@@ -29,7 +29,7 @@
 					<tr style="color: white; background-color: #7e5686">
 						<th style="width: 2%; border:1px solid black;">Period</th>
 						<th style="width: 5%; border:1px solid black;">Dept</th>
-						<th style="width: 1%; border:1px solid black;">ID</th>
+						<th style="width: 2%; border:1px solid black;">ID</th>
 						<th style="width: 6%; border:1px solid black;">Name</th>
 						<th style="width: 3%; border:1px solid black;">Grade</th>
 						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
@@ -59,12 +59,12 @@
 						<th colspan="6" style="background-color: #9f84a7">Office Overtime</th>
 					</tr>
 					<tr style="color: white; background-color: #7e5686">
-						<th style="width: 1%; border:1px solid black;">Period</th>
+						<th style="width: 2%; border:1px solid black;">Period</th>
 						<th style="width: 5%; border:1px solid black;">Dept</th>
-						<th style="width: 1%; border:1px solid black;">ID</th>
-						<th style="width: 8%; border:1px solid black;">Name</th>
-						<th style="width: 5%; border:1px solid black;">Grade</th>
-						<th style="width: 1%; border:1px solid black;">Σ Overtime</th>
+						<th style="width: 2%; border:1px solid black;">ID</th>
+						<th style="width: 6%; border:1px solid black;">Name</th>
+						<th style="width: 3%; border:1px solid black;">Grade</th>
+						<th style="width: 2%; border:1px solid black;">Σ Overtime</th>
 					</tr>
 				</thead>
 				<tbody>

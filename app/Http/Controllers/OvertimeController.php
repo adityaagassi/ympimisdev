@@ -1501,118 +1501,268 @@ public function overtimeControl(Request $request)
 
 public function overtimeReportDetail(Request $request)
 {
-	$tgl = date('Y-m' ,strtotime($request->get('tanggal')));
-	$ctg = $request->get('category');
+	$period_check = date('Y-m-01', strtotime($request->get('period')));
+	$category = $request->get('category');
 	$department = $request->get('department');
-	$query = "";
 
-	if($ctg == '3 hour(s) / day'){
-		$query = 'SELECT s.*, employees.employee_id, employees.name, department, section, `group` from
-		(select d.nik, round(avg(jam),2) as avg from
-		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
-		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
-		group by nik, tanggal, hari) d 
-		where jam > 3
-		group by d.nik ) s
-		left join employees on employees.employee_id = s.nik
-		left join 
-		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
-		group by employee_id,`group`, department, section
-		) employee on employee.employee_id = s.nik
-		where department = "'.$department.'"';
+	if($period_check >= '2020-01-01'){
+		$period = $request->get('period');
 
+		if($category == '3Hours/Day'){
+			$violations = db::connection('sunfish')->select("
+				SELECT
+				format ( A.ovtplanfrom, 'yyyy-MM-dd' ) AS period,
+				A.Emp_no,
+				B.Full_name,
+				B.Section,
+				IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+				) AS ot 
+				FROM
+				VIEW_YMPI_Emp_OvertimePlan A
+				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
+				WHERE
+				A.daytype = 'WD' 
+				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
+				AND IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 ) > 3");
+		}
+		if($category == '14Hours/Week'){
+			$violations = db::connection('sunfish')->select("SELECT
+				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )) AS period,
+				A.Emp_no,
+				B.Full_name,
+				B.Section,
+				SUM (
+				IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+				)) AS ot 
+				FROM
+				VIEW_YMPI_Emp_OvertimePlan A
+				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
+				WHERE
+				A.daytype = 'WD' 
+				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."' 
+				AND B.Department = '".$department."'
+				GROUP BY
+				A.Emp_no,
+				B.Full_name,
+				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )),
+				B.Section 
+				HAVING
+				SUM (
+				IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 )) > 14");
+		}
+		if($category == 'Both'){
 
-		$lebih_detail = 'select d.nik, jam, null week_name, keperluan, tanggal from
-		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, group_concat(keperluan) as keperluan from ftm.over_time
-		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
-		group by nik, tanggal, hari) d 
-		where jam > 3';
+			$ot_3 = db::connection('sunfish')->select("
+				SELECT
+				format ( A.ovtplanfrom, 'yyyy-MM-dd' ) AS period,
+				A.Emp_no,
+				B.Full_name,
+				B.Section,
+				IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+				) AS ot 
+				FROM
+				VIEW_YMPI_Emp_OvertimePlan A
+				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
+				WHERE
+				A.daytype = 'WD' 
+				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."' 
+				AND B.Department = '".$department."'
+				AND IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 ) > 3");
 
-		$detail = db::select($lebih_detail);
+			$ot_14 = db::connection('sunfish')->select("SELECT
+				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )) AS period,
+				A.Emp_no,
+				B.Full_name,
+				B.Section,
+				SUM (
+				IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+				)) AS ot 
+				FROM
+				VIEW_YMPI_Emp_OvertimePlan A
+				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
+				WHERE
+				A.daytype = 'WD' 
+				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."' 
+				AND B.Department = '".$department."'
+				GROUP BY
+				A.Emp_no,
+				B.Full_name,
+				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )),
+				B.Section 
+				HAVING
+				SUM (
+				IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 )) > 14");
+
+			$violations = array();
+
+			if($ot_3 != null && $ot_14 != null){
+				foreach ($ot_3 as $key) {
+					array_push($violations, [
+						"period" => $key->period,
+						"Emp_no" => $key->Emp_no,
+						"Full_name" => $key->Full_name,
+						"Section" => $key->Section,
+					]);
+				};
+
+				foreach ($ot_4 as $key) {
+					array_push($violations, [
+						"period" => $key->period,
+						"Emp_no" => $key->Emp_no,
+						"Full_name" => $key->Full_name,
+						"Section" => $key->Section,
+					]);
+				};
+			}		
+		}
+		if($category == '56Hours/Month'){
+			$violations = db::connection('sunfish')->select("SELECT
+				FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
+				A.Emp_no,
+				B.Section,
+				SUM (
+				IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+				)) AS ot 
+				FROM
+				VIEW_YMPI_Emp_OvertimePlan A
+				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
+				WHERE
+				A.daytype = 'WD' 
+				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."' 
+				AND B.Department = '".$department."'
+				GROUP BY
+				FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
+				A.Emp_no,
+				B.Section 
+				HAVING
+				SUM (
+				IIF (
+				A.total_ot IS NOT NULL,
+				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
+				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 )) > 56");
+		}
 	}
-	if($ctg == '14 hour(s) / week'){
-		$query = 'SELECT s.nik, avg(jam) as avg, name, section, department, `group` from
-		(select nik, sum(jam) jam, week_name from
-		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
-		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
-		group by nik, tanggal, hari) m
-		group by nik, week_name) s
-		left join employees on employees.employee_id = s.nik
-		left join 
-		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null" 
-		group by employee_id,`group`, department, section
-		) employee on employee.employee_id = s.nik
-		where jam > 14 and department = "'.$department.'"
-		group by s.nik, name, section, department,`group`';
+	else{
+		$tgl = $request->get('period');
+		$query = "";
 
-		$detail = '';
+		if($category == '3Hours/Day'){
+			$query = 'SELECT s.*, employees.employee_id, employees.name, department, section, `group` from
+			(select d.nik, round(avg(jam),2) as avg from
+			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
+			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
+			where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
+			group by nik, tanggal, hari) d 
+			where jam > 3
+			group by d.nik ) s
+			left join employees on employees.employee_id = s.nik
+			left join 
+			(
+			select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.'" and valid_to is null
+			group by employee_id,`group`, department, section
+			) employee on employee.employee_id = s.nik
+			where department = "'.$department.'"';
+		}
+		if($category == '14Hours/Week'){
+			$query = 'SELECT s.nik, avg(jam) as avg, name, section, department, `group` from
+			(select nik, sum(jam) jam, week_name from
+			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
+			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
+			where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
+			group by nik, tanggal, hari) m
+			group by nik, week_name) s
+			left join employees on employees.employee_id = s.nik
+			left join 
+			(
+			select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null" 
+			group by employee_id,`group`, department, section
+			) employee on employee.employee_id = s.nik
+			where jam > 14 and department = "'.$department.'"
+			group by s.nik, name, section, department,`group`';			
+		}
+		if($category == 'Both'){
+			$query = 'select c.nik, name, department, section, `group`, c.avg from ( select z.nik, x.avg from 
+			( select d.nik, round(avg(jam),2) as avg from
+			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
+			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
+			where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
+			group by nik, tanggal, hari) d 
+			where jam > 3
+			group by d.nik ) z
 
+			INNER JOIN
+
+			( select s.nik, avg(jam) as avg from
+			(select nik, sum(jam) jam, week_name from
+			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
+			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
+			where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
+			group by nik, tanggal, hari) m
+			group by nik, week_name) s
+			where jam > 14
+			group by s.nik) x on z.nik = x.nik
+			) c
+			left join employees on employees.employee_id = c.nik
+			left join
+			(
+			select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null"
+			group by employee_id,`group`, department, section
+			) employee on employee.employee_id = c.nik
+			where department = "'.$department.'"';
+		}
+		if($category == '56Hours/Month'){
+			$query = 'select semua.nik, employees.name, department, section, `group`, avg from
+			(select c.nik, c.jam as avg from
+			(select d.nik, sum(jam) as jam from
+			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
+			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
+			where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
+			group by nik, tanggal, hari) d
+			group by d.nik) c
+			where jam > 56) semua
+			left join employees on employees.employee_id = semua.nik
+			left join
+			(
+			select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null"
+			group by employee_id,`group`, department, section
+			) employee on employee.employee_id = semua.nik
+			where department = "'.$department.'"';
+			
+		}
+		$violations = db::select($query);
 	}
-	if($ctg == '3 & 14 hour(s) / week'){
-		$query = 'select c.nik, name, department, section, `group`, c.avg from ( select z.nik, x.avg from 
-		( select d.nik, round(avg(jam),2) as avg from
-		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
-		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
-		group by nik, tanggal, hari) d 
-		where jam > 3
-		group by d.nik ) z
-
-		INNER JOIN
-
-		( select s.nik, avg(jam) as avg from
-		(select nik, sum(jam) jam, week_name from
-		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
-		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
-		group by nik, tanggal, hari) m
-		group by nik, week_name) s
-		where jam > 14
-		group by s.nik) x on z.nik = x.nik
-		) c
-		left join employees on employees.employee_id = c.nik
-		left join
-		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null"
-		group by employee_id,`group`, department, section
-		) employee on employee.employee_id = c.nik
-		where department = "'.$department.'"';
-
-		$detail = '';
-	}
-	if($ctg == '56 hour(s) / month'){
-		$query = 'select semua.nik, employees.name, department, section, `group`, avg from
-		(select c.nik, c.jam as avg from
-		(select d.nik, sum(jam) as jam from
-		(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
-		left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
-		where deleted_at IS NULL and date_format(ftm.over_time.tanggal, "%Y-%m") = "'.$tgl.'" and nik IS NOT NULL and jam_aktual = 0 and hari = "N"
-		group by nik, tanggal, hari) d
-		group by d.nik) c
-		where jam > 56) semua
-		left join employees on employees.employee_id = semua.nik
-		left join
-		(
-		select employee_id, `group`, department, section from mutation_logs where DATE_FORMAT(valid_from,"%Y-%m") <= "'.$tgl.' and valid_to is null"
-		group by employee_id,`group`, department, section
-		) employee on employee.employee_id = semua.nik
-		where department = "'.$department.'"';
-
-		$detail = '';
-	}
-
-	$ftm = db::select($query);
 
 	$response = array(
 		'status' => true,
-		'datas' => $ftm,
-		'head' => $ctg,
-		'detail' => $detail
+		'violations' => $violations,
+		'head' => $category,
 	);
 	return Response::json($response);
 }

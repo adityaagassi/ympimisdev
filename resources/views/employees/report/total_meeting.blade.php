@@ -1,1334 +1,855 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
-<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
- thead input {
-  width: 100%;
-  padding: 3px;
-  box-sizing: border-box;
-}
-thead>tr>th{
-  text-align:center;
-}
-tbody>tr>td{
-  text-align:center;
-}
-tfoot>tr>th{
-  text-align:center;
-}
-td:hover {
-  overflow: visible;
-}
-table.table-bordered{
-  border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-  border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(211,211,211);
-  padding-top: 0;
-  padding-bottom: 0;
-}
-table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
-
-.loading {
-  margin: 0;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
+     thead>tr>th{
+          text-align:center;
+          overflow:hidden;
+          padding: 3px;
+     }
+     tbody>tr>td{
+          text-align:center;
+     }
+     tfoot>tr>th{
+          text-align:center;
+     }
+     th:hover {
+          overflow: visible;
+     }
+     td:hover {
+          overflow: visible;
+     }
+     table.table-bordered{
+          border:1px solid black;
+     }
+     table.table-bordered > thead > tr > th{
+          border:1px solid black;
+     }
+     table.table-bordered > tbody > tr > td{
+          border:1px solid black;
+          vertical-align: middle;
+          padding:0;
+     }
+     table.table-bordered > tfoot > tr > th{
+          border:1px solid black;
+          padding:0;
+     }
+     #loading, #progressbar2 { display: none; }
 </style>
 @endsection
 @section('header')
-<section class="content-header">
-  <h1>
-    Total Meeting <span class="text-purple"> トータルミーティング </span>
-  </h1>
-  <ol class="breadcrumb">
-  </ol>
-</section>
 @endsection
-
-
 @section('content')
-
-<section class="content container-fluid">
- <div class="row">
-  <div class="col-md-12">
-   <!-- Custom Tabs -->
-   <div class="box">
-    <div class="box-body">
-     <div class="col-md-12">
-      <div class="row">
-       <div class="col-md-12">
-        <div id="wait" class="loading">
-          <div>
-            <center>
-              <i class="fa fa-spinner fa-5x fa-spin"></i><br>
-              <h2 style="margin: 0px">Loading . . .</h2>
-            </center>
+<section class="content" style="padding-top: 0;">
+     <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+          <p style="position: absolute; color: White; top: 45%; left: 35%;">
+               <span style="font-size: 40px">Loading, please wait <i class="fa fa-spin fa-spinner"></i></span>
+          </p>
+     </div>
+     <div class="row">
+          <div class="col-xs-12">
+               <div id="chartTotalManpower" style="width: 100%; height: 500px;"></div>
           </div>
-        </div>
-        <div id="status_stacked_chart" style="width: 100%; height: 500px;"></div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-
-
-<div class="box">
-  <div class="box-body">
-   <div class="col-md-12">
-    <div class="row">
-     <div class="col-md-12">
-      <div id="wait2" class="loading">
-        <div>
-          <center>
-            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
-            <h2 style="margin: 0px">Loading . . .</h2>
-          </center>
-        </div>
-      </div>
-      <div id="status_chart" style="width: 100%; height: 550px;"></div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-
-<div class="box">
-  <div class="box-body">
-   <div class="col-md-12">
-    <div class="row">
-     <div class="col-md-12">
-      <div id="wait3" class="loading">
-        <div>
-          <center>
-            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
-            <h2 style="margin: 0px">Loading . . .</h2>
-          </center>
-        </div>
-      </div>
-      <div id="gender_chart" style="width: 100%; height: 550px;"></div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-
-<div class="box">
-  <div class="box-body">
-   <div class="col-md-12">
-    <div class="row">
-     <div class="col-md-12">
-      <div id="wait4" class="loading">
-        <div>
-          <center>
-            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
-            <h2 style="margin: 0px">Loading . . .</h2>
-          </center>
-        </div>
-      </div>
-      <div id="serikat_chart" style="width: 100%; height: 550px;"></div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-
-<div class="box">
-  <div class="box-body">
-   <div class="col-md-12">
-    <div class="row">
-     <div class="col-md-12">
-      <div id="wait5" class="loading">
-        <div>
-          <center>
-            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
-            <h2 style="margin: 0px">Loading . . .</h2>
-          </center>
-        </div>
-      </div>
-      <div id="over_by_dep" style="width: 100%; height: 550px;"></div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-
-<div class="box">
-  <div class="box-body">
-   <div class="col-md-12">
-    <div class="row">
-     <div class="col-md-12">
-      <div class="col-md-2 pull-right">
-        <div class="input-group date">
-          <div class="input-group-addon bg-green" style="border-color: #00a65a">
-            <i class="fa fa-calendar"></i>
+          <div class="col-xs-12" style="padding-top: 10px;">
+               <div id="chartTotalManpowerByGender" style="width: 100%; height: 500px;"></div>
           </div>
-          <input type="text" class="form-control datepicker" id="date2" onchange="drawChartOvertimeOver()" placeholder="Select Month" style="border-color: #00a65a">
-        </div>
-      </div>
-      <div id="wait6" class="loading">
-        <div>
-          <center>
-            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
-            <h2 style="margin: 0px">Loading . . .</h2>
-          </center>
-        </div>
-      </div>
-      <div id="over" style="width: 100%; height: 550px;"></div>
-      <br>
-      <br>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-
-<div class="box">
-  <div class="box-body">
-   <div class="col-md-12">
-    <div class="row">
-     <div class="col-md-12">
-      <small style="font-size: 15px; color: #88898c"><i class="fa fa-history"></i> Last updated : <?php echo date('d M Y') ?> </small>
-      <div class="col-md-2 pull-right">
-        <div class="input-group date">
-          <div class="input-group-addon bg-green" style="border-color: #00a65a">
-            <i class="fa fa-calendar"></i>
+          <div class="col-xs-12" style="padding-top: 10px;">
+               <div id="chartTotalManpowerByUnion" style="width: 100%; height: 500px;"></div>
           </div>
-          <input type="text" class="form-control datepicker" id="tgl" onchange="drawChartOvertimeControl()" placeholder="Select Date" style="border-color: #00a65a">
-        </div>
-      </div>
-      <div id="wait7" class="loading">
-        <div>
-          <center>
-            <i class="fa fa-spinner fa-5x fa-spin"></i><br>
-            <h2 style="margin: 0px">Loading . . .</h2>
-          </center>
-        </div>
-      </div>
-      <div id="over_control" style="width: 100%; height: 550px;"></div>
-      <br>
-      <br>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-
-<div class="box box-solid">
-  <div class="box-body">
-    <div class="col-md-12">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="col-md-4">
-            <div class="description-block border-right" style="color: #02ff17">
-              <h5 class="description-header" style="font-size: 60px;">
-                <span class="description-percentage" id="tot_budget"></span>
-              </h5>      
-              <span class="description-text" style="font-size: 35px;">Total Forecast<br><span>単月見込み</span></span>   
-            </div>
+          <div class="col-xs-12" style="padding-top: 10px;">
+               <div id="chartTotalOvertime" style="width: 100%; height: 500px;"></div>
           </div>
-          <div class="col-md-4">
-            <div class="description-block border-right" style="color: #7300ab" >
-              <h5 class="description-header" style="font-size: 60px; ">
-                <span class="description-percentage" id="tot_act"></span>
-              </h5>      
-              <span class="description-text" style="font-size: 35px;">Total Actual<br><span >単月実績</span></span>   
-            </div>
+          <div class="col-xs-12" style="padding-top: 10px;">
+               <div id="chartOvertimeViolation" style="width: 100%; height: 500px;"></div>
           </div>
-          <div class="col-md-4">
-            <div class="description-block border-right text-green" id="diff_text">
-              <h5 class="description-header" style="font-size: 60px;">
-                <span class="description-percentage" id="tot_diff"></span>
-              </h5>      
-              <span class="description-text" style="font-size: 35px;">Difference<br><span >差異</span></span>   
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-</div>
-</div>
-
-<div class="modal fade" id="myModal2">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title"><b id="head">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <table class="table table-bordered table-striped table-hover" style="width: 100%;">
-              <thead style="background-color: rgba(126,86,134,.7);">
-                <tr>
-                  <th>NIK</th>
-                  <th>Nama karyawan</th>
-                  <th>Departemen</th>
-                  <th>Section</th>
-                  <th>Kode</th>
-                  <th>Avg (jam)</th>
-                  <th width="5%">Action</th>
-                </tr>
-              </thead>
-              <tbody id="details">
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
+     </div>
 </section>
 
+<div class="modal fade" id="modalPeriod">
+     <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+               <div class="modal-header">
+                    <div class="modal-body table-responsive no-padding">
+                         <div class="form-group">
+                              <label for="exampleInputEmail1">Pilih Periode</label>
+                              <div class="input-group date">
+                                   <div class="input-group-addon bg-purple" style="border: none;">
+                                        <i class="fa fa-calendar"></i>
+                                   </div>
+                                   <input type="text" class="form-control datepicker" id="month_from" placeholder="Bulan Sampai" onchange="fetchChart(value)">
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+</div>
 
-@stop
+<div class="modal fade" id="modalDetail">
+     <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+               <div class="modal-header">
+                    <h3 style="margin-top: 0;" id="titleDetail"></h3>
+                    <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="example2">
+                         <thead style="background-color: rgba(126,86,134,.7);">
+                              <tr>
+                                   <th>Period</th>
+                                   <th>ID</th>
+                                   <th>Name</th>
+                                   <th>Section</th>
+                                   <th>OT</th>
+                              </tr>
+                         </thead>
+                         <tbody id="tableDetailBody"></tbody>
+                         <tfoot>
+                         </tfoot>
+                    </table>
+                    <div id="progressbar2">
+                         <center>
+                              <i class="fa fa-spinner fa-spin" style="font-size: 6em;"></i> 
+                              <br><h4>Loading ...</h4>
+                         </center>
+                    </div>
+               </div>
+               <div class="modal-footer">
+                    <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+               </div>
+          </div>
+     </div>
+</div>
 
+@endsection
 @section('scripts')
-<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/highcharts.js")}}"></script>
+<script src="{{ url("js/highstock.js")}}"></script>
+<script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
 <script>
-  var detail = new Array();
-  var month = new Array();
-  month[0] = "January";
-  month[1] = "February";
-  month[2] = "March";
-  month[3] = "April";
-  month[4] = "May";
-  month[5] = "June";
-  month[6] = "July";
-  month[7] = "August";
-  month[8] = "September";
-  month[9] = "October";
-  month[10] = "November";
-  month[11] = "December";
-
-  $(function () {
-    Highcharts.setOptions({
-      colors: ['#8fafc4','#336a86', '#293132', '#88d958', '#ff410d', '#b95436', '#6fb98f', '#cb58e8', '#ea2a4a', '#ffba00', '#1c8704', '#f3cc6f', '#2971e5','#c89d0f', '#ffccab']
-    });
-    drawChartGender();
-    drawChartStatusStacked();
-    drawChartSerikat();
-    drawChart();
-    drawChartOvertimeOver();
-    drawChartOvertimeControl();
-  })
-
-
-  $.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  });
-
-  jQuery(document).ready(function() {
-    $('body').toggleClass("sidebar-collapse");
-
-  });
-
-  function openErrorGritter(title, message) {
-    jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-danger',
-      image: '{{ url("images/image-stop.png") }}',
-      sticky: false,
-      time: '2000'
-    });
-  }
-
-  function openSuccessGritter(title, message){
-    jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-success',
-      image: '{{ url("images/image-screen.png") }}',
-      sticky: false,
-      time: '2000'
-    });
-  }
-
-  function drawChartGender(){
-    $("#wait3").show();
-    $.get('{{ url("fetch/report/gender") }}', function(result, status, xhr){
-      $("#wait3").hide();
-      if(xhr.status == 200){
-
-        if(result.status){
-          var xCategories = [];
-          var seriesLaki = [];
-          var seriesPerempuan = [];
-          var cat, cat2;
-
-          for(var i = 0; i < result.manpower_by_gender.length; i++){
-            cat = result.manpower_by_gender[i].mon;
-
-            var date = new Date(cat+'-01');
-
-            cat2 = month[date.getMonth()]+" "+date.getFullYear();
-
-            if(result.manpower_by_gender[i].gender == 'L')
-              seriesLaki.push(parseInt(result.manpower_by_gender[i].tot_karyawan));
-            else
-              seriesPerempuan.push(parseInt(result.manpower_by_gender[i].tot_karyawan));
-
-            if(xCategories.indexOf(cat2) === -1){
-              xCategories[xCategories.length] = cat2;
-            }
+     $.ajaxSetup({
+          headers: {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
+     });
 
-          Highcharts.chart('gender_chart', {
-            chart: {
-              type: 'column'
-            },
-            title: {
-              text: 'Total Manpower by Gender <br> Fiscal 196'
-            },
-            xAxis: {
-              categories: xCategories,
-              labels: {
-                style: {
-                  fontSize: '17px'
-                }
-              }
-            },
-            legend: {
-              enabled:true,
-              itemStyle: {
-               fontSize:'15px'
-             },
-           },
-           yAxis: {
-            min: 0,
-            title: {
-              text: 'Total Manpower',
-              style: {
-                fontSize: '17px'
-              }
-            }
+     jQuery(document).ready(function(){
+          $('#modalPeriod').modal({
+               backdrop: 'static',
+               keyboard: false
+          });
+          // fetchChart();
+     });
+
+     Highcharts.createElement('link', {
+          href: '{{ url("fonts/UnicaOne.css")}}',
+          rel: 'stylesheet',
+          type: 'text/css'
+     }, null, document.getElementsByTagName('head')[0]);
+
+     Highcharts.theme = {
+          colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+          '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+          chart: {
+               backgroundColor: {
+                    linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+                    stops: [
+                    [0, '#2a2a2b'],
+                    [1, '#3e3e40']
+                    ]
+               },
+               style: {
+                    fontFamily: 'sans-serif'
+               },
+               plotBorderColor: '#606063'
+          },
+          title: {
+               style: {
+                    color: '#E0E0E3',
+                    textTransform: 'uppercase',
+                    fontSize: '20px'
+               }
+          },
+          subtitle: {
+               style: {
+                    color: '#E0E0E3',
+                    textTransform: 'uppercase'
+               }
+          },
+          xAxis: {
+               gridLineColor: '#707073',
+               labels: {
+                    style: {
+                         color: '#E0E0E3'
+                    }
+               },
+               lineColor: '#707073',
+               minorGridLineColor: '#505053',
+               tickColor: '#707073',
+               title: {
+                    style: {
+                         color: '#A0A0A3'
+
+                    }
+               }
+          },
+          yAxis: {
+               gridLineColor: '#707073',
+               labels: {
+                    style: {
+                         color: '#E0E0E3'
+                    }
+               },
+               lineColor: '#707073',
+               minorGridLineColor: '#505053',
+               tickColor: '#707073',
+               tickWidth: 1,
+               title: {
+                    style: {
+                         color: '#A0A0A3'
+                    }
+               }
           },
           tooltip: {
-            useHTML: true
+               backgroundColor: 'rgba(0, 0, 0, 0.85)',
+               style: {
+                    color: '#F0F0F0'
+               }
+          },
+          plotOptions: {
+               series: {
+                    dataLabels: {
+                         color: 'white'
+                    },
+                    marker: {
+                         lineColor: '#333'
+                    }
+               },
+               boxplot: {
+                    fillColor: '#505053'
+               },
+               candlestick: {
+                    lineColor: 'white'
+               },
+               errorbar: {
+                    color: 'white'
+               }
+          },
+          legend: {
+               itemStyle: {
+                    color: '#E0E0E3'
+               },
+               itemHoverStyle: {
+                    color: '#FFF'
+               },
+               itemHiddenStyle: {
+                    color: '#606063'
+               }
           },
           credits: {
-            enabled: false
+               style: {
+                    color: '#666'
+               }
           },
-          plotOptions: {
-            column: {
-              dataLabels: {
-                enabled: true,
-                crop: false,
-                overflow: 'none',
-                style: {
-                  fontSize: '12px'
-                }
-              },
-              borderWidth: 0
-            },
-            series: {
-              minPointLength: 3
-            }
+          labels: {
+               style: {
+                    color: '#707073'
+               }
           },
-          series: [{
-            name: 'Male',
-            data: seriesLaki
 
-          }, {
-            name: 'Female',
-            data: seriesPerempuan
+          drilldown: {
+               activeAxisLabelStyle: {
+                    color: '#F0F0F3'
+               },
+               activeDataLabelStyle: {
+                    color: '#F0F0F3'
+               }
+          },
 
-          }]
-        });
+          navigation: {
+               buttonOptions: {
+                    symbolStroke: '#DDDDDD',
+                    theme: {
+                         fill: '#505053'
+                    }
+               }
+          },
 
-        }
-        else{
-          alert('Attempt to retrieve data failed');
-        }
-      }
-    })
-  }
+          rangeSelector: {
+               buttonTheme: {
+                    fill: '#505053',
+                    stroke: '#000000',
+                    style: {
+                         color: '#CCC'
+                    },
+                    states: {
+                         hover: {
+                              fill: '#707073',
+                              stroke: '#000000',
+                              style: {
+                                   color: 'white'
+                              }
+                         },
+                         select: {
+                              fill: '#000003',
+                              stroke: '#000000',
+                              style: {
+                                   color: 'white'
+                              }
+                         }
+                    }
+               },
+               inputBoxBorderColor: '#505053',
+               inputStyle: {
+                    backgroundColor: '#333',
+                    color: 'silver'
+               },
+               labelStyle: {
+                    color: 'silver'
+               }
+          },
 
-  function drawChartStatusStacked() {
-    $('#wait').show();
-    $('#wait2').show();
-    $.get('{{ url("fetch/report/status1") }}', function(result, status, xhr){
-      if(xhr.status == 200){
-        if(result.status){
-          $('#wait').hide();
+          navigator: {
+               handles: {
+                    backgroundColor: '#666',
+                    borderColor: '#AAA'
+               },
+               outlineColor: '#CCC',
+               maskFill: 'rgba(255,255,255,0.1)',
+               series: {
+                    color: '#7798BF',
+                    lineColor: '#A6C7ED'
+               },
+               xAxis: {
+                    gridLineColor: '#505053'
+               }
+          },
 
-          //  ------------- CHART STATUS STACKED ---------------
+          scrollbar: {
+               barBackgroundColor: '#808083',
+               barBorderColor: '#808083',
+               buttonArrowColor: '#CCC',
+               buttonBackgroundColor: '#606063',
+               buttonBorderColor: '#606063',
+               rifleColor: '#FFF',
+               trackBackgroundColor: '#404043',
+               trackBorderColor: '#404043'
+          },
 
-          var xCategories = [];
-          var seriesPKWT = [];
-          var seriesPKWTT1 = [];
-          var seriesPKWTT2 = [];
-          var seriesOutsource = [];
-          var maxMP = [];
-          var cat, cat2, MP = 0;
+          legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+          background2: '#505053',
+          dataLabelsColor: '#B0B0B3',
+          textColor: '#C0C0C0',
+          contrastTextColor: '#F0F0F3',
+          maskColor: 'rgba(255,255,255,0.3)'
+     };
+     Highcharts.setOptions(Highcharts.theme);
 
-          for(var i = 0; i < result.manpower_by_status_stack.length; i++){
-            cat = result.manpower_by_status_stack[i].mon;
-
-            var date = new Date(cat+'-01');
-
-            cat2 = month[date.getMonth()]+" "+date.getFullYear();
-
-            if(result.manpower_by_status_stack[i].status == 'Tetap' || 
-              result.manpower_by_status_stack[i].status == 'Percobaan')
-              seriesPKWT.push(result.manpower_by_status_stack[i].emp);
-
-            else if(result.manpower_by_status_stack[i].status == 'Kontrak 1')
-              seriesPKWTT1.push(result.manpower_by_status_stack[i].emp);
-
-            else if(result.manpower_by_status_stack[i].status == 'Kontrak 2')
-              seriesPKWTT2.push(result.manpower_by_status_stack[i].emp);
-
-            else if(result.manpower_by_status_stack[i].status == 'OUTSOURCES')
-              seriesOutsource.push(result.manpower_by_status_stack[i].emp);
-
-            // else if(result.manpower_by_status_stack[i].status == 'Percobaan')
-            //   seriesPercobaan.push(result.manpower_by_status_stack[i].emp);
-
-            if(xCategories.indexOf(cat2) === -1){
-              xCategories[xCategories.length] = cat2;
-            }
+     function addZero(i) {
+          if (i < 10) {
+               i = "0" + i;
           }
+          return i;
+     }
 
-          for (var i = 0; i < xCategories.length; i++) {
-            MP = MP + seriesPKWT[i] + seriesPKWTT1[i] + seriesPKWTT2[i] + seriesOutsource[i];
-            maxMP.push(MP);
-            MP = 0;
+     function getActualFullDate() {
+          var d = new Date();
+          var day = addZero(d.getDate());
+          var month = addZero(d.getMonth()+1);
+          var year = addZero(d.getFullYear());
+          var h = addZero(d.getHours());
+          var m = addZero(d.getMinutes());
+          var s = addZero(d.getSeconds());
+          return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+     }
+
+     $('.datepicker').datepicker({
+          autoclose: true,
+          format: "yyyy-mm",
+          startView: "months", 
+          minViewMode: "months",
+          autoclose: true,
+     });
+
+     function fetchChart(period){
+          $('#loading').show();
+          $('#modalPeriod').modal('hide');
+          var data = {
+               period:period,
           }
+          $.get('{{ url("fetch/report/total_meeting") }}', data, function(result, status, xhr) {
+               if(result.status){
+                    xDate = [];
+                    sTotal = [];
+                    sOutsource = [];
+                    sContract1 = [];
+                    sContract2 = [];
+                    sPermanent = [];
+                    sProbation = [];
+                    sMale = [];
+                    sFemale = [];
+                    sNon = [];
+                    sSPSI = [];
+                    sSBM = [];
+                    sSPMI = [];
 
-          Highcharts.chart('status_stacked_chart', {
-            chart: {
-              type: 'column'
-            },
-            title: {
-              text: 'Total Manpower'
-            },
-            xAxis: {
-              categories: xCategories,
-              labels: {
-                style: {
-                  fontSize: '17px'
-                }
-              }
-            },
-            tooltip: {
-              useHTML: true
-            },
-            yAxis: {
-              min: 0,
-              title: {
-                text: 'Total Manpower',
-                style: {
-                  fontSize: '17px'
-                }
-              },
-              stackLabels: {
-                enabled: true,
-                style: {
-                  fontWeight: 'bold',
-                  color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray',
-                  fontSize: '15px',
-                  textOutline: 0
-                }
-              }
-            },
-            legend: {
-              enabled:true,
-              itemStyle: {
-               fontSize:'15px'
-             },
-           },
-           tooltip: {
-            headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-          },
-          plotOptions: {
-            column: {
-              stacking: 'normal',
-              dataLabels: {
-                enabled: true,
-                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-                style: {
-                  fontSize: '12px',
-                  textOutline: 0
-                }
-              },
-              borderWidth: 0
-            },
-            series: {
-              minPointLength: 5
-            }
-          },
-          credits:{
-            enabled:false
-          },
-          series: [{
-            name: 'OutSources',
-            data: seriesOutsource
+                    $.each(result.employees, function(key, value) {
+                         var catDate = value.period;
+                         if(xDate.indexOf(catDate) === -1){
+                              xDate[xDate.length] = catDate;
+                         }
 
-          },
-          {
-            name: 'Contract 1',
-            data: seriesPKWTT1
+                         sTotal.push(value.total);
+                         sOutsource.push(parseInt(value.outsource));
+                         sContract1.push(parseInt(value.contract1));
+                         sContract2.push(parseInt(value.contract2));
+                         sPermanent.push(parseInt(value.permanent));
+                         sProbation.push(parseInt(value.probation));
+                         sMale.push(parseInt(value.male));
+                         sFemale.push(parseInt(value.female));
+                         sNon.push(parseInt(value.no_union));
+                         sSPSI.push(parseInt(value.spsi));
+                         sSBM.push(parseInt(value.sbm));
+                         sSPMI.push(parseInt(value.spmi));
+                    });
 
-          }, {
-            name: 'Contract 2',
-            data: seriesPKWTT2
+                    Highcharts.chart('chartTotalManpower', {
+                         title: {
+                              text: 'Total Manpower',
+                              style: {
+                                   fontSize: '30px',
+                                   fontWeight: 'bold'
+                              }
+                         },
+                         yAxis:{
+                              title:{
+                                   text: null
+                              }
+                         },
+                         xAxis: {
+                              categories: xDate
+                         },
+                         credits:{
+                              enabled:false
+                         },
+                         series: [{
+                              type: 'column',
+                              name: 'Outsource',
+                              data: sOutsource,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }, {
+                              type: 'column',
+                              name: 'Contract 1',
+                              data: sContract1,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }, {
+                              type: 'column',
+                              name: 'Contract 2',
+                              data: sContract2,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }, {
+                              type: 'column',
+                              name: 'Permanent',
+                              data: sPermanent,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }, {
+                              type: 'column',
+                              name: 'Probation',
+                              data: sProbation,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }, {
+                              type: 'spline',
+                              name: 'Total Employee',
+                              data: sTotal,
+                              dataLabels: {
+                                   enabled: true,
+                                   style: {
+                                        textOutline: false,
+                                        fontWeight: 'bold',
+                                        fontSize: '20px'
+                                   }
+                              }
+                         }]
+                    });
 
-          }, {
-            name: 'Permanent',
-            data: seriesPKWT
-          },
-          {
-            name: 'Trendline',
-            type: 'line',
-            data: maxMP,
-            color: '#f21a25'
+Highcharts.chart('chartTotalManpowerByGender', {
+     title: {
+          text: 'Total Manpower By Gender',
+          style: {
+               fontSize: '30px',
+               fontWeight: 'bold'
           }
-          ]
-        });
+     },
+     yAxis:{
+          title:{
+               text: null
+          }
+     },
+     xAxis: {
+          categories: xDate
+     },
+     credits:{
+          enabled:false
+     },
+     series: [{
+          type: 'column',
+          name: 'Male',
+          data: sMale,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }, {
+          type: 'column',
+          name: 'Female',
+          data: sFemale,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }]
+});
 
-          //  ------------- CHART STATUS NOT STACKED ---------------
+Highcharts.chart('chartTotalManpowerByUnion', {
+     title: {
+          text: 'Total Manpower By Union',
+          style: {
+               fontSize: '30px',
+               fontWeight: 'bold'
+          }
+     },
+     yAxis:{
+          title:{
+               text: null
+          }
+     },
+     xAxis: {
+          categories: xDate
+     },
+     credits:{
+          enabled:false
+     },
+     series: [{
+          type: 'column',
+          name: 'No Union',
+          data: sNon,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }, {
+          type: 'column',
+          name: 'SPSI',
+          data: sSPSI,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }, {
+          type: 'column',
+          name: 'SPMI',
+          data: sSPMI,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }, {
+          type: 'column',
+          name: 'SBM',
+          data: sSBM,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }]
+});
 
-          $('#wait2').hide();
-
-          Highcharts.chart('status_chart', {
-            chart: {
-              type: 'column'
-            },
-            title: {
-              text: 'Total Manpower by Status'
-            },
-            xAxis: {
-              categories: xCategories,
-              labels: {
-                style: {
-                  fontSize: '17px'
-                }
-              }
-            },
-            legend: {
-              enabled:true,
-              itemStyle: {
-               fontSize:'15px'
-             },
-           },
-           yAxis: {
-            min: 0,
-            title: {
-              text: 'Total Manpower',
-              style: {
-                fontSize: '17px'
-              }
-            }
-          },
-          tooltip: {
-            useHTML: true
-          },
-          credits:{
-            enabled:false
-          },
-          plotOptions: {
-            column: {
-              pointPadding: 0.2,
-              borderWidth: 0,
-              dataLabels: {
-                enabled: true,
-                textOutline: 0
-              }
-            },
-            series: {
-              minPointLength: 5
-            }
-          },
-          series: [
-          {
-            name: 'OutSources',
-            data: seriesOutsource
-
-          }, {
-            name: 'Contract 1',
-            data: seriesPKWTT1
-
-          }, {
-            name: 'Contract 2',
-            data: seriesPKWTT2
-
-          }, {
-            name: 'Permanent',
-            data: seriesPKWT
-
-          }]
-        });
-        }
-      }
-    });
+var data = result.overtimes1;
+var seriesData = [];
+var xCategories = [];
+var i, cat;
+var intVal = function ( i ) {
+     return typeof i === 'string' ?
+     i.replace(/[\$,]/g, '')*1 :
+     typeof i === 'number' ?
+     i : 0;
+};
+for(i = 0; i < data.length; i++){
+     cat = data[i].period;
+     if(xCategories.indexOf(cat) === -1){
+          xCategories[xCategories.length] = cat;
+     }
 }
-
-function drawChartSerikat() {
-  $("#wait4").show();
-  $.get('{{ url("fetch/report/serikat") }}', function(result, status, xhr){
-    $("#wait4").hide();
-    if(xhr.status == 200){
-
-      if(result.status){
-        var xCategories = [];
-        var seriesData = [];
-        var cat, cat2;
-
-        for(var i = 0; i < result.manpower_by_serikat.length; i++){
-          cat = result.manpower_by_serikat[i].mon;
-
-          var date = new Date(cat+'-01');
-
-          cat2 = month[date.getMonth()]+" "+date.getFullYear();
-
-          if(xCategories.indexOf(cat2) === -1){
-            xCategories[xCategories.length] = cat2;
-          }
-        }
-
-
-        for(i = 0; i < result.manpower_by_serikat.length; i++){
-          if(seriesData){
-           var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == result.manpower_by_serikat[i].serikat;});
-           if(currSeries.length === 0){
-            seriesData[seriesData.length] = currSeries = {name: result.manpower_by_serikat[i].serikat, data: []};
+for(i = 0; i < data.length; i++){
+     var ot = parseFloat(data[i].ot_person);
+     if(seriesData){
+          var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == data[i].Department.toUpperCase();});
+          if(currSeries.length === 0){
+               seriesData[seriesData.length] = currSeries = {name: data[i].Department.toUpperCase(), data: []};
           } else {
-            currSeries = currSeries[0];
+               currSeries = currSeries[0];
           }
           var index = currSeries.data.length;
-          currSeries.data[index] = result.manpower_by_serikat[i].emp_tot;
-        } else {
-         seriesData[0] = {name: result.manpower_by_serikat[i].serikat, data: [intVal(result.manpower_by_serikat[i].emp_tot)]}
-       }
+          currSeries.data[index] = parseFloat(ot.toFixed(1));
+     } else {
+          seriesData[0] = {name: data[i].Department.toUpperCase(), data: [parseFloat(ot.toFixed(1))]}
      }
+}
 
-     Highcharts.chart('serikat_chart', {
-      chart: {
-        type: 'column'
-      },
-      title: {
-        text: 'Total Manpower by Labor Union <br> Fiscal 196'
-      },
-      xAxis: {
-        categories: xCategories,
-        labels: {
+Highcharts.chart('chartTotalOvertime', {
+     chart: {
+          type: 'column'
+     },
+     title: {
+          text: 'Overtime By Person',
           style: {
-            fontSize: '17px'
+               fontSize: '30px',
+               fontWeight: 'bold'
           }
-        }
-      },
-      legend: {
-        enabled:true,
-        itemStyle: {
-         fontSize:'15px'
-       },
+     },
+     xAxis: {
+          categories: xCategories
+     },
+     credits:{
+          enabled:false
      },
      yAxis: {
-      min: 0,
-      title: {
-        text: 'Total Manpower',
-        style: {
-          fontSize: '17px'
-        }
-      }
-    },
-    tooltip: {
-      useHTML: true
-    },
-    credits: {
-      enabled: false
-    },
-    plotOptions: {
-      column: {
-        dataLabels: {
-          enabled: true,
-          crop: false,
-          overflow: 'none',
-          style: {
-            fontSize: '12px',
-            textOutline: 0
+          min: 0,
+          title: {
+               text: null
           }
-        },
-        borderWidth: 0
-      },
-      series: {
-        minPointLength: 3
-      }
-    },
-    series: seriesData
-  });
-
-   }
-   else{
-    alert('Attempt to retrieve data failed');
-  }
-}
-})
-}
-
-function drawChart() {
-  $("#wait5").show();
-  $.get('{{ url("fetch/overtime_report") }}', function(result) {
-    $("#wait5").hide();
-   // ------------  Chart Overtime by Department
-   var categories;
-   var xCategories = [];
-   var xTotal = [];
-   var xOTHour = [];
-   var xKar = [];
-   var seriesData = [];
-   var cats, total = 0, kar, ot = 0;
-
-   for (i = 0; i < result.report_by_dep.length; i++){
-    total += result.report_by_dep[i].avg;
-    categories = result.report_by_dep[i].mon;
-
-    var date = new Date(categories+'-01');
-
-    cats = month[date.getMonth()]+" "+date.getFullYear();
-
-    if(xCategories.indexOf(cats) === -1){
-      xCategories[xCategories.length] = cats;
-    }
-  }
-
-  for(i = 0; i < result.report_by_dep.length; i++){
-    if(seriesData){
-     var currSeries = seriesData.filter(function(seriesObject){ return seriesObject.name == result.report_by_dep[i].department;});
-     if(currSeries.length === 0){
-      seriesData[seriesData.length] = currSeries = {name: result.report_by_dep[i].department, data: []};
-    } else {
-      currSeries = currSeries[0];
-    }
-    var index = currSeries.data.length;
-    currSeries.data[index] = result.report_by_dep[i].avg;
-  } else {
-   seriesData[0] = {name: result.report_by_dep[i].department, data: [intVal(result.report_by_dep[i].avg)]}
- }
-}
-
-// var map = result.report_by_dep.reduce(function(map, invoice) {
-//   var name = invoice.mon
-//   var price = +invoice.ot_hour
-//   map[name] = (map[name] || 0) + price
-//   return map
-// }, {})
-
-// xOTHour = map;
-
-// // console.log(xOTHour);
-
-// var map2 = result.report_by_dep.reduce(function(map2, invoice) {
-//   var name2 = invoice.mon
-//   var price = +invoice.kar
-//   map2[name2] = (map2[name2] || 0) + price
-//   return map2
-// }, {})
-
-// xKar = map2;
-
-// // console.log(xKar);
-
-// $.each(xOTHour, function(key, value) {
-//   var hasil = xOTHour[key] / xKar[key];
-//   xTotal.push(Math.round(hasil * 100) / 100);
-// });
-
-// console.log(xTotal);
-
-// seriesData.push({name: 'avg', data: xTotal, visible: false})
-
-console.log(seriesData);
-
-
-Highcharts.chart('over_by_dep', {
-  chart: {
-    type: 'column'
-  },
-  title: {
-    text: 'Overtime Every Person Every Department Every Month'
-  },
-  xAxis: {
-    categories: xCategories,
-    labels: {
-      style: {
-        fontSize: '17px'
-      }
-    }
-  },
-  yAxis: {
-    min: 0,
-    title: {
-      text: 'Overtime (hour)',
-      style: {
-        fontSize: '17px'
-      }
-    },
-    stackLabels: {
-      enabled: true,
-      style: {
-        fontWeight: 'bold',
-        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray',
-        fontSize: '15px',
-        textOutline: 0
-      },
-      formatter: function() {
-        // return seriesData[15].data;
-      }
-    }
-  },
-  legend: {
-    enabled: true,
-    itemStyle: {
-      fontSize: '12px'
-    }
-  },
-  tooltip: {
-    enabled:true
-  },
-  credits:{
-    enabled: false
-  },
-  plotOptions: {
-    column: {
-      stacking: 'normal',
-      dataLabels: {
-        enabled: true,
-        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-        style: {
-          fontSize: '12px',
-          textOutline: 0
-        }
-      },
-      borderWidth: 0
-    },
-    series: {
-      minPointLength: 5
-    }
-  },
-  series: seriesData
-});
-});
-}
-
-function drawChartOvertimeOver() {
-  var tanggal = $('#date2').val();
-  var cat = new Array();
-  var tiga_jam = new Array();
-  var per_minggu = new Array();
-  var per_bulan = new Array();
-  var manam_bulan = new Array();
-
-  var data = {
-   tanggal:tanggal
- }
-
- $("#over").css("visibility","hidden");
- $("#wait6").show();
-
- $.get('{{ url("fetch/overtime_report_over") }}', data, function(result) {
-
-  $("#wait6").hide();
-  $("#over").css("visibility","visible");
-
-  for (i = 0; i < result.report.length; i++){
-   cat.push(result.report[i].department);
-   tiga_jam.push(parseInt(result.report[i].tiga_jam));
-   per_minggu.push(parseInt(result.report[i].emptblas_jam));
-   per_bulan.push(parseInt(result.report[i].tiga_patblas_jam));
-   manam_bulan.push(parseInt(result.report[i].limanam_jam));
- }
-
- tgl = result.report[0].month_name;
-
- var date = new Date(tgl+'-01');
-
- title = month[date.getMonth()]+" "+date.getFullYear();
-
-
-    // ------ Chart Overtime over 3 hour -----------
-
-
-    $('#over').highcharts({
-     chart: {
-      type: 'column'     
-    },
-    legend: {
-     enabled: true,
-     itemStyle: {
-      fontSize: '15px'
-    }
-  },
-  exporting : {
-   enabled : true,
-   buttons: {
-     contextButton: {
-       align: 'right',
-       x: -25
-     }
-   }
- },
- title: {
-  text: 'Overtime <br><span style="font-size:12pt">'+title+'</span>',
-  style: {
-    fontSize: '30px'
-  }
-},
-xAxis: {
-  categories: cat,
-  labels: {
-    rotation: -60,
-    style: {
-      fontSize: '17px'
-    }
-  }
-},
-yAxis: {
-  min:0,
-  title: {
-    text: 'Total Manpower',
-    style: {
-      fontSize: '17px'
-    }
-  },
-  labels: {
-    style: {
-      fontSize: '15px',
-      textOutline: 0
-    }
-  }
-},
-plotOptions: {
-  column: {
-    dataLabels: {
-      enabled: true,
-      color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
-      style: {
-        fontSize: '12px',
-        textOutline: 0
-      }
-    },
-    borderWidth: 0
-  },
-  series: {
-   cursor: 'pointer',
-   minPointLength: 5,
-   point: {
-     events: {
-       click: function(e) {
-         show2(tgl, this.category, this.series.name);
-       }
-     }
-   }
- }
-},
-credits: {
-  enabled: false
-},
-series: [{
-  name: '3 hour(s) / day',
-  color: '#2598db',
-  data: tiga_jam
-}, {
-  name: '14 hour(s) / week',
-  color: '#f78a1d',
-  data: per_minggu
-},
-{
-  name: '3 & 14 hour(s) / week',
-  color: '#f90031',
-  data: per_bulan
-},
-{
-  name: '56 hour(s) / month',
-  color: '#d756f7',
-  data: manam_bulan
-}]
-
-});
-  });
-}
-
-function drawChartOvertimeControl() {
-  var tanggal = $('#tgl').val();
-
-  var data = {
-    tgl:tanggal
-  }
-
-  // $("#over_control").css("visibility","hidden");
-  $("#wait7").show();
-  $.get('{{ url("fetch/report/overtime_report_control") }}', data, function(result) {
-
-    $("#wait7").hide();
-    // $("#over_control").css("visibility","visible");
-
-    // -------------- CHART OVERTIME REPORT CONTROL ----------------------
-
-    var xCategories2 = [];
-    var seriesDataBudget = [];
-    var seriesDataAktual = [];
-    var budgetHarian = [];
-    var ctg, tot_act = 0, avg = 0;
-    var tot_day_budget = 0, tot = 0, tot_diff;
-
-    for(var i = 0; i < result.report_control.length; i++){
-      ctg = result.report_control[i].cost_center_name;
-      tot_act += result.report_control[i].act;
-      tot_day_budget += result.report_control[i].jam_harian;
-      tot += result.report_control[i].tot;
-
-      seriesDataBudget.push(Math.round(result.report_control[i].tot * 100) / 100);
-      seriesDataAktual.push(Math.round(result.report_control[i].act * 100) / 100);
-      budgetHarian.push(Math.round(result.report_control[i].jam_harian * 100) / 100);
-      if(xCategories2.indexOf(ctg) === -1){
-       xCategories2[xCategories2.length] = ctg;
-     }
-   }
-
-   tot_diff = tot_act - tot_day_budget;
-
-   tot_day_budget = Math.round(tot_day_budget * 100) / 100;
-   tot = Math.round(tot * 100) / 100;
-   tot_act = Math.round(tot_act * 100) / 100;
-   tot_diff = Math.round(tot_diff * 100) / 100;
-
-   var tot_day_budget2 = tot_day_budget.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-   var tot2 = tot.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-   var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-   var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-
-   $("#tot_budget").text(tot_day_budget2);
-   $("#tot_act").text(tot_act2);
-
-   if (tot_diff > 0) {
-    $('#diff_text').removeClass('text-green').addClass('text-red');
-    $("#tot_diff").html("+ "+tot_diff2);
-  }
-  else {
-    $('#diff_text').removeClass('text-red').addClass('text-green');
-    $("#tot_diff").html(tot_diff2);
-  }
-
-  avg = tot_act / data[1];
-  avg = Math.round(avg * 100) / 100;
-  // $("#avg").html(avg);
-
-  // Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
-  //   return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
-  // };
-
-  Highcharts.chart('over_control', {
-    chart: {
-      spacingTop: 10,
-      type: 'column'
-    },
-    title: {
-      text: '<span style="font-size: 18pt;">Overtime Control</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.report_control[0].tanggal +'</center></span>',
-      useHTML: true
-    },
-    credits:{
-      enabled:false
-    },
-    legend: {
-      itemStyle: {
-        color: '#000000',
-        fontWeight: 'bold',
-        fontSize: '20px'
-      }
-    },
-    yAxis: {
-      tickInterval: 10,
-      min:0,
-      allowDecimals: false,
-      title: {
-        text: 'Amount of Overtime (hours)'
-      }
-    },
-    xAxis: {
-      labels: {
-        style: {
-          color: 'rgba(75, 30, 120)',
-          fontSize: '12px',
-          fontWeight: 'bold'
-        }
-      },
-      categories: xCategories2
-    },
-    tooltip: {
-      formatter: function () {
-        return '<b>' + this.series.name + '</b><br/>' +
-        this.point.y + ' ' + this.series.name.toLowerCase();
-      }
-    },
-    plotOptions: {
-      column: {
-        pointPadding: 0.93,
-        cursor: 'pointer',
-        point: {
-          events: {
-            click: function () {
-              modalTampil(this.category, result.report_control[0].tanggal);
-            }
+     },
+     tooltip: {
+          headerFormat: '<b>{point.x}</b><br/>',
+          pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+     },
+     plotOptions: {
+          column: {
+               stacking: 'normal',
+               dataLabels: {
+                    enabled: true,
+                    style: {
+                         textOutline: 'black',
+                         fontWeight: 'bold',
+                         fontSize: '16px'
+                    }
+               }
           }
-        },
-        minPointLength: 3,
-        dataLabels: {
-          allowOverlap: true,
-          enabled: true,
-          y: -25,
+     },
+     series: seriesData
+});
+
+var xCat = [];
+var s3 = [];
+var s14 = [];
+var s3_14 = [];
+var s56 = [];
+
+var tgl = result.overtimes2[0].orderer;
+
+$.each(result.overtimes2, function(key, value) {
+     var cat = value.Department.toUpperCase();
+     if(xCat.indexOf(cat) === -1){
+          xCat[xCat.length] = cat;
+     }
+
+     s3.push(parseInt(value.ot_3));
+     s14.push(parseInt(value.ot_14));
+     s3_14.push(parseInt(value.ot_3_14));
+     s56.push(parseInt(value.ot_56));
+
+});
+
+Highcharts.chart('chartOvertimeViolation', {
+     title: {
+          text: 'Overtime Violation',
           style: {
-            color: 'black',
-            fontSize: '13px',
-            textOutline: false,
-            fontWeight: 'bold',
+               fontSize: '30px',
+               fontWeight: 'bold'
+          }
+     },
+     yAxis:{
+          title:{
+               text: null
+          }
+     },
+     xAxis: {
+          categories: xCat
+     },
+     credits:{
+          enabled:false
+     },
+     plotOptions: {
+          column: {
+               dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
+                    style: {
+                         fontSize: '12px',
+                         textOutline: 0
+                    }
+               },
+               borderWidth: 0
           },
-          rotation: -90
-        },
-        pointWidth: 15,
-        pointPadding: 0,
-        borderWidth: 0,
-        groupPadding: 0.1,
-        animation: false,
-        opacity: 1
-      },
-      scatter : {
-        dataLabels: {
-          enabled: false
-        },
-        animation: false
-      }
-    },
-    series: [{
-      name: 'Forecast Accumulative',
-      data: budgetHarian,
-      color: "#02ff17"
-    }, {
-      name: 'Actual Accumulative',
-      data: seriesDataAktual,
-      color: "#7300ab"
-    }]
-  });
+          series: {
+               cursor: 'pointer',
+               minPointLength: 5,
+               point: {
+                    events: {
+                         click: function(e) {
+                              if(this.y > 0){
+                                   details(tgl, this.category, this.series.name);
+                              }
+                         }
+                    }
+               }
+          }
+     },
+     series: [{
+          type: 'column',
+          name: '3Hours/Day',
+          data: s3,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }, {
+          type: 'column',
+          name: '14Hours/Week',
+          data: s14,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }, {
+          type: 'column',
+          name: 'Both',
+          data: s3_14,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }, {
+          type: 'column',
+          name: '56 Hours/Month',
+          data: s56,
+          dataLabels: {
+               enabled: true,
+               style: {
+                    textOutline: false,
+                    fontWeight: 'bold',
+                    fontSize: '20px'
+               }
+          }
+     }]
+});
+}
+else{
+     alert(result.message);
+}
+$('#loading').hide();
 });
 }
 
-function show2(tgl, department, ctg) {
-  tabel = $('#example3').DataTable();
-  tabel.destroy();
+function details(date, cat, name){
+     $('#tableDetailBody').html("");
+     $('#titleDetail').text("");
+     $('#modalDetail').modal('show');
+     $('#progressbar2').show();
+     var data = {
+          period:date,
+          department:cat,
+          category:name
+     }
+     $.get('{{ url("fetch/overtime_report_detail") }}', data, function(result){
+          if(result.status){
+               tableData = "";
 
-  $('#myModal2').modal('show');
-
-  var data = {
-    tanggal : tgl,
-    department : department,
-    category: ctg
-  }
-
-  $("#details").empty();
-
-  $("#details").append('<tr><td colspan="7">Loading . . .</td></tr>');
-  $.get('{{ url("fetch/overtime_report_detail") }}', data, function(result){
-    $("#details").empty();
-    $("#head").html('Overtime of More than '+result.head);
-    $.each(result.datas, function(key, value) {
-
-     if(result.head == '3 hour(s) / day')
-     {
-      button = "<td><button id='expand"+value.nik+"' class='btn btn-primary btn-xs' onclick='expand(this)'>expand</button>"+
-      "<button id='collapse"+value.nik+"' class='btn btn-primary btn-xs' onclick='collapse(this,\""+value.nik+"\")' style='display:none'>collapse</button></td>";
-    }
-    else {
-      button = "<td></td>";
-    }
-    
-    $("#details").append(
-      "<tr id='"+value.nik+"'><td>"+value.nik+"</td><td>"+value.name+"</td><td>"+value.department+"</td><td>"+value.section+"</td><td>"+value.group+"</td><td>"+value.avg+"</td>"+
-      button
-      +"</tr>"
-      );
-  });
-
-    detail = result.detail;
-    console.log(detail);
-
-  })
+               $.each(result.violations, function(key, value){
+                    tableData += '<tr>';
+                    tableData += '<td>'+value.period+'</td>';
+                    tableData += '<td>'+value.Emp_no+'</td>';
+                    tableData += '<td>'+value.Full_name+'</td>';
+                    tableData += '<td>'+value.Section+'</td>';
+                    tableData += '<td>'+value.ot+'</td>';
+                    tableData += '</tr>';
+               });
+               $('#titleDetail').text(cat+" More than "+name);
+               $('#tableDetailBody').append(tableData);
+          }
+          else{
+               alert(result.message);
+          }
+          $('#progressbar2').hide();
+     });
 }
-
-function expand(element) {
-  var tr_id =  $(element).closest('tr').attr('id');
-  console.log(tr_id);
-  var isi = '';
-  for (var i = 0; i < detail.length; i++) {
-    if(detail[i].nik == tr_id) {
-      var tmp = '<tr><td width="15%"><i class="fa fa-minus"></i>&nbsp; '+detail[i].tanggal+'</td><td width="30%">'+detail[i].keperluan+'</td><td width="10%">'+detail[i].jam+' Jam</td></tr>';
-
-      isi = isi+tmp;
-    }
-  }
-  
-  $(element).hide();
-  $('#'+tr_id).after('<tr id="col'+tr_id+'"><td colspan="7"><table style="margin: 5px 0 5px 0" width="80%" align="center">'+isi+
-    '</table></td></tr>');
-  $('#collapse'+tr_id).show();
-}
-
-function collapse(element, nik) {
-  $(element).hide();
-  var tr_id =  $(element).closest('tr').attr('id');
-  $("#col"+tr_id).remove();
-  $('#expand'+nik).show();
-}
-
-$('#date2').datepicker({
-  autoclose: true,
-  format: "mm-yyyy",
-  viewMode: "months", 
-  minViewMode: "months"
-});
-
-$('#tgl').datepicker({
-  <?php $tgl_max = date('d-m-Y') ?>
-  autoclose: true,
-  format: "dd-mm-yyyy",
-  endDate: '<?php echo $tgl_max ?>',
-});
-
 </script>
-
-@stop
+@endsection
