@@ -1674,7 +1674,7 @@ public function overtimeReportDetail(Request $request)
 		$query = "";
 
 		if($category == '3Hours/Day'){
-			$query = 'SELECT '.$request->get('period').' as period, s.avg as ot, employees.employee_id as Emp_no, employees.name as Full_name, department, section as Section, `group` from
+			$query = 'SELECT "'.$request->get('period').'" as period, s.avg as ot, employees.employee_id as Emp_no, employees.name as Full_name, department, section as Section, `group` from
 			(select d.nik, round(avg(jam),2) as avg from
 			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
 			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
@@ -1691,7 +1691,7 @@ public function overtimeReportDetail(Request $request)
 			where department = "'.$department.'"';
 		}
 		if($category == '14Hours/Week'){
-			$query = 'SELECT '.$request->get('period').' as period, s.nik as Emp_no, avg(jam) as avg as ot, name as Full_name, section as Section, department, `group` from
+			$query = 'SELECT "'.$request->get('period').'" as period, s.nik as Emp_no, avg(jam) as avg as ot, name as Full_name, section as Section, department, `group` from
 			(select nik, sum(jam) jam, week_name from
 			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
 			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
@@ -1708,7 +1708,7 @@ public function overtimeReportDetail(Request $request)
 			group by s.nik, name, section, department,`group`';			
 		}
 		if($category == 'Both'){
-			$query = 'select '.$request->get('period').' as period, c.nik as Emp_no, name as Full_name, department, section as Section, `group`, c.avg as ot from ( select z.nik, x.avg from 
+			$query = 'select "'.$request->get('period').'" as period, c.nik as Emp_no, name as Full_name, department, section as Section, `group`, c.avg as ot from ( select z.nik, x.avg from 
 			( select d.nik, round(avg(jam),2) as avg from
 			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
 			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
@@ -1738,7 +1738,7 @@ public function overtimeReportDetail(Request $request)
 			where department = "'.$department.'"';
 		}
 		if($category == '56Hours/Month'){
-			$query = 'select '.$request->get('period').' as period, semua.nik as Emp_no, employees.name as Full_name, department, section as Section, `group`, avg as ot from
+			$query = 'select "'.$request->get('period').'" as period, semua.nik as Emp_no, employees.name as Full_name, department, section as Section, `group`, avg as ot from
 			(select c.nik, c.jam as avg from
 			(select d.nik, sum(jam) as jam from
 			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari from ftm.over_time
