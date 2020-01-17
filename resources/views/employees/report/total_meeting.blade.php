@@ -799,7 +799,7 @@ Highcharts.chart('chartOvertimeViolation', {
           }
      }, {
           type: 'column',
-          name: '56 Hours/Month',
+          name: '56Hours/Month',
           data: s56,
           dataLabels: {
                enabled: true,

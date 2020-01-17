@@ -1691,7 +1691,7 @@ public function overtimeReportDetail(Request $request)
 			where department = "'.$department.'"';
 		}
 		if($category == '14Hours/Week'){
-			$query = 'SELECT "'.$request->get('period').'" as period, s.nik as Emp_no, avg(jam) as avg as ot, name as Full_name, section as Section, department, `group` from
+			$query = 'SELECT "'.$request->get('period').'" as period, s.nik as Emp_no, avg(jam) as ot, name as Full_name, section as Section, department, `group` from
 			(select nik, sum(jam) jam, week_name from
 			(select tanggal, nik, sum(IF(status = 1, final, jam)) as jam, ftm.over_time.hari, week(ftm.over_time.tanggal) as week_name from ftm.over_time
 			left join ftm.over_time_member on ftm.over_time_member.id_ot = ftm.over_time.id
