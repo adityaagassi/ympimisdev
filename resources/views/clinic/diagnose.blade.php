@@ -399,7 +399,7 @@
 				$('#date').val(result.visitor[0].in_time);
 				$('#nik').val(result.visitor[0].employee_id);
 				$('#hire_date').val(result.visitor[0].hire_date);
-				$('#name').val(result.visitor[0].employee_name);
+				$('#name').val(result.visitor[0].name);
 				$('#section').val(result.visitor[0].section);
 			}
 		});
@@ -420,10 +420,10 @@
 					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ ++count +'</td>';
 					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].in_time +'</td>';
 					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].employee_id +'</td>';
-					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ result.visitor[i].employee_name +'</td>';
-					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].section +'</td>';
+					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ (result.visitor[i].name || 'Not Found') +'</td>';
+					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ (result.visitor[i].section || 'Not Found') +'</td>';
 					tableData += '<td style="text-align: center;">';
-					tableData += '<button style="width: 50%; height: 100%;" onClick="showDelete(this)" id="'+result.visitor[i].idx+'+'+ result.visitor[i].employee_name +'" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-fw fa-trash"></i> Delete</span></button>';
+					tableData += '<button style="width: 50%; height: 100%;" onClick="showDelete(this)" id="'+result.visitor[i].idx+'+'+ result.visitor[i].name +'" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-fw fa-trash"></i> Delete</span></button>';
 					tableData += '</td>';
 					tableData += '</tr>';
 				}

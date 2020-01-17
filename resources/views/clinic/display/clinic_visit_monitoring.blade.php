@@ -44,6 +44,38 @@
 	#tidak-ada{
 		background-color: rgba(255,0,0,.85);
 	}
+
+	.gambar {
+		width: 100px;
+		height: 175px;
+		background-color: rgba(118,255,3,.6);
+		border-radius: 15px;
+		margin-left: 30px;
+		margin-top: 15px;
+		display: inline-block;
+		border: 2px solid white;
+	}
+
+	.gambar img {
+		max-width:87%; 
+		height:auto;
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		vertical-align:middle;
+	}
+
+	.content-wrapper {
+		padding: 0px !important;
+	}
+
+	.text_stat {
+		color: white;
+		text-align: center;
+		font-weight: bold;
+		font-size: 15px;
+		vertical-align: top;
+	}
 </style>
 @stop
 @section('header')
@@ -58,20 +90,51 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div class="row">
-		<div class="col-xs-4">
-			<table class="table" id="tableMedic" style="font-size: 2vw;">
+		<div class="col-xs-4" style="padding-top: 2.5%;">
+			<table class="table" id="tableMedic" style="font-size: 2vw; padding: 0px;">
 				<tbody id="tableBodyMedic">
 				</tbody>
 			</table>
 		</div>
-		<div class="col-xs-4 pull-right">
-			<table class="table" id="tableDoctor" style="font-size: 2vw;">
-				<tbody id="tableBodyDoctor">
-				</tbody>
-			</table>
+		<div class="col-xs-7 pull-right" style="display: none;">
+			<div class="col-xs-2" style="padding: 0px;">
+				<div class="gambar" id="gambar-1">
+					<img src="{{ url("images/Gents.png") }}">
+					<p class='text_stat' id='text-1'>VACANT</p>
+				</div>
+			</div>
+			<div class="col-xs-2" style="padding: 0px;">
+				<div class="gambar" id="gambar-1">
+					<img src="{{ url("images/Gents.png") }}">
+					<p class='text_stat' id='text-1'>VACANT</p>
+				</div>
+			</div>
+			<div class="col-xs-2" style="padding: 0px;">
+				<div class="gambar" id="gambar-1">
+					<img src="{{ url("images/Gents.png") }}">
+					<p class='text_stat' id='text-1'>VACANT</p>
+				</div>
+			</div>
+			<div class="col-xs-2" style="padding: 0px;">
+				<div class="gambar" id="gambar-1">
+					<img src="{{ url("images/Gents.png") }}">
+					<p class='text_stat' id='text-1'>VACANT</p>
+				</div>
+			</div>
+			<div class="col-xs-2" style="padding: 0px;">
+				<div class="gambar" id="gambar-1">
+					<img src="{{ url("images/Ladies.png") }}">
+					<p class='text_stat' id='text-1'>VACANT</p>
+				</div>
+			</div>
+			<div class="col-xs-2" style="padding: 0px;">
+				<div class="gambar" id="gambar-1">
+					<img src="{{ url("images/Ladies.png") }}">
+					<p class='text_stat' id='text-1'>VACANT</p>
+				</div>
+			</div>
 		</div>
-		<div class="col-xs-12">
-			<h2 style="text-align: center; font-weight: bold;">CLINIC VISITOR LIST</h2>
+		<div class="col-xs-12" style="padding-top: 2%;">
 			<table class="table table-bordered" id="tableList">
 				<thead>
 					<tr>
@@ -150,24 +213,20 @@
 	function fillVisitor(){
 
 		$('#tableBodyMedic').html("");
-		$('#tableBodyDoctor').html("");
 
 		var paramedic = "";
 		paramedic += '<tr>';
 		paramedic += '<td style="border-width:0px;">PARAMEDIC</td>';
-		paramedic += '<td style="border-width:0px;"> : </td>';
+		paramedic += '<td style="border-width:0px;">:</td>';
 		paramedic += '<td style="border-width:0px;"><mark id="ada">Elis Kurniawati</mark></td>';
 		paramedic += '</tr>';
-
-		var doctor = "";
-		doctor += '<tr>';
-		doctor += '<td style="border-width:0px;">DOCTOR</td>';
-		doctor += '<td style="border-width:0px;"> : </td>';
-		doctor += '<td style="border-width:0px;"><mark id="tidak-ada">Tidak Ada</mark></td>';
-		doctor += '</tr>';
+		paramedic += '<tr>';
+		paramedic += '<td style="border-width:0px;">DOCTOR</td>';
+		paramedic += '<td style="border-width:0px;">:</td>';
+		paramedic += '<td style="border-width:0px;"><mark id="tidak-ada">Tidak Ada</mark></td>';
+		paramedic += '</tr>';
 
 		$('#tableBodyMedic').append(paramedic);
-		$('#tableBodyDoctor').append(doctor);
 
 		$.get('{{ url("fetch/display_patient") }}', function(result, status, xhr){
 			if(result.status){
@@ -182,8 +241,8 @@
 					tableData += '<tr>';
 					tableData += '<td>'+ ++count +'</td>';
 					tableData += '<td>'+ result.visitor[i].employee_id +'</td>';
-					tableData += '<td>'+ result.visitor[i].employee_name +'</td>';
-					tableData += '<td>'+ result.visitor[i].section +'</td>';
+					tableData += '<td>'+ (result.visitor[i].name || 'Not Found') +'</td>';
+					tableData += '<td>'+ (result.visitor[i].section || 'Not Found') +'</td>';
 					tableData += '<td>'+ result.visitor[i].in_time +'</td>';
 					in_time.push(new Date(result.visitor[i].in_time));
 					tableData += '<td><p class="patient-duration">';
@@ -217,7 +276,7 @@
 					'paging': true,
 					'lengthChange': true,
 					'pageLength': 10,
-					'searching': true,
+					'searching': false,
 					'ordering': true,
 					'order': [],
 					'info': true,

@@ -174,7 +174,7 @@ class ClinicController extends Controller{
 			$id = 'and p.idx = '. $request->get('id');
 		}
 
-		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.employee_name, e.hire_date, e.section  from patient_list p
+		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.name, e.hire_date, e.section  from patient_list p
 			left join ympimis.employee_syncs e on e.employee_id = p.employee_id
 			where p.`status` is null
 			and p.note is null ".$id."
@@ -188,7 +188,7 @@ class ClinicController extends Controller{
 	}
 
 	public function fetchPatient(){
-		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.employee_name, e.hire_date, e.section, d.purpose from patient_list p
+		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.name, e.hire_date, e.section, d.purpose from patient_list p
 			left join ympimis.employee_syncs e on e.employee_id = p.employee_id
 			left join ympimis.clinic_patient_details d on d.id = p.`status`
 			where p.note is null
@@ -226,11 +226,12 @@ class ClinicController extends Controller{
 
 		$clinic_visit = db::connection("clinic")->select("select DATE_FORMAT(date.week_date,'%d %b %Y') as week_date, COALESCE(log.sum,0) as visit from
 			(select week_date, DATE_FORMAT(week_date,'%a') as `day` from ympimis.weekly_calendars
-			".$date." and DATE_FORMAT(week_date,'%a') != 'Sun' and DATE_FORMAT(week_date,'%a') != 'Sat') as date
+			".$date." and remark <> 'H') as date
 			left join 
 			(select tanggal, count(employee_id) as sum from patient_logs
 			".$date_log." group by tanggal) as log
-			on date.week_date = log.tanggal");
+			on date.week_date = log.tanggal
+			order by date.week_date asc");
 
 		$response = array(
 			'status' => true,
@@ -256,9 +257,9 @@ class ClinicController extends Controller{
 			$date_log = "WHERE tanggal BETWEEN '".date('Y-m-d',strtotime('-1 month'))."' AND '".date('Y-m-d')."'";
 		}
 
-		$clinic_visit = db::connection("clinic")->select("select e.cost_center, count(p.employee_id) as qty from patient_logs p
+		$clinic_visit = db::connection("clinic")->select("select e.section, count(p.employee_id) as qty from patient_logs p
 			left join ympimis.employee_syncs e on e.employee_id = p.employee_id ".$date_log."
-			group by e.cost_center
+			group by e.section
 			order by qty desc");
 		$response = array(
 			'status' => true,

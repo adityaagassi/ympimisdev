@@ -180,10 +180,14 @@
 
 		$.get('{{ url("fetch/clinic_visit") }}', data, function(result, status, xhr) {
 			if(result.status){
-				var cost_center = [];
+				var section = [];
 				var visit = [];
 				for (i = 0; i < result.clinic_visit.length; i++) {
-					cost_center.push(result.clinic_visit[i].cost_center);
+					if(result.clinic_visit[i].section){
+						section.push(result.clinic_visit[i].section);
+					}else{
+						section.push('Not Found');
+					}
 					visit.push(parseInt(result.clinic_visit[i].qty));
 				}
 
@@ -195,7 +199,7 @@
 						text: 'Clinic Visit'
 					},						
 					xAxis: {
-						categories: cost_center,
+						categories: section,
 					},
 					yAxis: {
 						title: {
