@@ -1526,6 +1526,7 @@ public function overtimeReportDetail(Request $request)
 				WHERE
 				A.daytype = 'WD' 
 				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
+				AND B.Department = '".$department."'
 				AND IIF (
 				A.total_ot IS NOT NULL,
 				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
