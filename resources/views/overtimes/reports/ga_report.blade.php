@@ -52,6 +52,7 @@
           overflow:hidden;
           text-overflow: ellipsis;
      }
+     #loading { display: none; }
 </style>
 @stop
 @section('header')
@@ -63,6 +64,11 @@
 @endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+     <p style="position: absolute; color: White; top: 45%; left: 35%;">
+          <span style="font-size: 40px">Loading, please wait <i class="fa fa-spin fa-spinner"></i></span>
+     </p>
+</div>
 <section class="content">
      <div class="row">
           <div class="col-xs-12">
@@ -86,7 +92,7 @@
                                                             <tr><th>Shift 1</th></tr>
                                                        </thead>
                                                        <tbody>
-                                                            <tr><td id='makan1' onclick="makan(1,'Shift 1')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                            <tr><td id='makan1' style="font-size: 3vw; font-weight: bold;">0</td></tr>
                                                        </tbody>
                                                   </table>
                                              </div>
@@ -96,7 +102,7 @@
                                                             <tr><th>Shift 2</th></tr>
                                                        </thead>
                                                        <tbody>
-                                                            <tr><td id='makan2' onclick="makan(2,'Shift 2')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                            <tr><td id='makan2' style="font-size: 3vw; font-weight: bold;">0</td></tr>
                                                        </tbody>
                                                   </table>
                                              </div>
@@ -106,7 +112,7 @@
                                                             <tr><th>Shift 3</th></tr>
                                                        </thead>
                                                        <tbody>
-                                                            <tr><td id='makan3' onclick="makan(3,'Shift 3')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                            <tr><td id='makan3' style="font-size: 3vw; font-weight: bold;">0</td></tr>
                                                        </tbody>
                                                   </table>
                                              </div>
@@ -121,7 +127,7 @@
                                                             <tr><th>Shift 1</th></tr>
                                                        </thead>
                                                        <tbody>
-                                                            <tr><td id='extra1' onclick="extmakan(1, 'Shift 1')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                            <tr><td id='extra1' style="font-size: 3vw; font-weight: bold;">0</td></tr>
                                                        </tbody>
                                                   </table>
                                              </div>
@@ -131,7 +137,7 @@
                                                             <tr><th>Shift 2</th></tr>
                                                        </thead>
                                                        <tbody>
-                                                            <tr><td id='extra2' onclick="extmakan(2, 'Shift 2')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                            <tr><td id='extra2' style="font-size: 3vw; font-weight: bold;">0</td></tr>
                                                        </tbody>
                                                   </table>
                                              </div>
@@ -141,7 +147,7 @@
                                                             <tr><th>Shift 3</th></tr>
                                                        </thead>
                                                        <tbody>
-                                                            <tr><td id='extra3' onclick="extmakan(3, 'Shift 3')" style="font-size: 3vw; font-weight: bold;">0</td></tr>
+                                                            <tr><td id='extra3' style="font-size: 3vw; font-weight: bold;">0</td></tr>
                                                        </tbody>
                                                   </table>
                                              </div>
@@ -223,6 +229,7 @@
      var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
      function changeTanggal() {
+          $('#loading').show();
           var tanggal = $('#datepicker').val();
           var data = {
                tanggal:tanggal
@@ -259,7 +266,7 @@
 
                $.each(result.details, function(key, value) {
                     tableData2 += '<tr>';
-                    tableData2 += '<td style="font-size:12px;">'+value.shiftdaily_code+'</td>';
+                    tableData2 += '<td style="font-size:12px;">'+value.SHIFT_OVTPLAN+'</td>';
                     tableData2 += '<td style="font-size:12px;">'+value.ot_from+'-'+value.ot_to+'</td>';
                     tableData2 += '<td style="font-size:12px;">'+value.emp_no+'</td>';
                     tableData2 += '<td style="font-size:12px;">'+value.Full_name+'</td>';
@@ -325,12 +332,14 @@
                $('#extra2').text(extra2);
                $('#extra3').text(extra3);
 
+               $('#loading').hide();
           });
 }
 
 $('#datepicker').datepicker({
      autoclose: true,
      format: "dd-mm-yyyy",
+     todayHighlight: true
 });
 
 function openSuccessGritter(title, message){
