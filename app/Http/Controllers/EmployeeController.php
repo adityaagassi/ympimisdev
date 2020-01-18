@@ -470,7 +470,7 @@ class EmployeeController extends Controller
                if($last_mirai >= '2020-01-01'){
                     $last_mirai = '2019-12-31';
                }
-               $mirai_overtimes1 = db::select("select date_format(mon,'%M %Y') as period, department as Department, round(ot_hour / kar,2) as ot_person from 
+               $mirai_overtimes1 = db::select("select mon as period, department as Department, round(ot_hour / kar,2) as ot_person from 
                     (
                     select em.mon ,em.department, IFNULL(sum(ovr.final),0) ot_hour, sum(jml) as kar from
                     (
@@ -515,7 +515,7 @@ class EmployeeController extends Controller
                foreach ($sunfish_overtimes1 as $key) {
                     array_push($overtimes1, 
                          [
-                              "period" => $key->period,
+                              "period" => $key->orderer,
                               "Department" => $key->Department,
                               "ot_person" => $key->ot_person
                          ]);
