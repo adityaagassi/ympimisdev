@@ -409,54 +409,118 @@ class EmployeeController extends Controller
 
           $first = date('Y-m-d', strtotime('-12 months', strtotime($now)));
           $last = date('Y-m-t', strtotime($now));
+          $first_sunfish = date('Y-m-d', strtotime('-12 months', strtotime($now)));
+          $last_mirai = date('Y-m-t', strtotime($now));
 
           $employees = db::select("select date_format(period, '%M %Y') as period, date_format(period, '%Y-%m') as period2, count(full_name) as total, sum(if(employ_code = 'OUTSOURCE', 1, 0)) as outsource, sum(if(employ_code = 'CONTRACT1', 1, 0)) as contract1, sum(if(employ_code = 'CONTRACT2', 1, 0)) as contract2, sum(if(employ_code = 'PERMANENT', 1, 0)) as permanent, sum(if(employ_code = 'PROBATION', 1, 0)) as probation, sum(if(gender = 'L', 1, 0)) as male, sum(if(gender = 'P', 1, 0)) as female, sum(if(`Union` = 'NONE' or `Union` is null, 1, 0)) as no_union, sum(if(`Union` = 'SPSI', 1, 0)) as spsi, sum(if(`Union` = 'sbm', 1, 0)) as sbm, sum(if(`Union` = 'spmi', 1, 0)) as spmi from employee_histories where end_date is null and date_format(period, '%Y-%m-%d') >= '".$first."' and date_format(period, '%Y-%m') <= '".$last."' group by date_format(period, '%Y-%m'), date_format(period, '%M %Y') order by period2 asc");
 
-          $overtimes1 = db::connection('sunfish')->select("
-               SELECT DISTINCT
-               X.orderer,
-               X.period,
-               VIEW_YMPI_Emp_OrgUnit.Department,
-               COALESCE ( Q.ot_person, 0 ) AS ot_person 
-               FROM
-               VIEW_YMPI_Emp_OrgUnit
-               CROSS JOIN ( SELECT DISTINCT format ( ovtplanfrom, 'yyyy-MM' ) AS orderer, format ( ovtplanfrom, 'MMMM yyyy' ) AS period FROM VIEW_YMPI_Emp_OvertimePlan where ovtplanfrom >= '".$first." 00:00:00' AND ovtplanfrom <= '".$last." 00:00:00' ) X
-               LEFT JOIN (
-               SELECT
-               orderer,
-               period,
-               B.Department,
-               SUM ( ot ) / COUNT ( final.Emp_no ) AS ot_person 
-               FROM
-               (
-               SELECT
-               A.Emp_no,
-               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
-               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
-               SUM (
-               CASE
+          $mirai_overtimes1 = array();
+          $sunfish_overtimes1 = array();
+          if($last >= '2020-01-01'){
+               if($first <= '2020-01-01'){
+                    $first_sunfish = '2020-01-01';
+               }
+               $sunfish_overtimes1 = db::connection('sunfish')->select("
+                    SELECT DISTINCT
+                    X.orderer,
+                    X.period,
+                    VIEW_YMPI_Emp_OrgUnit.Department,
+                    COALESCE ( Q.ot_person, 0 ) AS ot_person 
+                    FROM
+                    VIEW_YMPI_Emp_OrgUnit
+                    CROSS JOIN ( SELECT DISTINCT format ( ovtplanfrom, 'yyyy-MM' ) AS orderer, format ( ovtplanfrom, 'MMMM yyyy' ) AS period FROM VIEW_YMPI_Emp_OvertimePlan where ovtplanfrom >= '".$first_sunfish." 00:00:00' AND ovtplanfrom <= '".$last." 00:00:00' ) X
+                    LEFT JOIN (
+                    SELECT
+                    orderer,
+                    period,
+                    B.Department,
+                    SUM ( ot ) / COUNT ( final.Emp_no ) AS ot_person 
+                    FROM
+                    (
+                    SELECT
+                    A.Emp_no,
+                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
+                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
+                    SUM (
+                    CASE
 
-               WHEN A.total_ot IS NOT NULL THEN
-               floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
-               END 
-               ) AS ot 
-               FROM
-               VIEW_YMPI_Emp_OvertimePlan A 
-               where A.ovtplanfrom >= '".$first." 00:00:00'
-               AND A.ovtplanfrom <= '".$last." 23:59:59'
-               GROUP BY
-               A.Emp_no,
-               FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
-               FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) 
-               ) AS final
-               LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = final.Emp_no 
-               GROUP BY
-               orderer,
-               period,
-               B.Department 
-               ) AS Q ON Q.orderer = X.orderer 
-               AND Q.Department = VIEW_YMPI_Emp_OrgUnit.Department where VIEW_YMPI_Emp_OrgUnit.Department is not null
-               ");
+                    WHEN A.total_ot IS NOT NULL THEN
+                    floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+                    END 
+                    ) AS ot 
+                    FROM
+                    VIEW_YMPI_Emp_OvertimePlan A 
+                    where A.ovtplanfrom >= '".$first_sunfish." 00:00:00'
+                    AND A.ovtplanfrom <= '".$last." 23:59:59'
+                    GROUP BY
+                    A.Emp_no,
+                    FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
+                    FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) 
+                    ) AS final
+                    LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = final.Emp_no 
+                    GROUP BY
+                    orderer,
+                    period,
+                    B.Department 
+                    ) AS Q ON Q.orderer = X.orderer 
+                    AND Q.Department = VIEW_YMPI_Emp_OrgUnit.Department where VIEW_YMPI_Emp_OrgUnit.Department is not null
+                    ");
+          }
+          if($first <= '2020-01-01'){
+               if($last_mirai >= '2020-01-01'){
+                    $last_mirai = '2019-12-31';
+               }
+               $mirai_overtimes1 = db::select("select date_format(mon,'%M %Y') as period, department as Department, round(ot_hour / kar,2) as ot_person from 
+                    (
+                    select em.mon ,em.department, IFNULL(sum(ovr.final),0) ot_hour, sum(jml) as kar from
+                    (
+                    select emp.*, bagian.department, 1 as jml from 
+                    (select employee_id, mon from 
+                    (
+                    select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+                    cross join (
+                    select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where week_date BETWEEN  '".$first."' and  '".$last_mirai."' group by date_format(week_date, '%Y-%m')) s
+                    ) m
+                    where hire_month <= mon and (mon < end_month OR end_month is null)
+                    ) emp
+                    left join (
+                    SELECT id, employee_id, department, date_format(valid_from, '%Y-%m') as mon_from, coalesce(date_format(valid_to, '%Y-%m'), date_format(DATE_ADD(now(), INTERVAL 1 MONTH),'%Y-%m')) as mon_to FROM mutation_logs
+                    WHERE id IN (SELECT MAX(id) FROM mutation_logs GROUP BY employee_id, DATE_FORMAT(valid_from,'%Y-%m'))
+                    ) bagian on emp.employee_id = bagian.employee_id and emp.mon >= bagian.mon_from and emp.mon < mon_to
+                    where department is not null
+                    ) as em
+                    left join (
+                    select nik, date_format(tanggal,'%Y-%m') as mon, sum(if(status = 0,om.jam,om.final)) as final from ftm.over_time as o left join ftm.over_time_member as om on o.id = om.id_ot
+                    where deleted_at is null and jam_aktual = 0 and DATE_FORMAT(tanggal,'%Y-%m') in (
+                    select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where week_date BETWEEN  '".$first."' and '".$last_mirai."' group by date_format(week_date, '%Y-%m')
+                    )
+                    group by date_format(tanggal,'%Y-%m'), nik
+                    ) ovr on em.employee_id = ovr.nik and em.mon = ovr.mon
+                    group by department, em.mon
+               ) as semua");
+          }
+
+          $overtimes1 = array();
+          if($mirai_overtimes1 != null){
+               foreach ($mirai_overtimes1 as $key) {
+                    array_push($overtimes1, 
+                         [
+                              "period" => $key->period,
+                              "Department" => $key->Department,
+                              "ot_person" => $key->ot_person
+                         ]);
+               }
+          }
+          if($sunfish_overtimes1 != null){
+               foreach ($sunfish_overtimes1 as $key) {
+                    array_push($overtimes1, 
+                         [
+                              "period" => $key->period,
+                              "Department" => $key->Department,
+                              "ot_person" => $key->ot_person
+                         ]);
+               }
+          }
 
           if($now >= '2020-01-01'){
                $overtimes2 = db::connection('sunfish')->select("
