@@ -57,6 +57,7 @@ class SyncSunfish extends Command
             $row['JP'] = $data['JP'];
             $row['BPJS'] = $data['BPJS'];
             $row['hire_date'] = $data['start_date'];
+            $row['end_date'] = $data['end_date'];
             $row['position'] = $data['pos_name_en'];
             $row['grade_code'] = $data['grade_code'];
             $row['grade_name'] = $data['gradecategory_name'];
@@ -69,6 +70,7 @@ class SyncSunfish extends Command
             $row['employment_status'] = $data['employ_code'];
             $row['cost_center'] = $data['cost_center_code'];
             $row['assignment'] = $data['Penugasan'];
+            $row['union'] = $data['Union'];
             $row['created_at'] = date('Y-m-d H:i:s');
             $row['updated_at'] = date('Y-m-d H:i:s');
 
