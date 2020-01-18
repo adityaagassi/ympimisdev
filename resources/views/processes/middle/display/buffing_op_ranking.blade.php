@@ -933,7 +933,6 @@ $('.datepicker').datepicker({
 	minViewMode: "months",
 	autoclose: true,
 	endDate: '<?php echo $tgl_max ?>'
-
 });
 
 function bulanText(param){
