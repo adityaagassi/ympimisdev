@@ -236,7 +236,7 @@ table.table-bordered > tfoot > tr > th{
             },
             "columns": [
               { "data": "nomor" },
-              { "data": "tgl_kejadian" },
+              { "data": "tgl_kejadian"},
               { "data": "judul" },
               { "data": "lokasi" },
               { "data": "material_description" },

@@ -193,6 +193,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
@@ -206,6 +208,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
@@ -219,6 +223,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
@@ -232,6 +238,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke Departemen QA</span>
                         @endif
@@ -264,6 +272,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
@@ -277,6 +287,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
@@ -290,6 +302,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke Departemen QA</span>
                         @endif
@@ -309,6 +323,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
@@ -322,6 +338,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
@@ -335,6 +353,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
@@ -348,6 +368,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke Departemen QA</span>
                         @endif
@@ -367,6 +389,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
@@ -380,6 +404,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
@@ -393,6 +419,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke GM</span>
                         @endif
@@ -406,6 +434,8 @@
                           @else
                             <span class="label label-success">Sudah Diverifikasi</span>
                           @endif
+                        @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
                           <span class="label label-danger">Sudah Dikirim Ke Departemen QA</span>
                         @endif

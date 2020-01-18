@@ -44,11 +44,10 @@ class QcReportController extends Controller
             }
         }      
       $this->middleware('auth');
-      // $this->staff = 'O11081664';
-      $this->chief = 'g03110980';
-      $this->manager = 'a97100056';
-      $this->dgm = 'E01090823';
-      $this->gm = 'P12061848';
+      $this->chief = 'PI0311001';
+      $this->manager = 'PI9710001';
+      $this->dgm = 'PI0109004';
+      $this->gm = 'PI1206001';
     }
 
     public function index()

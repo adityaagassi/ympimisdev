@@ -45,11 +45,15 @@ class QcYmmjController extends Controller
 
         return DataTables::of($qc_ymmj)
 
+          ->editColumn('tgl_kejadian',function($qc_ymmj){
+            return date('d F Y', strtotime($qc_ymmj->tgl_kejadian));
+          })
+
           ->editColumn('detail',function($qc_ymmj){
             return $qc_ymmj->detail;
           })
 
-        ->rawColumns(['detail' => 'detail'])
+        ->rawColumns(['detail' => 'detail','tgl_kejadian' => 'tgl_kejadian'])
         ->make(true);
     }
 
@@ -101,6 +105,7 @@ class QcYmmjController extends Controller
             'qty_ng' => $request->get('defect_qty'),
             'presentase_ng' => $request->get('defect_presentase'),
             'detail' => $request->get('detail'),
+            'penanganan' => $request->get('penanganan'),
             'file' => $file->filename,
             'created_by' => $id_user
           ]);

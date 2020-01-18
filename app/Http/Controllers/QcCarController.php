@@ -927,7 +927,7 @@ class QcCarController extends Controller
           }
 
           Mail::to($mailtoo)->send(new SendEmail($querycar, 'rejectcar'));
-          return redirect('/index/qc_car/verifikasicar/'.$id)->with('error', 'CAR Rejected')->with('page', 'CAR');
+          return redirect('/index/qc_car/verifikasicar/'.$id)->with('success', 'CAR Rejected')->with('page', 'CAR');
       } 
 
       //Verifikator QA

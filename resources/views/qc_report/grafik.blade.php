@@ -592,7 +592,7 @@ table > thead > tr > th{
                 point: {
                   events: {
                     click: function () {
-                      ShowModal(this.category,this.series.name,result.tglfrom,result.tglto,result.kategori,result.departemen);
+                      // ShowModal(this.category,this.series.name,result.tglfrom,result.tglto,result.kategori,result.departemen);
                     }
                   }
                 },
@@ -712,13 +712,16 @@ table > thead > tr > th{
             var urldetailcpar = '{{ url("index/qc_report/update/") }}';
             var urlverifikasi = '{{ url("index/qc_report/verifikasicpar/") }}';
             var urlverifikasigm = '{{ url("index/qc_report/verifikasigm/") }}';
+            var urlprintcpar = '{{ url("index/qc_report/print_cpar/") }}';
+
             var urldetailcar = '{{ url("index/qc_car/detail/") }}';
             var urlverifikasicar = '{{ url("index/qc_car/verifikasicar/") }}';
+            var urlprintcar = '{{ url("index/qc_car/print_car_new/") }}';
             var urlverifikasiqa = '{{ url("index/qc_report/verifikasiqa/") }}';
 
             if (value.posisi_cpar != "staff" && value.posisi_cpar != "leader") {
               // statusawal = '<img src="{{ url("ok.png")}}" width="40" height="40"';
-              statusawal = '<span class="label label-success">'+namasl2+'</span>';
+              statusawal = '<a href="'+urlprintcpar+'/'+value.id+'"><span class="label label-success">'+namasl2+'</span></a>';
               color = 'style="background-color:green"';
             }
             else {
@@ -747,7 +750,7 @@ table > thead > tr > th{
                           }
                     }
                     else{
-                        statuscf = '<span class="label label-success">'+namacf2+'</span>';
+                        statuscf = '<a href="'+urlprintcpar+'/'+value.id+'"><span class="label label-success">'+namacf2+'</span></a>';
                         color = 'style="background-color:green"'; 
                         // statuscf = '<img src="{{ url("ok.png")}}" width="40" height="40">';
                     }
@@ -781,7 +784,7 @@ table > thead > tr > th{
                       }
                   }
                   else {
-                    statusm = '<span class="label label-success">'+namam2+'</span>';
+                    statusm = '<a href="'+urlprintcpar+'/'+value.id+'"><span class="label label-success">'+namam2+'</span></a>';
                     color = 'style="background-color:green"'; 
                     // statusm = '<img src="{{ url("ok.png")}}" width="40" height="40">';
                   } 
@@ -809,7 +812,7 @@ table > thead > tr > th{
                         statusdgm = '';
                       }
                   } else {
-                    statusdgm = '<span class="label label-success">'+namadgm2+'</span>'; 
+                    statusdgm = '<a href="'+urlprintcpar+'/'+value.id+'"><span class="label label-success">'+namadgm2+'</span></a>'; 
                     color = 'style="background-color:green"'; 
                       // statusdgm = '<img src="{{ url("ok.png")}}" width="40" height="40">';
                   }
@@ -838,7 +841,7 @@ table > thead > tr > th{
                         statusgm = '';
                       }
                   } else {
-                      statusgm = '<span class="label label-success">'+namagm2+'</span>'; 
+                      statusgm = '<a href="'+urlprintcpar+'/'+value.id+'"><span class="label label-success">'+namagm2+'</span></a>'; 
                       color = 'style="background-color:green"'; 
                       // statusgm = '<img src="{{ url("ok.png")}}" width="40" height="40">';                    
                   }
@@ -865,7 +868,7 @@ table > thead > tr > th{
                         statusbagian = '';
                       }
                   } else {
-                      statusbagian = '<span class="label label-success">'+namabagian2+'</span>';
+                      statusbagian = '<a href="'+urlprintcpar+'/'+value.id+'"><span class="label label-success">'+namabagian2+'</span></a>';
                       color = 'style="background-color:green"'; 
                       // statusbagian = '<img src="{{ url("ok.png")}}" width="40" height="40">';                    
                   }
@@ -886,7 +889,7 @@ table > thead > tr > th{
               //staff leader
               if (value.posisi_car != null) {
                 if (value.posisi_car != "staff" && value.posisi_car != "foreman" && value.posisi_car != "bagian") {
-                      statusawalcar = '<span class="label label-success">'+namapiccar2+'</span>'; 
+                      statusawalcar = '<a href="'+urlprintcar+'/'+value.id_car+'"><span class="label label-success">'+namapiccar2+'</span></a>'; 
                       color = 'style="background-color:green"'; 
                       // statusawalcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
                   }
@@ -928,7 +931,7 @@ table > thead > tr > th{
                         }
                   }
                   else{
-                      statuscfcar = '<span class="label label-success">'+namacfcar2+'</span>';
+                      statuscfcar = '<a href="'+urlprintcar+'/'+value.id_car+'"><span class="label label-success">'+namacfcar2+'</span></a>';
                       color = 'style="background-color:green"'; 
                       // statuscfcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
                   }
@@ -967,7 +970,7 @@ table > thead > tr > th{
                       }
                   }
                   else{
-                      statusmcar = '<span class="label label-success">'+namabagian2+'</span>';
+                      statusmcar = '<a href="'+urlprintcar+'/'+value.id_car+'"><span class="label label-success">'+namabagian2+'</span></a>';
                       color = 'style="background-color:green"'; 
                       // statusmcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
                   }
@@ -997,7 +1000,7 @@ table > thead > tr > th{
                       }
                   }
                   else{
-                      statusdgmcar = '<span class="label label-success">'+namadgm2+'</span>';
+                      statusdgmcar = '<a href="'+urlprintcar+'/'+value.id_car+'"><span class="label label-success">'+namadgm2+'</span></a>';
                       color = 'style="background-color:green"'; 
                       // statusdgmcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
                   }
@@ -1027,7 +1030,7 @@ table > thead > tr > th{
                       }
                   }
                   else{
-                      statusgmcar = '<span class="label label-success">'+namagm+'</span>';
+                      statusgmcar = '<a href="'+urlprintcar+'/'+value.id_car+'"><span class="label label-success">'+namagm+'</span></a>';
                       color = 'style="background-color:green"'; 
                       // statusgmcar = '<img src="{{ url("ok.png")}}" width="40" height="40">';
                   }

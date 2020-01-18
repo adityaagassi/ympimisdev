@@ -154,6 +154,14 @@
             </div>
           </div>
 
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">Penanganan Masalah</span></label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="penanganan" name="penanganan" placeholder="Penanganan Masalah" required>
+            </div>
+          </div>
+
         <!-- /.box-body -->
         <div class="col-sm-4 col-sm-offset-5">
           <div class="btn-group">

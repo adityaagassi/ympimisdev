@@ -320,7 +320,7 @@
           $("#customer").show();
           $("#supplier").hide();
 
-          $addeksternal = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><option value="KD Parts">KD Parts</option><option value="FG">FG</option><option value="NG Jelas">NG Jelas</option><option value="Claim Rate">Claim Rate</option></select></div></div>';
+          $addeksternal = '<div class="form-group row" align="left"><div class="col-sm-6"></div><label class="col-sm-1">Kategori Komplain<span class="text-red">*</span></label><div class="col-sm-5" align="left"><select class="form-control select2" name="kategori_komplain" style="width: 100%;" data-placeholder="Pilih Kategori Komplain"><option value="KD Parts">KD Parts</option><option value="FG">Finished Goods</option><option value="NG Jelas">NG Jelas</option><option value="Claim Rate">Claim Rate</option></select></div></div>';
 
           $('#kategori_komplain').append($addeksternal);
 
