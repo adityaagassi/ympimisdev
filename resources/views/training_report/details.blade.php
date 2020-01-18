@@ -2,8 +2,9 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('/bower_components/qrcode/css/bootstrap.min.css') }}">
-{{-- <script src="{{ asset('/bower_components/qrcode/js/jquery.min.js') }}"></script> --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
+<script src="{{ url("bower_components/jquery-ui/jquery-ui.min.js")}}"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 <style type="text/css">
 thead input {
@@ -360,11 +361,15 @@ table.table-bordered > tfoot > tr > th{
 				              <tr>
 				              	@if($jml_null > 0)
 								<td id="approval2">
+									<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ttd-modal" onclick="getValue('{{ $training_participant->id }}')">
+						               <!-- <i class="fa fa-edit"></i> -->
+						               Kehadiran
+						            </button>
 									<input type="hidden" value="{{csrf_token()}}" name="_token" />
-									@if($training_participant->participant_absence == Null)
+									<!-- @if($training_participant->participant_absence == Null)
 									    {{-- <input type="checkbox" id="checklist_participant" name="approve[]" value="{{ $training_participant->id }}"> --}}
 									    <input type="checkbox" name="ips[]" onchange="getValue(this.value)" value="{{ $training_participant->participant_id }}">
-									@endif
+									@endif -->
 								</td>
 								@endif
 				                <td>
@@ -548,6 +553,50 @@ table.table-bordered > tfoot > tr > th{
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="ttd-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>TTD Peserta</b></h4>
+      </div>
+      <div class="modal-body">
+        <!-- <form role="form" method="post" enctype="multipart/form-data" id="formimport" action="#"> -->
+          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+          <div class="box-body">
+            <div class="panel panel-default">
+	            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+	            <div class="panel-heading">Digital Signature : </div>
+	            <div class="panel-body center-text"  style="padding: 0">
+	              <div id="signArea">
+	                <h2 class="tag-ingo">Put signature here,</h2>
+	                <div class="sig sigWrapper" style="height:204px;">
+	                  <div class="typed"></div>
+	                  <canvas class="sign-pad" id="sign-pad" width="500" height="190"></canvas>
+	                </div>
+	              </div>
+	              
+	              <input type="hidden" name="id_peserta" id="id_peserta">
+	              <input type="hidden" name="id_training" id="id_training" value="{{$id}}">
+	              <button class="btn btn-success" onclick="saveSign()">HADIR</button>
+	              <a href="{{ url('index/training_report/details/'.$id.'/view') }}" class="btn btn-danger">Clear</a>
+	              <!-- <button onclick="clearSign()" class="btn btn-danger">Clear</button> -->
+	              <!-- <button class="clearButton" href="#clear">Clear</button> -->
+	            </div>
+	        </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+            <!-- <button type="submit" class="btn btn-primary">Import</button> -->
+          </div>
+        <!-- </form> -->
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 
@@ -555,14 +604,15 @@ table.table-bordered > tfoot > tr > th{
 <script>
 	function getValue(value){
     	// alert(value);
-    	var url = '{{ url("index/training_report/cek_employee") }}';
-    	var conf = confirm('Are you sure you want to attend?');
-    	if(conf){
-    		window.location.href = url+'/'+value+'/{{ $id }}';
-    		// console.log(url+'/'+value+'/{{ $id }}');
-    	}else{
+    	// var url = '{{ url("index/training_report/cek_employee") }}';
+    	// var conf = confirm('Are you sure you want to attend?');
+    	// if(conf){
+    	// 	window.location.href = url+'/'+value+'/{{ $id }}';
+    	// 	// console.log(url+'/'+value+'/{{ $id }}');
+    	// }else{
 
-    	}
+    	// }
+    	$("#id_peserta").val(value);
 	}
 </script>
 <script>
@@ -587,17 +637,87 @@ table.table-bordered > tfoot > tr > th{
 				}
 			}
 		});
+
+		$('#signArea').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:190});
+
+		
 	});
+
+	function saveSign() {
+		var img_data;
+		html2canvas([document.getElementById('sign-pad')], {
+	        onrendered: function (canvas) {
+	          var canvas_img_data = canvas.toDataURL('image/png');
+	          img_data = canvas_img_data.replace(/^data:image\/(png|jpg);base64,/, "");
+	          // var cpar_no = $("#cpar_no").val();
+	        //ajax call to save image inside folder
+		        
+		      }
+	      });
+
+			var id_peserta = $("#id_peserta").val();
+	        var url = '{{ url("index/training_report/cek_employee2") }}';
+
+			var data = {
+				img_data:img_data,
+				
+			}
+	        $.post(url+'/'+id_peserta+'/'+'{{ $id }}', data, function(result, status, xhr){
+				if(result.status){
+					// $('#example1').DataTable().ajax.reload();
+					// $('#example2').DataTable().ajax.reload();
+				} else {
+					audio_error.play();
+					openErrorGritter('Error','Attendance Failed');
+				}
+			});
+			$("#ttd-modal").modal('hide');
+			openSuccessGritter('Success','Participant has been attend');
+			window.location.reload();
+
+		// $("#ttd-modal").modal('hide');
+		// openSuccessGritter('Success','Participant has been attend');
+		// window.location.reload();
+	}
 
 	
 </script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
   <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
   <script src="{{ url("js/buttons.flash.min.js")}}"></script>
   <script src="{{ url("js/jszip.min.js")}}"></script>
   <script src="{{ url("js/vfs_fonts.js")}}"></script>
   <script src="{{ url("js/buttons.html5.min.js")}}"></script>
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
+
+<link rel="stylesheet" href="{{ url("css/jquery.signaturepad.css")}}">
+<script src="{{ url("js/numeric-1.2.6.min.js")}}"></script>
+<script src="{{ url("js/bezier.js")}}"></script>
+<script src="{{ url("js/jquery.signaturepad.js")}}"></script>
+
+<script src="{{ url("js/html2canvas.js")}}"></script>
   <script>
+  	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
   	$(function () {
       $('.select2').select2()
     });

@@ -684,6 +684,51 @@ class TrainingReportController extends Controller
             ->with('page', 'Training Report')->with('status', 'Participant has been attend.');
     }
 
+    function cek_employee2(Request $request,$id_peserta,$id)
+    {
+        try{
+                $id_user = Auth::id();
+
+                $result = array();
+                $imagedata = base64_decode($request->get('img_data'));
+                $filename = md5(date("dmYhisA"));
+                //Location to where you want to created sign image
+                $file_name = './images/sign_training/'.$filename.'.png';
+                file_put_contents($file_name,$imagedata);
+                $result['status'] = 1;
+                $result['file_name'] = $file_name;
+                echo json_encode($result);
+
+                // TrainingParticipant::create([
+                //     'training_id' => '2',
+                //     'participant_name' => $nik,
+                //     'created_by' => $id_user
+                // ]);
+
+                $training = TrainingParticipant::find($id_peserta);
+                // foreach($training as $training){
+                    $training->participant_absence = 'Hadir';
+                    $training->file = $file_name;
+                // }
+                $training->save();
+
+            // return redirect('index/interview/details/'.$interview_id)
+            //   ->with('page', 'Interview Details')->with('status', 'Participant has been updated.');
+               $response = array(
+                'status' => true,
+              );
+              // return redirect('index/interview/details/'.$interview_id)
+              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
     public function getparticipant(Request $request)
     {
          try{
