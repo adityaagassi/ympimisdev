@@ -2506,6 +2506,17 @@ if ($request->get('category') == 'manager') { // --------------- JIKA inputor Ma
 
                $kz_nilai->save();
 
+               $total_nilai = ($request->get('nilai1')*40)+($request->get('nilai2')*30)+($request->get('nilai1')*30);
+
+               if($total_nilai <= 350){
+                    $manager = KaizenScore::where('id_kaizen', '=', $request->get('id'))
+                    ->update([
+                         'manager_point_1' => $request->get('nilai1'),
+                         'manager_point_2' => $request->get('nilai2'),
+                         'manager_point_3' => $request->get('nilai3'),
+                    ]);
+               }
+
 // return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
                return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
 
@@ -2593,10 +2604,10 @@ return DataTables::of($kzn)
      return '<button onClick="cekDetail(\''.$kzn->id.'\')" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Details</button>';
 })
 ->addColumn('fr_point', function($kzn){
-     return ($kzn->foreman_point_1 * 40) + ($kzn->foreman_point_2 * 20) + ($kzn->foreman_point_3 * 20);
+     return ($kzn->foreman_point_1 * 40) + ($kzn->foreman_point_2 * 30) + ($kzn->foreman_point_3 * 30);
 })
 ->addColumn('mg_point', function($kzn){
-     return ($kzn->manager_point_1 * 40) + ($kzn->manager_point_2 * 20) + ($kzn->manager_point_3 * 20);
+     return ($kzn->manager_point_1 * 40) + ($kzn->manager_point_2 * 30) + ($kzn->manager_point_3 * 30);
 })
 ->rawColumns(['app_stat', 'fr_point', 'mg_point', 'action'])
 ->make(true);

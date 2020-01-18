@@ -60,7 +60,7 @@ class Kernel extends ConsoleKernel
             }
         }
 
-        $schedule->command('plan:leaves')->monthlyOn(1, '01:00');
+        // $schedule->command('plan:leaves')->monthlyOn(1, '01:00');
 
         $schedule->command('record:daily_stocks')->dailyAt('07:00');
 
@@ -74,11 +74,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('plan:injections')->weekdays()->dailyAt('08:40');
         $schedule->command('sync:sunfish')->weekdays()->dailyAt('03:01');
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
-        $schedule->command('employee:history')->monthlyOn(date('t'), '20:00');
+        $schedule->command('employee:history')->monthlyOn(date('t'), '20:01');
 
         // $schedule->command('email:user_document')->weekdays()->dailyAt('07:00');
-
-
     }
 
     /**

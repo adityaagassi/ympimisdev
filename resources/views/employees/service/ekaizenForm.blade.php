@@ -34,23 +34,23 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	<div class="row">
 		<div class="col-xs-4">
 			<label for="kz_tanggal">Tanggal</label>
-			<input type="text" id="kz_tanggal" class="form-control" value="{{ date('Y-m-d')}}" readonly>
-			<!-- <input type="text" id="kz_tanggal" class="form-control"> -->
+			<!-- <input type="text" id="kz_tanggal" class="form-control" value="{{ date('Y-m-d')}}" readonly> -->
+			<input type="text" id="kz_tanggal" class="form-control">
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nik">NIK</label>
-			<input type="text" id="kz_nik" class="form-control" value="{{ $emp_id}}" readonly>
-			<!-- <input type="text" id="kz_nik" class="form-control"> -->
+			<!-- <input type="text" id="kz_nik" class="form-control" value="{{ $emp_id}}" readonly> -->
+			<input type="text" id="kz_nik" class="form-control">
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_nama">Nama</label>
-			<input type="text" id="kz_nama" class="form-control" value="{{ Request::segment(4)}}" readonly>
-			<!-- <input type="text" id="kz_nama" class="form-control"> -->
+			<!-- <input type="text" id="kz_nama" class="form-control" value="{{ Request::segment(4)}}" readonly> -->
+			<input type="text" id="kz_nama" class="form-control">
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_bagian">Bagian</label>
-			<input type="text" id="kz_bagian" class="form-control" value="{{$section}} ~ {{$group}}" readonly>
-			<!-- <input type="text" id="kz_bagian" class="form-control"> -->
+			<!-- <input type="text" id="kz_bagian" class="form-control" value="{{$section}} ~ {{$group}}" readonly> -->
+			<input type="text" id="kz_bagian" class="form-control">
 		</div>
 		<div class="col-xs-4">
 			<label for="kz_leader">Nama Leader</label><br>
@@ -336,12 +336,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			return false;
 		}
 
-		if (($("#kz_mp_bulan").val() == "" || $("#kz_mp_bulan").val() == "0") &&
-			($("#kz_space_bulan").val() == "" || $("#kz_space_bulan").val() == "0") &&
-			($("#kz_material_bulan").val() == "" || $("#kz_material_bulan").val() == "0")) {
-			alert("Harap mengisi estimasi hasil (minimal 1 kolom)");
-		return false;
-	}
+	// 	if (($("#kz_mp_bulan").val() == "" || $("#kz_mp_bulan").val() == "0") &&
+	// 		($("#kz_space_bulan").val() == "" || $("#kz_space_bulan").val() == "0") &&
+	// 		($("#kz_material_bulan").val() == "" || $("#kz_material_bulan").val() == "0")) {
+	// 		alert("Harap mengisi estimasi hasil (minimal 1 kolom)");
+	// 	return false;
+	// }
 
 	cal = [];
 
