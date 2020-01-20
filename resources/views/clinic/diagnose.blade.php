@@ -454,8 +454,8 @@
 					'dom': 'Bfrtip',
 					'responsive':true,
 					'lengthMenu': [
-					[ 10, 25, 50, -1 ],
-					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					[ -1 ],
+					[ 'Show all' ]
 					],
 					'buttons': {
 						buttons:[
@@ -465,9 +465,9 @@
 						},
 						]
 					},
-					'paging': true,
+					'paging': false,
 					'lengthChange': true,
-					'pageLength': 5,
+					// 'pageLength': 5,
 					'searching': true,
 					'ordering': true,
 					'order': [],
