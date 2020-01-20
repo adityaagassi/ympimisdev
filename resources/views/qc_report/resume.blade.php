@@ -262,12 +262,18 @@
 
 		$.get('{{ url("fetch/cpar/resume") }}', data, function(result, status, xhr){
 			if(result.status){
+				var total = 0;
 				var totalnonymmj = 0;
 				var ymmj = 0;
 
 				for(var i = 0; i < result.data_status.length; i++){
 					$('#total').append().empty();
-					$('#total').html(result.data_status[i].total + '<sup style="font-size: 30px"> kasus</sup>');
+					total = result.data_status[i].total;
+					ymmj = result.ymmj[i].jumlahymmj;
+
+					totalkasus = total + ymmj;
+
+					$('#total').html(totalkasus+ '<sup style="font-size: 30px"> kasus</sup>');
 
 					$('#cpar').append().empty();
 					$('#cpar').html(result.data_status[i].CPAR + '<sup style="font-size: 30px"> kasus</sup>');
