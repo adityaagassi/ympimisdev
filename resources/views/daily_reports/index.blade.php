@@ -148,9 +148,10 @@
 											<label>Category<span class="text-red">*</span></label>
 											<select class="form-control select2" style="width: 100%;" id="category" name="category" data-placeholder="Choose a Category..." required>
 												<option></option>
+												<option value="Network Maintenance">Network Maintenance</option>
 												<option value="Hardware Maintenance">Hardware Maintenance</option>
 												<option value="Hardware Installation">Hardware Installation</option>
-												<option value="Network Maintenance">Network Maintenance</option>
+												<option value="Hardware Installation">Software Installation</option>
 												<option value="Design">Design</option>
 												<option value="System Analysis">System Analysis</option>
 												<option value="System Programming">System Programming</option>
