@@ -73,6 +73,61 @@
 			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
+	
+	<div class="col-md-12" style="padding-top: 10px;">
+		<div class="row">
+			<table id="traceabilityTable" class="table table-bordered table-striped table-hover">
+				<thead style="background-color: rgba(126,86,134,.7);">
+					<tr>
+						<th style="width: 5%">Tanggal Pengajuan</th>
+						<th style="width: 5%">WJO</th>
+						<th style="width: 5%">Prioritas</th>
+						<th style="width: 10%">Jenis Pekerjaan</th>
+						<th style="width: 15%">Nama Barang</th>
+						<th style="width: 5%">Jumlah</th>
+						<th style="width: 10%">Material</th>
+						<th style="width: 5%">Target</th>
+						<th style="width: 5%">Status</th>
+						<th style="width: 7%">PIC</th>
+						<th style="width: 7%">Action</th>
+					</tr>
+				</thead>
+				<tbody id="tableBody">
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+
+	<div class="modal fade" id="detailModal" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Workshop Job Orders Detail</b></h4>
+					<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-7">
+							<table id="data" class="table table-striped table-bordered" style="width: 100%;"> 
+								<tbody id="data-log-body">
+								</tbody>
+							</table>
+						</div>
+						<div class="col-xs-5">
+							
+						</div>
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -226,31 +281,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-12" style="padding-top: 10px;">
-		<div class="row">
-			<table id="traceabilityTable" class="table table-bordered table-striped table-hover">
-				<thead style="background-color: rgba(126,86,134,.7);">
-					<tr>
-						<th style="width: 5%">Tanggal Pengajuan</th>
-						<th style="width: 5%">WJO</th>
-						<th style="width: 5%">Prioritas</th>
-						<th style="width: 10%">Jenis Pekerjaan</th>
-						<th style="width: 15%">Nama Barang</th>
-						<th style="width: 5%">Jumlah</th>
-						<th style="width: 10%">Material</th>
-						<th style="width: 5%">Target</th>
-						<th style="width: 5%">Status</th>
-						<th style="width: 7%">PIC</th>
-						<th style="width: 7%">Action</th>
-					</tr>
-				</thead>
-				<tbody id="tableBody">
-				</tbody>
-				<tfoot>
-				</tfoot>
-			</table>
-		</div>
-	</div>
 
 </section>
 
@@ -399,10 +429,10 @@
 					if(result.tableData[i].remark == '0' || result.tableData[i].remark == '1'){
 						tableData += '<td>';
 						tableData += '<a style="padding: 10%; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-warning">Edit</a>';
-						tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-primary">Detail</a>';
+						tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+result.tableData[i].id+'\')" class="btn btn-primary">Detail</a>';
 						tableData += '</td>';
 					}else{
-						tableData += '<td><a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-primary">Detail</a></td>';							
+						tableData += '<td><a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+result.tableData[i].id+'\')" class="btn btn-primary">Detail</a></td>';							
 					}
 					tableData += '</tr>';	
 				}
@@ -441,7 +471,11 @@
 				openErrorGritter('Error!', result.message);
 			}
 		});
+	}
 
+	function showDetail(id) {
+		$('#detailModal').modal('show');
+		
 	}
 
 	function openSuccessGritter(title, message){

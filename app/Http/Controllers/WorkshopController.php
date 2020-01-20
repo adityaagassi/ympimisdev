@@ -58,7 +58,7 @@ class WorkshopController extends Controller{
 
 	public function indexProductivity(){
 		$title = 'Workshop Productivity';
-		$title_jp = '??';
+		$title_jp = '作業依頼書の実現力';
 
 		return view('workshop.report.productivity', array(
 			'title' => $title,
@@ -68,7 +68,7 @@ class WorkshopController extends Controller{
 
 	public function indexWJOMonitoring(){
 		$title = 'WJO Monitoring';
-		$title_jp = '??';
+		$title_jp = '作業依頼書の監視';
 
 		return view('workshop.report.monitoring', array(
 			'title' => $title,
