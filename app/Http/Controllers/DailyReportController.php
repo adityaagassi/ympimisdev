@@ -22,31 +22,34 @@ class DailyReportController extends Controller
     {
         $this->middleware('auth');
         $this->cat = [
-            'Hardware',
-            'Networking',
-            'Software',
-            'System Dev',
-            'Other',
+            'Network Maintenance',
+            'Hardware Maintenance',
+            'Hardware Installation',
+            'Software Installation',
+            'Design',
+            'System Analysis',
+            'System Programming',
+            'Bug & Error',
+            'Trial & Training'
+
         ];
 
         $this->loc = [
-            'Office',
-            'Assy',
-            'Body Process',
-            'Buffing',
-            'CL Body',
-            'Lacquering',
-            'Meeting Room',
-            'Part Process',
-            'Pianica',
-            'Plating',
-            'Recorder',
-            'Sub Assy',
-            'TR Room',
-            'Venova',
-            'Warehouse',
-            'Welding',
-            'Other'
+            'Management Information System',
+            'Accounting',
+            'Assembly (WI-A)',
+            'Educational Instrument (EI)',
+            'General Affairs',
+            'Human Resources',
+            'Logistic',
+            'Maintenance',
+            'Parts Process (WI-PP)',
+            'Procurement',
+            'Production Control',
+            'Production Engineering',
+            'Purchasing',
+            'Quality Assurance',
+            'Welding-Surface Treatment (WI-WST)'
         ];
     }
     /**
