@@ -42,7 +42,6 @@ table.table-bordered > tfoot > tr > th{
     <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
-
     <li>
       <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-sm" style="color:white">Import {{ $page }}s</a>
       &nbsp;

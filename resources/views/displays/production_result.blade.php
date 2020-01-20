@@ -143,13 +143,9 @@
 			hpl:hpl,
 		}
 		$.get('{{ url("fetch/dp_production_result") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 
-					// Progres bar jam kerja/hari
 					if(now.getHours() < 7){
 						$('#progress_bar_production').append().empty();
 						$('#progress_text_production').html("Today's Working Time : 0%");

@@ -67,7 +67,7 @@
 					<h5 class="text-orange" style="font-size: 4vw; font-weight: bold;" id="plan"></h5>
 				</div>
 				<div class="icon" style="padding-top: 30px;">
-					<i class="ion ion-stats-bars"></i>
+					<i class="glyphicon glyphicon-screenshot"></i>
 				</div>
 			</div>
 			<div class="small-box" style="background: rgb(220,220,220); height: 150px;">
@@ -76,7 +76,7 @@
 					<h5 class="text-purple" style="font-size: 4vw; font-weight: bold;" id="actual"></h5>
 				</div>
 				<div class="icon" style="padding-top: 30px;">
-					<i class="ion ion-stats-bars"></i>
+					<i class="fa fa-check-circle-o"></i>
 				</div>
 			</div>
 			<div class="small-box" style="background: rgb(220,220,220); height: 150px;">
@@ -85,7 +85,7 @@
 					<h5 class="text-purple" style="font-size: 4vw; font-weight: bold;" id="diff"></h5>
 				</div>
 				<div class="icon" style="padding-top: 30px;">
-					<i class="ion ion-stats-bars"></i>
+					<i class="fa fa-minus-circle"></i>
 				</div>
 			</div>
 			<div class="small-box" style="background: rgb(220,220,220); height: 150px;">
@@ -94,7 +94,7 @@
 					<h5 class="text-purple" style="font-size: 4vw; font-weight: bold;" id="pctg"></h5>
 				</div>
 				<div class="icon" style="padding-top: 30px;">
-					<i class="ion ion-stats-bars"></i>
+					<i class="fa fa-line-chart"></i>
 				</div>
 			</div>
 		</div>

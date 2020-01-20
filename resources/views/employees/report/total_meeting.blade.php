@@ -630,6 +630,7 @@ var intVal = function ( i ) {
      typeof i === 'number' ?
      i : 0;
 };
+
 for(i = 0; i < data.length; i++){
      cat = data[i].period;
      if(xCategories.indexOf(cat) === -1){

@@ -292,7 +292,7 @@
 									arr_pkg.push([value2.date, value2.material_number, pkg]);
 									pkg = 0;
 								}
-							} else {
+							} else if (typeof result.packing[key2-1] !== 'undefined') {
 								if (result.packing[key2].material_number == result.packing[key2-1].material_number) {
 									pkg += value2.packing;
 									arr_pkg.push([value2.date, value2.material_number, pkg]);
@@ -300,6 +300,9 @@
 									pkg = value2.packing;
 									arr_pkg.push([value2.date, value2.material_number, pkg]);
 								}
+							} else {
+								pkg += value2.packing;
+								arr_pkg.push([value2.date, value2.material_number, pkg]);
 							}
 						})
 

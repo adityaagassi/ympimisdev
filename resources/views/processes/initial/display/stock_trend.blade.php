@@ -379,7 +379,6 @@
 						name:name,
 						data:series
 					};
-
 				});
 
 				window.chart = Highcharts.stockChart('container1', {

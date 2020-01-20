@@ -148,34 +148,35 @@
 											<label>Category<span class="text-red">*</span></label>
 											<select class="form-control select2" style="width: 100%;" id="category" name="category" data-placeholder="Choose a Category..." required>
 												<option></option>
-												<option value="Hardware">Hardware</option>
-												<option value="Networking">Networking</option>
-												<option value="Software">Software</option>
-												<option value="System Dev">System Dev</option>
-												<option value="Other">Other</option>
+												<option value="Hardware Maintenance">Hardware Maintenance</option>
+												<option value="Hardware Installation">Hardware Installation</option>
+												<option value="Network Maintenance">Network Maintenance</option>
+												<option value="Design">Design</option>
+												<option value="System Analysis">System Analysis</option>
+												<option value="System Programming">System Programming</option>
+												<option value="Bug & Error">Bug & Error</option>
+												<option value="Trial & Training">Trial & Training</option>
 											</select>
 										</div>
 										<div class="form-group">
-											<label>Location<span class="text-red">*</span></label>
+											<label>Related Department<span class="text-red">*</span></label>
 											<select class="form-control select2" style="width: 100%;" id="location" name="location" data-placeholder="Choose a Location..." required>
 												<option></option>
-												<option value='Office'>Office</option>
-												<option value='Assy'>Assy</option>
-												<option value='Body Process'>Body Process</option>
-												<option value='Buffing'>Buffing</option>
-												<option value='CL Body'>CL Body</option>
-												<option value='Lacquering'>Lacquering</option>
-												<option value='Meeting Room'>Meeting Room</option>
-												<option value='Part Process'>Part Process</option>
-												<option value='Pianica'>Pianica</option>
-												<option value='Plating'>Plating</option>
-												<option value='Recorder'>Recorder</option>
-												<option value='Sub Assy'>Sub Assy</option>
-												<option value='TR Room'>TR Room</option>
-												<option value='Venova'>Venova</option>
-												<option value='Warehouse'>Warehouse</option>
-												<option value='Welding'>Welding</option>
-												<option value='Other'>Other</option>
+												<option value='Management Information System'>Management Information System</option>
+												<option value='Accounting'>Accounting</option>
+												<option value='Assembly (WI-A)'>Assembly (WI-A)</option>
+												<option value='Educational Instrument (EI)'>Educational Instrument (EI)</option>
+												<option value='General Affairs'>General Affairs</option>
+												<option value='Human Resources'>Human Resources</option>
+												<option value='Logistic'>Logistic</option>
+												<option value='Maintenance'>Maintenance</option>
+												<option value='Parts Process (WI-PP)'>Parts Process (WI-PP)</option>
+												<option value='Procurement'>Procurement</option>
+												<option value='Production Control'>Production Control</option>
+												<option value='Production Engineering'>Production Engineering</option>
+												<option value='Purchasing'>Purchasing</option>
+												<option value='Quality Assurance'>Quality Assurance</option>
+												<option value='Welding-Surface Treatment (WI-WST)'>Welding-Surface Treatment (WI-WST)</option>
 											</select>
 										</div>
 										<div class="form-group">

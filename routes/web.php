@@ -1118,7 +1118,9 @@ Route::get('index/display/clinic_disease', 'ClinicController@indexClinicDisease'
 Route::get('fetch/display_patient', 'ClinicController@fetchPatient');
 Route::get('fetch/daily_clinic_visit', 'ClinicController@fetchDailyClinicVisit');
 Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
+Route::get('fetch/clinic_visit_detail', 'ClinicController@fetchClinicVisitDetail');
 Route::get('fetch/display/clinic_disease', 'ClinicController@fetchDisease');
+Route::get('fetch/display/clinic_disease_detail', 'ClinicController@fetchDiseaseDetail');
 
 //END CLINIC
 
@@ -1619,6 +1621,8 @@ Route::get('fetch/detail/sub_assy', 'AssyProcessController@fetchPickingDetail');
 Route::get('index/production_report/index/{id}', 'ProductionReportController@index');
 Route::get('index/production_report/activity/{id}', 'ProductionReportController@activity');
 Route::get('index/production_report/report_all/{id}', 'ProductionReportController@report_all');
+Route::get('index/production_report/report_by_task/{id}', 'ProductionReportController@report_by_task');
+Route::get('index/production_report/fetchReportByTask/{id}', 'ProductionReportController@fetchReportByTask');
 Route::get('index/production_report/fetchReport/{id}', 'ProductionReportController@fetchReport');
 Route::get('index/production_report/fetchReportDaily/{id}', 'ProductionReportController@fetchReportDaily');
 Route::get('index/production_report/fetchReportWeekly/{id}', 'ProductionReportController@fetchReportWeekly');
@@ -1643,6 +1647,8 @@ Route::get('index/production_report/fetchPointCheck/{id}', 'ProductionReportCont
 Route::get('index/production_report/fetchDetailReportPrev/{id}', 'ProductionReportController@fetchDetailReportPrev');
 Route::get('index/production_report/fetchDetailReportMonthly/{id}', 'ProductionReportController@fetchDetailReportMonthly');
 Route::get('index/production_report/fetchDetailReportDaily/{id}', 'ProductionReportController@fetchDetailReportDaily');
+
+//APPROVAL LEADER TASK
 Route::get('index/production_report/approval/{id}', 'ProductionReportController@approval');
 Route::get('index/production_report/approval_list/{id}/{leader_name}', 'ProductionReportController@approval_list');
 Route::post('index/production_report/approval_list_filter/{id}/{leader_name}', 'ProductionReportController@approval_list_filter');
@@ -1724,6 +1730,7 @@ Route::get('index/training_report/print_training_email/{id}', 'TrainingReportCon
 Route::get('index/training_report/print_training_approval/{id}/{month}', 'TrainingReportController@print_training_approval');
 Route::get('index/training_report/scan_employee/{id}', 'TrainingReportController@scan_employee');
 Route::get('index/training_report/cek_employee/{nik}/{id}','TrainingReportController@cek_employee');
+Route::post('index/training_report/cek_employee2/{nik}/{id}','TrainingReportController@cek_employee2');
 Route::get('index/training_participant/edit','TrainingReportController@getparticipant')->name('admin.participantedit');
 Route::get('index/training_report/sendemail/{id}', 'TrainingReportController@sendemail');
 Route::post('index/training_report/approval/{id}', 'TrainingReportController@approval');
@@ -2065,6 +2072,7 @@ Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
 Route::get('index/qa_ymmj/create', 'QcYmmjController@create');
 Route::post('index/qa_ymmj/create_action', 'QcYmmjController@create_action');
 
+Route::get('index/cpar/resume', 'QcReportController@resume');
 
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
@@ -2084,6 +2092,8 @@ Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterial
 Route::get('index/qc_report/fetchtable', 'QcReportController@fetchtable');
 Route::get('index/qc_report/fetchMonitoring', 'QcReportController@fetchMonitoring');
 Route::get('index/qc_report/fetchGantt', 'QcReportController@fetchGantt');
+
+
 
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');

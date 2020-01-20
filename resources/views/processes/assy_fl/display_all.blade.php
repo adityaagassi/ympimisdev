@@ -293,7 +293,7 @@
 								}]
 							}]
 						});
-						setTimeout(fetchChartStock, 1000);
+						setTimeout(fetchChartStock, 60000);
 					}
 					else{
 						alert('Attempt to retrieve data failed')
@@ -442,7 +442,7 @@ function fetchTableStock(){
 						}
 					});
 				$('#tableStock').find("thead th").removeClass("sorting_asc");
-				setTimeout(fetchTableStock, 1000);
+				setTimeout(fetchTableStock, 60000);
 			}
 			else{
 				alert('Attempt to retrieve data failed');
