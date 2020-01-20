@@ -134,6 +134,7 @@ class DailyReportController extends Controller
         ->select('roles.role_code', 'users.name', 'daily_reports.category', 'daily_reports.description', 'daily_reports.location', 'daily_reports.begin_date', 'daily_reports.target_date', 'daily_reports.finished_date', 'daily_reports.report_code', 'daily_report_attachments.att', db::raw('concat(round(time_to_sec(daily_reports.duration)/60, 0), " Min") as duration'))
         ->distinct()
         ->orderByRaw('daily_reports.begin_date desc, users.name asc')
+        ->limit(500)
         ->get();
 
         return DataTables::of($daily_reports)

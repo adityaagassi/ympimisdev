@@ -1354,7 +1354,11 @@ table > thead > tr > th{
           "url" : "{{ url("index/qc_report/detail_cpar") }}",
           "data" : {
             bulan : bulan,
-            status : status
+            status : status,
+            kategori : kategori,
+            departemen : departemen,
+            tglfrom : tglfrom,
+            tglto : tglto
           }
         },
       "columns": [

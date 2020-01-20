@@ -32,6 +32,10 @@ table.table-bordered > tbody > tr > td{
 table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
 }
+#tableBodyList > tr:hover {
+    cursor: pointer;
+    background-color: #7dfa8c;
+  }
 #loading, #error { display: none; }
 </style>
 @endsection
@@ -43,7 +47,7 @@ table.table-bordered > tfoot > tr > th{
     <small></small>
   </h1>
   <ol class="breadcrumb">
-    <li><a href="{{ url("index/qa_ymmj/create")}}" class="btn btn-primary btn-sm" style="color:white">Create Form Ketidaksesuaian</a></li>
+    <li><a href="{{ url("index/qa_ymmj/create")}}" class="btn btn-primary btn-sm" style="color:white"><i class="glyphicon glyphicon-plus"></i>&nbsp;Create Form Ketidaksesuaian</a></li>
   </ol>
 </section>
 @endsection
@@ -75,19 +79,21 @@ table.table-bordered > tfoot > tr > th{
                 <th>Tanggal Kejadian</th>
                 <th>Judul</th>
                 <th>Lokasi</th>
-                <th>Material Description</th>
-                <th>Detail</th>
                 <th>Nomor Invoice</th>
                 <th>Jumlah Cek</th>
                 <th>Jumlah NG</th> 
                 <th>Presentase NG</th>
+                <th>Penanganan</th>
+                <th>Attach.</th>
+                <th>Edit</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBodyList">
               
             </tbody>
             <tfoot>
               <tr>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -235,17 +241,17 @@ table.table-bordered > tfoot > tr > th{
               "data" : data,
             },
             "columns": [
-              { "data": "nomor" },
+              { "data": "nomor"},
               { "data": "tgl_kejadian"},
-              { "data": "judul" },
-              { "data": "lokasi" },
-              { "data": "material_description" },
-              { "data": "detail" },
+              { "data": "judul", "width": "15%"},
+              { "data": "lokasi"},
               { "data": "no_invoice" },
               { "data": "qty_cek" },
               { "data": "qty_ng" },
               { "data": "presentase_ng" },
-
+              { "data": "penanganan" },
+              { "data": "file" },
+              { "data": "action" },
             ]
       });
 

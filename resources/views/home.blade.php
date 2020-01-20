@@ -154,7 +154,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/report/attendance_data")}}">
-                                <i class="fa fa-caret-right"></i>Attendance Data (??)
+                                <i class="fa fa-caret-right"></i>Attendance Data (出席データ)
                             </a>
                         </td>
                     </tr>
@@ -167,28 +167,28 @@
                             </a>
                             <br>
                             <a href="{{ url("/machinery_monitoring?mesin=") }}">
-                                <i class="fa fa-caret-right"></i> Machinery Monitoring ()
+                                <i class="fa fa-caret-right"></i> Machinery Monitoring (機械監視)
                             </a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Quality Assurance (品質保証)</span>
+                            <span style="font-weight: bold;">Quality Assurance (品保)</span>
                             <br>
                             <a href="{{ url("index/qc_report") }}">
-                                <i class="fa fa-caret-right"></i> Corrective and Preventive Action Request (CPAR)
+                                <i class="fa fa-caret-right"></i> Corrective and Preventive Action Request <br> (是正予防策依頼)
                             </a>
                             <br>
                             <a href="{{ url("index/qc_car") }}">
-                                <i class="fa fa-caret-right"></i> Corrective Action Report (CAR)
+                                <i class="fa fa-caret-right"></i> Corrective Action Report (是正策リポート)
                             </a>
                             <br>                            
                             <a href="{{ url("index/qc_report/grafik_cpar") }}">
-                                <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring
+                                <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring <br> (是正予防策・是正策監視)
                             </a>
                             <br>
                             <a href="{{ url("index/cpar/resume") }}">
-                                <i class="fa fa-caret-right"></i> Resume CPAR CAR By Kategori
+                                <i class="fa fa-caret-right"></i> Resume CPAR & CAR <br> (是正予防策・是正策のまとめ)
                             </a>
                             
                         </td>
@@ -196,11 +196,11 @@
                     <tr>
                         <td>                        
                             <a href="{{ url("index/qa_ymmj") }}">
-                                <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ
+                                <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ <br> (YMMJ不具合リポート)
                             </a>
                             <br>
                             <a href="{{ url("index/request_qa") }}">
-                                <i class="fa fa-caret-right"></i> Form Request CPAR QA
+                                <i class="fa fa-caret-right"></i> Form Request CPAR QA <br> (品保是正予防策依頼書)
                             </a>
                         </td>
                     </tr>
@@ -209,12 +209,12 @@
                             <span style="font-weight: bold;">Internet of Things (モノのインターネット)</span>
                             <br>
                             <a href="{{ url("index/reedplate/map") }}">
-                                <i class="fa fa-caret-right"></i> Smart Tracking Operator ReedPlate ()
+                                <i class="fa fa-caret-right"></i> Smart Tracking Operator ReedPlate <br>(リードプレート作業者のスマートトラッキング)
                             </a>
-                            <br>
+                            <!-- <br>
                             <a href="{{ url("index/index_map") }}">
                                 <i class="fa fa-caret-right"></i> Temperature Map ()
-                            </a>                           
+                            </a>     -->                       
                         </td>
                     </tr>
 
@@ -232,7 +232,7 @@
                     <tr>
                         <td>
                             <a href="#">
-                                <i class="fa fa-caret-right"></i> Raw Material Monitoring (?)
+                                <i class="fa fa-caret-right"></i> Raw Material Monitoring (素材監視)
                             </a>
                         </td>
                     </tr>
@@ -257,23 +257,23 @@
                             </a> --}}
                             <br>
                             <a href="{{ url("index/display/clinic_monitoring") }}">
-                                <i class="fa fa-caret-right"></i> Clinic Monitoring ()
+                                <i class="fa fa-caret-right"></i> Clinic Monitoring (クリニック監視)
                             </a>
                             <br>
                             <a href="{{ url("index/display/clinic_visit?month=") }}">
-                                <i class="fa fa-caret-right"></i> Clinic Visit ()
+                                <i class="fa fa-caret-right"></i> Clinic Visit (クリニック訪問)
                             </a>
                             <br>
                             <a href="{{ url("index/display/clinic_disease?month=") }}">
-                                <i class="fa fa-caret-right"></i> Clinic Diagnostic Data ()
+                                <i class="fa fa-caret-right"></i> Clinic Diagnostic Data (クリニック見立てデータ)
                             </a>
                             <br>
                             <a href="{{ url("index/emergency_response") }}">
-                                <i class="fa fa-caret-right"></i> Emergency Condition ()
+                                <i class="fa fa-caret-right"></i> Emergency Condition (緊急事態)
                             </a>
                             <br>
                             <a href="{{ url("index/toilet") }}">
-                                <i class="fa fa-caret-right"></i> Toilet Availability ()
+                                <i class="fa fa-caret-right"></i> Toilet Availability (トイレステイタス(空席・使用中))
                             </a>
                         </td>
                     </tr>
@@ -283,7 +283,7 @@
             <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
-                        <th>HRqu & e-Kaizen</th>
+                        <th>HRqu & e-Kaizen<br>Hrqu&e-改善</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -294,31 +294,31 @@
                             </a>
                             <br>
                             <a href="{{ url("index/employee/service") }}">
-                                <i class="fa fa-caret-right"></i> e-Kaizen
+                                <i class="fa fa-caret-right"></i> e-Kaizen (E-改善)
                             </a>
                             <br>
                             <a href="{{ url("/index/kaizen/aproval/resume") }}">
-                                <i class="fa fa-caret-right"></i> Resume e-Kaizen Progress 
+                                <i class="fa fa-caret-right"></i> Resume e-Kaizen Progress (E-改善進捗のまとめ)
                             </a>
                             <br>
                             <a href="{{ url("/index/kaizen") }}">
-                                <i class="fa fa-caret-right"></i> List Unverified e-Kaizen 
+                                <i class="fa fa-caret-right"></i> List Unverified e-Kaizen (未承認E-改善のリスト)
                             </a>
                             <br>
                             <a href="#">
-                                <i class="fa fa-caret-right"></i> List Verified e-Kaizen
+                                <i class="fa fa-caret-right"></i> List Verified e-Kaizen (承認済E-改善のリスト)
                             </a>
                             <br>
                             <a href="{{ url("/index/kaizen/applied") }}">
-                                <i class="fa fa-caret-right"></i> List Applied e-Kaizen 
+                                <i class="fa fa-caret-right"></i> List Applied e-Kaizen (適用済E-改善のリスト)
                             </a>
                             <br>
                             <a href="{{ url("/index/kaizen2/resume") }}">
-                                <i class="fa fa-caret-right"></i> Report All Kaizen
+                                <i class="fa fa-caret-right"></i> Report All Kaizen (全改善のリポート)
                             </a>
                             <br>
                             <a href="{{ url("index/kaizen2/report") }}">
-                                <i class="fa fa-caret-right"></i> Report Kaizen Excellent
+                                <i class="fa fa-caret-right"></i> Report Kaizen Excellent (エクセレント改善のリポート)
                             </a>
                             <br>
                         </td>
@@ -326,7 +326,7 @@
                     <tr>
                         <td>
                             <a href="{{ url("index/upload_kaizen") }}">
-                                <i class="fa fa-caret-right"></i> Upload Kaizen Images
+                                <i class="fa fa-caret-right"></i> Upload Kaizen Images (改善写真のアップロード)
                             </a>
                             <br>
                         </td>
@@ -337,14 +337,14 @@
             <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
-                        <th>SunFish</th>
+                        <th>SunFish<br>サンフィッシュ</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>
                             <a href="http://172.17.144.11/sf6/" target="_blank">
-                                <i class="fa fa-caret-right"></i> Sunfish
+                                <i class="fa fa-caret-right"></i> Sunfish (サンフィッシュ)
                             </a>
                         </td>
                     </tr>
@@ -353,22 +353,22 @@
             <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
-                        <th>Workshop</th>
+                        <th>Workshop<br>ワークショップ</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>
                             <a href="{{ url("index/workshop/create_wjo") }}">
-                                <i class="fa fa-caret-right"></i> Create WJO ()
+                                <i class="fa fa-caret-right"></i> Create WJO (作業依頼書の作成)
                             </a>
                             <br>
                             <a href="{{ url("index/workshop/wjo_monitoring") }}">
-                                <i class="fa fa-caret-right"></i> WJO Monitoring ()
+                                <i class="fa fa-caret-right"></i> WJO Monitoring (作業依頼書の監視)
                             </a>
                             <br>
                             <a href="{{ url("index/workshop/productivity") }}">
-                                <i class="fa fa-caret-right"></i> Workshop Productivity ()
+                                <i class="fa fa-caret-right"></i> Workshop Productivity (作業依頼書の実現力)
                             </a>
                             <br>
                         </td>                        
@@ -395,11 +395,11 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">INJECTION Process (???)</span>
+                            <span style="font-weight: bold;">INJECTION Process (成形プロセス)</span>
 
                             <br>
                             <a href="{{ url("/index/injeksi") }}">
-                                <i class="fa fa-caret-right"></i> Injection Recorder (???)
+                                <i class="fa fa-caret-right"></i> Injection Recorder (RC成形)
                             </a>
                         </td>
                     </tr>
@@ -408,11 +408,11 @@
                             <span style="font-weight: bold;">MATERIAL Process (イニシアル工程)</span>
                             <br>
                             <a href="{{ url("/index/initial", "press") }}">
-                                <i class="fa fa-caret-right"></i> Press ()
+                                <i class="fa fa-caret-right"></i> Press (プレス)
                             </a>
                             <br>
                             <a href="{{ url("/index/initial", "lotting") }}">
-                                <i class="fa fa-caret-right"></i> Lotting ()
+                                <i class="fa fa-caret-right"></i> Lotting (ロッティング)
                             </a>
                             <br>
                             <a href="{{ url("/index/press/monitoring") }}">
@@ -433,15 +433,15 @@
                             <span style="font-weight: bold;">BODY Process (イニシアル工程)</span>
                             <br>
                             <a href="{{ url("/index/initial", "bpro_cl") }}">
-                                <i class="fa fa-caret-right"></i> Clarinet(?)
+                                <i class="fa fa-caret-right"></i> Clarinet(ロッティング)
                             </a>
                             <br>
                             <a href="{{ url("/index/initial", "bpro_fl") }}">
-                                <i class="fa fa-caret-right"></i> Flute(?)
+                                <i class="fa fa-caret-right"></i> Flute(フルート)
                             </a>
                             <br>
                             <a href="{{ url("/index/initial", "bpro_sx") }}">
-                                <i class="fa fa-caret-right"></i> Saxophone(?)
+                                <i class="fa fa-caret-right"></i> Saxophone(サックス)
                             </a>
                         </td>
                     </tr>
@@ -458,11 +458,11 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy/welding_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
-                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
+                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor <br>(サックスのピッキング監視)
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy/welding_cl?date=&order2=") }}">
-                                <i class="fa fa-caret-right"></i> Clarinet Picking Monitor ()
+                                <i class="fa fa-caret-right"></i> Clarinet Picking Monitor <br>(クラリネットピッキング監視)
                             </a>
                         </td>
                     </tr>
@@ -471,7 +471,7 @@
                             <span style="font-weight: bold;">MIDDLE Process (中間工程)</span>
                             <br>
                             <a href="{{ url("/index/process_middle_cl") }}">
-                                <i class="fa fa-caret-right"></i> Clarinet ()
+                                <i class="fa fa-caret-right"></i> Clarinet (クラリネット)
                             </a>
                             <br>
                             <a href="{{ url("/index/process_middle_fl") }}">
@@ -503,19 +503,19 @@
                             </a>
                             <br>
                             <a href="{{ url("index/recorder_process") }}">
-                                <i class="fa fa-caret-right"></i> Recorder (???)
+                                <i class="fa fa-caret-right"></i> Recorder (リコーダー)
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy/assy_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
-                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
+                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor <br>(サックスのピッキング監視)
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy/assy_cl?date=&order2=") }}">
-                                <i class="fa fa-caret-right"></i> Clarinet Picking Monitor ()
+                                <i class="fa fa-caret-right"></i> Clarinet Picking Monitor <br>(クラリネットピッキング監視)
                             </a>
                             <br>
                             <a href="{{ url("/index/production_report/index/8") }}">
-                                <i class="fa fa-caret-right"></i> Assembly (WI-A) Report (アセンブリ（WI-A）レポート)
+                                <i class="fa fa-caret-right"></i> Assembly (WI-A) Report <br> (アセンブリ（WI-A）レポート)
                             </a>
                         </td>
                     </tr>
@@ -557,7 +557,7 @@
                             <span style="font-weight: bold;">Finished Goods Control (完成品管理)</span>
                             <br>
                             <a href="{{ url("/index/fg_production_schedule") }}">
-                                <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
+                                <i class="fa fa-caret-right"></i> Production Schedule Data <br>(生産スケジュールデータ)
                             </a>
                             {{-- <br>
                                 <a href="{{ url("/index/fg_production_monitoring") }}">
@@ -590,7 +590,7 @@
                                 <span style="font-weight: bold;">KD Parts Control (KD部品管理)</span>
                                 <br>
                                 <a href="{{ url("/index/kd_production_schedule_data") }}">
-                                    <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
+                                    <i class="fa fa-caret-right"></i> Production Schedule Data <br>(生産スケジュールデータ)
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/kd_daily_production_result") }}">
@@ -611,11 +611,11 @@
                                 <span style="font-weight: bold;">Shipment Control (出荷管理)</span>
                                 <br>
                                 <a href="{{ url("/index/display/all_stock") }}">
-                                    <i class="fa fa-caret-right"></i> All Stock (???)
+                                    <i class="fa fa-caret-right"></i> All Stock (全在庫)
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/fg_shipment_schedule") }}">
-                                    <i class="fa fa-caret-right"></i> Shipment Schedule Data (出荷スケジュールデータ)
+                                    <i class="fa fa-caret-right"></i> Shipment Schedule Data <br> (出荷スケジュールデータ)
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/fg_shipment_result") }}">
@@ -657,7 +657,7 @@
                                 </a>
                             </td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td>
                                 <span style="font-weight: bold;">Additional</span>
                                 <br>
@@ -669,7 +669,7 @@
                                     <i class="fa fa-caret-right"></i> Recorder Repair
                                 </a>
                             </td>
-                        </tr>
+                        </tr> --}}
                         {{-- <tr>
                             <td>
                                 <span style="font-weight: bold;">Display (表示)</span>

@@ -542,7 +542,7 @@
 </li>
 @endif
 
-@if(in_array('S30', $navs))
+@if(in_array('S31', $navs))
 @if(isset($head) && $head == "Workshop")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
    <i class="fa fa-industry"></i> <span>Workshop</span>
@@ -551,21 +551,24 @@
   </span>
 </a>
 <ul class="treeview-menu">
- @if(isset($page) && $page == "WJO Form")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/workshop/create_wjo") }}"><i class="fa fa-edit"></i> <span>Create WJO</span></a>
-</li>
 
-@if(isset($page) && $page == "WJO List")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/workshop/list_wjo") }}"><i class="fa fa-list"></i> <span>List WJO</span></a>
-</li>
+  @if(in_array('S30', $navs))
+  @if(isset($page) && $page == "WJO Form")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/workshop/create_wjo") }}"><i class="fa fa-edit"></i> <span>Create WJO</span></a>
+  </li>
 
-@if(isset($page) && $page == "Drawing")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/workshop/drawing") }}"><i class="fa fa-files-o"></i> <span>Drawing</span></a>
-</li>
+  @if(isset($page) && $page == "WJO List")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/workshop/list_wjo") }}"><i class="fa fa-list"></i> <span>List WJO</span></a>
+  </li>
 
-@if(isset($page) && $page == "WJO Execution")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/workshop/wjo") }}"><i class="fa fa-archive"></i> <span>WJO</span></a>
-</li>
+  @if(isset($page) && $page == "Drawing")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/workshop/drawing") }}"><i class="fa fa-files-o"></i> <span>Drawing</span></a>
+  </li>
+  @endif
+
+  @if(isset($page) && $page == "WJO Execution")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/workshop/wjo") }}"><i class="fa fa-archive"></i> <span>WJO</span></a>
+  </li>
 </ul>
 </li>
 @endif

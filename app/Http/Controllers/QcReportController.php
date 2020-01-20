@@ -183,7 +183,7 @@ class QcReportController extends Controller
         ->whereNull('promotion_logs.valid_to')
         ->whereNull('mutation_logs.valid_to')
         ->whereNull('employees.end_date')
-        ->whereNotIn('departments.id',['1','2','3','4','11','14'])
+        ->whereNotIn('departments.id',['1','2','3','4','11','13','14'])
         ->where('promotion_logs.position','manager')
         ->distinct()
         ->get();
@@ -757,7 +757,7 @@ class QcReportController extends Controller
           $cat = json_encode($kategori);
           $kat = str_replace(array("[","]"),array("(",")"),$cat);
 
-          $kate = 'and kategori in'.$kat;
+          $kate = 'and qc_cpars.kategori in'.$kat;
       }else{
           $kate = '';
       }
@@ -768,7 +768,7 @@ class QcReportController extends Controller
           $deptt = json_encode($departemen);
           $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 
-          $dep = 'and department_id in'.$dept;
+          $dep = 'and qc_cpars.department_id in'.$dept;
       } else {
           $dep = '';
       }
@@ -2294,5 +2294,72 @@ class QcReportController extends Controller
           return Response::json($response);
         }
       }
+
+
+
+
+      // Resumes
+      public function resume(){
+        $tglnow = date('Y-m-d');
+        
+        $fiscaly = db::select("select distinct fiscal_year from weekly_calendars");
+ 
+        $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+
+        foreach ($fy as $fys) {
+            $fiscal = $fys->fiscal_year;
+        }
+
+        return view('qc_report.resume',  
+          array('title' => 'CPAR CAR Resume '.$fiscal, 
+                'title_jp' => '',
+                'fy' => $fy,
+                'fiscaly' => $fiscaly
+              )
+          )->with('page', 'CPAR Resume');
+
+      }
+
+      public function getResumeData(Request $request){
+
+        $fiscal = $request->get('fy');
+
+        if ($fiscal == "") {
+            $tglnow = date('Y-m-d');
+            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+
+            foreach ($fy as $fys) {
+                $fiscal = $fys->fiscal_year;
+            }
+        }
+        
+        $data_status = db::select("select sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as CPAR, SUM(case when qc_cpars.status_code = '6' then 1 else 0 end) as CAR, SUM(case when qc_cpars.status_code = '1' then 1 else 0 end) as closed, SUM(case when qc_cpars.status_code = '7' then 1 else 0 end) as QA, count(qc_cpars.status_code) as total from qc_cpars join statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = weekly_calendars.week_date where fiscal_year='".$fiscal."' and qc_cpars.deleted_at is null");
+
+        $kategori = db::select(" 
+          select 
+          sum(case when qc_cpars.kategori_komplain = 'Ketidaksesuaian Kualitas' then 1 else 0 end) as Kualitas,
+          sum(case when qc_cpars.kategori_komplain = 'Non YMMJ' then 1 else 0 end) as NonYMMJ, 
+          sum(case when qc_cpars.kategori_komplain = 'FG' then 1 else 0 end) as FG, 
+          sum(case when qc_cpars.kategori_komplain = 'KD Parts' then 1 else 0 end) as KD,
+          sum(case when qc_cpars.kategori_komplain = 'NG Jelas' then 1 else 0 end) as NG,
+          SUM(case when qc_cpars.kategori_komplain = 'Claim Rate' then 1 else 0 end) as Claim 
+          from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = weekly_calendars.week_date where fiscal_year='".$fiscal."' and qc_cpars.deleted_at is null
+        ");
+
+        $ymmj = db::select(" 
+          select count(qc_ymmjs.id) as jumlahymmj from qc_ymmjs LEFT JOIN weekly_calendars on qc_ymmjs.tgl_kejadian = weekly_calendars.week_date where fiscal_year='".$fiscal."' and qc_ymmjs.deleted_at is null
+        ");
+
+
+        $response = array(
+          'status' => true,
+          'data_status' => $data_status,
+          'kategori' => $kategori,
+          'ymmj' => $ymmj
+        );
+        return Response::json($response);
+
+      }
+
 
 }

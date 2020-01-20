@@ -84,17 +84,17 @@
 					<table id="dailyReportTable" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 5%;">Dept</th>
-								<th style="width: 10%;">PIC</th>
-								<th style="width: 8%;">Category</th>
-								<th style="width: 40%;">Description</th>
-								<th style="width: 5%;">Duration</th>
-								<th style="width: 5%;">Location</th>
-								<th style="width: 8%;">Begin Date</th>
-								<th style="width: 8%;">Target Date</th>
-								<th style="width: 8%;">Finished Date</th>
-								<th style="width: 8%;">Att</th>
-								<th style="width: 8%;">Edit</th>
+								<th style="width: 1%;">Dept</th>
+								<th style="width: 3%;">PIC</th>
+								<th style="width: 4%;">Category</th>
+								<th style="width: 12%;">Description</th>
+								<th style="width: 1%;">Duration</th>
+								<th style="width: 7%;">Location</th>
+								<th style="width: 1%;">Begin Date</th>
+								<th style="width: 1%;">Target Date</th>
+								<th style="width: 1%;">Finished Date</th>
+								<th style="width: 1%;">Att</th>
+								<th style="width: 1%;">Edit</th>
 								{{-- <th style="width: 10%;">Act</th> --}}
 							</tr>
 						</thead>

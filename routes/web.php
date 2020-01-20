@@ -907,11 +907,12 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::get('index/workshop/drawing', 'WorkshopController@indexDrawing');
 	Route::post('create/workshop/drawing', 'WorkshopController@createDrawing');
 	Route::post('edit/workshop/drawing', 'WorkshopController@editDrawing');
-
-
 });
 
-Route::get('index/workshop/wjo', 'WorkshopController@indexWJO');
+Route::group(['nav' => 'S31', 'middleware' => 'permission'], function(){
+	Route::get('index/workshop/wjo', 'WorkshopController@indexWJO');
+});
+
 Route::get('fetch/workshop/machine', 'WorkshopController@scanMachine');
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
@@ -928,7 +929,6 @@ Route::post('create/workshop/tag/process_log', 'WorkshopController@createProcess
 Route::get('close/workshop/check_rfid', 'WorkshopController@checkCloseTag');
 Route::get('fetch/workshop/drawing', 'WorkshopController@fetchDrawing');
 Route::get('fetch/workshop/edit_drawing', 'WorkshopController@fetchEditDrawing');
-
 Route::get('index/workshop/wjo_monitoring', 'WorkshopController@indexWJOMonitoring');
 Route::get('fetch/workshop/wjo_monitoring', 'WorkshopController@fetchWJOMonitoring');
 Route::get('index/workshop/productivity', 'WorkshopController@indexProductivity');
@@ -2018,7 +2018,6 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_report/unchecked/{id}', 'QcReportController@unchecked');
 
 	
-
 	//CAR
 	Route::get('index/qc_car', 'QcCarController@index');
 	Route::post('index/qc_car/filter', 'QcCarController@filter_data');
@@ -2071,8 +2070,12 @@ Route::get('index/qa_ymmj', 'QcYmmjController@index');
 Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
 Route::get('index/qa_ymmj/create', 'QcYmmjController@create');
 Route::post('index/qa_ymmj/create_action', 'QcYmmjController@create_action');
+Route::get('index/qa_ymmj/update/{id}', 'QcYmmjController@update');
+Route::post('index/qa_ymmj/update_action/{id}', 'QcYmmjController@update_action');
+Route::post('index/qa_ymmj/deletefiles', 'QcYmmjController@deletefiles');
 
 Route::get('index/cpar/resume', 'QcReportController@resume');
+Route::get('fetch/cpar/resume', 'QcReportController@getResumeData');
 
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');

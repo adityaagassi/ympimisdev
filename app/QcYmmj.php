@@ -10,7 +10,7 @@ class QcYmmj extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'nomor','tgl_form','judul','tgl_kejadian','lokasi','material_number','material_description','no_invoice','qty_cek','qty_ng','presentase_ng','detail','penanganan','created_by'
+		'nomor','tgl_form','judul','tgl_kejadian','lokasi','material_number','material_description','no_invoice','qty_cek','qty_ng','presentase_ng','detail','file','penanganan','created_by'
 	];
 
 	public function user()
