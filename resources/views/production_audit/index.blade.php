@@ -11,7 +11,7 @@ thead>tr>th{
   text-align:center;
 }
 tbody>tr>td{
-  text-align:center;
+  /*text-align:center;*/
 }
 tfoot>tr>th{
   text-align:center;
@@ -215,10 +215,10 @@ table.table-bordered > tfoot > tr > th{
 						@foreach($point_check_audit as $point_check_audit)
 							<div class="col-md-4">
 								<a href="{{ url('index/production_audit/create_by_point_check/'.$id.'/'.$product.'/'.$proses.'/'.$point_check_audit->id) }}" style="text-decoration:none;color:black;">
-									<center><b>{{ $point_check_audit->product }}</b></center>
-									<center><b>{{ $point_check_audit->proses }}</b></center>
-									<center><?php echo $point_check_audit->point_check ?></center>
-									<center><?php echo $point_check_audit->cara_cek ?></center>
+									<b>{{ $point_check_audit->product }}</b>
+									<b>{{ $point_check_audit->proses }}</b>
+									<?php echo $point_check_audit->point_check ?>
+									<?php echo $point_check_audit->cara_cek ?>
 								</a>
 							</div>
 						@endforeach

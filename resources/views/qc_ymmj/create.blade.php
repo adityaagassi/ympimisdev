@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ asset('/ckeditor-full/ckeditor.js') }}"></script>
 @endsection
 @section('header')
 <section class="content-header">
@@ -62,7 +62,9 @@
           <div class="col-sm-5">
             <select class="form-control select2" style="width: 100%;" id="lokasi" name="lokasi" data-placeholder="Pilih Lokasi" required>
               <option></option>
-              <option value='Assy'>Assy</option>
+              <option value='Assy SAX'>Assy SAX</option>
+              <option value='Assy FL'>Assy FL</option>
+              <option value='Assy CL'>Assy CL</option>
               <option value='Body Process'>Body Process</option>
               <option value='Buffing'>Buffing</option>
               <option value='CL Body'>CL Body</option>
@@ -76,6 +78,7 @@
               <option value='Venova'>Venova</option>
               <option value='Warehouse'>Warehouse</option>
               <option value='Welding'>Welding</option>
+              <option value='Incoming Check QA'>Incoming Check QA</option>
               <option value='Other'>Other</option>
             </select>
           </div>

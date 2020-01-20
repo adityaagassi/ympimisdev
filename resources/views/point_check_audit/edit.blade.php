@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('header')
-<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ asset('/ckeditor-full/ckeditor.js') }}"></script>
 <section class="content-header">
   <h1>
     Edit Point Checks

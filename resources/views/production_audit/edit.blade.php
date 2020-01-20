@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('header')
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
-<section class="content-header">
+<section class="content-ckeditor-full">
   <h1>
     Edit {{ $activity_name }}
     <small>it all starts here</small>

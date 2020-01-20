@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
 <link rel="stylesheet" href="{{ url("bower_components/font-awesome/css/font-awesome.min.css")}}">
 <link rel="stylesheet" href="{{ url("css/app_style.css")}}">
-<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ asset('/ckeditor-full/ckeditor.js') }}"></script>
 <style type="text/css">
 thead input {
 	width: 100%;
