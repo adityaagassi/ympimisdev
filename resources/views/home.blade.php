@@ -175,10 +175,6 @@
                         <td>
                             <span style="font-weight: bold;">Quality Assurance (品質保証)</span>
                             <br>
-                            <a href="{{ url("index/request_qa") }}">
-                                <i class="fa fa-caret-right"></i> Form Request CPAR QA
-                            </a>
-                            <br>
                             <a href="{{ url("index/qc_report") }}">
                                 <i class="fa fa-caret-right"></i> Corrective and Preventive Action Request (CPAR)
                             </a>
@@ -190,9 +186,21 @@
                             <a href="{{ url("index/qc_report/grafik_cpar") }}">
                                 <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring
                             </a>
-                            <br>                            
+                            <br>
+                            <a href="{{ url("index/cpar/resume") }}">
+                                <i class="fa fa-caret-right"></i> Resume CPAR CAR By Kategori
+                            </a>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>                        
                             <a href="{{ url("index/qa_ymmj") }}">
                                 <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ
+                            </a>
+                            <br>
+                            <a href="{{ url("index/request_qa") }}">
+                                <i class="fa fa-caret-right"></i> Form Request CPAR QA
                             </a>
                         </td>
                     </tr>
@@ -252,12 +260,12 @@
                                 <i class="fa fa-caret-right"></i> Clinic Monitoring ()
                             </a>
                             <br>
-                            <a href="{{ url("index/display/clinic_visit?dateto=&datefrom=") }}">
+                            <a href="{{ url("index/display/clinic_visit?month=") }}">
                                 <i class="fa fa-caret-right"></i> Clinic Visit ()
                             </a>
                             <br>
-                            <a href="{{ url("index/display/clinic_disease?dateto=&datefrom=") }}">
-                                <i class="fa fa-caret-right"></i> Clinic Patient's Disease ()
+                            <a href="{{ url("index/display/clinic_disease?month=") }}">
+                                <i class="fa fa-caret-right"></i> Clinic Diagnostic Data ()
                             </a>
                             <br>
                             <a href="{{ url("index/emergency_response") }}">

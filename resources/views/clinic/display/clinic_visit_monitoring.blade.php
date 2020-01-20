@@ -38,17 +38,18 @@
 		margin: 0px;
 		padding: 0px;
 	}
-	#ada{
+
+	.ada{
 		background-color: rgba(118,255,3,.65);
 	}
-	#tidak-ada{
+	.tidak-ada{
 		background-color: rgba(255,0,0,.85);
 	}
 
 	.laktasi {
 		width: 100px;
 		height: 160px;
-		background-color: rgba(118,255,3,.6);
+		background-color: rgba(57,73,171 ,.6);
 		border-radius: 15px;
 		margin-top: 15px;
 		display: inline-block;
@@ -69,7 +70,7 @@
 	.bed {
 		width: 100px;
 		height: 160px;
-		background-color: rgba(255,0,0,.85);
+		background-color: rgba(57,73,171 ,.6);
 		border-radius: 15px;
 		margin-top: 15px;
 		display: inline-block;
@@ -239,70 +240,92 @@
 	}
 
 	function fillVisitor(){
-
-		$('#tableBodyMedic').html("");
-
-		var laktasi = [];
-		var bed = [];
-
-		var paramedic = "";
-		paramedic += '<tr>';
-		paramedic += '<td style="border-width:0px;">PARAMEDIC</td>';
-		paramedic += '<td style="border-width:0px;">:</td>';
-		paramedic += '<td style="border-width:0px;"><mark id="ada">Elis Kurniawati</mark></td>';
-		paramedic += '</tr>';
-		paramedic += '<tr>';
-		paramedic += '<td style="border-width:0px;">DOCTOR</td>';
-		paramedic += '<td style="border-width:0px;">:</td>';
-		paramedic += '<td style="border-width:0px;"><mark id="tidak-ada">Tidak Ada</mark></td>';
-		paramedic += '</tr>';
-
-		$('#tableBodyMedic').append(paramedic);
-
 		$.get('{{ url("fetch/display_patient") }}', function(result, status, xhr){
 			if(result.status){
+				var laktasi = [];
+				var bed = [];
+
 				$('#tableList').DataTable().clear();
 				$('#tableList').DataTable().destroy();
 				$('#tableBodyList').html("");
+				$('#tableBodyMedic').html("");
 
 				var tableData = "";
 				var count = 0;
 				in_time = [];
-				for (var i = 0; i < result.visitor.length; i++) {
-					tableData += '<tr>';
-					tableData += '<td>'+ ++count +'</td>';
-					tableData += '<td>'+ result.visitor[i].employee_id +'</td>';
-					tableData += '<td>'+ (result.visitor[i].name || 'Not Found') +'</td>';
-					tableData += '<td>'+ (result.visitor[i].section || 'Not Found') +'</td>';
-					tableData += '<td>'+ result.visitor[i].in_time +'</td>';
-					in_time.push(new Date(result.visitor[i].in_time));
-					tableData += '<td><p class="patient-duration">';
-					tableData += '<label id="hours'+ i +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[i]) / 3600)) +'</label>:';
-					tableData += '<label id="minutes'+ i +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[i]) % 3600) / 60)) +'</label>:';
-					tableData += '<label id="seconds'+ i +'">'+ pad(diff_seconds(new Date(), in_time[i]) % 60) +'</label>';
-					tableData += '</p></td>';
-					if(result.visitor[i].purpose == null){
-						tableData += '<td>'+ '-' +'</td>';
-					}else{
-						tableData += '<td>'+ result.visitor[i].purpose +'</td>';
-					}
-					tableData += '</tr>';
+				var paramedic = "";
+				var paramedic_availability = false;
 
+				paramedic += '<tr>';
+				paramedic += '<td style="border-width:0px;">PARAMEDIC</td>';
+				paramedic += '<td style="border-width:0px;">:</td>';
+				paramedic += '<td style="border-width:0px;">';
+
+				for (var i = 0; i < result.visitor.length; i++) {
+
+					if(result.visitor[i].employee_id.includes('PI')){
+						tableData += '<tr>';
+						tableData += '<td>'+ ++count +'</td>';
+						tableData += '<td>'+ result.visitor[i].employee_id +'</td>';
+						tableData += '<td>'+ (result.visitor[i].name || 'Not Found') +'</td>';
+						tableData += '<td>'+ (result.visitor[i].section || 'Not Found') +'</td>';
+						tableData += '<td>'+ result.visitor[i].in_time +'</td>';
+						in_time.push(new Date(result.visitor[i].in_time));
+						tableData += '<td><p class="patient-duration">';
+						tableData += '<label id="hours'+ i +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[i]) / 3600)) +'</label>:';
+						tableData += '<label id="minutes'+ i +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[i]) % 3600) / 60)) +'</label>:';
+						tableData += '<label id="seconds'+ i +'">'+ pad(diff_seconds(new Date(), in_time[i]) % 60) +'</label>';
+						tableData += '</p></td>';
+						if(result.visitor[i].purpose == null){
+							tableData += '<td>'+ '-' +'</td>';
+						}else{
+							if(result.visitor[i].purpose == 'Laktasi'){
+								tableData += '<td>-</td>';
+							}else{
+								tableData += '<td>'+ result.visitor[i].purpose +'</td>';
+							}
+						}
+						tableData += '</tr>';
+
+					}else if(result.visitor[i].employee_id.includes('PR')){
+						if(!paramedic_availability){
+							paramedic += '<mark class="ada">';
+						}
+						if(result.visitor[i].employee_id == 'PR0000001'){
+							paramedic += 'Elis Kurniawati<br>';
+						}else if(result.visitor[i].employee_id == 'PR0000002'){
+							paramedic += 'Nanang Sugianto<br>';
+						}else if(result.visitor[i].employee_id == 'PR0000003'){
+							paramedic += 'Ahmad Fanani<br>';
+						}
+
+						paramedic_availability = true;
+
+					}
 
 					if(result.visitor[i].bed == 'Yes'){
 						bed.push(result.visitor[i].bed);
 					}
 
-
 					if(result.visitor[i].purpose == 'Laktasi'){
-						bed.push(result.visitor[i].purpose);
+						laktasi.push(result.visitor[i].purpose);
 					}
 
-
-
-
-
 				}
+				if(!paramedic_availability){
+					paramedic += '<mark class="tidak-ada">None</mark>';
+				}else{
+					paramedic += '</mark>';
+				}
+				paramedic += '</td>';
+				paramedic += '</tr>';
+				paramedic += '<tr>';
+				paramedic += '<td style="border-width:0px;">DOCTOR</td>';
+				paramedic += '<td style="border-width:0px;">:</td>';
+				paramedic += '<td style="border-width:0px;"><mark class="tidak-ada">None</mark></td>';
+				paramedic += '</tr>';
+				$('#tableBodyMedic').append(paramedic);
+
 				$('#tableBodyList').append(tableData);
 				$('#tableList').DataTable({
 					'dom': 'Bfrtip',	
@@ -332,10 +355,21 @@
 					"bAutoWidth": false,
 					"processing": true
 				});
+
+				for (var i = 1; i <=  bed.length; i++) {
+					$('#text-bed-'+i).html('OCCUPIED');
+					$('#bed-'+i).css('background-color', 'rgba(255,0,0,.85)');
+				}
+
+				for (var i = 1; i <=  laktasi.length; i++) {
+					$('#text-laktasi-'+i).html('OCCUPIED');
+					$('#laktasi-'+i).css('background-color', 'rgba(255,0,0,.85)');
+				}
+
 			}			
 
 		});
-	}
+}
 
 </script>
 @endsection

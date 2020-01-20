@@ -42,7 +42,6 @@
 								<th style="width: 15%; text-align: center;">NIK</th>
 								<th style="width: 25%;">Name</th>
 								<th style="width: 20%; text-align: center;">Section</th>
-								<th style="width: 15%; text-align: center;">Action</th>
 							</tr>					
 						</thead>
 						<tbody id="tableBodyList">
@@ -90,7 +89,7 @@
 							</div>
 
 							<div class="col-xs-4" style="color: black;">
-								<span style="font-weight: bold; font-size: 16px;">Purpose:</span>
+								<span style="font-weight: bold; font-size: 16px;">Purpose:<span class="text-red">*</span></span>
 								<div class="form-group">
 									<select style="width: 100%;" class="form-control select2 purpose" id="purpose"  data-placeholder="Select Purpose">
 										<option value=""></option>
@@ -102,14 +101,16 @@
 							</div>
 
 							<div class="col-xs-4" style="color: black;">
-								<span style="font-weight: bold; font-size: 16px;">Bed:</span>
-								<div class="form-group">
-									<select style="width: 100%;" class="form-control select2" id="bed"  data-placeholder="Select Bed">
-										<option value=""></option>
-										<option value="Yes">Yes</option>
-										<option value="No">No</option>
-									</select>
+								<div class="col-xs-2" style="padding: 0px;">
+									<span style="font-weight: bold; font-size: 16px;">Bed:<span class="text-red">*</span></span>
 								</div>
+								<div class="col-xs-10" style="padding: 0px;">
+									<div class="form-group">
+										<input type="radio" name="bed" value="Yes"> Yes<br>
+										<input type="radio" name="bed" value="No" checked="checked"> No<br>
+									</div>									
+								</div>
+
 							</div>
 
 							<div id='pemeriksaan-kesehatan'>
@@ -142,7 +143,7 @@
 									</label>
 								</div>
 								<div class="col-xs-4" style="color: black;">
-									<span style="font-weight: bold; font-size: 16px;">Diagnose:</span>
+									<span style="font-weight: bold; font-size: 16px;">Diagnose:<span class="text-red">*</span></span>
 									<select style="width: 100%;" class="form-control select2" multiple="multiple" id="diagnose" data-placeholder="Select Diagnose">
 										@foreach($diagnoses as $diagnose)
 										<option value="{{ $diagnose }}">{{ $diagnose }}</option>
@@ -293,11 +294,18 @@
 		var date = $("#date").val();
 		var nik = $("#nik").val();
 		var purpose = $("#purpose").val();
-		var bed = $("#bed").val();
 		var family = $("#family").val();
 		var family_name = $("#family_name").val();
 		var diagnose = $("#diagnose").val();
 		var doctor = $("#doctor").val();
+
+		var radios = document.getElementsByName('bed');
+		for (var i = 0, length = radios.length; i < length; i++) {
+			if (radios[i].checked) {
+				var bed = radios[i].value;
+				break;
+			}
+		}
 
 		var medicines = [];
 		for (var i = 1; i <= med; i++) {
@@ -306,12 +314,12 @@
 
 		$("#loading").show();
 		if(purpose == "" || bed == ""){
-			openErrorGritter('Error!', 'All fields must be filled');
+			openErrorGritter('Error!', '(*) must be filled');
 			$("#loading").hide();
 			return false;
 		}else if(purpose == "Pemeriksaan Kesehatan"){
-			if(diagnose == "" || doctor == ""){
-				openErrorGritter('Error!', 'All fields must be filled');
+			if(diagnose == ""){
+				openErrorGritter('Error!', '(*) must be filled');
 				$("#loading").hide();
 				return false;
 			}
@@ -345,7 +353,7 @@
 				$('#purpose').prop('selectedIndex', 0).change();
 				$('#diagnose').prop('selectedIndex', 0).change();
 				$('#doctor').prop('selectedIndex', 0).change();
-				
+
 				$('#medicine').append().empty();
 				$('#family-field').hide();
 				$('#pemeriksaan-kesehatan').hide();
@@ -430,16 +438,16 @@
 				var tableData = "";
 				var count = 0;
 				for (var i = 0; i < result.visitor.length; i++) {
-					tableData += '<tr>';
-					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ ++count +'</td>';
-					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].in_time +'</td>';
-					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].employee_id +'</td>';
-					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ (result.visitor[i].name || 'Not Found') +'</td>';
-					tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ (result.visitor[i].section || 'Not Found') +'</td>';
-					tableData += '<td style="text-align: center;">';
-					tableData += '<button style="width: 50%; height: 100%;" onClick="showDelete(this)" id="'+result.visitor[i].idx+'+'+ result.visitor[i].name +'" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-fw fa-trash"></i> Delete</span></button>';
-					tableData += '</td>';
-					tableData += '</tr>';
+					if(result.visitor[i].employee_id.includes('PI')){
+						tableData += '<tr>';
+						tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ ++count +'</td>';
+						tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].in_time +'</td>';
+						tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].employee_id +'</td>';
+						tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ (result.visitor[i].name || 'Not Found') +'</td>';
+						tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ (result.visitor[i].section || 'Not Found') +'</td>';
+						tableData += '</tr>';
+					}
+					
 				}
 				$('#tableBodyList').append(tableData);
 				$('#tableList').DataTable({
