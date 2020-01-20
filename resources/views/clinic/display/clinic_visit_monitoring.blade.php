@@ -173,7 +173,7 @@
 						<th style="width: 21%; text-align: center;">Section</th>
 						<th style="width: 14%; text-align: center;">In Time</th>
 						<th style="width: 10%; text-align: center;">Duration</th>
-						<th style="width: 20%; text-align: center;">Keperluan</th>
+						{{-- <th style="width: 20%; text-align: center;">Keperluan</th> --}}
 					</tr>					
 				</thead>
 				<tbody id="tableBodyList">
@@ -261,6 +261,8 @@
 				paramedic += '<td style="border-width:0px;">:</td>';
 				paramedic += '<td style="border-width:0px;">';
 
+				var patient = 0;
+
 				for (var i = 0; i < result.visitor.length; i++) {
 
 					if(result.visitor[i].employee_id.includes('PI')){
@@ -272,21 +274,21 @@
 						tableData += '<td>'+ result.visitor[i].in_time +'</td>';
 						in_time.push(new Date(result.visitor[i].in_time));
 						tableData += '<td><p class="patient-duration">';
-						tableData += '<label id="hours'+ i +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[i]) / 3600)) +'</label>:';
-						tableData += '<label id="minutes'+ i +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[i]) % 3600) / 60)) +'</label>:';
-						tableData += '<label id="seconds'+ i +'">'+ pad(diff_seconds(new Date(), in_time[i]) % 60) +'</label>';
+						tableData += '<label id="hours'+ i +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[patient]) / 3600)) +'</label>:';
+						tableData += '<label id="minutes'+ i +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[patient]) % 3600) / 60)) +'</label>:';
+						tableData += '<label id="seconds'+ i +'">'+ pad(diff_seconds(new Date(), in_time[patient]) % 60) +'</label>';
 						tableData += '</p></td>';
-						if(result.visitor[i].purpose == null){
-							tableData += '<td>'+ '-' +'</td>';
-						}else{
-							if(result.visitor[i].purpose == 'Laktasi'){
-								tableData += '<td>-</td>';
-							}else{
-								tableData += '<td>'+ result.visitor[i].purpose +'</td>';
-							}
-						}
+						// if(result.visitor[i].purpose == null){
+						// 	tableData += '<td>'+ '-' +'</td>';
+						// }else{
+						// 	if(result.visitor[i].purpose == 'Laktasi'){
+						// 		tableData += '<td>-</td>';
+						// 	}else{
+						// 		tableData += '<td>'+ result.visitor[i].purpose +'</td>';
+						// 	}
+						// }
 						tableData += '</tr>';
-
+						++patient;
 					}else if(result.visitor[i].employee_id.includes('PR')){
 						if(!paramedic_availability){
 							paramedic += '<mark class="ada">';
@@ -312,6 +314,7 @@
 					}
 
 				}
+				
 				if(!paramedic_availability){
 					paramedic += '<mark class="tidak-ada">None</mark>';
 				}else{
