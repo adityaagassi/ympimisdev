@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\UserActivityLog;
 
 class LoginController extends Controller
 {
@@ -45,6 +46,11 @@ class LoginController extends Controller
     }
 
     public function authenticated($request , $user){
+        $activity =  new UserActivityLog([
+            'activity' => 'Login',
+            'created_by' => $user->id,
+        ]);
+        $activity->save();
         if($user->role_code != 'emp-srv'){
             return redirect()->route('home');
         }else {
