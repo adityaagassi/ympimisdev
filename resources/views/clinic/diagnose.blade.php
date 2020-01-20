@@ -101,6 +101,17 @@
 								</div>
 							</div>
 
+							<div class="col-xs-4" style="color: black;">
+								<span style="font-weight: bold; font-size: 16px;">Bed:</span>
+								<div class="form-group">
+									<select style="width: 100%;" class="form-control select2" id="bed"  data-placeholder="Select Bed">
+										<option value=""></option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
 							<div id='pemeriksaan-kesehatan'>
 								<div class="col-xs-12" style="margin-top: 1%; margin-left: 1%;">
 									<label>
@@ -282,6 +293,7 @@
 		var date = $("#date").val();
 		var nik = $("#nik").val();
 		var purpose = $("#purpose").val();
+		var bed = $("#bed").val();
 		var family = $("#family").val();
 		var family_name = $("#family_name").val();
 		var diagnose = $("#diagnose").val();
@@ -293,7 +305,7 @@
 		}
 
 		$("#loading").show();
-		if(purpose == ""){
+		if(purpose == "" || bed == ""){
 			openErrorGritter('Error!', 'All fields must be filled');
 			$("#loading").hide();
 			return false;
@@ -311,6 +323,7 @@
 			date : date,
 			nik : nik,
 			purpose : purpose,
+			bed : bed,
 			family : family,
 			family_name : family_name,
 			diagnose : diagnose,
@@ -328,6 +341,7 @@
 				$("#family").val("");
 				$("#family_name").val("");
 
+				$('#bed').prop('selectedIndex', 0).change();
 				$('#purpose').prop('selectedIndex', 0).change();
 				$('#diagnose').prop('selectedIndex', 0).change();
 				$('#doctor').prop('selectedIndex', 0).change();

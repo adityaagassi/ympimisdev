@@ -128,6 +128,8 @@ class ClinicController extends Controller{
 			'Laktasi',
 			'Istirahat',
 			'Medical Check Up',
+			'Mengantar Karyawan Sakit',
+			'Mengantar Medical Check Up',
 		];
 
 	}
@@ -178,10 +180,6 @@ class ClinicController extends Controller{
 		))->with('page', 'Diagnose')->with('head','Clinic');
 	}
 
-	public function fetchClinicDisease(Request $request){
-		# code...
-	}
-
 	public function fetchDiagnose(Request $request){
 		$id = '';
 		if($request->get('id') != null){
@@ -202,10 +200,9 @@ class ClinicController extends Controller{
 	}
 
 	public function fetchPatient(){
-		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.name, e.hire_date, e.section, d.purpose from patient_list p
+		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.name, e.hire_date, e.section, d.purpose, p.note as bed from patient_list p
 			left join ympimis.employee_syncs e on e.employee_id = p.employee_id
 			left join ympimis.clinic_patient_details d on d.id = p.`status`
-			where p.note is null
 			order by p.in_time asc");
 
 		$response = array(
@@ -218,86 +215,96 @@ class ClinicController extends Controller{
 	public function fetchDailyClinicVisit(Request $request){
 		$date = "";
 		$date_log = "";
+		$month = "";
 
-		if(strlen($request->get('datefrom')) > 0){
-			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-			$date = "WHERE week_date BETWEEN '".$datefrom."'";
-			$date_log = "WHERE tanggal BETWEEN '".$datefrom."'";
+		if(strlen($request->get('month')) > 0){
+			$date = "WHERE DATE_FORMAT(week_date,'%Y-%m') ='".$request->get('month')."'";
+			$date_log = "where DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
+			$month = $request->get('month');
 
-			if(strlen($request->get('dateto')) > 0){
-				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
-
-				$date = $date." AND '".$dateto."'";
-				$date_log = $date_log." AND '".$dateto."'";
-			}else{
-				$date = $date." AND '". date('Y-m-d') ."'";
-				$date_log = $date_log." AND '". date('Y-m-d') ."'";
-			}
 		}else{
-			$date = "WHERE week_date BETWEEN '".date('Y-m-d',strtotime('-1 month'))."' AND '".date('Y-m-d')."'";
-			$date_log = "WHERE tanggal BETWEEN '".date('Y-m-d',strtotime('-1 month'))."' AND '".date('Y-m-d')."'";
+			$date = "WHERE DATE_FORMAT(week_date,'%Y-%m') ='".date('Y-m')."'";
+			$date_log = "WHERE DATE_FORMAT(tanggal,'%Y-%m') = '".date('Y-m')."'";
+			$month = date('Y-m');
+
 		}
 
 		$clinic_visit = db::connection("clinic")->select("select DATE_FORMAT(date.week_date,'%d %b %Y') as week_date, COALESCE(log.sum,0) as visit from
 			(select week_date, DATE_FORMAT(week_date,'%a') as `day` from ympimis.weekly_calendars
-			".$date." and remark <> 'H') as date
+			".$date." and remark <> 'H'
+			order by week_date asc) as date
 			left join 
 			(select tanggal, count(employee_id) as sum from patient_logs
 			".$date_log." group by tanggal) as log
-			on date.week_date = log.tanggal
-			order by date.week_date asc");
+			on date.week_date = log.tanggal");
 
 		$response = array(
 			'status' => true,
 			'clinic_visit' => $clinic_visit,
+			'month' => $month,
 		);
 		return Response::json($response);
 	}
 
 	public function fetchClinicVisit(Request $request){
 		$date_log = "";
+		$month = "";
 
-		if(strlen($request->get('datefrom')) > 0){
-			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-			$date_log = "WHERE tanggal BETWEEN '".$datefrom."'";
-
-			if(strlen($request->get('dateto')) > 0){
-				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
-				$date_log = $date_log." AND '".$dateto."'";
-			}else{
-				$date_log = $date_log." AND '". date('Y-m-d') ."'";
-			}
+		if(strlen($request->get('month')) > 0){
+			$date_log = "where DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
+			$month = $request->get('month');
 		}else{
-			$date_log = "WHERE tanggal BETWEEN '".date('Y-m-d',strtotime('-1 month'))."' AND '".date('Y-m-d')."'";
+			$date_log = "WHERE DATE_FORMAT(tanggal,'%Y-%m') = '".date('Y-m')."'";
+			$month = date('Y-m');
 		}
 
-		$clinic_visit = db::connection("clinic")->select("select e.section, count(p.employee_id) as qty from patient_logs p
+		$clinic_visit = db::connection("clinic")->select("select visit.department, count(visit.employee_id) as qty from
+			(select p.employee_id, e.department, count(p.employee_id) as qty from patient_logs p
 			left join ympimis.employee_syncs e on e.employee_id = p.employee_id ".$date_log."
-			group by e.section
+			and e.department is not null
+			group by p.employee_id, e.department) visit
+			group by department
 			order by qty desc");
+
+		$department = db::select("select department, count(employee_id) as qty from employee_syncs
+			where department is not null
+			group by department");
+
 		$response = array(
 			'status' => true,
 			'clinic_visit' => $clinic_visit,
+			'department' => $department,
+			'month' => $month,
 		);
 		return Response::json($response);
+	}
+
+	public function fetchClinicVisitDetail(Request $request){
+
+		$detail =  db::connection("clinic")->select("select p.employee_id, e.name, d.paramedic, p.in_time, p.out_time, d.purpose from patient_logs p
+			left join ympimis.employee_syncs e on e.employee_id = p.employee_id
+			left join ympimis.clinic_patient_details d on d.id = p.status
+			where DATE_FORMAT(p.in_time,'%Y-%m') = '".$request->get('month')."'
+			and e.department like '%".$request->get('department')."%'");
+
+		$response = array(
+			'status' => true,
+			'detail' => $detail,
+		);
+		return Response::json($response);		
 	}
 
 
 	public function fetchDisease(Request $request){
 		$date_log = "";
+		$month = "";
 
-		if(strlen($request->get('datefrom')) > 0){
-			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-			$date_log = "WHERE date(visited_at) BETWEEN '".$datefrom."'";
-
-			if(strlen($request->get('dateto')) > 0){
-				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
-				$date_log = $date_log." AND '".$dateto."'";
-			}else{
-				$date_log = $date_log." AND '". date('Y-m-d') ."'";
-			}
+		if(strlen($request->get('month')) > 0){
+			$date_log = "where DATE_FORMAT(visited_at,'%Y-%m') = '".$request->get('month')."'";
+			$month = $request->get('month');
 		}else{
-			$date_log = "WHERE date(visited_at) BETWEEN '".date('Y-m-d',strtotime('-1 month'))."' AND '".date('Y-m-d')."'";
+			$date_log = "WHERE DATE_FORMAT(visited_at,'%Y-%m') = '".date('Y-m')."'";
+			$month = date('Y-m');
 		}
 
 		$disease = db::select("select diagnose, count(employee_id) qty from clinic_patient_details ".$date_log."
@@ -308,10 +315,24 @@ class ClinicController extends Controller{
 		$response = array(
 			'status' => true,
 			'disease' => $disease,
+			'month' => $month,
 		);
 		return Response::json($response);
+	}
 
+	public function fetchDiseaseDetail(Request $request){
 
+		$detail = db::select("select p.diagnose, p.employee_id, e.name, p.paramedic, p.visited_at from clinic_patient_details p
+			left join employee_syncs e on e.employee_id = p.employee_id
+			where DATE_FORMAT(p.visited_at,'%Y-%m') = '".$request->get('month')."'
+			and p.diagnose like '%".$request->get('disease')."%'
+			order by p.visited_at asc");
+
+		$response = array(
+			'status' => true,
+			'detail' => $detail,
+		);
+		return Response::json($response);
 	}
 
 	public function deleteVisitor(Request $request){
@@ -343,6 +364,7 @@ class ClinicController extends Controller{
 		$idx = $request->get('id');
 		$employee_id = $request->get('nik');
 		$purpose = $request->get('purpose');
+		$bed = $request->get('bed');
 
 		$diagnose = "";
 		if($request->get('diagnose') != null) {
@@ -386,25 +408,27 @@ class ClinicController extends Controller{
 						'clinic_patient_detail' => $clinic_patient_detail->id,
 						'quantity' => $medicines[$x]['quantity'],
 					]);
-					DB::transaction(function() use ($clinic_patient_detail, $idx, $clinic_medicine_log, $x){
+					DB::transaction(function() use ($clinic_patient_detail, $idx, $clinic_medicine_log, $x, $bed){
 						$clinic_patient_detail->save();
 						$clinic_medicine_log[$x]->save();
 
 						$clinic_patient = db::connection('clinic')->table('patient_list')
 						->where('idx', '=', $idx)
 						->update([
-							'status' => $clinic_patient_detail->id
+							'status' => $clinic_patient_detail->id,
+							'note' => $bed
 						]);
 					});
 				}
 			}else{
-				DB::transaction(function() use ($clinic_patient_detail, $idx){
+				DB::transaction(function() use ($clinic_patient_detail, $idx, $bed){
 					$clinic_patient_detail->save();
 
 					$clinic_patient = db::connection('clinic')->table('patient_list')
 					->where('idx', '=', $idx)
 					->update([
-						'status' => $clinic_patient_detail->id
+						'status' => $clinic_patient_detail->id,
+						'note' => $bed
 					]);
 				});
 			}			

@@ -69,7 +69,7 @@
 	.bed {
 		width: 100px;
 		height: 160px;
-		background-color: rgba(118,255,3,.6);
+		background-color: rgba(255,0,0,.85);
 		border-radius: 15px;
 		margin-top: 15px;
 		display: inline-block;
@@ -120,39 +120,39 @@
 		</div>
 		<div class="col-xs-6 pull-right">
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="laktasi" id="gambar-1">
+				<div class="laktasi" id="laktasi-1">
 					<img src="{{ url("images/Laktasi.png") }}">
-					<p class='text_stat' id='text-1'>VACANT</p>
+					<p class='text_stat' id='text-laktasi-1'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="laktasi" id="gambar-1">
+				<div class="laktasi" id="laktasi-2">
 					<img src="{{ url("images/Laktasi.png") }}">
-					<p class='text_stat' id='text-1'>VACANT</p>
+					<p class='text_stat' id='text-laktasi-2'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="laktasi" id="gambar-1">
+				<div class="laktasi" id="laktasi-3">
 					<img src="{{ url("images/Laktasi.png") }}">
-					<p class='text_stat' id='text-1'>VACANT</p>
+					<p class='text_stat' id='text-laktasi-3'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="laktasi" id="gambar-1">
+				<div class="laktasi" id="laktasi-4">
 					<img src="{{ url("images/Laktasi.png") }}">
-					<p class='text_stat' id='text-1'>VACANT</p>
+					<p class='text_stat' id='text-laktasi-4'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="bed" id="gambar-1">
+				<div class="bed" id="bed-1">
 					<img src="{{ url("images/Bed.png") }}">
-					<p class='text_stat' id='text-1'>VACANT</p>
+					<p class='text_stat' id='text-bed-1'>VACANT</p>
 				</div>
 			</div>
 			<div class="col-xs-2" style="padding: 0px;">
-				<div class="bed" id="gambar-1">
+				<div class="bed" id="bed-2">
 					<img src="{{ url("images/Bed.png") }}">
-					<p class='text_stat' id='text-1'>VACANT</p>
+					<p class='text_stat' id='text-bed-2'>VACANT</p>
 				</div>
 			</div>
 		</div>
@@ -242,6 +242,9 @@
 
 		$('#tableBodyMedic').html("");
 
+		var laktasi = [];
+		var bed = [];
+
 		var paramedic = "";
 		paramedic += '<tr>';
 		paramedic += '<td style="border-width:0px;">PARAMEDIC</td>';
@@ -284,6 +287,21 @@
 						tableData += '<td>'+ result.visitor[i].purpose +'</td>';
 					}
 					tableData += '</tr>';
+
+
+					if(result.visitor[i].bed == 'Yes'){
+						bed.push(result.visitor[i].bed);
+					}
+
+
+					if(result.visitor[i].purpose == 'Laktasi'){
+						bed.push(result.visitor[i].purpose);
+					}
+
+
+
+
+
 				}
 				$('#tableBodyList').append(tableData);
 				$('#tableList').DataTable({

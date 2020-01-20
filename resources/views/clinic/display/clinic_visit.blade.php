@@ -63,15 +63,7 @@
 					<div class="input-group-addon bg-green" style="border: none;">
 						<i class="fa fa-calendar"></i>
 					</div>
-					<input type="text" class="form-control datepicker" name="datefrom" id="datefrom" placeholder="Select Date From">
-				</div>
-			</div>
-			<div class="col-xs-2">
-				<div class="input-group date">
-					<div class="input-group-addon bg-green" style="border: none;">
-						<i class="fa fa-calendar"></i>
-					</div>
-					<input type="text" class="form-control datepicker" name="dateto" id="dateto" placeholder="Select Date To">
+					<input type="text" class="form-control datepicker" name="month" id="month" placeholder="Select Month">
 				</div>
 			</div>
 			<div class="col-xs-1">
@@ -86,8 +78,43 @@
 		<div class="col-xs-12">
 			<div id="container2" style="min-width: 300px; margin: 0 auto"></div>
 		</div>
-
 	</div>
+
+	<div class="modal fade" id="modal-detail" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Clinic Visit Detail</b></h4>
+					<h5 class="modal-title" style="text-align: center;" id="judul-detail"></h5>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<table id="detail" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="detail-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Employee ID</th>
+										<th>Name</th>
+										<th>Paramedic</th>
+										<th>In Time</th>
+										<th>Out Time</th>
+										<th>Purpose</th>
+									</tr>
+								</thead>
+								<tbody id="detail-body">
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 
 </section>
 
@@ -111,18 +138,28 @@
 	});
 
 	$('.datepicker').datepicker({
+		<?php $tgl_max = date('Y-m') ?>
+		format: "yyyy-mm",
+		startView: "months", 
+		minViewMode: "months",
 		autoclose: true,
-		format: "yyyy-mm-dd",
-		todayHighlight: true,
+		endDate: '<?php echo $tgl_max ?>'
 	});
 
+	function bulanText(param){
+		var date = param.split('-');
+		var bulan = parseInt(date[1]);
+		var tahun = date[0];
+		var bulanText = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+		return bulanText[bulan-1]+" "+tahun;
+	}
+
 	function fillChart() {
-		var dateto = "{{$_GET['dateto']}}";
-		var datefrom = "{{$_GET['datefrom']}}";
+		var month = "{{$_GET['month']}}";
 
 		var data = {
-			dateto:dateto,
-			datefrom:datefrom,
+			month:month,
 		}
 
 		$.get('{{ url("fetch/daily_clinic_visit") }}', data, function(result, status, xhr) {
@@ -140,6 +177,12 @@
 					},
 					title: {
 						text: 'Daily Clinic Visit'
+					},
+					subtitle: {
+						text: 'on '+ bulanText(result.month),
+						style: {
+							fontSize: '1vw',
+						}
 					},						
 					xAxis: {
 						categories: date,
@@ -180,43 +223,73 @@
 
 		$.get('{{ url("fetch/clinic_visit") }}', data, function(result, status, xhr) {
 			if(result.status){
-				var section = [];
+				var department = [];
 				var visit = [];
+				var percentage = [];
 				for (i = 0; i < result.clinic_visit.length; i++) {
-					if(result.clinic_visit[i].section){
-						section.push(result.clinic_visit[i].section);
-					}else{
-						section.push('Not Found');
-					}
+					department.push(result.clinic_visit[i].department);
 					visit.push(parseInt(result.clinic_visit[i].qty));
+					for (j = 0; j < result.department.length; j++) {
+						if(result.clinic_visit[i].department == result.department[j].department){
+							percentage.push((result.clinic_visit[i].qty / result.department[j].qty) * 100);
+						}
+					}
 				}
+
+				Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
+					return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
+				};
+
 
 				Highcharts.chart('container2', {
 					chart: {
-						type: 'column'
+						zoomType: 'xy'
 					},
 					title: {
-						text: 'Clinic Visit'
+						text: 'Clinic Visit VS Number of Employees'
+					},
+					subtitle: {
+						text: 'on '+ bulanText(result.month),
+						style: {
+							fontSize: '1vw',
+						}
 					},						
 					xAxis: {
-						categories: section,
+						categories: department,
 					},
-					yAxis: {
+					yAxis: [{
 						title: {
 							text: 'Patient(s)'
 						}
-					},
+					},{
+						title: {
+							text: '(%) Employees'
+						},
+						labels: {
+							format: '{value} %',
+
+						},
+						opposite: true
+
+					}],
 					tooltip: {
-						shared: true,
+						shared: false,
 					},
 					credits: {
 						enabled: false
 					},
 					legend: {
-						enabled: false
+						layout: 'vertical',
+						align: 'right',
+						x: -120,
+						verticalAlign: 'top',
+						y: 100,
+						floating: true,
+						backgroundColor:
+						Highcharts.defaultOptions.legend.backgroundColor || '#212121'
 					},
 					plotOptions: {
-						series:{
+						column:{
 							dataLabels: {
 								enabled: true,
 								format: '{point.y}',
@@ -229,18 +302,117 @@
 							groupPadding: 0.93,
 							borderWidth: 0.93,
 							cursor: 'pointer',
+							point: {
+								events: {
+									click: function () {
+										showDetail(this.category, result.month);
+									}
+								}
+							},
+						},
+						scatter:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y: .0f}%',
+								style:{
+									fontSize: '15px'
+								}
+							},
 						}
 					},
-					series: 
-					[{
+					series: [
+					{
 						name: 'Clinic Visit',
 						data: visit,
-						colorByPoint: true,
-					}]
+						type: 'column',
+						color: 'rgb(144,238,126)',
+						tooltip: {
+							valueSuffix: ' Person(s)'
+						}
+					},
+					{
+						name: 'Percent Employees',
+						data: percentage,
+						yAxis: 1,
+						marker: {
+							symbol: 'c-rect',
+							lineWidth:5,
+							lineColor: 'rgb(255,0,0)',
+							radius: 20,
+						},
+						type: 'scatter',
+						tooltip: {
+							headerFormat: '<span></span>',
+							pointFormat: '<span>{series.name}: <b>{point.y:.0f}% </b></span>',
+						},
+					}
+					]
 				});		
 			}
 		});
 
+	}
+
+	function showDetail(department, month) {
+		var data = {
+			department : department,
+			month : month
+		}
+
+		$.get('{{ url("fetch/clinic_visit_detail") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#modal-detail').modal('show');
+
+				$('#detail').DataTable().clear();
+				$('#detail').DataTable().destroy();
+				$('#detail-body').html("");
+
+				$('#judul-detail').append().empty();
+				$('#judul-detail').append('<b>'+ department +' on '+ bulanText(month) +'</b>');
+
+				var body = '';
+				for (var i = 0; i < result.detail.length; i++) {
+					body += '<tr>';
+					body += '<td>'+ result.detail[i].employee_id +'</td>';
+					body += '<td>'+ result.detail[i].name +'</td>';
+					body += '<td>'+ result.detail[i].paramedic +'</td>';
+					body += '<td>'+ result.detail[i].in_time +'</td>';
+					body += '<td>'+ result.detail[i].out_time +'</td>';
+					body += '<td>'+ result.detail[i].purpose +'</td>';
+					body += '</tr>';
+				}
+
+				$('#detail-body').append(body);
+				$('#detail').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+			}
+		});
 	}
 
 	Highcharts.createElement('link', {
