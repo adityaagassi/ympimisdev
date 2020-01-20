@@ -15,13 +15,11 @@
 </head>
 <body class="hold-transition login-page">
   <div class="login-logo" style="padding-top: 100px; margin-bottom: 0px">
-    {{-- <a href="#" style="font-size: 40px"><b>MI</b>RAI<br></a>
-    <div class="col-md-12" style="text-align: center;"><span style="font-size: 24px"><b>M</b>anufactur<b>i</b>ng <b>R</b>ealtime <b>A</b>cquisition of <b>I</b>nformation</div></span> --}}
-    <img src="{{ url("images/logo_mirai.png")}}" height="250px">
+    <img src="{{ url("images/logo_mirai.png")}}" height="200px">
   </div>
   <div class="login-box">
     <div class="login-box-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="login-box-msg" style="font-weight: bold; color: rgb(200,0,0);">Mulai 20 Januari 2020 Username (NIK) MIRAI menggunakan NIK baru.</p>
       <form method="post" action="{{ route('login') }}">
         {{ csrf_field() }}
         <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
