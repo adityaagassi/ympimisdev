@@ -104,9 +104,9 @@
 					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->date }}</center></td>
 					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->nama_dokumen }}</center></td>
 					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->no_dokumen }}</center></td>
-					<td class="head"><center><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></center></td>
-					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->kelengkapan_point_safety }}</center></td>
-					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</center></td>
+					<td class="head"><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></td>
+					<td class="head" rowspan="3">{{ $laporanAktivitas->kelengkapan_point_safety }}</td>
+					<td class="head" rowspan="3">{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</td>
 					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->operator }}</center></td>
 				</tr>
 				<tr>

@@ -110,9 +110,9 @@
 												 }
 												 echo implode(' , ', $type);
 												 ?></center></td>
-					<td style="vertical-align: middle" class="head"><center><?php echo $weekly_report->problem ?></center></td>
-					<td style="vertical-align: middle" class="head"><center><?php echo $weekly_report->action ?></center></td>
-					<td style="vertical-align: middle" class="head"><center><?php echo  $weekly_report->foto_aktual ?></center></td>
+					<td style="vertical-align: middle" class="head"><?php echo $weekly_report->problem ?></td>
+					<td style="vertical-align: middle" class="head"><?php echo $weekly_report->action ?></td>
+					<td style="vertical-align: middle" class="head"><?php echo  $weekly_report->foto_aktual ?></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $weekly_report->leader }}</center></td>
 					@if($jml_null > 0 && $role_code != 'M')
 					<td id="approval2" style="vertical-align: middle;">

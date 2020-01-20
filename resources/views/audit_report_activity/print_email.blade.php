@@ -107,9 +107,9 @@
 					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->date }}</center></td>
 					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->nama_dokumen }}</center></td>
 					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->no_dokumen }}</center></td>
-					<td class="head"><center><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></center></td>
-					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->kelengkapan_point_safety }}</center></td>
-					<td rowspan="3" class="head"><center>{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</center></td>
+					<td class="head"><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></td>
+					<td rowspan="3" class="head">{{ $laporanAktivitas->kelengkapan_point_safety }}</td>
+					<td rowspan="3" class="head">{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</td>
 					<td rowspan="3" class="head" colspan="2"><center>{{ $laporanAktivitas->operator }}</center></td>
 					@if($jml_null > 0 && $role_code != 'M')
 					<td rowspan="3" class="head" id="approval2">

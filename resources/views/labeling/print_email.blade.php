@@ -103,10 +103,10 @@
 				<tr>
 					<td style="border: 1px solid black;vertical-align: middle;"><center>{{ $no }}</center></td>
 					<td style="border: 1px solid black;vertical-align: middle;"><center>{{ $labeling->date }}</center></td>
-					<td style="border: 1px solid black;vertical-align: middle;"><center>{{ $labeling->nama_mesin }}</center></td>
+					<td style="border: 1px solid black;vertical-align: middle;">{{ $labeling->nama_mesin }}</td>
 					<td style="border: 1px solid black;vertical-align: middle;"><center><img width="200px" src="{{ url('/data_file/labeling/'.$labeling->foto_arah_putaran) }}"></center></td>
 					<td style="border: 1px solid black;vertical-align: middle;"><center><img width="200px" src="{{ url('/data_file/labeling/'.$labeling->foto_sisa_putaran) }}"></center></td>
-					<td style="border: 1px solid black;vertical-align: middle;"><center>{{ $labeling->keterangan }}</center></td>
+					<td style="border: 1px solid black;vertical-align: middle;">{{ $labeling->keterangan }}</td>
 					@if($jml_null > 0)
 					<td id="approval2" class="head" style="border: 1px solid black;vertical-align: middle">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />

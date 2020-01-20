@@ -107,8 +107,8 @@
 					@endif
 					@foreach($point_check as $point_check)
 						<tr>
-							<td class="head" style="border: 1px solid black;vertical-align: middle"><center><?php echo $point_check->point_check ?></center></td>
-							<td class="head" style="border: 1px solid black;vertical-align: middle"><center><?php echo $point_check->hasil_check ?></center></td>
+							<td class="head" style="border: 1px solid black;vertical-align: middle"><?php echo $point_check->point_check ?></td>
+							<td class="head" style="border: 1px solid black;vertical-align: middle"><?php echo $point_check->hasil_check ?></td>
 							<td class="head" style="border: 1px solid black;vertical-align: middle"><img width="200px" src="{{ url('/data_file/sampling_check/'.$point_check->picture_check) }}"></td>
 							<td class="head" style="border: 1px solid black;vertical-align: middle"><center>{{ $point_check->pic_check }}</center></td>
 							<td class="head" style="border: 1px solid black;vertical-align: middle"><center>{{ $point_check->sampling_by }}</center></td>

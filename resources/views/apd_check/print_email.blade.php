@@ -98,7 +98,7 @@
 					<td style="vertical-align: middle" class="head"><center>{{ $apd_check->proses }}</center></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $apd_check->jenis_apd }}</center></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $apd_check->kondisi }}</center></td>
-					<td style="vertical-align: middle" class="head" colspan="4"><center><?php echo  $apd_check->foto_aktual ?></center></td>
+					<td style="vertical-align: middle" class="head" colspan="4"><?php echo  $apd_check->foto_aktual ?></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $apd_check->leader }}</center></td>
 					@if($jml_null > 0 && $role_code != 'M')
 					<td id="approval2" style="vertical-align: middle;">

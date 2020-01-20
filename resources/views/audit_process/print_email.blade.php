@@ -110,9 +110,9 @@
 					<td style="vertical-align: middle" class="head"><center>{{ $audit_process->proses }}</center></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $audit_process->operator }}</center></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $audit_process->auditor }}</center></td>
-					<td style="vertical-align: middle" class="head"><center><?php echo $audit_process->cara_proses ?></center></td>
+					<td style="vertical-align: middle" class="head"><?php echo $audit_process->cara_proses ?></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $audit_process->kondisi_cara_proses }}</center></td>
-					<td style="vertical-align: middle" class="head"><center><?php echo $audit_process->pemahaman ?></center></td>
+					<td style="vertical-align: middle" class="head"><?php echo $audit_process->pemahaman ?></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $audit_process->kondisi_pemahaman }}</center></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $audit_process->keterangan }}</center></td>
 					@if($jml_null > 0 && $role_code != 'M')

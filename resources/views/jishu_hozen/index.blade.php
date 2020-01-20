@@ -12,7 +12,7 @@
 		text-align:center;
 	}
 	tbody>tr>td{
-		text-align:center;
+		/*text-align:center;*/
 	}
 	tfoot>tr>th{
 		text-align:center;
