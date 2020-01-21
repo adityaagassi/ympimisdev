@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('header')
 <script src="{{ url("js/jsQR.js")}}"></script>
-<script src="{{ asset('/ckeditor-full/ckeditor.js') }}"></script>
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
@@ -132,7 +132,7 @@
               <input type="text" class="form-control" name="kesesuaian_qc_kouteihyo" placeholder="Kesesuaian QC Kouteihyo">
             </div>
           </div>
-          <div class="form-group row" align="right">
+          <!-- <div class="form-group row" align="right">
             <label class="col-sm-4">Operator<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
               <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Choose an Operator..." required>
@@ -141,6 +141,28 @@
                 <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
                 @endforeach
               </select>
+            </div>
+          </div> -->
+          <div class="form-group row" align="right" id='scanner'>
+            <label class="col-sm-4">Scan QR Code<span class="text-red">*</span></label>
+            <div class="col-sm-8" align="left">
+              <div class="col-xs-12">
+                <div class="col-xs-6 col-xs-offset-3">
+                  <div id="loadingMessage">
+                    🎥 Unable to access video stream (please make sure you have a webcam enabled)
+                  </div>
+                  <canvas style="width: 240px; height: 160px;" id="canvas" hidden></canvas>
+                  <div id="output" hidden>
+                    <div id="outputMessage">No QR code detected.</div>
+                  </div>
+                </div>                  
+              </div>
+            </div>
+          </div>
+          <div class="form-group row" align="right">
+            <label class="col-sm-4">NIK</label>
+            <div class="col-sm-8" align="left">
+              <input type="text" class="form-control" name="operator" id="input_employee_id" placeholder="Enter NIK">
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -185,6 +207,69 @@
     jQuery(document).ready(function() {
       $('#email').val('');
       $('#password').val('');
+
+      var video = document.createElement("video");
+    var canvasElement = document.getElementById("canvas");
+    var canvas = canvasElement.getContext("2d");
+    var loadingMessage = document.getElementById("loadingMessage");
+
+    var outputContainer = document.getElementById("output");
+    var outputMessage = document.getElementById("outputMessage");
+
+    function drawLine(begin, end, color) {
+      canvas.beginPath();
+      canvas.moveTo(begin.x, begin.y);
+      canvas.lineTo(end.x, end.y);
+      canvas.lineWidth = 4;
+      canvas.strokeStyle = color;
+      canvas.stroke();
+    }
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+      video.srcObject = stream;
+      video.setAttribute("playsinline", true);
+      video.play();
+      requestAnimationFrame(tick);
+    });
+
+    function tick() {
+      loadingMessage.innerText = "⌛ Loading video..."
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        loadingMessage.hidden = true;
+        canvasElement.hidden = false;
+
+        canvasElement.height = video.videoHeight;
+        canvasElement.width = video.videoWidth;
+        canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+        var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+        var code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: "dontInvert",
+        });
+        if (code) {
+          drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+          drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+          drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+          drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+          outputMessage.hidden = true;
+          $('#scanner').hide();
+          // document.getElementById("input_employee_id").value = code.data.substr(0, 9);
+          var data = {
+            employee_id : code.data.substr(0, 9)
+          }
+          $.get('{{ url("index/getemployee") }}', data, function(result, status, xhr){
+            if(result.status){
+              document.getElementById("input_employee_id").value = result.name;
+            }
+            else{
+              alert('Attempt to retrieve data failed');
+            }
+          });
+        } else {
+          outputMessage.hidden = false;
+        }
+      }
+      requestAnimationFrame(tick);
+    }
     });
     CKEDITOR.replace('editor1' ,{
       filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'

@@ -39,8 +39,7 @@
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/production_report/report_all/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Leader Task Monitoring</a>
-			{{-- <a href="{{ url("index/activity_list/resume/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Resume Leader Task</a> --}}
-			{{-- <a href="{{ url("index/middle/display/Flute") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Display Buffing</a> --}}
+			<a href="{{ url("index/production_report/report_by_task/".$id) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Leader Tasks</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>

@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-<script src="{{ asset('/ckeditor-full/ckeditor.js') }}"></script>
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <style type="text/css">
   thead input {
     width: 100%;
@@ -1341,7 +1341,6 @@
         time: '3000'
       });
     }
-
 
   </script>
   @stop

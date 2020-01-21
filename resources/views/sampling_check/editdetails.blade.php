@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('header')
-<script src="{{ asset('/ckeditor-full/ckeditor.js') }}"></script>
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>

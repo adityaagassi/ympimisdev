@@ -171,6 +171,16 @@
 			<tr style="page-break-inside:avoid">
 				<td colspan="11"><b style="font-size: 20px">C. Corrective Action</b> : <?= $car->perbaikan ?></td>
 			</tr>
+			 <?php if ($car->file != null){ ?>
+			<tr style="page-break-inside:avoid">
+				<td colspan="11"><b style="font-size: 20px">Terlampir</b> : 
+					<?php $data = json_decode($car->file);
+                    for ($i = 0; $i < count($data); $i++) { ?>
+                            <a href="{{ url('/files/car/'.$data[$i]) }}" class="fa fa-paperclip"> {{$data[$i]}}</a> &nbsp;
+                  <?php } ?>         
+              </td>
+			</tr>
+			<?php } ?>
 			<tr>
 				<td colspan="9"></td>
 				<td class="centera">Prepared</td>

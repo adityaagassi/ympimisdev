@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
-<script src="{{ asset('/ckeditor-full/ckeditor.js') }}"></script>
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 	thead input {
