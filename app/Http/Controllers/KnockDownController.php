@@ -23,6 +23,7 @@ use App\Material;
 use App\ErrorLog;
 use App\OriginGroup;
 use App\ProductionSchedule;
+use App\UserActivityLog;
 use Carbon\Carbon;
 use DataTables;
 use Response;
@@ -123,6 +124,11 @@ class KnockDownController extends Controller{
 	}
 
 	public function indexKdDailyProductionResult(){
+		$activity =  new UserActivityLog([
+			'activity' => 'KD Daily Production Result (日常生産実績) ',
+			'created_by' => $user->id,
+		]);
+		$activity->save();
 		$locations = Material::where('category', '=', 'KD')
 		->whereNotNull('hpl')
 		->select('hpl')
@@ -254,17 +260,18 @@ class KnockDownController extends Controller{
 			$knock_down_deliveries = $knock_down_deliveries->where(db::raw('date(knock_down_details.created_at)'), '<=', $request->get('dateTo'));
 			$production_schedules = $production_schedules->where('production_schedules.due_date', '<=', $request->get('dateTo'));
 		}
+
 		if($request->get('originGroup') != null){
 			$knock_down_details = $knock_down_details->whereIn('materials.origin_group_code', $request->get('originGroup'));
 			$knock_down_deliveries = $knock_down_deliveries->whereIn('materials.origin_group_code', $request->get('originGroup'));
 			$production_schedules = $production_schedules->whereIn('materials.origin_group_code', $request->get('originGroup'));
 		}
 		
-		// if($request->get('hpl') != null){
-		// 	$knock_down_details = $knock_down_details->whereIn('materials.hpl', $request->get('hpl'));
-		// 	$knock_down_deliveries = $knock_down_deliveries->whereIn('materials.hpl', $request->get('hpl'));
-		// 	$production_schedules = $production_schedules->whereIn('materials.hpl', $request->get('hpl'));
-		// }
+		if($request->get('hpl') != null){
+			$knock_down_details = $knock_down_details->whereIn('materials.hpl', $request->get('hpl'));
+			$knock_down_deliveries = $knock_down_deliveries->whereIn('materials.hpl', $request->get('hpl'));
+			$production_schedules = $production_schedules->whereIn('materials.hpl', $request->get('hpl'));
+		}
 
 		if($request->get('material_number') != null){
 			$knock_down_details = $knock_down_details->whereIn('knock_down_details.material_number', $request->get('material_number'));

@@ -32,6 +32,7 @@ use App\OrganizationStructure;
 use File;
 use DateTime;
 use Illuminate\Support\Arr;
+use App\UserActivityLog;
 
 class ProductionReportController extends Controller
 {
@@ -47,12 +48,31 @@ class ProductionReportController extends Controller
                 die();
             }
         }
+        $this->activity_type = ['Audit',
+                        'Training',
+                        'Laporan Aktivitas',
+                        'Sampling Check',
+                        'Pengecekan Foto',
+                        'Interview',
+                        'Pengecekan',
+                        'Pemahaman Proses',
+                        'Labelisasi',
+                        'Cek Area',
+                        'Jishu Hozen',
+                        'Cek APD',
+                        'Weekly Report'];
     }
 
     function index($id)
     {
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+        $activity =  new UserActivityLog([
+            'activity' => 'Assembly (WI-A) Report',
+            'created_by' => Auth::user()->id,
+        ]);
+        $activity->save();
 
         $role_code = Auth::user()->role_code;
         $queryActivity = "SELECT DISTINCT(activity_type) FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null";
@@ -2411,4 +2431,95 @@ class ProductionReportController extends Controller
         return view('production_report.approval_detail', $data
           )->with('page', 'Approval Leader Task Monitoring');
     }
+
+    function report_by_task($id)
+    {
+        $queryDepartments = "SELECT * FROM departments where id='".$id."'";
+        $department = DB::select($queryDepartments);
+        foreach($department as $department){
+            $departments = $department->department_name;
+        }
+
+        $activityList = ActivityList::where('department_id',$id)->where('activity_name','!=','Null')->get();
+        // $queryLeader2 = "select DISTINCT(employees.name), employees.employee_id
+        //     from employees
+        //     join mutation_logs on employees.employee_id= mutation_logs.employee_id
+        //     join promotion_logs on employees.employee_id= promotion_logs.employee_id
+        //     where (mutation_logs.department = '".$departments."' and promotion_logs.`position` = 'leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='foreman')";
+        // $leader = DB::select($queryLeader2);
+        // $leader2 = DB::select($queryLeader2);
+        // $leader3 = DB::select($queryLeader2);
+
+        // $data = db::select("select count(*) as jumlah_activity, activity_type from activity_lists where deleted_at is null and department_id = '".$id."' GROUP BY activity_type");
+        return view('production_report.report_by_task',  array('title' => 'Leader Tasks',
+            'title_jp' => '???',
+            'id' => $id,
+            // 'data' => $data,
+            'activity_list' => $activityList,
+            'activity_type' => $this->activity_type,
+            // 'leader2' => $leader2,
+            // 'leader3' => $leader3,
+            // 'leader' => $leader,
+            'departments' => $departments,
+        ))->with('page', 'Leader Task Monitoring');
+    }
+
+    public function fetchReportByTask(Request $request)
+    {
+        if ($request->get('month') == null) {
+            $month = date('Y-m');
+        }
+        else{
+            $month = $request->get('month');
+        }
+
+        if ($request->get('activity_type') == null) {
+            $activity_type = 'Audit';
+        }
+        else{
+            $activity_type = $request->get('activity_type');
+        }
+
+        $monthTitle = date("F Y", strtotime($month));
+
+        $week = DB::SELECT("SELECT DISTINCT(week_name) from weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$month."'");
+
+        if ($activity_type == 'Audit') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select COALESCE(GROUP_CONCAT(DISTINCT(week_name) ORDER BY week_name),0) from production_audits where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and production_audits.deleted_at is null ) as hasil,4 as plan,frequency from activity_lists where activity_lists.activity_type = 'Audit' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Training') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select count(*) from training_reports where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and training_reports.deleted_at is null) as hasil,1 as plan,frequency from activity_lists where activity_lists.activity_type = 'Training' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Laporan Aktivitas') {
+            $data = DB::SELECT("select activity_lists.id,leader_dept,activity_name,(select count(*) from audit_report_activities where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and audit_report_activities.deleted_at is null ) as hasil,(SELECT count(*) from audit_guidances where leader = leader_dept and month = '".$month."' and audit_guidances.deleted_at is null) as plan,frequency from activity_lists  where activity_lists.activity_type = 'Laporan Aktivitas' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Sampling Check') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select COALESCE(GROUP_CONCAT(DISTINCT(week_name) ORDER BY week_name),0) from sampling_checks where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and sampling_checks.deleted_at is null ) as hasil,4 as plan,frequency from activity_lists where activity_lists.activity_type = 'Sampling Check' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        // $response = array(
+        //     'status' => true,
+        //     'activity_type' => $activity_type,
+        //     'datas' => $audit,
+        //     'monthTitle' => $monthTitle,
+        //     'month' => $month
+        //   );
+
+        //   return Response::json($response);
+
+          $response = array(
+            'status' => true,
+            'activity_type' => $activity_type,
+            'datas' => $data,
+            'week' => $week,
+            'monthTitle' => $monthTitle,
+            'month' => $month
+          );
+
+      return Response::json($response);
+    }
 }
+

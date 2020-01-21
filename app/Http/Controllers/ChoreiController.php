@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Response;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\UserActivityLog;
 
 class ChoreiController extends Controller
 {
@@ -16,6 +17,11 @@ class ChoreiController extends Controller
 	}
 	
 	public function index_ch_daily_production_result(){
+		$activity =  new UserActivityLog([
+			'activity' => 'Chorei (朝礼)',
+			'created_by' => $user->id,
+		]);
+		$activity->save();
 		return view('choreis.production_result')->with('page', 'Chorei Production Result')->with('head', 'Chorei');
 	}
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Response;
 use App\OriginGroup;
 use App\KnockDownDetail;
+use App\UserActivityLog;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use DataTables;
@@ -14,6 +15,12 @@ use DataTables;
 class DisplayController extends Controller
 {
 	public function index_dp_production_result(){
+		$activity =  new UserActivityLog([
+			'activity' => 'FG Daily Production Result (日常生産実績)',
+			'created_by' => $user->id,
+		]);
+		$activity->save();
+
 		$origin_groups = OriginGroup::orderBy('origin_group_name', 'asc')->get();
 		return view('displays.production_result', array(
 			'origin_groups' => $origin_groups,
@@ -49,6 +56,12 @@ class DisplayController extends Controller
 	{
 		$title = 'Container Stuffing Monitoring';
 		$title_jp = 'コンテナ荷積み監視';
+
+		$activity =  new UserActivityLog([
+			'activity' => 'Stuffing Monitoring (荷積み監視)',
+			'created_by' => $user->id,
+		]);
+		$activity->save();
 
 		return view('displays.shippings.stuffing_monitoring', array(
 			'title' => $title,
