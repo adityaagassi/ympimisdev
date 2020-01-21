@@ -274,9 +274,9 @@
 						tableData += '<td>'+ result.visitor[i].in_time +'</td>';
 						in_time.push(new Date(result.visitor[i].in_time));
 						tableData += '<td><p class="patient-duration">';
-						tableData += '<label id="hours'+ i +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[patient]) / 3600)) +'</label>:';
-						tableData += '<label id="minutes'+ i +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[patient]) % 3600) / 60)) +'</label>:';
-						tableData += '<label id="seconds'+ i +'">'+ pad(diff_seconds(new Date(), in_time[patient]) % 60) +'</label>';
+						tableData += '<label id="hours'+ patient +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[patient]) / 3600)) +'</label>:';
+						tableData += '<label id="minutes'+ patient +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[patient]) % 3600) / 60)) +'</label>:';
+						tableData += '<label id="seconds'+ patient +'">'+ pad(diff_seconds(new Date(), in_time[patient]) % 60) +'</label>';
 						tableData += '</p></td>';
 						// if(result.visitor[i].purpose == null){
 						// 	tableData += '<td>'+ '-' +'</td>';

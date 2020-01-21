@@ -310,6 +310,7 @@ class ClinicController extends Controller{
 
 		$disease = db::select("select diagnose, count(employee_id) qty from clinic_patient_details ".$date_log."
 			and diagnose is not null
+			and diagnose <> ''
 			group by diagnose
 			order by qty desc");
 
