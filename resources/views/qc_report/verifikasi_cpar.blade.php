@@ -111,7 +111,7 @@
         @if($cpars->email_status == "SentForeman" && $cpars->checked_foreman == "Checked")
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Manager</a>
 
-        @elseif(Auth::user()->username == "PI1910003" && $cpars->email_status == "SentManager") <!-- Jika yang login Foreman dan status-->
+        @elseif(Auth::user()->username == $cpars->foreman && $cpars->email_status == "SentManager") <!-- Jika yang login Foreman dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
         @endif
 
@@ -187,7 +187,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -269,7 +269,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -350,7 +350,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -431,7 +431,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -512,7 +512,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -593,7 +593,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -674,7 +674,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -759,7 +759,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -840,7 +840,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -921,7 +921,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -1002,7 +1002,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -1083,7 +1083,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
@@ -1164,7 +1164,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == "PI1910003") <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
                         @if ($cpars->posisi == "foreman")
                           @if($cpars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox">
