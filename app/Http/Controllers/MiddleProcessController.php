@@ -534,7 +534,7 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexProcessMiddleKensa($id){
-		$ng_lists = DB::table('ng_lists')->where('location', '=', $id)->get();
+		$ng_lists = DB::table('ng_lists')->where('location', '=', $id)->where('remark', '=', 'middle')->get();
 
 		if($id == 'lcq-incoming'){
 			$title = 'I.C. Saxophone Key Lacquering';

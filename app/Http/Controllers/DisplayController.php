@@ -10,6 +10,7 @@ use App\UserActivityLog;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use DataTables;
+use Illuminate\Support\Facades\Auth;
 
 
 class DisplayController extends Controller
@@ -17,7 +18,7 @@ class DisplayController extends Controller
 	public function index_dp_production_result(){
 		$activity =  new UserActivityLog([
 			'activity' => 'FG Daily Production Result (日常生産実績)',
-			'created_by' => $user->id,
+			'created_by' => Auth::id();
 		]);
 		$activity->save();
 
@@ -59,7 +60,7 @@ class DisplayController extends Controller
 
 		$activity =  new UserActivityLog([
 			'activity' => 'Stuffing Monitoring (荷積み監視)',
-			'created_by' => $user->id,
+			'created_by' => Auth::id(),
 		]);
 		$activity->save();
 

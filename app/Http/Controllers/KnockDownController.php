@@ -126,7 +126,7 @@ class KnockDownController extends Controller{
 	public function indexKdDailyProductionResult(){
 		$activity =  new UserActivityLog([
 			'activity' => 'KD Daily Production Result (日常生産実績) ',
-			'created_by' => $user->id,
+			'created_by' => Auth::id(),
 		]);
 		$activity->save();
 		$locations = Material::where('category', '=', 'KD')
