@@ -10,6 +10,6 @@ class ClinicMedicineLog extends Model{
 	use SoftDeletes;
 
 	protected $fillable = [
-		'medicine_name', 'status', 'clinic_visitor_detail', 'quantity'
+		'medicine_name', 'status', 'clinic_patient_detail', 'quantity'
 	];
 }

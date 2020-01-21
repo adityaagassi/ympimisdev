@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use App\CodeGenerator;
 use App\ClinicPatient;
 use App\ClinicPatientDetail;
 use App\ClinicMedicine;
@@ -135,8 +136,8 @@ class ClinicController extends Controller{
 	}
 
 	public function indexClinicDisease(){
-		$title = "Clinic Patient's Disease";
-		$title_jp = '??';
+		$title = "Clinic Diagnostic Data";
+		$title_jp = 'クリニック見立てデータ';
 
 		return view('clinic.display.clinic_disease', array(
 			'title' => $title,
@@ -145,8 +146,8 @@ class ClinicController extends Controller{
 	}
 
 	public function indexClinicMonitoring(){
-		$title = 'Clinic Visit Monitoring';
-		$title_jp = '??';
+		$title = 'Clinic Monitoring';
+		$title_jp = 'クリニック監視';
 
 		return view('clinic.display.clinic_visit_monitoring', array(
 			'title' => $title,
@@ -156,7 +157,7 @@ class ClinicController extends Controller{
 
 	public function indexClinicVisit(){
 		$title = 'Clinic Visit';
-		$title_jp = '??';
+		$title_jp = 'クリニック訪問';
 
 		return view('clinic.display.clinic_visit', array(
 			'title' => $title,
@@ -366,16 +367,7 @@ class ClinicController extends Controller{
 		$purpose = $request->get('purpose');
 		$bed = $request->get('bed');
 
-		$diagnose = "";
-		if($request->get('diagnose') != null) {
-			$diagnoses = $request->get('diagnose');
-			for($x = 0; $x < count($diagnoses); $x++) {
-				$diagnose = $diagnose.$diagnoses[$x];
-				if($x != count($diagnoses)-1){
-					$diagnose = $diagnose.", ";
-				}
-			}
-		}
+		$diagnose = null;
 
 		$paramedic = $request->get('paramedic');
 		$doctor = $request->get('doctor');
@@ -383,19 +375,50 @@ class ClinicController extends Controller{
 		$family_name = $request->get('family_name');
 		$visited_at = $request->get('date');
 
+
+		$code_generator = CodeGenerator::where('note','=','clinic-detail')->first();
+		$patient_detail_id = $code_generator->index+1;
+		$code_generator->index = $code_generator->index+1;
+		$code_generator->save();
+
+
+
 		try{
 			//Input Patient Diagnose
-			$clinic_patient_detail = new ClinicPatientDetail([
-				'employee_id' => $employee_id,
-				'purpose' => $purpose,
-				'diagnose' => $diagnose,
-				'paramedic' => Auth::user()->name,
-				'doctor' => $doctor,
-				'family' => $family,
-				'family_name' => $family_name,
-				'visited_at' => $visited_at,
-			]);
-			$clinic_patient_detail->save();	
+			
+			if($request->get('diagnose') != null) {
+				$diagnoses = $request->get('diagnose');
+				for($x = 0; $x < count($diagnoses); $x++) {
+					$diagnose = 
+					$clinic_patient_detail = new ClinicPatientDetail([
+						'employee_id' => $employee_id,
+						'patient_list_id' => $idx,
+						'purpose' => $purpose,
+						'diagnose' => $diagnoses[$x],
+						'paramedic' => Auth::user()->name,
+						'doctor' => $doctor,
+						'family' => $family,
+						'family_name' => $family_name,
+						'visited_at' => $visited_at,
+					]);
+					$clinic_patient_detail->save();
+					
+				}
+			}else{
+				$clinic_patient_detail = new ClinicPatientDetail([
+					'employee_id' => $employee_id,
+					'patient_list_id' => $idx,
+					'purpose' => $purpose,
+					'diagnose' => $diagnose,
+					'paramedic' => Auth::user()->name,
+					'doctor' => $doctor,
+					'family' => $family,
+					'family_name' => $family_name,
+					'visited_at' => $visited_at,
+				]);
+				$clinic_patient_detail->save();
+			}
+
 
 			//Input Medicine
 			if($request->get('medicine') != null) {
@@ -405,17 +428,16 @@ class ClinicController extends Controller{
 					$clinic_medicine_log[$x] = new ClinicMedicineLog([
 						'medicine_name' => $medicines[$x]['medicine_name'],
 						'status' => 'out',
-						'clinic_patient_detail' => $clinic_patient_detail->id,
+						'clinic_patient_detail' => $idx,
 						'quantity' => $medicines[$x]['quantity'],
 					]);
-					DB::transaction(function() use ($clinic_patient_detail, $idx, $clinic_medicine_log, $x, $bed){
-						$clinic_patient_detail->save();
+					DB::transaction(function() use ($idx, $clinic_medicine_log, $x, $bed){
 						$clinic_medicine_log[$x]->save();
 
 						$clinic_patient = db::connection('clinic')->table('patient_list')
 						->where('idx', '=', $idx)
 						->update([
-							'status' => $clinic_patient_detail->id,
+							'status' => 'Yes',
 							'note' => $bed
 						]);
 					});
