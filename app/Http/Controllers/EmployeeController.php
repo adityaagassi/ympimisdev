@@ -66,9 +66,9 @@ class EmployeeController extends Controller
                'Absensi', 'Lembur', 'BPJS Kes', 'BPJS TK', 'Cuti', "PKB", "Penggajian"
           ];
 
-          $this->usr = "'O11101710'";
+          $this->usr = "'PI1110001'";
 
-          $this->wst = ['18084786', '18094874', 'S15053064'];
+          $this->wst = ['PI1808032', 'PI1809036', 'PI1505002'];
 
      }
 // master emp
