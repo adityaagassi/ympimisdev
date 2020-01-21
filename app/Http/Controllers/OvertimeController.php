@@ -1446,7 +1446,7 @@ public function overtimeControl(Request $request)
 		where period = '".$tanggal."'
 		union all
 		select cost_center, 0 as bdg, round(SUM(`hour`),1) as fq from forecasts where date >= '".$tanggal."' and date <= '".$tanggal1."' GROUP BY cost_center) as semua
-		left join cost_centers2 on cost_centers2.cost_center = semua.cost_center
+		inner join cost_centers2 on cost_centers2.cost_center = semua.cost_center
 		group by cost_center, cost_center_name";
 
 		$main = db::select($main_q);
