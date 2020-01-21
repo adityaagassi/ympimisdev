@@ -375,11 +375,12 @@ class TrainingReportController extends Controller
             $nama_file = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $file->getClientOriginalName();
-            $file->move($tujuan_upload,$file->getClientOriginalName());
+            $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+            $file->move($tujuan_upload,$filename);
 
             TrainingPicture::create([
                 'training_id' => $id,
-                'picture' => $nama_file,
+                'picture' => $filename,
                 'extension' => $extension,
                 'created_by' => $id_user
             ]);
@@ -436,10 +437,11 @@ class TrainingReportController extends Controller
             $nama_file = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $file->getClientOriginalName();
-            $file->move($tujuan_upload,$file->getClientOriginalName());
+            $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+            $file->move($tujuan_upload,$filename);
 
             $training_picture = TrainingPicture::find($picture_id);
-            $training_picture->picture = $nama_file;
+            $training_picture->picture = $filename;
             $training_picture->extension = $extension;
             $training_picture->save();
 

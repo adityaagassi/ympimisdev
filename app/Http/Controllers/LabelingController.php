@@ -168,11 +168,13 @@ class LabelingController extends Controller
 
             $file = $request->file('file');
             $nama_file = $file->getClientOriginalName();
-            $file->move($tujuan_upload,$file->getClientOriginalName());
+            $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+            $file->move($tujuan_upload,$filename);
 
             $file2 = $request->file('file2');
             $nama_file2 = $file2->getClientOriginalName();
-            $file2->move($tujuan_upload,$file2->getClientOriginalName());
+            $filename2 = md5(date("dmYhis-A")).'.'.$file2->getClientOriginalExtension();
+            $file2->move($tujuan_upload,$filename2);
 
             Labeling::create([
                 'activity_list_id' => $id,
@@ -182,8 +184,8 @@ class LabelingController extends Controller
                 'periode' => $request->input('periode'),
                 'date' => $request->input('date'),
                 'nama_mesin' => $request->input('nama_mesin'),
-                'foto_arah_putaran' => $nama_file,
-                'foto_sisa_putaran' => $nama_file2,
+                'foto_arah_putaran' => $filename,
+                'foto_sisa_putaran' => $filename2,
                 'keterangan' => $request->input('keterangan'),
                 'leader' => $request->input('leader'),
                 'foreman' => $request->input('foreman'),
@@ -239,12 +241,14 @@ class LabelingController extends Controller
                 $file = $request->file('file');
                 $nama_file = $file->getClientOriginalName();
                 $file->getClientOriginalName();
-                $file->move($tujuan_upload,$file->getClientOriginalName());
+                $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
 
                 $file2 = $request->file('file2');
                 $nama_file2 = $file2->getClientOriginalName();
                 $file2->getClientOriginalName();
-                $file2->move($tujuan_upload,$file2->getClientOriginalName());
+                $filename2 = md5(date("dmYhis-A")).'.'.$file2->getClientOriginalExtension();
+                $file2->move($tujuan_upload,$filename2);
 
                 $labeling = Labeling::find($labeling_id);
                 $labeling->activity_list_id = $id;
@@ -254,8 +258,8 @@ class LabelingController extends Controller
                 $labeling->periode = $request->get('periode');
                 $labeling->date = $request->get('date');
                 $labeling->nama_mesin = $request->get('nama_mesin');
-                $labeling->foto_arah_putaran = $nama_file;
-                $labeling->foto_sisa_putaran = $nama_file2;
+                $labeling->foto_arah_putaran = $filename;
+                $labeling->foto_sisa_putaran = $filename2;
                 $labeling->keterangan = $request->get('keterangan');
                 $labeling->leader = $request->get('leader');
                 $labeling->foreman = $request->get('foreman');

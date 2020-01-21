@@ -287,14 +287,16 @@ class ProductionAuditController extends Controller
 
             $file = $request->file('file');
             $nama_file = $file->getClientOriginalName();
-            $file->move($tujuan_upload,$file->getClientOriginalName());
+            $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+
+            $file->move($tujuan_upload,$filename);
 
             ProductionAudit::create([
                 'activity_list_id' => $id,
                 'point_check_audit_id' => $request->input('point_check'),
                 'date' => $date,
                 'week_name' => $week_name,
-                'foto_kondisi_aktual' => $nama_file,
+                'foto_kondisi_aktual' => $filename,
                 'kondisi' => $request->input('kondisi'),
                 'pic' => $request->input('pic'),
                 'auditor' => $request->input('auditor'),
@@ -357,14 +359,15 @@ class ProductionAuditController extends Controller
                 $file = $request->file('file');
                 $nama_file = $file->getClientOriginalName();
                 $file->getClientOriginalName();
-                $file->move($tujuan_upload,$file->getClientOriginalName());
+                $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+                $file->move($tujuan_upload,$filename);
 
                 $production_audit = ProductionAudit::find($audit_id);
                 $production_audit->activity_list_id = $id;
                 $production_audit->point_check_audit_id = $request->get('point_check');
                 $production_audit->date = $request->get('date');
                 $production_audit->week_name = $week_name;
-                $production_audit->foto_kondisi_aktual = $nama_file;
+                $production_audit->foto_kondisi_aktual = $filename;
                 $production_audit->kondisi = $request->get('kondisi');
                 $production_audit->pic = $request->get('pic');
                 $production_audit->auditor = $request->get('auditor');

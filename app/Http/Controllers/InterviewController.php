@@ -657,11 +657,12 @@ class InterviewController extends Controller
             $nama_file = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $file->getClientOriginalName();
-            $file->move($tujuan_upload,$file->getClientOriginalName());
+            $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+            $file->move($tujuan_upload,$filename);
 
             InterviewPicture::create([
                 'interview_id' => $id,
-                'picture' => $nama_file,
+                'picture' => $filename,
                 'extension' => $extension,
                 'created_by' => $id_user
             ]);
@@ -692,10 +693,11 @@ class InterviewController extends Controller
             $nama_file = $file->getClientOriginalName();
             $extension = $file->getClientOriginalExtension();
             $file->getClientOriginalName();
-            $file->move($tujuan_upload,$file->getClientOriginalName());
+            $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+            $file->move($tujuan_upload,$filename);
 
             $interview_picture = InterviewPicture::find($picture_id);
-            $interview_picture->picture = $nama_file;
+            $interview_picture->picture = $filename;
             $interview_picture->extension = $extension;
             $interview_picture->save();
 
