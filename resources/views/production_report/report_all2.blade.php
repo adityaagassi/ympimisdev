@@ -827,6 +827,15 @@ function ShowModalChart(leader_name,frequency) {
                 else if(parseInt(aktual) >= 16 && parseInt(aktual) < 20 ){
                   total_aktual = 4;
                 }
+                else if(parseInt(aktual) >= 20 && parseInt(aktual) < 24 ){
+                  total_aktual = 5;
+                }
+                else if(parseInt(aktual) >= 24 && parseInt(aktual) < 28 ){
+                  total_aktual = 6;
+                }
+                else if(parseInt(aktual) >= 28 && parseInt(aktual) < 32 ){
+                  total_aktual = 7;
+                }
                 
                 presentase = (total_aktual/total_plan)*100;
                 // console.log(presentase);
