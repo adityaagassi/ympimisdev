@@ -375,14 +375,6 @@ class ClinicController extends Controller{
 		$family_name = $request->get('family_name');
 		$visited_at = $request->get('date');
 
-
-		$code_generator = CodeGenerator::where('note','=','clinic-detail')->first();
-		$patient_detail_id = $code_generator->index+1;
-		$code_generator->index = $code_generator->index+1;
-		$code_generator->save();
-
-
-
 		try{
 			//Input Patient Diagnose
 			
