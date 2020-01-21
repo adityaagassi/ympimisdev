@@ -18,7 +18,7 @@ class DisplayController extends Controller
 	public function index_dp_production_result(){
 		$activity =  new UserActivityLog([
 			'activity' => 'FG Daily Production Result (日常生産実績)',
-			'created_by' => Auth::id();
+			'created_by' => Auth::id(),
 		]);
 		$activity->save();
 
