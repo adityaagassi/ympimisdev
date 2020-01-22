@@ -489,8 +489,6 @@ class QcCarController extends Controller
 
                  if ($mails == NULL) {
                     $to = 'employee_id';
-
-
                     $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                     $mails = DB::select($mailto);
                  }
@@ -713,12 +711,24 @@ class QcCarController extends Controller
 
             else if($verif[0]->verifikatorchief == null && $verif[0]->verifikatorforeman == null && $verif[0]->verifikatorcoordinator == null) {
                 if (($qc_cars->email_status == "SentStaff" && $qc_cars->posisi == "staff") || ($qc_cars->email_status == "SentForeman" && $qc_cars->posisi == "foreman")) {
-                  $qc_cars->email_status = "SentManager";
-                  $qc_cars->email_send_date = date('Y-m-d');
-                  $qc_cars->posisi = "manager";
-                  $qc_cars->save();
-                  Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
-                  return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR'); 
+
+                  if($qc_cars->car_cpar->employee_id == $qc_cars->car_cpar->dgm){
+                    $qc_cars->email_status = "SentDGM";
+                    $qc_cars->email_send_date = date('Y-m-d');
+                    $qc_cars->posisi = "dgm";
+                    $qc_cars->save();
+                    Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
+                    return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CAR');
+                  }
+                  else{
+                    $qc_cars->email_status = "SentManager";
+                    $qc_cars->email_send_date = date('Y-m-d');
+                    $qc_cars->posisi = "manager";
+                    $qc_cars->save();
+                    Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
+                    return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');                     
+                  }
+
                 }
 
                 else if($qc_cars->email_status == "SentManager" && $qc_cars->posisi == "manager"){
@@ -736,7 +746,7 @@ class QcCarController extends Controller
                   $qc_cars->posisi = "gm";
                   $qc_cars->save();
                   // Mail::to('yukitaka.hayakawa@music.yamaha.com')->send(new SendEmail($cars, 'car'));
-                  return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke GM berhasil terkirim')->with('page', 'CAR');
+                  return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'Verifikasi Telah Berhasil')->with('page', 'CAR');
                 }
                 else if($qc_cars->email_status == "SentGM" && $qc_cars->posisi == "gm"){
                   $qc_cars->email_status = "SentQA";
@@ -858,6 +868,7 @@ class QcCarController extends Controller
             }
 
             else if ($cars->posisi == "dgm") {
+              $cars->checked_manager = "Checked";
               $cars->approved_dgm = "Checked";  
               $cars->email_status = "SentGM";
               $cars->email_send_date = date('Y-m-d');

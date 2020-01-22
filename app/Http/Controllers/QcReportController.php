@@ -183,7 +183,7 @@ class QcReportController extends Controller
         ->whereNull('promotion_logs.valid_to')
         ->whereNull('mutation_logs.valid_to')
         ->whereNull('employees.end_date')
-        ->whereNotIn('departments.id',['1','2','3','4','11','13','14'])
+        ->whereNotIn('departments.id',['1','2','3','4','10','11','13','14'])
         ->where('promotion_logs.position','manager')
         ->distinct()
         ->get();

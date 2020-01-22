@@ -226,7 +226,7 @@
                         @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
+                          <span class="label label-danger">Sudah Diverifikasi</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cars->gm)
@@ -290,7 +290,7 @@
                         @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
+                          <span class="label label-danger">Sudah Diverifikasi</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cars->gm)
@@ -356,7 +356,7 @@
                         @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
+                          <span class="label label-danger">Sudah Diverifikasi</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cars->gm)
@@ -422,7 +422,7 @@
                         @elseif($cars->posisi == "staff" || $cars->posisi == "foreman")
                           <span class="label label-danger">Sudah Dikirim Ke Staff / Foreman</span>
                         @else
-                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
+                          <span class="label label-danger">Sudah Diverifikasi</span>
                         @endif
 
                       @elseif(Auth::user()->username == $cars->gm)
