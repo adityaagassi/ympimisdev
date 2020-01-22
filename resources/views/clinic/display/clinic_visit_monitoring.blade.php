@@ -296,7 +296,7 @@
 						if(result.visitor[i].employee_id == 'PR0000001'){
 							paramedic += 'Elis Kurniawati<br>';
 						}else if(result.visitor[i].employee_id == 'PR0000002'){
-							paramedic += 'Nanang Sugianto<br>';
+							paramedic += 'Nanang S.<br>';
 						}else if(result.visitor[i].employee_id == 'PR0000003'){
 							paramedic += 'Ahmad Fanani<br>';
 						}
