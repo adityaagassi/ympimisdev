@@ -784,7 +784,7 @@ class QcReportController extends Controller
           $sta = '';
       }      
 
-      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, year(tgl_permintaan) as tahun, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep." ".$sta."  GROUP BY bulan,tahun order by tahun, month(tgl_permintaan) ASC");
+      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, year(tgl_permintaan) as tahun, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where qc_cpars.deleted_at is null and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep." ".$sta."  GROUP BY bulan,tahun order by tahun, month(tgl_permintaan) ASC");
 
       // $tahun = date('Y');
       // $monthTitle = date("Y", strtotime($bulan));
@@ -836,7 +836,7 @@ class QcReportController extends Controller
           $dep = '';
       }      
 
-      $data = db::select("select count(cpar_no) as jumlah, kategori, fiscal_year, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where fiscal_year='".$fiscal."' GROUP BY kategori,fiscal_year order by fiscal_year, month(tgl_permintaan) ASC");
+      $data = db::select("select count(cpar_no) as jumlah, kategori, fiscal_year, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null and fiscal_year='".$fiscal."' GROUP BY kategori,fiscal_year order by fiscal_year, month(tgl_permintaan) ASC");
 
       $response = array(
         'status' => true,

@@ -187,7 +187,7 @@
 				<!-- small box -->
 				<div class="small-box bg-blue" style="font-size: 30px;font-weight: bold;height: 143px;">
 					<div class="inner" style="padding-bottom: 0px;">
-						<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>VERIFICATION</b></h3>
+						<h3 style="margin-bottom: 0px;font-size: 1.5vw;"><b>Verification On Progress</b></h3>
 						<h2 style="margin: 0px; font-size: 4vw;" id='qa'>0<sup style="font-size: 2vw"> kasus</sup></h2>
 					</div>
 					<div class="icon">
