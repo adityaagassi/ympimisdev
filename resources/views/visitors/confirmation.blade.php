@@ -273,7 +273,9 @@
 			$('#telp').keyboard();
 			// $('#nikkaryawan').val('asd');
 			filltelpon();
-
+			setTimeout(function(){
+			      location = ''
+			    },60000);
 			$('.select2').select2({
 				dropdownAutoWidth : true,
 				width: '100%',

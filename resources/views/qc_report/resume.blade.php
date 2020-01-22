@@ -85,8 +85,8 @@
                   </thead>
                   <tbody>
                   	<tr>
-                  		<td rowspan="4">Eksternal</td>
-                  		<td rowspan="4">Komplain Parts dan FG yang diproduksi oleh YMPI</td>
+                  		<td rowspan="3">Eksternal</td>
+                  		<td rowspan="3">Komplain Parts dan FG yang diproduksi oleh YMPI</td>
                   		<td>NG Jelas</td>
                   		<td>Komplain diterima by email oleh GM dari QA YCJ (Tiap bulan)</td>
                   		<td>Semua</td>
@@ -104,12 +104,12 @@
                   		<td>Semua</td>
                   		<td><h3 style="margin: 0px;font-size: 2vw;" id='FG'>0</h3></td>
                   	</tr>
-                  	<tr>
+                  	<!-- <tr>
                   		<td>Claim Rate</td>
                   		<td>Komplain diterima by email oleh GM dari QA YCJ (Tiap bulan)</td>
                   		<td>Kasus critical atau kasus terjadi 3x berturut-turut</td>
                   		<td><h3 style="margin: 0px;font-size: 2vw;" id='Claim'>0</h3></td>
-                  	</tr>
+                  	</tr> -->
                   	<tr>
                   		<td>Internal</td>
                   		<td>Informasi antar bagian di dalam proses</td>
@@ -120,7 +120,7 @@
                   	</tr>
                   	<tr>
                   		<td rowspan="2">Supplier</td>
-                  		<td rowspan="2">Komplain parts/material  dari Supplier yang masuk ke YMPI</td>
+                  		<td rowspan="2">Komplain yang diberikan YMPI ke Supplier</td>
                   		<td>Non YMMJ</td>
                   		<td>Komplain yang diberikan YMPI ke supplier sumber masalah</td>
                   		<td>NG critical atau bila terjadi lot out</td>
@@ -168,7 +168,6 @@
 					<div class="icon">
 						<i class="ion ion-stats-bars"></i>
 					</div>
-					
 				</div>
 			</div>
 			<div class="col-lg-12 col-xs-12" style="margin-left: 0px; padding: 0px;">
