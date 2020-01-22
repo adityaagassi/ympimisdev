@@ -606,7 +606,7 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 
                 $qc_cars->save();
-                Mail::to($mailtoo)->bcc('rioirvansyah6@gmail.com','Rio Irvansyah')->send(new SendEmail($cars, 'car'));
+                Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CAR');  
               }
 

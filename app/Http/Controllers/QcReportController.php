@@ -1780,7 +1780,7 @@ class QcReportController extends Controller
                   $qc_cpars->posisi = "chief";
                   $qc_cpars->progress = "25";
                   $qc_cpars->save();
-                  Mail::to($mailtoo)->bcc('rioirvansyah6@gmail.com','Rio Irvansyah')->send(new SendEmail($cpars, 'cpar'));
+                  Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpars, 'cpar'));
                   return redirect('/index/qc_report')->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CPAR');
                 }
                 else{
@@ -1801,7 +1801,7 @@ class QcReportController extends Controller
                   $qc_cpars->posisi = "foreman";
                   $qc_cpars->progress = "25";
                   $qc_cpars->save();
-                  Mail::to($mailtoo)->bcc('rioirvansyah6@gmail.com','Rio Irvansyah')->send(new SendEmail($cpars, 'cpar'));
+                  Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpars, 'cpar'));
                   return redirect('/index/qc_report')->with('status', 'E-mail ke Foreman berhasil terkirim')->with('page', 'CPAR');
                 }
                 else{
