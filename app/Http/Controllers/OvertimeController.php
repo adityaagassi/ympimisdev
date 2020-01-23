@@ -1441,7 +1441,13 @@ public function overtimeControl(Request $request)
 
 		$ot = db::connection('mysql3')->select($q);
 
-		$main_q = "x";
+		$main_q = "select semua.cost_center, cost_center_name, SUM(bdg) as bdg, SUM(fq) as fq, DATE_FORMAT('".$tanggal1."','%d %M %Y') as tanggal from
+		(select cost_center, round(budget / DAY(LAST_DAY('".$tanggal1."')) * DAY('".$tanggal1."'),1) as bdg, 0 as fq from budgets 
+		where period = '".$tanggal."'
+		union all
+		select cost_center, 0 as bdg, round(SUM(`hour`),1) as fq from forecasts where date >= '".$tanggal."' and date <= '".$tanggal1."' GROUP BY cost_center) as semua
+		inner join cost_centers2 on cost_centers2.cost_center = semua.cost_center
+		group by cost_center, cost_center_name";
 
 		$main = db::select($main_q);
 
