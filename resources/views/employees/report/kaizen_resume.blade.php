@@ -102,6 +102,46 @@
 		</div>
 	</div>
 </section>
+
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalDetailTitle"></h4>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<center>
+						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+					</center>
+					<table class="table table-hover table-bordered table-striped" id="tableDetail">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 1%;">#</th>
+								<th style="width: 3%;">ID</th>
+								<th style="width: 9%;">Name</th>
+								<th style="width: 3%;">Section</th>
+								<th style="width: 3%;">Group</th>
+								<th style="width: 3%;">Total Kaizen</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailBody">
+						</tbody>
+						<tfoot id="tableDetailFoot">
+							<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th>Total</th>
+								<th id="totalKaizen"></th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
@@ -145,7 +185,7 @@
 					kumpul.push(parseInt(value.total_sudah));
 					belum.push(parseInt(value.total_belum));
 					total_kz.push(parseInt(value.total_kaizen));
-					ctg.push(value.name);
+					ctg.push(value.leader+"-"+value.name);
 				});
 
 				Highcharts.chart('kz_total', {
@@ -189,6 +229,13 @@
 						},
 						series:{
 							cursor: 'pointer',
+							point: {
+								events: {
+									click: function () {
+										fetchModal(this.category);
+									}
+								}
+							},
 							dataLabels: {
 								enabled: true,
 								format: '{point.y}',
@@ -212,19 +259,58 @@
 						data: kumpul,
 						color: '#2caddb'
 					}
-					// ,
-					// {
-					// 	type: 'line',
-					// 	name: 'Jumlah usulan',
-					// 	data: total_kz,
-					// 	color: '#44ab4b'
-					// }
 					]
 				});
 			} else {
-
+				alert(result.message);
 			}
 		})
+	}
+
+	function fetchModal(cat){
+		$('#modalDetail').modal('show');
+		$('#loading').show();
+		$('#modalDetailTitle').html("");
+		$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Stock: "+cat+"</span></center>");
+		$('#tableDetail').hide();
+		var tanggal = $('#tgl').val();
+
+		var data = {
+			tanggal:tanggal,
+			leader:cat
+		}
+		$.get('{{ url("fetch/kaizen/resume_detail") }}', data, function(result) {
+			if(result.status){
+				$('#tableDetailBody').html('');
+
+				var index = 1;
+				var resultData = "";
+				var total = 0;
+
+				$.each(result.details, function(key, value) {
+					resultData += '<tr>';
+					resultData += '<td>'+ index +'</td>';
+					resultData += '<td>'+ value.employee_id +'</td>';
+					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.section +'</td>';
+					resultData += '<td>'+ value.group +'</td>';
+					resultData += '<td>'+ value.kz +'</td>';
+					resultData += '</tr>';
+					index += 1;
+					total += parseInt(value.kz);
+				});
+				$('#tableDetailBody').append(resultData);
+				$('#loading').hide();
+				$('#tableDetail').show();
+
+				$('#totalKaizen').text(total);
+
+			}
+			else{
+				alert(result.message);
+			}
+		});
+
 	}
 
 	$('#tgl').datepicker({
@@ -233,5 +319,6 @@
 		viewMode: "months", 
 		minViewMode: "months"
 	});
+	
 </script>
 @endsection

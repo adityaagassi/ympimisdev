@@ -12,7 +12,6 @@
 |
 */
 
-
 if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
@@ -837,6 +836,15 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	// end ng FL
 });
 
+//welding process
+Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
+
+});
+Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
+Route::get('scan/welding/operator', 'WeldingProcessController@scanWeldingOperator');
+
+
+
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
 	Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
@@ -913,6 +921,8 @@ Route::group(['nav' => 'S31', 'middleware' => 'permission'], function(){
 	Route::get('index/workshop/wjo', 'WorkshopController@indexWJO');
 });
 
+Route::get('index/workshop/workload', 'WorkshopController@indexWorkload');
+Route::get('fetch/workshop/workload', 'WorkshopController@fetchWorkload');
 Route::get('fetch/workshop/machine', 'WorkshopController@scanMachine');
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
@@ -1102,6 +1112,7 @@ Route::get('index/kaizen2/report', 'EmployeeController@indexKaizenReport');
 Route::get('fetch/kaizen/report', 'EmployeeController@fetchKaizenReport');
 Route::get('index/kaizen2/resume', 'EmployeeController@indexKaizenResume');
 Route::get('fetch/kaizen/resume', 'EmployeeController@fetchKaizenResume');
+Route::get('fetch/kaizen/resume_detail', 'EmployeeController@fetchKaizenResumeDetail');
 Route::get('index/kaizen/aproval/resume', 'EmployeeController@indexKaizenApprovalResume');
 Route::get('kaizen/session', 'EmployeeController@setSession');
 
@@ -1963,7 +1974,7 @@ Route::get('index/weekly_report/print_weekly_report_email/{id}/{month}','WeeklyA
 Route::post('index/weekly_report/sendemail/{id}','WeeklyActivityReportController@sendemail');
 Route::post('index/weekly_report/approval/{id}/{month}','WeeklyActivityReportController@approval');
 
-//RECORDER PROCESS
+//RECORDER PUSH PULL CHECK
 Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
@@ -1981,6 +1992,13 @@ Route::get('index/recorder/detail_monitoring2', 'RecorderProcessController@detai
 Route::post('index/recorder/print_report_push_block/{remark}', 'RecorderProcessController@print_report_push_block');
 Route::get('index/recorder/get_push_pull','RecorderProcessController@get_push_pull')->name('recorder.get_push_pull');
 Route::post('index/recorder/update/{id}','RecorderProcessController@update');
+
+//RECORDER PUSH PULL CHECK
+Route::get('index/recorder_push_pull_check', 'RecorderProcessController@index_push_pull');
+Route::get('push_pull/fetchResult', 'RecorderProcessController@fetchResultPushPull');
+Route::get('push_pull/fetchResultCamera', 'RecorderProcessController@fetchResultCamera');
+Route::get('post/display/email/{value_check}/{judgement}/{model}/{checked_at}', 'RecorderProcessController@email');
+Route::post('push_pull/store_push_pull', 'RecorderProcessController@store_push_pull');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -2167,6 +2185,13 @@ Route::get('index/kanagata_lifetime/getkanagatalifetime','PressController@getkan
 Route::post('index/kanagata/update/{id}','PressController@update');
 Route::post('index/kanagata/reset','PressController@reset');
 
+
+//IP
+
+Route::get('index/display/ip', 'PingController@indexIpMonitoring');
+Route::get('fetch/display/ip', 'PingController@fetch');
+Route::get('fetch/display/fetch_hit/{ip}', 'PingController@fetch_hit');
+Route::post('post/display/ip_log', 'PingController@ip_log');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
