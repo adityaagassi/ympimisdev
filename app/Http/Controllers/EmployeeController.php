@@ -2744,13 +2744,13 @@ public function fetchKaizenResume(Request $request)
           // inner join employee_syncs on employee_syncs.employee_id = final.leader_id where employee_syncs.end_date is null
           // group by final.leader_id, employee_syncs.`name` order by total_belum desc";
 
-          $q = "select kaizen_leaders.leader_id, A.`name`, count(kz) as total_sudah, count(coalesce(kz, 1)) as total_operator, count(coalesce(kz, 1))-count(kz) total_belum from kaizen_leaders 
+          $q = "select kaizen_leaders.leader_id as leader, A.`name`, count(kz) as total_sudah, count(coalesce(kz, 1)) as total_operator, count(coalesce(kz, 1))-count(kz) total_belum from kaizen_leaders 
           left join (select employee_id, count(id) as kz from kaizen_forms where propose_date in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
           left join employee_syncs on employee_syncs.employee_id = kaizen_leaders.employee_id
           left join employee_syncs A on A.employee_id = kaizen_leaders.leader_id
           where employee_syncs.end_date is null and A.end_date is null and A.employee_id is not null
           group by kaizen_leaders.leader_id, A.`name`
-          order by kz asc";
+          order by total_belum desc";
 
           $datas = db::select($q);
 
