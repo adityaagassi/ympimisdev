@@ -118,6 +118,7 @@
 								<th style="width: 1%;">#</th>
 								<th style="width: 3%;">ID</th>
 								<th style="width: 9%;">Name</th>
+								<th style="width: 3%;">Grade</th>
 								<th style="width: 3%;">Section</th>
 								<th style="width: 3%;">Group</th>
 								<th style="width: 3%;">Total Kaizen</th>
@@ -127,6 +128,7 @@
 						</tbody>
 						<tfoot id="tableDetailFoot">
 							<tr>
+								<th></th>
 								<th></th>
 								<th></th>
 								<th></th>
@@ -292,6 +294,7 @@
 					resultData += '<td>'+ index +'</td>';
 					resultData += '<td>'+ value.employee_id +'</td>';
 					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.grade +'</td>';
 					resultData += '<td>'+ value.section +'</td>';
 					resultData += '<td>'+ value.group +'</td>';
 					resultData += '<td>'+ value.kz +'</td>';
@@ -319,6 +322,6 @@
 		viewMode: "months", 
 		minViewMode: "months"
 	});
-	
+
 </script>
 @endsection
