@@ -84,7 +84,7 @@
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>	
 			
-			<div id="container1" style="padding: 1%; padding-bottom: 0%; height: 250px;"></div>
+			<div id="container1" style="padding: 1%; padding-bottom: 0%; height: 300px;"></div>
 			<div id="container2" style="padding-right: 1%; padding-left: 1%;">
 				<table id="table-monitor" class="table" style="width: 100%; background-color: #212121;">
 					<thead>
@@ -391,8 +391,8 @@
 
 					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%;">';
 
-					if(result.progress[i].approved){
-						approved_time.push(new Date(result.progress[i].approved));
+					if(result.progress[i].requested){
+						approved_time.push(new Date(result.progress[i].requested));
 					}else{
 						approved_time.push(0);
 					}

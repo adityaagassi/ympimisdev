@@ -141,7 +141,7 @@
 								<span style="font-weight: bold; font-size: 16px;">Bagian:<span class="text-red">*</span></span>
 							</div>
 							<div class="col-xs-6">
-								<select class="form-control select2" data-placeholder="Pilih Bagian" name="sub_section" id="sub_section" style="width: 100% height: 35px; font-size: 15px;" required>
+								<select class="form-control select3" data-placeholder="Pilih Bagian" name="sub_section" id="sub_section" style="width: 100% height: 35px; font-size: 15px;" required>
 									<option value=""></option>
 									@php
 									$group = array();
@@ -162,7 +162,7 @@
 								<span style="font-weight: bold; font-size: 16px;">Prioritas:<span class="text-red">*</span></span>
 							</div>
 							<div class="col-xs-4">
-								<select class="form-control select2" data-placeholder="Pilih Prioritas Pengerjaan" name="priority" id="priority" style="width: 100% height: 35px; font-size: 15px;" required>
+								<select class="form-control select3" data-placeholder="Pilih Prioritas Pengerjaan" name="priority" id="priority" style="width: 100% height: 35px; font-size: 15px;" required>
 									<option value=""></option>
 									<option value="Normal">Normal</option>
 									<option value="Urgent">Urgent</option>
@@ -175,7 +175,7 @@
 								<span style="font-weight: bold; font-size: 16px;">Jenis Pekerjaan:<span class="text-red">*</span></span>
 							</div>
 							<div class="col-xs-4">
-								<select class="form-control select2" data-placeholder="Pilih Jenis Pekerjaan" name="type" id="type" style="width: 100% height: 35px; font-size: 15px;" required>
+								<select class="form-control select3" data-placeholder="Pilih Jenis Pekerjaan" name="type" id="type" style="width: 100% height: 35px; font-size: 15px;" required>
 									<option value=""></option>
 									<option value="Pembuatan Baru">Pembuatan Baru</option>
 									<option value="Perbaikan Ketidaksesuaian">Perbaikan Ketidaksesuaian</option>
@@ -189,7 +189,7 @@
 								<span style="font-weight: bold; font-size: 16px;">Kategori:<span class="text-red">*</span></span>
 							</div>
 							<div class="col-xs-4">
-								<select class="form-control select2" data-placeholder="Pilih Kategori" name="category" id="category" style="width: 100% height: 35px; font-size: 15px;" required>
+								<select class="form-control select3" data-placeholder="Pilih Kategori" name="category" id="category" style="width: 100% height: 35px; font-size: 15px;" required>
 									<option value=""></option>
 									<option value="Molding">Molding</option>
 									<option value="Jig">Jig</option>
@@ -220,7 +220,7 @@
 								<span style="font-weight: bold; font-size: 16px;">Material Awal:<span class="text-red">*</span></span>
 							</div>
 							<div class="col-xs-4">
-								<select class="form-control select2" data-placeholder="Pilih Material Awal" name="material" id="material" style="width: 100% height: 35px; font-size: 15px;" required>
+								<select class="form-control select3" data-placeholder="Pilih Material Awal" name="material" id="material" style="width: 100% height: 35px; font-size: 15px;" required>
 									<option value=""></option>
 									@foreach($materials as $material)
 									@if($material->remark == 'raw')
@@ -263,7 +263,7 @@
 								<span style="font-weight: bold; font-size: 16px;">Lampiran:&nbsp;&nbsp;</span>
 							</div>
 							<div class="col-xs-8">
-								<input style="height: 37px;" class="form-control" type="file" name="upload_file" id="upload_file" accept="text/plain">
+								<input style="height: 37px;" class="form-control" type="file" name="upload_file" id="upload_file">
 							</div>
 						</div>
 
@@ -338,9 +338,19 @@
 	});
 
 
-	$('#createModal').on('shown.bs.modal', function () {
-		$('.select2').select2();
-	});
+	// $('#createModal').on('shown.bs.modal', function () {
+	// 	$('.select2').select2();
+	// });
+
+	$(function () {
+      $('.select2').select2()
+    })
+
+	 $(function () {
+      $('.select3').select2({
+        dropdownParent: $('#createModal')
+      });
+    })
 
 	$('#material').on('change', function() {
 		if(this.value == 'Lainnya'){

@@ -20,7 +20,7 @@
 	<?php $sub_section = $row->sub_section ?>
 	<?php $item_name = $row->item_name ?>
 	<?php $quantity = $row->quantity ?>
-	<?php $request_date = $row->request_date ?>
+	<?php $target_date = $row->target_date ?>
 	<?php $type = $row->type ?>
 	<?php $material = $row->material ?>
 	<?php $problem_description = $row->problem_description ?>
@@ -67,7 +67,7 @@
 					</tr>
 					<tr>
 						<td style="width: 1%; border:1px solid black; background-color: rgb(126,86,134);">Target Selesai</td>
-						<td style="width: 2%; border:1px solid black;">{{ $request_date }}</td>
+						<td style="width: 2%; border:1px solid black;">{{ $target_date }}</td>
 					</tr>
 				</tbody>
 			</table>
