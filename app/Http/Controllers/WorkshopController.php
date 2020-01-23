@@ -53,7 +53,7 @@ class WorkshopController extends Controller{
 			and grade_code not like '%L%'
 			order by department, section, `group` asc");
 
-		$operators = WorkshopOperator::leftJOin('employee_syncs','employee_syncs.employee_id','=','workshop_operators.operator_id')
+		$operators = WorkshopOperator::leftJoin('employee_syncs','employee_syncs.employee_id','=','workshop_operators.operator_id')
 		->select('workshop_operators.operator_id', db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as name'), 'workshop_operators.task')
 		->orderBy('task', 'asc')
 		->get();
