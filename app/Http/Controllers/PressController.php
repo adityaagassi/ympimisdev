@@ -778,16 +778,20 @@ class PressController extends Controller
     {
         try{
         	$kanagata = $request->get('kanagata');
-        	$gmc_number = $request->get('gmc_number');
-        	$kanagata_lifetime = MpKanagataLog::where('material_number',$gmc_number)->get();
-        	foreach ($kanagata_lifetime as $key) {
-        		$id_kanagata = $key->id;
-	        	if ($kanagata == 'Punch') {
+        	$kanagata_number = $request->get('kanagata_number');
+        	if ($kanagata == 'Punch') {
+        		$kanagata_lifetime = MpKanagataLog::where('punch_number',$kanagata_number)->get();
+	        	foreach ($kanagata_lifetime as $key) {
+	        		$id_kanagata = $key->id;
 	        		$kanagata_lifetime2 = MpKanagataLog::find($id_kanagata);
 	                $kanagata_lifetime2->punch_status = 'Close';
 	                $kanagata_lifetime2->save();
 	        	}
-	        	elseif ($kanagata == 'Dies') {
+        	}
+        	elseif ($kanagata == 'Dies') {
+        		$kanagata_lifetime = MpKanagataLog::where('die_number',$kanagata_number)->get();
+	        	foreach ($kanagata_lifetime as $key) {
+	        		$id_kanagata = $key->id;
 	        		$kanagata_lifetime2 = MpKanagataLog::find($id_kanagata);
 	                $kanagata_lifetime2->die_status = 'Close';
 	                $kanagata_lifetime2->save();

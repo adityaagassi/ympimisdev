@@ -153,8 +153,8 @@ table.table-bordered > tfoot > tr > th{
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label>GMC Number</label>
-									<input type="text" class="form-control pull-right" id="gmc_number" name="gmc_number" autocomplete="off" placeholder="Enter GMC Number">
+									<label>Kanagata Number</label>
+									<input type="text" class="form-control pull-right" id="kanagata_number2" name="kanagata_number2" autocomplete="off" placeholder="Enter Kanagata Number">
 								</div>
 							</div>
 						</div>
@@ -162,7 +162,7 @@ table.table-bordered > tfoot > tr > th{
 							<!-- <div class="col-md-6"> -->
 								<div class="form-group pull-right">
 									<!-- <button type="submit" class="btn btn-primary col-sm-14">Edit</button> -->
-									<button type="button" class="btn btn-danger col-sm-14" onclick="reset_kanagata('{{ url("index/kanagata/reset") }}',$('#kanagata_reset').val(),$('#gmc_number').val());">
+									<button type="button" class="btn btn-danger col-sm-14" onclick="reset_kanagata('{{ url("index/kanagata/reset") }}',$('#kanagata_reset').val(),$('#kanagata_number2').val());">
 						               Reset
 						            </button>
 								</div>
@@ -328,6 +328,75 @@ table.table-bordered > tfoot > tr > th{
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="reset-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+		          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		            <span aria-hidden="true">&times;</span>
+		          </button>
+		          <h4 class="modal-title" align="center"><b>Edit Kanagata Lifetime</b></h4>
+		        </div>
+				<div class="modal-body">
+			      	<div class="box-body">
+			          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
+			            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+			            	<input type="hidden" name="url_reset" id="url_reset" class="form-control" value="" readonly required="required" title="">
+				            <div class="form-group">
+				              <label>Product</label>
+				              <input type="text" name="resetproduct" id="resetproduct" class="form-control" value="" readonly required="required" title="">
+				            </div>
+				            <div class="form-group">
+				              <label>Material</label>
+				              <input type="text" name="resetmaterial_number" id="resetmaterial_number" class="form-control" value="" readonly required="required" title="">
+				            </div>
+				            <div class="form-group">
+				              <label>Part</label>
+				              <input type="text" name="resetpart" id="resetpart" class="form-control" value="" readonly required="required" title="">
+				            </div>
+			            </div>
+			            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				            <div id="punch_reset">
+				            	<div class="form-group">
+					              <label>Punch Number</label>
+					              <input type="text" name="resetpunch_number" id="resetpunch_number" class="form-control" value="" readonly required="required" title="">
+					            </div>
+					            <div class="form-group">
+					              <label>Punch Value</label>
+					              <input type="text" name="resetpunch_value" id="resetpunch_value" class="form-control" value="" readonly required="required" title="" placeholder="Enter Punch Value">
+					            </div>
+					            <div class="form-group">
+					              <label>Punch Total</label>
+					              <input type="text" name="resetpunch_total" id="resetpunch_total" class="form-control" value="" required="required" title="" placeholder="Enter Punch Total" readonly>
+					            </div>
+				            </div>
+				            <div id="dies_reset">
+				            	<div class="form-group">
+					              <label>Dies Number</label>
+					              <input type="text" name="resetdies_number" id="resetdies_number" class="form-control" value="" readonly required="required" title="">
+					            </div>
+					            <div class="form-group">
+					              <label>Dies Value</label>
+					              <input type="text" name="resetdies_value" id="resetdies_value" class="form-control" value="" required="required" readonly title="" placeholder="Enter Dies Value">
+					            </div>
+					            <div class="form-group">
+					              <label>Dies Total</label>
+					              <input type="text" name="resetdies_total" id="resetdies_total" class="form-control" value="" required="required" title="" placeholder="Enter Dies Total" readonly>
+					            </div>
+				            </div>
+			            </div>
+				          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				          	<div class="modal-footer">
+				              <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+				              <input type="submit" value="Reset" onclick="reset($('#kanagata_reset').val(),$('#kanagata_number2').val())" class="btn btn-success">
+				            </div>
+				          </div>
+			          </div>
+			      </div>
+			</div>
+		</div>
+	</div>
 </section>
 @endsection
 
@@ -398,33 +467,63 @@ table.table-bordered > tfoot > tr > th{
       // console.log($('#formedit2').attr("action"));
     }
 
-    function reset_kanagata(url,kanagata,gmc_number) {
-		if (gmc_number === '' || kanagata === '') {
-			alert('Isi Jenis Kanagata dan GMC Number.')
-			// $("#edit-modal").modal('hide');
+    function reset_kanagata(url,kanagata,kanagata_number) {
+		if (kanagata_number === '' || kanagata === '') {
+			alert('Isi Jenis Kanagata dan Kanagata Number.')
+			$("#reset-modal").modal('hide');
+
 		}else{
-			if (confirm('Apakah Anda ingin RESET Kanagata?')) {
-				var data = {
-					kanagata:kanagata,
-					gmc_number:gmc_number
-				}
-				$.post('{{ url("index/kanagata/reset") }}', data, function(result, status, xhr){
-					if(result.status){
-						// $("#edit-modal").modal('hide');
-						// $('#example1').DataTable().ajax.reload();
-						// $('#example2').DataTable().ajax.reload();
-						openSuccessGritter('Success','Kanagata Lifetime has been reset');
-						window.location.reload();
-					} else {
-						audio_error.play();
-						openErrorGritter('Error','Reset Kanagata Lifetime Failed');
-					}
-				});
-		    }
+			$("#reset-modal").modal('show');
+			$.ajax({
+                url: "{{ route('kanagata_lifetime.getkanagatalifetime') }}?kanagata=" + kanagata +"&kanagata_number="+kanagata_number,
+                method: 'GET',
+                success: function(data) {
+                  var json = data;
+                  // obj = JSON.parse(json);
+                  // console.log(data.data);
+                  var data = data.data;
+                  $("#url_reset").val(url+'/'+data.kanagata_log_id);
+                  $("#resetproduct").val(data.product);
+                  $("#resetmaterial_number").val(data.material_number);
+                  $("#resetpart").val(data.part);
+                  if (kanagata === 'Punch') {
+                  	$('#punch_reset').show();
+                  	$('#dies_reset').hide();
+                  	$("#resetpunch_number").val(data.punch_number);
+                    $("#resetpunch_total").val(data.punch_total);
+                    $("#resetpunch_value").val(data.punch_value);
+                  }
+                  if (kanagata === 'Dies') {
+                  	$('#punch_reset').hide();
+                  	$('#dies_reset').show();
+                  	$("#resetdies_number").val(data.die_number);
+                  	$("#resetdies_value").val(data.die_value);
+                  	$("#resetdies_total").val(data.die_total);
+                  }
+                }
+            });
 		}
     	
       // jQuery('#formedit2').attr("action", url+'/'+interview_id+'/'+detail_id);
       // console.log($('#formedit2').attr("action"));
+    }
+
+    function reset(kanagata,kanagata_number) {
+    	if (confirm('Apakah Anda ingin RESET Kanagata?')) {
+			var data = {
+				kanagata:kanagata,
+				kanagata_number:kanagata_number
+			}
+			$.post('{{ url("index/kanagata/reset") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success','Kanagata Lifetime has been reset');
+					window.location.reload();
+				} else {
+					audio_error.play();
+					openErrorGritter('Error','Reset Kanagata Lifetime Failed');
+				}
+			});
+	    }
     }
 
     function update(){
