@@ -2733,14 +2733,24 @@ public function fetchKaizenResume(Request $request)
 
      try {
 
-          $q = "select final.leader_id as leader, employee_syncs.`name`, count(final.employee_id) as total_operator, count(final.kaizen) as total_sudah, count(if(final.kaizen is null, 1, null)) as total_belum, 0 as total_kaizen from
-          (
-          select kaizen_leaders.leader_id, kaizen_leaders.employee_id as employee_id, kaizens.employee_id as kaizen from kaizen_leaders left join 
-          (
-          select employee_id from kaizen_forms left join weekly_calendars on kaizen_forms.propose_date = weekly_calendars.week_date where weekly_calendars.fiscal_year = '".$fiscal->fiscal_year."') as kaizens on kaizens.employee_id = kaizen_leaders.employee_id 
-          group by kaizen_leaders.leader_id, kaizens.employee_id, kaizen_leaders.employee_id) as final 
-          inner join employee_syncs on employee_syncs.employee_id = final.leader_id where employee_syncs.end_date is null
-          group by final.leader_id, employee_syncs.`name` order by total_belum desc";
+          // $q = "select final.leader_id as leader, employee_syncs.`name`, count(final.employee_id) as total_operator, count(final.kaizen) as total_sudah, count(if(final.kaizen is null, 1, null)) as total_belum, 0 as total_kaizen from
+          // (
+          // select kaizen_leaders.leader_id, kaizen_leaders.employee_id as employee_id, kaizens.employee_id as kaizen from kaizen_leaders left join 
+          // (
+          // select employee_id from kaizen_forms left join weekly_calendars on kaizen_forms.propose_date = weekly_calendars.week_date where weekly_calendars.fiscal_year = '".$fiscal->fiscal_year."') as kaizens on kaizens.employee_id = kaizen_leaders.employee_id 
+          // inner join employee_syncs on employee_syncs.employee_id = kaizen_leaders.employee_id
+          // where employee_syncs.end_date is null
+          // group by kaizen_leaders.leader_id, kaizens.employee_id, kaizen_leaders.employee_id) as final 
+          // inner join employee_syncs on employee_syncs.employee_id = final.leader_id where employee_syncs.end_date is null
+          // group by final.leader_id, employee_syncs.`name` order by total_belum desc";
+
+          $q = "select kaizen_leaders.leader_id, A.`name`, count(kz) as total_sudah, count(coalesce(kz, 1)) as total_operator, count(coalesce(kz, 1))-count(kz) total_belum from kaizen_leaders 
+          left join (select employee_id, count(id) as kz from kaizen_forms where propose_date in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
+          left join employee_syncs on employee_syncs.employee_id = kaizen_leaders.employee_id
+          left join employee_syncs A on A.employee_id = kaizen_leaders.leader_id
+          where employee_syncs.end_date is null and A.end_date is null and A.employee_id is not null
+          group by kaizen_leaders.leader_id, A.`name`
+          order by kz asc";
 
           $datas = db::select($q);
 
