@@ -301,7 +301,7 @@
 						resultData += '<td style="background-color: RGB(255,204,255)">'+ value.kz +'</td>';						
 					}
 					else{
-						resultData += '<td style="background-color: RGB(204,255,255)>'+ value.kz +'</td>';
+						resultData += '<td style="background-color: RGB(204,255,255)">'+ value.kz +'</td>';
 					}
 					resultData += '</tr>';
 					index += 1;
