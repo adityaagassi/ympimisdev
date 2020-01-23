@@ -297,7 +297,12 @@
 					resultData += '<td>'+ value.grade +'</td>';
 					resultData += '<td>'+ value.section +'</td>';
 					resultData += '<td>'+ value.group +'</td>';
-					resultData += '<td>'+ value.kz +'</td>';
+					if(value.kz == 0){
+						resultData += '<td style="background-color: RGB(255,204,255)">'+ value.kz +'</td>';						
+					}
+					else{
+						resultData += '<td style="background-color: RGB(204,255,255)>'+ value.kz +'</td>';
+					}
 					resultData += '</tr>';
 					index += 1;
 					total += parseInt(value.kz);
