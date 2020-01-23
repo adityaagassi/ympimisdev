@@ -9,7 +9,7 @@ class WorkshopFlowProcess extends Model{
 
 	use SoftDeletes;
 	protected $fillable = [
-		'item_number', 'sequence_process', 'machine_code', 'status', 'std_time', 'created_by'
+		'order_no', 'sequence_process', 'machine_code', 'status', 'std_time', 'created_by'
 	];
 
 }

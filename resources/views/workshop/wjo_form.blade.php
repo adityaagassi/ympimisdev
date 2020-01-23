@@ -85,11 +85,11 @@
 						<th style="width: 10%">Jenis Pekerjaan</th>
 						<th style="width: 15%">Nama Barang</th>
 						<th style="width: 5%">Jumlah</th>
-						<th style="width: 10%">Material</th>
+						<th style="width: 9%">Material</th>
 						<th style="width: 5%">Target</th>
 						<th style="width: 5%">Status</th>
 						<th style="width: 7%">PIC</th>
-						<th style="width: 7%">Action</th>
+						<th style="width: 8%">Action</th>
 					</tr>
 				</thead>
 				<tbody id="tableBody">
@@ -140,18 +140,17 @@
 							<div class="col-xs-3" align="right" style="padding: 0px;">
 								<span style="font-weight: bold; font-size: 16px;">Bagian:<span class="text-red">*</span></span>
 							</div>
-							<div class="col-xs-5">
+							<div class="col-xs-6">
 								<select class="form-control select2" data-placeholder="Pilih Bagian" name="sub_section" id="sub_section" style="width: 100% height: 35px; font-size: 15px;" required>
 									<option value=""></option>
 									@php
 									$group = array();
 									@endphp
-									@foreach($employees as $employee)
-									@if(!in_array($employee->section.'-'.$employee->group, $group))
-									<option value="{{ $employee->section }}_{{ $employee->group }}">{{ $employee->section }}-{{ $employee->group }}</option>
-									@php
-									array_push($group, $employee->section.'-'.$employee->group);
-									@endphp
+									@foreach($sections as $section)
+									@if($section->group == null)
+									<option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+									@else
+									<option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
 									@endif
 									@endforeach
 								</select>
@@ -175,12 +174,26 @@
 							<div class="col-xs-3" align="right" style="padding: 0px;">
 								<span style="font-weight: bold; font-size: 16px;">Jenis Pekerjaan:<span class="text-red">*</span></span>
 							</div>
-							<div class="col-xs-5">
+							<div class="col-xs-4">
 								<select class="form-control select2" data-placeholder="Pilih Jenis Pekerjaan" name="type" id="type" style="width: 100% height: 35px; font-size: 15px;" required>
 									<option value=""></option>
 									<option value="Pembuatan Baru">Pembuatan Baru</option>
 									<option value="Perbaikan Ketidaksesuaian">Perbaikan Ketidaksesuaian</option>
 									<option value="Lain-lain">Lain-lain</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Kategori:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-4">
+								<select class="form-control select2" data-placeholder="Pilih Kategori" name="category" id="category" style="width: 100% height: 35px; font-size: 15px;" required>
+									<option value=""></option>
+									<option value="Molding">Molding</option>
+									<option value="Jig">Jig</option>
+									<option value="Equipment">Equipment</option>
 								</select>
 							</div>
 						</div>
@@ -254,7 +267,7 @@
 							</div>
 						</div>
 
-						<div class="col-xs-12" style="padding-bottom: 1%;">
+						{{-- <div class="col-xs-12" style="padding-bottom: 1%;">
 							<div class="col-xs-3" align="right" style="padding: 0px;">
 								<span style="font-weight: bold; font-size: 16px;">Pilih Drawing:&nbsp;&nbsp;</span></span>
 							</div>
@@ -263,12 +276,12 @@
 									<option value=""></option>
 									@foreach($materials as $material)
 									@if($material->remark == 'drawing')
-									<option value="{{ $material->item_number }}">{{ $material->item_number }} ({{ $material->item_description }})</option>
+									<option value="{{ $material->item_number }}">{{ $material->item_number }} - {{ $material->item_description }}</option>
 									@endif
 									@endforeach
 								</select>
 							</div>
-						</div>
+						</div> --}}
 
 						<div class="col-xs-12" style="padding-right: 12%;">
 							<br>
@@ -307,7 +320,6 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
-		$('.select2').select2();
 		var opt = $("#sub_section option").sort(function (a,b) { return a.value.toUpperCase().localeCompare(b.value.toUpperCase()) });
 		$("#sub_section").append(opt);
 		$('#sub_section').prop('selectedIndex', 0).change();
@@ -323,6 +335,11 @@
 		});
 
 		fetchTable('all');
+	});
+
+
+	$('#createModal').on('shown.bs.modal', function () {
+		$('.select2').select2();
 	});
 
 	$('#material').on('change', function() {
@@ -365,6 +382,7 @@
 				$("#loading").hide();
 
 				$('#sub_section').prop('selectedIndex', 0).change();
+				$("#category").val("");
 				$("#item_name").val("");
 				$("#quantity").val("");
 				$("#request_date").val("");

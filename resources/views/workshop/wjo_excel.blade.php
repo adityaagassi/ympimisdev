@@ -14,7 +14,6 @@
                 <th>Kode Barang</th>
                 <th>Nama Barang</th>
                 <th>Jumlah</th>
-                <th>Tanggal Permintaan Selesai</th>
                 <th>Prioritas</th>
                 <th>Jenis Pekerjaan</th>
                 <th>Material Awal</th>
@@ -42,7 +41,6 @@
                 <td>{{ $workshop_job_order->item_number }}</td>
                 <td>{{ $workshop_job_order->item_name }}</td>
                 <td>{{ $workshop_job_order->quantity }}</td>
-                <td>{{ $workshop_job_order->request_date }}</td>
                 <td>{{ $workshop_job_order->priority }}</td>
                 <td>{{ $workshop_job_order->type }}</td>
                 <td>{{ $workshop_job_order->material }}</td>

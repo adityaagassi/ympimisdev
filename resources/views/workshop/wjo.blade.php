@@ -258,7 +258,7 @@
 		var count_process_bar = false;
 		var started_at;
 		var std_time;
-		var approved_time;
+		var listed_time;
 		var target_date;
 		function setTime() {
 			if(count_time){
@@ -292,8 +292,8 @@
 			}
 
 			if(count_progress_bar){
-				var actual = diff_seconds(new Date(), approved_time);
-				var target = diff_seconds(target_date, approved_time);
+				var actual = diff_seconds(new Date(), listed_time);
+				var target = diff_seconds(target_date, listed_time);
 				var percent = (actual / target) * 100;
 
 				$('#progress_bar').append().empty();
@@ -352,7 +352,7 @@
 							
 							count_progress_bar = true;
 							
-							approved_time = new Date(result.approved_time.date);
+							listed_time = new Date(result.listed_time.date);
 							var date = result.wjo.target_date.split("-");
 							target_date = new Date(date[0], (parseInt(date[1]) - 1), date[2], 23, 59, 59, 0);
 
@@ -426,28 +426,11 @@
 									step += '</div>';
 									step += '</li>';
 								}
-								step += '<li>';
-								step += '<i class="fa fa-check-square-o bg-blue"></i>';
-								step += '</li>';
-								step += '</ul>';
-							}else{
-								$('#process_progress_bar').hide();
-								if(result.wjo_log.length > 0){
-									step += '<ul class="timeline">';
-									step += '<li class="time-label">';
-									step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+								if(result.flow_process[(result.flow_process.length-1)].status == 1){
+									step += '<li>';
+									step += '<i class="fa fa-check-square-o bg-blue"></i>';
 									step += '</li>';
-									for (var i = 0; i < result.wjo_log.length; i++) {
-										step += '<li>';
-										step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'"">'+ result.wjo_log[i].sequence_process +'</i>';
-										step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-										step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'</p>';
-										step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
-										step += '</div>';
-										step += '</li>';
-									}
-									green = result.wjo_log.length;
-
+									step += '</ul>';
 								}
 							}
 
@@ -527,41 +510,23 @@ $('#machine').keydown(function(event) {
 								std_time = result.flow_process[i].std_time;
 							}
 						}
-						step += '<li>';
-						step += '<i class="fa fa-check-square-o bg-blue"></i>';
-						step += '</li>';
-						step += '</ul>';
-					}else{
-						if(result.wjo_log.length > 0){
-							for (var i = 0; i < result.wjo_log.length; i++) {
-								step += '<li>';
-								step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'"">'+ result.wjo_log[i].sequence_process +'</i>';
-								step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-								step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'</p>';
-								step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
-								step += '</div>';
-								step += '</li>';
-							}
+						if(result.flow_process[(result.flow_process.length-1)].status == 1){
 							step += '<li>';
-							step += '<i class="fa fa-stack-1x" id="timeline_number_'+ result.wjo_log.length +'">'+ (result.wjo_log.length + 1) +'</i>';
-							step += '<div class="timeline-item" id="timeline_box_'+ result.wjo_log.length +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
-							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
-							step += '</div>';
+							step += '<i class="fa fa-check-square-o bg-blue"></i>';
 							step += '</li>';
-
-							green = result.wjo_log.length;
+							step += '</ul>';
 						}else{
+							count_process_bar = false;
+
+							green++;
 							step += '<li>';
-							step += '<i class="fa fa-stack-1x bg-green" id="timeline_number_0">1</i>';
-							step += '<div class="timeline-item bg-green" id="timeline_box_0" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+							step += '<i class="fa fa-stack-1x" id="timeline_number_'+ green +'">'+ (result.flow_process.length+1) +'</i>';
+							step += '<div class="timeline-item" id="timeline_box_'+ green +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
 							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
 							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
 							step += '</div>';
 							step += '</li>';
-
-							green = 0;
-						}	
+						}
 					}
 
 					$("#step").append(step);
@@ -574,8 +539,6 @@ $('#machine').keydown(function(event) {
 
 					$("#timeline_number_" + green).addClass('kedip');
 					$("#timeline_box_" + green).addClass('kedip');
-
-
 
 				}
 				else{
@@ -593,8 +556,8 @@ $('#machine').keydown(function(event) {
 					}
 				}
 			});
-}
-}
+		}
+	}
 });
 
 $('#leader').keydown(function(event) {

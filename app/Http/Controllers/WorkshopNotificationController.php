@@ -79,6 +79,11 @@ class WorkshopNotificationController extends Controller{
 		if($wjo->remark == 0){
 			$wjo->remark = 1;
 			$wjo->priority = 'Normal';
+			if($wjo->category == 'Equipment'){
+				$wjo->target_date = date('Y-m-d', strtotime($wjo->target_date. ' + 7 days'));
+			}else{
+				$wjo->target_date = date('Y-m-d', strtotime($wjo->target_date. ' + 14 days'));
+			}
 
 			$manager = EmployeeSync::where('position', '=', 'Manager')
 			->where('department', '=', 'Maintenance')

@@ -9,6 +9,6 @@ class WorkshopTagAvailability extends Model{
     use SoftDeletes;
 
 	protected $fillable = [
-		'tag', 'status'
+		'tag', 'remark', 'status'
 	];
 }

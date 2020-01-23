@@ -260,10 +260,12 @@
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
 									<th style="width: 1%;">WJO</th>
-									<th style="width: 1%;">Masuk</th>
+									<th style="width: 1%;">No. Tag</th>
+									<th style="width: 1%;">Tanggal Masuk</th>
+									<th style="width: 1%;">Prioritas</th>
+									<th style="width: 1%;">Pemohon</th>
 									<th style="width: 1%;">Dept.</th>
 									<th style="width: 1%;">Bag.</th>
-									<th style="width: 1%;">Prioritas</th>
 									<th style="width: 1%;">Nama Barang</th>
 									<th style="width: 1%;">Material</th>
 									<th style="width: 1%;">Qty</th>
@@ -436,164 +438,192 @@
 								<br>
 							</div>
 
-							<div id="assign_body">
-								<div class="col-xs-6">
-									<div class="form-group row" align="right" id="show_request">
-										<label class="col-xs-4" style="margin-top: 1%; padding-left: 0px;">Permintaan Selesai</label>
-										<div class="col-xs-8" align="left">
-											<div class="input-group date">
-												<div class="input-group-addon bg-default">
-													<i class="fa fa-calendar"></i>
-												</div>
-												<input type="text" class="form-control" id="assign_created_at" disabled>
-											</div>
-										</div>
-									</div>
-
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
-										<div class="col-xs-8" align="left">
-											<input type="text" class="form-control" id="assign_priority" disabled>
-										</div>
-									</div>
-
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Order No.</label>
-										<div class="col-xs-8" align="left">
-											<input type="text" class="form-control" id="assign_order_no" disabled>
-										</div>
-									</div>
-
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Dept.</label>
-										<div class="col-xs-8" align="left">
-											<input type="text" class="form-control" id="assign_department" disabled>
-										</div>
-									</div>
-
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Bagian</label>
-										<div class="col-xs-8" align="left">
-											<input type="text" class="form-control" id="assign_bagian" disabled>
-										</div>
-									</div>
-
-
+							<div id="assign_body" style="padding: 2%;">
+								<div class="nav-tabs-custom tab-danger">
+									<ul class="nav nav-tabs">
+										<li id="vendor-tab-1" class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">WJO Data</a></li>
+										<li id="vendor-tab-2" class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Flow Processes</a></li>
+										<li id="vendor-tab-3" class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Person in Charge</a></li>
+									</ul>
 								</div>
-								<div class="col-xs-6">
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Nama Barang<span class="text-red">*</span></label>
-										<div class="col-xs-8" align="left">
-											<input type="text" class="form-control" id="assign_item_name" required>
-										</div>
-									</div>
-
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Jumlah<span class="text-red">*</span></label>
-										<div class="col-xs-8" align="left">
-											<input type="text" class="form-control" id="assign_quantity" required>
-										</div>
-									</div>
-
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Material<span class="text-red">*</span></label>
-										<div class="col-xs-8" align="left">
-											<input type="text" class="form-control" id="assign_material" required>
-										</div>
-									</div>
-
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
-										<div class="col-xs-8" align="left">
-											<textarea class="form-control" id="assign_problem_desc" rows="3" required></textarea>
-										</div>
-									</div>							
-								</div>
-								<div class="col-xs-6" style="margin-top: 5%;">
-									<div class="form-group row" align="right" id="show_target">
-										<label class="col-xs-4" style="margin-top: 1%;">Target Selesai<span class="text-red">*</span></label>
-										<div class="col-xs-8">
-											<div class="input-group date">
-												<div class="input-group-addon bg-default">
-													<i class="fa fa-calendar"></i>
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_1">
+										<div class="row">
+											<div class="col-xs-6">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="assign_priority" disabled>
+													</div>
 												</div>
-												<input type="text" class="form-control datepicker" id="assign_target_date" placeholder="Pilih Tanggal">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Order No.</label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="assign_order_no" disabled>
+													</div>
+												</div>
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Dept.</label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="assign_department" disabled>
+													</div>
+												</div>
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Bagian</label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="assign_bagian" disabled>
+													</div>
+												</div>
 											</div>
-										</div>
-									</div>
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
-										<div class="col-xs-8" align="left">
-											<select class="form-control select2" data-placeholder="Pilih Kategori" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
-												<option value=""></option>
-												<option value="Molding">Molding</option>
-												<option value="Jig">Jig</option>
-												<option value="Equipment">Equipment</option>
-											</select>
-										</div>
-									</div>
-									<div id="drawing">
-										<div class="form-group row" align="right">
-											<label class="col-xs-4" style="margin-top: 1%;">Drawing<span class="text-red">*</span></label>
-											<div class="col-xs-8" align="left">
-												<select class="form-control select2" data-placeholder="Pilih Drawing" id="assign_item_number" style="width: 100% height: 35px; font-size: 15px;" >
-													<option value=""></option>
-													@foreach($workshop_materials as $material)
-													@if($material->remark == 'drawing')
-													<option value="{{ $material->item_number }}">{{ $material->item_number }} ({{ $material->item_description }})</option>
-													@endif
-													@endforeach
-												</select>
+											<div class="col-xs-6">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Nama Barang<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="assign_item_name" required>
+													</div>
+												</div>
+
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Jumlah<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="assign_quantity" required>
+													</div>
+												</div>
+
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Material<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="assign_material" required>
+													</div>
+												</div>
+
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<textarea class="form-control" id="assign_problem_desc" rows="3" required></textarea>
+													</div>
+												</div>							
 											</div>
+											<div class="col-xs-6" style="margin-top: 5%;">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Target Selesai<span class="text-red">*</span></label>
+													<div class="col-xs-8">
+														<div class="input-group date">
+															<div class="input-group-addon bg-default">
+																<i class="fa fa-calendar"></i>
+															</div>
+															<input type="text" class="form-control datepicker" id="assign_target_date" placeholder="Pilih Tanggal">
+														</div>
+													</div>
+												</div>
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<select class="form-control select2" data-placeholder="Pilih Kesulitan" id="assign_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
+															<option value=""></option>
+															<option value="Biasa">Biasa</option>
+															<option value="Sulit">Sulit</option>
+															<option value="Sangat Sulit">Sangat Sulit</option>
+															<option value="Spesial">Spesial</option>
+															<option value="Sangat Spesial">Sangat Spesial</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-6" style="margin-top: 5%;">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<select class="form-control select2" data-placeholder="Pilih Kategori" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
+															<option value=""></option>
+															<option value="Molding">Molding</option>
+															<option value="Jig">Jig</option>
+															<option value="Equipment">Equipment</option>
+														</select>
+													</div>
+												</div>
+												<div id="drawing">
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Drawing<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<select class="form-control select2" data-placeholder="Pilih Drawing" id="assign_item_number" style="width: 100% height: 35px; font-size: 15px;" >
+																<option value=""></option>
+																@foreach($workshop_materials as $material)
+																@if($material->remark == 'drawing')
+																<option value="{{ $material->item_number }}">{{ $material->item_number }} ({{ $material->item_description }})</option>
+																@endif
+																@endforeach
+															</select>
+														</div>
+													</div>	
+												</div>
+											</div>
+											
+											<div class="col-xs-12">
+												<a class="btn btn-primary btnNext pull-right">Next</a>
+											</div>
+											<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Tanda bintang (*) wajib diisi.</span>
+
 										</div>	
 									</div>
+									<div class="tab-pane" id="tab_2">
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="col-xs-12" style="margin-bottom: 1%;">
+													<div class="col-xs-8" style="padding: 0px;">
+														<label style="font-weight: bold; font-size: 18px;">
+															<span><i class="fa fa-gears"></i> Flow Processes</span>
+														</label>
+													</div>
+													<div class="col-xs-1" style="padding: 0px;">
+														<button class="btn btn-success" onclick='addProcess();'><i class='fa fa-plus' ></i></button>
+													</div>
+												</div>
+												<div id='process'></div>
+											</div>
+											<div class="col-xs-12">
+												<a class="btn btn-primary btnNext pull-right">Next</a>
+												<span class="pull-right">&nbsp;</span>				
+												<a class="btn btn-primary btnPrevious pull-right">Previous</a>
+											</div>
+											<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Standart time dalam menit</span>
 
-								</div>
-								<div class="col-xs-6" style="margin-top: 5%;">
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
-										<div class="col-xs-8" align="left">
-											<select class="form-control select2" data-placeholder="Pilih Operator" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>
-												<option value=""></option>
-												@foreach($employees as $employee)
-												@if(in_array($employee->group, ['Workshop']))
-												<option value="{{ $employee->employee_id }}">{{ $employee->employee_id }}-{{ $employee->name }}</option>
-												@endif
-												@endforeach
-											</select>
 										</div>
 									</div>
-									<div class="form-group row" align="right">
-										<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
-										<div class="col-xs-8" align="left">
-											<select class="form-control select2" data-placeholder="Pilih Kesulitan" id="assign_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
-												<option value=""></option>
-												<option value="Biasa">Biasa</option>
-												<option value="Sulit">Sulit</option>
-												<option value="Sangat Sulit">Sangat Sulit</option>
-												<option value="Spesial">Spesial</option>
-												<option value="Sangat Spesial">Sangat Spesial</option>
-											</select>
+									<div class="tab-pane" id="tab_3">
+										<div class="row">
+											<div class="col-xs-6">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<select class="form-control select2" data-placeholder="Pilih Operator" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>
+															<option value=""></option>
+															@foreach($operators as $operator)
+															<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>
+															@endforeach
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12">
+												<br>
+												<button class="btn btn-success pull-right" onclick="assign()"><i class="fa fa-save"></i> Save</button>
+												<span class="pull-right">&nbsp;</span>				
+												<a class="btn btn-primary btnPrevious pull-right">Previous</a>
+
+											</div>
 										</div>
 									</div>
-
-
 								</div>
-							</div>						
-
+								
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="modal-footer" style="padding-right: 4%;">
-				<br>
-				<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Tanda bintang (*) wajib diisi.</span>
-				<button id="assign-button" class="btn btn-success" onclick="assign()"><i class="fa fa-save"></i> Save</button>
-			</div>
 		</div>
 	</div>
 </div>
-
 
 {{-- Modal Reject --}}
 <div class="modal modal-default fade" id="modal-reject">
@@ -611,7 +641,7 @@
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-xs-6">
 								<div class="form-group row" align="right">
-									<label class="col-xs-4" style="margin-top: 1%; padding-left: 0px;">Permintaan Selesai</label>
+									<label class="col-xs-4" style="margin-top: 1%; padding-left: 0px;">Tanggal Masuk</label>
 									<div class="col-xs-8" align="left">
 										<div class="input-group date">
 											<div class="input-group-addon bg-default">
@@ -710,9 +740,6 @@
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-
-
-
 <script>
 
 	$.ajaxSetup({
@@ -760,10 +787,6 @@
 		$('#sub_section').prop('selectedIndex', 0).change();
 
 		$('#assign_body').hide();
-		$('#assign-button').hide();
-
-		$('#show_request').hide();
-		$('#show_target').hide();
 
 		$('#close_body').hide();
 		$('#close-button').hide();
@@ -772,7 +795,83 @@
 
 
 		fillTable();
+
+		$('.btnNext').click(function(){
+			var item_name = $("#assign_item_name").val();
+			var quantity = $("#assign_quantity").val();
+			var material = $("#assign_material").val();
+			var problem_description = $("#assign_problem_desc").val();
+
+			var tag = $("#tag").val();
+			var target_date = $("#assign_target_date").val(); 
+			var category = $("#assign_category").val();
+			
+			if(item_name == "" || quantity == "" || material == "" || problem_description == "" || tag == "" || target_date == "" || category == ""){
+				openErrorGritter('Error!', 'All fields must be filled');
+			}
+			else{
+				$('.nav-tabs > .active').next('li').find('a').trigger('click');
+			}
+		});
+		$('.btnPrevious').click(function(){
+			$('.nav-tabs > .active').prev('li').find('a').trigger('click');
+		});
 	});
+
+	var proses = 0;
+	function addProcess() {
+		++proses;
+
+		var add = '';
+		add += '<div class="col-xs-12" id="add_process_'+ proses +'">';
+		add += '<div class="col-xs-6" style="color: black; padding: 0px; padding-right: 1%;">';
+		add += '<div class="col-xs-1" style="color: black; padding: 0px;">';
+		add += '<h3 id="flow_'+ proses +'" style="margin: 0px;">'+ proses +'</h3>';
+		add += '</div>';
+		add += '<div class="col-xs-11" style="color: black; padding: 0px;">';
+		add += '<select class="form-control select2" id="process_'+ proses +'" data-placeholder="Select Process">';
+		add += '<option value="">Select Process</option>';
+		add += '@foreach($machines as $machine)';
+		add += '<option value="{{ $machine->machine_code }}">{{ $machine->process_name }} - {{ $machine->machine_name }} - {{ $machine->area_name }}</option>';
+		add += '@endforeach';
+		add += '</select>';
+		add += '</div>';
+		add += '</div>';
+		
+		add += '<div class="col-xs-2" style="color: black; padding: 0px; padding-right: 1%;">';
+		add += '<div class="form-group">';
+		add += '<input class="form-control" type="number" id="process_qty_'+ proses +'" placeholder="Std Time" style="width: 100%; height: 33px; font-size: 15px; text-align: center;">';
+		add += '</div>';
+		add += '</div>';
+		add += '<div class="col-xs-1" style="padding: 0px;">';
+		add += '<button class="btn btn-danger" id="'+proses+'" onclick="removeProcess(this)"><i class="fa fa-close"></i></button>';
+		add += '</div>';
+		add += '</div>';
+
+		$('#process').append(add);
+	}
+
+	function removeProcess(elem) {
+		var id = parseInt($(elem).attr("id"));
+
+		console.log(id);
+		console.log(proses);
+		
+		if(id != proses){
+			$("#add_process_"+id).remove();
+			for (var i = id; i < proses; i++) {
+				document.getElementById("flow_"+ (i+1)).innerHTML = i;				
+				document.getElementById("flow_"+ (i+1)).id = "flow_"+ i;
+				document.getElementById("add_process_"+ (i+1)).id = "add_process_"+ i;
+				document.getElementById("process_"+ (i+1)).id = "process_"+ i;
+				document.getElementById("process_qty_"+ (i+1)).id = "process_qty_"+ i;
+				document.getElementById(""+(i+1)+"").id = i;
+			}
+		}else{
+			$("#add_process_"+id).remove();
+		}
+		proses--;
+	}
 
 	function clearConfirmation(){
 		location.reload(true);		
@@ -793,7 +892,12 @@
 
 	$("#modal-assignment").on("hidden.bs.modal", function () {
 		$('#assign_body').hide();
-		$('#assign-button').hide();
+		$('#vendor-tab-2').removeClass('active');
+		$('#tab_2').removeClass('active');
+		$('#vendor-tab-3').removeClass('active');
+		$('#tab_3').removeClass('active');
+		$('#vendor-tab-1').addClass('active');
+		$('#tab_1').addClass('active');
 	});
 
 	$("#modal-close").on("hidden.bs.modal", function () {
@@ -811,8 +915,9 @@
 				}
 				$.post('{{ url("check/workshop/wjo_rfid") }}', data,  function(result, status, xhr){
 					if(result.status){
+						
+
 						$('#assign_body').show();
-						$('#assign-button').show();
 						openSuccessGritter('Success', result.message);
 
 					}else{
@@ -880,8 +985,6 @@
 			}
 		}
 	});
-
-
 
 	function exportExcel(){
 		var reqFrom = $('#reqFrom').val();
@@ -971,17 +1074,17 @@
 
 					tableData += '<tr>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].order_no +'</td>';
+					tableData += '<td'+ assign +'>'+ (result.tableData[i].tag || '-') +'</td>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].created_at +'</td>';
-					tableData += '<td'+ assign +'>'+ group[0] +'</td>';
-					tableData += '<td'+ assign +'>'+ group[1] +'</td>';
-					
 					if(result.tableData[i].priority == 'Urgent'){
 						var priority = '<span style="font-size: 13px;" class="label label-danger">Urgent</span>';
 					}else{
 						var priority = '<span style="font-size: 13px;" class="label label-default">Normal</span>';
 					}
 					tableData += '<td'+ assign +'>'+ priority +'</td>';
-
+					tableData += '<td'+ assign +'>'+ (result.tableData[i].requester || '-') +'</td>';
+					tableData += '<td'+ assign +'>'+ group[0] +'</td>';
+					tableData += '<td'+ assign +'>'+ group[1] +'</td>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].item_name +'</td>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].material +'</td>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].quantity +'</td>';
@@ -1088,6 +1191,15 @@
 			return false;
 		}
 
+		var flow_process = [];
+		for (var i = 1; i <= proses; i++) {
+			flow_process.push({
+				sequence_process : i,
+				machine_code : $("#process_"+ i).val(),
+				std_time: $("#process_qty_"+ i).val()
+			});
+		}
+
 		var data = {
 			order_no : order_no,
 			item_name : item_name,
@@ -1100,6 +1212,7 @@
 			item_number : item_number,
 			pic : pic,
 			difficulty : difficulty,
+			flow_process : flow_process,
 		}
 
 		$("#loading").show();		
@@ -1112,6 +1225,10 @@
 				$('#assign_difficulty').prop('selectedIndex', 0).change();
 				$('#assign_category').prop('selectedIndex', 0).change();
 				$('#assign_item_number').prop('selectedIndex', 0).change();
+
+				for (var i = 1; i <= proses; i++) {
+					$("#add_process_"+i).remove();
+				}
 
 				fillTable();
 				$("#loading").hide();
@@ -1142,20 +1259,8 @@
 		$.get('{{ url("fetch/workshop/assign_form") }}', data, function(result, status, xhr){
 			if(result.status){
 
-				if(result.wjo.priority == 'Urgent'){
-					var datetime = result.wjo.request_date.split(" ");
-					document.getElementById("assign_created_at").value = datetime[0];
-					document.getElementById("assign_target_date").value = datetime[0];
-
-					$('#show_request').show();
-					$('#show_target').show();
-				}else{
-					$('#show_request').hide();
-					$('#show_target').hide();
-				}
-
+				document.getElementById("assign_target_date").value = result.wjo.target_date;
 				var group = result.wjo.sub_section.split("_");
-
 				document.getElementById("assign_order_no").value = result.wjo.order_no;
 				document.getElementById("assign_bagian").value = group[1];
 				document.getElementById("assign_department").value = group[0];
