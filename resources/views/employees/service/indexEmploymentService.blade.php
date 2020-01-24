@@ -390,6 +390,10 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									Karyawan dapat menyampaikan informasi terkait tindakan ketidaksesuaian terhadap Kode Etik Kepatuhan (Compliance Code of Conduct) pada link berikut:
 									<br>
 									<a href="http://ml.helpline.jp/yamahacompliance/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Yamaha Helpline <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+									<br>
+									Username: <b>yamaha</b>
+									<br>
+									Password: <b>helpline</b>
 								</div>
 							</div>
 						</li>
