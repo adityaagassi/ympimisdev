@@ -274,9 +274,10 @@ table > thead > tr > th{
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/highcharts.js")}}"></script>
-<!-- <script src="{{ url("js/highcharts-3d.js")}}"></script> -->
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/accessibility.js")}}"></script>
+<script src="{{ url("js/drilldown.js")}}"></script>
 
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
@@ -532,15 +533,30 @@ table > thead > tr > th{
           }
 
           var kategori = [], jml = [], statusunverifiedcpar = [], statusunverifiedcar = [], statusverifikasi = [], statusclose = [];
+          var close = [], cpar = [], car = [], verifikasi = [], datadrill = [], datad = [];
 
-          $.each(result.datas, function(key, value) {
-            kategori.push(value.kategori);
-            jml.push(value.jumlah);
-            statusunverifiedcpar.push(parseInt(value.UnverifiedCPAR));
-            statusunverifiedcar.push(parseInt(value.UnverifiedCAR));
-            statusverifikasi.push(parseInt(value.qaverification));
-            statusclose.push(parseInt(value.close));
-          })
+          for (var i = 0; i < result.datas.length; i++) {
+            close.push({name:result.datas[i].kategori, y:parseInt(result.datas[i].close), drilldown:result.datas[i].kategori});
+            cpar.push({name:result.datas[i].kategori, y:parseInt(result.datas[i].UnverifiedCPAR), drilldown:result.datas[i].kategori});
+            car.push({name:result.datas[i].kategori, y:parseInt(result.datas[i].UnverifiedCAR), drilldown:result.datas[i].kategori});
+            verifikasi.push({name:result.datas[i].kategori, y:parseInt(result.datas[i].qaverification), drilldown:result.datas[i].kategori});
+          }
+
+          for (var z = 0; z < result.eksternal.length; z++) {            
+            datad.push([result.eksternal[z].destination_shortname, result.eksternal[z].jumlah]);
+            datadrill.push({id:result.eksternal[z].kategori, name:result.eksternal[z].kategori, data: datad});
+          }
+
+          // console.table(datadrill);
+
+          // $.each(result.datas, function(key, value) {
+          //   kategori.push(value.kategori);
+          //   jml.push(value.jumlah);
+          //   statusunverifiedcpar.push(parseInt(value.UnverifiedCPAR));
+          //   statusunverifiedcar.push(parseInt(value.UnverifiedCAR));
+          //   statusverifikasi.push(parseInt(value.qaverification));
+          //   statusclose.push(parseInt(value.close));
+          // })
 
           $('#chartresume').highcharts({
             chart: {
@@ -553,6 +569,11 @@ table > thead > tr > th{
                 fontWeight: 'bold'
               }
             },
+            accessibility: {
+              announceNewData: {
+                enabled: true
+              }
+            },
             subtitle: {
               text: 'On '+result.fiscal,
               style: {
@@ -562,7 +583,6 @@ table > thead > tr > th{
             },
             xAxis: {
               type: 'category',
-              categories: kategori,
               lineWidth:2,
               lineColor:'#9e9e9e',
               gridLineWidth: 1
@@ -588,6 +608,17 @@ table > thead > tr > th{
             },
             plotOptions: {
               series: {
+                  borderWidth: 0,
+                  dataLabels: {
+                      enabled: true,
+                      style: {
+                          color: 'white',
+                          textShadow: '0 0 2px black, 0 0 2px black'
+                      }
+                  },
+                  stacking: 'normal'
+              },
+              series: {
                 cursor: 'pointer',
                 point: {
                   events: {
@@ -600,7 +631,8 @@ table > thead > tr > th{
                 dataLabels: {
                   enabled: false,
                   format: '{point.y}'
-                }
+                },
+                stacking: 'normal'
               },
               column: {
                   color:  Highcharts.ColorString,
@@ -620,26 +652,51 @@ table > thead > tr > th{
                 return this.series.name+' : ' + this.y;
               }
             },
-            series: [{
-                name: 'Unverified CPAR',
-                color: '#ff6666', //ff6666
-                data: statusunverifiedcpar
-            }, {
-                name: 'Unverified CAR',
-                data: statusunverifiedcar,
-                color : '#f0ad4e' //f5f500
+            // series: [{
+            //     name: 'Unverified CPAR',
+            //     color: '#ff6666', //ff6666
+            //     data: statusunverifiedcpar
+            // }, {
+            //     name: 'Unverified CAR',
+            //     data: statusunverifiedcar,
+            //     color : '#f0ad4e', //f5f500
+            // },
+            // {
+            //     name: 'QA Verification',
+            //     data: statusverifikasi,
+            //     color : '#448aff', //f5f500
+            // },
+            // {
+            //     name: 'Closed',
+            //     data: statusclose,
+            //     color : '#5cb85c', //00f57f
+            // }
+            // ],
+            series: [
+            {
+              name: 'Unverified CPAR',
+              color: '#ff6666',
+              data: cpar,
             },
             {
-                name: 'QA Verification',
-                data: statusverifikasi,
-                color : '#448aff' //f5f500
+              name: 'Unverified CAR',
+              color: '#f0ad4e',
+              data: car,
             },
             {
-                name: 'Closed',
-                data: statusclose,
-                color : '#5cb85c' //00f57f
+              name: 'QA Verification',
+              data: verifikasi,
+              color : '#448aff', //f5f500
+            },
+            {
+              name: 'Closed',
+              color: '#5cb85c',
+              data: close,
             }
-            ]
+            ],
+            drilldown: {
+              series: datadrill
+            }
           })
         } else{
           alert('Attempt to retrieve data failed');

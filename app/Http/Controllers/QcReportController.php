@@ -836,14 +836,17 @@ class QcReportController extends Controller
           $dep = '';
       }      
 
-      $data = db::select("select count(cpar_no) as jumlah, kategori, fiscal_year, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null and fiscal_year='".$fiscal."' GROUP BY kategori,fiscal_year order by fiscal_year, month(tgl_permintaan) ASC");
+      $data = db::select("select count(cpar_no) as jumlah, kategori, fiscal_year, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null and fiscal_year='".$fiscal."' GROUP BY kategori,fiscal_year order by fiscal_year,jumlah ASC");
+
+      $eksternal = db::select("select count(cpar_no) as jumlah, kategori, qc_cpars.destination_code, fiscal_year, destination_shortname from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date join destinations on qc_cpars.destination_code = destinations.destination_code where qc_cpars.deleted_at is null and fiscal_year='".$fiscal."' GROUP BY destination_code,kategori,fiscal_year,destination_shortname order by fiscal_year, jumlah ASC");
 
       $response = array(
         'status' => true,
         'datas' => $data,
         'fiscal' => $fiscal,
         'kategori' =>  $kate,
-        'departemen' => $dep
+        'departemen' => $dep,
+        'eksternal' => $eksternal
       );
 
       return Response::json($response); 
