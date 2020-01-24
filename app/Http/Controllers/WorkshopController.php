@@ -55,7 +55,7 @@ class WorkshopController extends Controller{
 
 		$operators = WorkshopOperator::leftJoin('employee_syncs','employee_syncs.employee_id','=','workshop_operators.operator_id')
 		->select('workshop_operators.operator_id', db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as name'))
-		->orderBy('task', 'asc')
+		->orderBy('workshop_operators.operator_id', 'asc')
 		->get();
 
 		$this->material = $workshop_materials;
