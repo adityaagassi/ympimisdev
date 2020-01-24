@@ -197,8 +197,19 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
 					<?php if ($profil[0]->position == '-' && $profil[0]->position != 'Sub Leader' && strpos($profil[0]->grade_name, 'Staff') === false) { ?>
-						<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
+					<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
 					<?php } ?>
+				</div>
+				<div class="col-md-9">
+					<div class="box box-solid" style="background-color: #605ca8; margin-bottom: 10px;">
+						<div class="box-body">
+							<span style="color: white;">
+								<h4 style="font-weight: bold;">Informasi Perbaikan</h4>
+								<h5>Data HRq belum terupdate karena sedang dalam masa transisi ke data Sunfish.
+									<br>Informasi terkait HR dapat dilihat pada aplikasi GreatDay.</h5>
+							</span>					
+						</div>					
+					</div>
 				</div>
 				<div class="col-md-9">
 					<div class="box" id="boxing">
