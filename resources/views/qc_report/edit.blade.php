@@ -120,6 +120,11 @@
               <option value="{{ $manager->employee_id }}">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
               @endif
               @endforeach
+
+              @if($cpars->employee_id == "PI0109004")
+              <option value="PI0109004" selected="">Budhi Apriyanto - Manager production engineering</option>
+              @endif
+              
             </select>
           </div>
           <label class="col-sm-1">Judul Komplain<span class="text-red">*</span></label>

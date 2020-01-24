@@ -247,7 +247,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                       <td>
+                     <td>
                         <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a>
@@ -273,7 +273,11 @@
                             </a>
                             <br>
                             <a href="{{ url("index/toilet") }}">
-                                <i class="fa fa-caret-right"></i> Toilet Availability (トイレステイタス(空席・使用中))
+                                <i class="fa fa-caret-right"></i> Toilet Availability <br>(トイレステイタス(空席・使用中))
+                            </a>
+                            <br>
+                            <a href="{{ url("index/display/ip") }}">
+                                <i class="fa fa-caret-right"></i> Internet Protocol Monitoring (IP管理)
                             </a>
                         </td>
                     </tr>
@@ -305,14 +309,14 @@
                                 <i class="fa fa-caret-right"></i> List Unverified e-Kaizen (未承認E-改善のリスト)
                             </a>
                             <br>
-                            <a href="#">
+                            {{-- <a href="#">
                                 <i class="fa fa-caret-right"></i> List Verified e-Kaizen (承認済E-改善のリスト)
                             </a>
-                            <br>
-                            <a href="{{ url("/index/kaizen/applied") }}">
+                            <br> --}}
+                            {{-- <a href="{{ url("/index/kaizen/applied") }}">
                                 <i class="fa fa-caret-right"></i> List Applied e-Kaizen (適用済E-改善のリスト)
                             </a>
-                            <br>
+                            <br> --}}
                             <a href="{{ url("/index/kaizen2/resume") }}">
                                 <i class="fa fa-caret-right"></i> Report All Kaizen (全改善のリポート)
                             </a>
@@ -323,14 +327,14 @@
                             <br>
                         </td>
                     </tr>
-                    <tr>
+                   {{--  <tr>
                         <td>
                             <a href="{{ url("index/upload_kaizen") }}">
                                 <i class="fa fa-caret-right"></i> Upload Kaizen Images (改善写真のアップロード)
                             </a>
                             <br>
                         </td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
             </table>
 
@@ -369,6 +373,10 @@
                             <br>
                             <a href="{{ url("index/workshop/productivity") }}">
                                 <i class="fa fa-caret-right"></i> Workshop Productivity (作業依頼書の実現力)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/workshop/workload") }}">
+                                <i class="fa fa-caret-right"></i> Workshop Operator Workload ()
                             </a>
                             <br>
                         </td>                        
