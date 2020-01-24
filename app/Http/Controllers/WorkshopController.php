@@ -261,9 +261,11 @@ class WorkshopController extends Controller{
 	public function scanTag(Request $request){
 		$wjo = WorkshopJobOrder::leftJoin('workshop_materials', 'workshop_materials.item_number', '=', 'workshop_job_orders.item_number')
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_job_orders.operator')
+		->leftJoin('workshop_tag_availabilities', 'workshop_tag_availabilities.tag', '=', 'workshop_job_orders.tag')
 		->where('workshop_job_orders.tag', '=', $request->get('tag'))
 		->whereBetween('workshop_job_orders.remark', array(2, 3))
 		->select('workshop_job_orders.order_no',
+			'workshop_tag_availabilities.remark as tag_remark',
 			'workshop_job_orders.item_number',
 			'workshop_job_orders.priority',
 			'workshop_job_orders.category',
@@ -317,6 +319,13 @@ class WorkshopController extends Controller{
 
 	public function scanMachine(Request $request){
 		$current_machine = WorkshopProcess::where('tag', '=', $request->get('machine_tag'))->first();
+		if(!$current_machine){
+			$response = array(
+				'status' => false,
+				'message' => 'Mesin tidak ditemukan'
+			);
+			return Response::json($response);
+		}
 
 		$wjo = WorkshopJobOrder::where('order_no', '=', $request->get('order_no'))->first();
 
@@ -768,7 +777,10 @@ class WorkshopController extends Controller{
 				$data = db::select("select w.*, u.`name` from workshop_job_orders w
 					left join employee_syncs u on w.created_by = u.employee_id
 					where order_no = '".$order_no."'");
-				Mail::to(['aditya.agassi@music.yamaha.com', 'susilo.basri@music.yamaha.com'])->send(new SendEmail($data, 'urgent_wjo'));
+				
+				Mail::to('susilo.basri@music.yamaha.com')
+				->cc('aditya.agassi@music.yamaha.com')
+				->send(new SendEmail($data, 'urgent_wjo'));
 			}
 
 			$response = array(
@@ -789,20 +801,26 @@ class WorkshopController extends Controller{
 		$tag = $request->get('tag');
 
 		$tag_availability = WorkshopTagAvailability::where('tag', '=', $tag)
-		->where('status', '=', 0)
 		->first();
 
-		if(!$tag_availability){
-			$response = array(
-				'status' => true,
-				'message' => 'WJO Tag tersedia',
-			);
-			return Response::json($response);
-
+		if($tag_availability){
+			if($tag_availability->status == 1){
+				$response = array(
+					'status' => true,
+					'message' => 'WJO Tag tersedia',
+				);
+				return Response::json($response);
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'WJO Tag masih digunakan',
+				);
+				return Response::json($response);
+			}
 		}else{
 			$response = array(
 				'status' => false,
-				'message' => 'WJO Tag masih digunakan',
+				'message' => 'Tag bukan untuk WJO',
 			);
 			return Response::json($response);
 		}
@@ -973,7 +991,7 @@ class WorkshopController extends Controller{
 				$tag_availability = WorkshopTagAvailability::where('tag', '=', $tag)->first();
 				$tag_availability->status = 1;
 
-				$flow_process = WorkshopFlowProcess::where('item_number', '=', $wjo->item_number);
+				$flow_process = WorkshopFlowProcess::where('order_no', '=', $wjo->order_no);
 
 				DB::transaction(function() use ($wjo, $wjo_log, $flow_process, $tag_availability){
 					$wjo->save();
@@ -1114,7 +1132,7 @@ class WorkshopController extends Controller{
 		$workshop_job_orders = $workshop_job_orders
 		->select('workshop_job_orders.id',
 			'workshop_job_orders.order_no',
-			'workshop_tag_availabilities.tag',
+			'workshop_tag_availabilities.remark as tag',
 			'workshop_job_orders.created_at',
 			db::raw('concat(SPLIT_STRING(requester.name, " ", 1)," ",SPLIT_STRING(requester.name, " ", 2)) as requester'),
 			'workshop_job_orders.sub_section',
@@ -1218,7 +1236,7 @@ class WorkshopController extends Controller{
 			on date.week_date = reject.date
 			order by week_date asc");
 
-		$progress = db::select("select wjo.order_no, wjo.priority, wjo.item_name, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date from workshop_job_orders wjo
+		$progress = db::select("select wjo.order_no, wjo.priority, wjo.item_name, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date, step.std, step.actual from workshop_job_orders wjo
 			left join (select * from workshop_job_order_logs where remark = 0) as requested
 			on requested.order_no = wjo.order_no
 			left join (select * from workshop_job_order_logs where remark = 1) as listed
@@ -1228,6 +1246,24 @@ class WorkshopController extends Controller{
 			left join (select * from workshop_job_order_logs where remark = 2) as progress
 			on progress.order_no = wjo.order_no
 			left join employee_syncs e on wjo.operator = e.employee_id
+			left join
+			(select wjo.order_no, COALESCE(flow.std,0) as std, COALESCE(log.actual,0) as actual from workshop_job_orders wjo
+			left join
+			(select flow.order_no, count(flow.order_no) as std from workshop_flow_processes flow
+			left join workshop_job_orders wjo
+			on flow.order_no = wjo.order_no
+			where wjo.remark < 4
+			group by flow.order_no) flow
+			on flow.order_no = wjo.order_no 
+			left join
+			(select log.order_no, count(log.order_no) as actual from workshop_logs log
+			left join workshop_job_orders wjo
+			on log.order_no = wjo.order_no
+			where wjo.remark < 4
+			group by log.order_no) log
+			on log.order_no = wjo.order_no
+			where wjo.remark < 4) step
+			on step.order_no = wjo.order_no
 			where date(wjo.created_at) >= '".$datefrom."'
 			and date(wjo.created_at) <= '".$dateto."'
 			and wjo.remark < 4

@@ -206,6 +206,15 @@
 						<div class="form-group">
 							<label for="exampleInputEmail1">WJO Card</label>
 							<input class="form-control" style="width: 100%; text-align: center;" type="text" id="tag" placeholder="Tap WJO Card" required>
+							<br>
+							<div class="col-xs-4 pull-right">
+								<a class="btn btn-danger btn-flat" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+									Logout
+								</a>
+								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+									{{ csrf_field() }}
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -374,7 +383,7 @@
 								$('#text_priority').css('padding-bottom', '1%');
 								$('#text_priority').append('<span class="label label-default">Normal</span>');
 							}
-							$('#text_order_no').html(result.wjo.order_no);
+							$('#text_order_no').html(result.wjo.order_no +' ('+result.wjo.tag_remark+')');
 							$('#text_item_name').html(result.wjo.item_name);
 							$('#text_category').html(result.wjo.category);
 							$('#text_quantity').html(result.wjo.quantity);						
@@ -547,12 +556,14 @@ $('#machine').keydown(function(event) {
 					$('#machine').val('');
 
 					if(result.message == 'Proses tidak sama dengan sebelumnya'){
-						if(confirm("Alur proses tidak sama dengan sebelumnya\nUntuk mengubah alur yang sudah ada perlu persetujuan Leader\nApakah anda ingin mengubah alur proses yang telah disimpan?")){
-							$('#modalLeader').modal('show');
-							document.getElementById("order_no").value = result.order_no;
-							document.getElementById("item_number").value = result.item_number;
-							document.getElementById("sequence_process").value = result.sequence_process;
-						}
+						alert('Alur proses tidak sesuai');
+
+						// if(confirm("Alur proses tidak sama dengan sebelumnya\nUntuk mengubah alur yang sudah ada perlu persetujuan Leader\nApakah anda ingin mengubah alur proses yang telah disimpan?")){
+						// 	$('#modalLeader').modal('show');
+						// 	document.getElementById("order_no").value = result.order_no;
+						// 	document.getElementById("item_number").value = result.item_number;
+						// 	document.getElementById("sequence_process").value = result.sequence_process;
+						// }
 					}
 				}
 			});

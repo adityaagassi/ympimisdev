@@ -94,7 +94,8 @@
 							<th style="border: 1px solid #333; width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Item Name</th>
 							<th style="border: 1px solid #333; width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">PIC</th>
 							<th style="border: 1px solid #333; padding-top: 0.25%; padding-bottom: 0.25%; width: 25%;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" colspan="4">Status</th>
-							<th style="border: 1px solid #333; width: 25%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Progress</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Target<br>Date</th>
+							<th style="border: 1px solid #333; width: 20%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Progress</th>
 						</tr>
 						<tr>
 							<th style="border: 1px solid #333; width: 5%; padding: 0; padding-top: 0.25%; padding-bottom: 0.25%; border-left:3px solid #f44336 !important;vertical-align: middle;">Requested</th>
@@ -141,7 +142,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 300000);
+		setInterval(fillChart, 60000);
 		setInterval(setTime, 1000);
 	});
 
@@ -152,12 +153,12 @@
 	});
 
 	var count_process_bar = false;
-	var approved_time = [];
-	var target_date = [];
+	var actual = [];
+	var std = [];
+
 	function setTime() {
-		
-		for (var i = 0; i < target_date.length; i++) {
-			if(approved_time[i] == 0){
+		for (var i = 0; i < actual.length; i++) {
+			if(actual[i] == 0){
 				$('#progress_bar_'+i).append().empty();
 				$('#progress_bar_'+i).addClass('progress-bar-success');
 				$('#progress_bar_'+i).html('0%');
@@ -165,12 +166,9 @@
 				$('#progress_bar_'+i).css('color', 'white');
 				$('#progress_bar_'+i).css('margin-left', '2%');
 				$('#progress_bar_'+i).css('font-weight', 'bold');
-				
-			}else{
-				var actual = diff_seconds(new Date(), approved_time[i]);
-				var target = diff_seconds(target_date[i], approved_time[i]);
-				var percent = (actual / target) * 100;
 
+			}else{
+				var percent = (actual[i] / std[i]) * 100;
 				$('#progress_bar_'+i).append().empty();
 				if(percent <= 100){
 					$('#progress_bar_'+i).addClass('active');
@@ -181,14 +179,13 @@
 					$('#progress_bar_'+i).css('font-weight', 'bold');
 				}else{
 					$('#progress_bar_'+i).addClass('active');
-					$('#progress_bar_'+i).addClass('progress-bar-danger');
+					$('#progress_bar_'+i).addClass('progress-bar-success');
 					$('#progress_bar_'+i).html('100%');
 					$('#progress_bar_'+i).css('width', '100%');
 					$('#progress_bar_'+i).css('color', 'white');
 					$('#progress_bar_'+i).css('font-weight', 'bold');
 				}
 			}
-
 		}
 
 	}
@@ -327,9 +324,6 @@
 
 				$('#table-body-monitor').html("");
 
-				approved_time = [];
-				target_date = [];
-
 				var body = '';
 				for (var i = 0; i < result.progress.length; i++) {
 					body += '<tr>';
@@ -354,9 +348,9 @@
 
 					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; font-size: 13px;">';
 					if(result.progress[i].name){
-						body += '<span class="label label-success">'+ result.progress[i].name +'</span>';				
+						body += result.progress[i].name;				
 					}else{
-						body += '<span class="label label-danger">None</span>';
+						body += '-';
 					}
 					body += '</td>';
 
@@ -388,22 +382,29 @@
 					}
 					body += '</td>';
 
+					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; font-size: 13px;">';
+
+					var target = new Date(result.progress[i].target_date);
+					var now = new Date();
+					target_date = target.getFullYear() +'-'+ target.getMonth() +'-'+ target.getDate();
+					now_date = now.getFullYear() +'-'+ now.getMonth() +'-'+ now.getDate();
+
+					if(target_date == now_date){
+						body += '<span class="label label-warning">'+ result.progress[i].target_date +'</span>';
+					}else{
+						if(now < target){
+							body += '<span class="label label-success">'+ result.progress[i].target_date +'</span>';
+						}else{						
+							body += '<span class="label label-danger">'+ result.progress[i].target_date +'</span>';
+						}
+					}
+					body += '</td>';
+
+
+					actual.push(result.progress[i].actual);
+					std.push(result.progress[i].std);
 
 					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%;">';
-
-					if(result.progress[i].requested){
-						approved_time.push(new Date(result.progress[i].requested));
-					}else{
-						approved_time.push(0);
-					}
-
-					if(result.progress[i].target_date){
-						var date = result.progress[i].target_date.split("-");
-						target_date.push(new Date(date[0], (parseInt(date[1]) - 1), date[2], 23, 59, 59, 0));
-					}else{
-						target_date.push(0)
-					}
-
 					body += '<div class="progress-group">';
 					body += '<div class="progress" style="background-color: #212121; height: 25px; border: 1px solid; padding: 0px; margin: 0px;">';
 					body += '<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_'+i+'" style="font-size: 12px; padding-top: 0.5%;"></div>';

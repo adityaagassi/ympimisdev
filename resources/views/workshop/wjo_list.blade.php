@@ -403,7 +403,6 @@
 			</div>
 			<div class="modal-footer" style="padding-right: 4%;">
 				<br>
-				<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Tanda bintang (*) wajib diisi.</span>
 				<button id="close-button" class="btn btn-success" onclick="closen()"><i class="fa fa-save"></i> Close</button>
 			</div>
 		</div>
@@ -587,7 +586,6 @@
 												<a class="btn btn-primary btnPrevious pull-right">Previous</a>
 											</div>
 											<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Standart time dalam menit</span>
-
 										</div>
 									</div>
 									<div class="tab-pane" id="tab_3">
@@ -915,8 +913,6 @@
 				}
 				$.post('{{ url("check/workshop/wjo_rfid") }}', data,  function(result, status, xhr){
 					if(result.status){
-						
-
 						$('#assign_body').show();
 						openSuccessGritter('Success', result.message);
 
