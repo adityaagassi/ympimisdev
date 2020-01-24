@@ -113,7 +113,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div class="row">
-		<div class="col-xs-4" style="padding-top: 2.5%;">
+		<div class="col-xs-4" style="padding-top: 2%;">
 			<table class="table" id="tableMedic" style="font-size: 2vw; padding: 0px;">
 				<tbody id="tableBodyMedic">
 				</tbody>
@@ -157,13 +157,7 @@
 				</div>
 			</div>
 		</div>
-		{{-- <div class="col-xs-2">
-			<table class="table" id="tableQty" style="font-size: 2vw; padding: 0px;">
-				<tbody id="tableBodyQty">
-				</tbody>
-			</table>
-		</div> --}}
-		<div class="col-xs-12" style="padding-top: 2%;">
+		<div class="col-xs-12" style="padding-top: 0%;">
 			<table class="table table-bordered" id="tableList">
 				<thead>
 					<tr>
