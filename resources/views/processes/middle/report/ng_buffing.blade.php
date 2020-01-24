@@ -325,7 +325,7 @@
 		});
 
 
-		$.get('{{ url("fetch/middle/bff_op_ng_monthly") }}', data, function(result, status, xhr) {
+		$.get('{{ url("fetch/middle/bff_op_ng_monthly/resume") }}', data, function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 
@@ -351,7 +351,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 18pt;">Highest '+ result.hpl +' NG Rate by OP on '+ bulanText(result.bulan) +'</span>',
+							text: '<span style="font-size: 18pt;">Highest NG Rate by OP on '+ bulanText(result.bulan) +'</span>',
 							useHTML: true
 						},
 						xAxis: {
