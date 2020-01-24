@@ -65,7 +65,7 @@
 							<input type="text" class="form-control datepicker" name="bulan" placeholder="Select Month">
 						</div>
 					</div>
-					<div class="col-xs-2">
+					<div class="col-xs-2" style="color:black;">
 						<div class="form-group">
 							<select class="form-control select2" multiple="multiple" id="fySelect" data-placeholder="Select Fiscal Year" onchange="changeFy()">
 								@foreach($fys as $fy)
@@ -75,7 +75,7 @@
 							<input type="text" name="fy" id="fy" hidden>
 						</div>
 					</div>
-					<div class="col-xs-2">
+					<div class="col-xs-2" style="color:black;">
 						<div class="form-group">
 							<select class="form-control select2" multiple="multiple" id="hplSelect" data-placeholder="Select HPL" onchange="changeHpl()">
 								<option value="ASKEY">Alto Key</option>
