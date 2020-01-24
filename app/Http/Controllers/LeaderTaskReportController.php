@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-// use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\ActivityList;
@@ -59,6 +59,7 @@ class LeaderTaskReportController extends Controller
 
     function leader_task_list($id,$leader_name)
     {
+        $role_code = Auth::user()->role_code;
         $month = date('Y-m');
         $activity_list = DB::SELECT("SELECT detail.id_activity_list,
                                             detail.activity_type,
@@ -153,6 +154,7 @@ class LeaderTaskReportController extends Controller
         $data = array('activity_list' => $activity_list,
                       'leader_name' => $leader_name,
                       'monthTitle' => $monthTitle,
+                      'role_code' => $role_code,
                       'id' => $id);
         return view('leader_task_report.leader_task_list', $data
           )->with('page', 'Leader Task Report');
@@ -166,6 +168,7 @@ class LeaderTaskReportController extends Controller
         else{
         	$month = date('Y-m');
         }
+        $role_code = Auth::user()->role_code;
         $activity_list = DB::SELECT("SELECT detail.id_activity_list,
                                             detail.activity_type,
                                             detail.activity_name,
@@ -259,6 +262,7 @@ class LeaderTaskReportController extends Controller
         $data = array('activity_list' => $activity_list,
                       'leader_name' => $leader_name,
                       'monthTitle' => $monthTitle,
+                      'role_code' => $role_code,
                       'id' => $id);
         return view('leader_task_report.leader_task_list', $data
           )->with('page', 'Leader Task Report');

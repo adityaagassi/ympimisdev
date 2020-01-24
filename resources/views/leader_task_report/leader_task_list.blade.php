@@ -105,9 +105,17 @@ table.table-bordered > tfoot > tr > th{
                 <td>{{$activity_list->activity_type}}</td>
                 <td>
                   @if($activity_list->link != null)
-                    <a target="_blank" class="btn btn-primary btn-sm" href="{{url("$activity_list->link")}}">Details</a>
+                    @if($role_code == 'L-Assy')
+                      <button class="btn btn-success">Sudah Dilaksanakan</button>
+                    @else
+                      <a target="_blank" class="btn btn-primary btn-sm" href="{{url("$activity_list->link")}}">Details</a>
+                    @endif
                   @else
-                    <a class="btn btn-primary btn-sm" href="">Data Tidak Tersedia</a>
+                    @if($role_code == 'L-Assy')
+                      <button class="btn btn-warning">Belum Dilaksanakan</button>
+                    @else
+                      <a class="btn btn-warning btn-sm" href="">Data Tidak Tersedia</a>
+                    @endif
                   @endif
                 </td>
               </tr>
