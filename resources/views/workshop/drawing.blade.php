@@ -75,7 +75,7 @@
 								<th style="width: 25%;">Description</th>
 								<th style="width: 25%;">Created By</th>
 								<th style="width: 20%;">Created At</th>
-								<th style="width: 5%;">Attach.</th>
+								<th style="width: 5%;">Drawing File</th>
 								<th style="width: 5%;">Edit</th>
 							</tr>
 						</thead>
@@ -130,7 +130,7 @@
 								</div>
 
 								<div class="form-group row" align="right">
-									<label class="col-xs-4">Lampiran<span class="text-red">*</span></label>
+									<label class="col-xs-4">Drawing File<span class="text-red">*</span></label>
 									<div class="col-xs-6" align="left">
 										<input style="height: 37px;" class="form-control" type="file" name="upload_file" id="upload_file" accept="text/plain" required>
 									</div>

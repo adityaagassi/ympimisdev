@@ -9,6 +9,6 @@ class WorkshopOperator extends Model{
     use SoftDeletes;
 
 	protected $fillable = [
-		'operator_id', 'task', 'created_by'
+		'operator_id', 'created_by'
 	];
 }
