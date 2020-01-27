@@ -346,43 +346,43 @@ class WorkshopController extends Controller{
 		->orderBy('sequence_process', 'desc')
 		->first();
 
-		if($wjo_log){
-			$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
-			->where('order_no', '=', $wjo->order_no)
-			->where('sequence_process', '=', ($wjo_log->sequence_process + 1))
-			->select('workshop_flow_processes.order_no', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.status')
-			->first();
+		// if($wjo_log){
+		// 	$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+		// 	->where('order_no', '=', $wjo->order_no)
+		// 	->where('sequence_process', '=', ($wjo_log->sequence_process + 1))
+		// 	->select('workshop_flow_processes.order_no', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.status')
+		// 	->first();
 
-			if($flow){
-				if($flow->process_name != $current_machine->process_name){
-					$response = array(
-						'status' => false,
-						'message' => 'Proses tidak sama dengan sebelumnya',
-						'order_no' => $wjo->order_no,
-						'sequence_process' => ($wjo_log->sequence_process + 1)
-					);
-					return Response::json($response);
-				}
-			}
-		}else{
-			$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
-			->where('order_no', '=', $wjo->order_no)
-			->where('sequence_process', '=', 1)
-			->select('workshop_flow_processes.order_no', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.status')
-			->first();
+		// 	if($flow){
+		// 		if($flow->process_name != $current_machine->process_name){
+		// 			$response = array(
+		// 				'status' => false,
+		// 				'message' => 'Proses tidak sama dengan sebelumnya',
+		// 				'order_no' => $wjo->order_no,
+		// 				'sequence_process' => ($wjo_log->sequence_process + 1)
+		// 			);
+		// 			return Response::json($response);
+		// 		}
+		// 	}
+		// }else{
+		// 	$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+		// 	->where('order_no', '=', $wjo->order_no)
+		// 	->where('sequence_process', '=', 1)
+		// 	->select('workshop_flow_processes.order_no', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.status')
+		// 	->first();
 
-			if($flow){
-				if($flow->process_name != $current_machine->process_name){
-					$response = array(
-						'status' => false,
-						'message' => 'Proses tidak sama dengan sebelumnya',
-						'order_no' => $wjo->order_no,
-						'sequence_process' => 1						
-					);
-					return Response::json($response);
-				}
-			}
-		}
+		// 	if($flow){
+		// 		if($flow->process_name != $current_machine->process_name){
+		// 			$response = array(
+		// 				'status' => false,
+		// 				'message' => 'Proses tidak sama dengan sebelumnya',
+		// 				'order_no' => $wjo->order_no,
+		// 				'sequence_process' => 1						
+		// 			);
+		// 			return Response::json($response);
+		// 		}
+		// 	}
+		// }
 		
 
 		$wjo_remark = WorkshopJobOrder::where('order_no', '=', $wjo->order_no)
@@ -1209,7 +1209,7 @@ class WorkshopController extends Controller{
 			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 		}
 
-		$wjo = db::select("select date.week_date, coalesce(progress.qty, 0) as progress, coalesce(finish.qty, 0) as finish, coalesce(reject.qty, 0) as reject from
+		$wjo = db::select("select date.week_date, coalesce(list.qty, 0) as list, coalesce(progress.qty, 0) as progress, coalesce(finish.qty, 0) as finish, coalesce(reject.qty, 0) as reject from
 			(select week_date from weekly_calendars
 			where date(week_date) >= '".$datefrom."'
 			and date(week_date) <= '".$dateto."'	) date
@@ -1217,7 +1217,14 @@ class WorkshopController extends Controller{
 			(select date(created_at) as date, count(order_no) as qty from workshop_job_orders
 			where date(created_at) >= '".$datefrom."'
 			and date(created_at) <= '".$dateto."'
-			and remark < 4
+			and remark < 3
+			group by date(created_at)) list
+			on date.week_date = list.date
+			left join
+			(select date(created_at) as date, count(order_no) as qty from workshop_job_orders
+			where date(created_at) >= '".$datefrom."'
+			and date(created_at) <= '".$dateto."'
+			and remark = 3
 			group by date(created_at)) progress
 			on date.week_date = progress.date
 			left join
@@ -1266,7 +1273,7 @@ class WorkshopController extends Controller{
 			on step.order_no = wjo.order_no
 			where date(wjo.created_at) >= '".$datefrom."'
 			and date(wjo.created_at) <= '".$dateto."'
-			and wjo.remark < 4
+			and wjo.remark = 3
 			order by wjo.priority desc, wjo.order_no asc");
 
 		$response = array(
