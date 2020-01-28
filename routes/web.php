@@ -400,7 +400,6 @@ Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting')
 Route::get('fetch/report/total_meeting', 'EmployeeController@fetchTotalMeeting');
 Route::get('fetch/report/gender', 'EmployeeController@fetchReportGender');
 Route::get('fetch/report/status1', 'EmployeeController@fetchReportStatus');
-Route::get('fetch/report/overtime_control', 'OvertimeController@OvertimeControlReport');
 Route::get('fetch/report/serikat', 'EmployeeController@reportSerikat');
 Route::get('fetch/report/overtime_report_control', 'OvertimeController@overtimeControl');
 Route::get('fetch/overtime_report_over', 'OvertimeController@overtimeOver');
@@ -543,6 +542,7 @@ Route::get('setting/user', 'UserController@index_setting');
 Route::post('setting/user', 'UserController@setting');
 	// Route::get('register', 'UserController@indexRegister');
 	// Route::post('register', 'UserController@register');
+Route::post('register', 'RegisterController@register')->name('register');
 
 Route::group(['nav' => 'A3', 'middleware' => 'permission'], function(){
 	Route::get('index/navigation', 'NavigationController@index');
@@ -842,6 +842,7 @@ Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 });
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
 Route::get('scan/welding/operator', 'WeldingProcessController@scanWeldingOperator');
+Route::get('scan/welding/kensa', 'WeldingProcessController@scanWeldingKensa');
 
 
 
@@ -1997,8 +1998,10 @@ Route::post('index/recorder/update/{id}','RecorderProcessController@update');
 Route::get('index/recorder_push_pull_check', 'RecorderProcessController@index_push_pull');
 Route::get('push_pull/fetchResult', 'RecorderProcessController@fetchResultPushPull');
 Route::get('push_pull/fetchResultCamera', 'RecorderProcessController@fetchResultCamera');
-Route::get('post/display/email/{value_check}/{judgement}/{model}/{checked_at}', 'RecorderProcessController@email');
+Route::get('post/display/email/{value_check}/{judgement}/{model}/{checked_at}/{pic_check}/{remark}', 'RecorderProcessController@email');
 Route::post('push_pull/store_push_pull', 'RecorderProcessController@store_push_pull');
+Route::post('camera_kango/store_camera_kango', 'RecorderProcessController@store_camera');
+Route::get('scan/push_pull/operator', 'RecorderProcessController@scanPushPullOperator');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');

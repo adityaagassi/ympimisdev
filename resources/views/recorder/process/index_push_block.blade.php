@@ -126,7 +126,7 @@
 <section class="content-header">
 	<h1>
 		{{ $title }}
-		<span class="text-purple"> {{ $title_jp }}</span>
+		<small><span class="text-purple"> {{ $title_jp }}</span></small>
 	</h1>
 </section>
 @stop

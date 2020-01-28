@@ -11,10 +11,15 @@ use App\ActivityList;
 use App\PushBlockMaster;
 use App\PushBlockRecorder;
 use App\PushBlockRecorderResume;
+use App\CodeGenerator;
+use App\User;
+use App\RcPushPullLog;
+use App\RcCameraKangoLog;
+use App\PlcCounter;
+use App\Libraries\ActMLEasyIf;
 use Response;
 use DataTables;
 use Excel;
-use App\User;
 use File;
 use DateTime;
 use Illuminate\Support\Arr;
@@ -36,7 +41,7 @@ class RecorderProcessController extends Controller
                     	'YRS 20GG GREEN',
                       'YRS 20GP PINK',
                     'YRS 24BUK BROWN',
-                  'YRF 21 IVORY',];
+                  'YRF 21 IVORY'];
 
       $this->mail = ['budhi.apriyanto@music.yamaha.com',
                     'khoirul.umam@music.yamaha.com',
@@ -46,13 +51,40 @@ class RecorderProcessController extends Controller
     }
 
   public function index(){
-		return view('recorder.process.index')->with('page', 'Process Assy Recorder')->with('head', 'Assembly Process');
+		return view('recorder.process.index')->with('page', 'Recorder')->with('head', 'Assembly Process');
 	}
 
 	public function index_push_block($remark){
 		$name = Auth::user()->name;
-		return view('recorder.process.index_push_block')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Push Block Check')->with('title', 'Recorder Push Block Check')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('batas_bawah', '3')->with('batas_atas', '17')->with('batas_tinggi', '0.2')->with('remark', $remark);
+		return view('recorder.process.index_push_block')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Push Block Check')->with('title', 'Recorder Push Block Check')->with('title_jp', 'リコーダープッシュブロック検査')->with('name', $name)->with('product_type', $this->product_type)->with('batas_bawah', '3')->with('batas_atas', '17')->with('batas_tinggi', '0.2')->with('remark', $remark);
 	}
+
+  public function scanPushPullOperator(Request $request){
+
+    $tag = $request->get('employee_id');
+
+    if(strlen($tag) > 9){
+      $tag = substr($tag,0,10);
+    }
+
+    $employee = db::table('employees')->where('tag', 'like', '%'.$tag.'%')->first();
+
+    if(count($employee) > 0 ){
+      $response = array(
+        'status' => true,
+        'message' => 'Logged In',
+        'employee' => $employee
+      );
+      return Response::json($response);
+    }
+    else{
+      $response = array(
+        'status' => false,
+        'message' => 'Tag Invalid'
+      );
+      return Response::json($response);
+    }
+  }
 
 	function fetch_push_block(Request $request)
     {
@@ -352,7 +384,9 @@ class RecorderProcessController extends Controller
 
     public function push_block_check_monitoring($remark){
       $name = Auth::user()->name;
-      return view('recorder.display.push_block_check_monitoring')->with('page', 'Recorder Push Block Check Monitoring')->with('head', 'Recorder Push Block Check Monitoring')->with('title', 'Recorder Push Block Check Monitoring')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('remark', $remark);
+      $date7days = DB::SELECT('select week_date from weekly_calendars where remark != "H" and week_date BETWEEN DATE(NOW()) - INTERVAL 7 DAY and DATE(NOW())');
+
+      return view('recorder.display.push_block_check_monitoring')->with('page', 'Recorder Push Block Check Monitoring')->with('head', 'Recorder Process Monitoring')->with('title', 'Recorder Process Monitoring')->with('title_jp', 'リコーダー製造工程管理')->with('name', $name)->with('product_type', $this->product_type)->with('remark', $remark)->with('date', $date7days);
     }
 
     public function fetch_push_block_check_monitoring(Request $request,$remark){
@@ -365,22 +399,46 @@ class RecorderProcessController extends Controller
 
     // $monthTitle = date("F Y", strtotime($date));
 
-    $data = db::select("select DISTINCT(pic_check),
-        sum(jumlah_cek) as jumlah_cek,
-        COALESCE((select SUM((CHAR_LENGTH(push_pull_ng_value) - CHAR_LENGTH(REPLACE(push_pull_ng_value, ',', '')) + 1)) from push_block_recorder_resumes where push_pull_ng_value != 'OK' and remark = '".$remark."' and pic_check  = pushresume1.pic_check and check_date = '".$date."'),0)
-        as jumlah_ng_push_pull,
-        COALESCE((select SUM((CHAR_LENGTH(height_ng_value) - CHAR_LENGTH(REPLACE(height_ng_value, ',', '')) + 1)) from push_block_recorder_resumes where height_ng_value != 'OK' and remark = '".$remark."' and pic_check  = pushresume1.pic_check and check_date = '".$date."'),0)
-        as jumlah_ng_height 
-        from push_block_recorder_resumes as pushresume1
-        where check_date = '".$date."' 
-        and remark = '".$remark."' 
-        GROUP BY pic_check");
+    $date7days = DB::SELECT("select week_date from weekly_calendars where remark != 'H' and week_date BETWEEN DATE('".$date."') - INTERVAL 7 DAY and DATE('".$date."')");
+
+    // $datenew[] = '';
+
+    // for($i = 0;$i<count($date7days);$i++) {
+    //   $datenew[] = date('d F Y',strtotime($date7days[$i]));
+    // }
+
+    $data = db::select("select week_date,
+    (select count(*) from push_block_recorders where push_block_code = 'First Shot Approval' and DATE(check_date) = week_date) 
+    as countfsa,
+    (select count(*) from push_block_recorders where push_block_code = 'First Shot Approval' and DATE(check_date) = week_date and judgement = 'NG') 
+    as countfsappng,
+    (select count(*) from push_block_recorders where push_block_code = 'First Shot Approval' and DATE(check_date) = week_date and judgement2 = 'NG') 
+    as countfsahng,
+    (select count(*) from push_block_recorders where push_block_code = 'After Injection' and DATE(check_date) = week_date) 
+    as countai,
+    (select count(*) from push_block_recorders where push_block_code = 'After Injection' and DATE(check_date) = week_date and judgement = 'NG') 
+    as countaippng,
+    (select count(*) from push_block_recorders where push_block_code = 'After Injection' and DATE(check_date) = week_date and judgement2 = 'NG') 
+    as countaihng,
+    (select count(*) from rc_push_pull_logs where DATE(check_date) = week_date) 
+    as countppassy,
+    (select count(*) from rc_push_pull_logs where DATE(check_date) = week_date and judgement = 'NG') 
+    as countppassyng,
+    (select count(*) from rc_camera_kango_logs where DATE(check_date) = week_date) 
+    as countck,
+    (select count(*) from rc_camera_kango_logs where DATE(check_date) = week_date and judgement = 'NG') 
+    as countckng
+    from weekly_calendars 
+    where remark != 'H'
+    and week_date BETWEEN DATE('".$date."') - INTERVAL 7 DAY and DATE('".$date."')");
 
     $response = array(
       'status' => true,
       'datas' => $data,
+      'date7days' => $date7days,
+      // 'datenew' => $datenew,
       'date' => $date,
-      'remark' => $remark,
+      // 'remark' => $remark,
       // 'monthTitle' => $monthTitle,
     );
     return Response::json($response);
@@ -560,6 +618,372 @@ class RecorderProcessController extends Controller
               );
               return Response::json($response);
             }
+    }
+
+    public function index_push_pull(){
+      $name = Auth::user()->name;
+
+      $push_pull = RcPushPullLog::get();
+      if (count($push_pull) > 0) {
+        foreach ($push_pull as $key) {
+          $check_number = $key->check_number;
+        }
+      }else{
+        $check_number = 0;
+      }
+      return view('recorder.process.index_push_pull')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Push Pull Check')->with('title', 'Recorder Push Pull Check')->with('title_jp', 'リコーダープッシュプールチェック')->with('name', $name)->with('product_type', $this->product_type)->with('batas_bawah', '3')->with('batas_atas', '17')->with('check_number', $check_number);
+    }
+
+    public function fetchResultPushPull()
+    {
+      try{
+            $detail = RcPushPullLog::orderBy('id','DESC')->get();
+            $detail2 = RcPushPullLog::get();
+
+            $response = array(
+              'status' => true,
+              'data' => $detail,
+              'data2' => $detail2
+            );
+            return Response::json($response);
+
+          }
+          catch (QueryException $beacon){
+            $error_code = $beacon->errorInfo[1];
+            if($error_code == 1062){
+             $response = array(
+              'status' => false,
+              'datas' => "Name already exist",
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'datas' => "Update  Error.",
+            );
+             return Response::json($response);
+            }
+        }
+    }
+
+    public function fetchResultCamera()
+    {
+      try{
+            $detail = RcCameraKangoLog::orderBy('id','DESC')->get();
+            $detail_middle = RcCameraKangoLog::where('remark','Middle')->get();
+            $detail_stamp = RcCameraKangoLog::where('remark','Stamp')->get();
+
+            $response = array(
+              'status' => true,
+              'data' => $detail,
+              'data_middle' => $detail_middle,
+              'data_stamp' => $detail_stamp
+            );
+            return Response::json($response);
+
+          }
+          catch (QueryException $beacon){
+            $error_code = $beacon->errorInfo[1];
+            if($error_code == 1062){
+             $response = array(
+              'status' => false,
+              'datas' => "Name already exist",
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'datas' => "Update  Error.",
+            );
+             return Response::json($response);
+            }
+        }
+    }
+
+    public function email($value,$judgement,$model,$checked_at,$pic_check,$remark)
+    {
+      // $bodyHtml2 = "<html><h2>NG Report of Push Pull Check Recorder リコーダープッシュプールチェック</h2><p>Model : ".$model."</p><p>Check Date : ".$checked_at."</p><p>Value : ".$value."</p><p>Judgement : ".$judgement."</p></html>";
+
+      // $mail_to = 'budhi.apriyanto@music.yamaha.com';
+
+      // Mail::raw([], function($message) use($bodyHtml2,$mail_to) {
+      //     $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
+      //     $message->to($mail_to);
+      //     $message->subject('NG Report of Recorder Push Pull Check');
+      //     $message->setBody($bodyHtml2, 'text/html' );
+      //     // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
+      // });
+
+      $data_push_pull = array('value' => $value,
+      'judgement' => $judgement,
+      'checked_at' => $checked_at,
+      'model' => $model,
+      'remark' => $remark,
+      'pic_check' => $pic_check, );
+      // var_dump($data_push_pull);
+      // foreach ($data_push_pull as $key) {
+        // var_dump($data_push_pull['judgement']);
+      // }
+
+      foreach($this->mail as $mail_to){
+          Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
+      }
+
+      //http://172.17.128.87/miraidev/public/post/display/email/2.3/NG/YRS%2023%20IVORY/2020-01-21%2015:30:18
+    }
+
+    public function store_push_pull(Request $request)
+    {
+      try{
+        // if ($request->get('originGroupCode') =='072') {
+        //   $plc = new ActMLEasyIf(2);
+        //   $datas = $plc->read_data('D0', 1);
+        $plc_counter = PlcCounter::where('origin_group_code', '=', '0721')->first();
+        // }
+        // $data = $datas[0];
+        $data = 1;
+
+        if($plc_counter->plc_counter != $data){
+
+          // if(Auth::user()->role_code == "OP-PushPull-RC"){
+
+            $id = Auth::id();
+
+            $plc_counter->plc_counter = $data;
+
+            // if ($request->get('value_check') < 3 || $request->get('value_check') > 17) {
+              $judgement = 'NG';
+              $data_push_pull = array(
+                  'value' => '2.9',
+                  'judgement' => $judgement,
+                  'checked_at' => $request->get('check_date'),
+                  'model' => $request->get('model'),
+                  'remark' => 'Push Pull Check RC Assy',
+                  'pic_check' => $request->get('pic_check'), );
+              // var_dump($data_push_pull);
+              // foreach ($data_push_pull as $key) {
+                // var_dump($data_push_pull['judgement']);
+              // }
+
+              foreach($this->mail as $mail_to){
+                  Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
+              }
+            // }else{
+              // $judgement = 'OK';
+            // }
+
+            $push_pull = RcPushPullLog::create(
+              [
+                'model' => $request->get('model'),
+                'check_date' => $request->get('check_date'),
+                // 'value_check' => $request->get('value_check'),
+                'value_check' => '2.9',
+                'judgement' => $judgement,
+                'pic_check' => $request->get('pic_check'),
+                'created_by' => $id,
+              ]
+            );
+
+            try{
+                $plc_counter->save();
+                $push_pull->save();
+            }
+            catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+
+            $response = array(
+              'status' => true,
+              'statusCode' => 'push_pull',
+              'message' => 'Push Pull success',
+              'data' => $plc_counter->plc_counter
+            );
+            return Response::json($response);
+          // }
+        }
+        else{
+          $response = array(
+            'status' => true,
+            'statusCode' => 'noData',
+          );
+          return Response::json($response);
+        }
+      }
+      catch (\Exception $e){
+        $response = array(
+          'status' => false,
+          'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function store_camera(Request $request)
+    {
+      try{
+        // if ($request->get('originGroupCode') =='072') {
+        //   $plc = new ActMLEasyIf(2);
+        //   $datas = $plc->read_data('D0', 1);
+        //   $plc2 = new ActMLEasyIf(2);
+        //   $datas2 = $plc2->read_data('D0', 1);
+        $plc_counter = PlcCounter::where('origin_group_code', '=', '0722')->first();
+        $plc_counter2 = PlcCounter::where('origin_group_code', '=', '0723')->first();
+        // }
+        // $data = $datas[0];
+        // $data2 = $datas2[0];
+        $data = 1;
+        $data2 = 1;
+
+        //MIDDLE
+        if($plc_counter->plc_counter != $data){
+
+          // if(Auth::user()->role_code == "OP-PushPull-RC"){
+
+            $id = Auth::id();
+
+            $plc_counter->plc_counter = $data;
+
+            // if ($request->get('value_check') < 3 || $request->get('value_check') > 17) {
+              $judgement = 'NG';
+              $data_push_pull = array(
+                  'value' => 'B',
+                  'judgement' => $judgement,
+                  'checked_at' => $request->get('check_date'),
+                  'model' => $request->get('model'),
+                  'remark' => 'Middle Camera Check RC Assy',
+                  'pic_check' => $request->get('pic_check'), );
+              // var_dump($data_push_pull);
+              // foreach ($data_push_pull as $key) {
+                // var_dump($data_push_pull['judgement']);
+              // }
+
+              foreach($this->mail as $mail_to){
+                  Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
+              }
+            // }else{
+              // $judgement = 'OK';
+            // }
+
+            $camera = RcCameraKangoLog::create(
+              [
+                'model' => $request->get('model'),
+                'check_date' => $request->get('check_date'),
+                // 'value_check' => $request->get('value_check'),
+                'value_check' => 'B',
+                'judgement' => $judgement,
+                'remark' => 'Middle',
+                'pic_check' => $request->get('pic_check'),
+                'created_by' => $id,
+              ]
+            );
+
+            try{
+                $plc_counter->save();
+                $camera->save();
+            }
+            catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+
+            $response = array(
+              'status' => true,
+              'statusCode' => 'camera',
+              'message' => 'Push Pull success',
+              'data' => $plc_counter->plc_counter
+            );
+            return Response::json($response);
+          // }
+        }
+
+        //STAMP
+        else if($plc_counter2->plc_counter != $data2){
+
+          // if(Auth::user()->role_code == "OP-PushPull-RC"){
+
+            $id = Auth::id();
+
+            $plc_counter2->plc_counter = $data2;
+
+            // if ($request->get('value_check') < 3 || $request->get('value_check') > 17) {
+              $judgement = 'NG';
+              $data_push_pull = array(
+                  'value' => 'B',
+                  'judgement' => $judgement,
+                  'checked_at' => $request->get('check_date'),
+                  'model' => $request->get('model'),
+                  'remark' => 'Stamp',
+                  'pic_check' => $request->get('pic_check'), );
+              // var_dump($data_push_pull);
+              // foreach ($data_push_pull as $key) {
+                // var_dump($data_push_pull['judgement']);
+              // }
+
+              foreach($this->mail as $mail_to){
+                  Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
+              }
+            // }else{
+              // $judgement = 'OK';
+            // }
+
+            $camera2 = RcCameraKangoLog::create(
+              [
+                'model' => $request->get('model'),
+                'check_date' => $request->get('check_date'),
+                // 'value_check' => $request->get('value_check'),
+                'value_check' => 'B',
+                'judgement' => $judgement,
+                'remark' => 'Stamp Camera Check RC Assy',
+                'pic_check' => $request->get('pic_check'),
+                'created_by' => $id,
+              ]
+            );
+
+            try{
+                $plc_counter2->save();
+                $camera2->save();
+            }
+            catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+
+            $response = array(
+              'status' => true,
+              'statusCode' => 'camera2',
+              'message' => 'Push Pull success',
+              'data' => $plc_counter2->plc_counter
+            );
+            return Response::json($response);
+          // }
+        }
+        else{
+          $response = array(
+            'status' => true,
+            'statusCode' => 'noData',
+          );
+          return Response::json($response);
+        }
+      }
+      catch (\Exception $e){
+        $response = array(
+          'status' => false,
+          'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
     }
 }
   

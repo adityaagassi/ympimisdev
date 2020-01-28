@@ -8,8 +8,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $page }}-{{ $head }}<span class="text-purple"> ???　～　???</span>
-		{{-- <small>Flute <span class="text-purple"> ??? </span></small> --}}
+		{{ $page }} - {{ $head }} <small><span class="text-purple">リコーダー組立工程</span></small>
 	</h1>
 </section>
 @stop
@@ -23,10 +22,11 @@
 			<button type="button" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;" data-toggle="modal" data-target="#push-pull-check-modal">
 				Recorder Push Block Check
 			</button>
+			<a href="{{ url("index/recorder_push_pull_check") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Assy Check</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/recorder/push_block_check_monitoring","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Push Block Check Monitoring</a>
+			<a href="{{ url("index/recorder/push_block_check_monitoring","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Recorder Process Monitoring</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>

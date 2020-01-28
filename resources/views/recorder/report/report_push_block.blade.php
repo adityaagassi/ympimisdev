@@ -39,7 +39,11 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Report Push Pull & Height Check - {{ $remark }} <span class="text-purple">??</span>
+		{{$page}} - {{ $remark }} <small><span class="text-purple">プッシュブロック検査のまとめ ～ @if($remark == 'After Injection')
+			成形上がり
+		@else
+			初物検査
+		@endif </span></small>
 		<!-- <small> <span class="text-purple">??</span></small> -->
 	</h1>
 	<ol class="breadcrumb">

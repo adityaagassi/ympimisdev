@@ -2,7 +2,7 @@
 @section('stylesheets')
 <style type="text/css">
 
-	table.table-bordered{
+	/*table.table-bordered{
   border:1px solid rgb(150,150,150);
 }
 table.table-bordered > thead > tr > th{
@@ -12,12 +12,10 @@ table.table-bordered > thead > tr > th{
   color:white;
 }
 table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(54, 59, 56);
-  background-color: #212121;
-  color: white;
-  vertical-align: middle;
+  border:1px solid rgb(54, 59, 56) !important;
   text-align: center;
-  padding:3px;
+  background-color: #212121;  
+  color:white;
 }
 table.table-condensed > thead > tr > th{   
   color: black;
@@ -47,7 +45,8 @@ table.table-striped > tbody > tr > td{
 }
 
 thead input {
-  width: 100%;
+  wid
+  : 100%;
   padding: 3px;
   box-sizing: border-box;
 }
@@ -63,6 +62,14 @@ td:hover {
 table > thead > tr > th{
   border:2px solid #f4f4f4;
   color: white;
+}*/
+table > thead > tr > th {
+	border:1px solid white !important;
+	text-align: center;
+}
+table > tbody > tr > td {
+	border:1px solid white !important;
+	text-align: center;
 }
 	.content{
 		color: white;
@@ -101,97 +108,25 @@ table > thead > tr > th{
 				</div>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
-			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container1" style="width: 100%;height: 520px;"></div>
+			<center>
+				<center>
+					<span style="font-weight: bold;font-size: 40px">Recorder Process Monitoring</span><br>
+					<span style="font-weight: bold;font-size: 20px">Last 7 Days</span>
+				</center>
+			</center>
+			<div class="col-xs-12" style="width: 100%;height: 300px;margin-top: 5px;background-color: none;">
+				<table style="height: 100%;width: 100%;padding-top: 10px">
+					<thead id="headResult">
+					</thead>
+					<tbody id="bodyResult">
+					</tbody>
+				</table>
 			</div>
-			<!-- <div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container2" style="width: 100%;height: 420px;"></div>
-			</div> -->
 		</div>
 	</div>
 
 	
 </section>
-
-<div class="modal fade" id="myModal">
-    <div class="modal-dialog" style="width:1250px;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 style="float: right;" id="modal-title"></h4>
-          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-          <br><h4 class="modal-title" id="judul_table"></h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-12">
-              <table id="tableResult" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
-                <thead style="background-color: rgba(126,86,134,.7);">
-                  <tr>
-                  	<th>Nomor</th>
-                    <th>Check Date</th>
-                    <th>Injection Date</th>
-                    <th>Product</th>
-                    <th>Head</th>    
-                    <th>Block</th>
-                    <th>Push Pull Check</th>
-                    <th>Height Check</th>
-                    <th>Jumlah Cek</th>
-                    <th>PIC</th>
-                  </tr>
-                </thead>
-                <tbody id="tableBodyResult">
-                </tbody>
-                <tfoot>
-				</tfoot>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="myModal2">
-    <div class="modal-dialog" style="width:1250px;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 style="float: right;" id="modal-title"></h4>
-          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-          <br><h4 class="modal-title" id="judul_table2"></h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-12">
-              <table id="tableResult2" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
-                <thead style="background-color: rgba(126,86,134,.7);">
-                  <tr>
-                  	<th>Nomor</th>
-                    <th>Check Date</th>
-                    <th>Injection Date</th>
-                    <th>Head</th>    
-                    <th>Block</th>
-                    <th>Height</th>
-                    <th>Judgement</th>
-                    <th>PIC</th>
-                  </tr>
-                </thead>
-                <tbody id="tableBodyResult2">
-                </tbody>
-                <tfoot>
-				</tfoot>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
 @endsection
 @section('scripts')
 <script src="{{ url("js/highstock.js")}}"></script>
@@ -208,6 +143,7 @@ table > thead > tr > th{
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
+		setInterval(fillChart, 10000);
 	});
 
 	$('.datepicker').datepicker({
@@ -217,210 +153,6 @@ table > thead > tr > th{
 		todayHighlight: true,	
 		endDate: '<?php echo $tgl_max ?>'
 	});
-
-	Highcharts.createElement('link', {
-		href: '{{ url("fonts/UnicaOne.css")}}',
-		rel: 'stylesheet',
-		type: 'text/css'
-	}, null, document.getElementsByTagName('head')[0]);
-
-	Highcharts.theme = {
-		colors: ['#90ee7e', '#2b908f', '#eeaaee', '#ec407a', '#7798BF', '#f45b5b',
-		'#ff9800', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
-				]
-			},
-			style: {
-				fontFamily: 'sans-serif'
-			},
-			plotBorderColor: '#606063'
-		},
-		title: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase',
-				fontSize: '20px'
-			}
-		},
-		subtitle: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase'
-			}
-		},
-		xAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			title: {
-				style: {
-					color: '#A0A0A3'
-
-				}
-			}
-		},
-		yAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			tickWidth: 1,
-			title: {
-				style: {
-					color: '#A0A0A3'
-				}
-			}
-		},
-		tooltip: {
-			backgroundColor: 'rgba(0, 0, 0, 0.85)',
-			style: {
-				color: '#F0F0F0'
-			}
-		},
-		plotOptions: {
-			series: {
-				dataLabels: {
-					color: 'white'
-				},
-				marker: {
-					lineColor: '#333'
-				}
-			},
-			boxplot: {
-				fillColor: '#505053'
-			},
-			candlestick: {
-				lineColor: 'white'
-			},
-			errorbar: {
-				color: 'white'
-			}
-		},
-		legend: {
-			itemStyle: {
-				color: '#E0E0E3'
-			},
-			itemHoverStyle: {
-				color: '#FFF'
-			},
-			itemHiddenStyle: {
-				color: '#606063'
-			}
-		},
-		credits: {
-			style: {
-				color: '#666'
-			}
-		},
-		labels: {
-			style: {
-				color: '#707073'
-			}
-		},
-
-		drilldown: {
-			activeAxisLabelStyle: {
-				color: '#F0F0F3'
-			},
-			activeDataLabelStyle: {
-				color: '#F0F0F3'
-			}
-		},
-
-		navigation: {
-			buttonOptions: {
-				symbolStroke: '#DDDDDD',
-				theme: {
-					fill: '#505053'
-				}
-			}
-		},
-
-		rangeSelector: {
-			buttonTheme: {
-				fill: '#505053',
-				stroke: '#000000',
-				style: {
-					color: '#CCC'
-				},
-				states: {
-					hover: {
-						fill: '#707073',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					},
-					select: {
-						fill: '#000003',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					}
-				}
-			},
-			inputBoxBorderColor: '#505053',
-			inputStyle: {
-				backgroundColor: '#333',
-				color: 'silver'
-			},
-			labelStyle: {
-				color: 'silver'
-			}
-		},
-
-		navigator: {
-			handles: {
-				backgroundColor: '#666',
-				borderColor: '#AAA'
-			},
-			outlineColor: '#CCC',
-			maskFill: 'rgba(255,255,255,0.1)',
-			series: {
-				color: '#7798BF',
-				lineColor: '#A6C7ED'
-			},
-			xAxis: {
-				gridLineColor: '#505053'
-			}
-		},
-
-		scrollbar: {
-			barBackgroundColor: '#808083',
-			barBorderColor: '#808083',
-			buttonArrowColor: '#CCC',
-			buttonBackgroundColor: '#606063',
-			buttonBorderColor: '#606063',
-			rifleColor: '#FFF',
-			trackBackgroundColor: '#404043',
-			trackBorderColor: '#404043'
-		},
-
-		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-		background2: '#505053',
-		dataLabelsColor: '#B0B0B3',
-		textColor: '#C0C0C0',
-		contrastTextColor: '#F0F0F3',
-		maskColor: 'rgba(255,255,255,0.3)'
-	};
-	Highcharts.setOptions(Highcharts.theme);
 
 	function addZero(i) {
 		if (i < 10) {
@@ -457,139 +189,231 @@ table > thead > tr > th{
 				if(result.status){
 
 					//Chart Machine Report
-					var jumlah_cek = [];
-					var jumlah_ng_push_pull = [];
-					var jumlah_ng_height = [];
-					var pic = [];
+					// var jumlah_cek = [];
+					// var jumlah_ng_push_pull = [];
+					// var jumlah_ng_height = [];
+					// var pic = [];
 
-					for (var i = 0; i < result.datas.length; i++) {
-						pic.push(result.datas[i].pic_check);
-						jumlah_cek.push(parseInt(result.datas[i].jumlah_cek));
-						jumlah_ng_push_pull.push(parseInt(result.datas[i].jumlah_ng_push_pull));
-						jumlah_ng_height.push(parseInt(result.datas[i].jumlah_ng_height));
-						// series.push([machine[i], jml[i]]);
-					}
+					// for (var i = 0; i < result.datas.length; i++) {
+					// 	pic.push(result.datas[i].pic_check);
+					// 	jumlah_cek.push(parseInt(result.datas[i].jumlah_cek));
+					// 	jumlah_ng_push_pull.push(parseInt(result.datas[i].jumlah_ng_push_pull));
+					// 	jumlah_ng_height.push(parseInt(result.datas[i].jumlah_ng_height));
+					// 	// series.push([machine[i], jml[i]]);
+					// }
+					$('#headResult').html("");
+					$('#bodyResult').html("");
 
+					var bodyData = "";
+					var headData = "";
 
-					Highcharts.chart('container1', {
-						chart: {
-							type: 'column'
-						},
-						title: {
-							text: 'Recorder Push Pull & Height Check Monitoring By PIC - '+remark,
-							style: {
-								fontSize: '20px',
-								fontWeight: 'bold'
-							}
-						},
-						subtitle: {
-							text: 'on '+result.date,
-							style: {
-								fontSize: '1vw',
-								fontWeight: 'bold'
-							}
-						},
-						xAxis: {
-							categories: pic,
-							type: 'category',
-							// gridLineWidth: 1,
-							gridLineColor: 'RGB(204,255,255)',
-							lineWidth:2,
-							lineColor:'#9e9e9e',
-							labels: {
-								style: {
-									fontSize: '15px'
-								}
-							},
-						},
-						yAxis: {
-							title: {
-								text: 'Total Push Block & Height Check',
-								style: {
-			                        color: '#eee',
-			                        fontSize: '20px',
-			                        fontWeight: 'bold',
-			                        fill: '#6d869f'
-			                    }
-							},
-							labels:{
-					        	style:{
-									fontSize:"15px"
-								}
-					        },
-							type: 'linear'
-						},
-						tooltip: {
-							headerFormat: '<span>Total Check</span><br/>',
-							pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b><br/>',
-						},
-						legend: {
-							layout: 'horizontal',
-							align: 'right',
-							verticalAlign: 'top',
-							x: -90,
-							y: 30,
-							floating: true,
-							borderWidth: 1,
-							backgroundColor:
-							Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-							shadow: true,
-							itemStyle: {
-				                fontSize:'12px',
-				            },
-						},	
-						plotOptions: {
-							series:{
-								cursor: 'pointer',
-				                point: {
-				                  events: {
-				                    click: function () {
-				                      ShowModal(this.category,result.remark);
-				                    }
-				                  }
-				                },
-								dataLabels: {
-									enabled: true,
-									format: '{point.y}',
-									style:{
-										fontSize: '1.5vw'
-									}
-								},
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer'
-							},
-						},credits: {
-							enabled: false
-						},
-						series: [{
-							type: 'column',
-							data: jumlah_cek,
-							name: 'Jumlah Cek',
-							colorByPoint: false,
-							color: "#218380",
-							key:'OK'
-						},{
-							type: 'column',
-							data: jumlah_ng_push_pull,
-							name: 'Jumlah NG Push Pull Check',
-							// stacking:'normal',
-							colorByPoint: false,
-							color:'#d81159',
-							key:'NG'
-						},{
-							type: 'column',
-							data: jumlah_ng_height,
-							name: 'Jumlah NG Height Check',
-							// stacking:'normal',
-							colorByPoint: false,
-							color:'#8f2d56',
-							key:'NG'
-						},
-						]
+					var tgl = [];
+
+					headData += '<tr>';
+					headData += '<th style="padding-left: 10px;padding-right: 10px;font-size: 30px">Recorder Process</th>';
+					headData += '<th colspan="3" style="padding-left: 10px;padding-right: 10px;font-size: 30px">First Shot Approval</th>';
+					headData += '<th colspan="3" style="padding-left: 10px;padding-right: 10px;font-size: 30px">After Injection</th>';
+					headData += '<th colspan="2" style="padding-left: 10px;padding-right: 10px;font-size: 30px">Push Pull Assembly</th>';
+					headData += '<th colspan="2" style="padding-left: 10px;padding-right: 10px;font-size: 30px">Camera Kango</th>';
+					// for(var i = 0; i < result.date7days.length; i++){
+					// 	headData += '<th style="padding-left: 10px;padding-right: 10px;font-size: 20px">'+result.date7days[i].week_date+'</th>';
+					// 	tgl.push(result.date7days[i].week_date);
+					// }
+					headData += '</tr>';
+
+					$('#headResult').append(headData);
+
+					$.each(result.datas, function(key, value) {
+
+						var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+						var d = new Date(value.week_date);
+
+						bodyData += '<tr>';
+						bodyData += '<td rowspan="2" style="padding-left: 10px;padding-right: 10px;font-size: 30px">'+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+'</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">Total Check :</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">NG Push Block :</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">NG Height Check :</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">Total Check :</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">NG Push Block :</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">NG Height Check :</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">Total Check :</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">NG Push Pull :</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">Total Check :</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 10px">NG Camera Kango :</td>';
+
+						if (value.countfsappng > 0) {
+							var color1 = '#ff6363';
+						}else{
+							var color1 = 'none';
+						}
+
+						if(value.countfsahng > 0){
+							var color2 = '#ff6363';
+						}else{
+							var color2 = 'none';
+						}
+
+						if(value.countaippng > 0){
+							var color3 = '#ff6363';
+						}else{
+							var color3 = 'none';
+						}
+
+						if(value.countaihng > 0){
+							var color4 = '#ff6363';
+						}else{
+							var color4 = 'none';
+						}
+
+						if(value.countppassyng > 0){
+							var color5 = '#ff6363';
+						}else{
+							var color5 = 'none';
+						}
+
+						if(value.countckng > 0){
+							var color6 = '#ff6363';
+						}else{
+							var color6 = 'none';
+						}
+						
+						bodyData += '</tr>';
+						bodyData += '<tr>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countfsa+'</td>';
+						bodyData += '<td style="background-color:'+color1+';padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countfsappng+'</td>';
+						bodyData += '<td style="background-color:'+color2+';padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countfsahng+'</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countai+'</td>';
+						bodyData += '<td style="background-color:'+color3+';padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countaippng+'</td>';
+						bodyData += '<td style="background-color:'+color4+';padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countaihng+'</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countppassy+'</td>';
+						bodyData += '<td style="background-color:'+color5+';padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countppassyng+'</td>';
+						bodyData += '<td style="padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countck+'</td>';
+						bodyData += '<td style="background-color:'+color6+';padding-left: 10px;padding-right: 10px;font-size: 30px">'+value.countckng+'</td>';
+						bodyData += '</tr>';
 					});
+
+					$('#bodyResult').append(bodyData);
+
+
+					// Highcharts.chart('container1', {
+					// 	chart: {
+					// 		type: 'column'
+					// 	},
+					// 	title: {
+					// 		text: 'Recorder Push Pull & Height Check Monitoring By PIC - '+remark,
+					// 		style: {
+					// 			fontSize: '20px',
+					// 			fontWeight: 'bold'
+					// 		}
+					// 	},
+					// 	subtitle: {
+					// 		text: 'on '+result.date,
+					// 		style: {
+					// 			fontSize: '1vw',
+					// 			fontWeight: 'bold'
+					// 		}
+					// 	},
+					// 	xAxis: {
+					// 		categories: pic,
+					// 		type: 'category',
+					// 		// gridLineWidth: 1,
+					// 		gridLineColor: 'RGB(204,255,255)',
+					// 		lineWidth:2,
+					// 		lineColor:'#9e9e9e',
+					// 		labels: {
+					// 			style: {
+					// 				fontSize: '15px'
+					// 			}
+					// 		},
+					// 	},
+					// 	yAxis: {
+					// 		title: {
+					// 			text: 'Total Push Block & Height Check',
+					// 			style: {
+			  //                       color: '#eee',
+			  //                       fontSize: '20px',
+			  //                       fontWeight: 'bold',
+			  //                       fill: '#6d869f'
+			  //                   }
+					// 		},
+					// 		labels:{
+					//         	style:{
+					// 				fontSize:"15px"
+					// 			}
+					//         },
+					// 		type: 'linear'
+					// 	},
+					// 	tooltip: {
+					// 		headerFormat: '<span>Total Check</span><br/>',
+					// 		pointFormat: '<span style="color:{point.color};font-weight: bold;">{series.name} </span>: <b>{point.y}</b><br/>',
+					// 	},
+					// 	legend: {
+					// 		layout: 'horizontal',
+					// 		align: 'right',
+					// 		verticalAlign: 'top',
+					// 		x: -90,
+					// 		y: 30,
+					// 		floating: true,
+					// 		borderWidth: 1,
+					// 		backgroundColor:
+					// 		Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+					// 		shadow: true,
+					// 		itemStyle: {
+				 //                fontSize:'12px',
+				 //            },
+					// 	},	
+					// 	plotOptions: {
+					// 		series:{
+					// 			cursor: 'pointer',
+				 //                point: {
+				 //                  events: {
+				 //                    click: function () {
+				 //                      ShowModal(this.category,result.remark);
+				 //                    }
+				 //                  }
+				 //                },
+					// 			dataLabels: {
+					// 				enabled: true,
+					// 				format: '{point.y}',
+					// 				style:{
+					// 					fontSize: '1.5vw'
+					// 				}
+					// 			},
+					// 			animation: false,
+					// 			pointPadding: 0.93,
+					// 			groupPadding: 0.93,
+					// 			borderWidth: 0.93,
+					// 			cursor: 'pointer'
+					// 		},
+					// 	},credits: {
+					// 		enabled: false
+					// 	},
+					// 	series: [{
+					// 		type: 'column',
+					// 		data: jumlah_cek,
+					// 		name: 'Jumlah Cek',
+					// 		colorByPoint: false,
+					// 		color: "#218380",
+					// 		key:'OK'
+					// 	},{
+					// 		type: 'column',
+					// 		data: jumlah_ng_push_pull,
+					// 		name: 'Jumlah NG Push Pull Check',
+					// 		// stacking:'normal',
+					// 		colorByPoint: false,
+					// 		color:'#d81159',
+					// 		key:'NG'
+					// 	},{
+					// 		type: 'column',
+					// 		data: jumlah_ng_height,
+					// 		name: 'Jumlah NG Height Check',
+					// 		// stacking:'normal',
+					// 		colorByPoint: false,
+					// 		color:'#8f2d56',
+					// 		key:'NG'
+					// 	},
+					// 	]
+					// });
 				}
 			}
 		});

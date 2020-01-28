@@ -37,7 +37,7 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com')->subject('MIS Shipment Reminder (情報管理システムの出荷通知)')->view('mails.shipment');
         }
         if($this->remark == 'overtime'){
-            return $this->from('ympimis@gmail.com')->subject('MIS Overtime Information (情報管理システムの残業情報)')->view('mails.overtime');
+            return $this->from('ympimis2@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Overtime Information (情報管理システムの残業情報)')->view('mails.overtime');
         }
         if($this->remark == 'stuffing'){
             return $this->from('ympimis@gmail.com')->subject('MIS Stuffing Information (情報管理システムの荷積み情報)')->view('mails.stuffing');
@@ -119,6 +119,9 @@ class SendEmail extends Mailable
         }
         if($this->remark == 'height_check'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('NG Report of Height Gauge Check Recorder (??)')->view('mails.height_check');
+        }
+        if($this->remark == 'push_pull'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('NG Report of Push Pull & Camera Stamp Check Recorder (リコーダープッシュプールチェック)')->view('mails.push_pull');
         }
         if($this->remark == 'urgent_wjo'){
             if($this->data[0]->attachment != null){
