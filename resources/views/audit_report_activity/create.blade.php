@@ -132,7 +132,7 @@
               <input type="text" class="form-control" name="kesesuaian_qc_kouteihyo" placeholder="Kesesuaian QC Kouteihyo">
             </div>
           </div>
-          <!-- <div class="form-group row" align="right">
+          <div class="form-group row" align="right">
             <label class="col-sm-4">Operator<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
               <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Choose an Operator..." required>
@@ -142,8 +142,8 @@
                 @endforeach
               </select>
             </div>
-          </div> -->
-          <div class="form-group row" align="right" id='scanner'>
+          </div>
+          <!-- <div class="form-group row" align="right" id='scanner'>
             <label class="col-sm-4">Scan QR Code<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
               <div class="col-xs-12">
@@ -158,13 +158,13 @@
                 </div>                  
               </div>
             </div>
-          </div>
-          <div class="form-group row" align="right">
+          </div> -->
+          <!-- <div class="form-group row" align="right">
             <label class="col-sm-4">NIK</label>
             <div class="col-sm-8" align="left">
               <input type="text" class="form-control" name="operator" id="input_employee_id" placeholder="Enter NIK">
             </div>
-          </div>
+          </div> -->
           <div class="form-group row" align="right">
             <label class="col-sm-4">Leader<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
