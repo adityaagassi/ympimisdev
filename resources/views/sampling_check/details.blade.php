@@ -160,7 +160,7 @@ table.table-bordered > tfoot > tr > th{
 							<h3 class="box-title">Sampling Check Details <span class="text-purple"></span></h3>
 							<a class="btn btn-primary pull-right" href="{{ url('index/sampling_check/createdetails/'.$sampling_id) }}">Create Details</a>
 						</div>
-				        <div class="box-body">
+				        <div class="box-body" style="overflow-x: scroll;">
 				          <table id="example1" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>

@@ -146,7 +146,7 @@ table.table-bordered > tfoot > tr > th{
 						        Create
 						    </button>
 						</div>
-				        <div class="box-body">
+				        <div class="box-body" style="overflow-x: scroll;">
 				          <table id="example1" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
@@ -310,7 +310,7 @@ table.table-bordered > tfoot > tr > th{
 								<button type="submit" class="btn btn-primary ">Upload</button>
 							</form>
 						</div>
-				        <div class="box-body">
+				        <div class="box-body" style="overflow-x: scroll;">
 				          <table id="example3" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
