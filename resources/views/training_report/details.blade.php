@@ -361,15 +361,14 @@ table.table-bordered > tfoot > tr > th{
 				              <tr>
 				              	@if($jml_null > 0)
 								<td id="approval2">
-									<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ttd-modal" onclick="getValue('{{ $training_participant->id }}')">
-						               <!-- <i class="fa fa-edit"></i> -->
+									<!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ttd-modal" onclick="getValue('{{ $training_participant->id }}')">
 						               Kehadiran
-						            </button>
+						            </button> -->
 									<input type="hidden" value="{{csrf_token()}}" name="_token" />
-									<!-- @if($training_participant->participant_absence == Null)
+									@if($training_participant->participant_absence == Null)
 									    {{-- <input type="checkbox" id="checklist_participant" name="approve[]" value="{{ $training_participant->id }}"> --}}
 									    <input type="checkbox" name="ips[]" onchange="getValue(this.value)" value="{{ $training_participant->participant_id }}">
-									@endif -->
+									@endif
 								</td>
 								@endif
 				                <td>
@@ -604,14 +603,14 @@ table.table-bordered > tfoot > tr > th{
 <script>
 	function getValue(value){
     	// alert(value);
-    	// var url = '{{ url("index/training_report/cek_employee") }}';
-    	// var conf = confirm('Are you sure you want to attend?');
-    	// if(conf){
-    	// 	window.location.href = url+'/'+value+'/{{ $id }}';
-    	// 	// console.log(url+'/'+value+'/{{ $id }}');
-    	// }else{
+    	var url = '{{ url("index/training_report/cek_employee") }}';
+    	var conf = confirm('Are you sure you want to attend?');
+    	if(conf){
+    		window.location.href = url+'/'+value+'/{{ $id }}';
+    		// console.log(url+'/'+value+'/{{ $id }}');
+    	}else{
 
-    	// }
+    	}
     	$("#id_peserta").val(value);
 	}
 </script>
