@@ -738,14 +738,19 @@ class RecorderProcessController extends Controller
     {
       try{
         // if ($request->get('originGroupCode') =='072') {
-        //   $plc = new ActMLEasyIf(2);
-        //   $datas = $plc->read_data('D0', 1);
-        $plc_counter = PlcCounter::where('origin_group_code', '=', '0721')->first();
+          $plc = new ActMLEasyIf(2);
+          $counter_push_pull = $plc->read_data('D75', 1);
+          $value_push_pull = $plc->read_data('D50', 1);
+        $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
         // }
-        // $data = $datas[0];
-        $data = 1;
+        $data = $datas[0];
+        $datavalue = $datas[0] / 160;
+        // $data = 1;
+        var_dump($counter_push_pull);
+        var_dump($value_push_pull);
 
-        if($plc_counter->plc_counter != $data){
+
+        if($plc_counter->plc_counter != $counter_push_pull[0]){
 
           // if(Auth::user()->role_code == "OP-PushPull-RC"){
 
@@ -753,10 +758,10 @@ class RecorderProcessController extends Controller
 
             $plc_counter->plc_counter = $data;
 
-            // if ($request->get('value_check') < 3 || $request->get('value_check') > 17) {
+            if ($datavalue < 3 || $datavalue > 17) {
               $judgement = 'NG';
               $data_push_pull = array(
-                  'value' => '2.9',
+                  'value' => $datavalue,
                   'judgement' => $judgement,
                   'checked_at' => $request->get('check_date'),
                   'model' => $request->get('model'),
@@ -770,16 +775,16 @@ class RecorderProcessController extends Controller
               foreach($this->mail as $mail_to){
                   Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
               }
-            // }else{
-              // $judgement = 'OK';
-            // }
+            }else{
+              $judgement = 'OK';
+            }
 
             $push_pull = RcPushPullLog::create(
               [
                 'model' => $request->get('model'),
                 'check_date' => $request->get('check_date'),
-                // 'value_check' => $request->get('value_check'),
-                'value_check' => '2.9',
+                'value_check' => $datavalue,
+                // 'value_check' => '2.9',
                 'judgement' => $judgement,
                 'pic_check' => $request->get('pic_check'),
                 'created_by' => $id,
@@ -832,8 +837,8 @@ class RecorderProcessController extends Controller
         //   $datas = $plc->read_data('D0', 1);
         //   $plc2 = new ActMLEasyIf(2);
         //   $datas2 = $plc2->read_data('D0', 1);
-        $plc_counter = PlcCounter::where('origin_group_code', '=', '0722')->first();
-        $plc_counter2 = PlcCounter::where('origin_group_code', '=', '0723')->first();
+        $plc_counter = PlcCounter::where('origin_group_code', '=', '072_2')->first();
+        $plc_counter2 = PlcCounter::where('origin_group_code', '=', '072_3')->first();
         // }
         // $data = $datas[0];
         // $data2 = $datas2[0];
