@@ -772,9 +772,9 @@ class RecorderProcessController extends Controller
                 // var_dump($data_push_pull['judgement']);
               // }
 
-              foreach($this->mail as $mail_to){
-                  Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
-              }
+              // foreach($this->mail as $mail_to){
+              //     Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
+              // }
             }else{
               $judgement = 'OK';
             }
@@ -871,9 +871,9 @@ class RecorderProcessController extends Controller
                 // var_dump($data_push_pull['judgement']);
               // }
 
-              foreach($this->mail as $mail_to){
-                  Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
-              }
+              // foreach($this->mail as $mail_to){
+              //     Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
+              // }
             // }else{
               // $judgement = 'OK';
             // }
@@ -936,9 +936,9 @@ class RecorderProcessController extends Controller
                 // var_dump($data_push_pull['judgement']);
               // }
 
-              foreach($this->mail as $mail_to){
-                  Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
-              }
+              // foreach($this->mail as $mail_to){
+              //     Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
+              // }
             // }else{
               // $judgement = 'OK';
             // }
