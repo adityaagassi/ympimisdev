@@ -1,386 +1,222 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
-@endsection
+<style type="text/css">
+     input {
+          line-height: 22px;
+     }
+     thead>tr>th{
+          text-align:center;
+     }
+     tbody>tr>td{
+          text-align:center;
+     }
+     tfoot>tr>th{
+          text-align:center;
+     }
+     td:hover {
+          overflow: visible;
+     }
+     table.table-bordered{
+          border:1px solid black;
+     }
+     table.table-bordered > thead > tr > th{
+          border:1px solid black;
+     }
+     table.table-bordered > tbody > tr > td{
+          border:1px solid rgb(211,211,211);
+     }
+     table.table-bordered > tfoot > tr > th{
+          border:1px solid rgb(211,211,211);
+     }
+     #loading, #error { 
+          display: none;
+     }
+     #tableBodyList > tr:hover {
+          cursor: pointer;
+          background-color: #7dfa8c;
+     }
+     .urgent{
+          background-color: red;
+     }
+</style>
+@stop
 @section('header')
 <section class="content-header">
- <h1>
-  Overtime Control <span class="text-purple"> jepang </span>
-</h1>
-<div class="col-md-2 pull-right">
-  <div class="input-group date">
-    <div class="input-group-addon bg-green" style="border-color: green">
-      <i class="fa fa-calendar"></i>
-    </div>
-    <input type="text" class="form-control datepicker" id="tgl" onchange="drawChart()" placeholder="Select date" style="border-color: green">
-  </div>
-</div>
-<small style="font-size: 15px; color: #88898c"><i class="fa fa-history"></i> Last updated : <?php echo date('d M Y') ?> </small>
-<ol class="breadcrumb">
-</ol>
+     <h1>
+          Overtime Report<span class="text-purple"> </span>
+     </h1>
 </section>
 @endsection
-
-
 @section('content')
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+     <p style="position: absolute; color: White; top: 45%; left: 35%;">
+          <span style="font-size: 40px">Loading, please wait <i class="fa fa-spin fa-spinner"></i></span>
+     </p>
+</div>
 <section class="content">
- <div class="row">
-  <div class="col-xs-12">
-   <div class="box">
-    <div class="box-body">
-      <div class="box-body">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-12">
-              <div id="container" style="width: 100%; margin: 0px auto; height: 550px;"></div>
-            </div>
+     <div class="row">
+          <div class="col-xs-12">
+               <div class="col-md-2">
+                    <div class="form-group">
+                         <label>Tanggal Mulai</label>
+                         <div class="input-group date" style="width: 100%;">
+                              <input type="text" placeholder="Pilih Tanggal" class="form-control pull-right" name="dateFrom" id="dateFrom">
+                         </div>
+                    </div>
+               </div>
+               <div class="col-md-2">
+                    <div class="form-group">
+                         <label>Tanggal Sampai</label>
+                         <div class="input-group date" style="width: 100%;">
+                              <input type="text" placeholder="Pilih Tanggal" class="form-control pull-right" name="dateTo" id="dateTo">
+                         </div>
+                    </div>
+               </div>
+               <div class="col-md-2">
+                    <div class="form-group">
+                         <label>&nbsp;</label>
+                         <div class="input-group date" style="width: 100%;">
+                              <button class="btn btn-primary" onclick="fetchTable()">Search</button>
+                         </div>
+                    </div>
+               </div>
           </div>
-        </div>
-        <br><br>
-      </div>
-    </div>
-
-    <div class="box box-solid">
-      <div class="box-body">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="col-md-3">
-                <div class="description-block border-right" style="color: #f76111">
-                  <h5 class="description-header" style="font-size: 60px;">
-                    <span class="description-percentage" id="tot_budget"></span>
-                  </h5>      
-                  <span class="description-text" style="font-size: 35px;">Total Budget<br><span >総予算</span></span>   
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="description-block border-right" style="color: #7300ab" >
-                  <h5 class="description-header" style="font-size: 60px; ">
-                    <span class="description-percentage" id="tot_act"></span>
-                  </h5>      
-                  <span class="description-text" style="font-size: 35px;">Total Actual<br><span >総実績</span></span>   
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="description-block border-right text-green" id="diff_text">
-                  <h5 class="description-header" style="font-size: 60px;">
-                    <span class="description-percentage" id="tot_diff"></span>
-                  </h5>      
-                  <span class="description-text" style="font-size: 35px;">Difference<br><span >差異</span></span>   
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="description-block border-right text-yellow">
-                  <h5 class="description-header" style="font-size: 60px;">
-                    <span class="description-percentage" id="avg"></span>
-                  </h5>      
-                  <span class="description-text" style="font-size: 35px;">Average<br><span >平均</span></span>   
-                </div>
-              </div>
-            </div>
+          <div class="col-xs-12">
+               <table id="tableList" class="table table-bordered table-striped table-hover" style="width: 100%;">
+                    <thead style="background-color: rgba(126,86,134,.7);">
+                         <tr>
+                              <th style="width: 5%;">No</th>
+                              <th style="width: 1%;">ID</th>
+                              <th style="width: 7%;">Nama</th>
+                              <th style="width: 1%;">Tanggal</th>
+                              <th style="width: 1%;">Plan Mulai</th>
+                              <th style="width: 1%;">Plan Sampai</th>
+                              <th style="width: 1%;">Plan OT</th>
+                              <th style="width: 1%;">Hari</th>
+                              <th style="width: 1%;">Log Mulai</th>
+                              <th style="width: 1%;">Log Sampai</th>
+                              <th style="width: 1%;">Log OT</th>
+                         </tr>
+                    </thead>
+                    <tbody id="tableBodyList">
+                    </tbody>
+               </table>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="myModal">
-     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-       <div class="modal-header">
-        <h4 style="float: right; " id="modal-title"></h4> 
-        <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-         <div class="col-md-12">
-          <div id="progressbar2">
-            <center>
-              <i class="fa fa-refresh fa-spin" style="font-size: 6em;"></i> 
-              <br><h4>Loading ...</h4>
-            </center>
-          </div>
-          <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="example2">
-           <thead>
-             <tr>
-               <th>No</th>
-               <th>NIK</th>
-               <th>Nama</th>
-               <th>Total Lembur (jam)</th>
-               <th>Keperluan</th>
-             </tr>
-           </thead>
-           <tbody id="tabelDetail"></tbody>
-           <tfoot>
-             <th>
-              <td colspan="2" style="font-weight: bold; size: 25px; text-align: right;">TOTAL </td>
-              <td id="tot" style="font-weight: bold; size: 25px"></td>
-            </th>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-  </div>
-</div>
-<!-- /.modal-content -->
-</div>
-<!-- /.modal-dialog -->
-</div>
-</div>
-</div>
-
+     </div>
 </section>
-
-
-@stop
-
+@endsection
 @section('scripts')
-<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/highcharts.js")}}"></script>
-<script src="{{ url("js/exporting.js")}}"></script>
-<script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
-
- var tot_budget = 0;
- var tot_act = 0;
- var tot_diff = 0;
- $(function () {
-  drawChart();
-
-  // setInterval(function(){
-  //   drawChart();
-  // }, 30000);
-})
-
-
- $.ajaxSetup({
-  headers: {
-   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
- }
-});
-
- jQuery(document).ready(function() {
-  $('body').toggleClass("sidebar-collapse");
-
-});
-
- function openErrorGritter(title, message) {
-  jQuery.gritter.add({
-   title: title,
-   text: message,
-   class_name: 'growl-danger',
-   image: '{{ url("images/image-stop.png") }}',
-   sticky: false,
-   time: '2000'
- });
-}
-
-function openSuccessGritter(title, message){
-  jQuery.gritter.add({
-   title: title,
-   text: message,
-   class_name: 'growl-success',
-   image: '{{ url("images/image-screen.png") }}',
-   sticky: false,
-   time: '2000'
- });
-}
-$('.datepicker').datepicker({
-  <?php $tgl_max = date('d-m-Y') ?>
-  autoclose: true,
-  format: "dd-mm-yyyy",
-  endDate: '<?php echo $tgl_max ?>',
-
-});
-
-
-function drawChart(){
- var tgl = $('#tgl').val();
-
- var data = {
-   tgl:tgl
- }
- $.get('{{ url("fetch/report/overtime_control") }}', data, function(result, status, xhr){
-   if(xhr.status == 200){
-
-    if(result.status){
-      tot_budget = 0;
-      tot_act = 0;
-      tot_diff = 0;
-      avg = 0;
-      total_karyawan = 0;
-      var xCategories = [];
-      var seriesDataBudget = [];
-      var seriesDataAktual = [];
-      var budgetHarian = [];
-      var cat;
-
-      for(var i = 0; i < result.overtimes.length; i++){
-        cat = result.overtimes[i].NAME;
-        tot_budget += result.overtimes[i].tot;
-        tot_act += result.overtimes[i].act;
-        seriesDataBudget.push(Math.round(result.overtimes[i].tot * 100) / 100);
-        seriesDataAktual.push(result.overtimes[i].act);
-        budgetHarian.push(Math.round(result.overtimes[i].jam_harian * 100) / 100);
-        if(xCategories.indexOf(cat) === -1){
-         xCategories[xCategories.length] = cat;
-       }
-     }
-
-     for(var i = 0; i < result.total1.length; i++){
-      total_karyawan += result.total1[i].tot_karyawan;
-    }
-
-    tot_diff = tot_budget - tot_act;
-
-    tot_budget = Math.round(tot_budget * 100) / 100;
-    tot_act = Math.round(tot_act * 100) / 100;
-    tot_diff = Math.round(tot_diff * 100) / 100;
-
-    var tot_budget2 = tot_budget.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-    var tot_act2 = tot_act.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-
-    var tot_diff2 = tot_diff.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-
-    $("#tot_budget").text(tot_budget2);
-    $("#tot_act").text(tot_act2);
-
-    if (tot_diff > 0) {
-      $('#diff_text').removeClass('text-red').addClass('text-green');
-      $("#tot_diff").html(tot_diff2);
-    }
-    else {
-      $('#diff_text').removeClass('text-green').addClass('text-red');
-      $("#tot_diff").html(tot_diff2);
-    }
-    avg = tot_act / total_karyawan;
-    avg = Math.round(avg * 100) / 100;
-    $("#avg").html(avg);
-
-    var interval = Math.ceil(300/10);
-
-    Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
-      return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
-    };
-
-    Highcharts.chart('container', {
-      chart: {
-        spacingTop: 10,
-        type: 'column'
-      },
-      title: {
-        text: '<span style="font-size: 30pt;">Overtime</span><br><center><span style="color: rgba(96, 92, 168);">'+ result.overtimes[0].tanggal +'</center></span>',
-        useHTML: true
-      },
-      credits:{
-        enabled:false
-      },
-      legend: {
-        itemStyle: {
-          color: '#000000',
-          fontWeight: 'bold',
-          fontSize: '20px'
-        }
-      },
-      yAxis: {
-        tickInterval: 10,
-        min:0,
-        allowDecimals: false,
-        title: {
-          text: 'Amount of Overtime (hours)'
-        }
-      },
-      xAxis: {
-        labels: {
-          style: {
-            color: 'rgba(75, 30, 120)',
-            fontSize: '12px',
-            fontWeight: 'bold'
+     $.ajaxSetup({
+          headers: {
+               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
-        },
-        categories: xCategories
-      },
-      tooltip: {
-        formatter: function () {
-          return '<b>' + this.series.name + '</b><br/>' +
-          this.point.y + ' ' + this.series.name.toLowerCase();
-        }
-      },
-      plotOptions: {
-        column: {
-          pointPadding: 0.93,
-          cursor: 'pointer',
-          point: {
-            events: {
-              click: function () {
-                modalTampil(this.category, result.overtimes[0].tanggal);
-              }
-            }
-          },
-          minPointLength: 3,
-          dataLabels: {
-            allowOverlap: true,
-            enabled: true,
-            y: -25,
-            style: {
-              color: 'black',
-              fontSize: '13px',
-              textOutline: false,
-              fontWeight: 'bold',
-            },
-            rotation: -90
-          },
-          pointWidth: 15,
-          pointPadding: 0,
-          borderWidth: 0,
-          groupPadding: 0.1,
-          animation: false,
-          opacity: 0.2
-        },
-        scatter : {
-          dataLabels: {
-            enabled: false
-          },
-          animation: false
-        }
-      },
-      series: [{
-        name: 'Budget Accumulative',
-        data: seriesDataBudget,
-        color: "#f76111"
-      }, {
-        name: 'Actual Accumulative',
-        data: seriesDataAktual,
-        color: "#7300ab"
-      },
-      {
-        name: 'Day Budget',
-        marker: {
-          symbol: 'c-rect',
-          lineWidth:4,
-          lineColor: '#02ff17',
-          radius: 10,
-        },
-        type: 'scatter',
-        data: budgetHarian
-      }]
-    });
+     });
 
-  }
-  else{
-   alert('Attempt to retrieve data failed');
- }
-}
+     jQuery(document).ready(function() {
 
-else{
-  alert('Disconnected from server');
-}
+          $('#dateFrom').datepicker({
+               autoclose: true,
+               todayHighlight: true
+          });
+          $('#dateTo').datepicker({
+               autoclose: true,
+               todayHighlight: true
+          });
+     });
 
-});
-}
+     function fetchTable(){
+          if($('#dateFrom').val().length <= 0 || $('#dateTo').val().length <= 0 ){
+               alert('Pilih range tanggal yang diinginkan');
+               return false;
+          }
+          var dateFrom = $('#dateFrom').val();
+          var dateTo = $('#dateTo').val();
+          var data = {
+               dateFrom:dateFrom,
+               dateTo:dateTo
+          }
+
+          $('#tableList').DataTable().destroy();
+
+          var table = $('#tableList').DataTable({
+               'dom': 'Bfrtip',
+               'responsive': true,
+               'lengthMenu': [
+               [ 10, 25, 50, -1 ],
+               [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+               ],
+               'buttons': {
+                    buttons:[
+                    {
+                         extend: 'pageLength',
+                         className: 'btn btn-default',
+                    },
+                    {
+                         extend: 'copy',
+                         className: 'btn btn-success',
+                         text: '<i class="fa fa-copy"></i> Copy',
+                         exportOptions: {
+                              columns: ':not(.notexport)'
+                         }
+                    },
+                    {
+                         extend: 'excel',
+                         className: 'btn btn-info',
+                         text: '<i class="fa fa-file-excel-o"></i> Excel',
+                         exportOptions: {
+                              columns: ':not(.notexport)'
+                         }
+                    },
+                    {
+                         extend: 'print',
+                         className: 'btn btn-warning',
+                         text: '<i class="fa fa-print"></i> Print',
+                         exportOptions: {
+                              columns: ':not(.notexport)'
+                         }
+                    },
+                    ]
+               },
+               'paging': true,
+               'lengthChange': true,
+               'searching': true,
+               'ordering': true,
+               'order': [],
+               'info': true,
+               'autoWidth': true,
+               "sPaginationType": "full_numbers",
+               "bJQueryUI": true,
+               "bAutoWidth": false,
+               "processing": true,
+               // "serverSide": true,
+               "ajax": {
+                    "type" : "get",
+                    "url" : "{{ url("fetch/report/overtime_control") }}",
+                    "data" : data
+               },
+               "columns": [
+               { "data": "requestno" },
+               { "data": "emp_no" },
+               { "data": "full_name" },
+               { "data": "date" },
+               { "data": "ovt_from" },
+               { "data": "ovt_to" },
+               { "data": "ot_plan" },
+               { "data": "daytype" },
+               { "data": "log_from" },
+               { "data": "log_to" },
+               { "data": "ot_actual" }
+               ]
+          });
+     }
 </script>
-
-@stop
+@endsection

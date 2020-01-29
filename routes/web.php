@@ -391,9 +391,10 @@ Route::get('index/report/ga_report', 'OvertimeController@indexGAReport');
 Route::get('fetch/report/ga_report', 'OvertimeController@fetchGAReport');
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
+	Route::get('index/report/overtime_control', 'OvertimeController@indexOvertimeControl');
+	Route::get('fetch/report/overtime_control', 'OvertimeController@fetchOvertimeControl');
 });
 
-Route::get('index/report/overtime_control', 'OvertimeController@indexOvertimeControl');
 Route::get('fetch/overtime_report', 'OvertimeController@overtimeReport');
 Route::get('fetch/overtime_report_detail', 'OvertimeController@overtimeReportDetail');
 Route::get('index/report/total_meeting', 'EmployeeController@indexTotalMeeting');
@@ -838,7 +839,8 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 
 //welding process
 Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
-
+	Route::post('input/welding/rework', 'WeldingProcessController@inputWeldingRework');
+	Route::post('input/welding/kensa', 'WeldingProcessController@inputWeldingKensa');
 });
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
 Route::get('scan/welding/operator', 'WeldingProcessController@scanWeldingOperator');

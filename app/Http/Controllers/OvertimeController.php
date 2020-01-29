@@ -172,6 +172,35 @@ class OvertimeController extends Controller
 		))->with('page', 'GA Report')->with('head', 'Overtime Report');
 	}
 
+	public function fetchOvertimeControl(Request $request){
+		$dateFrom = date('Y-m-d', strtotime($request->get('dateFrom')));
+		$dateTo = date('Y-m-d', strtotime($request->get('dateTo')));
+
+		$overtimes = db::connection('sunfish')->select("SELECT
+			A.requestno,
+			A.emp_no,
+			B.full_name,
+			format ( A.ovtplanfrom, 'yyyy-MM-dd' ) AS date,
+			format ( A.ovtplanfrom, 'HH:mm:ss' ) AS ovt_from,
+			format ( A.ovtplanto, 'HH:mm:ss' ) AS ovt_to,
+			CAST(floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 AS FLOAT) AS ot_plan,
+			A.daytype,
+			format ( A.ActualStart, 'HH:mm:ss' ) AS log_from,
+			format ( A.ActualEnd, 'HH:mm:ss' ) AS log_to,
+			CAST(floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2 AS FLOAT) AS ot_actual
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan A
+			LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
+			WHERE
+			A.ovtplanfrom >= '".$dateFrom." 00:00:00' and A.ovtplanfrom <= '".$dateTo." 23:59:59'
+			ORDER BY
+			A.ovtplanfrom ASC,
+			A.Emp_no ASC");
+
+		return DataTables::of($overtimes)->make(true);
+
+	}
+
 	public function fetchReportOvertimeSection(Request $request){
 		if(strlen($request->get('month_from')) == 0 || strlen($request->get('month_to')) == 0 || strlen($request->get('cost_center')) == 0){
 			$response = array(
@@ -1047,130 +1076,6 @@ class OvertimeController extends Controller
 		);
 		return Response::json($response);
 	}
-
-	public function OvertimeControlReport(Request $request)
-	{
-		if($request->get('tgl') != ""){
-			$tgl = date('Y-m-d',strtotime($request->get('tgl')));
-			$tgl2 = date('Y-m',strtotime($request->get('tgl')));
-		}else{
-			$tgl = date('Y-m-d');
-			$tgl2 = date('Y-m');
-		}
-
-		$query = "SELECT datas.*, DATE_FORMAT('".$tgl."','%d %M %Y') as tanggal, d.jam_harian from
-		( SELECT  n.id_cc, master_cc.NAME,
-		sum( n.act ) AS act, ROUND( sum( budget_tot ), 1) AS tot, ROUND( sum( budget_tot ) - sum( n.act ), 1) AS diff FROM
-		(
-		SELECT
-		l.id_cc,
-		d.tanggal,
-		COALESCE ( act, 0 ) act,
-		l.budget_tot 
-		FROM
-		(
-		SELECT
-		id_cc,
-		( budget_total / DATE_FORMAT( LAST_DAY( '".$tgl."' ), '%d' ) ) budget_tot 
-		FROM
-		cost_center_budget 
-		WHERE
-		DATE_FORMAT( period, '%Y-%m' ) = '".$tgl2."' 
-		) AS l
-		CROSS JOIN ( SELECT tanggal FROM over_time WHERE DATE_FORMAT( tanggal, '%Y-%m' ) = '".$tgl2."' and tanggal <='".$tgl."' GROUP BY tanggal ) AS d
-		LEFT JOIN (
-		SELECT
-		d.tanggal,
-		sum( jam ) AS act,
-		karyawan.costCenter 
-		FROM
-		(
-		SELECT
-		over_time_member.nik,
-		over_time.tanggal,
-		sum(IF(status = 0, jam, final)) AS jam 
-		FROM
-		over_time
-		LEFT JOIN over_time_member ON over_time.id = over_time_member.id_ot 
-		WHERE
-		DATE_FORMAT( over_time.tanggal, '%Y-%m' ) = '".$tgl2."' 
-		AND over_time_member.nik IS NOT NULL and over_time.deleted_at is null
-		and jam_aktual = 0
-		and nik not like '%os%'
-		GROUP BY
-		over_time_member.nik,
-		over_time.tanggal
-		) d
-		LEFT JOIN karyawan ON karyawan.nik = d.nik 
-		GROUP BY
-		tanggal,
-		costCenter 
-		) x ON x.costCenter = l.id_cc 
-		AND x.tanggal = d.tanggal 
-		WHERE
-		d.tanggal <= '".$tgl."' 
-		) AS n
-		LEFT JOIN master_cc ON master_cc.id_cc = n.id_cc 
-		GROUP BY
-		id_cc, master_cc.NAME 
-		ORDER BY
-		diff ASC    ) AS datas
-		LEFT JOIN (
-		SELECT
-		cost_center,
-		sum( jam ) AS jam_harian 
-		FROM
-		budget_harian 
-		WHERE
-		DATE_FORMAT( tanggal, '%Y-%m' ) = '".$tgl2."' 
-		AND tanggal <= '".$tgl."' 
-		GROUP BY
-		cost_center 
-		) d on datas.id_cc = d.cost_center 
-		GROUP BY name,id_cc,act,tot,diff,jam_harian
-		ORDER BY diff asc
-		";
-
-		$fiskal = "select fiskal from kalender_fy where DATE_FORMAT(tanggal,'%Y-%m') = '".$tgl2."' limit 1";
-		$fiskal1 = db::connection('mysql3')->select($fiskal);
-
-
-		$total = "select mon, costCenter, count(if(if(date_format(a.tanggalMasuk, '%Y-%m') < mon, 1, 0 ) - if(date_format(a.tanggalKeluar, '%Y-%m') < mon, 1, 0 ) = 0, null, 1)) as tot_karyawan from
-		(
-		select distinct fiskal, date_format(tanggal, '%Y-%m') as mon
-		from kalender_fy
-		) as b
-		join
-		(
-		select '".$fiskal1[0]->fiskal."' as fy, karyawan.kode, tanggalKeluar, tanggalMasuk, nik, costCenter
-		from karyawan
-		) as a
-		on a.fy = b.fiskal
-		group by mon, costCenter
-		having mon = '".$tgl2."'";
-
-
-		$total1 = db::connection('mysql3')->select($total);
-
-		$daily = "select bdg.*, master_cc.name from
-		(select cost_center, sum(jam) as jam from budget_harian where DATE_FORMAT(tanggal,'%Y-%m') = '".$tgl2."' and tanggal <= '".$tgl."'
-		group by cost_center) as bdg
-		left join master_cc on master_cc.id_cc = bdg.cost_center";
-
-		$daily1 = db::connection('mysql3')->select($daily);
-		$overtimes = db::connection('mysql3')->select($query);
-
-		$response = array(
-			'status' => true,
-			'total1' => $total1,
-			'daily1' => $daily1,
-			'overtimes' => $overtimes,
-		);
-		return Response::json($response);	
-	}
-
-
-// ----------------------- CHART REPORT OVERTIME ------------------------
 
 	public function overtimeReport()
 	{
