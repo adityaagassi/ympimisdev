@@ -423,7 +423,7 @@
 		}
 		else{
 			setInterval(push_pull,1000);
-			setInterval(camera_kango,1000);
+			// setInterval(camera_kango,1000);
 			$('#modalOperator').modal('hide');
 		}
 	}
