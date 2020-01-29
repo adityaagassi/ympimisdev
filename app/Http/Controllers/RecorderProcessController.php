@@ -743,8 +743,8 @@ class RecorderProcessController extends Controller
           $value_push_pull = $plc->read_data('D50', 1);
         $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
         // }
-        $data = $datas[0];
-        $datavalue = $datas[0] / 160;
+        $data = $counter_push_pull[0];
+        $datavalue = $value_push_pull[0] / 160;
         // $data = 1;
         var_dump($counter_push_pull);
         var_dump($value_push_pull);
@@ -807,7 +807,10 @@ class RecorderProcessController extends Controller
               'status' => true,
               'statusCode' => 'push_pull',
               'message' => 'Push Pull success',
-              'data' => $plc_counter->plc_counter
+              'data' => $plc_counter->plc_counter,
+              'counter' => $counter_push_pull,
+              'value' => $value_push_pull
+
             );
             return Response::json($response);
           // }
