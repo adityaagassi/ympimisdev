@@ -56,6 +56,18 @@ class QcYmmjController extends Controller
             return $qc_ymmj->detail;
           })
 
+          ->editColumn('presentase_ng',function($qc_ymmj){
+            return $qc_ymmj->presentase_ng. ' %';
+          })
+
+          ->editColumn('qty_cek',function($qc_ymmj){
+            return $qc_ymmj->qty_cek. ' Pcs';
+          })
+
+          ->editColumn('qty_ng',function($qc_ymmj){
+            return $qc_ymmj->qty_ng. ' Pcs';
+          })
+
           ->editColumn('file', function($qc_ymmj){
             if ($qc_ymmj->file != null) {
               $data = json_decode($qc_ymmj->file);

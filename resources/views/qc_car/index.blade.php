@@ -149,8 +149,11 @@ table.table-bordered > tfoot > tr > th{
                 </td>
                 <td style="width: 15%">
                   <center>
+                    @if($car->status_name == "Closed")
+                    <a href="{{url('index/qc_car/print_car_new', $car['id'])}}" class="btn btn-success btn-xs" target="_blank">Report CAR</a>
+                    @else
                     <a href="{{url('index/qc_car/detail', $car['id'])}}" class="btn btn-primary btn-xs">Detail CAR</a>
-                    <!-- <a href="{{url('index/qc_car/print_car_new', $car['id'])}}" class="btn btn-warning btn-xs" target="_blank">Print CAR</a> -->
+                    @endif
                   </center>
                 </td>
               </tr>

@@ -85,7 +85,7 @@ table.table-bordered > tfoot > tr > th{
                 <th>Presentase NG</th>
                 <th>Penanganan</th>
                 <th>Attach.</th>
-                <th>Edit</th>
+                <!-- <th>Edit</th> -->
               </tr>
             </thead>
             <tbody id="tableBodyList">
@@ -103,7 +103,7 @@ table.table-bordered > tfoot > tr > th{
                 <th></th>
                 <th></th>
                 <th></th>
-                <th></th>
+                <!-- <th></th> -->
               </tr>
             </tfoot>
           </table>
@@ -251,7 +251,7 @@ table.table-bordered > tfoot > tr > th{
               { "data": "presentase_ng" },
               { "data": "penanganan" },
               { "data": "file" },
-              { "data": "action" },
+              // { "data": "action" },
             ]
       });
 
