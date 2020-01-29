@@ -746,8 +746,8 @@ class RecorderProcessController extends Controller
         $data = $counter_push_pull[0];
         $datavalue = $value_push_pull[0] / 160;
         // $data = 1;
-        var_dump($counter_push_pull);
-        var_dump($value_push_pull);
+        // var_dump($counter_push_pull);
+        // var_dump($value_push_pull);
 
 
         if($plc_counter->plc_counter != $counter_push_pull[0]){
