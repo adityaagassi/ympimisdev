@@ -2710,7 +2710,7 @@ public function fetchKaizenResumeDetail(Request $request){
      $leader = explode('-', $request->get('leader'))[0];
 
      $q = "select kaizen_leaders.employee_id, employee_syncs.`name`, employee_syncs.position as grade, employee_syncs.`section`, employee_syncs.`group`, COALESCE(kz,0) as kz from kaizen_leaders 
-     left join (select employee_id, count(id) as kz from kaizen_forms where propose_date in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."' and leader = '".$leader."') group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
+     left join (select employee_id, count(id) as kz from kaizen_forms where propose_date in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
      inner join employee_syncs on employee_syncs.employee_id = kaizen_leaders.employee_id
      where kaizen_leaders.leader_id = '".$leader."' and employee_syncs.end_date is null
      order by kz asc";
