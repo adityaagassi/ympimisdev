@@ -586,7 +586,7 @@
 					// fillResult();
 					$('#last_check').val(result.value);
 					$('#judgement_push_pull').val(result.judgement);
-					console.log(result.value);
+					// console.log(result.value);
 					if (result.judgement == 'OK') {
 						document.getElementById('judgement_push_pull').style.backgroundColor = "#57ff86";
 						document.getElementById('judgement_push_pull').style.color = "#163756";
@@ -597,7 +597,7 @@
 					}
 				}
 				else{
-					openErrorGritter('Error!', result.message);
+					// openErrorGritter('Error!', result.message);
 				}
 			});
 		// }
