@@ -422,7 +422,7 @@
 			alert('Pilih Jenis Middle!');
 		}
 		else{
-			setInterval(push_pull,100);
+			setInterval(push_pull,500);
 			// setInterval(camera_kango,1000);
 			$('#modalOperator').modal('hide');
 		}
