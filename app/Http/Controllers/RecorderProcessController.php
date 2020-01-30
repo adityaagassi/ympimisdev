@@ -741,11 +741,12 @@ class RecorderProcessController extends Controller
           $plc = new ActMLEasyIf(2);
           $counter_push_pull = $plc->read_data('D75', 1);
           $value_push_pull = $plc->read_data('D50', 1);
-        $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
+          $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
         // }
         $data = $counter_push_pull[0];
-        $datavalue = $value_push_pull[0] / 160;
-        // $data = 1;
+        $datavalue = $value_push_pull[0] / 120;
+        // $datavalue = '2.9';
+        // $data = 2;
         // var_dump($counter_push_pull);
         // var_dump($value_push_pull);
 
