@@ -660,7 +660,7 @@ class OvertimeController extends Controller
 
 			if($request->get('cost_center_code') != null) {
 				$costcenter = implode(",", $request->get('cost_center_code'));
-				$addcostcenter = "and B.cost_center_code in (".$costcenter.") ";
+				$addcostcenter = 'and B.cost_center_code in (\''.$costcenter.'\') ';
 			}
 
 			if($request->get('department') != null) {
@@ -738,7 +738,7 @@ class OvertimeController extends Controller
 				FROM
 				VIEW_YMPI_Emp_OvertimePlan A
 				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON A.Emp_no = B.Emp_no 
-				where A.TOTAL_OVT_PLAN > 0 ".$addcostcenter."".$adddepartment."".$addsection."".$addgrup."".$addnik."
+				where A.TOTAL_OVT_PLAN > 0 ".$tanggal."".$addcostcenter."".$adddepartment."".$addsection."".$addgrup."".$addnik."
 				ORDER BY
 				A.ovtplanfrom ASC");
 		}
