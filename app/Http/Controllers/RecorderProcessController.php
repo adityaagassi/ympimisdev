@@ -739,7 +739,7 @@ class RecorderProcessController extends Controller
       try{
         // if ($request->get('originGroupCode') =='072') {
           $plc = new ActMLEasyIf(2);
-          $counter_push_pull = $plc->read_data('D75', 1);
+          $counter_push_pull = $plc->read_data('D210', 1);
           $value_push_pull = $plc->read_data('D50', 1);
           $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
         // }
