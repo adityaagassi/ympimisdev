@@ -89,7 +89,7 @@
 							<span style="font-size: 20px; font-weight: bold;"><center>Jenis Middle:</center></span>
 							<input type="text" name="middle_type" id="middle_type" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 80px;background-color: #e7ff8c;font-size: 5vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
 							<input type="text" name="middle_type_desc" id="middle_type_desc" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 40px;background-color: #e7ff8c;font-size: 2vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
-							<div class="row" style="padding-top: 20px">
+							<!-- <div class="row" style="padding-top: 20px">
 								<div class="col-xs-12">
 									<span style="font-size: 20px; font-weight: bold;"><center>Result:</center></span>
 									<table id="resultCamera" name="resultCamera" class="table table-bordered table-striped table-hover">
@@ -107,7 +107,7 @@
 										</tfoot>
 									</table>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</div>
 				</div>
@@ -147,7 +147,7 @@
 							</div>
 							<span style="font-size: 20px; font-weight: bold;"><center>COLOR :</center></span>
 							<input type="text" name="color_push_pull" id="color_push_pull" class="form-control" value="YRS" required="required" pattern="" title="" style="width: 100%;height: 60px;background-color: #ffd0b0;font-size: 3vw;text-align: center;font-weight:bold;color: #163756;border: 1px solid black" disabled>
-							<div class="row" style="padding-top: 20px">
+							<!-- <div class="row" style="padding-top: 20px">
 								<div class="col-xs-12">
 									<span style="font-size: 20px; font-weight: bold;"><center>Result:</center></span>
 									<table id="resultTable" name="resultTable" class="table table-bordered table-striped table-hover">
@@ -164,7 +164,7 @@
 										</tfoot>
 									</table>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</div>
 				</div>
@@ -430,28 +430,28 @@
 
 	function fillResult(){
 		$.get('{{ url("push_pull/fetchResult") }}', function(result, status, xhr){
-			$('#resultTable').DataTable().destroy();
+			// $('#resultTable').DataTable().destroy();
 			if(xhr.status == 200){
 				if(result.status){
-					$('#resultTableBody').html("");
+					// $('#resultTableBody').html("");
 					var resultData = '';
 					var last_check = 0;
 					var judgement_push_pull = '';
-					$.each(result.data, function(key, value){
-						resultData += '<tr>';
-						resultData += '<td>'+ value.model +'</td>';
-						resultData += '<td>'+ value.check_date +'</td>';
-						resultData += '<td>'+ value.value_check +'</td>';
-						if (value.judgement == 'NG') {
-							var color = '#ff6363';
-						}
-						else{
-							var color = '#57ff86';
-						}
-						resultData += '<td style="background-color:'+color+'">'+ value.judgement +'</td>';
-						resultData += '<td>'+ value.pic_check +'</td>'
-						resultData += '</tr>';
-					});
+					// $.each(result.data, function(key, value){
+					// 	resultData += '<tr>';
+					// 	resultData += '<td>'+ value.model +'</td>';
+					// 	resultData += '<td>'+ value.check_date +'</td>';
+					// 	resultData += '<td>'+ value.value_check +'</td>';
+					// 	if (value.judgement == 'NG') {
+					// 		var color = '#ff6363';
+					// 	}
+					// 	else{
+					// 		var color = '#57ff86';
+					// 	}
+					// 	resultData += '<td style="background-color:'+color+'">'+ value.judgement +'</td>';
+					// 	resultData += '<td>'+ value.pic_check +'</td>'
+					// 	resultData += '</tr>';
+					// });
 
 					$.each(result.data2, function(key, value2){
 						last_check = value2.value_check;
@@ -459,22 +459,22 @@
 					});
 					$('#last_check').val(last_check);
 					$('#judgement_push_pull').val(judgement_push_pull);
-					$('#resultTableBody').append(resultData);
-					$('#resultTable').DataTable({
-						"sDom": '<"top"i>rt<"bottom"flp><"clear">',
-						'paging'      	: true,
-						'lengthChange'	: false,
-						'searching'   	: true,
-						'ordering'		: false,
-						'info'       	: true,
-						'autoWidth'		: false,
-						"sPaginationType": "full_numbers",
-						"bJQueryUI": true,
-						"bAutoWidth": false,
-						"infoCallback": function( settings, start, end, max, total, pre ) {
-							return "<b>Total "+ total +" pc(s)</b>";
-						}
-					});
+					// $('#resultTableBody').append(resultData);
+					// $('#resultTable').DataTable({
+					// 	"sDom": '<"top"i>rt<"bottom"flp><"clear">',
+					// 	'paging'      	: true,
+					// 	'lengthChange'	: false,
+					// 	'searching'   	: true,
+					// 	'ordering'		: false,
+					// 	'info'       	: true,
+					// 	'autoWidth'		: false,
+					// 	"sPaginationType": "full_numbers",
+					// 	"bJQueryUI": true,
+					// 	"bAutoWidth": false,
+					// 	"infoCallback": function( settings, start, end, max, total, pre ) {
+					// 		return "<b>Total "+ total +" pc(s)</b>";
+					// 	}
+					// });
 				}
 				else{
 					audio_error.play();
@@ -490,29 +490,29 @@
 
 	function fillResultCamera(){
 		$.get('{{ url("push_pull/fetchResultCamera") }}', function(result, status, xhr){
-			$('#resultCamera').DataTable().destroy();
+			// $('#resultCamera').DataTable().destroy();
 			if(xhr.status == 200){
 				if(result.status){
-					$('#resultCameraBody').html("");
+					// $('#resultCameraBody').html("");
 					var resultData = '';
 					var judgement_middle = '';
 					var judgement_stamp = '';
-					$.each(result.data, function(key, value){
-						resultData += '<tr>';
-						resultData += '<td>'+ value.model +'</td>';
-						resultData += '<td>'+ value.check_date +'</td>';
-						resultData += '<td>'+ value.value_check +'</td>';
-						if (value.judgement == 'NG') {
-							var color = '#ff6363';
-						}
-						else{
-							var color = '#57ff86';
-						}
-						resultData += '<td style="background-color:'+color+'">'+ value.judgement +'</td>';
-						resultData += '<td>'+ value.remark +'</td>';
-						resultData += '<td>'+ value.pic_check +'</td>';
-						resultData += '</tr>';
-					});
+					// $.each(result.data, function(key, value){
+					// 	resultData += '<tr>';
+					// 	resultData += '<td>'+ value.model +'</td>';
+					// 	resultData += '<td>'+ value.check_date +'</td>';
+					// 	resultData += '<td>'+ value.value_check +'</td>';
+					// 	if (value.judgement == 'NG') {
+					// 		var color = '#ff6363';
+					// 	}
+					// 	else{
+					// 		var color = '#57ff86';
+					// 	}
+					// 	resultData += '<td style="background-color:'+color+'">'+ value.judgement +'</td>';
+					// 	resultData += '<td>'+ value.remark +'</td>';
+					// 	resultData += '<td>'+ value.pic_check +'</td>';
+					// 	resultData += '</tr>';
+					// });
 					$.each(result.data_middle, function(key, value2){
 						judgement_middle = value2.judgement;
 						// judgement_stamp = value2.judgement_stamp;
@@ -537,22 +537,22 @@
 						document.getElementById('judgement_stamp').style.backgroundColor = "#57ff86";
 						document.getElementById('judgement_stamp').style.color = "#163756";
 					}
-					$('#resultCameraBody').append(resultData);
-					$('#resultCamera').DataTable({
-						"sDom": '<"top"i>rt<"bottom"flp><"clear">',
-						'paging'      	: true,
-						'lengthChange'	: false,
-						'searching'   	: true,
-						'ordering'		: false,
-						'info'       	: true,
-						'autoWidth'		: false,
-						"sPaginationType": "full_numbers",
-						"bJQueryUI": true,
-						"bAutoWidth": false,
-						"infoCallback": function( settings, start, end, max, total, pre ) {
-							return "<b>Total "+ total +" pc(s)</b>";
-						}
-					});
+					// $('#resultCameraBody').append(resultData);
+					// $('#resultCamera').DataTable({
+					// 	"sDom": '<"top"i>rt<"bottom"flp><"clear">',
+					// 	'paging'      	: true,
+					// 	'lengthChange'	: false,
+					// 	'searching'   	: true,
+					// 	'ordering'		: false,
+					// 	'info'       	: true,
+					// 	'autoWidth'		: false,
+					// 	"sPaginationType": "full_numbers",
+					// 	"bJQueryUI": true,
+					// 	"bAutoWidth": false,
+					// 	"infoCallback": function( settings, start, end, max, total, pre ) {
+					// 		return "<b>Total "+ total +" pc(s)</b>";
+					// 	}
+					// });
 				}
 				else{
 					audio_error.play();
