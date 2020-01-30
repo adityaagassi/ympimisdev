@@ -333,8 +333,8 @@
 						// $('#employee_id').val(result.employee.employee_id);
 						// $('#tag').focus();
 						// itemList();
-						fillResult();
-						fillResultCamera();
+						// fillResult();
+						// fillResultCamera();
 						// push_pull();
 						// $('#modalOperator2').modal({
 						// 	backdrop: 'static',
@@ -378,8 +378,8 @@
 						// $('#employee_id').val(result.employee.employee_id);
 						// $('#tag').focus();
 						// itemList();
-						fillResult();
-						fillResultCamera();
+						// fillResult();
+						// fillResultCamera();
 						// push_pull();
 						$('#operator2').prop('disabled', true);
 					}
@@ -570,33 +570,11 @@
 		// if($('#color_push_pull').val() == 'YRS'){
 		// 	alert('PILIH WARNA');
 		// }else{
-			var batas_bawah = '{{$batas_bawah}}';
-			var batas_atas = '{{$batas_atas}}';
-			var judgement = '';
-
-			var x = document.getElementById('last_check').value;
-			if(parseFloat(x) < parseFloat(batas_bawah) || parseFloat(x) > parseFloat(batas_atas)){
-				$('#judgement_push_pull').val('NG');
-				judgement = 'NG';
-				document.getElementById('judgement_push_pull').style.backgroundColor = "#ff6363";
-				document.getElementById('judgement_push_pull').style.color = "#fff";
-			}
-			else if(parseFloat(x) > parseFloat(batas_bawah) || parseFloat(x) < parseFloat(batas_atas)){
-				$('#judgement_push_pull').val('OK');
-				judgement = 'OK';
-				document.getElementById('judgement_push_pull').style.backgroundColor = "#57ff86";
-				document.getElementById('judgement_push_pull').style.color = "#163756";
-			}
-			else if(parseFloat(x) == ''){
-				$('#judgement_push_pull').val('');
-				document.getElementById('judgement_push_pull').style.backgroundColor = "white";
-				document.getElementById('judgement_push_pull').style.color = "#163756";
-			}
 
 			var data = {
 				model : $('#color_push_pull').val(),
 				check_date : getActualFullDate(),
-				value_check : $('#last_check').val(),
+				// value_check : $('#last_check').val(),
 				pic_check : $('#op4').text(),
 			}
 			// console.log(data);
@@ -605,7 +583,17 @@
 			$.post('{{ url("push_pull/store_push_pull") }}', data, function(result, status, xhr){
 				if(result.status){
 					// openSuccessGritter('Success', result.message);
-					fillResult();
+					// fillResult();
+					$('#last_check').val(result.value);
+					$('#judgement_push_pull').val(result.judgement);
+					if (result.judgement == 'OK') {
+						document.getElementById('judgement_push_pull').style.backgroundColor = "#57ff86";
+						document.getElementById('judgement_push_pull').style.color = "#163756";
+					}
+					else if(result.judgement == 'NG'){
+						document.getElementById('judgement_push_pull').style.backgroundColor = "white";
+						document.getElementById('judgement_push_pull').style.color = "#163756";
+					}
 				}
 				else{
 					openErrorGritter('Error!', result.message);
@@ -627,7 +615,7 @@
 			$.post('{{ url("camera_kango/store_camera_kango") }}', data, function(result, status, xhr){
 				if(result.status){
 					// openSuccessGritter('Success', result.message);
-					fillResultCamera();
+					// fillResultCamera();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
