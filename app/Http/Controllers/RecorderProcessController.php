@@ -48,10 +48,6 @@ class RecorderProcessController extends Controller
                     'aditya.agassi@music.yamaha.com',
                     'takashi.ohkubo@music.yamaha.com',
                     'eko.prasetyo.wicaksono@music.yamaha.com'];
-
-      $array_push_pull = [];
-      $check_date_push_pull = date('Y-m-d H:i:s');
-      $datavaluelama = 0;
     }
 
   public function index(){
@@ -743,7 +739,7 @@ class RecorderProcessController extends Controller
       try{
         // if ($request->get('originGroupCode') =='072') {
           $plc = new ActMLEasyIf(2);
-          $counter_push_pull = $plc->read_data('D75', 1);
+          $counter_push_pull = $plc->read_data('D275', 1);
           $value_push_pull = $plc->read_data('D250', 1);
           $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
         // }
@@ -785,25 +781,17 @@ class RecorderProcessController extends Controller
               $judgement = 'OK';
             }
 
-            if ($request->get('check_date') != $check_date_push_pull) {
-              $check_date_push_pull = $request->get('check_date');
-              unset($array_push_pull);
-              $array_push_pull[] = $datavalue;
-            }else{
-              $array_push_pull[] = $datavalue;
-              $datavaluelama = max($array_push_pull);
-              $push_pull = RcPushPullLog::create(
-                [
-                  'model' => $request->get('model'),
-                  'check_date' => $request->get('check_date'),
-                  'value_check' => $datavaluelama,
-                  // 'value_check' => '2.9',
-                  'judgement' => $judgement,
-                  'pic_check' => $request->get('pic_check'),
-                  'created_by' => $id,
-                ]
-              );
-            }
+            $push_pull = RcPushPullLog::create(
+              [
+                'model' => $request->get('model'),
+                'check_date' => $request->get('check_date'),
+                'value_check' => $datavalue,
+                // 'value_check' => '2.9',
+                'judgement' => $judgement,
+                'pic_check' => $request->get('pic_check'),
+                'created_by' => $id,
+              ]
+            );
 
             try{
                 $plc_counter->save();
