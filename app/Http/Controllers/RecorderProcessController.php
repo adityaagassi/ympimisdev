@@ -28,7 +28,6 @@ use App\Mail\SendEmail;
 
 class RecorderProcessController extends Controller
 {
-    $array_push_pull = [];
     public function __construct()
     {
       $this->middleware('auth');
