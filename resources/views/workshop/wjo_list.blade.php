@@ -277,6 +277,7 @@
 									<th style="width: 1%;">Progress</th>
 									<th style="width: 1%;">Att</th>
 									<th style="width: 1%;">Draw</th>
+									<th style="width: 1%;">Detail</th>
 									<th style="width: 1%;">Reject</th>
 								</tr>
 							</thead>
@@ -422,199 +423,207 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="box-body" style="padding-left: 0px;">
-							<input type="hidden" value="{{csrf_token()}}" name="_token" />
+							<form id="assign" method="post" enctype="multipart/form-data" autocomplete="off">
 
-							<div class="col-xs-12" style="text-align: center;">
-								<div class="input-group col-xs-12">
-									<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: grey;">
-										<i class="glyphicon glyphicon-credit-card"></i>
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+
+								<div class="col-xs-12" style="text-align: center;">
+									<div class="input-group col-xs-12">
+										<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: grey;">
+											<i class="glyphicon glyphicon-credit-card"></i>
+										</div>
+										<input type="text" style="text-align: center; border-color: grey; font-size: 3vw; height: 70px" class="form-control" id="tag" name="tag" placeholder=">> Tap WJO Tag <<" required>
+										<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: grey;">
+											<i class="glyphicon glyphicon-credit-card"></i>
+										</div>
 									</div>
-									<input type="text" style="text-align: center; border-color: grey; font-size: 3vw; height: 70px" class="form-control" id="tag" name="tag" placeholder=">> Tap WJO Tag <<" required>
-									<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 3vw; border-color: grey;">
-										<i class="glyphicon glyphicon-credit-card"></i>
+									<br>
+								</div>
+
+								<div id="assign_body" style="padding: 2%;">
+									<div class="nav-tabs-custom tab-danger">
+										<ul class="nav nav-tabs">
+											<li id="vendor-tab-1" class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">WJO Data</a></li>
+											<li id="vendor-tab-2" class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Flow Processes</a></li>
+											<li id="vendor-tab-3" class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Person in Charge</a></li>
+										</ul>
 									</div>
-								</div>
-								<br>
-							</div>
-
-							<div id="assign_body" style="padding: 2%;">
-								<div class="nav-tabs-custom tab-danger">
-									<ul class="nav nav-tabs">
-										<li id="vendor-tab-1" class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">WJO Data</a></li>
-										<li id="vendor-tab-2" class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Flow Processes</a></li>
-										<li id="vendor-tab-3" class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Person in Charge</a></li>
-									</ul>
-								</div>
-								<div class="tab-content">
-									<div class="tab-pane active" id="tab_1">
-										<div class="row">
-											<div class="col-xs-6">
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
-													<div class="col-xs-8" align="left">
-														<input type="text" class="form-control" id="assign_priority" disabled>
+									<div class="tab-content">
+										<div class="tab-pane active" id="tab_1">
+											<div class="row">
+												<div class="col-xs-6">
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
+														<div class="col-xs-8" align="left">
+															<input type="text" class="form-control" id="assign_priority" readonly>
+														</div>
 													</div>
-												</div>
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Order No.</label>
-													<div class="col-xs-8" align="left">
-														<input type="text" class="form-control" id="assign_order_no" disabled>
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Order No.</label>
+														<div class="col-xs-8" align="left">
+															<input type="text" class="form-control" name="assign_order_no" id="assign_order_no" readonly>
+														</div>
 													</div>
-												</div>
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Dept.</label>
-													<div class="col-xs-8" align="left">
-														<input type="text" class="form-control" id="assign_department" disabled>
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Dept.</label>
+														<div class="col-xs-8" align="left">
+															<input type="text" class="form-control" id="assign_department" readonly>
+														</div>
 													</div>
-												</div>
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Bagian</label>
-													<div class="col-xs-8" align="left">
-														<input type="text" class="form-control" id="assign_bagian" disabled>
-													</div>
-												</div>
-											</div>
-											<div class="col-xs-6">
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Nama Barang<span class="text-red">*</span></label>
-													<div class="col-xs-8" align="left">
-														<input type="text" class="form-control" id="assign_item_name" required>
-													</div>
-												</div>
-
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Jumlah<span class="text-red">*</span></label>
-													<div class="col-xs-8" align="left">
-														<input type="text" class="form-control" id="assign_quantity" required>
-													</div>
-												</div>
-
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Material<span class="text-red">*</span></label>
-													<div class="col-xs-8" align="left">
-														<input type="text" class="form-control" id="assign_material" required>
-													</div>
-												</div>
-
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
-													<div class="col-xs-8" align="left">
-														<textarea class="form-control" id="assign_problem_desc" rows="3" required></textarea>
-													</div>
-												</div>							
-											</div>
-											<div class="col-xs-6" style="margin-top: 5%;">
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Target Selesai<span class="text-red">*</span></label>
-													<div class="col-xs-8">
-														<div class="input-group date">
-															<div class="input-group-addon bg-default">
-																<i class="fa fa-calendar"></i>
-															</div>
-															<input type="text" class="form-control datepicker" id="assign_target_date" placeholder="Pilih Tanggal">
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Bagian</label>
+														<div class="col-xs-8" align="left">
+															<input type="text" class="form-control" id="assign_bagian" readonly>
 														</div>
 													</div>
 												</div>
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
-													<div class="col-xs-8" align="left">
-														<select class="form-control select2" data-placeholder="Pilih Kesulitan" id="assign_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
-															<option value=""></option>
-															<option value="Biasa">Biasa</option>
-															<option value="Sulit">Sulit</option>
-															<option value="Sangat Sulit">Sangat Sulit</option>
-															<option value="Spesial">Spesial</option>
-															<option value="Sangat Spesial">Sangat Spesial</option>
-														</select>
-													</div>
-												</div>
-											</div>
-											<div class="col-xs-6" style="margin-top: 5%;">
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
-													<div class="col-xs-8" align="left">
-														<select class="form-control select2" data-placeholder="Pilih Kategori" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
-															<option value=""></option>
-															<option value="Molding">Molding</option>
-															<option value="Jig">Jig</option>
-															<option value="Equipment">Equipment</option>
-														</select>
-													</div>
-												</div>
-												<div id="drawing">
+												<div class="col-xs-6">
 													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Drawing<span class="text-red">*</span></label>
+														<label class="col-xs-4" style="margin-top: 1%;">Tipe Pekerjaan<span class="text-red">*</span></label>
 														<div class="col-xs-8" align="left">
-															<select class="form-control select2" data-placeholder="Pilih Drawing" id="assign_item_number" style="width: 100% height: 35px; font-size: 15px;" >
+															<input type="text" class="form-control" name="assign_type" id="assign_type" readonly>
+														</div>
+													</div>
+
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Nama Barang<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<input type="text" class="form-control" name="assign_item_name" id="assign_item_name" required>
+														</div>
+													</div>
+
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Jumlah<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<input type="text" class="form-control" name="assign_quantity" id="assign_quantity" required>
+														</div>
+													</div>
+
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Material<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<input type="text" class="form-control" name="assign_material" id="assign_material" required>
+														</div>
+													</div>
+
+
+												</div>
+												<div class="col-xs-12">
+													<div class="form-group row" align="right">
+														<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
+														<div class="col-xs-10" align="left">
+															<textarea class="form-control" name="assign_problem_desc" id="assign_problem_desc" rows="3" required></textarea>
+														</div>
+													</div>
+												</div>
+												<div class="col-xs-6" style="margin-top: 5%;">
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Target Selesai<span class="text-red">*</span></label>
+														<div class="col-xs-8">
+															<div class="input-group date">
+																<div class="input-group-addon bg-default">
+																	<i class="fa fa-calendar"></i>
+																</div>
+																<input type="text" class="form-control datepicker" name="assign_target_date" id="assign_target_date" placeholder="Pilih Tanggal">
+															</div>
+														</div>
+													</div>
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<select class="form-control select2" data-placeholder="Pilih Kesulitan" name="assign_difficulty" id="assign_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
 																<option value=""></option>
-																@foreach($workshop_materials as $material)
-																@if($material->remark == 'drawing')
-																<option value="{{ $material->item_number }}">{{ $material->item_number }} ({{ $material->item_description }})</option>
-																@endif
+																<option value="Biasa">Biasa</option>
+																<option value="Sulit">Sulit</option>
+																<option value="Sangat Sulit">Sangat Sulit</option>
+																<option value="Spesial">Spesial</option>
+																<option value="Sangat Spesial">Sangat Spesial</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="col-xs-6" style="margin-top: 5%;">
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<select class="form-control select2" data-placeholder="Pilih Kategori" name="assign_category" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
+																<option value=""></option>
+																<option value="Molding">Molding</option>
+																<option value="Jig">Jig</option>
+																<option value="Equipment">Equipment</option>
+															</select>
+														</div>
+													</div>
+													<div id="drawing">
+														<div class="form-group row" align="right">
+															<label class="col-xs-4" style="margin-top: 1%;">Drawing</label>
+															<div class="col-xs-8" align="left">
+																<input style="height: 37px;" class="form-control" type="file" name="assign_drawing" id="assign_drawing">
+															</div>
+														</div>	
+													</div>
+												</div>
+
+												<div class="col-xs-12">
+													<a class="btn btn-primary btnNext pull-right">Next</a>
+												</div>
+												<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;Tanda bintang (*) wajib diisi.&nbsp;</span>
+
+											</div>	
+										</div>
+										<div class="tab-pane" id="tab_2">
+											<div class="row">
+												<div class="col-xs-12">
+													<div class="col-xs-12" style="margin-bottom: 1%;">
+														<div class="col-xs-8" style="padding: 0px;">
+															<label style="font-weight: bold; font-size: 18px;">
+																<span><i class="fa fa-gears"></i> Flow Processes</span>
+															</label>
+														</div>
+														<div class="col-xs-1" style="padding: 0px;">
+															<button class="btn btn-success" onclick='addProcess();'><i class='fa fa-plus' ></i></button>
+														</div>
+													</div>
+													<div id='process'></div>
+													<input type="hidden" class="form-control" name="assign_proses" id="assign_proses">
+
+												</div>
+												<div class="col-xs-12">
+													<a class="btn btn-primary btnNext pull-right">Next</a>
+													<span class="pull-right">&nbsp;</span>				
+													<a class="btn btn-primary btnPrevious pull-right">Previous</a>
+												</div>
+												<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;Standart time dalam menit.&nbsp;</span><br>
+											</div>
+										</div>
+										<div class="tab-pane" id="tab_3">
+											<div class="row">
+												<div class="col-xs-6">
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<select class="form-control select2" data-placeholder="Pilih Operator" name="assign_pic" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>
+																<option value=""></option>
+																@foreach($operators as $operator)
+																<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>
 																@endforeach
 															</select>
 														</div>
-													</div>	
+													</div>
 												</div>
-											</div>
-											
-											<div class="col-xs-12">
-												<a class="btn btn-primary btnNext pull-right">Next</a>
-											</div>
-											<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Tanda bintang (*) wajib diisi.</span>
+												<div class="col-xs-12">
+													<br>
+													<button class="btn btn-success pull-right" type="submit"><i class="fa fa-save"></i> Save</button>
+													<span class="pull-right">&nbsp;</span>				
+													<a class="btn btn-primary btnPrevious pull-right">Previous</a>
 
-										</div>	
-									</div>
-									<div class="tab-pane" id="tab_2">
-										<div class="row">
-											<div class="col-xs-12">
-												<div class="col-xs-12" style="margin-bottom: 1%;">
-													<div class="col-xs-8" style="padding: 0px;">
-														<label style="font-weight: bold; font-size: 18px;">
-															<span><i class="fa fa-gears"></i> Flow Processes</span>
-														</label>
-													</div>
-													<div class="col-xs-1" style="padding: 0px;">
-														<button class="btn btn-success" onclick='addProcess();'><i class='fa fa-plus' ></i></button>
-													</div>
 												</div>
-												<div id='process'></div>
-											</div>
-											<div class="col-xs-12">
-												<a class="btn btn-primary btnNext pull-right">Next</a>
-												<span class="pull-right">&nbsp;</span>				
-												<a class="btn btn-primary btnPrevious pull-right">Previous</a>
-											</div>
-											<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Standart time dalam menit</span>
-										</div>
-									</div>
-									<div class="tab-pane" id="tab_3">
-										<div class="row">
-											<div class="col-xs-6">
-												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
-													<div class="col-xs-8" align="left">
-														<select class="form-control select2" data-placeholder="Pilih Operator" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>
-															<option value=""></option>
-															@foreach($operators as $operator)
-															<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>
-															@endforeach
-														</select>
-													</div>
-												</div>
-											</div>
-											<div class="col-xs-12">
-												<br>
-												<button class="btn btn-success pull-right" onclick="assign()"><i class="fa fa-save"></i> Save</button>
-												<span class="pull-right">&nbsp;</span>				
-												<a class="btn btn-primary btnPrevious pull-right">Previous</a>
-
 											</div>
 										</div>
 									</div>
+
 								</div>
-								
-							</div>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -635,7 +644,7 @@
 			<div class="modal-body">
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="box-body" style="padding-left: 0px;">
+						<div class="box-body" style="padding-left: 0px;">						
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-xs-6">
 								<div class="form-group row" align="right">
@@ -720,7 +729,7 @@
 			</div>
 			<div class="modal-footer" style="padding-right: 4%;">
 				<br>
-				<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Tanda bintang (*) wajib diisi.</span>
+				<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;Tanda bintang (*) wajib diisi&nbsp;</span>
 				<button class="btn btn-success" onclick="reject()"><i class="fa fa-save"></i> Save</button>
 			</div>
 		</div>
@@ -816,6 +825,7 @@
 		});
 	});
 
+
 	var proses = 0;
 	function addProcess() {
 		++proses;
@@ -827,10 +837,14 @@
 		add += '<h3 id="flow_'+ proses +'" style="margin: 0px;">'+ proses +'</h3>';
 		add += '</div>';
 		add += '<div class="col-xs-11" style="color: black; padding: 0px;">';
-		add += '<select class="form-control select2" id="process_'+ proses +'" data-placeholder="Select Process">';
-		add += '<option value="">Select Process</option>';
+		add += '<select style="width: 100%;" class="form-control select3" name="process_'+ proses +'" id="process_'+ proses +'" data-placeholder="Select Process">';
+		add += '<option value=""></option>';
+		add += '@php $group = array(); @endphp';
 		add += '@foreach($machines as $machine)';
+		add += '@if(!in_array($machine->machine_name, $group))';
 		add += '<option value="{{ $machine->machine_code }}">{{ $machine->process_name }} - {{ $machine->machine_name }} - {{ $machine->area_name }}</option>';
+		add += '@php array_push($group, $machine->machine_name); @endphp';
+		add += '@endif';
 		add += '@endforeach';
 		add += '</select>';
 		add += '</div>';
@@ -838,7 +852,7 @@
 		
 		add += '<div class="col-xs-2" style="color: black; padding: 0px; padding-right: 1%;">';
 		add += '<div class="form-group">';
-		add += '<input class="form-control" type="number" id="process_qty_'+ proses +'" placeholder="Std Time" style="width: 100%; height: 33px; font-size: 15px; text-align: center;">';
+		add += '<input class="form-control" type="number" name="process_qty_'+ proses +'" id="process_qty_'+ proses +'" placeholder="Std Time" style="width: 100%; height: 33px; font-size: 15px; text-align: center;">';
 		add += '</div>';
 		add += '</div>';
 		add += '<div class="col-xs-1" style="padding: 0px;">';
@@ -847,13 +861,21 @@
 		add += '</div>';
 
 		$('#process').append(add);
+
+		$(function () {
+			$('.select3').select2({
+				dropdownParent: $('#modal-assignment')
+			});
+		})
+
+		document.getElementById("assign_proses").value = proses;
+
+		console.log(proses);
+
 	}
 
 	function removeProcess(elem) {
 		var id = parseInt($(elem).attr("id"));
-
-		console.log(id);
-		console.log(proses);
 		
 		if(id != proses){
 			$("#add_process_"+id).remove();
@@ -869,6 +891,11 @@
 			$("#add_process_"+id).remove();
 		}
 		proses--;
+
+		document.getElementById("assign_proses").value = proses;
+
+		console.log(proses);
+
 	}
 
 	function clearConfirmation(){
@@ -1096,7 +1123,18 @@
 						tableData += '<td>-</td>';							
 					}
 
-					tableData += '<td'+ assign +'>'+ (result.tableData[i].item_number || '-') +'</td>';
+					if(result.tableData[i].item_number != null){
+						tableData += '<td><a href="javascript:void(0)" onClick="downloadDrw(\''+result.tableData[i].item_number+'\')" class="fa fa-paperclip"></a></td>';
+					}else{
+						tableData += '<td>-</td>';							
+					}
+
+
+					tableData += '<td style="text-align: center;">';
+					tableData += '<button style="width: 50%; height: 100%;" class="btn btn-xs btn-primary form-control"><span><i class="glyphicon glyphicon-eye-open"></i></span></button>';
+					tableData += '</td>';
+
+
 					if((result.tableData[i].remark >= 1) && (result.tableData[i].remark <= 3)){
 						tableData += '<td style="text-align: center;">';
 						tableData += '<button style="width: 50%; height: 100%;" onclick="showReject(\''+result.tableData[i].order_no+'\')" class="btn btn-xs btn-danger form-control"><span><i class="glyphicon glyphicon-remove-sign"></i></span></button>';
@@ -1142,238 +1180,311 @@
 				openErrorGritter('Error!', result.message);
 			}
 		});
+}
+
+function closen() {
+	var tag = $("#close_tag").val();
+
+	var data = {
+		tag : tag,
 	}
 
-	function closen() {
-		var tag = $("#close_tag").val();
+	$("#loading").show();		
+	$.post('{{ url("close/workshop/wjo") }}', data,  function(result, status, xhr){
+		if(result.status){
+			$("#close_tag").val("");
 
-		var data = {
-			tag : tag,
-		}
-
-		$("#loading").show();		
-		$.post('{{ url("close/workshop/wjo") }}', data,  function(result, status, xhr){
-			if(result.status){
-				$("#close_tag").val("");
-
-				fillTable();
-				$("#loading").hide();
-				$("#modal-close").modal('hide');
-				openSuccessGritter('Success', result.message);
-			}else{
-				$("#loading").hide();
-				openErrorGritter('Error!', result.message);
-			}
-		});
-	}
-
-	function assign() {
-		var order_no = $("#assign_order_no").val();
-		var item_name = $("#assign_item_name").val();
-		var quantity = $("#assign_quantity").val();
-		var material = $("#assign_material").val();
-		var problem_description = $("#assign_problem_desc").val();
-
-		var tag = $("#tag").val();
-		var target_date = $("#assign_target_date").val(); 
-		var category = $("#assign_category").val();
-		var item_number = $("#assign_item_number").val();
-		var pic = $("#assign_pic").val(); 
-		var difficulty = $("#assign_difficulty").val(); 
-
-		if(item_name == "" || quantity == "" || material == "" || problem_description == "" || tag == "" || category == "" || pic == "" || difficulty == ""){
-			openErrorGritter('Error!', 'All fields must be filled');
+			fillTable();
 			$("#loading").hide();
-			return false;
-		}
-
-		var flow_process = [];
-		for (var i = 1; i <= proses; i++) {
-			flow_process.push({
-				sequence_process : i,
-				machine_code : $("#process_"+ i).val(),
-				std_time: $("#process_qty_"+ i).val()
-			});
-		}
-
-		var data = {
-			order_no : order_no,
-			item_name : item_name,
-			quantity : quantity,
-			material : material,
-			problem_description : problem_description,
-			tag : tag,
-			target_date : target_date,
-			category : category,
-			item_number : item_number,
-			pic : pic,
-			difficulty : difficulty,
-			flow_process : flow_process,
-		}
-
-		$("#loading").show();		
-		$.post('{{ url("update/workshop/wjo") }}', data,  function(result, status, xhr){
-			if(result.status){
-
-				$("#tag").val("");
-				$("#assign_target_date").val("");
-				$('#assign_pic').prop('selectedIndex', 0).change();
-				$('#assign_difficulty').prop('selectedIndex', 0).change();
-				$('#assign_category').prop('selectedIndex', 0).change();
-				$('#assign_item_number').prop('selectedIndex', 0).change();
-
-				for (var i = 1; i <= proses; i++) {
-					$("#add_process_"+i).remove();
-				}
-
-				fillTable();
-				$("#loading").hide();
-				$("#modal-assignment").modal('hide');
-				$('#drawing').hide();
-				openSuccessGritter('Success', result.message);
-			}else{
-				$("#tag").val("");
-				$("#assign_target_date").val("");
-				$('#assign_pic').prop('selectedIndex', 0).change();
-				$('#assign_difficulty').prop('selectedIndex', 0).change();
-				$('#assign_category').prop('selectedIndex', 0).change();
-				$('#assign_item_number').prop('selectedIndex', 0).change();
-
-				fillTable();
-				$("#loading").hide();
-				$("#modal-assignment").modal('hide');
-				openErrorGritter('Error!', result.message);
-			}
-		});
-
-	}
-
-	function showAssignment(order_no) {
-		var data = {
-			order_no:order_no
-		}
-		$.get('{{ url("fetch/workshop/assign_form") }}', data, function(result, status, xhr){
-			if(result.status){
-
-				document.getElementById("assign_target_date").value = result.wjo.target_date;
-				var group = result.wjo.sub_section.split("_");
-				document.getElementById("assign_order_no").value = result.wjo.order_no;
-				document.getElementById("assign_bagian").value = group[1];
-				document.getElementById("assign_department").value = group[0];
-				document.getElementById("assign_priority").value = result.wjo.priority;
-				document.getElementById("assign_item_name").value = result.wjo.item_name;
-				document.getElementById("assign_quantity").value = result.wjo.quantity;
-				document.getElementById("assign_material").value = result.wjo.material;
-				document.getElementById("assign_problem_desc").value = result.wjo.problem_description;
-
-
-				$('#assign_item_number').val(result.wjo.item_number).trigger('change');  
-
-				$("#modal-assignment").modal('show');
-
-			}
-		});
-	}
-
-	function reject(){
-		var order_no = $("#reject_order_no").val(); 
-		var reason = $("#reject_reason").val();
-
-		if(reason == ""){
-			openErrorGritter('Error!', 'All fields must be filled');
+			$("#modal-close").modal('hide');
+			openSuccessGritter('Success', result.message);
+		}else{
 			$("#loading").hide();
-			return false;
+			openErrorGritter('Error!', result.message);
 		}
+	});
+}
 
-		var data = {
-			order_no : order_no,
-			reason : reason
-		}
+function assign() {
+	var order_no = $("#assign_order_no").val();
+	var item_name = $("#assign_item_name").val();
+	var quantity = $("#assign_quantity").val();
+	var material = $("#assign_material").val();
+	var problem_description = $("#assign_problem_desc").val();
 
-		$("#loading").show();		
-		$.post('{{ url("reject/workshop/wjo") }}', data,  function(result, status, xhr){
-			if(result.status){
+	var tag = $("#tag").val();
+	var target_date = $("#assign_target_date").val(); 
+	var category = $("#assign_category").val();
+	var item_number = $("#assign_item_number").val();
+	var pic = $("#assign_pic").val(); 
+	var difficulty = $("#assign_difficulty").val(); 
 
-				$("#reject_reason").val("");
+	if(item_name == "" || quantity == "" || material == "" || problem_description == "" || tag == "" || category == "" || pic == "" || difficulty == ""){
+		openErrorGritter('Error!', 'All fields must be filled');
+		$("#loading").hide();
+		return false;
+	}
 
-				fillTable();
-				$("#loading").hide();
-				$("#modal-reject").modal('hide');
-				openSuccessGritter('Success', result.message);
-			}else{
-				$("#loading").hide();
-				openErrorGritter('Error!', result.message);
-			}
+	var flow_process = [];
+	for (var i = 1; i <= proses; i++) {
+		flow_process.push({
+			sequence_process : i,
+			machine_code : $("#process_"+ i).val(),
+			std_time: $("#process_qty_"+ i).val()
 		});
 	}
 
-	function showReject(order_no) {
-		var data = {
-			order_no:order_no
-		}
-		$.get('{{ url("fetch/workshop/assign_form") }}', data, function(result, status, xhr){
-			if(result.status){
-
-				var datetime = result.wjo.created_at.split(" ");
-				var group = result.wjo.sub_section.split("_");
-
-				document.getElementById("reject_created_at").value = datetime[0];
-				document.getElementById("reject_order_no").value = result.wjo.order_no;
-				document.getElementById("reject_bagian").value = group[1];
-				document.getElementById("reject_department").value = group[0];
-				document.getElementById("reject_priority").value = result.wjo.priority;
-				document.getElementById("reject_item_name").value = result.wjo.item_name;
-				document.getElementById("reject_quantity").value = result.wjo.quantity;
-				document.getElementById("reject_material").value = result.wjo.material;
-				document.getElementById("reject_problem_desc").value = result.wjo.problem_description;
-
-				$("#modal-reject").modal('show');
-
-			}
-		});
+	var data = {
+		order_no : order_no,
+		item_name : item_name,
+		quantity : quantity,
+		material : material,
+		problem_description : problem_description,
+		tag : tag,
+		target_date : target_date,
+		category : category,
+		item_number : item_number,
+		pic : pic,
+		difficulty : difficulty,
+		flow_process : flow_process,
 	}
 
-	function downloadAtt(attachment) {
-		var data = {
-			file:attachment
+	$("#loading").show();		
+	$.post('{{ url("update/workshop/wjo") }}', data,  function(result, status, xhr){
+		if(result.status){
+
+			$("#tag").val("");
+			$("#assign_target_date").val("");
+			$('#assign_pic').prop('selectedIndex', 0).change();
+			$('#assign_difficulty').prop('selectedIndex', 0).change();
+			$('#assign_category').prop('selectedIndex', 0).change();
+			$('#assign_item_number').prop('selectedIndex', 0).change();
+
+			for (var i = 1; i <= proses; i++) {
+				$("#add_process_"+i).remove();
+			}
+
+			fillTable();
+			$("#loading").hide();
+			$("#modal-assignment").modal('hide');
+			$('#drawing').hide();
+			openSuccessGritter('Success', result.message);
+		}else{
+			$("#tag").val("");
+			$("#assign_target_date").val("");
+			$('#assign_pic').prop('selectedIndex', 0).change();
+			$('#assign_difficulty').prop('selectedIndex', 0).change();
+			$('#assign_category').prop('selectedIndex', 0).change();
+			$('#assign_item_number').prop('selectedIndex', 0).change();
+
+			fillTable();
+			$("#loading").hide();
+			$("#modal-assignment").modal('hide');
+			openErrorGritter('Error!', result.message);
 		}
-		$.get('{{ url("download/workshop/attachment") }}', data, function(result, status, xhr){
-			if(xhr.status == 200){
-				if(result.status){
-					window.open(result.file_path);
-				}
-				else{
-					alert('Attempt to retrieve data failed');
-				}
+	});
+}
+
+$("form#assign").submit(function(e) {
+	$("#loading").show();		
+
+	e.preventDefault();    
+	var formData = new FormData(this);
+
+	$.ajax({
+		url: '{{ url("update/workshop/wjo") }}',
+		type: 'POST',
+		data: formData,
+		success: function (result, status, xhr) {
+			$("#tag").val("");
+			$("#assign_target_date").val("");
+			$('#assign_pic').prop('selectedIndex', 0).change();
+			$('#assign_difficulty').prop('selectedIndex', 0).change();
+			$('#assign_category').prop('selectedIndex', 0).change();
+			$('#assign_item_number').prop('selectedIndex', 0).change();
+			$("#assign_drawing").val("");
+
+
+			$('#process').append().empty();
+			// for (var i = 1; i <= proses; i++) {
+			// 	$("#add_process_"+i).remove();
+			// }
+			proses = 0;
+
+
+			fillTable();
+			$("#loading").hide();
+			$("#modal-assignment").modal('hide');
+			$('#drawing').hide();
+			openSuccessGritter('Success', result.message);
+		},
+		error: function(result, status, xhr){
+			$("#tag").val("");
+			$("#assign_target_date").val("");
+			$('#assign_pic').prop('selectedIndex', 0).change();
+			$('#assign_difficulty').prop('selectedIndex', 0).change();
+			$('#assign_category').prop('selectedIndex', 0).change();
+			$('#assign_item_number').prop('selectedIndex', 0).change();
+
+			fillTable();
+			$("#loading").hide();
+			$("#modal-assignment").modal('hide');
+			openErrorGritter('Error!', result.message);
+		},
+		cache: false,
+		contentType: false,
+		processData: false
+	});
+});
+
+function showAssignment(order_no) {
+	console.log(proses);
+	var data = {
+		order_no:order_no
+	}
+	$.get('{{ url("fetch/workshop/assign_form") }}', data, function(result, status, xhr){
+		if(result.status){
+
+			document.getElementById("assign_target_date").value = result.wjo.target_date;
+			var group = result.wjo.sub_section.split("_");
+			document.getElementById("assign_order_no").value = result.wjo.order_no;
+			document.getElementById("assign_bagian").value = group[1];
+			document.getElementById("assign_department").value = group[0];
+			document.getElementById("assign_priority").value = result.wjo.priority;
+			document.getElementById("assign_type").value = result.wjo.type;
+			document.getElementById("assign_item_name").value = result.wjo.item_name;
+			document.getElementById("assign_quantity").value = result.wjo.quantity;
+			document.getElementById("assign_material").value = result.wjo.material;
+			document.getElementById("assign_problem_desc").value = result.wjo.problem_description;
+
+			$("#assign_category").val(result.wjo.category).trigger('change.select2');
+			$('#assign_item_number').val(result.wjo.item_number).trigger('change');
+
+
+			$("#modal-assignment").modal('show');
+
+		}
+	});
+}
+
+function reject(){
+	var order_no = $("#reject_order_no").val(); 
+	var reason = $("#reject_reason").val();
+
+	if(reason == ""){
+		openErrorGritter('Error!', 'All fields must be filled');
+		$("#loading").hide();
+		return false;
+	}
+
+	var data = {
+		order_no : order_no,
+		reason : reason
+	}
+
+	$("#loading").show();		
+	$.post('{{ url("reject/workshop/wjo") }}', data,  function(result, status, xhr){
+		if(result.status){
+
+			$("#reject_reason").val("");
+
+			fillTable();
+			$("#loading").hide();
+			$("#modal-reject").modal('hide');
+			openSuccessGritter('Success', result.message);
+		}else{
+			$("#loading").hide();
+			openErrorGritter('Error!', result.message);
+		}
+	});
+}
+
+function showReject(order_no) {
+	var data = {
+		order_no:order_no
+	}
+	$.get('{{ url("fetch/workshop/assign_form") }}', data, function(result, status, xhr){
+		if(result.status){
+
+			var datetime = result.wjo.created_at.split(" ");
+			var group = result.wjo.sub_section.split("_");
+
+			document.getElementById("reject_created_at").value = datetime[0];
+			document.getElementById("reject_order_no").value = result.wjo.order_no;
+			document.getElementById("reject_bagian").value = group[1];
+			document.getElementById("reject_department").value = group[0];
+			document.getElementById("reject_priority").value = result.wjo.priority;
+			document.getElementById("reject_item_name").value = result.wjo.item_name;
+			document.getElementById("reject_quantity").value = result.wjo.quantity;
+			document.getElementById("reject_material").value = result.wjo.material;
+			document.getElementById("reject_problem_desc").value = result.wjo.problem_description;
+
+			$("#modal-reject").modal('show');
+
+		}
+	});
+}
+
+function downloadDrw(attachment) {
+	var data = {
+		file:attachment
+	}
+	$.get('{{ url("download/workshop/drawing") }}', data, function(result, status, xhr){
+		if(xhr.status == 200){
+			if(result.status){
+				window.open(result.file_path);
 			}
 			else{
-				alert('Disconnected from server');
+				alert('Attempt to retrieve data failed');
 			}
-		});
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
+}
 
+function downloadAtt(attachment) {
+	var data = {
+		file:attachment
 	}
+	$.get('{{ url("download/workshop/attachment") }}', data, function(result, status, xhr){
+		if(xhr.status == 200){
+			if(result.status){
+				window.open(result.file_path);
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		}
+		else{
+			alert('Disconnected from server');
+		}
+	});
 
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
+}
 
-	function openErrorGritter(title, message) {
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-danger',
-			image: '{{ url("images/image-stop.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
+
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
 </script>
 @endsection

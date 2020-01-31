@@ -285,10 +285,182 @@
 
 						<div class="col-xs-12" style="padding-right: 12%;">
 							<br>
-							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">Tanda bintang (*) wajib diisi.</span>
 							<button type="submit" class="btn btn-success pull-right">Submit</button>
+							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;&nbsp;&nbsp;&nbsp;Note :&nbsp;&nbsp;&nbsp;</span><br>
+							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- Tanda bintang (*) wajib diisi&nbsp;&nbsp;</span><br>
+							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- 1 WJO hanya untuk 1 drawing&nbsp;</span><br>
 						</div>
 
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="col-xs-12" style="background-color: #f39c12;">
+						<h1 style="text-align: center; margin:5px; font-weight: bold;">Edit Form WJO</h1>
+					</div>
+					<!-- <form id="data" method="post" enctype="multipart/form-data" autocomplete="off"> -->
+						<div class="col-xs-12" style="padding-bottom: 1%; padding-top: 2%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Bagian:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-6">
+								<select class="form-control select4" data-placeholder="Pilih Bagian" name="sub_section_edit" id="sub_section_edit" disabled="" style="width: 100% height: 35px; font-size: 15px;" required>
+									<option value=""></option>
+									@php
+									$group = array();
+									@endphp
+									@foreach($sections as $section)
+									@if($section->group == null)
+									<option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+									@else
+									<option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
+									@endif
+									@endforeach
+								</select>
+							</div>
+						</div>					
+
+						<div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Prioritas:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-4">
+								<select class="form-control select4" data-placeholder="Pilih Prioritas Pengerjaan" name="priority_edit" id="priority_edit" disabled="" style="width: 100% height: 35px; font-size: 15px;" required >
+									<option value=""></option>
+									<option value="Normal">Normal</option>
+									<option value="Urgent">Urgent</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Jenis Pekerjaan:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-4">
+								<select class="form-control select4" data-placeholder="Pilih Jenis Pekerjaan" name="type_edit" id="type_edit" style="width: 100% height: 35px; font-size: 15px;" required>
+									<option value=""></option>
+									<option value="Pembuatan Baru">Pembuatan Baru</option>
+									<option value="Perbaikan Ketidaksesuaian">Perbaikan Ketidaksesuaian</option>
+									<option value="Lain-lain">Lain-lain</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Kategori:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-4">
+								<select class="form-control select4" data-placeholder="Pilih Kategori" name="category_edit" id="category_edit" style="width: 100% height: 35px; font-size: 15px;" required>
+									<option value=""></option>
+									<option value="Molding">Molding</option>
+									<option value="Jig">Jig</option>
+									<option value="Equipment">Equipment</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Nama Barang:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-8">
+								<input type="text" class="form-control" name="item_name_edit" id="item_name_edit" rows='1' placeholder="Nama Barang" style="width: 100%; font-size: 15px;" required>
+							</div>
+						</div>
+
+						<div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Jumlah:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-4">
+								<input class="form-control" type="number" name="quantity_edit" id="quantity_edit" placeholder="Jumlah Barang" style="width: 100%; height: 33px; font-size: 15px;" required>
+							</div>
+						</div>
+						<div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Material Awal:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-4">
+								<select class="form-control select4" data-placeholder="Pilih Material Awal" name="material_edit" id="material_edit" style="width: 100% height: 35px; font-size: 15px;" required>
+									<option value=""></option>
+									@foreach($materials as $material)
+									@if($material->remark == 'raw')
+									<option value="{{ $material->item_description }}">{{ $material->item_description }}</option>
+									@endif
+									@endforeach
+									<option value="Lainnya">LAINNYA</option>
+								</select>
+							</div>
+							<div class="col-xs-4">
+								<input class="form-control" type="text" name="material-other_edit" id="material-other_edit" placeholder="Material Lainnya" style="width: 100% height: 35px; font-size: 15px;">
+							</div>
+						</div>
+
+						<div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Uraian Permintaan:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-8">
+								<textarea class="form-control" rows='3' name="problem_desc_edit" id="problem_desc_edit" placeholder="Uraian Permintaan / Masalah" style="width: 100%; font-size: 15px;" required></textarea>
+							</div>
+						</div>
+
+						<div class="col-xs-12" style="padding-bottom: 1%;" id="request_edit">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Request Selesai:<span class="text-red">*</span></span>
+							</div>
+							<div class="col-xs-4">
+								<div class="input-group date">
+									<div class="input-group-addon bg-default">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control datepicker" name="request_date_edit" id="request_date_edit" placeholder="Pilih Tanggal">
+								</div>
+							</div>
+						</div>
+
+						{{-- <div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Lampiran:&nbsp;&nbsp;</span>
+							</div>
+							<div class="col-xs-8">
+								<input style="height: 37px;" class="form-control" type="file" name="upload_file_edit" id="upload_file_edit">
+							</div>
+						</div> --}}
+
+						{{-- <div class="col-xs-12" style="padding-bottom: 1%;">
+							<div class="col-xs-3" align="right" style="padding: 0px;">
+								<span style="font-weight: bold; font-size: 16px;">Pilih Drawing:&nbsp;&nbsp;</span></span>
+							</div>
+							<div class="col-xs-5">
+								<select class="form-control select2" data-placeholder="Pilih Drawing" name="drawing_edit" id="drawing_edit" style="width: 100% height: 35px; font-size: 15px;">
+									<option value=""></option>
+									@foreach($materials as $material)
+									@if($material->remark == 'drawing')
+									<option value="{{ $material->item_number }}">{{ $material->item_number }} - {{ $material->item_description }}</option>
+									@endif
+									@endforeach
+								</select>
+							</div>
+						</div> --}}
+
+						<div class="col-xs-12" style="padding-right: 12%;">
+							<br>
+							<input type="hidden" id="id_edit">
+							<button type="button" onclick="edit()" class="btn btn-success pull-right" ><i class="fa fa-pencil"></i> Edit</button>
+							<!-- <button type="submit" class="btn btn-success pull-right">Submit</button> -->
+							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;&nbsp;&nbsp;&nbsp;Note :&nbsp;&nbsp;&nbsp;</span><br>
+							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- Tanda bintang (*) wajib diisi&nbsp;&nbsp;</span><br>
+							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- 1 WJO hanya untuk 1 drawing&nbsp;</span><br>
+						</div>
 					</form>
 				</div>
 			</div>
@@ -324,9 +496,15 @@
 		$("#sub_section").append(opt);
 		$('#sub_section').prop('selectedIndex', 0).change();
 
-		$('#request').hide();	
+		var opt = $("#sub_section_edit option").sort(function (a,b) { return a.value.toUpperCase().localeCompare(b.value.toUpperCase()) });
+		$("#sub_section_edit").append(opt);
+		$('#sub_section_edit').prop('selectedIndex', 0).change();
+
+		$('#request').hide();
 
 		$('#material-other').hide();
+
+		$('#material-other_edit').hide();
 
 		$('.datepicker').datepicker({
 			autoclose: true,
@@ -343,14 +521,17 @@
 	// });
 
 	$(function () {
-      $('.select2').select2()
-    })
+		$('.select2').select2()
+	})
 
-	 $(function () {
-      $('.select3').select2({
-        dropdownParent: $('#createModal')
-      });
-    })
+	$(function () {
+		$('.select3').select2({
+			dropdownParent: $('#createModal')
+		});
+		$('.select4').select2({
+			dropdownParent: $('#editModal')
+		});
+	})
 
 	$('#material').on('change', function() {
 		if(this.value == 'Lainnya'){
@@ -360,11 +541,28 @@
 		}
 	});
 
+	$('#material_edit').on('change', function() {
+		if(this.value == 'Lainnya'){
+			$('#material-other_edit').show();
+			$('#material-other_edit').val('');
+		}else{
+			$('#material-other_edit').hide();
+		}
+	});
+
 	$('#priority').on('change', function() {
 		if(this.value == 'Urgent'){
 			$('#request').show();
 		}else if(this.value == 'Normal'){
 			$('#request').hide();
+		}
+	});
+
+	$('#priority_edit').on('change', function() {
+		if(this.value == 'Urgent'){
+			$('#request_edit').show();
+		}else if(this.value == 'Normal'){
+			$('#request_edit').hide();
 		}
 	});
 
@@ -503,7 +701,103 @@
 
 	function showDetail(id) {
 		$('#detailModal').modal('show');
-		
+	}
+
+	function modalEdit(id) {
+		$('#editModal').modal('show');
+		var data = {
+			id:id
+		};
+
+
+		$.get('{{ url("index/workshop/edit_wjo") }}', data, function(result, status, xhr){
+
+			if(result.datas.priority == "Normal"){
+				$('#request_edit').hide();
+			}
+
+			else if(result.datas.priority == "Urgent"){
+				$('#request_edit').show();
+			}
+
+			for(var i = 0; i < result.material.length; i++){
+				if (result.material[i].remark == 'raw') {
+					console.log(result.datas.material);
+					if (result.material[i].item_description == result.datas.material) {
+						$("#material_edit").val(result.datas.material).trigger('change.select2');
+						$('#material-other_edit').hide();
+						break;
+					}
+					else{
+						$("#material_edit").val('Lainnya').trigger('change.select2');
+						$('#material-other_edit').show();
+						$('#material-other_edit').val(result.datas.material);
+						break;
+					}
+				}
+			}
+
+			// if(result.datas.material != "Lainnya"){
+			// 	$('#material-other_edit').show();
+			// }
+
+			$("#id_edit").val(id);
+			$("#sub_section_edit").val(result.datas.sub_section).trigger('change.select2');
+			$("#priority_edit").val(result.datas.priority).trigger('change.select2');
+			$("#type_edit").val(result.datas.type).trigger('change.select2');
+			$("#category_edit").val(result.datas.category).trigger('change.select2');
+			$("#item_name_edit").val(result.datas.item_name);
+			$("#quantity_edit").val(result.datas.quantity);	        
+			$("#problem_desc_edit").val(result.datas.problem_description);
+			$("#request_date_edit").val(result.datas.target_date);
+		});
+
+	}
+
+	function edit() {
+
+		if ($("#material_edit").val() == 'Lainnya') {
+			var material = $("#material-other_edit").val();
+		}else{
+			var material = $("#material_edit").val();
+		}
+
+		var data = {
+			id: $("#id_edit").val(),
+			sub_section: $("#sub_section_edit").val(),
+			priority: $("#priority_edit").val(),
+			type: $("#type_edit").val(),
+			category: $("#category_edit").val(),
+			item_name: $("#item_name_edit").val(),
+			quantity: $("#quantity_edit").val(),
+			material: material,
+			problem_description: $("#problem_desc_edit").val(),
+			target_date: $("#request_date_edit").val()
+		};
+
+		if (material == '') {
+			alert('Isi Material');
+		}else{
+			$.post('{{ url("index/workshop/edit_wjo") }}', data, function(result, status, xhr){
+				if (result.status == true) {
+					$("#id_edit").val("");
+					$("#sub_section_edit").prop('selectedIndex', 0).change();
+					$("#priority_edit").prop('selectedIndex', 0).change();
+					$("#type_edit").prop('selectedIndex', 0).change();
+					$("#category_edit").prop('selectedIndex', 0).change();
+					$("#item_name_edit").val("");
+					$("#quantity_edit").val("");	        
+					$("#problem_desc_edit").val("");
+					$("#request_date_edit").val("");
+
+					openSuccessGritter("Success", "WJO has been edited.");
+					$('#modalEdit').modal('hide');
+					window.location.reload();
+				} else {
+					openErrorGritter("Error","Failed to edit WJO.");
+				}
+			})
+		}
 	}
 
 	function openSuccessGritter(title, message){

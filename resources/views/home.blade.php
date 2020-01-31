@@ -184,11 +184,11 @@
                             </a>
                             <br>                            
                             <a href="{{ url("index/qc_report/grafik_cpar") }}">
-                                <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring <br> (是正予防策・是正策監視)
+                                <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring (是正予防策・是正策監視)
                             </a>
                             <br>
                             <a href="{{ url("index/cpar/resume") }}">
-                                <i class="fa fa-caret-right"></i> Resume CPAR & CAR <br> (是正予防策・是正策のまとめ)
+                                <i class="fa fa-caret-right"></i> Resume CPAR & CAR (是正予防策・是正策のまとめ)
                             </a>
                             
                         </td>
@@ -196,11 +196,11 @@
                     <tr>
                         <td>                        
                             <a href="{{ url("index/qa_ymmj") }}">
-                                <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ <br> (YMMJ不具合リポート)
+                                <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
                             </a>
                             <br>
                             <a href="{{ url("index/request_qa") }}">
-                                <i class="fa fa-caret-right"></i> Form Request CPAR QA <br> (品保是正予防策依頼書)
+                                <i class="fa fa-caret-right"></i> Form Request CPAR QA (品保是正予防策依頼書)
                             </a>
                         </td>
                     </tr>
@@ -273,7 +273,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/toilet") }}">
-                                <i class="fa fa-caret-right"></i> Toilet Availability <br>(トイレステイタス(空席・使用中))
+                                <i class="fa fa-caret-right"></i> Toilet Availability (トイレステイタス(空席・使用中))
                             </a>
                             <br>
                             <a href="{{ url("index/display/ip") }}">
@@ -466,11 +466,11 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy/welding_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
-                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor <br>(サックスのピッキング監視)
+                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy/welding_cl?date=&order2=") }}">
-                                <i class="fa fa-caret-right"></i> Clarinet Picking Monitor <br>(クラリネットピッキング監視)
+                                <i class="fa fa-caret-right"></i> Clarinet Picking Monitor (クラリネットピッキング監視)
                             </a>
                         </td>
                     </tr>
@@ -515,15 +515,15 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy/assy_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
-                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor <br>(サックスのピッキング監視)
+                                <i class="fa fa-caret-right"></i> Saxophone Picking Monitor (サックスのピッキング監視)
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy/assy_cl?date=&order2=") }}">
-                                <i class="fa fa-caret-right"></i> Clarinet Picking Monitor <br>(クラリネットピッキング監視)
+                                <i class="fa fa-caret-right"></i> Clarinet Picking Monitor (クラリネットピッキング監視)
                             </a>
                             <br>
                             <a href="{{ url("/index/production_report/index/8") }}">
-                                <i class="fa fa-caret-right"></i> Assembly (WI-A) Report <br> (アセンブリ（WI-A）レポート)
+                                <i class="fa fa-caret-right"></i> Assembly (WI-A) Report (アセンブリ（WI-A）レポート)
                             </a>
                         </td>
                     </tr>
@@ -532,11 +532,11 @@
                             <span style="font-weight: bold;">Check Material Dimensions (寸法測定結果)</span>
                             <br>
                             <a href="http://172.17.128.114/digital-ik-cdm/">
-                                <i class="fa fa-caret-right"></i> Work Instruction Digital System<br>(作業手順書デジタル化)
+                                <i class="fa fa-caret-right"></i> Work Instruction Digital System (作業手順書デジタル化)
                             </a>
                             <br>
                             <a href="http://172.17.128.114/cdm-new/">
-                                <i class="fa fa-caret-right"></i> T-Pro CDM Charts<br>(T-ProのCDMチャート)
+                                <i class="fa fa-caret-right"></i> T-Pro CDM Charts (T-ProのCDMチャート)
                             </a>
                         </td>
                     </tr>
@@ -565,7 +565,7 @@
                             <span style="font-weight: bold;">Finished Goods Control (完成品管理)</span>
                             <br>
                             <a href="{{ url("/index/fg_production_schedule") }}">
-                                <i class="fa fa-caret-right"></i> Production Schedule Data <br>(生産スケジュールデータ)
+                                <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
                             </a>
                             {{-- <br>
                                 <a href="{{ url("/index/fg_production_monitoring") }}">
@@ -598,7 +598,7 @@
                                 <span style="font-weight: bold;">KD Parts Control (KD部品管理)</span>
                                 <br>
                                 <a href="{{ url("/index/kd_production_schedule_data") }}">
-                                    <i class="fa fa-caret-right"></i> Production Schedule Data <br>(生産スケジュールデータ)
+                                    <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/kd_daily_production_result") }}">

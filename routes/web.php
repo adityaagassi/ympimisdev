@@ -929,6 +929,8 @@ Route::get('fetch/workshop/workload', 'WorkshopController@fetchWorkload');
 Route::get('fetch/workshop/machine', 'WorkshopController@scanMachine');
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
+Route::get('index/workshop/edit_wjo', 'WorkshopController@fetch_item_edit');
+Route::post('index/workshop/edit_wjo', 'WorkshopController@editWJO');
 Route::get('update/workshop/approve_urgent/{id}', 'WorkshopNotificationController@approveUrgent');
 Route::get('update/workshop/reject_urgent/{id}', 'WorkshopNotificationController@rejectUrgent');
 Route::get('fetch/workshop/list_wjo', 'WorkshopController@fetchListWJO');

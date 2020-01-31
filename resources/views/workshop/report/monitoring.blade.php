@@ -142,7 +142,7 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 60000);
+		setInterval(fillChart, 30000);
 		setInterval(setTime, 1000);
 	});
 
@@ -208,11 +208,13 @@
 		$.get('{{ url("fetch/workshop/wjo_monitoring") }}', data, function(result, status, xhr){
 			if(result.status){
 				var date = [];
+				var list = [];
 				var progress = [];
 				var finish = [];
 				var reject = [];
 				for (var i = 0; i < result.wjo.length; i++) {
 					date.push(result.wjo[i].week_date);
+					list.push(result.wjo[i].list);
 					progress.push(result.wjo[i].progress);
 					finish.push(result.wjo[i].finish);
 					reject.push(result.wjo[i].reject);
@@ -307,9 +309,9 @@
 						}
 					},
 					series: [{
-						name: 'Rejected',
-						color: '#ff6666',
-						data: reject
+						name: 'Listed',
+						color: '#ddd',
+						data: list
 					},{
 						name: 'In Progress',
 						data: progress,
@@ -318,6 +320,10 @@
 						name: 'Finished',
 						data: finish,
 						color : '#5cb85c'
+					},{
+						name: 'Rejected',
+						color: '#ff6666',
+						data: reject
 					}]
 				});
 

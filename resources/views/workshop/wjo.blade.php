@@ -90,8 +90,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-7" style="padding-right: 0; padding-left: 0">			
-
+		<div class="col-xs-7" style="padding-right: 0; padding-left: 0">
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 0.25%;">
 				<thead>
 					<tr>
@@ -167,7 +166,7 @@
 			</table>
 
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 3%;">
-				<thead id='process_progress_bar'>
+				{{-- <thead id='process_progress_bar'>
 					<tr>
 						<th style="background-color: rgb(50, 50, 50); padding: 0px;" colspan="2">
 							<div class="col-xs-12" style="padding: 0px;">
@@ -179,7 +178,7 @@
 							</div>
 						</th>
 					</tr>
-				</thead>
+				</thead> --}}
 				<tbody>
 					<tr>
 						<td style="width: 75%; color: white; font-size: 2vw; background-color: rgb(50, 50, 50);">
@@ -194,7 +193,23 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="col-xs-5" style="padding-right: 0;" id="step"></div>
+		<div class="col-xs-5">
+			<div class="nav-tabs-custom tab-default" style="background-color: rgb(60,60,60)">
+				<ul class="nav nav-tabs">
+					<li id="vendor-tab-1" class="vendor-tab active" style="font-weight: bold; font-size: 1vw; text-align: center; width: 50%; margin: 0px; color: rgb(60,60,60);"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Process Plan</a></li>
+					<li id="vendor-tab-2" class="vendor-tab pull-right" style="font-weight: bold; font-size: 1vw; text-align: center; width: 50%; margin: 0px; color: rgb(60,60,60);"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Actual Process</a></li>
+				</ul>
+			</div>
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab_1">
+					<div id="step"></div>
+				</div>
+				<div class="tab-pane" id="tab_2">
+					<div id="actual"></div>
+				</div>
+			</div>
+
+		</div>
 	</section>
 
 	
@@ -412,7 +427,9 @@
 							}
 
 							$("#step").append().empty();
+							$("#actual").append().empty();
 							var step = '';
+							var actual = '';
 							var green = '';
 							
 							if(result.flow_process.length > 0){
@@ -428,22 +445,41 @@
 								step += '</li>';
 								for (var i = 0; i < result.flow_process.length; i++) {
 									step += '<li>';
-									step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'">'+ result.flow_process[i].sequence_process +'</i>';
-									step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'</p>';
+									step += '<i class="fa fa-stack-1x">'+ result.flow_process[i].sequence_process +'</i>';
+									step += '<div class="timeline-item" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'s<span></p>';
 									step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
 									step += '</div>';
 									step += '</li>';
 								}
-								if(result.flow_process[(result.flow_process.length-1)].status == 1){
-									step += '<li>';
-									step += '<i class="fa fa-check-square-o bg-blue"></i>';
-									step += '</li>';
-									step += '</ul>';
+								step += '<li>';
+								step += '<i class="fa fa-check-square-o bg-blue"></i>';
+								step += '</li>';
+								step += '</ul>';
+								
+							}
+
+							if(result.wjo_log.length > 0){
+								$('#process_progress_bar').show();
+
+								actual += '<ul class="timeline">';
+								actual += '<li class="time-label">';
+								actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+								actual += '</li>';
+								for (var i = 0; i < result.wjo_log.length; i++) {
+									actual += '<li>';
+									actual += '<i class="fa fa-stack-1x bg-green">'+ result.wjo_log[i].sequence_process +'</i>';
+									actual += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+									actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'s<span></p>';
+									actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+									actual += '</div>';
+									actual += '</li>';
 								}
 							}
 
 							$("#step").append(step);
+							$("#actual").append(actual);
+
 							document.getElementById("green").value = green;
 
 							for (var i = 0; i < green; i++) {
@@ -489,56 +525,52 @@ $('#machine').keydown(function(event) {
 					document.getElementById("started_at").value = result.started_at;
 					started_at = new Date(result.started_at);
 
+					$("#actual").append().empty();
 
-
-					$("#step").append().empty();
-					var step = '';
+					var actual = '';
 					var green = '';
-					step += '<ul class="timeline">';
-					step += '<li class="time-label">';
-					step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
-					step += '</li>';
-					if(result.flow_process.length > 0){
+
+					actual += '<ul class="timeline">';
+					actual += '<li class="time-label">';
+					actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+					actual += '</li>';
+					if(result.wjo_log.length > 0){
 						$('#process_progress_bar').show();
 						
-						if(result.wjo_log.length == 0){
-							green = 0;
-						}else{
-							green = result.wjo_log.length;
-						}
-						for (var i = 0; i < result.flow_process.length; i++) {
-							step += '<li>';
-							step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'">'+ result.flow_process[i].sequence_process +'</i>';
-							step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'</p>';
-							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
-							step += '</div>';
-							step += '</li>';
+						green = result.wjo_log.length;
 
-							if(result.flow_process[i].sequence_process == (green + 1)){
-								std_time = result.flow_process[i].std_time;
-							}
+						for (var i = 0; i < result.wjo_log.length; i++) {
+							actual += '<li>';
+							actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'">'+ result.wjo_log[i].sequence_process +'</i>';
+							actual += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'s<span></p>';
+							actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							actual += '</div>';
+							actual += '</li>';
 						}
-						if(result.flow_process[(result.flow_process.length-1)].status == 1){
-							step += '<li>';
-							step += '<i class="fa fa-check-square-o bg-blue"></i>';
-							step += '</li>';
-							step += '</ul>';
-						}else{
-							count_process_bar = false;
 
-							green++;
-							step += '<li>';
-							step += '<i class="fa fa-stack-1x" id="timeline_number_'+ green +'">'+ (result.flow_process.length+1) +'</i>';
-							step += '<div class="timeline-item" id="timeline_box_'+ green +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
-							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
-							step += '</div>';
-							step += '</li>';
-						}
+						actual += '<li>';
+						actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ green +'">'+ (green+1) +'</i>';
+						actual += '<div class="timeline-item" id="timeline_box_'+ green +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+						actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
+						actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
+						actual += '</div>';
+						actual += '</li>';
+
+					}else{
+						green = 0;
+
+						actual += '<li>';
+						actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ green +'">1</i>';
+						actual += '<div class="timeline-item" id="timeline_box_'+ green +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+						actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
+						actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
+						actual += '</div>';
+						actual += '</li>';
 					}
 
-					$("#step").append(step);
+
+					$("#actual").append(actual);
 					document.getElementById("green").value = green;
 
 					for (var i = 0; i < green; i++) {
@@ -556,19 +588,18 @@ $('#machine').keydown(function(event) {
 					$('#machine').val('');
 
 					if(result.message == 'Proses tidak sama dengan sebelumnya'){
-						alert('Alur proses tidak sesuai');
-
-						// if(confirm("Alur proses tidak sama dengan sebelumnya\nUntuk mengubah alur yang sudah ada perlu persetujuan Leader\nApakah anda ingin mengubah alur proses yang telah disimpan?")){
-						// 	$('#modalLeader').modal('show');
-						// 	document.getElementById("order_no").value = result.order_no;
-						// 	document.getElementById("item_number").value = result.item_number;
-						// 	document.getElementById("sequence_process").value = result.sequence_process;
-						// }
+						// alert('Alur proses tidak sesuai');
+						if(confirm("Alur proses tidak sama dengan sebelumnya\nUntuk mengubah alur yang sudah ada perlu persetujuan Leader\nApakah anda ingin mengubah alur proses yang telah disimpan?")){
+							$('#modalLeader').modal('show');
+							document.getElementById("order_no").value = result.order_no;
+							document.getElementById("item_number").value = result.item_number;
+							document.getElementById("sequence_process").value = result.sequence_process;
+						}
 					}
 				}
 			});
-		}
-	}
+}
+}
 });
 
 $('#leader').keydown(function(event) {
@@ -590,29 +621,58 @@ $('#leader').keydown(function(event) {
 					count_process_bar = false;
 
 					$("#step").append().empty();
+					$("#actual").append().empty();
 					var step = '';
+					var actual = '';
 					var green = '';
 
-					if(result.wjo_log.length > 0){
-						$('#process_progress_bar').hide();
-
+					if(result.flow_process.length > 0){
+						$('#process_progress_bar').show();
+						if(result.wjo_log.length == 0){
+							green = 0;
+						}else{
+							green = result.wjo_log.length;
+						}
 						step += '<ul class="timeline">';
 						step += '<li class="time-label">';
 						step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
 						step += '</li>';
-						for (var i = 0; i < result.wjo_log.length; i++) {
+						for (var i = 0; i < result.flow_process.length; i++) {
 							step += '<li>';
-							step += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'"">'+ result.wjo_log[i].sequence_process +'</i>';
-							step += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'</p>';
-							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							step += '<i class="fa fa-stack-1x">'+ result.flow_process[i].sequence_process +'</i>';
+							step += '<div class="timeline-item" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'s<span></p>';
+							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
 							step += '</div>';
 							step += '</li>';
 						}
-						green = result.wjo_log.length;
+						step += '<li>';
+						step += '<i class="fa fa-check-square-o bg-blue"></i>';
+						step += '</li>';
+						step += '</ul>';
+					}
+
+					if(result.wjo_log.length > 0){
+						$('#process_progress_bar').show();
+
+						actual += '<ul class="timeline">';
+						actual += '<li class="time-label">';
+						actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+						actual += '</li>';
+						for (var i = 0; i < result.wjo_log.length; i++) {
+							actual += '<li>';
+							actual += '<i class="fa fa-stack-1x bg-green">'+ result.wjo_log[i].sequence_process +'</i>';
+							actual += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'s<span></p>';
+							actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							actual += '</div>';
+							actual += '</li>';
+						}
 					}
 
 					$("#step").append(step);
+					$("#actual").append(actual);
+
 					document.getElementById("green").value = green;
 
 					for (var i = 0; i < green; i++) {
@@ -692,6 +752,14 @@ function finish(){
 
 				$("#timeline_number_" + green).addClass('bg-green');
 				$("#timeline_box_" + green).addClass('bg-green');
+
+				var actual = '';
+				actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log.process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log.actual / 60) +'s<span></p>';
+				actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log.machine_name +'</p>';
+
+				$("#timeline_box_" + green).html("");
+				$("#timeline_box_" + green).append(actual);
+
 
 				count_time = false;
 				count_process_bar = false;
