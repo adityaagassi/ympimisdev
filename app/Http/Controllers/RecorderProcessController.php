@@ -50,7 +50,7 @@ class RecorderProcessController extends Controller
                     'eko.prasetyo.wicaksono@music.yamaha.com'];
 
       $array_push_pull = [];
-      $check_date_push_pull = '';
+      $check_date_push_pull = date('Y-m-d H:i:s');
       $datavaluelama = 0;
     }
 
