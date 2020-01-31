@@ -1360,7 +1360,6 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 
 
 
-
 		var op_b = [];
 		var name_b = [];
 		var cek_b = [];

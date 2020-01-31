@@ -126,7 +126,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 					<h3 class="profile-username text-center">{{ $profil[0]->name }}</h3>
 
-					<p class="text-muted text-center" style="text-transform: lowercase;">{{ $emp_id }}</p>
+					<p class="text-muted text-center">{{ strtoupper($emp_id) }}</p>
 
 					<ul class="list-group list-group-unbordered" style="margin:0">
 						<li class="list-group-item">
@@ -206,7 +206,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							<h3 class="box-title">Resume Absensi & Lembur</h3>
 							<div class="pull-right">
 								<select class="form-control select2">
-									<option>2019</option>
+									<option>2020</option>
 								</select>
 							</div>
 						</div>
