@@ -470,7 +470,7 @@
 									actual += '<li>';
 									actual += '<i class="fa fa-stack-1x bg-green">'+ result.wjo_log[i].sequence_process +'</i>';
 									actual += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-									actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'s<span></p>';
+									actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
 									actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
 									actual += '</div>';
 									actual += '</li>';
@@ -543,7 +543,7 @@ $('#machine').keydown(function(event) {
 							actual += '<li>';
 							actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'">'+ result.wjo_log[i].sequence_process +'</i>';
 							actual += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'s<span></p>';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
 							actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
 							actual += '</div>';
 							actual += '</li>';
@@ -663,7 +663,7 @@ $('#leader').keydown(function(event) {
 							actual += '<li>';
 							actual += '<i class="fa fa-stack-1x bg-green">'+ result.wjo_log[i].sequence_process +'</i>';
 							actual += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'s<span></p>';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
 							actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
 							actual += '</div>';
 							actual += '</li>';
@@ -754,7 +754,7 @@ function finish(){
 				$("#timeline_box_" + green).addClass('bg-green');
 
 				var actual = '';
-				actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log.process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log.actual / 60) +'s<span></p>';
+				actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log.process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log.actual / 60) +'m<span></p>';
 				actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log.machine_name +'</p>';
 
 				$("#timeline_box_" + green).html("");
