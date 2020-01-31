@@ -447,7 +447,7 @@
 									step += '<li>';
 									step += '<i class="fa fa-stack-1x">'+ result.flow_process[i].sequence_process +'</i>';
 									step += '<div class="timeline-item" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'s<span></p>';
+									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'m<span></p>';
 									step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
 									step += '</div>';
 									step += '</li>';
@@ -641,7 +641,7 @@ $('#leader').keydown(function(event) {
 							step += '<li>';
 							step += '<i class="fa fa-stack-1x">'+ result.flow_process[i].sequence_process +'</i>';
 							step += '<div class="timeline-item" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'s<span></p>';
+							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'m<span></p>';
 							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
 							step += '</div>';
 							step += '</li>';
