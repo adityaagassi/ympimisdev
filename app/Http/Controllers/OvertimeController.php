@@ -1535,7 +1535,7 @@ public function overtimeReportDetail(Request $request)
 					]);
 				};
 
-				foreach ($ot_4 as $key) {
+				foreach ($ot_14 as $key) {
 					array_push($violations, [
 						"period" => $key->period,
 						"Emp_no" => $key->Emp_no,
@@ -1549,6 +1549,7 @@ public function overtimeReportDetail(Request $request)
 			$violations = db::connection('sunfish')->select("SELECT
 				FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
 				A.Emp_no,
+				B.Full_name,
 				B.Section,
 				SUM (
 				IIF (
@@ -1566,6 +1567,7 @@ public function overtimeReportDetail(Request $request)
 				GROUP BY
 				FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ),
 				A.Emp_no,
+				B.Full_name,
 				B.Section 
 				HAVING
 				SUM (
