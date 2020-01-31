@@ -1532,6 +1532,7 @@ public function overtimeReportDetail(Request $request)
 						"Emp_no" => $key->Emp_no,
 						"Full_name" => $key->Full_name,
 						"Section" => $key->Section,
+						"ot" => $key->ot,
 					]);
 				};
 
@@ -1541,6 +1542,7 @@ public function overtimeReportDetail(Request $request)
 						"Emp_no" => $key->Emp_no,
 						"Full_name" => $key->Full_name,
 						"Section" => $key->Section,
+						"ot" => $key->ot,
 					]);
 				};
 			}		
