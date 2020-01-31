@@ -755,7 +755,7 @@ class RecorderProcessController extends Controller
 
           // if(Auth::user()->role_code == "OP-PushPull-RC"){
 
-          // if ($datavalue > 2) {
+          if ($datavalue > 0) {
             $id = Auth::id();
 
             $plc_counter->plc_counter = $data;
@@ -818,7 +818,7 @@ class RecorderProcessController extends Controller
 
             );
             return Response::json($response);
-          // }
+          }
             
           // }
         }
