@@ -28,6 +28,7 @@ use App\Mail\SendEmail;
 
 class RecorderProcessController extends Controller
 {
+    $array_push_pull = [];
     public function __construct()
     {
       $this->middleware('auth');
@@ -739,8 +740,8 @@ class RecorderProcessController extends Controller
       try{
         // if ($request->get('originGroupCode') =='072') {
           $plc = new ActMLEasyIf(2);
-          $counter_push_pull = $plc->read_data('D210', 1);
-          $value_push_pull = $plc->read_data('D50', 1);
+          $counter_push_pull = $plc->read_data('D75', 1);
+          $value_push_pull = $plc->read_data('D250', 1);
           $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
         // }
         $data = $counter_push_pull[0];
@@ -755,7 +756,7 @@ class RecorderProcessController extends Controller
 
           // if(Auth::user()->role_code == "OP-PushPull-RC"){
 
-          if ($datavalue > 2) {
+          // if ($datavalue > 2) {
             $id = Auth::id();
 
             $plc_counter->plc_counter = $data;
@@ -812,11 +813,13 @@ class RecorderProcessController extends Controller
               'data' => $plc_counter->plc_counter,
               'counter' => $data,
               'value' => $datavalue,
-              'judgement' => $judgement
+              'judgement' => $judgement,
+              'counter_all' => $counter_push_pull,
+              'value_all' => $value_push_pull
 
             );
             return Response::json($response);
-          }
+          // }
             
           // }
         }
