@@ -48,7 +48,7 @@ class RecorderProcessController extends Controller
                     'aditya.agassi@music.yamaha.com',
                     'takashi.ohkubo@music.yamaha.com',
                     'eko.prasetyo.wicaksono@music.yamaha.com'];
-      $array_push_pull = [];
+      $this->array_push_pull = [];
       $this->checked_at_time = date('Y-m-d H:i:s');
     }
 
@@ -752,18 +752,18 @@ class RecorderProcessController extends Controller
     {
       try{
         // if ($request->get('originGroupCode') =='072') {
-          $plc = new ActMLEasyIf(2);
-          $counter_push_pull = $plc->read_data('D275', 1);
-          $value_push_pull = $plc->read_data('D250', 1);
-          
-          $data = $counter_push_pull[0];
-          $datavalue = $value_push_pull[0] / 120;
+          // $plc = new ActMLEasyIf(2);
+          // $counter_push_pull = $plc->read_data('D275', 1);
+          // $value_push_pull = $plc->read_data('D250', 1);
+
+          // $data = $counter_push_pull[0];
+          // $datavalue = $value_push_pull[0] / 120;
 
           $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
         // }
         
-        // $datavalue = '2.9';
-        // $data = 3;
+        $datavalue = '2.9';
+        $data = 3;
         // var_dump($counter_push_pull);
         // var_dump($value_push_pull);
 
@@ -799,11 +799,11 @@ class RecorderProcessController extends Controller
             }
 
             if ($request->get('check_date') == $this->checked_at_time) {
-              $array_push_pull[] = $datavalue;
+              $this->array_push_pull[] = $datavalue;
               $this->checked_at_time = $request->get('check_date');
             }
             else{
-              $datavalue = max($array_push_pull);
+              $datavalue = max($this->array_push_pull);
               $push_pull = RcPushPullLog::create(
                 [
                   'model' => $request->get('model'),
