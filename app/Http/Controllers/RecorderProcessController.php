@@ -762,8 +762,8 @@ class RecorderProcessController extends Controller
           $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
         // }
         
-        // $datavalue = '2.9';
-        // $data = 3;
+        // $datavalue = '2.8';
+        // $data = 8;
         // var_dump($counter_push_pull);
         // var_dump($value_push_pull);
 
@@ -850,7 +850,7 @@ class RecorderProcessController extends Controller
         }
         else{
           $response = array(
-            'status' => true,
+            'status' => false,
             'statusCode' => 'noData',
           );
           return Response::json($response);

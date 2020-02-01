@@ -276,6 +276,7 @@
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
+	var audio_error = new Audio('{{ url("sounds/alarm_error.mp3") }}');
 	$('#injection_date').datepicker({
       autoclose: true,
       format: 'yyyy-mm-dd',
@@ -585,16 +586,19 @@
 				if(result.status){
 					// openSuccessGritter('Success', result.message);
 					// fillResult();
-					$('#last_check').val(result.value);
-					$('#judgement_push_pull').val(result.judgement);
-					// console.log(result.value);
-					if (result.judgement == 'OK') {
-						document.getElementById('judgement_push_pull').style.backgroundColor = "#57ff86";
-						document.getElementById('judgement_push_pull').style.color = "#163756";
-					}
-					else if(result.judgement == 'NG'){
-						document.getElementById('judgement_push_pull').style.backgroundColor = "#ff6363";
-						document.getElementById('judgement_push_pull').style.color = "#163756";
+					if (result.judgement.length > 0) {
+						$('#last_check').val(result.value);
+						$('#judgement_push_pull').val(result.judgement);
+						// console.log(result.value);
+						if (result.judgement == 'OK') {
+							document.getElementById('judgement_push_pull').style.backgroundColor = "#57ff86";
+							document.getElementById('judgement_push_pull').style.color = "#163756";
+						}
+						else if(result.judgement == 'NG'){
+							audio_error.play();
+							document.getElementById('judgement_push_pull').style.backgroundColor = "#ff6363";
+							document.getElementById('judgement_push_pull').style.color = "#163756";
+						}
 					}
 				}
 				else{
@@ -625,6 +629,7 @@
 						document.getElementById('judgement_middle').style.color = "#163756";
 					}
 					else if(result.judgement == 'NG'){
+						audio_error.play();
 						document.getElementById('judgement_middle').style.backgroundColor = "#ff6363";
 						document.getElementById('judgement_middle').style.color = "#163756";
 					}
@@ -657,6 +662,7 @@
 						document.getElementById('judgement_stamp').style.color = "#163756";
 					}
 					else if(result.judgement == 'NG'){
+						audio_error.play();
 						document.getElementById('judgement_stamp').style.backgroundColor = "#ff6363";
 						document.getElementById('judgement_stamp').style.color = "#163756";
 					}
