@@ -43,7 +43,7 @@
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="row" style="margin:0px;">
-				<form method="GET" action="{{ action('MiddleProcessController@indexDisplayProductionResult') }}">
+				<form method="GET" action="{{ action('WeldingProcessController@indexDisplayProductionResult') }}">
 					<div class="col-xs-2">
 						<div class="input-group date">
 							<div class="input-group-addon bg-green" style="border: none;">
