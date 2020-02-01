@@ -842,6 +842,8 @@ Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 	Route::post('input/welding/rework', 'WeldingProcessController@inputWeldingRework');
 	Route::post('input/welding/kensa', 'WeldingProcessController@inputWeldingKensa');
 });
+Route::get('index/welding/display_production_result', 'WeldingProcessController@indexDisplayProductionResult');
+Route::get('fetch/welding/display_production_result', 'WeldingProcessController@fetchDisplayProductionResult');
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
 Route::get('scan/welding/operator', 'WeldingProcessController@scanWeldingOperator');
 Route::get('scan/welding/kensa', 'WeldingProcessController@scanWeldingKensa');
@@ -912,6 +914,7 @@ Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::get('index/workshop/list_wjo', 'WorkshopController@indexListWJO');
 	Route::post('update/workshop/wjo', 'WorkshopController@updateWJO');
+	Route::post('edit/workshop/wjo', 'WorkshopController@editLeaderWJO');
 	Route::post('check/workshop/wjo_rfid', 'WorkshopController@checkTag');
 	Route::post('reject/workshop/wjo', 'WorkshopController@rejectWJO');
 	Route::post('close/workshop/wjo', 'WorkshopController@closeWJO');
@@ -2005,6 +2008,7 @@ Route::get('push_pull/fetchResultCamera', 'RecorderProcessController@fetchResult
 Route::get('post/display/email/{value_check}/{judgement}/{model}/{checked_at}/{pic_check}/{remark}', 'RecorderProcessController@email');
 Route::post('push_pull/store_push_pull', 'RecorderProcessController@store_push_pull');
 Route::post('camera_kango/store_camera_kango', 'RecorderProcessController@store_camera');
+Route::post('camera_kango/store_camera_kango2', 'RecorderProcessController@store_camera2');
 Route::get('scan/push_pull/operator', 'RecorderProcessController@scanPushPullOperator');
 
 //WEBCAM
@@ -2054,6 +2058,8 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_car/coba_print/{id}', 'QcCarController@coba_print');
 	Route::get('index/qc_car/sendemail/{id}/{posisi}', 'QcCarController@sendemail');
 	Route::post('index/qc_car/deletefiles', 'QcCarController@deletefiles');
+	Route::get('index/qc_car/verifikasigm/{id}', 'QcCarController@verifikasigm');
+	Route::post('index/qc_car/save_sign', 'QcCarController@save_sign');
 	
 
 	//Verifikator CAR

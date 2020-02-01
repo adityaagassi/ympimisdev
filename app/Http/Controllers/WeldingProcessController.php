@@ -19,6 +19,10 @@ class WeldingProcessController extends Controller
 {
 	public function __construct(){
 		$this->middleware('auth');
+		$this->location = [
+			'hsa-visual-sx',
+			'phs-visual-sx',
+		];
 	}
 
 	public function indexWeldingFL(){
@@ -44,6 +48,126 @@ class WeldingProcessController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 		))->with('page', 'Process Welding SX')->with('head', 'Welding Process');
+	}
+
+	public function indexDisplayProductionResult(){
+		$locations = $this->location;
+
+		return view('processes.welding.display.production_result', array(
+			'title' => 'Welding Production Result',
+			'title_jp' => '',
+			'locations' => $locations
+		))->with('page', 'Production Result');
+
+	}
+
+	public function fetchDisplayProductionResult(Request $request){
+		$tgl="";
+		if(strlen($request->get('tgl')) > 0){
+			$tgl = date('Y-m-d',strtotime($request->get("tgl")));
+		}else{
+			$tgl = date("Y-m-d");
+		}
+		$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tgl."' and";
+
+		$addlocation = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			$location = "";
+
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$location = $location.",";
+				}
+			}
+			$addlocation = "and l.location in (".$location.") ";
+		}
+
+		if($request->get('location') == 'hsa'){
+
+		}
+		else{
+			$query1 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
+			(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'ASKEY' and surface not like '%PLT%' and issue_storage_location = 'SX21' order by `key`) a
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			GROUP BY m.`key`, m.model) s3
+			on a.keymodel = s3.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			GROUP BY m.`key`, m.model) s1
+			on a.keymodel = s1.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			GROUP BY m.`key`, m.model) s2
+			on a.keymodel = s2.keymodel
+			ORDER BY `key`";
+			$alto = db::select($query1);
+
+			$query2 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
+			(select distinct `key`, model, CONCAT(`key`,model) as keymodel from materials where hpl = 'TSKEY' and surface not like '%PLT%' and issue_storage_location = 'SX21' order by `key`) a
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			GROUP BY m.`key`, m.model) s3
+			on a.keymodel = s3.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			GROUP BY m.`key`, m.model) s1
+			on a.keymodel = s1.keymodel
+			left join
+			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from welding_logs l
+			left join materials m on l.material_number = m.material_number
+			WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX21' ".$addlocation."
+			GROUP BY m.`key`, m.model) s2
+			on a.keymodel = s2.keymodel
+			ORDER BY `key`";
+			$tenor = db::select($query2);
+		}
+
+		$query3 = "select distinct `key` from materials where hpl = 'ASKEY' and issue_storage_location = 'SX21' order by `key`";
+		$key =  db::select($query3);
+
+		$query4 = "select distinct model from materials where hpl = 'ASKEY' and issue_storage_location = 'SX21' order by model";
+		$model_alto =  db::select($query4);
+
+		$query5 = "select distinct model from materials where hpl = 'TSKEY' and issue_storage_location = 'SX21' order by model";
+		$model_tenor =  db::select($query5);
+
+		$location = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location." ".$locations[$x]." ";
+				if($x != count($locations)-1){
+					$location = $location."&";
+				}
+			}
+		}else{
+			$location = "";
+		}
+		$location = strtoupper($location);
+
+		$response = array(
+			'status' => true,
+			'alto' => $alto,
+			'tenor' => $tenor,
+			'key' => $key,
+			'model_tenor' => $model_tenor,
+			'model_alto' => $model_alto,
+			'title' => $location
+		);
+		return Response::json($response);
 	}
 
 	public function scanWeldingOperator(Request $request){

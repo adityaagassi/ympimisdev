@@ -2478,19 +2478,19 @@ class MiddleProcessController extends Controller
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.selesai_start_time) > '00:00:00' and TIME(l.selesai_start_time) < '07:00:00' and m.hpl = 'ASKEY'
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '00:00:00' and TIME(l.selesai_start_time) < '07:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX51'
 			GROUP BY m.`key`, m.model) s3
 			on a.keymodel = s3.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.selesai_start_time) > '07:00:00' and TIME(l.selesai_start_time) < '16:00:00' and m.hpl = 'ASKEY'
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '07:00:00' and TIME(l.selesai_start_time) < '16:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX51'
 			GROUP BY m.`key`, m.model) s1
 			on a.keymodel = s1.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.selesai_start_time) > '16:00:00' and TIME(l.selesai_start_time) < '23:59:59' and m.hpl = 'ASKEY'
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '16:00:00' and TIME(l.selesai_start_time) < '23:59:59' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX51'
 			GROUP BY m.`key`, m.model) s2
 			on a.keymodel = s2.keymodel
 			ORDER BY `key`";
@@ -2501,19 +2501,19 @@ class MiddleProcessController extends Controller
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.selesai_start_time) > '00:00:00' and TIME(l.selesai_start_time) < '07:00:00' and m.hpl = 'TSKEY'
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '00:00:00' and TIME(l.selesai_start_time) < '07:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX51'
 			GROUP BY m.`key`, m.model) s3
 			on a.keymodel = s3.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.selesai_start_time) > '07:00:00' and TIME(l.selesai_start_time) < '16:00:00' and m.hpl = 'TSKEY'
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '07:00:00' and TIME(l.selesai_start_time) < '16:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX51'
 			GROUP BY m.`key`, m.model) s1
 			on a.keymodel = s1.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.material_qty) as total from data_log l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.selesai_start_time) > '16:00:00' and TIME(l.selesai_start_time) < '23:59:59' and m.hpl = 'TSKEY'
+			WHERE ".$tanggal." TIME(l.selesai_start_time) > '16:00:00' and TIME(l.selesai_start_time) < '23:59:59' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX51'
 			GROUP BY m.`key`, m.model) s2
 			on a.keymodel = s2.keymodel
 			ORDER BY `key`";
@@ -2525,19 +2525,19 @@ class MiddleProcessController extends Controller
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'ASKEY' ".$addlocation."
+			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s3
 			on a.keymodel = s3.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'ASKEY' ".$addlocation."
+			WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s1
 			on a.keymodel = s1.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'ASKEY' ".$addlocation."
+			WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'ASKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s2
 			on a.keymodel = s2.keymodel
 			ORDER BY `key`";
@@ -2548,19 +2548,19 @@ class MiddleProcessController extends Controller
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'TSKEY' ".$addlocation."
+			WHERE ".$tanggal." TIME(l.created_at) > '00:00:00' and TIME(l.created_at) < '07:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s3
 			on a.keymodel = s3.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'TSKEY' ".$addlocation."
+			WHERE ".$tanggal." TIME(l.created_at) > '07:00:00' and TIME(l.created_at) < '16:00:00' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s1
 			on a.keymodel = s1.keymodel
 			left join
 			(select m.`key`, m.model, CONCAT(`key`,model) as keymodel, sum(l.quantity) as total from middle_logs l
 			left join materials m on l.material_number = m.material_number
-			WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'TSKEY' ".$addlocation."
+			WHERE ".$tanggal." TIME(l.created_at) > '16:00:00' and TIME(l.created_at) < '23:59:59' and m.hpl = 'TSKEY' and m.issue_storage_location = 'SX51' ".$addlocation."
 			GROUP BY m.`key`, m.model) s2
 			on a.keymodel = s2.keymodel
 			ORDER BY `key`";
@@ -2569,13 +2569,13 @@ class MiddleProcessController extends Controller
 
 
 
-		$query3 = "select distinct `key` from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by `key`";
+		$query3 = "select distinct `key` from materials where hpl = 'ASKEY' and issue_storage_location = 'SX51' and surface not like '%PLT%' order by `key`";
 		$key =  db::select($query3);
 
-		$query4 = "select distinct model from materials where hpl = 'ASKEY' and surface not like '%PLT%' order by model";
+		$query4 = "select distinct model from materials where hpl = 'ASKEY' and issue_storage_location = 'SX51' and surface not like '%PLT%' order by model";
 		$model_alto =  db::select($query4);
 
-		$query5 = "select distinct model from materials where hpl = 'TSKEY' and surface not like '%PLT%' order by model";
+		$query5 = "select distinct model from materials where hpl = 'TSKEY' and issue_storage_location = 'SX51' and surface not like '%PLT%' order by model";
 		$model_tenor =  db::select($query5);
 
 		$location = "";
