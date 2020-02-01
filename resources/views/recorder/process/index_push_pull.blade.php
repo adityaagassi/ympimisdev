@@ -422,8 +422,9 @@
 			alert('Pilih Jenis Middle!');
 		}
 		else{
-			setInterval(push_pull,100);
-			// setInterval(camera_kango,1000);
+			setInterval(push_pull,1000);
+			setInterval(camera_kango,1000);
+			setInterval(camera_kango2,1000);
 			$('#modalOperator').modal('hide');
 		}
 	}
@@ -592,7 +593,7 @@
 						document.getElementById('judgement_push_pull').style.color = "#163756";
 					}
 					else if(result.judgement == 'NG'){
-						document.getElementById('judgement_push_pull').style.backgroundColor = "white";
+						document.getElementById('judgement_push_pull').style.backgroundColor = "#ff6363";
 						document.getElementById('judgement_push_pull').style.color = "#163756";
 					}
 				}
@@ -607,7 +608,7 @@
 			var data = {
 				model : $('#color_camera').val(),
 				check_date : getActualFullDate(),
-				// value_check : $('#last_check').val(),
+				value_check : $('#middle_type').val(),
 				pic_check : $('#op2').text(),
 			}
 			// console.log(data);
@@ -617,9 +618,51 @@
 				if(result.status){
 					// openSuccessGritter('Success', result.message);
 					// fillResultCamera();
+					$('#judgement_middle').val(result.judgement);
+					// console.log(result.value);
+					if (result.judgement == 'OK') {
+						document.getElementById('judgement_middle').style.backgroundColor = "#57ff86";
+						document.getElementById('judgement_middle').style.color = "#163756";
+					}
+					else if(result.judgement == 'NG'){
+						document.getElementById('judgement_middle').style.backgroundColor = "#ff6363";
+						document.getElementById('judgement_middle').style.color = "#163756";
+					}
 				}
 				else{
-					openErrorGritter('Error!', result.message);
+					// openErrorGritter('Error!', result.message);
+				}
+			});
+		// }
+	}
+
+	function camera_kango2() {
+			var data = {
+				model : $('#color_camera').val(),
+				check_date : getActualFullDate(),
+				value_check : $('#middle_type').val(),
+				pic_check : $('#op2').text(),
+			}
+			// console.log(data);
+			// console.log(data);
+
+			$.post('{{ url("camera_kango/store_camera_kango2") }}', data, function(result, status, xhr){
+				if(result.status){
+					// openSuccessGritter('Success', result.message);
+					// fillResultCamera();
+					$('#judgement_stamp').val(result.judgement);
+					// console.log(result.value);
+					if (result.judgement == 'OK') {
+						document.getElementById('judgement_stamp').style.backgroundColor = "#57ff86";
+						document.getElementById('judgement_stamp').style.color = "#163756";
+					}
+					else if(result.judgement == 'NG'){
+						document.getElementById('judgement_stamp').style.backgroundColor = "#ff6363";
+						document.getElementById('judgement_stamp').style.color = "#163756";
+					}
+				}
+				else{
+					// openErrorGritter('Error!', result.message);
 				}
 			});
 		// }

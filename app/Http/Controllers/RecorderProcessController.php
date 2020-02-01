@@ -48,6 +48,8 @@ class RecorderProcessController extends Controller
                     'aditya.agassi@music.yamaha.com',
                     'takashi.ohkubo@music.yamaha.com',
                     'eko.prasetyo.wicaksono@music.yamaha.com'];
+      $array_push_pull = [];
+      $this->checked_at_time = date('Y-m-d H:i:s');
     }
 
   public function index(){
@@ -621,6 +623,18 @@ class RecorderProcessController extends Controller
     }
 
     public function index_push_pull(){
+      // $file = File::get(public_path('RCImages/Cam1/RC_00236.txt'));
+      // $filepecah = explode(' ', $file);
+      // var_dump($filepecah[3]);
+      // var_dump($file);
+      foreach (glob(public_path('RCImages/Cam1/*.txt')) as $filename) {
+          // echo "$filename size " . filesize($filename) . "\n";
+        // var_dump();
+        $data = substr($filename,-9,5);
+        $file = File::get($filename);
+        $filepecah = explode(' ', $file);
+        // var_dump(substr($filepecah[3], 7,2));
+      }
       $name = Auth::user()->name;
 
       $push_pull = RcPushPullLog::get();
@@ -741,17 +755,20 @@ class RecorderProcessController extends Controller
           $plc = new ActMLEasyIf(2);
           $counter_push_pull = $plc->read_data('D275', 1);
           $value_push_pull = $plc->read_data('D250', 1);
+          
+          $data = $counter_push_pull[0];
+          $datavalue = $value_push_pull[0] / 120;
+
           $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
         // }
-        $data = $counter_push_pull[0];
-        $datavalue = $value_push_pull[0] / 120;
+        
         // $datavalue = '2.9';
-        // $data = 2;
+        // $data = 3;
         // var_dump($counter_push_pull);
         // var_dump($value_push_pull);
 
 
-        if($plc_counter->plc_counter != $counter_push_pull[0]){
+        if($plc_counter->plc_counter != $data){
 
           // if(Auth::user()->role_code == "OP-PushPull-RC"){
 
@@ -781,17 +798,26 @@ class RecorderProcessController extends Controller
               $judgement = 'OK';
             }
 
-            $push_pull = RcPushPullLog::create(
-              [
-                'model' => $request->get('model'),
-                'check_date' => $request->get('check_date'),
-                'value_check' => $datavalue,
-                // 'value_check' => '2.9',
-                'judgement' => $judgement,
-                'pic_check' => $request->get('pic_check'),
-                'created_by' => $id,
-              ]
-            );
+            if ($request->get('check_date') == $this->checked_at_time) {
+              $array_push_pull[] = $datavalue;
+              $this->checked_at_time = $request->get('check_date');
+            }
+            else{
+              $datavalue = max($array_push_pull);
+              $push_pull = RcPushPullLog::create(
+                [
+                  'model' => $request->get('model'),
+                  'check_date' => $request->get('check_date'),
+                  'value_check' => $datavalue,
+                  // 'value_check' => '2.9',
+                  'judgement' => $judgement,
+                  'pic_check' => $request->get('pic_check'),
+                  'created_by' => $id,
+                ]
+              );  
+            }
+
+            
 
             try{
                 $plc_counter->save();
@@ -813,8 +839,8 @@ class RecorderProcessController extends Controller
               'counter' => $data,
               'value' => $datavalue,
               'judgement' => $judgement,
-              'counter_all' => $counter_push_pull,
-              'value_all' => $value_push_pull
+              // 'counter_all' => $counter_push_pull,
+              // 'value_all' => $value_push_pull
 
             );
             return Response::json($response);
@@ -848,16 +874,27 @@ class RecorderProcessController extends Controller
         //   $plc2 = new ActMLEasyIf(2);
         //   $datas2 = $plc2->read_data('D0', 1);
         $plc_counter = PlcCounter::where('origin_group_code', '=', '072_2')->first();
-        $plc_counter2 = PlcCounter::where('origin_group_code', '=', '072_3')->first();
+        // $plc_counter2 = PlcCounter::where('origin_group_code', '=', '072_3')->first();
         // }
         // $data = $datas[0];
         // $data2 = $datas2[0];
-        $data = 1;
-        $data2 = 1;
+        $filenamefix = '';
+        foreach (glob(public_path('RCImages/Cam1/*.txt')) as $filename) {
+            // echo "$filename size " . filesize($filename) . "\n";
+          // var_dump();
+          $data = substr($filename,-9,5);
+          $filenamefix = $filename;
+          // File::delete($filename);
+        }
+        // $data2 = 1;
 
         //MIDDLE
         if($plc_counter->plc_counter != $data){
 
+          $file = File::get($filenamefix);
+          $filepecah = explode(' ', $file);
+          // var_dump($filepecah[3]);
+          $judgement = substr($filepecah[3], 7,2);
           // if(Auth::user()->role_code == "OP-PushPull-RC"){
 
             $id = Auth::id();
@@ -865,9 +902,9 @@ class RecorderProcessController extends Controller
             $plc_counter->plc_counter = $data;
 
             // if ($request->get('value_check') < 3 || $request->get('value_check') > 17) {
-              $judgement = 'NG';
+              // $judgement = 'NG';
               $data_push_pull = array(
-                  'value' => 'B',
+                  'value' => $request->get('value_check'),
                   'judgement' => $judgement,
                   'checked_at' => $request->get('check_date'),
                   'model' => $request->get('model'),
@@ -890,15 +927,17 @@ class RecorderProcessController extends Controller
                 'model' => $request->get('model'),
                 'check_date' => $request->get('check_date'),
                 // 'value_check' => $request->get('value_check'),
-                'value_check' => 'B',
+                'value_check' => $request->get('value_check'),
                 'judgement' => $judgement,
                 'remark' => 'Middle',
+                'file' => 'RC_'.$data.'.bmp',
                 'pic_check' => $request->get('pic_check'),
                 'created_by' => $id,
               ]
             );
 
             try{
+                File::delete(glob(public_path('RCImages/Cam1/*.txt')));
                 $plc_counter->save();
                 $camera->save();
             }
@@ -914,29 +953,85 @@ class RecorderProcessController extends Controller
               'status' => true,
               'statusCode' => 'camera',
               'message' => 'Push Pull success',
-              'data' => $plc_counter->plc_counter
+              'data' => $plc_counter->plc_counter,
+              'judgement' => $judgement
             );
             return Response::json($response);
           // }
         }
+        else{
+          $response = array(
+            'status' => true,
+            'statusCode' => 'noData',
+            'data' => $data,
+            'plc' => $plc_counter->plc_counter,
+            'filename' => $filenamefix
+          );
+          return Response::json($response);
+        }
+      }
+      catch (\Exception $e){
+        $response = array(
+          'status' => false,
+          'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function store_camera2(Request $request)
+    {
+      try{
+        // if ($request->get('originGroupCode') =='072') {
+        //   $plc = new ActMLEasyIf(2);
+        //   $datas = $plc->read_data('D0', 1);
+        //   $plc2 = new ActMLEasyIf(2);
+        //   $datas2 = $plc2->read_data('D0', 1);
+        $plc_counter = PlcCounter::where('origin_group_code', '=', '072_3')->first();
+        // $plc_counter2 = PlcCounter::where('origin_group_code', '=', '072_3')->first();
+        // }
+        // $data = $datas[0];
+        // $data2 = $datas2[0];
+        $filenamefix = '';
+        foreach (glob(public_path('RCImages/Cam2/*.txt')) as $filename) {
+            // echo "$filename size " . filesize($filename) . "\n";
+          // var_dump();
+          $data = substr($filename,-9,5);
+          $filenamefix = $filename;
+          // File::delete($filename);
+        }
+
+        // $filenamefix2 = '';
+        // foreach (glob(public_path('RCImages/Cam2/*.txt')) as $filename2) {
+        //     // echo "$filename size " . filesize($filename) . "\n";
+        //   // var_dump();
+        //   $data2 = substr($filename2,-9,5);
+        //   $filenamefix2 = $filename2;
+        //   // File::delete($filename);
+        // }
+        // $data2 = 1;
 
         //STAMP
-        else if($plc_counter2->plc_counter != $data2){
+        if($plc_counter->plc_counter != $data){
 
+          $file = File::get($filenamefix);
+          $filepecah = explode(' ', $file);
+          // var_dump($filepecah[3]);
+          $judgement = substr($filepecah[3], 7,2);
           // if(Auth::user()->role_code == "OP-PushPull-RC"){
 
             $id = Auth::id();
 
-            $plc_counter2->plc_counter = $data2;
+            $plc_counter->plc_counter = $data;
 
             // if ($request->get('value_check') < 3 || $request->get('value_check') > 17) {
-              $judgement = 'NG';
+              // $judgement = 'NG';
               $data_push_pull = array(
-                  'value' => 'B',
+                  'value' => $request->get('value_check'),
                   'judgement' => $judgement,
                   'checked_at' => $request->get('check_date'),
                   'model' => $request->get('model'),
-                  'remark' => 'Stamp',
+                  'remark' => 'Stamp Camera Check RC Assy',
                   'pic_check' => $request->get('pic_check'), );
               // var_dump($data_push_pull);
               // foreach ($data_push_pull as $key) {
@@ -950,22 +1045,24 @@ class RecorderProcessController extends Controller
               // $judgement = 'OK';
             // }
 
-            $camera2 = RcCameraKangoLog::create(
+            $camera = RcCameraKangoLog::create(
               [
                 'model' => $request->get('model'),
                 'check_date' => $request->get('check_date'),
                 // 'value_check' => $request->get('value_check'),
-                'value_check' => 'B',
+                'value_check' => $request->get('value_check'),
                 'judgement' => $judgement,
-                'remark' => 'Stamp Camera Check RC Assy',
+                'remark' => 'Stamp',
+                'file' => 'RC_'.$data.'.bmp',
                 'pic_check' => $request->get('pic_check'),
                 'created_by' => $id,
               ]
             );
 
             try{
-                $plc_counter2->save();
-                $camera2->save();
+                File::delete(glob(public_path('RCImages/Cam2/*.txt')));
+                $plc_counter->save();
+                $camera->save();
             }
             catch(\Exception $e){
               $response = array(
@@ -977,9 +1074,10 @@ class RecorderProcessController extends Controller
 
             $response = array(
               'status' => true,
-              'statusCode' => 'camera2',
+              'statusCode' => 'camera',
               'message' => 'Push Pull success',
-              'data' => $plc_counter2->plc_counter
+              'data' => $plc_counter->plc_counter,
+              'judgement' => $judgement
             );
             return Response::json($response);
           // }
@@ -988,6 +1086,9 @@ class RecorderProcessController extends Controller
           $response = array(
             'status' => true,
             'statusCode' => 'noData',
+            'data' => $data,
+            'plc' => $plc_counter->plc_counter,
+            'filename' => $filenamefix
           );
           return Response::json($response);
         }

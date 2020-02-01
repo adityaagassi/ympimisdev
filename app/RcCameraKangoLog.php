@@ -10,7 +10,7 @@ class RcCameraKangoLog extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'model','check_date','value_check','judgement','remark','pic_check','created_by'
+		'model','check_date','value_check','judgement','remark','file','pic_check','created_by'
 	];
 
     public function user()
