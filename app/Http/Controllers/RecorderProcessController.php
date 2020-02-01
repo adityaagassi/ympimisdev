@@ -48,7 +48,7 @@ class RecorderProcessController extends Controller
                     'aditya.agassi@music.yamaha.com',
                     'takashi.ohkubo@music.yamaha.com',
                     'eko.prasetyo.wicaksono@music.yamaha.com'];
-      $this->array_push_pull = [];
+      // $this->array_push_pull = [];
       $this->checked_at_time = date('Y-m-d H:i:s');
     }
 
@@ -798,12 +798,12 @@ class RecorderProcessController extends Controller
               $judgement = 'OK';
             }
 
-            if ($request->get('check_date') == $this->checked_at_time) {
-              $this->array_push_pull[] = $datavalue;
-              $this->checked_at_time = $request->get('check_date');
-            }
-            else{
-              $datavalue = max($this->array_push_pull);
+            // if ($request->get('check_date') == $this->checked_at_time) {
+            //   $array_push_pull[] = $datavalue;
+            //   $this->checked_at_time = $request->get('check_date');
+            // }
+            // else{
+            //   $datavalue = max($array_push_pull);
               $push_pull = RcPushPullLog::create(
                 [
                   'model' => $request->get('model'),
@@ -815,7 +815,7 @@ class RecorderProcessController extends Controller
                   'created_by' => $id,
                 ]
               );  
-            }
+            // }
 
             
 
