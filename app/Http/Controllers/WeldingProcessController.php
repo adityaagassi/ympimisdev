@@ -594,7 +594,8 @@ class WeldingProcessController extends Controller
 				->where('flow_id', '=', '3')
 				->update([
 					'order_start_sedang_date' => $request->get('started_at'),
-					'order_sedang_finish_date' => date('Y-m-d H:is')
+					'order_sedang_finish_date' => date('Y-m-d H:is'),
+					'order_status' => '6'
 				]);
 
 				$t_order = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
