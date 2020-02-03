@@ -410,6 +410,158 @@
 	</div>
 </div>
 
+{{-- Modal Edit --}}
+<div class="modal modal-default fade" id="modal-edit">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="col-xs-12" style="background-color: #e08e0b;">
+					<h1 style="text-align: center; margin:5px; font-weight: bold;">Edit WJO</h1>
+				</div>
+			</div>
+			<div class="modal-body" style="padding-top: 0px;">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box-body" style="padding-left: 0px;">
+							<form id="edit" method="post" enctype="multipart/form-data" autocomplete="off">
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab_1">
+										<div class="row">
+											<div class="col-xs-6">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="edit_priority" readonly>
+													</div>
+												</div>
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Order No.</label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" name="edit_order_no" id="edit_order_no" readonly>
+													</div>
+												</div>
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Dept.</label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="edit_department" readonly>
+													</div>
+												</div>
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Bagian</label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" id="edit_bagian" readonly>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-6">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Tipe Pekerjaan<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" name="edit_type" id="edit_type" readonly>
+													</div>
+												</div>
+
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Nama Barang<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" name="edit_item_name" id="edit_item_name" required>
+													</div>
+												</div>
+
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Jumlah<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" name="edit_quantity" id="edit_quantity" required>
+													</div>
+												</div>
+
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Material<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" name="edit_material" id="edit_material" required>
+													</div>
+												</div>
+
+
+											</div>
+											<div class="col-xs-12">
+												<div class="form-group row" align="right">
+													<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
+													<div class="col-xs-10" align="left">
+														<textarea class="form-control" name="edit_problem_desc" id="edit_problem_desc" rows="3" required></textarea>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-6" style="margin-top: 5%;">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Target Selesai<span class="text-red">*</span></label>
+													<div class="col-xs-8">
+														<div class="input-group date">
+															<div class="input-group-addon bg-default">
+																<i class="fa fa-calendar"></i>
+															</div>
+															<input type="text" class="form-control datepicker" name="edit_target_date" id="edit_target_date" placeholder="Pilih Tanggal">
+														</div>
+													</div>
+												</div>
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<select class="form-control select2" data-placeholder="Pilih Kesulitan" name="edit_difficulty" id="edit_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
+															<option value=""></option>
+															<option value="Biasa">Biasa</option>
+															<option value="Sulit">Sulit</option>
+															<option value="Sangat Sulit">Sangat Sulit</option>
+															<option value="Spesial">Spesial</option>
+															<option value="Sangat Spesial">Sangat Spesial</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-6" style="margin-top: 5%;">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<select class="form-control select2" data-placeholder="Pilih Kategori" name="edit_category" id="edit_category" style="width: 100% height: 35px; font-size: 15px;" required>
+															<option value=""></option>
+															<option value="Molding">Molding</option>
+															<option value="Jig">Jig</option>
+															<option value="Equipment">Equipment</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-6">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<select class="form-control select2" data-placeholder="Pilih Operator" name="edit_pic" id="edit_pic" style="width: 100% height: 35px; font-size: 15px;" required>
+															<option value=""></option>
+															@foreach($operators as $operator)
+															<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>
+															@endforeach
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-12">
+												<br>
+												<button class="btn btn-success pull-right" type="submit"><i class="fa fa-save"></i> Save</button>
+											</div>
+										</div>	
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 {{-- Modal Asssignment --}}
 <div class="modal modal-default fade" id="modal-assignment">
 	<div class="modal-dialog modal-lg">
@@ -441,7 +593,7 @@
 								</div>
 
 								<div id="assign_body" style="padding: 2%;">
-									<div class="nav-tabs-custom tab-danger">
+									<div class="nav-tabs-custom tab-primary">
 										<ul class="nav nav-tabs">
 											<li id="vendor-tab-1" class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">WJO Data</a></li>
 											<li id="vendor-tab-2" class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Flow Processes</a></li>
@@ -1093,7 +1245,12 @@
 					var assign = '';
 					if(result.tableData[i].process_name == 'Listed'){
 						assign = ' onclick="showAssignment(\''+result.tableData[i].order_no+'\')"';
+					}else if(result.tableData[i].process_name == 'Approved'){
+						assign = ' onclick="showEdit(\''+result.tableData[i].order_no+'\')"';
+					}else if(result.tableData[i].process_name == 'InProgress'){
+						assign = ' onclick="showEdit(\''+result.tableData[i].order_no+'\')"';
 					}
+
 
 					tableData += '<tr>';
 					tableData += '<td'+ assign +'>'+ result.tableData[i].order_no +'</td>';
@@ -1362,6 +1519,75 @@ function showAssignment(order_no) {
 
 
 			$("#modal-assignment").modal('show');
+
+		}
+	});
+}
+
+$("form#edit").submit(function(e) {
+	$("#loading").show();		
+
+	e.preventDefault();    
+	var formData = new FormData(this);
+
+	$.ajax({
+		url: '{{ url("edit/workshop/wjo") }}',
+		type: 'POST',
+		data: formData,
+		success: function (result, status, xhr) {
+			$("#edit_target_date").val("");
+			$('#edit_pic').prop('selectedIndex', 0).change();
+			$('#edit_difficulty').prop('selectedIndex', 0).change();
+			$('#edit_category').prop('selectedIndex', 0).change();
+
+			fillTable();
+			$("#loading").hide();
+			$("#modal-edit").modal('hide');
+			openSuccessGritter('Success', result.message);
+		},
+		error: function(result, status, xhr){
+			$("#edit_target_date").val("");
+			$('#edit_pic').prop('selectedIndex', 0).change();
+			$('#edit_difficulty').prop('selectedIndex', 0).change();
+			$('#edit_category').prop('selectedIndex', 0).change();
+
+			fillTable();
+			$("#loading").hide();
+			$("#modal-edit").modal('hide');
+			openErrorGritter('Error!', result.message);
+		},
+		cache: false,
+		contentType: false,
+		processData: false
+	});
+});
+
+function showEdit(order_no) {
+	var data = {
+		order_no:order_no
+	}
+	$.get('{{ url("fetch/workshop/assign_form") }}', data, function(result, status, xhr){
+		if(result.status){
+
+			document.getElementById("edit_target_date").value = result.wjo.target_date;
+			var group = result.wjo.sub_section.split("_");
+			document.getElementById("edit_order_no").value = result.wjo.order_no;
+			document.getElementById("edit_bagian").value = group[1];
+			document.getElementById("edit_department").value = group[0];
+			document.getElementById("edit_priority").value = result.wjo.priority;
+			document.getElementById("edit_type").value = result.wjo.type;
+			document.getElementById("edit_item_name").value = result.wjo.item_name;
+			document.getElementById("edit_quantity").value = result.wjo.quantity;
+			document.getElementById("edit_material").value = result.wjo.material;
+			document.getElementById("edit_problem_desc").value = result.wjo.problem_description;
+
+			$("#edit_category").val(result.wjo.category).trigger('change.select2');
+			$("#edit_difficulty").val(result.wjo.difficulty).trigger('change.select2');
+			$("#edit_pic").val(result.wjo.operator).trigger('change.select2');
+
+
+
+			$("#modal-edit").modal('show');
 
 		}
 	});

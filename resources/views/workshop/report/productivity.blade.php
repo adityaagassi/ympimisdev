@@ -197,7 +197,7 @@
 				var machine_name = [];
 				var time = [];
 				for (var i = 0; i < result.machines.length; i++) {
-					machine_name.push(result.machines[i].machine_name);
+					machine_name.push(result.machines[i].shortname);
 					time.push(parseInt(result.machines[i].time));
 				}
 
@@ -230,6 +230,7 @@
 						title: {
 							text: 'Minute(s)'
 						},
+						type: 'logarithmic',						
 					},
 					plotOptions: {
 						series:{
@@ -313,8 +314,26 @@
 					},
 					yAxis: {
 						title: {
-							text: 'Minute(s)'
+							text: 'Minutes(s)'
 						},
+						plotLines: [{
+							color: '#FF0000',
+							value: 460,
+							dashStyle: 'shortdash',
+							width: 2,
+							zIndex: 5,
+							label: {
+								align:'right',
+								text: 'Target 460 Minutes',
+								x:-7,
+								style: {
+									fontSize: '12px',
+									color: '#FF0000',
+									fontWeight: 'bold'
+								}
+							}
+						}],
+						max: 500
 					},
 					plotOptions: {
 						series:{

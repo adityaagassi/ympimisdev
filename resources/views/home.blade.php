@@ -376,7 +376,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/workshop/workload") }}">
-                                <i class="fa fa-caret-right"></i> Workshop Operator Workload ()
+                                <i class="fa fa-caret-right"></i> Workshop Workload ()
                             </a>
                             <br>
                         </td>                        

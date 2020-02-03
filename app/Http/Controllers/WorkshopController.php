@@ -73,8 +73,8 @@ class WorkshopController extends Controller{
 	}
 
 	public function indexWorkload(){
-		$title = 'Workshop Operator Workload';
-		$title_jp = '';
+		$title = 'Workshop Workload';
+		$title_jp = '??';
 
 		return view('workshop.report.workload', array(
 			'title' => $title,
@@ -1002,6 +1002,47 @@ class WorkshopController extends Controller{
 		}
 	}
 
+	public function editLeaderWJO(Request $request){
+		$order_no = $request->get('edit_order_no');
+		$item_name = $request->get('edit_item_name');
+		$quantity = $request->get('edit_quantity');
+		$material = $request->get('edit_material');
+		$problem_description = $request->get('edit_problem_desc');
+
+		$target_date = $request->get('edit_target_date');
+		$category = $request->get('edit_category');
+		$pic = $request->get('edit_pic');
+		$difficulty = $request->get('edit_difficulty');
+
+		$wjo = WorkshopJobOrder::where('order_no', '=', $order_no)->first();
+		$wjo->item_name = $item_name;
+		$wjo->quantity = $quantity;
+		$wjo->material = $material;
+		$wjo->problem_description = $problem_description;
+		$wjo->target_date = $target_date;
+		$wjo->category = $category;
+		$wjo->operator = $pic;
+		$wjo->difficulty = $difficulty;
+		
+		try{
+			DB::transaction(function() use ($wjo){
+				$wjo->save();
+			});
+
+			$response = array(
+				'status' => true,
+				'message' => 'Penugasan WJO berhasil',
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function rejectWJO(Request $request){
 
 		$reject_reason = $request->get('reason');
@@ -1114,6 +1155,57 @@ class WorkshopController extends Controller{
 	}
 
 	public function fetchWorkload(){
+
+		$op = db::select('select op.operator_id, concat(SPLIT_STRING(emp.`name`, " ", 1), " ", SPLIT_STRING(emp.`name`, " ", 2)) as name from workshop_operators op
+			left join employee_syncs emp
+			on emp.employee_id = op.operator_id');
+
+		$op_workload = db::select('select wjo.operator, sum(round((workload.workload/60), 0)) as workload from
+			(select workload.order_no, sum(workload.workload) workload from
+			(select flow.order_no, sum(std_time) as workload from workshop_flow_processes flow
+			left join workshop_job_orders wjo on wjo.order_no = flow.order_no
+			where wjo.remark < 4
+			group by flow.order_no
+			union all
+			select log.order_no, -sum(TIMESTAMPDIFF(second,log.started_at,log.created_at)) as workload from workshop_logs log
+			left join workshop_job_orders wjo on wjo.order_no = log.order_no
+			where wjo.remark < 4
+			group by log.order_no) as workload
+			group by workload.order_no) workload
+			left join workshop_job_orders wjo
+			on wjo.order_no = workload.order_no
+			GROUP BY wjo.operator
+			having workload > 0');
+
+		$machine = db::select('SELECT machine_name, shortname FROM workshop_processes
+			where category = "MACHINE"
+			order by shortname asc');
+
+		$mc_workload = db::select("select process.machine_name, round((workload.workload/60), 0) as workload from
+			(select workload.machine_code, sum(workload.workload) workload from
+			(select flow.machine_code, sum(std_time) as workload from workshop_flow_processes flow
+			left join workshop_job_orders wjo on wjo.order_no = flow.order_no
+			where wjo.remark < 4
+			group by flow.machine_code
+			union all
+			select log.machine_code, -sum(TIMESTAMPDIFF(second,log.started_at,log.created_at)) as workload from workshop_logs log
+			left join workshop_job_orders wjo on wjo.order_no = log.order_no
+			where wjo.remark < 4
+			group by log.machine_code) as workload
+			group by workload.machine_code
+			having workload > 0) workload
+			left join workshop_processes process
+			on process.machine_code = workload.machine_code
+			where process.category = 'MACHINE'");
+
+		$response = array(
+			'status' => true,
+			'op' => $op,
+			'op_workload' => $op_workload,
+			'machine' => $machine,
+			'mc_workload' => $mc_workload,
+		);
+		return Response::json($response);
 
 	}
 
@@ -1368,14 +1460,15 @@ class WorkshopController extends Controller{
 		}
 
 
-		$machine = db::select("select m.machine_name, COALESCE(CEILING(t.time/60),0) as time from workshop_processes m
+		$machine = db::select("select m.shortname, COALESCE(CEILING(t.time/60),0) as time from workshop_processes m
 			left join
-			(select p.machine_name, sum(timestampdiff(SECOND, l.started_at, l.created_at)) as time from workshop_logs l
+			(select p.shortname, sum(timestampdiff(SECOND, l.started_at, l.created_at)) as time from workshop_logs l
 			left join workshop_processes p on p.machine_code = l.machine_code
 			where date(l.started_at) = '".$date."'
-			group by p.machine_name) t
-			on m.machine_name = t.machine_name
-			order by time desc, machine_name asc");
+			group by p.shortname) t
+			on m.shortname = t.shortname
+			where m.category = 'MACHINE'
+			order by shortname asc");
 
 		$operator = db::select("select operator.`name`, COALESCE(CEILING(time.time/60),0) as time from
 			(select op.operator_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from workshop_operators op
