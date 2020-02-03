@@ -844,6 +844,12 @@ Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 });
 Route::get('index/welding/display_production_result', 'WeldingProcessController@indexDisplayProductionResult');
 Route::get('fetch/welding/display_production_result', 'WeldingProcessController@fetchDisplayProductionResult');
+Route::get('index/welding/report_ng', 'WeldingProcessController@indexReportNG');
+Route::get('fetch/welding/report_ng', 'WeldingProcessController@fetchReportNG');
+Route::get('index/welding/report_hourly', 'WeldingProcessController@indexReportHourly');
+Route::get('fetch/welding/report_hourly', 'WeldingProcessController@fetchReportHourly');
+Route::get('index/welding/ng_rate', 'WeldingProcessController@indexNgRate');
+Route::get('fetch/welding/ng_rate', 'WeldingProcessController@fetchNgRate');
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
 Route::get('scan/welding/operator', 'WeldingProcessController@scanWeldingOperator');
 Route::get('scan/welding/kensa', 'WeldingProcessController@scanWeldingKensa');
@@ -929,6 +935,9 @@ Route::group(['nav' => 'S31', 'middleware' => 'permission'], function(){
 
 Route::get('index/workshop/workload', 'WorkshopController@indexWorkload');
 Route::get('fetch/workshop/workload', 'WorkshopController@fetchWorkload');
+Route::get('fetch/workshop/workload_operator_detail', 'WorkshopController@fetchWorkloadOperatorDetail');
+
+
 Route::get('fetch/workshop/machine', 'WorkshopController@scanMachine');
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');

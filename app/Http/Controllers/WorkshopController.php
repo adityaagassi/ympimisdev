@@ -1209,6 +1209,42 @@ class WorkshopController extends Controller{
 
 	}
 
+	public function fetchWorkloadOperatorDetail(Request $request){
+		$name = $request->get('name');
+
+		$detail = db::select("select concat(SPLIT_STRING(emp.`name`, ' ', 1),' ',SPLIT_STRING(emp.`name`, ' ', 2)) as `name`, workload.order_no, tag.remark as tag_number, wjo.item_name, workload.workload from
+			(select wjo.operator, workload.order_no, round((workload.workload/60), 0) as workload from
+			(select workload.order_no, sum(workload.workload) workload from
+			(select flow.order_no, sum(std_time) as workload from workshop_flow_processes flow
+			left join workshop_job_orders wjo on wjo.order_no = flow.order_no
+			where wjo.remark < 4
+			group by flow.order_no
+			union all
+			select log.order_no, -sum(TIMESTAMPDIFF(second,log.started_at,log.created_at)) as workload from workshop_logs log
+			left join workshop_job_orders wjo on wjo.order_no = log.order_no
+			where wjo.remark < 4
+			group by log.order_no) as workload
+			group by workload.order_no) workload
+			left join workshop_job_orders wjo
+			on wjo.order_no = workload.order_no
+			having workload > 0) workload
+			left join employee_syncs emp
+			on emp.employee_id = workload.operator
+			left join workshop_job_orders wjo
+			on wjo.order_no = workload.order_no
+			left join workshop_tag_availabilities tag
+			on tag.tag = wjo.tag
+			where emp.`name` like '%".$name."%'
+			and emp.`group` = 'Workshop'");
+
+		$response = array(
+			'status' => true,
+			'detail' => $detail
+		);
+		return Response::json($response);
+		
+	}
+
 	public function fetchDrawing(){
 		$drawing = WorkshopMaterial::leftJOin('users', 'users.id', '=', 'workshop_materials.created_by')
 		->where('workshop_materials.remark', 'drawing')
