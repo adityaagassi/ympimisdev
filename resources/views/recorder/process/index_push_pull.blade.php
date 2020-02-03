@@ -147,6 +147,9 @@
 							</div>
 							<span style="font-size: 20px; font-weight: bold;"><center>COLOR :</center></span>
 							<input type="text" name="color_push_pull" id="color_push_pull" class="form-control" value="YRS" required="required" pattern="" title="" style="width: 100%;height: 60px;background-color: #ffd0b0;font-size: 3vw;text-align: center;font-weight:bold;color: #163756;border: 1px solid black" disabled>
+							<span style="font-size: 20px; font-weight: bold;"><center>Jenis Middle:</center></span>
+							<input type="text" name="middle_type3" id="middle_type3" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 80px;background-color: #e7ff8c;font-size: 5vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
+							<input type="text" name="middle_type_desc3" id="middle_type_desc3" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 40px;background-color: #e7ff8c;font-size: 2vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
 							<!-- <div class="row" style="padding-top: 20px">
 								<div class="col-xs-12">
 									<span style="font-size: 20px; font-weight: bold;"><center>Result:</center></span>
@@ -307,6 +310,8 @@
 		$('#middle_type_desc2').html(value);
 		$('#middle_type').val(id);
 		$('#middle_type_desc').val(value);
+		$('#middle_type3').val(id);
+		$('#middle_type_desc3').val(value);
 	}
 
 	function changeMiddle() {
