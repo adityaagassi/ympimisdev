@@ -589,7 +589,7 @@ class WeldingProcessController extends Controller
 				->where('part_id', '=', $m_hsa_kartu->hsa_id)
 				->first();
 
-				$t_order_detail = db::conenction('welding')->table('t_order_detail')
+				$t_order_detail = db::connection('welding')->table('t_order_detail')
 				->where('order_id', '=', $order_id->order_id)
 				->where('flow_id', '=', '3')
 				->update([
