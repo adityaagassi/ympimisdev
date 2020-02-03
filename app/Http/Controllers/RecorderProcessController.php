@@ -760,17 +760,22 @@ class RecorderProcessController extends Controller
           $datavalue = $value_push_pull[0] / 120;
 
           $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
+          $pushpull = RcPushPullLog::orderBy('rc_push_pull_logs.id','DESC')->first();
+          // var_dump($pushpull);
+          // foreach ($pushpull as $pushpull) {
+            $valuebefore = $pushpull->value_check;
+          // }
         // }
         
-        // $datavalue = '2.8';
-        // $data = 8;
+        // $datavalue = '2.9';
+        // $data = 11;
         // var_dump($counter_push_pull);
         // var_dump($value_push_pull);
 
 
         if($plc_counter->plc_counter != $data){
 
-          // if(Auth::user()->role_code == "OP-PushPull-RC"){
+          if(Auth::user()->role_code == "OP-Assy-RC"){
 
           if ($datavalue > 0) {
             $id = Auth::id();
@@ -804,17 +809,19 @@ class RecorderProcessController extends Controller
             // }
             // else{
             //   $datavalue = max($array_push_pull);
-              $push_pull = RcPushPullLog::create(
-                [
-                  'model' => $request->get('model'),
-                  'check_date' => $request->get('check_date'),
-                  'value_check' => $datavalue,
-                  // 'value_check' => '2.9',
-                  'judgement' => $judgement,
-                  'pic_check' => $request->get('pic_check'),
-                  'created_by' => $id,
-                ]
-              );  
+              if ($valuebefore != $datavalue) {
+                $push_pull = RcPushPullLog::create(
+                  [
+                    'model' => $request->get('model'),
+                    'check_date' => $request->get('check_date'),
+                    'value_check' => $datavalue,
+                    // 'value_check' => '2.9',
+                    'judgement' => $judgement,
+                    'pic_check' => $request->get('pic_check'),
+                    'created_by' => $id,
+                  ]
+                );
+              }
             // }
 
             
@@ -839,6 +846,7 @@ class RecorderProcessController extends Controller
               'counter' => $data,
               'value' => $datavalue,
               'judgement' => $judgement,
+              'valuebefore' => $valuebefore
               // 'counter_all' => $counter_push_pull,
               // 'value_all' => $value_push_pull
 
@@ -846,7 +854,7 @@ class RecorderProcessController extends Controller
             return Response::json($response);
           }
             
-          // }
+          }
         }
         else{
           $response = array(
@@ -895,7 +903,7 @@ class RecorderProcessController extends Controller
           $filepecah = explode(' ', $file);
           // var_dump($filepecah[3]);
           $judgement = substr($filepecah[3], 7,2);
-          // if(Auth::user()->role_code == "OP-PushPull-RC"){
+          if(Auth::user()->role_code == "OP-Assy-RC"){
 
             $id = Auth::id();
 
@@ -957,7 +965,7 @@ class RecorderProcessController extends Controller
               'judgement' => $judgement
             );
             return Response::json($response);
-          // }
+          }
         }
         else{
           $response = array(
@@ -1018,7 +1026,7 @@ class RecorderProcessController extends Controller
           $filepecah = explode(' ', $file);
           // var_dump($filepecah[3]);
           $judgement = substr($filepecah[3], 7,2);
-          // if(Auth::user()->role_code == "OP-PushPull-RC"){
+          if(Auth::user()->role_code == "OP-Assy-RC"){
 
             $id = Auth::id();
 
@@ -1080,7 +1088,7 @@ class RecorderProcessController extends Controller
               'judgement' => $judgement
             );
             return Response::json($response);
-          // }
+          }
         }
         else{
           $response = array(
