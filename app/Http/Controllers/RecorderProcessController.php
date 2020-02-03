@@ -765,7 +765,11 @@ class RecorderProcessController extends Controller
           $pushpull = RcPushPullLog::orderBy('rc_push_pull_logs.id','DESC')->first();
           // var_dump($pushpull);
           // foreach ($pushpull as $pushpull) {
-            $valuebefore = $pushpull->value_check;
+            if (count($pushpull) == 0) {
+              $valuebefore = 0;
+            }else{
+              $valuebefore = $pushpull->value_check;
+            }
           // }
         // }
         
