@@ -716,6 +716,7 @@ table > thead > tr > th{
       departemen: departemen,
       status:status
     }
+
     $.get('{{ url("index/qc_report/fetchtable") }}', data, function(result, status, xhr){
       if(xhr.status == 200){
         if(result.status){
@@ -774,7 +775,9 @@ table > thead > tr > th{
             var urldetailcar = '{{ url("index/qc_car/detail/") }}';
             var urlverifikasicar = '{{ url("index/qc_car/verifikasicar/") }}';
             var urlprintcar = '{{ url("index/qc_car/print_car_new/") }}';
+            var urlverifikasigmcar = '{{ url("index/qc_car/verifikasigm/") }}';
             var urlverifikasiqa = '{{ url("index/qc_report/verifikasiqa/") }}';
+
 
             if (value.posisi_cpar != "staff" && value.posisi_cpar != "leader") {
               // statusawal = '<img src="{{ url("ok.png")}}" width="40" height="40"';
@@ -1078,7 +1081,7 @@ table > thead > tr > th{
               if (value.approved_gm_car == "Checked") {
                   if (value.posisi_car == "gm") {
                       if (d == 0) {  
-                        statusgmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namagm+'</span></a>';
+                        statusgmcar = '<a href="'+urlverifikasigmcar+'/'+value.id_car+'"><span class="label label-danger">'+namagm+'</span></a>';
                         color = 'style="background-color:red"';
                         // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                         d = 1;
@@ -1094,7 +1097,7 @@ table > thead > tr > th{
               }
               else{
                 if (d == 0) {  
-                  statusgmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namagm+'</span></a>';
+                  statusgmcar = '<a href="'+urlverifikasigmcar+'/'+value.id_car+'"><span class="label label-danger">'+namagm+'</span></a>';
                   color = 'style="background-color:red"';
                   // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                   d = 1;

@@ -17,6 +17,7 @@ use App\Department;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use File;
+use App\QcTtdCoba;
 
 class QcCarController extends Controller
 {
@@ -305,9 +306,17 @@ class QcCarController extends Controller
          ->where('qc_verifikasis.cpar_no','=',$car->cpar_no)
          ->get(); 
 
+      // $carttds = QcCar::select('qc_cars.*','qc_ttd_cobas.ttd_car')
+      //       ->leftjoin('qc_ttd_cobas','qc_cars.cpar_no','=','qc_ttd_cobas.cpar_no')
+      //       ->where('qc_cars.id','=',$id)
+      //       ->get();
+
+      $carttds = DB::SELECT("select * from qc_cars left join qc_ttd_cobas on qc_cars.cpar_no = qc_ttd_cobas.cpar_no where qc_cars.id='".$id."'");
+
        return view('qc_car.print2_car', array(
           'cars' => $cars,
-          'verifikasi' => $verifikasi
+          'verifikasi' => $verifikasi,
+          'carss' =>  $carttds
         ))->with('page', 'CAR');
       
       return $pdf->stream("CAR ".$id. ".pdf");
@@ -363,7 +372,6 @@ class QcCarController extends Controller
             }
 
             $cars->email_send_date = date('Y-m-d');
-
 
             if($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") {
               $cars->email_status = "SentStaff";            
@@ -696,7 +704,7 @@ class QcCarController extends Controller
                   $mailtoo2 = $mail->email;
                 }
 
-                $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+                $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
                   $cars2 = db::select($query2);
 
@@ -772,7 +780,7 @@ class QcCarController extends Controller
                     $mailtoo2 = $mail->email;
                   }
 
-                $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+                $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain , employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
                   $cars2 = db::select($query2);
 
@@ -836,7 +844,7 @@ class QcCarController extends Controller
       public function checked(Request $request,$id)
       {
 
-          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+          $query = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain , employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
           $emailcar = db::select($query);
 
@@ -1003,4 +1011,127 @@ class QcCarController extends Controller
         return Response::json($response);
       }
     }
+
+
+    // Sign Online
+      public function verifikasigm($id){
+
+          $car = QcCar::find($id);
+
+          $cars = QcCar::select('qc_cars.*','qc_cpars.kategori','mutation_logs.section','qc_cpars.lokasi','qc_cpars.tgl_permintaan','qc_cpars.tgl_balas','qc_cpars.sumber_komplain','departments.department_name','pic.name as picname','manager.name as managername','dgm.name as dgmname','gm.name as gmname','statuses.status_name','chief.name as chiefname','foreman.name as foremanname','coordinator.name as coordinatorname','qc_cpars.posisi as posisi_cpar','staffqa.name as staffqaname','leaderqa.name as leaderqaname','chiefqa.name as chiefqaname','foremanqa.name as foremanqaname','managerqa.name as managerqaname','qc_cpars.staff','qc_cpars.leader')
+          ->join('qc_cpars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
+          ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+          ->join('qc_verifikators','qc_cpars.department_id','=','qc_verifikators.department_id')
+          ->join('departments','qc_verifikators.department_id','=','departments.id')
+          ->join('mutation_logs','qc_cpars.employee_id','=','mutation_logs.employee_id')
+          ->leftjoin('employees as chief','qc_verifikators.verifikatorchief','=','chief.employee_id')
+          ->leftjoin('employees as foreman','qc_verifikators.verifikatorforeman','=','foreman.employee_id')
+          ->leftjoin('employees as coordinator','qc_verifikators.verifikatorcoordinator','=','coordinator.employee_id')
+          ->join('employees as manager','qc_cpars.employee_id','=','manager.employee_id')
+          ->join('employees as pic','qc_cars.pic','=','pic.employee_id')
+          ->join('employees as dgm','qc_cpars.dgm','=','dgm.employee_id')
+          ->join('employees as gm','qc_cpars.gm','=','gm.employee_id')
+          ->leftjoin('employees as staffqa','qc_cpars.staff','=','staffqa.employee_id')
+          ->leftjoin('employees as leaderqa','qc_cpars.leader','=','leaderqa.employee_id')
+          ->leftjoin('employees as chiefqa','qc_cpars.chief','=','chiefqa.employee_id')
+          ->leftjoin('employees as foremanqa','qc_cpars.foreman','=','foremanqa.employee_id')
+          ->leftjoin('employees as managerqa','qc_cpars.manager','=','managerqa.employee_id')
+          ->whereNull('mutation_logs.valid_to')
+          ->where('qc_cars.id','=',$id)
+          ->get();
+
+          $verifikasi = QcCar::select('qc_verifikasis.id as id_ver','qc_verifikasis.keterangan','qc_verifikasis.status','qc_verifikasis.tanggal')
+             ->join('qc_verifikasis','qc_verifikasis.cpar_no','=','qc_cars.cpar_no')
+             ->where('qc_verifikasis.cpar_no','=',$car->cpar_no)
+             ->get(); 
+
+          $carttds = QcCar::select('qc_cars.*','qc_ttd_cobas.ttd_car')
+            ->leftjoin('qc_ttd_cobas','qc_cars.cpar_no','=','qc_ttd_cobas.cpar_no')
+            ->where('qc_cars.id','=',$id)
+            ->get();
+
+          return view('qc_car.verifikasi_gm', array(
+            'car' => $car,
+            'carss' =>  $carttds,
+            'cars' => $cars,
+            'verifikasi' => $verifikasi
+          ))->with('page', 'CAR');
+      }
+
+      public function save_sign(Request $request)
+      {
+          $id_user = Auth::id();
+
+          $result = array();
+          $imagedata = base64_decode($request->get('img_data'));
+          $filename = md5(date("dmYhisA"));
+
+          $file_name = './images/sign/'.$filename.'.png';
+          file_put_contents($file_name,$imagedata);
+          $result['status'] = 1;
+          $result['file_name'] = $file_name;
+          echo json_encode($result);
+
+          $ttdcar = QcTtdCoba::where('cpar_no','=',$request->get('cpar_no'))->get();
+
+          if(count($ttdcar) == 0){
+            $ttd = new QcTtdCoba([
+              'ttd_car' => $result['file_name'],
+              'cpar_no' => $request->get('cpar_no'),
+              'created_by' => $id_user
+            ]);
+
+            $ttd->save();
+
+          } else{
+            foreach ($ttdcar as $ttdcar) {
+              $ttdcar2 = QcTtdCoba::find($ttdcar->id);
+              $ttdcar2->ttd_car = $result['file_name'];
+              $ttdcar2->save();              
+            }
+          }
+
+          $cars = QcCar::find($request->get('id'));
+
+          if ($cars->posisi == "gm") {            
+            $cars->approved_gm = "Checked"; 
+            $cars->email_status = "SentQA";
+            $cars->email_send_date = date('Y-m-d');
+            $cars->posisi = "qa";
+
+            $cpar = QcCpar::select('qc_cpars.cpar_no','qc_cpars.id','qc_cpars.status_code','qc_cpars.posisi')
+            ->join('qc_cars','qc_cars.cpar_no','=','qc_cpars.cpar_no')
+            ->where('qc_cpars.cpar_no','=',$cars->cpar_no)
+            ->get();
+
+            foreach ($cpar as $cpar) {
+                $cpar->status_code = "7";
+                $cpar->posisi = "QA";
+                $cpar->save();
+            }
+
+            if ($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") {
+              $to = "staff";
+            }
+            else if ($cars->car_cpar->kategori == "Internal") {
+              $to = "leader";
+            }
+
+            $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$request->get('id')."'";
+            $mails = DB::select($mailto);
+
+            foreach($mails as $mail){
+              $mailtoo = $mail->email;
+            }
+
+            $cars->save();
+
+            $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$request->get('id')."'";
+
+            $cars2 = db::select($query2);
+
+            Mail::to($mailtoo)->send(new SendEmail($cars2, 'car'));
+            // return redirect('/index/qc_car/verifikasigm/'.$request->get('id'))->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
+          }
+      }
 }

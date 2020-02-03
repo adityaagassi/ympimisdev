@@ -69,6 +69,9 @@
 			<tr>
 				<td class="centera">
 					@if($car->approved_gm == "Checked")
+						@if(count($carss[0]->ttd_car) > 0)
+						<img width="100" src="{{url($carss[0]->ttd_car)}}" alt="" style="vertical-align: middle !important">
+						@endif
 						{{$car->gmname}}
 					@else
 						&nbsp;

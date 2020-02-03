@@ -164,13 +164,13 @@
 
         <br/><br/>
 
-        @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator || Auth::user()->username == $cars->employee_id || Auth::user()->username == $cars->dgm || Auth::user()->username == $cars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS")
+        @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator || Auth::user()->username == $cars->employee_id || Auth::user()->username == $cars->dgm || Auth::user()->username == $cars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL" || Auth::user()->username == $cars->car_cpar->staff || Auth::user()->username == $cars->car_cpar->leader) 
 
         <table class="table table-hover">
           <form role="form" method="post" action="{{url('index/qc_car/checked/'.$cars->id)}}">
           	 <thead>
               <tr>
-                <th colspan="6" style="background-color: #ef6c00; color: white; font-size: 24px;border: none;text-align: center;width: 100%"><b>VERIFIKASI CAR </b></th>
+                <th colspan="6" style="background-color: #ef6c00; color: white; font-size: 24px;border: none;text-align: center;width: 100%"><b>VERIFIKASI CAR</b></th>
               </tr>
               <tr>
                 <th colspan="1" style="width: 10%;border: none;text-align: center;font-size: 18px"><b>Point</b></th>

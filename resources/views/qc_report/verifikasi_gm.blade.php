@@ -411,18 +411,6 @@
         
         <?php foreach ($cparss as $cpars): ?>
 
-        <!-- <a href="{{url('index/qc_report/print_cpar_new', $cpars['id'])}}" data-toggle="tooltip" class="btn btn-warning btn-md " title="Lihat Report"  target="_blank" style="color:white;margin-right: 5px">Preview CPAR Report</a> -->
-
-        @if($cpars->email_status == "SentGM" && $cpars->approved_gm == "Checked") <!-- GM -->
-          <a class="btn btn-sm btn-primary" data-toggle="tooltip" title="Send Email Ke Bagian" onclick="sendemail({{ $cpars->id }})" style="margin-right: 5px">Send Email Ke Bagian</a>
-
-          <!-- <a href="{{url('index/qc_report/sendemail/'.$cpars['id'].'/'.$cpars['posisi'])}}" class="btn btn-sm ">Email </a> -->
-
-        @elseif(Auth::user()->username == $cpars->gm && $cpars->email_status == "SentBagian") <!-- Jika yang login GM dan status-->
-          <label class="label label-success" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim Ke Bagian</label>
-
-        @endif
-
         <br/><br/>
 
         @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader || Auth::user()->username == $cpars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL")

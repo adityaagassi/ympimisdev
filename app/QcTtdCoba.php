@@ -10,7 +10,7 @@ class QcTtdCoba extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'id','ttd','cpar_no','created_by'
+		'id','cpar_no','ttd','ttd_car','created_by'
 	];
 
 	public function user()

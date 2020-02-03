@@ -1540,11 +1540,12 @@ class QcReportController extends Controller
       ->where('qc_cpars.id','=',$id)
       ->get();
 
-      $cparttds = QcCpar::select('qc_cpars.*','qc_ttd_cobas.ttd')
-      ->leftjoin('qc_ttd_cobas','qc_cpars.cpar_no','=','qc_ttd_cobas.cpar_no')
-      ->where('qc_cpars.id','=',$id)
-      ->get();
-
+      // $cparttds = QcCpar::select('qc_cpars.*','qc_ttd_cobas.ttd')
+      // ->rightjoin('qc_ttd_cobas','qc_cpars.cpar_no','=','qc_ttd_cobas.cpar_no')
+      // ->where('qc_cpars.id','=',$id)
+      // ->get();
+      
+      $cparttds = DB::SELECT("select * from qc_cpars left join qc_ttd_cobas on qc_cpars.cpar_no = qc_ttd_cobas.cpar_no where qc_cpars.id='".$id."'");
 
       $pdf = \App::make('dompdf.wrapper');
       $pdf->getDomPDF()->set_option("enable_php", true);
@@ -1552,9 +1553,9 @@ class QcReportController extends Controller
       $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
       
       $pdf->loadView('qc_report.print_cpar', array(
-        'cpars'=>$cpars,
-        'parts'=>$parts,
-        'cparss'=>$cparttds
+        'cpars' => $cpars,
+        'parts' => $parts,
+        'cparss' => $cparttds
       ));
       
       $cpar = str_replace("/"," ",$qc_cpars->cpar_no);
