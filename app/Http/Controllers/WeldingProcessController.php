@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Response;
+use DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,230 @@ class WeldingProcessController extends Controller
 			'locations' => $locations
 		))->with('page', 'Production Result');
 
+	}
+
+	public function indexReportNG(){
+		$title = 'Not Good Record';
+		$title_jp = '不良内容';
+		$locations = $this->location;
+
+		return view('processes.welding.report.not_good', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'locations' => $locations
+		))->with('head', 'Welding Process');
+	}
+
+	public function indexReportHourly(){
+		$locations = $this->location;
+
+		return view('processes.welding.report.hourly_report', array(
+			'title' => 'Hourly Report',
+			'title_jp' => '',
+			'locations' => $locations
+		))->with('page', 'Hourly Report');
+	}
+
+	public function indexNgRate(){
+		$locations = $this->location;
+
+		return view('processes.welding.display.ng_rate', array(
+			'title' => 'NG Rate',
+			'title_jp' => '',
+			'locations' => $locations
+		))->with('page', 'Welding Process');
+	}
+
+	public function fetchNgRate(Request $request){
+		$now = date('Y-m-d');
+
+		$ngs = WeldingNgLog::leftJoin('materials', 'materials.material_number', '=', 'welding_ng_logs.material_number')
+		->orderBy('welding_ng_logs.created_at', 'asc');
+		$checks = WeldingCheckLog::leftJoin('materials', 'materials.material_number', '=', 'welding_check_logs.material_number')
+		->orderBy('welding_check_logs.created_at', 'asc');
+
+		if(strlen($request->get('location'))>0){
+			$location = explode(",", $request->get('location'));
+			$ngs = $ngs->whereIn('welding_ng_logs.location', $location);
+			$checks = $checks->whereIn('welding_check_logs.location', $location);
+		}
+		if(strlen($request->get('tanggal'))>0){
+			$now = date('Y-m-d', strtotime($request->get('tanggal')));
+			$ngs = $ngs->whereRaw('date(welding_ng_logs.created_at) = "'.$now.'"');
+			$checks = $checks->whereRaw('date(welding_check_logs.created_at) = "'.$now.'"');
+		}
+
+		$ngs = $ngs->get();
+		$checks = $checks->get();
+
+		$response = array(
+			'status' => true,
+			'checks' => $checks,
+			'ngs' => $ngs,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchReportHourly(Request $request){
+		$tanggal = '';
+		if(strlen($request->get('date')) > 0){
+			$date = date('Y-m-d', strtotime($request->get('date')));
+			$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' and ";
+		}else{		
+			$date = date('Y-m-d');
+			$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$date."' and ";
+		}
+
+		$addlocation = "";
+		if($request->get('location') != null) {
+			$locations = $request->get('location');
+			$location = "";
+
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$location = $location.",";
+				}
+			}
+			$addlocation = "and l.location in (".$location.") ";
+		}
+
+		$key = db::select("select DISTINCT SUBSTRING(`key`, 1, 1) as kunci from materials where hpl = 'ASKEY' and issue_storage_location = 'SX21' ORDER BY `key` asc");
+
+		$jam = [
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '00:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '01:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '01:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '03:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '03:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '05:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '05:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '07:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '07:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '09:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '09:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '11:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '11:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '14:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '14:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '16:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '16:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '18:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '18:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '20:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '20:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '22:00:00'",
+			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '22:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '23:59:59'"
+		];
+
+		$dataShift3 = [];
+		$dataShift1 = [];
+		$dataShift2 = [];
+
+		$z3 = [];
+		$z1 = [];
+		$z2 = [];
+
+		$push_data = [];
+		$push_data_z = [];
+
+		for ($i=0; $i <= 3 ; $i++) {
+			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from welding_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'ASKEY' and m.model != 'A82'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)
+				union
+				(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from welding_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'TSKEY' and m.model != 'A82'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)");
+			array_push($dataShift3, $push_data[$i]);
+
+			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
+				from welding_logs l left join materials m on l.material_number = m.material_number 
+				where  ".$tanggal." ".$jam[$i]." and m.model = 'A82' ".$addlocation."
+				GROUP BY tgl, m.model");
+			array_push($z3, $push_data_z[$i]);
+		}
+
+		for ($i=4; $i <= 7 ; $i++) {
+			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from welding_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'ASKEY' and m.model != 'A82'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)
+				union
+				(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from welding_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'TSKEY' and m.model != 'A82'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)");
+			array_push($dataShift1, $push_data[$i]);
+
+			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
+				from welding_logs l left join materials m on l.material_number = m.material_number 
+				where  ".$tanggal." ".$jam[$i]." and m.model = 'A82' ".$addlocation."
+				GROUP BY tgl, m.model");
+			array_push($z1, $push_data_z[$i]);
+		}
+
+		for ($i=8; $i <= 11 ; $i++) {
+			$push_data[$i] = db::select("(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from welding_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'ASKEY' and m.model != 'A82'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)
+				union
+				(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, SUBSTRING(`key`, 1, 1) as kunci, m.hpl, sum(l.quantity) as jml
+				from welding_logs l left join materials m on l.material_number = m.material_number
+				where ".$tanggal." ".$jam[$i]." ".$addlocation."
+				and m.hpl = 'TSKEY' and m.model != 'A82'
+				GROUP BY tgl, kunci, m.hpl
+				ORDER BY kunci)");
+			array_push($dataShift2, $push_data[$i]);
+
+			$push_data_z[$i] = db::select("select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, m.model, sum(l.quantity) as jml
+				from welding_logs l left join materials m on l.material_number = m.material_number 
+				where  ".$tanggal." ".$jam[$i]." and m.model = 'A82' ".$addlocation."
+				GROUP BY tgl, m.model");
+			array_push($z2, $push_data_z[$i]);
+		}
+
+		$tanggal = substr($tanggal,40,10);
+
+		$response = array(
+			'status' => true,
+			'tanggal' => $tanggal,
+			'key' => $key,
+			'dataShift3' => $dataShift3,
+			'dataShift1' => $dataShift1,
+			'dataShift2' => $dataShift2,
+			'z3' => $z3, 
+			'z1' => $z1, 
+			'z2' => $z2, 
+		);
+		return Response::json($response);
+	}
+
+	public function fetchReportNG(Request $request){
+		$report = WeldingNgLog::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'welding_ng_logs.employee_id')
+		->leftJoin('materials', 'materials.material_number', '=', 'welding_ng_logs.material_number');
+
+		if(strlen($request->get('datefrom')) > 0){
+			$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+			$report = $report->where(db::raw('date_format(welding_ng_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+		}
+
+		if(strlen($request->get('dateto')) > 0){
+			$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+			$report = $report->where(db::raw('date_format(welding_ng_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+		}
+
+		if($request->get('location') != null){
+			$report = $report->whereIn('welding_ng_logs.location', $request->get('location'));
+		}
+
+		$report = $report->select('welding_ng_logs.employee_id', 'employee_syncs.name', 'welding_ng_logs.tag', 'welding_ng_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'welding_ng_logs.ng_name', 'welding_ng_logs.quantity', 'welding_ng_logs.location', 'welding_ng_logs.created_at')->get();
+
+		// return Response::json($report);
+
+		return DataTables::of($report)->make(true);
 	}
 
 	public function fetchDisplayProductionResult(Request $request){
@@ -294,6 +519,8 @@ class WeldingProcessController extends Controller
 		$code_generator->index = $code;
 		$code_generator->save();
 
+		$tag = $this->dec2hex($request->get('tag'));
+
 		if($request->get('ng')){
 			foreach ($request->get('ng') as $ng) {
 				$welding_ng_log = new WeldingNgLog([
@@ -355,6 +582,31 @@ class WeldingProcessController extends Controller
 				return Response::json($response);
 			}
 		} else {
+			try{
+				$m_hsa_kartu = db::connection('welding')->table('m_hsa_kartu')->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)->first();
+
+				$order_id = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
+				->where('part_id', '=', $m_hsa_kartu->hsa_id)
+				->first();
+
+				$t_order_detail = db::conenction('welding')->table('t_order_detail')
+				->where('order_id', '=', $order_id->order_id)
+				->where('flow_id', '=', '3')
+				->update([
+					'order_start_sedang_date' => $request->get('started_at'),
+					'order_sedang_finish_date' => date('Y-m-d H:is')
+				]);
+
+				$t_order = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
+				->where('part_id', '=', $m_hsa_kartu->hsa_id)
+				->update([
+					'order_status' => '5'
+				]);
+			}
+			catch(\Exception $e){
+
+			}
+
 			try{
 				// $buffing_inventory = db::connection('digital_kanban')->table('buffing_inventories')
 				// ->where('material_tag_id', '=', $request->get('tag'))
