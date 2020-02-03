@@ -759,6 +759,8 @@ class RecorderProcessController extends Controller
           $data = $counter_push_pull[0];
           $datavalue = $value_push_pull[0] / 120;
 
+          $valuebefore = 0;
+
           $plc_counter = PlcCounter::where('origin_group_code', '=', '072_1')->first();
           $pushpull = RcPushPullLog::orderBy('rc_push_pull_logs.id','DESC')->first();
           // var_dump($pushpull);
