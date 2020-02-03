@@ -518,7 +518,8 @@ table.table-bordered > tfoot > tr > th{
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Import Participant</b></h4>
+        <h4 class="modal-title" align="center"><b>Import Participant</b></h4><br>
+        <button class="btn btn-default"><input type="checkbox" onclick="checkAll(this.checked)">Check All</button>
       </div>
       <div class="modal-body">
         <form role="form" method="post" enctype="multipart/form-data" id="formimport" action="#">
@@ -530,6 +531,7 @@ table.table-bordered > tfoot > tr > th{
 						<th style="width: 1%;">#</th>
 						<th style="width: 2%;">Employee ID</th>
 						<th style="width: 5%;">Employee Name</th>
+						<th style="width: 5%;">Sub Section</th>
 					</tr>					
 				</thead>
 				<tbody id="tableImportList">
@@ -538,6 +540,7 @@ table.table-bordered > tfoot > tr > th{
 							<td><input type="checkbox" name="empid[]" value="{{ $operator3->employee_id }}"></td>
 							<td>{{ $operator3->employee_id }}</td>
 							<td>{{ $operator3->name }}</td>
+							<td>{{ $operator3->sub_section }}</td>
 						</tr>
 					@endforeach
 				</tbody>
@@ -612,6 +615,15 @@ table.table-bordered > tfoot > tr > th{
 
     	}
     	$("#id_peserta").val(value);
+	}
+
+	function checkAll(isChecked){
+		if(isChecked){
+			$(':checkbox').attr('checked',true);
+		}
+		else{
+			$(':checkbox').attr('checked',false);
+		}
 	}
 </script>
 <script>
@@ -849,22 +861,22 @@ table.table-bordered > tfoot > tr > th{
 	$('#tableImport').DataTable({
 		'dom': 'Bfrtip',
 		'responsive':true,
-		'lengthMenu': [
-		[ 10, 25, 50, -1 ],
-		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-		],
-		'buttons': {
-			buttons:[
-			{
-				extend: 'pageLength',
-				className: 'btn btn-default',
-			},
+		// 'lengthMenu': [
+		// [ 10, 25, 50, -1 ],
+		// [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		// ],
+		// 'buttons': {
+		// 	buttons:[
+		// 	{
+		// 		extend: 'pageLength',
+		// 		className: 'btn btn-default',
+		// 	},
 			
-			]
-		},
-		'paging': true,
-		'lengthChange': true,
-		'pageLength': 10,
+		// 	]
+		// },
+		'paging': false,
+		// 'lengthChange': true,
+		// 'pageLength': 10,
 		'searching': true,
 		'ordering': true,
 		'order': [],

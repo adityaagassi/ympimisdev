@@ -341,7 +341,7 @@ class TrainingReportController extends Controller
         $activity_alias = $trainingReport->activity_lists->activity_alias;
         $activity_id = $trainingReport->activity_lists->id;
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employees.name),employees.employee_id,section,sub_section from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."' and end_date is null";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
         $operator3 = DB::select($queryOperator);
