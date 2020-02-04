@@ -59,6 +59,7 @@
 					<div class="col-xs-2">
 						<button class="btn" style="background-color: #605ca8; color: white;" type="submit"><i class="fa fa-search"></i> Search</button>
 					</div>
+					<div class="pull-right" id="loc" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 2vw;"></div>
 				</form>
 			</div>
 		</div>
@@ -67,8 +68,8 @@
 				<div class="col-xs-2" style="padding-right: 0;">
 					<div class="small-box" style="background: #52c9ed; height: 150px; margin-bottom: 5px;">
 						<div class="inner" style="padding-bottom: 0px;">
-							<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>TOTAL CHECK <span class="text-purple">?</span></b></h3>
-							<h5 style="font-size: 4vw; font-weight: bold;" id="total">100</h5>
+							<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>CHECK <span class="text-purple">検査数</span></b></h3>
+							<h5 style="font-size: 4vw; font-weight: bold;" id="total">0</h5>
 						</div>
 						<div class="icon" style="padding-top: 40px;">
 							<i class="fa fa-search"></i>
@@ -76,8 +77,8 @@
 					</div>
 					<div class="small-box" style="background: #00a65a; height: 150px; margin-bottom: 5px;">
 						<div class="inner" style="padding-bottom: 0px;">
-							<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>TOTAL OK <span class="text-purple">?</span></b></h3>
-							<h5 style="font-size: 4vw; font-weight: bold;" id="ok">9999</h5>
+							<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>OK <span class="text-purple">良品数</span></b></h3>
+							<h5 style="font-size: 4vw; font-weight: bold;" id="ok">0</h5>
 						</div>
 						<div class="icon" style="padding-top: 40px;">
 							<i class="fa fa-check-square-o"></i>
@@ -85,8 +86,8 @@
 					</div>
 					<div class="small-box" style="background: #ff851b; height: 150px; margin-bottom: 5px;">
 						<div class="inner" style="padding-bottom: 0px;">
-							<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>TOTAL NG <span class="text-purple">?</span></b></h3>
-							<h5 style="font-size: 4vw; font-weight: bold;" id="ng">9999</h5>
+							<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>NG <span class="text-purple">不良品数</span></b></h3>
+							<h5 style="font-size: 4vw; font-weight: bold;" id="ng">0</h5>
 						</div>
 						<div class="icon" style="padding-top: 40px;">
 							<i class="fa fa-remove"></i>
@@ -94,8 +95,8 @@
 					</div>
 					<div class="small-box" style="background: rgb(220,220,220); height: 150px; margin-bottom: 5px;">
 						<div class="inner" style="padding-bottom: 0px;">
-							<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>Presentase <span class="text-purple">?</span></b></h3>
-							<h5 style="font-size: 4vw; font-weight: bold;" id="pctg">9999</h5>
+							<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>% <span class="text-purple">不良率</span></b></h3>
+							<h5 style="font-size: 4vw; font-weight: bold;" id="pctg">0</h5>
 						</div>
 						<div class="icon" style="padding-top: 40px;">
 							<i class="fa fa-line-chart"></i>
@@ -382,6 +383,8 @@
 			if(result.status){
 
 				var total = 0;
+				var title = result.title;
+				$('#loc').html('<b style="color:white">'+ title +'</b>');
 
 				for(var i = 0; i < result.data.length; i++){
 					var Rate = result.data[i].ng_rate;
@@ -434,6 +437,7 @@
 				Highcharts.chart('container1', {
 					chart: {
 						type: 'column',
+						height: '330',
 						backgroundColor: "rgba(0,0,0,0)"
 					},
 					title: {
@@ -459,7 +463,8 @@
 						lineColor:'#9e9e9e',
 						labels: {
 							style: {
-								fontSize: '20px'
+								fontSize: '22px',
+		                        fontWeight: 'bold'
 							}
 						},
 					},
@@ -575,6 +580,7 @@
 				Highcharts.chart('container2', {
 					chart: {
 						type: 'column',
+						height: '330',
 						backgroundColor: "rgba(0,0,0,0)"
 					},
 					title: {
@@ -600,7 +606,8 @@
 						lineColor:'#9e9e9e',
 						labels: {
 							style: {
-								fontSize: '18px'
+								fontSize: '22px',
+		                        fontWeight: 'bold'
 							}
 						},
 					},

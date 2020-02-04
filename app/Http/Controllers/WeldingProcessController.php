@@ -62,7 +62,7 @@ class WeldingProcessController extends Controller
 
 		return view('processes.welding.display.production_result', array(
 			'title' => 'Welding Production Result',
-			'title_jp' => '',
+			'title_jp' => '溶接生産高',
 			'locations' => $locations
 		))->with('page', 'Production Result');
 
@@ -95,7 +95,7 @@ class WeldingProcessController extends Controller
 
 		return view('processes.welding.display.ng_rate', array(
 			'title' => 'NG Rate',
-			'title_jp' => '',
+			'title_jp' => '不良率',
 			'locations' => $locations
 		))->with('page', 'Welding Process');
 	}
@@ -157,12 +157,20 @@ class WeldingProcessController extends Controller
 			from welding_check_logs 
 			where DATE(welding_check_logs.created_at)='".$now."' ".$addlocation." and deleted_at is null ");
 
-
-
-
-
-
-
+		$location = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location." ".$locations[$x]." ";
+				if($x != count($locations)-1){
+					$location = $location."&";
+				}
+			}
+		}else{
+			$location = "";
+		}
+		$location = strtoupper($location);
+		
 		$response = array(
 			'status' => true,
 			'checks' => $checks,
@@ -170,8 +178,8 @@ class WeldingProcessController extends Controller
 			'ng' => $ng,
 			'ngkey' => $ngkey,
 			'dateTitle' => $dateTitle,
-			'data' => $datastat
-
+			'data' => $datastat,
+			'title' => $location
 		);
 		return Response::json($response);
 	}
