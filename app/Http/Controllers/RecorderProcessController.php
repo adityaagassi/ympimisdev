@@ -1117,5 +1117,90 @@ class RecorderProcessController extends Controller
         return Response::json($response);
       }
     }
+
+    public function index_resume_assy_rc()
+    {
+      $code = RcPushPullLog::orderBy('rc_push_pull_logs.id', 'asc')
+        ->get();
+
+
+        return view('recorder.report.resume_assy_rc',array(
+          'code' => $code,
+        ))->with('page', 'Process Assy RC')->with('head', 'Assembly Process');
+    }
+
+    public function filter_assy_rc(Request $request){
+      if($request->get('process') == 'Middle Check'){
+        $rc_assy_detail = DB::table('rc_camera_kango_logs')
+      
+        ->select('rc_camera_kango_logs.id','rc_camera_kango_logs.model', 'rc_camera_kango_logs.value_check', 'rc_camera_kango_logs.judgement','rc_camera_kango_logs.pic_check', db::raw('date_format(rc_camera_kango_logs.created_at, "%d-%b-%Y") as st_date') );
+
+        if(strlen($request->get('datefrom')) > 0){
+          $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+          $rc_assy_detail = $rc_assy_detail->where(DB::raw('DATE_FORMAT(rc_camera_kango_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+        }
+
+        // if(strlen($request->get('code')) > 0){
+        //   $code = $request->get('code');
+        //   $rc_assy_detail = $rc_assy_detail->where('rc_camera_kango_logs.process_code','=', $code );
+        // }
+
+        if(strlen($request->get('dateto')) > 0){
+          $date_to = date('Y-m-d', strtotime($request->get('dateto')));
+          $rc_assy_detail = $rc_assy_detail->where(DB::raw('DATE_FORMAT(rc_camera_kango_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+        }
+
+        $rc_detail = $rc_assy_detail->orderBy('rc_camera_kango_logs.created_at', 'desc')->where('rc_camera_kango_logs.remark', 'Middle')->get();
+      }else if($request->get('process') == 'Stamp Check'){
+        $rc_assy_detail = DB::table('rc_camera_kango_logs')
+      
+        ->select('rc_camera_kango_logs.id','rc_camera_kango_logs.model', 'rc_camera_kango_logs.value_check', 'rc_camera_kango_logs.judgement','rc_camera_kango_logs.pic_check', db::raw('date_format(rc_camera_kango_logs.created_at, "%d-%b-%Y") as st_date') );
+
+        if(strlen($request->get('datefrom')) > 0){
+          $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+          $rc_assy_detail = $rc_assy_detail->where(DB::raw('DATE_FORMAT(rc_camera_kango_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+        }
+
+        // if(strlen($request->get('code')) > 0){
+        //   $code = $request->get('code');
+        //   $rc_assy_detail = $rc_assy_detail->where('rc_camera_kango_logs.process_code','=', $code );
+        // }
+
+        if(strlen($request->get('dateto')) > 0){
+          $date_to = date('Y-m-d', strtotime($request->get('dateto')));
+          $rc_assy_detail = $rc_assy_detail->where(DB::raw('DATE_FORMAT(rc_camera_kango_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+        }
+
+        $rc_detail = $rc_assy_detail->orderBy('rc_camera_kango_logs.created_at', 'desc')->where('rc_camera_kango_logs.remark', 'Stamp')->get();
+      }else{
+        $rc_assy_detail = DB::table('rc_push_pull_logs')
+      
+        ->select('rc_push_pull_logs.id','rc_push_pull_logs.model', 'rc_push_pull_logs.value_check', 'rc_push_pull_logs.judgement','rc_push_pull_logs.pic_check', db::raw('date_format(rc_push_pull_logs.created_at, "%d-%b-%Y") as st_date') );
+
+        if(strlen($request->get('datefrom')) > 0){
+          $date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+          $rc_assy_detail = $rc_assy_detail->where(DB::raw('DATE_FORMAT(rc_push_pull_logs.created_at, "%Y-%m-%d")'), '>=', $date_from);
+        }
+
+        // if(strlen($request->get('code')) > 0){
+        //   $code = $request->get('code');
+        //   $rc_assy_detail = $rc_assy_detail->where('rc_push_pull_logs.process_code','=', $code );
+        // }
+
+        if(strlen($request->get('dateto')) > 0){
+          $date_to = date('Y-m-d', strtotime($request->get('dateto')));
+          $rc_assy_detail = $rc_assy_detail->where(DB::raw('DATE_FORMAT(rc_push_pull_logs.created_at, "%Y-%m-%d")'), '<=', $date_to);
+        }
+
+        $rc_detail = $rc_assy_detail->orderBy('rc_push_pull_logs.created_at', 'desc')->get();
+      }
+      
+
+      return DataTables::of($rc_detail)
+      ->addColumn('action', function($rc_detail){
+        return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteConfirmation(id)" id="' . $rc_detail->id . '"><i class="glyphicon glyphicon-trash"></i></a>';
+      })
+      ->make(true);
+    }
 }
   

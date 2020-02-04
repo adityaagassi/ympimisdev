@@ -32,6 +32,7 @@
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("/index/recorder/report_push_block","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Push Block Check</a>
 			<a href="{{ url("/index/recorder/resume_push_block","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Push Block Check</a>
+			<a href="{{ url("/index/recorder/resume_assy_rc") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Assembly Recorder</a>
 		</div>
 	</div>
 

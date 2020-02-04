@@ -2019,6 +2019,8 @@ Route::post('push_pull/store_push_pull', 'RecorderProcessController@store_push_p
 Route::post('camera_kango/store_camera_kango', 'RecorderProcessController@store_camera');
 Route::post('camera_kango/store_camera_kango2', 'RecorderProcessController@store_camera2');
 Route::get('scan/push_pull/operator', 'RecorderProcessController@scanPushPullOperator');
+Route::get('index/recorder/resume_assy_rc', 'RecorderProcessController@index_resume_assy_rc');
+Route::post('recorder/filter_assy_rc', 'RecorderProcessController@filter_assy_rc');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
