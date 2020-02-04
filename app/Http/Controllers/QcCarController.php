@@ -947,6 +947,46 @@ class QcCarController extends Controller
 
           Mail::to($mailtoo)->send(new SendEmail($querycar, 'rejectcar'));
           return redirect('/index/qc_car/verifikasicar/'.$id)->with('success', 'CAR Rejected')->with('page', 'CAR');
+      }
+
+      public function uncheckedGM(Request $request,$id)
+      {
+          $alasan = $request->get('alasan');
+          $cars = QcCar::find($id);
+          
+          $cars->qa_perbaikan = $alasan;
+
+          if ($cars->posisi == "gm") {
+            $cars->checked_chief = null;              
+            $cars->checked_foreman = null;
+            $cars->checked_coordinator = null;
+            $cars->checked_manager = null;
+            $cars->approved_dgm = null; 
+          }
+
+          if($cars->car_cpar->kategori == "Eksternal" || $cars->car_cpar->kategori == "Supplier") {
+            $cars->email_status = "SentStaff";            
+            $cars->posisi = "staff";                
+          } 
+
+          else if ($cars->car_cpar->kategori == "Internal") {
+            $cars->email_status = "SentForeman";            
+            $cars->posisi = "foreman";                
+          }
+
+          $cars->save();
+          $query = "select qc_cars.id, qc_cars.cpar_no, qc_cars.qa_perbaikan from qc_cars where qc_cars.id='".$id."'";
+          $querycar = db::select($query);
+
+          $mailto = "select distinct email from qc_cars join employees on qc_cars.pic = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+          $mails = DB::select($mailto);
+
+          foreach($mails as $mail){
+            $mailtoo = $mail->email;
+          }
+
+          Mail::to($mailtoo)->send(new SendEmail($querycar, 'rejectcar'));
+          return redirect('/index/qc_car/verifikasigm/'.$id)->with('success', 'CAR Rejected')->with('page', 'CAR');
       } 
 
       //Verifikator QA

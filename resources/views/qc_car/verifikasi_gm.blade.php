@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <style type="text/css">
 	.isi{
     background-color: #f5f5f5;
@@ -99,9 +100,12 @@
     {{-- <div class="box-header with-border">
       <h3 class="box-title">Detail User</h3>
     </div>   --}}
+
+    @if(Auth::user()->username == $car->car_cpar->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL" || Auth::user()->username == $car->car_cpar->staff || Auth::user()->username == $car->car_cpar->leader) 
+
       <div class="box-body">
       	<table class="table" style="border: 1px solid black;">
-			@foreach($cars as $car)
+		@foreach($cars as $car)
 		<thead>
 			<tr>
 				<td colspan="2" rowspan="3" class="centera">
@@ -338,6 +342,8 @@
 			<span style="font-size: 20px">No FM : YMPI/QA/FM/899</span>
 		</div>
 
+		@if($car->posisi == "gm")
+
 		<?php foreach ($carss as $carss): ?>
 
 		<?php if ($carss->ttd_car == null) { ?>
@@ -378,18 +384,51 @@
                           <a href="{{ url('index/qc_car/verifikasigm', $carss->id) }}" class="btn btn-danger">Clear</a>
                           <!-- <button onclick="clearSign()" class="btn btn-danger">Clear</button> -->
                           <!-- <button class="clearButton" href="#clear">Clear</button> -->
+                      		<br><br>
                         </div>
+
                       </div>
+
+                         <center><a data-toggle="modal" data-target="#notapproved{{$carss->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject CAR</a></center>
                     </div>
                   </div>
                 </div>
               </div>
+
           </div>
         </div>
 
+        <div class="modal modal-danger fade" id="notapproved{{$carss->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	      <div class="modal-dialog">
+	        <div class="modal-content">
+	          <form role="form" method="post" action="{{url('index/qc_car/uncheckedGM/'.$carss->id)}}">
+	            <div class="modal-header">
+	              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	              <h4 class="modal-title" id="myModalLabel">Not Approved</h4>
+	            </div>
+	            <div class="modal-body">
+	              <div class="box-body">
+	                  <input type="hidden" value="{{csrf_token()}}" name="_token" />
+	                  <h4>Berikan alasan tidak menyetujui CAR ini</h4>
+	                  <textarea class="form-control" required="" name="alasan" id="detail" style="height: 250px;"></textarea>
+	                  *CAR Akan Dikirim kembali lagi ke Foreman / Staff masing - masing departemen
+	              </div>    
+	            </div>
+	            <div class="modal-footer">
+	              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	              <button type="submit" class="btn btn-outline">Not Approved</a>
+	            </div>
+	          </form>
+	        </div>
+	      </div>
+	    </div>
+
+
       <?php } ?>
       <?php endforeach; ?>
+      @endif
 	</div>
+  @endif
   </div>
   @endsection
 <style>
@@ -500,6 +539,10 @@ table, th, td {
   function clearSign() {
     $('#signArea').siganturePad(clearCanvas());
   }
+
+  CKEDITOR.replace('detail' ,{
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
 </script>
 
   @stop

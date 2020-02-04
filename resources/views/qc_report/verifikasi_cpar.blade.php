@@ -1317,7 +1317,7 @@
             <div class="box-body">
                 <input type="hidden" value="{{csrf_token()}}" name="_token" />
                 <h4>Berikan alasan tidak menyetujui CPAR ini</h4>
-                <textarea class="form-control" required="" name="alasan"></textarea> 
+                <textarea class="form-control" required="" name="alasan" style="height: 250px;"></textarea> 
                 *CPAR Akan Dikirim kembali lagi ke Leader / Staff masing - masing departemen
             </div>    
           </div>

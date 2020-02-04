@@ -2080,7 +2080,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_car/verifikasicar/{id}', 'QcCarController@verifikasicar');
 	Route::post('index/qc_car/checked/{id}', 'QcCarController@checked');
 	Route::post('index/qc_car/unchecked/{id}', 'QcCarController@unchecked');
-
+	Route::post('index/qc_car/uncheckedGM/{id}', 'QcCarController@uncheckedGM');
 	//Verifikasi QA
 	Route::get('index/qc_report/verifikasiqa/{id}', 'QcReportController@verifikasiqa');
 	Route::post('index/qc_report/close1/{id}', 'QcReportController@close1');

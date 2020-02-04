@@ -30,7 +30,7 @@
 			<br>
 			<h3>Alasan CAR Tidak Disetujui :<h3>
 			<h3>
-				{{ $qa_perbaikan }}	
+				<?= $qa_perbaikan ?>	
 			</h3>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
