@@ -89,25 +89,6 @@
 							<span style="font-size: 20px; font-weight: bold;"><center>Jenis Middle:</center></span>
 							<input type="text" name="middle_type" id="middle_type" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 80px;background-color: #e7ff8c;font-size: 5vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
 							<input type="text" name="middle_type_desc" id="middle_type_desc" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 40px;background-color: #e7ff8c;font-size: 2vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
-							<!-- <div class="row" style="padding-top: 20px">
-								<div class="col-xs-12">
-									<span style="font-size: 20px; font-weight: bold;"><center>Result:</center></span>
-									<table id="resultCamera" name="resultCamera" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<th style="width: 15%">Model</th>
-											<th style="width: 15%">Checked At</th>
-											<th style="width: 15%">Value Check</th>
-											<th style="width: 15%">Judgement</th>
-											<th style="width: 15%">Remark</th>
-											<th style="width: 15%">Checked By</th>
-										</thead>
-										<tbody id="resultCameraBody">
-										</tbody>
-										<tfoot style="background-color: RGB(252, 248, 227);">
-										</tfoot>
-									</table>
-								</div>
-							</div> -->
 						</div>
 					</div>
 				</div>
