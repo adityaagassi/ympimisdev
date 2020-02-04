@@ -375,7 +375,7 @@
                           <input type="hidden" name="cpar_no" id="cpar_no" value="{{$carss->cpar_no}}">
                           <input type="hidden" name="id_verif" id="id_verif" value="{{$carss->id}}">
                           <button class="btn btn-success" id="btnSaveSign" >Verify CAR</button>
-                          <a href="{{ url('index/qc_cars/verifikasigm', $carss['id']) }}" class="btn btn-danger">Clear</a>
+                          <a href="{{ url('index/qc_car/verifikasigm', $carss->id) }}" class="btn btn-danger">Clear</a>
                           <!-- <button onclick="clearSign()" class="btn btn-danger">Clear</button> -->
                           <!-- <button class="clearButton" href="#clear">Clear</button> -->
                         </div>

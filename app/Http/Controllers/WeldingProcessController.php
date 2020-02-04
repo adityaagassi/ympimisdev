@@ -23,6 +23,7 @@ class WeldingProcessController extends Controller
 		$this->location = [
 			'hsa-visual-sx',
 			'phs-visual-sx',
+			'hsa-dimensi-sx'
 		];
 	}
 
@@ -41,6 +42,11 @@ class WeldingProcessController extends Controller
 		if($id == 'phs-visual-sx'){
 			$title = 'PHS Kensa Visual Saxophone';
 			$title_jp= 'HSAサックス外観検査';
+		}
+
+		if($id == 'hsa-dimensi-sx'){
+			$title = 'HSA Kensa Dimensi Saxophone';
+			$title_jp= 'HSAサックス寸法検査';
 		}
 
 		return view('processes.welding.kensa', array(
@@ -101,25 +107,71 @@ class WeldingProcessController extends Controller
 		->orderBy('welding_ng_logs.created_at', 'asc');
 		$checks = WeldingCheckLog::leftJoin('materials', 'materials.material_number', '=', 'welding_check_logs.material_number')
 		->orderBy('welding_check_logs.created_at', 'asc');
+		$addlocation = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			$location = "";
 
-		if(strlen($request->get('location'))>0){
-			$location = explode(",", $request->get('location'));
-			$ngs = $ngs->whereIn('welding_ng_logs.location', $location);
-			$checks = $checks->whereIn('welding_check_logs.location', $location);
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$location = $location.",";
+				}
+			}
+			$addlocation = "and location in (".$location.") ";
 		}
+
+		// if(strlen($request->get('location'))>0){
+		// 	$location = explode(",", $request->get('location'));
+		// 	$ngs = $ngs->whereIn('welding_ng_logs.location', $location);
+		// 	$checks = $checks->whereIn('welding_check_logs.location', $location);
+		// }
+
 		if(strlen($request->get('tanggal'))>0){
 			$now = date('Y-m-d', strtotime($request->get('tanggal')));
 			$ngs = $ngs->whereRaw('date(welding_ng_logs.created_at) = "'.$now.'"');
 			$checks = $checks->whereRaw('date(welding_check_logs.created_at) = "'.$now.'"');
 		}
 
+		$ng = db::select("select SUM(quantity) as jumlah,ng_name,SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null and welding_check_logs.location= 'hsa-visual-sx' and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs where date(created_at) = '".$now."' ".$addlocation." group by ng_name order by jumlah desc");
+
+		$ngkey = db::select("select SUM(quantity) as jumlah, materials.`key`, SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null and welding_check_logs.location= 'hsa-visual-sx' and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs join materials on welding_ng_logs.material_number = materials.material_number where date(welding_ng_logs.created_at) = '".$now."' ".$addlocation." group by `key` order by jumlah desc");
+
+
+		$dateTitle = date("d M Y", strtotime($now));
+
 		$ngs = $ngs->get();
 		$checks = $checks->get();
+
+
+		$datastat = db::select("SELECT 
+			COALESCE(SUM(welding_check_logs.quantity),0) as total_check,
+			COALESCE((SELECT sum(quantity) from welding_logs where deleted_at is null ".$addlocation." and DATE(welding_logs.created_at)='".$now."'),0) as total_ok,
+
+			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and DATE(welding_ng_logs.created_at)='".$now."'),0) as total_ng,
+
+			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and DATE(welding_ng_logs.created_at)='".$now."')
+			/ 
+			(Select SUM(quantity) from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100,0) as ng_rate 
+
+			from welding_check_logs 
+			where DATE(welding_check_logs.created_at)='".$now."' ".$addlocation." and deleted_at is null ");
+
+
+
+
+
+
 
 		$response = array(
 			'status' => true,
 			'checks' => $checks,
 			'ngs' => $ngs,
+			'ng' => $ng,
+			'ngkey' => $ngkey,
+			'dateTitle' => $dateTitle,
+			'data' => $datastat
+
 		);
 		return Response::json($response);
 	}

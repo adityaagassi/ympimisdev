@@ -86,10 +86,17 @@
 
 	$('#tag').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			var str = $("#tag").val();
-
-			scanTag(str);
-			$("#tag").focus();
+			if($("#tag").val().length == 10){
+				var str = $("#tag").val();
+				scanTag(str);
+				$("#tag").focus();
+			}
+			else{
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+				$("#tag").val("");
+				$('#tag').focus();
+			}
 		}
 	});
 
