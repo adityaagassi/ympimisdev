@@ -93,7 +93,7 @@
 			}
 			else{
 				audio_error.play();
-				openErrorGritter('Error', result.message);
+				openErrorGritter('Error', 'Barcode tidak valid. Silahkan scan ulang.');
 				$("#tag").val("");
 				$('#tag').focus();
 			}
