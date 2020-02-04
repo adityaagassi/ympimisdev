@@ -952,7 +952,7 @@ class RecorderProcessController extends Controller
 
             try{
                 File::delete(glob(public_path('RCImages/Cam1/*.txt')));
-                File::delete(glob(public_path('RCImages/Cam1/*.bmp')));
+                // File::delete(glob(public_path('RCImages/Cam1/*.bmp')));
                 $plc_counter->save();
                 $camera->save();
             }
@@ -1076,7 +1076,7 @@ class RecorderProcessController extends Controller
 
             try{
                 File::delete(glob(public_path('RCImages/Cam2/*.txt')));
-                File::delete(glob(public_path('RCImages/Cam2/*.bmp')));
+                // File::delete(glob(public_path('RCImages/Cam2/*.bmp')));
                 $plc_counter->save();
                 $camera->save();
             }
