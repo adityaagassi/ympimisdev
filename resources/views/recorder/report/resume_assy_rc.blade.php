@@ -82,8 +82,8 @@ table.table-bordered > tfoot > tr > th{
 								<select class="form-control select2" data-placeholder="Select Check Process" name="process" id="process" style="width: 100%;">
 									<option value=""></option>
 									<option value="Push Pull Check">Push Pull Check</option>
-									<option value="Middle Check">Middle Check</option>
-									<option value="Stamp Check">Stamp Check</option>
+									<!-- <option value="Middle Check">Middle Check</option>
+									<option value="Stamp Check">Stamp Check</option> -->
 									<!-- @foreach($code as $code) 
 									<option value="{{ $code->process_code }}">{{ $code->process_code }} - {{ $code->process_name }}</option>
 									@endforeach -->
