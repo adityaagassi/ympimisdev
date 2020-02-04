@@ -161,6 +161,7 @@
 		});
 		$('.select2').select2();
 		fetchChart();
+		setInterval(fetchChart, 10000);
 	});
 
 	Highcharts.createElement('link', {
