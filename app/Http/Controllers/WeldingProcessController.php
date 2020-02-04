@@ -461,9 +461,10 @@ class WeldingProcessController extends Controller
 			$zed_operator = db::connection('welding')->table('m_hsa_kartu')->leftJoin('t_order', 't_order.part_id', '=', 'm_hsa_kartu.hsa_id')
 			->leftJoin('t_order_detail', 't_order_detail.order_id', '=', 't_order.order_id')
 			->leftJoin('m_operator', 'm_operator.operator_id', '=', 't_order_detail.operator_id')
+			->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)
 			->where('t_order.part_type', '=', '2')
 			->where('t_order_detail.flow_id', '=', '1')
-			->select('m_operator.operator_nik', 'm_operator.operator_name', 't_order.order_id', 't_order_detail.order_sedang_finish_date')
+			// ->select('m_operator.operator_nik', 'm_operator.operator_name', 't_order.order_id', 't_order_detail.order_sedang_finish_date')
 			->first();
 
 			$material = db::table('materials')->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'materials.material_number')
@@ -583,22 +584,22 @@ class WeldingProcessController extends Controller
 			}
 		} else {
 			try{
-				$m_hsa_kartu = db::connection('welding')->table('m_hsa_kartu')->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)->first();
+				$m_hsa_kartu = db::connection('welding_controller')->table('m_hsa_kartu')->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)->first();
 
-				$order_id = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
+				$order_id = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
 				->where('part_id', '=', $m_hsa_kartu->hsa_id)
 				->first();
 
-				$t_order_detail = db::connection('welding')->table('t_order_detail')
+				$t_order_detail = db::connection('welding_controller')->table('t_order_detail')
 				->where('order_id', '=', $order_id->order_id)
 				->where('flow_id', '=', '3')
 				->update([
-					'order_start_sedang_date' => $request->get('started_at'),
-					'order_sedang_finish_date' => date('Y-m-d H:is'),
+					'order_sedang_start_date' => $request->get('started_at'),
+					'order_sedang_finish_date' => date('Y-m-d H:i:s'),
 					'order_status' => '6'
 				]);
 
-				$t_order = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
+				$t_order = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
 				->where('part_id', '=', $m_hsa_kartu->hsa_id)
 				->update([
 					'order_status' => '5'
