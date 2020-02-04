@@ -115,26 +115,24 @@
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Prioritas</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_priority"></td>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Drawing</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_drawing"></td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Lampiran</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_attach"></td>
 					</tr>
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">PIC</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_pic"></td>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Lampiran</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_attach"></td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Kategori</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_category"></td>
 					</tr>	
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Target Selesai</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_target_date"></td>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Kategori</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_category"></td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Jumlah</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_quantity"></td>
 					</tr>
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Material</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_material"></td>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Jumlah</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_quantity"></td>
+						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_material"></td>
 					</tr>
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Nama Barang</td>
@@ -272,8 +270,6 @@
 			$('#process_progress_bar').hide();
 			$('#machine_table').hide();
 
-
-
 			setInterval(setTime, 1000);
 		});
 
@@ -403,19 +399,19 @@
 							$('#text_category').html(result.wjo.category);
 							$('#text_quantity').html(result.wjo.quantity);						
 							$('#text_material').html(result.wjo.material);						
-							$('#text_problem_description').html(result.wjo.problem_description);					
+							$('#text_problem_description').html(result.wjo.problem_description + '<br>' + result.wjo.drawing_name + ' (' + result.wjo.item_number +' [Part No.'+ result.wjo.part_number +'])');
 							$('#text_target_date').html(result.wjo.target_date);
 							$('#text_pic').html(result.wjo.name);
 
 
-							$('#text_drawing').append().empty();
-							if(result.wjo.file_name){
-								$('#text_drawing').css('padding-top', '0.25%');
-								$('#text_drawing').css('padding-bottom', '0.75%');
-								$('#text_drawing').append('<button style="padding: 2%;" class="btn btn-sm btn-primary" onClick="downloadDrw(\''+result.wjo.file_name+'\')">'+ result.wjo.file_name +'&nbsp;&nbsp;&nbsp;<i class="fa fa-external-link"></i></button>');
-							}else{
-								$('#text_drawing').append('-');
-							}
+							// $('#text_drawing').append().empty();
+							// if(result.wjo.file_name){
+							// 	$('#text_drawing').css('padding-top', '0.25%');
+							// 	$('#text_drawing').css('padding-bottom', '0.75%');
+							// 	$('#text_drawing').append('<button style="padding: 2%;" class="btn btn-sm btn-primary" onClick="downloadDrw(\''+result.wjo.file_name+'\')">'+ result.wjo.file_name +'&nbsp;&nbsp;&nbsp;<i class="fa fa-external-link"></i></button>');
+							// }else{
+							// 	$('#text_drawing').append('-');
+							// }
 
 							$('#text_attach').append().empty();
 							if(result.wjo.attachment){
@@ -471,7 +467,8 @@
 									actual += '<i class="fa fa-stack-1x bg-green">'+ result.wjo_log[i].sequence_process +'</i>';
 									actual += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
 									actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
-									actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+									actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+									actual += '<p style="padding: 0px; font-size: 12px;">PIC : '+ result.wjo_log[i].pic +'</p>';
 									actual += '</div>';
 									actual += '</li>';
 								}
@@ -544,7 +541,8 @@ $('#machine').keydown(function(event) {
 							actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'">'+ result.wjo_log[i].sequence_process +'</i>';
 							actual += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
 							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
-							actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							actual += '<p style="padding: 0px; font-size: 12px;">PIC : '+ result.wjo_log[i].pic +'</p>';
 							actual += '</div>';
 							actual += '</li>';
 						}
@@ -664,7 +662,8 @@ $('#leader').keydown(function(event) {
 							actual += '<i class="fa fa-stack-1x bg-green">'+ result.wjo_log[i].sequence_process +'</i>';
 							actual += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
 							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
-							actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							actual += '<p style="padding: 0px; font-size: 12px;">PIC : '+ result.wjo_log[i].pic +'</p>';
 							actual += '</div>';
 							actual += '</li>';
 						}
@@ -755,7 +754,8 @@ function finish(){
 
 				var actual = '';
 				actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log.process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log.actual / 60) +'m<span></p>';
-				actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log.machine_name +'</p>';
+				actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log.machine_name +'</p>';
+				actual += '<p style="padding: 0px; font-size: 12px;">PIC : '+ result.wjo_log.pic +'</p>';
 
 				$("#timeline_box_" + green).html("");
 				$("#timeline_box_" + green).append(actual);

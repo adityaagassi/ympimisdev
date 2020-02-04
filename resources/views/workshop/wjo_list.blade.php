@@ -283,6 +283,30 @@
 							</thead>
 							<tbody id="tableBodyList">
 							</tbody>
+							<tfoot>
+								<tr style="color: black">
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</tfoot>
 						</table>
 					</div>
 				</div>
@@ -537,7 +561,7 @@
 												<div class="form-group row" align="right">
 													<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
-														<select class="form-control select2" data-placeholder="Pilih Operator" name="edit_pic" id="edit_pic" style="width: 100% height: 35px; font-size: 15px;" required>
+														<select class="form-control select3" data-placeholder="Pilih Operator" name="edit_pic" id="edit_pic" style="width: 100% height: 35px; font-size: 15px;" required>
 															<option value=""></option>
 															@foreach($operators as $operator)
 															<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>
@@ -681,6 +705,17 @@
 														</div>
 													</div>
 													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<select class="form-control select2" data-placeholder="Pilih Kategori" name="assign_category" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
+																<option value=""></option>
+																<option value="Molding">Molding</option>
+																<option value="Jig">Jig</option>
+																<option value="Equipment">Equipment</option>
+															</select>
+														</div>
+													</div>
+													<div class="form-group row" align="right">
 														<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
 														<div class="col-xs-8" align="left">
 															<select class="form-control select2" data-placeholder="Pilih Kesulitan" name="assign_difficulty" id="assign_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
@@ -694,25 +729,24 @@
 														</div>
 													</div>
 												</div>
-												<div class="col-xs-6" style="margin-top: 5%;">
+												<div class="col-xs-6" id="drawing" style="margin-top: 5%;">
 													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+														<label class="col-xs-4" style="margin-top: 1%;">Nama Drawing<span class="text-red">*</span></label>
 														<div class="col-xs-8" align="left">
-															<select class="form-control select2" data-placeholder="Pilih Kategori" name="assign_category" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
-																<option value=""></option>
-																<option value="Molding">Molding</option>
-																<option value="Jig">Jig</option>
-																<option value="Equipment">Equipment</option>
-															</select>
+															<input type="text" class="form-control" name="assign_drawing_name" id="assign_drawing_name">
 														</div>
 													</div>
-													<div id="drawing">
-														<div class="form-group row" align="right">
-															<label class="col-xs-4" style="margin-top: 1%;">Drawing</label>
-															<div class="col-xs-8" align="left">
-																<input style="height: 37px;" class="form-control" type="file" name="assign_drawing" id="assign_drawing">
-															</div>
-														</div>	
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">No. Drawing<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<input type="text" class="form-control" name="assign_drawing_number" id="assign_drawing_number">
+														</div>
+													</div>
+													<div class="form-group row" align="right">
+														<label class="col-xs-4" style="margin-top: 1%;">No. Part<span class="text-red">*</span></label>
+														<div class="col-xs-8" align="left">
+															<input type="text" class="form-control" name="assign_part_number" id="assign_part_number">
+														</div>
 													</div>
 												</div>
 
@@ -952,7 +986,6 @@
 
 		$('#drawing').hide();
 
-
 		fillTable();
 
 		$('.btnNext').click(function(){
@@ -964,8 +997,9 @@
 			var tag = $("#tag").val();
 			var target_date = $("#assign_target_date").val(); 
 			var category = $("#assign_category").val();
+			var difficulty = $("#assign_difficulty").val();
 			
-			if(item_name == "" || quantity == "" || material == "" || problem_description == "" || tag == "" || target_date == "" || category == ""){
+			if(item_name == "" || quantity == "" || material == "" || problem_description == "" || tag == "" || target_date == "" || category == "" || difficulty == ""){
 				openErrorGritter('Error!', 'All fields must be filled');
 			}
 			else{
@@ -976,6 +1010,18 @@
 			$('.nav-tabs > .active').prev('li').find('a').trigger('click');
 		});
 	});
+
+	$(function () {
+		$('.select3').select2({
+			dropdownParent: $('#modal-edit')
+		});
+	})
+
+	$(function () {
+		$('.select3').select2({
+			dropdownParent: $('#modal-assignment')
+		});
+	})
 
 
 	var proses = 0;
@@ -1053,14 +1099,6 @@
 	function clearConfirmation(){
 		location.reload(true);		
 	}
-
-	$('#assign_category').on('change', function() {
-		if(this.value != 'Equipment'){
-			$('#drawing').show();
-		}else{
-			$('#drawing').hide();
-		}
-	});
 
 	$('#modal-assignment').on('shown.bs.modal', function () {
 		$("#tag").val("");
@@ -1304,7 +1342,13 @@
 				}
 
 				$('#tableBodyList').append(tableData);
-				$('#tableList').DataTable({
+
+				$('#tableList tfoot th').each(function(){
+					var title = $(this).text();
+					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
+				});
+
+				var table = $('#tableList').DataTable({
 					'dom': 'Bfrtip',
 					'responsive':true,
 					'lengthMenu': [
@@ -1319,19 +1363,36 @@
 						},
 						]
 					},
+					"columnDefs": [ {
+						"searchable": false,
+						"orderable": false,
+						"targets": 0
+					} ],
 					'paging': true,
 					'lengthChange': true,
-					'pageLength': 10,
 					'searching': true,
-					'ordering': true,
-					'order': [],
+					'ordering': false,
 					'info': true,
 					'autoWidth': true,
 					"sPaginationType": "full_numbers",
 					"bJQueryUI": true,
 					"bAutoWidth": false,
-					"processing": true
+					"processing": true,
 				});
+
+				table.columns().every( function () {
+					var that = this;
+
+					$( 'input', this.footer() ).on( 'keyup change', function () {
+						if ( that.search() !== this.value ) {
+							that
+							.search( this.value )
+							.draw();
+						}
+					} );
+				} );
+
+				$('#tableList tfoot tr').appendTo('#tableList thead');
 			}
 			else{
 				openErrorGritter('Error!', result.message);
@@ -1469,7 +1530,8 @@ $("form#assign").submit(function(e) {
 			proses = 0;
 
 
-			fillTable();
+			location.reload(true);		
+
 			$("#loading").hide();
 			$("#modal-assignment").modal('hide');
 			$('#drawing').hide();
@@ -1483,7 +1545,8 @@ $("form#assign").submit(function(e) {
 			$('#assign_category').prop('selectedIndex', 0).change();
 			$('#assign_item_number').prop('selectedIndex', 0).change();
 
-			fillTable();
+			location.reload(true);		
+			
 			$("#loading").hide();
 			$("#modal-assignment").modal('hide');
 			openErrorGritter('Error!', result.message);
@@ -1513,10 +1576,14 @@ function showAssignment(order_no) {
 			document.getElementById("assign_quantity").value = result.wjo.quantity;
 			document.getElementById("assign_material").value = result.wjo.material;
 			document.getElementById("assign_problem_desc").value = result.wjo.problem_description;
-
+			document.getElementById("assign_drawing_name").value = result.wjo.drawing_name;
+			document.getElementById("assign_drawing_number").value = result.wjo.item_number;
+			document.getElementById("assign_part_number").value = result.wjo.part_number;
 			$("#assign_category").val(result.wjo.category).trigger('change.select2');
-			$('#assign_item_number').val(result.wjo.item_number).trigger('change');
-
+			
+			if(result.wjo.category != 'Equipment'){
+				$("#drawing").show();
+			}
 
 			$("#modal-assignment").modal('show');
 

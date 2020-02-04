@@ -410,7 +410,6 @@
 						title: {
 							text: 'Minute(s)'
 						},
-						type: 'logarithmic',
 					},
 					plotOptions: {
 						series:{
@@ -433,14 +432,6 @@
 									}
 								}
 							},
-						},
-						column: {
-							color:  Highcharts.ColorString,
-							stacking: 'normal',
-							borderRadius: 1,
-							dataLabels: {
-								enabled: true
-							}
 						}
 					},
 					credits: {
@@ -448,11 +439,6 @@
 					},
 					legend: {
 						enabled: false
-					},
-					tooltip: {
-						formatter:function(){
-							return this.series.name+' : ' + this.y;
-						}
 					},
 					series: [{
 						name: 'Machine Workload',
@@ -479,24 +465,36 @@
 					}
 					if(fill){
 						data.push(0);
-					}
-
-					
+					}	
 				}
 
-				for (var j = 0; j < data.length; j++) {
-					if(data[j] > 460){
-						series.push({y: data[j], color: 'rgb(255,116,116)'})
-					}else{
-						series.push({y: data[j], color: 'rgb(144,238,126)'});
-					}
+				var sumPlotLines = Math.ceil(Math.max(...data) / 400);
+				var plotLines = [];
+
+
+				for (var i = 1; i <= sumPlotLines; i++){
+					plotLines.push({
+						color: '#FFB300',
+						value: (i * 400),
+						dashStyle: 'shortdash',
+						width: 2,
+						zIndex: 5,
+						label: {
+							align:'right',
+							text: i + ' day(s)',
+							x:-7,
+							style: {
+								fontSize: '12px',
+								color: '#FFB300',
+								fontWeight: 'bold'
+							}
+						}
+					});
+					
 				}
 
 
 				$('#op-workload').highcharts({
-					chart: {
-						type: 'column'
-					},
 					title: {
 						text: 'Workshop Operator Workload',
 						style: {
@@ -512,27 +510,15 @@
 						gridLineWidth: 1
 					},
 					yAxis: {
+						gridLineWidth: 0,
 						title: {
 							text: 'Minute(s)'
 						},
-						type: 'logarithmic',
-						plotLines: [{
-							color: '#FF0000',
-							value: 460,
-							dashStyle: 'shortdash',
-							width: 2,
-							zIndex: 5,
-							label: {
-								align:'right',
-								text: '460 Minutes',
-								x:-7,
-								style: {
-									fontSize: '12px',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}]
+						plotLines : plotLines
+					},
+					tooltip: {
+						headerFormat: '<span>Operator Workload</span><br/>',
+						pointFormat: '<span style="font-weight: bold;">{point.category} </span>: <b>{point.y} Minute(s)</b><br/>',
 					},
 					plotOptions: {
 						series:{
@@ -555,14 +541,6 @@
 									}
 								}
 							},
-						},
-						column: {
-							color:  Highcharts.ColorString,
-							stacking: 'normal',
-							borderRadius: 1,
-							dataLabels: {
-								enabled: true
-							}
 						}
 					},
 					credits: {
@@ -571,14 +549,10 @@
 					legend: {
 						enabled: false
 					},
-					tooltip: {
-						formatter:function(){
-							return this.series.name+' : ' + this.y;
-						}
-					},
 					series:  [{
 						name: 'Operator Workload',
-						data: series,
+						data: data,
+						type: 'column'
 					}]
 				});
 
@@ -596,7 +570,6 @@ function showOperatorDetail(name) {
 			$('#modal-operator').modal('show');
 			$('#operator-body').append().empty();
 			$('#judul-operator').append().empty();
-			$('#judul-operator').append('<b>'+ result.detail[0].name +' on '+ result.date +'</b>');
 
 			var body = '';
 			for (var i = 0; i < result.detail.length; i++) {

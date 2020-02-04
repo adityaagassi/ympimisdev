@@ -262,11 +262,11 @@ class WorkshopController extends Controller{
 				->update(['status' => 0]);
 
 				$workshop_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
+				->leftJOin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_logs.operator_id')
 				->where('workshop_logs.order_no', '=', $request->get('order_no'))
-				->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name')
-				->orderBy('workshop_logs.sequence_process', 'asc')
+				->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name', db::raw('timestampdiff(second, workshop_logs.started_at, workshop_logs.created_at) as actual'), db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as pic'))
+				->orderBy('sequence_process', 'asc')
 				->get();
-
 
 				$process = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
 				->where('workshop_flow_processes.order_no', '=', $request->get('order_no'))
@@ -331,6 +331,10 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.item_number as file_name',
 			'workshop_job_orders.priority',
 			'workshop_job_orders.category',
+			'workshop_job_orders.drawing_name',
+			'workshop_job_orders.item_number',
+			'workshop_job_orders.part_number',
+			'workshop_job_orders.category',
 			'workshop_job_orders.item_name',
 			'workshop_job_orders.tag',
 			'workshop_job_orders.quantity',
@@ -361,8 +365,9 @@ class WorkshopController extends Controller{
 		->get();
 
 		$workshop_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
+		->leftJOin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_logs.operator_id')
 		->where('workshop_logs.order_no', '=', $wjo->order_no)
-		->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name', db::raw('timestampdiff(second, workshop_logs.started_at, workshop_logs.created_at) as actual'))
+		->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name', db::raw('timestampdiff(second, workshop_logs.started_at, workshop_logs.created_at) as actual'), db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as pic'))
 		->orderBy('sequence_process', 'asc')
 		->get();
 
@@ -473,8 +478,9 @@ class WorkshopController extends Controller{
 		->get();
 
 		$workshop_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
+		->leftJOin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_logs.operator_id')
 		->where('workshop_logs.order_no', '=', $wjo->order_no)
-		->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name', db::raw('timestampdiff(second, workshop_logs.started_at, workshop_logs.created_at) as actual'))
+		->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name', db::raw('timestampdiff(second, workshop_logs.started_at, workshop_logs.created_at) as actual'), db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as pic'))
 		->orderBy('sequence_process', 'asc')
 		->get();
 
@@ -552,7 +558,9 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.order_no',
 			db::raw('date(workshop_job_orders.created_at) as created_at'),
 			'workshop_job_orders.sub_section',
+			'workshop_job_orders.drawing_name',
 			'workshop_job_orders.item_number',
+			'workshop_job_orders.part_number',
 			'workshop_job_orders.item_name',
 			'workshop_job_orders.quantity',
 			'workshop_job_orders.priority',
@@ -561,11 +569,11 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.problem_description',
 			'processes.process_name',
 			'workshop_job_orders.target_date',
+			'workshop_job_orders.finish_date',
 			'workshop_job_orders.difficulty',
 			'workshop_job_orders.main_process',
 			'workshop_job_orders.rating',
 			'workshop_job_orders.note',
-			'workshop_job_orders.item_number',
 			'approver.name as approver_name',
 			'pic.name as pic_name'
 		)
@@ -737,8 +745,9 @@ class WorkshopController extends Controller{
 			});
 
 			$workshop_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
+			->leftJOin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_logs.operator_id')
 			->where('workshop_logs.order_no', '=', $wjo->order_no)
-			->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name', db::raw('timestampdiff(second, workshop_logs.started_at, workshop_logs.created_at) as actual'))
+			->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name', db::raw('timestampdiff(second, workshop_logs.started_at, workshop_logs.created_at) as actual'), db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as pic'))
 			->orderBy('sequence_process', 'desc')
 			->first();
 
@@ -770,6 +779,9 @@ class WorkshopController extends Controller{
 		$sub_section = $request->get('sub_section');
 		$item_name = $request->get('item_name');
 		$category = $request->get('category');
+		$drawing_name = $request->get('drawing_name');
+		$item_number = $request->get('item_number');
+		$part_number = $request->get('part_number');
 		$quantity = $request->get('quantity');
 		$priority = $request->get('priority');
 		$type = $request->get('type');
@@ -818,6 +830,9 @@ class WorkshopController extends Controller{
 			'sub_section' => $sub_section,
 			'item_name' => $item_name,
 			'category' => $category,
+			'drawing_name' => $drawing_name,
+			'item_number' => $item_number,
+			'part_number' => $part_number,
 			'quantity' => $quantity,
 			'target_date' => $request_date,
 			'priority' => $priority,
@@ -1212,7 +1227,7 @@ class WorkshopController extends Controller{
 	public function fetchWorkloadOperatorDetail(Request $request){
 		$name = $request->get('name');
 
-		$detail = db::select("select concat(SPLIT_STRING(emp.`name`, ' ', 1),' ',SPLIT_STRING(emp.`name`, ' ', 2)) as `name`, workload.order_no, tag.remark as tag_number, wjo.item_name, workload.workload from
+		$detail = db::select('select concat(SPLIT_STRING(emp.`name`, " ", 1)," ",SPLIT_STRING(emp.`name`, " ", 2)) as `name`, workload.order_no, tag.remark as tag_number, wjo.item_name, workload.workload from
 			(select wjo.operator, workload.order_no, round((workload.workload/60), 0) as workload from
 			(select workload.order_no, sum(workload.workload) workload from
 			(select flow.order_no, sum(std_time) as workload from workshop_flow_processes flow
@@ -1234,8 +1249,8 @@ class WorkshopController extends Controller{
 			on wjo.order_no = workload.order_no
 			left join workshop_tag_availabilities tag
 			on tag.tag = wjo.tag
-			where emp.`name` like '%".$name."%'
-			and emp.`group` = 'Workshop'");
+			where emp.`name` like "%'.$name.'%"
+			and emp.`group` = "Workshop"');
 
 		$response = array(
 			'status' => true,

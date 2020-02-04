@@ -207,6 +207,29 @@
 							</div>
 						</div>
 
+						<div id="drawing-field">
+							<div class="col-xs-12" style="padding-bottom: 1%;">
+								<div class="col-xs-3" align="right" style="padding: 0px;">
+									<span style="font-weight: bold; font-size: 16px;">Nama Drawing:<span class="text-red">*</span></span>
+								</div>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="drawing_name" id="drawing_name" rows='1' placeholder="Nama Drawing" style="width: 100%; font-size: 15px;">
+								</div>
+							</div>
+
+							<div class="col-xs-12" style="padding-bottom: 1%;">
+								<div class="col-xs-3" align="right" style="padding: 0px;">
+									<span style="font-weight: bold; font-size: 16px;">No. Drawing:<span class="text-red">*</span></span>
+								</div>
+								<div class="col-xs-4">
+									<input type="text" class="form-control" name="item_number" id="item_number" rows='1' placeholder="Nomor Drawing" style="width: 100%; font-size: 15px;">
+								</div>
+								<div class="col-xs-2" style="padding-left: 0px;">
+									<input type="text" class="form-control" name="part_number" id="part_number" rows='1' placeholder="Nomor Part" style="width: 100%; font-size: 15px;">
+								</div>
+							</div>
+						</div>
+
 						<div class="col-xs-12" style="padding-bottom: 1%;">
 							<div class="col-xs-3" align="right" style="padding: 0px;">
 								<span style="font-weight: bold; font-size: 16px;">Jumlah:<span class="text-red">*</span></span>
@@ -266,22 +289,6 @@
 								<input style="height: 37px;" class="form-control" type="file" name="upload_file" id="upload_file">
 							</div>
 						</div>
-
-						{{-- <div class="col-xs-12" style="padding-bottom: 1%;">
-							<div class="col-xs-3" align="right" style="padding: 0px;">
-								<span style="font-weight: bold; font-size: 16px;">Pilih Drawing:&nbsp;&nbsp;</span></span>
-							</div>
-							<div class="col-xs-5">
-								<select class="form-control select2" data-placeholder="Pilih Drawing" name="drawing" id="drawing" style="width: 100% height: 35px; font-size: 15px;">
-									<option value=""></option>
-									@foreach($materials as $material)
-									@if($material->remark == 'drawing')
-									<option value="{{ $material->item_number }}">{{ $material->item_number }} - {{ $material->item_description }}</option>
-									@endif
-									@endforeach
-								</select>
-							</div>
-						</div> --}}
 
 						<div class="col-xs-12" style="padding-right: 12%;">
 							<br>
@@ -436,22 +443,6 @@
 							</div>
 						</div> --}}
 
-						{{-- <div class="col-xs-12" style="padding-bottom: 1%;">
-							<div class="col-xs-3" align="right" style="padding: 0px;">
-								<span style="font-weight: bold; font-size: 16px;">Pilih Drawing:&nbsp;&nbsp;</span></span>
-							</div>
-							<div class="col-xs-5">
-								<select class="form-control select2" data-placeholder="Pilih Drawing" name="drawing_edit" id="drawing_edit" style="width: 100% height: 35px; font-size: 15px;">
-									<option value=""></option>
-									@foreach($materials as $material)
-									@if($material->remark == 'drawing')
-									<option value="{{ $material->item_number }}">{{ $material->item_number }} - {{ $material->item_description }}</option>
-									@endif
-									@endforeach
-								</select>
-							</div>
-						</div> --}}
-
 						<div class="col-xs-12" style="padding-right: 12%;">
 							<br>
 							<input type="hidden" id="id_edit">
@@ -506,6 +497,8 @@
 
 		$('#material-other_edit').hide();
 
+		$('#drawing-field').hide();
+
 		$('.datepicker').datepicker({
 			autoclose: true,
 			format: "yyyy-mm-dd",
@@ -532,6 +525,14 @@
 			dropdownParent: $('#editModal')
 		});
 	})
+
+	$('#category').on('change', function() {
+		if(this.value != 'Equipment'){
+			$('#drawing-field').show();
+		}else{
+			$('#drawing-field').hide();
+		}
+	});
 
 	$('#material').on('change', function() {
 		if(this.value == 'Lainnya'){
@@ -577,7 +578,21 @@
 	})
 
 	$("form#data").submit(function(e) {
-		$("#loading").show();		
+		$("#loading").show();
+
+		var category = $("#category").val();
+		var drawing_name = $("#drawing_name").val();
+		var drawing_number = $("#drawing_number").val();
+		var part_number = $("#part_number").val();
+
+		if(category != "Equipment"){
+			if(drawing_name == "" || drawing_number == "" || part_number == ""){
+				openErrorGritter('Error!', 'Tanda (*) harus diisi');
+				$("#loading").hide();
+				return false;
+			}
+		}
+		
 
 		e.preventDefault();    
 		var formData = new FormData(this);
