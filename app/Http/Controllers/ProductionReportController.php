@@ -204,7 +204,8 @@ class ProductionReportController extends Controller
                 IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 12 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 16,3,
                 IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 16 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 20,4,
                                 IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 20 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 24,5,
-                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 24 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 28,6,0)))))))
+                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 24 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 28,6,
+                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 28 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 32,7,0))))))))
                                 as jumlah_weekly,
         COALESCE((IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 4,0,
                 IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 4 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 8,1,
@@ -212,7 +213,8 @@ class ProductionReportController extends Controller
                 IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 12 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 16,3,
                 IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 16 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 20,4,
                                 IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 20 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 24,5,
-                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 24 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 28,6,0)))))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
+                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 24 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 28,6,
+                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 28 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 32,7,0))))))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
         (select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily as jumlah_activity_daily,
         daily.jumlah_daily_check+daily.jumlah_area_check as jumlah_daily,
         COALESCE(((daily.jumlah_daily_check+daily.jumlah_area_check)/((select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily))*100,0) as persen_daily,
@@ -2489,6 +2491,8 @@ class ProductionReportController extends Controller
 
         $week = DB::SELECT("SELECT DISTINCT(week_name) from weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$month."'");
 
+        $day = DB::SELECT("select week_date from weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$month."' and remark != 'H'");
+
         if ($activity_type == 'Audit') {
             $data = DB::SELECT("select leader_dept,activity_name,(select COALESCE(GROUP_CONCAT(DISTINCT(week_name) ORDER BY week_name),0) from production_audits where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and production_audits.deleted_at is null ) as hasil,4 as plan,frequency from activity_lists where activity_lists.activity_type = 'Audit' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
         }
@@ -2505,6 +2509,59 @@ class ProductionReportController extends Controller
             $data = DB::SELECT("select leader_dept,activity_name,(select COALESCE(GROUP_CONCAT(DISTINCT(week_name) ORDER BY week_name),0) from sampling_checks where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and sampling_checks.deleted_at is null ) as hasil,4 as plan,frequency from activity_lists where activity_lists.activity_type = 'Sampling Check' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
         }
 
+        if ($activity_type == 'Pengecekan Foto') {
+            $data = DB::SELECT("select leader_dept,
+            activity_name,
+            (select COALESCE(GROUP_CONCAT(check_date ORDER BY check_date),0) from daily_checks where activity_lists.id = activity_list_id and DATE_FORMAT(check_date,'%Y-%m') = '".$month."' and daily_checks.deleted_at is null ) as hasil,
+            (select count(*) from weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$month."' and remark != 'H') as plan,
+            frequency 
+            from activity_lists 
+            where activity_lists.activity_type = 'Pengecekan Foto' 
+            GROUP BY activity_lists.id,leader_dept,activity_name,frequency 
+            ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Interview') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select count(*) from interviews where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and interviews.deleted_at is null) as hasil,1 as plan,frequency from activity_lists where activity_lists.activity_type = 'Interview' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Pengecekan') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select count(DISTINCT(leader)) from first_product_audit_details where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and first_product_audit_details.deleted_at is null) as hasil,1 as plan,frequency from activity_lists where activity_lists.activity_type = 'Pengecekan' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Pemahaman Proses') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select COALESCE(GROUP_CONCAT(DISTINCT(week_name) ORDER BY week_name),0) from audit_processes where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and audit_processes.deleted_at is null ) as hasil,4 as plan,frequency from activity_lists where activity_lists.activity_type = 'Pemahaman Proses' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Labelisasi') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select COALESCE(COUNT(DISTINCT(leader)),0) from labelings where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and labelings.deleted_at is null ) as hasil,1 as plan,frequency from activity_lists where activity_lists.activity_type = 'Labelisasi' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Cek Area') {
+            $data = DB::SELECT("select leader_dept,
+            activity_name,
+            (select COALESCE(GROUP_CONCAT(date ORDER BY date),0) from area_checks where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and area_checks.deleted_at is null ) as hasil,
+            (select count(*) from weekly_calendars where DATE_FORMAT(week_date,'%Y-%m') = '".$month."' and remark != 'H') as plan,
+            frequency 
+            from activity_lists 
+            where activity_lists.activity_type = 'Cek Area' 
+            GROUP BY activity_lists.id,leader_dept,activity_name,frequency 
+            ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Jishu Hozen') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select COALESCE(COUNT(DISTINCT(leader)),0) from jishu_hozens where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and jishu_hozens.deleted_at is null ) as hasil,1 as plan,frequency from activity_lists where activity_lists.activity_type = 'Jishu Hozen' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Cek APD') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select COALESCE(GROUP_CONCAT(DISTINCT(week_name) ORDER BY week_name),0) from apd_checks where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and apd_checks.deleted_at is null ) as hasil,4 as plan,frequency from activity_lists where activity_lists.activity_type = 'Cek APD' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+        if ($activity_type == 'Weekly Report') {
+            $data = DB::SELECT("select leader_dept,activity_name,(select COALESCE(GROUP_CONCAT(DISTINCT(week_name) ORDER BY week_name),0) from weekly_activity_reports where activity_lists.id = activity_list_id and DATE_FORMAT(date,'%Y-%m') = '".$month."' and weekly_activity_reports.deleted_at is null) as hasil,4 as plan,frequency from activity_lists where activity_lists.activity_type = 'Weekly Report' GROUP BY activity_lists.id,leader_dept,activity_name,frequency ORDER BY activity_name");
+        }
+
+
         // $response = array(
         //     'status' => true,
         //     'activity_type' => $activity_type,
@@ -2520,6 +2577,7 @@ class ProductionReportController extends Controller
             'activity_type' => $activity_type,
             'datas' => $data,
             'week' => $week,
+            'day' => $day,
             'monthTitle' => $monthTitle,
             'month' => $month
           );

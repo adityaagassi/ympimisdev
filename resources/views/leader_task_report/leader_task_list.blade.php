@@ -108,6 +108,8 @@ table.table-bordered > tfoot > tr > th{
                     @if($role_code == 'L-Assy' || $name == 'Bagus Sudibyo')
                       @if($activity_list->frequency == 'Weekly' && $activity_list->jumlah >= '4')
                         <button class="btn btn-success">Sudah Dilaksanakan</button>
+                      @elseif($activity_list->frequency == 'Weekly' && $activity_list->jumlah < '4')
+                        <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
                       @elseif($activity_list->frequency == 'Monthly' && $activity_list->jumlah >= '1' || $activity_list->frequency == 'Conditional' && $activity_list->jumlah >= '1')
                         <button class="btn btn-success">Sudah Dilaksanakan</button>
                       @elseif($activity_list->frequency == 'Daily' && $activity_list->jumlah >= '1')

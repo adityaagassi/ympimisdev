@@ -67,7 +67,7 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com')->priority(1)->subject('Penolakan Corrective Action Report (CAR) (是正処置対策)')->view('mails.rejectcar');
         }
         if($this->remark == 'user_document'){
-            return $this->from('ympimis@gmail.com')->subject('Users Documents Reminder (??)')->view('mails.user_document');
+            return $this->from('ympimis@gmail.com')->subject('Users Documents Reminder (ユーザ資料関連の催促メール)')->view('mails.user_document');
         }
         if($this->remark == 'audit'){
             return $this->from('ympimis@gmail.com')->subject('Production Audit Report (??)')->view('mails.audit');
@@ -126,12 +126,12 @@ class SendEmail extends Mailable
         if($this->remark == 'urgent_wjo'){
             if($this->data[0]->attachment != null){
                 return $this->from('ympimis@gmail.com')
-                ->subject('Urgent Workshop Job Order (??)')
+                ->subject('Urgent Workshop Job Order (優先のワークショップ作業依頼書)')
                 ->view('mails.urgent_wjo')
                 ->attach(public_path('workshop/'.$this->data[0]->attachment));
             }else{
                 return $this->from('ympimis@gmail.com')
-                ->subject('Urgent Workshop Job Order (??)')
+                ->subject('Urgent Workshop Job Order (優先のワークショップ作業依頼書)')
                 ->view('mails.urgent_wjo');
             }
 
