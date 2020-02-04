@@ -533,7 +533,7 @@
 												<div class="form-group row" align="right">
 													<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
-														<select class="form-control select2" data-placeholder="Pilih Kesulitan" name="edit_difficulty" id="edit_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
+														<select class="form-control select4" data-placeholder="Pilih Kesulitan" name="edit_difficulty" id="edit_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
 															<option value=""></option>
 															<option value="Biasa">Biasa</option>
 															<option value="Sulit">Sulit</option>
@@ -548,7 +548,7 @@
 												<div class="form-group row" align="right">
 													<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
-														<select class="form-control select2" data-placeholder="Pilih Kategori" name="edit_category" id="edit_category" style="width: 100% height: 35px; font-size: 15px;" required>
+														<select class="form-control select4" data-placeholder="Pilih Kategori" name="edit_category" id="edit_category" style="width: 100% height: 35px; font-size: 15px;" required>
 															<option value=""></option>
 															<option value="Molding">Molding</option>
 															<option value="Jig">Jig</option>
@@ -561,7 +561,7 @@
 												<div class="form-group row" align="right">
 													<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
-														<select class="form-control select3" data-placeholder="Pilih Operator" name="edit_pic" id="edit_pic" style="width: 100% height: 35px; font-size: 15px;" required>
+														<select class="form-control select4" data-placeholder="Pilih Operator" name="edit_pic" id="edit_pic" style="width: 100% height: 35px; font-size: 15px;" required>
 															<option value=""></option>
 															@foreach($operators as $operator)
 															<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>
@@ -1013,13 +1013,11 @@
 
 	$(function () {
 		$('.select3').select2({
-			dropdownParent: $('#modal-edit')
-		});
-	})
-
-	$(function () {
-		$('.select3').select2({
 			dropdownParent: $('#modal-assignment')
+		});
+
+		$('.select4').select2({
+			dropdownParent: $('#modal-edit'),
 		});
 	})
 
@@ -1343,10 +1341,10 @@
 
 				$('#tableBodyList').append(tableData);
 
-				$('#tableList tfoot th').each(function(){
-					var title = $(this).text();
-					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
-				});
+				// $('#tableList tfoot th').each(function(){
+				// 	var title = $(this).text();
+				// 	$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
+				// });
 
 				var table = $('#tableList').DataTable({
 					'dom': 'Bfrtip',
@@ -1363,11 +1361,6 @@
 						},
 						]
 					},
-					"columnDefs": [ {
-						"searchable": false,
-						"orderable": false,
-						"targets": 0
-					} ],
 					'paging': true,
 					'lengthChange': true,
 					'searching': true,
@@ -1380,19 +1373,19 @@
 					"processing": true,
 				});
 
-				table.columns().every( function () {
-					var that = this;
+				// table.columns().every( function () {
+				// 	var that = this;
 
-					$( 'input', this.footer() ).on( 'keyup change', function () {
-						if ( that.search() !== this.value ) {
-							that
-							.search( this.value )
-							.draw();
-						}
-					} );
-				} );
+				// 	$( 'input', this.footer() ).on( 'keyup change', function () {
+				// 		if ( that.search() !== this.value ) {
+				// 			that
+				// 			.search( this.value )
+				// 			.draw();
+				// 		}
+				// 	} );
+				// } );
 
-				$('#tableList tfoot tr').appendTo('#tableList thead');
+				// $('#tableList tfoot tr').appendTo('#tableList thead');
 			}
 			else{
 				openErrorGritter('Error!', result.message);

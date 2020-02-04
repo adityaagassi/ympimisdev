@@ -1076,7 +1076,7 @@ class WorkshopController extends Controller{
 
 		try{
 			if($wjo->tag){
-				$tag_availability = WorkshopTagAvailability::where('tag', '=', $tag)->first();
+				$tag_availability = WorkshopTagAvailability::where('tag', '=', $wjo->tag)->first();
 				$tag_availability->status = 1;
 				$tag_availability->save();
 			}
@@ -1175,7 +1175,8 @@ class WorkshopController extends Controller{
 			left join employee_syncs emp
 			on emp.employee_id = op.operator_id');
 
-		$op_workload = db::select('select wjo.operator, sum(round((workload.workload/60), 0)) as workload from
+		$op_workload = db::select('select op_workload.operator, concat(SPLIT_STRING(emp.`name`, " ", 1), " ", SPLIT_STRING(emp.`name`, " ", 2)) as `name`, sum(op_workload.workload) as workload from
+			(select wjo.operator, round((workload.workload/60), 0) as workload from
 			(select workload.order_no, sum(workload.workload) workload from
 			(select flow.order_no, sum(std_time) as workload from workshop_flow_processes flow
 			left join workshop_job_orders wjo on wjo.order_no = flow.order_no
@@ -1189,8 +1190,9 @@ class WorkshopController extends Controller{
 			group by workload.order_no) workload
 			left join workshop_job_orders wjo
 			on wjo.order_no = workload.order_no
-			GROUP BY wjo.operator
-			having workload > 0');
+			having workload > 0) op_workload
+			left join employee_syncs emp on emp.employee_id = op_workload.operator
+			group by operator, `name`');
 
 		$machine = db::select('SELECT machine_name, shortname FROM workshop_processes
 			where category = "MACHINE"
