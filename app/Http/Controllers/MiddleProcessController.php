@@ -2629,7 +2629,7 @@ class MiddleProcessController extends Controller
 			$addlocation = "and l.location in (".$location.") ";
 		}
 
-		$key = db::select("select DISTINCT SUBSTRING(`key`, 1, 1) as kunci from materials where hpl = 'ASKEY' and surface not like '%PLT%' ORDER BY `key` asc");
+		$key = db::select("select DISTINCT SUBSTRING(`key`, 1, 1) as kunci from materials where hpl = 'ASKEY' and surface not like '%PLT%' and issue_storage_location = 'SX51' ORDER BY `key` asc");
 
 		$jam = [
 			"DATE_FORMAT(l.created_at,'%H:%m:%s') >= '00:00:00' and DATE_FORMAT(l.created_at,'%H:%m:%s') < '01:00:00'",

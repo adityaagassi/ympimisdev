@@ -259,7 +259,7 @@
 				$("#key").text(result.material.key);
 				if(result.opwelding){
 					$("#opwelding").text(result.opwelding.operator_nik+" "+result.opwelding.operator_name);	
-					$('#welding_time').val(result.opwelding.order_sedang_finish_date);			
+					$('#welding_time').val(result.opwelding.order_sedang_finish_date);		
 				}
 				else{		
 					$("#opwelding").text("Operator Not Found");

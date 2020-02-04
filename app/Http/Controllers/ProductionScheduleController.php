@@ -37,6 +37,7 @@ class ProductionScheduleController extends Controller
     	->get();
 
     	$production_schedules = ProductionSchedule::orderByRaw('due_date DESC', 'material_number ASC')
+        ->limit(1000)
     	->get();
 
     	$materials = Material::orderBy('material_number', 'ASC')->get();

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset("dist/css/AdminLTE.min.css")}}">
     <link rel="stylesheet" href="{{ asset("plugins/iCheck/square/blue.css")}}">
     <link rel="stylesheet" href="{{ asset("fonts/SourceSansPro.css")}}">
+    <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 </head>
 <body class="hold-transition register-page">
     <div class="register-box">
@@ -18,15 +19,36 @@
             <a href="#"><b>YMPI</b><br>Information System</a>
         </div>
         <div class="register-box-body">
+             @if (session('error'))
+              aa
+              @endif
             <p class="login-box-msg">Register a new account</p>
             <form action="{{ route("register")}}" method="post">
                 {{ csrf_field() }}
-                <div class="form-group has-feedback {{ $errors->has('name') ? ' has-error' : '' }}">
+                <!-- <div class="form-group has-feedback {{ $errors->has('name') ? ' has-error' : '' }}">
                     <input type="text" class="form-control" name="name" id="name" placeholder="Full name">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
                     @if ($errors->has('name'))
                     <span class="help-block">
                         <strong>{{ $errors->first('name') }}</strong>
+                    </span>
+                    @endif
+                </div> --> 
+                {{-- <div class="form-group has-feedback {{ $errors->has('name') ? ' has-error' : '' }}">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Full name">
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    @if ($errors->has('name'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('name') }}</strong>
+                    </span>
+                    @endif
+                </div> --}}  
+                <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Username (NIK)">
+                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+                    @if ($errors->has('name'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('username') }}</strong>
                     </span>
                     @endif
                 </div>
@@ -39,15 +61,7 @@
                     </span>
                     @endif
                 </div>
-                <div class="form-group has-feedback {{ $errors->has('username') ? ' has-error' : '' }}">
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Username (NIK)">
-                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
-                    @if ($errors->has('name'))
-                    <span class="help-block">
-                        <strong>{{ $errors->first('username') }}</strong>
-                    </span>
-                    @endif
-                </div>
+                
                 <div class="form-group has-feedback {{ $errors->has('password') ? ' has-error' : '' }}">
                     <input type="password" class="form-control" name="password" id="password" placeholder="Password">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>

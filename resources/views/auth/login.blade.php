@@ -37,7 +37,7 @@
           <div class="col-xs-12">
           </div>
           <div class="col-xs-8">
-            {{-- <a href="{{ url("register") }}" class="pull-left">Register a new account</a> --}}
+            <a href="{{ url("register") }}" class="pull-left">Register a new account</a>
           </div>
           <div class="col-xs-4">
             <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\EmployeeSync;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -61,16 +63,51 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
-    {
+    protected function create(array $data) {
+        $emp = EmployeeSync::where('employee_id', '=', strtolower($data['username']))->first();
+
+        if(!$emp){
+            // return redirect(url('register'))->with('error', 'NIK Not Exists')->with('page', 'Register');
+            // return redirect('172.17.128.4/mirai/public');
+            // $response = array(
+            //     'status' => true,
+            //     'error' => 'NIK Does Not Exists!',
+            // );
+            // return Response::json($response);
+        }
+
         return User::create([
-            'name' => ucwords($data['name']),
+            'name' => ucwords($emp->name),
             'email' => strtolower($data['email']),
             'password' => bcrypt($data['password']),
             'username' => strtolower($data['username']),
-            'role_code' => 'G',
-            'avatar' => 'image-user.png',
+            'role_code' => 'emp-srv',
+            'avatar' => strtolower($data['username']).'jpg',
             'created_by' => '1'
         ]);
     }
+
+    // protected function create(Request $data) {
+    //     $emp = EmployeeSync::where('employee_id', '=', strtolower($data->get('username')))->first();
+
+    //     if(!$emp){
+    //         // return redirect(url('register'))->with('error', 'NIK Not Exists')->with('page', 'Register');
+    //         // return redirect('172.17.128.4/mirai/public');
+    //         // $response = array(
+    //         //     'status' => true,
+    //         //     'error' => 'NIK Does Not Exists!',
+    //         // );
+    //         // return Response::json($response);
+    //     }
+
+    //     return User::create([
+    //         'name' => ucwords($emp->name),
+    //         'email' => strtolower($data->get('email')),
+    //         'password' => bcrypt($data->get('password')),
+    //         'username' => strtolower($data->get('username')),
+    //         'role_code' => 'emp-srv',
+    //         'avatar' => 'image-user.png',
+    //         'created_by' => '1'
+    //     ]);
+    // }
 }
