@@ -64,27 +64,61 @@ class SendEmailKaizen extends Command
 
         // $tes = DB::getQueryLog();
 
-        $query_cf = "select child_code, area, SUM(unv_frm) as frm, SUM(unv_mngr) as mngr from
-        (select child_code, area, count as unv_frm, 0 as unv_mngr from
-        (select organization_structures.child_code, os.child_code as section from organization_structures 
-        join organization_structures as os on organization_structures.`status` = os.parent_name
-        where organization_structures.remark = 'department') as bagian
-        left join
-        (select count(id) as count, area from kaizen_forms where `status` = -1 and propose_date >= '2019-12-01' group by area) as kz
-        on bagian.section = kz.area
-        where area is not null
-
-        UNION ALL
-
-        select child_code, area, 0 as unv_frm, count(kaizen_forms.id) as unv_mngr from kaizen_forms 
-        left join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
-        right join
-        (select organization_structures.child_code, os.child_code as section from organization_structures 
-        join organization_structures as os on organization_structures.`status` = os.parent_name
-        where organization_structures.remark = 'department') as bagian
-        on bagian.section = kaizen_forms.area
-        where `status` = 1 and (manager_point_1 is null or manager_point_1 = 0)
-        group by area) alls group by child_code, area";
+        $query_cf = "SELECT
+        child_code,
+        area,
+        SUM( unv_frm ) AS frm,
+        SUM( unv_mngr ) AS mngr 
+        FROM
+        (
+        SELECT
+        child_code,
+        area,
+        count AS unv_frm,
+        0 AS unv_mngr 
+        FROM
+        (
+        SELECT
+        organization_structures.child_code,
+        os.child_code AS section 
+        FROM
+        organization_structures
+        JOIN organization_structures AS os ON organization_structures.`status` = os.parent_name 
+        WHERE
+        organization_structures.remark = 'department' 
+        ) AS bagian
+        LEFT JOIN ( SELECT count( id ) AS count, area FROM kaizen_forms WHERE `status` = - 1 AND propose_date >= '2019-12-01'
+        and kaizen_forms.deleted_at is null GROUP BY area ) AS kz ON bagian.section = kz.area 
+        WHERE
+        area IS NOT NULL UNION ALL
+        SELECT
+        child_code,
+        area,
+        0 AS unv_frm,
+        count( kaizen_forms.id ) AS unv_mngr 
+        FROM
+        kaizen_forms
+        LEFT JOIN kaizen_scores ON kaizen_forms.id = kaizen_scores.id_kaizen
+        RIGHT JOIN (
+        SELECT
+        organization_structures.child_code,
+        os.child_code AS section 
+        FROM
+        organization_structures
+        JOIN organization_structures AS os ON organization_structures.`status` = os.parent_name 
+        WHERE
+        organization_structures.remark = 'department' 
+        ) AS bagian ON bagian.section = kaizen_forms.area 
+        WHERE
+        `status` = 1 
+        and kaizen_forms.deleted_at is null
+        AND ( manager_point_1 IS NULL OR manager_point_1 = 0 ) 
+        GROUP BY
+        area 
+        ) alls 
+        GROUP BY
+        child_code,
+        area";
         
         $kzn = db::select($query_cf);
 

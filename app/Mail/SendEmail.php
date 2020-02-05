@@ -34,25 +34,25 @@ class SendEmail extends Mailable
     public function build()
     {
         if($this->remark == 'shipment'){
-            return $this->from('ympimis@gmail.com')->subject('MIS Shipment Reminder (情報管理システムの出荷通知)')->view('mails.shipment');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Shipment Reminder (情報管理システムの出荷通知)')->view('mails.shipment');
         }
         if($this->remark == 'overtime'){
-            return $this->from('ympimis2@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Overtime Information (情報管理システムの残業情報)')->view('mails.overtime');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Overtime Information (情報管理システムの残業情報)')->view('mails.overtime');
         }
         if($this->remark == 'stuffing'){
             return $this->from('ympimis@gmail.com')->subject('MIS Stuffing Information (情報管理システムの荷積み情報)')->view('mails.stuffing');
         }
         if($this->remark == 'min_queue'){
-            return $this->from('ympimis@gmail.com')->subject('MIS Kanban Queue Information (情報管理システムのかんばん待ちの情報)')->view('mails.min_queue');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Kanban Queue Information (情報管理システムのかんばん待ちの情報)')->view('mails.min_queue');
         }
         if($this->remark == 'middle_kanban'){
-            return $this->from('ympimis@gmail.com')->subject('MIS Kanban WIP Information (情報管理システムのかんばん待ちの情報)')->view('mails.middle_kanban');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Kanban WIP Information (情報管理システムのかんばん待ちの情報)')->view('mails.middle_kanban');
         }
         if($this->remark == 'duobleserialnumber'){
             return $this->from('ympimis@gmail.com')->subject('MIS Double Serial Number Information (情報管理システムの二重製造番号の情報)')->view('mails.duobleserialnumber');
         }
         if($this->remark == 'confirmation_overtime'){
-            return $this->from('ympimis@gmail.com')->subject('MIS Unconfirmed Overtime (情報管理システムの未確認残業)')->view('mails.confirmation_overtime');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Unconfirmed Overtime (情報管理システムの未確認残業)')->view('mails.confirmation_overtime');
         }
         if($this->remark == 'cpar'){
             return $this->from('ympimis@gmail.com')->priority(1)->subject('CPAR '.$this->data[0]->judul_komplain.' (是正防止処置要求)')->view('mails.cpar');
@@ -67,7 +67,7 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com')->priority(1)->subject('Penolakan Corrective Action Report (CAR) (是正処置対策)')->view('mails.rejectcar');
         }
         if($this->remark == 'user_document'){
-            return $this->from('ympimis@gmail.com')->subject('Users Documents Reminder (ユーザ資料関連の催促メール)')->view('mails.user_document');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Users Documents Reminder (ユーザ資料関連の催促メール)')->view('mails.user_document');
         }
         if($this->remark == 'audit'){
             return $this->from('ympimis@gmail.com')->subject('Production Audit Report (??)')->view('mails.audit');
@@ -125,12 +125,12 @@ class SendEmail extends Mailable
         }
         if($this->remark == 'urgent_wjo'){
             if($this->data[0]->attachment != null){
-                return $this->from('ympimis@gmail.com')
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->subject('Urgent Workshop Job Order (優先のワークショップ作業依頼書)')
                 ->view('mails.urgent_wjo')
                 ->attach(public_path('workshop/'.$this->data[0]->attachment));
             }else{
-                return $this->from('ympimis@gmail.com')
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->subject('Urgent Workshop Job Order (優先のワークショップ作業依頼書)')
                 ->view('mails.urgent_wjo');
             }
