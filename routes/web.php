@@ -850,6 +850,10 @@ Route::get('index/welding/report_hourly', 'WeldingProcessController@indexReportH
 Route::get('fetch/welding/report_hourly', 'WeldingProcessController@fetchReportHourly');
 Route::get('index/welding/ng_rate', 'WeldingProcessController@indexNgRate');
 Route::get('fetch/welding/ng_rate', 'WeldingProcessController@fetchNgRate');
+Route::get('index/welding/op_ng', 'WeldingProcessController@indexOpRate');
+Route::get('fetch/welding/op_ng', 'WeldingProcessController@fetchOpRate');
+Route::get('index/welding/production_result', 'WeldingProcessController@indexProductionResult');
+Route::get('fetch/welding/production_result', 'WeldingProcessController@fetchProductionResult');
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
 Route::get('scan/welding/operator', 'WeldingProcessController@scanWeldingOperator');
 Route::get('scan/welding/kensa', 'WeldingProcessController@scanWeldingKensa');

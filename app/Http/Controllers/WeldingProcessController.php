@@ -20,10 +20,11 @@ class WeldingProcessController extends Controller
 {
 	public function __construct(){
 		$this->middleware('auth');
-		$this->location = [
-			'hsa-visual-sx',
+		$this->location_sx = [
 			'phs-visual-sx',
-			'hsa-dimensi-sx'
+			'hsa-visual-sx',
+			'hsa-dimensi-sx',
+			'hts-stamp-sx'
 		];
 	}
 
@@ -58,7 +59,7 @@ class WeldingProcessController extends Controller
 	}
 
 	public function indexDisplayProductionResult(){
-		$locations = $this->location;
+		$locations = $this->location_sx;
 
 		return view('processes.welding.display.production_result', array(
 			'title' => 'Welding Production Result',
@@ -71,7 +72,7 @@ class WeldingProcessController extends Controller
 	public function indexReportNG(){
 		$title = 'Not Good Record';
 		$title_jp = '不良内容';
-		$locations = $this->location;
+		$locations = $this->location_sx;
 
 		return view('processes.welding.report.not_good', array(
 			'title' => $title,
@@ -81,7 +82,7 @@ class WeldingProcessController extends Controller
 	}
 
 	public function indexReportHourly(){
-		$locations = $this->location;
+		$locations = $this->location_sx;
 
 		return view('processes.welding.report.hourly_report', array(
 			'title' => 'Hourly Report',
@@ -91,13 +92,67 @@ class WeldingProcessController extends Controller
 	}
 
 	public function indexNgRate(){
-		$locations = $this->location;
+		$locations = $this->location_sx;
 
 		return view('processes.welding.display.ng_rate', array(
 			'title' => 'NG Rate',
 			'title_jp' => '不良率',
 			'locations' => $locations
 		))->with('page', 'Welding Process');
+	}
+
+	public function indexOpRate(){
+		$title = 'NG Rate by Operator';
+		$title_jp = '作業者不良率';
+
+		$locations = $this->location_sx;
+		// $origin_groups = DB::table('origin_groups')->orderBy('origin_group_code', 'ASC')->get();
+
+		return view('processes.welding.display.op_rate', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'locations' => $locations
+		))->with('page', 'Welding Process');
+	}
+
+	public function indexProductionResult(){
+		$locations = $this->location_sx;
+
+		return view('processes.welding.report.production_result', array(
+			'title' => 'Production Result',
+			'title_jp' => '生産実績',
+			'locations' => $locations
+		))->with('page', 'Welding Process');		
+	}
+
+	public function fetchProductionResult(Request $request){
+		$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
+		$date_to = date('Y-m-d', strtotime($request->get('dateto')));
+
+		$kensas = ['hsa-visual-sx', 'hsa-dimensi-sx', 'phs-visual-sx'];
+
+		if($request->get('location') == 'hts-stamp-sx'){
+			$results = db::table('log_processes')
+			->where('log_processes.origin_group_code', '=', '043')
+			->where('log_processes.process_code', '=', '1')
+			->where('log_processes.created_at', '>=', $date_from)
+			->where('log_processes.created_at', '<=', $date_to)
+			->leftJoin('users', 'users.id', '=', 'log_processes.created_by')
+			->selectRaw('users.username as employee_id, users.name, log_processes.serial_number as tag, "-" as material_number, "-" as material_description, "-" as `key`, log_processes.model, "-" as surface, log_processes.quantity, "hts-stamp-sx" as location, log_processes.created_at')
+			->get();
+		}
+		else if(in_array($request->get('location'), $kensas)){
+			$results = WeldingLog::where('welding_logs.location', '=', $request->get('location'))
+			->where('welding_logs.created_at', '>=', $date_from)
+			->where('welding_logs.created_at', '<=', $date_to)
+			->leftJoin('users', 'users.username', '=', 'welding_logs.employee_id')
+			->leftJoin('materials', 'materials.material_number', '=', 'welding_logs.material_number')
+			->select('welding_logs.employee_id', 'users.name', 'welding_logs.tag', 'welding_logs.material_number', 'materials.material_description', 'materials.key', 'materials.model', 'materials.surface', 'welding_logs.quantity', 'welding_logs.location', 'welding_logs.created_at')
+			->get();
+		}
+
+		return DataTables::of($results)
+		->make(true);
 	}
 
 	public function fetchNgRate(Request $request){
@@ -133,9 +188,93 @@ class WeldingProcessController extends Controller
 			$checks = $checks->whereRaw('date(welding_check_logs.created_at) = "'.$now.'"');
 		}
 
-		$ng = db::select("select SUM(quantity) as jumlah,ng_name,SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null and welding_check_logs.location= 'hsa-visual-sx' and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs where date(created_at) = '".$now."' ".$addlocation." group by ng_name order by jumlah desc");
+		$ng = db::select("select SUM(quantity) as jumlah,ng_name,SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs where date(created_at) = '".$now."' ".$addlocation." group by ng_name order by jumlah desc");
 
-		$ngkey = db::select("select SUM(quantity) as jumlah, materials.`key`, SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null and welding_check_logs.location= 'hsa-visual-sx' and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs join materials on welding_ng_logs.material_number = materials.material_number where date(welding_ng_logs.created_at) = '".$now."' ".$addlocation." group by `key` order by jumlah desc");
+		$ngkey = db::select("select SUM(quantity) as jumlah, materials.`key`, SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs join materials on welding_ng_logs.material_number = materials.material_number where date(welding_ng_logs.created_at) = '".$now."' ".$addlocation." group by `key` order by jumlah desc");
+
+
+		$dateTitle = date("d M Y", strtotime($now));
+
+		$ngs = $ngs->get();
+		$checks = $checks->get();
+
+
+		$datastat = db::select("SELECT 
+			COALESCE(SUM(welding_check_logs.quantity),0) as total_check,
+			COALESCE((SELECT sum(quantity) from welding_logs where deleted_at is null ".$addlocation." and DATE(welding_logs.created_at)='".$now."'),0) as total_ok,
+
+			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and DATE(welding_ng_logs.created_at)='".$now."'),0) as total_ng,
+
+			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and DATE(welding_ng_logs.created_at)='".$now."')
+			/ 
+			(Select SUM(quantity) from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100,0) as ng_rate 
+
+			from welding_check_logs 
+			where DATE(welding_check_logs.created_at)='".$now."' ".$addlocation." and deleted_at is null ");
+
+		$location = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location." ".$locations[$x]." ";
+				if($x != count($locations)-1){
+					$location = $location."&";
+				}
+			}
+		}else{
+			$location = "";
+		}
+		$location = strtoupper($location);
+		
+		$response = array(
+			'status' => true,
+			'checks' => $checks,
+			'ngs' => $ngs,
+			'ng' => $ng,
+			'ngkey' => $ngkey,
+			'dateTitle' => $dateTitle,
+			'data' => $datastat,
+			'title' => $location
+		);
+		return Response::json($response);
+	}
+
+	public function fetchOpRate(Request $request){
+		$now = date('Y-m-d');
+
+		$ngs = WeldingNgLog::leftJoin('materials', 'materials.material_number', '=', 'welding_ng_logs.material_number')
+		->orderBy('welding_ng_logs.created_at', 'asc');
+		$checks = WeldingCheckLog::leftJoin('materials', 'materials.material_number', '=', 'welding_check_logs.material_number')
+		->orderBy('welding_check_logs.created_at', 'asc');
+		$addlocation = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			$location = "";
+
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$location = $location.",";
+				}
+			}
+			$addlocation = "and location in (".$location.") ";
+		}
+
+		// if(strlen($request->get('location'))>0){
+		// 	$location = explode(",", $request->get('location'));
+		// 	$ngs = $ngs->whereIn('welding_ng_logs.location', $location);
+		// 	$checks = $checks->whereIn('welding_check_logs.location', $location);
+		// }
+
+		if(strlen($request->get('tanggal'))>0){
+			$now = date('Y-m-d', strtotime($request->get('tanggal')));
+			$ngs = $ngs->whereRaw('date(welding_ng_logs.created_at) = "'.$now.'"');
+			$checks = $checks->whereRaw('date(welding_check_logs.created_at) = "'.$now.'"');
+		}
+
+		$ng = db::select("select SUM(quantity) as jumlah,ng_name,SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs where date(created_at) = '".$now."' ".$addlocation." group by ng_name order by jumlah desc");
+
+		$ngkey = db::select("select SUM(quantity) as jumlah, materials.`key`, SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs join materials on welding_ng_logs.material_number = materials.material_number where date(welding_ng_logs.created_at) = '".$now."' ".$addlocation." group by `key` order by jumlah desc");
 
 
 		$dateTitle = date("d M Y", strtotime($now));

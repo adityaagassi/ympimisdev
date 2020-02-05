@@ -81,7 +81,7 @@
 							<h5 style="font-size: 4vw; font-weight: bold;" id="ok">0</h5>
 						</div>
 						<div class="icon" style="padding-top: 40px;">
-							<i class="fa fa-check-square-o"></i>
+							<i class="fa fa-check"></i>
 						</div>
 					</div>
 					<div class="small-box" style="background: #ff851b; height: 150px; margin-bottom: 5px;">
@@ -161,7 +161,7 @@
 		});
 		$('.select2').select2();
 		fetchChart();
-		setInterval(fetchChart, 10000);
+		setInterval(fetchChart, 20000);
 	});
 
 	Highcharts.createElement('link', {
@@ -464,8 +464,8 @@
 						lineColor:'#9e9e9e',
 						labels: {
 							style: {
-								fontSize: '22px',
-		                        fontWeight: 'bold'
+								fontSize: '20px',
+								fontWeight: 'bold'
 							}
 						},
 					},
@@ -473,38 +473,38 @@
 						title: {
 							text: 'Qty NG Pc(s)',
 							style: {
-		                        color: '#eee',
-		                        fontSize: '20px',
-		                        fontWeight: 'bold',
-		                        fill: '#6d869f'
-		                    }
+								color: '#eee',
+								fontSize: '18px',
+								fontWeight: 'bold',
+								fill: '#6d869f'
+							}
 						},
 						labels:{
-				        	style:{
-								fontSize:"20px"
+							style:{
+								fontSize:"14px"
 							}
-				        },
+						},
 						type: 'linear',
 						
 					}
 					, { // Secondary yAxis
-				        title: {
-				            text: 'NG Rate (%)',
-				            style: {
-		                        color: '#eee',
-		                        fontSize: '20px',
-		                        fontWeight: 'bold',
-		                        fill: '#6d869f'
-		                    }
-				        },
-				        labels:{
-				        	style:{
+						title: {
+							text: 'NG Rate (%)',
+							style: {
+								color: '#eee',
+								fontSize: '20px',
+								fontWeight: 'bold',
+								fill: '#6d869f'
+							}
+						},
+						labels:{
+							style:{
 								fontSize:"20px"
 							}
-				        },
-				        type: 'linear',
-				        opposite: true
-					        
+						},
+						type: 'linear',
+						opposite: true
+
 					}],
 					tooltip: {
 						headerFormat: '<span>NG Name</span><br/>',
@@ -522,26 +522,40 @@
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
 						shadow: true,
 						itemStyle: {
-			                fontSize:'16px',
-			            },
+							fontSize:'16px',
+						},
 					},	
 					credits: {
 						enabled: false
 					},
-					series: [{
-						type: 'column',
-						data: series,
-						name: 'Total NG',
-						colorByPoint: false,
-						color: "#3f51b5",
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}' ,
-							style:{
-								fontSize: '1vw'
+					plotOptions: {
+						series:{
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function () {
+										ShowModal(this.category,result.date);
+									}
+								}
 							},
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									fontSize: '1vw'
+								}
+							},
+							animation: {
+								enabled: true,
+								duration: 800
+							},
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer'
 						},
-					},{
+					},
+					series: [{
 						type: 'column',
 						data: series2,
 						name: 'NG Rate',
@@ -557,6 +571,20 @@
 						},
 						
 					},
+					{
+						type: 'column',
+						data: series,
+						name: 'Total NG',
+						colorByPoint: false,
+						color: "#3f51b5",
+						dataLabels: {
+							enabled: true,
+							format: '{point.y}' ,
+							style:{
+								fontSize: '1vw'
+							},
+						},
+					}
 					]
 				});
 
@@ -608,7 +636,7 @@
 						labels: {
 							style: {
 								fontSize: '22px',
-		                        fontWeight: 'bold'
+								fontWeight: 'bold'
 							}
 						},
 					},
@@ -616,38 +644,38 @@
 						title: {
 							text: 'Qty NG Pc(s)',
 							style: {
-		                        color: '#eee',
-		                        fontSize: '20px',
-		                        fontWeight: 'bold',
-		                        fill: '#6d869f'
-		                    }
+								color: '#eee',
+								fontSize: '18px',
+								fontWeight: 'bold',
+								fill: '#6d869f'
+							}
 						},
 						labels:{
-				        	style:{
-								fontSize:"20px"
+							style:{
+								fontSize:"14px"
 							}
-				        },
+						},
 						type: 'linear',
 						
 					}
 					, { // Secondary yAxis
-				        title: {
-				            text: 'NG Rate (%)',
-				            style: {
-		                        color: '#eee',
-		                        fontSize: '20px',
-		                        fontWeight: 'bold',
-		                        fill: '#6d869f'
-		                    }
-				        },
-				        labels:{
-				        	style:{
+						title: {
+							text: 'NG Rate (%)',
+							style: {
+								color: '#eee',
+								fontSize: '20px',
+								fontWeight: 'bold',
+								fill: '#6d869f'
+							}
+						},
+						labels:{
+							style:{
 								fontSize:"20px"
 							}
-				        },
-				        type: 'linear',
-				        opposite: true
-					        
+						},
+						type: 'linear',
+						opposite: true
+
 					}],
 					legend: {
 						layout: 'horizontal',
@@ -661,8 +689,8 @@
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
 						shadow: true,
 						itemStyle: {
-			                fontSize:'16px',
-			            },
+							fontSize:'16px',
+						},
 					},
 					
 					tooltip: {
@@ -672,13 +700,13 @@
 					plotOptions: {
 						series:{
 							cursor: 'pointer',
-			                point: {
-			                  events: {
-			                    click: function () {
-			                      ShowModalpic(this.category,result.date);
-			                    }
-			                  }
-			                },
+							point: {
+								events: {
+									click: function () {
+										ShowModal(this.category,result.date);
+									}
+								}
+							},
 							dataLabels: {
 								enabled: true,
 								format: '{point.y}',
@@ -686,13 +714,17 @@
 									fontSize: '1vw'
 								}
 							},
-							animation: false,
+							animation: {
+								enabled: true,
+								duration: 800
+							},
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
 							cursor: 'pointer'
 						},
-					},credits: {
+					},
+					credits: {
 						enabled: false
 					},
 					series :  [{
@@ -723,28 +755,28 @@
 				alert('Attempt to retrieve data failed');
 			}
 		});
+}
+
+$.date = function(dateObject) {
+	var d = new Date(dateObject);
+	var day = d.getDate();
+	var month = d.getMonth() + 1;
+	var year = d.getFullYear();
+	if (day < 10) {
+		day = "0" + day;
 	}
-
-	$.date = function(dateObject) {
-		var d = new Date(dateObject);
-		var day = d.getDate();
-		var month = d.getMonth() + 1;
-		var year = d.getFullYear();
-		if (day < 10) {
-			day = "0" + day;
-		}
-		if (month < 10) {
-			month = "0" + month;
-		}
-		var date = year + "-" + month + "-" + day;
-
-		return date;
-	};
-
-	function changeLocation(){
-		$("#location").val($("#locationSelect").val());
+	if (month < 10) {
+		month = "0" + month;
 	}
-	
-	
+	var date = year + "-" + month + "-" + day;
+
+	return date;
+};
+
+function changeLocation(){
+	$("#location").val($("#locationSelect").val());
+}
+
+
 </script>
 @endsection

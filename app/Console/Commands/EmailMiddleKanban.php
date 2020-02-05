@@ -67,7 +67,7 @@ class EmailMiddleKanban extends Command
         ];
 
         if(count($dataKanban) > 0){
-            Mail::to($mail_to)->send(new SendEmail($data, 'middle_kanban'));
+            Mail::from('ympimis2@gmail.com', 'PT. Yamaha Musical Products Indonesia')->to($mail_to)->send(new SendEmail($data, 'middle_kanban'));
         }
     }
 }
