@@ -355,6 +355,9 @@ class WorkshopController extends Controller{
 			return Response::json($response);
 		}
 
+		$path = '/workshop/' . $wjo->attachment;			
+		$file_path = asset($path);
+
 		$listed_time = WorkshopJobOrderLog::where('order_no', '=', $wjo->order_no)
 		->where('remark', '=', 1)
 		->first();
@@ -379,6 +382,7 @@ class WorkshopController extends Controller{
 			'listed_time' => $listed_time,
 			'flow_process' => $process,
 			'wjo_log' => $workshop_log,
+			'file_path' => $file_path,
 			'message' => 'WJO ditemukan'
 		);
 		return Response::json($response);
@@ -1196,7 +1200,7 @@ class WorkshopController extends Controller{
 			left join employee_syncs emp on emp.employee_id = op_workload.operator
 			group by operator, `name`');
 
-		$machine = db::select('SELECT machine_name, shortname FROM workshop_processes
+		$machine = db::select('SELECT machine_name, shortname, shift FROM workshop_processes
 			where category = "MACHINE"
 			order by shortname asc');
 

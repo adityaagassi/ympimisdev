@@ -65,12 +65,57 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<div class="row">
-		<div class="col-xs-12">
-			<div class="row" style="margin:0px;">
-				<div class="pull-right" id="last_update" style="color: white; margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
+		<div class="col-xs-12" style="margin:0px;">
+			<div class="pull-right" id="last_update" style="color: white; margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
+		</div>
+{{-- 		<div class="col-xs-3">
+			<div class="small-box" style="background: #52c9ed; height: 175px; margin-bottom: 5px;">
+				<div class="inner" style="padding-bottom: 0px;">
+					<h3 style="color: rgb(60, 60, 60); margin-bottom: 0px;font-size: 2vw;"><b>LISTED <span class="text-purple">検査数</span></b></h3>
+					<h5 style="color: rgb(60, 60, 60); font-size: 4vw; font-weight: bold;" id="total">0</h5>
+				</div>
+				<div class="icon" style="padding-top: 40px;">
+					<i class="fa fa-search"></i>
+				</div>
 			</div>
-			<div id="mc-workload" style="width:100%;"></div>
-			<div id="op-workload" style="width:100%; margin-top: 1%;"></div>
+			<div class="small-box" style="background: #ff851b; height: 175px; margin-bottom: 5px;">
+				<div class="inner" style="padding-bottom: 0px;">
+					<h3 style="color: rgb(60, 60, 60); margin-bottom: 0px;font-size: 2vw;"><b>APPROVED <span class="text-purple">不良品数</span></b></h3>
+					<h5 style="color: rgb(60, 60, 60); font-size: 4vw; font-weight: bold;" id="ng">0</h5>
+				</div>
+				<div class="icon" style="padding-top: 40px;">
+					<i class="fa fa-hand-o-right"></i>
+				</div>
+			</div>
+			<div class="small-box" style="background: #00a65a; height: 175px; margin-bottom: 5px;">
+				<div class="inner" style="padding-bottom: 0px;">
+					<h3 style="color: rgb(60, 60, 60); margin-bottom: 0px;font-size: 2vw;"><b>IN PROGRESS <span class="text-purple">良品数</span></b></h3>
+					<h5 style="color: rgb(60, 60, 60); font-size: 4vw; font-weight: bold;" id="ok">0</h5>
+				</div>
+				<div class="icon" style="padding-top: 40px;">
+					<i class="fa fa-tasks"></i>
+				</div>
+			</div>
+			<div class="small-box" style="background: rgb(220,220,220); height: 175px; margin-bottom: 5px;">
+				<div class="inner" style="padding-bottom: 0px;">
+					<h3 style="color: rgb(60, 60, 60); margin-bottom: 0px;font-size: 2vw;"><b>FINISHED TODAY <span class="text-purple">不良率</span></b></h3>
+					<h5 style="color: rgb(60, 60, 60); font-size: 4vw; font-weight: bold;" id="pctg">0</h5>
+				</div>
+				<div class="icon" style="padding-top: 40px;">
+					<i class="fa fa-check-square-o"></i>
+				</div>
+			</div>
+		</div> --}}
+		<div class="col-xs-12">
+			<div class="col-xs-6" style="padding: 0px;">
+				<div id="mc-workload-shift-3" style="width:100%;"></div>
+			</div>
+			<div class="col-xs-6" style="padding: 0px;">
+				<div id="mc-workload-shift-2" style="width:100%;"></div>
+			</div>
+			<div class="col-xs-12" style="padding: 0px;">
+				<div id="op-workload" style="width:100%; margin-top: 1%;"></div>
+			</div>
 		</div>
 	</div>
 
@@ -366,36 +411,69 @@
 	}
 
 	function fillChart(){
+		var position = $(document).scrollTop();
+
+
 		$.get('{{ url("fetch/workshop/workload") }}', function(result, status, xhr){
 			if(result.status){
 				$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 				var machine = [];
 				var data = [];
-
 				for (var j = 0; j < result.machine.length; j++) {
-					machine.push(result.machine[j].shortname);
+					if(result.machine[j].shift == 3){
+						machine.push(result.machine[j].shortname);
 
-					var fill = true;
-					for (var k = 0; k < result.mc_workload.length; k++) {
-						if(result.machine[j].machine_name == result.mc_workload[k].machine_name){
-							data.push(parseInt(result.mc_workload[k].workload));
-							fill = false;
+						var fill = true;
+						for (var k = 0; k < result.mc_workload.length; k++) {
+							if(result.machine[j].machine_name == result.mc_workload[k].machine_name){
+								data.push(parseInt(result.mc_workload[k].workload));
+								fill = false;
+							}
 						}
+						if(fill){
+							data.push(0);
+						}	
 					}
-					if(fill){
-						data.push(0);
-					}	
 				}
 
-				$('#mc-workload').highcharts({
+				var sumPlotLines = Math.ceil(Math.max(...data) / 1280);
+				var plotLines = [];
+				for (var i = 1; i <= sumPlotLines; i++){
+					plotLines.push({
+						color: '#FFB300',
+						value: (i * 1280),
+						dashStyle: 'shortdash',
+						width: 2,
+						zIndex: 5,
+						label: {
+							align:'right',
+							text: i + ' day(s)',
+							x:-7,
+							style: {
+								fontSize: '12px',
+								color: '#FFB300',
+								fontWeight: 'bold'
+							}
+						}
+					});
+				}
+
+				$('#mc-workload-shift-3').highcharts({
 					chart: {
-						type: 'column'
+						type: 'bar'
 					},
 					title: {
 						text: 'Workshop Machine Workload',
 						style: {
 							fontSize: '25px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: '3 Shifts',
+						style: {
+							fontSize: '1vw',
 							fontWeight: 'bold'
 						}
 					},
@@ -407,6 +485,119 @@
 						gridLineWidth: 1
 					},
 					yAxis: {
+						opposite: true,
+						title: {
+							text: 'Minute(s)'
+						},
+						plotLines : plotLines
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									fontSize: '15px'
+								}
+							},
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function () {
+										alert(this.category);
+									}
+								}
+							},
+						}
+					},
+					credits: {
+						enabled: false
+					},
+					legend: {
+						enabled: false
+					},
+					series: [{
+						name: 'Machine Workload',
+						data: data,
+						color: 'rgb(144,238,126)'
+					}]
+				});
+
+
+				var machine = [];
+				var data = [];
+				for (var j = 0; j < result.machine.length; j++) {
+					if(result.machine[j].shift == 2){
+						machine.push(result.machine[j].shortname);
+
+						var fill = true;
+						for (var k = 0; k < result.mc_workload.length; k++) {
+							if(result.machine[j].machine_name == result.mc_workload[k].machine_name){
+								data.push(parseInt(result.mc_workload[k].workload));
+								fill = false;
+							}
+						}
+						if(fill){
+							data.push(0);
+						}	
+					}
+				}
+
+				var sumPlotLines = Math.ceil(Math.max(...data) / 880);
+				var plotLines = [];
+				for (var i = 1; i <= sumPlotLines; i++){
+					plotLines.push({
+						color: '#FFB300',
+						value: (i * 880),
+						dashStyle: 'shortdash',
+						width: 2,
+						zIndex: 5,
+						label: {
+							align:'right',
+							text: i + ' day(s)',
+							x:-7,
+							style: {
+								fontSize: '12px',
+								color: '#FFB300',
+								fontWeight: 'bold'
+							}
+						}
+					});
+				}
+
+
+				$('#mc-workload-shift-2').highcharts({
+					chart: {
+						type: 'bar'
+					},
+					title: {
+						text: 'Workshop Machine Workload',
+						style: {
+							fontSize: '25px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: '2 Shifts',
+						style: {
+							fontSize: '1vw',
+							fontWeight: 'bold'
+						},
+						plotLines : plotLines
+					},
+					xAxis: {
+						type: 'category',
+						categories: machine,
+						lineWidth:2,
+						lineColor:'#9e9e9e',
+						gridLineWidth: 1
+					},
+					yAxis: {
+						opposite: true,
 						title: {
 							text: 'Minute(s)'
 						},
@@ -555,6 +746,7 @@
 						type: 'column'
 					}]
 				});
+				$(document).scrollTop(position);
 
 			}
 		});
