@@ -45,7 +45,9 @@ class WorkshopController extends Controller{
 		->orderBy('employee_id', 'asc')
 		->select('employee_id', 'name', 'section', 'group')->get();
 		
-		$machines = WorkshopProcess::orderBy('process_name', 'asc')->get();
+		$machines = WorkshopProcess::where('process_name', '<>', 'LAIN-LAIN')
+		->orderBy('process_name', 'asc')
+		->get();
 
 		$sections = db::select("select DISTINCT department, section, `group` from employee_syncs
 			where department is not null
@@ -74,7 +76,7 @@ class WorkshopController extends Controller{
 
 	public function indexWorkload(){
 		$title = 'Workshop Workload';
-		$title_jp = '??';
+		$title_jp = 'ワークショップの作業内容';
 
 		return view('workshop.report.workload', array(
 			'title' => $title,
@@ -104,7 +106,7 @@ class WorkshopController extends Controller{
 
 	public function indexDrawing(){
 		$title = 'Drawing';
-		$title_jp = '??';
+		$title_jp = '図面';
 
 		return view('workshop.drawing', array(
 			'title' => $title,
@@ -114,7 +116,7 @@ class WorkshopController extends Controller{
 
 	public function indexWJO(){
 		$title = 'WJO Execution';
-		$title_jp = '??';
+		$title_jp = '作業依頼書の処理';
 
 		return view('workshop.wjo', array(
 			'title' => $title,
@@ -126,7 +128,7 @@ class WorkshopController extends Controller{
 
 	public function indexCreateWJO(){
 		$title = 'WJO Form';
-		$title_jp = '??';
+		$title_jp = '作業依頼書';
 
 		$workshop_job_orders = WorkshopJobOrder::where('created_by', '=', Auth::user()->username)
 		->select(db::raw('count(if(remark="5", 1, null)) as rejected, count(if(remark="0", 1, null)) as requested, count(if(remark="1", 1, null)) as listed, count(if(remark="2", 1, null)) as approved, count(if(remark="3", 1, null)) as inprogress, count(if(remark="4", 1, null)) as finished'))->get();
@@ -149,7 +151,7 @@ class WorkshopController extends Controller{
 
 	public function indexListWJO(){
 		$title = 'Workshop Job Order Lists';
-		$title_jp = '??';
+		$title_jp = '作業依頼書一覧';
 
 		return view('workshop.wjo_list', array(
 			'title' => $title,
