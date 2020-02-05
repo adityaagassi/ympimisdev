@@ -981,11 +981,18 @@ class QcCarController extends Controller
           $mailto = "select distinct email from qc_cars join employees on qc_cars.pic = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
           $mails = DB::select($mailto);
 
+          $mailmanager = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join users on qc_cpars.employee_id = users.username where qc_cars.id='".$id."'";
+          $mailmanagers = DB::select($mailmanager);
+
           foreach($mails as $mail){
             $mailtoo = $mail->email;
           }
 
-          Mail::to($mailtoo)->send(new SendEmail($querycar, 'rejectcar'));
+          foreach ($mailmanagers as $mailm) {
+            $mailmtoo = $mailm->email;        
+          }
+
+          Mail::to($mailtoo)->cc($mailmtoo)->send(new SendEmail($querycar, 'rejectcar'));
           return redirect('/index/qc_car/verifikasigm/'.$id)->with('success', 'CAR Rejected')->with('page', 'CAR');
       } 
 

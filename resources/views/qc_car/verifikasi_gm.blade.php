@@ -120,7 +120,7 @@
 			<tr>
 				<td class="centera">
 					@if($car->approved_gm == "Checked")
-						<img width="100" src="{{url($carss[0]['ttd_car'])}}" width="150px">
+						<img src="{{url($carss[0]['ttd_car'])}}" width="200px">
 						{{$car->gmname}}
 					@else
 						&nbsp;
