@@ -385,7 +385,7 @@ public function import(Request $request)
           {
                if (strlen($row) > 0) {
                     $row = explode("\t", $row);
-                    if ($row[0] != '' && $row[0] !='CONSIGNEE & ADDRESS'){
+                    if ($row[0] != '' || $row[0] !='CONSIGNEE & ADDRESS'){
                          if ( $row[5] =='' ) {
                               $row[5] = '-';
                          }
@@ -407,7 +407,6 @@ public function import(Request $request)
                               'created_by' => $id
                          ]);
                          $detail->save();
-
                     }
 
                }
