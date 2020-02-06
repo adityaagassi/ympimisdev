@@ -596,7 +596,7 @@
 					catkey.push(value.key);
 
 					kunci.push(value.key);
-					jml.push(parseInt(value.jumlah));
+					jml.push(parseInt(value.ng));
 					series.push([kunci[key], jml[key]]);
 
 					kunci2.push(value.key);

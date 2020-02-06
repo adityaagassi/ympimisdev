@@ -190,7 +190,30 @@ class WeldingProcessController extends Controller
 
 		$ng = db::select("select SUM(quantity) as jumlah,ng_name,SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs where date(created_at) = '".$now."' ".$addlocation." group by ng_name order by jumlah desc");
 
-		$ngkey = db::select("select SUM(quantity) as jumlah, materials.`key`, SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs join materials on welding_ng_logs.material_number = materials.material_number where date(welding_ng_logs.created_at) = '".$now."' ".$addlocation." group by `key` order by jumlah desc");
+		$ngkey = db::select("
+			select rate.`key`, rate.`check`, rate.ng, rate.rate from (
+				select c.`key`, c.jml as `check`, COALESCE(ng.jml,0) as ng,(COALESCE(ng.jml,0)/c.jml*100) as rate 
+				from 
+					(select mt.`key`, sum(w.quantity) as jml from welding_check_logs w
+					left join materials mt on mt.material_number = w.material_number
+					where w.deleted_at is null
+					".$addlocation."
+					and DATE(w.created_at)='".$now."'
+					GROUP BY mt.`key`) c
+					
+					left join
+					
+					(select mt.`key`, sum(w.quantity) as jml from welding_ng_logs w
+					left join materials mt on mt.material_number = w.material_number
+					where w.deleted_at is null
+					".$addlocation."
+					and DATE(w.created_at)='".$now."'
+					GROUP BY mt.`key`) ng
+
+				on c.`key` = ng.`key`) rate
+				where rate.ng != '0'
+				ORDER BY rate.rate desc"
+			);
 
 
 		$dateTitle = date("d M Y", strtotime($now));
@@ -199,7 +222,7 @@ class WeldingProcessController extends Controller
 		$checks = $checks->get();
 
 
-		$datastat = db::select("SELECT 
+		$datastat = db::select("select 
 			COALESCE(SUM(welding_check_logs.quantity),0) as total_check,
 			COALESCE((SELECT sum(quantity) from welding_logs where deleted_at is null ".$addlocation." and DATE(welding_logs.created_at)='".$now."'),0) as total_ok,
 
@@ -242,10 +265,6 @@ class WeldingProcessController extends Controller
 	public function fetchOpRate(Request $request){
 		$now = date('Y-m-d');
 
-		$ngs = WeldingNgLog::leftJoin('materials', 'materials.material_number', '=', 'welding_ng_logs.material_number')
-		->orderBy('welding_ng_logs.created_at', 'asc');
-		$checks = WeldingCheckLog::leftJoin('materials', 'materials.material_number', '=', 'welding_check_logs.material_number')
-		->orderBy('welding_check_logs.created_at', 'asc');
 		$addlocation = "";
 		if($request->get('location') != null) {
 			$locations = explode(",", $request->get('location'));
@@ -260,41 +279,49 @@ class WeldingProcessController extends Controller
 			$addlocation = "and location in (".$location.") ";
 		}
 
-		// if(strlen($request->get('location'))>0){
-		// 	$location = explode(",", $request->get('location'));
-		// 	$ngs = $ngs->whereIn('welding_ng_logs.location', $location);
-		// 	$checks = $checks->whereIn('welding_check_logs.location', $location);
-		// }
-
 		if(strlen($request->get('tanggal'))>0){
 			$now = date('Y-m-d', strtotime($request->get('tanggal')));
-			$ngs = $ngs->whereRaw('date(welding_ng_logs.created_at) = "'.$now.'"');
-			$checks = $checks->whereRaw('date(welding_check_logs.created_at) = "'.$now.'"');
 		}
 
-		$ng = db::select("select SUM(quantity) as jumlah,ng_name,SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs where date(created_at) = '".$now."' ".$addlocation." group by ng_name order by jumlah desc");
+		$ng_rate = db::select("
+			select eg.`group` as shift, eg.employee_id as operator_id, e.name, rate.`check`, rate.ng, rate.rate from employee_groups eg left join 
+			(select c.operator_id, c.jml as `check`, COALESCE(ng.jml,0) as ng, ROUND((COALESCE(ng.jml,0)/c.jml*100),1) as rate 
+			from (select w.operator_id, sum(w.quantity) as jml from welding_check_logs w
+			left join materials mt on mt.material_number = w.material_number
+			where w.operator_id is not null
+			".$addlocation."
+			and DATE(w.created_at)='".$now."'
+			GROUP BY w.operator_id) c
+			left join
+			(select w.operator_id, sum(w.quantity) as jml from welding_ng_logs w
+			left join materials mt on mt.material_number = w.material_number
+			where w.operator_id is not null
+			".$addlocation."
+			and DATE(w.created_at)='".$now."'
+			GROUP BY w.operator_id) ng
+			on c.operator_id = ng.operator_id) rate
+			on rate.operator_id = eg.employee_id
+			left join employee_syncs e on e.employee_id = eg.employee_id
+			where eg.location = 'soldering'
+			ORDER BY eg.`group`, eg.employee_id asc");
 
-		$ngkey = db::select("select SUM(quantity) as jumlah, materials.`key`, SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs join materials on welding_ng_logs.material_number = materials.material_number where date(welding_ng_logs.created_at) = '".$now."' ".$addlocation." group by `key` order by jumlah desc");
+		$target = db::select("
+			select eg.`group`, eg.employee_id, e.name, ng.material_number, m.`key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
+			(select * from welding_ng_logs where deleted_at is null ".$addlocation." and remark in 
+			(select remark.remark from
+			(select operator_id, max(remark) as remark from welding_ng_logs where DATE(created_at) ='".$now."' ".$addlocation." group by operator_id) 
+			remark)
+			) ng 
+			on eg.employee_id = ng.operator_id
+			left join materials m on m.material_number = ng.material_number
+			left join employee_syncs e on e.employee_id = eg.employee_id
+			where eg.location = 'soldering'
+			order by eg.`group`, eg.employee_id asc
+			");
 
+		$operator = db::select("select * from employee_groups where location = 'soldering' order by `group`, employee_id asc");
 
 		$dateTitle = date("d M Y", strtotime($now));
-
-		$ngs = $ngs->get();
-		$checks = $checks->get();
-
-
-		$datastat = db::select("SELECT 
-			COALESCE(SUM(welding_check_logs.quantity),0) as total_check,
-			COALESCE((SELECT sum(quantity) from welding_logs where deleted_at is null ".$addlocation." and DATE(welding_logs.created_at)='".$now."'),0) as total_ok,
-
-			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and DATE(welding_ng_logs.created_at)='".$now."'),0) as total_ng,
-
-			COALESCE((select sum(quantity) from welding_ng_logs where deleted_at is null ".$addlocation." and DATE(welding_ng_logs.created_at)='".$now."')
-			/ 
-			(Select SUM(quantity) from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100,0) as ng_rate 
-
-			from welding_check_logs 
-			where DATE(welding_check_logs.created_at)='".$now."' ".$addlocation." and deleted_at is null ");
 
 		$location = "";
 		if($request->get('location') != null) {
@@ -312,12 +339,10 @@ class WeldingProcessController extends Controller
 		
 		$response = array(
 			'status' => true,
-			'checks' => $checks,
-			'ngs' => $ngs,
-			'ng' => $ng,
-			'ngkey' => $ngkey,
+			'ng_rate' => $ng_rate,
+			'target' => $target,
+			'operator' => $operator,
 			'dateTitle' => $dateTitle,
-			'data' => $datastat,
 			'title' => $location
 		);
 		return Response::json($response);
@@ -610,8 +635,25 @@ class WeldingProcessController extends Controller
 			'status' => true,
 			'message' => 'Tag karyawan ditemukan',
 			'employee' => $employee,
+			'results' => $results,
 		);
 		return Response::json($response);
+	}
+
+	public function fetchKensaResult(Request $request){
+		
+		$query1 = "SELECT
+		sum( IF ( materials.model <> 'A82' AND materials.hpl = 'ASKEY', welding_logs.quantity, 0 ) ) AS askey,
+		sum( IF ( materials.model <> 'A82' AND materials.hpl = 'TSKEY', welding_logs.quantity, 0 ) ) AS tskey,
+		sum( IF ( materials.model LIKE '%82%', welding_logs.quantity, 0 ) ) AS `82z` 
+		FROM
+		welding_logs
+		LEFT JOIN materials ON materials.material_number = welding_logs.material_number 
+		WHERE
+		employee_id = 'PI1611005' 
+		AND location = 'hsa-visual-sx'";
+
+		return Response::json($results);
 	}
 
 	public function scanWeldingKensa(Request $request){
