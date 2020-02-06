@@ -61,8 +61,8 @@
 								<div class="col-xs-12">
 									<table class="table table-striped">
 										<tr>
-											<td colspan="3" style="font-size: 20px; font-weight: bold;background-color: #8bc34a;border: 1px solid black">
-												CAMERA STAMP CHECK
+											<td colspan="3" style="font-size: 1.5vw; font-weight: bold;background-color: #8bc34a;border: 1px solid black;color: black">
+												CAMERA MIDDLE CHECK
 											</td>
 										</tr>
 										<tr>
@@ -75,14 +75,14 @@
 										</tr>
 									</table>
 								</div>
-								<div class="col-xs-6">
+								<div class="col-xs-12">
 									<span style="font-size: 20px; font-weight: bold;"><center>Judgement Middle:</center></span>
 									<input type="text" name="judgement_middle" id="judgement_middle" class="form-control" value="OK" required="required" pattern="" title="" style="width: 100%;height: 200px;font-size: 10vw;text-align: center;font-weight:bold;background-color: #57ff86;color: #163756;border: 1px solid black" disabled>
 								</div>
-								<div class="col-xs-6">
+								<!-- <div class="col-xs-6">
 									<span style="font-size: 20px; font-weight: bold;"><center>Judgement Stamp:</center></span>
 									<input type="text" name="judgement_stamp" id="judgement_stamp" class="form-control" value="OK" required="required" pattern="" title="" style="width: 100%;height: 200px;font-size: 10vw;text-align: center;font-weight:bold;background-color: #57ff86;color: #163756;border: 1px solid black" disabled>
-								</div>
+								</div> -->
 							</div>
 							<span style="font-size: 20px; font-weight: bold;"><center>COLOR :</center></span>
 							<input type="text" name="color_camera" id="color_camera" class="form-control" value="YRS" required="required" pattern="" title="" style="width: 100%;height: 60px;background-color: #dde875;font-size: 3vw;text-align: center;font-weight:bold;color: #163756;border: 1px solid black" disabled>
@@ -103,7 +103,7 @@
 								<div class="col-xs-12">
 									<table class="table table-striped">
 										<tr>
-											<td colspan="3" style="font-size: 20px; font-weight: bold;background-color: #4db6ac;border: 1px solid black">
+											<td colspan="3" style="font-size: 1.5vw; font-weight: bold;background-color: #4db6ac;border: 1px solid black;color: black">
 												PUSH PULL CHECK
 											</td>
 										</tr>
@@ -119,11 +119,11 @@
 								</div>
 								<div class="col-xs-6">
 									<span style="font-size: 20px; font-weight: bold;"><center>Last Check (Kgf):</center></span>
-									<input type="text" name="last_check" id="last_check" class="form-control" value="3.0" required="required" pattern="" title="" style="width: 100%;height: 200px;background-color: #ffdd71;font-size: 10vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" disabled>
+									<input type="text" name="last_check" id="last_check" class="form-control" value="3.2" required="required" pattern="" title="" style="width: 100%;height: 200px;background-color: #ffdd71;font-size: 10vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" disabled>
 								</div>
 								<div class="col-xs-6">
 									<span style="font-size: 20px; font-weight: bold;"><center>Judgement :</center></span>
-									<input type="text" name="judgement_push_pull" id="judgement_push_pull" class="form-control" value="NG" required="required" pattern="" title="" style="width: 100%;height: 200px;font-size: 10vw;text-align: center;font-weight:bold;background-color: #ff6363;color: #163756;border: 1px solid black" disabled>
+									<input type="text" name="judgement_push_pull" id="judgement_push_pull" class="form-control" value="OK" required="required" pattern="" title="" style="width: 100%;height: 200px;font-size: 10vw;text-align: center;font-weight:bold;background-color: #57ff86;color: #163756;border: 1px solid black" disabled>
 								</div>
 							</div>
 							<span style="font-size: 20px; font-weight: bold;"><center>COLOR :</center></span>
@@ -411,7 +411,7 @@
 		else{
 			setInterval(push_pull,1000);
 			setInterval(camera_kango,1000);
-			setInterval(camera_kango2,1000);
+			// setInterval(camera_kango2,1000);
 			$('#modalOperator').modal('hide');
 		}
 	}

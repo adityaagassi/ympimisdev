@@ -747,6 +747,7 @@
 		$('#product_fix').hide();
 		$('#mesin_head_fix').hide();
 		$('#mesin_block_fix').hide();
+
 	});
 
 	jQuery.extend(jQuery.expr[':'], {
@@ -888,8 +889,7 @@
 			itemresume6($("#head_id").val(),$("#block_6").val());
 			itemresume7($("#head_id").val(),$("#block_7").val());
 			itemresume8($("#head_id").val(),$("#block_8").val());
-			get_temp();
-			setInterval(update_temp,300000);
+			create_temp();
 		}
 	}
 
@@ -962,169 +962,13 @@
 		$.post('{{ url("index/push_block_recorder/create_temp") }}', data2, function(result, status, xhr){
 			if(result.status){
 				openSuccessGritter('Success', result.message);
+				alert('Pengisian Selesai. Tekan OK untuk menutup.');
+				window.close();
 			}
 			else{
 				openErrorGritter('Error!', result.message);
 			}
 		});
-	}
-
-	function get_temp() {
-		var array_head = [];
-		var array_block = [];
-
-		for(var i = 1; i <= 8; i++){
-			array_block.push($("#block_"+[i]).val());
-		}
-		for(var j = 1; j <= 4; j++){
-			array_head.push($("#head_"+[j]).val());
-		}
-		
-		var data = {
-			array_head : array_head,
-			array_block : array_block,
-			remark : '{{$remark}}'
-		}
-
-		$.get('{{ url("index/push_block_recorder/get_temp") }}',data,  function(result, status, xhr){
-			if(result.status){
-				if(result.datas.length != 0){
-					$.each(result.datas, function(key, value) {
-						$("#push_pull_"+value[0].head+"_"+value[0].block).val(value[0].push_pull);
-						$("#ketinggian_"+value[0].head+"_"+value[0].block).val(value[0].ketinggian);
-						$("#judgement_"+value[0].head+"_"+value[0].block).html(value[0].judgement);
-						$("#judgement2_"+value[0].head+"_"+value[0].block).html(value[0].judgement2);
-						if (value[0].judgement == 'NG') {
-							document.getElementById("judgement_"+value[0].head+"_"+value[0].block).style.backgroundColor = "#ff4f4f";
-						}else if(value[0].judgement == 'OK'){
-							document.getElementById("judgement_"+value[0].head+"_"+value[0].block).style.backgroundColor = "#7fff6e";
-						}
-						if (value[0].judgement2 == 'NG') {
-							document.getElementById("judgement2_"+value[0].head+"_"+value[0].block).style.backgroundColor = "#ff4f4f";
-						}else if(value[0].judgement2 == 'OK'){
-							document.getElementById("judgement2_"+value[0].head+"_"+value[0].block).style.backgroundColor = "#7fff6e";
-						}
-						$("#prod_type").html(value[0].product_type);
-						$("#check_date").html(value[0].check_date);
-						$('#injection_date_head_fix').html(value[0].injection_date_head);
-						$('#injection_date_block_fix').html(value[0].injection_date_block);
-						$('#mesin_head').html(value[0].mesin_head);
-						$('#mesin_block').html(value[0].mesin_block);
-					});
-					openSuccessGritter('Success!', result.message);
-				}else{
-					create_temp();
-				}
-			}
-			else{
-				openErrorGritter('Error!', result.message);
-				audio_error.play();
-				
-			}
-		});
-	}
-
-	function update_temp(){
-		var head_id =  $("#head_id").val();
-		var block_id =  $("#block_id").val();
-
-		var head_value =  $("#head_value").val();
-		var block_value =  $("#block_value").val();
-
-		var check_date = $("#check_date").text();
-		var injection_date_head = $("#injection_date_head_fix").text();
-		var injection_date_block = $("#injection_date_block_fix").text();
-		var mesin_head = $("#mesin_head").text();
-		var mesin_block = $("#mesin_block").text();
-		var product_type = $("#prod_type").text();
-		var pic_check = $("#pic_check").text();
-
-		var array_head = [];
-		var array_block = [];
-		var array_head2 = [];
-		var array_block2 = [];
-
-		var push_pull = [];
-		var judgement = [];
-		var push_pull2 = [];
-		var judgement2 = [];
-
-		var ketinggian = [];
-		var judgementketinggian = [];
-		var ketinggian2 = [];
-		var judgementketinggian2 = [];
-
-		var push_block_code = '{{ $remark }}';
-
-		for(var i = 1; i <= 4; i++){
-			for(var j = 1; j <= 4; j++){
-				array_head.push($("#head_"+[j]).val());
-				array_block.push($("#block_"+[i]).val());
-				push_pull.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
-				judgement.push($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
-				ketinggian.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
-				judgementketinggian.push($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
-			}
-		}
-		for(var k = 5; k <= 8; k++){
-			for(var l = 1; l <= 4; l++){
-				array_head2.push($("#head_"+[l]).val());
-				array_block2.push($("#block_"+[k]).val());
-				push_pull2.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
-				judgement2.push($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
-				ketinggian2.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
-				judgementketinggian2.push($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
-			}
-		}
-
-			var data = {
-				push_block_code : push_block_code,
-				check_date : check_date,
-				injection_date_head : injection_date_head,
-				injection_date_block : injection_date_block,
-				mesin_head : mesin_head,
-				mesin_block : mesin_block,
-				pic_check : pic_check,
-				product_type : product_type,
-				head : array_head,
-				block : array_block,
-				push_pull : push_pull,
-				judgement : judgement,
-				ketinggian : ketinggian,
-				judgementketinggian : judgementketinggian
-			}
-			$.post('{{ url("index/push_block_recorder/update_temp") }}', data, function(result, status, xhr){
-				if(result.status){
-					// openSuccessGritter('Success', result.message);
-				}
-				else{
-					// openErrorGritter('Error!', result.message);
-				}
-			});
-			var data2 = {
-				push_block_code : push_block_code,
-				check_date : check_date,
-				injection_date_head : injection_date_head,
-				injection_date_block : injection_date_block,
-				mesin_head : mesin_head,
-				mesin_block : mesin_block,
-				pic_check : pic_check,
-				product_type : product_type,
-				head : array_head2,
-				block : array_block2,
-				push_pull : push_pull2,
-				judgement : judgement2,
-				ketinggian : ketinggian2,
-				judgementketinggian : judgementketinggian2
-			}
-			$.post('{{ url("index/push_block_recorder/update_temp") }}', data2, function(result, status, xhr){
-				if(result.status){
-					// openSuccessGritter('Success', result.message);
-				}
-				else{
-					// openErrorGritter('Error!', result.message);
-				}
-			});
 	}
 
 	function konfirmasi(){
@@ -1305,6 +1149,7 @@
 					openErrorGritter('Error!', result.message);
 				}
 			});
+
 			var data2 = {
 				push_block_code : push_block_code,
 				check_date : check_date,

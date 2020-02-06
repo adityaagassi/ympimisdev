@@ -26,11 +26,14 @@
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
 						<th style="width: 2%; border:1px solid black;">Check Date</th>
-						<th style="width: 2%; border:1px solid black;">Injection Date</th>
+						<th style="width: 2%; border:1px solid black;">Injection Date Head</th>
+						<th style="width: 2%; border:1px solid black;">Mesin Head</th>
+						<th style="width: 2%; border:1px solid black;">Injection Date Block</th>
+						<th style="width: 2%; border:1px solid black;">Mesin Block</th>
 						<th style="width: 2%; border:1px solid black;">PIC</th>
 						<th style="width: 2%; border:1px solid black;">Product</th>
 						<th style="width: 2%; border:1px solid black;">Head - Block</th>
-						<th style="width: 2%; border:1px solid black;">Push Pull</th>
+						<th style="width: 2%; border:1px solid black;">Height</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -38,7 +41,10 @@
 						<tr>
 							<td style="border:1px solid black; text-align: center;">{{ $i+1 }}</td>
 							<td style="border:1px solid black; text-align: center;">{{ $data['check_date'] }}</td>
-							<td style="border:1px solid black; text-align: center;">{{ $data['injection_date'] }}</td>
+							<td style="border:1px solid black; text-align: center;">{{ $data['injection_date_head'] }}</td>
+							<td style="border:1px solid black; text-align: center;">{{ $data['mesin_head'] }}</td>
+							<td style="border:1px solid black; text-align: center;">{{ $data['injection_date_block'] }}</td>
+							<td style="border:1px solid black; text-align: center;">{{ $data['mesin_block'] }}</td>
 							<td style="border:1px solid black; text-align: center;">{{ $data['pic_check'] }}</td>
 							<td style="border:1px solid black; text-align: center;">{{ $data['product_type'] }}</td>
 							<td style="border:1px solid black; text-align: center;">{{ $data['height_ng_name'][$i] }}</td>

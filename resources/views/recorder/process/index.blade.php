@@ -27,6 +27,7 @@
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/recorder/push_block_check_monitoring","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Recorder Process Monitoring</a>
+			<a href="{{ url("index/recorder/rc_picking_result") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Recorder Picking Result</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>

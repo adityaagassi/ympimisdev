@@ -857,6 +857,7 @@ Route::get('fetch/welding/production_result', 'WeldingProcessController@fetchPro
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
 Route::get('scan/welding/operator', 'WeldingProcessController@scanWeldingOperator');
 Route::get('scan/welding/kensa', 'WeldingProcessController@scanWeldingKensa');
+Route::get('fetch/welding/kensa_result', 'WeldingProcessController@fetchKensaResult');
 
 
 
@@ -2000,6 +2001,9 @@ Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
+Route::post('index/push_block_recorder/create_temp', 'RecorderProcessController@create_temp');
+Route::post('index/push_block_recorder/update_temp', 'RecorderProcessController@update_temp');
+Route::get('index/push_block_recorder/get_temp', 'RecorderProcessController@get_temp');
 Route::post('index/push_block_recorder_resume/create_resume', 'RecorderProcessController@create_resume');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
 Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessController@report_push_block');
@@ -2025,6 +2029,8 @@ Route::post('camera_kango/store_camera_kango2', 'RecorderProcessController@store
 Route::get('scan/push_pull/operator', 'RecorderProcessController@scanPushPullOperator');
 Route::get('index/recorder/resume_assy_rc', 'RecorderProcessController@index_resume_assy_rc');
 Route::post('recorder/filter_assy_rc', 'RecorderProcessController@filter_assy_rc');
+Route::get('index/recorder/rc_picking_result', 'RecorderProcessController@index_rc_picking_result');
+Route::get('fetch/recorder/rc_picking_result', 'RecorderProcessController@fetch_rc_picking_result');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
