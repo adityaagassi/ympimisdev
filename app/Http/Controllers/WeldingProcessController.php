@@ -635,7 +635,6 @@ class WeldingProcessController extends Controller
 			'status' => true,
 			'message' => 'Tag karyawan ditemukan',
 			'employee' => $employee,
-			'results' => $results,
 		);
 		return Response::json($response);
 	}
