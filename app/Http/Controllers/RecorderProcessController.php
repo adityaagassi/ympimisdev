@@ -32,17 +32,35 @@ class RecorderProcessController extends Controller
     public function __construct()
     {
       $this->middleware('auth');
-      $this->product_type = ['YRS 23 IVORY',
-                        'YRS 24B IVORY',
-                        'YRS 20BB BLUE',
-                        'YRS 20BG GREEN',
-                    	'YRS 20BP PINK',
-                    	'YRS 20BR RED',
-                    	'YRS 20GB BLUE',
-                    	'YRS 20GG GREEN',
-                      'YRS 20GP PINK',
-                    'YRS 24BUK BROWN',
-                  'YRF 21 IVORY'];
+      $this->product_type = ['YRS-27III //J',
+                            'YRS-28BIII //J',
+                            'YRF-21//ID',
+                            'YRS-20BB //ID',
+                            'YRS-20BG //ID',
+                            'YRS-20BP //ID',
+                            'YRS-23 //ID',
+                            'YRS-23CA //ID',
+                            'YRS-24B //ID',
+                            'YRS-23K//ID',
+                            'YRS-24BK//ID',
+                            'YRS-20GP //ID',
+                            'YRS-20GG //ID',
+                            'YRS-20GB //ID',
+                            'YRS-20BR //ID',
+                            'YRS-23  //WOFB   ID',
+                            'YRS-24BUKII //ID',
+                            'YRS-24BCA //ID',
+                            'YRS-23BR//ID',
+                            'YRS-24BBR//ID',
+                            'YRS-20BB // WOFB ID',
+                            'YRS-20BG// WOFB ID',
+                            'YRS-20BP// WOFB ID',
+                            'YRS-20GBK//ID',
+                            'YRS-20GGK//ID',
+                            'YRS-20GPK//ID',
+                            'YRS-24B // WOFB ID',
+                            'YRF-21K//ID',
+                            'YRS-24B//MX ID'];
 
       $this->mesin = ['#1',
                       '#2',
@@ -1381,8 +1399,7 @@ class RecorderProcessController extends Controller
       //   $datenew[] = date('d F Y',strtotime($date7days[$i]));
       // }
 
-      $data = db::select("select SUM(quantity) as plan,materials.surface,materials.key,CONCAT(materials.key,' - ',materials.surface) as colorkey,(select count(id) as actual from rc_camera_kango_logs where remark = 'Middle' and DATE(created_at) = '".$date."' and model = materials.surface and value_check = materials.key) as actual from production_schedules join materials on production_schedules.material_number = materials.material_number where due_date = '".$date."' and materials.origin_group_code = '072' and materials.category = 'FG' GROUP BY colorkey,surface,materials.key
-");
+      $data = db::select("select SUM(quantity) as plan,materials.surface,materials.key,CONCAT(materials.key,' - ',materials.surface) as colorkey,(select count(id) as actual from rc_camera_kango_logs where remark = 'Middle' and DATE(created_at) = '".$date."' and model = materials.surface and value_check = materials.key) as actual from production_schedules join materials on production_schedules.material_number = materials.material_number where due_date = '".$date."' and materials.origin_group_code = '072' and materials.category = 'FG' GROUP BY colorkey,surface,materials.key");
 
       $response = array(
         'status' => true,

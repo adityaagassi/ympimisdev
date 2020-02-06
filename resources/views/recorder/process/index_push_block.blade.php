@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
@@ -427,7 +427,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xs-6" id="mesin_head_choice">
+							<div class="col-xs-6" id="mesin_head_choice" style="padding-top: 20px">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="row">
@@ -447,7 +447,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xs-6" id="mesin_head_fix">
+							<div class="col-xs-6" id="mesin_head_fix" style="padding-top: 20px">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="row">
@@ -463,7 +463,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xs-6" id="mesin_block_choice">
+							<div class="col-xs-6" id="mesin_block_choice" style="padding-top: 20px">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="row">
@@ -483,7 +483,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xs-6" id="mesin_block_fix">
+							<div class="col-xs-6" id="mesin_block_fix" style="padding-top: 20px">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="row">
@@ -499,7 +499,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xs-12" id="product_choice">
+							<div class="col-xs-12" id="product_choice" style="padding-top: 20px">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="row">
@@ -521,7 +521,7 @@
 								    </div>
 								</div>
 							</div>
-							<div class="col-xs-12" id="product_fix">
+							<div class="col-xs-12" id="product_fix" style="padding-top: 20px">
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="row">
@@ -749,26 +749,26 @@
 		$('#mesin_block_fix').hide();
 	});
 
-	jQuery.extend(jQuery.expr[':'], {
-	    focusable: function (el, index, selector) {
-	        return $(el).is('a, button, :input, [tabindex]');
-	    }
-	});
+	// jQuery.extend(jQuery.expr[':'], {
+	//     focusable: function (el, index, selector) {
+	//         return $(el).is('a, button, :input, [tabindex]');
+	//     }
+	// });
 
 	$('#modalHeadBlock').on('shown.bs.modal', function () {
 			$('#injection_date_head').focus();
 	});
 
-	$(document).on('keypress', 'input,select', function (e) {
-	    if (e.which == 13) {
-	        e.preventDefault();
-	        // Get all focusable elements on the page
-	        var $canfocus = $(':focusable');
-	        var index = $canfocus.index(document.activeElement) + 1;
-	        if (index >= $canfocus.length) index = 0;
-	        $canfocus.eq(index).focus();
-	    }
-	});
+	// $(document).on('keypress', 'input,select', function (e) {
+	//     if (e.which == 13) {
+	//         e.preventDefault();
+	//         // Get all focusable elements on the page
+	//         var $canfocus = $(':focusable');
+	//         var index = $canfocus.index(document.activeElement) + 1;
+	//         if (index >= $canfocus.length) index = 0;
+	//         $canfocus.eq(index).focus();
+	//     }
+	// });
 
 	function getProduct(product) {
 		$('#product_choice').hide();
@@ -1419,36 +1419,36 @@
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_3+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
 
@@ -1478,36 +1478,36 @@
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_3+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
 
@@ -1537,36 +1537,36 @@
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_3+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
 
@@ -1596,36 +1596,36 @@
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_3+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
 
@@ -1655,36 +1655,36 @@
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_3+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
 
@@ -1714,36 +1714,36 @@
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_3+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
 
@@ -1773,36 +1773,36 @@
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_3+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
 
@@ -1832,36 +1832,36 @@
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_3+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="text" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
 
