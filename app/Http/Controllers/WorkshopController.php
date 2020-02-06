@@ -294,7 +294,9 @@ class WorkshopController extends Controller{
 					'workshop_materials.file_name')
 				->first();
 
-				$temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)->first();
+				$temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)
+				->where('operator', '=', Auth::user()->username)
+				->first();
 				$started_at = $temp->started_at;
 
 				$response = array(
@@ -401,10 +403,13 @@ class WorkshopController extends Controller{
 
 		$wjo = WorkshopJobOrder::where('order_no', '=', $request->get('order_no'))->first();
 
-		$temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)->first();
+		$temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)
+		->where('operator', '=', Auth::user()->username)
+		->first();
 		if(!$temp){
 			$temp = new WorkshopTempProcess([
 				'tag' => $wjo->tag,
+				'operator' => Auth::user()->username,
 				'started_at' => date('Y-m-d H:i:s'),
 			]);
 			$temp->save();
@@ -699,9 +704,10 @@ class WorkshopController extends Controller{
 				'started_at' => $started_at,
 			]);
 		}
-
-		$temp = WorkshopTempProcess::where('tag', '=', $tag)->first();
-
+		$temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)
+		->where('operator', '=', Auth::user()->username)
+		->first();
+		
 		try {
 
 			// $started_at = new DateTime($temp->started_at);
@@ -1469,7 +1475,7 @@ class WorkshopController extends Controller{
 			on date.week_date = reject.date
 			order by week_date asc");
 
-		$progress = db::select("select wjo.order_no, wjo.priority, wjo.item_name, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date, step.std, step.actual from workshop_job_orders wjo
+		$progress = db::select("select wjo.order_no, wjo.priority, wjo.item_name, wjo.quantity, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date, step.std, step.actual from workshop_job_orders wjo
 			left join (select * from workshop_job_order_logs where remark = 0) as requested
 			on requested.order_no = wjo.order_no
 			left join (select * from workshop_job_order_logs where remark = 1) as listed

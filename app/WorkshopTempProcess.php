@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class WorkshopTempProcess extends Model{
 
 	protected $fillable = [
-		'tag','started_at'
+		'tag','operator','started_at'
 	];
 }

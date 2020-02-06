@@ -92,6 +92,7 @@
 							<th style="border: 1px solid #333; width: 7%; padding: 0;vertical-align: middle;;font-size: 16px; border-top: 0px !important;" rowspan="2">Order No.</th>
 							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Priority</th>
 							<th style="border: 1px solid #333; width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Item Name</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Qty</th>
 							<th style="border: 1px solid #333; width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">PIC</th>
 							<th style="border: 1px solid #333; padding-top: 0.25%; padding-bottom: 0.25%; width: 25%;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" colspan="4">Status</th>
 							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Target<br>Date</th>
@@ -349,6 +350,10 @@
 
 					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%;">';
 					body += result.progress[i].item_name;
+					body += '</td>';
+
+					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%;">';
+					body += result.progress[i].quantity;
 					body += '</td>';
 
 

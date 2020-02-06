@@ -447,6 +447,7 @@
 						width: 2,
 						zIndex: 5,
 						label: {
+							rotation: 0,
 							align:'right',
 							text: i + ' day(s)',
 							x:-7,
@@ -458,6 +459,8 @@
 						}
 					});
 				}
+				console.log(plotLines);
+
 
 				$('#mc-workload-shift-3').highcharts({
 					chart: {
@@ -486,6 +489,7 @@
 					},
 					yAxis: {
 						opposite: true,
+						gridLineWidth: 0,
 						title: {
 							text: 'Minute(s)'
 						},
@@ -523,7 +527,7 @@
 					series: [{
 						name: 'Machine Workload',
 						data: data,
-						color: 'rgb(144,238,126)'
+						color: 'rgb(186,104,200)'
 					}]
 				});
 
@@ -557,6 +561,7 @@
 						width: 2,
 						zIndex: 5,
 						label: {
+							rotation: 0,
 							align:'right',
 							text: i + ' day(s)',
 							x:-7,
@@ -568,6 +573,8 @@
 						}
 					});
 				}
+
+				console.log(plotLines);
 
 
 				$('#mc-workload-shift-2').highcharts({
@@ -587,7 +594,6 @@
 							fontSize: '1vw',
 							fontWeight: 'bold'
 						},
-						plotLines : plotLines
 					},
 					xAxis: {
 						type: 'category',
@@ -598,9 +604,11 @@
 					},
 					yAxis: {
 						opposite: true,
+						gridLineWidth: 0,
 						title: {
 							text: 'Minute(s)'
 						},
+						plotLines : plotLines
 					},
 					plotOptions: {
 						series:{
@@ -634,7 +642,7 @@
 					series: [{
 						name: 'Machine Workload',
 						data: data,
-						color: 'rgb(144,238,126)'
+						color: 'rgb(186,104,200)'
 					}]
 				});
 

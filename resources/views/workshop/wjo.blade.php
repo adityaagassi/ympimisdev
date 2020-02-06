@@ -90,17 +90,17 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-7" style="padding-right: 0; padding-left: 0">
+		<div class="col-xs-6" style="padding-right: 0; padding-left: 0;">
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 0.25%;">
 				<thead>
 					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;" colspan="2">Operator</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 18px;" colspan="2">Operator</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:25px; width: 30%;" id="op">{{ $employee_id }}</td>
-						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 25px;" id="op2">{{ $name }}</td>
+						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;" id="op">{{ $employee_id }}</td>
+						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="op2">{{ $name }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -108,109 +108,110 @@
 			<table class="table table-bordered" style="width: 100%; margin-bottom: 3%;">
 				<thead>
 					<tr>
-						<th style="width:15%; background-color: rgb(50, 50, 50); color: white; text-align: center; padding:0;font-size: 35px;" colspan="4" id="text_order_no">Order No.</th>
+						<th style="width:15%; background-color: rgb(50, 50, 50); color: white; text-align: center; padding:0;font-size: 30px;" colspan="4" id="text_order_no">Order No.</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Prioritas</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_priority"></td>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Lampiran</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_attach"></td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Prioritas</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 25%;" id="text_priority"></td>
+						{{-- <td rowspan="6" style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 35%;">Lampiran</td> --}}
 					</tr>
 					<tr>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">PIC</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_pic"></td>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Kategori</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_category"></td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Kategori</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_category"></td>						
+					</tr>
+					<tr>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">PIC</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_pic"></td>
+
 					</tr>	
 					<tr>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Target Selesai</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_target_date"></td>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 20%;">Jumlah</td>
-						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_quantity"></td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Target Selesai</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_target_date"></td>
 					</tr>
 					<tr>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Material</td>
-						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="text_material"></td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Material</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_material"></td>
 					</tr>
 					<tr>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Nama Barang</td>
-						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px;" id="text_item_name"></td>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Jumlah</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_quantity"></td>
 					</tr>
 					<tr>
-						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:20px; width: 25%;">Uraian Permintaan</td>
-						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 20px;" id="text_problem_description"></td>
-					</tr>		
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Nama Barang</td>
+						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px;" id="text_item_name"></td>
+					</tr>
+					<tr>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Uraian Permintaan</td>
+						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px;" id="text_problem_description"></td>
+					</tr>
+					<tr>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Drawing</td>
+						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px;" id="text_drawing"></td>
+					</tr>
+					<tr>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Lampiran</td>
+						<td colspan="3" style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_attach"></td>
+					</tr>
+					<tr id="show-att">
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px;" colspan="2" id="text_attach_1">
+						</td>
+					</tr>
+
 					
 				</tbody>
 			</table>
 
-			<div class="input-group">
-				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black; font-size: 20px;">
-					<i class="glyphicon glyphicon-credit-card"></i>
-				</div>
-				<input type="text" style="text-align: center; border-color: black; height: 40px; font-size: 25px;" class="form-control" id="machine" placeholder="Tap Machine Tag..." required>
-				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black; font-size: 20px;">
-					<i class="glyphicon glyphicon-credit-card"></i>
-				</div>
-			</div>
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 0px;" id="machine_table">
-				<tbody>
-					<tr>
-						<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size: 25px; width: 30%;" id="machine_information"></td>
-					</tr>
-				</tbody>
-			</table>
 
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 3%;">
-				{{-- <thead id='process_progress_bar'>
-					<tr>
-						<th style="background-color: rgb(50, 50, 50); padding: 0px;" colspan="2">
-							<div class="col-xs-12" style="padding: 0px;">
-								<div class="progress-group" id="progress_div">
-									<div class="progress" style="height: 30px; border: 1px solid; padding: 0px; margin: 0px;">
-										<div class="progress-bar progress-bar-success progress-bar-striped" id="process_bar" style="font-size: 20px; padding-top: 0.5%;"></div>
-									</div>
-								</div>
-							</div>
-						</th>
-					</tr>
-				</thead> --}}
-				<tbody>
-					<tr>
-						<td style="width: 75%; color: white; font-size: 2vw; background-color: rgb(50, 50, 50);">
-							<p style="margin: 0px;"><label id='hours'>00</label>:<label id='minutes'>00</label>:<label id='seconds'>00</label></p>
-						</td>
-						<td style="width: 25%;">
-							<div class="col-md-12" style="padding: 0px;">
-								<button class="btn btn-success" onclick="finish()" style="width: 100%; font-size: 20px;"><i class="fa fa-check"></i> Finish</button>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
 		</div>
-		<div class="col-xs-5">
-			<div class="nav-tabs-custom tab-default" style="background-color: rgb(60,60,60)">
-				<ul class="nav nav-tabs">
-					<li id="vendor-tab-1" class="vendor-tab active" style="font-weight: bold; font-size: 1vw; text-align: center; width: 50%; margin: 0px; color: rgb(60,60,60);"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Process Plan</a></li>
-					<li id="vendor-tab-2" class="vendor-tab pull-right" style="font-weight: bold; font-size: 1vw; text-align: center; width: 50%; margin: 0px; color: rgb(60,60,60);"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Actual Process</a></li>
-				</ul>
-			</div>
-			<div class="tab-content">
-				<div class="tab-pane active" id="tab_1">
-					<div id="step"></div>
+		<div class="col-xs-6" style="padding-right: 0; padding-left: 1%;">
+			<div class="col-xs-12" style="padding-right: 0px; padding-left: 0px;">
+				<div class="input-group">
+					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black; font-size: 20px;">
+						<i class="glyphicon glyphicon-credit-card"></i>
+					</div>
+					<input type="text" style="text-align: center; border-color: black; height: 40px; font-size: 20px;" class="form-control" id="machine" placeholder="Tap Machine Tag..." required>
+					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black; font-size: 20px;">
+						<i class="glyphicon glyphicon-credit-card"></i>
+					</div>
 				</div>
-				<div class="tab-pane" id="tab_2">
-					<div id="actual"></div>
-				</div>
+
+				<table class="table table-bordered" style="width: 100%; margin-bottom: 0px;" id="machine_table">
+					<tbody>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size: 20px; width: 30%;" id="machine_information"></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<table class="table table-bordered" style="width: 100%; margin-bottom: 3%;">
+
+					<tbody>
+						<tr>
+							<td style="width: 75%; color: white; font-size: 20px; background-color: rgb(50, 50, 50); padding: 0px;">
+								<p style="margin: 0px;"><label id='hours'>00</label>:<label id='minutes'>00</label>:<label id='seconds'>00</label></p>
+							</td>
+							<td style="width: 25%;">
+								<div class="col-md-12" style="padding: 0px;">
+									<button class="btn btn-success" onclick="finish()" style="width: 100%; font-size: 20px;"><i class="fa fa-check"></i> Finish</button>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 
+			<div class="col-xs-6" style="padding-right: 0px; padding-left: 0px;">
+				<div id="step"></div>
+			</div>
+			<div class="col-xs-6" style="padding-right: 0px; padding-left: 0px;">
+				<div id="actual"></div>
+			</div>
 		</div>
 	</section>
 
-	
+
 	<div class="modal fade" id="modalTag">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
@@ -270,6 +271,8 @@
 			$('#process_progress_bar').hide();
 			$('#machine_table').hide();
 
+			$('#show-att').hide();
+
 			setInterval(setTime, 1000);
 		});
 
@@ -290,7 +293,7 @@
 			if(count_process_bar){
 				var actual = diff_seconds(new Date(), started_at);
 				var percent = (actual / std_time) * 100;
-				
+
 				$('#process_bar').append().empty();
 				if(percent <= 100){
 					$('#process_bar').addClass('active');
@@ -369,9 +372,9 @@
 
 					$.get('{{ url("scan/workshop/tag/rfid") }}', data, function(result, status, xhr){
 						if(result.status){
-							
+
 							count_progress_bar = true;
-							
+
 							listed_time = new Date(result.listed_time.date);
 							var date = result.wjo.target_date.split("-");
 							target_date = new Date(date[0], (parseInt(date[1]) - 1), date[2], 23, 59, 59, 0);
@@ -399,35 +402,56 @@
 							$('#text_category').html(result.wjo.category);
 							$('#text_quantity').html(result.wjo.quantity);						
 							$('#text_material').html(result.wjo.material);						
-							$('#text_problem_description').html(result.wjo.problem_description + '<br>' + result.wjo.drawing_name + ' (' + result.wjo.item_number +' [Part No.'+ result.wjo.part_number +'])');
+							$('#text_problem_description').html(result.wjo.problem_description);
 							$('#text_target_date').html(result.wjo.target_date);
 							$('#text_pic').html(result.wjo.name);
 
+							$('#text_drawing').append().empty();
+							if(result.wjo.drawing_name){
 
-							// $('#text_drawing').append().empty();
-							// if(result.wjo.file_name){
-							// 	$('#text_drawing').css('padding-top', '0.25%');
-							// 	$('#text_drawing').css('padding-bottom', '0.75%');
-							// 	$('#text_drawing').append('<button style="padding: 2%;" class="btn btn-sm btn-primary" onClick="downloadDrw(\''+result.wjo.file_name+'\')">'+ result.wjo.file_name +'&nbsp;&nbsp;&nbsp;<i class="fa fa-external-link"></i></button>');
-							// }else{
-							// 	$('#text_drawing').append('-');
-							// }
+								if(result.wjo.item_number){
+									if(result.wjo.part_number){
+										$('#text_drawing').html(result.wjo.drawing_name + '  ( ' + result.wjo.item_number +' [Part No.'+ result.wjo.part_number +'] )');
+									}else{
+										$('#text_drawing').html(result.wjo.drawing_name + '  ( ' + result.wjo.item_number +' )');
+									}
+								}else{
+									$('#text_drawing').html(result.wjo.drawing_name);
+								}
+							}else{
+								$('#text_drawing').html('-');
+							}
 
 							$('#text_attach').append().empty();
 							if(result.wjo.attachment){
-								$('#text_attach').css('padding-top', '0.25%');
+								$('#text_attach').css('padding-top', '0.5%');
 								$('#text_attach').css('padding-bottom', '0.75%');
-								$('#text_attach').append('<button style="padding: 2%;" class="btn btn-sm btn-primary" onClick="downloadAtt(\''+result.wjo.attachment+'\')">'+ result.wjo.attachment +'&nbsp;&nbsp;&nbsp;<i class="fa fa-external-link"></i></button>');
+								$('#text_attach').append('<button style="padding: 0.5%;" class="btn btn-sm btn-primary" onClick="downloadAtt(\''+result.wjo.attachment+'\')">'+ result.wjo.attachment +'&nbsp;&nbsp;&nbsp;<i class="fa fa-download"></i></button>');
 							}else{
 								$('#text_attach').append('-');
 							}
+
+
+							$('#text_attach_1').append().empty();
+
+							if(result.wjo.attachment){
+								var showAtt = result.wjo.attachment;
+								
+								if(showAtt.includes('.pdf') || showAtt.includes('.png') || showAtt.includes('.jp')){
+									$('#text_attach_1').append("<embed src='"+ result.file_path +"' type='application/pdf' width='100%' height='300px'>");
+									$('#show-att').show();
+								}
+
+								
+							}
+
 
 							$("#step").append().empty();
 							$("#actual").append().empty();
 							var step = '';
 							var actual = '';
 							var green = '';
-							
+
 							if(result.flow_process.length > 0){
 								$('#process_progress_bar').show();
 								if(result.wjo_log.length == 0){
@@ -437,14 +461,14 @@
 								}
 								step += '<ul class="timeline">';
 								step += '<li class="time-label">';
-								step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+								step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Plan&nbsp;&nbsp;&nbsp;&nbsp;</span>';
 								step += '</li>';
 								for (var i = 0; i < result.flow_process.length; i++) {
-									step += '<li>';
-									step += '<i class="fa fa-stack-1x">'+ result.flow_process[i].sequence_process +'</i>';
+									step += '<li style="margin-bottom: 5px;">';
+									step += '<i class="fa fa-stack-1x" style="font-size: 15px;">'+ result.flow_process[i].sequence_process +'</i>';
 									step += '<div class="timeline-item" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'m<span></p>';
-									step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
+									step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'m<span></p>';
+									step += '<p style="padding: 0px; font-size: 14px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
 									step += '</div>';
 									step += '</li>';
 								}
@@ -452,7 +476,7 @@
 								step += '<i class="fa fa-check-square-o bg-blue"></i>';
 								step += '</li>';
 								step += '</ul>';
-								
+
 							}
 
 							if(result.wjo_log.length > 0){
@@ -460,14 +484,14 @@
 
 								actual += '<ul class="timeline">';
 								actual += '<li class="time-label">';
-								actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+								actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Actual&nbsp;&nbsp;&nbsp;&nbsp;</span>';
 								actual += '</li>';
 								for (var i = 0; i < result.wjo_log.length; i++) {
-									actual += '<li>';
-									actual += '<i class="fa fa-stack-1x bg-green">'+ result.wjo_log[i].sequence_process +'</i>';
+									actual += '<li style="margin-bottom: 5px;">';
+									actual += '<i class="fa fa-stack-1x bg-green" style="font-size: 15px;">'+ result.wjo_log[i].sequence_process +'</i>';
 									actual += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-									actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
-									actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+									actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
+									actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 14px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
 									actual += '<p style="padding: 0px; font-size: 12px;">PIC : '+ result.wjo_log[i].pic +'</p>';
 									actual += '</div>';
 									actual += '</li>';
@@ -483,14 +507,14 @@
 								$("#timeline_number_" + i).addClass('bg-green');
 								$("#timeline_box_" + i).addClass('bg-green');						
 							}
-							
+
 						}
 						else{
 							audio_error.play();
 							openErrorGritter('Error', result.message);
 							$('#tag').val('');
 						}
-						
+
 					});
 }
 }
@@ -529,7 +553,7 @@ $('#machine').keydown(function(event) {
 
 					actual += '<ul class="timeline">';
 					actual += '<li class="time-label">';
-					actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+					actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Actual&nbsp;&nbsp;&nbsp;&nbsp;</span>';
 					actual += '</li>';
 					if(result.wjo_log.length > 0){
 						$('#process_progress_bar').show();
@@ -538,20 +562,20 @@ $('#machine').keydown(function(event) {
 
 						for (var i = 0; i < result.wjo_log.length; i++) {
 							actual += '<li>';
-							actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'">'+ result.wjo_log[i].sequence_process +'</i>';
+							actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ i +'" style="font-size: 15px;">'+ result.wjo_log[i].sequence_process +'</i>';
 							actual += '<div class="timeline-item" id="timeline_box_'+ i +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
-							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 14px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
 							actual += '<p style="padding: 0px; font-size: 12px;">PIC : '+ result.wjo_log[i].pic +'</p>';
 							actual += '</div>';
 							actual += '</li>';
 						}
 
 						actual += '<li>';
-						actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ green +'">'+ (green+1) +'</i>';
+						actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ green +'" style="font-size: 15px;">'+ (green+1) +'</i>';
 						actual += '<div class="timeline-item" id="timeline_box_'+ green +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-						actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
-						actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
+						actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.current_machine.process_name +'</p>';
+						actual += '<p style="padding: 0px; font-size: 14px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
 						actual += '</div>';
 						actual += '</li>';
 
@@ -559,10 +583,10 @@ $('#machine').keydown(function(event) {
 						green = 0;
 
 						actual += '<li>';
-						actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ green +'">1</i>';
+						actual += '<i class="fa fa-stack-1x" id="timeline_number_'+ green +'" style="font-size: 15px;">1</i>';
 						actual += '<div class="timeline-item" id="timeline_box_'+ green +'" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-						actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.current_machine.process_name +'</p>';
-						actual += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
+						actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.current_machine.process_name +'</p>';
+						actual += '<p style="padding: 0px; font-size: 14px; font-weight: bold;">'+ result.current_machine.machine_name +'</p>';
 						actual += '</div>';
 						actual += '</li>';
 					}
@@ -633,14 +657,14 @@ $('#leader').keydown(function(event) {
 						}
 						step += '<ul class="timeline">';
 						step += '<li class="time-label">';
-						step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+						step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Flow&nbsp;&nbsp;&nbsp;&nbsp;</span>';
 						step += '</li>';
 						for (var i = 0; i < result.flow_process.length; i++) {
 							step += '<li>';
-							step += '<i class="fa fa-stack-1x">'+ result.flow_process[i].sequence_process +'</i>';
+							step += '<i class="fa fa-stack-1x" style="font-size: 15px;">'+ result.flow_process[i].sequence_process +'</i>';
 							step += '<div class="timeline-item" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'m<span></p>';
-							step += '<p style="padding: 0px; font-size: 18px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
+							step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.flow_process[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow_process[i].std_time / 60) +'m<span></p>';
+							step += '<p style="padding: 0px; font-size: 14px; font-weight: bold;">'+ result.flow_process[i].machine_name +'</p>';
 							step += '</div>';
 							step += '</li>';
 						}
@@ -655,14 +679,14 @@ $('#leader').keydown(function(event) {
 
 						actual += '<ul class="timeline">';
 						actual += '<li class="time-label">';
-						actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+						actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Actual&nbsp;&nbsp;&nbsp;&nbsp;</span>';
 						actual += '</li>';
 						for (var i = 0; i < result.wjo_log.length; i++) {
 							actual += '<li>';
-							actual += '<i class="fa fa-stack-1x bg-green">'+ result.wjo_log[i].sequence_process +'</i>';
+							actual += '<i class="fa fa-stack-1x bg-green" style="font-size: 15px;">'+ result.wjo_log[i].sequence_process +'</i>';
 							actual += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
-							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
-							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.wjo_log[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log[i].actual / 60) +'m<span></p>';
+							actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 14px; font-weight: bold;">'+ result.wjo_log[i].machine_name +'</p>';
 							actual += '<p style="padding: 0px; font-size: 12px;">PIC : '+ result.wjo_log[i].pic +'</p>';
 							actual += '</div>';
 							actual += '</li>';
@@ -753,8 +777,8 @@ function finish(){
 				$("#timeline_box_" + green).addClass('bg-green');
 
 				var actual = '';
-				actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 23px;">'+ result.wjo_log.process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log.actual / 60) +'m<span></p>';
-				actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 18px; font-weight: bold;">'+ result.wjo_log.machine_name +'</p>';
+				actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.wjo_log.process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.wjo_log.actual / 60) +'m<span></p>';
+				actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 14px; font-weight: bold;">'+ result.wjo_log.machine_name +'</p>';
 				actual += '<p style="padding: 0px; font-size: 12px;">PIC : '+ result.wjo_log.pic +'</p>';
 
 				$("#timeline_box_" + green).html("");
