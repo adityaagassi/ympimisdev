@@ -654,7 +654,7 @@ class WeldingProcessController extends Controller
 		LEFT JOIN materials ON materials.material_number = welding_logs.material_number 
 		WHERE
 		employee_id = '".$employee_id."'
-		AND date(welding_ng_logs.created_at) = '".$now."'
+		AND date(welding_logs.created_at) = '".$now."'
 		AND location = '".$location."'";
 
 		$oks = db::select($query1);
@@ -693,7 +693,7 @@ class WeldingProcessController extends Controller
 			if($zed_material == null){
 				$response = array(
 					'status' => false,
-					'message' => 'Tag material tidak ditemukan',
+					'message' => 'Tag material PHS tidak ditemukan',
 				);
 				return Response::json($response);
 			}
@@ -719,7 +719,7 @@ class WeldingProcessController extends Controller
 			if($zed_material == null){
 				$response = array(
 					'status' => false,
-					'message' => 'Tag material tidak ditemukan',
+					'message' => 'Tag material HSA tidak ditemukan',
 				);
 				return Response::json($response);
 			}
