@@ -427,7 +427,7 @@
 					series.push([ng[key], jml[key]]);
 
 					ng2.push(value.ng_name);
-					ng_rate.push(parseFloat(value.rate.toFixed(2)));
+					ng_rate.push(parseFloat(value.rate.toFixed(1)));
 					series2.push([ng2[key], ng_rate[key]]);
 
 				});
@@ -566,7 +566,8 @@
 							enabled: true,
 							format: '{point.y}%' ,
 							style:{
-								fontSize: '1vw'
+								fontSize: '1vw',
+								textShadow: false
 							},
 						},
 						
@@ -581,7 +582,8 @@
 							enabled: true,
 							format: '{point.y}' ,
 							style:{
-								fontSize: '1vw'
+								fontSize: '1vw',
+								textShadow: false
 							},
 						},
 					}
@@ -600,7 +602,7 @@
 					series.push([kunci[key], jml[key]]);
 
 					kunci2.push(value.key);
-					ng_rate.push(parseFloat(value.rate.toFixed(2)));
+					ng_rate.push(parseFloat(value.rate.toFixed(1)));
 					series2.push([kunci2[key], ng_rate[key]]);
 
 				});
@@ -736,9 +738,10 @@
 						color:'#ff9800',
 						dataLabels: {
 							enabled: true,
-							format: '{point.y}%' ,
+							format: '{point.y}%',
 							style:{
-								fontSize: '1vw'
+								fontSize: '0.9vw',
+								textShadow : false
 							},
 						},
 					},{
