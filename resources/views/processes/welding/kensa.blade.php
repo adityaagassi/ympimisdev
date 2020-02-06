@@ -272,15 +272,19 @@
 			location:location
 		}
 		$.get('{{ url("fetch/welding/kensa_result") }}', data, function(result, status, xhr){
+			var pctgAS = (result.ngs[0].askey/result.oks[0].askey)*100
+			var pctgTS = (result.ngs[0].tskey/result.oks[0].tskey)*100
+			var pctgZ = (result.ngs[0].z/result.oks[0].z)*100
+
 			$('#result1').text(result.oks[0].askey);
 			$('#result2').text(result.ngs[0].askey);
-			$('#result3').text((result.ngs[0].askey/result.oks[0].askey)*100+'%');
+			$('#result3').text(pctgAS.toFixed(2)+'%');
 			$('#result4').text(result.oks[0].tskey);
 			$('#result5').text(result.ngs[0].tskey);
-			$('#result6').text((result.ngs[0].tskey/result.oks[0].tskey)*100+'%');
+			$('#result6').text(pctgTS.toFixed(2)+'%');
 			$('#result7').text(result.oks[0].z);
 			$('#result8').text(result.ngs[0].z);
-			$('#result9').text((result.ngs[0].z/result.oks[0].z)*100+'%');
+			$('#result9').text(pctgZ.toFixed(2)+'%');
 		});
 	}
 
