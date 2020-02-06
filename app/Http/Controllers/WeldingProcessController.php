@@ -730,6 +730,7 @@ class WeldingProcessController extends Controller
 			->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)
 			->where('t_order.part_type', '=', '2')
 			->where('t_order_detail.flow_id', '=', '1')
+			->where('t_order.kanban_no', '=', $zed_material->hsa_kartu_no)
 			// ->select('m_operator.operator_nik', 'm_operator.operator_name', 't_order.order_id', 't_order_detail.order_sedang_finish_date')
 			->first();
 
