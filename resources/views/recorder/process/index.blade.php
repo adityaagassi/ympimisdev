@@ -94,6 +94,7 @@
 	});
 
 	function confirm() {
+		$('#push-pull-check-modal').modal('hide');
 		var remark = $('#remark').val();
 		var jumlah_hako = $('#jumlah_hako').val();
 		var url = '{{ url("index/recorder_process_push_block","After Injection") }}';

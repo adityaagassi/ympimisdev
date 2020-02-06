@@ -21,6 +21,7 @@
 			<a href="{{ url("index/welding/kensa", "phs-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">PHS Kensa Visual</a>
 			<a href="{{ url("index/welding/kensa", "hsa-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">HSA Kensa Visual</a>
 			<a href="{{ url("index/welding/kensa", "hsa-dimensi-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa Dimensi</a>
+			<a href="{{ url("index/middle/buffing_target/wld") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Welding Target</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Handatsuke <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_stamp_sx_1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Stamp <b><i>IoT</i></b></a>
 		</div>
