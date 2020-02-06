@@ -316,6 +316,7 @@
 				$('#material_number').val(result.material.material_number);
 				$('#material_quantity').val(result.material.lot_completion);
 
+				fetchResult($('#op').val());
 				$("#tag").prop('disabled', true);
 				openSuccessGritter('Success', result.message);
 			}

@@ -192,28 +192,28 @@ class WeldingProcessController extends Controller
 
 		$ngkey = db::select("
 			select rate.`key`, rate.`check`, rate.ng, rate.rate from (
-				select c.`key`, c.jml as `check`, COALESCE(ng.jml,0) as ng,(COALESCE(ng.jml,0)/c.jml*100) as rate 
-				from 
-					(select mt.`key`, sum(w.quantity) as jml from welding_check_logs w
-					left join materials mt on mt.material_number = w.material_number
-					where w.deleted_at is null
-					".$addlocation."
-					and DATE(w.created_at)='".$now."'
-					GROUP BY mt.`key`) c
-					
-					left join
-					
-					(select mt.`key`, sum(w.quantity) as jml from welding_ng_logs w
-					left join materials mt on mt.material_number = w.material_number
-					where w.deleted_at is null
-					".$addlocation."
-					and DATE(w.created_at)='".$now."'
-					GROUP BY mt.`key`) ng
+			select c.`key`, c.jml as `check`, COALESCE(ng.jml,0) as ng,(COALESCE(ng.jml,0)/c.jml*100) as rate 
+			from 
+			(select mt.`key`, sum(w.quantity) as jml from welding_check_logs w
+			left join materials mt on mt.material_number = w.material_number
+			where w.deleted_at is null
+			".$addlocation."
+			and DATE(w.created_at)='".$now."'
+			GROUP BY mt.`key`) c
 
-				on c.`key` = ng.`key`) rate
-				where rate.ng != '0'
-				ORDER BY rate.rate desc"
-			);
+			left join
+
+			(select mt.`key`, sum(w.quantity) as jml from welding_ng_logs w
+			left join materials mt on mt.material_number = w.material_number
+			where w.deleted_at is null
+			".$addlocation."
+			and DATE(w.created_at)='".$now."'
+			GROUP BY mt.`key`) ng
+
+			on c.`key` = ng.`key`) rate
+			where rate.ng != '0'
+			ORDER BY rate.rate desc"
+		);
 
 
 		$dateTitle = date("d M Y", strtotime($now));
