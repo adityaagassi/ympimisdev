@@ -703,6 +703,7 @@ class WeldingProcessController extends Controller
 			->leftJoin('m_operator', 'm_operator.operator_id', '=', 't_order_detail.operator_id')
 			->where('t_order.part_type', '=', '1')
 			->where('t_order_detail.flow_id', '=', '1')
+			->where('t_order.kanban_no', '=', $zed_material->hsa_kartu_no)
 			->select('m_operator.operator_nik', 'm_operator.operator_name', 't_order.order_id', 't_order_detail.order_sedang_finish_date')
 			->first();
 
@@ -855,6 +856,7 @@ class WeldingProcessController extends Controller
 
 				$order_id = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
 				->where('part_id', '=', $m_hsa_kartu->hsa_id)
+				->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
 				->first();
 
 				$t_order_detail = db::connection('welding_controller')->table('t_order_detail')
@@ -869,6 +871,7 @@ class WeldingProcessController extends Controller
 
 				$t_order = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
 				->where('part_id', '=', $m_hsa_kartu->hsa_id)
+				->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
 				->update([
 					'order_status' => '5'
 				]);
