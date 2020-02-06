@@ -99,6 +99,26 @@
 				<table style="width: 100%;" border="1">
 					<tbody>
 						<tr>
+							<td colspan="3" style="width: 1%; font-weight: bold; font-size: 16px; background-color: #ffff66;">Alto</td>
+							<td colspan="3" style="width: 1%; font-weight: bold; font-size: 16px; background-color: #1565c0;">Tenor</td>
+							<td colspan="3" style="width: 1%; font-weight: bold; font-size: 16px; background-color: #ffff66;">82Z</td>
+						</tr>
+						<tr>
+							<td id="result1" style="width: 2%; font-weight: bold; font-size: 16px; background-color: #ccffff; border: 1px solid black">999</td>
+							<td id="result2" style="width: 2%; font-weight: bold; font-size: 16px; background-color: #ffccff; border: 1px solid black">999</td>
+							<td id="result3" style="width: 2%; font-weight: bold; font-size: 16px; background-color: rgb(100,100,100); color: yellow; border: 1px solid black">999</td>
+							<td id="result4" style="width: 2%; font-weight: bold; font-size: 16px; background-color: #ffccff; border: 1px solid black">999</td>
+							<td id="result5" style="width: 2%; font-weight: bold; font-size: 16px; background-color: #ccffff; border: 1px solid black">999</td>
+							<td id="result6" style="width: 2%; font-weight: bold; font-size: 16px; background-color: rgb(100,100,100); color: yellow; border: 1px solid black">999</td>
+							<td id="result7" style="width: 2%; font-weight: bold; font-size: 16px; background-color: #ccffff; border: 1px solid black">999</td>
+							<td id="result8" style="width: 2%; font-weight: bold; font-size: 16px; background-color: #ffccff; border: 1px solid black">999</td>
+							<td id="result9" style="width: 2%; font-weight: bold; font-size: 16px; background-color: rgb(100,100,100); color: yellow; border: 1px solid black">999</td>
+						</tr>
+					</tbody>
+				</table>
+				<table style="width: 100%; margin-top: 5px;" border="1">
+					<tbody>
+						<tr>
 							<td style="width: 1%; font-weight: bold; font-size: 16px; background-color: rgb(220,220,220);">Model</td>
 							<td id="model" style="width: 2%; font-size: 16px; font-weight: bold; background-color: rgb(100,100,100); color: yellow; border: 1px solid black" colspan="2"></td>
 							<td style="width: 1%; font-weight: bold; font-size: 16px; background-color: rgb(220,220,220);">Key</td>
@@ -228,6 +248,7 @@
 				$.get('{{ url("scan/welding/operator") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
+						fetchResult(result.employee.employee_id)
 						$('#modalOperator').modal('hide');
 						$('#op').html(result.employee.employee_id);
 						$('#op2').html(result.employee.name);
@@ -243,6 +264,25 @@
 			}
 		}
 	});
+
+	function fetchResult(employee_id){
+		var location = $('#loc').val();
+		var data = {
+			employee_id:employee_id,
+			location:location
+		}
+		$.get('{{ url("fetch/welding/kensa_result") }}', data, function(result, status, xhr){
+			$('#result1').text(result.oks[0].askey);
+			$('#result2').text(result.ngs[0].askey);
+			$('#result3').text((result.ngs[0].askey/result.oks[0].askey)*100+'%');
+			$('#result4').text(result.oks[0].tskey);
+			$('#result5').text(result.ngs[0].tskey);
+			$('#result6').text((result.ngs[0].tskey/result.oks[0].tskey)*100+'%');
+			$('#result7').text(result.oks[0].z);
+			$('#result8').text(result.ngs[0].z);
+			$('#result9').text((result.ngs[0].z/result.oks[0].z)*100+'%');
+		});
+	}
 
 	function getHeader(tag) {
 		$('#attention_point').html("");
@@ -272,7 +312,7 @@
 				$('#material_number').val(result.material.material_number);
 				$('#material_quantity').val(result.material.lot_completion);
 
-				// $("input").prop('disabled', true);
+				$("#tag").prop('disabled', true);
 				openSuccessGritter('Success', result.message);
 			}
 			else{

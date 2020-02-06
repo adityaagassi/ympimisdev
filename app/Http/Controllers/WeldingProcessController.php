@@ -640,19 +640,45 @@ class WeldingProcessController extends Controller
 	}
 
 	public function fetchKensaResult(Request $request){
+
+		$location = $request->get('location');
+		$employee_id = $request->get('employee_id');
+		$now = date('Y-m-d');
 		
 		$query1 = "SELECT
 		sum( IF ( materials.model <> 'A82' AND materials.hpl = 'ASKEY', welding_logs.quantity, 0 ) ) AS askey,
 		sum( IF ( materials.model <> 'A82' AND materials.hpl = 'TSKEY', welding_logs.quantity, 0 ) ) AS tskey,
-		sum( IF ( materials.model LIKE '%82%', welding_logs.quantity, 0 ) ) AS `82z` 
+		sum( IF ( materials.model LIKE '%82%', welding_logs.quantity, 0 ) ) AS `z` 
 		FROM
 		welding_logs
 		LEFT JOIN materials ON materials.material_number = welding_logs.material_number 
 		WHERE
-		employee_id = 'PI1611005' 
-		AND location = 'hsa-visual-sx'";
+		employee_id = '".$employee_id."'
+		AND date(welding_ng_logs.created_at) = '".$now."'
+		AND location = '".$location."'";
 
-		return Response::json($results);
+		$oks = db::select($query1);
+
+		$query2 = "SELECT
+		sum( IF ( materials.model <> 'A82' AND materials.hpl = 'ASKEY', welding_ng_logs.quantity, 0 ) ) AS askey,
+		sum( IF ( materials.model <> 'A82' AND materials.hpl = 'TSKEY', welding_ng_logs.quantity, 0 ) ) AS tskey,
+		sum( IF ( materials.model LIKE '%82%', welding_ng_logs.quantity, 0 ) ) AS `z` 
+		FROM
+		welding_ng_logs
+		LEFT JOIN materials ON materials.material_number = welding_ng_logs.material_number 
+		WHERE
+		employee_id = '".$employee_id."'
+		AND date(welding_ng_logs.created_at) = '".$now."'
+		AND location = '".$location."'";
+
+		$ngs = db::select($query2);
+
+		$response = array(
+			'status' => true,
+			'oks' => $oks,
+			'ngs' => $ngs,
+		);
+		return Response::json($response);
 	}
 
 	public function scanWeldingKensa(Request $request){
