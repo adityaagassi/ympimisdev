@@ -65,12 +65,9 @@
 							<input type="text" name="group" id="group" hidden>			
 						</div>
 					</div>
-
 					<div class="col-xs-2">
 						<button class="btn" style="background-color: #605ca8; color: white;" type="submit"><i class="fa fa-search"></i> Search</button>
 					</div>
-
-
 					<div class="pull-right" id="loc" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 2vw;"></div>
 				</form>
 			</div>
@@ -461,7 +458,6 @@
 				Highcharts.chart('container1', {
 					chart: {
 						type: 'column',
-						height: '300',
 					},
 					title: {
 						text: 'NG Rate By Operator',
@@ -491,26 +487,7 @@
 							}
 						},
 					},
-					yAxis: [{
-						title: {
-							text: 'Qty NG Pc(s)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
-						},
-						labels:{
-							enabled:false,
-							style:{
-								fontSize:"14px"
-							}
-						},
-						type: 'linear',
-						
-					}
-					, { // Secondary yAxis
+					yAxis: {
 						title: {
 							text: 'NG Rate (%)',
 							style: {
@@ -527,9 +504,29 @@
 							}
 						},
 						type: 'linear',
-						opposite: true
+						
+					}
+					// , { // Secondary yAxis
+					// 	title: {
+					// 		text: 'NG Rate (%)',
+					// 		style: {
+					// 			color: '#eee',
+					// 			fontSize: '16px',
+					// 			fontWeight: 'bold',
+					// 			fill: '#6d869f'
+					// 		}
+					// 	},
+					// 	labels:{
+					// 		enabled:false,
+					// 		style:{
+					// 			fontSize:"14px"
+					// 		}
+					// 	},
+					// 	type: 'linear',
+					// 	opposite: true
 
-					}],
+					// }
+					,
 					tooltip: {
 						headerFormat: '<span>{series.name}</span><br/>',
 						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category} </span>: <b>{point.y}</b><br/>',
@@ -584,32 +581,23 @@
 						type: 'column',
 						data: data2,
 						name: 'NG Rate',
-						yAxis:1,
 						colorByPoint: false,
 						color:'#ff9800',
 						dataLabels: {
 							enabled: true,
 							format: '{point.y}%' ,
 							style:{
-								fontSize: '0.6vw'
-							},
-						},
-						
-					},
-					{
-						type: 'column',
-						data: data,
-						name: 'Total NG',
-						colorByPoint: false,
-						color: "#3f51b5",
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}' ,
-							style:{
-								fontSize: '0.6vw'
+								fontSize: '0.9vw'
 							},
 						},
 					}
+					// ,{
+					// 	type: 'column',
+					// 	data: data,
+					// 	name: 'Total NG',
+					// 	colorByPoint: false,
+					// 	color: "#3f51b5"
+					// },
 					]
 				});
 
@@ -650,7 +638,6 @@
 				Highcharts.chart('container2', {
 					chart: {
 						type: 'column',
-						height: '300',
 					},
 					title: {
 						text: 'NG Rate By Operator',
@@ -680,26 +667,7 @@
 							}
 						},
 					},
-					yAxis: [{
-						title: {
-							text: 'Qty NG Pc(s)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
-						},
-						labels:{
-							enabled:false,
-							style:{
-								fontSize:"12px"
-							}
-						},
-						type: 'linear',
-						
-					}
-					, { // Secondary yAxis
+					yAxis: {
 						title: {
 							text: 'NG Rate (%)',
 							style: {
@@ -716,9 +684,9 @@
 							}
 						},
 						type: 'linear',
-						opposite: true
-
-					}],
+						
+					}
+					,
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
@@ -754,7 +722,7 @@
 								enabled: true,
 								format: '{point.y}',
 								style:{
-									fontSize: '0.6vw'
+									fontSize: '0.9vw'
 								}
 							},
 							animation: {
@@ -774,23 +742,17 @@
 						type: 'column',
 						data: data2,
 						name: 'NG Rate',
-						yAxis:1,
+						// yAxis:1,
 						colorByPoint: false,
-						color:'#ff9800',
+						color:'#3f51b5',
 						dataLabels: {
 							enabled: true,
 							format: '{point.y}%' ,
 							style:{
-								fontSize: '0.6vw'
+								fontSize: '0.9vw'
 							},
 						},
-					},{
-						type: 'column',
-						data: data,
-						name: 'Total NG',
-						colorByPoint: false,
-						color: "#3f51b5"
-					},
+					}
 					]
 				});
 
@@ -832,7 +794,6 @@
 				Highcharts.chart('container3', {
 					chart: {
 						type: 'column',
-						height: '300',
 					},
 					title: {
 						text: 'NG Rate By Operator',
@@ -862,15 +823,36 @@
 							}
 						},
 					},
-					yAxis: [{
+					yAxis: {
 						title: {
-							text: 'Qty NG Pc(s)',
+							text: 'Minutes'.
 							style: {
 								color: '#eee',
 								fontSize: '16px',
 								fontWeight: 'bold',
 								fill: '#6d869f'
 							}
+						},
+						plotLines: [{
+							color: '#FF0000',
+							value: 460,
+							dashStyle: 'shortdash',
+							width: 2,
+							zIndex: 5,
+							label: {
+								align:'right',
+								text: 'Target 460 Minutes',
+								x:-7,
+								style: {
+									fontSize: '12px',
+									color: '#FF0000',
+									fontWeight: 'bold'
+								}
+							}
+						}],
+
+						title: {
+							
 						},
 						labels:{
 							enabled:false,
@@ -881,26 +863,7 @@
 						type: 'linear',
 						
 					}
-					, { // Secondary yAxis
-						title: {
-							text: 'NG Rate (%)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
-						},
-						labels:{
-							enabled:false,
-							style:{
-								fontSize:"12px"
-							}
-						},
-						type: 'linear',
-						opposite: true
-
-					}],
+					,
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
@@ -936,7 +899,7 @@
 								enabled: true,
 								format: '{point.y}',
 								style:{
-									fontSize: '0.6vw'
+									fontSize: '0.9vw'
 								}
 							},
 							animation: {
@@ -956,23 +919,16 @@
 						type: 'column',
 						data: data2,
 						name: 'NG Rate',
-						yAxis:1,
 						colorByPoint: false,
 						color:'#ff9800',
 						dataLabels: {
 							enabled: true,
 							format: '{point.y}%' ,
 							style:{
-								fontSize: '0.6vw'
+								fontSize: '0.9vw'
 							},
 						},
-					},{
-						type: 'column',
-						data: data,
-						name: 'Total NG',
-						colorByPoint: false,
-						color: "#3f51b5"
-					},
+					}
 					]
 				});
 
@@ -1078,7 +1034,7 @@
 							}
 						},
 					},
-					yAxis: [{
+					yAxis: {
 						title: {
 							text: 'Qty NG Pc(s)',
 							style: {
@@ -1097,26 +1053,27 @@
 						type: 'linear',
 						
 					}
-					, { // Secondary yAxis
-						title: {
-							text: 'NG Rate (%)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
-						},
-						labels:{
-							enabled:false,
-							style:{
-								fontSize:"14px"
-							}
-						},
-						type: 'linear',
-						opposite: true
+					// , { // Secondary yAxis
+					// 	title: {
+					// 		text: 'NG Rate (%)',
+					// 		style: {
+					// 			color: '#eee',
+					// 			fontSize: '16px',
+					// 			fontWeight: 'bold',
+					// 			fill: '#6d869f'
+					// 		}
+					// 	},
+					// 	labels:{
+					// 		enabled:false,
+					// 		style:{
+					// 			fontSize:"14px"
+					// 		}
+					// 	},
+					// 	type: 'linear',
+					// 	opposite: true
 
-					}],
+					// }],
+					,
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
@@ -1155,7 +1112,7 @@
 								enabled: true,
 								format: '{point.y}',
 								style:{
-									fontSize: '0.6vw'
+									fontSize: '0.9vw'
 								}
 							},
 							animation: {
@@ -1312,7 +1269,7 @@
 							}
 						},
 					},
-					yAxis: [{
+					yAxis: {
 						title: {
 							text: 'Qty NG Pc(s)',
 							style: {
@@ -1331,26 +1288,27 @@
 						type: 'linear',
 						
 					}
-					, { // Secondary yAxis
-						title: {
-							text: 'NG Rate (%)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
-						},
-						labels:{
-							enabled:false,
-							style:{
-								fontSize:"14px"
-							}
-						},
-						type: 'linear',
-						opposite: true
+					// , { // Secondary yAxis
+					// 	title: {
+					// 		text: 'NG Rate (%)',
+					// 		style: {
+					// 			color: '#eee',
+					// 			fontSize: '16px',
+					// 			fontWeight: 'bold',
+					// 			fill: '#6d869f'
+					// 		}
+					// 	},
+					// 	labels:{
+					// 		enabled:false,
+					// 		style:{
+					// 			fontSize:"14px"
+					// 		}
+					// 	},
+					// 	type: 'linear',
+					// 	opposite: true
 
-					}],
+					// }],
+					,
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
@@ -1389,7 +1347,7 @@
 								enabled: true,
 								format: '{point.y}',
 								style:{
-									fontSize: '0.6vw'
+									fontSize: '0.9vw'
 								}
 							},
 							animation: {
@@ -1625,7 +1583,7 @@
 								enabled: true,
 								format: '{point.y}',
 								style:{
-									fontSize: '0.6vw'
+									fontSize: '0.9vw'
 								}
 							},
 							animation: {
