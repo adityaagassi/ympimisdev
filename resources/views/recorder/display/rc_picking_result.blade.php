@@ -36,8 +36,8 @@
 	<h1>
 		Recorder Picking Result <span class="text-purple">??</span>
 	</h1>
-	<ol class="breadcrumb" id="last_update">
-	</ol>
+	<!-- <ol class="breadcrumb" id="last_update">
+	</ol> -->
 </section>
 @endsection
 @section('content')
@@ -54,6 +54,9 @@
 			</div>
 			<div class="col-xs-2">
 				<button class="btn btn-success" onclick="fillChart()">Search</button>
+			</div>
+			<div class="col-xs-8 pull-right">
+				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw; color: white"></div>
 			</div>
 		</div>
 		<div class="col-xs-8">
@@ -152,6 +155,8 @@
 			if(xhr.status == 200){
 				if(result.status){
 
+					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
 					if(now.getHours() < 7){
 						$('#progress_bar_production').append().empty();
 						$('#progress_text_production').html("Today's Working Time : 0%");
@@ -219,7 +224,6 @@
 						$('#progress_bar_production').addClass('active');
 					}
 					
-					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
 					var data = result.datas;
 					var xAxis = []
 					, planCount = []
@@ -369,7 +373,7 @@
 					resumeData += '	</div>';
 					// end add percentage
 					$('#resume').append(resumeData);
-					setTimeout(fillChart, 1000);
+					setTimeout(fillChart, 10000);
 				}
 				else{
 					alert('Attempt to retrieve data failed');
