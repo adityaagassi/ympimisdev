@@ -512,7 +512,7 @@
 										<div class="col-xs-12">
 											@foreach($product_type as $product_type)
 											<div class="col-xs-3" style="padding-top: 5px">
-												<center><button class="btn btn-primary" id="{{$product_type}}" style="width: 160px;font-size: 15px" onclick="getProduct(this.id)">
+												<center><button class="btn btn-primary" id="{{$product_type}}" style="width: 180px;font-size: 15px" onclick="getProduct(this.id)">
 													{{$product_type}}
 												</button></center>
 											</div>
@@ -889,7 +889,7 @@
 			itemresume7($("#head_id").val(),$("#block_7").val());
 			itemresume8($("#head_id").val(),$("#block_8").val());
 			get_temp();
-			setInterval(update_temp,300000);
+			setInterval(update_temp,60000);
 		}
 	}
 

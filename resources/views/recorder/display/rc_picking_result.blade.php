@@ -369,7 +369,7 @@
 					resumeData += '	</div>';
 					// end add percentage
 					$('#resume').append(resumeData);
-					// setTimeout(fillChart, 1000);
+					setTimeout(fillChart, 1000);
 				}
 				else{
 					alert('Attempt to retrieve data failed');

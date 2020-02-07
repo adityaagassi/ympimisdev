@@ -60,7 +60,11 @@ class RecorderProcessController extends Controller
                             'YRS-20GPK//ID',
                             'YRS-24B // WOFB ID',
                             'YRF-21K//ID',
-                            'YRS-24B//MX ID'];
+                            'YRS-24B//MX ID',
+                            'YRS TRANSLUCENT (FSA)',
+                            'YRS BROWN (FSA)',
+                            'YRS IVORY (FSA)',
+                            'YRF-21 (FSA)'];
 
       $this->mesin = ['#1',
                       '#2',
@@ -417,9 +421,9 @@ class RecorderProcessController extends Controller
                   'push_pull_ng_value' => $request->get('push_pull_ng_value2'),
                   'pic_check' => $request->get('pic_check'),
                 );
-                foreach($this->mail as $mail_to){
-                    Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull_check'));
-                }
+                // foreach($this->mail as $mail_to){
+                    Mail::to($this->mail)->send(new SendEmail($data_push_pull, 'push_pull_check'));
+                // }
               }
 
               if($height_ng_name != 'OK'){
@@ -437,9 +441,9 @@ class RecorderProcessController extends Controller
                   'height_ng_value' => $request->get('height_ng_value2'),
                   'pic_check' => $request->get('pic_check'),
                 );
-                foreach($this->mail as $mail_to){
-                    Mail::to($mail_to)->send(new SendEmail($data_height, 'height_check'));
-                }
+                // foreach($this->mail as $mail_to){
+                    Mail::to($this->mail)->send(new SendEmail($data_height, 'height_check'));
+                // }
               }
 
               $response = array(
