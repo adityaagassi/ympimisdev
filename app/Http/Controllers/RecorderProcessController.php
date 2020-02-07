@@ -558,6 +558,55 @@ class RecorderProcessController extends Controller
         )->with('page', 'Resume Push Block Check')->with('remark', $remark);
     }
 
+    public function filter_resume_push_block(Request $request,$remark)
+    {
+      // $judgement = $request->get('judgement');
+      $date_from = $request->get('date_from');
+      $date_to = $request->get('date_to');
+      $datenow = date('Y-m-d');
+
+      if($request->get('date_to') == null){
+        if($request->get('date_from') == null){
+          $date = "";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$datenow."'";
+        }
+      }
+      elseif($request->get('date_to') != null){
+        if($request->get('date_from') == null){
+          $date = "and date(check_date) <= '".$date_to."'";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$date_to."'";
+        }
+      }
+
+      // $judgement = '';
+      // if($request->get('judgement') != null){
+      //   $judgements =  explode(",", $request->get('judgement'));
+      //   for ($i=0; $i < count($judgements); $i++) {
+      //     $judgement = $judgement."'".$judgements[$i]."'";
+      //     if($i != (count($judgements)-1)){
+      //       $judgement = $judgement.',';
+      //     }
+      //   }
+      //   $judgementin = " and `judgement` in (".$judgement.") ";
+      //   $judgementin2 = " or `judgement2` in (".$judgement.") ";
+      // }
+      // else{
+      //   $judgementin = "";
+      //   $judgementin2 = "";
+      // }
+
+      $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorder_resumes` where remark = '".$remark."' ".$date." ORDER BY push_block_recorder_resumes.id desc");
+
+      $data = array('push_block_check' => $push_block_check,
+                      'remark' => $remark,);
+      return view('recorder.report.resume_push_block', $data
+        )->with('page', 'Resume Push Block Check')->with('remark', $remark);
+    }
+
     public function push_block_check_monitoring($remark){
       $name = Auth::user()->name;
       $date7days = DB::SELECT('select week_date from weekly_calendars where remark != "H" and week_date BETWEEN DATE(NOW()) - INTERVAL 7 DAY and DATE(NOW())');
@@ -737,7 +786,10 @@ class RecorderProcessController extends Controller
             $detail = PushBlockRecorder::find($request->get("id"));
             $data = array('push_block_id' => $detail->id,
                           'check_date' => $detail->check_date,
-                          'injection_date' => $detail->injection_date,
+                          'injection_date_head' => $detail->injection_date_head,
+                          'mesin_head' => $detail->mesin_head,
+                          'injection_date_block' => $detail->injection_date_block,
+                          'mesin_block' => $detail->mesin_block,
                           'product_type' => $detail->product_type,
                           'head' => $detail->head,
                           'block' => $detail->block,

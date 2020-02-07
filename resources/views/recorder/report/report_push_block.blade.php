@@ -174,12 +174,15 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="box">
-								<div class="box-body">
+								<div class="box-body" style="overflow-x: scroll;">
 									<table id="example1" class="table table-bordered table-striped table-hover">
 										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>
 												<th>Check Date</th>
-												<th>Injection Date</th>
+												<th>Injection Date Head</th>
+												<th>Mesin Head</th>
+												<th>Injection Date Block</th>
+												<th>Mesin Block</th>
 												<th>Product</th>
 												<th>Head</th>
 												<th>Block</th>
@@ -195,7 +198,10 @@
 											@foreach($push_block_check as $push_block_check)
 											<tr>
 												<td>{{ $push_block_check->check_date }}</td>
-												<td>{{ $push_block_check->injection_date }}</td>
+												<td>{{ $push_block_check->injection_date_head }}</td>
+												<td>{{ $push_block_check->mesin_head }}</td>
+												<td>{{ $push_block_check->injection_date_block }}</td>
+												<td>{{ $push_block_check->mesin_block }}</td>
 												<td>{{ $push_block_check->product_type }}</td>
 												<td>{{ $push_block_check->head }}</td>
 												<td>{{ $push_block_check->block }}</td>
@@ -215,6 +221,9 @@
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
+												<th></th>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
@@ -256,9 +265,21 @@
 	              <label for="">Check Date</label>
 				  <input type="text" name="check_date" id="check_date" class="form-control" readonly required="required" title="" readonly>
 	            </div>
+	            <div class="form-group">
+	              <label for="">Injection Date Head</label>
+				  <input type="text" name="injection_date_head" id="injection_date_head" class="form-control" readonly required="required" title="" readonly>
+	            </div>
 	            <div class="form-group">	              
-	              <label for="">Injection Date</label>
-				  <input type="text" name="injection_date" id="injection_date" class="form-control" readonly required="required" title="" readonly>
+	              <label for="">Mesin Head</label>
+				  <input type="text" name="mesin_head" id="mesin_head" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Injection Date Block</label>
+				  <input type="text" name="injection_date_block" id="injection_date_block" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Mesin Block</label>
+				  <input type="text" name="mesin_block" id="mesin_block" class="form-control" readonly required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">	              
 	              <label for="">Product</label>
@@ -441,7 +462,10 @@
                   var data = data.data;
                   $("#url_edit").val(url+'/'+id);
                   $("#check_date").val(data.check_date);
-                  $("#injection_date").val(data.injection_date);
+                  $("#injection_date_head").val(data.injection_date_head);
+                  $("#mesin_head").val(data.mesin_head);
+                  $("#injection_date_block").val(data.injection_date_block);
+                  $("#mesin_block").val(data.mesin_block);
                   $("#product_type").val(data.product_type);
                   $("#head").val(data.head);
                   $("#block").val(data.block);

@@ -73,10 +73,10 @@
 				<div class="box-body">
 					<div class="col-xs-12">
 						<div class="col-xs-6">
-							<!-- <div class="box-header">
+							<div class="box-header">
 								<h3 class="box-title">Filter</h3>
 							</div>
-							<form role="form" method="post" action="{{url('index/recorder/filter_report_push_block/'.$remark)}}">
+							<form role="form" method="post" action="{{url('index/recorder/filter_resume_push_block/'.$remark)}}">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 								<div class="col-md-12">
 									<div class="col-md-6">
@@ -102,7 +102,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-12">
+								<!-- <div class="col-md-12">
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="">Judgement</label>
@@ -113,7 +113,7 @@
 											<input type="text" name="judgement" id="judgement" hidden>			
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="col-md-12">
 									<div class="col-md-12">
 										<div class="form-group pull-right">
@@ -122,12 +122,12 @@
 											@else
 											<a href="{{ url('index/injeksi') }}" class="btn btn-warning">Back</a>
 											@endif
-											<a href="{{ url('index/recorder/report_push_block/'.$remark) }}" class="btn btn-danger">Clear</a>
+											<a href="{{ url('index/recorder/resume_push_block/'.$remark) }}" class="btn btn-danger">Clear</a>
 											<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 										</div>
 									</div>
 								</div>
-							</form> -->
+							</form>
 						</div>
 						<div class="col-xs-6">
 							<!-- <div class="box-header">
@@ -179,7 +179,10 @@
 										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>
 												<th>Check Date</th>
-												<th>Injection Date</th>
+												<th>Injection Date Head</th>
+												<th>Mesin Head</th>
+												<th>Injection Date Block</th>
+												<th>Mesin Block</th>
 												<th>Product</th>
 												<th>Head</th>
 												<th>Block</th>
@@ -192,7 +195,10 @@
 											@foreach($push_block_check as $push_block_check)
 											<tr>
 												<td>{{ $push_block_check->check_date }}</td>
-												<td>{{ $push_block_check->injection_date }}</td>
+												<td>{{ $push_block_check->injection_date_head }}</td>
+												<td>{{ $push_block_check->mesin_head }}</td>
+												<td>{{ $push_block_check->injection_date_block }}</td>
+												<td>{{ $push_block_check->mesin_block }}</td>
 												<td>{{ $push_block_check->product_type }}</td>
 												<td>{{ $push_block_check->head }}</td>
 												<td>{{ $push_block_check->block }}</td>
@@ -223,6 +229,9 @@
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
+												<th></th>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
