@@ -450,7 +450,7 @@
 						ng.push(result.ng_rate[i].ng);
 
 						data.push({y: ng[loop-1], color: '#ff9800'});
-						data2.push({y: rate[loop-1], color: '#3f51b5'});
+						data2.push({y: rate[loop-1], color: '#ef6c00'});
 					}
 					// console.table(result.ng_rate);
 				}
@@ -630,10 +630,9 @@
 						ng.push(result.ng_rate[i].ng);
 
 						data.push({y: ng[loop-1], color: '#ff9800'});
-						data2.push({y: rate[loop-1], color: '#3f51b5'});
+						data2.push({y: rate[loop-1], color: '#ef6c00'});
 					}
 				}
-
 
 				Highcharts.chart('container2', {
 					chart: {
@@ -684,7 +683,6 @@
 							}
 						},
 						type: 'linear',
-						
 					}
 					,
 					legend: {
@@ -744,7 +742,7 @@
 						name: 'NG Rate',
 						// yAxis:1,
 						colorByPoint: false,
-						color:'#3f51b5',
+						color:'#ef6c00',
 						dataLabels: {
 							enabled: true,
 							format: '{point.y}%' ,
@@ -784,7 +782,7 @@
 						ng.push(result.ng_rate[i].ng);
 
 						data.push({y: ng[loop-1], color: '#ff9800'});
-						data2.push({y: rate[loop-1], color: '#3f51b5'});
+						data2.push({y: rate[loop-1], color: '#ef6c00'});
 					}
 					// console.table(result.ng_rate);
 				}
@@ -825,34 +823,13 @@
 					},
 					yAxis: {
 						title: {
-							text: 'Minutes'.
+							text: 'Minutes',
 							style: {
 								color: '#eee',
 								fontSize: '16px',
 								fontWeight: 'bold',
 								fill: '#6d869f'
 							}
-						},
-						plotLines: [{
-							color: '#FF0000',
-							value: 460,
-							dashStyle: 'shortdash',
-							width: 2,
-							zIndex: 5,
-							label: {
-								align:'right',
-								text: 'Target 460 Minutes',
-								x:-7,
-								style: {
-									fontSize: '12px',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}],
-
-						title: {
-							
 						},
 						labels:{
 							enabled:false,
@@ -861,7 +838,6 @@
 							}
 						},
 						type: 'linear',
-						
 					}
 					,
 					legend: {
