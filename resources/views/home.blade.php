@@ -190,13 +190,16 @@
                             <a href="{{ url("index/cpar/resume") }}">
                                 <i class="fa fa-caret-right"></i> Resume CPAR & CAR (是正予防策・是正策のまとめ)
                             </a>
-                            
                         </td>
                     </tr>
                     <tr>
                         <td>                        
                             <a href="{{ url("index/qa_ymmj") }}">
                                 <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
+                                <i class="fa fa-caret-right"></i> Report YMMJ (YMMJ)
                             </a>
                             <br>
                             <a href="{{ url("index/request_qa") }}">
