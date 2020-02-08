@@ -1416,7 +1416,7 @@
 			// $.each(result.datas, function(key, value) {
 				// console.log(value.cavity_1);
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
@@ -1425,7 +1425,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
@@ -1434,7 +1434,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
@@ -1443,7 +1443,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
@@ -1475,7 +1475,7 @@
 			// $.each(result.datas, function(key, value) {
 				// console.log(value.cavity_1);
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
@@ -1484,7 +1484,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
@@ -1493,7 +1493,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
@@ -1502,7 +1502,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
@@ -1534,7 +1534,7 @@
 			// $.each(result.datas, function(key, value) {
 				// console.log(value.cavity_1);
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
@@ -1543,7 +1543,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
@@ -1552,7 +1552,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
@@ -1561,7 +1561,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
@@ -1593,7 +1593,7 @@
 			// $.each(result.datas, function(key, value) {
 				// console.log(value.cavity_1);
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
@@ -1602,7 +1602,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
@@ -1611,7 +1611,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
@@ -1620,7 +1620,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
@@ -1652,7 +1652,7 @@
 			// $.each(result.datas, function(key, value) {
 				// console.log(value.cavity_1);
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
@@ -1661,7 +1661,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
@@ -1670,7 +1670,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
@@ -1679,7 +1679,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
@@ -1711,7 +1711,7 @@
 			// $.each(result.datas, function(key, value) {
 				// console.log(value.cavity_1);
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
@@ -1720,7 +1720,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
@@ -1729,7 +1729,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
@@ -1738,7 +1738,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
@@ -1770,7 +1770,7 @@
 			// $.each(result.datas, function(key, value) {
 				// console.log(value.cavity_1);
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
@@ -1779,7 +1779,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
@@ -1788,7 +1788,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
@@ -1797,7 +1797,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
@@ -1829,7 +1829,7 @@
 			// $.each(result.datas, function(key, value) {
 				// console.log(value.cavity_1);
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#1</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
@@ -1838,7 +1838,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#2</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
@@ -1847,7 +1847,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#3</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>3</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_3 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_3+'_'+block+'"></td>';
@@ -1856,7 +1856,7 @@
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_3+'_'+block+'"></td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
-				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>#4</b></td>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>4</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_4 +'</td>';
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
