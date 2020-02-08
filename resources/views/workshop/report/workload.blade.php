@@ -500,11 +500,7 @@
 				Highcharts.ganttChart('container', {
 					series: series,
 					title: {
-						text: 'Workshop Machine Workload',
-						style: {
-							fontSize: '25px',
-							fontWeight: 'bold'
-						}
+						text: null,
 					},
 					tooltip: {
 						pointFormat: '<span>Order No.: {point.wjo}</span><br/><span>From: {point.start:%e %b %Y, %H:%M}</span><br/><span>To: {point.end:%e %b %Y, %H:%M}</span>'
@@ -545,15 +541,27 @@
 						grid: {
 							columns: [{
 								title: {
-									text: 'Machine'
+									text: 'MACHINES',
+									style: {
+										fontSize: '18px',
+										fontWeight: 'bold'
+									}
 								},
 								categories: map(series, function(s) {
 									return s.name;
-								})
+								}),
 							}]
 						}
 					},
+					plotOptions: {
+						gantt: {
+							animation: false,
+						}
+					},
 					credits: {
+						enabled: false
+					},
+					exporting: {
 						enabled: false
 					}
 				});
