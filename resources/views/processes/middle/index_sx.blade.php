@@ -52,6 +52,7 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/middle/op_analysis?dateFrom=&dateTo=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">OP Analysis</a>
 			<a href="{{ url("index/middle/display_monitoring?location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Kanban WIP Monitoring</a>
 			<a href="{{ url("index/middle/display_kensa_time?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Kensa ΣTime</a>
 			<a href="{{ url("index/middle/display_production_result?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Production Result</a>
