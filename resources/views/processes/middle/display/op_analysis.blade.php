@@ -179,6 +179,53 @@
 	</div>
 </section>
 
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalDetailTitle"></h4>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<table class="table table-hover table-bordered table-striped" id="tableDetail">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 1%;">#</th>
+								<th style="width: 3%;">ID</th>
+								<th style="width: 9%;">Name</th>
+								<th style="width: 3%;">Perolehan (PCs)</th>
+								<th style="width: 3%;">Act Time (Mins)</th>
+								<th style="width: 3%;">Std Time (Mins)</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailBody">
+						</tbody>
+						<tfoot id="tableDetailFoot">
+							<tr>
+								<th></th>
+								<th></th>
+								<th>Total</th>
+								<th id="tot1"></th>
+								<th id="tot2"></th>
+								<th id="tot3"></th>
+							</tr>
+							<tr>
+								<th></th>
+								<th></th>
+								<th>Average</th>
+								<th id="avg1"></th>
+								<th id="avg2"></th>
+								<th id="avg3"></th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				<center>
+					<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+				</center>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/highstock.js")}}"></script>
@@ -202,6 +249,7 @@
 			todayHighlight: true
 		});
 		fetchChart();
+		setInterval(fetchChart, 20000);
 	});
 
 	Highcharts.createElement('link', {
@@ -436,16 +484,30 @@
 				var totalMP = 0;
 
 				for(i = 0; i < data.length; i++){
+					var avgAct = 0;
+					var avgStd = 0;
+					var lossAct = 0;
+					var lossStd = 0;
+
 					cat = data[i].cat;
 					if(categories1.indexOf(cat) === -1){
 						categories1[categories1.length] = cat;
 					}
 
-					time1.push(parseFloat(data[i].actual/data[i].divider));
-					loss1.push(parseFloat(data[i].target-(data[i].actual/data[i].divider)));
+					avgAct = parseFloat(data[i].actual/data[i].divider);
+					avgStd = parseFloat(data[i].standard/data[i].divider);
+					if(data[i].target-avgAct > 0 ){
+						lossAct = parseFloat(data[i].target)-avgAct;
+					}
+					if(data[i].target-avgStd > 0 ){
+						lossStd = parseFloat(data[i].target)-avgStd;
+					}
 
-					time2.push(parseFloat(data[i].standard/data[i].divider));
-					loss2.push(parseFloat(data[i].target-(data[i].standard/data[i].divider)));
+					time1.push(avgAct);
+					loss1.push(lossAct);
+
+					time2.push(avgStd);
+					loss2.push(lossStd);
 
 					totalTimeAct += parseFloat(data[i].actual);
 					totalTimeStd += parseFloat(data[i].standard);
@@ -575,7 +637,7 @@
 							point: {
 								events: {
 									click: function () {
-										fillModal(this.category, this.series.userOptions.stack);
+										fetchModal(this.category);
 									}
 								}
 							}
@@ -688,7 +750,7 @@
 							point: {
 								events: {
 									click: function () {
-										fillModal(this.category, this.series.userOptions.stack);
+										fetchModal(this.category);
 									}
 								}
 							}
@@ -699,7 +761,7 @@
 						data: loss2,
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
-						name: 'Actual Working Time',
+						name: 'Standard Working Time',
 						data: time2,
 						color: '#ff851b'
 					}]
@@ -709,6 +771,56 @@
 				alert('Attempt to retrieve data failed');
 			}
 		});
+}
+
+function fetchModal(date){
+	$('#modalDetailTitle').text(date);
+	$('#modalDetail').modal('show');
+	$('#loading').show();
+	var data = {
+		date:date
+	}
+	$.get('{{ url("fetch/middle/op_analysis_detail") }}', data, function(result, status, xhr) {
+		if(result.status){
+			var tableData = "";
+			$('#tableDetailBody').html("");
+
+			var count = 1;
+			var tot_result = 0;
+			var tot_act = 0;
+			var tot_standard = 0;
+
+			$.each(result.details, function(key, value){
+				tableData += "<tr>";
+				tableData += "<td>"+count+"</td>";
+				tableData += "<td>"+value.operator_id+"</td>";
+				tableData += "<td>"+value.name+"</td>";
+				tableData += "<td>"+value.result+"</td>";
+				tableData += "<td>"+Math.round(value.actual)+"</td>";
+				tableData += "<td>"+Math.round(value.standard)+"</td>";
+				tableData += "</tr>";
+				count += 1;
+				tot_result += Math.round(parseFloat(value.result));
+				tot_act += Math.round(parseFloat(value.actual));
+				tot_standard += Math.round(parseFloat(value.standard));
+			});
+
+			$('#tableDetailBody').append(tableData);
+			$('#tot1').text(tot_result);
+			$('#tot2').text(tot_act);
+			$('#tot3').text(tot_standard);
+			$('#avg1').text(Math.round(tot_result/count));
+			$('#avg2').text(Math.round(tot_act/count));
+			$('#avg3').text(Math.round(tot_standard/count));
+			$('#loading').hide();
+
+		}
+		else{
+			alert('Attempt to retrieve data failed.')
+			$('#loading').hide();
+		}
+
+	});
 }
 
 $.date = function(dateObject) {

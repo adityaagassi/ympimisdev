@@ -847,6 +847,32 @@ class MiddleProcessController extends Controller
 		}
 	}
 
+	public function fetchOpAnalysisDetail(Request $request){
+		$date = date('Y-m-d', strtotime($request->get('date')));
+
+		$details = db::connection('digital_kanban')->select("SELECT
+			data_log.operator_id,
+			ympimis.employee_syncs.`name`,
+			sum( data_log.material_qty ) AS result,
+			sum( TIMESTAMPDIFF( MINUTE, sedang_start_time, selesai_start_time ) ) AS actual,
+			sum( ( data_log.material_qty * ympimis.standard_times.time ) / 60 ) AS standard 
+			FROM
+			data_log
+			LEFT JOIN ympimis.standard_times ON ympimis.standard_times.material_number = data_log.material_number
+			LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = data_log.operator_id 
+			WHERE
+			date( data_log.sedang_start_time ) = '".$date."' 
+			GROUP BY
+			data_log.operator_id,
+			ympimis.employee_syncs.`name`");
+
+		$response = array(
+			'status' => true,
+			'details' => $details,
+		);
+		return Response::json($response);
+	}
+
 	public function fetchOpAnalysis(Request $request){
 		$dateFrom = date('Y-m-01');
 		$dateTo = date('Y-m-d');

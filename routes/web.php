@@ -976,6 +976,7 @@ Route::get('fetch/workshop/machine_detail', 'WorkshopController@fetchmachineDeta
 
 Route::get('index/middle/op_analysis', 'MiddleProcessController@indexOpAnalysis');
 Route::get('fetch/middle/op_analysis', 'MiddleProcessController@fetchOpAnalysis');
+Route::get('fetch/middle/op_analysis_detail', 'MiddleProcessController@fetchOpAnalysisDetail');
 
 
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
@@ -2133,6 +2134,8 @@ Route::post('index/qa_ymmj/deletefiles', 'QcYmmjController@deletefiles');
 Route::get('index/qa_ymmj/grafik_ymmj', 'QcYmmjController@grafik_ymmj');
 Route::get('index/qa_ymmj/fetchGrafik', 'QcYmmjController@fetchGrafik');
 Route::get('index/qa_ymmj/fetchtable', 'QcYmmjController@fetchTable');
+Route::get('index/qa_ymmj/detail', 'QcYmmjController@detail');
+Route::get('index/qa_ymmj/print/{id}', 'QcYmmjController@print_ymmj');
 
 Route::get('index/cpar/resume', 'QcReportController@resume');
 Route::get('fetch/cpar/resume', 'QcReportController@getResumeData');
