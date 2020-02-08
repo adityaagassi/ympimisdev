@@ -623,6 +623,13 @@
 								groupPadding: 0.93,
 								borderWidth: 0.93,
 								cursor: 'pointer',
+								point: {
+									events: {
+										click: function () {
+											fetchModal(this.category);
+										}
+									}
+								}
 							}
 					},
 					series: [{
@@ -724,14 +731,14 @@
 								groupPadding: 0.93,
 								borderWidth: 0.93,
 								cursor: 'pointer',
-							}
-							point: {
-								events: {
-									click: function () {
-										fetchModal(this.category);
+								point: {
+									events: {
+										click: function () {
+											fetchModal(this.category);
+										}
 									}
 								}
-							}
+							},
 					},
 					series: [{
 						name: 'Loss Working Time',
@@ -760,7 +767,7 @@ function fetchModal(date){
 	var data = {
 		date:date
 	}
-	$.get('{{ url("fetch/middle/op_analysis_detail") }}', data, function(result, status, xhr) {
+	$.get('{{ url("fetch/welding/op_analysis_detail") }}', data, function(result, status, xhr) {
 		if(result.status){
 			var tableData = "";
 			$('#tableDetailBody').html("");
