@@ -55,6 +55,16 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexOpAnalysis(){
+		$title = 'Buffing Operator Analysis';
+		$title_jp = '??';
+
+		return view('processes.middle.display.op_analysis', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Buffing Operator Analysis');
+	}
+
 	public function indexOpAssesment(){
 		$title = 'Operator Evaluation';
 		$title_jp = '??';
@@ -78,6 +88,9 @@ class MiddleProcessController extends Controller
 	public function indexBuffingTarget($loc){
 		if($loc == 'bff'){
 			return view('processes.middle.buffing_target')->with('page', 'queue')->with('head', 'Buffing target');
+		}
+		if($loc == 'wld'){
+			return view('processes.welding.welding_target')->with('page', 'queue')->with('head', 'Welding target');
 		}
 	}
 
@@ -832,6 +845,53 @@ class MiddleProcessController extends Controller
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function fetchOpAnalysis(Request $request){
+		$dateFrom = date('Y-m-01');
+		$dateTo = date('Y-m-d');
+
+		if(strlen($request->get('dateFrom'))>0){
+			$dateFrom = date('Y-m-d', strtotime($request->get('dateFrom')));
+		}
+		if(strlen($request->get('dateTo'))>0){
+			$dateTo = date('Y-m-d', strtotime($request->get('dateTo')));
+		}
+
+		$data_logs = db::connection('digital_kanban')->select("SELECT
+			DATE_FORMAT( data_logs.date, '%d-%b-%y' ) AS cat,
+			data_logs.*,
+			( SELECT target FROM ympimis.middle_targets WHERE target_name = 'Normal Working Time' AND location = 'bff' ) AS target 
+			FROM
+			(
+			SELECT
+			date( sedang_start_time ) AS date,
+			count( DISTINCT operator_id ) AS divider,
+			sum( TIMESTAMPDIFF( MINUTE, sedang_start_time, selesai_start_time ) ) AS actual,
+			sum( ( data_log.material_qty * ympimis.standard_times.time ) / 60 ) AS standard 
+			FROM
+			data_log
+			LEFT JOIN ympimis.standard_times ON standard_times.material_number = data_log.material_number 
+			WHERE
+			sedang_start_time >= '".$dateFrom." 00:00:00' 
+			AND sedang_start_time <= '".$dateTo." 23:59:59' 
+			GROUP BY
+			date( sedang_start_time ) 
+			) AS data_logs
+			LEFT JOIN ympimis.weekly_calendars ON weekly_calendars.week_date = data_logs.date 
+			WHERE
+			weekly_calendars.remark <> 'H' 
+			ORDER BY
+			date ASC");
+
+		$response = array(
+			'status' => true,
+			'datas' => $data_logs,
+			'dateFrom' => $dateFrom,
+			'dateTo' => $dateTo,
+		);
+		return Response::json($response);
+
 	}
 
 	public function fetchReportBuffingCancelled(Request $request){

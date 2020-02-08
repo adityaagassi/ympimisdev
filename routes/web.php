@@ -853,6 +853,7 @@ Route::get('fetch/welding/ng_rate', 'WeldingProcessController@fetchNgRate');
 Route::get('index/welding/op_ng', 'WeldingProcessController@indexOpRate');
 Route::get('fetch/welding/op_ng', 'WeldingProcessController@fetchOpRate');
 Route::get('index/welding/op_analysis', 'WeldingProcessController@indexOpAnalysis');
+Route::get('fetch/welding/op_analysis', 'WeldingProcessController@fetchOpAnalysis');
 Route::get('index/welding/production_result', 'WeldingProcessController@indexProductionResult');
 Route::get('fetch/welding/production_result', 'WeldingProcessController@fetchProductionResult');
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
@@ -973,6 +974,8 @@ Route::get('fetch/workshop/machine_detail', 'WorkshopController@fetchmachineDeta
 
 
 
+Route::get('index/middle/op_analysis', 'MiddleProcessController@indexOpAnalysis');
+Route::get('fetch/middle/op_analysis', 'MiddleProcessController@fetchOpAnalysis');
 
 
 Route::get('fetch/middle/kensa', 'MiddleProcessController@fetchMiddleKensa');
@@ -2127,6 +2130,9 @@ Route::post('index/qa_ymmj/create_action', 'QcYmmjController@create_action');
 Route::get('index/qa_ymmj/update/{id}', 'QcYmmjController@update');
 Route::post('index/qa_ymmj/update_action/{id}', 'QcYmmjController@update_action');
 Route::post('index/qa_ymmj/deletefiles', 'QcYmmjController@deletefiles');
+Route::get('index/qa_ymmj/grafik_ymmj', 'QcYmmjController@grafik_ymmj');
+Route::get('index/qa_ymmj/fetchGrafik', 'QcYmmjController@fetchGrafik');
+Route::get('index/qa_ymmj/fetchtable', 'QcYmmjController@fetchTable');
 
 Route::get('index/cpar/resume', 'QcReportController@resume');
 Route::get('fetch/cpar/resume', 'QcReportController@getResumeData');
