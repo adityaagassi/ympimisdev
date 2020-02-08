@@ -1105,15 +1105,14 @@
 						layout: 'horizontal',
 						align: 'right',
 						verticalAlign: 'top',
-						x: -40,
+						x: 0,
 						y: 25,
 						floating: true,
-						borderWidth: 1,
+						borderWidth: "0",
 						backgroundColor:
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-						shadow: true,
 						itemStyle: {
-							fontSize:'12px',
+							fontSize:'0.7vw',
 						},
 						// enabled:false
 					},
@@ -1315,40 +1314,19 @@
 						type: 'linear',
 						
 					}
-					// , { // Secondary yAxis
-					// 	title: {
-					// 		text: 'NG Rate (%)',
-					// 		style: {
-					// 			color: '#eee',
-					// 			fontSize: '16px',
-					// 			fontWeight: 'bold',
-					// 			fill: '#6d869f'
-					// 		}
-					// 	},
-					// 	labels:{
-					// 		enabled:false,
-					// 		style:{
-					// 			fontSize:"14px"
-					// 		}
-					// 	},
-					// 	type: 'linear',
-					// 	opposite: true
-
-					// }],
 					,
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
 						verticalAlign: 'top',
-						x: -40,
+						x: 0,
 						y: 25,
 						floating: true,
-						borderWidth: 1,
+						borderWidth: "0",
 						backgroundColor:
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-						shadow: true,
 						itemStyle: {
-							fontSize:'12px',
+							fontSize:'0.7vw',
 						},
 						// enabled:false
 					},
@@ -1533,7 +1511,7 @@
 							}
 						},
 					},
-					yAxis: [{
+					yAxis: {
 						title: {
 							text: 'Qty NG Pc(s)',
 							style: {
@@ -1549,41 +1527,20 @@
 								fontSize:"14px"
 							}
 						},
-						type: 'linear',
-						
-					}
-					, { // Secondary yAxis
-						title: {
-							text: 'NG Rate (%)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
-						},
-						labels:{
-							enabled:false,
-							style:{
-								fontSize:"14px"
-							}
-						},
-						type: 'linear',
-						opposite: true
-					}],
+						type: 'linear',	
+					},
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
 						verticalAlign: 'top',
-						x: -40,
+						x: 0,
 						y: 25,
 						floating: true,
-						borderWidth: 1,
+						borderWidth: "0",
 						backgroundColor:
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-						shadow: true,
 						itemStyle: {
-							fontSize:'12px',
+							fontSize:'0.7vw',
 						},
 						// enabled:false
 					},

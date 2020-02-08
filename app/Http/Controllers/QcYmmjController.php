@@ -14,6 +14,7 @@ use DataTables;
 use Carbon\Carbon;
 use App\QcYmmj;
 use File;
+use PDF;
 
 class QcYmmjController extends Controller
 {
@@ -73,7 +74,7 @@ class QcYmmjController extends Controller
               $data = json_decode($qc_ymmj->file);
               for ($i = 0; $i < count($data); $i++) {
                 $data[$i];
-                return '<a href="../files/'.$data[$i].'" class="fa fa-paperclip"></a>';
+                return '<a href="../files/'.$data[$i].'" target="_blank" class="fa fa-paperclip"></a>';
               }
               
             }
@@ -281,4 +282,135 @@ class QcYmmjController extends Controller
       }
 
 
+      //grafik CPAR
+
+      public function grafik_ymmj(){
+        $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
+        $bulan = db::select("select DISTINCT MONTH(tgl_kejadian) as bulan, MONTHNAME(tgl_kejadian) as namabulan FROM qc_ymmjs order by bulan asc;");
+        $tahun = db::select("select DISTINCT YEAR(tgl_kejadian) as tahun FROM qc_ymmjs order by tahun desc");
+        
+         return view('qc_ymmj.grafik',  
+          array('title' => 'Report YMMJ By Month', 
+                'title_jp' => '',
+                'fys' => $fys,
+                'bulans' => $bulan,
+                'years' => $tahun, 
+              )
+          )->with('page', 'YMMJ Graph');
+      }
+
+    public function fetchGrafik(Request $request)
+    {
+      $tahun = date('Y');
+      $tglfrom = $request->get('tglfrom');
+      $tglto = $request->get('tglto');
+
+      if ($tglfrom == "") {
+          $tglfrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($tglto == "") {
+          $tglto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $dateTitle = date("M Y", strtotime($tglto));
+
+      $data = db::select("select count(nomor) as jumlah, monthname(tgl_kejadian) as bulan, year(tgl_kejadian) as tahun from qc_ymmjs where qc_ymmjs.deleted_at is null and DATE_FORMAT(tgl_kejadian,'%Y-%m') between '".$tglfrom."' and '".$tglto."' GROUP BY bulan,tahun order by tahun, month(tgl_kejadian) ASC");
+
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'tahun' => $tahun,
+        'tglfrom' => $tglfrom,
+        'tglto' => $tglto,
+        'date' => $dateTitle
+      );
+
+      return Response::json($response); 
+    }
+
+    public function fetchTable(Request $request)
+    {
+      $data = db::select("select nomor, DATE_FORMAT(tgl_kejadian, '%d %M %Y') as tgl_kejadian, lokasi, judul, no_invoice, qty_cek, qty_ng, penanganan, file from qc_ymmjs order by id desc ");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data
+      );
+
+      return Response::json($response); 
+    }
+
+    public function detail(Request $request){
+
+      $bulan = $request->get("bulan");
+      $tglfrom = $request->get("tglfrom");
+      $tglto = $request->get("tglto");
+
+      $query = "select * from qc_ymmjs where qc_ymmjs.deleted_at is null and monthname(tgl_kejadian) = '".$bulan."' and DATE_FORMAT(tgl_kejadian,'%Y-%m') between '".$tglfrom."' and '".$tglto."'";
+
+      $detail = db::select($query);
+
+      return DataTables::of($detail)
+        ->addColumn('action', function($detail){
+          $id = $detail->id;
+          return '<a href="print/'.$id.'" class="btn btn-warning btn-md" target="_blank">Report YMMJ</a>';
+        })
+
+        ->editColumn('penanganan',function($detail){
+          if($detail->penanganan == "Repair") {
+            return '<label class="label label-warning">'.$detail->penanganan. '</label>';
+          }
+          else if($detail->penanganan == "Confirm stock") {
+            return '<label class="label label-success">'.$detail->penanganan. '</label>';
+          }
+          else if($detail->penanganan == "Return") {
+            return '<label class="label label-info">'.$detail->penanganan. '</label>';
+          }
+        })
+
+        ->editColumn('file', function($qc_ymmj){
+            if ($qc_ymmj->file != null) {
+              $data = json_decode($qc_ymmj->file);
+              for ($i = 0; $i < count($data); $i++) {
+                $data[$i];
+                return '<a href="../files/'.$data[$i].'" target="_blank" class="fa fa-paperclip"></a>';
+              }
+              
+            }
+            else{
+              return '-';
+            }
+            
+          })
+
+      ->rawColumns(['action' => 'action', 'penanganan' => 'penanganan','file' => 'file'])
+      ->make(true);
+    }
+
+    public function print_ymmj($id)
+    {
+      $ymmj = QcYmmj::find($id);
+      
+      $pdf = \App::make('dompdf.wrapper');
+      $pdf->getDomPDF()->set_option("enable_php", true);
+      $pdf->setPaper('Legal', 'potrait');
+      $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+      
+      $pdf->loadView('qc_ymmj.print', array(
+        'ymmj' => $ymmj,
+      ));
+      
+      $nomor = str_replace("/"," ",$ymmj->nomor);
+      return $pdf->stream("Form YMMJ ".$nomor. ".pdf");
+
+
+      // return view('qc_ymmj.print',  
+      //     array('title' => 'Report YMMJ By Month', 
+      //           'title_jp' => '',
+      //           'ymmj' => $ymmj,
+      //         )
+      //     )->with('page', 'YMMJ Graph');
+    }
 }

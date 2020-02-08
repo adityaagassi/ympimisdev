@@ -114,6 +114,19 @@ class WeldingProcessController extends Controller
 		))->with('page', 'Welding Process');
 	}
 
+	public function indexOpAnalysis(){
+		$title = 'Welding OP Analysis';
+		$title_jp = '';
+
+		$locations = $this->location_sx;
+
+		return view('processes.welding.display.op_analysis', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'locations' => $locations
+		))->with('page', 'Welding OP Analysis');
+	}
+
 	public function indexProductionResult(){
 		$locations = $this->location_sx;
 
@@ -351,40 +364,53 @@ class WeldingProcessController extends Controller
 	}
 
 	public function fetchOpAnalysis(Request $request){
-		$from = "CONCAT(DATE_FORMAT(d.tanggaljam_shift,'%Y-%m'),'-01')";
+		$from = date('Y-m')."-01";
 		$now = date('Y-m-d');
 
-		$addlocation = "";
-		if($request->get('location') != null) {
-			$locations = explode(",", $request->get('location'));
-			$location = "";
+		// $addlocation = "";
+		// if($request->get('location') != null) {
+		// 	$locations = explode(",", $request->get('location'));
+		// 	$location = "";
 
-			for($x = 0; $x < count($locations); $x++) {
-				$location = $location."'".$locations[$x]."'";
-				if($x != count($locations)-1){
-					$location = $location.",";
-				}
-			}
-			$addlocation = "and location in (".$location.") ";
-		}
+		// 	for($x = 0; $x < count($locations); $x++) {
+		// 		$location = $location."'".$locations[$x]."'";
+		// 		if($x != count($locations)-1){
+		// 			$location = $location.",";
+		// 		}
+		// 	}
+		// 	$addlocation = "and location in (".$location.") ";
+		// }
 
-		if(strlen($request->get('tanggal'))>0){
-			$now = date('Y-m-d', strtotime($request->get('tanggal')));
-		}
+		// if(strlen($request->get('tanggal'))>0){
+		// 	$now = date('Y-m-d', strtotime($request->get('tanggal')));
+		// }
 
-		$actual = db::connection('welding')->select("select 
-			DATE(d.tanggaljam_shift) as tgl, 
+		$actual = db::connection('welding')->select("select DATE(d.tanggaljam_shift) as tgl,
 			SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)) as time, 
+
 			count(distinct id_operator) as op,
+
 			ROUND((SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)))/count(distinct id_operator),2) as act_time,
-			(select target from middle_targets where target_name = 'Normal Working Time' and location = 'wld') as normal_time,
-			ROUND((select target from middle_targets where target_name = 'Normal Working Time' and location = 'wld') - (SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)))/count(distinct id_operator),2) as loss_time
+
+			ROUND((SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime))),2) as all_time,
+
+			(select target from ympimis.middle_targets where target_name = 'Normal Working Time' and location = 'wld') as normal_time,
+
+			ROUND((select target from ympimis.middle_targets where target_name = 'Normal Working Time' and location = 'wld') - (SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)))/count(distinct id_operator),2) as loss_time,
+
+			ROUND((select SUM(perolehan_jumlah + hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2')/count(distinct id_operator),2) as std_time,
+
+			ROUND((select target from ympimis.middle_targets where target_name = 'Normal Working Time' and location = 'wld') - (select SUM(perolehan_jumlah + hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2')/count(distinct id_operator),2) as loss_time_std,
+
+			ROUND((select SUM(perolehan_jumlah + hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2'),2) as all_time_std
 			from t_data_downtime d 
+			LEFT JOIN ympimis.weekly_calendars ON weekly_calendars.week_date = DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d')
 			where 
-			DATE(d.tanggaljam_shift) BETWEEN ".$from."
+			DATE(d.tanggaljam_shift) BETWEEN '".$from."'
 			and '".$now."'
 			and  
 			`status` = '1' 
+			and weekly_calendars.remark <> 'H'
 			GROUP BY tgl");
 
 		// $op = db::connection('welding')->select("select DATE(d.tanggaljam_shift) as tgl, SUM(durasi) as act, count(distinct id_operator) as op from t_data_downtime d where DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d') between '".$from."' and '".$now."' and  `status` = '1' GROUP BY tgl");
@@ -395,27 +421,31 @@ class WeldingProcessController extends Controller
 		// $datastat = db::select(" ");
 
 		
-		$dateTitle = date("d M Y", strtotime($now));
+		$dateTitleNow = date("d-M-Y", strtotime($now));
+		$dateTitleFrom = date("d-M-Y", strtotime($from));
 
-		$location = "";
-		if($request->get('location') != null) {
-			$locations = explode(",", $request->get('location'));
-			for($x = 0; $x < count($locations); $x++) {
-				$location = $location." ".$locations[$x]." ";
-				if($x != count($locations)-1){
-					$location = $location."&";
-				}
-			}
-		}else{
-			$location = "";
-		}
-		$location = strtoupper($location);
+		// $location = "";
+		// if($request->get('location') != null) {
+		// 	$locations = explode(",", $request->get('location'));
+		// 	for($x = 0; $x < count($locations); $x++) {
+		// 		$location = $location." ".$locations[$x]." ";
+		// 		if($x != count($locations)-1){
+		// 			$location = $location."&";
+		// 		}
+		// 	}
+		// }else{
+		// 	$location = "";
+		// }
+		// $location = strtoupper($location);
 		
 		$response = array(
 			'status' => true,
 			'actual' => $actual,
-			'dateTitle' => $dateTitle,
-			'title' => $location
+			'from' => $from,
+			'now' => $now,
+			'dateTitleNow' => $dateTitleNow,
+			'dateTitleFrom' => $dateTitleFrom,
+			// 'title' => $location
 		);
 		return Response::json($response);
 	}
