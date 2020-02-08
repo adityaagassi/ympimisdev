@@ -423,6 +423,8 @@
 				var title = result.title;
 				$('#loc').html('<b style="color:white">'+ title +'</b>');
 
+				var target = result.ng_target;
+
 				// GROUP A
 				var op_name = [];
 				var rate = [];
@@ -430,6 +432,8 @@
 				var data = [];
 				var data2 = [];
 				var loop = 0;
+
+				// console.log(target);
 
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 'A'){
@@ -447,17 +451,23 @@
 							rate.push(result.ng_rate[i].rate);						
 						}
 
-						ng.push(result.ng_rate[i].ng);
+						// ng.push(result.ng_rate[i].ng);
 
-						data.push({y: ng[loop-1], color: '#ff9800'});
-						data2.push({y: rate[loop-1], color: '#ef6c00'});
+						if(rate[loop-1] > parseInt(target)){
+							data2.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
+						} else{
+							data2.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
+						}
+
+						// data.push({y: ng[loop-1], color: '#ff9800'});
+						// data2.push({y: rate[loop-1], color: 'rgb(255,116,116)'});
 					}
-					// console.table(result.ng_rate);
 				}
 
 				Highcharts.chart('container1', {
 					chart: {
 						type: 'column',
+						animation: false
 					},
 					title: {
 						text: 'NG Rate By Operator',
@@ -488,6 +498,7 @@
 						},
 					},
 					yAxis: {
+						min: 0,
 						title: {
 							text: 'NG Rate (%)',
 							style: {
@@ -497,36 +508,30 @@
 								fill: '#6d869f'
 							}
 						},
+						plotLines: [{
+							color: '#FF0000',
+							value: parseInt(target),
+							dashStyle: 'shortdash',
+							width: 2,
+							zIndex: 5,
+							label: {
+								align:'right',
+								text: 'Target '+parseInt(target)+'%',
+								x:-7,
+								style: {
+									fontSize: '12px',
+									color: '#FF0000',
+									fontWeight: 'bold'
+								}
+							}
+						}],
 						labels:{
 							enabled:false,
 							style:{
 								fontSize:"14px"
 							}
 						},
-						type: 'linear',
-						
-					}
-					// , { // Secondary yAxis
-					// 	title: {
-					// 		text: 'NG Rate (%)',
-					// 		style: {
-					// 			color: '#eee',
-					// 			fontSize: '16px',
-					// 			fontWeight: 'bold',
-					// 			fill: '#6d869f'
-					// 		}
-					// 	},
-					// 	labels:{
-					// 		enabled:false,
-					// 		style:{
-					// 			fontSize:"14px"
-					// 		}
-					// 	},
-					// 	type: 'linear',
-					// 	opposite: true
-
-					// }
-					,
+					},
 					tooltip: {
 						headerFormat: '<span>{series.name}</span><br/>',
 						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category} </span>: <b>{point.y}</b><br/>',
@@ -629,14 +634,21 @@
 
 						ng.push(result.ng_rate[i].ng);
 
-						data.push({y: ng[loop-1], color: '#ff9800'});
-						data2.push({y: rate[loop-1], color: '#ef6c00'});
+						if(rate[loop-1] > parseInt(target)){
+							data2.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
+						}else{
+							data2.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
+						}
+
+						// data.push({y: ng[loop-1], color: '#ff9800'});
+						// data2.push({y: rate[loop-1], color: '#ef6c00'});
 					}
 				}
 
 				Highcharts.chart('container2', {
 					chart: {
 						type: 'column',
+						animation: false
 					},
 					title: {
 						text: 'NG Rate By Operator',
@@ -682,7 +694,23 @@
 								fontSize:"12px"
 							}
 						},
-						type: 'linear',
+						plotLines: [{
+							color: '#FF0000',
+							value: parseInt(target),
+							dashStyle: 'shortdash',
+							width: 2,
+							zIndex: 5,
+							label: {
+								align:'right',
+								text: 'Target '+parseInt(target)+'%',
+								x:-7,
+								style: {
+									fontSize: '12px',
+									color: '#FF0000',
+									fontWeight: 'bold'
+								}
+							}
+						}],
 					}
 					,
 					legend: {
@@ -781,8 +809,14 @@
 
 						ng.push(result.ng_rate[i].ng);
 
-						data.push({y: ng[loop-1], color: '#ff9800'});
-						data2.push({y: rate[loop-1], color: '#ef6c00'});
+						if(rate[loop-1] > parseInt(target)){
+							data2.push({y: rate[loop-1], color: 'rgb(255,116,116)'})
+						} else{
+							data2.push({y: rate[loop-1], color: 'rgb(144,238,126)'});
+						}
+
+						// data.push({y: ng[loop-1], color: '#ff9800'});
+						// data2.push({y: rate[loop-1], color: '#ef6c00'});
 					}
 					// console.table(result.ng_rate);
 				}
@@ -792,6 +826,7 @@
 				Highcharts.chart('container3', {
 					chart: {
 						type: 'column',
+						animation: false
 					},
 					title: {
 						text: 'NG Rate By Operator',
@@ -823,7 +858,7 @@
 					},
 					yAxis: {
 						title: {
-							text: 'Minutes',
+							text: 'NG Rate(%)',
 							style: {
 								color: '#eee',
 								fontSize: '16px',
@@ -837,7 +872,23 @@
 								fontSize:"12px"
 							}
 						},
-						type: 'linear',
+						plotLines: [{
+							color: '#FF0000',
+							value: parseInt(target),
+							dashStyle: 'shortdash',
+							width: 2,
+							zIndex: 5,
+							label: {
+								align:'right',
+								text: 'Target '+parseInt(target)+'%',
+								x:-7,
+								style: {
+									fontSize: '12px',
+									color: '#FF0000',
+									fontWeight: 'bold'
+								}
+							}
+						}],
 					}
 					,
 					legend: {
@@ -1054,17 +1105,17 @@
 						layout: 'horizontal',
 						align: 'right',
 						verticalAlign: 'top',
-						x: -90,
-						y: 20,
+						x: -40,
+						y: 25,
 						floating: true,
 						borderWidth: 1,
 						backgroundColor:
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
 						shadow: true,
 						itemStyle: {
-							fontSize:'16px',
+							fontSize:'12px',
 						},
-						enabled:false
+						// enabled:false
 					},
 					
 					tooltip: {
@@ -1289,17 +1340,17 @@
 						layout: 'horizontal',
 						align: 'right',
 						verticalAlign: 'top',
-						x: -90,
-						y: 20,
+						x: -40,
+						y: 25,
 						floating: true,
 						borderWidth: 1,
 						backgroundColor:
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
 						shadow: true,
 						itemStyle: {
-							fontSize:'16px',
+							fontSize:'12px',
 						},
-						enabled:false
+						// enabled:false
 					},
 					
 					tooltip: {
@@ -1519,23 +1570,22 @@
 						},
 						type: 'linear',
 						opposite: true
-
 					}],
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
 						verticalAlign: 'top',
-						x: -90,
-						y: 20,
+						x: -40,
+						y: 25,
 						floating: true,
 						borderWidth: 1,
 						backgroundColor:
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
 						shadow: true,
 						itemStyle: {
-							fontSize:'16px',
+							fontSize:'12px',
 						},
-						enabled:false
+						// enabled:false
 					},
 					
 					tooltip: {

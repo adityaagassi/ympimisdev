@@ -562,6 +562,7 @@
 						yAxis:1,
 						colorByPoint: false,
 						color:'#ff9800',
+						animation: false,
 						dataLabels: {
 							enabled: true,
 							format: '{point.y}%' ,
@@ -578,6 +579,7 @@
 						name: 'Total NG',
 						colorByPoint: false,
 						color: "#3f51b5",
+						animation: false,
 						dataLabels: {
 							enabled: true,
 							format: '{point.y}' ,
@@ -736,6 +738,7 @@
 						yAxis:1,
 						colorByPoint: false,
 						color:'#ff9800',
+						animation: false,
 						dataLabels: {
 							enabled: true,
 							format: '{point.y}%',
@@ -749,7 +752,8 @@
 						data: series,
 						name: 'Total NG',
 						colorByPoint: false,
-						color: "#3f51b5"
+						color: "#3f51b5",
+						animation: false
 					},
 					]
 				});

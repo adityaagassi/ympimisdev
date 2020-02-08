@@ -30,14 +30,12 @@
 			<a href="{{ url("index/welding/display_production_result?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Production Result</a>
 			<a href="{{ url("index/welding/ng_rate?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate</a>
 			<a href="{{ url("index/welding/op_ng?tanggal=&location=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">OP NG Rate</a>
+			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">OP Efficiency</a>
+			<a href="{{ url("index/welding/op_analysis?tanggal=&location=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Manpower Analysis</a>
 
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Display Kosuha <i class="fa fa-angle-double-down"></i></span>
-			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">OP NG Rate</a>
-			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">OP Efficiency</a>
 			<a href="{{ url("index/middle/request/display/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Middle Process Material Request</a>
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Display Handatsuke <i class="fa fa-angle-double-down"></i></span>
-			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">OP NG Rate</a>
-			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">OP Efficiency</a>
 			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Middle Process Material Request</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center;">

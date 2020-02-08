@@ -66,7 +66,6 @@ class WeldingProcessController extends Controller
 			'title_jp' => '溶接生産高',
 			'locations' => $locations
 		))->with('page', 'Production Result');
-
 	}
 
 	public function indexReportNG(){
@@ -283,6 +282,8 @@ class WeldingProcessController extends Controller
 			$now = date('Y-m-d', strtotime($request->get('tanggal')));
 		}
 
+		$ng_target = db::table("middle_targets")->where('location', '=', 'wld')->where('target_name', '=', 'NG Rate')->select('target')->first();
+
 		$ng_rate = db::select("
 			select eg.`group` as shift, eg.employee_id as operator_id, e.name, rate.`check`, rate.ng, rate.rate from employee_groups eg left join 
 			(select c.operator_id, c.jml as `check`, COALESCE(ng.jml,0) as ng, ROUND((COALESCE(ng.jml,0)/c.jml*100),1) as rate 
@@ -342,11 +343,84 @@ class WeldingProcessController extends Controller
 			'ng_rate' => $ng_rate,
 			'target' => $target,
 			'operator' => $operator,
+			'ng_target' => $ng_target->target,
 			'dateTitle' => $dateTitle,
 			'title' => $location
 		);
 		return Response::json($response);
 	}
+
+	public function fetchOpAnalysis(Request $request){
+		$from = "CONCAT(DATE_FORMAT(d.tanggaljam_shift,'%Y-%m'),'-01')";
+		$now = date('Y-m-d');
+
+		$addlocation = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			$location = "";
+
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location."'".$locations[$x]."'";
+				if($x != count($locations)-1){
+					$location = $location.",";
+				}
+			}
+			$addlocation = "and location in (".$location.") ";
+		}
+
+		if(strlen($request->get('tanggal'))>0){
+			$now = date('Y-m-d', strtotime($request->get('tanggal')));
+		}
+
+		$actual = db::connection('welding')->select("select 
+			DATE(d.tanggaljam_shift) as tgl, 
+			SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)) as time, 
+			count(distinct id_operator) as op,
+			ROUND((SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)))/count(distinct id_operator),2) as act_time,
+			(select target from middle_targets where target_name = 'Normal Working Time' and location = 'wld') as normal_time,
+			ROUND((select target from middle_targets where target_name = 'Normal Working Time' and location = 'wld') - (SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)))/count(distinct id_operator),2) as loss_time
+			from t_data_downtime d 
+			where 
+			DATE(d.tanggaljam_shift) BETWEEN ".$from."
+			and '".$now."'
+			and  
+			`status` = '1' 
+			GROUP BY tgl");
+
+		// $op = db::connection('welding')->select("select DATE(d.tanggaljam_shift) as tgl, SUM(durasi) as act, count(distinct id_operator) as op from t_data_downtime d where DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d') between '".$from."' and '".$now."' and  `status` = '1' GROUP BY tgl");
+
+		// $emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
+		// 	where g.location = 'soldering'");
+
+		// $datastat = db::select(" ");
+
+		
+		$dateTitle = date("d M Y", strtotime($now));
+
+		$location = "";
+		if($request->get('location') != null) {
+			$locations = explode(",", $request->get('location'));
+			for($x = 0; $x < count($locations); $x++) {
+				$location = $location." ".$locations[$x]." ";
+				if($x != count($locations)-1){
+					$location = $location."&";
+				}
+			}
+		}else{
+			$location = "";
+		}
+		$location = strtoupper($location);
+		
+		$response = array(
+			'status' => true,
+			'actual' => $actual,
+			'dateTitle' => $dateTitle,
+			'title' => $location
+		);
+		return Response::json($response);
+	}
+
+
 
 	public function fetchReportHourly(Request $request){
 		$tanggal = '';
