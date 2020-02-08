@@ -375,7 +375,7 @@ class QcYmmjController extends Controller
               $data = json_decode($qc_ymmj->file);
               for ($i = 0; $i < count($data); $i++) {
                 $data[$i];
-                return '<a href="../files/'.$data[$i].'" target="_blank" class="fa fa-paperclip"></a>';
+                return '<a href="../../files/'.$data[$i].'" target="_blank" class="fa fa-paperclip"></a>';
               }
               
             }
