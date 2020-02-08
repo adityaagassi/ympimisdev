@@ -1,6 +1,8 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
+<link type='text/css' rel="stylesheet" href="{{ url("css/bootstrap-datetimepicker.min.css")}}">
 <style type="text/css">
 	
 	input {
@@ -772,7 +774,6 @@
 													</div>
 													<div id='process'></div>
 													<input type="hidden" class="form-control" name="assign_proses" id="assign_proses">
-
 												</div>
 												<div class="col-xs-12">
 													<a class="btn btn-primary btnNext pull-right">Next</a>
@@ -925,14 +926,16 @@
 
 @endsection
 @section('scripts')
+<script src="{{ url("js/moment.min.js")}}"></script>
+<script src="{{ url("js/bootstrap-datetimepicker.min.js")}}"></script>
 <script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
-<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script>
 
 	$.ajaxSetup({
@@ -974,6 +977,17 @@
 			format: "yyyy-mm-dd",
 			todayHighlight: true
 		});
+
+		$('.timepicker').timepicker({
+			use24hours: true,
+			showInputs: false,
+			showMeridian: false,
+			minuteStep: 1,
+			defaultTime: '00:00',
+			timeFormat: 'h:mm'
+		})
+
+		
 
 		var opt = $("#sub_section option").sort(function (a,b) { return a.value.toUpperCase().localeCompare(b.value.toUpperCase()) });
 		$("#sub_section").append(opt);
@@ -1027,7 +1041,7 @@
 		++proses;
 
 		var add = '';
-		add += '<div class="col-xs-12" id="add_process_'+ proses +'">';
+		add += '<div class="col-xs-12" id="add_process_'+ proses +'" style="margin-bottom: 1%;">';
 		add += '<div class="col-xs-6" style="color: black; padding: 0px; padding-right: 1%;">';
 		add += '<div class="col-xs-1" style="color: black; padding: 0px;">';
 		add += '<h3 id="flow_'+ proses +'" style="margin: 0px;">'+ proses +'</h3>';
@@ -1047,14 +1061,40 @@
 		add += '</div>';
 		
 		add += '<div class="col-xs-2" style="color: black; padding: 0px; padding-right: 1%;">';
-		add += '<div class="form-group">';
+		add += '<div class="form-group" style="margin-bottom: 0px;">';
 		add += '<input class="form-control" type="number" name="process_qty_'+ proses +'" id="process_qty_'+ proses +'" placeholder="Std Time" style="width: 100%; height: 33px; font-size: 15px; text-align: center;">';
 		add += '</div>';
 		add += '</div>';
 		add += '<div class="col-xs-1" style="padding: 0px;">';
 		add += '<button class="btn btn-danger" id="'+proses+'" onclick="removeProcess(this)"><i class="fa fa-close"></i></button>';
 		add += '</div>';
+
+
+		add += '<div class="col-xs-11" style="margin-top: 1%; margin-left: 2%;">';
+		add += '<div class="form-group row" align="right">';
+		add += '<label class="col-xs-1" style="margin-top: 0.75%; padding: 0px;">Start<span class="text-red">*</span></label>';
+		add += '<div class="col-xs-3" align="left" style="padding: 0px; margin-left: 1%;">';
+		add += '<div class="input-group date">';
+		add += '<div class="input-group-addon bg-blue" style="border: none;">';
+		add += '<i class="fa fa-calendar"></i>';
 		add += '</div>';
+		add += '<input type="text" class="form-control datetime" name="start_'+ proses +'" id="start_'+ proses +'" placeholder="start Date" >';
+		add += '</div>';
+		add += '</div>';
+		add += '<label class="col-xs-1" style="margin-top: 0.75%; padding: 0px; margin-left: 1%;">Finish<span class="text-red">*</span></label>';
+		add += '<div class="col-xs-3" align="left" style="padding: 0px; margin-left: 1%;">';
+		add += '<div class="input-group date">';
+		add += '<div class="input-group-addon bg-blue" style="border: none;">';
+		add += '<i class="fa fa-calendar"></i>';
+		add += '</div>';
+		add += '<input type="text" class="form-control datetime" name="finish_'+ proses +'" id="finish_'+ proses +'" placeholder="End Date" >';
+		add += '</div>';
+		add += '</div>';
+		add += '</div>';
+		add += '</div>';
+
+		add += '</div>';
+
 
 		$('#process').append(add);
 
@@ -1063,6 +1103,10 @@
 				dropdownParent: $('#modal-assignment')
 			});
 		})
+
+		$('.datetime').datetimepicker({
+			format: 'YYYY-MM-DD HH:mm:ss'
+		});
 
 		document.getElementById("assign_proses").value = proses;
 
@@ -1279,9 +1323,9 @@
 
 
 					var assign = '';
-					if(result.tableData[i].process_name == 'Listed'){
+					if(result.tableData[i].process_name == 'Received'){
 						assign = ' onclick="showAssignment(\''+result.tableData[i].order_no+'\')"';
-					}else if(result.tableData[i].process_name == 'Approved'){
+					}else if(result.tableData[i].process_name == 'Listed'){
 						assign = ' onclick="showEdit(\''+result.tableData[i].order_no+'\')"';
 					}else if(result.tableData[i].process_name == 'InProgress'){
 						assign = ' onclick="showEdit(\''+result.tableData[i].order_no+'\')"';
@@ -1364,7 +1408,7 @@
 					'paging': true,
 					'lengthChange': true,
 					'searching': true,
-					'ordering': false,
+					'ordering': true,
 					'info': true,
 					'autoWidth': true,
 					"sPaginationType": "full_numbers",
@@ -1507,28 +1551,41 @@ $("form#assign").submit(function(e) {
 		type: 'POST',
 		data: formData,
 		success: function (result, status, xhr) {
-			$("#tag").val("");
-			$("#assign_target_date").val("");
-			$('#assign_pic').prop('selectedIndex', 0).change();
-			$('#assign_difficulty').prop('selectedIndex', 0).change();
-			$('#assign_category').prop('selectedIndex', 0).change();
-			$('#assign_item_number').prop('selectedIndex', 0).change();
-			$("#assign_drawing").val("");
+			if(result.status){
+				$("#tag").val("");
+				$("#assign_target_date").val("");
+				$('#assign_pic').prop('selectedIndex', 0).change();
+				$('#assign_difficulty').prop('selectedIndex', 0).change();
+				$('#assign_category').prop('selectedIndex', 0).change();
+				$('#assign_item_number').prop('selectedIndex', 0).change();
+				$("#assign_drawing").val("");
 
 
-			$('#process').append().empty();
-			// for (var i = 1; i <= proses; i++) {
-			// 	$("#add_process_"+i).remove();
-			// }
-			proses = 0;
+				$('#process').append().empty();
+				proses = 0;
 
 
-			location.reload(true);		
+				location.reload(true);		
 
-			$("#loading").hide();
-			$("#modal-assignment").modal('hide');
-			$('#drawing').hide();
-			openSuccessGritter('Success', result.message);
+				$("#loading").hide();
+				$("#modal-assignment").modal('hide');
+				$('#drawing').hide();
+				openSuccessGritter('Success', result.message);
+			}else{
+				$("#tag").val("");
+				$("#assign_target_date").val("");
+				$('#assign_pic').prop('selectedIndex', 0).change();
+				$('#assign_difficulty').prop('selectedIndex', 0).change();
+				$('#assign_category').prop('selectedIndex', 0).change();
+				$('#assign_item_number').prop('selectedIndex', 0).change();
+
+				location.reload(true);		
+
+				$("#loading").hide();
+				$("#modal-assignment").modal('hide');
+				openErrorGritter('Error!', result.message);
+			}
+
 		},
 		error: function(result, status, xhr){
 			$("#tag").val("");
@@ -1539,7 +1596,7 @@ $("form#assign").submit(function(e) {
 			$('#assign_item_number').prop('selectedIndex', 0).change();
 
 			location.reload(true);		
-			
+
 			$("#loading").hide();
 			$("#modal-assignment").modal('hide');
 			openErrorGritter('Error!', result.message);

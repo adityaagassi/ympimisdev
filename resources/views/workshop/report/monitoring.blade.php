@@ -60,7 +60,6 @@
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px; padding: 0%;">
 			<div class="row" style="margin:0px;">
-				<form method="GET" action="{{ action('MiddleProcessController@indexBuffingOpEff') }}">
 					<div class="col-xs-2">
 						<div class="input-group date">
 							<div class="input-group-addon bg-green" style="border: none;">
@@ -78,9 +77,8 @@
 						</div>
 					</div>
 					<div class="col-xs-1">
-						<button class="btn btn-success" type="submit">Update Chart</button>
+						<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
 					</div>
-				</form>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>	
 			
@@ -91,6 +89,7 @@
 						<tr>
 							<th style="border: 1px solid #333; width: 7%; padding: 0;vertical-align: middle;;font-size: 16px; border-top: 0px !important;" rowspan="2">Order No.</th>
 							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Priority</th>
+							<th style="border: 1px solid #333; width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Requester</th>
 							<th style="border: 1px solid #333; width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Item Name</th>
 							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Qty</th>
 							<th style="border: 1px solid #333; width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">PIC</th>
@@ -100,9 +99,9 @@
 						</tr>
 						<tr>
 							<th style="border: 1px solid #333; width: 5%; padding: 0; padding-top: 0.25%; padding-bottom: 0.25%; border-left:3px solid #f44336 !important;vertical-align: middle;">Requested</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;">Received</th>
 							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;">Listed</th>
-							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;">Approved</th>
-							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;">In Progress</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;">Start Process</th>
 						</tr>
 					</thead>
 					<tbody id="table-body-monitor">
@@ -347,6 +346,14 @@
 					}
 					body += '</td>';
 
+					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; font-size: 13px;">';
+					if(result.progress[i].requester){
+						body += result.progress[i].requester;				
+					}else{
+						body += '-';
+					}
+					body += '</td>';
+
 
 					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%;">';
 					body += result.progress[i].item_name;
@@ -358,8 +365,8 @@
 
 
 					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; font-size: 13px;">';
-					if(result.progress[i].name){
-						body += result.progress[i].name;				
+					if(result.progress[i].pic){
+						body += result.progress[i].pic;				
 					}else{
 						body += '-';
 					}

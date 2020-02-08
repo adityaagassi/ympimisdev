@@ -164,19 +164,58 @@ class WorkshopController extends Controller{
 		))->with('page', 'WJO List')->with('head', 'Workshop');	
 	}
 
-	public function editWJO(Request $request)
-	{
+	public function editWJO(Request $request){
+
+		$sub_section = $request->get("sub_section_edit");
+		$priority = $request->get("priority_edit");
+		$type = $request->get("type_edit");
+		$category = $request->get("category_edit");
+		$item_name = $request->get("item_name_edit");
+		$drawing_name = $request->get("drawing_name_edit");
+		$item_number = $request->get("item_number_edit");
+		$part_number = $request->get("part_number_edit");
+		$quantity = $request->get("quantity_edit");
+
+		$material = '';
+		if($request->get("material") != 'LAINNYA'){
+			$material = $request->get("material_edit");
+		}else{
+			$material = $request->get("material-other_edit");
+		}
+
+		$problem_description = $request->get("problem_desc_edit");
+		$target_date = $request->get("request_date_edit");
+
+
+		$wjo = WorkshopJobOrder::find($request->get("id_edit"));
+		$wjo->sub_section = $sub_section;
+		$wjo->priority = $priority;
+		$wjo->type = $type;
+		$wjo->category = $category;
+		$wjo->item_name = $item_name;
+		$wjo->drawing_name = $drawing_name;
+		$wjo->item_number = $item_number;
+		$wjo->part_number = $part_number;
+		$wjo->quantity = $quantity;
+		$wjo->material = $material;
+		$wjo->problem_description = $problem_description;
+		$wjo->target_date = $target_date;
+
+		if($request->hasFile("upload_file_edit")) {
+			if($wjo->attachment != null){
+				File::delete('workshop/'. $wjo->attachment);
+			}
+
+			$file = $request->file("upload_file_edit");
+			$file_name = $wjo->order_no.'.'.$file->getClientOriginalExtension();
+			$file->move(public_path('workshop'), $file_name);
+
+			$wjo->attachment = $file_name;
+		}
+
+
 		try{
-			$wjo = WorkshopJobOrder::find($request->get("id"));
-			$wjo->sub_section = $request->get('sub_section');
-			$wjo->priority = $request->get('priority');
-			$wjo->type = $request->get('type');
-			$wjo->category = $request->get('category');
-			$wjo->item_name = $request->get('item_name');
-			$wjo->quantity = $request->get('quantity');
-			$wjo->material = $request->get('material');
-			$wjo->problem_description = $request->get('problem_description');
-			$wjo->target_date = $request->get('target_date');
+			
 			$wjo->save();
 
 			$response = array(
@@ -191,22 +230,21 @@ class WorkshopController extends Controller{
 			if($error_code == 1062){
 				$response = array(
 					'status' => false,
-					'datas' => "Material already exist",
+					'datas' => "Edit Error",
 				);
 				return Response::json($response);
 			}
 			else{
 				$response = array(
 					'status' => false,
-					'datas' => "Update Material Error.",
+					'datas' => "Edit Error",
 				);
 				return Response::json($response);
 			}
 		}
 	}
 
-	public function fetch_item_edit(Request $request)
-	{
+	public function fetch_item_edit(Request $request){
 		$items = WorkshopJobOrder::find($request->get("id"));
 
 		$material = $this->material;
@@ -707,7 +745,7 @@ class WorkshopController extends Controller{
 		$temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)
 		->where('operator', '=', Auth::user()->username)
 		->first();
-		
+
 		try {
 
 			// $started_at = new DateTime($temp->started_at);
@@ -996,17 +1034,69 @@ class WorkshopController extends Controller{
 		try{
 			$tag_availability = WorkshopTagAvailability::where('tag', '=', $tag)->first();
 			$tag_availability->status = 0;
+
+			$flow_processes = [];
 			
 			for($x = 1; $x <= $request->get('assign_proses'); $x++) {
-				$flow_processes = new WorkshopFlowProcess([
+
+				$existed_flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+				->where('workshop_flow_processes.machine_code', '=', $request->get('process_'.$x))
+				->select('workshop_flow_processes.order_no',
+					'workshop_flow_processes.sequence_process',
+					'workshop_flow_processes.machine_code',
+					'workshop_processes.category',
+					'workshop_processes.machine_name',
+					'workshop_processes.process_name',
+					'workshop_flow_processes.start_plan',
+					'workshop_flow_processes.finish_plan',
+					'workshop_flow_processes.std_time')
+				->get();
+
+				if(count($existed_flow) > 0){
+					if($existed_flow[0]->category == 'MACHINE'){
+						for($j = 0; $j < count($existed_flow); $j++) {
+
+							if($existed_flow[$j]->finish_plan <> null){
+								$start_plan = new DateTime($request->get('start_'.$x));
+								$finish_plan = new DateTime($request->get('finish_'.$x));
+
+								$start_exist = new DateTime($existed_flow[$j]->start_plan);
+								$finish_exist = new DateTime($existed_flow[$j]->finish_plan);
+
+								if($start_plan >= $start_exist && $start_plan <= $finish_exist){
+									$response = array(
+										'status' => false,
+										'message' => 'Plan sudah ada',
+									);
+									return Response::json($response);
+								}
+
+								if($finish_plan >= $start_exist && $finish_plan <= $finish_exist){
+									$response = array(
+										'status' => false,
+										'message' => 'Plan sudah ada',
+									);
+									return Response::json($response);
+								}
+							}
+						}
+					}
+				}
+
+				$flow_processes[$x] = new WorkshopFlowProcess([
 					'order_no' => $order_no,
 					'sequence_process' => $x,
 					'machine_code' => $request->get('process_'.$x),
 					'status' => 1,
+					'start_plan' => date($request->get('start_'.$x)),
+					'finish_plan' => date($request->get('finish_'.$x)),
 					'std_time' => $request->get('process_qty_'.$x) * 60,
 					'created_by' => Auth::user()->username,
 				]);
-				$flow_processes->save();
+			}
+
+			for($x = 1; $x <= count($flow_processes); $x++) {
+				$flow_processes[$x]->save();
 			}
 
 			DB::transaction(function() use ($wjo, $wjo_log, $tag_availability){
@@ -1206,26 +1296,17 @@ class WorkshopController extends Controller{
 			left join employee_syncs emp on emp.employee_id = op_workload.operator
 			group by operator, `name`');
 
-		$machine = db::select('SELECT machine_name, shortname, shift FROM workshop_processes
+		$machine = db::select('SELECT machine_code, shortname, shift FROM workshop_processes
 			where category = "MACHINE"
 			order by shortname asc');
 
-		$mc_workload = db::select("select process.machine_name, round((workload.workload/60), 0) as workload from
-			(select workload.machine_code, sum(workload.workload) workload from
-			(select flow.machine_code, sum(std_time) as workload from workshop_flow_processes flow
+		$mc_workload = db::select("select flow.machine_code, process.shortname, flow.order_no, flow.start_plan, flow.finish_plan, std_time from workshop_flow_processes flow
 			left join workshop_job_orders wjo on wjo.order_no = flow.order_no
+			left join workshop_processes process on process.machine_code = flow.machine_code
 			where wjo.remark < 4
-			group by flow.machine_code
-			union all
-			select log.machine_code, -sum(TIMESTAMPDIFF(second,log.started_at,log.created_at)) as workload from workshop_logs log
-			left join workshop_job_orders wjo on wjo.order_no = log.order_no
-			where wjo.remark < 4
-			group by log.machine_code) as workload
-			group by workload.machine_code
-			having workload > 0) workload
-			left join workshop_processes process
-			on process.machine_code = workload.machine_code
-			where process.category = 'MACHINE'");
+			and process.category = 'MACHINE'
+			and start_plan is not null
+			order by machine_code, start_plan asc");
 
 		$response = array(
 			'status' => true,
@@ -1241,7 +1322,7 @@ class WorkshopController extends Controller{
 	public function fetchWorkloadOperatorDetail(Request $request){
 		$name = $request->get('name');
 
-		$detail = db::select('select concat(SPLIT_STRING(emp.`name`, " ", 1)," ",SPLIT_STRING(emp.`name`, " ", 2)) as `name`, workload.order_no, tag.remark as tag_number, wjo.item_name, workload.workload from
+		$detail = db::select('select concat(SPLIT_STRING(emp.`name`, " ", 1)," ",SPLIT_STRING(emp.`name`, " ", 2)) as `name`, workload.order_no, wjo.target_date, tag.remark as tag_number, wjo.item_name, workload.workload from
 			(select wjo.operator, workload.order_no, round((workload.workload/60), 0) as workload from
 			(select workload.order_no, sum(workload.workload) workload from
 			(select flow.order_no, sum(std_time) as workload from workshop_flow_processes flow
@@ -1264,7 +1345,8 @@ class WorkshopController extends Controller{
 			left join workshop_tag_availabilities tag
 			on tag.tag = wjo.tag
 			where emp.`name` like "%'.$name.'%"
-			and emp.`group` = "Workshop"');
+			and emp.`group` = "Workshop"
+			order by target_date asc');
 
 		$response = array(
 			'status' => true,
@@ -1475,7 +1557,7 @@ class WorkshopController extends Controller{
 			on date.week_date = reject.date
 			order by week_date asc");
 
-		$progress = db::select("select wjo.order_no, wjo.priority, wjo.item_name, wjo.quantity, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date, step.std, step.actual from workshop_job_orders wjo
+		$progress = db::select("select wjo.order_no, wjo.priority, concat(SPLIT_STRING(requester.name, ' ', 1), ' ', SPLIT_STRING(requester.name, ' ', 2)) as requester, wjo.item_name, wjo.quantity, concat(SPLIT_STRING(pic.name, ' ', 1), ' ', SPLIT_STRING(pic.name, ' ', 2)) as `pic`, coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date, step.std, step.actual from workshop_job_orders wjo
 			left join (select * from workshop_job_order_logs where remark = 0) as requested
 			on requested.order_no = wjo.order_no
 			left join (select * from workshop_job_order_logs where remark = 1) as listed
@@ -1484,7 +1566,8 @@ class WorkshopController extends Controller{
 			on approved.order_no = wjo.order_no
 			left join (select * from workshop_job_order_logs where remark = 2) as progress
 			on progress.order_no = wjo.order_no
-			left join employee_syncs e on wjo.operator = e.employee_id
+			left join employee_syncs pic on wjo.operator = pic.employee_id
+			left join employee_syncs requester on wjo.created_by = requester.employee_id
 			left join
 			(select wjo.order_no, COALESCE(flow.std,0) as std, COALESCE(log.actual,0) as actual from workshop_job_orders wjo
 			left join

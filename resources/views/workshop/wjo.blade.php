@@ -411,7 +411,7 @@
 
 								if(result.wjo.item_number){
 									if(result.wjo.part_number){
-										$('#text_drawing').html(result.wjo.drawing_name + '  ( ' + result.wjo.item_number +' [Part No.'+ result.wjo.part_number +'] )');
+										$('#text_drawing').html(result.wjo.drawing_name + '  ( ' + result.wjo.item_number +' #'+ result.wjo.part_number +')');
 									}else{
 										$('#text_drawing').html(result.wjo.drawing_name + '  ( ' + result.wjo.item_number +' )');
 									}

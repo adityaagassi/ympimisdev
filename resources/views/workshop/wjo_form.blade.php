@@ -311,13 +311,13 @@
 					<div class="col-xs-12" style="background-color: #f39c12;">
 						<h1 style="text-align: center; margin:5px; font-weight: bold;">Edit Form WJO</h1>
 					</div>
-					<!-- <form id="data" method="post" enctype="multipart/form-data" autocomplete="off"> -->
+					<form id="edit" method="post" enctype="multipart/form-data" autocomplete="off">
 						<div class="col-xs-12" style="padding-bottom: 1%; padding-top: 2%;">
 							<div class="col-xs-3" align="right" style="padding: 0px;">
 								<span style="font-weight: bold; font-size: 16px;">Bagian:<span class="text-red">*</span></span>
 							</div>
 							<div class="col-xs-6">
-								<select class="form-control select4" data-placeholder="Pilih Bagian" name="sub_section_edit" id="sub_section_edit" disabled="" style="width: 100% height: 35px; font-size: 15px;" required>
+								<select class="form-control select4" data-placeholder="Pilih Bagian" name="sub_section_edit" id="sub_section_edit" style="width: 100% height: 35px; font-size: 15px;" readonly>
 									<option value=""></option>
 									@php
 									$group = array();
@@ -338,7 +338,7 @@
 								<span style="font-weight: bold; font-size: 16px;">Prioritas:<span class="text-red">*</span></span>
 							</div>
 							<div class="col-xs-4">
-								<select class="form-control select4" data-placeholder="Pilih Prioritas Pengerjaan" name="priority_edit" id="priority_edit" disabled="" style="width: 100% height: 35px; font-size: 15px;" required >
+								<select class="form-control select4" data-placeholder="Pilih Prioritas Pengerjaan" name="priority_edit" id="priority_edit" style="width: 100% height: 35px; font-size: 15px;" readonly>
 									<option value=""></option>
 									<option value="Normal">Normal</option>
 									<option value="Urgent">Urgent</option>
@@ -380,6 +380,29 @@
 							</div>
 							<div class="col-xs-8">
 								<input type="text" class="form-control" name="item_name_edit" id="item_name_edit" rows='1' placeholder="Nama Barang" style="width: 100%; font-size: 15px;" required>
+							</div>
+						</div>
+
+						<div id="drawing-field-edit">
+							<div class="col-xs-12" style="padding-bottom: 1%;">
+								<div class="col-xs-3" align="right" style="padding: 0px;">
+									<span style="font-weight: bold; font-size: 16px;">Nama Drawing:<span class="text-red">*</span></span>
+								</div>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" name="drawing_name_edit" id="drawing_name_edit" rows='1' placeholder="Nama Drawing" style="width: 100%; font-size: 15px;">
+								</div>
+							</div>
+
+							<div class="col-xs-12" style="padding-bottom: 1%;">
+								<div class="col-xs-3" align="right" style="padding: 0px;">
+									<span style="font-weight: bold; font-size: 16px;">No. Drawing:<span class="text-red">*</span></span>
+								</div>
+								<div class="col-xs-4">
+									<input type="text" class="form-control" name="item_number_edit" id="item_number_edit" rows='1' placeholder="Nomor Drawing" style="width: 100%; font-size: 15px;">
+								</div>
+								<div class="col-xs-2" style="padding-left: 0px;">
+									<input type="text" class="form-control" name="part_number_edit" id="part_number_edit" rows='1' placeholder="Nomor Part" style="width: 100%; font-size: 15px;">
+								</div>
 							</div>
 						</div>
 
@@ -434,19 +457,19 @@
 							</div>
 						</div>
 
-						{{-- <div class="col-xs-12" style="padding-bottom: 1%;">
+						<div class="col-xs-12" style="padding-bottom: 1%;">
 							<div class="col-xs-3" align="right" style="padding: 0px;">
 								<span style="font-weight: bold; font-size: 16px;">Lampiran:&nbsp;&nbsp;</span>
 							</div>
 							<div class="col-xs-8">
 								<input style="height: 37px;" class="form-control" type="file" name="upload_file_edit" id="upload_file_edit">
 							</div>
-						</div> --}}
+						</div>
 
 						<div class="col-xs-12" style="padding-right: 12%;">
 							<br>
-							<input type="hidden" id="id_edit">
-							<button type="button" onclick="edit()" class="btn btn-success pull-right" ><i class="fa fa-pencil"></i> Edit</button>
+							<input type="hidden" id="id_edit" name="id_edit">
+							<button type="submit" class="btn btn-success pull-right" ><i class="fa fa-pencil"></i> Edit</button>
 							<!-- <button type="submit" class="btn btn-success pull-right">Submit</button> -->
 							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;&nbsp;&nbsp;&nbsp;Note :&nbsp;&nbsp;&nbsp;</span><br>
 							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- Tanda bintang (*) wajib diisi&nbsp;&nbsp;</span><br>
@@ -499,6 +522,8 @@
 
 		$('#drawing-field').hide();
 
+		$('#drawing-field-edit').hide();
+
 		$('.datepicker').datepicker({
 			autoclose: true,
 			format: "yyyy-mm-dd",
@@ -521,6 +546,9 @@
 		$('.select3').select2({
 			dropdownParent: $('#createModal')
 		});
+	})
+
+	$(function () {
 		$('.select4').select2({
 			dropdownParent: $('#editModal')
 		});
@@ -531,6 +559,14 @@
 			$('#drawing-field').show();
 		}else{
 			$('#drawing-field').hide();
+		}
+	});
+
+	$('#category_edit').on('change', function() {
+		if(this.value != 'Equipment'){
+			$('#drawing-field-edit').show();
+		}else{
+			$('#drawing-field-edit').hide();
 		}
 	});
 
@@ -635,6 +671,64 @@
 		});
 	});
 
+	$("form#edit").submit(function(e) {
+		$("#loading").show();
+
+		var category = $("#category_edit").val();
+		var drawing_name = $("#drawing_name_edit").val();
+		var drawing_number = $("#item_number_edit").val();
+		var part_number = $("#part_number_edit").val();
+
+		if(category != "Equipment"){
+			if(drawing_name == "" || drawing_number == "" || part_number == ""){
+				openErrorGritter('Error!', 'Tanda (*) harus diisi');
+				$("#loading").hide();
+				return false;
+			}
+		}
+
+		e.preventDefault();    
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: '{{ url("index/workshop/edit_wjo") }}',
+			type: 'POST',
+			data: formData,
+			success: function (result, status, xhr) {
+				$("#loading").hide();
+
+				$('#sub_section').prop('selectedIndex', 0).change();
+				$("#category").val("");
+				$("#item_name").val("");
+				$("#quantity").val("");
+				$("#request_date").val("");
+				$('#priority').prop('selectedIndex', 0).change();
+				$('#type').prop('selectedIndex', 0).change();
+				$("#material").prop('selectedIndex', 0).change();
+				$("#material-other").val("");
+				$("#problem_desc").val("");
+				$("#upload_file").val("");
+				$("#drawing").prop('selectedIndex', 0).change();
+
+				$('#createModal').modal('hide');
+
+				openSuccessGritter('Success', result.message);
+
+				location.reload(true);		
+
+			},
+			error: function(result, status, xhr){
+				$("#loading").hide();
+				
+				openErrorGritter('Error!', result.message);
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+
+	});
+
 	function fetchTable(id){
 		var username = $('#username').val();
 		var data = {
@@ -719,7 +813,6 @@
 	}
 
 	function modalEdit(id) {
-		$('#editModal').modal('show');
 		var data = {
 			id:id
 		};
@@ -765,6 +858,17 @@
 			$("#quantity_edit").val(result.datas.quantity);	        
 			$("#problem_desc_edit").val(result.datas.problem_description);
 			$("#request_date_edit").val(result.datas.target_date);
+
+			if(result.datas.category != 'Equipment'){
+				$("#drawing_name_edit").val(result.datas.drawing_name);
+				$("#item_number_edit").val(result.datas.item_number);
+				$("#part_number_edit").val(result.datas.part_number);
+				$("#drawing-field-edit").show();
+			}
+
+			$('#editModal').modal('show');
+
+
 		});
 
 	}
@@ -804,6 +908,10 @@
 					$("#quantity_edit").val("");	        
 					$("#problem_desc_edit").val("");
 					$("#request_date_edit").val("");
+
+					$("#drawing_name_edit").val("");	        
+					$("#item_number_edit").val("");
+					$("#part_number_edit").val("");
 
 					openSuccessGritter("Success", "WJO has been edited.");
 					$('#modalEdit').modal('hide');
