@@ -247,7 +247,7 @@
 							backgroundColor: null
 						},
 						title: {
-							text: 'Recorder Picking Result<br><span style="color:rgba(96,92,168);">???</span>'
+							text: 'Recorder Picking Result<br><span style="color:rgba(96,92,168);">リコーダーピッキング結果</span>'
 						},
 						xAxis: {
 							tickInterval:  1,
