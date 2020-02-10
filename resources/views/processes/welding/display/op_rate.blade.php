@@ -162,8 +162,7 @@
 			backgroundColor: {
 				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
 				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
+				[0, '#2a2a2b']
 				]
 			},
 			style: {
@@ -407,14 +406,14 @@
 			} 
 		}
 		else{
-				$('#shifta').addClass("col-xs-4");
-				$('#shiftb').addClass("col-xs-4");
-				$('#shiftc').addClass("col-xs-4");
+			$('#shifta').addClass("col-xs-4");
+			$('#shiftb').addClass("col-xs-4");
+			$('#shiftc').addClass("col-xs-4");
 
-				$('#shifta2').addClass("col-xs-4");
-				$('#shiftb2').addClass("col-xs-4");
-				$('#shiftc2').addClass("col-xs-4");
-			}
+			$('#shifta2').addClass("col-xs-4");
+			$('#shiftb2').addClass("col-xs-4");
+			$('#shiftc2').addClass("col-xs-4");
+		}
 
 		$.get('{{ url("fetch/welding/op_ng") }}', data, function(result, status, xhr) {
 			if(result.status){
@@ -966,6 +965,7 @@
 				var name_a = [];
 				var key = [];
 
+
 				//NG
 				var ro_tare = [];
 				var ro_tsuki = [];
@@ -974,6 +974,12 @@
 				var toke = [];
 				var bari = [];
 				var ro_oi = [];
+
+				var ng_rate = [];
+				var ng = [];
+				var qty = [];
+
+				var plotBands = [];
 
 				var loop = 0;
 
@@ -1022,7 +1028,27 @@
 
 						ng.push(ro_tare[loop-1] + ro_tsuki[loop-1] + gosong[loop-1] + dimensi[loop-1] + toke[loop-1] + bari[loop-1] + ro_oi[loop-1]);
 
-						// ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+						if(key[loop-1] != 'None'){
+							if(key[loop-1] != 'A82Z'){
+								if(key[loop-1][0] == 'A'){
+									qty.push(15);
+								}else if(key[loop-1][0] == 'T'){
+									qty.push(8);
+								}
+							}else{
+								qty.push(10);
+							}
+						}else{
+							qty.push(0);
+						}
+
+						ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+
+						if(ng_rate[loop-1] > 30){
+							plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+						}			
+
+
 
 					}
 				}
@@ -1060,6 +1086,7 @@
 								fontWeight: 'bold'
 							}
 						},
+						plotBands: plotBands
 					},
 					yAxis: {
 						title: {
@@ -1079,7 +1106,7 @@
 						},
 						type: 'linear',
 						
-					}
+					},
 					// , { // Secondary yAxis
 					// 	title: {
 					// 		text: 'NG Rate (%)',
@@ -1100,22 +1127,21 @@
 					// 	opposite: true
 
 					// }],
-					,
-					legend: {
-						layout: 'horizontal',
-						align: 'right',
-						verticalAlign: 'top',
-						x: 0,
-						y: 25,
-						floating: true,
-						borderWidth: "0",
-						backgroundColor:
-						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-						itemStyle: {
-							fontSize:'0.7vw',
-						},
-						// enabled:false
-					},
+					// ,
+					// legend: {
+					// 	layout: 'horizontal',
+					// 	align: 'right',
+					// 	verticalAlign: 'top',
+					// 	x: 0,
+					// 	y: 25,
+					// 	floating: true,
+					// 	borderWidth: "0",
+					// 	backgroundColor:
+					// 	Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+					// 	itemStyle: {
+					// 		fontSize:'0.7vw',
+					// 	},
+					// },
 					
 					tooltip: {
 						headerFormat: '<span> {point.category}</span><br/>',
@@ -1209,6 +1235,12 @@
 				var bari = [];
 				var ro_oi = [];
 
+				var ng_rate = [];
+				var ng = [];
+				var qty = [];
+
+				var plotBands = [];
+
 				var loop = 0;
 
 				for (var i = 0; i < result.operator.length; i++) {
@@ -1256,7 +1288,25 @@
 
 						ng.push(ro_tare[loop-1] + ro_tsuki[loop-1] + gosong[loop-1] + dimensi[loop-1] + toke[loop-1] + bari[loop-1] + ro_oi[loop-1]);
 
-						// ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+						if(key[loop-1] != 'None'){
+							if(key[loop-1] != 'A82Z'){
+								if(key[loop-1][0] == 'A'){
+									qty.push(15);
+								}else if(key[loop-1][0] == 'T'){
+									qty.push(8);
+								}
+							}else{
+								qty.push(10);
+							}
+						}else{
+							qty.push(0);
+						}
+
+						ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+
+						if(ng_rate[loop-1] > 30){
+							plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+						}	
 
 					}
 				}
@@ -1294,6 +1344,8 @@
 								fontWeight: 'bold'
 							}
 						},
+						plotBands: plotBands
+
 					},
 					yAxis: {
 						title: {
@@ -1313,23 +1365,21 @@
 						},
 						type: 'linear',
 						
-					}
-					,
-					legend: {
-						layout: 'horizontal',
-						align: 'right',
-						verticalAlign: 'top',
-						x: 0,
-						y: 25,
-						floating: true,
-						borderWidth: "0",
-						backgroundColor:
-						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-						itemStyle: {
-							fontSize:'0.7vw',
-						},
-						// enabled:false
 					},
+					// legend: {
+					// 	layout: 'horizontal',
+					// 	align: 'right',
+					// 	verticalAlign: 'top',
+					// 	x: 0,
+					// 	y: 25,
+					// 	floating: true,
+					// 	borderWidth: "0",
+					// 	backgroundColor:
+					// 	Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+					// 	itemStyle: {
+					// 		fontSize:'0.7vw',
+					// 	},
+					// },
 					
 					tooltip: {
 						headerFormat: '<span> {point.category}</span><br/>',
@@ -1425,6 +1475,12 @@
 				var bari = [];
 				var ro_oi = [];
 
+				var ng_rate = [];
+				var ng = [];
+				var qty = [];
+
+				var plotBands = [];
+
 				var loop = 0;
 
 				for (var i = 0; i < result.operator.length; i++) {
@@ -1472,7 +1528,25 @@
 
 						ng.push(ro_tare[loop-1] + ro_tsuki[loop-1] + gosong[loop-1] + dimensi[loop-1] + toke[loop-1] + bari[loop-1] + ro_oi[loop-1]);
 
-						// ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+						if(key[loop-1] != 'None'){
+							if(key[loop-1] != 'A82Z'){
+								if(key[loop-1][0] == 'A'){
+									qty.push(15);
+								}else if(key[loop-1][0] == 'T'){
+									qty.push(8);
+								}
+							}else{
+								qty.push(10);
+							}
+						}else{
+							qty.push(0);
+						}
+
+						ng_rate.push(ng[loop-1] / qty[loop-1] * 100);
+
+						if(ng_rate[loop-1] > 30){
+							plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+						}	
 
 					}
 				}
@@ -1510,6 +1584,8 @@
 								fontWeight: 'bold'
 							}
 						},
+						plotBands: plotBands
+						
 					},
 					yAxis: {
 						title: {
@@ -1529,21 +1605,20 @@
 						},
 						type: 'linear',	
 					},
-					legend: {
-						layout: 'horizontal',
-						align: 'right',
-						verticalAlign: 'top',
-						x: 0,
-						y: 25,
-						floating: true,
-						borderWidth: "0",
-						backgroundColor:
-						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-						itemStyle: {
-							fontSize:'0.7vw',
-						},
-						// enabled:false
-					},
+					// legend: {
+					// 	layout: 'horizontal',
+					// 	align: 'right',
+					// 	verticalAlign: 'top',
+					// 	x: 0,
+					// 	y: 25,
+					// 	floating: true,
+					// 	borderWidth: "0",
+					// 	backgroundColor:
+					// 	Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+					// 	itemStyle: {
+					// 		fontSize:'0.7vw',
+					// 	},
+					// },
 					
 					tooltip: {
 						headerFormat: '<span> {point.category}</span><br/>',

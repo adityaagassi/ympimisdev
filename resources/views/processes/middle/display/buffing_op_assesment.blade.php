@@ -606,7 +606,6 @@
 						avg_time.push(Math.ceil(sum/temp) || 0);
 
 						series.push([xAxis, (Math.ceil(sum/temp) || 0)]);
-
 					}
 
 					series.sort(function(a, b){return b[1] - a[1]});

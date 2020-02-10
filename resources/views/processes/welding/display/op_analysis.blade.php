@@ -38,7 +38,7 @@
 	<div class="row">
 		<div class="col-xs-12" style="padding-bottom: 0px;">
 			<div class="row">
-				<form method="GET" action="{{ action('WeldingProcessController@indexOpAnalysis') }}">
+				<!-- <form method="GET" action="{{ action('WeldingProcessController@indexOpAnalysis') }}"> -->
 					<div class="col-xs-2" style="padding-right: 0;">
 						<div class="input-group date">
 							<div class="input-group-addon" style="border: none; background-color: #605ca8; color: white;">
@@ -55,28 +55,10 @@
 							<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To">
 						</div>
 					</div>
-					<!-- <div class="col-xs-2" style="padding-right: 0;">
-						<select class="form-control select2" multiple="multiple" id="locationSelect" data-placeholder="Select Locations" onchange="changeLocation()" style="width: 100%;"> 	
-							@foreach($locations as $location)
-							<option value="{{$location}}">{{ trim($location, "'")}}</option>
-							@endforeach
-						</select>
-						<input type="text" name="location" id="location" hidden>	
-					</div>
-					<div class="col-xs-2" style="color: black;">
-						<div class="form-group">
-							<select class="form-control select2" multiple="multiple" id='groupSelect' onchange="changeGroup()" data-placeholder="Select Group" style="width: 100%;">
-								<option value="A">GROUP A</option>
-								<option value="B">GROUP B</option>
-								<option value="C">GROUP C</option>
-							</select>
-							<input type="text" name="group" id="group" hidden>			
-						</div>
-					</div> -->
 					<div class="col-xs-2">
-						<button class="btn" style="background-color: #605ca8; color: white;" type="submit"><i class="fa fa-search"></i> Search</button>
+						<button class="btn" style="background-color: #605ca8; color: white;" onclick="fetchChart()"><i class="fa fa-search"></i> Search</button>
 					</div>
-				</form>
+				<!-- </form> -->
 					<div class="pull-right" id="period" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 1.5vw;color: white;font-weight: bold;"></div>
 			</div>
 		</div>
@@ -246,7 +228,7 @@
 		});
 		$('.select2').select2();
 		fetchChart();
-		setInterval(fetchChart, 10000);
+		setInterval(fetchChart, 20000);
 	});
 
 	Highcharts.createElement('link', {
@@ -455,10 +437,8 @@
 
 	function fetchChart(){
 
-		// var location = "{{$_GET['location']}}";
 		var date_from = $('#date_from').val();
 		var date_to = $('#date_to').val();
-		// var group = "{{$_GET['group']}}";
 
 		var data = {
 			date_from:date_from,
@@ -826,13 +806,13 @@ $.date = function(dateObject) {
 	return date;
 };
 
-function changeLocation(){
-	$("#location").val($("#locationSelect").val());
-}
+// function changeLocation(){
+// 	$("#location").val($("#locationSelect").val());
+// }
 
-function changeGroup() {
-	$("#group").val($("#groupSelect").val());
-}
+// function changeGroup() {
+// 	$("#group").val($("#groupSelect").val());
+// }
 
 
 </script>

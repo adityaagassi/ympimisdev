@@ -297,8 +297,7 @@ class WeldingProcessController extends Controller
 
 		$ng_target = db::table("middle_targets")->where('location', '=', 'wld')->where('target_name', '=', 'NG Rate')->select('target')->first();
 
-		$ng_rate = db::select("
-			select eg.`group` as shift, eg.employee_id as operator_id, e.name, rate.`check`, rate.ng, rate.rate from employee_groups eg left join 
+		$ng_rate = db::select("select eg.`group` as shift, eg.employee_id as operator_id, e.name, rate.`check`, rate.ng, rate.rate from employee_groups eg left join 
 			(select c.operator_id, c.jml as `check`, COALESCE(ng.jml,0) as ng, ROUND((COALESCE(ng.jml,0)/c.jml*100),1) as rate 
 			from (select w.operator_id, sum(w.quantity) as jml from welding_check_logs w
 			left join materials mt on mt.material_number = w.material_number
@@ -319,8 +318,7 @@ class WeldingProcessController extends Controller
 			where eg.location = 'soldering'
 			ORDER BY eg.`group`, eg.employee_id asc");
 
-		$target = db::select("
-			select eg.`group`, eg.employee_id, e.name, ng.material_number, m.`key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
+		$target = db::select("select eg.`group`, eg.employee_id, e.name, ng.material_number, concat(m.model, ' ', m.`key`) as `key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
 			(select * from welding_ng_logs where deleted_at is null ".$addlocation." and remark in 
 			(select remark.remark from
 			(select operator_id, max(remark) as remark from welding_ng_logs where DATE(created_at) ='".$now."' ".$addlocation." group by operator_id) 
@@ -330,8 +328,7 @@ class WeldingProcessController extends Controller
 			left join materials m on m.material_number = ng.material_number
 			left join employee_syncs e on e.employee_id = eg.employee_id
 			where eg.location = 'soldering'
-			order by eg.`group`, eg.employee_id asc
-			");
+			order by eg.`group`, eg.employee_id asc");
 
 		$operator = db::select("select * from employee_groups where location = 'soldering' order by `group`, employee_id asc");
 
@@ -364,8 +361,43 @@ class WeldingProcessController extends Controller
 	}
 
 	public function fetchOpAnalysis(Request $request){
-		$from = date('Y-m')."-01";
-		$now = date('Y-m-d');
+		// if (strlen($request->get('date_from')) > 0) {
+		// 	$from = $request->get('date_from');
+		// }else{
+		// 	$from = date('Y-m')."-01";
+		// }
+
+		// if (strlen($request->get('date_to')) > 0) {
+		// 	$now = $request->get('date_to');
+		// // }else{
+		// // 	$now = date('Y-m-d');
+		// // }
+		$date_from = $request->get('date_from');
+      	$date_to = $request->get('date_to');
+
+		if($request->get('date_to') == null){
+          if($request->get('date_from') == null){
+            $from = date('Y-m')."-01";
+            $now = date('Y-m-d');
+          }
+          elseif($request->get('date_from') != null){
+          	$from = $request->get('date_from');
+          	$now = date('Y-m-d');
+            // $date = "DATE(d.tanggaljam_shift) BETWEEN '".$date_from."' and '".$datenow."'";
+          }
+        }
+        elseif($request->get('date_to') != null){
+          if($request->get('date_from') == null){
+          	$from = date('Y-m')."-01";
+            $now = $request->get('date_to');
+            // $date = "DATE(d.tanggaljam_shift) <= '".$date_to."'";
+          }
+          elseif($request->get('date_from') != null){
+          	$from = $request->get('date_from');
+            $now = $request->get('date_to');
+            // $date = "DATE(d.tanggaljam_shift) BETWEEN '".$date_from."' and '".$date_to."'";
+          }
+        }
 
 		// $addlocation = "";
 		// if($request->get('location') != null) {
@@ -955,35 +987,36 @@ class WeldingProcessController extends Controller
 				return Response::json($response);
 			}
 		} else {
-			try{
-				$m_hsa_kartu = db::connection('welding_controller')->table('m_hsa_kartu')->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)->first();
+			if($request->get('loc') == 'hsa-visual-sx'){
+				try{
+					$m_hsa_kartu = db::connection('welding_controller')->table('m_hsa_kartu')->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)->first();
 
-				$order_id = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
-				->where('part_id', '=', $m_hsa_kartu->hsa_id)
-				->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
-				->first();
+					$order_id = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
+					->where('part_id', '=', $m_hsa_kartu->hsa_id)
+					->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
+					->first();
 
-				$t_order_detail = db::connection('welding_controller')->table('t_order_detail')
-				->where('order_id', '=', $order_id->order_id)
-				->where('flow_id', '=', '3')
-				->where('order_status', '=', '1')
-				->update([
-					'order_sedang_start_date' => $request->get('started_at'),
-					'order_sedang_finish_date' => date('Y-m-d H:i:s'),
-					'order_status' => '6'
-				]);
+					$t_order_detail = db::connection('welding_controller')->table('t_order_detail')
+					->where('order_id', '=', $order_id->order_id)
+					->where('flow_id', '=', '3')
+					->where('order_status', '=', '1')
+					->update([
+						'order_sedang_start_date' => $request->get('started_at'),
+						'order_sedang_finish_date' => date('Y-m-d H:i:s'),
+						'order_status' => '6'
+					]);
 
-				$t_order = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
-				->where('part_id', '=', $m_hsa_kartu->hsa_id)
-				->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
-				->update([
-					'order_status' => '5'
-				]);
+					$t_order = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
+					->where('part_id', '=', $m_hsa_kartu->hsa_id)
+					->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
+					->update([
+						'order_status' => '5'
+					]);
+				}
+				catch(\Exception $e){
+
+				}
 			}
-			catch(\Exception $e){
-
-			}
-
 			try{
 				// $buffing_inventory = db::connection('digital_kanban')->table('buffing_inventories')
 				// ->where('material_tag_id', '=', $request->get('tag'))
