@@ -15,6 +15,7 @@ use App\WeldingNgLog;
 use App\WeldingCheckLog;
 use App\WeldingTempLog;
 use App\WeldingLog;
+use App\Employee;
 
 class WeldingProcessController extends Controller
 {
@@ -116,7 +117,7 @@ class WeldingProcessController extends Controller
 
 	public function indexOpAnalysis(){
 		$title = 'Welding OP Analysis';
-		$title_jp = '';
+		$title_jp = '溶接作業者の分析';
 
 		$locations = $this->location_sx;
 
@@ -125,6 +126,13 @@ class WeldingProcessController extends Controller
 			'title_jp' => $title_jp,
 			'locations' => $locations
 		))->with('page', 'Welding OP Analysis');
+	}
+
+	public function indexWeldingOpEff(){
+		return view('processes.welding.display.welding_op_eff', array(
+			'title' => 'Operator Overall Efficiency',
+			'title_jp' => '作業者全体能率',
+		))->with('page', 'Operator Overall Efficiency');
 	}
 
 	public function indexProductionResult(){
@@ -430,11 +438,11 @@ class WeldingProcessController extends Controller
 
 			ROUND((select target from ympimis.middle_targets where target_name = 'Normal Working Time' and location = 'wld') - (SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)))/count(distinct id_operator),2) as loss_time,
 
-			ROUND((select SUM(perolehan_jumlah + hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2')/count(distinct id_operator),2) as std_time,
+			ROUND((select SUM(perolehan_jumlah*hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2')/count(distinct id_operator),2) as std_time,
 
-			ROUND((select target from ympimis.middle_targets where target_name = 'Normal Working Time' and location = 'wld') - (select SUM(perolehan_jumlah + hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2')/count(distinct id_operator),2) as loss_time_std,
+			ROUND((select target from ympimis.middle_targets where target_name = 'Normal Working Time' and location = 'wld') - (select SUM(perolehan_jumlah * hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2')/count(distinct id_operator),2) as loss_time_std,
 
-			ROUND((select SUM(perolehan_jumlah + hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2'),2) as all_time_std
+			ROUND((select SUM(perolehan_jumlah* hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2'),2) as all_time_std
 			from t_data_downtime d 
 			LEFT JOIN ympimis.weekly_calendars ON weekly_calendars.week_date = DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d')
 			where 
@@ -483,6 +491,60 @@ class WeldingProcessController extends Controller
 	}
 
 
+	public function fetchWeldingOpEff(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$eff_target = db::table("middle_targets")->where('location', '=', 'wld')->where('target_name', '=', 'Operator Efficiency')->select('target')->first();
+
+		$rate = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
+			(select c.shift, c.operator_id, c.jml as tot, COALESCE(ng.jml,0) as ng, ((c.jml-COALESCE(ng.jml,0))/c.jml) as rate from
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_check_logs m
+			left join materials mt on mt.material_number = m.material_number
+			left join employee_groups eg on eg.employee_id = m.operator_id
+			where m.location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
+			GROUP BY shift, m.operator_id) c
+			left join
+			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
+			left join materials mt on mt.material_number = m.material_number
+			left join employee_groups eg on eg.employee_id = m.operator_id
+			where m.location = 'bff-kensa'
+			and m.operator_id is not null
+			and mt.origin_group_code = '043'
+			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
+			GROUP BY shift, m.operator_id) ng
+			on c.shift = ng.shift and c.operator_id = ng.operator_id) rate
+			left join employees e on e.employee_id = rate.operator_id
+			ORDER BY shift, rate.rate desc");
+
+		$time_eff = db::connection('digital_kanban')->select("select e.`group`, e.employee_id, dl.act, dl.std, dl.std/dl.act as eff  from employee_groups e left join
+			(select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))/60 as act, sum((l.material_qty*t.time))/60 as std from data_log l
+			left join standart_times t on l.material_number = t.material_number
+			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
+			GROUP BY l.operator_id) dl on dl.operator_id = e.employee_id
+			WHERE e.location = 'bff'
+			ORDER BY e.`group`, e.employee_id asc;");
+
+		$emp_name = Employee::select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'rate' => $rate,
+			'time_eff' => $time_eff,
+			'emp_name' => $emp_name,
+			'eff_target' => $eff_target->target,
+		);
+		return Response::json($response);
+
+	}
 
 	public function fetchReportHourly(Request $request){
 		$tanggal = '';

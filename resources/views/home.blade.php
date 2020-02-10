@@ -199,7 +199,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
-                                <i class="fa fa-caret-right"></i> Report YMMJ (YMMJ)
+                                <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
                             </a>
                             <br>
                             <a href="{{ url("index/request_qa") }}">

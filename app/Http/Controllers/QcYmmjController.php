@@ -36,7 +36,7 @@ class QcYmmjController extends Controller
     {
          return view('qc_ymmj.index',  
           array('title' => 'Form Ketidaksesuaian YMMJ', 
-                'title_jp' => '?????????????',)
+                'title_jp' => 'YMMJ不適合報告',)
           )->with('page', 'Form Ketidaksesuaian YMMJ');
     }
 

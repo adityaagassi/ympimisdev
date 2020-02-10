@@ -310,7 +310,7 @@ table > thead > tr > th{
               }
             },
             subtitle: {
-              text: 'On '+result.date,
+              text: 'Last 12 Month',
               style: {
                 fontSize: '1vw',
                 fontWeight: 'bold'
