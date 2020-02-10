@@ -504,7 +504,7 @@
 		        $('#wt').html(wt+' Min(s)');
 		        $('#avg_wt').html((wt/op).toFixed(2)+' Min(s)');
 		        $('#twt').html(twt+' Min(s)');
-		        $('#avg_lt').html(twt-(wt/op).toFixed(2)+' Min(s)');
+		        $('#avg_lt').html((twt-(wt/op)).toFixed(2)+' Min(s)');
 		        $('#tlt').html(((twt-(wt/op).toFixed(2))*Math.max.apply(Math, opall)).toFixed(2)+' Min(s)');
 		        $('#lm').html(((twt-(wt/op).toFixed(2))*Math.max.apply(Math, opall)/480).toFixed(0)+' MP(s)');
 
@@ -513,7 +513,7 @@
 		        $('#wt_std').html(wt_std+' Min(s)');
 		        $('#avg_wt_std').html((wt_std/op).toFixed(2)+' Min(s)');
 		        $('#twt_std').html(twt_std+' Min(s)');
-		        $('#avg_lt_std').html(twt_std-(wt_std/op).toFixed(2)+' Min(s)');
+		        $('#avg_lt_std').html((twt_std-(wt_std/op)).toFixed(2)+' Min(s)');
 		        $('#tlt_std').html(((twt_std-(wt_std/op).toFixed(2))*Math.max.apply(Math, opall_std)).toFixed(2)+' Min(s)');
 		        $('#lm_std').html(((twt_std-(wt_std/op).toFixed(2))*Math.max.apply(Math, opall_std)/480).toFixed(0)+' MP(s)');
 
