@@ -75,9 +75,22 @@
 										</tr>
 									</table>
 								</div>
-								<div class="col-xs-12">
+								<div class="col-xs-6">
+									<!-- <table class="table table-striped">
+										<tr>
+											<td style="font-size: 1.5vw; font-weight: bold;background-color: #8bc34a;border: 1px solid black;color: black">
+												PEROLEHAN
+											</td>
+											<td style="width:50%;background-color: #7ecb20;font-size: 1.5vw;text-align: center;color: #000;font-weight:bold;padding-top: 0px;padding-bottom: 0px;border-top: #9ccc65;border: 1px solid black;vertical-align: middle;" id="perolehan">
+											</td>
+										</tr>
+									</table> -->
 									<span style="font-size: 20px; font-weight: bold;"><center>Judgement Middle:</center></span>
 									<input type="text" name="judgement_middle" id="judgement_middle" class="form-control" value="OK" required="required" pattern="" title="" style="width: 100%;height: 200px;font-size: 10vw;text-align: center;font-weight:bold;background-color: #57ff86;color: #163756;border: 1px solid black" disabled>
+								</div>
+								<div class="col-xs-6">
+									<span style="font-size: 20px; font-weight: bold;"><center>Perolehan:</center></span>
+									<input type="text" name="perolehan" id="perolehan" class="form-control" value="0" required="required" pattern="" title="" style="width: 100%;height: 200px;font-size: 7vw;text-align: center;font-weight:bold;background-color: #57ff86;color: #163756;border: 1px solid black" disabled>
 								</div>
 								<!-- <div class="col-xs-6">
 									<span style="font-size: 20px; font-weight: bold;"><center>Judgement Stamp:</center></span>
@@ -608,6 +621,11 @@
 				if(result.status){
 					// openSuccessGritter('Success', result.message);
 					// fillResultCamera();
+					if (result.jumlah_perolehan >= 1000) {
+						$('#perolehan').val(convertToK(result.jumlah_perolehan));
+					}else{
+						$('#perolehan').val(result.jumlah_perolehan);
+					}
 					$('#judgement_middle').val(result.judgement);
 					// console.log(result.value);
 					if (result.judgement == 'OK') {
@@ -622,6 +640,11 @@
 				}
 				else{
 					// openErrorGritter('Error!', result.message);
+					if (result.jumlah_perolehan >= 1000) {
+						$('#perolehan').val(convertToK(result.jumlah_perolehan));
+					}else{
+						$('#perolehan').val(result.jumlah_perolehan);
+					}
 				}
 			});
 		// }
@@ -659,6 +682,13 @@
 			});
 		// }
 	}
+
+	function convertToK(value)
+    {
+        var number = value / 1000;
+    //if you want 2 decimal digits
+        return newVal = number.toFixed(2) + 'K';
+    }
 
 	function addZero(i) {
 			if (i < 10) {

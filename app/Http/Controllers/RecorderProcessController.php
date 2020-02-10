@@ -1117,7 +1117,23 @@ class RecorderProcessController extends Controller
         //   $datas = $plc->read_data('D0', 1);
         //   $plc2 = new ActMLEasyIf(2);
         //   $datas2 = $plc2->read_data('D0', 1);
+
+        $jumlah_perolehan = 0;
+
+        $date = date('Y-m-d');
         $plc_counter = PlcCounter::where('origin_group_code', '=', '072_2')->first();
+
+        $perolehan = DB::SELECT("select count(*) as jumlah from rc_camera_kango_logs where DATE(check_date) = '".$date."'");
+
+        if (count($perolehan) > 0) {
+          foreach ($perolehan as $key) {
+            $jumlah_perolehan = $key->jumlah;
+            // $jumlah_perolehan = convertToK($key->jumlah);
+          }
+        }
+        else{
+          $jumlah_perolehan = 0;
+        }
         // $plc_counter2 = PlcCounter::where('origin_group_code', '=', '072_3')->first();
         // }
         // $data = $datas[0];
@@ -1190,6 +1206,7 @@ class RecorderProcessController extends Controller
               $response = array(
                 'status' => false,
                 'message' => $e->getMessage(),
+                'jumlah_perolehan' => $jumlah_perolehan
               );
               return Response::json($response);
             }
@@ -1199,7 +1216,8 @@ class RecorderProcessController extends Controller
               'statusCode' => 'camera',
               'message' => 'Push Pull success',
               'data' => $plc_counter->plc_counter,
-              'judgement' => $judgement
+              'judgement' => $judgement,
+              'jumlah_perolehan' => $jumlah_perolehan
             );
             return Response::json($response);
           }
@@ -1210,7 +1228,8 @@ class RecorderProcessController extends Controller
             'statusCode' => 'noData',
             'data' => $data,
             'plc' => $plc_counter->plc_counter,
-            'filename' => $filenamefix
+            'filename' => $filenamefix,
+            'jumlah_perolehan' => $jumlah_perolehan
           );
           return Response::json($response);
         }
@@ -1218,6 +1237,7 @@ class RecorderProcessController extends Controller
       catch (\Exception $e){
         $response = array(
           'status' => false,
+          'jumlah_perolehan' => $jumlah_perolehan,
           'message' => $e->getMessage(),
         );
         return Response::json($response);
