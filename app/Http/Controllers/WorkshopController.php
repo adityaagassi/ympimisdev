@@ -1091,6 +1091,7 @@ class WorkshopController extends Controller{
 					'start_plan' => date($request->get('start_'.$x)),
 					'finish_plan' => date($request->get('finish_'.$x)),
 					'std_time' => $request->get('process_qty_'.$x) * 60,
+					'operator' => $pic,
 					'created_by' => Auth::user()->username,
 				]);
 			}
@@ -1278,21 +1279,20 @@ class WorkshopController extends Controller{
 			on emp.employee_id = op.operator_id');
 
 		$op_workload = db::select('select op_workload.operator, concat(SPLIT_STRING(emp.`name`, " ", 1), " ", SPLIT_STRING(emp.`name`, " ", 2)) as `name`, sum(op_workload.workload) as workload from
-			(select wjo.operator, round((workload.workload/60), 0) as workload from
-			(select workload.order_no, sum(workload.workload) workload from
-			(select flow.order_no, sum(std_time) as workload from workshop_flow_processes flow
+			(select workload.operator, round((workload.workload/60), 0) as workload from
+			(select workload.order_no, workload.operator, sum(workload.workload) workload from
+			(select flow.order_no, flow.operator, sum(std_time) as workload from workshop_flow_processes flow
 			left join workshop_job_orders wjo on wjo.order_no = flow.order_no
 			where wjo.remark < 4
-			group by flow.order_no
+			group by flow.order_no, flow.operator
 			union all
-			select log.order_no, -sum(TIMESTAMPDIFF(second,log.started_at,log.created_at)) as workload from workshop_logs log
+			select log.order_no, log.operator_id as operator, -sum(TIMESTAMPDIFF(second,log.started_at,log.created_at)) as workload from workshop_logs log
 			left join workshop_job_orders wjo on wjo.order_no = log.order_no
 			where wjo.remark < 4
-			group by log.order_no) as workload
-			group by workload.order_no) workload
-			left join workshop_job_orders wjo
-			on wjo.order_no = workload.order_no
-			having workload > 0) op_workload
+			group by log.order_no, log.operator_id) as workload
+			group by workload.order_no, workload.operator
+			having workload > 0) workload
+			) op_workload
 			left join employee_syncs emp on emp.employee_id = op_workload.operator
 			group by operator, `name`');
 
