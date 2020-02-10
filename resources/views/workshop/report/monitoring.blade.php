@@ -87,21 +87,20 @@
 				<table id="table-monitor" class="table" style="width: 100%; background-color: #212121;">
 					<thead>
 						<tr>
-							<th style="border: 1px solid #333; width: 7%; padding: 0;vertical-align: middle;;font-size: 16px; border-top: 0px !important;" rowspan="2">Order No.</th>
-							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Priority</th>
-							<th style="border: 1px solid #333; width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Requester</th>
-							<th style="border: 1px solid #333; width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Item Name</th>
-							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Qty</th>
-							<th style="border: 1px solid #333; width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">PIC</th>
-							<th style="border: 1px solid #333; padding-top: 0.25%; padding-bottom: 0.25%; width: 25%;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" colspan="4">Status</th>
-							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Target<br>Date</th>
-							<th style="border: 1px solid #333; width: 20%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important;" rowspan="2">Progress</th>
+							<th style="border: 1px solid #333; width: 7%; padding: 0;vertical-align: middle;;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Order No.</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Priority</th>
+							<th style="border: 1px solid #333; width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Requester</th>
+							<th style="border: 1px solid #333; width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Item Name</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Qty</th>
+							<th style="border: 1px solid #333; width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">PIC</th>
+							<th style="border: 1px solid #333; padding-top: 0.25%; padding-bottom: 0.25%; width: 25%;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" colspan="3">Status</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Target<br>Date</th>
+							<th style="border: 1px solid #333; width: 20%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Progress</th>
 						</tr>
 						<tr>
-							<th style="border: 1px solid #333; width: 5%; padding: 0; padding-top: 0.25%; padding-bottom: 0.25%; border-left:3px solid #f44336 !important;vertical-align: middle;">Requested</th>
-							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;">Received</th>
-							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;">Listed</th>
-							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;">Start Process</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0; padding-top: 0.25%; padding-bottom: 0.25%; border-left:3px solid #f44336 !important;vertical-align: middle; text-transform: uppercase;">Requested</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle; text-transform: uppercase;">Listed</th>
+							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle; text-transform: uppercase;">Start Process</th>
 						</tr>
 					</thead>
 					<tbody id="table-body-monitor">
@@ -333,12 +332,12 @@
 				var body = '';
 				for (var i = 0; i < result.progress.length; i++) {
 					body += '<tr>';
-					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; padding: 0.25%;">';
+					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; padding: 0.25%;text-transform: uppercase;">';
 					body += result.progress[i].order_no;
 					body += '</td>';
 
 
-					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; font-size: 13px;">';
+					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; font-size: 13px;text-transform: uppercase;">';
 					if(result.progress[i].priority == 'Urgent'){
 						body += '<span class="label label-danger">Urgent</span>';
 					}else{
@@ -346,7 +345,7 @@
 					}
 					body += '</td>';
 
-					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; font-size: 13px;">';
+					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; text-transform: uppercase;">';
 					if(result.progress[i].requester){
 						body += result.progress[i].requester;				
 					}else{
@@ -355,7 +354,7 @@
 					body += '</td>';
 
 
-					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%;">';
+					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; text-transform: uppercase;">';
 					body += result.progress[i].item_name;
 					body += '</td>';
 
@@ -364,7 +363,7 @@
 					body += '</td>';
 
 
-					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; font-size: 13px;">';
+					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; border-left: 3px solid #f44336 !important; padding: 0.25%; text-transform: uppercase;">';
 					if(result.progress[i].pic){
 						body += result.progress[i].pic;				
 					}else{
@@ -380,11 +379,11 @@
 					body += '</td>';
 
 
-					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; padding: 0.25%; font-size: 13px;">';
-					if(result.progress[i].listed){
-						body += '<span class="label label-success">'+ result.progress[i].listed +'</span>';
-					}
-					body += '</td>';
+					// body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; padding: 0.25%; font-size: 13px;">';
+					// if(result.progress[i].listed){
+					// 	body += '<span class="label label-success">'+ result.progress[i].listed +'</span>';
+					// }
+					// body += '</td>';
 
 
 					body += '<td style="text-align: center; vertical-align: middle; border: 1px solid #333; padding: 0.25%; font-size: 13px;">';
