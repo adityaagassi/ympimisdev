@@ -1128,6 +1128,7 @@
 	}
 
 	function konfirmasi(){
+		$('#selesai_button').prop('disabled', true);
 		var head_id =  $("#head_id").val();
 		var block_id =  $("#block_id").val();
 
