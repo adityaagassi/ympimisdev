@@ -66,7 +66,7 @@
 			</tr>
 			<tr>
 				<td colspan="5" style="border: none !important">Location : <b>{{$cpar->lokasi}}</b></td>
-				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Source Of Complaint : <b>{{$cpar->sumber_komplain}}</b></td>
+				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Source Of Complaint : <b>{{$cpar->sumber_komplain}} - {{$cpar->kategori_komplain}}</b></td>
 			</tr>
 			<tr>
 				<td colspan="5" style="border: none !important">Issue Date : <b><?php echo date('d F Y', strtotime($cpar->tgl_permintaan)) ?></b></td>

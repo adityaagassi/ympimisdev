@@ -1189,6 +1189,18 @@ class QcReportController extends Controller
           }
         })
 
+        ->editColumn('kategori',function($detail){
+          if($detail->kategori == "Eksternal") {
+            if ($detail->kategori_komplain == "FG") {
+              $detail->kategori_komplain  = "Finished Goods";
+            }
+            return $detail->kategori.' - '.$detail->kategori_komplain;
+          }
+          else{
+            return $detail->kategori;
+          }
+        })
+
         ->addColumn('action', function($detail){
           $idcpar = $detail->id;
           $idcar = $detail->id_car;
@@ -1218,7 +1230,7 @@ class QcReportController extends Controller
 
         })
 
-        ->rawColumns(['status_name' => 'status_name','action' => 'action','verif' => 'verif','sumber_komplain' => 'sumber_komplain'])
+        ->rawColumns(['status_name' => 'status_name','action' => 'action','verif' => 'verif','sumber_komplain' => 'sumber_komplain', 'kategori' =>'kategori'])
         ->make(true);
     }
 
