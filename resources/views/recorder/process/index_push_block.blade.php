@@ -1128,7 +1128,6 @@
 	}
 
 	function konfirmasi(){
-		$('#selesai_button').prop('disabled', true);
 		var head_id =  $("#head_id").val();
 		var block_id =  $("#block_id").val();
 
@@ -1216,6 +1215,7 @@
 			alert('Semua Data Harus Diisi');
 		}
 		else{
+			$('#selesai_button').prop('disabled', true);
 			if (push_pull_ng_name.join() == '') {
 				push_pull_ng_name.push('OK');
 			}
