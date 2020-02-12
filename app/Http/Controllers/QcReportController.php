@@ -289,7 +289,8 @@ class QcReportController extends Controller
                     $hasilforeman = $for->username;
                   }
 
-                  $foreman = $hasilforeman;                
+                  // $foreman = $hasilforeman; 
+                  $foreman = $this->chief;               
                 }
                 else{
                   $foreman = null;
@@ -311,7 +312,8 @@ class QcReportController extends Controller
                   $hasilforeman = $for->username;
                 }
 
-                $foreman = $hasilforeman;                
+                // $foreman = $hasilforeman;
+                $foreman = $this->chief;                
               }
               else{
                 $foreman = null;
@@ -423,6 +425,10 @@ class QcReportController extends Controller
         $materials = MaterialPlantDataList::select('material_plant_data_lists.id','material_plant_data_lists.material_number','material_plant_data_lists.material_description')
         ->orderBy('material_plant_data_lists.id','ASC')
         ->get();
+
+        // $materials = Material::select('materials.id','materials.material_number','materials.material_description')
+        // ->orderBy('materials.id','ASC')
+        // ->get();
 
         return view('qc_report.edit', array(
             'cpars' => $cpars,
