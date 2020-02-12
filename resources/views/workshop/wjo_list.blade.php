@@ -268,7 +268,7 @@
 									<th style="width: 1%;">Pemohon</th>
 									<th style="width: 1%;">Dept.</th>
 									<th style="width: 1%;">Bag.</th>
-									<th style="width: 1%;">Nama Barang</th>
+									<th style="width: 10%;">Nama Barang</th>
 									<th style="width: 1%;">Material</th>
 									<th style="width: 1%;">Qty</th>
 									<th style="width: 1%;">Approved By</th>
@@ -278,7 +278,6 @@
 									<th style="width: 1%;">Actual Selesai</th>
 									<th style="width: 1%;">Progress</th>
 									<th style="width: 1%;">Att</th>
-									<th style="width: 1%;">Draw</th>
 									<th style="width: 1%;">Detail</th>
 									<th style="width: 1%;">Reject</th>
 								</tr>
@@ -287,7 +286,6 @@
 							</tbody>
 							<tfoot>
 								<tr style="color: black">
-									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -618,195 +616,156 @@
 									<br>
 								</div>
 
-								<div id="assign_body" style="padding: 2%;">
-									<div class="nav-tabs-custom tab-primary">
-										<ul class="nav nav-tabs">
-											<li id="vendor-tab-1" class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">WJO Data</a></li>
-											<li id="vendor-tab-2" class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Flow Processes</a></li>
-											<li id="vendor-tab-3" class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Person in Charge</a></li>
-										</ul>
-									</div>
-									<div class="tab-content">
-										<div class="tab-pane active" id="tab_1">
-											<div class="row">
-												<div class="col-xs-6">
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" id="assign_priority" readonly>
-														</div>
-													</div>
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Order No.</label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" name="assign_order_no" id="assign_order_no" readonly>
-														</div>
-													</div>
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Dept.</label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" id="assign_department" readonly>
-														</div>
-													</div>
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Bagian</label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" id="assign_bagian" readonly>
-														</div>
-													</div>
+								<div id="assign_body" style="padding: 2%;">									
+									<div class="row">
+										<div class="col-xs-6">
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" id="assign_priority" readonly>
 												</div>
-												<div class="col-xs-6">
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Tipe Pekerjaan<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" name="assign_type" id="assign_type" readonly>
-														</div>
-													</div>
-
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Nama Barang<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" name="assign_item_name" id="assign_item_name" required>
-														</div>
-													</div>
-
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Jumlah<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" name="assign_quantity" id="assign_quantity" required>
-														</div>
-													</div>
-
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Material<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" name="assign_material" id="assign_material" required>
-														</div>
-													</div>
-
-
-												</div>
-												<div class="col-xs-12">
-													<div class="form-group row" align="right">
-														<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
-														<div class="col-xs-10" align="left">
-															<textarea class="form-control" name="assign_problem_desc" id="assign_problem_desc" rows="3" required></textarea>
-														</div>
-													</div>
-												</div>
-												<div class="col-xs-6" style="margin-top: 5%;">
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Target Selesai<span class="text-red">*</span></label>
-														<div class="col-xs-8">
-															<div class="input-group date">
-																<div class="input-group-addon bg-default">
-																	<i class="fa fa-calendar"></i>
-																</div>
-																<input type="text" class="form-control datepicker" name="assign_target_date" id="assign_target_date" placeholder="Pilih Tanggal">
-															</div>
-														</div>
-													</div>
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<select class="form-control select2" data-placeholder="Pilih Kategori" name="assign_category" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
-																<option value=""></option>
-																<option value="Molding">Molding</option>
-																<option value="Jig">Jig</option>
-																<option value="Equipment">Equipment</option>
-															</select>
-														</div>
-													</div>
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<select class="form-control select2" data-placeholder="Pilih Kesulitan" name="assign_difficulty" id="assign_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
-																<option value=""></option>
-																<option value="Biasa">Biasa</option>
-																<option value="Sulit">Sulit</option>
-																<option value="Sangat Sulit">Sangat Sulit</option>
-																<option value="Spesial">Spesial</option>
-																<option value="Sangat Spesial">Sangat Spesial</option>
-															</select>
-														</div>
-													</div>
-												</div>
-												<div class="col-xs-6" id="drawing" style="margin-top: 5%;">
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">Nama Drawing<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" name="assign_drawing_name" id="assign_drawing_name">
-														</div>
-													</div>
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">No. Drawing<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" name="assign_drawing_number" id="assign_drawing_number">
-														</div>
-													</div>
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">No. Part<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<input type="text" class="form-control" name="assign_part_number" id="assign_part_number">
-														</div>
-													</div>
-												</div>
-
-												<div class="col-xs-12">
-													<a class="btn btn-primary btnNext pull-right">Next</a>
-												</div>
-												<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;Tanda bintang (*) wajib diisi.&nbsp;</span>
-
-											</div>	
-										</div>
-										<div class="tab-pane" id="tab_2">
-											<div class="row">
-												<div class="col-xs-12">
-													<div class="col-xs-12" style="margin-bottom: 1%;">
-														<div class="col-xs-8" style="padding: 0px;">
-															<label style="font-weight: bold; font-size: 18px;">
-																<span><i class="fa fa-gears"></i> Flow Processes</span>
-															</label>
-														</div>
-														<div class="col-xs-1" style="padding: 0px;">
-															<button class="btn btn-success" onclick='addProcess();'><i class='fa fa-plus' ></i></button>
-														</div>
-													</div>
-													<div id='process'></div>
-													<input type="hidden" class="form-control" name="assign_proses" id="assign_proses">
-												</div>
-												<div class="col-xs-12">
-													<a class="btn btn-primary btnNext pull-right">Next</a>
-													<span class="pull-right">&nbsp;</span>				
-													<a class="btn btn-primary btnPrevious pull-right">Previous</a>
-												</div>
-												<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;Standart time dalam menit.&nbsp;</span><br>
 											</div>
-										</div>
-										<div class="tab-pane" id="tab_3">
-											<div class="row">
-												<div class="col-xs-6">
-													<div class="form-group row" align="right">
-														<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
-														<div class="col-xs-8" align="left">
-															<select class="form-control select2" data-placeholder="Pilih Operator" name="assign_pic" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>
-																<option value=""></option>
-																@foreach($operators as $operator)
-																<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>
-																@endforeach
-															</select>
-														</div>
-													</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Order No.</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="assign_order_no" id="assign_order_no" readonly>
 												</div>
-												<div class="col-xs-12">
-													<br>
-													<button class="btn btn-success pull-right" type="submit"><i class="fa fa-save"></i> Save</button>
-													<span class="pull-right">&nbsp;</span>				
-													<a class="btn btn-primary btnPrevious pull-right">Previous</a>
-
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Dept.</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" id="assign_department" readonly>
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Bagian</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" id="assign_bagian" readonly>
 												</div>
 											</div>
 										</div>
+										<div class="col-xs-6">
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Tipe Pekerjaan<span class="text-red">*</span></label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="assign_type" id="assign_type" readonly>
+												</div>
+											</div>
+
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Nama Barang<span class="text-red">*</span></label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="assign_item_name" id="assign_item_name" required>
+												</div>
+											</div>
+
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Jumlah<span class="text-red">*</span></label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="assign_quantity" id="assign_quantity" required>
+												</div>
+											</div>
+
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Material<span class="text-red">*</span></label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="assign_material" id="assign_material" required>
+												</div>
+											</div>
+
+
+										</div>
+										<div class="col-xs-12">
+											<div class="form-group row" align="right">
+												<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
+												<div class="col-xs-10" align="left">
+													<textarea class="form-control" name="assign_problem_desc" id="assign_problem_desc" rows="3" required></textarea>
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-6" style="margin-top: 3%;">
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Target Selesai<span class="text-red">*</span></label>
+												<div class="col-xs-8">
+													<div class="input-group date">
+														<div class="input-group-addon bg-default">
+															<i class="fa fa-calendar"></i>
+														</div>
+														<input type="text" class="form-control datepicker" name="assign_target_date" id="assign_target_date" placeholder="Pilih Tanggal">
+													</div>
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+												<div class="col-xs-8" align="left">
+													<select class="form-control select2" data-placeholder="Pilih Kategori" name="assign_category" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
+														<option value=""></option>
+														<option value="Molding">Molding</option>
+														<option value="Jig">Jig</option>
+														<option value="Equipment">Equipment</option>
+													</select>
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Kesulitan<span class="text-red">*</span></label>
+												<div class="col-xs-8" align="left">
+													<select class="form-control select2" data-placeholder="Pilih Kesulitan" name="assign_difficulty" id="assign_difficulty" style="width: 100% height: 35px; font-size: 15px;" required>
+														<option value=""></option>
+														<option value="Biasa">Biasa</option>
+														<option value="Sulit">Sulit</option>
+														<option value="Sangat Sulit">Sangat Sulit</option>
+														<option value="Spesial">Spesial</option>
+														<option value="Sangat Spesial">Sangat Spesial</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-6" id="drawing" style="margin-top: 3%;">
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Nama Drawing<span class="text-red">*</span></label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="assign_drawing_name" id="assign_drawing_name">
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">No. Drawing<span class="text-red">*</span></label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="assign_drawing_number" id="assign_drawing_number">
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">No. Part<span class="text-red">*</span></label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="assign_part_number" id="assign_part_number">
+												</div>
+											</div>
+										</div>
+									</div>	
+									<div class="row">
+										<div class="col-xs-12" style="margin-top: 5%;">
+											<div class="col-xs-12" style="margin-bottom: 1%;">
+												<div class="col-xs-8" style="padding: 0px;">
+													<label style="font-weight: bold; font-size: 18px;">
+														<span><i class="fa fa-gears"></i> Flow Processes</span>
+													</label>
+												</div>
+												<div class="col-xs-1" style="padding: 0px;">
+													<button class="btn btn-success" onclick='addProcess();'><i class='fa fa-plus' ></i></button>
+												</div>
+											</div>
+											<div id='process'></div>
+											<input type="hidden" class="form-control" name="assign_proses" id="assign_proses">
+										</div>
+										
+										<div class="col-xs-12">
+											<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;&nbsp;Note :&nbsp;</span><br>
+											<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- Tanda bintang (*) wajib diisi.&nbsp;</span>
+											<br>
+											<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- Standart time dalam menit.&nbsp;</span><br>
+											<br>
+											<button class="btn btn-success pull-right" type="submit"><i class="fa fa-save"></i> Save</button>
+										</div>
+
 									</div>
 
 								</div>
@@ -1035,18 +994,25 @@
 		});
 	})
 
+	$('#assign_category').on('change', function() {
+		if(this.value != 'Equipment'){
+			$('#drawing').show();
+		}else{
+			$('#drawing').hide();
+		}
+	});
 
 	var proses = 0;
 	function addProcess() {
 		++proses;
 
 		var add = '';
-		add += '<div class="col-xs-12" id="add_process_'+ proses +'" style="margin-bottom: 1%;">';
-		add += '<div class="col-xs-6" style="color: black; padding: 0px; padding-right: 1%;">';
+		add += '<div class="col-xs-12" id="add_process_'+ proses +'" style="margin-bottom: 1%; position: static;">';
+		add += '<div class="col-xs-8" style="color: black; padding: 0px; padding-right: 1%; position: static;">';
 		add += '<div class="col-xs-1" style="color: black; padding: 0px;">';
 		add += '<h3 id="flow_'+ proses +'" style="margin: 0px;">'+ proses +'</h3>';
 		add += '</div>';
-		add += '<div class="col-xs-11" style="color: black; padding: 0px;">';
+		add += '<div class="col-xs-11" style="color: black; padding: 0px; position: static;">';
 		add += '<select style="width: 100%;" class="form-control select3" name="process_'+ proses +'" id="process_'+ proses +'" data-placeholder="Select Process">';
 		add += '<option value=""></option>';
 		add += '@php $group = array(); @endphp';
@@ -1059,40 +1025,70 @@
 		add += '</select>';
 		add += '</div>';
 		add += '</div>';
-		
-		add += '<div class="col-xs-2" style="color: black; padding: 0px; padding-right: 1%;">';
-		add += '<div class="form-group" style="margin-bottom: 0px;">';
-		add += '<input class="form-control" type="number" name="process_qty_'+ proses +'" id="process_qty_'+ proses +'" placeholder="Std Time" style="width: 100%; height: 33px; font-size: 15px; text-align: center;">';
-		add += '</div>';
-		add += '</div>';
 		add += '<div class="col-xs-1" style="padding: 0px;">';
-		add += '<button class="btn btn-danger" id="'+proses+'" onclick="removeProcess(this)"><i class="fa fa-close"></i></button>';
+		add += '<button class="btn btn-danger" id="'+proses+'" onClick="removeProcess(this)"><i class="fa fa-close"></i></button>';
 		add += '</div>';
-
-
-		add += '<div class="col-xs-11" style="margin-top: 1%; margin-left: 2%;">';
+		add += '<div class="col-xs-8" style="color: black; padding: 0px; padding-right: 1%;">';
+		add += '<div class="col-xs-8 col-xs-offset-1" style="margin-top: 1%; padding-left: 0px;" align="left">';
+		add += '<select class="form-control select4" data-placeholder="Pilih Operator" name="assign_pic" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>';
+		add += '<option value=""></option>';
+		add += '@foreach($operators as $operator)';
+		add += '<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>';
+		add += '@endforeach';
+		add += '</select>';
+		add += '</div>';
+		add += '<div class="col-xs-3" style="color: black; padding: 0px; margin-top: 1%;">';
+		add += '<div class="form-group" style="margin-bottom: 0px;">';
+		add += '<input class="form-control" type="number" name="process_qty_'+ proses +'" id="process_qty_'+ proses +'" placeholder="Std Time" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" required>';
+		add += '</div>';
+		add += '</div>';
+		add += '</div>';
+		add += '<div class="col-xs-8" style="margin-top: 1%; padding: 0px; margin-left: 3%;">';
 		add += '<div class="form-group row" align="right">';
-		add += '<label class="col-xs-1" style="margin-top: 0.75%; padding: 0px;">Start<span class="text-red">*</span></label>';
-		add += '<div class="col-xs-3" align="left" style="padding: 0px; margin-left: 1%;">';
+		add += '<div class="col-xs-2">';
+		add += '<label style="margin-top: 1%; padding: 0px;">Start<span class="text-red">*</span></label>';
+		add += '</div>';
+		add += '<div class="col-xs-4" align="right" style="padding: 0px;">';
 		add += '<div class="input-group date">';
 		add += '<div class="input-group-addon bg-blue" style="border: none;">';
 		add += '<i class="fa fa-calendar"></i>';
 		add += '</div>';
-		add += '<input type="text" class="form-control datetime" name="start_'+ proses +'" id="start_'+ proses +'" placeholder="start Date" >';
+		add += '<input type="text" class="form-control datepicker" name="start_'+ proses +'" id="start_'+ proses +'" placeholder="start Date"  required>';
 		add += '</div>';
 		add += '</div>';
-		add += '<label class="col-xs-1" style="margin-top: 0.75%; padding: 0px; margin-left: 1%;">Finish<span class="text-red">*</span></label>';
-		add += '<div class="col-xs-3" align="left" style="padding: 0px; margin-left: 1%;">';
+		add += '<div class="col-xs-3" align="right" style="padding: 0px;">';
+		add += '<div class="input-group date">';
+		add += '<div class="input-group-addon bg-blue" style="border: none;">';
+		add += '<i class="fa fa-clock-o"></i>';
+		add += '</div>';
+		add += '<input type="text" class="form-control timepicker" id="start_time'+ proses +'" name="start_time'+ proses +'" placeholder="select Time" required>';
+		add += '</div>';
+		add += '</div>';
+		add += '</div>';
+		add += '</div>';
+		add += '<div class="col-xs-8" style="margin-top: 0%; padding: 0px; margin-left: 3%;">';
+		add += '<div class="form-group row" align="right">';
+		add += '<div class="col-xs-2">';
+		add += '<label style="margin-top: 1%;padding: 0px;">Finish<span class="text-red">*</span></label>';
+		add += '</div>';
+		add += '<div class="col-xs-4" align="right" style="padding: 0px;">';
 		add += '<div class="input-group date">';
 		add += '<div class="input-group-addon bg-blue" style="border: none;">';
 		add += '<i class="fa fa-calendar"></i>';
 		add += '</div>';
-		add += '<input type="text" class="form-control datetime" name="finish_'+ proses +'" id="finish_'+ proses +'" placeholder="End Date" >';
+		add += '<input type="text" class="form-control datepicker" name="finish_'+ proses +'" id="finish_'+ proses +'" placeholder="Finish Date" required>';
+		add += '</div>';
+		add += '</div>';
+		add += '<div class="col-xs-3" align="right" style="padding: 0px;">';
+		add += '<div class="input-group date">';
+		add += '<div class="input-group-addon bg-blue" style="border: none;">';
+		add += '<i class="fa fa-clock-o"></i>';
+		add += '</div>';
+		add += '<input type="text" class="form-control timepicker" id="finish_time'+ proses +'" name="finish_time'+ proses +'" placeholder="select Time" required>';
 		add += '</div>';
 		add += '</div>';
 		add += '</div>';
 		add += '</div>';
-
 		add += '</div>';
 
 
@@ -1100,18 +1096,32 @@
 
 		$(function () {
 			$('.select3').select2({
-				dropdownParent: $('#modal-assignment')
+				dropdownParent: $('#process')
 			});
 		})
 
-		$('.datetime').datetimepicker({
-			format: 'YYYY-MM-DD HH:mm:ss'
+		$(function () {
+			$('.select4').select2({
+				dropdownParent: $('#process')
+			});
+		})
+
+		$('.datepicker').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true,	
 		});
 
+		$('.timepicker').timepicker({
+			use24hours: true,
+			showInputs: false,
+			showMeridian: false,
+			minuteStep: 5,
+			defaultTime: '00:00',
+			timeFormat: 'hh:mm'
+		})
+
 		document.getElementById("assign_proses").value = proses;
-
-		console.log(proses);
-
 	}
 
 	function removeProcess(elem) {
@@ -1133,8 +1143,6 @@
 		proses--;
 
 		document.getElementById("assign_proses").value = proses;
-
-		console.log(proses);
 
 	}
 
@@ -1360,13 +1368,6 @@
 						tableData += '<td>-</td>';							
 					}
 
-					if(result.tableData[i].item_number != null){
-						tableData += '<td><a href="javascript:void(0)" onClick="downloadDrw(\''+result.tableData[i].item_number+'\')" class="fa fa-paperclip"></a></td>';
-					}else{
-						tableData += '<td>-</td>';							
-					}
-
-
 					tableData += '<td style="text-align: center;">';
 					tableData += '<button style="width: 50%; height: 100%;" class="btn btn-xs btn-primary form-control"><span><i class="glyphicon glyphicon-eye-open"></i></span></button>';
 					tableData += '</td>';
@@ -1541,7 +1542,20 @@ function assign() {
 }
 
 $("form#assign").submit(function(e) {
-	$("#loading").show();		
+	$("#loading").show();
+
+	var category = $("#assign_category").val();
+	var drawing_name = $("#assign_drawing_name").val();
+	var drawing_number = $("#assign_drawing_number").val();
+	var part_number = $("#assign_part_number").val();
+
+	if(category != "Equipment"){
+		if(drawing_name == "" || drawing_number == "" || part_number == ""){
+			openErrorGritter('Error!', 'Tanda (*) harus diisi');
+			$("#loading").hide();
+			return false;
+		}
+	}
 
 	e.preventDefault();    
 	var formData = new FormData(this);
@@ -1572,33 +1586,13 @@ $("form#assign").submit(function(e) {
 				$('#drawing').hide();
 				openSuccessGritter('Success', result.message);
 			}else{
-				$("#tag").val("");
-				$("#assign_target_date").val("");
-				$('#assign_pic').prop('selectedIndex', 0).change();
-				$('#assign_difficulty').prop('selectedIndex', 0).change();
-				$('#assign_category').prop('selectedIndex', 0).change();
-				$('#assign_item_number').prop('selectedIndex', 0).change();
-
-				location.reload(true);		
-
 				$("#loading").hide();
-				$("#modal-assignment").modal('hide');
 				openErrorGritter('Error!', result.message);
 			}
 
 		},
 		error: function(result, status, xhr){
-			$("#tag").val("");
-			$("#assign_target_date").val("");
-			$('#assign_pic').prop('selectedIndex', 0).change();
-			$('#assign_difficulty').prop('selectedIndex', 0).change();
-			$('#assign_category').prop('selectedIndex', 0).change();
-			$('#assign_item_number').prop('selectedIndex', 0).change();
-
-			location.reload(true);		
-
 			$("#loading").hide();
-			$("#modal-assignment").modal('hide');
 			openErrorGritter('Error!', result.message);
 		},
 		cache: false,
@@ -1608,7 +1602,6 @@ $("form#assign").submit(function(e) {
 });
 
 function showAssignment(order_no) {
-	console.log(proses);
 	var data = {
 		order_no:order_no
 	}
@@ -1631,6 +1624,7 @@ function showAssignment(order_no) {
 			document.getElementById("assign_part_number").value = result.wjo.part_number;
 			$("#assign_category").val(result.wjo.category).trigger('change.select2');
 			
+			$("#drawing").hide();
 			if(result.wjo.category != 'Equipment'){
 				$("#drawing").show();
 			}

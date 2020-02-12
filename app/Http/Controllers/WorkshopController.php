@@ -997,7 +997,9 @@ class WorkshopController extends Controller{
 		$tag = $request->get('tag');
 		$target_date = $request->get('assign_target_date');
 		$category = $request->get('assign_category');
+		$drawing_name = $request->get('assign_drawing_name');
 		$item_number = $request->get('assign_item_number');
+		$part_number = $request->get('assign_part_number');
 		$pic = $request->get('assign_pic');
 		$difficulty = $request->get('assign_difficulty');
 
@@ -1018,7 +1020,9 @@ class WorkshopController extends Controller{
 		$wjo->tag = $tag;		
 		$wjo->target_date = $target_date;
 		$wjo->category = $category;
-		$wjo->item_number = $file_name;		
+		$wjo->drawing_name = $drawing_name;
+		$wjo->item_number = $item_number;
+		$wjo->part_number = $part_number;
 		$wjo->operator = $pic;
 		$wjo->difficulty = $difficulty;
 		$wjo->approved_by = Auth::user()->username;
@@ -1055,10 +1059,12 @@ class WorkshopController extends Controller{
 				if(count($existed_flow) > 0){
 					if($existed_flow[0]->category == 'MACHINE'){
 						for($j = 0; $j < count($existed_flow); $j++) {
+							$start = $request->get('start_'.$x) .' '.$request->get('start_time'.$x).':01';
+							$finish = $request->get('finish_'.$x) .' '.$request->get('finish_time'.$x).':00';
 
 							if($existed_flow[$j]->finish_plan <> null){
-								$start_plan = new DateTime($request->get('start_'.$x));
-								$finish_plan = new DateTime($request->get('finish_'.$x));
+								$start_plan = new DateTime($start);
+								$finish_plan = new DateTime($finish);
 
 								$start_exist = new DateTime($existed_flow[$j]->start_plan);
 								$finish_exist = new DateTime($existed_flow[$j]->finish_plan);
@@ -1088,8 +1094,8 @@ class WorkshopController extends Controller{
 					'sequence_process' => $x,
 					'machine_code' => $request->get('process_'.$x),
 					'status' => 1,
-					'start_plan' => date($request->get('start_'.$x)),
-					'finish_plan' => date($request->get('finish_'.$x)),
+					'start_plan' => date($request->get('start_'.$x) .' '.$request->get('start_time'.$x).':01'),
+					'finish_plan' => date($request->get('finish_'.$x) .' '.$request->get('finish_time'.$x).':00'),
 					'std_time' => $request->get('process_qty_'.$x) * 60,
 					'operator' => $pic,
 					'created_by' => Auth::user()->username,
