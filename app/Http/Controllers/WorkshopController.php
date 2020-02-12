@@ -912,7 +912,7 @@ class WorkshopController extends Controller{
 					left join employee_syncs u on w.created_by = u.employee_id
 					where order_no = '".$order_no."'");
 				
-				Mail::to('susilo.basri@music.yamaha.com')
+				Mail::to(['susilo.basri@music.yamaha.com', 'darma.bagus@music.yamaha.com'])
 				->cc('aditya.agassi@music.yamaha.com')
 				->send(new SendEmail($data, 'urgent_wjo'));
 			}
