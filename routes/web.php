@@ -93,6 +93,9 @@ Route::get('visitor_getchart', 'VisitorController@getchart');
 
 Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
 
+Route::get('visitor_confirmation_manager', 'VisitorController@confirmation_manager');
+Route::get('fetch/visitor/fetchVisitorByManager', 'VisitorController@fetchVisitorByManager');
+
 //end visitor control 
 
 //----- Start mesin injeksi
@@ -854,6 +857,8 @@ Route::get('index/welding/op_ng', 'WeldingProcessController@indexOpRate');
 Route::get('fetch/welding/op_ng', 'WeldingProcessController@fetchOpRate');
 Route::get('index/welding/op_analysis', 'WeldingProcessController@indexOpAnalysis');
 Route::get('fetch/welding/op_analysis', 'WeldingProcessController@fetchOpAnalysis');
+Route::get('index/welding/welding_op_eff', 'WeldingProcessController@indexWeldingOpEff');
+Route::get('fetch/welding/welding_op_eff', 'WeldingProcessController@fetchWeldingOpEff');
 Route::get('index/welding/production_result', 'WeldingProcessController@indexProductionResult');
 Route::get('fetch/welding/production_result', 'WeldingProcessController@fetchProductionResult');
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
@@ -2143,6 +2148,7 @@ Route::get('fetch/cpar/resume', 'QcReportController@getResumeData');
 Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
 Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
 Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
+Route::get('index/qc_report/grafik_kategori', 'QcReportController@grafik_kategori');
 Route::get('index/qc_report/komplain_monitoring', 'QcReportController@komplain_monitoring');
 Route::get('index/qc_report/komplain_monitoring2', 'QcReportController@komplain_monitoring2');
 Route::get('index/qc_report/komplain_monitoring3', 'QcReportController@komplain_monitoring3');
@@ -2150,7 +2156,9 @@ Route::get('index/qc_report/komplain_monitoring4', 'QcReportController@komplain_
 Route::get('index/qc_report/komplain_monitoring5', 'QcReportController@komplain_monitoring5');
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
 Route::get('index/qc_report/fetchKategori', 'QcReportController@fetchKategori');
+Route::get('index/qc_report/fetchSource', 'QcReportController@fetchSource');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
+Route::get('index/qc_report/detail_kategori', 'QcReportController@detail_kategori');
 Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_dept');
 Route::get('index/qc_report/detail_monitoring', 'QcReportController@detail_monitoring');
 Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');

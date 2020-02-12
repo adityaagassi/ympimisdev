@@ -718,6 +718,7 @@ class QcReportController extends Controller
       $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
       $bulan = db::select("select DISTINCT MONTH(tgl_permintaan) as bulan, MONTHNAME(tgl_permintaan) as namabulan FROM qc_cpars order by bulan asc;");
       $tahun = db::select("select DISTINCT YEAR(tgl_permintaan) as tahun FROM qc_cpars order by tahun desc");
+      $sumber = db::select("select DISTINCT kategori_komplain from qc_cpars where kategori='Eksternal'");
       $dept = db::select("select id, department_name from departments where departments.id not in (1,2,3,4,11)");
       $statuses = db::select("select distinct qc_cpars.status_code, status_name from statuses join qc_cpars on qc_cpars.status_code = statuses.status_code");
       
@@ -728,18 +729,27 @@ class QcReportController extends Controller
               'bulans' => $bulan,
               'years' => $tahun, 
               'departemens' => $dept,
-              'status' => $statuses
+              'status' => $statuses,
+              'sumber' => $sumber
             )
         )->with('page', 'CPAR Graph');
     }
 
+    public function grafik_kategori(){
+      $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
+      $tahun = db::select("select DISTINCT YEAR(tgl_permintaan) as tahun FROM qc_cpars order by tahun desc");
+      
+       return view('qc_report.grafik_kategori',  
+        array('title' => 'Report CPAR By Kategori', 
+              'title_jp' => '種類別の是正処置報告書',
+              'fys' => $fys,
+              'years' => $tahun, 
+            )
+        )->with('page', 'CPAR');
+    }
+
     public function fetchReport(Request $request)
     {
-      // if(strlen($request->get('tgl')) > 0){
-      //   $tgl = $request->get("tgl");
-      // }else{
-      //   $tgl = date("Y-m-d");
-      // }
 
       $tahun = date('Y');
       $tglfrom = $request->get('tglfrom');
@@ -752,9 +762,6 @@ class QcReportController extends Controller
       if ($tglto == "") {
           $tglto = date('Y-m', strtotime(carbon::now()));
       }
-
-      
-
       // $files=array();
 
       $kategori = $request->get('kategori');
@@ -788,9 +795,20 @@ class QcReportController extends Controller
           $sta = 'and qc_cpars.status_code in'.$stat;
       } else {
           $sta = '';
+      }
+
+      $sumber = $request->get('sumber');
+
+      if ($sumber != null) {
+          $sumbb = json_encode($sumber);
+          $sumb = str_replace(array("[","]"),array("(",")"),$sumbb);
+
+          $sum = 'and qc_cpars.kategori_komplain in '.$sumb;
+      } else {
+          $sum = '';
       }      
 
-      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, year(tgl_permintaan) as tahun, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where qc_cpars.deleted_at is null and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep." ".$sta."  GROUP BY bulan,tahun order by tahun, month(tgl_permintaan) ASC");
+      $data = db::select("select count(cpar_no) as jumlah, monthname(tgl_permintaan) as bulan, year(tgl_permintaan) as tahun, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code where qc_cpars.deleted_at is null and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$kate." ".$dep." ".$sta." ".$sum." GROUP BY bulan,tahun order by tahun, month(tgl_permintaan) ASC");
 
       // $tahun = date('Y');
       // $monthTitle = date("Y", strtotime($bulan));
@@ -802,7 +820,8 @@ class QcReportController extends Controller
         'tglfrom' => $tglfrom,
         'tglto' => $tglto,
         'kategori' =>  $kate,
-        'departemen' => $dep
+        'departemen' => $dep,
+        'sumber' => $sum
       );
 
       return Response::json($response); 
@@ -814,45 +833,100 @@ class QcReportController extends Controller
     {   
 
       $tglnow = date('Y-m-d');
-      $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+      // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
 
-      foreach ($fy as $fys) {
-          $fiscal = $fys->fiscal_year;
-      }
+      // foreach ($fy as $fys) {
+      //     $fiscal = $fys->fiscal_year;
+      // }
 
-      $kategori = $request->get('kategori');
+      // $kategori = $request->get('kategori');
 
-      if ($kategori != null) {
-          $cat = json_encode($kategori);
-          $kat = str_replace(array("[","]"),array("(",")"),$cat);
+      // if ($kategori != null) {
+      //     $cat = json_encode($kategori);
+      //     $kat = str_replace(array("[","]"),array("(",")"),$cat);
 
-          $kate = 'and kategori in'.$kat;
+      //     $kate = 'and kategori in'.$kat;
+      // }else{
+      //     $kate = '';
+      // }
+
+      // $departemen = $request->get('departemen');
+
+      // if ($departemen != null) {
+      //     $deptt = json_encode($departemen);
+      //     $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+      //     $dep = 'and department_id in'.$dept;
+      // }else{
+      //     $dep = '';
+      // }
+
+      $fy = $request->get('fy');
+
+      if ($fy != null) {
+          $f = 'and fiscal_year = "'.$fy.'"';
+          $fiscal = $fy;
       }else{
-          $kate = '';
-      }
+          $f = null;
+          $fiscal = null;
+      }       
 
-      $departemen = $request->get('departemen');
+      $data = db::select("select count(cpar_no) as jumlah, kategori, fiscal_year, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null ".$f." GROUP BY kategori,fiscal_year order by fiscal_year,jumlah ASC");
 
-      if ($departemen != null) {
-          $deptt = json_encode($departemen);
-          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
-
-          $dep = 'and department_id in'.$dept;
-      }else{
-          $dep = '';
-      }      
-
-      $data = db::select("select count(cpar_no) as jumlah, kategori, fiscal_year, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null and fiscal_year='".$fiscal."' GROUP BY kategori,fiscal_year order by fiscal_year,jumlah ASC");
-
-      $eksternal = db::select("select count(cpar_no) as jumlah, kategori, qc_cpars.destination_code, fiscal_year, destination_shortname from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date join destinations on qc_cpars.destination_code = destinations.destination_code where qc_cpars.deleted_at is null and fiscal_year='".$fiscal."' GROUP BY destination_code,kategori,fiscal_year,destination_shortname order by fiscal_year, jumlah ASC");
+      $eksternal = db::select("select count(cpar_no) as jumlah, kategori, qc_cpars.destination_code, fiscal_year, destination_shortname from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date join destinations on qc_cpars.destination_code = destinations.destination_code where qc_cpars.deleted_at is null ".$f." GROUP BY destination_code,kategori,fiscal_year,destination_shortname order by fiscal_year, jumlah DESC");
 
       $response = array(
         'status' => true,
         'datas' => $data,
         'fiscal' => $fiscal,
-        'kategori' =>  $kate,
-        'departemen' => $dep,
+        // 'kategori' =>  $kate,
+        // 'departemen' => $dep,
         'eksternal' => $eksternal
+      );
+
+      return Response::json($response); 
+    }
+
+    public function fetchSource(Request $request)
+    {   
+
+      $tglnow = date('Y-m-d');
+
+      $fy = $request->get('fy');
+      
+      if ($fy != null) {
+          $f = 'and fiscal_year = "'.$fy.'"';
+          $fiscal = $fy;
+      }else{
+          $f = null;
+          $fiscal = null;
+      } 
+
+
+      // $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+
+      // foreach ($fy as $fys) {
+      //     $fiscal = $fys->fiscal_year;
+      // }
+
+      if ($fy != null) {
+        $data = db::select("select kategori_komplain, count(cpar_no) as jumlah from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null ".$f." GROUP BY kategori_komplain order by jumlah DESC");
+      }
+      else{
+
+        $data = db::select("select kategori_komplain, count(cpar_no) as jumlah from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null ".$f." GROUP BY kategori_komplain 
+          UNION 
+          select 'YMMJ', count(*) as jumlah from qc_ymmjs 
+          order by jumlah DESC");
+      }
+
+
+      // $ymmj = db::select("select count(*) from qc_ymmjs");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'fiscal' => $fiscal,
       );
 
       return Response::json($response); 
@@ -866,8 +940,9 @@ class QcReportController extends Controller
       $tglto = $request->get("status");
       $kategori = $request->get("kategori");
       $departemen = $request->get("departemen");
+      $sumber = $request->get("sumber");
 
-      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name,staff.name as staffname,employees.name,chief.name as chiefname, foreman.name as foremanname, manager.name as managername, dgm.name as dgmname, gm.name as gmname, statuses.status_name, qc_cars.id as id_car, qc_cars.pic, pic.name as picname, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car, chiefcar.name as chiefcarname, foremancar.name as foremancarname, coordinatorcar.name as coordinatorcarname, qc_cars.checked_chief as checked_chief_car, qc_cars.checked_foreman as checked_foreman_car, qc_cars.checked_manager as checked_manager_car, qc_cars.approved_dgm as approved_dgm_car, qc_cars.approved_gm as approved_gm_car,destinations.destination_shortname FROM qc_cpars join departments on departments.id = qc_cpars.department_id left join destinations on qc_cpars.destination_code = destinations.destination_code join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code left join employees as staff on qc_cpars.staff = staff.employee_id left join employees as chief on qc_cpars.chief = chief.employee_id left join employees as foreman on qc_cpars.foreman = foreman.employee_id left join employees as manager on qc_cpars.manager = manager.employee_id left join employees as dgm on qc_cpars.dgm = dgm.employee_id left join employees as gm on qc_cpars.gm = gm.employee_id left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id left join employees as chiefcar on qc_verifikators.verifikatorchief = chiefcar.employee_id left join employees as foremancar on qc_verifikators.verifikatorforeman = foremancar.employee_id left join employees as coordinatorcar on qc_verifikators.verifikatorcoordinator = coordinatorcar.employee_id left join employees as pic on qc_cars.pic = pic.employee_id where qc_cpars.deleted_at is null and monthname(tgl_permintaan) = '".$bulan."' and statuses.status_name ='".$status."' and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."'".$kategori." ".$departemen."";
+      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name,staff.name as staffname,employees.name,chief.name as chiefname, foreman.name as foremanname, manager.name as managername, dgm.name as dgmname, gm.name as gmname, statuses.status_name, qc_cars.id as id_car, qc_cars.pic, pic.name as picname, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car, chiefcar.name as chiefcarname, foremancar.name as foremancarname, coordinatorcar.name as coordinatorcarname, qc_cars.checked_chief as checked_chief_car, qc_cars.checked_foreman as checked_foreman_car, qc_cars.checked_manager as checked_manager_car, qc_cars.approved_dgm as approved_dgm_car, qc_cars.approved_gm as approved_gm_car,destinations.destination_shortname FROM qc_cpars join departments on departments.id = qc_cpars.department_id left join destinations on qc_cpars.destination_code = destinations.destination_code join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code left join employees as staff on qc_cpars.staff = staff.employee_id left join employees as chief on qc_cpars.chief = chief.employee_id left join employees as foreman on qc_cpars.foreman = foreman.employee_id left join employees as manager on qc_cpars.manager = manager.employee_id left join employees as dgm on qc_cpars.dgm = dgm.employee_id left join employees as gm on qc_cpars.gm = gm.employee_id left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id left join employees as chiefcar on qc_verifikators.verifikatorchief = chiefcar.employee_id left join employees as foremancar on qc_verifikators.verifikatorforeman = foremancar.employee_id left join employees as coordinatorcar on qc_verifikators.verifikatorcoordinator = coordinatorcar.employee_id left join employees as pic on qc_cars.pic = pic.employee_id where qc_cpars.deleted_at is null and monthname(tgl_permintaan) = '".$bulan."' and statuses.status_name ='".$status."' and DATE_FORMAT(tgl_permintaan,'%Y-%m') between '".$tglfrom."' and '".$tglto."'".$kategori." ".$departemen." ".$sumber." ";
 
       $detail = db::select($query);
 
@@ -1240,6 +1315,97 @@ class QcReportController extends Controller
         ->make(true);
     }
 
+    public function detail_kategori(Request $request){
+
+      $kategori = $request->get("kategori");
+      $fy = $request->get("fy");
+
+      if($fy == "All Years"){
+          $fiscal = '';
+      }
+      else if ($fy != null) {
+          $fiscal = 'and fiscal_year = "'.$fy.'"';
+      } 
+      else {
+          $fiscal = '';
+      }  
+
+      $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name, qc_cars.id as id_car, statuses.status_name, qc_cars.id as id_car, destinations.destination_shortname  FROM qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no left join destinations on qc_cpars.destination_code = destinations.destination_code join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null and qc_cpars.kategori_komplain ='".$kategori."' ".$fiscal." ";
+
+      $detail = db::select($query);
+
+      return DataTables::of($detail)
+
+        ->editColumn('status_name',function($detail){
+          if($detail->status_name == "Unverified CPAR") {
+            return '<label class="label label-danger">'.$detail->status_name. '</label>';
+          }
+          else if($detail->status_name == "Unverified CAR"){
+            return '<label class="label label-warning">'.$detail->status_name. '</label>';
+          }
+          else if($detail->status_name == "QA Verification"){
+            return '<label class="label label-success">'.$detail->status_name. '</label>';
+          }
+          else if($detail->status_name == "Closed"){
+            return '<label class="label label-success">'.$detail->status_name. '</label>';
+          }
+
+          })
+
+        ->editColumn('sumber_komplain',function($detail){
+          if($detail->sumber_komplain == "Eksternal Complaint") {
+            return $detail->destination_shortname;
+          }
+          else{
+            return $detail->sumber_komplain;
+          }
+        })
+
+        ->editColumn('kategori',function($detail){
+          if($detail->kategori == "Eksternal") {
+            if ($detail->kategori_komplain == "FG") {
+              $detail->kategori_komplain  = "Finished Goods";
+            }
+            return $detail->kategori.' - '.$detail->kategori_komplain;
+          }
+          else{
+            return $detail->kategori;
+          }
+        })
+
+        ->addColumn('action', function($detail){
+          $idcpar = $detail->id;
+          $idcar = $detail->id_car;
+
+          if($detail->status_name == "Unverified CPAR") {
+            return '<a href="update/'.$idcpar.'" class="btn btn-primary btn-xs">Detail CPAR</a>
+                    <a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report CPAR</a>';
+          } 
+
+          else if ($detail->status_name == "Unverified CAR"){
+            return '
+                    <a href="print_cpar/'.$idcpar.'" class="btn btn-success btn-xs" target="_blank">Report CPAR</a>
+                    <a href="../qc_car/detail/'.$idcar.'" class="btn btn-primary btn-xs">Detail CAR</a>
+                    <a href="../qc_car/print_car_new/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>';
+          }
+
+          else if ($detail->status_name == "QA Verification"){
+            return '<a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report CPAR</a>
+                    <a href="../qc_car/print_car_new/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>';
+          } 
+
+          else if($detail->status_name == "Closed"){
+            return '<a href="print_cpar/'.$idcpar.'" class="btn btn-warning btn-xs" target="_blank">Report CPAR</a>
+                    <a href="../qc_car/print_car_new/'.$idcar.'" class="btn btn-warning btn-xs" target="_blank">Report CAR</a>
+                    ';
+          }
+
+        })
+
+        ->rawColumns(['status_name' => 'status_name','action' => 'action','verif' => 'verif','sumber_komplain' => 'sumber_komplain', 'kategori' =>'kategori'])
+        ->make(true);
+    }
+
     public function detail_cpar_dept(Request $request){
       $departemen = $request->get("departemen");
       $status = $request->get("status");
@@ -1370,6 +1536,17 @@ class QcReportController extends Controller
           $sta = 'and qc_cpars.status_code in '.$stat;
       } else {
           $sta = 'and qc_cpars.status_code not in (1)';
+      }
+
+      $sumber = $request->get('sumber');
+
+      if ($sumber != null) {
+          $sumbb = json_encode($sumber);
+          $sumb = str_replace(array("[","]"),array("(",")"),$sumbb);
+
+          $sum = 'and qc_cpars.kategori_komplain in '.$sumb;
+      } else {
+          $sum = '';
       }      
 
       $data = db::select("select qc_cpars.id,qc_cars.id as id_car, qc_cpars.cpar_no, qc_cpars.status_code, qc_cpars.judul_komplain, departments.department_name, qc_cpars.posisi as posisi_cpar, qc_cpars.email_status, qc_cpars.checked_chief, qc_cpars.checked_foreman, qc_cpars.checked_manager, qc_cpars.approved_dgm, qc_cpars.approved_gm, qc_cpars.received_manager, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car,qc_cars.checked_chief as checked_chief_car,qc_cars.checked_foreman as checked_foreman_car,qc_cars.checked_coordinator as checked_coordinator_car,qc_cars.checked_manager as checked_manager_car,qc_cars.approved_dgm as approved_dgm_car,qc_cars.approved_gm as approved_gm_car, IF(qc_cpars.leader is null,(select name from employees where employee_id = qc_cpars.staff),(select name from employees where employee_id = qc_cpars.leader)) as namasl, IF(qc_cpars.chief is null,(select name from employees where employee_id = qc_cpars.foreman),(select name from employees where employee_id = qc_cpars.chief)) as namacf, (select name from employees where employee_id = qc_cpars.manager) as namam, (select name from employees where employee_id = qc_cpars.dgm) as namadgm, (select name from employees where employee_id = qc_cpars.gm) as namagm, (select name from employees where employee_id = qc_cpars.employee_id) as namabagian, (select name from employees where employee_id = qc_cars.pic) as namapiccar,
@@ -1377,7 +1554,7 @@ class QcReportController extends Controller
               WHEN qc_verifikators.verifikatorforeman is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),'Tidak Ada'))
               WHEN qc_verifikators.verifikatorcoordinator is not null THEN (select name from employees where employee_id = qc_verifikators.verifikatorcoordinator)
               ELSE 'Tidak Ada'
-        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.deleted_at is null ".$kate." ".$dep." ".$sta." order by kategori,cpar_no asc");
+        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.deleted_at is null ".$kate." ".$dep." ".$sta." ".$sum." order by kategori,cpar_no asc");
 
       $response = array(
         'status' => true,
@@ -1958,10 +2135,12 @@ class QcReportController extends Controller
           //     $from = "staff";
           // }
 
-          $cpars = QcCpar::select('qc_cpars.*','departments.department_name','employees.name','statuses.status_name')
+          $cpars = QcCpar::select('qc_cpars.*','departments.department_name','employees.name','statuses.status_name','destinations.destination_name','destinations.destination_shortname','vendors.name as vendorname')
           ->join('departments','qc_cpars.department_id','=','departments.id')
           ->join('employees','qc_cpars.employee_id','=','employees.employee_id')
           ->join('statuses','qc_cpars.status_code','=','statuses.status_code')
+          ->leftjoin('destinations','qc_cpars.destination_code','=','destinations.destination_code')
+          ->leftjoin('vendors','qc_cpars.vendor','=','vendors.vendor')
           ->where('qc_cpars.id','=',$id)
           ->get();
 
@@ -1984,8 +2163,7 @@ class QcReportController extends Controller
           $emailcpar = db::select($query);
 
           $checked = $request->get('checked');
-          // var_dump(count($checked));die();
-          if(count($checked) == 13 || count($checked) == 19 || count($checked) == 25 || count($checked) == 31 || count($checked) == 37){
+          if(count($checked) == 14 || count($checked) == 19 || count($checked) == 25 || count($checked) == 31 || count($checked) == 37){
             $cpars = QcCpar::find($id);
             if ($cpars->posisi == "chief") {
               $cpars->checked_chief = "Checked";              

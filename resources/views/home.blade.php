@@ -190,6 +190,10 @@
                             <a href="{{ url("index/cpar/resume") }}">
                                 <i class="fa fa-caret-right"></i> Resume CPAR & CAR (是正予防策・是正策のまとめ)
                             </a>
+                            <br>
+                            <a href="{{ url("index/qc_report/grafik_kategori") }}">
+                                <i class="fa fa-caret-right"></i> Report CPAR By Category (種類別の是正処置報告書)
+                            </a>
                         </td>
                     </tr>
                     <tr>
@@ -281,6 +285,14 @@
                             <br>
                             <a href="{{ url("index/display/ip") }}">
                                 <i class="fa fa-caret-right"></i> Internet Protocol Monitoring (IP管理)
+                            </a>
+                            <br>
+                            <a href="{{ url("visitor_confirmation_manager") }}">
+                                <i class="fa fa-caret-right"></i> Visitor Confirmation ()
+                            </a>
+                            <br>
+                            <a href="{{ url("visitor_display") }}">
+                                <i class="fa fa-caret-right"></i> Visitor Monitoring ()
                             </a>
                         </td>
                     </tr>

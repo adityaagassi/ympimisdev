@@ -332,6 +332,112 @@
                   </td>
                 </tr>
                 <tr>
+                  <td colspan="2">Source Of Complain</td>
+                  <?php 
+                    if($cpars->kategori_komplain == "FG"){
+                      $kategori = "Finished Goods";
+                    }
+                    else{
+                      $kategori = $cpars->kategori_komplain;
+                    }
+
+                    if($cpars->kategori == "Eksternal"){
+                      $dest = $cpars->destination_name.' ('.$cpars->destination_shortname.') -';
+                    }
+                    else{
+                      $dest = '';
+                    }
+
+                    if($cpars->kategori == "Supplier"){
+                      $vendor = $cpars->vendorname.' -';
+                    }
+                    else{
+                      $vendor = '';
+                    }
+                  ?>
+
+                  <td colspan="2"><?= $dest ?> <?= $vendor ?> <?= $kategori ?> </td>
+
+                  <td colspan="2">
+                    <!-- Jika yang masuk adalah bu ratri dan posisi CPAR di chief -->
+                      @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                        @if ($cpars->posisi == "chief")
+                          @if($cpars->checked_chief == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
+                        @else
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
+                        @endif
+
+                      @elseif(Auth::user()->username == $cpars->foreman) <!-- {{$cpars->foreman}} --> <!-- Jika yang masuk adalah foreman -->
+                        @if ($cpars->posisi == "foreman")
+                          @if($cpars->checked_foreman == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
+                        @else
+                          <span class="label label-danger">Sudah Dikirim Ke Manager</span>
+                        @endif  
+
+                      @elseif(Auth::user()->username == $cpars->manager) <!-- {{$cpars->manager}} --><!-- Jika yang masuk adalah bu yayuk -->
+                        @if ($cpars->posisi == "manager")
+                          @if($cpars->checked_manager == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
+                        @else
+                          <span class="label label-danger">Sudah Dikirim Ke DGM</span>
+                        @endif
+
+                      @elseif(Auth::user()->username == $cpars->dgm) <!-- {{$cpars->dgm}} --><!-- Jika yang masuk adalah pak budhi -->
+                        @if ($cpars->posisi == "dgm")
+                          @if($cpars->approved_dgm == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
+                        @else
+                          <span class="label label-danger">Sudah Dikirim Ke GM</span>
+                        @endif
+
+                      @elseif(Auth::user()->username == $cpars->gm || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader) <!-- {{$cpars->gm}} --><!-- Jika yang masuk adalah pak hayakawa -->
+                        @if ($cpars->posisi == "gm")
+                          @if($cpars->approved_gm == NULL)
+                            <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck" name="checked[]" value="">
+                            </div>
+                          @else
+                            <span class="label label-success">Sudah Diverifikasi</span>
+                          @endif
+                        @elseif($cpars->posisi == "staff" || $cpars->posisi == "leader")
+                          <span class="label label-danger">Sudah Dikirim Ke Staff / Leader</span>
+                        @else
+                          <span class="label label-danger">Sudah Dikirim Ke Bagian Terkait</span>
+                        @endif
+                      @endif
+                  </td>
+                </tr>
+                <tr>
                   <td colspan="2">Lokasi</td>
                   <td colspan="2">{{ $cpars->lokasi }}</td>
                   <td colspan="2">
@@ -1267,7 +1373,7 @@
                   </div>
                 </div>
                 <div  class="col-md-2">
-                    <a href="{{ url('/files/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                    <a href="{{ url('/files/'.$data[$i]) }}" target="_blank" class="btn btn-primary">Download / Preview</a>
                 </div>
               </div>
             <?php } ?>                       

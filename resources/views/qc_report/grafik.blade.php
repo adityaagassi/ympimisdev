@@ -127,7 +127,7 @@ table > thead > tr > th{
             <div class="input-group-addon bg-green">
               <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" class="form-control datepicker" id="tglfrom" placeholder="Bulan Dari">
+            <input type="text" class="form-control datepicker" id="tglfrom" placeholder="Bulan Dari" onchange="drawChart()">
           </div>
         </div>
         <div class="col-md-2">
@@ -135,7 +135,7 @@ table > thead > tr > th{
             <div class="input-group-addon bg-green">
               <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" class="form-control datepicker" id="tglto" placeholder="Bulan Ke">
+            <input type="text" class="form-control datepicker" id="tglto" placeholder="Bulan Ke" onchange="drawChart()">
           </div>
         </div>
         <div class="col-md-2">
@@ -143,7 +143,7 @@ table > thead > tr > th{
             <div class="input-group-addon bg-blue">
               <i class="fa fa-search"></i>
             </div>
-            <select class="form-control select2" multiple="multiple" id="kategori" data-placeholder="Select Kategori">
+            <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="kategori" data-placeholder="Select Kategori">
                 <option value="Eksternal">Eksternal</option>
                 <option value="Internal">Internal</option>
                 <option value="Supplier">Supplier</option>
@@ -155,7 +155,7 @@ table > thead > tr > th{
               <div class="input-group-addon bg-blue">
                 <i class="fa fa-search"></i>
               </div>
-              <select class="form-control select2" multiple="multiple" id="departemen" data-placeholder="Pilih Departemen" style="border-color: #605ca8" >
+              <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="departemen" data-placeholder="Pilih Departemen" style="border-color: #605ca8" >
                   <!-- <option value="" selected>Semua Departemen</option> -->
                   @foreach($departemens as $departemen)
                     <option value="{{ $departemen->id }}">{{ $departemen->department_name }}</option>
@@ -169,7 +169,7 @@ table > thead > tr > th{
             <div class="input-group-addon bg-blue">
               <i class="fa fa-search"></i>
             </div>
-            <select class="form-control select2" multiple="multiple" id="status" data-placeholder="Pilih Status" style="border-color: #605ca8" >
+            <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="status" data-placeholder="Pilih Status" style="border-color: #605ca8" >
                 @foreach($status as $status)
                   <option value="{{ $status->status_code }}">{{ $status->status_name }}</option>
                 @endforeach
@@ -177,17 +177,33 @@ table > thead > tr > th{
           </div>
         </div>
 
-        <div class="col-xs-2">
+        <div class="col-md-2">
+          <div class="input-group">
+            <div class="input-group-addon bg-blue">
+              <i class="fa fa-search"></i>
+            </div>
+            <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="sumber" data-placeholder="Pilih Sumber Komplain" style="border-color: #605ca8" onchange="drawChart()">
+                @foreach($sumber as $sbr)
+                  <option value="{{ $sbr->kategori_komplain }}">{{ $sbr->kategori_komplain }}</option>
+                @endforeach
+              </select>
+          </div>
+        </div>
+
+
+
+      </div>
+
+      <!-- <div class="col-md-12" style="padding: 1px !important">
+        <div class="col-md-2">
           <button class="btn btn-success btn-sm" onclick="drawChart()">Update Chart</button>
         </div>
-      </div>
+      </div> -->
       
-      <div class="col-md-8" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
+      <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
           <div id="chart" style="width: 99%"></div>
       </div>
-      <div class="col-md-4" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
-          <div id="chartresume" style="width: 99%"></div>
-      </div>
+      
       <div class="col-md-12" style="padding-right: 0;padding-left: 10px">
           <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
@@ -300,7 +316,7 @@ table > thead > tr > th{
     $('.select2').select2();
 
     drawChart();
-    drawChartResume();
+    // drawChartResume();
     fetchTable();
     setInterval(fetchTable, 300000);
     // drawChartDepartemen();
@@ -355,13 +371,15 @@ table > thead > tr > th{
     var kategori = $('#kategori').val();
     var departemen = $('#departemen').val();
     var status = $('#status').val();
+    var sumber = $('#sumber').val();
 
     var data = {
       tglfrom: tglfrom,
       tglto: tglto,
       kategori: kategori,
       departemen: departemen,
-      status:status
+      status:status,
+      sumber:sumber
     };
 
     $.get('{{ url("index/qc_report/fetchReport") }}', data, function(result, status, xhr) {
@@ -421,10 +439,10 @@ table > thead > tr > th{
               lineWidth:2,
               lineColor:'#fff',
               type: 'linear',
-              title: {
-                text: 'Total Kasus'
-              },
-              tickInterval: 2,  
+                title: {
+                  text: 'Total Kasus'
+                },
+              tickInterval: 5,  
               stackLabels: {
                   enabled: true,
                   style: {
@@ -454,7 +472,7 @@ table > thead > tr > th{
                 point: {
                   events: {
                     click: function () {
-                      ShowModal(this.category,this.series.name,result.tglfrom,result.tglto,result.kategori,result.departemen);
+                      ShowModal(this.category,this.series.name,result.tglfrom,result.tglto,result.kategori,result.departemen,result.sumber);
                     }
                   }
                 },
@@ -510,211 +528,20 @@ table > thead > tr > th{
     })
   }
 
-  function drawChartResume() {
-    
-    var tglfrom = $('#tglfrom').val();
-    var tglto = $('#tglto').val();
-    var departemen = $('#departemen').val();
-    var status = $('#status').val();
-
-    var data = {
-      tglfrom: tglfrom,
-      tglto: tglto,
-      departemen: departemen,
-      status:status
-    };
-
-    $.get('{{ url("index/qc_report/fetchKategori") }}', data, function(result, status, xhr) {
-      if(xhr.status == 200){
-        if(result.status){
-          var fiscal = result.fiscal;
-          if(fiscal == null){
-            fiscal = "All"
-          }
-
-          var kategori = [], jml = [], statusunverifiedcpar = [], statusunverifiedcar = [], statusverifikasi = [], statusclose = [];
-          var close = [], cpar = [], car = [], verifikasi = [], datadrill = [], datad = [];
-
-          for (var i = 0; i < result.datas.length; i++) {
-            close.push({name:result.datas[i].kategori, y:parseInt(result.datas[i].close), drilldown:result.datas[i].kategori});
-            cpar.push({name:result.datas[i].kategori, y:parseInt(result.datas[i].UnverifiedCPAR), drilldown:result.datas[i].kategori});
-            car.push({name:result.datas[i].kategori, y:parseInt(result.datas[i].UnverifiedCAR), drilldown:result.datas[i].kategori});
-            verifikasi.push({name:result.datas[i].kategori, y:parseInt(result.datas[i].qaverification), drilldown:result.datas[i].kategori});
-          }
-
-          for (var z = 0; z < result.eksternal.length; z++) {            
-            datad.push([result.eksternal[z].destination_shortname, result.eksternal[z].jumlah]);
-            datadrill.push({id:result.eksternal[z].kategori, name:result.eksternal[z].kategori, data: datad});
-          }
-
-          // console.table(datadrill);
-
-          // $.each(result.datas, function(key, value) {
-          //   kategori.push(value.kategori);
-          //   jml.push(value.jumlah);
-          //   statusunverifiedcpar.push(parseInt(value.UnverifiedCPAR));
-          //   statusunverifiedcar.push(parseInt(value.UnverifiedCAR));
-          //   statusverifikasi.push(parseInt(value.qaverification));
-          //   statusclose.push(parseInt(value.close));
-          // })
-
-          $('#chartresume').highcharts({
-            chart: {
-              type: 'column'
-            },
-            title: {
-              text: 'Complain Report By Category',
-              style: {
-                fontSize: '18px',
-                fontWeight: 'bold'
-              }
-            },
-            accessibility: {
-              announceNewData: {
-                enabled: true
-              }
-            },
-            subtitle: {
-              text: 'On '+result.fiscal,
-              style: {
-                fontSize: '1vw',
-                fontWeight: 'bold'
-              }
-            },
-            xAxis: {
-              type: 'category',
-              lineWidth:2,
-              lineColor:'#9e9e9e',
-              gridLineWidth: 1
-            },
-            yAxis: {
-              lineWidth:2,
-              lineColor:'#fff',
-              type: 'linear',
-              title: {
-                text: 'Total Kasus'
-              },
-              tickInterval: 4,  
-              stackLabels: {
-                  enabled: true,
-                  style: {
-                      fontWeight: 'bold',
-                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                  }
-              }
-            },
-            legend: {
-              enabled: false
-            },
-            plotOptions: {
-              series: {
-                  borderWidth: 0,
-                  dataLabels: {
-                      enabled: true,
-                      style: {
-                          color: 'white',
-                          textShadow: '0 0 2px black, 0 0 2px black'
-                      }
-                  },
-                  stacking: 'normal'
-              },
-              series: {
-                cursor: 'pointer',
-                point: {
-                  events: {
-                    click: function () {
-                      // ShowModal(this.category,this.series.name,result.tglfrom,result.tglto,result.kategori,result.departemen);
-                    }
-                  }
-                },
-                borderWidth: 0,
-                dataLabels: {
-                  enabled: false,
-                  format: '{point.y}'
-                },
-                stacking: 'normal'
-              },
-              column: {
-                  color:  Highcharts.ColorString,
-                  stacking: 'normal',
-                  borderRadius: 1,
-                  dataLabels: {
-                      enabled: true
-                  }
-              }
-            },
-            credits: {
-              enabled: false
-            },
-
-            tooltip: {
-              formatter:function(){
-                return this.series.name+' : ' + this.y;
-              }
-            },
-            // series: [{
-            //     name: 'Unverified CPAR',
-            //     color: '#ff6666', //ff6666
-            //     data: statusunverifiedcpar
-            // }, {
-            //     name: 'Unverified CAR',
-            //     data: statusunverifiedcar,
-            //     color : '#f0ad4e', //f5f500
-            // },
-            // {
-            //     name: 'QA Verification',
-            //     data: statusverifikasi,
-            //     color : '#448aff', //f5f500
-            // },
-            // {
-            //     name: 'Closed',
-            //     data: statusclose,
-            //     color : '#5cb85c', //00f57f
-            // }
-            // ],
-            series: [
-            {
-              name: 'Unverified CPAR',
-              color: '#ff6666',
-              data: cpar,
-            },
-            {
-              name: 'Unverified CAR',
-              color: '#f0ad4e',
-              data: car,
-            },
-            {
-              name: 'QA Verification',
-              data: verifikasi,
-              color : '#448aff', //f5f500
-            },
-            {
-              name: 'Closed',
-              color: '#5cb85c',
-              data: close,
-            }
-            ],
-            drilldown: {
-              series: datadrill
-            }
-          })
-        } else{
-          alert('Attempt to retrieve data failed');
-        }
-      }
-    })
-  }
+  
 
   function fetchTable(){
 
     var kategori = $('#kategori').val();
     var departemen = $('#departemen').val();
     var status = $('#status').val();
+    var sumber = $('#sumber').val();
 
     var data = {
       kategori: kategori,
       departemen: departemen,
-      status:status
+      status:status,
+      sumber:sumber
     }
 
     $.get('{{ url("index/qc_report/fetchtable") }}', data, function(result, status, xhr){
@@ -1351,7 +1178,7 @@ table > thead > tr > th{
   //   })
   // }
 
-  function ShowModal(bulan, status, tglfrom, tglto, kategori, departemen) {
+  function ShowModal(bulan, status, tglfrom, tglto, kategori, departemen, sumber) {
     tabel = $('#example2').DataTable();
     tabel.destroy();
 
@@ -1418,7 +1245,8 @@ table > thead > tr > th{
             kategori : kategori,
             departemen : departemen,
             tglfrom : tglfrom,
-            tglto : tglto
+            tglto : tglto,
+            sumber : sumber
           }
         },
       "columns": [
