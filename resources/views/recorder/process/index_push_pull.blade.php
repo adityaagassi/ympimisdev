@@ -621,11 +621,11 @@
 				if(result.status){
 					// openSuccessGritter('Success', result.message);
 					// fillResultCamera();
-					if (result.jumlah_perolehan >= 1000) {
-						$('#perolehan').val(convertToK(result.jumlah_perolehan));
-					}else{
+					// if (result.jumlah_perolehan >= 1000) {
+					// 	$('#perolehan').val(convertToK(result.jumlah_perolehan));
+					// }else{
 						$('#perolehan').val(result.jumlah_perolehan);
-					}
+					// }
 					$('#judgement_middle').val(result.judgement);
 					// console.log(result.value);
 					if (result.judgement == 'OK') {
@@ -640,11 +640,11 @@
 				}
 				else{
 					// openErrorGritter('Error!', result.message);
-					if (result.jumlah_perolehan >= 1000) {
-						$('#perolehan').val(convertToK(result.jumlah_perolehan));
-					}else{
+					// if (result.jumlah_perolehan >= 1000) {
+					// 	$('#perolehan').val(convertToK(result.jumlah_perolehan));
+					// }else{
 						$('#perolehan').val(result.jumlah_perolehan);
-					}
+					// }
 				}
 			});
 		// }

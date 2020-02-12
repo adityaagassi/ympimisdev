@@ -407,17 +407,11 @@
 							$('#text_pic').html(result.wjo.name);
 
 							$('#text_drawing').append().empty();
+							
 							if(result.wjo.drawing_name){
-
-								if(result.wjo.item_number){
-									if(result.wjo.part_number){
-										$('#text_drawing').html(result.wjo.drawing_name + '  ( ' + result.wjo.item_number +' #'+ result.wjo.part_number +')');
-									}else{
-										$('#text_drawing').html(result.wjo.drawing_name + '  ( ' + result.wjo.item_number +' )');
-									}
-								}else{
-									$('#text_drawing').html(result.wjo.drawing_name);
-								}
+								var val_item_number = result.wjo.item_number || '';
+								var val_part_number = result.wjo.part_number || '-';
+								$('#text_drawing').html(result.wjo.drawing_name + '  ( ' + val_item_number +' #PartNo.'+ val_part_number +')');
 							}else{
 								$('#text_drawing').html('-');
 							}
