@@ -381,7 +381,6 @@ class QcReportController extends Controller
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
-
         $managers = Employee::select('employees.employee_id','employees.name','promotion_logs.position','mutation_logs.department')
         ->join('promotion_logs','employees.employee_id','=','promotion_logs.employee_id')
         ->join('mutation_logs','employees.employee_id','=','mutation_logs.employee_id')
@@ -1882,12 +1881,26 @@ class QcReportController extends Controller
           if ($cpars->posisi == "gm") {            
             $cpars->approved_gm = "Checked"; 
 
-            $mailto = "select distinct employees.name,email from qc_cpars join employees on qc_cpars.employee_id = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$request->get('id')."'";
+            $mailto = "select distinct employees.name,email,phone from qc_cpars join employees on qc_cpars.employee_id = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$request->get('id')."'";
             $mails = DB::select($mailto);
 
             foreach($mails as $mail){
               $mailtoo = $mail->email;
+              $number = $mail->phone;
             }
+
+            if (strpos($number, '/') !== false) {
+              $number2 = explode("/", $number);
+              $mailnumber = '62'.substr($number2[0],1);
+            }else{
+              $mailnumber = '62'.substr($number, 1);
+            }
+
+            $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+            $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+            $query_string .= "&message=".rawurlencode(stripslashes("Telah Diterbitkan CPAR ".$cpars->judul_komplain." Dengan Nomor ".$cpars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+            $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+            $fd = @implode('', file($url));
 
             $cpars->email_status = "SentBagian";
             $cpars->email_send_date = date('Y-m-d');
@@ -1927,7 +1940,6 @@ class QcReportController extends Controller
 
       public function sendemail(Request $request,$id,$posisi)
       {
-
           $id_user = Auth::id();
 
           $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id='".$id."'";
@@ -1962,13 +1974,20 @@ class QcReportController extends Controller
               $to = "employee_id"; //manager departemen
           }
 
-          $mailto = "select distinct employees.name,email from qc_cpars join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
-            $mails = DB::select($mailto);
+          $mailto = "select distinct employees.name,email,phone from qc_cpars join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
+          $mails = DB::select($mailto);
 
-            foreach($mails as $mail){
-              $mailtoo = $mail->email;
-              // var_dump($mailtoo);die();
-            }
+          foreach($mails as $mail){
+            $mailtoo = $mail->email;
+            $number = $mail->phone;
+          }
+
+          if (strpos($number, '/') !== false) {
+            $number2 = explode("/", $number);
+            $mailnumber = '62'.substr($number2[0],1);
+          }else{
+            $mailnumber = '62'.substr($number, 1);
+          }
 
           if($cpars != null){
           // var_dump($cpars);die();
@@ -1979,6 +1998,13 @@ class QcReportController extends Controller
                   $qc_cpars->posisi = "chief";
                   $qc_cpars->progress = "25";
                   $qc_cpars->save();
+
+                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Diterbitkan CPAR ".$qc_cpars->judul_komplain." Dengan Nomor ".$qc_cpars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                  $fd = @implode('', file($url));
+                  
                   Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpars, 'cpar'));
                   return redirect('/index/qc_report')->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CPAR');
                 }
@@ -1988,6 +2014,13 @@ class QcReportController extends Controller
                   $qc_cpars->posisi = "manager";
                   $qc_cpars->progress = "30";
                   $qc_cpars->save();
+
+                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Diterbitkan CPAR ".$qc_cpars->judul_komplain." Dengan Nomor ".$qc_cpars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                  $fd = @implode('', file($url));
+
                   Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
                   return redirect('/index/qc_report')->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CPAR');
                 }
@@ -2000,6 +2033,13 @@ class QcReportController extends Controller
                   $qc_cpars->posisi = "foreman";
                   $qc_cpars->progress = "25";
                   $qc_cpars->save();
+
+                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Diterbitkan CPAR ".$qc_cpars->judul_komplain." Dengan Nomor ".$qc_cpars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                  $fd = @implode('', file($url));
+
                   Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpars, 'cpar'));
                   return redirect('/index/qc_report')->with('status', 'E-mail ke Foreman berhasil terkirim')->with('page', 'CPAR');
                 }
@@ -2009,6 +2049,13 @@ class QcReportController extends Controller
                   $qc_cpars->posisi = "manager";
                   $qc_cpars->progress = "30";
                   $qc_cpars->save();
+
+                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Diterbitkan CPAR ".$qc_cpars->judul_komplain." Dengan Nomor ".$qc_cpars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                  $fd = @implode('', file($url));
+
                   Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
                   return redirect('/index/qc_report')->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CPAR');
                 }
@@ -2020,6 +2067,13 @@ class QcReportController extends Controller
                 $qc_cpars->posisi = "manager";
                 $qc_cpars->progress = "30";
                 $qc_cpars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Diterbitkan CPAR ".$qc_cpars->judul_komplain." Dengan Nomor ".$qc_cpars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
                 return redirect('/index/qc_report')->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CPAR');
               }
@@ -2030,6 +2084,13 @@ class QcReportController extends Controller
                 $qc_cpars->posisi = "dgm";
                 $qc_cpars->progress = "40";
                 $qc_cpars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Diterbitkan CPAR ".$qc_cpars->judul_komplain." Dengan Nomor ".$qc_cpars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
                 return redirect('/index/qc_report')->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CPAR');
               }
@@ -2040,7 +2101,7 @@ class QcReportController extends Controller
                 $qc_cpars->posisi = "gm";
                 $qc_cpars->progress = "50";
                 $qc_cpars->save();
-                Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
+                // Mail::to($mailtoo)->send(new SendEmail($cpars, 'cpar'));
                 return redirect('/index/qc_report')->with('status', 'E-mail ke GM berhasil terkirim')->with('page', 'CPAR');
               }
               else if($qc_cpars->email_status == "SentGM" && $qc_cpars->posisi == "gm"){
@@ -2239,12 +2300,27 @@ class QcReportController extends Controller
           $query = "select qc_cpars.id, qc_cpars.cpar_no, qc_cpars.alasan, qc_cpars.posisi, qc_cpars.judul_komplain from qc_cpars where qc_cpars.id='".$id."'";
           $querycpar = db::select($query);
 
-          $mailto = "select distinct email from qc_cpars join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
+          $mailto = "select distinct email,phone from qc_cpars join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
           $mails = DB::select($mailto);
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
+            $number = $mail->phone;
           }
+
+          if (strpos($number, '/') !== false) {
+            $number2 = explode("/", $number);
+            $mailnumber = '62'.substr($number2[0],1);
+          }else{
+            $mailnumber = '62'.substr($number, 1);
+          }
+
+          $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+          $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+          $query_string .= "&message=".rawurlencode(stripslashes("CPAR ".$cpars->judul_komplain." Dengan Nomor ".$cpars->cpar_no." Telah Ditolak. Mohon untuk segera diperbaiki")) . "&languagetype=1";        
+          $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+          $fd = @implode('', file($url));
+
 
           Mail::to($mailtoo)->send(new SendEmail($querycpar, 'rejectcpar'));
           return redirect('/index/qc_report/verifikasicpar/'.$id)->with('error', 'CPAR Not Approved')->with('page', 'CPAR');
@@ -2279,12 +2355,26 @@ class QcReportController extends Controller
           $query = "select qc_cpars.id, qc_cpars.cpar_no, qc_cpars.alasan, qc_cpars.posisi, qc_cpars.judul_komplain from qc_cpars where qc_cpars.id='".$id."'";
           $querycpar = db::select($query);
 
-          $mailto = "select distinct email from qc_cpars join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
+          $mailto = "select distinct email,phone from qc_cpars join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
           $mails = DB::select($mailto);
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
+            $number = $mail->phone;
           }
+
+          if (strpos($number, '/') !== false) {
+            $number2 = explode("/", $number);
+            $mailnumber = '62'.substr($number2[0],1);
+          }else{
+            $mailnumber = '62'.substr($number, 1);
+          }
+
+          $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+          $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+          $query_string .= "&message=".rawurlencode(stripslashes("CPAR ".$cpars->judul_komplain." Dengan Nomor ".$cpars->cpar_no." Telah Ditolak. Mohon untuk segera diperbaiki")) . "&languagetype=1";        
+          $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+          $fd = @implode('', file($url));
 
           Mail::to($mailtoo)->send(new SendEmail($querycpar, 'rejectcpar'));
           return redirect('/index/qc_report/verifikasiqa/'.$id)->with('success', 'Verification Not Approved')->with('page', 'CPAR');

@@ -196,7 +196,7 @@
               <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
               </div>
-              <input type="text" class="form-control pull-right" id="tgl_permintaan" name="tgl_permintaan" placeholder="Masukkan Tanggal Permintaan" value="{{ date('d/m/Y', strtotime($cpars->tgl_permintaan)) }}" required>
+              <input type="text" class="form-control pull-right" id="tgl_permintaan" name="tgl_permintaan" placeholder="Masukkan Tanggal Permintaan" value="{{ date('d/m/Y', strtotime($cpars->tgl_permintaan)) }}" readonly="" required>
             </div>
           </div>
           <label class="col-sm-1">Sumber Komplain<span class="text-red">*</span></label>

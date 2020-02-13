@@ -108,7 +108,8 @@
               <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
               </div>
-              <input type="text" class="form-control pull-right" id="tgl_permintaan" name="tgl_permintaan" placeholder="Masukkan Tanggal Permintaan" onchange="selectbulan()" required>
+              <input type="text" class="form-control pull-right" placeholder="" value="<?= date('d/m/Y') ?>" disabled>
+              <input type="hidden" class="form-control pull-right" id="tgl_permintaan" name="tgl_permintaan" placeholder="" value="<?= date('d/m/Y') ?>" >
             </div>
           </div>
           <label class="col-sm-1">Sumber Komplain<span class="text-red">*</span></label>
@@ -226,6 +227,14 @@
 
       $("#customer").hide();
       $("#supplier").hide();
+
+      var tgl = document.getElementById("tgl_permintaan").value;
+      var time = new Date(tgl);
+      var dateArr = tgl.split("/");
+      var forDate = dateArr[1];
+      var forYear = dateArr[2];
+      $('#getbulan').val(forDate); 
+      $('#getyear').val(forYear);  
     });
 
 </script>
@@ -282,16 +291,9 @@
         });
     }
 
-    function selectbulan(){
-          var tgl = document.getElementById("tgl_permintaan").value;
-          var time = new Date(tgl);
-          var dateArr = tgl.split("/");
-          var forDate = dateArr[1];
-          var forYear = dateArr[2];
-          // console.log(forDate);
-          $('#getbulan').val(forDate); 
-          $('#getyear').val(forYear);  
-    }
+    // function selectbulan(){
+      
+    // }
 
 
     function selectsumber() {

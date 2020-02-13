@@ -189,6 +189,7 @@
 												<th>Push Pull Judgement</th>
 												<th>Height Judgement</th>
 												<th>PIC</th>
+												<th>Notes</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -224,11 +225,13 @@
 													} ?>
 												</td>
 												<td>{{ $push_block_check->pic_check }}</td>
+												<td>{{ $push_block_check->notes }}</td>
 											</tr>
 											@endforeach
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>

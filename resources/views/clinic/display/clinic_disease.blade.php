@@ -213,7 +213,7 @@
 							point: {
 								events: {
 									click: function () {
-										showDetail(this.category, result.month);
+										// showDetail(this.category, result.month);
 									}
 								}
 							},

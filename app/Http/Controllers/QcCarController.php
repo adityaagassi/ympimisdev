@@ -492,12 +492,12 @@ class QcCarController extends Controller
           if ($verif[0]->verifikatorchief != null || $verif[0]->verifikatorforeman != null || $verif[0]->verifikatorcoordinator != null) {
             if ($verif[0]->kategori == "Eksternal") {
                if ($qc_cars->checked_chief == NULL) {
-                 $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorchief = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                 $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorchief = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                  $mails = DB::select($mailto);                 
 
                  if ($mails == NULL) {
                     $to = 'employee_id';
-                    $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                    $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                     $mails = DB::select($mailto);
                  }
 
@@ -515,7 +515,7 @@ class QcCarController extends Controller
                     $to = "staff"; //manager departemen
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                  $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
 
                   $mails = DB::select($mailto);
                }
@@ -524,7 +524,7 @@ class QcCarController extends Controller
             } else if ($verif[0]->kategori == "Internal") {
               
               if ($qc_cars->checked_foreman == NULL) {
-                $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorforeman = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'"; 
+                $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorforeman = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'"; 
                 $mails = DB::select($mailto);
               }
               else {
@@ -541,7 +541,7 @@ class QcCarController extends Controller
                     $to = "staff"; //manager departemen
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                  $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
 
                   $mails = DB::select($mailto);
                }
@@ -550,7 +550,7 @@ class QcCarController extends Controller
             } else if ($verif[0]->kategori == "Supplier") {
 
               if ($qc_cars->checked_foreman == NULL) {
-                $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorcoordinator = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorcoordinator = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                 $mails = DB::select($mailto);
               }else{
                 if ($posisi == "coordinator") {
@@ -566,7 +566,7 @@ class QcCarController extends Controller
                     $to = "staff"; //manager departemen
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                  $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
 
                   $mails = DB::select($mailto);
               }
@@ -580,15 +580,21 @@ class QcCarController extends Controller
               $to = "dgm";
             }
 
-            $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+            $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
             $mails = DB::select($mailto);
 
           }
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
+            $number = $mail->phone;
+          }
 
-            // var_dump($mailtoo);die();
+          if (strpos($number, '/') !== false) {
+            $number2 = explode("/", $number);
+            $mailnumber = '62'.substr($number2[0],1);
+          }else{
+            $mailnumber = '62'.substr($number, 1);
           }
 
           if($cars != null){
@@ -614,6 +620,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CAR');  
               }
@@ -623,6 +636,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "foreman2";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Foreman berhasil terkirim')->with('page', 'CAR');
               }
@@ -632,6 +652,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');
               }
@@ -641,6 +668,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');
               }
@@ -650,6 +684,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');
               }
@@ -659,6 +700,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "dgm";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CAR');
               }
@@ -697,16 +745,24 @@ class QcCarController extends Controller
                     $to = "leader";
                 }
 
-                $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+                $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
                 $mails = DB::select($mailto);
 
                 foreach($mails as $mail){
                   $mailtoo2 = $mail->email;
+                  $number2 = $mail->phone;
+                }
+
+                if (strpos($number2, '/') !== false) {
+                  $number3 = explode("/", $number2);
+                  $mailnumber2 = '62'.substr($number3[0],1);
+                }else{
+                  $mailnumber2 = '62'.substr($number2, 1);
                 }
 
                 $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
-                  $cars2 = db::select($query2);
+                $cars2 = db::select($query2);
 
                 Mail::to($mailtoo2)->send(new SendEmail($cars2, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
@@ -725,6 +781,13 @@ class QcCarController extends Controller
                     $qc_cars->email_send_date = date('Y-m-d');
                     $qc_cars->posisi = "dgm";
                     $qc_cars->save();
+
+                    $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                    $fd = @implode('', file($url));
+
                     Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                     return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CAR');
                   }
@@ -733,6 +796,13 @@ class QcCarController extends Controller
                     $qc_cars->email_send_date = date('Y-m-d');
                     $qc_cars->posisi = "manager";
                     $qc_cars->save();
+
+                    $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                    $fd = @implode('', file($url));
+
                     Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                     return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');                     
                   }
@@ -744,6 +814,13 @@ class QcCarController extends Controller
                   $qc_cars->email_send_date = date('Y-m-d');
                   $qc_cars->posisi = "dgm";
                   $qc_cars->save();
+
+                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                  $fd = @implode('', file($url));
+
                   Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CAR');
                 }
@@ -773,18 +850,32 @@ class QcCarController extends Controller
                       $cpar->save();
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+                  $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
                   $mails = DB::select($mailto);
 
                   foreach($mails as $mail){
                     $mailtoo2 = $mail->email;
+                    $number2 = $mail->phone;
                   }
 
-                $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain , employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+                  if (strpos($number2, '/') !== false) {
+                    $number3 = explode("/", $number2);
+                    $mailnumber2 = '62'.substr($number3[0],1);
+                  }else{
+                    $mailnumber2 = '62'.substr($number2, 1);
+                  }
+
+                  $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain , employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
                   $cars2 = db::select($query2);
 
-                  Mail::to($mailtoo)->send(new SendEmail($cars2, 'car'));
+                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber2);
+                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                  $fd = @implode('', file($url));
+
+                  Mail::to($mailtoo2)->send(new SendEmail($cars2, 'car'));
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
                 }
 
@@ -902,12 +993,12 @@ class QcCarController extends Controller
           if ($verif[0]->verifikatorchief != null || $verif[0]->verifikatorforeman != null || $verif[0]->verifikatorcoordinator != null) {
             if ($verif[0]->kategori == "Eksternal") {
                if ($qc_cars->checked_chief == NULL) {
-                 $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorchief = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                 $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorchief = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                  $mails = DB::select($mailto);                 
 
                  if ($mails == NULL) {
                     $to = 'employee_id';
-                    $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                    $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                     $mails = DB::select($mailto);
                  }
 
@@ -925,7 +1016,7 @@ class QcCarController extends Controller
                     $to = "staff"; //manager departemen
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                  $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
 
                   $mails = DB::select($mailto);
                }
@@ -934,7 +1025,7 @@ class QcCarController extends Controller
             } else if ($verif[0]->kategori == "Internal") {
               
               if ($qc_cars->checked_foreman == NULL) {
-                $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorforeman = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'"; 
+                $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorforeman = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'"; 
                 $mails = DB::select($mailto);
               }
               else {
@@ -951,7 +1042,7 @@ class QcCarController extends Controller
                     $to = "staff"; //manager departemen
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                  $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
 
                   $mails = DB::select($mailto);
                }
@@ -960,7 +1051,7 @@ class QcCarController extends Controller
             } else if ($verif[0]->kategori == "Supplier") {
 
               if ($qc_cars->checked_foreman == NULL) {
-                $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorcoordinator = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorcoordinator = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                 $mails = DB::select($mailto);
               }else{
                 if ($qc_cars->posisi == "coordinator") {
@@ -976,7 +1067,7 @@ class QcCarController extends Controller
                     $to = "staff"; //manager departemen
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+                  $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
 
                   $mails = DB::select($mailto);
               }
@@ -990,15 +1081,21 @@ class QcCarController extends Controller
               $to = "dgm";
             }
 
-            $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
+            $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
             $mails = DB::select($mailto);
 
           }
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
+            $number = $mail->phone;
+          }
 
-            // var_dump($mailtoo);die();
+          if (strpos($number, '/') !== false) {
+            $number2 = explode("/", $number);
+            $mailnumber = '62'.substr($number2[0],1);
+          }else{
+            $mailnumber = '62'.substr($number, 1);
           }
 
           if($cars != null){
@@ -1024,6 +1121,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
               }
@@ -1033,6 +1137,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "foreman2";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
               }
@@ -1042,6 +1153,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
               }
@@ -1051,6 +1169,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
               }
@@ -1060,6 +1185,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
               }
@@ -1069,6 +1201,13 @@ class QcCarController extends Controller
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "dgm";
                 $qc_cars->save();
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
+
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
               }
@@ -1084,7 +1223,6 @@ class QcCarController extends Controller
                 $qc_cars->email_status = "SentQA";
                 $qc_cars->email_send_date = date('Y-m-d');
                 $qc_cars->posisi = "qa";
-
 
                 $qc_cars->save();
 
@@ -1106,16 +1244,30 @@ class QcCarController extends Controller
                     $to = "leader";
                 }
 
-                $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+                $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
                 $mails = DB::select($mailto);
 
                 foreach($mails as $mail){
                   $mailtoo2 = $mail->email;
+                  $number2 = $mail->phone;
+                }
+
+                if (strpos($number2, '/') !== false) {
+                  $number3 = explode("/", $number2);
+                  $mailnumber2 = '62'.substr($number3[0],1);
+                } else{
+                  $mailnumber2 = '62'.substr($number2, 1);
                 }
 
                 $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
-                  $cars2 = db::select($query2);
+                $cars2 = db::select($query2);
+
+                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber2);
+                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                $fd = @implode('', file($url));
 
                 Mail::to($mailtoo2)->send(new SendEmail($cars2, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
@@ -1134,6 +1286,13 @@ class QcCarController extends Controller
                     $qc_cars->email_send_date = date('Y-m-d');
                     $qc_cars->posisi = "dgm";
                     $qc_cars->save();
+
+                    $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                    $fd = @implode('', file($url));
+
                     Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                     return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
                   }
@@ -1142,6 +1301,13 @@ class QcCarController extends Controller
                     $qc_cars->email_send_date = date('Y-m-d');
                     $qc_cars->posisi = "manager";
                     $qc_cars->save();
+
+                    $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                    $fd = @implode('', file($url));
+
                     Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                     return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
                   }
@@ -1153,6 +1319,13 @@ class QcCarController extends Controller
                   $qc_cars->email_send_date = date('Y-m-d');
                   $qc_cars->posisi = "dgm";
                   $qc_cars->save();
+
+                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                    $fd = @implode('', file($url));
+
                   Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                   return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
                 }
@@ -1186,13 +1359,27 @@ class QcCarController extends Controller
 
                   foreach($mails as $mail){
                     $mailtoo2 = $mail->email;
+                    $number2 = $mail->phone;
                   }
 
-                $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain , employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
+                  if (strpos($number2, '/') !== false) {
+                    $number3 = explode("/", $number2);
+                    $mailnumber2 = '62'.substr($number3[0],1);
+                  }else{
+                    $mailnumber2 = '62'.substr($number2, 1);
+                  }
+
+                  $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain , employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
                   $cars2 = db::select($query2);
 
-                  Mail::to($mailtoo)->send(new SendEmail($cars2, 'car'));
+                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber2);
+                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+                  $fd = @implode('', file($url));
+
+                  Mail::to($mailtoo2)->send(new SendEmail($cars2, 'car'));
                   return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
                 }
 
@@ -1249,12 +1436,27 @@ class QcCarController extends Controller
           $cars->save();
           $query = "select qc_cars.id, qc_cars.cpar_no, qc_cars.qa_perbaikan from qc_cars where qc_cars.id='".$id."'";
           $querycar = db::select($query);
-          $mailto = "select distinct email from qc_cars join employees on qc_cars.pic = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+
+          $mailto = "select distinct email, phone from qc_cars join employees on qc_cars.pic = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
           $mails = DB::select($mailto);
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
+            $number = $mail->phone;
           }
+
+          if (strpos($number, '/') !== false) {
+            $number2 = explode("/", $number);
+            $mailnumber = '62'.substr($number2[0],1);
+          }else{
+            $mailnumber = '62'.substr($number, 1);
+          }
+
+          $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+          $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+          $query_string .= "&message=".rawurlencode(stripslashes("CAR ".$cars->car_cpar->judul_komplain." Dengan Nomor ".$cars->cpar_no." Telah Ditolak. Mohon untuk segera diperbaiki")) . "&languagetype=1";        
+          $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+          $fd = @implode('', file($url));
 
           Mail::to($mailtoo)->send(new SendEmail($querycar, 'rejectcar'));
           return redirect('/index/qc_car/verifikasicar/'.$id)->with('success', 'CAR Rejected')->with('page', 'CAR');
@@ -1289,7 +1491,7 @@ class QcCarController extends Controller
           $query = "select qc_cars.id, qc_cars.cpar_no, qc_cars.qa_perbaikan from qc_cars where qc_cars.id='".$id."'";
           $querycar = db::select($query);
 
-          $mailto = "select distinct email from qc_cars join employees on qc_cars.pic = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+          $mailto = "select distinct email,phone from qc_cars join employees on qc_cars.pic = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
           $mails = DB::select($mailto);
 
           $mailmanager = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join users on qc_cpars.employee_id = users.username where qc_cars.id='".$id."'";
@@ -1297,11 +1499,25 @@ class QcCarController extends Controller
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
+            $number = $mail->phone;
+          }
+
+          if (strpos($number, '/') !== false) {
+            $number2 = explode("/", $number);
+            $mailnumber = '62'.substr($number2[0],1);
+          }else{
+            $mailnumber = '62'.substr($number, 1);
           }
 
           foreach ($mailmanagers as $mailm) {
             $mailmtoo = $mailm->email;        
           }
+
+          $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+          $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+          $query_string .= "&message=".rawurlencode(stripslashes("CAR ".$cars->car_cpar->judul_komplain." Dengan Nomor ".$cars->cpar_no." Telah Ditolak. Mohon untuk segera diperbaiki")) . "&languagetype=1";        
+          $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+          $fd = @implode('', file($url));
 
           Mail::to($mailtoo)->cc($mailmtoo)->send(new SendEmail($querycar, 'rejectcar'));
           return redirect('/index/qc_car/verifikasigm/'.$id)->with('success', 'CAR Rejected')->with('page', 'CAR');
