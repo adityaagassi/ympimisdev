@@ -430,9 +430,21 @@
 
 							if(result.wjo.attachment){
 								var showAtt = result.wjo.attachment;
+								console.log(showAtt);
 								
-								if(showAtt.includes('.pdf') || showAtt.includes('.png') || showAtt.includes('.jp')){
+								if(showAtt.includes('.pdf')){
 									$('#text_attach_1').append("<embed src='"+ result.file_path +"' type='application/pdf' width='100%' height='300px'>");
+									$('#show-att').show();
+								}
+
+								if(showAtt.includes('.png') || showAtt.includes('.PNG')){
+									$('#text_attach_1').append("<embed src='"+ result.file_path +"' width='100%' height='300px'>");
+									$('#show-att').show();
+								}
+
+								if(showAtt.includes('.jp') || showAtt.includes('.JP')){
+									console.log('y');
+									$('#text_attach_1').append("<embed src='"+ result.file_path +"' width='100%' height='300px'>");
 									$('#show-att').show();
 								}
 
