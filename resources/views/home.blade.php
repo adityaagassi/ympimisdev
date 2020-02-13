@@ -288,11 +288,11 @@
                             </a>
                             <br>
                             <a href="{{ url("visitor_confirmation_manager") }}">
-                                <i class="fa fa-caret-right"></i> Visitor Confirmation ()
+                                <i class="fa fa-caret-right"></i> Visitor Confirmation (来客の確認)
                             </a>
                             <br>
                             <a href="{{ url("visitor_display") }}">
-                                <i class="fa fa-caret-right"></i> Visitor Monitoring ()
+                                <i class="fa fa-caret-right"></i> Visitor Monitoring (来客の管理)
                             </a>
                         </td>
                     </tr>
@@ -650,7 +650,7 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/display/shipment_report") }}">
-                                    <i class="fa fa-caret-right"></i>Weekly Shipment ETD SUB ()
+                                    <i class="fa fa-caret-right"></i>Weekly Shipment ETD SUB (週次出荷　スラバヤ着荷)
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/fg_container_departure") }}">
