@@ -975,8 +975,7 @@ Route::get('index/workshop/productivity', 'WorkshopController@indexProductivity'
 Route::get('fetch/workshop/productivity', 'WorkshopController@fetchProductivity');
 Route::get('fetch/workshop/operator_detail', 'WorkshopController@fetchOperatorDetail');
 Route::get('fetch/workshop/machine_detail', 'WorkshopController@fetchmachineDetail');
-
-
+Route::get('fetch/workshop/process_detail', 'WorkshopController@fetchProcessDetail');
 
 
 Route::get('index/middle/op_analysis', 'MiddleProcessController@indexOpAnalysis');
@@ -1629,6 +1628,12 @@ Route::get('fetch/flo_lading', 'FloController@fetch_flo_lading');
 Route::post('input/flo_lading', 'FloController@input_flo_lading');
 Route::post('update/flo_container', 'FloController@update_flo_container');
 Route::post('filter/flo_detail', 'FloController@filter_flo_detail');
+
+
+//SHIPMENT REPORT
+Route::get('index/display/shipment_report', 'DisplayController@indexShipmentReport');
+Route::get('fetch/display/shipment_report', 'DisplayController@fetchShipmentReport');
+Route::get('fetch/display/shipment_report_detail', 'DisplayController@fetchShipmentReportDetail');
 
 
 //DISPLAY EXPORT PROGRESS

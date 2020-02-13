@@ -625,7 +625,7 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/kd_shipment_progress") }}">
-                                    <i class="fa fa-caret-right"></i> Shipment Progress (出荷結果)
+                                    <i class="fa fa-caret-right"></i>KD Shipment Progress (出荷結果)
                                 </a>
                             </td>
                         </tr>
@@ -646,7 +646,11 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/display/shipment_progress") }}">
-                                    <i class="fa fa-caret-right"></i> Shipment Progress (出荷結果)
+                                    <i class="fa fa-caret-right"></i>FG Shipment Progress (出荷結果)
+                                </a>
+                                <br>
+                                <a href="{{ url("/index/display/shipment_report") }}">
+                                    <i class="fa fa-caret-right"></i>Weekly Shipment ETD SUB ()
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/fg_container_departure") }}">
