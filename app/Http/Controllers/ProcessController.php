@@ -2976,12 +2976,12 @@ public function fetchResultFlStamp(Request $request)
 				sum(stamp) as stamp,
 				sum(stamp_kd) as stamp_kd,
 				sum(h1) as h1,
-				IF(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng)) < 0,
+				IF(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng)) <= 0,
 						sum(h1) - (-(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng)))),
 						-sum(h1)) 
 				as sisaH1,
 				sum(h2) as h2,
-				IF((sum(h1) - (-(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng))))) < 0,
+				IF((sum(h1) - (-(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng))))) <= 0,
 						sum(h2) + (sum(h1) - (-(((sum(plan) + (-sum(debt)))-sum(actual))-(sum(wip)-sum(ng))))),
 						sum(h2)) 
 				as sisaH2
