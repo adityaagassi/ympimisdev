@@ -17,7 +17,7 @@
 	<div style="width: 700px;">
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Visitor Confirmation (??) (Last Update: {{ date('d-M-Y H:i:s') }})</p><br>
+			<p style="font-size: 18px;">Visitor Confirmation (来客の確認) (Last Update: {{ date('d-M-Y H:i:s') }})</p><br>
 			This is an automatic notification. Please do not reply to this address.
 			<br><br>
 			<table style="border-color: black">
