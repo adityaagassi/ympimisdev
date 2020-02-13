@@ -5706,6 +5706,9 @@ class MiddleProcessController extends Controller
 			else if($material->hpl == 'TSKEY' && preg_match("/82/", $material->model) != TRUE){
 				$quantity = 8;
 			}
+			else if($material->hpl == 'ASKEY' && preg_match("/82/", $material->model) == TRUE){
+				$quantity = 10;
+			}
 			else{
 				$response = array(
 					'status' => false,
@@ -5722,7 +5725,7 @@ class MiddleProcessController extends Controller
 					$now = new DateTime();
 					$interval = $last->diff($now);
 
-					if ($interval->format('%I') < 1) {
+					if ($interval->format('%I') < 2) {
 						$response = array(
 							'status' => false,
 							'message' => "Interval scan terlalu cepat",
@@ -5757,7 +5760,7 @@ class MiddleProcessController extends Controller
 				return Response::json($response);
 			}
 		}
-		else{		
+		else{
 			$response = array(
 				'status' => false,
 				'message' => "Material Tidak Ditemukan ",
