@@ -376,6 +376,11 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
+			<textarea name="notes" id="notes" style="width: 100%;text-align: center;font-size: 20px;vertical-align: middle;" placeholder="Notes"></textarea>
+		</div>
+	</div>
+	<div class="row" style="padding-top: 20px">
+		<div class="col-xs-12">
 			<button class="btn btn-danger" onclick="konfirmasi()" id="selesai_button" style="font-size:35px; width: 100%; font-weight: bold; padding: 0;">
 				SELESAI PROSES
 			</button>
@@ -635,7 +640,7 @@
 						<div class="col-xs-6" style="padding-top: 0px">
 							<div class="col-xs-12">
 								<input type="hidden" id="head_id" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
-								<input type="hidden" id="head_value" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
+								<input type="text" id="head_value" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
 								<table class="table table-bordered">
 									<tr>
 										<td>
@@ -817,7 +822,7 @@
 		}else if (no_cavity == 2) {
 			$('#head_value').val('5-8');
 		}else if (no_cavity == 3) {
-			$('#head_value').val('8-12');
+			$('#head_value').val('9-12');
 		}else if (no_cavity == 4) {
 			$('#head_value').val('13-16');
 		}else if (no_cavity == 5) {
@@ -1010,6 +1015,7 @@
 						$('#injection_date_block_fix').html(value[0].injection_date_block);
 						$('#mesin_head').html(value[0].mesin_head);
 						$('#mesin_block').html(value[0].mesin_block);
+						$("#notes").html(value[0].notes);
 					});
 					openSuccessGritter('Success!', result.message);
 				}else{
@@ -1027,6 +1033,8 @@
 	function update_temp(){
 		var head_id =  $("#head_id").val();
 		var block_id =  $("#block_id").val();
+
+		var notes =  $("#notes").val();
 
 		var head_value =  $("#head_value").val();
 		var block_value =  $("#block_value").val();
@@ -1091,7 +1099,8 @@
 				push_pull : push_pull,
 				judgement : judgement,
 				ketinggian : ketinggian,
-				judgementketinggian : judgementketinggian
+				judgementketinggian : judgementketinggian,
+				notes : notes
 			}
 			$.post('{{ url("index/push_block_recorder/update_temp") }}', data, function(result, status, xhr){
 				if(result.status){
@@ -1115,7 +1124,8 @@
 				push_pull : push_pull2,
 				judgement : judgement2,
 				ketinggian : ketinggian2,
-				judgementketinggian : judgementketinggian2
+				judgementketinggian : judgementketinggian2,
+				notes : notes
 			}
 			$.post('{{ url("index/push_block_recorder/update_temp") }}', data2, function(result, status, xhr){
 				if(result.status){
@@ -1130,6 +1140,8 @@
 	function konfirmasi(){
 		var head_id =  $("#head_id").val();
 		var block_id =  $("#block_id").val();
+
+		var notes =  $("#notes").val();
 
 		var head_value =  $("#head_value").val();
 		var block_value =  $("#block_value").val();
@@ -1266,7 +1278,8 @@
 				push_pull_ng_name2 : push_pull_ng_name,
 				push_pull_ng_value2 : push_pull_ng_value,
 				height_ng_name2 : height_ng_name,
-				height_ng_value2 : height_ng_value
+				height_ng_value2 : height_ng_value,
+				notes : notes
 			}
 			// console.log(data3);
 

@@ -350,6 +350,7 @@ class RecorderProcessController extends Controller
               $head = $request->get('head');
               $block = $request->get('block');
               $push_block_code = $request->get('push_block_code');
+              $notes = $request->get('notes');
               for($i = 0; $i<16;$i++){
                 $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->get();
                 foreach ($temptemp as $key) {
@@ -358,6 +359,7 @@ class RecorderProcessController extends Controller
                   $update->judgement = $judgement[$i];
                   $update->ketinggian = $ketinggian[$i];
                   $update->judgement2 = $judgementketinggian[$i];
+                  $update->notes = $notes;
                   $update->save();
                 }
               }
@@ -386,6 +388,7 @@ class RecorderProcessController extends Controller
               $head = $request->get('head');
               $block = $request->get('block');
               $remark = $request->get('remark');
+              $notes = $request->get('notes');
 
               PushBlockRecorderResume::create([
                 'remark' => $remark,
@@ -403,6 +406,7 @@ class RecorderProcessController extends Controller
                   'height_ng_value' => $height_ng_value,
                   'jumlah_cek' => '32',
                   'pic_check' => $request->get('pic_check'),
+                  'notes' => $notes,
                   'created_by' => $id_user
               ]);
 
