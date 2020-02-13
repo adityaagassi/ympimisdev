@@ -58,7 +58,13 @@
 			<a href="javascript:void(0)" id="all" onclick="fetchTable(id)">All ({{ $rejected+$requested+$listed+$approved+$inprogress+$finished }})</a>
 		</li>
 		<li>
-			<a data-toggle="modal" data-target="#createModal" class="btn btn-success btn-md" style="color:white"><i class="fa fa-plus"></i>Buat WJO Baru</a>
+			<?php 
+			if (strpos(strtolower($employee->position), 'operator') !== false || strpos(strtolower($employee->position), 'sub') !== false) {
+				// echo $employee->position;
+			} else {
+				echo '<a data-toggle="modal" data-target="#createModal" class="btn btn-success btn-md" style="color:white"><i class="fa fa-plus"></i>Buat WJO Baru</a>';
+			}
+			?>
 		</li>
 	</ol>
 </section>
@@ -628,7 +634,16 @@
 				return false;
 			}
 		}
-		
+
+		var material = $("#material").val();
+		if(material == "Lainnya"){
+			var material_other = $("#material-other").val();
+			if(material_other == ""){
+				openErrorGritter('Error!', 'Kolom Material Lainnya harus diisi');
+				$("#loading").hide();
+				return false;
+			}
+		}
 
 		e.preventDefault();    
 		var formData = new FormData(this);

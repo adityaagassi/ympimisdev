@@ -130,6 +130,9 @@ class WorkshopController extends Controller{
 		$title = 'WJO Form';
 		$title_jp = '作業依頼書';
 
+		$emp = EmployeeSync::where('employee_id', Auth::user()->username)
+		->select('employee_id', 'name', 'position')->first();
+
 		$workshop_job_orders = WorkshopJobOrder::where('created_by', '=', Auth::user()->username)
 		->select(db::raw('count(if(remark="5", 1, null)) as rejected, count(if(remark="0", 1, null)) as requested, count(if(remark="1", 1, null)) as listed, count(if(remark="2", 1, null)) as approved, count(if(remark="3", 1, null)) as inprogress, count(if(remark="4", 1, null)) as finished'))->get();
 
@@ -140,6 +143,7 @@ class WorkshopController extends Controller{
 			'employees' => $this->employee,
 			'sections' => $this->section,
 			'materials' => $this->material,
+			'employee' => $emp,
 			'rejected' => $workshop_job_orders[0]->rejected,
 			'requested' => $workshop_job_orders[0]->requested,
 			'listed' => $workshop_job_orders[0]->listed,
