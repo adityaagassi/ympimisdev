@@ -32,6 +32,7 @@ class Kernel extends ConsoleKernel
         Commands\SyncSunfish::class,
         Commands\SendEmailKaizen::class,
         Commands\EmployeeHistory::class,
+        Commands\EmailVisitorConfirmation::class,
     ];
 
     /**
@@ -69,6 +70,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('email:shipment')->weekends()->dailyAt('13:00');
         $schedule->command('email:overtime')->weekends()->dailyAt('13:02');
         $schedule->command('email:middle_kanban')->weekdays()->dailyAt('07:00');
+        $schedule->command('email:visitor_confirmation')->weekdays()->dailyAt('07:00');
         // $schedule->command('email:confirmation_overtime')->weekdays()->dailyAt('06:55');
 
         $schedule->command('plan:injections')->weekdays()->dailyAt('08:40');
