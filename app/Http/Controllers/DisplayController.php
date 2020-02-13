@@ -151,6 +151,7 @@ class DisplayController extends Controller
 			'week' => 'Week ' . substr($week2->week_name, 1),
 			'weekTitle' => 'Week ' . substr($week->week_name, 1),
 			'dateTitle' => date('d F Y', strtotime($date)),
+			'now' => $now,
 		);
 		return Response::json($response);
 	}

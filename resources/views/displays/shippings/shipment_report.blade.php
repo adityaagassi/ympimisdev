@@ -63,34 +63,40 @@
 	</div>
 </section>
 
-<div class="modal fade" id="modalDetail">
-	<div class="modal-dialog modal-lg">
+<div class="modal fade" id="modalResult">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="modalDetailTitle"></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="modalResultTitle"></h4>
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
 					<center>
 						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
 					</center>
-					<table class="table table-hover table-bordered table-striped" id="tableDetail">
+					<table class="table table-hover table-bordered table-striped" id="tableResult">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
-								<th style="width: 1%;">#</th>
-								<th style="width: 3%;">Material</th>
-								<th style="width: 9%;">Description</th>
-								<th style="width: 3%;">Stock/Day</th>
-								<th style="width: 3%;">Act. Stock</th>
-								<th style="width: 3%;">Stock</th>
+								<th>Material</th>
+								<th>Description</th>
+								<th>Quantity</th>
 							</tr>
 						</thead>
-						<tbody id="tableDetailBody">
+						<tbody id="modalResultBody">
 						</tbody>
+						<tfoot style="background-color: RGB(252, 248, 227);">
+							<th>Total</th>
+							<th></th>
+							<th id="modalResultTotal"></th>
+						</tfoot>
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
 
 @endsection
 @section('scripts')
@@ -246,7 +252,7 @@
 								point: {
 									events: {
 										click: function () {
-											modalBL(this.category , this.series.name, result.weekTitle, result.now);
+											modalDetail(this.category , this.series.name, result.weekTitle, result.now);
 										}
 									}
 								},
@@ -273,6 +279,54 @@
 			}
 			else{
 				alert('Attempt to retrieve data failed');
+			}
+		});
+	}
+
+	function modalDetail(hpl, name, week, date){
+		$('#modalResult').modal('show');
+		$('#loading').show();
+		$('#modalResultTitle').hide();
+		$('#tableResult').hide();
+		var data = {
+			hpl:hpl,
+			name:name,
+			week:'W'+week.substring(5),
+			date:date,
+		}
+		$.get('{{ url("fetch/display/shipment_report_detail") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status == 200){
+				if(result.status){
+					$('#modalResultTitle').html('');
+					$('#modalResultTitle').html('Detail of '+ hpl +' '+ name);
+					$('#modalResultBody').html('');
+					var blData = '';
+					var blTotal = 0;
+					$.each(result.blData, function(key, value) {
+						blData += '<tr>';
+						blData += '<td>'+ value.material_number +'</td>';
+						blData += '<td>'+ value.material_description +'</td>';
+						blData += '<td>'+ value.quantity.toLocaleString() +'</td>';
+						blData += '</tr>';
+						blTotal += value.quantity;
+					});
+					$('#modalResultBody').append(blData);
+					$('#modalResultTotal').html('');
+					$('#modalResultTotal').append(blTotal.toLocaleString());
+
+					$('#loading').hide();
+					$('#modalResultTitle').show();
+					$('#tableResult').show();
+				}
+				else{
+					alert('Attempt to retrieve data failed');
+				}
+			}
+			else{
+				alert('Disconnected from server');
 			}
 		});
 	}
