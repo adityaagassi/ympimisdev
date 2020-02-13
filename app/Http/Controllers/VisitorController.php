@@ -16,12 +16,24 @@ use DataTables;
 
 class VisitorController extends Controller
 {
+	public function __construct()
+    {
+      $this->middleware('auth');
+      if (isset($_SERVER['HTTP_USER_AGENT']))
+        {
+            $http_user_agent = $_SERVER['HTTP_USER_AGENT']; 
+            if (preg_match('/Word|Excel|PowerPoint|ms-office/i', $http_user_agent)) 
+            {
+                // Prevent MS office products detecting the upcoming re-direct .. forces them to launch the browser to this link
+                die();
+            }
+        }
+    }
+
 	public function index()
 	{
 		return view('visitors.index')->with('page', 'Visitor Index');
 	}
-
-
 
 //-------------registration   
 
@@ -48,7 +60,6 @@ class VisitorController extends Controller
 				'company' => $request->get('company'),
 				'purpose' => $request->get('purpose'),
 				'status' => $request->get('status'),
-				'remark' => 'Unconfirmed',
 				'employee'=> $request->get('employee'),
 				'transport'=>  $request->get('kendaraan'),
 				'pol'=>  $request->get('pol'),
@@ -66,8 +77,7 @@ class VisitorController extends Controller
 					'id_visitor' => $id->id+1,
 					'full_name' => $request->get($visitor_name),
 					'telp' => $request->get($telp),
-					'status' => $request->get('status'),
-					'remark' => 'Unconfirmed'
+					'status' => $request->get('status')
 				]);
 				$VisitorDetail -> save();
 
@@ -260,16 +270,17 @@ public function updateremarkall(Request $request){
 
 	try {
 		$id = $request->get('id');
+		$remark = $request->get('remark');
 		// $tag = $request->get('idtag');
 		$intime = date('H:i:s');
 		$visitordetail = VisitorDetail::where('id_visitor','=', $id)		
 		->withTrashed()
-		->update(['remark' => 'Confirmed']);       
+		->update(['remark' => $remark]);       
 		
 
 		$visitor = Visitor::where('id','=', $id)		     
 		->first();
-		$visitor->remark = 'Confirmed';
+		$visitor->remark = $remark;
 		$visitor->save();
 
 		$response = array(
@@ -295,6 +306,50 @@ public function telpon()
 	$telpons = DB::select($telpon);
 	return DataTables::of($telpons)
 	->make(true);
+}
+
+public function confirmation_manager()
+{
+
+	$manager = Auth::user()->username;
+	$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
+
+	foreach ($emp_sync as $key) {
+		$position = $key->position;
+	}
+
+	if (strpos($position, 'Manager') === false) {
+		return redirect('home');
+	}else{
+		return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager');
+	}
+}
+
+public function fetchVisitorByManager()
+{
+	$manager = Auth::user()->username;
+	$manager_name = Auth::user()->name;
+
+	$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
+
+	foreach ($emp_sync as $key) {
+		$name = $key->name;
+	}
+	$lists = DB::SELECT("select 
+		visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
+		from visitors 
+		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
+		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
+		LEFT JOIN employee_superiors on employee_syncs.employee_id = employee_superiors.employee_id 
+		where visitors.remark is null and employee_superiors.direct_superior = '".$manager."'");
+
+	$response = array(
+		'status' => true,
+		'lists' => $lists,
+		'manager_name' => $manager_name,
+		'name' => $name,
+	);
+	return Response::json($response);
 }
 
 

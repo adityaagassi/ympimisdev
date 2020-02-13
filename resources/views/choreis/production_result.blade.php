@@ -1173,7 +1173,7 @@
 							enabled: false
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Weekly Shipment ETD SUB</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>',
+							text: '<span style="font-size: 3vw;">Weekly Shipment ETD YMPI</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -1282,7 +1282,7 @@
 							enabled: false
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Weekly Shipment ETD SUB</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>',
+							text: '<span style="font-size: 3vw;">Weekly Shipment ETD YMPI</span><br><span style="color: rgba(96, 92, 168);">'+ result.weekTitle +'</span>',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'

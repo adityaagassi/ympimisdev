@@ -136,5 +136,8 @@ class SendEmail extends Mailable
             }
 
         }
+        if($this->remark == 'visitor_confirmation'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Visitor Confirmation (??)')->view('mails.visitor_confirmation');
+        }
     }
 }
