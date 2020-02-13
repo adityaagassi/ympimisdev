@@ -74,6 +74,7 @@ public function handle()
         $row['union'] = $data['Union'];
         $row['created_at'] = date('Y-m-d H:i:s');
         $row['updated_at'] = date('Y-m-d H:i:s');
+        $row['nik_manager'] = $data['NIK_Manager'];
 
         $insert[] = $row;
     }
