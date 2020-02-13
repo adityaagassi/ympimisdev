@@ -142,6 +142,9 @@
 	}
 
 	function fetchChart(id){
+		if(id != 0){
+			$('#dateHidden').val(id);
+		}
 		var data = {
 			date : id
 		}
