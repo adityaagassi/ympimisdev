@@ -55,7 +55,6 @@
 					<div class="form-group">
 						<label for="inputEmail3" class="col-sm-2 control-label">Jenis Kendaraan</label>
 						<div class="col-sm-9">
-							{{-- <input type="text" name="lop2" id="lop2" hidden> --}}
 							<select class="form-control select2" id="kendaraan" name="kendaraan" required>
 								<option style="color:grey;" value="">Pilih Kendaraan</option>					
 								<option value="Motorcycle">Motorcycle</option>
