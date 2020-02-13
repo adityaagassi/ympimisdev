@@ -5776,6 +5776,9 @@ class MiddleProcessController extends Controller
 		if ($request->get('filter') != '') {
 			$filter = " and materials.hpl = '".$request->get('filter')."'";
 		}
+		if($request->get('filter') == '82Z'){
+			$filter = " and materials.model like '%82%'";
+		}
 
 		$query = "select middle_material_requests.material_number, materials.model, materials.key, middle_material_requests.quantity/material_volumes.lot_transfer as kanban, middle_material_requests.quantity, coalesce(kitto.kanban,0) as inventory_kanban, coalesce(kitto.quantity, 0) as inventory_quantity from ympimis.middle_material_requests left join (select kitto.inventories.material_number, count(kitto.inventories.material_number) as kanban, sum(kitto.inventories.lot) as quantity from kitto.inventories where kitto.inventories.lot > 0 group by kitto.inventories.material_number) as kitto on kitto.material_number = ympimis.middle_material_requests.material_number left join material_volumes on material_volumes.material_number = middle_material_requests.material_number left join materials on materials.material_number = middle_material_requests.material_number where middle_material_requests.quantity > 0 and materials.origin_group_code = '".$request->get('origin_group_code')."'".$filter." ORDER BY middle_material_requests.quantity/material_volumes.lot_transfer DESC, materials.key ASC"; 
 
