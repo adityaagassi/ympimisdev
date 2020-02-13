@@ -54,8 +54,10 @@
 			</div>
 		</div>
 		<div class="col-xs-12">
-			<div class="row">
-				<div id="container3" style="width:100%; height:530px;"></div>
+			<div class="box box-solid">
+				<div class="box-body">
+					<div id="container3" style="width:100%; height:530px;"></div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -108,9 +110,9 @@
 			autoclose: true,
 			todayHighlight: true
 		});
-		fillChart($('#dateHidden').val());
+		fetchChart($('#dateHidden').val());
 		setInterval(function(){
-			fillChart($('#dateHidden').val());
+			fetchChart($('#dateHidden').val());
 		}, 10000);
 	});
 
@@ -135,11 +137,14 @@
 		var date = $.date($('#tanggal').val());
 
 		if($('#tanggal').val() != 0){
-			fillChart(date);
+			fetchChart(date);
 		}
 	}
 
-	function fetchChart(){
+	function fetchChart(id){
+		var data = {
+			date : id
+		}
 		$.get('{{ url("fetch/display/shipment_report") }}', data, function(result, status, xhr){
 			if(result.status){
 				var data3 = result.chartResult3;
@@ -152,6 +157,7 @@
 					planBLCount.push(data3[i].prc_plan);
 					actualBLCount.push(data3[i].prc_actual);
 				}
+				var yAxisLabels = [0,25,50,75,110];	
 
 				Highcharts.chart('container3', {
 					colors: ['rgba(255, 0, 0, 0.15)','rgba(255, 69, 0, 0.70)'],
@@ -265,11 +271,7 @@
 			else{
 				alert('Attempt to retrieve data failed');
 			}
-		}
+		});
 	}
-
-
-
-
 </script>
 @endsection
