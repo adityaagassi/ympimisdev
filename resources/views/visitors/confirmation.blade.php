@@ -74,13 +74,13 @@
 		{{-- <div class="box"> --}}
 			
 			{{-- TELP --}}
-			<div class="col-xs-6">
+			<div class="col-xs-12">
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="box">
 							<div class="box-body">
 								<div class="form-group">					
-									<div  class="col-xs-11">
+									<div  class="col-xs-12">
 										<div class="input-group ">
 											<div class="input-group-btn">
 												<button type="button" class="btn btn-warning"><i class="fa fa-search"></i>&nbsp;Search</button>
@@ -129,7 +129,7 @@
 			</div>
 
 			{{-- CONFIRMATION --}}
-			<div class="col-xs-6">
+			<!-- <div class="col-xs-6">
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="box">
@@ -233,17 +233,14 @@
 														<button type="button" class="btn btn-primary" onclick="inputag2();reloadtable(); ">Confirm All</button>
 													</div>
 												</div>
-												<!-- /.modal-content -->
 											</div>
-											<!-- /.modal-dialog -->
 										</div>
-										<!-- /.modal -->
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</div>
