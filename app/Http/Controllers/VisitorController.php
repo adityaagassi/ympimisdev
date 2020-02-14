@@ -13,6 +13,8 @@ use App\Employee;
 use App\TelephoneList;
 use App\VisitorId;
 use DataTables;
+use File;
+use Storage;
 
 class VisitorController extends Controller
 {
@@ -310,7 +312,16 @@ public function telpon()
 
 public function confirmation_manager()
 {
-
+	// var_dump(stream_get_contents(fopen("\\\\172.17.128.87\\MIS\\Book1.csv", "r")));
+	// foreach (glob(public_path('*.csv')) as $filename) {
+	//       // echo "$filename size " . filesize($filename) . "\n";
+	//     // var_dump();
+	//     $data = substr($filename,-9,5);
+	//     $file = File::get($filename);
+	//     $filepecah = explode(' ', $file);
+	//     // var_dump(substr($filepecah[3], 7,2));
+	//     // var_dump($file);
+	//   }
 	$manager = Auth::user()->username;
 	$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
 
@@ -340,8 +351,7 @@ public function fetchVisitorByManager()
 		from visitors 
 		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
 		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
-		LEFT JOIN employee_superiors on employee_syncs.employee_id = employee_superiors.employee_id 
-		where visitors.remark is null and employee_superiors.direct_superior = '".$manager."'");
+		where visitors.remark is null and employee_syncs.nik_manager = '".$manager."'");
 
 	$response = array(
 		'status' => true,

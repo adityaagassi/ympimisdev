@@ -385,7 +385,6 @@ table > thead > tr > th{
             series: [{
                 name: 'List YMMJ',
                 data: jml,
-                color : '#5cb85c' 
             }
             ]
           })

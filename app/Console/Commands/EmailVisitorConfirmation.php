@@ -51,8 +51,7 @@ class EmailVisitorConfirmation extends Command
             from visitors 
             LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
             LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
-            LEFT JOIN employee_superiors on employee_syncs.employee_id = employee_superiors.employee_id 
-            where visitors.remark is null and employee_superiors.direct_superior = '".$key->employee_id."'");
+            where visitors.remark is null and employee_syncs.nik_manager = '".$key->employee_id."'");
             if (count($visitor) > 0) {
                 $namamanager[] = [ 'manager_name' => $key->name,
                 'jumlah_visitor' => count($visitor)
