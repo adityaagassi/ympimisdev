@@ -272,18 +272,33 @@ public function updateremarkall(Request $request){
 
 	try {
 		$id = $request->get('id');
-		$remark = $request->get('remark');
+		if (count($request->get('remark')) > 0) {
+		    $remark = $request->get('remark');
+		    $intime = date('H:i:s');
+			$visitordetail = VisitorDetail::where('id_visitor','=', $id)		
+			->withTrashed()
+			->update(['remark' => $remark]);
+
+			$visitor = Visitor::where('id','=', $id)		     
+			->first();
+			$visitor->remark = $remark;
+			$visitor->save();
 		// $tag = $request->get('idtag');
-		$intime = date('H:i:s');
-		$visitordetail = VisitorDetail::where('id_visitor','=', $id)		
-		->withTrashed()
-		->update(['remark' => $remark]);       
+			
+		}else{
+			$intime = date('H:i:s');
+			$visitordetail = VisitorDetail::where('id_visitor','=', $id)		
+			->withTrashed()
+			->update(['remark' => 'Confirmed']);
+
+			$visitor = Visitor::where('id','=', $id)		     
+			->first();
+			$visitor->remark = 'Confirmed';
+			$visitor->save();
+		}
 		
 
-		$visitor = Visitor::where('id','=', $id)		     
-		->first();
-		$visitor->remark = $remark;
-		$visitor->save();
+		
 
 		$response = array(
 			'status' => true,
