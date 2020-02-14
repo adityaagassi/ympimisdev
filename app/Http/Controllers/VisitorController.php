@@ -54,8 +54,8 @@ class VisitorController extends Controller
 
 	public function simpanheader(Request $request)
 	{
-		$id = Visitor::orderby('created_at','desc')->first();
 		$lop = $request->get('lop2');
+		// var_dump($id);
 		try {
 			//----insert visitor
 			$visitor = new visitor([
@@ -67,7 +67,7 @@ class VisitorController extends Controller
 				'pol'=>  $request->get('pol'),
 			]);	
 			$visitor -> save();	
-
+			$id = Visitor::orderby('created_at','desc')->first();
 			//----insert detail
 			for ($i=0; $i < $lop ; $i++) {
 
@@ -76,7 +76,7 @@ class VisitorController extends Controller
 				$telp = "telp".$i;
 				$VisitorDetail = new VisitorDetail([
 					'id_number' => $request->get($visitor_id), 
-					'id_visitor' => $id->id+1,
+					'id_visitor' => $id->id,
 					'full_name' => $request->get($visitor_name),
 					'telp' => $request->get($telp),
 					'status' => $request->get('status')
@@ -272,7 +272,7 @@ public function updateremarkall(Request $request){
 
 	try {
 		$id = $request->get('id');
-		if (count($request->get('remark')) > 0) {
+		if ($request->get('remark') != null) {
 		    $remark = $request->get('remark');
 		    $intime = date('H:i:s');
 			$visitordetail = VisitorDetail::where('id_visitor','=', $id)		
