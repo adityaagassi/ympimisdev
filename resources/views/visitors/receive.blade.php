@@ -559,7 +559,7 @@
 
 							$.each(result.ops, function(key, value) {
 
-								if(value.remark =="Unconfirmed"){												 
+								if(value.remark ==""){												 
 									$('#apen').append('<div class="col-xs-12" > <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.id_number +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.full_name +'</b> </div> <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.in_time +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.company +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.name +'</b> </div> <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.department +'</b> </div> <div class="col-sm-2 " > <div class="input-group margin"> <input type="text" class="form-control" id="'+ value.tag +'" name="visitor_id0" placeholder="Reschedule" required value=""> <span class="input-group-btn"> <button type="button" class="btn btn-success btn-flat" onclick="out('+'\''+ id + '\''+')"><i class="glyphicon glyphicon-calendar"> Input</i> </button> </span> </div> </div> </div>');
 									openErrorGritter('Error!', 'Meet Unconfirmed');
 								}

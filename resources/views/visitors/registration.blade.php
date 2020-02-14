@@ -61,6 +61,7 @@
 								<option value="Truck">Truck</option>
 								<option value="Bus">Bus</option>
 								<option value="SUV / MPV">SUV / MPV</option>
+								<option value="Container">Container</option>
 								<option value="No Vehicle">No Vehicle</option>
 								<option value="Other">Other</option>
 							</select>
