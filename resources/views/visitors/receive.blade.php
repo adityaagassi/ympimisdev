@@ -387,7 +387,7 @@
 					"columnDefs": [ {
 						"targets": [11],
 						"createdCell": function (td, cellData, rowData, row, col) {
-							if ( cellData =='Unconfirmed' ) {
+							if ( cellData == null ) {
 								$(td).css('background-color', 'RGB(255,204,255)')
 							}
 							else
