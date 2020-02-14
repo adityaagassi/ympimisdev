@@ -309,12 +309,19 @@ class EmployeeController extends Controller
 
           $section = explode(" ~ ",$data[0]->section)[0];
 
-          $q_subleader = "select employees.name, position, employees.employee_id from employees 
-          left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
-          left join mutation_logs on mutation_logs.employee_id = employees.employee_id
-          where promotion_logs.valid_to is null and mutation_logs.valid_to is null and position = 'Leader'
-          and end_date is null and section = '".$section."'
-          order by name asc";
+          $ldr = "position = 'Leader'";
+          if ($section == 'Assembly Process Control') {
+               $ldr = "grade_name = 'Staff'";
+          }
+          
+          $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
+
+          // $q_subleader = "select employees.name, position, employees.employee_id from employees 
+          // left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
+          // left join mutation_logs on mutation_logs.employee_id = employees.employee_id
+          // where promotion_logs.valid_to is null and mutation_logs.valid_to is null and position = 'Leader'
+          // and end_date is null and section = '".$section."'
+          // order by name asc";
 
           $subleader = db::select($q_subleader);
 
