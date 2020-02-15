@@ -369,89 +369,107 @@ class WeldingProcessController extends Controller
 	}
 
 	public function fetchOpAnalysis(Request $request){
-		// if (strlen($request->get('date_from')) > 0) {
-		// 	$from = $request->get('date_from');
-		// }else{
-		// 	$from = date('Y-m')."-01";
-		// }
-
-		// if (strlen($request->get('date_to')) > 0) {
-		// 	$now = $request->get('date_to');
-		// // }else{
-		// // 	$now = date('Y-m-d');
-		// // }
 		$date_from = $request->get('date_from');
-      	$date_to = $request->get('date_to');
+		$date_to = $request->get('date_to');
 
 		if($request->get('date_to') == null){
-          if($request->get('date_from') == null){
-            $from = date('Y-m')."-01";
-            $now = date('Y-m-d');
-          }
-          elseif($request->get('date_from') != null){
-          	$from = $request->get('date_from');
-          	$now = date('Y-m-d');
-            // $date = "DATE(d.tanggaljam_shift) BETWEEN '".$date_from."' and '".$datenow."'";
-          }
-        }
-        elseif($request->get('date_to') != null){
-          if($request->get('date_from') == null){
-          	$from = date('Y-m')."-01";
-            $now = $request->get('date_to');
-            // $date = "DATE(d.tanggaljam_shift) <= '".$date_to."'";
-          }
-          elseif($request->get('date_from') != null){
-          	$from = $request->get('date_from');
-            $now = $request->get('date_to');
-            // $date = "DATE(d.tanggaljam_shift) BETWEEN '".$date_from."' and '".$date_to."'";
-          }
-        }
+			if($request->get('date_from') == null){
+				$from = date('Y-m')."-01";
+				$now = date('Y-m-d');
+			}
+			elseif($request->get('date_from') != null){
+				$from = $request->get('date_from');
+				$now = date('Y-m-d');
+			}
+		}
+		elseif($request->get('date_to') != null){
+			if($request->get('date_from') == null){
+				$from = date('Y-m')."-01";
+				$now = $request->get('date_to');
+			}
+			elseif($request->get('date_from') != null){
+				$from = $request->get('date_from');
+				$now = $request->get('date_to');
+			}
+		}
 
-		// $addlocation = "";
-		// if($request->get('location') != null) {
-		// 	$locations = explode(",", $request->get('location'));
-		// 	$location = "";
-
-		// 	for($x = 0; $x < count($locations); $x++) {
-		// 		$location = $location."'".$locations[$x]."'";
-		// 		if($x != count($locations)-1){
-		// 			$location = $location.",";
-		// 		}
-		// 	}
-		// 	$addlocation = "and location in (".$location.") ";
-		// }
-
-		// if(strlen($request->get('tanggal'))>0){
-		// 	$now = date('Y-m-d', strtotime($request->get('tanggal')));
-		// }
-
-		$actual = db::connection('welding')->select("select DATE(d.tanggaljam_shift) as tgl,
-			SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)) as time, 
-
-			count(distinct id_operator) as op,
-
-			ROUND((SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)))/count(distinct id_operator),2) as act_time,
-
-			ROUND((SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime))),2) as all_time,
-
-			(select target from ympimis.middle_targets where target_name = 'Normal Working Time' and location = 'wld') as normal_time,
-
-			ROUND((select target from ympimis.middle_targets where target_name = 'Normal Working Time' and location = 'wld') - (SUM(TIMESTAMPDIFF(MINUTE,d.starttime,d.stoptime)))/count(distinct id_operator),2) as loss_time,
-
-			ROUND((select SUM(perolehan_jumlah*hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2')/count(distinct id_operator),2) as std_time,
-
-			ROUND((select target from ympimis.middle_targets where target_name = 'Normal Working Time' and location = 'wld') - (select SUM(perolehan_jumlah * hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2')/count(distinct id_operator),2) as loss_time_std,
-
-			ROUND((select SUM(perolehan_jumlah* hsa_timing)/60 from t_perolehan left join m_hsa on m_hsa.hsa_id = t_perolehan.part_id where DATE(tanggaljam) = tgl and part_type  = '2'),2) as all_time_std
-			from t_data_downtime d 
-			LEFT JOIN ympimis.weekly_calendars ON weekly_calendars.week_date = DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d')
-			where 
-			DATE(d.tanggaljam_shift) BETWEEN '".$from."'
-			and '".$now."'
-			and  
-			`status` = '1' 
-			and weekly_calendars.remark <> 'H'
-			GROUP BY tgl");
+		$actual = db::connection('welding')->select("SELECT
+			DATE( d.tanggaljam_shift ) AS tgl,
+			SUM(
+			TIMESTAMPDIFF( MINUTE, d.starttime, d.stoptime )) AS time,
+			COUNT( DISTINCT operator_id ) AS op,
+			ROUND(( SUM( TIMESTAMPDIFF( MINUTE, d.starttime, d.stoptime )))/ COUNT( DISTINCT operator_id ), 2 ) AS act_time,
+			ROUND(( SUM( TIMESTAMPDIFF( MINUTE, d.starttime, d.stoptime ))), 2 ) AS all_time,
+			( SELECT target FROM ympimis.middle_targets WHERE target_name = 'Normal Working Time' AND location = 'wld' ) AS normal_time,
+			ROUND((
+				SELECT
+					target 
+				FROM
+					ympimis.middle_targets 
+				WHERE
+					target_name = 'Normal Working Time' 
+					AND location = 'wld' 
+					) - (
+					SUM(
+					TIMESTAMPDIFF( MINUTE, d.starttime, d.stoptime )))/ COUNT( DISTINCT operator_id ),
+				2 
+			) AS loss_time,
+			ROUND((
+				SELECT
+					SUM( perolehan_jumlah * hsa_timing )/ 60 
+				FROM
+					t_perolehan
+					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_perolehan.part_id 
+				WHERE
+					DATE( tanggaljam ) = tgl 
+					AND part_type = '2' 
+					)/ COUNT( DISTINCT operator_id ),
+				2 
+			) AS std_time,
+			ROUND((
+				SELECT
+					target 
+				FROM
+					ympimis.middle_targets 
+				WHERE
+					target_name = 'Normal Working Time' 
+					AND location = 'wld' 
+					) - (
+				SELECT
+					SUM( perolehan_jumlah * hsa_timing )/ 60 
+				FROM
+					t_perolehan
+					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_perolehan.part_id 
+				WHERE
+					DATE( tanggaljam ) = tgl 
+					AND part_type = '2' 
+					)/ COUNT( DISTINCT operator_id ),
+				2 
+			) AS loss_time_std,
+			ROUND((
+				SELECT
+					SUM( perolehan_jumlah * hsa_timing )/ 60 
+				FROM
+					t_perolehan
+					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_perolehan.part_id 
+				WHERE
+					DATE( tanggaljam ) = tgl 
+					AND part_type = '2' 
+					),
+				2 
+			) AS all_time_std 
+		FROM
+			t_data_downtime d
+			LEFT JOIN ympimis.weekly_calendars ON weekly_calendars.week_date = DATE_FORMAT( d.tanggaljam_shift, '%Y-%m-%d' )
+			LEFT JOIN m_mesin ON m_mesin.mesin_id = d.mesin_id 
+		WHERE
+			DATE( d.tanggaljam_shift ) BETWEEN '".$from."' 
+			AND '".$now."' 
+			AND m_mesin.department_id = 2 
+			AND `status` = '1' 
+			AND weekly_calendars.remark <> 'H' 
+		GROUP BY
+			tgl");
 
 		// $op = db::connection('welding')->select("select DATE(d.tanggaljam_shift) as tgl, SUM(durasi) as act, count(distinct id_operator) as op from t_data_downtime d where DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d') between '".$from."' and '".$now."' and  `status` = '1' GROUP BY tgl");
 
