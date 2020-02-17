@@ -146,7 +146,7 @@ class EmployeeController extends Controller
                array_push($dd, $emp_usr[$x]->username);
           }
 
-          array_push($dd, 'O11101710');
+          array_push($dd, 'PI0904007');
 
 // $dd = implode("','", $emp_usr);
 
@@ -2676,7 +2676,7 @@ public function fetchKaizenReport(Request $request)
 
      $kz_rank2 = db::select($q_rank2);
 
-     $q_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',mutation_logs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as  score from kaizen_forms 
+     $q_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',mutation_logs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as score, kaizen_forms.id from kaizen_forms 
      join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
      left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
      where DATE_FORMAT(propose_date,'%Y-%m') = '".$date."' and (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) > 450

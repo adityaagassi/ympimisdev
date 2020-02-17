@@ -561,8 +561,8 @@
     <a href="{{ url("/index/workshop/list_wjo") }}"><i class="fa fa-list"></i> <span>List WJO</span></a>
   </li>
 
-  @if(isset($page) && $page == "Drawing")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/workshop/drawing") }}"><i class="fa fa-files-o"></i> <span>Drawing</span></a>
+  @if(isset($page) && $page == "WJO History")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/workshop/job_history") }}"><i class="fa fa-files-o"></i> <span>Job History</span></a>
   </li>
   @endif
 

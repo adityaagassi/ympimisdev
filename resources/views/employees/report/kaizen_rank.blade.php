@@ -70,6 +70,41 @@
 		color: #363836 !important;
 		background-color: #cc952f !important;
 	}
+
+	#kz_top_each_score > tr:hover {
+		background-color: #fff !important;
+		cursor: pointer;
+	}
+
+	#tabel_nilai_all tbody > tr > th {
+		text-align: center;
+		background-color: #7e5686;
+		color: white;
+	}
+
+	#tabel_nilai > tbody > tr > td {
+		text-align: left;
+	}
+	#tabel_assess > tbody > tr > td, #tabel_assess > tbody > tr > th {
+		text-align: center;
+	}
+	#tabel_assess > tbody > tr > th {
+		background-color: #7e5686;
+		color: white;
+	}
+	#tabelDetail > tbody > tr > td {
+		text-align: left;
+	}
+	#tabel_Kz > tbody > tr > td {
+		text-align: left;
+		vertical-align: top;
+		padding: 2px;
+	}
+	#tabel_Kz > tbody > tr > th {
+		padding: 2px;
+		background-color: #7e5686;
+		color: white;
+	}
 </style>
 @stop
 @section('header')
@@ -99,7 +134,7 @@
 			<div class="col-xs-12">
 				<div id="kz_total" style="width: 100%; height: 500px;"></div>
 				<!-- <h1 style="color: white">TOTAL KAIZEN : 50</h1> -->
-				<h3 style="color: white;">TOP KAIZEN Score :</h3>
+				<h3 style="color: white;">TOP Kaizen Score :</h3>
 				<table class="table" style="color: white">
 					<thead>
 						<tr>
@@ -138,6 +173,146 @@
 					</thead>
 					<tbody id="kz_top_each_score"></tbody>
 				</table>
+
+				<div class="modal fade" id="modal_excellent">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-xs-12">
+										<p style="font-size: 25px; font-weight: bold; text-align: center" id="kz_title"></p>
+										<table id="tabelDetail" width="100%">
+											<tr>
+												<th>NIK/Name </th>
+												<td> : </td>
+												<td id="kz_nik"></td>
+												<th>Date</th>
+												<td> : </td>
+												<td id="kz_tanggal"></td>
+											</tr>
+											<tr>
+												<th>Section</th>
+												<td> : </td>
+												<td id="kz_section"></td>
+												<th>Area Kaizen</th>
+												<td> : </td>
+												<td id="kz_area"></td>
+											</tr>
+											<tr>
+												<th>Leader</th>
+												<td> : </td>
+												<td id="kz_leader"></td>
+											</tr>
+											<tr>
+												<td colspan="6"><hr style="margin: 5px 0px 5px 0px; border-color: black"></td>
+											</tr>
+										</table>
+										<table width="100%" border="1" id="tabel_Kz">
+											<tr>
+												<th style="border-bottom: 1px solid black" width="50%">BEFORE :</th>
+												<th style="border-bottom: 1px solid black; border-left: 1px" width="50%">AFTER :</th>
+											</tr>
+											<tr>
+												<td id="kz_before"></td>
+												<td id="kz_after"></td>
+											</tr>
+										</table>
+										<table width="100%" id="tabel_nilai" style="border: 1px solid black">
+										</table>
+										<br>
+										<table width="100%" border="1" id="tabel_assess">
+											<tr>
+												<th colspan="4">TABEL NILAI KAIZEN</th>
+											</tr>
+											<tr>
+												<th width="5%">No</th>
+												<th>Kategori</th>
+												<th>Foreman / Chief</th>
+												<th>Manager</th>
+											</tr>
+											<tr>
+												<th>1</th>
+												<th>Estimasi Hasil</th>
+												<td id="foreman_point1"></td>
+												<td id="manager_point1"></td>
+											</tr>
+											<tr>
+												<th>2</th>
+												<th>Ide</th>
+												<td id="foreman_point2"></td>
+												<td id="manager_point2"></td>
+											</tr>
+											<tr>
+												<th>3</th>
+												<th>Implementasi</th>
+												<td id="foreman_point3"></td>
+												<td id="manager_point3"></td>
+											</tr>
+											<tr>
+												<th colspan="2"> TOTAL</th>
+												<td id="foreman_total" style="font-weight: bold;"></td>
+												<td id="manager_total" style="font-weight: bold;"></td>
+											</tr>
+										</table>
+										<br>
+										<table width="100%" id="tabel_nilai_all" border="1">
+											<tr>
+												<th>No</th>
+												<th>Total Nilai</th>
+												<th>Point</th>
+												<th>Keterangan</th>
+												<th>Reward Aplikasi</th>
+											</tr>
+											<tr>
+												<td>1</td>
+												<td><300</td>
+												<td>2</td>
+												<td>Kurang</td>
+												<td>Rp 2.000,-</td>
+											</tr>
+
+											<tr>
+												<td>2</td>
+												<td>300 - 350</td>
+												<td>4</td>
+												<td>Cukup</td>
+												<td>Rp 5.000,-</td>
+											</tr>
+
+											<tr>
+												<td>3</td>
+												<td>351 - 400</td>
+												<td>6</td>
+												<td>Baik</td>
+												<td>Rp 10.000,-</td>
+											</tr>
+
+											<tr>
+												<td>4</td>
+												<td>401 - 450</td>
+												<td>8</td>
+												<td>Sangat Baik</td>
+												<td>Rp 25,000,-</td>
+											</tr>
+
+											<tr>
+												<td>5</td>
+												<td>> 450</td>
+												<td>10</td>
+												<td>Potensi Excellent</td>
+												<td>Rp 50,000,-</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
 			</div>
 		</div>
 	</div>
@@ -222,7 +397,7 @@
 					text: 'Data Kaizen Teian '+result.date
 				},
 				subtitle: {
-					text: 'Click the columns to view detail per Section'
+					text: 'Click the columns to view detail each Section'
 				},
 				accessibility: {
 					announceNewData: {
@@ -308,7 +483,7 @@
 			no = 1;
 
 			$.each(result.excellent, function(index, value){
-				body_each += "<tr>";
+				body_each += "<tr onclick='detail_excellent("+value.id+")'>";
 				body_each += "<td>"+no+"</td>";
 				body_each += "<td>"+value.employee_id+"</td>";
 				body_each += "<td>"+value.employee_name+"</td>";
@@ -320,6 +495,76 @@
 
 			$("#kz_top_each_score").append(body_each);
 		});
+	}
+
+	function detail_excellent(id) {
+		$('#modal_excellent').modal('show');
+
+		data = {
+			id:id
+		}
+
+		$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
+			$("#kz_title").text(result[0].title);
+			$("#kz_nik").text(result[0].employee_id + " / "+ result[0].employee_name);
+			$("#kz_section").text(result[0].section);
+			$("#kz_leader").text(result[0].leader_name);
+			$("#kz_tanggal").text(result[0].date);
+			$("#kz_area").text(result[0].area);
+			$("#kz_before").html(result[0].condition);
+			$("#kz_after").html(result[0].improvement);
+			$("#foreman_point1").text(result[0].foreman_point_1 * 40);
+			$("#foreman_point2").text(result[0].foreman_point_2 * 30);
+			$("#foreman_point3").text(result[0].foreman_point_3 * 30);
+			$("#foreman_total").text((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 30) + (result[0].foreman_point_3 * 30));
+			$("#manager_point1").text(result[0].manager_point_1 * 40);
+			$("#manager_point2").text(result[0].manager_point_2 * 30);
+			$("#manager_point3").text(result[0].manager_point_3 * 30);
+			$("#manager_total").text((result[0].manager_point_1 * 40) + (result[0].manager_point_2 * 30) + (result[0].manager_point_3 * 30));
+
+			$("#tabel_nilai").empty();
+			if (result[0].cost_name) {
+				bd = "";
+				tot = 0;
+				bd += "<tr style='font-size: 13px;'><th>Estimasi Hasil : </th></tr>";
+				$.each(result, function(index, value){
+					bd += "<tr>";
+					var unit = "";
+
+					if (value.cost_name == "Manpower") {
+						unit = "menit";
+						sub_tot = parseInt(value.sub_total_cost) * 20;
+						tot += sub_tot;
+					}  else if (value.cost_name == "Tempat") {
+						unit = value.unit+"<sup>2</sup>";
+						sub_tot = parseInt(value.sub_total_cost);
+						tot += sub_tot;
+					}
+					else {
+						unit = value.unit;
+						sub_tot = value.sub_total_cost;
+						tot += sub_tot;
+					}
+
+					sub_tot = sub_tot.toLocaleString('es-ES');
+
+					bd += "<th>"+value.cost_name+"</th>";
+					bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",-</b></td>";
+					bd += "<td><b>Rp "+sub_tot+",- / bulan</b></td>";
+					bd += "</tr>";
+				});
+
+				tot = tot.toLocaleString('es-ES');
+
+				bd += "<tr style='font-size: 18px;'>";
+				bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total : </th>";
+				bd += "<td><b>Rp "+tot+",-</b></td>";
+				bd += "</tr>";
+
+				$("#tabel_nilai").append(bd);
+			}
+			$("#modalDetail").modal('show');
+		})
 	}
 
 	$('#tgl').datepicker({

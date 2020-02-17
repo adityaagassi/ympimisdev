@@ -30,7 +30,7 @@ Route::get('/trial', function () {
 Route::get('/trial2', function () {
 	return view('trial2');
 });
-Route::get('print/trial', 'TrialController@printKDO');
+Route::get('print/trial', 'TrialController@tes');
 
 Route::get('/machinery_monitoring', function () {
 	return view('plant_maintenance.machinery_monitoring', array(
@@ -865,6 +865,13 @@ Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKen
 Route::get('scan/welding/operator', 'WeldingProcessController@scanWeldingOperator');
 Route::get('scan/welding/kensa', 'WeldingProcessController@scanWeldingKensa');
 Route::get('fetch/welding/kensa_result', 'WeldingProcessController@fetchKensaResult');
+Route::get('index/welding/resume/{id}', 'WeldingProcessController@indexWeldingResume');
+Route::get('fetch/welding/resume', 'WeldingProcessController@fetchWeldingResume');
+Route::get('index/welding/group_achievement', 'WeldingProcessController@indexWeldingAchievement');
+Route::get('fetch/welding/group_achievement', 'WeldingProcessController@fetchGroupAchievement');
+Route::get('fetch/welding/accumulated_achievement', 'WeldingProcessController@fetchAccumulatedAchievement');
+
+
 
 
 
@@ -939,6 +946,8 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::get('index/workshop/drawing', 'WorkshopController@indexDrawing');
 	Route::post('create/workshop/drawing', 'WorkshopController@createDrawing');
 	Route::post('edit/workshop/drawing', 'WorkshopController@editDrawing');
+	Route::get('index/workshop/job_history', 'WorkshopController@indexJobHistory');
+	Route::get('fetch/workshop/job_history', 'WorkshopController@fetchJobHistory');
 });
 
 Route::group(['nav' => 'S31', 'middleware' => 'permission'], function(){
@@ -1153,6 +1162,11 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::get('fetch/diagnose', 'ClinicController@fetchDiagnose');
 	Route::post('delete/diagnose', 'ClinicController@deleteVisitor');
 	Route::post('input/diagnose', 'ClinicController@inputDiagnose');
+
+	Route::get('fetch/display/clinic_disease_detail', 'ClinicController@fetchDiseaseDetail');
+	Route::get('fetch/clinic_visit_detail', 'ClinicController@fetchClinicVisitDetail');
+
+
 });
 Route::get('index/display/clinic_monitoring', 'ClinicController@indexClinicMonitoring');
 Route::get('index/display/clinic_visit', 'ClinicController@indexClinicVisit');
@@ -1160,9 +1174,7 @@ Route::get('index/display/clinic_disease', 'ClinicController@indexClinicDisease'
 Route::get('fetch/display_patient', 'ClinicController@fetchPatient');
 Route::get('fetch/daily_clinic_visit', 'ClinicController@fetchDailyClinicVisit');
 Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
-Route::get('fetch/clinic_visit_detail', 'ClinicController@fetchClinicVisitDetail');
 Route::get('fetch/display/clinic_disease', 'ClinicController@fetchDisease');
-Route::get('fetch/display/clinic_disease_detail', 'ClinicController@fetchDiseaseDetail');
 
 //END CLINIC
 
