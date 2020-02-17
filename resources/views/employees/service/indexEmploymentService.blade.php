@@ -278,11 +278,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 											@endif
 										</td>
 										<td>
-											{{-- @if ($presence->overtime > 0)
+											@if ($presence->overtime > 0)
 											<span class="badge bg-yellow">{{$presence->overtime}}</span>
 											@else 
 											- 
-											@endif --}}
+											@endif
 										</td>
 									</tr>
 									@endforeach

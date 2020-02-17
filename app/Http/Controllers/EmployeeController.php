@@ -1567,7 +1567,8 @@ public function indexEmployeeService(Request $request)
           OR Attend_Code LIKE '%TELAT%',
           1,
           NULL 
-          )) AS tunjangan 
+          )) AS tunjangan,
+          SUM ( floor(( total_ot / 60.0 ) * 2 + 0.5 ) / 2 ) as overtime
           FROM
           VIEW_YMPI_Emp_Attendance 
           WHERE
