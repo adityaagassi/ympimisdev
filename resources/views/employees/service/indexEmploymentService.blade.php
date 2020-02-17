@@ -131,7 +131,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<ul class="list-group list-group-unbordered" style="margin:0">
 						<li class="list-group-item">
 							<b>Sisa Cuti</b> <a class="pull-right">
-								<span style="color: black">{{ $sisa_cuti[0]->sisa_cuti }} hari</span>
+								<span style="color: black">{{ round($employee[0]->remaining) }} hari</span>
 								<!-- <span class="label label-danger">-</span>/
 									<span class="label label-danger">-</span> -->
 								</a>
@@ -157,7 +157,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<strong><i class="fa fa-briefcase margin-r-5"></i> Bagian</strong>
 
 						<p class="text-muted">
-							{{ $profil[0]->division }} - {{$profil[0]->department}} - {{$profil[0]->section}} - {{$profil[0]->sub_section}} - {{$profil[0]->group}}
+							{{ $profil[0]->division }} - {{$profil[0]->department}} - {{$profil[0]->section}} - {{$profil[0]->group}} - {{$profil[0]->sub_group}}
 						</p>
 
 						<hr style="margin:2px;">
@@ -227,62 +227,62 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									</tr>
 								</thead>
 								<tbody>
-									@foreach ($absences as $data)
+									@foreach ($presences as $presence)
 									<tr>
-										<td>{{$data->period}}</td>
+										<td>{{$presence->periode}}</td>
 										<td>
-											@if ($data->absent > 0) 
-											<span class="badge bg-yellow">{{$data->absent}}</span>
+											@if ($presence->mangkir > 0) 
+											<span class="badge bg-yellow">{{$presence->mangkir}}</span>
 											@else 
 											- 
 											@endif
 										</td>
 										<td>
-											@if ($data->permit > 0) 
-											<span class="badge bg-yellow">{{$data->permit}}</span>
+											@if ($presence->izin > 0) 
+											<span class="badge bg-yellow">{{$presence->izin}}</span>
 											@else 
 											- 
 											@endif
 										</td>
 										<td>
-											@if ($data->sick > 0)
-											<span class="badge bg-yellow">{{$data->sick}}</span>
+											@if ($presence->sakit > 0)
+											<span class="badge bg-yellow">{{$presence->sakit}}</span>
 											@else 
 											- 
 											@endif
 										</td>
-										<td>@if ($data->late > 0)
-											<span class="badge bg-yellow">{{$data->late}}</span>
+										<td>@if ($presence->terlambat > 0)
+											<span class="badge bg-yellow">{{$presence->terlambat}}</span>
 											@else 
 											- 
 										@endif</td>
 										<td>
-											@if ($data->pc > 0)
-											<span class="badge bg-yellow">{{$data->pc}}</span>
+											@if ($presence->pulang_cepat > 0)
+											<span class="badge bg-yellow">{{$presence->pulang_cepat}}</span>
 											@else 
 											- 
 											@endif
 										</td>
 										<td>
-											@if ($data->personal_leave > 0) 
-											<span class="badge bg-yellow">{{$data->personal_leave}}</span>
+											@if ($presence->cuti > 0) 
+											<span class="badge bg-yellow">{{$presence->cuti}}</span>
 											@else 
 											- 
 											@endif
 										</td>
 										<td>
-											@if ($data->dicipline > 0)
+											@if ($presence->tunjangan > 0)
 											<i class="fa fa-close" style="color: red"></i>
 											@else 
 											<i class="fa fa-check" style="color: #18c40c"></i>
 											@endif
 										</td>
 										<td>
-											@if ($data->overtime > 0)
-											<span class="badge bg-yellow">{{$data->overtime}}</span>
+											{{-- @if ($presence->overtime > 0)
+											<span class="badge bg-yellow">{{$presence->overtime}}</span>
 											@else 
 											- 
-											@endif
+											@endif --}}
 										</td>
 									</tr>
 									@endforeach
@@ -410,10 +410,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									Diinformasikan bahwa per tanggal <i style="color: red;">01 Januari 2020</i>, pembuatan <i style="color: red;">form lembur</i> menggunakan <i style="color: red;">Sunfish</i> pada link berikut:
 									<br>
 									<a href="http://172.17.144.11/sf6/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Sunfish Overtime <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
-									<br>
-									<br>
-									Data HRq belum terupdate karena sedang dalam masa transisi ke data Sunfish.
-									Informasi terkait HR dapat dilihat pada aplikasi GreatDay.
 								</div>
 							</div>
 						</li>

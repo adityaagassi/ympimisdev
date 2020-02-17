@@ -1524,72 +1524,81 @@ public function indexEmployeeService(Request $request)
      $title_jp = '従業員の情報サービス';
      $emp_id = Auth::user()->username;
      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+     $now = date('Y-m-d');
 
-// if (!file_exists(public_path().'/kcfinderimages/'.$emp_id)) {
-//   mkdir(public_path().'/kcfinderimages/'.$emp_id, 0777, true);
-//   mkdir(public_path().'/kcfinderimages/'.$emp_id.'/files', 0777, true);
-// }
+     $profil = db::select("select employee_id, name, hire_date, phone, phone as wa_number, address, employment_status as `status`, division, department, section, `group`, sub_group, cost_center, grade_code, grade_name,position from employee_syncs where employee_id = '".$emp_id."'
+          ");
 
-     $query = "select employees.employee_id, employees.name,  DATE_FORMAT(employees.hire_date, '%d %M %Y') hire_date, phone, wa_number, address, employees.direct_superior, emp_log.`status`, mut_log.division, mut_log.department, mut_log.section, mut_log.sub_section, mut_log.`group`, mut_log.cost_center, promot_log.grade_code, promot_log.grade_name, promot_log.position from employees 
-     left join 
-     (
-     SELECT employee_id, `status` FROM employment_logs
-     WHERE id IN ( SELECT MAX(id) FROM employment_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
-     ) as emp_log on employees.employee_id = emp_log.employee_id
-     left join
-     (
-     select employee_id ,division, department, section, sub_section, `group`, cost_center from mutation_logs
-     WHERE id IN (SELECT MAX(id) FROM mutation_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
-     ) as mut_log on employees.employee_id = mut_log.employee_id
-     left join
-     (
-     select employee_id ,grade_code, grade_name, position from promotion_logs
-     WHERE id IN (SELECT MAX(id) FROM promotion_logs where employee_id = '".$emp_id."' GROUP BY employee_id)
-     ) as promot_log on employees.employee_id = promot_log.employee_id
-     where employees.employee_id = '".$emp_id."'";
+     // $leave = db::connection('sunfish')->select("");
 
-     $absence = "select abs.*, COALESCE(jam,0) overtime, IF(absent > 0 OR permit > 0 OR sick > 0 OR pc > 0 OR late > 0, 1, 0) as dicipline from 
-     (select DATE_FORMAT(tanggal,'%b %Y') as period, sum(if(shift = 'A',1,0)) as absent, sum(if(shift = 'I',1,0)) as permit, sum(if(shift = 'SD',1,0)) as sick, sum(if(shift = 'CT',1,0)) as personal_leave, sum(if(shift = 'T',1,0)) as late, sum(if(shift = 'PC',1,0)) as pc from ftm.presensi where nik = '".$emp_id."'
-     group by DATE_FORMAT(tanggal,'%b %Y') 
-     order by tanggal asc) abs
-     left join (
-     select DATE_FORMAT(tanggal,'%b %Y') as period, SUM(IF(status = 0, jam, final)) as jam from over_time left join over_time_member on over_time.id = over_time_member.id_ot where deleted_at is null and jam_aktual = 0 and nik = '".$emp_id."'
-     group by DATE_FORMAT(tanggal,'%b %Y')
-) ovr on ovr.period = abs.period";
+     $presences = db::connection('sunfish')->select("SELECT
+          Emp_no,
+          format ( shiftstarttime, 'yyyy-MM' ) AS orderer,
+          format ( shiftstarttime, 'MMMM yyyy' ) AS periode,
+          COUNT (
+          IIF ( Attend_Code LIKE '%Mangkir%', 1, NULL )) AS mangkir,
+          COUNT (
+          IIF ( Attend_Code LIKE '%CK%' OR Attend_Code LIKE '%CUTI%', 1, NULL )) AS cuti,
+          COUNT (
+          IIF ( Attend_Code LIKE '%Izin%', 1, NULL )) AS izin,
+          COUNT (
+          IIF ( Attend_Code LIKE '%SAKIT%', 1, NULL )) AS sakit,
+          COUNT (
+          IIF ( Attend_Code LIKE '%LTI%', 1, NULL )) AS terlambat,
+          COUNT (
+          IIF ( Attend_Code LIKE '%PC%', 1, NULL )) AS pulang_cepat,
+          COUNT (
+          IIF (
+          Attend_Code LIKE '%ABS%' 
+          OR Attend_Code LIKE '%CK10%' 
+          OR Attend_Code LIKE '%CK11%' 
+          OR Attend_Code LIKE '%CK12%' 
+          OR Attend_Code LIKE '%CK15%' 
+          OR Attend_Code LIKE '%CK2%' 
+          OR Attend_Code LIKE '%CK7%' 
+          OR Attend_Code LIKE '%CK8%' 
+          OR Attend_Code LIKE '%CK9%' 
+          OR Attend_Code LIKE '%Izin%' 
+          OR Attend_Code LIKE '%Mangkir%' 
+          OR Attend_Code LIKE '%PC%' 
+          OR Attend_Code LIKE '%SAKIT%' 
+          OR Attend_Code LIKE '%UPL%' 
+          OR Attend_Code LIKE '%LTI%' 
+          OR Attend_Code LIKE '%TELAT%',
+          1,
+          NULL 
+          )) AS tunjangan 
+          FROM
+          VIEW_YMPI_Emp_Attendance 
+          WHERE
+          Emp_no = '".$emp_id."'
+          AND YEAR ( shiftstarttime ) = '2020' 
+          AND shiftstarttime <= '".$now."' 
+          GROUP BY
+          format ( shiftstarttime, 'MMMM yyyy' ),
+          format ( shiftstarttime, 'yyyy-MM' ),
+          Emp_no 
+          ORDER BY
+          orderer ASC");
 
-$absences = db::connection('mysql3')->select($absence);
+     $employee = db::connection('sunfish')->select("SELECT
+          VIEW_YMPI_LEAVE_BALANCE.remaining 
+          FROM
+          VIEW_YMPI_LEAVE_BALANCE
+          WHERE
+          VIEW_YMPI_LEAVE_BALANCE.emp_no = '".$emp_id."' 
+          AND VIEW_YMPI_LEAVE_BALANCE.startvaliddate <= '".$now."'
+          AND VIEW_YMPI_LEAVE_BALANCE.endvaliddate >= '".$now."'");
 
-$ct = db::connection('mysql3')->select("
-     select leave_quota, leave_quota - (select shift + (select count(tanggal) as mass_leave from kalender where deskripsi = 'Mass Leave' and tanggal >= 
-     IF(DATE_FORMAT(hire_date,'%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
-     DATE_FORMAT(hire_date, CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
-     DATE_FORMAT(hire_date, CONCAT(YEAR(now()),'-%m-01')))) as cuti from ympimis.employees left join
-     (select count(shift) as shift, '".$emp_id."' as nik from presensi join ympimis.employees on employees.employee_id = presensi.nik
-     where shift in ('S','I','A','CT') and nik = '".$emp_id."'
-     and DATE_FORMAT(tanggal,'%Y-%m-%d') >= 
-     IF(DATE_FORMAT(hire_date,'%m-%d') > DATE_FORMAT(now(),'%m-%d'), 
-     DATE_FORMAT(hire_date, CONCAT(YEAR(now() - INTERVAL 1 YEAR),'-%m-01')),
-     DATE_FORMAT(hire_date, CONCAT(YEAR(now()),'-%m-01')))
-     ) presensi on employees.employee_id = presensi.nik where nik = '".$emp_id."') as sisa_cuti from 
-     (select YEAR(now()) - YEAR(hire_date)
-     - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(hire_date, '%m%d')) as employeed, 0 as cuti from ympimis.employees where employee_id = '".$emp_id."') as emp
-     join ympimis.leave_quotas on leave_quotas.employeed = emp.employeed");
-
-$datas = db::select($query);
-
-if($datas) {
      return view('employees.service.indexEmploymentService', array(
           'status' => true,
           'title' => $title,
           'title_jp' => $title_jp,
           'emp_id' => $emp_id,
-          'profil' => $datas,
-          'absences' => $absences,
-          'sisa_cuti' => $ct
+          'profil' => $profil,
+          'presences' => $presences,
+          'employee' => $employee,
      ))->with('page', 'Employment Services');
-} else {
-     return view('home')->with('page', 'Dashboard');
-}
 }
 
 public function fetchChat(Request $request)
