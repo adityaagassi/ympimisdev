@@ -32,6 +32,7 @@
 			<a href="{{ url("index/welding/op_ng?tanggal=&location=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator NG Rate</a>
 			<a href="{{ url("index/welding/welding_op_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
 			<a href="{{ url("index/welding/op_analysis") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Welding OP Analysis</a>
+			<a href="{{ url("index/welding/group_achievement") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">WS Achievement</a>
 
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Display Kosuha <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/request/display/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Middle Process Material Request</a>
@@ -39,13 +40,15 @@
 			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Middle Process Material Request</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center;">
-			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report<i class="fa fa-angle-double-down"></i></span>
+			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/welding/report_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Not Good Record</a>
 			<a href="{{ url("index/welding/production_result") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Production Result</a>
 			<a href="{{ url("index/welding/report_hourly") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Hourly Report</a>
-			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report Kosuha<i class="fa fa-angle-double-down"></i></span>
-			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume</a>
-			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report Handatsuke<i class="fa fa-angle-double-down"></i></span>
+			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report Kosuha <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/welding/resume", "phs-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">PHS Resume</a>
+			<a href="{{ url("index/welding/resume", "hsa-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">HSA Resume</a>
+			<a href="{{ url("index/welding/resume", "hsa-dimensi-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Dimensi Resume</a>
+			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report Handatsuke <i class="fa fa-angle-double-down"></i></span>
 			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume</a>
 		</div>
 	</div>

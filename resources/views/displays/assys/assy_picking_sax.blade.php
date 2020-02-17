@@ -181,7 +181,8 @@
 					<div class="col-xs-2">
 						<select class="form-control select2" id="order" onchange="changeOrder()" placeholder="Order by">
 							<option value="">Diff</option>
-							<option value="1" <?php if($_GET['order2'] != '' ) echo "selected"; ?> >Stock Room</option>
+							<option value="1" <?php if($_GET['order2'] == '1' ) echo "selected"; ?> >Stock Room</option>
+							<option value="2" <?php if($_GET['order2'] == '2' ) echo "selected"; ?> >Availibility</option>
 						</select>
 						<input type="text" name="order2" id="order2" hidden>
 					</div>
@@ -304,306 +305,439 @@
 			diffs = [];
 			plans = [];
 
-		// var values="{{$_GET['key2']}}";
-		// $.each(values.split(","), function(i,e){
-		// 	$("#key option[value='" + e + "']").prop("selected", true);
-		// });
-		if ("{{$option}}".substr(0, 4) == "assy") {
-			var url = '{{ url("fetch/display/sub_assy/".$option) }}';
-		} else {
-			var url = '{{ url("fetch/display/welding/".$option) }}';
-		}
+			// var values="{{$_GET['key2']}}";
+			// $.each(values.split(","), function(i,e){
+			// 	$("#key option[value='" + e + "']").prop("selected", true);
+			// });
+			if ("{{$option}}".substr(0, 4) == "assy") {
+				var url = '{{ url("fetch/display/sub_assy/".$option) }}';
+			} else {
+				var url = '{{ url("fetch/display/welding/".$option) }}';
+			}
 
-		$.get(url, data, function(result, status, xhr){
-			if(result.status){
-				$("#model").empty();
-				$("#plan").empty();
-				$("#picking").empty();
-				$("#diff").empty();
+			$.get(url, data, function(result, status, xhr){
+				if(result.status){
+					$("#model").empty();
+					$("#plan").empty();
+					$("#picking").empty();
+					$("#diff").empty();
 
-				$("#plan_acc").empty();
-				$("#picking_acc").empty();
-				$("#return_acc").empty();
+					$("#plan_acc").empty();
+					$("#picking_acc").empty();
+					$("#return_acc").empty();
 
-				$("#stok").empty();
-				$("#stok_all").empty();
+					$("#stok").empty();
+					$("#stok_all").empty();
 
-				model = "<th style='width:45px'>#</th>";
-				totplan = "<th>Plan</th>";
-				picking = "<th>Pick</th>";
+					model = "<th style='width:45px'>#</th>";
+					totplan = "<th>Plan</th>";
+					picking = "<th>Pick</th>";
 
-				if ("{{$option}}".substr(0, 4) == "assy") {
-					diff = "<th>Diff</th>";
-				} else {
-					diff = "<th>Target</th>";
-				}
-
-				planAcc = "<th>Plan acc</th>";
-				pickAcc = "<th>Pick acc</th>";
-				retunAcc = "<th>Return acc</th>";
-
-				if ("{{$option}}".substr(0, 4) == "assy") {
-					stk = "<th style='border: 1px solid white;'>Stock Room</th>";
-				} else {
-					stk = "<th style='border: 1px solid white;'>Stock All</th>";
-				}
-				stk_als = "<th style='border: 1px solid white;' rowspan='2'>Availibility</th>";
-
-				var style = "";
-
-				$.each(result.plan, function(index, value){
-					var minus = 0;
-					// var picking = 0;
-
-					if (value.diff <= 0) {
-						style = "style='background-color:#00a65a';";
-					} else {
-						style = "style='background-color:#f24b4b';";
-					}
-
-					if (value.model.charAt(0) == 'A') {
-						color = "style='background-color:#80ed5f';";
-					} else {
-						color = "style='background-color:#f2e127';";
-					}
-
-					if (value.surface) {
-						srf = value.surface;
-					} else {
-						srf = "";
-					}
-
-					planAcc += "<td class='acc'>"+value.plan_ori+"</td>";
-					pickAcc += "<td class='acc'>"+value.plus+"</td>";
-					retunAcc += "<td class='acc'>"+value.minus+"</td>";
-
-					model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+srf+"</th>";
-					totplan += "<td>"+value.plan+"</td>";
-					picking += "<td>"+value.picking+"</td>";
 					if ("{{$option}}".substr(0, 4) == "assy") {
-						diff += "<td "+style+">"+(-value.diff)+"</td>";
+						diff = "<th>Diff</th>";
 					} else {
-						diff += "<td "+style+">"+value.diff+"</td>";
+						diff = "<th>Target</th>";
 					}
-					diffs.push(value.diff);
-					plans.push(value.plan);
-				})
 
-				$("#model").append(model);
-				$("#plan").append(totplan);
-				$("#picking").append(picking);
-				$("#diff").append(diff);
+					planAcc = "<th>Plan acc</th>";
+					pickAcc = "<th>Pick acc</th>";
+					retunAcc = "<th>Return acc</th>";
 
-				$("#plan_acc").append(planAcc);
-				$("#picking_acc").append(pickAcc);
-				$("#return_acc").append(retunAcc);
+					if ("{{$option}}".substr(0, 4) == "assy") {
+						stk = "<th style='border: 1px solid white;'>Stock Room</th>";
+					} else {
+						stk = "<th style='border: 1px solid white;'>Stock All</th>";
+					}
+					stk_als = "<th style='border: 1px solid white;' rowspan='2'>Availibility</th>";
+
+					var style = "";
+
+					temporary = [];
+
+					for (var i = 0; i < result.plan.length; i++) {
+						var z = [];
+						z["model"] = result.plan[i].model;
+						z["key"] = result.plan[i].key;
+
+						if(typeof result.plan[i].surface === 'undefined') 
+							z["surface"] = ""; 
+						else 
+							z["surface"] = result.plan[i].surface;
+
+						z["plan"] = result.plan[i].plan;
+						z["picking"] = result.plan[i].picking;
+						z["plus"] = result.plan[i].plus;
+						z["minus"] = result.plan[i].minus;
+						z["stock"] = result.plan[i].stock;
+						z["plan_ori"] = result.plan[i].plan_ori;
+						z["diff"] = result.plan[i].diff;
+						z["diff2"] = result.plan[i].diff2;
+
+						if("{{$option}}".substr(0, 4) == "assy") 
+							z["ava"] = result.plan[i].ava;
+						else 
+							z["ava"] = (parseInt(result.stok[i].welding) + parseInt(result.stok[i].stockroom) + result.stok[i].lacquering + result.stok[i].plating + result.stok[i].barrel + result.stok[i].buffing) / result.plan[i].plan;
+
+						z["stockroom"] = result.stok[i].stockroom;
+						z["barrel"] = result.stok[i].barrel;
+						z["lacquering"] = result.stok[i].lacquering;
+						z["plating"] = result.stok[i].plating;
+						z["welding"] = result.stok[i].welding;
+						z["buffing"] = result.stok[i].buffing;
+
+						temporary.push(z);
+
+					}
+					// console.log(result.plan.length+" "+result.stok.length);
+
+
+					if ("{{$_GET['order2']}}" == "1") {
+						temporary.sort(function(a, b) {
+							return a['diff2'] - b['diff2'];
+						});
+					} else if ("{{$_GET['order2']}}" == "2") {
+						temporary.sort(function(a, b) {
+							return a['ava'] - b['ava'];
+						});
+					}
+
+					console.log(temporary);
+
+					var chart = "";
+					var max_tmp = [];
+
+					$.each(temporary, function(index, value){
+						var minus = 0;
+
+						if (value.diff <= 0) {
+							style = "style='background-color:#00a65a';";
+						} else {
+							style = "style='background-color:#f24b4b';";
+						}
+
+						if (value.model.charAt(0) == 'A') {
+							color = "style='background-color:#80ed5f';";
+						} else {
+							color = "style='background-color:#f2e127';";
+						}
+
+						planAcc += "<td class='acc'>"+value.plan_ori+"</td>";
+						pickAcc += "<td class='acc'>"+value.plus+"</td>";
+						retunAcc += "<td class='acc'>"+value.minus+"</td>";
+
+						model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+value.surface+"</th>";
+						totplan += "<td>"+value.plan+"</td>";
+						picking += "<td>"+value.picking+"</td>";
+						if ("{{$option}}".substr(0, 4) == "assy") {
+							diff += "<td "+style+">"+(-value.diff)+"</td>";
+						} else {
+							diff += "<td "+style+">"+value.diff+"</td>";
+						}
+
+
+						diffs.push(value.diff);
+						plans.push(value.plan);
+
+						// ============================================================================
+
+						var stockroom = 0;
+						var barrel = 0;
+						var lacquering = 0;
+						var plating = 0;
+						var welding = 0;
+						var buffing = 0;
+
+						var categories = [];
+						var tmp = 0;
+
+						if ("{{$option}}".substr(0, 4) != "assy") {
+							tmp = (parseInt(value.barrel) + parseInt(value.lacquering) + parseInt(value.plating)+ parseInt(value.stockroom) + parseInt(value.welding) + parseInt(value.buffing));
+							if (tmp >= value.diff) {
+								color2 = "background-color:#00a65a";
+							} else {
+								color2 = "background-color:#f24b4b";
+							}
+
+							if (tmp / value.plan >= 3) {
+								colour = "background-color:#00a65a";
+							} else {
+								colour = "background-color:#f24b4b";
+							}
+
+						} else {
+							if (value.stockroom >= value.diff) {
+								color2 = "background-color:#00a65a";
+							} else {
+								color2 = "background-color:#f24b4b";
+							}
+
+							if (value.stockroom / value.plan >= 1) {
+								colour = "background-color:#00a65a";
+							} else {
+								colour = "background-color:#f24b4b";
+							}
+
+						}
+
+						if ("{{$option}}".substr(0, 4) != "assy") {
+							stk += "<td style='border: 1px solid white; "+color2+"'>"+tmp+"</td>";
+
+							stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(tmp / value.plan).toFixed(1)+"</td>";
+						} else {
+							stk += "<td style='border: 1px solid white; "+color2+"'>"+value.stockroom+"</td>";
+
+							stk_als += "<td style='border: 1px solid white; "+colour+"'>"+value.ava+"</td>";
+						}
+
+						max_tmp.push(parseInt(value.barrel) + parseInt(value.lacquering) + parseInt(value.plating)+ parseInt(value.stockroom) + parseInt(value.welding) + parseInt(value.buffing));
+
+						categories.push(value.model+" "+value.key+" "+value.surface);
+					});
+
+					$("#model").append(model);
+					$("#plan").append(totplan);
+					$("#picking").append(picking);
+					$("#diff").append(diff);
+
+					$("#plan_acc").append(planAcc);
+					$("#picking_acc").append(pickAcc);
+					$("#return_acc").append(retunAcc);
+
+					$("#stok").append(stk);
+					$("#stok_all").append(stk_als);
+
+					// console.log(max_tmp);
+
+					max = (Math.max(...max_tmp)) + 10;
+					// max = 0;
+
+					$('#chart').empty();
+					$('#legend').empty();
+
+					var chart = "";
+					var legend = "";
+					for (var i = 0; i < temporary.length; i++) {
+
+						chart += '<td style="padding: 0px; height:350px">';
+
+						kosong = (max - (parseInt(temporary[i].barrel) + parseInt(temporary[i].lacquering) + parseInt(temporary[i].plating) + parseInt(temporary[i].stockroom) + parseInt(temporary[i].welding) + parseInt(temporary[i].buffing))) / max * 100;
+						chart += '<div style="margin: 0px 3px 0px 3px; background-color: #3c3c3c; height: '+kosong+'%" id="kosong"></div>';
+
+						welding = parseInt(temporary[i].welding) / max * 100;
+						if (parseInt(temporary[i].welding) > 0) wld = parseInt(temporary[i].welding); else wld = '';
+						chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #7cb5ec; height: '+welding+'%" id="welding">'+wld+'</div>';
+
+						buffing = parseInt(temporary[i].buffing) / max * 100;
+						if (parseInt(temporary[i].buffing) > 0) bff = parseInt(temporary[i].buffing); else bff = '';
+						chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #e096ff; height: '+buffing+'%" id="buffing">'+bff+'</div>';
+
+						barrel = parseInt(temporary[i].barrel) / max * 100;
+						if (parseInt(temporary[i].barrel) > 0) brl = parseInt(temporary[i].barrel); else brl = '';
+						chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #722973; height: '+barrel+'%" id="barrel">'+brl+'</div>';
+
+						lacquering = parseInt(temporary[i].lacquering) / max * 100;
+						if (parseInt(temporary[i].lacquering) > 0) lcq = parseInt(temporary[i].lacquering); else lcq = '';
+						chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #fcf33a; height: '+lacquering+'%" id="lacquering">'+lcq+'</div>';
+
+						plating = parseInt(temporary[i].plating) / max * 100;
+						if (parseInt(temporary[i].plating) > 0) plt = parseInt(temporary[i].plating); else plt = '';
+						chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: silver; height: '+plating+'%" id="plating">'+plt+'</div>';
+
+						stockroom = parseInt(temporary[i].stockroom) / max * 100;
+						if (parseInt(temporary[i].stockroom) > 0) stk = parseInt(temporary[i].stockroom); else stk = '';
+						chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #a9ff96; height: '+stockroom+'%" id="stockroom">'+stk+'</div>';
+						chart += '</td>';
+					}
+
+					legend += "<td style='background-color:white; border-color:white'></td>";
+					legend += "<td colspan='"+(temporary.length)+"' style='text-align:left'>";
+					legend += "<div class='stock'></div> Stockroom";
+					legend += "<div class='plt'></div> Plating";
+					legend += "<div class='lcq'></div> Lacquering";
+					legend += "<div class='brl'></div> Barrel";
+					legend += "<div class='bff'></div> Buffing";
+					legend += "<div class='wld'></div> Welding";
+					legend += "</td>";
+
+					$('#chart').append(chart);
+					$('#legend').append(legend);
+
+
+				// 	$.each(result.plan, function(index, value){
+				// 		var minus = 0;
+				// 	// var picking = 0;
+
+				// 	if (value.diff <= 0) {
+				// 		style = "style='background-color:#00a65a';";
+				// 	} else {
+				// 		style = "style='background-color:#f24b4b';";
+				// 	}
+
+				// 	if (value.model.charAt(0) == 'A') {
+				// 		color = "style='background-color:#80ed5f';";
+				// 	} else {
+				// 		color = "style='background-color:#f2e127';";
+				// 	}
+
+				// 	if (value.surface) {
+				// 		srf = value.surface;
+				// 	} else {
+				// 		srf = "";
+				// 	}
+
+				// 	planAcc += "<td class='acc'>"+value.plan_ori+"</td>";
+				// 	pickAcc += "<td class='acc'>"+value.plus+"</td>";
+				// 	retunAcc += "<td class='acc'>"+value.minus+"</td>";
+
+				// 	model += "<th "+color+">"+value.model+"<br/>"+value.key+"<br/>"+srf+"</th>";
+				// 	totplan += "<td>"+value.plan+"</td>";
+				// 	picking += "<td>"+value.picking+"</td>";
+				// 	if ("{{$option}}".substr(0, 4) == "assy") {
+				// 		diff += "<td "+style+">"+(-value.diff)+"</td>";
+				// 	} else {
+				// 		diff += "<td "+style+">"+value.diff+"</td>";
+				// 	}
+				// 	diffs.push(value.diff);
+				// 	plans.push(value.plan);
+				// })
+
+				// $("#model").append(model);
+				// $("#plan").append(totplan);
+				// $("#picking").append(picking);
+				// $("#diff").append(diff);
+
+				// $("#plan_acc").append(planAcc);
+				// $("#picking_acc").append(pickAcc);
+				// $("#return_acc").append(retunAcc);
 
 
 				// -------- CHART ------------
 
-				var stockroom = 0;
-				var barrel = 0;
-				var lacquering = 0;
-				var plating = 0;
-				var welding = 0;
-				var buffing = 0;
-				var legend = 0;
+				// var stockroom = 0;
+				// var barrel = 0;
+				// var lacquering = 0;
+				// var plating = 0;
+				// var welding = 0;
+				// var buffing = 0;
+				// var legend = 0;
 
-				var categories = [];
-				var max_tmp = [];
-				var max = 0;
-				var sisa = 0;
-				var tmp = 0;
+				// var categories = [];
+				// var max_tmp = [];
+				// var max = 0;
+				// var sisa = 0;
+				// var tmp = 0;
 
-				$.each(result.stok, function(index2, value2){
-
-					if ("{{$option}}".substr(0, 4) != "assy") {
-						tmp = (parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding) + parseInt(value2.buffing));
-						if (tmp >= diffs[index2]) {
-							color2 = "background-color:#00a65a";
-						} else {
-							color2 = "background-color:#f24b4b";
-						}
-
-						if (tmp / plans[index2] >= 3) {
-							colour = "background-color:#00a65a";
-						} else {
-							colour = "background-color:#f24b4b";
-						}
-
-					} else {
-						if (value2.stockroom >= diffs[index2]) {
-							color2 = "background-color:#00a65a";
-						} else {
-							color2 = "background-color:#f24b4b";
-						}
-
-						if (parseInt(value2.stockroom) / plans[index2] >= 1) {
-							colour = "background-color:#00a65a";
-						} else {
-							colour = "background-color:#f24b4b";
-						}
-
-					}
-
-					if ("{{$option}}".substr(0, 4) != "assy") {
-						stk += "<td style='border: 1px solid white; "+color2+"'>"+tmp+"</td>";
-
-						stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(tmp / plans[index2]).toFixed(1)+"</td>";
-					} else {
-						stk += "<td style='border: 1px solid white; "+color2+"'>"+parseInt(value2.stockroom)+"</td>";
-
-						stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(parseInt(value2.stockroom) / plans[index2]).toFixed(1)+"</td>";
-					}
-
-					max_tmp.push(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding) + parseInt(value2.buffing));
-
-					if (value2.surface) {
-						srf2 = value2.surface;
-					} else {
-						srf2 = "";
-					}
-
-					categories.push(value2.model+" "+value2.key+" "+srf2);
-				})
-
-				$("#stok").append(stk);
-				$("#stok_all").append(stk_als);
-
-				// console.table(result.stok);
-
-				max = (Math.max(...max_tmp)) + 10;
-				// console.table(max_tmp);
-
-				$('#chart').empty();
-				$('#legend').empty();
-
-				var chart = "";
-				for (var i = 0; i < result.stok.length; i++) {
-
-					chart += '<td style="padding: 0px; height:350px">';
-
-					kosong = (max - (parseInt(result.stok[i].barrel) + parseInt(result.stok[i].lacquering) + parseInt(result.stok[i].plating) + parseInt(result.stok[i].stockroom) + parseInt(result.stok[i].welding) + parseInt(result.stok[i].buffing))) / max * 100;
-					chart += '<div style="margin: 0px 3px 0px 3px; background-color: #3c3c3c; height: '+kosong+'%" id="kosong"></div>';
-
-					welding = parseInt(result.stok[i].welding) / max * 100;
-					if (parseInt(result.stok[i].welding) > 0) wld = parseInt(result.stok[i].welding); else wld = '';
-					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #7cb5ec; height: '+welding+'%" id="welding">'+wld+'</div>';
-
-					buffing = parseInt(result.stok[i].buffing) / max * 100;
-					if (parseInt(result.stok[i].buffing) > 0) bff = parseInt(result.stok[i].buffing); else bff = '';
-					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #e096ff; height: '+buffing+'%" id="buffing">'+bff+'</div>';
-
-					barrel = parseInt(result.stok[i].barrel) / max * 100;
-					if (parseInt(result.stok[i].barrel) > 0) brl = parseInt(result.stok[i].barrel); else brl = '';
-					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #722973; height: '+barrel+'%" id="barrel">'+brl+'</div>';
-
-					lacquering = parseInt(result.stok[i].lacquering) / max * 100;
-					if (parseInt(result.stok[i].lacquering) > 0) lcq = parseInt(result.stok[i].lacquering); else lcq = '';
-					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #fcf33a; height: '+lacquering+'%" id="lacquering">'+lcq+'</div>';
-
-					plating = parseInt(result.stok[i].plating) / max * 100;
-					if (parseInt(result.stok[i].plating) > 0) plt = parseInt(result.stok[i].plating); else plt = '';
-					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: silver; height: '+plating+'%" id="plating">'+plt+'</div>';
-
-					stockroom = parseInt(result.stok[i].stockroom) / max * 100;
-					if (parseInt(result.stok[i].stockroom) > 0) stk = parseInt(result.stok[i].stockroom); else stk = '';
-					chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #a9ff96; height: '+stockroom+'%" id="stockroom">'+stk+'</div>';
-					chart += '</td>';
-				}
-
-				legend += "<td style='background-color:white; border-color:white'></td>";
-				legend += "<td colspan='"+(result.stok.length)+"' style='text-align:left'>";
-				legend += "<div class='stock'></div> Stockroom";
-				legend += "<div class='plt'></div> Plating";
-				legend += "<div class='lcq'></div> Lacquering";
-				legend += "<div class='brl'></div> Barrel";
-				legend += "<div class='bff'></div> Buffing";
-				legend += "<div class='wld'></div> Welding";
-				legend += "</td>";
-
-				$('#chart').append(chart);
-				$('#legend').append(legend);
-
-				// Highcharts.chart('picking_chart', {
-				// 	chart: {
-				// 		type: 'column',
-				// 		width: $('#assyTable').width(),
-				// 		marginLeft: 40
-				// 	},
-				// 	title: {
-				// 		text: null
-				// 	},
-				// 	xAxis: {
-				// 		categories: categories
-				// 	},
-				// 	yAxis: {
-				// 		min: 0,
-				// 		title: {
-				// 			enabled: false
-				// 		},
-				// 		stackLabels: {
-				// 			enabled: true,
-				// 			style: {
-				// 				fontWeight: 'bold',
-				// 				color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-				// 			}
-				// 		},
-				// 		labels: {
-				// 			useHTML:true,
-				// 			style:{
-				// 				width:'10px',
-				// 				whiteSpace:'normal'
-				// 			},
-				// 		},
-				// 		tickInterval: 10
-				// 	},
-				// 	tooltip: {
-				// 		headerFormat: '<b>{point.x}</b><br/>',
-				// 		pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-				// 	},
-				// 	plotOptions: {
-				// 		column: {
-				// 			stacking: 'normal',
-				// 			dataLabels: {
-				// 				enabled: true,
-				// 				color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
-				// 			},
-				// 			animation: false,
-				// 		},
-				// 		series: {
-				// 			cursor: 'pointer',
-				// 			pointPadding: -0.25,
-				// 			events: {
-				// 				click: function(event) {
-				// 					openModal(event.point.category, this.name)
-				// 				}
-				// 			}
+				// $.each(result.stok, function(index2, value2){
+				// 	if ("{{$option}}".substr(0, 4) != "assy") {
+				// 		tmp = (parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding) + parseInt(value2.buffing));
+				// 		if (tmp >= diffs[index2]) {
+				// 			color2 = "background-color:#00a65a";
+				// 		} else {
+				// 			color2 = "background-color:#f24b4b";
 				// 		}
-				// 	},
-				// 	credits :{
-				// 		enabled: false,
-				// 	},
-				// 	series: [{
-				// 		name: 'Welding',
-				// 		data: welding
-				// 	}, {
-				// 		name: 'Barrel',
-				// 		data: barrel
-				// 	}, {
-				// 		name: 'Lacquering',
-				// 		data: lacquering
-				// 	}, {
-				// 		name: 'Plating',
-				// 		data: plating
-				// 	}, {
-				// 		name: 'Stockroom',
-				// 		data: stockroom
-				// 	}]
-				// });
+
+				// 		if (tmp / plans[index2] >= 3) {
+				// 			colour = "background-color:#00a65a";
+				// 		} else {
+				// 			colour = "background-color:#f24b4b";
+				// 		}
+
+				// 	} else {
+				// 		if (value2.stockroom >= diffs[index2]) {
+				// 			color2 = "background-color:#00a65a";
+				// 		} else {
+				// 			color2 = "background-color:#f24b4b";
+				// 		}
+
+				// 		if (parseInt(value2.stockroom) / plans[index2] >= 1) {
+				// 			colour = "background-color:#00a65a";
+				// 		} else {
+				// 			colour = "background-color:#f24b4b";
+				// 		}
+
+				// 	}
+
+				// 	if ("{{$option}}".substr(0, 4) != "assy") {
+				// 		stk += "<td style='border: 1px solid white; "+color2+"'>"+tmp+"</td>";
+
+				// 		stk_als += "<td style='border: 1px solid white; "+colour+"'>"+(tmp / plans[index2]).toFixed(1)+"</td>";
+				// 	} else {
+				// 		stk += "<td style='border: 1px solid white; "+color2+"'>"+parseInt(value2.stockroom)+"</td>";
+
+				// 		stk_als += "<td style='border: 1px solid white; "+colour+"'>"+result.plan[index2].ava+"</td>";
+				// 	}
+
+				// 	max_tmp.push(parseInt(value2.barrel) + parseInt(value2.lacquering) + parseInt(value2.plating)+ parseInt(value2.stockroom) + parseInt(value2.welding) + parseInt(value2.buffing));
+
+				// 	if (value2.surface) {
+				// 		srf2 = value2.surface;
+				// 	} else {
+				// 		srf2 = "";
+				// 	}
+
+				// 	categories.push(value2.model+" "+value2.key+" "+srf2);
+				// })
+
+				// $("#stok").append(stk);
+				// $("#stok_all").append(stk_als);
+
+				// // console.log(plans);
+
+				// max = (Math.max(...max_tmp)) + 10;
+				// // console.table(max_tmp);
+
+				// $('#chart').empty();
+				// $('#legend').empty();
+
+				// var chart = "";
+				// for (var i = 0; i < result.stok.length; i++) {
+
+				// 	chart += '<td style="padding: 0px; height:350px">';
+
+				// 	kosong = (max - (parseInt(result.stok[i].barrel) + parseInt(result.stok[i].lacquering) + parseInt(result.stok[i].plating) + parseInt(result.stok[i].stockroom) + parseInt(result.stok[i].welding) + parseInt(result.stok[i].buffing))) / max * 100;
+				// 	chart += '<div style="margin: 0px 3px 0px 3px; background-color: #3c3c3c; height: '+kosong+'%" id="kosong"></div>';
+
+				// 	welding = parseInt(result.stok[i].welding) / max * 100;
+				// 	if (parseInt(result.stok[i].welding) > 0) wld = parseInt(result.stok[i].welding); else wld = '';
+				// 	chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #7cb5ec; height: '+welding+'%" id="welding">'+wld+'</div>';
+
+				// 	buffing = parseInt(result.stok[i].buffing) / max * 100;
+				// 	if (parseInt(result.stok[i].buffing) > 0) bff = parseInt(result.stok[i].buffing); else bff = '';
+				// 	chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #e096ff; height: '+buffing+'%" id="buffing">'+bff+'</div>';
+
+				// 	barrel = parseInt(result.stok[i].barrel) / max * 100;
+				// 	if (parseInt(result.stok[i].barrel) > 0) brl = parseInt(result.stok[i].barrel); else brl = '';
+				// 	chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #722973; height: '+barrel+'%" id="barrel">'+brl+'</div>';
+
+				// 	lacquering = parseInt(result.stok[i].lacquering) / max * 100;
+				// 	if (parseInt(result.stok[i].lacquering) > 0) lcq = parseInt(result.stok[i].lacquering); else lcq = '';
+				// 	chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #fcf33a; height: '+lacquering+'%" id="lacquering">'+lcq+'</div>';
+
+				// 	plating = parseInt(result.stok[i].plating) / max * 100;
+				// 	if (parseInt(result.stok[i].plating) > 0) plt = parseInt(result.stok[i].plating); else plt = '';
+				// 	chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: silver; height: '+plating+'%" id="plating">'+plt+'</div>';
+
+				// 	stockroom = parseInt(result.stok[i].stockroom) / max * 100;
+				// 	if (parseInt(result.stok[i].stockroom) > 0) stk = parseInt(result.stok[i].stockroom); else stk = '';
+				// 	chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #a9ff96; height: '+stockroom+'%" id="stockroom">'+stk+'</div>';
+				// 	chart += '</td>';
+				// }
+
+				// legend += "<td style='background-color:white; border-color:white'></td>";
+				// legend += "<td colspan='"+(result.stok.length)+"' style='text-align:left'>";
+				// legend += "<div class='stock'></div> Stockroom";
+				// legend += "<div class='plt'></div> Plating";
+				// legend += "<div class='lcq'></div> Lacquering";
+				// legend += "<div class='brl'></div> Barrel";
+				// legend += "<div class='bff'></div> Buffing";
+				// legend += "<div class='wld'></div> Welding";
+				// legend += "</td>";
+
+				// $('#chart').append(chart);
+				// $('#legend').append(legend);
 			}
-			diffs = [];
-		})
+		// 	diffs = [];
+	})
 
 }
 
@@ -685,209 +819,5 @@ function openModal(kunci, lokasi) {
     });
 
 }
-
-// Highcharts.createElement('link', {
-// 	href: '{{ url("fonts/UnicaOne.css")}}',
-// 	rel: 'stylesheet',
-// 	type: 'text/css'
-// }, null, document.getElementsByTagName('head')[0]);
-
-// Highcharts.theme = {
-// 	colors: ['#7cb5ec', '#722973' , '#fcf33a', '#94908f', '#90ed7d'],
-// 	chart: {
-// 		backgroundColor: {
-// 			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-// 			stops: [
-// 			[0, '#2a2a2b'],
-// 			[1, '#3e3e40']
-// 			]
-// 		},
-// 		style: {
-// 			fontFamily: 'sans-serif'
-// 		},
-// 		plotBorderColor: '#606063'
-// 	},
-// 	title: {
-// 		style: {
-// 			color: '#E0E0E3',
-// 			textTransform: 'uppercase',
-// 			fontSize: '20px'
-// 		}
-// 	},
-// 	subtitle: {
-// 		style: {
-// 			color: '#E0E0E3',
-// 			textTransform: 'uppercase'
-// 		}
-// 	},
-// 	xAxis: {
-// 		gridLineColor: '#707073',
-// 		labels: {
-// 			style: {
-// 				color: '#E0E0E3'
-// 			}
-// 		},
-// 		lineColor: '#707073',
-// 		minorGridLineColor: '#505053',
-// 		tickColor: '#707073',
-// 		title: {
-// 			style: {
-// 				color: '#A0A0A3'
-
-// 			}
-// 		}
-// 	},
-// 	yAxis: {
-// 		gridLineColor: '#707073',
-// 		labels: {
-// 			style: {
-// 				color: '#E0E0E3'
-// 			}
-// 		},
-// 		lineColor: '#707073',
-// 		minorGridLineColor: '#505053',
-// 		tickColor: '#707073',
-// 		tickWidth: 1,
-// 		title: {
-// 			style: {
-// 				color: '#A0A0A3'
-// 			}
-// 		}
-// 	},
-// 	tooltip: {
-// 		backgroundColor: 'rgba(0, 0, 0, 0.85)',
-// 		style: {
-// 			color: '#F0F0F0'
-// 		}
-// 	},
-// 	plotOptions: {
-// 		series: {
-// 			dataLabels: {
-// 				color: '#FFF'
-// 			},
-// 			marker: {
-// 				lineColor: '#333'
-// 			}
-// 		},
-// 		boxplot: {
-// 			fillColor: '#505053'
-// 		},
-// 		candlestick: {
-// 			lineColor: 'black'
-// 		},
-// 		errorbar: {
-// 			color: 'white'
-// 		}
-// 	},
-// 	legend: {
-// 		itemStyle: {
-// 			color: '#E0E0E3'
-// 		},
-// 		itemHoverStyle: {
-// 			color: '#FFF'
-// 		},
-// 		itemHiddenStyle: {
-// 			color: '#606063'
-// 		}
-// 	},
-// 	credits: {
-// 		style: {
-// 			color: '#666'
-// 		}
-// 	},
-// 	labels: {
-// 		style: {
-// 			color: '#707073'
-// 		}
-// 	},
-
-// 	drilldown: {
-// 		activeAxisLabelStyle: {
-// 			color: '#F0F0F3'
-// 		},
-// 		activeDataLabelStyle: {
-// 			color: '#F0F0F3'
-// 		}
-// 	},
-
-// 	navigation: {
-// 		buttonOptions: {
-// 			symbolStroke: '#DDDDDD',
-// 			theme: {
-// 				fill: '#505053'
-// 			}
-// 		}
-// 	},
-
-// 	rangeSelector: {
-// 		buttonTheme: {
-// 			fill: '#505053',
-// 			stroke: '#000000',
-// 			style: {
-// 				color: '#CCC'
-// 			},
-// 			states: {
-// 				hover: {
-// 					fill: '#707073',
-// 					stroke: '#000000',
-// 					style: {
-// 						color: 'white'
-// 					}
-// 				},
-// 				select: {
-// 					fill: '#000003',
-// 					stroke: '#000000',
-// 					style: {
-// 						color: 'white'
-// 					}
-// 				}
-// 			}
-// 		},
-// 		inputBoxBorderColor: '#505053',
-// 		inputStyle: {
-// 			backgroundColor: '#333',
-// 			color: 'silver'
-// 		},
-// 		labelStyle: {
-// 			color: 'silver'
-// 		}
-// 	},
-
-// 	navigator: {
-// 		handles: {
-// 			backgroundColor: '#666',
-// 			borderColor: 'black'
-// 		},
-// 		outlineColor: '#CCC',
-// 		maskFill: 'rgba(255,255,255,0.1)',
-// 		series: {
-// 			color: '#7798BF',
-// 			lineColor: '#A6C7ED'
-// 		},
-// 		xAxis: {
-// 			gridLineColor: '#505053'
-// 		}
-// 	},
-
-// 	scrollbar: {
-// 		barBackgroundColor: '#808083',
-// 		barBorderColor: '#808083',
-// 		buttonArrowColor: '#CCC',
-// 		buttonBackgroundColor: '#606063',
-// 		buttonBorderColor: '#606063',
-// 		rifleColor: '#FFF',
-// 		trackBackgroundColor: '#404043',
-// 		trackBorderColor: '#404043'
-// 	},
-
-// 	legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-// 	background2: '#505053',
-// 	dataLabelsColor: '#fff',
-// 	textColor: '#C0C0C0',
-// 	contrastTextColor: '#F0F0F3',
-// 	maskColor: 'rgba(255,255,255,0.3)'
-// };
-// Highcharts.setOptions(Highcharts.theme);
-
 </script>
 @endsection
