@@ -640,7 +640,7 @@
 						<div class="col-xs-6" style="padding-top: 0px">
 							<div class="col-xs-12">
 								<input type="hidden" id="head_id" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
-								<input type="text" id="head_value" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
+								<input type="hidden" id="head_value" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
 								<table class="table table-bordered">
 									<tr>
 										<td>
