@@ -248,23 +248,20 @@ class ClinicController extends Controller{
 	}
 
 	public function fetchClinicVisit(Request $request){
-		$date_log = "";
 		$month = "";
 
 		if(strlen($request->get('month')) > 0){
-			$date_log = "where DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
 			$month = $request->get('month');
 		}else{
-			$date_log = "WHERE DATE_FORMAT(tanggal,'%Y-%m') = '".date('Y-m')."'";
 			$month = date('Y-m');
 		}
 
-		$clinic_visit = db::connection("clinic")->select("select visit.department, count(visit.employee_id) as qty from
-			(select p.employee_id, e.department, count(p.employee_id) as qty from patient_logs p
-			left join ympimis.employee_syncs e on e.employee_id = p.employee_id ".$date_log."
+		$clinic_visit = db::select("select e.department, count(c.employee_id) as qty from clinic_patient_details c
+			left join employee_syncs e on c.employee_id = e.employee_id
+			where DATE_FORMAT(c.created_at,'%Y-%m') = '".$month."'
 			and e.department is not null
-			group by p.employee_id, e.department) visit
-			group by department
+			and c.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat')
+			group by e.department
 			order by qty desc");
 
 		$department = db::select("select department, count(employee_id) as qty from employee_syncs
@@ -282,10 +279,16 @@ class ClinicController extends Controller{
 
 	public function fetchClinicVisitDetail(Request $request){
 
-		$detail =  db::connection("clinic")->select("select p.employee_id, e.name, d.paramedic, p.in_time, p.out_time, d.purpose from patient_logs p
-			left join ympimis.employee_syncs e on e.employee_id = p.employee_id
-			left join ympimis.clinic_patient_details d on d.id = p.status
-			where DATE_FORMAT(p.in_time,'%Y-%m') = '".$request->get('month')."'
+		// $detail =  db::connection("clinic")->select("select p.employee_id, e.name, d.paramedic, p.in_time, p.out_time, d.purpose from patient_logs p
+		// 	left join ympimis.employee_syncs e on e.employee_id = p.employee_id
+		// 	left join ympimis.clinic_patient_details d on d.id = p.status
+		// 	where DATE_FORMAT(p.in_time,'%Y-%m') = '".$request->get('month')."'
+		// 	and e.department like '%".$request->get('department')."%'");
+
+		$detail =  db::select("select d.employee_id, e.`name`, d.paramedic, d.visited_at, d.purpose  from clinic_patient_details d
+			left join ympimis.employee_syncs e on e.employee_id = d.employee_id
+			where DATE_FORMAT(d.visited_at,'%Y-%m') = '".$request->get('month')."'
+			and d.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat')
 			and e.department like '%".$request->get('department')."%'");
 
 		$response = array(

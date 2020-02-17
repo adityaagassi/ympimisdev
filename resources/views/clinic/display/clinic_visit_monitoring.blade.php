@@ -256,33 +256,28 @@
 				paramedic += '<td style="border-width:0px;">';
 
 				var patient = 0;
+				var doctor = false;
 
 				for (var i = 0; i < result.visitor.length; i++) {
 
 					if(result.visitor[i].employee_id.includes('PI')){
-						tableData += '<tr>';
-						tableData += '<td>'+ ++count +'</td>';
-						tableData += '<td>'+ result.visitor[i].employee_id +'</td>';
-						tableData += '<td>'+ (result.visitor[i].name || 'Not Found') +'</td>';
-						tableData += '<td>'+ (result.visitor[i].section || 'Not Found') +'</td>';
-						tableData += '<td>'+ result.visitor[i].in_time +'</td>';
-						in_time.push(new Date(result.visitor[i].in_time));
-						tableData += '<td><p class="patient-duration">';
-						tableData += '<label id="hours'+ patient +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[patient]) / 3600)) +'</label>:';
-						tableData += '<label id="minutes'+ patient +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[patient]) % 3600) / 60)) +'</label>:';
-						tableData += '<label id="seconds'+ patient +'">'+ pad(diff_seconds(new Date(), in_time[patient]) % 60) +'</label>';
-						tableData += '</p></td>';
-						// if(result.visitor[i].purpose == null){
-						// 	tableData += '<td>'+ '-' +'</td>';
-						// }else{
-						// 	if(result.visitor[i].purpose == 'Laktasi'){
-						// 		tableData += '<td>-</td>';
-						// 	}else{
-						// 		tableData += '<td>'+ result.visitor[i].purpose +'</td>';
-						// 	}
-						// }
-						tableData += '</tr>';
-						++patient;
+						if(result.visitor[i].purpose != 'Laktasi'){
+							tableData += '<tr>';
+							tableData += '<td>'+ ++count +'</td>';
+							tableData += '<td>'+ result.visitor[i].employee_id +'</td>';
+							tableData += '<td>'+ (result.visitor[i].name || 'Not Found') +'</td>';
+							tableData += '<td>'+ (result.visitor[i].section || 'Not Found') +'</td>';
+							tableData += '<td>'+ result.visitor[i].in_time +'</td>';
+							in_time.push(new Date(result.visitor[i].in_time));
+							tableData += '<td><p class="patient-duration">';
+							tableData += '<label id="hours'+ patient +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[patient]) / 3600)) +'</label>:';
+							tableData += '<label id="minutes'+ patient +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[patient]) % 3600) / 60)) +'</label>:';
+							tableData += '<label id="seconds'+ patient +'">'+ pad(diff_seconds(new Date(), in_time[patient]) % 60) +'</label>';
+							tableData += '</p></td>';
+							tableData += '</tr>';
+							++patient;
+						}
+						
 					}else if(result.visitor[i].employee_id.includes('PR')){
 						if(!paramedic_availability){
 							paramedic += '<mark class="ada">';
@@ -293,6 +288,10 @@
 							paramedic += 'Nanang S.<br>';
 						}else if(result.visitor[i].employee_id == 'PR0000003'){
 							paramedic += 'Ahmad Fanani<br>';
+						}else if(result.visitor[i].employee_id == 'PR0000004'){
+							doctor = true;
+						}else if(result.visitor[i].employee_id == 'PR0000005'){
+							paramedic += 'Paramedis Pengganti<br>';
 						}
 
 						paramedic_availability = true;
@@ -319,7 +318,12 @@
 				paramedic += '<tr>';
 				paramedic += '<td style="border-width:0px;">DOCTOR</td>';
 				paramedic += '<td style="border-width:0px;">:</td>';
-				paramedic += '<td style="border-width:0px;"><mark class="tidak-ada">None</mark></td>';
+				
+				if(doctor){
+					paramedic += '<td style="border-width:0px;"><mark class="ada">Taliffia Setya, dr</mark></td>';
+				}else{
+					paramedic += '<td style="border-width:0px;"><mark class="tidak-ada">None</mark></td>';
+				}
 				paramedic += '</tr>';
 				$('#tableBodyMedic').append(paramedic);
 
@@ -353,17 +357,38 @@
 					"processing": true
 				});
 
-				for (var i = 1; i <=  bed.length; i++) {
-					$('#text-bed-'+i).html('OCCUPIED');
-					$('#bed-'+i).css('background-color', 'rgba(255,0,0,.85)');
+				for (var i = 1; i <=  2; i++) {
+					$('#text-bed-'+i).html('VACANT');
+					$('#bed-'+i).css('background-color', 'rgba(57,73,171 ,.6)');
+
+					if(bed[(i-1)]){
+						console.log('Y');
+
+						$('#text-bed-'+i).html('OCCUPIED');
+						$('#bed-'+i).css('background-color', 'rgba(255,0,0,.85)');
+					}
 				}
 
-				for (var i = 1; i <=  laktasi.length; i++) {
-					$('#text-laktasi-'+i).html('OCCUPIED');
-					$('#laktasi-'+i).css('background-color', 'rgba(255,0,0,.85)');
+				for (var i = 1; i <=  4; i++) {
+					$('#text-laktasi-'+i).html('VACANT');
+					$('#laktasi-'+i).css('background-color', 'rgba(57,73,171 ,.6)');
+
+					if(laktasi[(i-1)]){
+						$('#text-laktasi-'+i).html('OCCUPIED');
+						$('#laktasi-'+i).css('background-color', 'rgba(255,0,0,.85)');
+					}
 				}
 
-			}			
+				// for (var i = 1; i <=  bed.length; i++) {
+				// 	$('#text-bed-'+i).html('OCCUPIED');
+				// 	$('#bed-'+i).css('background-color', 'rgba(255,0,0,.85)');
+				// }
+
+				// for (var i = 1; i <=  laktasi.length; i++) {
+				// 	$('#text-laktasi-'+i).html('OCCUPIED');
+				// 	$('#laktasi-'+i).css('background-color', 'rgba(255,0,0,.85)');
+				// }
+			}
 
 		});
 }

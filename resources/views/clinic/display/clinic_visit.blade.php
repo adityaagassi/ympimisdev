@@ -96,8 +96,7 @@
 										<th>Employee ID</th>
 										<th>Name</th>
 										<th>Paramedic</th>
-										<th>In Time</th>
-										<th>Out Time</th>
+										<th>Visited at</th>
 										<th>Purpose</th>
 									</tr>
 								</thead>
@@ -279,14 +278,18 @@
 						enabled: false
 					},
 					legend: {
-						layout: 'vertical',
 						align: 'right',
-						x: -120,
+						x: -50,
 						verticalAlign: 'top',
-						y: 100,
+						y: 30,
+						itemStyle:{
+							color: "white",
+							fontSize: "12px",
+							fontWeight: "bold",
+
+						},
 						floating: true,
-						backgroundColor:
-						Highcharts.defaultOptions.legend.backgroundColor || '#212121'
+						shadow: false
 					},
 					plotOptions: {
 						column:{
@@ -305,7 +308,7 @@
 							point: {
 								events: {
 									click: function () {
-										// showDetail(this.category, result.month);
+										showDetail(this.category, result.month);
 									}
 								}
 							},
@@ -376,8 +379,7 @@
 					body += '<td>'+ result.detail[i].employee_id +'</td>';
 					body += '<td>'+ result.detail[i].name +'</td>';
 					body += '<td>'+ result.detail[i].paramedic +'</td>';
-					body += '<td>'+ result.detail[i].in_time +'</td>';
-					body += '<td>'+ result.detail[i].out_time +'</td>';
+					body += '<td>'+ result.detail[i].visited_at +'</td>';
 					body += '<td>'+ result.detail[i].purpose +'</td>';
 					body += '</tr>';
 				}
