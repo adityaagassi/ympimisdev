@@ -69,14 +69,15 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control datepicker" id="date" name="date">
+									<input type="text" class="form-control datepicker" id="date" name="date" placeholder="Select Date">
 								</div>
 							</div>
 						</div>
 						<div class="col-md-3">
 							<div class="form-group">
 								<label>Selct Loacation</label>
-								<select class="form-control select2" multiple="multiple" data-placeholder="Select Location" name="location" id="location" style="width: 100%;">
+								<select class="form-control select2" data-placeholder="Select Location" name="location" id="location" style="width: 100%;">
+									<option value=""></option>
 									@foreach($locations as $location) 
 									<option value="{{ $location }}">{{ $location }}</option>
 									@endforeach
@@ -224,7 +225,7 @@
 							for (var k = 0; k < result.dataShift3[i].length; k++) {
 								if((result.dataShift3[i][k].hpl == 'ASKEY') && (result.key[j].kunci == result.dataShift3[i][k].kunci)){
 									body += '<td style="background-color: #ffff66;color:black;">'+result.dataShift3[i][k].jml+'</td>';
-									sum_as += result.dataShift3[i][k].jml;
+									sum_as += parseInt(result.dataShift3[i][k].jml);
 									isAsEmpty = false;
 								}
 							}
@@ -237,7 +238,7 @@
 							for (var k = 0; k < result.dataShift3[i].length; k++) {
 								if((result.dataShift3[i][k].hpl == 'TSKEY') && (result.key[j].kunci == result.dataShift3[i][k].kunci)){
 									body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+result.dataShift3[i][k].jml+'</td>';
-									sum_ts += result.dataShift3[i][k].jml;
+									sum_ts += parseInt(result.dataShift3[i][k].jml);
 									isTsEmpty = false;
 								}
 							}
@@ -249,7 +250,7 @@
 
 						if(result.z3[i].length > 0){
 							body += '<td style="background-color: #434348;color:white;">'+result.z3[i][0].jml+'</td>';
-							sum_as += result.z3[i][0].jml;
+							sum_as += parseInt(result.z3[i][0].jml);
 						}else{
 							body += '<td style="background-color: #434348;color:white;">0</td>';
 						}
@@ -302,7 +303,7 @@
 							for (var k = 0; k < result.dataShift1[i].length; k++) {
 								if((result.dataShift1[i][k].hpl == 'ASKEY') && (result.key[j].kunci == result.dataShift1[i][k].kunci)){
 									body += '<td style="background-color: #ffff66;color:black;">'+result.dataShift1[i][k].jml+'</td>';
-									sum_as += result.dataShift1[i][k].jml;
+									sum_as += parseInt(result.dataShift1[i][k].jml);
 									isAsEmpty = false;
 								}
 							}
@@ -315,7 +316,7 @@
 							for (var k = 0; k < result.dataShift1[i].length; k++) {
 								if((result.dataShift1[i][k].hpl == 'TSKEY') && (result.key[j].kunci == result.dataShift1[i][k].kunci)){
 									body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+result.dataShift1[i][k].jml+'</td>';
-									sum_ts += result.dataShift1[i][k].jml;
+									sum_ts += parseInt(result.dataShift1[i][k].jml);
 									isTsEmpty = false;
 								}
 							}
@@ -327,7 +328,7 @@
 
 						if(result.z1[i].length > 0){
 							body += '<td style="background-color: #434348;color:white;">'+result.z1[i][0].jml+'</td>';
-							sum_as += result.z1[i][0].jml;
+							sum_as += parseInt(result.z1[i][0].jml);
 						}else{
 							body += '<td style="background-color: #434348;color:white;">0</td>';
 						}
@@ -380,7 +381,7 @@
 							for (var k = 0; k < result.dataShift2[i].length; k++) {
 								if((result.dataShift2[i][k].hpl == 'ASKEY') && (result.key[j].kunci == result.dataShift2[i][k].kunci)){
 									body += '<td style="background-color: #ffff66;color:black;">'+result.dataShift2[i][k].jml+'</td>';
-									sum_as += result.dataShift2[i][k].jml;
+									sum_as += parseInt(result.dataShift2[i][k].jml);
 									isAsEmpty = false;
 								}
 							}
@@ -393,7 +394,7 @@
 							for (var k = 0; k < result.dataShift2[i].length; k++) {
 								if((result.dataShift2[i][k].hpl == 'TSKEY') && (result.key[j].kunci == result.dataShift2[i][k].kunci)){
 									body += '<td style="background-color: rgb(157, 255, 105);color:black;">'+result.dataShift2[i][k].jml+'</td>';
-									sum_ts += result.dataShift2[i][k].jml;
+									sum_ts += parseInt(result.dataShift2[i][k].jml);
 									isTsEmpty = false;
 								}
 							}
@@ -405,7 +406,7 @@
 
 						if(result.z2[i].length > 0){
 							body += '<td style="background-color: #434348;color:white;">'+result.z2[i][0].jml+'</td>';
-							sum_as += result.z2[i][0].jml;
+							sum_as += parseInt(result.z2[i][0].jml);
 						}else{
 							body += '<td style="background-color: #434348;color:white;">0</td>';
 						}

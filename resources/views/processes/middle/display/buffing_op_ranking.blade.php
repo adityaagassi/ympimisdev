@@ -466,7 +466,7 @@
 						categories.push(series[i][0]);
 						y.push(series[i][1]);
 
-						if(y[i] > 400){
+						if(y[i] > 420){
 							data.push({y: y[i], color: 'rgb(144,238,126)'});
 						}else{
 							data.push({y: y[i], color: 'rgb(255,116,116)'})
@@ -499,13 +499,13 @@
 							},
 							plotLines: [{
 								color: '#FF0000',
-								value: 400,
+								value: 420,
 								dashStyle: 'shortdash',
 								width: 2,
 								zIndex: 5,
 								label: {
 									align:'right',
-									text: 'Target 400 Minutes',
+									text: 'Target 420 Minutes',
 									x:-7,
 									style: {
 										fontSize: '12px',

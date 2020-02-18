@@ -60,7 +60,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="datefrom" name="datefrom">
+									<input type="text" class="form-control pull-right" id="datefrom" name="datefrom" placeholder="Select Date">
 								</div>
 							</div>
 						</div>
@@ -71,7 +71,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="dateto" name="dateto">
+									<input type="text" class="form-control pull-right" id="dateto" name="dateto" placeholder="Select Date">
 								</div>
 							</div>
 						</div>
@@ -81,6 +81,7 @@
 						<div class="col-md-6">
 							<div class="form-group">
 								<select class="form-control select2" data-placeholder="Select Location" name="location" id="location" style="width: 100%;">
+									<option value="">Select Location</option>
 									@foreach($locations as $location) 
 									<option value="{{ $location }}">{{ $location }}</option>
 									@endforeach
@@ -156,10 +157,18 @@
 	jQuery(document).ready(function() {
 
 		$('#datefrom').datepicker({
-			autoclose: true
+			<?php $tgl_max = date('Y-m-d') ?>
+			todayHighlight : true,
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			endDate: '<?php echo $tgl_max ?>'
 		});
 		$('#dateto').datepicker({
-			autoclose: true
+			<?php $tgl_max = date('Y-m-d') ?>
+			todayHighlight : true,
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			endDate: '<?php echo $tgl_max ?>'
 		});
 		$('.select2').select2({
 		});

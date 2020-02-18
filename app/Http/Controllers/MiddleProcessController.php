@@ -31,6 +31,7 @@ use App\MiddleTarget;
 use App\ErrorLog;
 use App\Material;
 use App\MiddleRequestHelper;
+use App\MiddleRequestLog;
 use App\MiddleMaterialRequest;
 use App\Employee;
 use App\Mail\SendEmail;
@@ -254,25 +255,12 @@ class MiddleProcessController extends Controller
 		));
 	}
 
-	public function indexRequestDisplay($id)
-	{
+	public function indexRequestDisplay($id){
 		return view('processes.middle.display.buffing_request', array( 
 			'title' => 'Middle Request Material',
 			'title_jp' => '中間工程ワーク',
-			'option' => $id)
-	)->with('page', 'Middle Request Material Soldering');
-	}
-
-	public function indexDisplayPicking(){
-		$keys = db::select("select DISTINCT `key` from materials order by `key` ASC");
-		$models = db::select("select DISTINCT model from materials where mrpc='S51' order by model ASC");
-
-		return view('processes.middle.display.middle_picking', array(
-			'title' => 'Middle Process Picking Schedule',
-			'title_jp' => '(??)',
-			'models' => $models,
-			'keys' => $keys,
-		))->with('page', 'Middle Process Picking Schedule');
+			'option' => $id))
+		->with('page', 'Middle Request Material Soldering');
 	}
 
 	public function indexReportHourlyLcq(){
@@ -5291,7 +5279,8 @@ class MiddleProcessController extends Controller
 					'quantity' => $datas['qty'][$i],
 					'remark' => 'up',
 					'created_at' => $datas['created_at'][$i],
-					'updated_at' => date('Y-m-d H:i:s')
+					'updated_at' => date('Y-m-d H:i:s'),
+					'created_by' => Auth::id()
 				]);
 			}
 		}
@@ -5739,11 +5728,22 @@ class MiddleProcessController extends Controller
 					['material_tag' => $request->get('tag'), 'material_number' => $material_number, 'created_by' => Auth::id(), 'updated_at' => Carbon::now()]
 				);
 
-				$request = MiddleMaterialRequest::firstOrNew([
+				$material_request = MiddleMaterialRequest::firstOrNew([
 					'material_number' => $material_number
 				]);
-				$request->quantity = ($request->quantity+$quantity);
-				$request->save();
+				$material_request->quantity = ($request->quantity+$quantity);
+
+				$log = new MiddleRequestLog([
+					'material_number' => $material_number,
+					'material_tag' => $request->get('tag'),
+					'quantity' => $quantity,
+					'created_by' => Auth::id(),
+				]);
+
+				DB::transaction(function() use ($material_request, $log){
+					$material_request->save();
+					$log->save();
+				});
 
 				$response = array(
 					'status' => true,

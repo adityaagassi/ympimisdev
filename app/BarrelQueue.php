@@ -10,7 +10,7 @@ class BarrelQueue extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'tag', 'material_number', 'remark', 'quantity'
+		'tag', 'material_number', 'remark', 'quantity', 'created_by'
 	];
 
 	public function material()
