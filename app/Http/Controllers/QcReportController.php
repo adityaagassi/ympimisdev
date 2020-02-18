@@ -289,8 +289,8 @@ class QcReportController extends Controller
                     $hasilforeman = $for->username;
                   }
 
-                  // $foreman = $hasilforeman; 
-                  $foreman = $this->chief;               
+                  $foreman = $hasilforeman; 
+                  // $foreman = $this->chief;               
                 }
                 else{
                   $foreman = null;
@@ -312,8 +312,8 @@ class QcReportController extends Controller
                   $hasilforeman = $for->username;
                 }
 
-                // $foreman = $hasilforeman;
-                $foreman = $this->chief;                
+                $foreman = $hasilforeman;
+                // $foreman = $this->chief;                
               }
               else{
                 $foreman = null;
