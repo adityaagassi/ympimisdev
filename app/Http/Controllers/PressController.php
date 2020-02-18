@@ -60,7 +60,7 @@ class PressController extends Controller
 	public function fetchPressList(Request $request){
 
 		$lists = MpKanagata::where('process', '=', $request->get('process'))
-		->select('mp_kanagatas.material_number', 'mp_kanagatas.material_name', 'mp_kanagatas.material_description', 'mp_kanagatas.id')
+		->select('mp_kanagatas.material_number', 'mp_kanagatas.material_name', 'mp_kanagatas.material_description','mp_kanagatas.punch_die_number', 'mp_kanagatas.id')
 		->distinct()
 		->get();
 

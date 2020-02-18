@@ -200,6 +200,7 @@
 									<th style="width: 2%;">Material Number</th>
 									<th style="width: 5%;">Part Name</th>
 									<th style="width: 5%;">Description</th>
+									<th style="width: 5%;">Kanagata Number</th>
 								</tr>					
 							</thead>
 							<tbody id="tableBodyList">
@@ -624,6 +625,7 @@
 						tableData += '<td>'+ value.material_number +'</td>';
 						tableData += '<td>'+ value.material_name +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
+						tableData += '<td>'+ value.punch_die_number +'</td>';
 						tableData += '</tr>';
 						count += 1;
 					});
