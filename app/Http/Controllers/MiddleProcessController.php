@@ -5731,7 +5731,7 @@ class MiddleProcessController extends Controller
 				$material_request = MiddleMaterialRequest::firstOrNew([
 					'material_number' => $material_number
 				]);
-				$material_request->quantity = ($request->quantity+$quantity);
+				$material_request->quantity = ($material_request->quantity+$quantity);
 
 				$log = new MiddleRequestLog([
 					'material_number' => $material_number,
