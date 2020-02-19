@@ -336,8 +336,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<div class="box" id="kaizen" style="display: none;">
 						<div class="box-header">
 							<h3 class="box-title">E-Kaizen</h3>
+							<?php $grp = str_replace("/"," ",$profil[0]->group); ?>
 							<a class="btn btn-primary pull-right" 
-							href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name."/".$profil[0]->section."/".$profil[0]->group) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
+							href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name."/".$profil[0]->section."/".$grp) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
 						</div>
 						<div class="box-body">
 							<div class="row">
