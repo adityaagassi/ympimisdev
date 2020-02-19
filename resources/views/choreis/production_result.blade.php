@@ -514,27 +514,38 @@
 						// Progres bar hari kerja/minggu
 						for (var i = 1; i < 3; i++) {
 							var persen = 0;
-							if(req.getDay() == 4){
+
+							if(req.getDay() == 0){
+								persen = 0;
+								$('#progress_bar_week'+i).css('font-size', '25px');
+								$('#progress_bar_week'+i).addClass('active');		
+							}
+							else if(req.getDay() == 1){
 								persen = 20;
 								$('#progress_bar_week'+i).css('font-size', '25px');
 								$('#progress_bar_week'+i).addClass('active');		
 							}
-							else if((req.getDay() == 0) || (req.getDay() > 4)){
+							else if(req.getDay() == 2){
 								persen = 40;
 								$('#progress_bar_week'+i).css('font-size', '30px');
-								$('#progress_bar_week'+i).addClass('active');		
-							}
-							else if(req.getDay() == 1){
-								persen = 60;
-								$('#progress_bar_week'+i).css('font-size', '30px');
-								$('#progress_bar_week'+i).addClass('active');		
-							}
-							else if(req.getDay() == 2){
-								persen = 80;
-								$('#progress_bar_week'+i).css('font-size', '30px');
-								$('#progress_bar_week'+i).addClass('active');		
+								$('#progress_bar_week'+i).addClass('active');
 							}
 							else if(req.getDay() == 3){
+								persen = 60;
+								$('#progress_bar_week'+i).css('font-size', '30px');
+								$('#progress_bar_week'+i).addClass('active');
+							}
+							else if(req.getDay() == 4){
+								persen = 80;
+								$('#progress_bar_week'+i).css('font-size', '30px');
+								$('#progress_bar_week'+i).addClass('active');
+							}
+							else if(req.getDay() == 5){
+								persen = 100;
+								$('#progress_bar_week'+i).css('font-size', '30px');
+								$('#progress_bar_week'+i).removeClass('active');
+							}	
+							else if(req.getDay() == 6){
 								persen = 100;
 								$('#progress_bar_week'+i).css('font-size', '30px');
 								$('#progress_bar_week'+i).removeClass('active');
@@ -1397,9 +1408,6 @@ function modalResult(hpl, name, now, first, last){
 		last:last,
 	}
 	$.get('{{ url("fetch/production_result_modal") }}', data, function(result, status, xhr){
-		console.log(status);
-		console.log(result);
-		console.log(xhr);
 		if(xhr.status == 200){
 			if(result.status){
 				$('#modalResultTitle').html('');
