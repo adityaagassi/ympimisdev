@@ -372,7 +372,7 @@ class WeldingProcessController extends Controller
 			on c.operator_id = ng.operator_id) rate
 			on rate.operator_id = eg.employee_id
 			left join employee_syncs e on e.employee_id = eg.employee_id
-			where eg.location = 'soldering'
+			where eg.location = 'soldering-hsa'
 			ORDER BY eg.`group`, eg.employee_id asc");
 
 		$target = db::select("select eg.`group`, eg.employee_id, e.name, ng.material_number, concat(m.model, ' ', m.`key`) as `key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
@@ -384,10 +384,10 @@ class WeldingProcessController extends Controller
 			on eg.employee_id = ng.operator_id
 			left join materials m on m.material_number = ng.material_number
 			left join employee_syncs e on e.employee_id = eg.employee_id
-			where eg.location = 'soldering'
+			where eg.location = 'soldering-hsa'
 			order by eg.`group`, eg.employee_id asc");
 
-		$operator = db::select("select * from employee_groups where location = 'soldering' order by `group`, employee_id asc");
+		$operator = db::select("select * from employee_groups where location = 'soldering-hsa' order by `group`, employee_id asc");
 
 		$dateTitle = date("d M Y", strtotime($now));
 
@@ -523,7 +523,7 @@ class WeldingProcessController extends Controller
 		// $op = db::connection('welding')->select("select DATE(d.tanggaljam_shift) as tgl, SUM(durasi) as act, count(distinct id_operator) as op from t_data_downtime d where DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d') between '".$from."' and '".$now."' and  `status` = '1' GROUP BY tgl");
 
 		// $emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
-		// 	where g.location = 'soldering'");
+		// 	where g.location = 'soldering-hsa'");
 
 		// $datastat = db::select(" ");
 
