@@ -53,7 +53,7 @@
 						</div>
 					</div>
 					<div class="col-xs-3">
-						<div class="form-group">
+						<div class="form-group" style="color: black;">
 							<select class="form-control select2" multiple="multiple" id="locationSelect" data-placeholder="Select Location" onchange="change()">
 								@foreach($locations as $location)
 								<option value="{{ $location }}">{{ $location }}</option>
