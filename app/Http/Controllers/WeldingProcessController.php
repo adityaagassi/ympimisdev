@@ -9,10 +9,11 @@ use DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
-use App\WeldingReworkLog;
 use App\CodeGenerator;
+use App\Material;
 use App\WeldingNgLog;
 use App\WeldingCheckLog;
+use App\WeldingReworkLog;
 use App\WeldingTempLog;
 use App\WeldingLog;
 use App\Employee;
@@ -35,6 +36,29 @@ class WeldingProcessController extends Controller
 			'CLKEY'
 		];
 		$this->fy = db::table('weekly_calendars')->select('fiscal_year')->distinct()->get();
+	}
+
+	public function indexHsaAdjustment(){
+		$title = 'Saxophone HSA Adjustment';
+		$title_jp = '??';
+
+		$workstations = db::connection('welding')->select("select distinct ws.ws_name from m_hsa hsa
+			left join m_ws ws on ws.ws_id = hsa.ws_id
+			order by ws.ws_id asc");
+
+		$materials = Material::where('mrpc','=','s21')
+		->where('hpl', 'like', '%KEY%')
+		->select('material_number', 'hpl', 'model', 'key', 'material_description')
+		->orderBy('key', 'asc')
+		->orderBy('model', 'asc')
+		->get();
+
+		return view('processes.welding.hsa_adjustment', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'materials' => $materials,
+			'workstations' => $workstations,
+		))->with('page', 'welding-queue');
 	}
 
 	public function indexWeldingAchievement(){
@@ -566,47 +590,49 @@ class WeldingProcessController extends Controller
 			$date = date('Y-m-d');
 		}
 
-		$eff_target = db::table("middle_targets")->where('location', '=', 'wld')->where('target_name', '=', 'Operator Efficiency')->select('target')->first();
+		$eff_target = db::table("middle_targets")
+		->where('location', '=', 'wld')
+		->where('target_name', '=', 'Operator Efficiency')
+		->select('target')
+		->first();
 
-		$rate = db::select("select rate.shift, rate.operator_id, concat(SPLIT_STRING(e.name, ' ', 1), ' ', SPLIT_STRING(e.name, ' ', 2)) as `name`, rate.tot, rate.ng, rate.rate from
-			(select c.shift, c.operator_id, c.jml as tot, COALESCE(ng.jml,0) as ng, ((c.jml-COALESCE(ng.jml,0))/c.jml) as rate from
-			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_check_logs m
-			left join materials mt on mt.material_number = m.material_number
-			left join employee_groups eg on eg.employee_id = m.operator_id
-			where m.location = 'bff-kensa'
-			and m.operator_id is not null
-			and mt.origin_group_code = '043'
-			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
-			GROUP BY shift, m.operator_id) c
+		$rate = db::select("select op.employee_id, concat(SPLIT_STRING(op.`name`, ' ', 1),' ',SPLIT_STRING(op.`name`, ' ', 2)) as `name`, op.`group`, eff.eff, rate.post, (eff.eff * COALESCE(rate.post,1) * 100) as oof  from
+			(select g.employee_id, e.`name`, g.`group` from ympimis.employee_groups g
+			left join ympimis.employee_syncs e
+			on g.employee_id = e.employee_id
+			where location = 'soldering-hsa') op
 			left join
-			(select eg.`group` as shift, m.operator_id, sum(m.quantity) as jml from middle_ng_logs m
-			left join materials mt on mt.material_number = m.material_number
-			left join employee_groups eg on eg.employee_id = m.operator_id
-			where m.location = 'bff-kensa'
-			and m.operator_id is not null
-			and mt.origin_group_code = '043'
-			and DATE_FORMAT(m.buffing_time,'%Y-%m-%d') = '".$date."'
-			GROUP BY shift, m.operator_id) ng
-			on c.shift = ng.shift and c.operator_id = ng.operator_id) rate
-			left join employees e on e.employee_id = rate.operator_id
-			ORDER BY shift, rate.rate desc");
-
-		$time_eff = db::connection('digital_kanban')->select("select e.`group`, e.employee_id, dl.act, dl.std, dl.std/dl.act as eff  from employee_groups e left join
-			(select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))/60 as act, sum((l.material_qty*t.time))/60 as std from data_log l
-			left join standart_times t on l.material_number = t.material_number
-			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
-			GROUP BY l.operator_id) dl on dl.operator_id = e.employee_id
-			WHERE e.location = 'bff'
-			ORDER BY e.`group`, e.employee_id asc;");
-
-		$emp_name = Employee::select('employee_id', db::raw('concat(SPLIT_STRING(employees.name, " ", 1), " ", SPLIT_STRING(employees.name, " ", 2)) as name'))->get();
+			(select op_eff.operator_nik, (op_eff.std/op_eff.actual) as eff from
+			(select time.operator_nik, sum(time.actual) actual, sum(time.std) std from
+			(select op.operator_nik, (TIMESTAMPDIFF(second,p.perolehan_start_date,p.perolehan_finish_date)) as  actual,
+			(hsa.hsa_timing * p.perolehan_jumlah) as std from soldering_db.t_perolehan p
+			left join soldering_db.m_operator op on p.operator_id = op.operator_id
+			left join soldering_db.m_hsa hsa on p.part_id = hsa.hsa_id
+			where p.flow_id = '1'
+			and p.part_type = '2'
+			and date(p.tanggaljam) = '".$date."'
+			having actual < 3600) time
+			group by time.operator_nik) op_eff) eff
+			on op.employee_id = eff.operator_nik
+			left join
+			(select cek.operator_id, cek.cek, COALESCE(ng.ng,0) as ng, (cek.cek - COALESCE(ng.ng,0)) as good, ((cek.cek - COALESCE(ng.ng,0))/cek.cek) as post from
+			(select operator_id, sum(quantity) as cek from ympimis.welding_check_logs
+			where date(created_at) = '".$date."'
+			and location = 'hsa-visual-sx'
+			group by operator_id) cek
+			left join
+			(select operator_id, sum(quantity) as ng from ympimis.welding_ng_logs
+			where date(created_at) = '".$date."'
+			and location = 'hsa-visual-sx'
+			group by operator_id) ng
+			on cek.operator_id = ng.operator_id) rate
+			on op.employee_id = rate.operator_id
+			order by `group`, `name` asc");
 
 		$response = array(
 			'status' => true,
 			'date' => $date,
 			'rate' => $rate,
-			'time_eff' => $time_eff,
-			'emp_name' => $emp_name,
 			'eff_target' => $eff_target->target,
 		);
 		return Response::json($response);
@@ -682,7 +708,7 @@ class WeldingProcessController extends Controller
 
 		if($request->get('location') == 'hsa-sx'){			
 			for ($i=0; $i <= 3 ; $i++) {
-				$push_data[$i] = db::select("(select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
+				$push_data[$i] = db::connection('welding')->select("(select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
 					left join m_hsa hsa on p.part_id = hsa.hsa_id
 					left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 					where p.part_type = '2'
@@ -707,7 +733,7 @@ class WeldingProcessController extends Controller
 					ORDER BY kunci)");
 				array_push($dataShift3, $push_data[$i]);
 
-				$push_data_z[$i] = db::select("select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
+				$push_data_z[$i] = db::connection('welding')->select("select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
 					left join m_hsa hsa on p.part_id = hsa.hsa_id
 					left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 					where p.part_type = '2'
@@ -722,7 +748,7 @@ class WeldingProcessController extends Controller
 			}
 
 			for ($i=4; $i <= 7 ; $i++) {
-				$push_data[$i] = db::select("(select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
+				$push_data[$i] = db::connection('welding')->select("(select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
 					left join m_hsa hsa on p.part_id = hsa.hsa_id
 					left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 					where p.part_type = '2'
@@ -747,7 +773,7 @@ class WeldingProcessController extends Controller
 					ORDER BY kunci)");
 				array_push($dataShift1, $push_data[$i]);
 
-				$push_data_z[$i] = db::select("select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
+				$push_data_z[$i] = db::connection('welding')->select("select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
 					left join m_hsa hsa on p.part_id = hsa.hsa_id
 					left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 					where p.part_type = '2'
@@ -762,7 +788,7 @@ class WeldingProcessController extends Controller
 			}
 
 			for ($i=8; $i <= 11 ; $i++) {
-				$push_data[$i] = db::select("(select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
+				$push_data[$i] = db::connection('welding')->select("(select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
 					left join m_hsa hsa on p.part_id = hsa.hsa_id
 					left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 					where p.part_type = '2'
@@ -787,7 +813,7 @@ class WeldingProcessController extends Controller
 					ORDER BY kunci)");
 				array_push($dataShift2, $push_data[$i]);
 
-				$push_data_z[$i] = db::select("select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
+				$push_data_z[$i] = db::connection('welding')->select("select DATE_FORMAT(p.tanggaljam,'%Y-%m-%d') as tgl, SUBSTRING(m.`key`, 1, 1) as kunci, m.hpl, sum(p.perolehan_jumlah) as jml from t_perolehan p
 					left join m_hsa hsa on p.part_id = hsa.hsa_id
 					left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 					where p.part_type = '2'
@@ -980,7 +1006,7 @@ class WeldingProcessController extends Controller
 			GROUP BY m.`key`, m.model) s2
 			on a.keymodel = s2.keymodel
 			ORDER BY `key`";
-			$alto = db::select($query1);
+			$alto = db::connection('welding')->select($query1);
 
 			$query2 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
 			(select distinct `key`, model, CONCAT(`key`,model) as keymodel from ympimis.materials where hpl = 'ASKEY' and surface not like '%PLT%' and issue_storage_location = 'SX21' order by `key`) a
@@ -1024,7 +1050,7 @@ class WeldingProcessController extends Controller
 			GROUP BY m.`key`, m.model) s2
 			on a.keymodel = s2.keymodel
 			ORDER BY `key`";
-			$tenor = db::select($query2);
+			$tenor = db::connection('welding')->select($query2);
 		}
 		else{
 			$query1 = "SELECT a.`key`, a.model, COALESCE(s3.total,0) as shift3, COALESCE(s1.total,0) as shift1, COALESCE(s2.total,0) as shift2 from
@@ -1248,6 +1274,62 @@ class WeldingProcessController extends Controller
 			'tanggal' => $tanggal,
 		);
 		return Response::json($response);
+	}
+
+	public function fetchHsaQueue(Request $request){
+		$ws = "";
+		if($request->get('ws') != null){
+			$ws = "and ws.ws_name = 'WS 1'";
+		}
+
+		$queue = db::connection('welding')->select("select p.pesanan_id, ws.ws_name, p.hsa_kito_code, hsa.hsa_name, hsa.hsa_qty, p.pesanan_create_date from t_pesanan p
+			left join m_hsa hsa on hsa.hsa_kito_code = p.hsa_kito_code
+			left join m_ws ws on ws.ws_id = hsa.ws_id
+			where p.is_deleted = '0' ".$ws."
+			order by ws.ws_id, p.pesanan_create_date asc");
+
+		return DataTables::of($queue)
+		->addColumn('check', function($queue){
+			return '<input type="checkbox" class="queue" id="'.$queue->pesanan_id.'+'.$queue->hsa_name.'" onclick="showSelected(this)">';
+		})
+		->rawColumns([ 'check' => 'check'])
+		->make(true);
+	}
+
+	public function fetchHsaStock(){
+
+		$stock = db::connection('welding')->select("select material.material_number, material.material_description, COALESCE(antrian.qty,0) as antrian, COALESCE(wip.qty,0) as wip, COALESCE(store.qty,0) as store from
+			(select * from ympimis.materials
+			where mrpc = 's21'
+			and hpl like '%key%') material
+			left join
+			(select i.material_number, count(i.material_number) as qty from kitto.inventories i
+			left join kitto.materials m on i.material_number = m.material_number
+			where i.lot > 0 
+			and m.location = 'SX21'
+			and m.category = 'KEY'
+			group by i.material_number) store
+			on material.material_number = store.material_number
+			left join
+			(select hsa.hsa_kito_code, count(hsa.hsa_kito_code) as qty from t_order_detail detail
+			left join t_order `order` on `order`.order_id = detail.order_id
+			left join m_hsa hsa on hsa.hsa_id = `order`.part_id
+			where `order`.part_type = '2'
+			and detail.flow_id = 1
+			and detail.order_status = '1'
+			group by hsa.hsa_kito_code) antrian
+			on material.material_number = antrian.hsa_kito_code
+			left join
+			(select i.material_number, count(i.material_number) as qty from kitto.inventories i
+			left join kitto.materials m on i.material_number = m.material_number
+			where i.lot > 0 
+			and m.location = 'SX21'
+			and m.category = 'KEY'
+			group by i.material_number) wip
+			on material.material_number = wip.material_number");
+
+		return DataTables::of($stock)->make(true);
+
 	}
 
 	public function scanWeldingKensa(Request $request){

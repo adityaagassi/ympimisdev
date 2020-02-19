@@ -83,7 +83,7 @@ class MiddleProcessController extends Controller
 		return view('processes.middle.report.buffing_canceled_log', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-		))->with('page', 'Buffing Cancelled Log');
+		))->with('page', 'buffing-cancel');
 	}
 
 	public function indexBuffingTarget($loc){
@@ -128,7 +128,7 @@ class MiddleProcessController extends Controller
 	}
 
 	public function indexBuffingCanceled(){
-		return view('processes.middle.buffing_cancel')->with('page', 'queue')->with('head', 'Buffing Canceled');
+		return view('processes.middle.buffing_cancel')->with('page', 'buffing-cancel')->with('head', 'Buffing Canceled');
 	}
 	
 	public function indexReportOpTime(){
@@ -156,7 +156,7 @@ class MiddleProcessController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'materials' => $materials,
-		))->with('page', 'queue')->with('head', 'Middle Process Adjustment');
+		))->with('page', 'buffing-queue')->with('head', 'Middle Process Adjustment');
 	}
 
 
@@ -577,7 +577,7 @@ class MiddleProcessController extends Controller
 			'title' => $title,
 			'mrpc' => $mrpc,
 			'hpl' => $hpl,
-		))->with('page', 'queue')->with('head', 'Middle Process Adjustment');
+		))->with('page', 'barrel-queue')->with('head', 'Middle Process Adjustment');
 	}
 
 	public function indexWIPAdjustment()
