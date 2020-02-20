@@ -133,7 +133,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							<b>Sisa Cuti</b> <a class="pull-right">
 								<span style="color: black">
 									@if(isset($employee[0]->remaining))
-									{{ round($employee[0]->remaining)) }} hari
+									{{ round($employee[0]->remaining) }} hari
 									@endif
 								</span>
 								<span class="label label-danger">-</span>/
