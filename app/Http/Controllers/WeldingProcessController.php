@@ -639,6 +639,55 @@ class WeldingProcessController extends Controller
 
 	}
 
+	public function fetchWeldingOpEffTarget(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$eff_target = db::table("middle_targets")
+		->where('location', '=', 'wld')
+		->where('target_name', '=', 'Operator Efficiency')
+		->select('target')
+		->first();
+
+		$target = db::connection('welding')->select("select op.`group`, op.employee_id, op.`name`, eff.material_number, CONCAT(m.model,' ',m.`key`) as `key`, eff.finish, eff.act, eff.std, eff.eff from
+			(select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`,
+			g.`group` from ympimis.employee_groups g
+			left join ympimis.employees e on e.employee_id = g.employee_id
+			where g.location = 'soldering-hsa') op
+			left join
+			(select op.operator_nik, hsa.hsa_kito_code as material_number, dl.finish, dl.perolehan_jumlah, hsa.hsa_timing, (dl.perolehan_jumlah * hsa.hsa_timing) as std, dl.act, ((dl.perolehan_jumlah * hsa.hsa_timing)/dl.act) as eff from
+			(select a.operator_id, a.part_id, time(a.perolehan_finish_date) as finish, timestampdiff(second, a.perolehan_start_date, a.perolehan_finish_date) as act, a.perolehan_jumlah from
+			(select * from t_perolehan
+			where date(tanggaljam) = '".$date."'
+			and part_type = '2'
+			and flow_id = '1') a
+			left join
+			(select * from t_perolehan
+			where date(tanggaljam) = '".$date."'
+			and part_type = '2'
+			and flow_id = '1') b
+			on (a.operator_id = b.operator_id and a.perolehan_finish_date < b.perolehan_finish_date)
+			where b.perolehan_finish_date is null
+			order by a.operator_id asc) dl
+			left join m_operator op on op.operator_id = dl.operator_id
+			left join m_hsa hsa on hsa.hsa_id = dl.part_id) eff
+			on op.employee_id = eff.operator_nik
+			left join ympimis.materials m on eff.material_number = m.material_number
+			order by op.`group`, op.`name` asc");
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'target' => $target,
+			'eff_target' => $eff_target->target,
+		);
+		return Response::json($response);
+	}
+
 	public function fetchReportHourly(Request $request){
 		$tanggal = '';
 		if(strlen($request->get('date')) > 0){
@@ -1320,12 +1369,21 @@ class WeldingProcessController extends Controller
 			group by hsa.hsa_kito_code) antrian
 			on material.material_number = antrian.hsa_kito_code
 			left join
-			(select i.material_number, count(i.material_number) as qty from kitto.inventories i
-			left join kitto.materials m on i.material_number = m.material_number
-			where i.lot > 0 
-			and m.location = 'SX21'
-			and m.category = 'KEY'
-			group by i.material_number) wip
+			(select hsa.hsa_kito_code as material_number, qty.qty from
+			(select part.part_id, count(part.part_id) as qty  from
+			(select m.order_id_sedang as order_id, o.part_type, o.part_id from m_mesin m
+			left join t_order o on m.order_id_sedang = o.order_id
+			where m.order_id_sedang <> ''
+			or m.order_id_sedang <> null
+			and o.part_type = '2'
+			union
+			select m.order_id_akan as order_id, o.part_type, o.part_id from m_mesin m
+			left join t_order o on m.order_id_akan = o.order_id
+			where m.order_id_akan <> ''
+			or m.order_id_akan <> null
+			and o.part_type = '2') part
+			group by part.part_id) qty
+			left join m_hsa hsa on hsa.hsa_id = qty.part_id) wip
 			on material.material_number = wip.material_number");
 
 		return DataTables::of($stock)->make(true);

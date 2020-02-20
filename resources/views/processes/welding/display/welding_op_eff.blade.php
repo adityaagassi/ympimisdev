@@ -1068,6 +1068,349 @@
 			}
 		});
 
+
+$.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result, status, xhr) {
+	if(result.status){
+		var target = result.eff_target;
+
+		var op_a = [];
+		var name_a = [];
+		var key = [];
+		var eff = [];
+		var data = [];
+		var loop = 0;
+		var plotBands = [];
+
+		for(var i = 0; i < result.target.length; i++){
+			if(result.target[i].group == 'A'){
+				loop += 1;
+
+				op_a.push(result.target[i].employee_id);
+				name_a.push(result.target[i].name);
+				key.push(result.target[i].key || 'Not Found');
+				eff.push(result.target[i].eff * 100);
+				
+
+				if(eff[loop-1] > parseInt(target)){
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(144,238,126)'});
+				}else{
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
+				}
+
+				if(eff[loop-1] < parseInt(target)){
+					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+				}
+			}			
+		}
+		var chart = Highcharts.chart('container4_shifta', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Last Operators Efficiency Less '+target+'%',
+				style: {
+					fontSize: '25px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group A on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "Efficiency"
+				},
+				labels: {
+					enabled: false
+				},
+			},
+			xAxis:  {
+				categories: key,
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+				plotBands: plotBands
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				enabled:false
+			},
+			plotOptions: {
+				series:{				
+					dataLabels: {
+						enabled: true,
+						format: '{point.y:.2f}%',
+						rotation: -90,
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+					point: {
+						events: {
+							click: function (event) {
+								showCheck(op_a[event.point.index], name_a[event.point.index], event.point.category, result.date);
+							}
+						}
+					},
+				},
+			},
+			series: [{
+				name:'OP Efficiency',
+				type: 'column',
+				data: data,
+				showInLegend: false
+			}]
+
+		});
+
+
+
+		var op_b = [];
+		var name_b = [];
+		var key = [];
+		var eff = [];
+		var data = [];
+		var loop = 0;
+		var plotBands = [];
+		for(var i = 0; i < result.target.length; i++){
+			if(result.target[i].group == 'B'){
+				loop += 1;
+
+				op_b.push(result.target[i].employee_id);
+				name_b.push(result.target[i].name);
+				key.push(result.target[i].key || 'Not Found');
+				eff.push(result.target[i].eff * 100);
+				
+
+				if(eff[loop-1] > parseInt(target)){
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(144,238,126)'});
+				}else{
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
+				}
+
+				if(eff[loop-1] < parseInt(target)){
+					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+				}
+			}			
+		}
+
+		var chart = Highcharts.chart('container4_shiftb', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Last Operators Efficiency Less '+target+'%',
+				style: {
+					fontSize: '25px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group B on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "Efficiency"
+				},
+				labels: {
+					enabled: false
+				},
+			},
+			xAxis:  {
+				categories: key,
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+				plotBands: plotBands
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				enabled:false
+			},
+			plotOptions: {
+				series:{				
+					dataLabels: {
+						enabled: true,
+						format: '{point.y:.2f}%',
+						rotation: -90,
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+					point: {
+						events: {
+							click: function (event) {
+								showCheck(op_b[event.point.index], name_b[event.point.index], event.point.category, result.date);
+							}
+						}
+					},
+				},
+			},
+			series: [{
+				name:'OP Efficiency',
+				type: 'column',
+				data: data,
+				showInLegend: false
+			}]
+		});
+
+		var op_c = [];
+		var name_c = [];
+		var key = [];
+		var eff = [];
+		var data = [];
+		var loop = 0;
+		var plotBands = [];
+		for(var i = 0; i < result.target.length; i++){
+			if(result.target[i].group == 'C'){
+				loop += 1;
+
+				op_c.push(result.target[i].employee_id);
+				name_c.push(result.target[i].name);
+				key.push(result.target[i].key || 'Not Found');
+				eff.push(result.target[i].eff * 100);
+				
+
+				if(eff[loop-1] > parseInt(target)){
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(144,238,126)'});
+				}else{
+					data.push({y: Math.ceil(eff[loop-1]), color: 'rgb(255,116,116)'})
+				}
+
+				if(eff[loop-1] < parseInt(target)){
+					plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+				}
+			}			
+		}
+		var chart = Highcharts.chart('container4_shiftc', {
+			chart: {
+				animation: false
+			},
+			title: {
+				text: 'Last Operators Efficiency Less '+target+'%',
+				style: {
+					fontSize: '25px',
+					fontWeight: 'bold'
+				}
+			},
+			subtitle: {
+				text: 'Group C on '+ result.date,
+				style: {
+					fontSize: '1vw',
+					fontWeight: 'bold'
+				}
+			},
+			yAxis: {
+				title: {
+					enabled: true,
+					text: "Efficiency"
+				},
+				labels: {
+					enabled: false
+				},
+			},
+			xAxis:  {
+				categories: key,
+				gridLineWidth: 1,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					rotation: -45,
+					style: {
+						fontSize: '13px'
+					}
+				},
+				plotBands: plotBands
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				enabled:false
+			},
+			plotOptions: {
+				series:{				
+					dataLabels: {
+						enabled: true,
+						format: '{point.y:.2f}%',
+						rotation: -90,
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+					point: {
+						events: {
+							click: function (event) {
+								showCheck(op_c[event.point.index], name_c[event.point.index], event.point.category, result.date);
+							}
+						}
+					},
+				},
+			},
+			series: [{
+				name:'OP Efficiency',
+				type: 'column',
+				data: data,
+				showInLegend: false
+			}]
+
+		});		
+
+		$(document).scrollTop(position);
+
+	}
+});
+
 }
 
 

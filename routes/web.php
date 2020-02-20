@@ -31,6 +31,7 @@ Route::get('/trial2', function () {
 	return view('trial2');
 });
 Route::get('print/trial', 'TrialController@tes');
+Route::get('trial_machine', 'TrialController@fetch_machine');
 
 Route::get('/machinery_monitoring', function () {
 	return view('plant_maintenance.machinery_monitoring', array(
@@ -859,6 +860,8 @@ Route::get('index/welding/op_analysis', 'WeldingProcessController@indexOpAnalysi
 Route::get('fetch/welding/op_analysis', 'WeldingProcessController@fetchOpAnalysis');
 Route::get('index/welding/welding_op_eff', 'WeldingProcessController@indexWeldingOpEff');
 Route::get('fetch/welding/welding_op_eff', 'WeldingProcessController@fetchWeldingOpEff');
+Route::get('fetch/welding/welding_op_eff_target', 'WeldingProcessController@fetchWeldingOpEffTarget');
+
 Route::get('index/welding/production_result', 'WeldingProcessController@indexProductionResult');
 Route::get('fetch/welding/production_result', 'WeldingProcessController@fetchProductionResult');
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
@@ -870,6 +873,11 @@ Route::get('fetch/welding/resume', 'WeldingProcessController@fetchWeldingResume'
 Route::get('index/welding/group_achievement', 'WeldingProcessController@indexWeldingAchievement');
 Route::get('fetch/welding/group_achievement', 'WeldingProcessController@fetchGroupAchievement');
 Route::get('fetch/welding/accumulated_achievement', 'WeldingProcessController@fetchAccumulatedAchievement');
+
+Route::get('index/welding/hsa_adjustment', 'WeldingProcessController@indexHsaAdjustment');
+Route::get('fetch/welding/hsa_queue', 'WeldingProcessController@fetchHsaQueue');
+Route::get('fetch/welding/hsa_stock', 'WeldingProcessController@fetchHsaStock');
+
 
 
 
@@ -2046,6 +2054,9 @@ Route::post('index/recorder/print_report_push_block/{remark}', 'RecorderProcessC
 Route::get('index/recorder/get_push_pull','RecorderProcessController@get_push_pull')->name('recorder.get_push_pull');
 Route::post('index/recorder/update/{id}','RecorderProcessController@update');
 
+//RECORDER TORQUE CHECK
+Route::get('index/recorder_process_torque/{remark}', 'RecorderProcessController@index_torque');
+
 //RECORDER PUSH PULL CHECK
 Route::get('index/recorder_push_pull_check', 'RecorderProcessController@index_push_pull');
 Route::get('push_pull/fetchResult', 'RecorderProcessController@fetchResultPushPull');
@@ -2198,8 +2209,10 @@ Route::get('index/master_beacon/delete/{id}','BeaconController@delete');
 
 //CUBEACON REEDPLATE
 Route::get('index/reedplate/map','ReedplateController@index');
+Route::get('index/reedplate/working_time','ReedplateController@reed');
 Route::get('fetch/reedplate/user','ReedplateController@getUser');
 Route::get('fetch/reedplate/log','ReedplateController@fetch_log');
+Route::post('index/reedplate/reader', 'ReedplateController@inputTemp');
 
 //TEMPERATURE / SUHU
 Route::get('index/grafikServer','TemperatureController@grafikServer');
@@ -2262,6 +2275,9 @@ Route::get('index/display/ip', 'PingController@indexIpMonitoring');
 Route::get('fetch/display/ip', 'PingController@fetch');
 Route::get('fetch/display/fetch_hit/{ip}', 'PingController@fetch_hit');
 Route::post('post/display/ip_log', 'PingController@ip_log');
+
+//OFFICECLOCK
+Route::get('index/display/office_clock', 'OfficeClockController@index');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
