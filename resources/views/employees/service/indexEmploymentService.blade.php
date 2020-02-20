@@ -131,517 +131,521 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<ul class="list-group list-group-unbordered" style="margin:0">
 						<li class="list-group-item">
 							<b>Sisa Cuti</b> <a class="pull-right">
-								<span style="color: black">{{ round($employee[0]->remaining) }} hari</span>
-								<!-- <span class="label label-danger">-</span>/
-									<span class="label label-danger">-</span> -->
-								</a>
-							</li>
-							<li class="list-group-item">
-								<b>Penugasan</b> <a class="pull-right">
-									<span class="label label-success">{{ $profil[0]->position }}</span>
-								</a>
-							</li>
-						</ul>
+								<span style="color: black">
+									@if(isset($employee[0]->remaining))
+									{{ round($employee[0]->remaining)) }} hari
+									@endif
+								</span>
+								<span class="label label-danger">-</span>/
+								<span class="label label-danger">-</span>
+							</a>
+						</li>
+						<li class="list-group-item">
+							<b>Penugasan</b> <a class="pull-right">
+								<span class="label label-success">{{ $profil[0]->position }}</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<!-- /.box-body -->
+			</div>
+			<!-- /.box -->
+
+			<!-- About Me Box -->
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title">Tentang Saya</h3>
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<strong><i class="fa fa-briefcase margin-r-5"></i> Bagian</strong>
+
+					<p class="text-muted">
+						{{ $profil[0]->division }} - {{$profil[0]->department}} - {{$profil[0]->section}} - {{$profil[0]->group}} - {{$profil[0]->sub_group}}
+					</p>
+
+					<hr style="margin:2px;">
+
+					<strong><i class="fa fa-cc margin-r-5"></i> Alamat</strong>
+
+					<p class="text-muted" style="margin:2px;">{{$profil[0]->address}}</p>
+
+					<hr style="margin:2px;">
+
+					<strong><i class="fa fa-calendar margin-r-5"></i> Tanggal Masuk</strong>
+
+					<p class="text-muted" style="margin:2px;">{{$profil[0]->hire_date}}</p>
+
+					<hr style="margin:2px;">
+
+					<strong><i class="fa fa-star margin-r-5"></i> Grade</strong>
+
+					<p class="text-muted" style="margin:2px;">{{$profil[0]->grade_code}} - {{$profil[0]->grade_name}}</p>
+
+					<hr style="margin:2px;">
+
+					<strong><i class="fa fa-phone margin-r-5"></i> Nomor Telepon</strong>
+					<div class="pull-right"><button class="btn btn-sm btn-primary" style="padding: 2px 5px 2px 5px" data-toggle="modal" data-target="#editModal"><u><i class="fa fa-pencil"></i> Edit</button></u></div>
+
+					<p class="text-muted"><i class="fa fa-mobile-phone margin-r-5"></i>&nbsp;&nbsp; {{$profil[0]->phone}}<br>
+						<i class="fa fa-whatsapp margin-r-5"></i> {{$profil[0]->wa_number}}</p>
+
 					</div>
 					<!-- /.box-body -->
 				</div>
 				<!-- /.box -->
+			</div>
+			<!-- /.col -->
+			<div class="col-md-9" style="margin-bottom: 10px">
+				<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
+				<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
-				<!-- About Me Box -->
-				<div class="box">
-					<div class="box-header with-border">
-						<h3 class="box-title">Tentang Saya</h3>
+				<?php if (strpos($profil[0]->position, 'Operator') !== false) { ?>
+				<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
+				<?php } ?>
+			</div>
+			<div class="col-md-9">
+				<div class="box" id="boxing">
+					<div class="box-header">
+						<h3 class="box-title">Resume Absensi & Lembur</h3>
+						<div class="pull-right">
+							<select class="form-control select2">
+								<option>2020</option>
+							</select>
+						</div>
 					</div>
 					<!-- /.box-header -->
 					<div class="box-body">
-						<strong><i class="fa fa-briefcase margin-r-5"></i> Bagian</strong>
-
-						<p class="text-muted">
-							{{ $profil[0]->division }} - {{$profil[0]->department}} - {{$profil[0]->section}} - {{$profil[0]->group}} - {{$profil[0]->sub_group}}
-						</p>
-
-						<hr style="margin:2px;">
-
-						<strong><i class="fa fa-cc margin-r-5"></i> Alamat</strong>
-
-						<p class="text-muted" style="margin:2px;">{{$profil[0]->address}}</p>
-
-						<hr style="margin:2px;">
-
-						<strong><i class="fa fa-calendar margin-r-5"></i> Tanggal Masuk</strong>
-
-						<p class="text-muted" style="margin:2px;">{{$profil[0]->hire_date}}</p>
-
-						<hr style="margin:2px;">
-
-						<strong><i class="fa fa-star margin-r-5"></i> Grade</strong>
-
-						<p class="text-muted" style="margin:2px;">{{$profil[0]->grade_code}} - {{$profil[0]->grade_name}}</p>
-
-						<hr style="margin:2px;">
-
-						<strong><i class="fa fa-phone margin-r-5"></i> Nomor Telepon</strong>
-						<div class="pull-right"><button class="btn btn-sm btn-primary" style="padding: 2px 5px 2px 5px" data-toggle="modal" data-target="#editModal"><u><i class="fa fa-pencil"></i> Edit</button></u></div>
-
-						<p class="text-muted"><i class="fa fa-mobile-phone margin-r-5"></i>&nbsp;&nbsp; {{$profil[0]->phone}}<br>
-							<i class="fa fa-whatsapp margin-r-5"></i> {{$profil[0]->wa_number}}</p>
-
-						</div>
-						<!-- /.box-body -->
+						<table class="table table-bordered table-striped" id="history">
+							<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+								<tr>
+									<th style="width: 10%">Periode</th>
+									<th style="width: 10%">Mangkir</th>
+									<th style="width: 10%">Izin</th>
+									<th style="width: 10%">Sakit</th>
+									<th style="width: 10%">Terlambat</th>
+									<th style="width: 10%">Pulang Cepat</th>
+									<th style="width: 10%">Cuti</th>
+									<th style="width: 10%">Tunjangan Disiplin</th>
+									<th style="width: 10%">Lembur (Jam)</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach ($presences as $presence)
+								<tr>
+									<td>{{$presence->periode}}</td>
+									<td>
+										@if ($presence->mangkir > 0) 
+										<span class="badge bg-yellow">{{$presence->mangkir}}</span>
+										@else 
+										- 
+										@endif
+									</td>
+									<td>
+										@if ($presence->izin > 0) 
+										<span class="badge bg-yellow">{{$presence->izin}}</span>
+										@else 
+										- 
+										@endif
+									</td>
+									<td>
+										@if ($presence->sakit > 0)
+										<span class="badge bg-yellow">{{$presence->sakit}}</span>
+										@else 
+										- 
+										@endif
+									</td>
+									<td>@if ($presence->terlambat > 0)
+										<span class="badge bg-yellow">{{$presence->terlambat}}</span>
+										@else 
+										- 
+									@endif</td>
+									<td>
+										@if ($presence->pulang_cepat > 0)
+										<span class="badge bg-yellow">{{$presence->pulang_cepat}}</span>
+										@else 
+										- 
+										@endif
+									</td>
+									<td>
+										@if ($presence->cuti > 0) 
+										<span class="badge bg-yellow">{{$presence->cuti}}</span>
+										@else 
+										- 
+										@endif
+									</td>
+									<td>
+										@if ($presence->tunjangan > 0)
+										<i class="fa fa-close" style="color: red"></i>
+										@else 
+										<i class="fa fa-check" style="color: #18c40c"></i>
+										@endif
+									</td>
+									<td>
+										@if ($presence->overtime > 0)
+										<span class="badge bg-yellow">{{$presence->overtime}}</span>
+										@else 
+										- 
+										@endif
+									</td>
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
 					</div>
-					<!-- /.box -->
+					<!-- /.box-body -->
 				</div>
-				<!-- /.col -->
-				<div class="col-md-9" style="margin-bottom: 10px">
-					<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
-					<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
-					<?php if (strpos($profil[0]->position, 'Operator') !== false) { ?>
-					<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
-					<?php } ?>
-				</div>
-				<div class="col-md-9">
-					<div class="box" id="boxing">
-						<div class="box-header">
-							<h3 class="box-title">Resume Absensi & Lembur</h3>
-							<div class="pull-right">
-								<select class="form-control select2">
-									<option>2020</option>
-								</select>
-							</div>
-						</div>
-						<!-- /.box-header -->
-						<div class="box-body">
-							<table class="table table-bordered table-striped" id="history">
-								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
-									<tr>
-										<th style="width: 10%">Periode</th>
-										<th style="width: 10%">Mangkir</th>
-										<th style="width: 10%">Izin</th>
-										<th style="width: 10%">Sakit</th>
-										<th style="width: 10%">Terlambat</th>
-										<th style="width: 10%">Pulang Cepat</th>
-										<th style="width: 10%">Cuti</th>
-										<th style="width: 10%">Tunjangan Disiplin</th>
-										<th style="width: 10%">Lembur (Jam)</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach ($presences as $presence)
-									<tr>
-										<td>{{$presence->periode}}</td>
-										<td>
-											@if ($presence->mangkir > 0) 
-											<span class="badge bg-yellow">{{$presence->mangkir}}</span>
-											@else 
-											- 
-											@endif
-										</td>
-										<td>
-											@if ($presence->izin > 0) 
-											<span class="badge bg-yellow">{{$presence->izin}}</span>
-											@else 
-											- 
-											@endif
-										</td>
-										<td>
-											@if ($presence->sakit > 0)
-											<span class="badge bg-yellow">{{$presence->sakit}}</span>
-											@else 
-											- 
-											@endif
-										</td>
-										<td>@if ($presence->terlambat > 0)
-											<span class="badge bg-yellow">{{$presence->terlambat}}</span>
-											@else 
-											- 
-										@endif</td>
-										<td>
-											@if ($presence->pulang_cepat > 0)
-											<span class="badge bg-yellow">{{$presence->pulang_cepat}}</span>
-											@else 
-											- 
-											@endif
-										</td>
-										<td>
-											@if ($presence->cuti > 0) 
-											<span class="badge bg-yellow">{{$presence->cuti}}</span>
-											@else 
-											- 
-											@endif
-										</td>
-										<td>
-											@if ($presence->tunjangan > 0)
-											<i class="fa fa-close" style="color: red"></i>
-											@else 
-											<i class="fa fa-check" style="color: #18c40c"></i>
-											@endif
-										</td>
-										<td>
-											@if ($presence->overtime > 0)
-											<span class="badge bg-yellow">{{$presence->overtime}}</span>
-											@else 
-											- 
-											@endif
-										</td>
-									</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
-						<!-- /.box-body -->
+				<!-- QUESTION & ANSWER -->
+
+				<div class="box" id="question" style="display: none;">
+					<div class="box-header">
+						<h3 class="box-title">Question & Answer</h3>
 					</div>
-
-					<!-- QUESTION & ANSWER -->
-
-					<div class="box" id="question" style="display: none;">
-						<div class="box-header">
-							<h3 class="box-title">Question & Answer</h3>
-						</div>
-						<div class="box-body">
-							<div class="col-xs-12">
-								<div class="row">
-									<div class="col-xs-2">
-										<select class="form-control select2" style="width: 100%" id="category">
-											<option disabled selected value="">Category</option>
-											<option value="Absensi">Absensi</option>
-											<option value="Lembur">Lembur</option>
-											<option value="Cuti">Cuti</option>
-											<option value="PKB">PKB</option>
-											<option value="Penggajian">Penggajian</option>
-											<option value="BPJS Kes">BPJS Kes</option>
-											<option value="BPJS TK">BPJS TK</option>
-										</select>
-									</div>
-									<div class="col-xs-10">
-										<div class="input-group input-group">
-											<input type="text" class="form-control" id="msg" placeholder="Write a Message...">
-											<span class="input-group-btn">
-												<button type="button" class="btn btn-success btn-flat" onclick="posting()"><i class="fa fa-send-o"></i>&nbsp; Post</button>
-											</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-12">
-								<hr>
-								<div id="chat">
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- E-KAIZEN -->
-
-					<div class="box" id="kaizen" style="display: none;">
-						<div class="box-header">
-							<h3 class="box-title">E-Kaizen</h3>
-							<?php $grp = str_replace("/"," ",$profil[0]->group); ?>
-							<a class="btn btn-primary pull-right" 
-							href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name."/".$profil[0]->section."/".$grp) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
-						</div>
-						<div class="box-body">
+					<div class="box-body">
+						<div class="col-xs-12">
 							<div class="row">
-								<div class="col-xs-1">
-									<label>Filter :</label>
-								</div>
-								<div class="col-xs-4">
-									<input type="text" id="bulanAwal" class="form-control datepicker" placeholder="Tanggal dari..">
-								</div>
-								<div class="col-xs-4">
-									<input type="text" id="bulanAkhir" class="form-control datepicker" placeholder="Tanggal sampai..">
-								</div>
 								<div class="col-xs-2">
-									<button class="btn btn-default" onclick="fill_kaizen()">Cari</button>
+									<select class="form-control select2" style="width: 100%" id="category">
+										<option disabled selected value="">Category</option>
+										<option value="Absensi">Absensi</option>
+										<option value="Lembur">Lembur</option>
+										<option value="Cuti">Cuti</option>
+										<option value="PKB">PKB</option>
+										<option value="Penggajian">Penggajian</option>
+										<option value="BPJS Kes">BPJS Kes</option>
+										<option value="BPJS TK">BPJS TK</option>
+									</select>
+								</div>
+								<div class="col-xs-10">
+									<div class="input-group input-group">
+										<input type="text" class="form-control" id="msg" placeholder="Write a Message...">
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-success btn-flat" onclick="posting()"><i class="fa fa-send-o"></i>&nbsp; Post</button>
+										</span>
+									</div>
 								</div>
 							</div>
+						</div>
+						<div class="col-xs-12">
 							<hr>
-							<table class="table table-bordered" id="tableKaizen" width="100%">
-								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
-									<tr>
-										<th style="width: 900px">Id</th>
-										<th>Tanggal</th>
-										<th>Usulan</th>
-										<th>Kategori</th>
-										<th>Status</th>
-										<th>Aplikasi</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
+							<div id="chat">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- E-KAIZEN -->
+
+				<div class="box" id="kaizen" style="display: none;">
+					<div class="box-header">
+						<h3 class="box-title">E-Kaizen</h3>
+						<?php $grp = str_replace("/"," ",$profil[0]->group); ?>
+						<a class="btn btn-primary pull-right" 
+						href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name."/".$profil[0]->section."/".$grp) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							<div class="col-xs-1">
+								<label>Filter :</label>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="bulanAwal" class="form-control datepicker" placeholder="Tanggal dari..">
+							</div>
+							<div class="col-xs-4">
+								<input type="text" id="bulanAkhir" class="form-control datepicker" placeholder="Tanggal sampai..">
+							</div>
+							<div class="col-xs-2">
+								<button class="btn btn-default" onclick="fill_kaizen()">Cari</button>
+							</div>
+						</div>
+						<hr>
+						<table class="table table-bordered" id="tableKaizen" width="100%">
+							<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+								<tr>
+									<th style="width: 900px">Id</th>
+									<th>Tanggal</th>
+									<th>Usulan</th>
+									<th>Kategori</th>
+									<th>Status</th>
+									<th>Aplikasi</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="col-md-9" style="padding-top: 0;">
+				<ul class="timeline">
+					<li class="time-label">
+						<span style="background-color: #00a65a; color: white;">
+							24 January 2019
+						</span>
+					</li>
+					<li>
+						<i class="fa fa-info-circle" style="background-color: #00a65a; color: white;"></i>
+						<div class="timeline-item">
+							<h3 class="timeline-header" style="color: #00a65a; font-weight: bold;">Yamaha Group Helpline</h3>
+							<div class="timeline-body">
+								Karyawan dapat menyampaikan informasi terkait tindakan ketidaksesuaian terhadap Kode Etik Kepatuhan (Compliance Code of Conduct) pada link berikut:
+								<br>
+								<a href="http://ml.helpline.jp/yamahacompliance/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Yamaha Helpline <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+								<br>
+								Username: <b>yamaha</b>
+								<br>
+								Password: <b>helpline</b>
+							</div>
+						</div>
+					</li>
+					<li class="time-label">
+						<span style="background-color: #605ca8; color: white;">
+							01 January 2020
+						</span>
+					</li>
+					<li>
+						<i class="fa fa-info-circle" style="background-color: #605ca8; color: white;"></i>
+						<div class="timeline-item">
+							<h3 class="timeline-header" style="color: #605ca8; font-weight: bold;">Sunfish</h3>
+							<div class="timeline-body">
+								Diinformasikan bahwa per tanggal <i style="color: red;">01 Januari 2020</i>, pembuatan <i style="color: red;">form lembur</i> menggunakan <i style="color: red;">Sunfish</i> pada link berikut:
+								<br>
+								<a href="http://172.17.144.11/sf6/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Sunfish Overtime <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+							</div>
+						</div>
+					</li>
+					<li>
+						<i class="fa fa-dot-circle-o bg-gray"></i>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- /.col -->
+	</div>
+	<div id="editModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Edit Nomor yang bisa Dihubungi</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row" style="margin-bottom: 2%">
+						<div class="col-xs-5" align="right"><label>Nomor Telepon<span class="text-red">*</span></label></div>
+						<div class="col-xs-6"><input type="text" class="form-control" placeholder="Active Phone Number" id="phone_number"></div>
+					</div>
+					<div class="row">
+						<div class="col-xs-5" align="right"><label>Nomor WhatsApp<span class="text-red">*</span></label></div>
+						<div class="col-xs-6"><input type="text" class="form-control" placeholder="WhatsApp Number" id="wa_number"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="editData"><i class="fa fa-pencil"></i> Edit</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- DETAIL -->
+
+	<div class="modal fade" id="modalDetail">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<p style="font-size: 25px; font-weight: bold; text-align: center" id="kz_title"></p>
+							<table id="tabelDetail" width="100%">
+								<tr>
+									<th>NIK/Name </th>
+									<td> : </td>
+									<td id="kz_nik"></td>
+									<th>Date</th>
+									<td> : </td>
+									<td id="kz_tanggal"></td>
+								</tr>
+								<tr>
+									<th>Section</th>
+									<td> : </td>
+									<td id="kz_section"></td>
+									<th>Area Kaizen</th>
+									<td> : </td>
+									<td id="kz_area"></td>
+								</tr>
+								<tr>
+									<th>Leader</th>
+									<td> : </td>
+									<td id="kz_leader"></td>
+								</tr>
+								<tr>
+									<td colspan="6"><hr style="margin: 5px 0px 5px 0px; border-color: black"></td>
+								</tr>
+							</table>
+							<table width="100%" border="1" id="tabel_Kz">
+								<tr>
+									<th style="border-bottom: 1px solid black" width="50%">BEFORE :</th>
+									<th style="border-bottom: 1px solid black; border-left: 1px" width="50%">AFTER :</th>
+								</tr>
+								<tr>
+									<td id="kz_before"></td>
+									<td id="kz_after"></td>
+								</tr>
+							</table>
+							<table id="tableEstimasi" style="border: 1px solid black" width="100%"></table>
+							<br>
+							<table width="100%" border="1" id="tabel_assess">
+								<tr>
+									<th colspan="4">TABEL NILAI KAIZEN</th>
+								</tr>
+								<tr>
+									<th width="5%">No</th>
+									<th>Kategori</th>
+									<th>Foreman / Chief</th>
+									<th>Manager</th>
+								</tr>
+								<tr>
+									<th>1</th>
+									<th>Estimasi Hasil</th>
+									<td id="foreman_point1"></td>
+									<td id="manager_point1"></td>
+								</tr>
+								<tr>
+									<th>2</th>
+									<th>Ide</th>
+									<td id="foreman_point2"></td>
+									<td id="manager_point2"></td>
+								</tr>
+								<tr>
+									<th>3</th>
+									<th>Implementasi</th>
+									<td id="foreman_point3"></td>
+									<td id="manager_point3"></td>
+								</tr>
+								<tr>
+									<th colspan="2"> TOTAL</th>
+									<td id="foreman_total" style="font-weight: bold;"></td>
+									<td id="manager_total" style="font-weight: bold;"></td>
+								</tr>
+							</table>
+							<br>
+							<table width="100%" id="tabel_nilai_all" border="1">
+								<tr>
+									<th>No</th>
+									<th>Total Nilai</th>
+									<th>Point</th>
+									<th>Keterangan</th>
+									<th>Reward Aplikasi</th>
+								</tr>
+								<tr>
+									<td>1</td>
+									<td><300</td>
+									<td>2</td>
+									<td>Kurang</td>
+									<td>Rp 2.000,-</td>
+								</tr>
+
+								<tr>
+									<td>2</td>
+									<td>300 - 350</td>
+									<td>4</td>
+									<td>Cukup</td>
+									<td>Rp 5.000,-</td>
+								</tr>
+
+								<tr>
+									<td>3</td>
+									<td>351 - 400</td>
+									<td>6</td>
+									<td>Baik</td>
+									<td>Rp 10.000,-</td>
+								</tr>
+
+								<tr>
+									<td>4</td>
+									<td>401 - 450</td>
+									<td>8</td>
+									<td>Sangat Baik</td>
+									<td>Rp 25,000,-</td>
+								</tr>
+
+								<tr>
+									<td>5</td>
+									<td>> 450</td>
+									<td>10</td>
+									<td>Potensi Excellent</td>
+									<td>Rp 50,000,-</td>
+								</tr>
 							</table>
 						</div>
 					</div>
-
 				</div>
-
-				<div class="col-md-9" style="padding-top: 0;">
-					<ul class="timeline">
-						<li class="time-label">
-							<span style="background-color: #00a65a; color: white;">
-								24 January 2019
-							</span>
-						</li>
-						<li>
-							<i class="fa fa-info-circle" style="background-color: #00a65a; color: white;"></i>
-							<div class="timeline-item">
-								<h3 class="timeline-header" style="color: #00a65a; font-weight: bold;">Yamaha Group Helpline</h3>
-								<div class="timeline-body">
-									Karyawan dapat menyampaikan informasi terkait tindakan ketidaksesuaian terhadap Kode Etik Kepatuhan (Compliance Code of Conduct) pada link berikut:
-									<br>
-									<a href="http://ml.helpline.jp/yamahacompliance/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Yamaha Helpline <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
-									<br>
-									Username: <b>yamaha</b>
-									<br>
-									Password: <b>helpline</b>
-								</div>
-							</div>
-						</li>
-						<li class="time-label">
-							<span style="background-color: #605ca8; color: white;">
-								01 January 2020
-							</span>
-						</li>
-						<li>
-							<i class="fa fa-info-circle" style="background-color: #605ca8; color: white;"></i>
-							<div class="timeline-item">
-								<h3 class="timeline-header" style="color: #605ca8; font-weight: bold;">Sunfish</h3>
-								<div class="timeline-body">
-									Diinformasikan bahwa per tanggal <i style="color: red;">01 Januari 2020</i>, pembuatan <i style="color: red;">form lembur</i> menggunakan <i style="color: red;">Sunfish</i> pada link berikut:
-									<br>
-									<a href="http://172.17.144.11/sf6/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Sunfish Overtime <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
-								</div>
-							</div>
-						</li>
-						<li>
-							<i class="fa fa-dot-circle-o bg-gray"></i>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<!-- /.col -->
-		</div>
-		<div id="editModal" class="modal fade" role="dialog">
-			<div class="modal-dialog">
-
-				<!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Edit Nomor yang bisa Dihubungi</h4>
-					</div>
-					<div class="modal-body">
-						<div class="row" style="margin-bottom: 2%">
-							<div class="col-xs-5" align="right"><label>Nomor Telepon<span class="text-red">*</span></label></div>
-							<div class="col-xs-6"><input type="text" class="form-control" placeholder="Active Phone Number" id="phone_number"></div>
-						</div>
-						<div class="row">
-							<div class="col-xs-5" align="right"><label>Nomor WhatsApp<span class="text-red">*</span></label></div>
-							<div class="col-xs-6"><input type="text" class="form-control" placeholder="WhatsApp Number" id="wa_number"></div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary" id="editData"><i class="fa fa-pencil"></i> Edit</button>
-					</div>
-				</div>
-
-			</div>
-		</div>
-
-		<!-- DETAIL -->
-
-		<div class="modal fade" id="modalDetail">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-xs-12">
-								<p style="font-size: 25px; font-weight: bold; text-align: center" id="kz_title"></p>
-								<table id="tabelDetail" width="100%">
-									<tr>
-										<th>NIK/Name </th>
-										<td> : </td>
-										<td id="kz_nik"></td>
-										<th>Date</th>
-										<td> : </td>
-										<td id="kz_tanggal"></td>
-									</tr>
-									<tr>
-										<th>Section</th>
-										<td> : </td>
-										<td id="kz_section"></td>
-										<th>Area Kaizen</th>
-										<td> : </td>
-										<td id="kz_area"></td>
-									</tr>
-									<tr>
-										<th>Leader</th>
-										<td> : </td>
-										<td id="kz_leader"></td>
-									</tr>
-									<tr>
-										<td colspan="6"><hr style="margin: 5px 0px 5px 0px; border-color: black"></td>
-									</tr>
-								</table>
-								<table width="100%" border="1" id="tabel_Kz">
-									<tr>
-										<th style="border-bottom: 1px solid black" width="50%">BEFORE :</th>
-										<th style="border-bottom: 1px solid black; border-left: 1px" width="50%">AFTER :</th>
-									</tr>
-									<tr>
-										<td id="kz_before"></td>
-										<td id="kz_after"></td>
-									</tr>
-								</table>
-								<table id="tableEstimasi" style="border: 1px solid black" width="100%"></table>
-								<br>
-								<table width="100%" border="1" id="tabel_assess">
-									<tr>
-										<th colspan="4">TABEL NILAI KAIZEN</th>
-									</tr>
-									<tr>
-										<th width="5%">No</th>
-										<th>Kategori</th>
-										<th>Foreman / Chief</th>
-										<th>Manager</th>
-									</tr>
-									<tr>
-										<th>1</th>
-										<th>Estimasi Hasil</th>
-										<td id="foreman_point1"></td>
-										<td id="manager_point1"></td>
-									</tr>
-									<tr>
-										<th>2</th>
-										<th>Ide</th>
-										<td id="foreman_point2"></td>
-										<td id="manager_point2"></td>
-									</tr>
-									<tr>
-										<th>3</th>
-										<th>Implementasi</th>
-										<td id="foreman_point3"></td>
-										<td id="manager_point3"></td>
-									</tr>
-									<tr>
-										<th colspan="2"> TOTAL</th>
-										<td id="foreman_total" style="font-weight: bold;"></td>
-										<td id="manager_total" style="font-weight: bold;"></td>
-									</tr>
-								</table>
-								<br>
-								<table width="100%" id="tabel_nilai_all" border="1">
-									<tr>
-										<th>No</th>
-										<th>Total Nilai</th>
-										<th>Point</th>
-										<th>Keterangan</th>
-										<th>Reward Aplikasi</th>
-									</tr>
-									<tr>
-										<td>1</td>
-										<td><300</td>
-										<td>2</td>
-										<td>Kurang</td>
-										<td>Rp 2.000,-</td>
-									</tr>
-
-									<tr>
-										<td>2</td>
-										<td>300 - 350</td>
-										<td>4</td>
-										<td>Cukup</td>
-										<td>Rp 5.000,-</td>
-									</tr>
-
-									<tr>
-										<td>3</td>
-										<td>351 - 400</td>
-										<td>6</td>
-										<td>Baik</td>
-										<td>Rp 10.000,-</td>
-									</tr>
-
-									<tr>
-										<td>4</td>
-										<td>401 - 450</td>
-										<td>8</td>
-										<td>Sangat Baik</td>
-										<td>Rp 25,000,-</td>
-									</tr>
-
-									<tr>
-										<td>5</td>
-										<td>> 450</td>
-										<td>10</td>
-										<td>Potensi Excellent</td>
-										<td>Rp 50,000,-</td>
-									</tr>
-								</table>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-					</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 				</div>
 			</div>
 		</div>
+	</div>
 
 
-		<!-- DELETE -->
-		<div class="modal fade" id="modalDelete">
-			<div class="modal-dialog modal-md modal-danger">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title"><b>Apakah anda yakin ingin menghapus kaizen ?</b></h4>
-					</div>
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-md-12">
-								<p id="kz_title_delete"></p>
-								<input type="hidden" id="id_delete">
-							</div>
+	<!-- DELETE -->
+	<div class="modal fade" id="modalDelete">
+		<div class="modal-dialog modal-md modal-danger">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title"><b>Apakah anda yakin ingin menghapus kaizen ?</b></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<p id="kz_title_delete"></p>
+							<input type="hidden" id="id_delete">
 						</div>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="deleteKaizen()"><i class="fa fa-close"></i> YES</button>
-						<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> NO</button>
-					</div>
 				</div>
-				<!-- /.modal-content -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="deleteKaizen()"><i class="fa fa-close"></i> YES</button>
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> NO</button>
+				</div>
 			</div>
-			<!-- /.modal-dialog -->
+			<!-- /.modal-content -->
 		</div>
+		<!-- /.modal-dialog -->
+	</div>
 
-	</section>
-	@endsection
-	@section('scripts')
-	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-	<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
-	<script>
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});			
+</section>
+@endsection
+@section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});			
 
-		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-		var chat = 0;
-		var name = "";
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+	var chat = 0;
+	var name = "";
 
-		jQuery(document).ready(function() {
-			$('body').toggleClass("sidebar-collapse");
+	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 
-			$('.select2').select2({
-				language : {
-					noResults : function(params) {
-						return "There is no data";
-					}
+		$('.select2').select2({
+			language : {
+				noResults : function(params) {
+					return "There is no data";
 				}
-			});
+			}
+		});
 
 				// $('#kz_sub_leader').select2({ width: 'resolve' });
 
@@ -659,88 +663,88 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				})
 			});
 
-		$(window).on('pageshow', function(){
-			$("#bulanAwal").val("");
-			$("#bulanAkhir").val("");
-			fill_kaizen();
-		});
+	$(window).on('pageshow', function(){
+		$("#bulanAwal").val("");
+		$("#bulanAkhir").val("");
+		fill_kaizen();
+	});
 
-		$("#editData").click(function() {
-			var data = {
-				employee_id: "{{ $emp_id }}",
-				phone_number: $("#phone_number").val(),
-				wa_number: $("#wa_number").val()
-			}
-
-			if ($("#phone_number").val() == "{{$profil[0]->phone}}" && $("#wa_number").val() == "{{$profil[0]->wa_number}}") {
-				$('#editModal').modal('hide');
-				openSuccessGritter('Success','Tidak Ada Data yang Berubah');
-			} else {
-				$.get('{{ url("update/employee/number") }}', data, function(result, status, xhr){
-					if (result.status) {
-						$('#editModal').modal('hide');
-						openSuccessGritter('Success','Nomor Telepon Berhasil Diubah');
-					} else {
-						openErrorGritter('Error!', result.datas);
-					}
-				})
-			}
-
-		});
-
-		function check_chart() {
-			if (!$(".komen").is(':focus') && chat == 1) {
-				fill_chat();
-			}
+	$("#editData").click(function() {
+		var data = {
+			employee_id: "{{ $emp_id }}",
+			phone_number: $("#phone_number").val(),
+			wa_number: $("#wa_number").val()
 		}
 
-		function fill_chat() {
-			var data = {
-				employee_id: '{{ $emp_id }}_'+name.split(' ').slice(0,2).join('-')
-			}
+		if ($("#phone_number").val() == "{{$profil[0]->phone}}" && $("#wa_number").val() == "{{$profil[0]->wa_number}}") {
+			$('#editModal').modal('hide');
+			openSuccessGritter('Success','Tidak Ada Data yang Berubah');
+		} else {
+			$.get('{{ url("update/employee/number") }}', data, function(result, status, xhr){
+				if (result.status) {
+					$('#editModal').modal('hide');
+					openSuccessGritter('Success','Nomor Telepon Berhasil Diubah');
+				} else {
+					openErrorGritter('Error!', result.datas);
+				}
+			})
+		}
 
-			$.get('{{ url("fetch/chat/hrqa") }}', data, function(result, status, xhr){
-				if(result.status){
-					$("#chat").empty();
-					var xCategories2 = [];
+	});
 
-					for(var i = 0; i < result.chats.length; i++){
-						ctg = result.chats[i].id+"_"+result.chats[i].message+"_"+result.chats[i].category+"_"+result.chats[i].created_at_new;
+	function check_chart() {
+		if (!$(".komen").is(':focus') && chat == 1) {
+			fill_chat();
+		}
+	}
 
-						if(xCategories2.indexOf(ctg) === -1){
-							xCategories2[xCategories2.length] = ctg;
-						}
+	function fill_chat() {
+		var data = {
+			employee_id: '{{ $emp_id }}_'+name.split(' ').slice(0,2).join('-')
+		}
+
+		$.get('{{ url("fetch/chat/hrqa") }}', data, function(result, status, xhr){
+			if(result.status){
+				$("#chat").empty();
+				var xCategories2 = [];
+
+				for(var i = 0; i < result.chats.length; i++){
+					ctg = result.chats[i].id+"_"+result.chats[i].message+"_"+result.chats[i].category+"_"+result.chats[i].created_at_new;
+
+					if(xCategories2.indexOf(ctg) === -1){
+						xCategories2[xCategories2.length] = ctg;
 					}
+				}
 
 
-					$.each(xCategories2, function(index, value){
-						var chat_history = "";
-						var chats = value.split("_");
-						chat_history += '<div class="post">';
-						chat_history += '<div class="user-block">'
-						chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/{{ $emp_id }}.jpg" alt="image">';
-						chat_history += '<span class="username">{{ $emp_id }}_'+name.split(' ').slice(0,2).join('-')+'</span>';
-						chat_history += '<span class="description">'+chats[3]+'</span></div>';
-						chat_history += '<p>'+chats[1]+'</p>';
+				$.each(xCategories2, function(index, value){
+					var chat_history = "";
+					var chats = value.split("_");
+					chat_history += '<div class="post">';
+					chat_history += '<div class="user-block">'
+					chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/{{ $emp_id }}.jpg" alt="image">';
+					chat_history += '<span class="username">{{ $emp_id }}_'+name.split(' ').slice(0,2).join('-')+'</span>';
+					chat_history += '<span class="description">'+chats[3]+'</span></div>';
+					chat_history += '<p>'+chats[1]+'</p>';
 
-						var stat = 0;
-						var rev = 0;
+					var stat = 0;
+					var rev = 0;
 
-						$.each(result.chats, function(index2, value2){
-							if (chats[0] == value2.id) { 
-								if (value2.message_detail) {
-									if (stat == 0) {
-										chat_history += '<div style="margin-left: 30px">';
-									} else {
-										chat_history += '<div>';
-									}
+					$.each(result.chats, function(index2, value2){
+						if (chats[0] == value2.id) { 
+							if (value2.message_detail) {
+								if (stat == 0) {
+									chat_history += '<div style="margin-left: 30px">';
+								} else {
+									chat_history += '<div>';
+								}
 
-									chat_history += '<div class="post">'
-									chat_history += '<div class="user-block">';
-									chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/'+value2.avatar+'.jpg" alt="image">';
-									chat_history += '<span class="username">'+value2.dari+' &nbsp; ';
-									chat_history += '<span style="color:#999; font-size:13px">'+value2.created_at_new+'</span></span>';
-									chat_history += '<span class="description" style="color:#666">'+value2.message_detail+'</span></div>';
+								chat_history += '<div class="post">'
+								chat_history += '<div class="user-block">';
+								chat_history += '<img class="img-circle img-bordered-sm" src="'+result.base_avatar+'/'+value2.avatar+'.jpg" alt="image">';
+								chat_history += '<span class="username">'+value2.dari+' &nbsp; ';
+								chat_history += '<span style="color:#999; font-size:13px">'+value2.created_at_new+'</span></span>';
+								chat_history += '<span class="description" style="color:#666">'+value2.message_detail+'</span></div>';
 								// chat_history += '<p>'+value2.message_detail+'</p>';
 
 								stat = 1;
@@ -762,16 +766,16 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						}
 
 					})
-						chat_history += '</div>';
+					chat_history += '</div>';
 
-						$("#chat").append(chat_history);
-					})
+					$("#chat").append(chat_history);
+				})
 
-					$(".komen").keypress(function() {
-						var keycode = (event.keyCode ? event.keyCode : event.which);
-						if(keycode == '13'){
-							if (this.value != "") {
-								var id2 = this.id.split("_")[1];
+				$(".komen").keypress(function() {
+					var keycode = (event.keyCode ? event.keyCode : event.which);
+					if(keycode == '13'){
+						if (this.value != "") {
+							var id2 = this.id.split("_")[1];
 							// alert(id+" "+this.value+" HR");
 							var data = {
 								id:id2,
@@ -787,78 +791,78 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						}
 					}
 				});
-				}
-			})
+			}
+		})
+	}
+
+	function posting() {
+		var msg = $("#msg").val();
+		var cat = $("#category").val();
+
+		if (msg == "" && cat == "") {
+			openErrorGritter('Error!','Pesan harus diisi');
+			return false;
 		}
 
-		function posting() {
-			var msg = $("#msg").val();
-			var cat = $("#category").val();
-
-			if (msg == "" && cat == "") {
-				openErrorGritter('Error!','Pesan harus diisi');
-				return false;
-			}
-
-			var data = {
-				message:msg,
-				category:cat,
-				from:"{{ $emp_id }}_"+name.split(' ').slice(0,2).join('-')
-			}
-
-			$.post('{{ url("post/hrqa") }}', data, function(result, status, xhr){
-				openSuccessGritter('Success','');
-				$("#msg").val("");
-				fill_chat();
-			})
+		var data = {
+			message:msg,
+			category:cat,
+			from:"{{ $emp_id }}_"+name.split(' ').slice(0,2).join('-')
 		}
 
-		function fill_kaizen() {
-			if ($("#bulanAwal").val() != "" && $("#bulanAkhir").val() == "") {
-				alert("Bulan Sampai harap diisi");
-				return false;
-			} else if ($("#bulanAwal").val() == "" && $("#bulanAkhir").val() != "") {
-				alert("Bulan Dari harap diisi");
-				return false;
-			}
+		$.post('{{ url("post/hrqa") }}', data, function(result, status, xhr){
+			openSuccessGritter('Success','');
+			$("#msg").val("");
+			fill_chat();
+		})
+	}
 
-			var data = {
-				employee_id : "{{ $emp_id }}",
-				bulanAwal : $("#bulanAwal").val(),
-				bulanAkhir : $("#bulanAkhir").val(),
-			}
-			$('#tableKaizen').DataTable().destroy();
-			var table2 = $('#tableKaizen').DataTable({
-				'dom': 'Bfrtip',
-				'responsive': true,
-				'lengthMenu': [
-				[ 10, 25, 50, -1 ],
-				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-				],
-				'paging': true,
-				'lengthChange': true,
-				'searching': true,
-				'ordering': true,
-				'order': [],
-				'info': true,
-				'autoWidth': true,
-				"sPaginationType": "full_numbers",
-				"processing": true,
-				"serverSide": true,
-				"ajax": {
-					"type" : "get",
-					"url" : "{{ url("fetch/report/kaizen") }}",
-					"data" : data
-				},
-				"columns": [
-				{ "data": "id" },
-				{ "data": "propose_date" },
-				{ "data": "title" },
-				{ "data": "stat" },
-				{ "data": "posisi" },
-				{ "data": "application" },
-				{ "data": "action" }
-				],
+	function fill_kaizen() {
+		if ($("#bulanAwal").val() != "" && $("#bulanAkhir").val() == "") {
+			alert("Bulan Sampai harap diisi");
+			return false;
+		} else if ($("#bulanAwal").val() == "" && $("#bulanAkhir").val() != "") {
+			alert("Bulan Dari harap diisi");
+			return false;
+		}
+
+		var data = {
+			employee_id : "{{ $emp_id }}",
+			bulanAwal : $("#bulanAwal").val(),
+			bulanAkhir : $("#bulanAkhir").val(),
+		}
+		$('#tableKaizen').DataTable().destroy();
+		var table2 = $('#tableKaizen').DataTable({
+			'dom': 'Bfrtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': true,
+			'order': [],
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"processing": true,
+			"serverSide": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/report/kaizen") }}",
+				"data" : data
+			},
+			"columns": [
+			{ "data": "id" },
+			{ "data": "propose_date" },
+			{ "data": "title" },
+			{ "data": "stat" },
+			{ "data": "posisi" },
+			{ "data": "application" },
+			{ "data": "action" }
+			],
 					// "columnDefs": [
 					// { "width": "2%", "targets": 0 },
 					// { "width": "3%", "targets": 1 },
@@ -866,79 +870,79 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					// ]
 				});
 
-			$('#tableKaizen tfoot tr').appendTo('#tableKaizen thead');
+		$('#tableKaizen tfoot tr').appendTo('#tableKaizen thead');
+	}
+
+	function cekDetail(id) {
+		data = {
+			id:id
 		}
 
-		function cekDetail(id) {
-			data = {
-				id:id
+		$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
+			$("#kz_title").text(result[0].title);
+			$("#kz_nik").text(result[0].employee_id + " / "+ result[0].employee_name);
+			$("#kz_section").text(result[0].section);
+			$("#kz_leader").text(result[0].leader_name);
+			$("#kz_tanggal").text(result[0].date);
+			$("#kz_area").text(result[0].area);
+			$("#kz_before").html(result[0].condition);
+			$("#kz_after").html(result[0].improvement);
+
+			$("#tableEstimasi").empty();
+			bd = "";
+			tot = 0;
+			if (result[0].cost_name) {
+				$.each(result, function(index, value){
+					bd += "<tr>";
+					var unit = "";
+
+					if (value.cost_name == "Manpower") {
+						unit = "menit";
+						sub_tot = (value.sub_total_cost * 20);
+						tot += parseInt(sub_tot);
+					} else if (value.cost_name == "Tempat") {
+						unit = value.unit+"<sup>2</sup>";
+						sub_tot = parseInt(value.sub_total_cost);
+						tot += sub_tot;
+					}
+					else {
+						unit = value.frequency;
+						sub_tot = value.sub_total_cost;
+						tot += parseInt(sub_tot);
+					}
+
+					bd += "<th>"+value.cost_name+"</th>";
+					bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",-</b></td>";
+					bd += "<td><b>Rp "+sub_tot+",- / bulan</b></td>";
+					bd += "</tr>";
+				});
+
+				bd += "<tr style='font-size: 18px;'>";
+				bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total</th>";
+				bd += "<td><b>Rp "+tot+",-</b></td>";
+				bd += "</tr>";
+
+				$("#tableEstimasi").append(bd);
 			}
 
-			$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
-				$("#kz_title").text(result[0].title);
-				$("#kz_nik").text(result[0].employee_id + " / "+ result[0].employee_name);
-				$("#kz_section").text(result[0].section);
-				$("#kz_leader").text(result[0].leader_name);
-				$("#kz_tanggal").text(result[0].date);
-				$("#kz_area").text(result[0].area);
-				$("#kz_before").html(result[0].condition);
-				$("#kz_after").html(result[0].improvement);
+			$("#foreman_point1").text(result[0].foreman_point_1 * 40);
+			$("#foreman_point2").text(result[0].foreman_point_2 * 30);
+			$("#foreman_point3").text(result[0].foreman_point_3 * 30);
+			$("#foreman_total").text((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 30) + (result[0].foreman_point_3 * 30));
+			$("#manager_point1").text(result[0].manager_point_1 * 40);
+			$("#manager_point2").text(result[0].manager_point_2 * 30);
+			$("#manager_point3").text(result[0].manager_point_3 * 30);
+			$("#manager_total").text((result[0].manager_point_1 * 40) + (result[0].manager_point_2 * 30) + (result[0].manager_point_3 * 30));
+			$("#modalDetail").modal('show');
+		})
+	}
 
-				$("#tableEstimasi").empty();
-				bd = "";
-				tot = 0;
-				if (result[0].cost_name) {
-					$.each(result, function(index, value){
-						bd += "<tr>";
-						var unit = "";
+	function load_leader() {
+		$.get('{{ url("fetch/sub_leader") }}', function(result, status, xhr){
 
-						if (value.cost_name == "Manpower") {
-							unit = "menit";
-							sub_tot = (value.sub_total_cost * 20);
-							tot += parseInt(sub_tot);
-						} else if (value.cost_name == "Tempat") {
-							unit = value.unit+"<sup>2</sup>";
-							sub_tot = parseInt(value.sub_total_cost);
-							tot += sub_tot;
-						}
-						else {
-							unit = value.frequency;
-							sub_tot = value.sub_total_cost;
-							tot += parseInt(sub_tot);
-						}
-
-						bd += "<th>"+value.cost_name+"</th>";
-						bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",-</b></td>";
-						bd += "<td><b>Rp "+sub_tot+",- / bulan</b></td>";
-						bd += "</tr>";
-					});
-
-					bd += "<tr style='font-size: 18px;'>";
-					bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total</th>";
-					bd += "<td><b>Rp "+tot+",-</b></td>";
-					bd += "</tr>";
-
-					$("#tableEstimasi").append(bd);
-				}
-
-				$("#foreman_point1").text(result[0].foreman_point_1 * 40);
-				$("#foreman_point2").text(result[0].foreman_point_2 * 30);
-				$("#foreman_point3").text(result[0].foreman_point_3 * 30);
-				$("#foreman_total").text((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 30) + (result[0].foreman_point_3 * 30));
-				$("#manager_point1").text(result[0].manager_point_1 * 40);
-				$("#manager_point2").text(result[0].manager_point_2 * 30);
-				$("#manager_point3").text(result[0].manager_point_3 * 30);
-				$("#manager_total").text((result[0].manager_point_1 * 40) + (result[0].manager_point_2 * 30) + (result[0].manager_point_3 * 30));
-				$("#modalDetail").modal('show');
-			})
-		}
-
-		function load_leader() {
-			$.get('{{ url("fetch/sub_leader") }}', function(result, status, xhr){
-
-				fill_chat();
-			})
-		}
+			fill_chat();
+		})
+	}
 
 			// function modalEditKaizen(id) {
 			// 	alert(id);
