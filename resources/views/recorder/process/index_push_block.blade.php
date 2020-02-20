@@ -854,7 +854,7 @@
 		}else if (no_cavity == 7) {
 			$('#block_value').val('9-16');
 		}else if (no_cavity == 8) {
-			$('#block_value').val('16-24');
+			$('#block_value').val('17-24');
 		}
 
 		$.get('{{ url("index/fetch_push_block") }}', data, function(result, status, xhr){
