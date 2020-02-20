@@ -131,13 +131,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<ul class="list-group list-group-unbordered" style="margin:0">
 						<li class="list-group-item">
 							<b>Sisa Cuti</b> <a class="pull-right">
-								<span style="color: black">
+								<span class="label label-danger" style="color: black">
 									@if(isset($employee[0]->remaining))
 									{{ round($employee[0]->remaining) }} hari
 									@endif
 								</span>
-								<span class="label label-danger">-</span>/
-								<span class="label label-danger">-</span>
 							</a>
 						</li>
 						<li class="list-group-item">
