@@ -301,9 +301,14 @@
 			if(result.status){
 				$("#model").text(result.material.model+" "+result.material.surface);
 				$("#key").text(result.material.key);
-				if(result.opwelding.operator_nik.includes('PI')){
-					$("#opwelding").text(result.opwelding.operator_nik+" "+result.opwelding.operator_name);	
-					$('#welding_time').val(result.opwelding.order_sedang_finish_date);		
+				if(result.opwelding){
+					if(result.opwelding.operator_nik.includes('PI')){
+						$("#opwelding").text(result.opwelding.operator_nik+" "+result.opwelding.operator_name);	
+						$('#welding_time').val(result.opwelding.order_sedang_finish_date);		
+					}else{
+						$("#opwelding").text("Operator Not Found");
+						$('#welding_time').val("");
+					}
 				}
 				else{
 					$("#opwelding").text("Operator Not Found");
