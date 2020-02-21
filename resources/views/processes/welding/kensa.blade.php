@@ -319,8 +319,11 @@
 					$("#opwelding").text("Operator Not Found");
 					$('#welding_time').val("");		
 				}
-				$('#attention_point').append('<img style="width: 100%; height: 445px;" src="'+result.attention_point+'">');
-				$('#check_point').append('<img style="width: 100%; height: 445px;" src="'+result.check_point+'">');
+				
+				if(location == 'hsa-visual-sx'){
+					$('#attention_point').append('<img style="width: 100%; height: 445px;" src="'+result.attention_point+'">');
+					$('#check_point').append('<img style="width: 100%; height: 445px;" src="'+result.check_point+'">');	
+				}
 				$('#started_at').val(result.started_at);
 				$('#material_tag').val(tag);
 				$('#material_number').val(result.material.material_number);

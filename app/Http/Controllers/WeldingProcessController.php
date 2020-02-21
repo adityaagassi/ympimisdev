@@ -1421,10 +1421,11 @@ class WeldingProcessController extends Controller
 			$zed_operator = db::connection('welding')->table('m_phs_kartu')->leftJoin('t_order', 't_order.part_id', '=', 'm_phs_kartu.phs_id')
 			->leftJoin('t_order_detail', 't_order_detail.order_id', '=', 't_order.order_id')
 			->leftJoin('m_operator', 'm_operator.operator_id', '=', 't_order_detail.operator_id')
+			->where('m_phs_kartu.phs_kartu_code', '=', $tag)
 			->where('t_order.part_type', '=', '1')
 			->where('t_order_detail.flow_id', '=', '1')
 			->where('t_order.kanban_no', '=', $zed_material->phs_kartu_no)
-			->select('m_operator.operator_nik', 'm_operator.operator_name', 't_order.order_id', 't_order_detail.order_sedang_finish_date')
+			// ->select('m_operator.operator_nik', 'm_operator.operator_name', 't_order.order_id', 't_order_detail.order_sedang_finish_date')
 			->first();
 
 			$material = db::table('materials')->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'materials.material_number')
