@@ -329,7 +329,7 @@
 				$('#material_number').val(result.material.material_number);
 				$('#material_quantity').val(result.material.lot_completion);
 
-				fetchResult($('#op').val());
+				fetchResult($('#op').text());
 				$("#tag").prop('disabled', true);
 				openSuccessGritter('Success', result.message);
 			}
@@ -419,7 +419,10 @@
 				$('#opwelding').val("");
 				$('#tag').val("");
 				$('#tag').prop('disabled', false);
-				$('#tag').focus();				
+				$('#tag').focus();	
+
+				fetchResult($('#op').text());
+
 			}
 			else{
 				var btn = document.getElementById('rework');
@@ -492,6 +495,9 @@
 				$('#tag').val("");
 				$('#tag').prop('disabled', false);
 				$('#tag').focus();
+
+				fetchResult($('#op').text());
+
 			}
 			else{
 				var btn = document.getElementById('conf1');
