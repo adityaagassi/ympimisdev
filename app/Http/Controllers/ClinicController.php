@@ -256,22 +256,18 @@ class ClinicController extends Controller{
 			$month = date('Y-m');
 		}
 
-		$clinic_visit = db::select("select e.department, count(c.employee_id) as qty from clinic_patient_details c
-			left join employee_syncs e on c.employee_id = e.employee_id
+		$clinic_visit = db::select("select e.department, count(visit.employee_id) as qty from
+			(select distinct c.employee_id, c.patient_list_id from clinic_patient_details c
 			where DATE_FORMAT(c.created_at,'%Y-%m') = '".$month."'
-			and e.department is not null
-			and c.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat')
+			and c.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat')) visit
+			left join employee_syncs e on visit.employee_id = e.employee_id
+			where e.department is not null
 			group by e.department
 			order by qty desc");
-
-		$department = db::select("select department, count(employee_id) as qty from employee_syncs
-			where department is not null
-			group by department");
 
 		$response = array(
 			'status' => true,
 			'clinic_visit' => $clinic_visit,
-			'department' => $department,
 			'month' => $month,
 		);
 		return Response::json($response);
@@ -279,13 +275,7 @@ class ClinicController extends Controller{
 
 	public function fetchClinicVisitDetail(Request $request){
 
-		// $detail =  db::connection("clinic")->select("select p.employee_id, e.name, d.paramedic, p.in_time, p.out_time, d.purpose from patient_logs p
-		// 	left join ympimis.employee_syncs e on e.employee_id = p.employee_id
-		// 	left join ympimis.clinic_patient_details d on d.id = p.status
-		// 	where DATE_FORMAT(p.in_time,'%Y-%m') = '".$request->get('month')."'
-		// 	and e.department like '%".$request->get('department')."%'");
-
-		$detail =  db::select("select d.employee_id, e.`name`, d.paramedic, d.visited_at, d.purpose  from clinic_patient_details d
+		$detail =  db::select("select distinct d.patient_list_id, d.employee_id, e.`name`, d.paramedic, d.visited_at, d.purpose  from clinic_patient_details d
 			left join ympimis.employee_syncs e on e.employee_id = d.employee_id
 			where DATE_FORMAT(d.visited_at,'%Y-%m') = '".$request->get('month')."'
 			and d.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat')

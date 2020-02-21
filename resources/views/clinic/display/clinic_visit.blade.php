@@ -225,15 +225,19 @@
 				var department = [];
 				var visit = [];
 				var percentage = [];
+
+				var sum = 0;
 				for (i = 0; i < result.clinic_visit.length; i++) {
 					department.push(result.clinic_visit[i].department);
 					visit.push(parseInt(result.clinic_visit[i].qty));
-					for (j = 0; j < result.department.length; j++) {
-						if(result.clinic_visit[i].department == result.department[j].department){
-							percentage.push((result.clinic_visit[i].qty / result.department[j].qty) * 100);
-						}
-					}
+					sum += parseInt(result.clinic_visit[i].qty);
 				}
+
+				for (i = 0; i < result.clinic_visit.length; i++) {
+					percentage.push(parseInt(result.clinic_visit[i].qty) / sum * 100);
+				}
+
+				console.log(percentage);
 
 				Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
 					return ['M', x, y + h / 2, 'L', x + w, y + h / 2];

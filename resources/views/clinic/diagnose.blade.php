@@ -271,9 +271,15 @@
 	function addMedicine() {
 		++med;
 
-		$add = '<div class="col-xs-12" id="add_med_'+ med +'"><div class="col-xs-3" style="color: black; padding: 0px; padding-right: 1%;"><select style="width: 100%;" class="form-control select2" id="med_'+ med +'" data-placeholder="Select Medicine"><option value="">Select Medicine</option>@foreach($medicines as $medicine)<option value="{{ $medicine->medicine_name }}">{{ $medicine->medicine_name }}</option>@endforeach</select></div><div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;"><div class="form-group"><input type="number" id="med_qty_'+ med +'" data-placeholder="Qty" style="width: 100%; height: 33px; font-size: 15px; text-align: center;"></div></div><div class="col-xs-1" style="padding: 0px;"><button class="btn btn-danger" onclick="removeMedicine(1)"><i class="fa fa-close"></i></button></div></div>';
+		$add = '<div class="col-xs-12" id="add_med_'+ med +'"><div class="col-xs-3" style="color: black; padding: 0px; padding-right: 1%;"><select style="width: 100%;" class="form-control select3" id="med_'+ med +'" data-placeholder="Select Medicine"><option value="">Select Medicine</option>@foreach($medicines as $medicine)<option value="{{ $medicine->medicine_name }}">{{ $medicine->medicine_name }}</option>@endforeach</select></div><div class="col-xs-1" style="color: black; padding: 0px; padding-right: 1%;"><div class="form-group"><input type="number" id="med_qty_'+ med +'" data-placeholder="Qty" style="width: 100%; height: 33px; font-size: 15px; text-align: center;"></div></div><div class="col-xs-1" style="padding: 0px;"><button class="btn btn-danger" onclick="removeMedicine(1)"><i class="fa fa-close"></i></button></div></div>';
 
 		$('#medicine').append($add);
+
+		$(function () {
+			$('.select3').select2({
+				dropdownParent: $('#medicine')
+			});
+		})
 	}
 
 	function removeMedicine(id) {
@@ -351,20 +357,21 @@
 
 				$('#bed').prop('selectedIndex', 0).change();
 				$('#purpose').prop('selectedIndex', 0).change();
-				$('#diagnose').prop('selectedIndex', 0).change();
+				$('#diagnose option:selected').removeAttr('selected');
 				$('#doctor').prop('selectedIndex', 0).change();
 
 				$('#medicine').append().empty();
 				$('#family-field').hide();
 				$('#pemeriksaan-kesehatan').hide();
 
+				med = 0;
+
 				fillVisitor();
 				$("#loading").hide();
 				openSuccessGritter('Success', result.message);
-			}else{
-				$("#family").val("");
-				$("#family_name").val("");
 
+				location.reload(true);
+			}else{
 				$('#purpose').prop('selectedIndex', 0).change();
 				$('#diagnose').prop('selectedIndex', 0).change();
 				$('#doctor').prop('selectedIndex', 0).change();
