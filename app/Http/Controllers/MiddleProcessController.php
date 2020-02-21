@@ -2000,18 +2000,40 @@ class MiddleProcessController extends Controller
 
 		$eff_target = db::table("middle_targets")->where('location', '=', 'bff')->where('target_name', '=', 'Operator Efficiency')->select('target')->first();
 
+		// $target = db::connection('digital_kanban')->select("select e.`group`, e.employee_id, dl.material_number, CONCAT(m.model,' ',m.`key`) as `key`, dl.finish, dl.act, (dl.material_qty*s.time/60) as std, (dl.material_qty*s.time/60)/dl.act as eff, dl.`check` from employee_groups e
+		// 	left join
+		// 	(SELECT a.`group`, a.operator_id, a.material_number, time(a.selesai_start_time) as finish,
+		// 	TIMESTAMPDIFF(SECOND,a.sedang_start_time,a.selesai_start_time)/60 as act,
+		// 	a.material_qty, a.`check`
+		// 	FROM (select * from data_log l
+		// 	left join employee_groups e on l.operator_id = e.employee_id
+		// 	where date(l.selesai_start_time) = '".$date."'
+		// 	".$group.") a
+		// 	LEFT JOIN
+		// 	(select * from data_log l
+		// 	left join employee_groups e on l.operator_id = e.employee_id
+		// 	where date(l.selesai_start_time) = '".$date."'
+		// 	".$group.") b
+		// 	ON (a.operator_id = b.operator_id AND a.selesai_start_time < b.selesai_start_time)
+		// 	WHERE b.selesai_start_time IS NULL
+		// 	order by a.operator_id asc) dl
+		// 	on dl.operator_id = e.employee_id
+		// 	left join standart_times s on s.material_number = dl.material_number
+		// 	left join materials m on m.material_number = dl.material_number
+		// 	where e.location = 'bff'
+		// 	".$group."
+		// 	order by e.`group`, e.employee_id");
+
 		$target = db::connection('digital_kanban')->select("select e.`group`, e.employee_id, dl.material_number, CONCAT(m.model,' ',m.`key`) as `key`, dl.finish, dl.act, (dl.material_qty*s.time/60) as std, (dl.material_qty*s.time/60)/dl.act as eff, dl.`check` from employee_groups e
 			left join
-			(SELECT a.`group`, a.operator_id, a.material_number, time(a.selesai_start_time) as finish,
+			(SELECT a.operator_id, a.material_number, time(a.selesai_start_time) as finish,
 			TIMESTAMPDIFF(SECOND,a.sedang_start_time,a.selesai_start_time)/60 as act,
 			a.material_qty, a.`check`
 			FROM (select * from data_log l
-			left join employee_groups e on l.operator_id = e.employee_id
 			where date(l.selesai_start_time) = '".$date."'
 			".$group.") a
 			LEFT JOIN
 			(select * from data_log l
-			left join employee_groups e on l.operator_id = e.employee_id
 			where date(l.selesai_start_time) = '".$date."'
 			".$group.") b
 			ON (a.operator_id = b.operator_id AND a.selesai_start_time < b.selesai_start_time)

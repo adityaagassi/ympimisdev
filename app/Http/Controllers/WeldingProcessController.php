@@ -467,12 +467,11 @@ class WeldingProcessController extends Controller
 		}
 
 		$actual = db::connection('welding')->select("SELECT
-			DATE( d.tanggaljam_shift ) AS tgl,
-			SUM(
-			TIMESTAMPDIFF( MINUTE, d.starttime, d.stoptime )) AS time,
-			COUNT( DISTINCT operator_id ) AS op,
-			ROUND(( SUM( TIMESTAMPDIFF( MINUTE, d.starttime, d.stoptime )))/ COUNT( DISTINCT operator_id ), 2 ) AS act_time,
-			ROUND(( SUM( TIMESTAMPDIFF( MINUTE, d.starttime, d.stoptime ))), 2 ) AS all_time,
+			DATE( d.tanggaljam ) AS tgl,
+			SUM(IF(TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date) < 60, TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date), 0)) AS time,
+			COUNT( DISTINCT d.operator_id ) AS op,
+			ROUND(( SUM(IF(TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date) < 60, TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date), 0))) / COUNT( DISTINCT d.operator_id ), 2 ) AS act_time,
+			ROUND(( SUM(IF(TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date) < 60, TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date), 0))), 2 ) AS all_time,
 			( SELECT target FROM ympimis.middle_targets WHERE target_name = 'Normal Working Time' AND location = 'wld' ) AS normal_time,
 			ROUND((
 			SELECT
@@ -483,8 +482,7 @@ class WeldingProcessController extends Controller
 			target_name = 'Normal Working Time' 
 			AND location = 'wld' 
 			) - (
-			SUM(
-			TIMESTAMPDIFF( MINUTE, d.starttime, d.stoptime )))/ COUNT( DISTINCT operator_id ),
+			SUM(IF(TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date) < 60, TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date), 0)))/ COUNT(DISTINCT d.operator_id),
 			2 
 			) AS loss_time,
 			ROUND((
@@ -496,7 +494,7 @@ class WeldingProcessController extends Controller
 			WHERE
 			DATE( tanggaljam ) = tgl 
 			AND part_type = '2' 
-			)/ COUNT( DISTINCT operator_id ),
+			)/ COUNT( DISTINCT d.operator_id ),
 			2 
 			) AS std_time,
 			ROUND((
@@ -516,7 +514,7 @@ class WeldingProcessController extends Controller
 			WHERE
 			DATE( tanggaljam ) = tgl 
 			AND part_type = '2' 
-			)/ COUNT( DISTINCT operator_id ),
+			)/ COUNT( DISTINCT d.operator_id ),
 			2 
 			) AS loss_time_std,
 			ROUND((
@@ -532,17 +530,18 @@ class WeldingProcessController extends Controller
 			2 
 			) AS all_time_std 
 			FROM
-			t_data_downtime d
-			LEFT JOIN ympimis.weekly_calendars ON weekly_calendars.week_date = DATE_FORMAT( d.tanggaljam_shift, '%Y-%m-%d' )
-			LEFT JOIN m_mesin ON m_mesin.mesin_id = d.mesin_id 
+			t_perolehan d
+			LEFT JOIN ympimis.weekly_calendars ON weekly_calendars.week_date = DATE_FORMAT( d.tanggaljam, '%Y-%m-%d' )
+			JOIN m_device ON m_device.device_id = d.device_id
+			JOIN m_mesin ON m_device.mesin_id = m_mesin.mesin_id
 			WHERE
-			DATE( d.tanggaljam_shift ) BETWEEN '".$from."' 
-			AND '".$now."' 
-			AND m_mesin.department_id = 2 
-			AND `status` = '1' 
+			DATE( d.tanggaljam ) BETWEEN '".$from."' AND '".$now."' 
+			AND d.part_type = '2' 
+			AND d.flow_id = '1'
+			AND d.perolehan_start_date != '2000-01-01 00:00:00'
 			AND weekly_calendars.remark <> 'H' 
-			GROUP BY
-			tgl");
+			AND m_mesin.department_id = '2'
+			GROUP BY tgl");
 
 		// $op = db::connection('welding')->select("select DATE(d.tanggaljam_shift) as tgl, SUM(durasi) as act, count(distinct id_operator) as op from t_data_downtime d where DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d') between '".$from."' and '".$now."' and  `status` = '1' GROUP BY tgl");
 
@@ -1327,8 +1326,17 @@ class WeldingProcessController extends Controller
 
 	public function fetchHsaQueue(Request $request){
 		$ws = "";
-		if($request->get('ws') != null){
-			$ws = "and ws.ws_name = 'WS 1'";
+		if($request->get('grup') != null){
+			$wss = $request->get('grup');
+			$ws = "";
+
+			for($x = 0; $x < count($wss); $x++) {
+				$ws = $ws."'".$wss[$x]."'";
+				if($x != count($wss)-1){
+					$ws = $ws.",";
+				}
+			}
+			$ws = "and ws.ws_name in (".$ws.") ";
 		}
 
 		$queue = db::connection('welding')->select("select p.pesanan_id, ws.ws_name, p.hsa_kito_code, hsa.hsa_name, hsa.hsa_qty, p.pesanan_create_date from t_pesanan p
@@ -1647,6 +1655,78 @@ class WeldingProcessController extends Controller
 				return Response::json($response);
 			}
 		}
+	}
+
+	public function inputHsaQueue(Request $request){
+		$material = $request->get('material');
+		$qty = $request->get('kanban');
+		$order = $request->get('order');
+
+		try {
+			for ($i=0; $i < $qty; $i++) { 
+				$queue = db::connection('welding')
+				->table('t_pesanan')
+				->insert([
+					'hsa_kito_code' => $material,
+					'pesanan_status' => '0',
+					'pesanan_create_date' => date('Y-m-d H:i:s'),
+					'no_kanban' => '10',
+					'antrian' => ($order + $i),
+					'is_deleted' => '0',
+					'is_finish' => '0'
+				]);
+			}
+
+			$response = array(
+				'status' => true
+			);
+			return Response::json($response);
+
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function deleteHsaQueue(Request $request){
+
+		try{
+
+			if($request->get('idx') != null) {
+				$where_idx = "";		
+				$idxs = $request->get('idx');
+				$idx = "";
+				for($x = 0; $x < count($idxs); $x++) {
+					$idx = $idx."'".$idxs[$x]."'";
+					if($x != count($idxs)-1){
+						$idx = $idx.",";
+					}
+
+					$queue = db::connection('welding')
+					->table('t_pesanan')
+					->where('pesanan_id', $idxs[$x])
+					->update([
+						'is_deleted' => '1'
+					]);
+				}
+			}
+
+			$response = array(
+				'status' => true,
+				'idx' => $idx,
+			);
+			return Response::json($response);
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
 	}
 
 	function dec2hex($number)

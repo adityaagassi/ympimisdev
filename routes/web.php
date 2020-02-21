@@ -877,6 +877,8 @@ Route::get('fetch/welding/accumulated_achievement', 'WeldingProcessController@fe
 Route::get('index/welding/hsa_adjustment', 'WeldingProcessController@indexHsaAdjustment');
 Route::get('fetch/welding/hsa_queue', 'WeldingProcessController@fetchHsaQueue');
 Route::get('fetch/welding/hsa_stock', 'WeldingProcessController@fetchHsaStock');
+Route::post('post/welding/hsa_add_queue', 'WeldingProcessController@inputHsaQueue');
+Route::post('post/welding/hsa_delete_queue', 'WeldingProcessController@deleteHsaQueue');
 
 
 

@@ -61,7 +61,7 @@
 	<h1>
 		{{ $title }}
 		<small>WIP Control <span class="text-purple"> ??</span></small>
-		<button href="javascript:void(0)" class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#create_modal" style="margin-right: 5px">
+		<button class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#create_modal" style="margin-right: 5px">
 			<i class="fa fa-plus"></i>&nbsp;&nbsp;Add Queue
 		</button>
 	</h1>
@@ -101,10 +101,12 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-7 pull-left">
+			<h2 style="margin-top: 0px;">HSA Queue</h2>
 			<table id="tableAdjust" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th width="10%">WS</th>
+						<th width="1%">WS</th>
+						<th>Antrian ID</th>
 						<th width="10%">Material</th>
 						<th>Material Description</th>
 						<th width="1%">Quantity</th>
@@ -116,6 +118,7 @@
 				</tbody>
 				<tfoot>
 					<tr style="color: black">
+						<th></th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -136,6 +139,7 @@
 			</div>
 		</div>
 		<div class="col-xs-5 pull-left">
+			<h2 style="margin-top: 0px;">Stock</h2>
 			<table id="tableStock" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
@@ -162,7 +166,7 @@
 	</div>
 
 	<div class="modal modal-default fade" id="create_modal">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-md">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -170,9 +174,9 @@
 							&times;
 						</span>
 					</button>
-					<h4 class="modal-title">
-						Add HSA Queue
-					</h4>
+					<div class="col-xs-12" style="background-color: #00a65a;">
+						<h1 style="text-align: center; margin:5px; font-weight: bold;">Add HSA Queue</h1>
+					</div>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -186,7 +190,7 @@
 										<select class="form-control select2" data-placeholder="Select Material" name="material" id="material" style="width: 100%">
 											<option value=""></option>
 											@foreach($materials as $material) 
-											<option value="{{ $material->material_number }}-{{ $material->model }}">{{ $material->key }} - {{ $material->model }}</option>
+											<option value="{{ $material->material_number }}">{{ $material->key }} - {{ $material->model }}</option>
 											@endforeach
 										</select>
 									</div>
@@ -198,25 +202,10 @@
 									</div>
 								</div>
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Date<span class="text-red">*</span></label>
+									<label class="col-sm-4">Urutan<span class="text-red">*</span></label>
 									<div class="col-sm-3" align="left">
 										<div class="input-group date">
-											<div class="input-group-addon bg-green" style="border: none;">
-												<i class="fa fa-calendar"></i>
-											</div>
-											<input type="text" class="form-control datepicker" id="date" placeholder="select Date" >
-										</div>
-									</div>
-								</div>
-
-								<div class="form-group row" align="right">
-									<label class="col-sm-4">Time<span class="text-red">*</span></label>
-									<div class="col-sm-3" align="left">
-										<div class="input-group date">
-											<div class="input-group-addon bg-green" style="border: none;">
-												<i class="fa fa-clock-o"></i>
-											</div>
-											<input type="text" class="form-control timepicker" id="time" placeholder="select Time">
+											<input type="number" class="form-control" id="order" placeholder="select Date" >
 										</div>
 									</div>
 								</div>
@@ -261,14 +250,19 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
-		$('.select2').select2();
 
 		fillTable();
 
 		$('.datetime').datetimepicker({
 			format: 'YYYY-MM-DD HH:mm:ss'
 		});
-	});	
+	});
+
+	$(function () {
+		$('.select2').select2({
+			dropdownParent: $('#create_modal')
+		});
+	})
 
 	$('.datepicker').datepicker({
 		autoclose: true,
@@ -309,6 +303,7 @@
 
 	function fillTable(){
 		$('#tableAdjust').DataTable().destroy();
+		$('#tableStock').DataTable().destroy();
 
 		var grup = $('#grup').val();
 
@@ -377,6 +372,7 @@
 
 				"columns": [
 				{ "data": "ws_name"},
+				{ "data": "pesanan_id"},
 				{ "data": "hsa_kito_code"},
 				{ "data": "hsa_name" },
 				{ "data": "hsa_qty"},
@@ -411,8 +407,8 @@
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			[ 10, 20, 50, -1 ],
+			[ '10 rows', '20 rows', '50 rows', 'Show all' ]
 			],
 			'buttons': {
 				buttons:[
@@ -519,9 +515,10 @@
 			idx:idx
 		}
 
-		$.post('{{ url("post/middle/buffing_delete_queue") }}', arrs, function(result, status, xhr){
+		$.post('{{ url("post/welding/hsa_delete_queue") }}', arrs, function(result, status, xhr){
 			if (result.status) {
 				$('#tableAdjust').DataTable().ajax.reload();
+				$('#tableStock').DataTable().ajax.reload();
 				
 				arr = [];
 				$("#selected1").empty();
@@ -533,40 +530,33 @@
 	}
 
 	function addQueue() {
-		var rack = $('#rack').val();
 		var material = $('#material').val();
 		var kanban = $('#kanban').val();
-		var date = $('#date').val();
-		var time = $('#time').val();
+		var order = $('#order').val();
 
-		if (rack != "" && material != "" && kanban != "" && date != "" && time != "") {
+		if (material != "" && kanban != "" && order != "") {
 			var data = {
-				rack:rack,
 				material:material,
 				kanban:kanban,
-				date:date,
-				time:time,
+				order:order,
 			}
 			
-			$.post('{{ url("post/middle/buffing_add_queue") }}', data, function(result, status, xhr){
+			$.post('{{ url("post/welding/hsa_add_queue") }}', data, function(result, status, xhr){
 				if(result.status){
-					$("#rack").val("");
 					$("#material").val("");
 					$("#kanban").val("");
-					$("#date").val("");
-					$("#time").val("");
+					$("#order").val("");
 
-					$('#rack').prop('selectedIndex',0);
 					$('#material').prop('selectedIndex',0);
 					$('#kanban').prop('selectedIndex',0);
 					$('#date').prop('selectedIndex',0);
-					$('#time').prop('selectedIndex',0);
 
 					$("#create_modal").modal('hide');
 
 					location.reload(true);
 					
 					$('#tableAdjust').DataTable().ajax.reload();
+					$('#tableStock').DataTable().ajax.reload();
 					openSuccessGritter('Success','Insert Queue Success');
 				} else {
 					audio_error.play();
