@@ -1423,7 +1423,7 @@ class WeldingProcessController extends Controller
 			->leftJoin('m_operator', 'm_operator.operator_id', '=', 't_order_detail.operator_id')
 			->where('t_order.part_type', '=', '1')
 			->where('t_order_detail.flow_id', '=', '1')
-			->where('t_order.kanban_no', '=', $zed_material->hsa_kartu_no)
+			->where('t_order.kanban_no', '=', $zed_material->phs_kartu_no)
 			->select('m_operator.operator_nik', 'm_operator.operator_name', 't_order.order_id', 't_order_detail.order_sedang_finish_date')
 			->first();
 
