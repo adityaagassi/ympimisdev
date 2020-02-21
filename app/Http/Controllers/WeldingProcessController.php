@@ -16,6 +16,7 @@ use App\WeldingCheckLog;
 use App\WeldingReworkLog;
 use App\WeldingTempLog;
 use App\WeldingLog;
+use App\WeldingInventory;
 use App\Employee;
 
 class WeldingProcessController extends Controller
@@ -396,7 +397,7 @@ class WeldingProcessController extends Controller
 			on c.operator_id = ng.operator_id) rate
 			on rate.operator_id = eg.employee_id
 			left join employee_syncs e on e.employee_id = eg.employee_id
-			where eg.location = 'soldering-hsa'
+			where eg.location = 'soldering'
 			ORDER BY eg.`group`, eg.employee_id asc");
 
 		$target = db::select("select eg.`group`, eg.employee_id, e.name, ng.material_number, concat(m.model, ' ', m.`key`) as `key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
@@ -408,10 +409,10 @@ class WeldingProcessController extends Controller
 			on eg.employee_id = ng.operator_id
 			left join materials m on m.material_number = ng.material_number
 			left join employee_syncs e on e.employee_id = eg.employee_id
-			where eg.location = 'soldering-hsa'
+			where eg.location = 'soldering'
 			order by eg.`group`, eg.employee_id asc");
 
-		$operator = db::select("select * from employee_groups where location = 'soldering-hsa' order by `group`, employee_id asc");
+		$operator = db::select("select * from employee_groups where location = 'soldering' order by `group`, employee_id asc");
 
 		$dateTitle = date("d M Y", strtotime($now));
 
@@ -546,7 +547,7 @@ class WeldingProcessController extends Controller
 		// $op = db::connection('welding')->select("select DATE(d.tanggaljam_shift) as tgl, SUM(durasi) as act, count(distinct id_operator) as op from t_data_downtime d where DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d') between '".$from."' and '".$now."' and  `status` = '1' GROUP BY tgl");
 
 		// $emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
-		// 	where g.location = 'soldering-hsa'");
+		// 	where g.location = 'soldering'");
 
 		// $datastat = db::select(" ");
 
@@ -599,7 +600,7 @@ class WeldingProcessController extends Controller
 			(select g.employee_id, e.`name`, g.`group` from ympimis.employee_groups g
 			left join ympimis.employee_syncs e
 			on g.employee_id = e.employee_id
-			where location = 'soldering-hsa') op
+			where location = 'soldering') op
 			left join
 			(select op_eff.operator_nik, (op_eff.std/op_eff.actual) as eff from
 			(select time.operator_nik, sum(time.actual) actual, sum(time.std) std from
@@ -656,7 +657,7 @@ class WeldingProcessController extends Controller
 			(select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`,
 			g.`group` from ympimis.employee_groups g
 			left join ympimis.employees e on e.employee_id = g.employee_id
-			where g.location = 'soldering-hsa') op
+			where g.location = 'soldering') op
 			left join
 			(select op.operator_nik, hsa.hsa_kito_code as material_number, dl.finish, dl.perolehan_jumlah, hsa.hsa_timing, (dl.perolehan_jumlah * hsa.hsa_timing) as std, dl.act, ((dl.perolehan_jumlah * hsa.hsa_timing)/dl.act) as eff from
 			(select a.operator_id, a.part_id, time(a.perolehan_finish_date) as finish, timestampdiff(second, a.perolehan_start_date, a.perolehan_finish_date) as act, a.perolehan_jumlah from
@@ -1599,11 +1600,12 @@ class WeldingProcessController extends Controller
 				}
 			}
 			try{
-				// $buffing_inventory = db::connection('digital_kanban')->table('buffing_inventories')
-				// ->where('material_tag_id', '=', $request->get('tag'))
-				// ->update([
-				// 	'lokasi' => 'BUFFING-AFTER',
-				// ]);
+
+				// $welding_inventory = WeldingInventory::updateOrCreate(
+				// 	['tag' => $kd_number, 'status' => 1],
+				// 	['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
+				// );
+
 				$welding_log = new WeldingLog([
 					'employee_id' => $request->get('employee_id'),
 					'tag' => $request->get('tag'),
