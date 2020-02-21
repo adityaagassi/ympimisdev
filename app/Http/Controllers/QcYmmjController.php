@@ -362,11 +362,14 @@ class QcYmmjController extends Controller
           if($detail->penanganan == "Repair") {
             return '<label class="label label-warning">'.$detail->penanganan. '</label>';
           }
-          else if($detail->penanganan == "Confirm stock") {
+          else if($detail->penanganan == "Confirm stock" || $detail->penanganan == "Confirm Stock") {
             return '<label class="label label-success">'.$detail->penanganan. '</label>';
           }
           else if($detail->penanganan == "Return") {
             return '<label class="label label-info">'.$detail->penanganan. '</label>';
+          }
+          else if($detail->penanganan == "Replacement") {
+            return '<label class="label label-primary">'.$detail->penanganan. '</label>';
           }
         })
 

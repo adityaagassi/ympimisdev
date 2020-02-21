@@ -431,7 +431,9 @@ table > thead > tr > th{
             else if (value.penanganan == "Confirm stock" || value.penanganan == "Confirm Stock")  {
               table += '<td style="background-color:green">'+value.penanganan+'</td>';
             }
-
+            else if (value.penanganan == "Replacement" || value.penanganan == "replacement")  {
+              table += '<td style="background-color:purple">'+value.penanganan+'</td>';
+            }
             // table += '<td>'+value.file+'</td>';
             table += '</tr>';
 
