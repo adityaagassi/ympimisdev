@@ -18,6 +18,8 @@ use App\WeldingTempLog;
 use App\WeldingLog;
 use App\WeldingInventory;
 use App\Employee;
+use Carbon\Carbon;
+
 
 class WeldingProcessController extends Controller
 {
@@ -1601,11 +1603,6 @@ class WeldingProcessController extends Controller
 			}
 			try{
 
-				// $welding_inventory = WeldingInventory::updateOrCreate(
-				// 	['tag' => $kd_number, 'status' => 1],
-				// 	['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
-				// );
-
 				$welding_log = new WeldingLog([
 					'employee_id' => $request->get('employee_id'),
 					'tag' => $request->get('tag'),
@@ -1642,6 +1639,15 @@ class WeldingProcessController extends Controller
 					]);
 					$welding_check_log->save();
 				}
+
+				$welding_inventory = WeldingInventory::updateOrCreate(
+					['tag' => $request->get('tag')],
+					['material_number' => $request->get('material_number'),
+					'location' => $request->get('loc'),
+					'quantity' => $request->get('cek'),
+					'last_check' => $request->get('employee_id'),
+					'updated_at' => Carbon::now()]
+				);
 
 				$response = array(
 					'status' => true,

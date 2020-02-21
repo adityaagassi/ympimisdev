@@ -669,6 +669,8 @@
 				$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 				var target = result.eff_target;
 
+				console.table(result.rate);
+
 				var op_name = [];
 				var eff_value = [];
 				var data = [];
