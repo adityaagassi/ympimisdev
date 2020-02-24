@@ -143,7 +143,7 @@
               <option value='Body Process'>Body Process</option>
               <option value='Buffing'>Buffing</option>
               <option value='CL Body'>CL Body</option>
-              <option value='Lacquering'>Lacquering</option>s
+              <option value='Lacquering'>Lacquering</option>
               <option value='Part Process'>Part Process</option>
               <option value='Pianica'>Pianica</option>
               <option value='Plating'>Plating</option>
@@ -153,6 +153,7 @@
               <option value='Venova'>Venova</option>
               <option value='Warehouse'>Warehouse</option>
               <option value='Welding'>Welding</option>
+              <option value='Incoming Check QA'>Incoming Check QA</option>
               <option value='Other'>Other</option>
             </select>
           </div>

@@ -64,18 +64,17 @@
               <option value='Body Process'>Body Process</option>
               <option value='Buffing'>Buffing</option>
               <option value='CL Body'>CL Body</option>
-              <option value='Lacquering'>Lacquering</optiofn>
-              <!-- <option value='Meeting Room'>Meeting Room</option> -->
+              <option value='Lacquering'>Lacquering</option>
               <option value='Part Process'>Part Process</option>
               <option value='Pianica'>Pianica</option>
               <option value='Plating'>Plating</option>
               <option value='Recorder'>Recorder</option>
               <option value='Sub Assy'>Sub Assy</option>
               <option value='Case KD'>Case KD</option>
-              <!-- <option value='TR Room'>TR Room</option> -->
               <option value='Venova'>Venova</option>
               <option value='Warehouse'>Warehouse</option>
               <option value='Welding'>Welding</option>
+              <option value='Incoming Check QA'>Incoming Check QA</option>
               <option value='Other'>Other</option>
             </select>
           </div>
