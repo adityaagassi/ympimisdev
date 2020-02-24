@@ -229,6 +229,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								</tr>
 							</thead>
 							<tbody>
+								@if(isset($presences))
 								@foreach ($presences as $presence)
 								<tr>
 									<td>{{$presence->periode}}</td>
@@ -288,6 +289,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									</td>
 								</tr>
 								@endforeach
+								@endif
 							</tbody>
 						</table>
 					</div>
@@ -592,7 +594,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		</div>
 	</div>
 
-
 	<!-- DELETE -->
 	<div class="modal fade" id="modalDelete">
 		<div class="modal-dialog modal-md modal-danger">
@@ -611,6 +612,62 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				<div class="modal-footer">
 					<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="deleteKaizen()"><i class="fa fa-close"></i> YES</button>
 					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> NO</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+	<!-- MODAL ANNOUNCEMENT -->
+	<div class="modal fade" id="modalBerita">
+		<div class="modal-dialog modal-lg modal-default">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title"><b>YMPI Announcement</b></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+
+
+								<!-- Wrapper for slides -->
+								<div class="carousel-inner">
+									<div class="item active">
+										<img class="img-responsive" src="http://placehold.it/1200x600/555/000&text=One" alt="...">
+										<div class="carousel-caption">
+											One Image
+										</div>
+									</div>
+									<div class="item">
+										<img class="img-responsive" src="http://placehold.it/1200x600/fffccc/000&text=Two" alt="...">
+										<div class="carousel-caption">
+											Another Image
+										</div>
+									</div>
+									<div class="item">
+										<img class="img-responsive" src="http://placehold.it/1200x600/fcf00c/000&text=Three" alt="...">
+										<div class="carousel-caption">
+											Another Image
+										</div>
+									</div>
+								</div>
+
+								<!-- Controls -->
+								<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+									<span class="glyphicon glyphicon-chevron-left"></span>
+								</a>
+								<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+									<span class="glyphicon glyphicon-chevron-right"></span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 				</div>
 			</div>
 			<!-- /.modal-content -->
@@ -645,21 +702,23 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			}
 		});
 
-				// $('#kz_sub_leader').select2({ width: 'resolve' });
+		$("#modalBerita").modal('show');
 
-				name = "{{ $profil[0]->name }}";
-				name = name.replace('&#039;','');
+		// $('#kz_sub_leader').select2({ width: 'resolve' });
 
-				$("#phone_number").val("{{$profil[0]->phone}}");
-				$("#wa_number").val("{{$profil[0]->wa_number}}");
+		name = "{{ $profil[0]->name }}";
+		name = name.replace('&#039;','');
 
-				fill_chat();
+		$("#phone_number").val("{{$profil[0]->phone}}");
+		$("#wa_number").val("{{$profil[0]->wa_number}}");
 
-				$('.datepicker').datepicker({
-					autoclose: true,
-					format: 'yyyy-mm-dd',
-				})
-			});
+		fill_chat();
+
+		$('.datepicker').datepicker({
+			autoclose: true,
+			format: 'yyyy-mm-dd',
+		})
+	});
 
 	$(window).on('pageshow', function(){
 		$("#bulanAwal").val("");
