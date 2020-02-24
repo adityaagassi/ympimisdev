@@ -87,7 +87,7 @@
 	<div class="row">
 		<div class="col-xs-3">
 			<div class="form-group">
-				<select class="form-control select2" multiple="multiple" id='grup' data-placeholder="Select Work Station" style="width: 100%;">
+				<select class="form-control select3" multiple="multiple" id='grup' data-placeholder="Select Work Station" style="width: 100%;">
 					<option value=""></option>
 					@foreach($workstations as $workstation) 
 					<option value="{{ $workstation->ws_name }}">{{ $workstation->ws_name }}</option>
@@ -106,7 +106,7 @@
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
 						<th width="1%">WS</th>
-						<th>Antrian ID</th>
+						<th>ID</th>
 						<th width="10%">Material</th>
 						<th>Material Description</th>
 						<th width="1%">Quantity</th>
@@ -169,12 +169,12 @@
 		<div class="modal-dialog modal-md">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">
-							&times;
-						</span>
-					</button>
-					<div class="col-xs-12" style="background-color: #00a65a;">
+					<div class="col-xs-12" style="background-color: #00a65a; padding-right: 1%;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">
+								&times;
+							</span>
+						</button>
 						<h1 style="text-align: center; margin:5px; font-weight: bold;">Add HSA Queue</h1>
 					</div>
 				</div>
@@ -197,18 +197,43 @@
 								</div>
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Kanban Qty.<span class="text-red">*</span></label>
-									<div class="col-sm-3">
+									<div class="col-sm-4">
 										<input type="number" class="form-control" id="kanban" placeholder="Kanban Qty" required>
 									</div>
 								</div>
 								<div class="form-group row" align="right">
+									<label class="col-sm-4">Date<span class="text-red">*</span></label>
+									<div class="col-sm-4" align="left">
+										<div class="input-group date">
+											<div class="input-group-addon bg-green" style="border: none;">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<input type="text" class="form-control datepicker" id="date" placeholder="select Date" >
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Time<span class="text-red">*</span></label>
+									<div class="col-sm-4" align="left">
+										<div class="input-group date">
+											<div class="input-group-addon bg-green" style="border: none;">
+												<i class="fa fa-clock-o"></i>
+											</div>
+											<input type="text" class="form-control timepicker" id="time" placeholder="select Time">
+										</div>
+									</div>
+								</div>
+
+								{{-- <div class="form-group row" align="right">
 									<label class="col-sm-4">Urutan<span class="text-red">*</span></label>
-									<div class="col-sm-3" align="left">
+									<div class="col-sm-4" align="left">
 										<div class="input-group date">
 											<input type="number" class="form-control" id="order" placeholder="select Date" >
 										</div>
 									</div>
-								</div>
+								</div> --}}
+
 							</div>
 						</div>
 					</div>
@@ -262,6 +287,8 @@
 		$('.select2').select2({
 			dropdownParent: $('#create_modal')
 		});
+
+		$('.select3').select2();
 	})
 
 	$('.datepicker').datepicker({
@@ -532,24 +559,25 @@
 	function addQueue() {
 		var material = $('#material').val();
 		var kanban = $('#kanban').val();
-		var order = $('#order').val();
+		var date = $('#date').val();
+		var time = $('#time').val();
 
-		if (material != "" && kanban != "" && order != "") {
+		if (material != "" && kanban != "" && date != "" && time != "") {
 			var data = {
 				material:material,
 				kanban:kanban,
-				order:order,
+				date:date,
+				time:time,
 			}
 			
 			$.post('{{ url("post/welding/hsa_add_queue") }}', data, function(result, status, xhr){
 				if(result.status){
 					$("#material").val("");
 					$("#kanban").val("");
-					$("#order").val("");
+					$("#date").val("");
+					$("#time").val("");
 
 					$('#material').prop('selectedIndex',0);
-					$('#kanban').prop('selectedIndex',0);
-					$('#date').prop('selectedIndex',0);
 
 					$("#create_modal").modal('hide');
 

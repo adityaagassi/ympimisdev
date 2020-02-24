@@ -1669,18 +1669,38 @@ class WeldingProcessController extends Controller
 	public function inputHsaQueue(Request $request){
 		$material = $request->get('material');
 		$qty = $request->get('kanban');
-		$order = $request->get('order');
+		$date = $request->get('date');
+		$time = $request->get('time');
+
+		$ws_id = db::connection('welding')
+		->table('m_hsa')
+		->where('hsa_kito_code', $material)
+		->first();
+
+		$antrian = db::connection('welding')->select("select ws.ws_name, count(p.pesanan_id) as antrian from t_pesanan p
+			left join m_hsa hsa on hsa.hsa_kito_code = p.hsa_kito_code
+			left join m_ws ws on ws.ws_id = hsa.ws_id
+			where p.is_deleted = '0'
+			and ws.ws_id = '". $ws_id->ws_id ."'
+			and pesanan_create_date < '". date('Y-m-d H:i:s', strtotime($date.' '.$time)) ."'
+			group by ws.ws_name");
+
+		if(count($antrian) > 0){
+			$antrian = $antrian[0]->antrian;
+		}else{
+			$antrian = 1;
+		}
 
 		try {
-			for ($i=0; $i < $qty; $i++) { 
+			for ($i=1; $i <= $qty; $i++) {
 				$queue = db::connection('welding')
 				->table('t_pesanan')
 				->insert([
 					'hsa_kito_code' => $material,
 					'pesanan_status' => '0',
-					'pesanan_create_date' => date('Y-m-d H:i:s'),
-					'no_kanban' => '10',
-					'antrian' => ($order + $i),
+					'pesanan_create_date' => date('Y-m-d H:i:s', strtotime($date.' '.$time.':'.$i)),
+					'no_kanban' => '1',
+					'antrian' => ($antrian + $i),
 					'is_deleted' => '0',
 					'is_finish' => '0'
 				]);
