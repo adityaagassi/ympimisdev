@@ -305,7 +305,7 @@
 					if(result.opwelding.operator_nik){
 						if(result.opwelding.operator_nik.includes('PI')){
 							$("#opwelding").text(result.opwelding.operator_nik+" "+result.opwelding.operator_name);	
-							$('#welding_time').val(result.opwelding.order_sedang_finish_date);		
+							$('#welding_time').val(result.opwelding.order_finish_date);		
 						}else{
 							$("#opwelding").text("Operator Not Found");
 							$('#welding_time').val("");
