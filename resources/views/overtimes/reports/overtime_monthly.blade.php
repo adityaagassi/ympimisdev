@@ -407,6 +407,8 @@
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
+  
+
   function drawChart() {
 
     var tanggal = $('#tgl').val();

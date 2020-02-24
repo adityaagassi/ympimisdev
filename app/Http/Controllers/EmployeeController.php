@@ -2834,7 +2834,7 @@ public function updateKaizen(Request $request)
      }
 }
 
-public function deleteKaizen()
+public function deleteKaizen(Request $request)
 {
      KaizenForm::where('id',$request->get('id'))->delete();
 

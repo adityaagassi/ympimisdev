@@ -31,11 +31,15 @@
 @stop
 @section('header')
 <section class="content-header">
+	<input type="hidden" id="green">
 	<h1>
 		List of {{ $page }}s
 		<small>it all starts here</small>
 	</h1>
 	<ol class="breadcrumb">
+		<li>
+			<a href="javascript:void(0)" id="6" onclick="fetchTable(id)">Canceled ({{ $canceled }})</a>
+		</li>
 		<li>
 			<a href="javascript:void(0)" id="5" onclick="fetchTable(id)">Rejected ({{ $rejected }})</a>
 		</li>
@@ -94,7 +98,7 @@
 						<th style="width: 9%">Material</th>
 						<th style="width: 5%">Target</th>
 						<th style="width: 5%">Status</th>
-						<th style="width: 7%">PIC</th>
+						<th style="width: 7%">Att</th>
 						<th style="width: 8%">Action</th>
 					</tr>
 				</thead>
@@ -115,16 +119,44 @@
 				</div>
 				<div class="modal-body">
 					<div class="row">
-						<div class="col-xs-7">
-							<table id="data" class="table table-striped table-bordered" style="width: 100%;"> 
-								<tbody id="data-log-body">
-								</tbody>
-							</table>
+						<div class="col-xs-12">
+							<div class="col-xs-12">
+								<table class="table table-bordered">
+									<thead style="background-color: rgba(126,86,134,.7);">
+										<tr>
+											<th>WJO</th>
+											<th>Nama Barang</th>
+											<th>Jumlah</th>
+											<th>Target</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td id="wjo_num2"></td>
+											<td id="item_name2"></td>
+											<td id="quantity2"></td>
+											<td id="target2"></td>
+											<td id="status2"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-xs-10 col-xs-offset-2" id="reject">
+								<div class="form-group row">
+									<label class="col-xs-2" style="margin-top: 1%;">Alasan Ditolak</label>
+									<div class="col-xs-8" align="left">
+										<textarea class="form-control" readonly id="detail_reject_reason"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-6" style="padding-right: 0px; padding-left: 0px;">
+								<div id="step"></div>
+							</div>
+							<div class="col-xs-6" style="padding-right: 0px; padding-left: 0px;">
+								<div id="actual"></div>
+							</div>
 						</div>
-						<div class="col-xs-5">
-							
-						</div>
-
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -475,7 +507,7 @@
 						<div class="col-xs-12" style="padding-right: 12%;">
 							<br>
 							<input type="hidden" id="id_edit" name="id_edit">
-							<button type="submit" class="btn btn-success pull-right" ><i class="fa fa-pencil"></i> Edit</button>
+							<button type="submit" class="btn btn-success pull-right" ><i class="fa fa-pencil"></i> Simpan</button>
 							<!-- <button type="submit" class="btn btn-success pull-right">Submit</button> -->
 							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;&nbsp;&nbsp;&nbsp;Note :&nbsp;&nbsp;&nbsp;</span><br>
 							<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- Tanda bintang (*) wajib diisi&nbsp;&nbsp;</span><br>
@@ -512,6 +544,9 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+
+		$("#reject").hide();
+
 		var opt = $("#sub_section option").sort(function (a,b) { return a.value.toUpperCase().localeCompare(b.value.toUpperCase()) });
 		$("#sub_section").append(opt);
 		$('#sub_section').prop('selectedIndex', 0).change();
@@ -775,15 +810,26 @@
 					tableData += '<td>'+ result.tableData[i].material +'</td>';
 					tableData += '<td>'+ (result.tableData[i].target_date || '-') +'</td>';
 					tableData += '<td>'+ result.tableData[i].process_name +'</td>';	
-					tableData += '<td>'+ (result.tableData[i].pic || '-') +'</td>';	
+
+					if(result.tableData[i].attachment != null){
+						tableData += '<td><a href="javascript:void(0)" onClick="downloadAtt(\''+result.tableData[i].attachment+'\')" class="fa fa-paperclip"></a></td>';
+					}else{
+						tableData += '<td>-</td>';							
+					}
+
 					if(result.tableData[i].remark == '0' || result.tableData[i].remark == '1'){
 						tableData += '<td>';
 						tableData += '<a style="padding: 10%; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-warning">Edit</a>';
-						tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+result.tableData[i].id+'\')" class="btn btn-primary">Detail</a>';
+						tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+result.tableData[i].order_no+'\')" class="btn btn-primary">Detail</a>';
+
+						if (result.tableData[i].remark == '1' && result.tableData[i].priority == 'Normal') {
+							tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="cancelWjo(\''+result.tableData[i].order_no+'\')" class="btn btn-danger">Cancel</a>';
+						}
 						tableData += '</td>';
 					}else{
-						tableData += '<td><a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+result.tableData[i].id+'\')" class="btn btn-primary">Detail</a></td>';							
+						tableData += '<td><a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+result.tableData[i].order_no+'\')" class="btn btn-primary">Detail</a></td>';							
 					}
+
 					tableData += '</tr>';	
 				}
 
@@ -823,8 +869,90 @@
 		});
 	}
 
-	function showDetail(id) {
+	function showDetail(wjo_num) {
 		$('#detailModal').modal('show');
+
+		var data = {
+			order_no : wjo_num
+		}
+
+		$.get('{{ url("fetch/workshop/process_detail") }}', data, function(result, status, xhr){
+			$("#wjo_num2").html(result.detail.order_no);
+			$("#item_name2").html(result.detail.item_name);
+			$("#quantity2").html(result.detail.quantity);
+			$("#target2").html(result.detail.target_date);
+			$("#status2").html(result.detail.process_name);
+			$("#step").append().empty();
+			$("#actual").append().empty();
+
+			if (result.detail.remark == 5) {
+				$("#reject").show();
+				$('#detail_reject_reason').val(result.detail.reject_reason);
+			} else {
+				$("#reject").hide();
+				$('#detail_reject_reason').val("");
+			}
+
+			var step = '';
+			var actual = '';
+			var green = '';
+
+			if(result.flow.length > 0){
+				$('#process_progress_bar').show();
+				if(result.act.length == 0){
+					green = 0;
+				}else{
+					green = result.act.length;
+				}
+				step += '<ul class="timeline">';
+				step += '<li class="time-label">';
+				step += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Plan&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+				step += '</li>';
+				for (var i = 0; i < result.flow.length; i++) {
+					step += '<li style="margin-bottom: 5px;">';
+					step += '<i class="fa fa-stack-1x" style="font-size: 15px;">'+ result.flow[i].sequence_process +'</i>';
+					step += '<div class="timeline-item" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+					step += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.flow[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ (result.flow[i].std_time / 60) +'m<span></p>';
+					step += '<p style="padding: 0px; font-size: 14px; font-weight: bold; margin-bottom: 0px">'+ result.flow[i].machine_name +'</p><p>&nbsp;</p>';
+					step += '</div>';
+					step += '</li>';
+				}
+				step += '<li>';
+				step += '<i class="fa fa-check-square-o bg-blue"></i>';
+				step += '</li>';
+				step += '</ul>';
+
+			}
+
+			if(result.act.length > 0){
+				$('#process_progress_bar').show();
+
+				actual += '<ul class="timeline">';
+				actual += '<li class="time-label">';
+				actual += '<span style="margin-left: 0.4%;" class="bg-blue">&nbsp;&nbsp;&nbsp;Actual&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+				actual += '</li>';
+				for (var i = 0; i < result.act.length; i++) {
+					actual += '<li style="margin-bottom: 5px;">';
+					actual += '<i class="fa fa-stack-1x bg-green" style="font-size: 15px;">'+ result.act[i].sequence_process +'</i>';
+					actual += '<div class="timeline-item bg-green" style="padding-top: 1%; padding-left: 2%; padding-bottom: 0.25%;">';
+					actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 16px;">'+ result.act[i].process_name +'<span class="pull-right" style="margin-right: 3%;">'+ Math.ceil(result.act[i].actual / 60) +'m<span></p>';
+					actual += '<p style="padding: 0px; margin-bottom: 0px; font-size: 14px; font-weight: bold;">'+ result.act[i].machine_name +'</p>';
+					actual += '<p style="padding: 0px; font-size: 12px;">PIC : '+ result.act[i].pic +'</p>';
+					actual += '</div>';
+					actual += '</li>';
+				}
+			}
+
+			$("#step").append(step);
+			$("#actual").append(actual);
+
+			document.getElementById("green").value = green;
+
+			for (var i = 0; i < green; i++) {
+				$("#timeline_number_" + i).addClass('bg-green');
+				$("#timeline_box_" + i).addClass('bg-green');						
+			}
+		})
 	}
 
 	function modalEdit(id) {
@@ -935,6 +1063,48 @@
 					openErrorGritter("Error","Failed to edit WJO.");
 				}
 			})
+		}
+	}
+
+	function downloadAtt(attachment) {
+		var data = {
+			file:attachment
+		}
+		$.get('{{ url("download/workshop/attachment") }}', data, function(result, status, xhr){
+			if(xhr.status == 200){
+				if(result.status){
+					window.open(result.file_path);
+				}
+				else{
+					alert('Attempt to retrieve data failed');
+				}
+			}
+			else{
+				alert('Disconnected from server');
+			}
+		});
+
+	}
+
+	function cancelWjo(order_no) {
+		if (confirm("Apakah anda yakin akan membatalkan '"+order_no+"'?")) {
+			var data = {
+				wjo_num : order_no
+			}
+			$.get('{{ url("cancel/workshop/wjo") }}', data, function(result, status, xhr){
+				if(xhr.status == 200){
+					if(result.status){
+						openSuccessGritter('Success','WJO has been Canceled.');
+						fetchTable("all");
+					}
+					else{
+						alert('Attempt to retrieve data failed');
+					}
+				}
+				else{
+					alert('Disconnected from server');
+				}
+			});
 		}
 	}
 
