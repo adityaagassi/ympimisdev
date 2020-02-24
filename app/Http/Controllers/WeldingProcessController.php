@@ -26,6 +26,7 @@ class WeldingProcessController extends Controller
 	public function __construct(){
 		$this->middleware('auth');
 		$this->location_sx = [
+			'phs-sx',
 			'phs-visual-sx',
 			'hsa-sx',
 			'hsa-visual-sx',
@@ -39,6 +40,18 @@ class WeldingProcessController extends Controller
 			'CLKEY'
 		];
 		$this->fy = db::table('weekly_calendars')->select('fiscal_year')->distinct()->get();
+	}
+
+	public function indexEffHandling(){
+		$title = 'Efficiency Handling';
+		$title_jp = '??';
+		$locations = $this->location_sx;
+
+		return view('processes.welding.display.eff_handling', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'locations' => $locations
+		))->with('page', 'Welding Process');
 	}
 
 	public function indexHsaAdjustment(){
@@ -210,6 +223,62 @@ class WeldingProcessController extends Controller
 			'title_jp' => '生産実績',
 			'locations' => $locations
 		))->with('page', 'Welding Process');		
+	}
+
+	public function fetchEffHandling(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		if($request->get('location') == 'phs-sx'){
+			$time = db::select("select material.material_number, material.hpl, result.phs_name as `key`, material.model, result.actual, result.std, (result.actual-result.std) as diff from 
+				(select * from materials
+				where mrpc = 's11'
+				and surface like '%PHS%') material
+				left join
+				(SELECT phs.phs_code, phs.phs_name, sum(timestampdiff(second,p.perolehan_start_date,p.perolehan_finish_date)) as actual, sum(p.perolehan_jumlah * std.time) as std  FROM soldering_db.t_perolehan p
+				left join soldering_db.m_phs phs on phs.phs_id = p.part_id
+				left join standard_times std on std.material_number = phs.phs_code
+				where p.flow_id = '1'
+				and p.part_type = '1'
+				and date(perolehan_finish_date) = '".$date."'
+				group by phs.phs_code, phs.phs_name) result
+				on material.material_number = result.phs_code
+				where result.actual > 0
+				order by diff desc, material.hpl, result.phs_name, material.model asc");
+		}else if($request->get('location') == 'hsa-sx'){
+			$time = db::select("select material.material_number, material.hpl, material.`key`, material.model, result.actual, result.std, (result.actual-result.std) as diff from 
+				(select * from materials m
+				where m.mrpc = 's21' and m.hpl like '%KEY%') material
+				left join
+				(SELECT hsa.hsa_kito_code, sum(timestampdiff(second,p.perolehan_start_date,p.perolehan_finish_date)) as actual, sum(p.perolehan_jumlah * std.time) as std  FROM soldering_db.t_perolehan p
+				left join soldering_db.m_hsa hsa on hsa.hsa_id = p.part_id
+				left join standard_times std on std.material_number = hsa.hsa_kito_code
+				where p.flow_id = '1'
+				and p.part_type = '2'
+				and date(perolehan_finish_date) = '".$date."'
+				group by hsa.hsa_kito_code) result
+				on material.material_number = result.hsa_kito_code
+				where result.actual > 0
+				order by diff desc, material.hpl, material.`key`, material.model asc");
+		}else{
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);	
+		}
+		
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'time' => $time,
+			'location' => $request->get('location'),
+		);
+		return Response::json($response);
+
 	}
 
 	public function fetchProductionResult(Request $request){
@@ -604,7 +673,7 @@ class WeldingProcessController extends Controller
 			on g.employee_id = e.employee_id
 			where location = 'soldering') op
 			left join
-			(select op_eff.operator_nik, (op_eff.std/op_eff.actual) as eff from
+			(select solder.operator_nik, sum(solder.actual) as actual, sum(solder.std) as std, sum(solder.std)/sum(solder.actual) as eff from
 			(select time.operator_nik, sum(time.actual) actual, sum(time.std) std from
 			(select op.operator_nik, (TIMESTAMPDIFF(second,p.perolehan_start_date,p.perolehan_finish_date)) as  actual,
 			(hsa.hsa_timing * p.perolehan_jumlah) as std from soldering_db.t_perolehan p
@@ -614,22 +683,33 @@ class WeldingProcessController extends Controller
 			and p.part_type = '2'
 			and date(p.tanggaljam) = '".$date."'
 			having actual < 3600) time
-			group by time.operator_nik) op_eff) eff
+			group by time.operator_nik
+			union all
+			select time.operator_nik, sum(time.actual) actual, sum(time.std) std from
+			(select op.operator_nik, (TIMESTAMPDIFF(second,p.perolehan_start_date,p.perolehan_finish_date)) as  actual,
+			(hsa.hsa_timing * p.perolehan_jumlah) as std from soldering_db.t_perolehan p
+			left join soldering_db.m_operator op on p.operator_id = op.operator_id
+			left join soldering_db.m_hsa hsa on p.part_id = hsa.hsa_id
+			where p.flow_id = '1'
+			and p.part_type = '1'
+			and date(p.tanggaljam) = '".$date."'
+			having actual < 3600) time
+			group by time.operator_nik) solder
+			group by solder.operator_nik) eff
 			on op.employee_id = eff.operator_nik
 			left join
 			(select cek.operator_id, cek.cek, COALESCE(ng.ng,0) as ng, (cek.cek - COALESCE(ng.ng,0)) as good, ((cek.cek - COALESCE(ng.ng,0))/cek.cek) as post from
 			(select operator_id, sum(quantity) as cek from ympimis.welding_check_logs
 			where date(created_at) = '".$date."'
-			and location = 'hsa-visual-sx'
 			group by operator_id) cek
 			left join
 			(select operator_id, sum(quantity) as ng from ympimis.welding_ng_logs
-			where date(created_at) = '".$date."'
-			and location = 'hsa-visual-sx'
+			where date(created_at) = '2020-02-24'
 			group by operator_id) ng
 			on cek.operator_id = ng.operator_id) rate
 			on op.employee_id = rate.operator_id
-			order by `group`, `name` asc");
+			order by `group`, `name` asc
+			");
 
 		$response = array(
 			'status' => true,

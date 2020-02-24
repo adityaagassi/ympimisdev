@@ -873,6 +873,9 @@ Route::get('fetch/welding/resume', 'WeldingProcessController@fetchWeldingResume'
 Route::get('index/welding/group_achievement', 'WeldingProcessController@indexWeldingAchievement');
 Route::get('fetch/welding/group_achievement', 'WeldingProcessController@fetchGroupAchievement');
 Route::get('fetch/welding/accumulated_achievement', 'WeldingProcessController@fetchAccumulatedAchievement');
+Route::get('index/welding/eff_handling', 'WeldingProcessController@indexEffHandling');
+Route::get('fetch/welding/eff_handling', 'WeldingProcessController@fetchEffHandling');
+
 
 Route::get('index/welding/hsa_adjustment', 'WeldingProcessController@indexHsaAdjustment');
 Route::get('fetch/welding/hsa_queue', 'WeldingProcessController@fetchHsaQueue');
@@ -972,6 +975,7 @@ Route::get('fetch/workshop/workload_operator_detail', 'WorkshopController@fetchW
 Route::get('fetch/workshop/machine', 'WorkshopController@scanMachine');
 Route::get('index/workshop/create_wjo', 'WorkshopController@indexCreateWJO');
 Route::post('create/workshop/wjo', 'WorkshopController@createWJO');
+Route::get('cancel/workshop/wjo', 'WorkshopController@cancelWJO');
 Route::get('index/workshop/edit_wjo', 'WorkshopController@fetch_item_edit');
 Route::post('index/workshop/edit_wjo', 'WorkshopController@editWJO');
 Route::get('update/workshop/approve_urgent/{id}', 'WorkshopNotificationController@approveUrgent');
