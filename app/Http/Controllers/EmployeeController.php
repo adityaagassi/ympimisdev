@@ -1529,67 +1529,72 @@ public function indexEmployeeService(Request $request)
      $profil = db::select("select employee_id, name, hire_date, phone, phone as wa_number, address, employment_status as `status`, division, department, section, `group`, sub_group, cost_center, grade_code, grade_name,position from employee_syncs where employee_id = '".$emp_id."'
           ");
 
-     // $leave = db::connection('sunfish')->select("");
+     try{
+          $presences = db::connection('sunfish')->select("SELECT
+               Emp_no,
+               format ( shiftstarttime, 'yyyy-MM' ) AS orderer,
+               format ( shiftstarttime, 'MMMM yyyy' ) AS periode,
+               COUNT (
+               IIF ( Attend_Code LIKE '%Mangkir%', 1, NULL )) AS mangkir,
+               COUNT (
+               IIF ( Attend_Code LIKE '%CK%' OR Attend_Code LIKE '%CUTI%', 1, NULL )) AS cuti,
+               COUNT (
+               IIF ( Attend_Code LIKE '%Izin%', 1, NULL )) AS izin,
+               COUNT (
+               IIF ( Attend_Code LIKE '%SAKIT%', 1, NULL )) AS sakit,
+               COUNT (
+               IIF ( Attend_Code LIKE '%LTI%', 1, NULL )) AS terlambat,
+               COUNT (
+               IIF ( Attend_Code LIKE '%PC%', 1, NULL )) AS pulang_cepat,
+               COUNT (
+               IIF (
+               Attend_Code LIKE '%ABS%' 
+               OR Attend_Code LIKE '%CK10%' 
+               OR Attend_Code LIKE '%CK11%' 
+               OR Attend_Code LIKE '%CK12%' 
+               OR Attend_Code LIKE '%CK15%' 
+               OR Attend_Code LIKE '%CK2%' 
+               OR Attend_Code LIKE '%CK7%' 
+               OR Attend_Code LIKE '%CK8%' 
+               OR Attend_Code LIKE '%CK9%' 
+               OR Attend_Code LIKE '%Izin%' 
+               OR Attend_Code LIKE '%Mangkir%' 
+               OR Attend_Code LIKE '%PC%' 
+               OR Attend_Code LIKE '%SAKIT%' 
+               OR Attend_Code LIKE '%UPL%' 
+               OR Attend_Code LIKE '%LTI%' 
+               OR Attend_Code LIKE '%TELAT%',
+               1,
+               NULL 
+               )) AS tunjangan,
+               SUM ( floor(( total_ot / 60.0 ) * 2 + 0.5 ) / 2 ) as overtime
+               FROM
+               VIEW_YMPI_Emp_Attendance 
+               WHERE
+               Emp_no = '".$emp_id."'
+               AND YEAR ( shiftstarttime ) = '2020' 
+               AND shiftstarttime <= '".$now."' 
+               GROUP BY
+               format ( shiftstarttime, 'MMMM yyyy' ),
+               format ( shiftstarttime, 'yyyy-MM' ),
+               Emp_no 
+               ORDER BY
+               orderer ASC");
 
-     $presences = db::connection('sunfish')->select("SELECT
-          Emp_no,
-          format ( shiftstarttime, 'yyyy-MM' ) AS orderer,
-          format ( shiftstarttime, 'MMMM yyyy' ) AS periode,
-          COUNT (
-          IIF ( Attend_Code LIKE '%Mangkir%', 1, NULL )) AS mangkir,
-          COUNT (
-          IIF ( Attend_Code LIKE '%CK%' OR Attend_Code LIKE '%CUTI%', 1, NULL )) AS cuti,
-          COUNT (
-          IIF ( Attend_Code LIKE '%Izin%', 1, NULL )) AS izin,
-          COUNT (
-          IIF ( Attend_Code LIKE '%SAKIT%', 1, NULL )) AS sakit,
-          COUNT (
-          IIF ( Attend_Code LIKE '%LTI%', 1, NULL )) AS terlambat,
-          COUNT (
-          IIF ( Attend_Code LIKE '%PC%', 1, NULL )) AS pulang_cepat,
-          COUNT (
-          IIF (
-          Attend_Code LIKE '%ABS%' 
-          OR Attend_Code LIKE '%CK10%' 
-          OR Attend_Code LIKE '%CK11%' 
-          OR Attend_Code LIKE '%CK12%' 
-          OR Attend_Code LIKE '%CK15%' 
-          OR Attend_Code LIKE '%CK2%' 
-          OR Attend_Code LIKE '%CK7%' 
-          OR Attend_Code LIKE '%CK8%' 
-          OR Attend_Code LIKE '%CK9%' 
-          OR Attend_Code LIKE '%Izin%' 
-          OR Attend_Code LIKE '%Mangkir%' 
-          OR Attend_Code LIKE '%PC%' 
-          OR Attend_Code LIKE '%SAKIT%' 
-          OR Attend_Code LIKE '%UPL%' 
-          OR Attend_Code LIKE '%LTI%' 
-          OR Attend_Code LIKE '%TELAT%',
-          1,
-          NULL 
-          )) AS tunjangan,
-          SUM ( floor(( total_ot / 60.0 ) * 2 + 0.5 ) / 2 ) as overtime
-          FROM
-          VIEW_YMPI_Emp_Attendance 
-          WHERE
-          Emp_no = '".$emp_id."'
-          AND YEAR ( shiftstarttime ) = '2020' 
-          AND shiftstarttime <= '".$now."' 
-          GROUP BY
-          format ( shiftstarttime, 'MMMM yyyy' ),
-          format ( shiftstarttime, 'yyyy-MM' ),
-          Emp_no 
-          ORDER BY
-          orderer ASC");
+          $employee = db::connection('sunfish')->select("SELECT
+               VIEW_YMPI_LEAVE_BALANCE.remaining 
+               FROM
+               VIEW_YMPI_LEAVE_BALANCE
+               WHERE
+               VIEW_YMPI_LEAVE_BALANCE.emp_no = '".$emp_id."' 
+               AND VIEW_YMPI_LEAVE_BALANCE.startvaliddate <= '".$now."'
+               AND VIEW_YMPI_LEAVE_BALANCE.endvaliddate >= '".$now."'");
 
-     $employee = db::connection('sunfish')->select("SELECT
-          VIEW_YMPI_LEAVE_BALANCE.remaining 
-          FROM
-          VIEW_YMPI_LEAVE_BALANCE
-          WHERE
-          VIEW_YMPI_LEAVE_BALANCE.emp_no = '".$emp_id."' 
-          AND VIEW_YMPI_LEAVE_BALANCE.startvaliddate <= '".$now."'
-          AND VIEW_YMPI_LEAVE_BALANCE.endvaliddate >= '".$now."'");
+     }
+     catch(\Exception $e){
+          $presences = "";
+          $employee = "";
+     }
 
      return view('employees.service.indexEmploymentService', array(
           'status' => true,
