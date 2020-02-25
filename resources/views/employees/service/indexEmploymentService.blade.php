@@ -229,7 +229,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								</tr>
 							</thead>
 							<tbody>
-								@if(isset($presences))
+								@if(count($presences)>0)
 								@foreach ($presences as $presence)
 								<tr>
 									<td>{{$presence->periode}}</td>
