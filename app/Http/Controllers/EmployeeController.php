@@ -1592,19 +1592,30 @@ public function indexEmployeeService(Request $request)
 
      }
      catch(\Exception $e){
-          $presences = "";
-          $employee = "";
+          
      }
 
-     return view('employees.service.indexEmploymentService', array(
-          'status' => true,
-          'title' => $title,
-          'title_jp' => $title_jp,
-          'emp_id' => $emp_id,
-          'profil' => $profil,
-          'presences' => $presences,
-          'employee' => $employee,
-     ))->with('page', 'Employment Services');
+     if (ISSET($presences)) {
+          return view('employees.service.indexEmploymentService', array(
+               'status' => true,
+               'title' => $title,
+               'title_jp' => $title_jp,
+               'emp_id' => $emp_id,
+               'profil' => $profil,
+               'presences' => $presences,
+               'employee' => $employee,
+          ))->with('page', 'Employment Services');
+     }else{
+          return view('employees.service.indexEmploymentService', array(
+               'status' => true,
+               'title' => $title,
+               'title_jp' => $title_jp,
+               'emp_id' => $emp_id,
+               'profil' => $profil,
+               // 'presences' => $presences,
+               // 'employee' => $employee,
+          ))->with('page', 'Employment Services');
+     }
 }
 
 public function fetchChat(Request $request)
