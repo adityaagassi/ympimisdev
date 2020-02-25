@@ -381,13 +381,7 @@ class EmployeeController extends Controller
 
           }
 
-          $sections = "select section from
-          (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'chief')) d
-          left join employees on d.employee_id = employees.employee_id
-          left join
-          (select employee_id, section from mutation_logs where valid_to is null) s on s.employee_id = d.employee_id
-          group by section
-          order by section";
+          $sections = "select section from employee_syncs where position in ('Leader', 'chief') group by section";
 
           $sc = db::select($sections);
 

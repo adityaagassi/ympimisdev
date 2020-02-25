@@ -33,8 +33,8 @@
 					<?php
 					foreach ($data['kaizens'] as $kzn) {
 						print_r ('<tr>
-							<td>'.$kzn->child_code.'</td>
-							<td>'.$kzn->area.'</td>
+							<td>'.$kzn->department.'</td>
+							<td>'.$kzn->section.'</td>
 							<td>'.$kzn->frm.'</td>
 							<td>'.$kzn->mngr.'</td>
 							</tr>');
