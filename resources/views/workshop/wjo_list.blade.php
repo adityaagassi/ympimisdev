@@ -551,7 +551,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="col-xs-6" style="margin-top: 3%;">
+											<div class="col-xs-6" style="margin-top: 3%;" id="edit_drawing">
 												<div class="form-group row" align="right">
 													<label class="col-xs-4" style="margin-top: 1%;">Nama Drawing<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
@@ -1114,6 +1114,7 @@
 			$('body').toggleClass("sidebar-collapse");
 
 			$("#reject").hide();
+			$("#edit_drawing").css("visibility","hidden");
 
 			$('#reqFrom').datepicker({
 				autoclose: true,
@@ -1948,7 +1949,10 @@ function edit_action() {
 			edit_difficulty : $("#edit_difficulty").val(),
 			edit_category : $("#edit_category").val(),
 			pic : pic,
-			edit_pic : $("#edit_pic").val()
+			edit_pic : $("#edit_pic").val(),
+			edit_drawing_name : $("#edit_drawing_name").val(),
+			edit_drawing_number : $("#edit_drawing_number").val(),
+			edit_part_number : $("#edit_part_number").val(),
 		},
 		success: function (result, status, xhr) {
 			$("#edit_target_date").val("");
@@ -1991,7 +1995,20 @@ function showEdit(order_no) {
 
 			$("#edit_category").val(result.wjo[0].category).trigger('change.select2');
 			$("#edit_difficulty").val(result.wjo[0].difficulty).trigger('change.select2');
-			$("#edit_pic").val(result.wjo[0].operator).trigger('change.select2');
+			$("#edit_pic").val(result.wjo[0].pic).trigger('change.select2');
+
+			if (result.wjo[0].category == 'Molding' || result.wjo[0].category == 'Jig') {
+				$("#edit_drawing").css("visibility","visible");
+				$("#edit_drawing_name").val(result.wjo[0].drawing_name);
+				$("#edit_drawing_number").val(result.wjo[0].item_number);
+				$("#edit_part_number").val(result.wjo[0].part_number);
+				
+			} else {
+				$("#edit_drawing").css("visibility","hidden");
+				$("#edit_drawing_name").val("");
+				$("#edit_drawing_number").val("");
+				$("#edit_part_number").val("");
+			}
 
 
 			$("#flows").empty();

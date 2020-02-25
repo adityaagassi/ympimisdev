@@ -1176,6 +1176,10 @@ class WorkshopController extends Controller{
 		$target_date = $request->get('edit_target_date');
 		$category = $request->get('edit_category');
 		$difficulty = $request->get('edit_difficulty');
+
+		$drawing_name = $request->get('edit_drawing_name') ? $request->get('edit_drawing_name') : NULL;
+		$drawing_number = $request->get('edit_drawing_number') ? $request->get('edit_drawing_number') : NULL;
+		$part_number = $request->get('edit_part_number') ? $request->get('edit_part_number') : NULL;
 		
 		foreach ($request->get('pic') as $pics) {
 			$pic = WorkshopFlowProcess::find($pics[0]);
@@ -1195,6 +1199,9 @@ class WorkshopController extends Controller{
 		$wjo->category = $category;
 		$wjo->operator = $pic2;
 		$wjo->difficulty = $difficulty;
+		$wjo->drawing_name = $drawing_name;
+		$wjo->item_number = $drawing_number;
+		$wjo->part_number = $part_number;
 		
 		try{
 			DB::transaction(function() use ($wjo){
@@ -1533,7 +1540,7 @@ class WorkshopController extends Controller{
 		->leftJoin('workshop_processes', 'workshop_flow_processes.machine_code', '=', 'workshop_processes.machine_code')
 		->leftJoin('employee_syncs','workshop_flow_processes.operator', '=', 'employee_syncs.employee_id')
 		->where('workshop_job_orders.order_no', '=', $request->get('order_no'))
-		->select('workshop_job_orders.order_no', 'workshop_job_orders.priority', 'workshop_job_orders.sub_section', 'workshop_job_orders.type', 'workshop_job_orders.item_name', 'workshop_job_orders.quantity', 'workshop_job_orders.material', 'workshop_job_orders.problem_description', 'workshop_job_orders.target_date', 'workshop_job_orders.difficulty', 'workshop_job_orders.category', 'workshop_job_orders.part_number', 'workshop_job_orders.drawing_name', 'workshop_job_orders.item_number', 'workshop_flow_processes.machine_code', 'workshop_flow_processes.operator', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.sequence_process', db::raw('workshop_flow_processes.id as flow_id'), 'employee_syncs.name','workshop_job_orders.created_at')
+		->select('workshop_job_orders.order_no', 'workshop_job_orders.priority', 'workshop_job_orders.sub_section', 'workshop_job_orders.type', 'workshop_job_orders.item_name', 'workshop_job_orders.quantity', 'workshop_job_orders.material', 'workshop_job_orders.problem_description', 'workshop_job_orders.target_date', 'workshop_job_orders.difficulty', 'workshop_job_orders.category', 'workshop_job_orders.part_number', 'workshop_job_orders.drawing_name', 'workshop_job_orders.item_number', 'workshop_flow_processes.machine_code', 'workshop_flow_processes.operator', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.sequence_process', db::raw('workshop_flow_processes.id as flow_id'), 'employee_syncs.name','workshop_job_orders.created_at', db::raw('workshop_job_orders.operator as pic'))
 		->orderBy('workshop_flow_processes.id', 'asc')
 		->get();
 
