@@ -291,6 +291,7 @@
 										<th style="width: 1%;">Material</th>
 										<th style="width: 1%;">Qty</th>
 										<th style="width: 1%;">Approved By</th>
+										<th style="width: 1%;">PIC</th>
 										<th style="width: 1%;">Kesulitan</th>
 										<th style="width: 1%;">Target Selesai</th>
 										<th style="width: 1%;">Actual Selesai</th>
@@ -537,8 +538,7 @@
 														</select>
 													</div>
 												</div>
-											</div>
-											<div class="col-xs-6" style="margin-top: 5%;">
+
 												<div class="form-group row" align="right">
 													<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
@@ -551,7 +551,27 @@
 													</div>
 												</div>
 											</div>
-											<!-- <div class="col-xs-6">
+											<div class="col-xs-6" style="margin-top: 3%;">
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">Nama Drawing<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" name="edit_drawing_name" id="edit_drawing_name">
+													</div>
+												</div>
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">No Drawing<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" name="edit_drawing_number" id="edit_drawing_number">
+													</div>
+												</div>
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">No Part<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<input type="text" class="form-control" name="edit_part_number" id="edit_part_number">
+													</div>
+												</div>
+											</div>
+											<div class="col-xs-6">
 												<div class="form-group row" align="right">
 													<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
@@ -563,7 +583,7 @@
 														</select>
 													</div>
 												</div>
-											</div> -->
+											</div>
 											<div class="col-xs-12">
 												<div class="form-group row">
 													<div class="col-xs-10 col-xs-offset-2" style="margin-top: 1%;">
@@ -724,6 +744,19 @@
 														</select>
 													</div>
 												</div>
+
+												<div class="form-group row" align="right">
+													<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
+													<div class="col-xs-8" align="left">
+														<select class="form-control select4" data-placeholder="Pilih Operator" name="assign_pic" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>
+															<option value=""></option>
+															@foreach($operators as $operator)
+															<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>
+															@endforeach
+														</select>
+													</div>
+												</div>
+
 											</div>
 											<div class="col-xs-6" id="drawing" style="margin-top: 3%;">
 												<div class="form-group row" align="right">
@@ -1575,6 +1608,7 @@
 						tableData += '<td'+ assign +'>'+ result.tableData[i].material +'</td>';
 						tableData += '<td'+ assign +'>'+ result.tableData[i].quantity +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].approver || '-') +'</td>';
+						tableData += '<td'+ assign +'>'+ (result.tableData[i].pic || '-') +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].difficulty || '-') +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].target_date || '-') +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].finish_date || '-') +'</td>';
@@ -1913,11 +1947,12 @@ function edit_action() {
 			edit_target_date : $("#edit_target_date").val(),
 			edit_difficulty : $("#edit_difficulty").val(),
 			edit_category : $("#edit_category").val(),
-			pic : pic
+			pic : pic,
+			edit_pic : $("#edit_pic").val()
 		},
 		success: function (result, status, xhr) {
 			$("#edit_target_date").val("");
-			// $('#edit_pic').prop('selectedIndex', 0).change();
+			$('#edit_pic').prop('selectedIndex', 0).change();
 			$('.pic').prop('selectedIndex', 0).change();
 			$('#edit_difficulty').prop('selectedIndex', 0).change();
 			$('#edit_category').prop('selectedIndex', 0).change();
