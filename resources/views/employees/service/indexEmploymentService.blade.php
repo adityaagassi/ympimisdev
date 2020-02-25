@@ -625,24 +625,24 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		<div class="modal-dialog modal-lg modal-default">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title"><b>YMPI Announcement</b></h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+					<center><h4 class="modal-title"><b>YMPI Announcement</b></h4></center>
 				</div>
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-md-12">
 							<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-
-
-
 								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
 									<div class="item active">
-										<img class="img-responsive" src="http://placehold.it/1200x600/555/000&text=One" alt="...">
-										<div class="carousel-caption">
-											One Image
-										</div>
+										<center><img class="img-responsive" src="{{url('images/corona.jpg')}}" alt="..." width="600px"></center>
+										<!-- <div class="carousel-caption">
+											Alur Penanganan Corona Virus
+										</div> -->
 									</div>
-									<div class="item">
+									<!-- <div class="item">
 										<img class="img-responsive" src="http://placehold.it/1200x600/fffccc/000&text=Two" alt="...">
 										<div class="carousel-caption">
 											Another Image
@@ -653,9 +653,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 										<div class="carousel-caption">
 											Another Image
 										</div>
-									</div>
+									</div> -->
 								</div>
-
 								<!-- Controls -->
 								<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
 									<span class="glyphicon glyphicon-chevron-left"></span>
@@ -703,7 +702,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			}
 		});
 
-		// $("#modalBerita").modal('show');
+		$("#modalBerita").modal('show');
 
 		// $('#kz_sub_leader').select2({ width: 'resolve' });
 
