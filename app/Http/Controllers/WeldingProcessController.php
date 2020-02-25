@@ -1340,7 +1340,7 @@ class WeldingProcessController extends Controller
 			left join soldering_db.m_ws ws on ws.ws_id = hsa.ws_id
 			order by ws.ws_id asc) ws
 			left join
-			(select ws.ws_name, sum(l.quantity) as jml from middle_request_logs l
+			(select ws.ws_name, count(l.quantity) as jml from middle_request_logs l
 			left join
 			(select hsa.hsa_kito_code as material_number, ws.ws_name from soldering_db.m_hsa hsa
 			left join soldering_db.m_ws ws on ws.ws_id = hsa.ws_id) ws
@@ -1349,7 +1349,7 @@ class WeldingProcessController extends Controller
 			group by ws.ws_name) bff
 			on ws.ws_name = bff.ws_name
 			left join
-			(select ws.ws_name, sum(l.quantity) as jml from welding_logs l
+			(select ws.ws_name, count(l.quantity) as jml from welding_logs l
 			left join
 			(select hsa.hsa_kito_code as material_number, ws.ws_name from soldering_db.m_hsa hsa
 			left join soldering_db.m_ws ws on ws.ws_id = hsa.ws_id) ws
@@ -1359,11 +1359,44 @@ class WeldingProcessController extends Controller
 			group by ws.ws_name) wld
 			on ws.ws_name = wld.ws_name");
 
-
 		$response = array(
 			'status' => true,
 			'data' => $data,
 			'tanggal' => $tanggal
+		);
+		return Response::json($response);
+	}
+
+	public function fetchGroupAchievementDetail(Request $request){
+		
+		$bff = db::select("select ws.ws_name, l.material_number, m.model, m.`key`, count(l.material_number) as kanban, sum(l.quantity) as jml from middle_request_logs l
+			left join
+			(select hsa.hsa_kito_code as material_number, ws.ws_name from soldering_db.m_hsa hsa
+			left join soldering_db.m_ws ws on ws.ws_id = hsa.ws_id) ws
+			on ws.material_number = l.material_number
+			left join materials m on m.material_number = l.material_number
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$request->get('date')."'
+			and ws.ws_name = '".$request->get('ws')."'
+			group by ws.ws_name, l.material_number, m.model, m.`key`
+			order by m.`key`, m.model asc");
+
+		$wld = db::select("select ws.ws_name, l.material_number, m.model, m.`key`, count(l.material_number) as kanban, sum(l.quantity) as jml from welding_logs l
+			left join
+			(select hsa.hsa_kito_code as material_number, ws.ws_name from soldering_db.m_hsa hsa
+			left join soldering_db.m_ws ws on ws.ws_id = hsa.ws_id) ws
+			on ws.material_number = l.material_number
+			left join materials m on m.material_number = l.material_number
+			where l.location = 'hsa-visual-sx'
+			and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$request->get('date')."'
+			and ws.ws_name = '".$request->get('ws')."'
+			group by ws.ws_name, l.material_number, m.model, m.`key`
+			order by m.`key`, m.model asc");
+
+
+		$response = array(
+			'status' => true,
+			'bff' => $bff,
+			'wld' => $wld
 		);
 		return Response::json($response);
 	}
@@ -1379,7 +1412,7 @@ class WeldingProcessController extends Controller
 
 		$akumulasi = db::select("select w.week_name, acc.tgl, acc.wld, acc.bff from
 			(select wld.tgl, COALESCE(wld.jml,0) as wld, COALESCE(bff.jml,0) as bff from
-			(select DATE_FORMAT(w.created_at,'%Y-%m-%d') as tgl, sum(w.quantity) as jml from welding_logs w
+			(select DATE_FORMAT(w.created_at,'%Y-%m-%d') as tgl, count(w.quantity) as jml from welding_logs w
 			left join materials m on m.material_number = w.material_number
 			where w.location = 'hsa-visual-sx'
 			and DATE_FORMAT(w.created_at,'%Y-%m-%d') in
@@ -1388,7 +1421,7 @@ class WeldingProcessController extends Controller
 			and DATE_FORMAT(week_date,'%Y') = '".$tahun."')
 			group by tgl) wld
 			left join
-			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, sum(l.quantity) as jml from middle_request_logs l
+			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, count(l.quantity) as jml from middle_request_logs l
 			left join materials m on m.material_number = l.material_number
 			where DATE_FORMAT(l.created_at,'%Y-%m-%d') in
 			(select week_date from weekly_calendars

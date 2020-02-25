@@ -1,6 +1,46 @@
 @extends('layouts.display')
 @section('stylesheets')
 <style type="text/css">
+	thead>tr>th{
+		text-align:center;
+		vertical-align: middle;
+		padding: 0px;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	th:hover {
+		overflow: visible;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid #2a2a2b;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid #2a2a2b;
+		vertical-align: middle;
+		text-align: center;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid #2a2a2b;
+		text-align: center;
+		vertical-align: middle;
+		padding:0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid #2a2a2b;
+		padding:0;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+		vertical-align: middle;
+	}
 	.content{
 		color: white;
 		font-weight: bold;
@@ -42,11 +82,70 @@
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container2" style="width: 100%;"></div>
-			</div>
-			
-			
+			</div>			
 		</div>
 	</div>
+
+	<div class="modal fade" id="modal-detail" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Workstation Achievements</b></h4>
+					<h5 class="modal-title" style="text-align: center;" id="judul-detail"></h5>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-6">
+							<h3 style="margin-top: 0px;">Buffing Request</h3>
+							<table id="request-detail" class="table table-bordered" style="width: 100%;"> 
+								<thead id="request-detail-head" style="background-color: rgba(126,86,134,.8);">
+									<tr>
+										<th rowspan="2">WS Name</th>
+										<th rowspan="2">Material Number</th>
+										<th rowspan="2">Model</th>
+										<th rowspan="2">Key</th>
+										<th colspan="3">Quantity</th>
+									</tr>
+									<tr>
+										<th>Kanban(s)</th>
+										<th>PC(s)</th>
+									</tr>
+								</thead>
+								<tbody id="request-detail-body">
+								</tbody>
+							</table>
+						</div>
+						<div class="col-xs-6">
+							<h3 style="margin-top: 0px;">Welding Result</h3>
+							<table id="result-detail" class="table table-bordered" style="width: 100%;"> 
+								<thead id="result-detail-head" style="background-color: rgba(126,86,134,.8);">
+									<tr>
+										<th rowspan="2">WS Name</th>
+										<th rowspan="2">Material Number</th>
+										<th rowspan="2">Model</th>
+										<th rowspan="2">Key</th>
+										<th colspan="3">Quantity</th>
+									</tr>
+									<tr>
+										<th>Kanban(s)</th>
+										<th>PC(s)</th>
+									</tr>
+								</thead>
+								<tbody id="result-detail-body">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
 </section>
 @endsection
 @section('scripts')
@@ -332,7 +431,7 @@
 					},
 					yAxis: {
 						title: {
-							text: 'PC(s)'
+							text: 'Kanban(s)'
 						},
 						style: {
 							fontSize: '26px',
@@ -378,7 +477,14 @@
 								}
 							},
 							animation: false,
-							cursor: 'pointer'
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(result.tanggal, event.point.category);
+									}
+								}
+							},
 						}
 					},
 					series: [{
@@ -440,7 +546,7 @@
 					},
 					yAxis: {
 						title: {
-							text: 'PC(s)'
+							text: 'Kanban(s)'
 						},
 						style: {
 							fontSize: '26px',
@@ -511,6 +617,72 @@
 			}
 		});
 
+	}
+
+	function showDetail(date, ws) {
+		var data = {
+			date : date,
+			ws : ws
+		}
+
+		$.get('{{ url("fetch/welding/group_achievement_detail") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#modal-detail').modal('show');
+
+				$('#judul-detail').append().empty();
+				$('#judul-detail').append('<b>'+ ws +' on '+ date +'</b>');	
+
+				$('#result-detail-body').html("");			
+				var body = '';
+				var sum_kanban = 0;
+				var sum_pc = 0;
+				for (var i = 0; i < result.wld.length; i++) {
+					body += '<tr>';
+					body += '<td>'+ result.wld[i].ws_name +'</td>';
+					body += '<td>'+ result.wld[i].material_number +'</td>';
+					body += '<td>'+ result.wld[i].model +'</td>';
+					body += '<td>'+ result.wld[i].key +'</td>';
+					body += '<td>'+ result.wld[i].kanban +'</td>';
+					body += '<td>'+ result.wld[i].jml +'</td>';
+					body += '</tr>';
+
+					sum_kanban += parseInt(result.wld[i].kanban);
+					sum_pc += parseInt(result.wld[i].jml);
+				}
+				body += '<tr>';
+				body += '<td colspan="4">Total</td>';
+				body += '<td>'+ sum_kanban +'</td>';
+				body += '<td>'+ sum_pc +'</td>';
+				body += '</tr>';
+				$('#result-detail-body').append(body);
+
+
+				$('#request-detail-body').html("");			
+				var body = '';
+				var sum_kanban = 0;
+				var sum_pc = 0;
+				for (var i = 0; i < result.bff.length; i++) {
+					body += '<tr>';
+					body += '<td>'+ result.bff[i].ws_name +'</td>';
+					body += '<td>'+ result.bff[i].material_number +'</td>';
+					body += '<td>'+ result.bff[i].model +'</td>';
+					body += '<td>'+ result.bff[i].key +'</td>';
+					body += '<td>'+ result.bff[i].kanban +'</td>';
+					body += '<td>'+ result.bff[i].jml +'</td>';
+					body += '</tr>';
+
+					sum_kanban += parseInt(result.bff[i].kanban);
+					sum_pc += parseInt(result.bff[i].jml);
+				}
+				body += '<tr>';
+				body += '<td colspan="4">Total</td>';
+				body += '<td>'+ sum_kanban +'</td>';
+				body += '<td>'+ sum_pc +'</td>';
+				body += '</tr>';
+				$('#request-detail-body').append(body);
+				
+			}
+		});
 	}
 
 

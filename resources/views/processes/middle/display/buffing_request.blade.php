@@ -168,7 +168,11 @@
 
 
 						if(value.model[0] == 'A'){
-							model += "<th style='background-color: #ffff66;'>"+value.model+" "+value.key+"</th>";
+							if(value.model == 'A82'){
+								model += "<th style='background-color: #e5e5df;'>"+value.model+" "+value.key+"</th>";
+							}else{
+								model += "<th style='background-color: #ffff66;'>"+value.model+" "+value.key+"</th>";
+							}
 						}else if(value.model[0] == 'T'){
 							model += "<th style='background-color: #1565C0;'>"+value.model+" "+value.key+"</th>";
 						}
