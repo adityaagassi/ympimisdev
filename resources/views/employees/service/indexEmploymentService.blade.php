@@ -702,7 +702,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			}
 		});
 
-		$("#modalBerita").modal('show');
+		// $("#modalBerita").modal('show');
 
 		// $('#kz_sub_leader').select2({ width: 'resolve' });
 
