@@ -129,6 +129,20 @@
 								<table width="100%" id="tableEstimasi" class="table table-bordered" style="font-size: 15px;">
 								</table>
 							</div>
+							<div class="col-xs-12">
+								<b>Note :</b>
+								<table width="100%" class="table table-bordered" style="font-size: 15px;">
+									<thead>
+										<tr><th width="50%">Foreman</th><th width="50%">Manager</th></tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td id="note_foreman"></td>
+											<td id="note_manager"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 						<center><input type="checkbox" checked data-toggle="toggle" data-on="Kaizen" data-off="Not Kaizen" data-onstyle="success" data-offstyle="danger" data-width="300" id="kz_stat"></center>
 					</div>
@@ -500,13 +514,21 @@
 
 		function confirmCatatan(){
 			var note = $('#catatan').val();
+
+			if (note == "") {
+				openErrorGritter('Failed!' ,'Note cannot be empty');
+				return false;
+			}
+
 			data = {
-				id: id,
-				catatan:note,
+				id : "{{ Request::segment(4) }}",
+				catatan : note,
+				from : "{{ Request::segment(5) }}"
 			}
 			$.post('{{ url("input/kaizen/detail/note") }}', data, function(result) {
 				if(result.status){
 					openSuccessGritter('Success!', result.message);
+					setTimeout(function(){ window.history.back(); }, 2000);
 				}
 				else{
 					openErrorGritter('Error!', result.message);
@@ -531,6 +553,8 @@
 				$("#leader").html(result[0].leader_name);
 				$("#before").html(result[0].condition);
 				$("#after").html(result[0].improvement);
+				$("#note_foreman").html(result[0].foreman_note);
+				$("#note_manager").html(result[0].manager_note);
 
 				$('#catatan').val(result[0].remark);
 				$("#tableEstimasi").empty();

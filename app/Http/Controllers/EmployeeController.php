@@ -23,6 +23,7 @@ use App\HrQuestionLog;
 use App\HrQuestionDetail;
 use App\KaizenForm;
 use App\KaizenScore;
+use App\KaizenNote;
 use App\Employee;
 use App\EmployeeSync;
 use App\EmploymentLog;
@@ -131,10 +132,9 @@ class EmployeeController extends Controller
      {
           $username = Auth::user()->username;
 
-          $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
-          ->where('promotion_logs.employee_id','=', $username)
-          ->whereNull('valid_to')
-          ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or role_code = "MIS" or username in ('.$this->usr.'))')
+          $emp = User::join('employee_syncs','employee_syncs.employee_id','=','users.username')
+          ->where('employee_syncs.employee_id','=', $username)
+          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief") or role_code = "MIS" or username in ('.$this->usr.'))')
           ->select('position')
           ->first();
 
@@ -153,13 +153,7 @@ class EmployeeController extends Controller
 // $dd = str_replace("'","", $this->usr);
 // $dd = "'".$dd."'";
 
-          $sections = "select section from
-          (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'Chief')) d
-          left join employees on d.employee_id = employees.employee_id
-          left join
-          (select employee_id, section from mutation_logs where valid_to is null) s on s.employee_id = d.employee_id
-          group by section
-          order by section";
+          $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
 
           $sc = db::select($sections);
 
@@ -189,13 +183,7 @@ class EmployeeController extends Controller
           $dd = str_replace("'","", $this->usr);
           $dd = explode(',', $dd);
 
-          $sections = "select section from
-          (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'Chief')) d
-          left join employees on d.employee_id = employees.employee_id
-          left join
-          (select employee_id, section from mutation_logs where valid_to is null) s on s.employee_id = d.employee_id
-          group by section
-          order by section";
+          $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
 
           $sc = db::select($sections);
 
@@ -226,13 +214,7 @@ class EmployeeController extends Controller
           $dd = str_replace("'","", $this->usr);
           $dd = explode(',', $dd);
 
-          $sections = "select section from
-          (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'Chief')) d
-          left join employees on d.employee_id = employees.employee_id
-          left join
-          (select employee_id, section from mutation_logs where valid_to is null) s on s.employee_id = d.employee_id
-          group by section
-          order by section";
+          $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
 
           $sc = db::select($sections);
 
@@ -304,7 +286,8 @@ class EmployeeController extends Controller
      {
           $data = KaizenForm::where('kaizen_forms.id','=', $id)
           ->leftJoin('kaizen_calculations','kaizen_forms.id','=','kaizen_calculations.id_kaizen')
-          ->select('kaizen_forms.id','kaizen_forms.employee_name','kaizen_forms.propose_date','kaizen_forms.section','kaizen_forms.leader','kaizen_forms.title','kaizen_forms.purpose', 'kaizen_forms.condition', 'kaizen_forms.improvement','kaizen_forms.area','kaizen_forms.employee_id','kaizen_calculations.id_cost', 'kaizen_calculations.cost')
+          ->leftJoin('kaizen_notes','kaizen_forms.id','=','kaizen_notes.id_kaizen')
+          ->select('kaizen_forms.id','kaizen_forms.employee_name','kaizen_forms.propose_date','kaizen_forms.section','kaizen_forms.leader','kaizen_forms.title','kaizen_forms.purpose', 'kaizen_forms.condition', 'kaizen_forms.improvement','kaizen_forms.area','kaizen_forms.employee_id','kaizen_calculations.id_cost', 'kaizen_calculations.cost','kaizen_notes.foreman_note','kaizen_notes.manager_note')
           ->get();
 
           $section = explode(" ~ ",$data[0]->section)[0];
@@ -325,13 +308,7 @@ class EmployeeController extends Controller
 
           $subleader = db::select($q_subleader);
 
-          $sections = "select section from
-          (select employee_id, position from promotion_logs where valid_to is null and position in ('Leader', 'chief')) d
-          left join employees on d.employee_id = employees.employee_id
-          left join
-          (select employee_id, section from mutation_logs where valid_to is null) s on s.employee_id = d.employee_id
-          group by section
-          order by section";
+          $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
 
           $sc = db::select($sections);
 
@@ -1586,7 +1563,7 @@ public function indexEmployeeService(Request $request)
 
      }
      catch(\Exception $e){
-          
+
      }
 
      if (ISSET($presences)) {
@@ -2206,7 +2183,7 @@ public function fetchKaizen(Request $request)
 
      return DataTables::of($kz)
      ->addColumn('action', function($kz){
-          if ($kz->status == '-1') {
+          if ($kz->status == '-1' || $kz->status == '3') {
                return '<a href="javascript:void(0)" class="btn btn-xs btn-primary" onClick="cekDetail(this.id)" id="' . $kz->id . '"><i class="fa fa-eye"></i> Details</a>
                <a href="'. url("index/updateKaizen")."/".$kz->id.'" class="btn btn-xs btn-warning"><i class="fa fa-pencil"></i> Ubah</a>
                <button onclick="openDeleteDialog('.$kz->id.',\''.$kz->title.'\', \''.$kz->propose_date.'\')" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button>';
@@ -2229,6 +2206,8 @@ public function fetchKaizen(Request $request)
                return 'Bukan Kaizen';
           else if ($kz->status == '-1') 
                return 'Belum Verifikasi';
+          else if ($kz->status == '3') 
+               return '<font style="color:red">Terdapat Catatan</font>';
      })->addColumn('aplikasi', function($kz){
           if ($kz->application == '1') 
                return 'Telah di Aplikasikan';
@@ -2339,7 +2318,7 @@ public function fetchDataKaizen()
           }
      }
 
-     $dprt = db::select("select distinct section from mutation_logs where valid_to is null and department = (select department from mutation_logs where employee_id = '".$username."' and valid_to is null)");
+     $dprt = db::select("select distinct section from employee_syncs where department = (select department from employee_syncs where employee_id = '".$username."') and section is not null");
 
      $kzn = KaizenForm::leftJoin('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
      ->select('kaizen_forms.id','employee_id','employee_name','title','area','section','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3');
@@ -2351,7 +2330,7 @@ public function fetchDataKaizen()
 
      if ($_GET['status'] != "") {
           if ($_GET['status'] == '1') {
-               $kzn = $kzn->where('status','=', '-1');
+               $kzn = $kzn->whereRaw('( status = -1 OR status = 3 )');
           } else if ($_GET['status'] == '2') {
                $kzn = $kzn->where('manager_point_1','=', '0');
                $kzn = $kzn->where('status','=', '1');
@@ -2403,6 +2382,9 @@ public function fetchDataKaizen()
           else if ($kzn->status == 2) {
                return '<span class="label bg-green"><i class="fa fa-check"></i> Verified</span>';
           }
+          else if ($kzn->status == 3) {
+               return '<span class="label bg-blue"><i class="fa fa-envelope-o"></i>&nbsp; Noted</span>';
+          }
           else {
                return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
           }
@@ -2418,7 +2400,11 @@ public function fetchDataKaizen()
                } else {
                     if ($kzn->status == 2) {
                          return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
-                    } else {
+                    }
+                    else if ($kzn->status == 3) {
+                         return '<span class="label bg-blue"><i class="fa fa-envelope-o"></i>&nbsp; Noted</span>';
+                    }
+                    else {
                          if ($_GET['position'] == 'Manager' || $_GET['position'] == 'Deputy General Manager') {
                               return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/manager").'">Unverified</a>';     
                          } else {
@@ -2445,14 +2431,25 @@ public function fetchDataKaizen()
 }
 
 public function inputKaizenDetailNote(Request $request){
-     $kaizen_form = KaizenForm::where('id', '=', $request->get('id'))->first();
-     $kaizen_form->remark = $request->get('catatan');
+
+     $kaizen_forms = KaizenForm::find($request->get('id'));
+     $kaizen_forms->status = 3;
+
+     $kaizen_notes = KaizenNote::firstOrNew(array('id_kaizen' => $request->get('id')));
+     if ($request->get('from') == 'foreman') {
+          $kaizen_notes->foreman_note = $request->get('catatan');
+     }else if ($request->get('from') == 'manager') {
+          $kaizen_notes->manager_note = $request->get('catatan');
+     }
+     $kaizen_notes->created_by = Auth::id();
+
      try{
-          $kaizen_form->save();
+          $kaizen_notes->save();
+          $kaizen_forms->save();
 
           return response()->json([
                'status' => true,
-               'message' => 'Catatan berhasil disimpan'
+               'message' => 'Note saved successfully'
           ]);
 
      }
@@ -2466,11 +2463,12 @@ public function inputKaizenDetailNote(Request $request){
 
 public function fetchDetailKaizen(Request $request)
 {
-     $data = KaizenForm::select("kaizen_forms.employee_id","employee_name", db::raw("date_format(propose_date,'%d-%b-%Y') as date"), "title", "condition", "improvement", "area", "leader", "purpose", "section", db::raw("name as leader_name"),'foreman_point_1', 'foreman_point_2', 'foreman_point_3', 'manager_point_1', 'manager_point_2', 'manager_point_3', 'kaizen_calculations.cost', 'standart_costs.cost_name', db::raw('kaizen_calculations.cost * standart_costs.cost as sub_total_cost'), 'frequency', 'unit',db::raw('standart_costs.cost as std_cost'), 'kaizen_forms.remark')
+     $data = KaizenForm::select("kaizen_forms.employee_id","employee_name", db::raw("date_format(propose_date,'%d-%b-%Y') as date"), "title", "condition", "improvement", "area", "leader", "purpose", "section", db::raw("name as leader_name"),'foreman_point_1', 'foreman_point_2', 'foreman_point_3', 'manager_point_1', 'manager_point_2', 'manager_point_3', 'kaizen_calculations.cost', 'standart_costs.cost_name', db::raw('kaizen_calculations.cost * standart_costs.cost as sub_total_cost'), 'frequency', 'unit',db::raw('standart_costs.cost as std_cost'), 'kaizen_forms.remark', 'kaizen_notes.foreman_note','kaizen_notes.manager_note')
      ->leftJoin('employees','employees.employee_id','=','kaizen_forms.leader')
      ->leftJoin('kaizen_calculations','kaizen_forms.id','=','kaizen_calculations.id_kaizen')
      ->leftJoin('standart_costs','standart_costs.id','=','kaizen_calculations.id_cost')
      ->leftJoin('kaizen_scores','kaizen_scores.id_kaizen','=','kaizen_forms.id')
+     ->leftJoin('kaizen_notes','kaizen_forms.id','=','kaizen_notes.id_kaizen')
      ->where('kaizen_forms.id','=',$request->get('id'))
      ->get();
 
@@ -2481,7 +2479,8 @@ public function assessKaizen(Request $request)
 {
      $id = Auth::id();
 
-if ($request->get('category') == 'manager') { // --------------- JIKA inputor Manager ----
+if ($request->get('category') == 'manager') { 
+// --------------- JIKA inputor Manager ----
      if ($request->get('nilai1')) {
           try {
                $data = KaizenScore::where('id_kaizen','=' , $request->get('id'))
@@ -2801,6 +2800,15 @@ public function fetchKaizenResume(Request $request)
 
 public function updateKaizen(Request $request)
 {
+     $stt_q = KaizenScore::where('id_kaizen','=',$request->get('id'))->first();
+
+     if ($stt_q) {
+          $stt = 1;
+     } else {
+          $stt = -1;
+     }
+
+
      try {
           $kz = KaizenForm::where('id',$request->get('id'))
           ->update([
@@ -2809,7 +2817,8 @@ public function updateKaizen(Request $request)
                'condition' => $request->get('condition'),
                'improvement' => $request->get('improvement'),
                'area' => $request->get('area_kz'),
-               'purpose' => $request->get('purpose')
+               'purpose' => $request->get('purpose'),
+               'status' => $stt
           ]);
           if ($request->get('estimasi')) {
 

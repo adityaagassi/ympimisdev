@@ -198,6 +198,11 @@
 							</table>
 							<table width="100%" id="tabel_nilai" style="border: 1px solid black">
 							</table>
+							<table width="100%" id="tabel_note">
+								<tr><th colspan="2">Note :</th></tr>
+								<tr><th style="border: 1px solid black;" width="50%">Foreman</th><th style="border: 1px solid black;" width="50%">Manager</th></tr>
+								<tr><td style="text-align: left; border: 1px solid" id="note_foreman"></td><td style="text-align: left; border: 1px solid" id="note_manager"></td></tr>
+							</table>
 							<br>
 							<table width="100%" border="1" id="tabel_assess">
 								<tr>
@@ -494,6 +499,9 @@
 				bd += "</tr>";
 
 				$("#tabel_nilai").append(bd);
+
+				$("#note_foreman").html(result[0].foreman_note);
+				$("#note_manager").html(result[0].manager_note);
 			}
 			$("#modalDetail").modal('show');
 		})

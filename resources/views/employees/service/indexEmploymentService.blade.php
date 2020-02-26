@@ -199,7 +199,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
 				<?php if (strpos($profil[0]->position, 'Operator') !== false) { ?>
-				<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
+					<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				<?php } ?>
 			</div>
 			<div class="col-md-9">
@@ -376,6 +376,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							<tbody>
 							</tbody>
 						</table>
+						<font style="color: red">* NB : Jika kategori "Terdapat Catatan" maka terdapat catatan dari Foreman / Manager, tekan tombol "details" untuk melihat catatan dan lakukan perubahan pada kaizen teian</font>
 					</div>
 				</div>
 
@@ -501,6 +502,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								</tr>
 							</table>
 							<table id="tableEstimasi" style="border: 1px solid black" width="100%"></table>
+							<table width="100%" id="tabel_note">
+								<tr><th colspan="2">Note :</th></tr>
+								<tr><th style="border: 1px solid black;" width="50%">Foreman</th><th style="border: 1px solid black;" width="50%">Manager</th></tr>
+								<tr><td style="text-align: left; border: 1px solid" id="note_foreman"></td><td style="text-align: left; border: 1px solid" id="note_manager"></td></tr>
+							</table>
 							<br>
 							<table width="100%" border="1" id="tabel_assess">
 								<tr>
@@ -626,8 +632,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			          <span aria-hidden="true">&times;</span>
-			        </button>
+						<span aria-hidden="true">&times;</span>
+					</button>
 					<center><h4 class="modal-title"><b>YMPI Announcement</b></h4></center>
 				</div>
 				<div class="modal-body">
@@ -944,6 +950,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			$("#kz_area").text(result[0].area);
 			$("#kz_before").html(result[0].condition);
 			$("#kz_after").html(result[0].improvement);
+			$("#note_foreman").html(result[0].foreman_note);
+			$("#note_manager").html(result[0].manager_note);
 
 			$("#tableEstimasi").empty();
 			bd = "";

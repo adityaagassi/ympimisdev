@@ -103,6 +103,15 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
+			<label>Catatan</label>
+			<table class="table" style="color: white">
+				<tr><th>Foreman</th><th>Manager</th></tr>
+				<tr><td><?php echo $data[0]->foreman_note ?></td><td><?php echo $data[0]->manager_note ?></td></tr>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
 			<label>Estimasi Hasil</label><br>
 			<table class="table" style="color:white">
 				<thead>
@@ -157,19 +166,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<div class="col-xs-12">
 							<table class="table table-bordered" id="tabel_other">
 							</table>
-							<!-- <select class="form-control select2" id="kz_other">
-								<option value="">Pilih Salah satu</option>
-								<option value="1">Material</option>
-								<option value="1295">Listrik</option>
-								<option value="7000">Air (PDAB)</option>
-								<option value="25476">Air (MBP / DI)</option>
-								<option value="8097">Solar</option>
-								<option value="9850">Pertamax</option>
-								<option value="140070">LNG (Liquifed Natural Gas)</option>
-								<option value="72">Kertas (A4)</option>
-								<option value="152">Kertas (A3)</option>
-								<option value="96">Kertas (F4)</option>
-							</select> -->
 						</div>
 					</div>
 				</div>
