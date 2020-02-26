@@ -375,7 +375,7 @@
 				var fl21 = [];
 				var fla1 = [];
 				var fla0 = [];
-				var mscr = [];
+				var zpa0 = [];
 				var cat;
 
 				for (var i = 0; i < result.variances.length; i++) {
@@ -400,8 +400,8 @@
 					if(result.variances[i].storage_location == 'FLA0'){
 						fla0.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
 					}
-					if(result.variances[i].storage_location == 'MSCR'){
-						mscr.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
+					if(result.variances[i].storage_location == 'ZPA0'){
+						zpa0.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
 					}
 
 				}
@@ -471,8 +471,8 @@
 						name: 'FLA0',
 						data: fla0
 					},{
-						name: 'MSCR',
-						data: mscr
+						name: 'ZPA0',
+						data: zpa0
 					}
 					],
 
@@ -486,13 +486,13 @@
 				var varFL21 = [];
 				var varFLA1 = [];
 				var varFLA0 = [];
-				var varMSCR = [];
+				var varZPA0 = [];
 				var okFL91 = [];
 				var okFL51 = [];
 				var okFL21 = [];
 				var okFLA1 = [];
 				var okFLA0 = [];
-				var okMSCR = [];
+				var okZPA0 = [];
 				var i, cat;
 				var intVal = function ( i ) {
 					return typeof i === 'string' ?
@@ -525,9 +525,9 @@
 						varFLA0.push(intVal(data[i].variance));
 						okFLA0.push(intVal(data[i].ok));
 					}
-					if(data[i].storage_location == 'MSCR'){
-						varMSCR.push(intVal(data[i].variance));
-						okMSCR.push(intVal(data[i].ok));
+					if(data[i].storage_location == 'ZPA0'){
+						varZPA0.push(intVal(data[i].variance));
+						okZPA0.push(intVal(data[i].ok));
 					}
 				}
 
@@ -667,8 +667,8 @@
 						color: 'rgb(255,116,116)'
 					}, {
 						name: 'Variance',
-						data: varMSCR,
-						stack: 'MSCR',
+						data: varZPA0,
+						stack: 'ZPA0',
 						color: 'rgb(255,116,116)'
 					}, {
 						name: 'OK',
@@ -697,8 +697,8 @@
 						color: 'rgb(144,238,126)'
 					}, {
 						name: 'OK',
-						data: okMSCR,
-						stack: 'MSCR',
+						data: okZPA0,
+						stack: 'ZPA0',
 						color: 'rgb(144,238,126)'
 					}]
 				});
