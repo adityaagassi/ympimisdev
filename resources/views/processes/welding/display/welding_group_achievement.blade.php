@@ -77,9 +77,64 @@
 				</div>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
+
 			<div class="col-xs-12" style="margin-top: 5px;">
-				<div id="container1" style="width: 100%;"></div>
+				<h2 style="text-transform: uppercase; font-weight: bold; text-align: center;">Daily qty of incoming instruction Vs Actual result qty</h2>
 			</div>
+
+			<div class="row">
+				<div class="col-xs-4" style="margin-top: 5px; margin-left: 0px;">
+					<div id="1" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-4" style="margin-top: 5px;">
+					<div id="2" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-4" style="margin-top: 5px; margin-right: 0px;">
+					<div id="3" style="width: 100%;"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-3" style="margin-top: 5px; margin-left: 0px;">
+					<div id="4" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-3" style="margin-top: 5px;">
+					<div id="5" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-3" style="margin-top: 5px; margin-right: 0px;">
+					<div id="13" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-3" style="margin-top: 5px; margin-left: 0px;">
+					<div id="14" style="width: 100%;"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-3" style="margin-top: 5px;">
+					<div id="15" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-3" style="margin-top: 5px; margin-right: 0px;">
+					<div id="16" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-3" style="margin-top: 5px; margin-right: 0px;">
+					<div id="19" style="width: 100%;"></div>
+				</div>
+				<div class="col-xs-3" style="margin-top: 5px;">
+					<div id="18" style="width: 100%;"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12" style="margin-top: 5px; margin-left: 0px;">
+					<div id="17" style="width: 100%;"></div>
+				</div>
+				
+			</div>
+			
+
+
+
+
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container2" style="width: 100%;"></div>
 			</div>			
@@ -404,102 +459,102 @@
 
 		$.get('{{ url("fetch/welding/group_achievement") }}', data, function(result, status, xhr) {
 			if(result.status){
-				var ws = [];
-				var bff = [];
-				var wld = [];
 
-				for(var i = 0; i < result.data.length; i++){
-					ws.push(result.data[i].ws_name);
-					bff.push(parseInt(result.data[i].bff));
-					wld.push(parseInt(result.data[i].wld));
-				}
-
-				var chart = Highcharts.chart('container1', {
-					title: {
-						text: 'Daily qty of incoming instruction Vs Actual result qty',
-						style: {
-							fontSize: '30px',
-							fontWeight: 'bold'
+				for(var h = 0; h < result.ws.length; h++){
+					var key = [];
+					var bff = [];
+					var wld = [];
+					for(var i = 0; i < result.data.length; i++){
+						if(result.data[i].ws_name == result.ws[h].ws_name){
+							key.push(result.data[i].model +" "+ result.data[i].key);
+							bff.push(parseInt(result.data[i].bff));
+							wld.push(parseInt(result.data[i].wld));
 						}
-					},
-					subtitle: {
-						text: 'on '+result.tanggal,
-						style: {
-							fontSize: '18px',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
+					}
+					var chart = Highcharts.chart(''+ result.ws[h].ws_id +'', {
 						title: {
-							text: 'Kanban(s)'
-						},
-						style: {
-							fontSize: '26px',
-							fontWeight: 'bold'
-						}
-					},
-					xAxis: {
-						categories: ws,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
+							text: result.ws[h].ws_name + ' on '+result.tanggal,
 							style: {
-								fontSize: '1vw'
+								fontSize: '18px',
+								fontWeight: 'bold'
 							}
 						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					legend : {
-						align: 'center',
-						verticalAlign: 'bottom',
-						x: 0,
-						y: 0,
-
-						backgroundColor: (
-							Highcharts.theme && Highcharts.theme.background2) || 'white',
-						shadow: false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y}',
-								style:{
-									textOutline: false,
+						yAxis: {
+							title: {
+								text: 'Kanban(s)'
+							},
+							style: {
+								fontSize: '26px',
+								fontWeight: 'bold'
+							},
+							labels: {
+								enabled: false
+							}
+						},
+						xAxis: {
+							categories: key,
+							type: 'category',
+							gridLineWidth: 1,
+							gridLineColor: 'RGB(204,255,255)',
+							labels: {
+								rotation: -45,
+								style: {
 									fontSize: '1vw'
 								}
 							},
-							animation: false,
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function (event) {
-										showDetail(result.tanggal, event.point.category);
-									}
-								}
-							},
-						}
-					},
-					series: [{
-						name:'Buffing Request',
-						type: 'column',
-						color: 'rgb(255,116,116)',
-						data: bff,
-					},{
-						name:'Welding Result',
-						type: 'column',
-						color: 'rgb(169,255,151)',
-						data: wld,
-					}]
+						},
+						tooltip: {
+							headerFormat: '<span>{point.category}</span><br/>',
+							pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+						},
+						credits: {
+							enabled:false
+						},
+						legend : {
+							align: 'center',
+							verticalAlign: 'bottom',
+							x: 0,
+							y: 0,
 
-				});
+							backgroundColor: (
+								Highcharts.theme && Highcharts.theme.background2) || 'white',
+							shadow: false
+						},
+						plotOptions: {
+							series:{
+								dataLabels: {
+									enabled: true,
+									format: '{point.y}',
+									style:{
+										textOutline: false,
+										fontSize: '1vw'
+									}
+								},
+								animation: false,
+								cursor: 'pointer',
+								point: {
+									events: {
+										click: function (event) {
+											showDetail(result.tanggal, event.point.category);
+										}
+									}
+								},
+							}
+						},
+						series: [{
+							name:'Buffing Request',
+							type: 'column',
+							color: 'rgb(255,116,116)',
+							data: bff,
+						},{
+							name:'Welding Result',
+							type: 'column',
+							color: 'rgb(169,255,151)',
+							data: wld,
+						}]
+					});
+				}
+
 				$(document).scrollTop(position);
 				
 			}
@@ -612,7 +667,7 @@
 
 				});				
 				$(document).scrollTop(position);
-				
+
 
 			}
 		});
@@ -680,7 +735,7 @@
 				body += '<td>'+ sum_pc +'</td>';
 				body += '</tr>';
 				$('#request-detail-body').append(body);
-				
+
 			}
 		});
 	}

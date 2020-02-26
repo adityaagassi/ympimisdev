@@ -872,6 +872,9 @@ Route::get('index/welding/resume/{id}', 'WeldingProcessController@indexWeldingRe
 Route::get('fetch/welding/resume', 'WeldingProcessController@fetchWeldingResume');
 Route::get('index/welding/group_achievement', 'WeldingProcessController@indexWeldingAchievement');
 Route::get('fetch/welding/group_achievement', 'WeldingProcessController@fetchGroupAchievement');
+Route::get('fetch/welding/group_achievement_detail', 'WeldingProcessController@fetchGroupAchievementDetail');
+
+
 Route::get('fetch/welding/accumulated_achievement', 'WeldingProcessController@fetchAccumulatedAchievement');
 Route::get('index/welding/eff_handling', 'WeldingProcessController@indexEffHandling');
 Route::get('fetch/welding/eff_handling', 'WeldingProcessController@fetchEffHandling');
@@ -883,7 +886,8 @@ Route::get('fetch/welding/hsa_stock', 'WeldingProcessController@fetchHsaStock');
 Route::post('post/welding/hsa_add_queue', 'WeldingProcessController@inputHsaQueue');
 Route::post('post/welding/hsa_delete_queue', 'WeldingProcessController@deleteHsaQueue');
 
-
+Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
+Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 
 
 
@@ -2284,6 +2288,7 @@ Route::post('post/display/ip_log', 'PingController@ip_log');
 
 //OFFICECLOCK
 Route::get('index/display/office_clock', 'OfficeClockController@index');
+Route::get('fetch/office_clock/visitor', 'OfficeClockController@fetchVisitor');
 
 //ROOMS
 Route::get('/meetingroom1', function () {

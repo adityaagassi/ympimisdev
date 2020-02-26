@@ -42,6 +42,30 @@ class WeldingProcessController extends Controller
 		$this->fy = db::table('weekly_calendars')->select('fiscal_year')->distinct()->get();
 	}
 
+	public function indexWeldingJig(){
+		return view('processes.welding.index_jig')->with('page', 'Welding Jig Handling');		
+	}
+
+	public function indexWeldingKensaJig(){
+		$title = 'Welding Kensa Jig';
+		$title_jp = '??';
+
+		return view('processes.welding.display.kensa_jig', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Welding Kensa Jig');
+	}
+
+	public function indexWeldingRepairJig(){
+		$title = 'Welding Repair Jig';
+		$title_jp = '??';
+
+		return view('processes.welding.display.repair_jig', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Welding Repair Jig');
+	}
+
 	public function indexEffHandling(){
 		$title = 'Efficiency Handling';
 		$title_jp = '??';
@@ -1335,34 +1359,43 @@ class WeldingProcessController extends Controller
 			$tanggal = date('Y-m-d',strtotime($request->get('tanggal')));
 		}
 
-		$data = db::select("select ws.ws_name, COALESCE(bff.jml,0) as bff, COALESCE(wld.jml,0) as wld from
-			(select distinct ws.ws_name from soldering_db.m_hsa hsa
-			left join soldering_db.m_ws ws on ws.ws_id = hsa.ws_id
-			order by ws.ws_id asc) ws
-			left join
-			(select ws.ws_name, count(l.quantity) as jml from middle_request_logs l
-			left join
-			(select hsa.hsa_kito_code as material_number, ws.ws_name from soldering_db.m_hsa hsa
-			left join soldering_db.m_ws ws on ws.ws_id = hsa.ws_id) ws
-			on ws.material_number = l.material_number
+		$data = db::select("select ws.ws_name, material.material_number, material.model, material.`key`, COALESCE(bff.jml,0) as bff, COALESCE(wld.jml,0) as wld from
+			(select l.material_number, m.hpl, m.model, m.`key` from 
+			(select distinct l.material_number from middle_request_logs l
 			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
-			group by ws.ws_name) bff
-			on ws.ws_name = bff.ws_name
+			union
+			select distinct w.material_number from welding_logs w
+			where w.location = 'hsa-visual-sx'
+			and DATE_FORMAT(w.created_at,'%Y-%m-%d') = '".$tanggal."') l
+			left join materials m on l.material_number = m.material_number) as material
 			left join
-			(select ws.ws_name, count(l.quantity) as jml from welding_logs l
+			(select l.material_number, count(l.material_number) as jml, 'bff' as remark from middle_request_logs l
+			where DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
+			group by l.material_number) bff
+			on material.material_number = bff.material_number
 			left join
-			(select hsa.hsa_kito_code as material_number, ws.ws_name from soldering_db.m_hsa hsa
+			(select w.material_number, count(w.material_number) as jml, 'wld' as remark from welding_logs w
+			where w.location = 'hsa-visual-sx'
+			and DATE_FORMAT(w.created_at,'%Y-%m-%d') = '".$tanggal."'
+			group by w.material_number) wld
+			on material.material_number = wld.material_number
+			left join
+			(select ws.ws_id, hsa.hsa_kito_code as material_number, ws.ws_name from soldering_db.m_hsa hsa
 			left join soldering_db.m_ws ws on ws.ws_id = hsa.ws_id) ws
-			on ws.material_number = l.material_number
-			where l.location = 'hsa-visual-sx'
-			and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
-			group by ws.ws_name) wld
-			on ws.ws_name = wld.ws_name");
+			on material.material_number = ws.material_number
+			order by ws.ws_id, material.`key`, material.model asc");
+
+		$ws = db::connection('welding')->select("select * from m_ws where ws_name in ('WS 1', 'WS 2', 'WS 3', 'WS 4', 'WS 5', 'WS 13', 'WS 14', 'WS 15', 'WS 16', 'WS 1T', 'WS 2T', 'Burner')");
+
+		// $ws = db::connection('welding')->select("select DISTINCT m_hsa.ws_id, m_ws.ws_name  from m_hsa
+		// 	left join m_ws on m_hsa.ws_id = m_ws.ws_id
+		// 	order by m_ws.ws_id asc");
 
 		$response = array(
 			'status' => true,
 			'data' => $data,
-			'tanggal' => $tanggal
+			'tanggal' => $tanggal,
+			'ws' => $ws
 		);
 		return Response::json($response);
 	}
