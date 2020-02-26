@@ -290,7 +290,7 @@
     font-size: 0.75em;
     width: 25px;
     letter-spacing: 1.1px;
-}
+  }
 
 
 </style>
@@ -375,19 +375,19 @@
     <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
     <script src="{{ url("js/highcharts.js")}}"></script>
 <!--     <script src="{{ url("js/exporting.js")}}"></script>
-    <script src="{{ url("js/export-data.js")}}"></script> -->
+  <script src="{{ url("js/export-data.js")}}"></script> -->
 
 
-    <script>
+  <script>
 
-      var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
-      var arr_user = [];
-      var stat = 0;
+    var arr_user = [];
+    var stat = 0;
 
-      jQuery(document).ready(function() {
-        call_data_user();
-        call_data();
+    jQuery(document).ready(function() {
+      call_data_user();
+      call_data();
         // send();
         setInterval(call_data, 2000);
         // setInterval(send, 2000);      
@@ -395,66 +395,69 @@
         // setInterval(drawChart, 10000);
       })
 
-      $('.datepicker').datepicker({
-        <?php $tgl_max = date('d-m-Y') ?>
-        autoclose : true,
-        format : "dd-mm-yyyy",
-        todayHighlight: true,
-        endDate: '<?php echo $tgl_max ?>'
-      });
+    $('.datepicker').datepicker({
+      <?php $tgl_max = date('d-m-Y') ?>
+      autoclose : true,
+      format : "dd-mm-yyyy",
+      todayHighlight: true,
+      endDate: '<?php echo $tgl_max ?>'
+    });
 
-      function addZero(i) {
-        if (i < 10) {
-          i = "0" + i;
+    function addZero(i) {
+      if (i < 10) {
+        i = "0" + i;
+      }
+      return i;
+    }
+
+    function getActualFullDate() {
+      var d = new Date();
+      var day = addZero(d.getDate());
+      var month = addZero(d.getMonth()+1);
+      var year = addZero(d.getFullYear());
+      var h = addZero(d.getHours());
+      var m = addZero(d.getMinutes());
+      var s = addZero(d.getSeconds());
+      return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+    }
+
+    function call_data_user() {
+      $.get('{{ url("fetch/reedplate/user") }}', function(result, status, xhr) {
+        if (result.status) {
+          arr_user = result.data;
+          stat = 1;
         }
-        return i;
-      }
+      })
+    }
 
-      function getActualFullDate() {
-        var d = new Date();
-        var day = addZero(d.getDate());
-        var month = addZero(d.getMonth()+1);
-        var year = addZero(d.getFullYear());
-        var h = addZero(d.getHours());
-        var m = addZero(d.getMinutes());
-        var s = addZero(d.getSeconds());
-        return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
-      }
-
-      function call_data_user() {
-        $.get('{{ url("fetch/reedplate/user") }}', function(result, status, xhr) {
-          if (result.status) {
-            arr_user = result.data;
-            stat = 1;
-          }
-        })
-      }
-
-      function call_data() {
-        if (stat == 1) {
-          $.ajax({
-            url: 'http://172.17.128.87:82/reader/data',
-            type: 'GET',
-            data: {
+    function call_data() {
+      if (stat == 1) {
+        $.ajax({
+          url: 'http://172.17.128.87:82/reader/data',
+          type: 'GET',
+          data: {
               // _token: CSRF_TOKEN
             },
             
             success: function(data) {
-              $.ajax({
-                url: '{{ url("index/reedplate/reader") }}',
-                type: 'POST',
-                data: {
-                  _token: CSRF_TOKEN,
-                  data:data
-                },
-                success: function(result) {
-                  if(result.status){
-                  }
-                  else{
+
+              if ("{{ $login }}" == "Display") {
+                $.ajax({
+                  url: '{{ url("index/reedplate/reader") }}',
+                  type: 'POST',
+                  data: {
+                    _token: CSRF_TOKEN,
+                    data:data
+                  },
+                  success: function(result) {
+                    if(result.status){
+                    }
+                    else{
                     // console.log(result.message);
                   }                
                 }
               });
+              }
 
               // $.post('{{ url("index/reedplate/reader") }}', data, function(result, status, xhr){
               //   if(result.status){
@@ -471,33 +474,33 @@
 
               for (i = 0; i < data.length; i++) {
                 if (data[i].distance > 0) {
-                        $.each(arr_user, function(index2, value2) {
-                          if (data[i].major == value2.major && data[i].minor == value2.minor) {
-                            name = value2.kode;
-                          }
-                        })
+                  $.each(arr_user, function(index2, value2) {
+                    if (data[i].major == value2.major && data[i].minor == value2.minor) {
+                      name = value2.kode;
+                    }
+                  })
 
-                        if (data[i].major == '111' && data[i].minor == '1900') {
-                          color = 'salmon';
-                        } else if (data[i].major == '111' && data[i].minor == '1901') {
-                          color = 'green';
-                        } else if (data[i].major == '111' && data[i].minor == '1902') {
-                          color = 'red';
-                        } else if (data[i].major == '111' && data[i].minor == '1903') {
-                          color = 'aqua';
-                        } else if (data[i].major == '111' && data[i].minor == '1904') {
-                          color = 'maroon';
-                        } else if (data[i].major == '111' && data[i].minor == '1905') {
-                          color = 'fuchsia';
-                        } else if (data[i].major == '111' && data[i].minor == '1906') {
-                          color = 'olive';
-                        } else if (data[i].major == '111' && data[i].minor == '1907') {
-                          color = 'teal';
-                        } else if (data[i].major == '111' && data[i].minor == '1908') {
-                          color = 'purple';
-                        } else if (data[i].major == '111' && data[i].minor == '1909') {
-                          color = 'silver';
-                        }
+                  if (data[i].major == '111' && data[i].minor == '1900') {
+                    color = 'salmon';
+                  } else if (data[i].major == '111' && data[i].minor == '1901') {
+                    color = 'green';
+                  } else if (data[i].major == '111' && data[i].minor == '1902') {
+                    color = 'red';
+                  } else if (data[i].major == '111' && data[i].minor == '1903') {
+                    color = 'aqua';
+                  } else if (data[i].major == '111' && data[i].minor == '1904') {
+                    color = 'maroon';
+                  } else if (data[i].major == '111' && data[i].minor == '1905') {
+                    color = 'fuchsia';
+                  } else if (data[i].major == '111' && data[i].minor == '1906') {
+                    color = 'olive';
+                  } else if (data[i].major == '111' && data[i].minor == '1907') {
+                    color = 'teal';
+                  } else if (data[i].major == '111' && data[i].minor == '1908') {
+                    color = 'purple';
+                  } else if (data[i].major == '111' && data[i].minor == '1909') {
+                    color = 'silver';
+                  }
 
                         //Reader//------------
                         address = data[i].major + "_" + data[i].minor;
@@ -593,8 +596,8 @@
                             $("." + address).remove();
                           } 
                           else{
-                          $("." + address).remove();
-                          $("#benkuri_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("." + address).remove();
+                            $("#benkuri_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
                           }
                         }
 
@@ -613,7 +616,7 @@
                         //Mesin 1 Bennuki
 
                         else if(data[i].reader == '4c5681'){
-                          
+
                           if (data[i].distance > 5) {
                             $("." + address).remove();
                           } 
@@ -626,7 +629,7 @@
                         //Mesin 2 Bennuki
 
                         else if(data[i].reader == '4c65da'){
-                          
+
                           if (data[i].distance > 5) {
                             $("." + address).remove();
                           } 
@@ -639,7 +642,7 @@
                         //Mesin 3 Bennuki
 
                         else if(data[i].reader == '4c6825'){
-                          
+
                           if (data[i].distance > 5) {
                             $("." + address).remove();
                           } 
@@ -652,7 +655,7 @@
                         //Mesin 4 Bennuki
 
                         else if(data[i].reader == '4c675f'){
-                          
+
                           if (data[i].distance > 5) {
                             $("." + address).remove();
                           } 
@@ -705,8 +708,8 @@
                             $("." + address).remove();
                           } 
                           else{
-                          $("." + address).remove();
-                          $("#pressReedplate_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("." + address).remove();
+                            $("#pressReedplate_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
                           }
                         }
 

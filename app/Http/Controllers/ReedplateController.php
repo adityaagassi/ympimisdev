@@ -23,7 +23,8 @@ class ReedplateController extends Controller
         return view('beacons.reedplate.reedplateMap', array(
           'title' => 'Smart Tracking Operator Reedplate',
           'title_jp' => 'リードプレート作業者の位置把握スマートシステム',
-          'user' => $user
+          'user' => $user,
+          'login' => Auth::user()->username
       ))->with('page', 'reedplate');
     }
 
