@@ -218,10 +218,10 @@
                             <a href="{{ url("index/reedplate/map") }}">
                                 <i class="fa fa-caret-right"></i> Smart Tracking Operator ReedPlate <br>(リードプレート作業者のスマートトラッキング)
                             </a>
-                            <!-- <br>
-                            <a href="{{ url("index/index_map") }}">
-                                <i class="fa fa-caret-right"></i> Temperature Map ()
-                            </a>     -->                       
+                            <br>
+                            <a href="{{ url("index/reedplate/working_time") }}">
+                                <i class="fa fa-caret-right"></i> Working Time Reedplate (リードプレート作業時間)
+                            </a>                           
                         </td>
                     </tr>
 
@@ -294,6 +294,10 @@
                             <a href="{{ url("visitor_display") }}">
                                 <i class="fa fa-caret-right"></i> Visitor Monitoring (来客の管理)
                             </a>
+                            <!-- <br>
+                            <a href="{{ url("index/display/office_clock") }}">
+                                <i class="fa fa-caret-right"></i> Office Clock (??)
+                            </a> -->
                         </td>
                     </tr>
                 </tbody>
@@ -439,7 +443,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/press/monitoring") }}">
-                                <i class="fa fa-caret-right"></i> Press Machine Monitoring(プレス機管理)
+                                <i class="fa fa-caret-right"></i> Press Machine Monitoring (プレス機管理)
                             </a>
                             <br>
                             <a href="{{ url("/index/initial/stock_monitoring", "mpro") }}">
@@ -456,15 +460,15 @@
                             <span style="font-weight: bold;">BODY Process (イニシアル工程)</span>
                             <br>
                             <a href="{{ url("/index/initial", "bpro_cl") }}">
-                                <i class="fa fa-caret-right"></i> Clarinet(ロッティング)
+                                <i class="fa fa-caret-right"></i> Clarinet (ロッティング)
                             </a>
                             <br>
                             <a href="{{ url("/index/initial", "bpro_fl") }}">
-                                <i class="fa fa-caret-right"></i> Flute(フルート)
+                                <i class="fa fa-caret-right"></i> Flute (フルート)
                             </a>
                             <br>
                             <a href="{{ url("/index/initial", "bpro_sx") }}">
-                                <i class="fa fa-caret-right"></i> Saxophone(サックス)
+                                <i class="fa fa-caret-right"></i> Saxophone (サックス)
                             </a>
                         </td>
                     </tr>
@@ -478,6 +482,10 @@
                             <br>
                             <a href="{{ url("/index/process_stamp_sx") }}">
                                 <i class="fa fa-caret-right"></i> Saxophone (サックス溶接)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/welding_jig") }}">
+                                <i class="fa fa-caret-right"></i> Digital Jig Handling ()
                             </a>
                             <br>
                             <a href="{{ url("/index/display/sub_assy/welding_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
