@@ -290,7 +290,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								</tr>
 								@endforeach
 								@endif
-								<p style="font-size: 28px; font-weight: bold;">Server SUNFISH sedang bermasalah, mohon bersabar dan maaf atas ketidaknyamanannya.</p>
+								<!-- <p style="font-size: 28px; font-weight: bold;">Server SUNFISH sedang bermasalah, mohon bersabar dan maaf atas ketidaknyamanannya.</p> -->
 							</tbody>
 						</table>
 					</div>
