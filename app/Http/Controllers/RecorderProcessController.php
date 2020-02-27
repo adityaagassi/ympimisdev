@@ -1128,94 +1128,96 @@ class RecorderProcessController extends Controller
           $data = substr($filename,-9,5);
           $filenamefix = $filename;
           // File::delete($filename);
-        }
-        // $data2 = 1;
 
-        //MIDDLE
-        if($plc_counter->plc_counter != $data){
+          if($plc_counter->plc_counter != $data){
 
-          $file = File::get($filenamefix);
-          $filepecah = explode(' ', $file);
-          // var_dump($filepecah[3]);
-          $judgement = substr($filepecah[3], 7,2);
-          if(Auth::user()->role_code == "OP-Assy-RC"){
+            $file = File::get($filenamefix);
+            $filepecah = explode(' ', $file);
+            // var_dump($filepecah[3]);
+            $judgement = substr($filepecah[3], 7,2);
+            if(Auth::user()->role_code == "OP-Assy-RC"){
 
-            $id = Auth::id();
+              $id = Auth::id();
 
-            $plc_counter->plc_counter = $data;
+              $plc_counter->plc_counter = $data;
 
-            // if ($request->get('value_check') < 3 || $request->get('value_check') > 17) {
-              // $judgement = 'NG';
-              $data_push_pull = array(
-                  'value' => $request->get('value_check'),
-                  'judgement' => $judgement,
-                  'checked_at' => $request->get('check_date'),
+              // if ($request->get('value_check') < 3 || $request->get('value_check') > 17) {
+                // $judgement = 'NG';
+                $data_push_pull = array(
+                    'value' => $request->get('value_check'),
+                    'judgement' => $judgement,
+                    'checked_at' => $request->get('check_date'),
+                    'model' => $request->get('model'),
+                    'remark' => 'Middle Camera Check RC Assy',
+                    'pic_check' => $request->get('pic_check'), );
+                // var_dump($data_push_pull);
+                // foreach ($data_push_pull as $key) {
+                  // var_dump($data_push_pull['judgement']);
+                // }
+
+                // foreach($this->mail as $mail_to){
+                //     Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
+                // }
+              // }else{
+                // $judgement = 'OK';
+              // }
+
+              $camera = RcCameraKangoLog::create(
+                [
                   'model' => $request->get('model'),
-                  'remark' => 'Middle Camera Check RC Assy',
-                  'pic_check' => $request->get('pic_check'), );
-              // var_dump($data_push_pull);
-              // foreach ($data_push_pull as $key) {
-                // var_dump($data_push_pull['judgement']);
-              // }
+                  'check_date' => $request->get('check_date'),
+                  // 'value_check' => $request->get('value_check'),
+                  'value_check' => $request->get('value_check'),
+                  'judgement' => $judgement,
+                  'remark' => 'Middle',
+                  'file' => 'RC_'.$data.'.bmp',
+                  'pic_check' => $request->get('pic_check'),
+                  'created_by' => $id,
+                ]
+              );
 
-              // foreach($this->mail as $mail_to){
-              //     Mail::to($mail_to)->send(new SendEmail($data_push_pull, 'push_pull'));
-              // }
-            // }else{
-              // $judgement = 'OK';
-            // }
+              try{
+                  File::delete($filenamefix);
+                  // File::delete(glob(public_path('RCImages/Cam1/*.bmp')));
+                  $plc_counter->save();
+                  $camera->save();
+              }
+              catch(\Exception $e){
+                $response = array(
+                  'status' => false,
+                  'message' => $e->getMessage(),
+                  'jumlah_perolehan' => $jumlah_perolehan
+                );
+                return Response::json($response);
+              }
 
-            $camera = RcCameraKangoLog::create(
-              [
-                'model' => $request->get('model'),
-                'check_date' => $request->get('check_date'),
-                // 'value_check' => $request->get('value_check'),
-                'value_check' => $request->get('value_check'),
-                'judgement' => $judgement,
-                'remark' => 'Middle',
-                'file' => 'RC_'.$data.'.bmp',
-                'pic_check' => $request->get('pic_check'),
-                'created_by' => $id,
-              ]
-            );
-
-            try{
-                File::delete(glob(public_path('RCImages/Cam1/*.txt')));
-                // File::delete(glob(public_path('RCImages/Cam1/*.bmp')));
-                $plc_counter->save();
-                $camera->save();
-            }
-            catch(\Exception $e){
               $response = array(
-                'status' => false,
-                'message' => $e->getMessage(),
+                'status' => true,
+                'statusCode' => 'camera',
+                'message' => 'Push Pull success',
+                'data' => $plc_counter->plc_counter,
+                'judgement' => $judgement,
                 'jumlah_perolehan' => $jumlah_perolehan
               );
               return Response::json($response);
             }
-
+          }
+          else{
             $response = array(
               'status' => true,
-              'statusCode' => 'camera',
-              'message' => 'Push Pull success',
-              'data' => $plc_counter->plc_counter,
-              'judgement' => $judgement,
+              'statusCode' => 'noData',
+              'data' => $data,
+              'plc' => $plc_counter->plc_counter,
+              'filename' => $filenamefix,
               'jumlah_perolehan' => $jumlah_perolehan
             );
             return Response::json($response);
           }
         }
-        else{
-          $response = array(
-            'status' => true,
-            'statusCode' => 'noData',
-            'data' => $data,
-            'plc' => $plc_counter->plc_counter,
-            'filename' => $filenamefix,
-            'jumlah_perolehan' => $jumlah_perolehan
-          );
-          return Response::json($response);
-        }
+        // $data2 = 1;
+
+        //MIDDLE
+        
       }
       catch (\Exception $e){
         $response = array(
