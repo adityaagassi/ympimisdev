@@ -32,7 +32,7 @@
 			<a href="{{ url("index/welding/op_ng?tanggal=&location=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator NG Rate</a>
 			<a href="{{ url("index/welding/welding_op_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
 			<a href="{{ url("index/welding/op_analysis") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Welding OP Analysis</a>
-			<a href="{{ url("index/welding/group_achievement") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">WS Achievement</a>
+			<a href="{{ url("index/welding/group_achievement?tanggal=&ws=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">WS Achievement</a>
 			<a href="{{ url("index/welding/eff_handling?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Efficiency Handling</a>
 
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Display Kosuha <i class="fa fa-angle-double-down"></i></span>

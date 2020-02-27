@@ -50,7 +50,7 @@ class WeldingProcessController extends Controller
 		$title = 'Welding Kensa Jig';
 		$title_jp = '??';
 
-		return view('processes.welding.display.kensa_jig', array(
+		return view('processes.welding.kensa_jig', array(
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'Welding Kensa Jig');
@@ -105,9 +105,15 @@ class WeldingProcessController extends Controller
 		$title = 'Welding Group Achievement';
 		$title_jp= 'HSAサックス寸法検査';
 
+		$workstations = db::connection('welding')->select("select distinct ws.ws_name from m_hsa hsa
+			left join m_ws ws on ws.ws_id = hsa.ws_id
+			order by ws.ws_id asc");
+
+
 		return view('processes.welding.display.welding_group_achievement', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
+			'workstations' => $workstations,
 		))->with('page', 'Welding Group Achievement')->with('head', 'Welding Process');
 	}
 
@@ -258,34 +264,39 @@ class WeldingProcessController extends Controller
 		}
 
 		if($request->get('location') == 'phs-sx'){
-			$time = db::select("select material.material_number, material.hpl, result.phs_name as `key`, material.model, result.actual, result.std, (result.actual-result.std) as diff from 
-				(select * from materials
-				where mrpc = 's11'
-				and surface like '%PHS%') material
-				left join
-				(SELECT phs.phs_code, phs.phs_name, sum(timestampdiff(second,p.perolehan_start_date,p.perolehan_finish_date)) as actual, sum(p.perolehan_jumlah * std.time) as std  FROM soldering_db.t_perolehan p
+			$time = db::select("select material.material_number, material.hpl, result.phs_name as `key`, material.model, result.operator_nik, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, result.actual, result.std, (result.actual-result.std) as diff from 
+				(SELECT phs.phs_code, phs.phs_name, op.operator_nik, ceil(avg(timestampdiff(second,p.perolehan_start_date,p.perolehan_finish_date))) as actual, avg(p.perolehan_jumlah * std.time) as std  FROM soldering_db.t_perolehan p
 				left join soldering_db.m_phs phs on phs.phs_id = p.part_id
 				left join standard_times std on std.material_number = phs.phs_code
+				left join soldering_db.m_operator op on op.operator_id = p.operator_id
 				where p.flow_id = '1'
 				and p.part_type = '1'
 				and date(perolehan_finish_date) = '".$date."'
-				group by phs.phs_code, phs.phs_name) result
+				and p.operator_id <> 0
+				group by phs.phs_code, phs.phs_name, op.operator_nik) result
+				left join
+				(select * from materials
+				where mrpc = 's11' and surface like '%PHS%') material
 				on material.material_number = result.phs_code
+				left join employee_syncs e on e.employee_id = result.operator_nik
 				where result.actual > 0
 				order by diff desc, material.hpl, result.phs_name, material.model asc");
 		}else if($request->get('location') == 'hsa-sx'){
-			$time = db::select("select material.material_number, material.hpl, material.`key`, material.model, result.actual, result.std, (result.actual-result.std) as diff from 
-				(select * from materials m
-				where m.mrpc = 's21' and m.hpl like '%KEY%') material
-				left join
-				(SELECT hsa.hsa_kito_code, sum(timestampdiff(second,p.perolehan_start_date,p.perolehan_finish_date)) as actual, sum(p.perolehan_jumlah * std.time) as std  FROM soldering_db.t_perolehan p
+			$time = db::select("select material.material_number, material.hpl, material.`key`, material.model, result.operator_nik, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, result.actual, result.std, (result.actual-result.std) as diff from
+				(SELECT hsa.hsa_kito_code, op.operator_nik, ceil(avg(timestampdiff(second,p.perolehan_start_date,p.perolehan_finish_date))) as actual, avg(p.perolehan_jumlah * std.time) as std  FROM soldering_db.t_perolehan p
 				left join soldering_db.m_hsa hsa on hsa.hsa_id = p.part_id
 				left join standard_times std on std.material_number = hsa.hsa_kito_code
+				left join soldering_db.m_operator op on op.operator_id = p.operator_id
 				where p.flow_id = '1'
 				and p.part_type = '2'
 				and date(perolehan_finish_date) = '".$date."'
-				group by hsa.hsa_kito_code) result
+				and p.operator_id <> 0
+				group by hsa.hsa_kito_code, op.operator_nik) result
+				left join
+				(select * from materials m
+				where m.mrpc = 's21' and m.hpl like '%KEY%') material
 				on material.material_number = result.hsa_kito_code
+				left join employee_syncs e on e.employee_id = result.operator_nik
 				where result.actual > 0
 				order by diff desc, material.hpl, material.`key`, material.model asc");
 		}else{
@@ -562,7 +573,8 @@ class WeldingProcessController extends Controller
 			}
 		}
 
-		$actual = db::connection('welding')->select("SELECT
+		$actual = db::connection('welding')->select("
+			SELECT
 			DATE( d.tanggaljam ) AS tgl,
 			SUM(IF(TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date) < 60, TIMESTAMPDIFF(MINUTE, d.perolehan_start_date, d.perolehan_finish_date), 0)) AS time,
 			COUNT( DISTINCT d.operator_id ) AS op,
@@ -583,13 +595,23 @@ class WeldingProcessController extends Controller
 			) AS loss_time,
 			ROUND((
 			SELECT
-			SUM( perolehan_jumlah * hsa_timing )/ 60 
+			(SUM( perolehan_jumlah * time.time )/ 60)+
+			(SELECT SUM((perolehan_jumlah * time.time))/ 60 
 			FROM
 			t_perolehan
-			LEFT JOIN m_hsa ON m_hsa.hsa_id = t_perolehan.part_id 
+			LEFT JOIN m_phs ON m_phs.phs_id = t_perolehan.part_id
+			JOIN ympimis.standard_times time ON time.material_number = m_phs.phs_code 
 			WHERE
-			DATE( tanggaljam ) = tgl 
-			AND part_type = '2' 
+			DATE( tanggaljam ) = tgl
+			AND time.location = 'soldering' 
+			) 
+			FROM
+			t_perolehan
+			LEFT JOIN m_hsa ON m_hsa.hsa_id = t_perolehan.part_id
+			JOIN ympimis.standard_times time ON time.material_number = m_hsa.hsa_kito_code 
+			WHERE
+			DATE( tanggaljam ) = tgl
+			AND time.location = 'soldering'
 			)/ COUNT( DISTINCT d.operator_id ),
 			2 
 			) AS std_time,
@@ -603,25 +625,45 @@ class WeldingProcessController extends Controller
 			AND location = 'wld' 
 			) - (
 			SELECT
-			SUM( perolehan_jumlah * hsa_timing )/ 60 
+			(SUM( perolehan_jumlah * time.time )/ 60)+
+			(SELECT SUM((perolehan_jumlah * time.time))/ 60 
 			FROM
 			t_perolehan
-			LEFT JOIN m_hsa ON m_hsa.hsa_id = t_perolehan.part_id 
+			LEFT JOIN m_phs ON m_phs.phs_id = t_perolehan.part_id
+			JOIN ympimis.standard_times time ON time.material_number = m_phs.phs_code 
 			WHERE
-			DATE( tanggaljam ) = tgl 
-			AND part_type = '2' 
+			DATE( tanggaljam ) = tgl
+			AND time.location = 'soldering' 
+			) 
+			FROM
+			t_perolehan
+			LEFT JOIN m_hsa ON m_hsa.hsa_id = t_perolehan.part_id
+			JOIN ympimis.standard_times time ON time.material_number = m_hsa.hsa_kito_code 
+			WHERE
+			DATE( tanggaljam ) = tgl
+			AND time.location = 'soldering'
 			)/ COUNT( DISTINCT d.operator_id ),
 			2 
 			) AS loss_time_std,
 			ROUND((
 			SELECT
-			SUM( perolehan_jumlah * hsa_timing )/ 60 
+			(SUM( perolehan_jumlah * time.time )/ 60)+
+			(SELECT SUM((perolehan_jumlah * time.time))/ 60 
 			FROM
 			t_perolehan
-			LEFT JOIN m_hsa ON m_hsa.hsa_id = t_perolehan.part_id 
+			LEFT JOIN m_phs ON m_phs.phs_id = t_perolehan.part_id
+			JOIN ympimis.standard_times time ON time.material_number = m_phs.phs_code 
 			WHERE
-			DATE( tanggaljam ) = tgl 
-			AND part_type = '2' 
+			DATE( tanggaljam ) = tgl
+			AND time.location = 'soldering' 
+			) 
+			FROM
+			t_perolehan
+			LEFT JOIN m_hsa ON m_hsa.hsa_id = t_perolehan.part_id
+			JOIN ympimis.standard_times time ON time.material_number = m_hsa.hsa_kito_code 
+			WHERE
+			DATE( tanggaljam ) = tgl
+			AND time.location = 'soldering'
 			),
 			2 
 			) AS all_time_std 
@@ -632,11 +674,11 @@ class WeldingProcessController extends Controller
 			JOIN m_mesin ON m_device.mesin_id = m_mesin.mesin_id
 			WHERE
 			DATE( d.tanggaljam ) BETWEEN '".$from."' AND '".$now."' 
-			AND d.part_type = '2' 
 			AND d.flow_id = '1'
 			AND d.perolehan_start_date != '2000-01-01 00:00:00'
 			AND weekly_calendars.remark <> 'H' 
 			AND m_mesin.department_id = '2'
+			AND d.operator_id != 0
 			GROUP BY tgl");
 
 		// $op = db::connection('welding')->select("select DATE(d.tanggaljam_shift) as tgl, SUM(durasi) as act, count(distinct id_operator) as op from t_data_downtime d where DATE_FORMAT(d.tanggaljam_shift,'%Y-%m-%d') between '".$from."' and '".$now."' and  `status` = '1' GROUP BY tgl");
@@ -1795,6 +1837,13 @@ class WeldingProcessController extends Controller
 					'last_check' => $request->get('employee_id'),
 					'updated_at' => Carbon::now()]
 				);
+
+				if($request->get('kensa_id') != null){
+					$delete = db::connection('welding')
+					->table('t_kensa')
+					->where('kensa_id', $request->get('kensa_id'))
+					->delete();
+				}
 
 				$response = array(
 					'status' => true,

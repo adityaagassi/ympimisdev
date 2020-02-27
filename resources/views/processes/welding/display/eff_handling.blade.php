@@ -321,28 +321,51 @@
 
 		$.get('{{ url("fetch/welding/eff_handling") }}', data, function(result, status, xhr) {
 			if(result.status){
+
+				var first = ['C','E'];
+				var second = ['D','F','G','H','J'];
+
+
 				var key = [];
 				var act = [];
 				var std = [];
+				var eff = [];
+				var plotBands = [];
+				var loop = 0;
 
 				for(var i = 0; i < result.time.length; i++){
-					if(result.time[i].hpl == 'ASKEY' && result.time[i].model != 'A82'){
-						key.push(result.time[i].model + " - " + result.time[i].key);
+					if(result.time[i].hpl == 'ASKEY' && first.includes(result.time[i].key.split("-")[0])){
+						loop += 1;
+
+						var name = '';
+						var name_temp = result.time[i].name.split(" ");
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
+							name += name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							name += name_temp[0]+'. '+name_temp[1].charAt(0);
+						}
+
+						key.push(result.time[i].model + " - " + result.time[i].key + "<br>" + name);
 						act.push(Math.ceil(parseInt(result.time[i].actual)/60));
 						std.push(Math.ceil(parseInt(result.time[i].std)/60));
+						eff.push(Math.ceil(parseInt(result.time[i].std)/60) / Math.ceil(parseInt(result.time[i].actual)/60) * 100);
+
+						if(eff[loop-1] < 85){
+							plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});		
+						}
 					}
 				}
-
+				
 				var chart = Highcharts.chart('container1', {
 					title: {
-						text: result.location + ' Actual Working Time VS Standart Time',
+						text: result.location + ' AVG Actual Working Time VS AVG Standart Time',
 						style: {
-							fontSize: '25px',
+							fontSize: '23px',
 							fontWeight: 'bold'
 						}
 					},
 					subtitle: {
-						text: 'ASKEY on '+result.date,
+						text: 'ASKEY (C,E) on '+result.date,
 						style: {
 							fontSize: '18px',
 							fontWeight: 'bold'
@@ -364,9 +387,10 @@
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
 							style: {
-								fontSize: '1vw'
+								fontSize: '12px'
 							}
 						},
+						plotBands: plotBands
 					},
 					tooltip: {
 						headerFormat: '<span>{point.category}</span><br/>',
@@ -400,36 +424,170 @@
 						}
 					},
 					series: [{
-						name:'Actual Time',
-						type: 'column',
-						color: 'rgb(169,255,151)',
-						data: act,
-					},{
 						name:'Standart Time',
 						type: 'column',
-						color: 'rgb(255,116,116)',
+						color: '#3F51B5',
 						data: std,
+					},{
+						name:'Actual Time',
+						type: 'column',
+						color: '#FFC107',
+						data: act,
 					}]
 				});
+
+
+
 
 
 				var key = [];
 				var act = [];
 				var std = [];
+				var eff = [];
+				var plotBands = [];
+				var loop = 0;
+
+				for(var i = 0; i < result.time.length; i++){
+					if(result.time[i].hpl == 'ASKEY' && second.includes(result.time[i].key.split("-")[0])){
+						loop += 1;
+
+						var name = '';
+						var name_temp = result.time[i].name.split(" ");
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
+							name += name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							name += name_temp[0]+'. '+name_temp[1].charAt(0);
+						}
+
+						key.push(result.time[i].model + " - " + result.time[i].key + "<br>" + name);
+						act.push(Math.ceil(parseInt(result.time[i].actual)/60));
+						std.push(Math.ceil(parseInt(result.time[i].std)/60));
+						eff.push(Math.ceil(parseInt(result.time[i].std)/60) / Math.ceil(parseInt(result.time[i].actual)/60) * 100);
+
+						if(eff[loop-1] < 85){
+							plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});		
+						}
+					}
+				}
+				
+				var chart = Highcharts.chart('container2', {
+					title: {
+						text: result.location + ' AVG Actual Working Time VS AVG Standart Time',
+						style: {
+							fontSize: '23px',
+							fontWeight: 'bold'
+						}
+					},
+					subtitle: {
+						text: 'ASKEY (D,F,G,H,J) on '+result.date,
+						style: {
+							fontSize: '18px',
+							fontWeight: 'bold'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'Minute(s)'
+						},
+						style: {
+							fontSize: '26px',
+							fontWeight: 'bold'
+						}
+					},
+					xAxis: {
+						categories: key,
+						type: 'category',
+						gridLineWidth: 1,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
+							style: {
+								fontSize: '12px'
+							}
+						},
+						plotBands: plotBands
+					},
+					tooltip: {
+						headerFormat: '<span>{point.category}</span><br/>',
+						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+					},
+					credits: {
+						enabled:false
+					},
+					legend : {
+						align: 'center',
+						verticalAlign: 'bottom',
+						x: 0,
+						y: 0,
+
+						backgroundColor: (
+							Highcharts.theme && Highcharts.theme.background2) || 'white',
+						shadow: false
+					},
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y}',
+								style:{
+									textOutline: false,
+									fontSize: '1vw'
+								}
+							},
+							animation: false,
+							cursor: 'pointer'
+						}
+					},
+					series: [{
+						name:'Standart Time',
+						type: 'column',
+						color: '#3F51B5',
+						data: std,
+					},{
+						name:'Actual Time',
+						type: 'column',
+						color: '#FFC107',
+						data: act,
+					}]
+				});
+
+
+
+
+				var key = [];
+				var act = [];
+				var std = [];
+				var eff = [];
+				var plotBands = [];
+				var loop = 0;
 
 				for(var i = 0; i < result.time.length; i++){
 					if(result.time[i].hpl == 'TSKEY' && result.time[i].model != 'A82'){
-						key.push(result.time[i].model + " - " + result.time[i].key);
+						loop += 1;
+
+						var name = '';
+						var name_temp = result.time[i].name.split(" ");
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
+							name += name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							name += name_temp[0]+'. '+name_temp[1].charAt(0);
+						}
+
+						key.push(result.time[i].model + " - " + result.time[i].key + "<br>" + name);
 						act.push(Math.ceil(parseInt(result.time[i].actual)/60));
 						std.push(Math.ceil(parseInt(result.time[i].std)/60));
+						eff.push(Math.ceil(parseInt(result.time[i].std)/60) / Math.ceil(parseInt(result.time[i].actual)/60) * 100);
+
+						if(eff[loop-1] < 85){
+							plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});		
+						}
 					}
 				}
 
-				var chart = Highcharts.chart('container2', {
+				var chart = Highcharts.chart('container3', {
 					title: {
-						text: result.location + ' Actual Working Time VS Standart Time',
+						text: result.location + ' AVG Actual Working Time VS AVG Standart Time',
 						style: {
-							fontSize: '25px',
+							fontSize: '23px',
 							fontWeight: 'bold'
 						}
 					},
@@ -456,9 +614,10 @@
 						gridLineColor: 'RGB(204,255,255)',
 						labels: {
 							style: {
-								fontSize: '1vw'
+								fontSize: '12px'
 							}
 						},
+						plotBands: plotBands
 					},
 					tooltip: {
 						headerFormat: '<span>{point.category}</span><br/>',
@@ -492,112 +651,17 @@
 						}
 					},
 					series: [{
-						name:'Actual Time',
-						type: 'column',
-						color: 'rgb(169,255,151)',
-						data: act,
-					},{
 						name:'Standart Time',
 						type: 'column',
-						color: 'rgb(255,116,116)',
+						color: '#3F51B5',
 						data: std,
-					}]
-				});
-
-
-
-				var key = [];
-				var act = [];
-				var std = [];
-
-				for(var i = 0; i < result.time.length; i++){
-					if(result.time[i].model == 'A82'){
-						key.push(result.time[i].model + " - " + result.time[i].key);
-						act.push(Math.ceil(parseInt(result.time[i].actual)/60));
-						std.push(Math.ceil(parseInt(result.time[i].std)/60));
-					}
-				}
-
-				var chart = Highcharts.chart('container3', {
-					title: {
-						text: result.location + ' Actual Working Time VS Standart Time',
-						style: {
-							fontSize: '25px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'A82 on '+result.date,
-						style: {
-							fontSize: '18px',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							text: 'Minute(s)'
-						},
-						style: {
-							fontSize: '26px',
-							fontWeight: 'bold'
-						}
-					},
-					xAxis: {
-						categories: key,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							style: {
-								fontSize: '1vw'
-							}
-						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					legend : {
-						align: 'center',
-						verticalAlign: 'bottom',
-						x: 0,
-						y: 0,
-
-						backgroundColor: (
-							Highcharts.theme && Highcharts.theme.background2) || 'white',
-						shadow: false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y}',
-								style:{
-									textOutline: false,
-									fontSize: '1vw'
-								}
-							},
-							animation: false,
-							cursor: 'pointer'
-						}
-					},
-					series: [{
+					},{
 						name:'Actual Time',
 						type: 'column',
-						color: 'rgb(169,255,151)',
+						color: '#FFC107',
 						data: act,
-					},{
-						name:'Standart Time',
-						type: 'column',
-						color: 'rgb(255,116,116)',
-						data: std,
 					}]
 				});
-
-
 
 
 				$(document).scrollTop(position);

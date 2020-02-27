@@ -62,6 +62,7 @@
 	<input type="hidden" id="loc" value="{{ $loc }}">
 	<input type="hidden" id="started_at">
 	<input type="hidden" id="welding_time">
+	<input type="hidden" id="kensa_id">
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
 		<div class="col-xs-7" style="padding-right: 0; padding-left: 0">
 			<div class="col-xs-12" style="padding-bottom: 5px;">
@@ -305,7 +306,8 @@
 					if(result.opwelding.operator_nik){
 						if(result.opwelding.operator_nik.includes('PI')){
 							$("#opwelding").text(result.opwelding.operator_nik+" "+result.opwelding.operator_name);	
-							$('#welding_time').val(result.opwelding.order_finish_date);		
+							$('#welding_time').val(result.opwelding.order_finish_date);
+							$('#kensa_id').val(result.opwelding.kensa_id);
 						}else{
 							$("#opwelding").text("Operator Not Found");
 							$('#welding_time').val("");
@@ -468,6 +470,7 @@
 			operator_id: $('#opwelding').text().split(' ')[0],
 			started_at: $('#started_at').val(),
 			welding_time: $('#welding_time').val(),
+			kensa_id: $('#kensa_id').val(),
 			cek: $('#material_quantity').val(),
 			ng: ng,
 			count_text: count_text,
@@ -488,6 +491,7 @@
 				$('#check_point').html("");
 				$('#model').text("");
 				$('#key').text("");
+				$('#kensa_id').val("");
 				$('#material_tag').val("");
 				$('#material_number').val("");
 				$('#material_quantity').val("");

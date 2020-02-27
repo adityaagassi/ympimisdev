@@ -64,22 +64,41 @@
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px;">
 			<div class="row" style="margin:0px;">
-				<div class="col-xs-2">
-					<div class="input-group date">
-						<div class="input-group-addon bg-green" style="border: none;">
-							<i class="fa fa-calendar"></i>
+				<form method="GET" action="{{ action('WeldingProcessController@indexWeldingAchievement') }}">
+					<div class="col-xs-2">
+						<div class="input-group date">
+							<div class="input-group-addon bg-green" style="border: none;">
+								<i class="fa fa-calendar"></i>
+							</div>
+							<input type="text" class="form-control datepicker" name="tanggal" id="tanggal" placeholder="Select Date">
 						</div>
-						<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date">
 					</div>
-				</div>
-				<div class="col-xs-2">
-					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
-				</div>
+					<div class="col-xs-3">
+						<div class="form-group" style="color: black;">
+							<select class="form-control select3" multiple="multiple" id='wsSelect' onchange="changeWs()" data-placeholder="Select Work Station" style="width: 100%;">
+								<option value=""></option>
+								@foreach($workstations as $workstation) 
+								<option value="{{ $workstation->ws_name }}">{{ $workstation->ws_name }}</option>
+								@endforeach
+							</select>
+							<input type="text" name="ws" id="ws" hidden>
+						</div>
+					</div>
+					<div class="col-xs-2">
+						<button class="btn btn-success" type="submit">Update Chart</button>
+					</div>
+				</form>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>
 
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<h2 style="text-transform: uppercase; font-weight: bold; text-align: center;">Daily qty of incoming instruction Vs Actual result qty</h2>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12" style="margin-top: 5px; margin-left: 0px;">
+					<div id="container" style="width: 100%;"></div>
+				</div>
 			</div>
 
 			<div class="row">
@@ -128,12 +147,7 @@
 				<div class="col-xs-12" style="margin-top: 5px; margin-left: 0px;">
 					<div id="17" style="width: 100%;"></div>
 				</div>
-				
 			</div>
-			
-
-
-
 
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container2" style="width: 100%;"></div>
@@ -218,9 +232,17 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 10000);
+		setInterval(fillChart, 60000);
 
 	});
+
+	function changeWs() {
+		$("#ws").val($("#wsSelect").val());
+	}
+
+	$(function () {
+		$('.select3').select2();
+	})
 
 	$('.datepicker').datepicker({
 		<?php $tgl_max = date('d-m-Y') ?>
@@ -447,33 +469,38 @@
 	}
 
 	function fillChart() {
-		var tanggal = $('#tanggal').val();
+		var tanggal = "{{$_GET['tanggal']}}";
+		var ws = "{{$_GET['ws']}}";
 
 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 		var position = $(document).scrollTop();
-		
 
 		var data = {
 			tanggal:tanggal,
 		}
+		var workstations = ws.split(",");
+
 
 		$.get('{{ url("fetch/welding/group_achievement") }}', data, function(result, status, xhr) {
 			if(result.status){
 
-				for(var h = 0; h < result.ws.length; h++){
+				console.log(workstations);
+				console.log(workstations.length);
+				
+				if(workstations.toString() != ""){
 					var key = [];
 					var bff = [];
 					var wld = [];
 					for(var i = 0; i < result.data.length; i++){
-						if(result.data[i].ws_name == result.ws[h].ws_name){
+						if(workstations.includes(result.data[i].ws_name)){
 							key.push(result.data[i].model +" "+ result.data[i].key);
 							bff.push(parseInt(result.data[i].bff));
 							wld.push(parseInt(result.data[i].wld));
 						}
 					}
-					var chart = Highcharts.chart(''+ result.ws[h].ws_id +'', {
+					var chart = Highcharts.chart('container', {
 						title: {
-							text: result.ws[h].ws_name + ' on '+result.tanggal,
+							text: workstations.toString() + ' on '+ result.tanggal,
 							style: {
 								fontSize: '18px',
 								fontWeight: 'bold'
@@ -535,7 +562,7 @@
 								point: {
 									events: {
 										click: function (event) {
-											showDetail(result.tanggal, event.point.category);
+											showDetail(result.tanggal, ws);
 										}
 									}
 								},
@@ -553,6 +580,102 @@
 							data: wld,
 						}]
 					});
+				}else{
+					for(var h = 0; h < result.ws.length; h++){
+						var key = [];
+						var bff = [];
+						var wld = [];
+						var ws = result.ws[h].ws_name;
+						for(var i = 0; i < result.data.length; i++){
+							if(result.data[i].ws_name == result.ws[h].ws_name){
+								key.push(result.data[i].model +" "+ result.data[i].key);
+								bff.push(parseInt(result.data[i].bff));
+								wld.push(parseInt(result.data[i].wld));
+							}
+						}
+						var chart = Highcharts.chart(''+ result.ws[h].ws_id +'', {
+							title: {
+								text: result.ws[h].ws_name + ' on '+result.tanggal,
+								style: {
+									fontSize: '18px',
+									fontWeight: 'bold'
+								}
+							},
+							yAxis: {
+								title: {
+									text: 'Kanban(s)'
+								},
+								style: {
+									fontSize: '26px',
+									fontWeight: 'bold'
+								},
+								labels: {
+									enabled: false
+								}
+							},
+							xAxis: {
+								categories: key,
+								type: 'category',
+								gridLineWidth: 1,
+								gridLineColor: 'RGB(204,255,255)',
+								labels: {
+									rotation: -45,
+									style: {
+										fontSize: '1vw'
+									}
+								},
+							},
+							tooltip: {
+								headerFormat: '<span>{point.category}</span><br/>',
+								pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+							},
+							credits: {
+								enabled:false
+							},
+							legend : {
+								align: 'center',
+								verticalAlign: 'bottom',
+								x: 0,
+								y: 0,
+
+								backgroundColor: (
+									Highcharts.theme && Highcharts.theme.background2) || 'white',
+								shadow: false
+							},
+							plotOptions: {
+								series:{
+									dataLabels: {
+										enabled: true,
+										format: '{point.y}',
+										style:{
+											textOutline: false,
+											fontSize: '1vw'
+										}
+									},
+									animation: false,
+									cursor: 'pointer',
+									point: {
+										events: {
+											click: function (event) {
+												showDetail(result.tanggal, ws);
+											}
+										}
+									},
+								}
+							},
+							series: [{
+								name:'Buffing Request',
+								type: 'column',
+								color: 'rgb(255,116,116)',
+								data: bff,
+							},{
+								name:'Welding Result',
+								type: 'column',
+								color: 'rgb(169,255,151)',
+								data: wld,
+							}]
+						});
+					}
 				}
 
 				$(document).scrollTop(position);
@@ -562,183 +685,183 @@
 		});
 
 
-		$.get('{{ url("fetch/welding/accumulated_achievement") }}', data, function(result, status, xhr) {
-			if(result.status){
+$.get('{{ url("fetch/welding/accumulated_achievement") }}', data, function(result, status, xhr) {
+	if(result.status){
 
-				var tgl= [];
-				var bff = [];
-				var wld = [];
+		var tgl= [];
+		var bff = [];
+		var wld = [];
 
-				var week_name = '';
-				var diff = 0;
+		var week_name = '';
+		var diff = 0;
 
-				for (var i = 0; i < result.akumulasi.length; i++) {
-					week_name = result.akumulasi[i].week_name;
-					tgl.push(result.akumulasi[i].tgl);
-					bff.push(parseInt(result.akumulasi[i].bff) + diff);
-					wld.push(parseInt(result.akumulasi[i].wld));
+		for (var i = 0; i < result.akumulasi.length; i++) {
+			week_name = result.akumulasi[i].week_name;
+			tgl.push(result.akumulasi[i].tgl);
+			bff.push(parseInt(result.akumulasi[i].bff) + diff);
+			wld.push(parseInt(result.akumulasi[i].wld));
 
-					diff = bff[i] - wld[i];
-				}
-
-				var chart = Highcharts.chart('container2', {
-					chart: {
-						type: 'areaspline'
-					},
-					title: {
-						text: 'Weekly Group Achievements Accumulation',
-						style: {
-							fontSize: '30px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'on WEEK '+week_name.substr(1),
-						style: {
-							fontSize: '18px',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							text: 'Kanban(s)'
-						},
-						style: {
-							fontSize: '26px',
-							fontWeight: 'bold'
-						},
-						gridLineWidth: 0,
-						startOnTick: false,
-						endOnTick: false
-					},
-					xAxis: {
-						categories: tgl,
-						gridLineWidth: 0,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							style: {
-								fontSize: '26px'
-							}
-						}
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					legend : {
-						align: 'center',
-						verticalAlign: 'bottom',
-						x: 0,
-						y: 0,
-
-						backgroundColor: (
-							Highcharts.theme && Highcharts.theme.background2) || 'white',
-						shadow: false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y}',
-								style:{
-									textOutline: false,
-									fontSize: '26px'
-								}
-							},
-							animation: false,
-							cursor: 'pointer'
-						},
-						areaspline: {
-							fillOpacity: 0.5
-						}
-					},
-					series: [{
-						name:'Incoming Instruction',
-						color: 'rgb(255,116,116)',
-						data: bff,
-					},{
-						name:'Actual Result',
-						color: 'rgb(169,255,151)',
-						data: wld,
-					}]
-
-				});				
-				$(document).scrollTop(position);
-
-
-			}
-		});
-
-	}
-
-	function showDetail(date, ws) {
-		var data = {
-			date : date,
-			ws : ws
+			diff = bff[i] - wld[i];
 		}
 
-		$.get('{{ url("fetch/welding/group_achievement_detail") }}', data, function(result, status, xhr){
-			if(result.status){
-				$('#modal-detail').modal('show');
-
-				$('#judul-detail').append().empty();
-				$('#judul-detail').append('<b>'+ ws +' on '+ date +'</b>');	
-
-				$('#result-detail-body').html("");			
-				var body = '';
-				var sum_kanban = 0;
-				var sum_pc = 0;
-				for (var i = 0; i < result.wld.length; i++) {
-					body += '<tr>';
-					body += '<td>'+ result.wld[i].ws_name +'</td>';
-					body += '<td>'+ result.wld[i].material_number +'</td>';
-					body += '<td>'+ result.wld[i].model +'</td>';
-					body += '<td>'+ result.wld[i].key +'</td>';
-					body += '<td>'+ result.wld[i].kanban +'</td>';
-					body += '<td>'+ result.wld[i].jml +'</td>';
-					body += '</tr>';
-
-					sum_kanban += parseInt(result.wld[i].kanban);
-					sum_pc += parseInt(result.wld[i].jml);
+		var chart = Highcharts.chart('container2', {
+			chart: {
+				type: 'areaspline'
+			},
+			title: {
+				text: 'Weekly Group Achievements Accumulation',
+				style: {
+					fontSize: '30px',
+					fontWeight: 'bold'
 				}
-				body += '<tr>';
-				body += '<td colspan="4">Total</td>';
-				body += '<td>'+ sum_kanban +'</td>';
-				body += '<td>'+ sum_pc +'</td>';
-				body += '</tr>';
-				$('#result-detail-body').append(body);
-
-
-				$('#request-detail-body').html("");			
-				var body = '';
-				var sum_kanban = 0;
-				var sum_pc = 0;
-				for (var i = 0; i < result.bff.length; i++) {
-					body += '<tr>';
-					body += '<td>'+ result.bff[i].ws_name +'</td>';
-					body += '<td>'+ result.bff[i].material_number +'</td>';
-					body += '<td>'+ result.bff[i].model +'</td>';
-					body += '<td>'+ result.bff[i].key +'</td>';
-					body += '<td>'+ result.bff[i].kanban +'</td>';
-					body += '<td>'+ result.bff[i].jml +'</td>';
-					body += '</tr>';
-
-					sum_kanban += parseInt(result.bff[i].kanban);
-					sum_pc += parseInt(result.bff[i].jml);
+			},
+			subtitle: {
+				text: 'on WEEK '+week_name.substr(1),
+				style: {
+					fontSize: '18px',
+					fontWeight: 'bold'
 				}
-				body += '<tr>';
-				body += '<td colspan="4">Total</td>';
-				body += '<td>'+ sum_kanban +'</td>';
-				body += '<td>'+ sum_pc +'</td>';
-				body += '</tr>';
-				$('#request-detail-body').append(body);
+			},
+			yAxis: {
+				title: {
+					text: 'Kanban(s)'
+				},
+				style: {
+					fontSize: '26px',
+					fontWeight: 'bold'
+				},
+				gridLineWidth: 0,
+				startOnTick: false,
+				endOnTick: false
+			},
+			xAxis: {
+				categories: tgl,
+				gridLineWidth: 0,
+				gridLineColor: 'RGB(204,255,255)',
+				labels: {
+					style: {
+						fontSize: '26px'
+					}
+				}
+			},
+			tooltip: {
+				headerFormat: '<span>{point.category}</span><br/>',
+				pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y}</b> <br/>',
+			},
+			credits: {
+				enabled:false
+			},
+			legend : {
+				align: 'center',
+				verticalAlign: 'bottom',
+				x: 0,
+				y: 0,
 
-			}
-		});
+				backgroundColor: (
+					Highcharts.theme && Highcharts.theme.background2) || 'white',
+				shadow: false
+			},
+			plotOptions: {
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							textOutline: false,
+							fontSize: '26px'
+						}
+					},
+					animation: false,
+					cursor: 'pointer'
+				},
+				areaspline: {
+					fillOpacity: 0.5
+				}
+			},
+			series: [{
+				name:'Incoming Instruction',
+				color: 'rgb(255,116,116)',
+				data: bff,
+			},{
+				name:'Actual Result',
+				color: 'rgb(169,255,151)',
+				data: wld,
+			}]
+
+		});				
+		$(document).scrollTop(position);
+
+
 	}
+});
+
+}
+
+function showDetail(date, ws) {
+	var data = {
+		date : date,
+		ws : ws
+	}
+
+	$.get('{{ url("fetch/welding/group_achievement_detail") }}', data, function(result, status, xhr){
+		if(result.status){
+			$('#modal-detail').modal('show');
+
+			$('#judul-detail').append().empty();
+			$('#judul-detail').append('<b>'+ ws +' on '+ date +'</b>');	
+
+			$('#result-detail-body').html("");			
+			var body = '';
+			var sum_kanban = 0;
+			var sum_pc = 0;
+			for (var i = 0; i < result.wld.length; i++) {
+				body += '<tr>';
+				body += '<td>'+ result.wld[i].ws_name +'</td>';
+				body += '<td>'+ result.wld[i].material_number +'</td>';
+				body += '<td>'+ result.wld[i].model +'</td>';
+				body += '<td>'+ result.wld[i].key +'</td>';
+				body += '<td>'+ result.wld[i].kanban +'</td>';
+				body += '<td>'+ result.wld[i].jml +'</td>';
+				body += '</tr>';
+
+				sum_kanban += parseInt(result.wld[i].kanban);
+				sum_pc += parseInt(result.wld[i].jml);
+			}
+			body += '<tr>';
+			body += '<td colspan="4">Total</td>';
+			body += '<td>'+ sum_kanban +'</td>';
+			body += '<td>'+ sum_pc +'</td>';
+			body += '</tr>';
+			$('#result-detail-body').append(body);
+
+
+			$('#request-detail-body').html("");			
+			var body = '';
+			var sum_kanban = 0;
+			var sum_pc = 0;
+			for (var i = 0; i < result.bff.length; i++) {
+				body += '<tr>';
+				body += '<td>'+ result.bff[i].ws_name +'</td>';
+				body += '<td>'+ result.bff[i].material_number +'</td>';
+				body += '<td>'+ result.bff[i].model +'</td>';
+				body += '<td>'+ result.bff[i].key +'</td>';
+				body += '<td>'+ result.bff[i].kanban +'</td>';
+				body += '<td>'+ result.bff[i].jml +'</td>';
+				body += '</tr>';
+
+				sum_kanban += parseInt(result.bff[i].kanban);
+				sum_pc += parseInt(result.bff[i].jml);
+			}
+			body += '<tr>';
+			body += '<td colspan="4">Total</td>';
+			body += '<td>'+ sum_kanban +'</td>';
+			body += '<td>'+ sum_pc +'</td>';
+			body += '</tr>';
+			$('#request-detail-body').append(body);
+
+		}
+	});
+}
 
 
 
