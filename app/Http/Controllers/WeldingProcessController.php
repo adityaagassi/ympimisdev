@@ -358,10 +358,10 @@ class WeldingProcessController extends Controller
 	public function fetchNgRate(Request $request){
 		$now = date('Y-m-d');
 
-		$ngs = WeldingNgLog::leftJoin('materials', 'materials.material_number', '=', 'welding_ng_logs.material_number')
-		->orderBy('welding_ng_logs.created_at', 'asc');
-		$checks = WeldingCheckLog::leftJoin('materials', 'materials.material_number', '=', 'welding_check_logs.material_number')
-		->orderBy('welding_check_logs.created_at', 'asc');
+		// $ngs = WeldingNgLog::leftJoin('materials', 'materials.material_number', '=', 'welding_ng_logs.material_number')
+		// ->orderBy('welding_ng_logs.created_at', 'asc');
+		// $checks = WeldingCheckLog::leftJoin('materials', 'materials.material_number', '=', 'welding_check_logs.material_number')
+		// ->orderBy('welding_check_logs.created_at', 'asc');
 		$addlocation = "";
 		if($request->get('location') != null) {
 			$locations = explode(",", $request->get('location'));
@@ -418,8 +418,8 @@ class WeldingProcessController extends Controller
 
 		$dateTitle = date("d M Y", strtotime($now));
 
-		$ngs = $ngs->get();
-		$checks = $checks->get();
+		// $ngs = $ngs->get();
+		// $checks = $checks->get();
 
 
 		$datastat = db::select("select 
@@ -451,8 +451,8 @@ class WeldingProcessController extends Controller
 		
 		$response = array(
 			'status' => true,
-			'checks' => $checks,
-			'ngs' => $ngs,
+			// 'checks' => $checks,
+			// 'ngs' => $ngs,
 			'ng' => $ng,
 			'ngkey' => $ngkey,
 			'dateTitle' => $dateTitle,
