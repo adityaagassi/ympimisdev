@@ -15,6 +15,9 @@
     background-color: #9c27b0;
     color: white;
   }
+  input[type=checkbox] {
+    transform: scale(1.5);
+  }
   tbody>tr>td{
     text-align:left;
   }

@@ -595,8 +595,8 @@ class WeldingProcessController extends Controller
 			) AS loss_time,
 			ROUND((
 			SELECT
-			(SUM( perolehan_jumlah * time.time )/ 60)+
-			(SELECT SUM((perolehan_jumlah * time.time))/ 60 
+			(SUM( perolehan_jumlah * time.time )/ 60) + 
+			(SELECT COALESCE(SUM((perolehan_jumlah * time.time)) / 60,0) 
 			FROM
 			t_perolehan
 			LEFT JOIN m_phs ON m_phs.phs_id = t_perolehan.part_id
@@ -626,7 +626,7 @@ class WeldingProcessController extends Controller
 			) - (
 			SELECT
 			(SUM( perolehan_jumlah * time.time )/ 60)+
-			(SELECT SUM((perolehan_jumlah * time.time))/ 60 
+			(SELECT COALESCE(SUM((perolehan_jumlah * time.time)) / 60,0) 
 			FROM
 			t_perolehan
 			LEFT JOIN m_phs ON m_phs.phs_id = t_perolehan.part_id
@@ -648,7 +648,7 @@ class WeldingProcessController extends Controller
 			ROUND((
 			SELECT
 			(SUM( perolehan_jumlah * time.time )/ 60)+
-			(SELECT SUM((perolehan_jumlah * time.time))/ 60 
+			(SELECT COALESCE(SUM((perolehan_jumlah * time.time)) / 60,0) 
 			FROM
 			t_perolehan
 			LEFT JOIN m_phs ON m_phs.phs_id = t_perolehan.part_id
@@ -665,8 +665,8 @@ class WeldingProcessController extends Controller
 			DATE( tanggaljam ) = tgl
 			AND time.location = 'soldering'
 			),
-			2 
-			) AS all_time_std 
+			2
+			) AS all_time_std  
 			FROM
 			t_perolehan d
 			LEFT JOIN ympimis.weekly_calendars ON weekly_calendars.week_date = DATE_FORMAT( d.tanggaljam, '%Y-%m-%d' )

@@ -7,6 +7,9 @@
     padding: 3px;
     box-sizing: border-box;
   }
+  input[type=checkbox] {
+    transform: scale(1.5);
+  }
   thead>tr>th{
     text-align:center;
     background-color: #7e5686;

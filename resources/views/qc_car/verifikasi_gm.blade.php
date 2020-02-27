@@ -101,7 +101,7 @@
       <h3 class="box-title">Detail User</h3>
     </div>   --}}
 
-    @if(Auth::user()->username == $car->car_cpar->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL" || Auth::user()->username == $car->car_cpar->staff || Auth::user()->username == $car->car_cpar->leader) 
+    @if(Auth::user()->username == $car->car_cpar->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->username == $car->car_cpar->staff || Auth::user()->username == $car->car_cpar->leader || Auth::user()->username == "PI1108002" || Auth::user()->username == "PI0811001")
 
       <div class="box-body">
       	<table class="table" style="border: 1px solid black;">

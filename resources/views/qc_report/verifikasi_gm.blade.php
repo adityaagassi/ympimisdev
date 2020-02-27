@@ -145,6 +145,8 @@
   </div>   
   @endif
   <!-- SELECT2 EXAMPLE -->
+  @if(Auth::user()->username == $cpar->leader || Auth::user()->username == "PI1108002" || Auth::user()->username == "PI0811001" || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS")
+
   <div class="box box-primary">
       <div class="box-body">
 
@@ -502,6 +504,8 @@
       </div>
     </form>
   </div>
+
+  @endif
 
 
 @endsection
