@@ -1019,7 +1019,7 @@ class WorkshopController extends Controller{
 		$drawing_name = $request->get('assign_drawing_name');
 		$item_number = $request->get('assign_item_number');
 		$part_number = $request->get('assign_part_number');
-		$pic = $request->get('assign_pic');
+		// $pic = $request->get('assign_pic');
 		$difficulty = $request->get('assign_difficulty');
 
 		$file_name;
@@ -1042,7 +1042,7 @@ class WorkshopController extends Controller{
 		$wjo->drawing_name = $drawing_name;
 		$wjo->item_number = $item_number;
 		$wjo->part_number = $part_number;
-		$wjo->operator = $pic;
+		// $wjo->operator = $pic;
 		$wjo->difficulty = $difficulty;
 		$wjo->approved_by = Auth::user()->username;
 		$wjo->remark = 2;
@@ -1188,7 +1188,7 @@ class WorkshopController extends Controller{
 
 			$pic->save();
 		}
-		$pic2 = $request->get('edit_pic');
+		// $pic2 = $request->get('edit_pic');
 
 		$wjo = WorkshopJobOrder::where('order_no', '=', $order_no)->first();
 		$wjo->item_name = $item_name;
@@ -1197,7 +1197,7 @@ class WorkshopController extends Controller{
 		$wjo->problem_description = $problem_description;
 		$wjo->target_date = $target_date;
 		$wjo->category = $category;
-		$wjo->operator = $pic2;
+		// $wjo->operator = $pic2;
 		$wjo->difficulty = $difficulty;
 		$wjo->drawing_name = $drawing_name;
 		$wjo->item_number = $drawing_number;

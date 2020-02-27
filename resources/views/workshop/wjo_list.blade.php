@@ -229,7 +229,7 @@
 										</div>
 										<div class="col-md-12">
 											<div class="row">
-												<div class="col-md-4">
+												<!-- <div class="col-md-4">
 													<div class="form-group">
 														<label>Operator</label>
 														<select class="form-control select2" data-placeholder="Pilih Operator" name="pic" id="pic" style="width: 100% height: 35px; font-size: 15px;">
@@ -241,7 +241,7 @@
 															@endforeach
 														</select>
 													</div>
-												</div>
+												</div> -->
 												<div class="col-md-4">
 													<div class="form-group">
 														<label>Progres</label>
@@ -291,7 +291,7 @@
 										<th style="width: 1%;">Material</th>
 										<th style="width: 1%;">Qty</th>
 										<th style="width: 1%;">Approved By</th>
-										<th style="width: 1%;">PIC</th>
+										<!-- <th style="width: 1%;">PIC</th> -->
 										<th style="width: 1%;">Kesulitan</th>
 										<th style="width: 1%;">Target Selesai</th>
 										<th style="width: 1%;">Actual Selesai</th>
@@ -376,17 +376,17 @@
 												<input type="text" class="form-control" id="closed_bagian" disabled>
 											</div>
 										</div>
-										<div class="form-group row" align="right">
+										<!-- <div class="form-group row" align="right">
 											<label class="col-xs-4" style="margin-top: 1%;">PIC</label>
 											<div class="col-xs-8" align="left">
 												<input type="text" class="form-control" id="closed_pic" disabled>
 											</div>
-										</div>
+										</div> -->
 									</div>
 
 									<div class="col-xs-6">
 										<div class="form-group row" align="right">
-											<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
+											<label class="col-xs-4" style="margin-top: 1%;">Kategori Part</label>
 											<div class="col-xs-8" align="left">
 												<input type="text" class="form-control" id="closed_category" disabled>
 											</div>
@@ -540,7 +540,7 @@
 												</div>
 
 												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+													<label class="col-xs-4" style="margin-top: 1%;">Kategori Part<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
 														<select class="form-control select4" data-placeholder="Pilih Kategori" name="edit_category" id="edit_category" style="width: 100% height: 35px; font-size: 15px;" required>
 															<option value=""></option>
@@ -571,7 +571,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="col-xs-6">
+											<!-- <div class="col-xs-6">
 												<div class="form-group row" align="right">
 													<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
@@ -583,7 +583,7 @@
 														</select>
 													</div>
 												</div>
-											</div>
+											</div> -->
 											<div class="col-xs-12">
 												<div class="form-group row">
 													<div class="col-xs-10 col-xs-offset-2" style="margin-top: 1%;">
@@ -721,7 +721,7 @@
 													</div>
 												</div>
 												<div class="form-group row" align="right">
-													<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+													<label class="col-xs-4" style="margin-top: 1%;">Kategori Part<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
 														<select class="form-control select2" data-placeholder="Pilih Kategori" name="assign_category" id="assign_category" style="width: 100% height: 35px; font-size: 15px;" required>
 															<option value=""></option>
@@ -745,7 +745,7 @@
 													</div>
 												</div>
 
-												<div class="form-group row" align="right">
+												<!-- <div class="form-group row" align="right">
 													<label class="col-xs-4" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>
 													<div class="col-xs-8" align="left">
 														<select class="form-control select4" data-placeholder="Pilih Operator" name="assign_pic" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>
@@ -755,7 +755,7 @@
 															@endforeach
 														</select>
 													</div>
-												</div>
+												</div> -->
 
 											</div>
 											<div class="col-xs-6" id="drawing" style="margin-top: 3%;">
@@ -782,13 +782,13 @@
 										<div class="row">
 											<div class="col-xs-12" style="margin-top: 5%;">
 												<div class="col-xs-12" style="margin-bottom: 1%;">
-													<div class="col-xs-8" style="padding: 0px;">
+													<div class="col-xs-3" style="padding: 0px;">
 														<label style="font-weight: bold; font-size: 18px;">
 															<span><i class="fa fa-gears"></i> Flow Processes</span>
 														</label>
 													</div>
 													<div class="col-xs-1" style="padding: 0px;">
-														<button class="btn btn-success" onclick='addProcess();'><i class='fa fa-plus' ></i></button>
+														<button class="btn btn-success" onclick='addProcess();'><i class='fa fa-plus' ></i> Add</button>
 													</div>
 												</div>
 												<div id='process'></div>
@@ -1015,7 +1015,7 @@
 												</div>
 											</div>
 											<div class="form-group row" align="right">
-												<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
+												<label class="col-xs-4" style="margin-top: 1%;">Kategori Part</label>
 												<div class="col-xs-8" align="left">
 													<input type="text" class="form-control" name="detail_category" id="detail_category" readonly>
 												</div>
@@ -1218,12 +1218,12 @@
 			++proses;
 
 			var add = '';
-			add += '<div class="col-xs-12" id="add_process_'+ proses +'" style="margin-bottom: 1%; position: static;">';
-			add += '<div class="col-xs-8" style="color: black; padding: 0px; padding-right: 1%; position: static;">';
+			add += '<div class="row" id="add_process_'+ proses +'" style="margin-bottom: 1%; position: static;">';
+			add += '<div class="col-xs-12" style="color: black; padding: 0px; position: static;">';
 			add += '<div class="col-xs-1" style="color: black; padding: 0px;">';
 			add += '<h3 id="flow_'+ proses +'" style="margin: 0px;">'+ proses +'</h3>';
 			add += '</div>';
-			add += '<div class="col-xs-11" style="color: black; padding: 0px; position: static;">';
+			add += '<div class="col-xs-6" style="color: black; padding: 0px; position: static;">';
 			add += '<select style="width: 100%;" class="form-control select3" name="process_'+ proses +'" id="process_'+ proses +'" data-placeholder="Select Process">';
 			add += '<option value=""></option>';
 			add += '@php $group = array(); @endphp';
@@ -1235,12 +1235,7 @@
 			add += '@endforeach';
 			add += '</select>';
 			add += '</div>';
-			add += '</div>';
-			add += '<div class="col-xs-1" style="padding: 0px;">';
-			add += '<button class="btn btn-danger" id="'+proses+'" onClick="removeProcess(this)"><i class="fa fa-close"></i></button>';
-			add += '</div>';
-			add += '<div class="col-xs-8" style="color: black; padding: 0px; padding-right: 1%;">';
-			add += '<div class="col-xs-8 col-xs-offset-1" style="margin-top: 1%; padding-left: 0px;" align="left">';
+			add += '<div class="col-xs-4">';
 			add += '<select class="form-control select4" data-placeholder="Pilih Operator" name="assign_pic_'+ proses +'" id="assign_pic" style="width: 100% height: 35px; font-size: 15px;" required>';
 			add += '<option value=""></option>';
 			add += '@foreach($operators as $operator)';
@@ -1248,18 +1243,20 @@
 			add += '@endforeach';
 			add += '</select>';
 			add += '</div>';
-			add += '<div class="col-xs-3" style="color: black; padding: 0px; margin-top: 1%;">';
+			add += '<div class="col-xs-1" style="padding: 0px;">';
+			add += '<button class="btn btn-danger" id="'+proses+'" onClick="removeProcess(this)"><i class="fa fa-close"></i></button>';
+			add += '</div>';
+			add += '</div>';
+			
+			add += '<div class="col-xs-11 col-xs-offset-1" style="color: black; padding: 0px; padding-right: 1%;">';
+			add += '<div class="col-xs-12" style="margin-top: 1%; padding: 0px;" align="left">';
+			add += '<div class="form-group" align="right">';
+			add += '<div class="col-xs-2" style="color: black; padding-left:0px">';
 			add += '<div class="form-group" style="margin-bottom: 0px;">';
-			add += '<input class="form-control" type="number" name="process_qty_'+ proses +'" id="process_qty_'+ proses +'" placeholder="Std Time" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" required>';
+			add += '<input class="form-control" type="number" name="process_qty_'+ proses +'" id="process_qty_'+ proses +'" placeholder="Duration" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" required>';
 			add += '</div>';
 			add += '</div>';
-			add += '</div>';
-			add += '<div class="col-xs-8" style="margin-top: 1%; padding: 0px; margin-left: 3%;">';
-			add += '<div class="form-group row" align="right">';
-			add += '<div class="col-xs-2">';
-			add += '<label style="margin-top: 1%; padding: 0px;">Start<span class="text-red">*</span></label>';
-			add += '</div>';
-			add += '<div class="col-xs-4" align="right" style="padding: 0px;">';
+			add += '<div class="col-xs-2" align="right" style="padding: 0px;">';
 			add += '<div class="input-group date">';
 			add += '<div class="input-group-addon bg-blue" style="border: none;">';
 			add += '<i class="fa fa-calendar"></i>';
@@ -1267,7 +1264,7 @@
 			add += '<input type="text" class="form-control datepicker" name="start_'+ proses +'" id="start_'+ proses +'" placeholder="start Date" required>';
 			add += '</div>';
 			add += '</div>';
-			add += '<div class="col-xs-3" align="right" style="padding: 0px;">';
+			add += '<div class="col-xs-2" align="right" style="padding: 0px;">';
 			add += '<div class="input-group date">';
 			add += '<div class="input-group-addon bg-blue" style="border: none;">';
 			add += '<i class="fa fa-clock-o"></i>';
@@ -1275,14 +1272,10 @@
 			add += '<input type="text" class="form-control timepicker" id="start_time'+ proses +'" name="start_time'+ proses +'" placeholder="select Time" required>';
 			add += '</div>';
 			add += '</div>';
+			add += '<div class="col-xs-1" align="center" style="padding: 0px;">';
+			add += '<label style="margin-top: 1%;padding: 0px;">~</label>';
 			add += '</div>';
-			add += '</div>';
-			add += '<div class="col-xs-8" style="margin-top: 0%; padding: 0px; margin-left: 3%;">';
-			add += '<div class="form-group row" align="right">';
-			add += '<div class="col-xs-2">';
-			add += '<label style="margin-top: 1%;padding: 0px;">Finish<span class="text-red">*</span></label>';
-			add += '</div>';
-			add += '<div class="col-xs-4" align="right" style="padding: 0px;">';
+			add += '<div class="col-xs-2" align="right" style="padding: 0px;">';
 			add += '<div class="input-group date">';
 			add += '<div class="input-group-addon bg-blue" style="border: none;">';
 			add += '<i class="fa fa-calendar"></i>';
@@ -1290,7 +1283,7 @@
 			add += '<input type="text" class="form-control datepicker" name="finish_'+ proses +'" id="finish_'+ proses +'" placeholder="Finish Date" required>';
 			add += '</div>';
 			add += '</div>';
-			add += '<div class="col-xs-3" align="right" style="padding: 0px;">';
+			add += '<div class="col-xs-2" align="right" style="padding: 0px;">';
 			add += '<div class="input-group date">';
 			add += '<div class="input-group-addon bg-blue" style="border: none;">';
 			add += '<i class="fa fa-clock-o"></i>';
@@ -1300,6 +1293,8 @@
 			add += '</div>';
 			add += '</div>';
 			add += '</div>';
+			add += '</div>';
+			add += '<div class="col-xs-12"><hr style="margin-top:10px; margin-bottom:10px"></div>';
 			add += '</div>';
 
 
@@ -1332,48 +1327,67 @@
 				timeFormat: 'hh:mm'
 			})
 
-			$( "#start_"+proses+", #start_time"+proses+", #finish_"+proses+", #finish_time"+proses).change(function() {
+			on_change_flow(proses);
+
+			document.getElementById("assign_proses").value = proses;
+		}
+
+		function on_change_flow(i) {
+			// var d1 = new Date ();
+			// var d2 = new Date ( d1 );
+			// d2.setMinutes ( d1.getMinutes() + 30 );
+			// alert ( d2 );
+
+			// return false;
+
+			$("#start_"+i+", #start_time"+i+", #process_qty_"+i).change(function() {
 				var start_time = "";
 				var finish_time = "";
 
-				if ($("#start_time"+proses).val().indexOf(':') != -1) {
-					if ($("#start_time"+proses).val().length <= 4) {
+				if ($("#start_time"+i).val().indexOf(':') != -1) {
+					if ($("#start_time"+i).val().length <= 4) {
 						start_time = "0";
-						start_time += $("#start_time"+proses).val();
+						start_time += $("#start_time"+i).val();
 						start_time += ":00";
 					} else {
-						start_time = $("#start_time"+proses).val();
+						start_time = $("#start_time"+i).val();
 						start_time += ":00";
 					}
-
-					// console.log(start_time);
 				}
 
-				if ($("#finish_time"+proses).val().indexOf(':') != -1) {
-					if ($("#finish_time"+proses).val().length <= 4) {
-						finish_time = "0";
-						finish_time += $("#finish_time"+proses).val();
-						finish_time += ":00";
-					} else {
-						finish_time = $("#finish_time"+proses).val();
-						finish_time += ":00";
-					}
+				// if ($("#finish_time"+i).val().indexOf(':') != -1) {
+				// 	if ($("#finish_time"+i).val().length <= 4) {
+				// 		finish_time = "0";
+				// 		finish_time += $("#finish_time"+i).val();
+				// 		finish_time += ":00";
+				// 	} else {
+				// 		finish_time = $("#finish_time"+i).val();
+				// 		finish_time += ":00";
+				// 	}
 
-					// console.log(finish_time);
-				}
+				// }
 
-				var d1 = new Date($('#start_'+proses).val()+' '+start_time);
-				var d2 = new Date($('#finish_'+proses).val()+' '+finish_time);
+				var d1 = new Date($('#start_'+i).val()+' '+start_time);
+				var d2 = new Date ( d1 );
+				d2.setMinutes ( d1.getMinutes() + $("#process_qty_"+i).val() );
+				
+				// var d2 = new Date($('#finish_'+i).val()+' '+finish_time);
 
-				var minutes =  (d2 - d1)/ 1000 / 60;
+				// var minutes =  (d2 - d1)/ 1000 / 60;
 
-				// console.log(minutes);
-				if (isNaN(minutes) == false || minutes >= 0) {
-					$("#process_qty_"+proses).val(minutes);
+
+				if (isNaN(d2) == false) {
+					// $("#process_qty_"+i).val(minutes);
+					year = d2.getFullYear();
+					month = '-' + format_two_digits(d2.getMonth());
+					day = '-' + format_two_digits(d2.getDate());
+					hours = format_two_digits(d2.getHours());
+					minutes = ':' + format_two_digits(d2.getMinutes());
+					$("#finish_"+i).val(year+month+day);
+					$("#finish_time"+i).val(hours+minutes);
+					// console.log ( d2 );
 				}
 			});
-
-			document.getElementById("assign_proses").value = proses;
 		}
 
 		function removeProcess(elem) {
@@ -1474,7 +1488,7 @@
 							document.getElementById("closed_priority").value = result.wjo.priority;
 							document.getElementById("closed_department").value = group[0];
 							document.getElementById("closed_bagian").value = group[1];
-							document.getElementById("closed_pic").value = result.wjo.name;
+							// document.getElementById("closed_pic").value = result.wjo.name;
 							document.getElementById("closed_category").value = result.wjo.category;
 							document.getElementById("closed_item_name").value = result.wjo.item_name;
 							document.getElementById("closed_quantity").value = result.wjo.quantity;
@@ -1550,7 +1564,7 @@
 			var workType = $('#workType').val();
 			var rawMaterial = $('#rawMaterial').val();
 			var material = $('#material').val();
-			var pic = $('#pic').val();
+			// var pic = $('#pic').val();
 			var remark = $('#remark').val(); 
 			var approvedBy = $('#approvedBy').val(); 
 			var data = {
@@ -1565,7 +1579,7 @@
 				workType:workType,
 				rawMaterial:rawMaterial,
 				material:material,
-				pic:pic,
+				// pic:pic,
 				remark:remark,
 				approvedBy:approvedBy
 			}
@@ -1609,7 +1623,7 @@
 						tableData += '<td'+ assign +'>'+ result.tableData[i].material +'</td>';
 						tableData += '<td'+ assign +'>'+ result.tableData[i].quantity +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].approver || '-') +'</td>';
-						tableData += '<td'+ assign +'>'+ (result.tableData[i].pic || '-') +'</td>';
+						// tableData += '<td'+ assign +'>'+ (result.tableData[i].pic || '-') +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].difficulty || '-') +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].target_date || '-') +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].finish_date || '-') +'</td>';
@@ -1883,7 +1897,7 @@ function showAssignment(order_no) {
 			$("#assign_category").val(result.wjo[0].category).trigger('change.select2');
 			
 			$("#drawing").hide();
-			if(result.wjo.category != 'Equipment'){
+			if(result.wjo[0].category != 'Equipment'){
 				$("#drawing").show();
 			}
 
@@ -1949,14 +1963,14 @@ function edit_action() {
 			edit_difficulty : $("#edit_difficulty").val(),
 			edit_category : $("#edit_category").val(),
 			pic : pic,
-			edit_pic : $("#edit_pic").val(),
+			// edit_pic : $("#edit_pic").val(),
 			edit_drawing_name : $("#edit_drawing_name").val(),
 			edit_drawing_number : $("#edit_drawing_number").val(),
 			edit_part_number : $("#edit_part_number").val(),
 		},
 		success: function (result, status, xhr) {
 			$("#edit_target_date").val("");
-			$('#edit_pic').prop('selectedIndex', 0).change();
+			// $('#edit_pic').prop('selectedIndex', 0).change();
 			$('.pic').prop('selectedIndex', 0).change();
 			$('#edit_difficulty').prop('selectedIndex', 0).change();
 			$('#edit_category').prop('selectedIndex', 0).change();
@@ -1995,7 +2009,7 @@ function showEdit(order_no) {
 
 			$("#edit_category").val(result.wjo[0].category).trigger('change.select2');
 			$("#edit_difficulty").val(result.wjo[0].difficulty).trigger('change.select2');
-			$("#edit_pic").val(result.wjo[0].pic).trigger('change.select2');
+			// $("#edit_pic").val(result.wjo[0].pic).trigger('change.select2');
 
 			if (result.wjo[0].category == 'Molding' || result.wjo[0].category == 'Jig') {
 				$("#edit_drawing").css("visibility","visible");
@@ -2269,6 +2283,10 @@ function open_modal_detail(wjo_num) {
 			}
 		}
 	})
+}
+
+function format_two_digits(n) {
+	return n < 10 ? '0' + n : n;
 }
 
 function openSuccessGritter(title, message){
