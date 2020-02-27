@@ -1559,13 +1559,9 @@ class WeldingProcessController extends Controller
 			group by i.material_number) store
 			on material.material_number = store.material_number
 			left join
-			(select hsa.hsa_kito_code, count(hsa.hsa_kito_code) as qty from t_order_detail detail
-			left join t_order `order` on `order`.order_id = detail.order_id
-			left join m_hsa hsa on hsa.hsa_id = `order`.part_id
-			where `order`.part_type = '2'
-			and detail.flow_id = 1
-			and detail.order_status = '1'
-			group by hsa.hsa_kito_code) antrian
+			(select p.hsa_kito_code, count(p.hsa_kito_code) as qty from t_pesanan p
+			where p.is_deleted = 0
+			group by p.hsa_kito_code) antrian
 			on material.material_number = antrian.hsa_kito_code
 			left join
 			(select hsa.hsa_kito_code as material_number, qty.qty from
@@ -1896,8 +1892,7 @@ class WeldingProcessController extends Controller
 					'pesanan_create_date' => date('Y-m-d H:i:s', strtotime($date.' '.$time.':'.$i)),
 					'no_kanban' => '1',
 					'antrian' => ($antrian + $i),
-					'is_deleted' => '0',
-					'is_finish' => '0'
+					'is_deleted' => '0'
 				]);
 			}
 
@@ -1953,8 +1948,8 @@ class WeldingProcessController extends Controller
 
 	}
 
-	function dec2hex($number)
-	{
+	function dec2hex($number){
+		
 		$hexvalues = array('0','1','2','3','4','5','6','7',
 			'8','9','A','B','C','D','E','F');
 		$hexval = '';

@@ -146,7 +146,7 @@
 						<th width="10%">Material</th>
 						<th>Material Description</th>
 						<th width="1%">Antrian</th>
-						<th width="1%">WIP</th>
+						{{-- <th width="1%">WIP</th> --}}
 						<th width="1%">Store</th>				
 					</tr>
 				</thead>
@@ -157,7 +157,7 @@
 						<th></th>
 						<th></th>
 						<th></th>
-						<th></th>
+						{{-- <th></th> --}}
 						<th></th>
 					</tr>
 				</tfoot>
@@ -488,7 +488,7 @@
 				{ "data": "material_number" },
 				{ "data": "material_description"},
 				{ "data": "antrian"},
-				{ "data": "wip"},
+				// { "data": "wip"},
 				{ "data": "store" }]
 			});
 
