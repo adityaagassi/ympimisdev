@@ -799,7 +799,7 @@
 												<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;&nbsp;Note :&nbsp;</span><br>
 												<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- Tanda bintang (*) wajib diisi.&nbsp;</span>
 												<br>
-												<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- Standart time dalam menit.&nbsp;</span><br>
+												<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;- Duration dalam menit.&nbsp;</span><br>
 												<br>
 												<button class="btn btn-success pull-right" type="submit"><i class="fa fa-save"></i> Save</button>
 											</div>
@@ -1370,6 +1370,8 @@
 				var d1 = new Date($('#start_'+i).val()+' '+start_time);
 				var d2 = new Date ( d1 );
 				d2.setMinutes ( d1.getMinutes() + $("#process_qty_"+i).val() );
+
+				// console.log(d2);
 				
 				// var d2 = new Date($('#finish_'+i).val()+' '+finish_time);
 
@@ -1379,7 +1381,8 @@
 				if (isNaN(d2) == false) {
 					// $("#process_qty_"+i).val(minutes);
 					year = d2.getFullYear();
-					month = '-' + format_two_digits(d2.getMonth());
+					month = '-' + format_two_digits(d2.getMonth()+1);
+					// console.log(d2.getMonth()+1);
 					day = '-' + format_two_digits(d2.getDate());
 					hours = format_two_digits(d2.getHours());
 					minutes = ':' + format_two_digits(d2.getMinutes());
