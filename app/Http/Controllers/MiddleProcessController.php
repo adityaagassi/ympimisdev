@@ -1390,26 +1390,25 @@ class MiddleProcessController extends Controller
 				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 			}
 
-			$op_ng = db::select("SELECT g.operator_id, concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
-				(SELECT l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
-				left join employees e on e.employee_id = l.operator_id
-				left join materials m on l.material_number = m.material_number
+			$op_ng = db::select("SELECT rate.operator_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, rate.ng as ng, rate.g as g, rate.ng_rate as ng_rate FROM
+				(SELECT g.operator_id, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
+				(SELECT l.operator_id, sum(l.quantity) ng from middle_ng_logs l
 				where l.location = 'bff-kensa'
 				and DATE_FORMAT(l.buffing_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."' 
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
-				GROUP BY l.operator_id, e.`name`) ng
+				GROUP BY l.operator_id) ng
 				left join
-				(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
-				left join employees e on e.employee_id = l.operator_id
-				left join materials m on l.material_number = m.material_number
+				(SELECT l.operator_id, sum(l.quantity) g from middle_check_logs l
 				where l.location = 'bff-kensa'
 				and DATE_FORMAT(l.buffing_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."' 
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
-				GROUP BY l.operator_id, e.`name`) g
-				on ng.operator_id = g.operator_id
-				order by ng_rate asc");
+				GROUP BY l.operator_id) g
+				on ng.operator_id = g.operator_id) rate
+				left join employee_syncs e on e.employee_id = rate.operator_id
+				order by rate.ng_rate asc");
+			
 		}else{
 			if(strlen($request->get('bulan')) > 0){
 				$bulan = $request->get('bulan');
@@ -1417,26 +1416,24 @@ class MiddleProcessController extends Controller
 				$bulan = date('m-Y');
 			}
 
-			$op_ng = db::select("SELECT g.operator_id, concat(SPLIT_STRING(g.`name`, ' ', 1), ' ', SPLIT_STRING(g.`name`, ' ', 2)) as `name`, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
-				(SELECT l.operator_id, e.`name`, sum(l.quantity) ng from middle_ng_logs l
-				left join employees e on e.employee_id = l.operator_id
-				left join materials m on l.material_number = m.material_number
+			$op_ng = db::select("SELECT rate.operator_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, rate.ng as ng, rate.g as g, rate.ng_rate as ng_rate FROM
+				(SELECT g.operator_id, COALESCE(ng.ng,0) as ng, COALESCE(g.g,0) as g, (ng.ng / g.g) as ng_rate FROM
+				(SELECT l.operator_id, sum(l.quantity) ng from middle_ng_logs l
 				where l.location = 'bff-kensa'
 				and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
-				GROUP BY l.operator_id, e.`name`) ng
+				GROUP BY l.operator_id) ng
 				left join
-				(SELECT l.operator_id, e.`name`, sum(l.quantity) g from middle_check_logs l
-				left join employees e on e.employee_id = l.operator_id
-				left join materials m on l.material_number = m.material_number
+				(SELECT l.operator_id, sum(l.quantity) g from middle_check_logs l
 				where l.location = 'bff-kensa'
-				and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."' 
+				and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
-				GROUP BY l.operator_id, e.`name`) g
-				on ng.operator_id = g.operator_id
-				order by ng_rate asc");
+				GROUP BY l.operator_id) g
+				on ng.operator_id = g.operator_id) rate
+				left join employee_syncs e on e.employee_id = rate.operator_id
+				order by rate.ng_rate asc");
 		}
 
 		$response = array(

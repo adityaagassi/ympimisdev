@@ -42,6 +42,9 @@
 	  transition: 1s opacity;
 	}
 
+	.ww-informers-box-854754{-webkit-animation-name:ww-informers54;animation-name:ww-informers54;-webkit-animation-duration:1.5s;animation-duration:1.5s;white-space:nowrap;overflow:hidden;-o-text-overflow:ellipsis;text-overflow:ellipsis;font-size:12px;font-family:Arial;line-height:18px;text-align:center}
+	@-webkit-keyframes ww-informers54{0%,80%{opacity:0}100%{opacity:1}}@keyframes ww-informers54{0%,80%{opacity:0}100%{opacity:1}}
+
 </style>
 <video autoplay id="bgvid" loop>
 	<source src="{{url('vid/wave_visual_thumb.mp4')}}" type="video/mp4">
@@ -54,16 +57,19 @@
 			<h1 id="jam" style="margin-top: 0px;font-size: 10em;font-weight: bold;margin-bottom: -20px;color: white; "></h1>
 			<span id="tanggal" style="font-size: 3.2em;color: white;font-weight: bold;"></span>
 		</div>
-	    <div class="col-xs-4" style="width: 220px;padding-top: 50px;padding-left: 20px" id="weather1">
-	    	<a href='https://www.accuweather.com/en/id/pasuruan/203183/weather-forecast/203183' class='aw-widget-legal'></a><div id='awcc1535343665265' class='aw-widget-current'  data-locationkey='203183' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343665265'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
+	    <div class="col-xs-4" style="width: 250px;margin-top: 50px;margin-left: 20px;background-color: white">
+	    	<span style="font-weight: bold;font-size: 20px;color: black;width: 100%;padding-left: 10px">Pasuruan, ID</span>
+	    	<div id="e761385a5815e733b988da40edee7ac0" class="ww-informers-box-854753"><p class="ww-informers-box-854754"><a href="https://world-weather.info/forecast/indonesia/pasuruan/month/"></a><br><a href="https://world-weather.info/">world-weather.info</a></p></div><script type="text/javascript" charset="utf-8" src="https://world-weather.info/wwinformer.php?userid=e761385a5815e733b988da40edee7ac0"></script>
 	    </div>
-
-	    <div class="col-xs-4" style="width: 220px;padding-left: 20px" id="weather2">
-	    	<a href='https://www.accuweather.com/en/id/jakarta/208971/weather-forecast/208971' class='aw-widget-legal'></a><div id='awcc1535343722607' class='aw-widget-current'  data-locationkey='208971' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343722607'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
+	    <br>
+	    <div class="col-xs-4" style="width: 250px;margin-left: 20px;background-color: white">
+	    	<span style="font-weight: bold;font-size: 20px;color: black;width: 100%;padding-left: 10px">Jakarta, ID</span>
+	    	<div id="364858afaf5629894b5970c4aa120860" class="ww-informers-box-854753"><p class="ww-informers-box-854754"><a href="https://world-weather.info/forecast/indonesia/jakarta/">Detailed forecast</a><br><a href="https://world-weather.info/">world-weather.info</a></p></div><script type="text/javascript" charset="utf-8" src="https://world-weather.info/wwinformer.php?userid=364858afaf5629894b5970c4aa120860"></script>
 	    </div>
-
-	    <div class="col-xs-4" style="width: 220px;padding-left: 20px" id="weather3">
-	    	<a href='https://www.accuweather.com/en/jp/hamamatsu-shi/226090/weather-forecast/226090' class='aw-widget-legal'></a><div id='awcc1535343845965' class='aw-widget-current'  data-locationkey='226090' data-unit='c' data-language='id' data-useip='false' data-uid='awcc1535343845965'></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
+	    <br>
+	    <div class="col-xs-4" style="width: 250px;margin-left: 20px;background-color: white">
+	    	<span style="font-weight: bold;font-size: 20px;color: black;width: 100%;padding-left: 10px">Hamamatsu, JP</span>
+	    	<div id="a83dd8d114fa24f9350a290451ff8936" class="ww-informers-box-854753"><p class="ww-informers-box-854754"><a href="https://world-weather.info/forecast/japan/hamamatsu/">Hamamatsu - weather</a><br><a href="https://world-weather.info/forecast/usa/montpelier/">Weather Forecast in Montpelier</a></p></div><script type="text/javascript" charset="utf-8" src="https://world-weather.info/wwinformer.php?userid=a83dd8d114fa24f9350a290451ff8936"></script>
 	    </div>
 	</div>
 </body>
