@@ -65,8 +65,8 @@ public function handle()
         $row['division'] = $data['Division'];
         $row['department'] = $data['Department'];
         $row['section'] = $data['Section'];
-        $row['group'] = $data['Group'];
-        $row['sub_group'] = $data['Sub-Group'];
+        $row['group'] = $data['Groups'];
+        $row['sub_group'] = $data['Sub_Groups'];
         $row['group'] = $data['Group'];
         $row['employment_status'] = $data['employ_code'];
         $row['cost_center'] = $data['cost_center_code'];

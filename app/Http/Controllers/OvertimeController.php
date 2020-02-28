@@ -702,7 +702,7 @@ class OvertimeController extends Controller
 						$group = $group.",";
 					}
 				}
-				$addgrup = "and B.[Group] in (".$group.") ";
+				$addgrup = "and B.Groups in (".$group.") ";
 			}
 
 			if($request->get('employee_id') != null) {
@@ -728,7 +728,7 @@ class OvertimeController extends Controller
 				B.cost_center_code AS cost_center,
 				B.Department AS department,
 				B.[Section] AS [section],
-				B.[Group] AS [group],
+				B.Groups AS [group],
 				IIF (
 				total_ot IS NOT NULL,
 				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
