@@ -1458,11 +1458,19 @@ class WeldingProcessController extends Controller
 		$query3 = "select distinct `key` from materials where hpl = 'ASKEY' and issue_storage_location = 'SX21' order by `key`";
 		$key =  db::select($query3);
 
-		$query4 = "select distinct model from materials where hpl = 'ASKEY' and issue_storage_location = 'SX21' order by model";
-		$model_alto =  db::select($query4);
+		
+		if(strpos($addlocation, 'phs')){
+			$query4 = "select distinct model from materials where hpl = 'ASKEY' and mrpc = 'S11' and surface = 'PHS' order by model";
+			$query5 = "select distinct model from materials where hpl = 'TSKEY' and mrpc = 'S11' and surface = 'PHS' order by model";
+		}else{
+			$query4 = "select distinct model from materials where hpl = 'ASKEY' and mrpc = 'S21' order by model";
+			$query5 = "select distinct model from materials where hpl = 'TSKEY' and mrpc = 'S21' order by model";
+		}
 
-		$query5 = "select distinct model from materials where hpl = 'TSKEY' and issue_storage_location = 'SX21' order by model";
+		$model_alto =  db::select($query4);
 		$model_tenor =  db::select($query5);
+
+
 
 		$location = "";
 		if($request->get('location') != null) {
