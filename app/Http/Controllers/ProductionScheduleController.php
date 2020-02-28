@@ -36,10 +36,6 @@ class ProductionScheduleController extends Controller
     	->orderBy('hpl', 'asc')
     	->get();
 
-    	$production_schedules = ProductionSchedule::orderByRaw('due_date DESC', 'material_number ASC')
-        ->limit(1000)
-    	->get();
-
     	$materials = Material::orderBy('material_number', 'ASC')->get();
     	$origin_groups = OriginGroup::orderBy('origin_group_code', 'ASC')->get();
 
@@ -56,6 +52,7 @@ class ProductionScheduleController extends Controller
     	$production_schedules = ProductionSchedule::leftJoin("materials","materials.material_number","=","production_schedules.material_number")
     	->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
     	->select('production_schedules.id','production_schedules.material_number','production_schedules.due_date','production_schedules.quantity','materials.material_description','origin_groups.origin_group_name')
+        ->limit(1000)
     	->orderByRaw('due_date DESC', 'production_schedules.material_number ASC')
     	->get();
 
