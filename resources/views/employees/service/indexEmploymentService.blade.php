@@ -942,22 +942,22 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		}
 
 		$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
-			$("#kz_title").text(result[0].title);
-			$("#kz_nik").text(result[0].employee_id + " / "+ result[0].employee_name);
-			$("#kz_section").text(result[0].section);
-			$("#kz_leader").text(result[0].leader_name);
-			$("#kz_tanggal").text(result[0].date);
-			$("#kz_area").text(result[0].area);
-			$("#kz_before").html(result[0].condition);
-			$("#kz_after").html(result[0].improvement);
-			$("#note_foreman").html(result[0].foreman_note);
-			$("#note_manager").html(result[0].manager_note);
+			$("#kz_title").text(result.datas[0].title);
+			$("#kz_nik").text(result.datas[0].employee_id + " / "+ result.datas[0].employee_name);
+			$("#kz_section").text(result.datas[0].section);
+			$("#kz_leader").text(result.datas[0].leader_name);
+			$("#kz_tanggal").text(result.datas[0].date);
+			$("#kz_area").text(result.datas[0].area);
+			$("#kz_before").html(result.datas[0].condition);
+			$("#kz_after").html(result.datas[0].improvement);
+			$("#note_foreman").html(result.datas[0].foreman_note);
+			$("#note_manager").html(result.datas[0].manager_note);
 
 			$("#tableEstimasi").empty();
 			bd = "";
 			tot = 0;
-			if (result[0].cost_name) {
-				$.each(result, function(index, value){
+			if (result.datas[0].cost_name) {
+				$.each(result.datas, function(index, value){
 					bd += "<tr>";
 					var unit = "";
 
@@ -990,14 +990,14 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				$("#tableEstimasi").append(bd);
 			}
 
-			$("#foreman_point1").text(result[0].foreman_point_1 * 40);
-			$("#foreman_point2").text(result[0].foreman_point_2 * 30);
-			$("#foreman_point3").text(result[0].foreman_point_3 * 30);
-			$("#foreman_total").text((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 30) + (result[0].foreman_point_3 * 30));
-			$("#manager_point1").text(result[0].manager_point_1 * 40);
-			$("#manager_point2").text(result[0].manager_point_2 * 30);
-			$("#manager_point3").text(result[0].manager_point_3 * 30);
-			$("#manager_total").text((result[0].manager_point_1 * 40) + (result[0].manager_point_2 * 30) + (result[0].manager_point_3 * 30));
+			$("#foreman_point1").text(result.datas[0].foreman_point_1 * 40);
+			$("#foreman_point2").text(result.datas[0].foreman_point_2 * 30);
+			$("#foreman_point3").text(result.datas[0].foreman_point_3 * 30);
+			$("#foreman_total").text((result.datas[0].foreman_point_1 * 40) + (result.datas[0].foreman_point_2 * 30) + (result.datas[0].foreman_point_3 * 30));
+			$("#manager_point1").text(result.datas[0].manager_point_1 * 40);
+			$("#manager_point2").text(result.datas[0].manager_point_2 * 30);
+			$("#manager_point3").text(result.datas[0].manager_point_3 * 30);
+			$("#manager_total").text((result.datas[0].manager_point_1 * 40) + (result.datas[0].manager_point_2 * 30) + (result.datas[0].manager_point_3 * 30));
 			$("#modalDetail").modal('show');
 		})
 	}

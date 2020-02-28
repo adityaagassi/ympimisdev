@@ -544,24 +544,24 @@
 			var max = [];
 
 			$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
-				$("#judul").html(result[0].title);
-				$("#lokasi").html(result[0].area);
-				$("#propose").html(result[0].purpose);				
-				$("#tgl").html(result[0].date);
-				$("#nama").html(result[0].employee_id+" "+result[0].employee_name);
-				$("#bagian").html(result[0].section);
-				$("#leader").html(result[0].leader_name);
-				$("#before").html(result[0].condition);
-				$("#after").html(result[0].improvement);
-				$("#note_foreman").html(result[0].foreman_note);
-				$("#note_manager").html(result[0].manager_note);
+				$("#judul").html(result.datas[0].title);
+				$("#lokasi").html(result.datas[0].area);
+				$("#propose").html(result.datas[0].purpose);				
+				$("#tgl").html(result.datas[0].date);
+				$("#nama").html(result.datas[0].employee_id+" "+result.datas[0].employee_name);
+				$("#bagian").html(result.datas[0].section);
+				$("#leader").html(result.datas[0].leader_name);
+				$("#before").html(result.datas[0].condition);
+				$("#after").html(result.datas[0].improvement);
+				$("#note_foreman").html(result.datas[0].foreman_note);
+				$("#note_manager").html(result.datas[0].manager_note);
 
-				$('#catatan').val(result[0].remark);
+				$('#catatan').val(result.datas[0].remark);
 				$("#tableEstimasi").empty();
 				bd = "";
 				tot = 0;
-				if (result[0].cost_name) {
-					$.each(result, function(index, value){
+				if (result.datas[0].cost_name) {
+					$.each(result.datas, function(index, value){
 						bd += "<tr>";
 						var unit = "";
 
@@ -594,13 +594,13 @@
 					$("#tableEstimasi").append(bd);
 				}
 
-				// $("#mp_point").html("<b>"+result.mp_point+"</b> menit X <b>Rp "+ 500+",00</b>");
-				// $("#total_mp_point").html("<b>Rp "+result.mp_point * 500 + ",00</b> / bulan");
-				// $("#space_point").html("<b>"+result.space_point+"</b> m<sup>2</sup> X <b>Rp "+0+",00");
-				// $("#total_space_point").html("<b>Rp "+result.space_point+",00</b>");
-				// $("#other_point").html("<b>Rp "+result.other_point+"</b>");
-				// $("#total_other_point").html("<b>Rp "+result.other_point+",00</b>");
-				// var tot = (result.mp_point * 500) + (result.space_point * 0) + result.other_point;
+				// $("#mp_point").html("<b>"+result.datas.mp_point+"</b> menit X <b>Rp "+ 500+",00</b>");
+				// $("#total_mp_point").html("<b>Rp "+result.datas.mp_point * 500 + ",00</b> / bulan");
+				// $("#space_point").html("<b>"+result.datas.space_point+"</b> m<sup>2</sup> X <b>Rp "+0+",00");
+				// $("#total_space_point").html("<b>Rp "+result.datas.space_point+",00</b>");
+				// $("#other_point").html("<b>Rp "+result.datas.other_point+"</b>");
+				// $("#total_other_point").html("<b>Rp "+result.datas.other_point+",00</b>");
+				// var tot = (result.datas.mp_point * 500) + (result.datas.space_point * 0) + result.datas.other_point;
 				// $("#total_point").html("<b>Rp "+tot+",00");
 				max.push($("#before").height());
 				max.push($("#after").height());
@@ -611,11 +611,11 @@
 				$("#after").height(mx);
 
 				if ("{{ Request::segment(5) }}" == "manager") {
-					$("#r_foreman1").html(result[0].foreman_point_1 * 40);
-					$("#r_foreman2").html(result[0].foreman_point_2 * 30);
-					$("#r_foreman3").html(result[0].foreman_point_3 * 30);
+					$("#r_foreman1").html(result.datas[0].foreman_point_1 * 40);
+					$("#r_foreman2").html(result.datas[0].foreman_point_2 * 30);
+					$("#r_foreman3").html(result.datas[0].foreman_point_3 * 30);
 
-					$("#total_foreman").html((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 30) + (result[0].foreman_point_3 * 30));
+					$("#total_foreman").html((result.datas[0].foreman_point_1 * 40) + (result.datas[0].foreman_point_2 * 30) + (result.datas[0].foreman_point_3 * 30));
 				}
 			})
 		}
