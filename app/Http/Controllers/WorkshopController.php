@@ -84,6 +84,16 @@ class WorkshopController extends Controller{
 		))->with('page', 'Workshop Operator Workload')->with('head', 'Workshop');	
 	}
 
+	public function indexOperatorload(){
+		$title = 'Workshop Operator Work Schedule';
+		$title_jp = '??';
+
+		return view('workshop.report.operatorload', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Workshop Operator Work Schedule')->with('head', 'Workshop');	
+	}
+
 	public function indexProductivity(){
 		$title = 'Workshop Productivity';
 		$title_jp = '作業依頼書の実現力';
@@ -1809,5 +1819,26 @@ class WorkshopController extends Controller{
 			'status' => true,
 		);
 		return Response::json($response);
+	}
+
+	public function fetchOperatorload(){
+
+		$operators = db::select('SELECT operator_id, name FROM workshop_operators
+			LEFT JOIN employee_syncs on workshop_operators.operator_id = employee_syncs.employee_id
+			order by operator_id asc');
+
+		$op_workloads = db::select("select workshop_flow_processes.operator, process.shortname, workshop_flow_processes.order_no, start_plan, finish_plan, std_time from workshop_flow_processes
+			left join workshop_job_orders wjo on wjo.order_no = workshop_flow_processes.order_no
+			left join workshop_processes process on process.machine_code = workshop_flow_processes.machine_code
+			where wjo.remark < 4 and process.category = 'MACHINE' and start_plan is not null
+			ORDER BY workshop_flow_processes.operator, start_plan asc");
+
+		$response = array(
+			'status' => true,
+			'operators' => $operators,
+			'op_workloads' => $op_workloads,
+		);
+		return Response::json($response);
+
 	}
 }

@@ -160,7 +160,7 @@
 					</thead>
 					<tbody id="kz_top_count"></tbody>
 				</table>
-				<h3 style="color: white;">TOP 10 each Kaizen Teian Score (EXCELLENT) :</h3>
+				<h3 style="color: white;">TOP 10 each Kaizen Teian Score (POTENTIAL EXCELLENT) :</h3>
 				<table class="table" style="color: white">
 					<thead>
 						<tr>
@@ -172,6 +172,19 @@
 						</tr>
 					</thead>
 					<tbody id="kz_top_each_score"></tbody>
+				</table>
+				<h3 style="color: white;">KAIZEN EXCELLENT :</h3>
+				<table class="table" style="color: white">
+					<thead>
+						<tr>
+							<th><i class="fa fa-trophy fa-2x"></i></th>
+							<th>EMPLOYEE ID</th>
+							<th>EMPLOYEE NAME</th>
+							<th>DEPARTMENT - SECTION - GROUP</th>
+							<th>SCORE</th>
+						</tr>
+					</thead>
+					<tbody id="kz_excellent"></tbody>
 				</table>
 
 				<div class="modal fade" id="modal_excellent">
@@ -303,6 +316,11 @@
 												<td>Rp 50,000,-</td>
 											</tr>
 										</table>
+										<br>
+										<div id="eksekusi">
+											<button class="btn btn-success pull-left" onclick="eksekusi_kaizen(true)"><i class="fa fa-check"></i>&nbsp;EXCELLENT</button>
+											<button class="btn btn-danger pull-right" onclick="eksekusi_kaizen(false)"><i class="fa fa-close"></i>&nbsp;NOT EXCELLENT</button>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -332,9 +350,12 @@
 		}
 	});
 
+	var id_kz = 0;
+
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		$("#navbar-collapse").text('');
+		$("#eksekusi").hide();
 		drawChart();
 
 		// setInterval(drawChart, 3000);
@@ -355,6 +376,7 @@
 			$("#kz_top_sum").empty();
 			$("#kz_top_count").empty();
 			$("#kz_top_each_score").empty();
+			$("#kz_excellent").empty();
 			var data1 = [];
 			var data_total = [];
 			var total_tmp = 0;
@@ -494,84 +516,142 @@
 			})
 
 			$("#kz_top_each_score").append(body_each);
+
+			body_each = "";
+			no = 1;
+
+			$.each(result.true_excellent, function(index, value){
+				body_each += "<tr onclick='detail_excellent("+value.id+")'>";
+				body_each += "<td colspan='2'>"+value.employee_id+"</td>";
+				body_each += "<td>"+value.employee_name+"</td>";
+				body_each += "<td>"+value.bagian+"</td>";
+				body_each += "<td>"+value.score+"</td>";
+				body_each += "</tr>";
+				no++;
+			})
+
+			$("#kz_excellent").append(body_each);
 		});
+}
+
+function detail_excellent(id) {
+	$('#modal_excellent').modal('show');
+
+	data = {
+		id:id
 	}
 
-	function detail_excellent(id) {
-		$('#modal_excellent').modal('show');
-
-		data = {
-			id:id
+	$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
+		if (result.aksi && result.datas[0].remark == null) {
+			$("#eksekusi").show();
+			id_kz = id;
+		} else {
+			$("#eksekusi").hide();
 		}
 
-		$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
-			$("#kz_title").text(result[0].title);
-			$("#kz_nik").text(result[0].employee_id + " / "+ result[0].employee_name);
-			$("#kz_section").text(result[0].section);
-			$("#kz_leader").text(result[0].leader_name);
-			$("#kz_tanggal").text(result[0].date);
-			$("#kz_area").text(result[0].area);
-			$("#kz_before").html(result[0].condition);
-			$("#kz_after").html(result[0].improvement);
-			$("#foreman_point1").text(result[0].foreman_point_1 * 40);
-			$("#foreman_point2").text(result[0].foreman_point_2 * 30);
-			$("#foreman_point3").text(result[0].foreman_point_3 * 30);
-			$("#foreman_total").text((result[0].foreman_point_1 * 40) + (result[0].foreman_point_2 * 30) + (result[0].foreman_point_3 * 30));
-			$("#manager_point1").text(result[0].manager_point_1 * 40);
-			$("#manager_point2").text(result[0].manager_point_2 * 30);
-			$("#manager_point3").text(result[0].manager_point_3 * 30);
-			$("#manager_total").text((result[0].manager_point_1 * 40) + (result[0].manager_point_2 * 30) + (result[0].manager_point_3 * 30));
+		$("#kz_title").text(result.datas[0].title);
+		$("#kz_nik").text(result.datas[0].employee_id + " / "+ result.datas[0].employee_name);
+		$("#kz_section").text(result.datas[0].section);
+		$("#kz_leader").text(result.datas[0].leader_name);
+		$("#kz_tanggal").text(result.datas[0].date);
+		$("#kz_area").text(result.datas[0].area);
+		$("#kz_before").html(result.datas[0].condition);
+		$("#kz_after").html(result.datas[0].improvement);
+		$("#foreman_point1").text(result.datas[0].foreman_point_1 * 40);
+		$("#foreman_point2").text(result.datas[0].foreman_point_2 * 30);
+		$("#foreman_point3").text(result.datas[0].foreman_point_3 * 30);
+		$("#foreman_total").text((result.datas[0].foreman_point_1 * 40) + (result.datas[0].foreman_point_2 * 30) + (result.datas[0].foreman_point_3 * 30));
+		$("#manager_point1").text(result.datas[0].manager_point_1 * 40);
+		$("#manager_point2").text(result.datas[0].manager_point_2 * 30);
+		$("#manager_point3").text(result.datas[0].manager_point_3 * 30);
+		$("#manager_total").text((result.datas[0].manager_point_1 * 40) + (result.datas[0].manager_point_2 * 30) + (result.datas[0].manager_point_3 * 30));
 
-			$("#tabel_nilai").empty();
-			if (result[0].cost_name) {
-				bd = "";
-				tot = 0;
-				bd += "<tr style='font-size: 13px;'><th>Estimasi Hasil : </th></tr>";
-				$.each(result, function(index, value){
-					bd += "<tr>";
-					var unit = "";
+		$("#tabel_nilai").empty();
+		if (result.datas[0].cost_name) {
+			bd = "";
+			tot = 0;
+			bd += "<tr style='font-size: 13px;'><th>Estimasi Hasil : </th></tr>";
+			$.each(result.datas, function(index, value){
+				bd += "<tr>";
+				var unit = "";
 
-					if (value.cost_name == "Manpower") {
-						unit = "menit";
-						sub_tot = parseInt(value.sub_total_cost) * 20;
-						tot += sub_tot;
-					}  else if (value.cost_name == "Tempat") {
-						unit = value.unit+"<sup>2</sup>";
-						sub_tot = parseInt(value.sub_total_cost);
-						tot += sub_tot;
-					}
-					else {
-						unit = value.unit;
-						sub_tot = value.sub_total_cost;
-						tot += sub_tot;
-					}
+				if (value.cost_name == "Manpower") {
+					unit = "menit";
+					sub_tot = parseInt(value.sub_total_cost) * 20;
+					tot += sub_tot;
+				}  else if (value.cost_name == "Tempat") {
+					unit = value.unit+"<sup>2</sup>";
+					sub_tot = parseInt(value.sub_total_cost);
+					tot += sub_tot;
+				}
+				else {
+					unit = value.unit;
+					sub_tot = value.sub_total_cost;
+					tot += sub_tot;
+				}
 
-					sub_tot = sub_tot.toLocaleString('es-ES');
+				sub_tot = sub_tot.toLocaleString('es-ES');
 
-					bd += "<th>"+value.cost_name+"</th>";
-					bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",-</b></td>";
-					bd += "<td><b>Rp "+sub_tot+",- / bulan</b></td>";
-					bd += "</tr>";
-				});
-
-				tot = tot.toLocaleString('es-ES');
-
-				bd += "<tr style='font-size: 18px;'>";
-				bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total : </th>";
-				bd += "<td><b>Rp "+tot+",-</b></td>";
+				bd += "<th>"+value.cost_name+"</th>";
+				bd += "<td><b>"+value.cost+"</b> "+unit+" X <b>Rp "+value.std_cost+",-</b></td>";
+				bd += "<td><b>Rp "+sub_tot+",- / bulan</b></td>";
 				bd += "</tr>";
+			});
 
-				$("#tabel_nilai").append(bd);
-			}
-			$("#modalDetail").modal('show');
-		})
+			tot = tot.toLocaleString('es-ES');
+
+			bd += "<tr style='font-size: 18px;'>";
+			bd += "<th colspan='2' style='text-align: right;padding-right:5px'>Total : </th>";
+			bd += "<td><b>Rp "+tot+",-</b></td>";
+			bd += "</tr>";
+
+			$("#tabel_nilai").append(bd);
+		}
+		$("#modalDetail").modal('show');
+	})
+}
+
+function eksekusi_kaizen(status) {
+	var data = {
+		status : status,
+		id: id_kz
 	}
+	$.post('{{ url("execute/kaizen/excellent") }}', data, function(result) {
+		openSuccessGritter('Success!', result.message);
+	})
+}
 
-	$('#tgl').datepicker({
-		autoclose: true,
-		format: "yyyy-mm",
-		viewMode: "months", 
-		minViewMode: "months"
+$("#modal_excellent").on('hide.bs.modal', function(){
+	id_kz = 0;
+});
+
+$('#tgl').datepicker({
+	autoclose: true,
+	format: "yyyy-mm",
+	viewMode: "months", 
+	minViewMode: "months"
+});
+
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '2000'
 	});
+}
+
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '2000'
+	});
+}
 </script>
 @endsection

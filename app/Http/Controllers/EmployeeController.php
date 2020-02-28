@@ -2416,7 +2416,7 @@ public function fetchDataKaizen()
                if ($kzn->status == 0) {
                     return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
                } else {
-// return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>';
+                    // return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>';
                }
           }
      })
@@ -2463,7 +2463,7 @@ public function inputKaizenDetailNote(Request $request){
 
 public function fetchDetailKaizen(Request $request)
 {
-     $data = KaizenForm::select("kaizen_forms.employee_id","employee_name", db::raw("date_format(propose_date,'%d-%b-%Y') as date"), "title", "condition", "improvement", "area", "leader", "purpose", "section", db::raw("name as leader_name"),'foreman_point_1', 'foreman_point_2', 'foreman_point_3', 'manager_point_1', 'manager_point_2', 'manager_point_3', 'kaizen_calculations.cost', 'standart_costs.cost_name', db::raw('kaizen_calculations.cost * standart_costs.cost as sub_total_cost'), 'frequency', 'unit',db::raw('standart_costs.cost as std_cost'), 'kaizen_forms.remark', 'kaizen_notes.foreman_note','kaizen_notes.manager_note')
+     $data = KaizenForm::select("kaizen_forms.id","kaizen_forms.employee_id","employee_name", db::raw("date_format(propose_date,'%d-%b-%Y') as date"), "title", "condition", "improvement", "area", "leader", "purpose", "section", db::raw("name as leader_name"),'foreman_point_1', 'foreman_point_2', 'foreman_point_3', 'manager_point_1', 'manager_point_2', 'manager_point_3', 'kaizen_calculations.cost', 'standart_costs.cost_name', db::raw('kaizen_calculations.cost * standart_costs.cost as sub_total_cost'), 'frequency', 'unit',db::raw('standart_costs.cost as std_cost'), 'kaizen_forms.remark', 'kaizen_notes.foreman_note','kaizen_notes.manager_note')
      ->leftJoin('employees','employees.employee_id','=','kaizen_forms.leader')
      ->leftJoin('kaizen_calculations','kaizen_forms.id','=','kaizen_calculations.id_kaizen')
      ->leftJoin('standart_costs','standart_costs.id','=','kaizen_calculations.id_cost')
@@ -2472,51 +2472,64 @@ public function fetchDetailKaizen(Request $request)
      ->where('kaizen_forms.id','=',$request->get('id'))
      ->get();
 
-     return Response::json($data);
+     $login = db::select("select username from users where '".Auth::user()->username."' in (select username from users where role_code = 'MIS' or username = 'PI0904007')");
+
+     if (count($login) > 0) {
+          $aksi = true;
+     } else {
+          $aksi = false;
+     }
+
+     // return Response::json($data);
+     return response()->json([
+          'status' => true,
+          'datas' => $data,
+          'aksi' => $aksi
+     ]);
 }
 
 public function assessKaizen(Request $request)
 {
      $id = Auth::id();
 
-if ($request->get('category') == 'manager') { 
-// --------------- JIKA inputor Manager ----
-     if ($request->get('nilai1')) {
-          try {
-               $data = KaizenScore::where('id_kaizen','=' , $request->get('id'))
-               ->first();
+     if ($request->get('category') == 'manager') { 
+          // --------------- JIKA inputor Manager ----
+          if ($request->get('nilai1')) {
+               try {
+                    $data = KaizenScore::where('id_kaizen','=' , $request->get('id'))
+                    ->first();
 
-               $data->manager_point_1 = $request->get('nilai1');
-               $data->manager_point_2 = $request->get('nilai2');
-               $data->manager_point_3 = $request->get('nilai3');
-               $data->save();
+                    $data->manager_point_1 = $request->get('nilai1');
+                    $data->manager_point_2 = $request->get('nilai2');
+                    $data->manager_point_3 = $request->get('nilai3');
+                    $data->save();
 
-               return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
-// return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
+                    return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
+                    // return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
 
-          } catch (QueryException $e) {
-// return ['status' => 'error', 'message' => $e->getMessage()];
-               return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+               } catch (QueryException $e) {
+                    // return ['status' => 'error', 'message' => $e->getMessage()];
+                    return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+               }
+          } else {
+                    // -------------- Jika Kaizen False -----------
+               try {
+                    $data = KaizenForm::where('id','=' , $request->get('id'))
+                    ->first();
+
+                    $data->status = 2;
+                    $data->save();
+
+                    // return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
+                    return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
+               } catch (QueryException $e) {
+                    // return ['status' => 'error', 'message' => $e->getMessage()];
+                    return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
+               }
           }
-     } else {
-// -------------- Jika Kaizen False -----------
-          try {
-               $data = KaizenForm::where('id','=' , $request->get('id'))
-               ->first();
-
-               $data->status = 2;
-               $data->save();
-
-// return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
-               return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
-          } catch (QueryException $e) {
-// return ['status' => 'error', 'message' => $e->getMessage()];
-               return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
-          }
-     }
 } else if ($request->get('category') == 'foreman') {    // --------------- JIKA inputor Foreman ----
      if ($request->get('nilai1')) {
-// ----------------  JIKA KAIZEN true ------------
+          // ----------------  JIKA KAIZEN true ------------
           try {
                $data = KaizenForm::where('id','=' , $request->get('id'))
                ->first();
@@ -2545,15 +2558,15 @@ if ($request->get('category') == 'manager') {
                     ]);
                }
 
-// return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
+               // return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
                return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
 
           } catch (QueryException $e) {
-// return ['status' => 'error', 'message' => $e->getMessage()];
+               // return ['status' => 'error', 'message' => $e->getMessage()];
                return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
           }
      } else {
-// ----------------  JIKA KAIZEN false ------------
+               // ----------------  JIKA KAIZEN false ------------
           try {
                $data = KaizenForm::where('id','=' , $request->get('id'))
                ->first();
@@ -2561,11 +2574,11 @@ if ($request->get('category') == 'manager') {
                $data->status = 0;
                $data->save();
 
-// return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
+               // return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
 
                return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
           } catch (QueryException $e) {
-// return ['status' => 'error', 'message' => $e->getMessage()];
+               // return ['status' => 'error', 'message' => $e->getMessage()];
                return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
           }
      }
@@ -2585,60 +2598,59 @@ public function fetchAppliedKaizen()
      }
 
      $dprt = db::select("select distinct section from mutation_logs where valid_to is null and department = (select department from mutation_logs where employee_id = '".$username."' and valid_to is null)");
-DB::enableQueryLog(); // Enable query log
 
-$kzn = KaizenForm::Join('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
-->select('kaizen_forms.id','employee_name','title','area','section','application','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3')
-->where('manager_point_1','<>','0');
-if ($_GET['area'][0] != "") {
-     $areas = implode("','", $_GET['area']);
+     $kzn = KaizenForm::Join('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
+     ->select('kaizen_forms.id','employee_name','title','area','section','application','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3')
+     ->where('manager_point_1','<>','0');
+     if ($_GET['area'][0] != "") {
+          $areas = implode("','", $_GET['area']);
 
-     $kzn = $kzn->whereRaw('area in (\''.$areas.'\')');
-}
-
-if ($_GET['status'] != "") {
-     if ($_GET['status'] == '1') {
-          $kzn = $kzn->whereNull('application');
-     } else if ($_GET['status'] == '2') {
-          $kzn = $kzn->where('application','=', '1');
-     } else if ($_GET['status'] == '3') {
-          $kzn = $kzn->where('application','=', '0');
+          $kzn = $kzn->whereRaw('area in (\''.$areas.'\')');
      }
-}
 
-$dprt2 = [];
-foreach ($dprt as $dpr) {
-     array_push($dprt2, $dpr->section);
-}
-
-$dprt3 = implode("','", $dprt2);
-if ($d == 0) {
-     $kzn = $kzn->whereRaw('area in (\''.$dprt3.'\')');
-}
-
-$kzn->get();
-
-return DataTables::of($kzn)
-->addColumn('app_stat', function($kzn){
-     if ($kzn->application == '') {
-          return '<button class="label bg-yellow btn" onclick="modal_apply('.$kzn->id.',\''.$kzn->title.'\')">UnApplied</a>';
-     } else if($kzn->application == '1') {
-          return '<span class="label bg-green"><i class="fa fa-check"></i> Applied</span>';
-     } else if($kzn->application == '0') {
-          return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Applied</span>';
+     if ($_GET['status'] != "") {
+          if ($_GET['status'] == '1') {
+               $kzn = $kzn->whereNull('application');
+          } else if ($_GET['status'] == '2') {
+               $kzn = $kzn->where('application','=', '1');
+          } else if ($_GET['status'] == '3') {
+               $kzn = $kzn->where('application','=', '0');
+          }
      }
-})
-->addColumn('action', function($kzn){
-     return '<button onClick="cekDetail(\''.$kzn->id.'\')" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Details</button>';
-})
-->addColumn('fr_point', function($kzn){
-     return ($kzn->foreman_point_1 * 40) + ($kzn->foreman_point_2 * 30) + ($kzn->foreman_point_3 * 30);
-})
-->addColumn('mg_point', function($kzn){
-     return ($kzn->manager_point_1 * 40) + ($kzn->manager_point_2 * 30) + ($kzn->manager_point_3 * 30);
-})
-->rawColumns(['app_stat', 'fr_point', 'mg_point', 'action'])
-->make(true);
+
+     $dprt2 = [];
+     foreach ($dprt as $dpr) {
+          array_push($dprt2, $dpr->section);
+     }
+
+     $dprt3 = implode("','", $dprt2);
+     if ($d == 0) {
+          $kzn = $kzn->whereRaw('area in (\''.$dprt3.'\')');
+     }
+
+     $kzn->get();
+
+     return DataTables::of($kzn)
+     ->addColumn('app_stat', function($kzn){
+          if ($kzn->application == '') {
+               return '<button class="label bg-yellow btn" onclick="modal_apply('.$kzn->id.',\''.$kzn->title.'\')">UnApplied</a>';
+          } else if($kzn->application == '1') {
+               return '<span class="label bg-green"><i class="fa fa-check"></i> Applied</span>';
+          } else if($kzn->application == '0') {
+               return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Applied</span>';
+          }
+     })
+     ->addColumn('action', function($kzn){
+          return '<button onClick="cekDetail(\''.$kzn->id.'\')" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i> Details</button>';
+     })
+     ->addColumn('fr_point', function($kzn){
+          return ($kzn->foreman_point_1 * 40) + ($kzn->foreman_point_2 * 30) + ($kzn->foreman_point_3 * 30);
+     })
+     ->addColumn('mg_point', function($kzn){
+          return ($kzn->manager_point_1 * 40) + ($kzn->manager_point_2 * 30) + ($kzn->manager_point_3 * 30);
+     })
+     ->rawColumns(['app_stat', 'fr_point', 'mg_point', 'action'])
+     ->make(true);
 }
 
 public function fetchCost()
@@ -2694,12 +2706,22 @@ public function fetchKaizenReport(Request $request)
 
      $kz_excellent = db::select($q_excellent);
 
+     $q_a_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',mutation_logs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as score, kaizen_forms.id from kaizen_forms 
+     join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
+     left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
+     where DATE_FORMAT(propose_date,'%Y-%m') = '".$date."' and remark = 'excellent'
+     and valid_to is null
+     order by (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) desc";
+
+     $kz_after_excellent = db::select($q_a_excellent);
+
      $response = array(
           'status' => true,
           'charts' => $kz_total,
           'rank1' => $kz_rank1,
           'rank2' => $kz_rank2,
           'excellent' => $kz_excellent,
+          'true_excellent' => $kz_after_excellent,
           'date' => $dt2
      );
      return Response::json($response);
@@ -2864,21 +2886,6 @@ public function deleteKaizen(Request $request)
      return Response::json($response);
 }
 
-// public function fetchEmployee(Request $request)
-// {
-//   $username = Auth::user()->username;
-
-//   $mstr = EmployeeSync::where('employee_id','=', $username)->select('sub_section')->first();
-
-//   $datas = EmployeeSync::where('section','=', $mstr->sub_section)->select('employee_id','name')->get();
-
-//   $response = array(
-//     'status' => true,
-//     'employees' => $datas,
-//     'master' => $mstr
-//   );
-//   return Response::json($response);
-// }
 
 public function UploadKaizenImage(Request $request)
 {
@@ -2893,14 +2900,34 @@ public function UploadKaizenImage(Request $request)
 
           $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
 
-// if (!file_exists(public_path().'/kcfinderimages/'.$request->get('employee_id'))) {
-//   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id'), 0777, true);
-//   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', 0777, true);
-// }
+          // if (!file_exists(public_path().'/kcfinderimages/'.$request->get('employee_id'))) {
+          //   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id'), 0777, true);
+          //   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', 0777, true);
+          // }
 
-// $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
+          // $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
           return redirect('/index/upload_kaizen')->with('status', 'Upload Image Successfully');
      }
+}
+
+public function executeKaizenExcellent(Request $request)
+{
+     if ($request->get('status')) {
+          $stat = 'excellent';
+     } else {
+          $stat = 'not excellent';
+     }
+
+     $kz = KaizenForm::where('id', $request->get('id'))
+     ->update([
+          'remark' => $stat,
+     ]);
+
+     $response = array(
+          'status' => true,
+          'message' => 'Kaizen Successfully Executed'
+     );
+     return Response::json($response);
 }
 
 public function setSession(Request $request)
