@@ -1005,7 +1005,6 @@ Route::get('fetch/workshop/edit_drawing', 'WorkshopController@fetchEditDrawing')
 Route::get('index/workshop/wjo_monitoring', 'WorkshopController@indexWJOMonitoring');
 Route::get('fetch/workshop/wjo_monitoring', 'WorkshopController@fetchWJOMonitoring');
 Route::get('index/workshop/productivity', 'WorkshopController@indexProductivity');
-Route::get('index/workshop/productivity', 'WorkshopController@indexProductivity');
 Route::get('fetch/workshop/productivity', 'WorkshopController@fetchProductivity');
 Route::get('fetch/workshop/operator_detail', 'WorkshopController@fetchOperatorDetail');
 Route::get('fetch/workshop/machine_detail', 'WorkshopController@fetchmachineDetail');

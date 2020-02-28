@@ -412,6 +412,7 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.material',
 			'workshop_job_orders.problem_description',
 			'workshop_job_orders.target_date',
+			'workshop_job_orders.sub_section',
 			db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as name'),
 			'workshop_job_orders.attachment')
 		->first();
@@ -1718,7 +1719,7 @@ class WorkshopController extends Controller{
 		$date = date('Y-m-d', strtotime($request->get('date')));
 		$name = $request->get('name');
 
-		$detail = db::select("select concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, p.machine_name, p.process_name, l.started_at, l.created_at  from workshop_logs l
+		$detail = db::select("select concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, p.machine_name, p.process_name, l.started_at, l.created_at, l.order_no  from workshop_logs l
 			left join employee_syncs e on e.employee_id = l.operator_id
 			left join workshop_processes p on p.machine_code = l.machine_code
 			where e.`group` = 'Workshop'

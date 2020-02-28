@@ -131,6 +131,7 @@
 								<thead id="operator-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th>Operator</th>
+										<th>Order no</th>
 										<th>Machine Name</th>
 										<th>Process Name</th>
 										<th>Started at</th>
@@ -451,6 +452,7 @@ function showOperatorDetail(name, date) {
 			for (var i = 0; i < result.detail.length; i++) {
 				body += '<tr>';
 				body += '<td>'+ result.detail[i].name +'</td>';
+				body += '<td>'+ result.detail[i].order_no +'</td>';
 				body += '<td>'+ result.detail[i].machine_name +'</td>';
 				body += '<td>'+ result.detail[i].process_name +'</td>';
 				body += '<td>'+ result.detail[i].started_at +'</td>';
