@@ -398,6 +398,10 @@
                                 <i class="fa fa-caret-right"></i> Workshop Workload (作業依頼書一覧)
                             </a>
                             <br>
+                            <a href="{{ url("index/workshop/operatorload") }}">
+                                <i class="fa fa-caret-right"></i> Workshop Operator Work Schedule (??)
+                            </a>
+                            <br>
                         </td>                        
                     </tr>
                 </tbody>
