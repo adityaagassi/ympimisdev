@@ -1078,7 +1078,9 @@ class WorkshopController extends Controller{
 				// ==================== EXIST FLOW PROCCESS ====================
 
 				$existed_flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+				->leftJoin('workshop_job_orders','workshop_job_orders.order_no', '=', 'workshop_flow_processes.order_no')
 				->where('workshop_flow_processes.machine_code', '=', $request->get('process_'.$x))
+				->where('workshop_job_orders.remark', '<', '4')
 				->select('workshop_flow_processes.order_no',
 					'workshop_flow_processes.sequence_process',
 					'workshop_flow_processes.machine_code',
