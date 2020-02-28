@@ -185,9 +185,10 @@
 		$.get('{{ url("fetch/workshop/job_history") }}', data,  function(result, status, xhr){
 			$.each(result.datas, function(index, value){
 				if (typeof result.datas[index+1] === 'undefined') {
-					body += "<td>"+value.waktu+"</td></tr>";
+					if (value.waktu == '0.00') time = '-'; else time = value.waktu;
+					body += "<td>"+time+"</td></tr>";
 				} else {
-					if (result.datas[index].operator_id != result.datas[index+1].operator_id) {
+					if (result.datas[index].operator_id.toUpperCase() != result.datas[index+1].operator_id.toUpperCase()) {
 						if (value.waktu == '0.00') time = '-'; else time = value.waktu;
 
 						body += "<td>"+time+"</td></tr>";
