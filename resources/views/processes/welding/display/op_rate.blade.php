@@ -1,17 +1,19 @@
 @extends('layouts.display')
 @section('stylesheets')
 <style type="text/css">
-	input {
-		line-height: 22px;
-	}
 	thead>tr>th{
 		text-align:center;
+		overflow:hidden;
+		padding: 3px;
 	}
 	tbody>tr>td{
 		text-align:center;
 	}
 	tfoot>tr>th{
 		text-align:center;
+	}
+	th:hover {
+		overflow: visible;
 	}
 	td:hover {
 		overflow: visible;
@@ -21,13 +23,22 @@
 	}
 	table.table-bordered > thead > tr > th{
 		border:1px solid black;
+		vertical-align: middle;
+		text-align: center;
 	}
 	table.table-bordered > tbody > tr > td{
-		border:1px solid rgb(211,211,211);
-		padding: 0;
+		border:1px solid black;
+		text-align: center;
+		vertical-align: middle;
+		padding:0;
 	}
 	table.table-bordered > tfoot > tr > th{
-		border:1px solid rgb(211,211,211);
+		border:1px solid black;
+		padding:0;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
 	}
 </style>
 @endsection
@@ -41,7 +52,7 @@
 				<form method="GET" action="{{ action('WeldingProcessController@indexOpRate') }}">
 					<div class="col-xs-2" style="padding-right: 0;">
 						<div class="input-group date">
-							<div class="input-group-addon" style="border: none; background-color: #605ca8; color: white;">
+							<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
 								<i class="fa fa-calendar"></i>
 							</div>
 							<input type="text" class="form-control datepicker" id="tanggal" name="tanggal" placeholder="Select Date">
@@ -66,7 +77,7 @@
 						</div>
 					</div>
 					<div class="col-xs-2">
-						<button class="btn" style="background-color: #605ca8; color: white;" type="submit"><i class="fa fa-search"></i> Search</button>
+						<button class="btn btn-success" type="submit"><i class="fa fa-search"></i> Search</button>
 					</div>
 					<div class="pull-right" id="loc" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 2vw;"></div>
 				</form>
@@ -97,34 +108,92 @@
 	</div>
 </section>
 
-<div class="modal fade" id="modalDetail">
+<!-- start modal -->
+<div class="modal fade" id="myModal" style="color: black;">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="modalDetailTitle"></h4>
-				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
-					<center>
-						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
-					</center>
-					<table class="table table-hover table-bordered table-striped" id="tableDetail">
-						<thead style="background-color: rgba(126,86,134,.7);">
-							<tr>
-								<th style="width: 1%;">#</th>
-								<th style="width: 3%;">Material</th>
-								<th style="width: 9%;">Description</th>
-								<th style="width: 3%;">Stock/Day</th>
-								<th style="width: 3%;">Act. Stock</th>
-								<th style="width: 3%;">Stock</th>
-							</tr>
-						</thead>
-						<tbody id="tableDetailBody">
-						</tbody>
-					</table>
+				<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>NG Rate Operator Details</b></h4>
+				<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12" style="margin-bottom: 20px;">
+						<div class="col-md-6">
+							<h5 class="modal-title">NG Rate</h5><br>
+							<h5 class="modal-title" id="ng_rate"></h5>
+						</div>
+						<div class="col-md-6">
+							<div id="modal_ng" style="height: 200px"></div>
+						</div>
+					</div>
+
+					<div class="col-md-8">
+						<table id="welding-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
+							<thead id="welding-ng-log-head" style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th colspan="6" style="text-align: center;">NOT GOOD</th>
+								</tr>
+								<tr>
+									<th style="width: 15%;">Finish Welding</th>
+									<th>Model</th>
+									<th>Key</th>
+									<th>OP Kensa</th>
+									<th>NG Name</th>
+									<th style="width: 5%;">Material Qty</th>
+								</tr>
+							</thead>
+							<tbody id="welding-ng-log-body">
+							</tbody>
+						</table>
+					</div>
+
+					<div class="col-md-6">
+						<table id="welding-log" class="table table-striped table-bordered" style="width: 100%;"> 
+							<thead id="welding-log-head" style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th colspan="5" style="text-align: center;">GOOD</th>
+								</tr>
+								<tr>
+									<th>Finish Welding</th>
+									<th>Model</th>
+									<th>Key</th>
+									<th>OP Kensa</th>
+									<th>Material Qty</th>
+								</tr>
+							</thead>
+							<tbody id="welding-log-body">
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-6">
+						<table id="welding-cek" class="table table-striped table-bordered" style="width: 100%;"> 
+							<thead id="welding-cek-head" style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th colspan="5" style="text-align: center;">TOTAL CEK</th>
+								</tr>
+								<tr>
+									<th>Finish Welding</th>
+									<th>Model</th>
+									<th>Key</th>
+									<th>OP Kensa</th>
+									<th>Material Qty</th>
+								</tr>
+							</thead>
+							<tbody id="welding-cek-body">
+							</tbody>
+						</table>
+					</div>
+
 				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 			</div>
 		</div>
 	</div>
 </div>
+<!-- end modal -->
 
 @endsection
 @section('scripts')
@@ -159,12 +228,7 @@
 		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
 		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
 		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#2a2a2b']
-				]
-			},
+			backgroundColor: null,
 			style: {
 				fontFamily: 'sans-serif'
 			},
@@ -353,6 +417,165 @@
 	Highcharts.setOptions(Highcharts.theme);
 
 	
+	function showDetail(tgl, nama) {
+		var data = {
+			tgl:tgl,
+			nama:nama,
+		}
+
+		$('#myModal').modal('show');
+		$('#welding-log-body').append().empty();
+		$('#welding-ng-log-body').append().empty();
+		$('#welding-cek-body').append().empty();
+		$('#ng_rate').append().empty();
+		$('#posh_rate').append().empty();
+		$('#judul').append().empty();
+
+
+		$.get('{{ url("fetch/welding/op_ng_detail") }}', data, function(result, status, xhr) {
+			if(result.status){
+
+				$('#judul').append('<b>'+result.nik+' - '+result.nama+' on '+tgl+'</b>');
+
+				//Welding log
+				var total_good = 0;
+				var body = '';
+				for (var i = 0; i < result.good.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.good[i].welding_time+'</td>';
+					body += '<td>'+result.good[i].model+'</td>';
+					body += '<td>'+result.good[i].key+'</td>';
+					body += '<td>'+result.good[i].op_kensa+'</td>';
+					body += '<td>'+result.good[i].quantity+'</td>';
+					body += '</tr>';
+
+					total_good += parseInt(result.good[i].quantity);
+				}
+				body += '<tr>';
+				body += '<td  colspan="4" style="text-align: center;">Total</td>';
+				body += '<td>'+total_good+'</td>';
+				body += '</tr>';
+				$('#welding-log-body').append(body);
+
+
+				//Welding NG log
+				var total_ng = 0;
+				var body = '';
+				for (var i = 0; i < result.ng_ng.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.ng_ng[i].welding_time+'</td>';
+					body += '<td>'+result.ng_ng[i].model+'</td>';
+					body += '<td>'+result.ng_ng[i].key+'</td>';
+					body += '<td>'+result.ng_ng[i].op_kensa+'</td>';
+					body += '<td>'+result.ng_ng[i].ng_name+'</td>';
+					body += '<td>'+result.ng_ng[i].quantity+'</td>';
+					body += '</tr>';
+
+					total_ng += parseInt(result.ng_ng[i].quantity);
+				}
+				body += '<tr>';
+				body += '<td colspan="5" style="text-align: center;">Total</td>';
+				body += '<td>'+total_ng+'</td>';
+				body += '</tr>';
+				$('#welding-ng-log-body').append(body);
+
+				//Welding cek
+				var total_cek = 0;
+				var body = '';
+				for (var i = 0; i < result.cek.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.cek[i].welding_time+'</td>';
+					body += '<td>'+result.cek[i].model+'</td>';
+					body += '<td>'+result.cek[i].key+'</td>';
+					body += '<td>'+result.cek[i].op_kensa+'</td>';
+					body += '<td>'+result.cek[i].quantity+'</td>';
+					body += '</tr>';
+
+					total_cek += parseInt(result.cek[i].quantity);
+				}
+				body += '<tr>';
+				body += '<td colspan="4" style="text-align: center;">Total</td>';
+				body += '<td>'+total_cek+'</td>';
+				body += '</tr>';
+				$('#welding-cek-body').append(body);
+
+
+				//Resume
+				var ng_rate = total_ng / total_cek * 100;
+				var text_ng_rate = '= <sup>Total NG</sup>/<sub>Total Cek</sub> x 100%';
+				text_ng_rate += '<br>= <sup>'+ total_ng +'</sup>/<sub>'+ total_cek +'</sub> x 100%';
+				text_ng_rate += '<br>= <b>'+ ng_rate.toFixed(2) +'%</b>';
+				$('#ng_rate').append(text_ng_rate);
+
+
+				//Chart NG
+				var data = [];
+				var ng_name = [];
+				var qty = [];
+				for (var i = 0; i < result.ng_qty.length; i++) {
+
+					ng_name.push(result.ng_qty[i].ng_name);
+					qty.push(result.ng_qty[i].qty);
+
+					if(i == 0){
+						data.push([ng_name[i], qty[i], true, false]);
+					}else{
+						data.push([ng_name[i], qty[i], false, false]);
+					}
+
+				}
+
+				Highcharts.chart('modal_ng', {
+					chart: {
+						styledMode: true,
+						backgroundColor: null,
+						borderWidth: null,
+						plotBackgroundColor: null,
+						plotShadow: null,
+						plotBorderWidth: null,
+						plotBackgroundImage: null
+					},
+					title: {
+						text: '',
+						style: {
+							display: 'none'
+						}
+					},
+					exporting: {
+						enabled: false 
+					},
+					tooltip: {
+						enabled: false
+					},
+					plotOptions: {
+						pie: {
+							animation: false,
+							dataLabels: {
+								useHTML: true,
+								enabled: true,
+								format: '<span style="color:#121212"><b>{point.name}</b>:</span><br><span style="color:#121212">total = {point.y} PC(s)</span>',
+								style:{
+									textOutline: true,
+								}
+							}
+						}
+					},
+					credits: {
+						enabled:false
+					},
+					series: [{
+						type: 'pie',
+						allowPointSelect: true,
+						keys: ['name', 'y', 'selected', 'sliced'],
+						data: data,
+					}]
+				});
+
+			}
+
+		});
+	}
+
 
 	function fetchChart(){
 
@@ -437,12 +660,19 @@
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 'A'){
 						loop += 1;
-						var name_temp = result.ng_rate[i].name;
+
+						var name_temp = result.ng_rate[i].name.split(" ");
 						var xAxis = '';
-						// xAxis += result.ng_rate[i].operator_id + ' - ';
-						var namasingkat = name_temp.split(' ').slice(0,2).join(' ');
-						xAxis += namasingkat;
+						xAxis += result.ng_rate[i].operator_id + ' - ';
+
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
+							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+						}
 						op_name.push(xAxis);
+
+
 
 						if(result.ng_rate[i].rate > 100){
 							rate.push(100);						
@@ -465,7 +695,6 @@
 
 				Highcharts.chart('container1', {
 					chart: {
-						type: 'column',
 						animation: false
 					},
 					title: {
@@ -487,9 +716,8 @@
 						type: 'category',
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
-						lineWidth:2,
-						lineColor:'#9e9e9e',
 						labels: {
+							rotation: -45,
 							style: {
 								fontSize: '12px',
 								fontWeight: 'bold'
@@ -497,16 +725,11 @@
 						},
 					},
 					yAxis: {
-						min: 0,
 						title: {
-							text: 'NG Rate (%)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
+							enabled: true,
+							text: "Overall Efficiency (%)"
 						},
+						min: 0,
 						plotLines: [{
 							color: '#FF0000',
 							value: parseInt(target),
@@ -524,16 +747,13 @@
 								}
 							}
 						}],
-						labels:{
-							enabled:false,
-							style:{
-								fontSize:"14px"
-							}
-						},
+						labels: {
+							enabled: false
+						}
 					},
 					tooltip: {
 						headerFormat: '<span>{series.name}</span><br/>',
-						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category} </span>: <b>{point.y}</b><br/>',
+						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category} </span>: <b>{point.y}%</b><br/>',
 					},
 					legend: {
 						layout: 'horizontal',
@@ -556,53 +776,35 @@
 					},
 					plotOptions: {
 						series:{
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function () {
-										// ShowModal(this.category,result.date);
-									}
-								}
-							},
 							dataLabels: {
 								enabled: true,
-								format: '{point.y}',
+								format: '{point.y:.2f}%',
+								rotation: -90,
 								style:{
-									fontSize: '1vw'
+									fontSize: '15px'
 								}
 							},
-							animation: {
-								enabled: true,
-								duration: 800
-							},
+							animation: false,
 							pointPadding: 0.93,
 							groupPadding: 0.93,
 							borderWidth: 0.93,
-							cursor: 'pointer'
-						},
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(result.dateTitle, event.point.category);
+
+									}
+								}
+							},
+						}
 					},
 					series: [{
 						type: 'column',
 						data: data2,
 						name: 'NG Rate',
-						colorByPoint: false,
-						color:'#ff9800',
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}%' ,
-							style:{
-								fontSize: '0.9vw'
-							},
-						},
-					}
-					// ,{
-					// 	type: 'column',
-					// 	data: data,
-					// 	name: 'Total NG',
-					// 	colorByPoint: false,
-					// 	color: "#3f51b5"
-					// },
-					]
+						showInLegend: false
+					}]
 				});
 
 
@@ -617,12 +819,16 @@
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 'B'){
 						loop += 1;
-						var name_temp = result.ng_rate[i].name;
+						
+						var name_temp = result.ng_rate[i].name.split(" ");
 						var xAxis = '';
-						// xAxis += result.ng_rate[i].operator_id + ' - ';
-						var namasingkat = name_temp.split(' ').slice(0,2).join(' ');
-						xAxis += namasingkat;
+						xAxis += result.ng_rate[i].operator_id + ' - ';
 
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
+							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+						}
 						op_name.push(xAxis);
 
 						if(result.ng_rate[i].rate > 100){
@@ -668,9 +874,8 @@
 						type: 'category',
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
-						lineWidth:2,
-						lineColor:'#9e9e9e',
 						labels: {
+							rotation: -45,
 							style: {
 								fontSize: '12px',
 								fontWeight: 'bold'
@@ -679,20 +884,10 @@
 					},
 					yAxis: {
 						title: {
-							text: 'NG Rate (%)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
+							enabled: true,
+							text: "Overall Efficiency (%)"
 						},
-						labels:{
-							enabled:false,
-							style:{
-								fontSize:"12px"
-							}
-						},
+						min: 0,
 						plotLines: [{
 							color: '#FF0000',
 							value: parseInt(target),
@@ -710,75 +905,64 @@
 								}
 							}
 						}],
-					}
-					,
+						labels: {
+							enabled: false
+						}
+					},
+					tooltip: {
+						headerFormat: '<span>{series.name}</span><br/>',
+						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category} </span>: <b>{point.y}%</b><br/>',
+					},
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
 						verticalAlign: 'top',
-						x: -90,
-						y: 20,
+						x: 0,
+						y: 30,
 						floating: true,
 						borderWidth: 1,
 						backgroundColor:
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
 						shadow: true,
 						itemStyle: {
-							fontSize:'16px',
+							fontSize:'px',
 						},
 						enabled:false
-					},
-					
-					tooltip: {
-						headerFormat: '<span>{series.name}</span><br/>',
-						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category}</span>: <b>{point.y}</b><br/>',
-					},
-					plotOptions: {
-						series:{
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function () {
-										// ShowModal(this.category,result.date);
-									}
-								}
-							},
-							dataLabels: {
-								enabled: true,
-								format: '{point.y}',
-								style:{
-									fontSize: '0.9vw'
-								}
-							},
-							animation: {
-								enabled: true,
-								duration: 800
-							},
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer'
-						},
-					},
+					},	
 					credits: {
 						enabled: false
 					},
-					series :  [{
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:.2f}%',
+								rotation: -90,
+								style:{
+									fontSize: '15px'
+								}
+							},
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(result.dateTitle, event.point.category);
+
+									}
+								}
+							},
+						}
+					},
+					series: [{
 						type: 'column',
 						data: data2,
 						name: 'NG Rate',
-						// yAxis:1,
-						colorByPoint: false,
-						color:'#ef6c00',
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}%' ,
-							style:{
-								fontSize: '0.9vw'
-							},
-						},
-					}
-					]
+						showInLegend: false
+					}]
 				});
 
 
@@ -793,11 +977,17 @@
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 'C'){
 						loop += 1;
-						var name_temp = result.ng_rate[i].name;
+						
+
+						var name_temp = result.ng_rate[i].name.split(" ");
 						var xAxis = '';
-						// xAxis += result.ng_rate[i].operator_id + ' - ';
-						var namasingkat = name_temp.split(' ').slice(0,2).join(' ');
-						xAxis += namasingkat;
+						xAxis += result.ng_rate[i].operator_id + ' - ';
+
+						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
+							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else{
+							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+						}
 						op_name.push(xAxis);
 
 						if(result.ng_rate[i].rate > 100){
@@ -846,9 +1036,8 @@
 						type: 'category',
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
-						lineWidth:2,
-						lineColor:'#9e9e9e',
 						labels: {
+							rotation: -45,
 							style: {
 								fontSize: '12px',
 								fontWeight: 'bold'
@@ -857,20 +1046,10 @@
 					},
 					yAxis: {
 						title: {
-							text: 'NG Rate(%)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
+							enabled: true,
+							text: "Overall Efficiency (%)"
 						},
-						labels:{
-							enabled:false,
-							style:{
-								fontSize:"12px"
-							}
-						},
+						min: 0,
 						plotLines: [{
 							color: '#FF0000',
 							value: parseInt(target),
@@ -888,74 +1067,64 @@
 								}
 							}
 						}],
-					}
-					,
+						labels: {
+							enabled: false
+						}
+					},
+					tooltip: {
+						headerFormat: '<span>{series.name}</span><br/>',
+						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category} </span>: <b>{point.y}%</b><br/>',
+					},
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
 						verticalAlign: 'top',
-						x: -90,
-						y: 20,
+						x: 0,
+						y: 30,
 						floating: true,
 						borderWidth: 1,
 						backgroundColor:
 						Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
 						shadow: true,
 						itemStyle: {
-							fontSize:'16px',
+							fontSize:'px',
 						},
 						enabled:false
-					},
-					
-					tooltip: {
-						headerFormat: '<span>{series.name}</span><br/>',
-						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category}</span>: <b>{point.y}</b><br/>',
-					},
-					plotOptions: {
-						series:{
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function () {
-										// ShowModal(this.category,result.date);
-									}
-								}
-							},
-							dataLabels: {
-								enabled: true,
-								format: '{point.y}',
-								style:{
-									fontSize: '0.9vw'
-								}
-							},
-							animation: {
-								enabled: true,
-								duration: 800
-							},
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer'
-						},
-					},
+					},	
 					credits: {
 						enabled: false
 					},
-					series :  [{
+					plotOptions: {
+						series:{
+							dataLabels: {
+								enabled: true,
+								format: '{point.y:.2f}%',
+								rotation: -90,
+								style:{
+									fontSize: '15px'
+								}
+							},
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function (event) {
+										showDetail(result.dateTitle, event.point.category);
+
+									}
+								}
+							},
+						}
+					},
+					series: [{
 						type: 'column',
 						data: data2,
 						name: 'NG Rate',
-						colorByPoint: false,
-						color:'#ff9800',
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}%' ,
-							style:{
-								fontSize: '0.9vw'
-							},
-						},
-					}
-					]
+						showInLegend: false
+					}]
 				});
 
 
@@ -1060,7 +1229,7 @@
 						height: '300',
 					},
 					title: {
-						text: 'Last NG Rate By Operator',
+						text: 'Last NG Rate By Operator Over 30%' ,
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -1106,43 +1275,7 @@
 						},
 						type: 'linear',
 						
-					},
-					// , { // Secondary yAxis
-					// 	title: {
-					// 		text: 'NG Rate (%)',
-					// 		style: {
-					// 			color: '#eee',
-					// 			fontSize: '16px',
-					// 			fontWeight: 'bold',
-					// 			fill: '#6d869f'
-					// 		}
-					// 	},
-					// 	labels:{
-					// 		enabled:false,
-					// 		style:{
-					// 			fontSize:"14px"
-					// 		}
-					// 	},
-					// 	type: 'linear',
-					// 	opposite: true
-
-					// }],
-					// ,
-					// legend: {
-					// 	layout: 'horizontal',
-					// 	align: 'right',
-					// 	verticalAlign: 'top',
-					// 	x: 0,
-					// 	y: 25,
-					// 	floating: true,
-					// 	borderWidth: "0",
-					// 	backgroundColor:
-					// 	Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-					// 	itemStyle: {
-					// 		fontSize:'0.7vw',
-					// 	},
-					// },
-					
+					},				
 					tooltip: {
 						headerFormat: '<span> {point.category}</span><br/>',
 						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category}<br>{series.name}</span>: <b>{point.y}</b><br/>',
@@ -1153,13 +1286,6 @@
 						},
 						series:{
 							cursor: 'pointer',
-							point: {
-								events: {
-									click: function () {
-										// ShowModal(this.category,result.date);
-									}
-								}
-							},
 							dataLabels: {
 								enabled: true,
 								format: '{point.y}',
@@ -1318,7 +1444,7 @@
 						height: '300',
 					},
 					title: {
-						text: 'Last NG Rate By Operator',
+						text: 'Last NG Rate By Operator Over 30%',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -1365,22 +1491,7 @@
 						},
 						type: 'linear',
 						
-					},
-					// legend: {
-					// 	layout: 'horizontal',
-					// 	align: 'right',
-					// 	verticalAlign: 'top',
-					// 	x: 0,
-					// 	y: 25,
-					// 	floating: true,
-					// 	borderWidth: "0",
-					// 	backgroundColor:
-					// 	Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-					// 	itemStyle: {
-					// 		fontSize:'0.7vw',
-					// 	},
-					// },
-					
+					},		
 					tooltip: {
 						headerFormat: '<span> {point.category}</span><br/>',
 						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category}<br>{series.name}</span>: <b>{point.y}</b><br/>',
@@ -1391,13 +1502,6 @@
 						},
 						series:{
 							cursor: 'pointer',
-							point: {
-								events: {
-									click: function () {
-										// ShowModal(this.category,result.date);
-									}
-								}
-							},
 							dataLabels: {
 								enabled: true,
 								format: '{point.y}',
@@ -1558,7 +1662,7 @@
 						height: '300',
 					},
 					title: {
-						text: 'Last NG Rate By Operator',
+						text: 'Last NG Rate By Operator Over 30%',
 						style: {
 							fontSize: '25px',
 							fontWeight: 'bold'
@@ -1605,21 +1709,6 @@
 						},
 						type: 'linear',	
 					},
-					// legend: {
-					// 	layout: 'horizontal',
-					// 	align: 'right',
-					// 	verticalAlign: 'top',
-					// 	x: 0,
-					// 	y: 25,
-					// 	floating: true,
-					// 	borderWidth: "0",
-					// 	backgroundColor:
-					// 	Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
-					// 	itemStyle: {
-					// 		fontSize:'0.7vw',
-					// 	},
-					// },
-					
 					tooltip: {
 						headerFormat: '<span> {point.category}</span><br/>',
 						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category}<br>{series.name}</span>: <b>{point.y}</b><br/>',
@@ -1630,13 +1719,6 @@
 						},
 						series:{
 							cursor: 'pointer',
-							point: {
-								events: {
-									click: function () {
-										// ShowModal(this.category,result.date);
-									}
-								}
-							},
 							dataLabels: {
 								enabled: true,
 								format: '{point.y}',

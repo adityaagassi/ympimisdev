@@ -856,6 +856,7 @@ Route::get('index/welding/ng_rate', 'WeldingProcessController@indexNgRate');
 Route::get('fetch/welding/ng_rate', 'WeldingProcessController@fetchNgRate');
 Route::get('index/welding/op_ng', 'WeldingProcessController@indexOpRate');
 Route::get('fetch/welding/op_ng', 'WeldingProcessController@fetchOpRate');
+Route::get('fetch/welding/op_ng_detail', 'WeldingProcessController@fetchOpRateDetail');
 Route::get('index/welding/op_analysis', 'WeldingProcessController@indexOpAnalysis');
 Route::get('fetch/welding/op_analysis', 'WeldingProcessController@fetchOpAnalysis');
 Route::get('index/welding/welding_op_eff', 'WeldingProcessController@indexWeldingOpEff');

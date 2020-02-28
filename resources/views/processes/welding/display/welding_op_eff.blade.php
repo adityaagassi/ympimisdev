@@ -173,27 +173,9 @@
 							</div>
 						</div>
 
-						<div class="col-md-6">
-							<table id="middle-log" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead id="middle-log-head" style="background-color: rgba(126,86,134,.7);">
-									<tr>
-										<th colspan="5" style="text-align: center;">GOOD</th>
-									</tr>
-									<tr>
-										<th style="width: 20%">Finish Buffing</th>
-										<th>Model</th>
-										<th>Key</th>
-										<th>OP Kensa</th>
-										<th>Material Qty</th>
-									</tr>
-								</thead>
-								<tbody id="middle-log-body">
-								</tbody>
-							</table>
-						</div>
-						<div class="col-md-6">
-							<table id="middle-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead id="middle-ng-log-head" style="background-color: rgba(126,86,134,.7);">
+						<div class="col-md-7">
+							<table id="welding-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="welding-ng-log-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th colspan="5" style="text-align: center;">NOT GOOD</th>
 									</tr>
@@ -205,13 +187,33 @@
 										<th>Material Qty</th>
 									</tr>
 								</thead>
-								<tbody id="middle-ng-log-body">
+								<tbody id="welding-ng-log-body">
 								</tbody>
 							</table>
 						</div>
-						<div class="col-md-8">
-							<table id="middle-cek" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead id="middle-cek-head" style="background-color: rgba(126,86,134,.7);">
+
+						<div class="col-md-6">
+							<table id="welding-log" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="welding-log-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th colspan="5" style="text-align: center;">GOOD</th>
+									</tr>
+									<tr>
+										<th style="width: 20%">Finish Buffing</th>
+										<th>Model</th>
+										<th>Key</th>
+										<th>OP Kensa</th>
+										<th>Material Qty</th>
+									</tr>
+								</thead>
+								<tbody id="welding-log-body">
+								</tbody>
+							</table>
+						</div>
+						
+						<div class="col-md-6">
+							<table id="welding-cek" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="welding-cek-head" style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th colspan="5" style="text-align: center;">TOTAL CEK</th>
 									</tr>
@@ -223,10 +225,11 @@
 										<th>Material Qty</th>
 									</tr>
 								</thead>
-								<tbody id="middle-cek-body">
+								<tbody id="welding-cek-body">
 								</tbody>
 							</table>
 						</div>
+
 						<div class="col-md-12">
 							<table id="data-log" class="table table-striped table-bordered" style="width: 100%;"> 
 								<thead id="data-log-head" style="background-color: rgba(126,86,134,.7);">
@@ -234,11 +237,11 @@
 										<th colspan="8" style="text-align: center;">BUFFING RESULT</th>
 									</tr>
 									<tr>
+										<th>Part Type</th>
 										<th>Model</th>
 										<th>Key</th>
-										<th style="width: 13%">Akan</th>
-										<th style="width: 13%">Sedang</th>
-										<th style="width: 13%">Selesai</th>
+										<th style="width: 13%">Start</th>
+										<th style="width: 13%">Finsih</th>
 										<th style="width: 10%">Standart time</th>
 										<th style="width: 10%">Actual time</th>
 										<th style="width: 10%">Material Qty</th>
@@ -605,470 +608,608 @@
 	}
 
 
-	function fillChart() {
-		var group = "{{$_GET['group']}}";
-		var tanggal = "{{$_GET['tanggal']}}";
-
-		var position = $(document).scrollTop();
-
+	function showDetail(tgl, nama) {
 		var data = {
-			tanggal:tanggal,
-			group:group,
+			tgl:tgl,
+			nama:nama,
 		}
 
-		group = group.split(',');
-
-		if(group != ''){
-			$('#shifta').hide();
-			$('#shiftb').hide();
-			$('#shiftc').hide();
-
-			$('#shifta4').hide();
-			$('#shiftb4').hide();
-			$('#shiftc4').hide();
-
-
-			if(group.length == 1){
-				for (var i = 0; i < group.length; i++) {
-					$('#shift'+group[i].toLowerCase()).addClass("col-xs-12");
-					$('#shift'+group[i].toLowerCase()).show();
-
-					$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-12");
-					$('#shift'+group[i].toLowerCase()+'4').show();
-				}
-			}else if(group.length == 2){
-				for (var i = 0; i < group.length; i++) {
-					$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
-					$('#shift'+group[i].toLowerCase()).show();
-
-					$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-6");
-					$('#shift'+group[i].toLowerCase()+'4').show();
-				}
-			}else if(group.length == 3){
-				for (var i = 0; i < group.length; i++) {
-					$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
-					$('#shift'+group[i].toLowerCase()).show();
-
-					$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-4");
-					$('#shift'+group[i].toLowerCase()+'4').show();
-				}
-			}
-		}else{
-			$('#shifta').addClass("col-xs-4");
-			$('#shiftb').addClass("col-xs-4");
-			$('#shiftc').addClass("col-xs-4");
-
-			$('#shifta4').addClass("col-xs-4");
-			$('#shiftb4').addClass("col-xs-4");
-			$('#shiftc4').addClass("col-xs-4");
-		}
+		$('#myModal').modal('show');
+		$('#data-log-body').append().empty();
+		$('#welding-log-body').append().empty();
+		$('#welding-ng-log-body').append().empty();
+		$('#welding-cek-body').append().empty();
+		$('#ng_rate').append().empty();
+		$('#posh_rate').append().empty();
+		$('#op_eff').append().empty();
+		$('#judul').append().empty();
 
 
-		$.get('{{ url("fetch/welding/welding_op_eff") }}', data, function(result, status, xhr) {
+
+		$.get('{{ url("fetch/welding/op_ng_detail") }}', data, function(result, status, xhr) {
 			if(result.status){
-				$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-				var target = result.eff_target;
 
-				console.table(result.rate);
+				$('#judul').append('<b>'+result.nik+' - '+result.nama+' on '+tgl+'</b>');
 
-				var op_name = [];
-				var eff_value = [];
-				var data = [];
-				var loop = 0;
+				//Welding log
+				var total_good = 0;
+				var body = '';
+				for (var i = 0; i < result.good.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.good[i].welding_time+'</td>';
+					body += '<td>'+result.good[i].model+'</td>';
+					body += '<td>'+result.good[i].key+'</td>';
+					body += '<td>'+result.good[i].op_kensa+'</td>';
+					body += '<td>'+result.good[i].quantity+'</td>';
+					body += '</tr>';
 
-				for(var i = 0; i < result.rate.length; i++){
-					if(result.rate[i].group == 'A'){
-						loop += 1;
-
-						var name_temp = result.rate[i].name.split(" ");
-						var xAxis = '';
-						xAxis += result.rate[i].employee_id + ' - ';
-
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
-							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
-						}else{
-							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
-						}
-						op_name.push(xAxis);
-
-						eff_value.push((result.rate[i].oof || 0));
-
-
-
-						if(eff_value[loop-1] > parseInt(target)){
-							data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
-						}else{
-							data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
-						}
-					}
+					total_good += parseInt(result.good[i].quantity);
 				}
+				body += '<tr>';
+				body += '<td  colspan="4" style="text-align: center;">Total</td>';
+				body += '<td>'+total_good+'</td>';
+				body += '</tr>';
+				$('#welding-log-body').append(body);
 
 
-				var chart = Highcharts.chart('container1_shifta', {
-					chart: {
-						animation: false
-					},
-					title: {
-						text: 'Operators Overall Efficiency',
-						style: {
-							fontSize: '25px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Group A on '+ result.date,
-						style: {
-							fontSize: '1vw',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							enabled: true,
-							text: "Overall Efficiency (%)"
-						},
-						min: 0,
-						plotLines: [{
-							color: '#FF0000',
-							value: parseInt(target),
-							dashStyle: 'shortdash',
-							width: 2,
-							zIndex: 5,
-							label: {
-								align:'right',
-								text: 'Target '+parseInt(target)+'%',
-								x:-7,
-								style: {
-									fontSize: '12px',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}],
-						labels: {
-							enabled: false
-						}
-					},
-					xAxis: {
-						categories: op_name,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							rotation: -45,
-							style: {
-								fontSize: '13px'
-							}
-						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:.2f}%',
-								rotation: -90,
-								style:{
-									fontSize: '15px'
-								}
-							},
-							animation: false,
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function (event) {
-										showDetail(result.date, event.point.category);
+				//Welding NG log
+				var total_ng = 0;
+				var body = '';
+				for (var i = 0; i < result.ng.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.ng[i].welding_time+'</td>';
+					body += '<td>'+result.ng[i].model+'</td>';
+					body += '<td>'+result.ng[i].key+'</td>';
+					body += '<td>'+result.ng[i].op_kensa+'</td>';
+					body += '<td>'+result.ng[i].quantity+'</td>';
+					body += '</tr>';
 
-									}
-								}
-							},
-						}
-					},
-					series: [{
-						name:'OP Efficiency',
-						type: 'column',
-						data: data,
-						showInLegend: false
-					}]
-
-				});
-
-
-				var op_name = [];
-				var eff_value = [];
-				var data = [];
-				var loop = 0;
-
-				for(var i = 0; i < result.rate.length; i++){
-					if(result.rate[i].group == 'B'){
-						loop += 1;
-
-						var name_temp = result.rate[i].name.split(" ");
-						var xAxis = '';
-						xAxis += result.rate[i].employee_id + ' - ';
-
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
-							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
-						}else{
-							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
-						}
-						op_name.push(xAxis);
-
-						eff_value.push((result.rate[i].oof || 0));
-
-
-
-						if(eff_value[loop-1] > parseInt(target)){
-							data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
-						}else{
-							data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
-						}
-					}
+					total_ng += parseInt(result.ng[i].quantity);
 				}
+				body += '<tr>';
+				body += '<td colspan="4" style="text-align: center;">Total</td>';
+				body += '<td>'+total_ng+'</td>';
+				body += '</tr>';
+				$('#welding-ng-log-body').append(body);
 
-				var chart = Highcharts.chart('container1_shiftb', {
-					chart: {
-						animation: false
-					},
-					title: {
-						text: 'Operators Overall Efficiency',
-						style: {
-							fontSize: '25px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Group B on '+ result.date,
-						style: {
-							fontSize: '1vw',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							enabled: true,
-							text: "Overall Efficiency (%)"
-						},
-						min: 0,
-						plotLines: [{
-							color: '#FF0000',
-							value: parseInt(target),
-							dashStyle: 'shortdash',
-							width: 2,
-							zIndex: 5,
-							label: {
-								align:'right',
-								text: 'Target '+parseInt(target)+'%',
-								x:-7,
-								style: {
-									fontSize: '12px',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}],
-						labels: {
-							enabled: false
-						}
-					},
-					xAxis: {
-						categories: op_name,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							rotation: -45,
-							style: {
-								fontSize: '13px'
-							}
-						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:.2f}%',
-								rotation: -90,
-								style:{
-									fontSize: '15px'
-								}
-							},
-							animation: false,
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function (event) {
-										showDetail(result.date, event.point.category);
+				//Welding cek
+				var total_cek = 0;
+				var body = '';
+				for (var i = 0; i < result.cek.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.cek[i].welding_time+'</td>';
+					body += '<td>'+result.cek[i].model+'</td>';
+					body += '<td>'+result.cek[i].key+'</td>';
+					body += '<td>'+result.cek[i].op_kensa+'</td>';
+					body += '<td>'+result.cek[i].quantity+'</td>';
+					body += '</tr>';
 
-									}
-								}
-							},
-						}
-					},
-					series: [{
-						name:'OP Efficiency',
-						type: 'column',
-						data: data,
-						showInLegend: false
-					}]
-
-				});
-
-
-				var op_name = [];
-				var eff_value = [];
-				var data = [];
-				var loop = 0;
-
-				
-				for(var i = 0; i < result.rate.length; i++){
-					if(result.rate[i].group == 'C'){
-						loop += 1;
-
-						var name_temp = result.rate[i].name.split(" ");
-						var xAxis = '';
-						xAxis += result.rate[i].employee_id + ' - ';
-
-						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
-							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
-						}else{
-							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
-						}
-						op_name.push(xAxis);
-
-						eff_value.push((result.rate[i].oof || 0));
-
-
-
-						if(eff_value[loop-1] > parseInt(target)){
-							data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
-						}else{
-							data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
-						}
-					}
+					total_cek += parseInt(result.cek[i].quantity);
 				}
+				body += '<tr>';
+				body += '<td colspan="4" style="text-align: center;">Total</td>';
+				body += '<td>'+total_cek+'</td>';
+				body += '</tr>';
+				$('#welding-cek-body').append(body);
 
-				var chart = Highcharts.chart('container1_shiftc', {
-					chart: {
-						animation: false
-					},
-					title: {
-						text: 'Operators Overall Efficiency',
-						style: {
-							fontSize: '25px',
-							fontWeight: 'bold'
-						}
-					},
-					subtitle: {
-						text: 'Group C on '+ result.date,
-						style: {
-							fontSize: '1vw',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							enabled: true,
-							text: "Overall Efficiency (%)"
-						},
-						min: 0,
-						plotLines: [{
-							color: '#FF0000',
-							value: parseInt(target),
-							dashStyle: 'shortdash',
-							width: 2,
-							zIndex: 5,
-							label: {
-								align:'right',
-								text: 'Target '+parseInt(target)+'%',
-								x:-7,
-								style: {
-									fontSize: '12px',
-									color: '#FF0000',
-									fontWeight: 'bold'
-								}
-							}
-						}],
-						labels: {
-							enabled: false
-						}
-					},
-					xAxis: {
-						categories: op_name,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							rotation: -45,
-							style: {
-								fontSize: '13px'
-							}
-						},
-					},
-					tooltip: {
-						headerFormat: '<span>{point.category}</span><br/>',
-						pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
-					},
-					credits: {
-						enabled:false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y:.2f}%',
-								rotation: -90,
-								style:{
-									fontSize: '15px'
-								}
-							},
-							animation: false,
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function (event) {
-										showDetail(result.date, event.point.category);
 
-									}
-								}
-							},
-						}
-					},
-					series: [{
-						name:'OP Efficiency',
-						type: 'column',
-						data: data,
-						showInLegend: false
-					}]
+				//Data Log
+				var total_perolehan = 0;
+				var total_std = 0;
+				var total_act = 0;
 
-				});
+				var body = '';
+				for (var i = 0; i < result.data_log.length; i++) {
+					body += '<tr>';
+					body += '<td>'+result.data_log[i].part_type+'</td>';
+					body += '<td>'+result.data_log[i].model+'</td>';
+					body += '<td>'+result.data_log[i].key+'</td>';
+					body += '<td>'+result.data_log[i].start+'</td>';
+					body += '<td>'+result.data_log[i].finish+'</td>';
+					body += '<td>'+result.data_log[i].std+'</td>';
+					body += '<td>'+result.data_log[i].act+'</td>';
+					body += '<td>'+result.data_log[i].perolehan_jumlah+'</td>';
+					body += '</tr>';
+					total_perolehan += parseInt(result.data_log[i].perolehan_jumlah);
+					total_std += parseFloat(result.data_log[i].std);
+					total_act += parseFloat(result.data_log[i].act);
+				}
+				body += '<tr>';
+				body += '<td colspan="5" style="text-align: center;">Total</td>';
+				body += '<td>'+total_std.toFixed(2)+'</td>';
+				body += '<td>'+total_act.toFixed(2)+'</td>';
+				body += '<td>'+total_perolehan+'</td>';
+				body += '</tr>';
+				$('#data-log-body').append(body);
 
-				$(document).scrollTop(position);
+
+				//Resume
+				var ng_rate = total_ng / total_cek * 100;
+				var text_ng_rate = '= <sup>Total NG</sup>/<sub>Total Cek</sub> x 100%';
+				text_ng_rate += '<br>= <sup>'+ total_ng +'</sup>/<sub>'+ total_cek +'</sub> x 100%';
+				text_ng_rate += '<br>= <b>'+ ng_rate.toFixed(2) +'%</b>';
+				$('#ng_rate').append(text_ng_rate);
+
+				var posh_rate = ((total_cek - total_ng) / total_cek) * 100;
+				var text_posh_rate = '= <sup>(Total Cek - Total NG)</sup>/<sub>Total Cek</sub> x 100%';
+				text_posh_rate += '<br>= <sup>('+ total_cek + ' - ' + total_ng +')</sup>/<sub>'+ total_cek +'</sub> x 100%';
+				text_posh_rate += '<br>= <b>'+ posh_rate.toFixed(2) +'%</b>';
+				$('#posh_rate').append(text_posh_rate);
+
+				var op_eff = posh_rate * (total_std / total_act);
+				var text_op_eff = '= <sup>Total Standart time</sup>/<sub>Total Actual time</sub> x Posh Rate';
+				text_op_eff += '<br>= <sup>'+ total_std.toFixed(2) +'</sup>/<sub>'+ total_act.toFixed(2) +'</sub> x '+ posh_rate.toFixed(2) +'%';
+				text_op_eff += '<br>= <b>'+ op_eff.toFixed(2) +'%</b>';
+				$('#op_eff').append(text_op_eff);
 
 			}
+
 		});
+}
+
+
+function fillChart() {
+	var group = "{{$_GET['group']}}";
+	var tanggal = "{{$_GET['tanggal']}}";
+
+	var position = $(document).scrollTop();
+
+	var data = {
+		tanggal:tanggal,
+		group:group,
+	}
+
+	group = group.split(',');
+
+	if(group != ''){
+		$('#shifta').hide();
+		$('#shiftb').hide();
+		$('#shiftc').hide();
+
+		$('#shifta4').hide();
+		$('#shiftb4').hide();
+		$('#shiftc4').hide();
+
+
+		if(group.length == 1){
+			for (var i = 0; i < group.length; i++) {
+				$('#shift'+group[i].toLowerCase()).addClass("col-xs-12");
+				$('#shift'+group[i].toLowerCase()).show();
+
+				$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-12");
+				$('#shift'+group[i].toLowerCase()+'4').show();
+			}
+		}else if(group.length == 2){
+			for (var i = 0; i < group.length; i++) {
+				$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
+				$('#shift'+group[i].toLowerCase()).show();
+
+				$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-6");
+				$('#shift'+group[i].toLowerCase()+'4').show();
+			}
+		}else if(group.length == 3){
+			for (var i = 0; i < group.length; i++) {
+				$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
+				$('#shift'+group[i].toLowerCase()).show();
+
+				$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-4");
+				$('#shift'+group[i].toLowerCase()+'4').show();
+			}
+		}
+	}else{
+		$('#shifta').addClass("col-xs-4");
+		$('#shiftb').addClass("col-xs-4");
+		$('#shiftc').addClass("col-xs-4");
+
+		$('#shifta4').addClass("col-xs-4");
+		$('#shiftb4').addClass("col-xs-4");
+		$('#shiftc4').addClass("col-xs-4");
+	}
+
+
+	$.get('{{ url("fetch/welding/welding_op_eff") }}', data, function(result, status, xhr) {
+		if(result.status){
+			$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+			var target = result.eff_target;
+
+			var op_name = [];
+			var eff_value = [];
+			var data = [];
+			var loop = 0;
+
+			for(var i = 0; i < result.rate.length; i++){
+				if(result.rate[i].group == 'A'){
+					loop += 1;
+
+					var name_temp = result.rate[i].name.split(" ");
+					var xAxis = '';
+					xAxis += result.rate[i].employee_id + ' - ';
+
+					if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
+						xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+					}else{
+						xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+					}
+					op_name.push(xAxis);
+
+					eff_value.push((result.rate[i].oof || 0));
+
+
+
+					if(eff_value[loop-1] > parseInt(target)){
+						data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
+					}else{
+						data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
+					}
+				}
+			}
+
+
+			var chart = Highcharts.chart('container1_shifta', {
+				chart: {
+					animation: false
+				},
+				title: {
+					text: 'Operators Overall Efficiency',
+					style: {
+						fontSize: '25px',
+						fontWeight: 'bold'
+					}
+				},
+				subtitle: {
+					text: 'Group A on '+ result.date,
+					style: {
+						fontSize: '1vw',
+						fontWeight: 'bold'
+					}
+				},
+				yAxis: {
+					title: {
+						enabled: true,
+						text: "Overall Efficiency (%)"
+					},
+					min: 0,
+					plotLines: [{
+						color: '#FF0000',
+						value: parseInt(target),
+						dashStyle: 'shortdash',
+						width: 2,
+						zIndex: 5,
+						label: {
+							align:'right',
+							text: 'Target '+parseInt(target)+'%',
+							x:-7,
+							style: {
+								fontSize: '12px',
+								color: '#FF0000',
+								fontWeight: 'bold'
+							}
+						}
+					}],
+					labels: {
+						enabled: false
+					}
+				},
+				xAxis: {
+					categories: op_name,
+					type: 'category',
+					gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					labels: {
+						rotation: -45,
+						style: {
+							fontSize: '13px'
+						}
+					},
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+				},
+				credits: {
+					enabled:false
+				},
+				plotOptions: {
+					series:{
+						dataLabels: {
+							enabled: true,
+							format: '{point.y:.2f}%',
+							rotation: -90,
+							style:{
+								fontSize: '15px'
+							}
+						},
+						animation: false,
+						pointPadding: 0.93,
+						groupPadding: 0.93,
+						borderWidth: 0.93,
+						cursor: 'pointer',
+						point: {
+							events: {
+								click: function (event) {
+									showDetail(result.date, event.point.category);
+
+								}
+							}
+						},
+					}
+				},
+				series: [{
+					name:'OP Efficiency',
+					type: 'column',
+					data: data,
+					showInLegend: false
+				}]
+
+			});
+
+
+			var op_name = [];
+			var eff_value = [];
+			var data = [];
+			var loop = 0;
+
+			for(var i = 0; i < result.rate.length; i++){
+				if(result.rate[i].group == 'B'){
+					loop += 1;
+
+					var name_temp = result.rate[i].name.split(" ");
+					var xAxis = '';
+					xAxis += result.rate[i].employee_id + ' - ';
+
+					if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
+						xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+					}else{
+						xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+					}
+					op_name.push(xAxis);
+
+					eff_value.push((result.rate[i].oof || 0));
+
+
+
+					if(eff_value[loop-1] > parseInt(target)){
+						data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
+					}else{
+						data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
+					}
+				}
+			}
+
+			var chart = Highcharts.chart('container1_shiftb', {
+				chart: {
+					animation: false
+				},
+				title: {
+					text: 'Operators Overall Efficiency',
+					style: {
+						fontSize: '25px',
+						fontWeight: 'bold'
+					}
+				},
+				subtitle: {
+					text: 'Group B on '+ result.date,
+					style: {
+						fontSize: '1vw',
+						fontWeight: 'bold'
+					}
+				},
+				yAxis: {
+					title: {
+						enabled: true,
+						text: "Overall Efficiency (%)"
+					},
+					min: 0,
+					plotLines: [{
+						color: '#FF0000',
+						value: parseInt(target),
+						dashStyle: 'shortdash',
+						width: 2,
+						zIndex: 5,
+						label: {
+							align:'right',
+							text: 'Target '+parseInt(target)+'%',
+							x:-7,
+							style: {
+								fontSize: '12px',
+								color: '#FF0000',
+								fontWeight: 'bold'
+							}
+						}
+					}],
+					labels: {
+						enabled: false
+					}
+				},
+				xAxis: {
+					categories: op_name,
+					type: 'category',
+					gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					labels: {
+						rotation: -45,
+						style: {
+							fontSize: '13px'
+						}
+					},
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+				},
+				credits: {
+					enabled:false
+				},
+				plotOptions: {
+					series:{
+						dataLabels: {
+							enabled: true,
+							format: '{point.y:.2f}%',
+							rotation: -90,
+							style:{
+								fontSize: '15px'
+							}
+						},
+						animation: false,
+						pointPadding: 0.93,
+						groupPadding: 0.93,
+						borderWidth: 0.93,
+						cursor: 'pointer',
+						point: {
+							events: {
+								click: function (event) {
+									showDetail(result.date, event.point.category);
+
+								}
+							}
+						},
+					}
+				},
+				series: [{
+					name:'OP Efficiency',
+					type: 'column',
+					data: data,
+					showInLegend: false
+				}]
+
+			});
+
+
+			var op_name = [];
+			var eff_value = [];
+			var data = [];
+			var loop = 0;
+
+
+			for(var i = 0; i < result.rate.length; i++){
+				if(result.rate[i].group == 'C'){
+					loop += 1;
+
+					var name_temp = result.rate[i].name.split(" ");
+					var xAxis = '';
+					xAxis += result.rate[i].employee_id + ' - ';
+
+					if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad' || name_temp[0] == 'Rr.'){
+						xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+					}else{
+						xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
+					}
+					op_name.push(xAxis);
+
+					eff_value.push((result.rate[i].oof || 0));
+
+
+
+					if(eff_value[loop-1] > parseInt(target)){
+						data.push({y: eff_value[loop-1], color: 'rgb(144,238,126)'});
+					}else{
+						data.push({y: eff_value[loop-1], color: 'rgb(255,116,116)'})
+					}
+				}
+			}
+
+			var chart = Highcharts.chart('container1_shiftc', {
+				chart: {
+					animation: false
+				},
+				title: {
+					text: 'Operators Overall Efficiency',
+					style: {
+						fontSize: '25px',
+						fontWeight: 'bold'
+					}
+				},
+				subtitle: {
+					text: 'Group C on '+ result.date,
+					style: {
+						fontSize: '1vw',
+						fontWeight: 'bold'
+					}
+				},
+				yAxis: {
+					title: {
+						enabled: true,
+						text: "Overall Efficiency (%)"
+					},
+					min: 0,
+					plotLines: [{
+						color: '#FF0000',
+						value: parseInt(target),
+						dashStyle: 'shortdash',
+						width: 2,
+						zIndex: 5,
+						label: {
+							align:'right',
+							text: 'Target '+parseInt(target)+'%',
+							x:-7,
+							style: {
+								fontSize: '12px',
+								color: '#FF0000',
+								fontWeight: 'bold'
+							}
+						}
+					}],
+					labels: {
+						enabled: false
+					}
+				},
+				xAxis: {
+					categories: op_name,
+					type: 'category',
+					gridLineWidth: 1,
+					gridLineColor: 'RGB(204,255,255)',
+					labels: {
+						rotation: -45,
+						style: {
+							fontSize: '13px'
+						}
+					},
+				},
+				tooltip: {
+					headerFormat: '<span>{point.category}</span><br/>',
+					pointFormat: '<span　style="color:{point.color};font-weight: bold;">{point.category}</span><br/><span>{series.name} </span>: <b>{point.y:.2f}%</b> <br/>',
+				},
+				credits: {
+					enabled:false
+				},
+				plotOptions: {
+					series:{
+						dataLabels: {
+							enabled: true,
+							format: '{point.y:.2f}%',
+							rotation: -90,
+							style:{
+								fontSize: '15px'
+							}
+						},
+						animation: false,
+						pointPadding: 0.93,
+						groupPadding: 0.93,
+						borderWidth: 0.93,
+						cursor: 'pointer',
+						point: {
+							events: {
+								click: function (event) {
+									showDetail(result.date, event.point.category);
+
+								}
+							}
+						},
+					}
+				},
+				series: [{
+					name:'OP Efficiency',
+					type: 'column',
+					data: data,
+					showInLegend: false
+				}]
+
+			});
+
+			$(document).scrollTop(position);
+
+		}
+	});
 
 
 $.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result, status, xhr) {

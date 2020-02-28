@@ -101,6 +101,17 @@ class WeldingProcessController extends Controller
 		))->with('page', 'welding-queue');
 	}
 
+	public function indexWeldingBoard($loc){
+		$title = 'Saxophone Welding Board';
+		$title_jp = '??';
+
+		return view('processes.welding.display.welding_board', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'loc' => $loc,
+		))->with('page', 'welding-board');
+	}
+
 	public function indexWeldingAchievement(){
 		$title = 'Welding Group Achievement';
 		$title_jp= 'HSAサックス寸法検査';
@@ -253,6 +264,73 @@ class WeldingProcessController extends Controller
 			'title_jp' => '生産実績',
 			'locations' => $locations
 		))->with('page', 'Welding Process');		
+	}
+
+	public function fetchWeldingBoard(Request $request)
+	{
+		$loc = $request->get('loc');
+		$boards = array();
+		if ($loc == 'hsa-sx') {
+			$work_stations = DB::SELECT("SELECT
+				mesin_nama,
+				ws_name,
+				m_mesin.operator_id,
+				operator_name,
+				operator_nik,
+				item_sedang.hsa_kito_code AS gmcsedang,
+				item_sedang.hsa_name AS gmcdescsedang,
+				detail_sedang.order_sedang_start_date AS waktu_sedang,
+				item_akan.hsa_kito_code AS gmcakan,
+				item_akan.hsa_name AS gmsdescakan,
+				detail_akan.order_akan_start_date AS waktu_akan 
+				FROM
+				m_mesin
+				LEFT JOIN m_ws ON m_ws.ws_id = m_mesin.ws_id
+				LEFT JOIN m_operator ON m_operator.operator_id = m_mesin.operator_id
+				LEFT JOIN t_order sedang ON sedang.order_id = m_mesin.order_id_sedang
+				LEFT JOIN t_order akan ON akan.order_id = m_mesin.order_id_akan
+				LEFT JOIN m_hsa item_sedang ON item_sedang.hsa_id = sedang.part_id
+				LEFT JOIN m_hsa item_akan ON item_akan.hsa_id = akan.part_id
+				LEFT JOIN t_order_detail detail_sedang ON m_mesin.order_id_sedang = detail_sedang.order_id
+				LEFT JOIN t_order_detail detail_akan ON m_mesin.order_id_akan = detail_akan.order_id 
+				WHERE
+				( detail_sedang.flow_id IS NULL OR detail_sedang.flow_id = 1 ) 
+				AND ( detail_akan.flow_id IS NULL OR detail_akan.flow_id = 1 ) 
+				AND (
+				mesin_type = 2 
+				OR mesin_type = 3)");
+		}
+
+		foreach ($work_stations as $ws) {
+			array_push($boards, [
+				'ws' => $work_station->dev_name,
+				'employee_id' => $work_station->dev_operator_id,
+				'employee_name' => $employee_name,
+				'sedang' => $work_station->gmcsedang.'<br>'.$work_station->gmcdescsedang,
+				'akan' => $work_station->gmcakan.'<br>'.$work_station->gmcdescakan,
+				'akan_time' => $akan_time->format('%H:%i:%s'),
+				'sedang_time' => $sedang_time->format('%H:%i:%s'),
+				'selesai_time' => $selesai_time->format('%H:%i:%s'),
+				'selesai' => $selesai,
+				'queue_1' => $lists[0],
+				'queue_2' => $lists[1],
+				'queue_3' => $lists[2],
+				'queue_4' => $lists[3],
+				'queue_5' => $lists[4],
+				'queue_6' => $lists[5],
+				'queue_7' => $lists[6],
+				'queue_8' => $lists[7],
+				'queue_9' => $lists[8],
+				'queue_10' => $lists[9]
+			]);
+		}
+
+		$response = array(
+			'status' => true,
+			'loc' => $loc,
+			'boards' => $boards,
+		);
+		return Response::json($response);
 	}
 
 	public function fetchEffHandling(Request $request){
@@ -483,44 +561,51 @@ class WeldingProcessController extends Controller
 			$now = date('Y-m-d', strtotime($request->get('tanggal')));
 		}
 
-		$ng_target = db::table("middle_targets")->where('location', '=', 'wld')->where('target_name', '=', 'NG Rate')->select('target')->first();
+		$ng_target = db::table("middle_targets")
+		->where('location', '=', 'wld')
+		->where('target_name', '=', 'NG Rate')
+		->select('target')
+		->first();
 
-		$ng_rate = db::select("select eg.`group` as shift, eg.employee_id as operator_id, e.name, rate.`check`, rate.ng, rate.rate from employee_groups eg left join 
+		$ng_rate = db::select("select eg.`group` as shift, eg.employee_id as operator_id, concat(SPLIT_STRING(e.`name`, ' ', 1),' ',SPLIT_STRING(e.`name`, ' ', 2)) as `name`, rate.`check`, rate.ng, rate.rate from employee_groups eg left join 
 			(select c.operator_id, c.jml as `check`, COALESCE(ng.jml,0) as ng, ROUND((COALESCE(ng.jml,0)/c.jml*100),1) as rate 
 			from (select w.operator_id, sum(w.quantity) as jml from welding_check_logs w
 			left join materials mt on mt.material_number = w.material_number
 			where w.operator_id is not null
 			".$addlocation."
-			and DATE(w.created_at)='".$now."'
+			and DATE(w.welding_time)='".$now."'
 			GROUP BY w.operator_id) c
 			left join
 			(select w.operator_id, sum(w.quantity) as jml from welding_ng_logs w
 			left join materials mt on mt.material_number = w.material_number
 			where w.operator_id is not null
 			".$addlocation."
-			and DATE(w.created_at)='".$now."'
+			and DATE(w.welding_time)='".$now."'
 			GROUP BY w.operator_id) ng
 			on c.operator_id = ng.operator_id) rate
 			on rate.operator_id = eg.employee_id
 			left join employee_syncs e on e.employee_id = eg.employee_id
 			where eg.location = 'soldering'
-			ORDER BY eg.`group`, eg.employee_id asc");
+			ORDER BY eg.`group`, e.`name` asc");
 
 		$target = db::select("select eg.`group`, eg.employee_id, e.name, ng.material_number, concat(m.model, ' ', m.`key`) as `key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
 			(select * from welding_ng_logs where deleted_at is null ".$addlocation." and remark in 
 			(select remark.remark from
-			(select operator_id, max(remark) as remark from welding_ng_logs where DATE(created_at) ='".$now."' ".$addlocation." group by operator_id) 
+			(select operator_id, max(remark) as remark from welding_ng_logs where DATE(welding_time) ='".$now."' ".$addlocation." group by operator_id) 
 			remark)
 			) ng 
 			on eg.employee_id = ng.operator_id
 			left join materials m on m.material_number = ng.material_number
 			left join employee_syncs e on e.employee_id = eg.employee_id
 			where eg.location = 'soldering'
-			order by eg.`group`, eg.employee_id asc");
+			order by eg.`group`, e.`name` asc");
 
-		$operator = db::select("select * from employee_groups where location = 'soldering' order by `group`, employee_id asc");
+		$operator = db::select("select g.group, g.employee_id, e.name from employee_groups g
+			left join employee_syncs e on e.employee_id = g.employee_id
+			where g.location = 'soldering'
+			order by g.`group`, e.name asc");
 
-		$dateTitle = date("d M Y", strtotime($now));
+		// $dateTitle = date("d M Y", strtotime($now));
 
 		$location = "";
 		if($request->get('location') != null) {
@@ -542,8 +627,82 @@ class WeldingProcessController extends Controller
 			'target' => $target,
 			'operator' => $operator,
 			'ng_target' => $ng_target->target,
-			'dateTitle' => $dateTitle,
+			'dateTitle' => $now,
 			'title' => $location
+		);
+		return Response::json($response);
+	}
+
+	public function fetchOpRateDetail(Request $request){
+		$tgl = $request->get('tgl');
+		$nik = (explode(" - ",$request->get('nama')));
+
+		$nama = Employee::where('employee_id','=',$nik[0])->select('name')->first();
+
+		$data_log = db::connection('welding')->select("select * from
+			(select hsa.hsa_kito_code, 'HSA' as part_type, m.model, m.`key`, p.perolehan_start_date as `start`, p.perolehan_finish_date as finish, ROUND(TIMESTAMPDIFF(SECOND,p.perolehan_start_date,p.perolehan_finish_date)/60,2) as act, ROUND((s.time * p.perolehan_jumlah)/60,2) as std, perolehan_jumlah from t_perolehan p
+			left join m_operator op on op.operator_id = p.operator_id
+			left join m_hsa hsa on hsa.hsa_id = p.part_id
+			left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
+			left join ympimis.standard_times s on s.material_number = hsa.hsa_kito_code
+			where p.part_type = '2'
+			and date(p.tanggaljam) = '".$tgl."'
+			and op.operator_nik = '".$nik[0]."'
+			union
+			select phs.phs_code, 'PHS' as part_type, m.model, m.`key`, p.perolehan_start_date as `start`, p.perolehan_finish_date as finish, ROUND(TIMESTAMPDIFF(SECOND,p.perolehan_start_date,p.perolehan_finish_date)/60,2) as act, ROUND((s.time * p.perolehan_jumlah)/60,2) as std, perolehan_jumlah from t_perolehan p
+			left join m_operator op on op.operator_id = p.operator_id
+			left join m_phs phs on phs.phs_id = p.part_id
+			left join ympimis.materials m on m.material_number = phs.phs_code
+			left join ympimis.standard_times s on s.material_number = phs.phs_code
+			where p.part_type = '1'
+			and date(p.tanggaljam) = '".$tgl."'
+			and op.operator_nik = '".$nik[0]."') result 
+			order by `start` asc");
+
+		$good = db::select("select l.welding_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity from welding_logs l
+			left join materials m on m.material_number = l.material_number
+			left join employees e on e.employee_id = l.employee_id
+			where l.operator_id = '".$nik[0]."'
+			and date(l.welding_time) = '".$tgl."'
+			order by welding_time asc");
+
+		$ng = db::select("SELECT a.welding_time, a.material_number, a.model, a.`key`, a.remark, concat(SPLIT_STRING(a.op_kensa, ' ', 1), ' ', SPLIT_STRING(a.op_kensa, ' ', 2)) as op_kensa, SUM(quantity) as quantity from (
+			select l.welding_time, l.material_number, m.model, m.`key`, l.remark, e.`name` as op_kensa, l.quantity as quantity from welding_ng_logs l
+			left join materials m on m.material_number = l.material_number
+			left join employees e on e.employee_id = l.employee_id
+			where l.operator_id = '".$nik[0]."'
+			and date(l.welding_time) = '".$tgl."') a   GROUP BY remark order by welding_time asc");
+
+		$cek = db::select("SELECT l.welding_time, l.material_number, m.model, m.`key`, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, quantity FROM welding_check_logs l
+			left join materials m on l.material_number = m.material_number
+			left join employees e on e.employee_id = l.employee_id
+			where operator_id = '".$nik[0]."'
+			and date(l.welding_time) = '".$tgl."'
+			order by welding_time asc");
+
+		$ng_ng = db::select("select l.welding_time, l.material_number, m.model, m.`key`, l.ng_name, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as op_kensa, l.quantity as quantity from welding_ng_logs l
+			left join materials m on m.material_number = l.material_number
+			left join employees e on e.employee_id = l.employee_id
+			where l.operator_id = '".$nik[0]."'
+			and date(l.welding_time) = '".$tgl."'");
+
+
+		$ng_qty = db::Select("select ng_name, sum(quantity) as qty from welding_ng_logs
+			where operator_id = '".$nik[0]."'
+			and date(welding_time) = '".$tgl."'
+			GROUP BY ng_name
+			Order by qty desc");
+
+		$response = array(
+			'status' => true,
+			'nik' => $nik[0],
+			'nama' => $nama['name'],
+			'data_log' => $data_log,
+			'good' => $good,
+			'ng' => $ng,
+			'cek' => $cek,
+			'ng_ng' => $ng_ng,
+			'ng_qty' => $ng_qty,
 		);
 		return Response::json($response);
 	}
@@ -742,40 +901,39 @@ class WeldingProcessController extends Controller
 			(select solder.operator_nik, sum(solder.actual) as actual, sum(solder.std) as std, sum(solder.std)/sum(solder.actual) as eff from
 			(select time.operator_nik, sum(time.actual) actual, sum(time.std) std from
 			(select op.operator_nik, (TIMESTAMPDIFF(second,p.perolehan_start_date,p.perolehan_finish_date)) as  actual,
-			(hsa.hsa_timing * p.perolehan_jumlah) as std from soldering_db.t_perolehan p
+			(s.time * p.perolehan_jumlah) as std from soldering_db.t_perolehan p
 			left join soldering_db.m_operator op on p.operator_id = op.operator_id
 			left join soldering_db.m_hsa hsa on p.part_id = hsa.hsa_id
+			left join ympimis.standard_times s on  s.material_number = hsa.hsa_kito_code
 			where p.flow_id = '1'
 			and p.part_type = '2'
-			and date(p.tanggaljam) = '".$date."'
-			having actual < 3600) time
+			and date(p.tanggaljam) = '".$date."') time
 			group by time.operator_nik
 			union all
 			select time.operator_nik, sum(time.actual) actual, sum(time.std) std from
 			(select op.operator_nik, (TIMESTAMPDIFF(second,p.perolehan_start_date,p.perolehan_finish_date)) as  actual,
-			(hsa.hsa_timing * p.perolehan_jumlah) as std from soldering_db.t_perolehan p
+			(s.time * p.perolehan_jumlah) as std from soldering_db.t_perolehan p
 			left join soldering_db.m_operator op on p.operator_id = op.operator_id
-			left join soldering_db.m_hsa hsa on p.part_id = hsa.hsa_id
+			left join soldering_db.m_phs phs on p.part_id = phs.phs_id
+			left join ympimis.standard_times s on  s.material_number = phs.phs_code
 			where p.flow_id = '1'
 			and p.part_type = '1'
-			and date(p.tanggaljam) = '".$date."'
-			having actual < 3600) time
+			and date(p.tanggaljam) = '".$date."') time
 			group by time.operator_nik) solder
 			group by solder.operator_nik) eff
 			on op.employee_id = eff.operator_nik
 			left join
 			(select cek.operator_id, cek.cek, COALESCE(ng.ng,0) as ng, (cek.cek - COALESCE(ng.ng,0)) as good, ((cek.cek - COALESCE(ng.ng,0))/cek.cek) as post from
 			(select operator_id, sum(quantity) as cek from ympimis.welding_check_logs
-			where date(created_at) = '".$date."'
+			where date(welding_time) = '".$date."'
 			group by operator_id) cek
 			left join
 			(select operator_id, sum(quantity) as ng from ympimis.welding_ng_logs
-			where date(created_at) = '2020-02-24'
+			where date(welding_time) = '".$date."'
 			group by operator_id) ng
 			on cek.operator_id = ng.operator_id) rate
 			on op.employee_id = rate.operator_id
-			order by `group`, `name` asc
-			");
+			order by `group`, `name` asc");
 
 		$response = array(
 			'status' => true,

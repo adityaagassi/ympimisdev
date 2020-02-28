@@ -96,7 +96,7 @@
 			</div>
 
 			<div class="row">
-				<div class="col-xs-12" style="margin-top: 5px; margin-left: 0px;">
+				<div class="col-xs-12" style="margin-top: 0px;">
 					<div id="container" style="width: 100%;"></div>
 				</div>
 			</div>
@@ -493,7 +493,7 @@
 					var wld = [];
 					for(var i = 0; i < result.data.length; i++){
 						if(workstations.includes(result.data[i].ws_name)){
-							key.push(result.data[i].model +" "+ result.data[i].key);
+							key.push(result.data[i].model +" "+ result.data[i].key + " ("+result.data[i].ws_name+")");
 							bff.push(parseInt(result.data[i].bff));
 							wld.push(parseInt(result.data[i].wld));
 						}
@@ -526,7 +526,7 @@
 							labels: {
 								rotation: -45,
 								style: {
-									fontSize: '1vw'
+									fontSize: '13px'
 								}
 							},
 						},
@@ -559,13 +559,6 @@
 								},
 								animation: false,
 								cursor: 'pointer',
-								point: {
-									events: {
-										click: function (event) {
-											showDetail(result.tanggal, ws);
-										}
-									}
-								},
 							}
 						},
 						series: [{
@@ -654,13 +647,6 @@
 									},
 									animation: false,
 									cursor: 'pointer',
-									point: {
-										events: {
-											click: function (event) {
-												showDetail(result.tanggal, ws);
-											}
-										}
-									},
 								}
 							},
 							series: [{

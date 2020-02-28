@@ -41,7 +41,7 @@
 				<form method="GET" action="{{ action('WeldingProcessController@indexNgRate') }}">
 					<div class="col-xs-2" style="padding-right: 0;">
 						<div class="input-group date">
-							<div class="input-group-addon" style="border: none; background-color: #605ca8; color: white;">
+							<div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
 								<i class="fa fa-calendar"></i>
 							</div>
 							<input type="text" class="form-control datepicker" id="tanggal" name="tanggal" placeholder="Select Date">
@@ -57,7 +57,7 @@
 					</div>
 
 					<div class="col-xs-2">
-						<button class="btn" style="background-color: #605ca8; color: white;" type="submit"><i class="fa fa-search"></i> Search</button>
+						<button class="btn btn-success" type="submit"><i class="fa fa-search"></i> Search</button>
 					</div>
 					<div class="pull-right" id="loc" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 2vw;"></div>
 				</form>
@@ -174,13 +174,7 @@
 		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
 		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
 		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#2a2a2b'],
-				[1, '#3e3e40']
-				]
-			},
+			backgroundColor: null,
 			style: {
 				fontFamily: 'sans-serif'
 			},
