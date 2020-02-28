@@ -65,198 +65,6 @@
    text-align: center; 
  }
 
- #spotWelding_k1 { 
-   position: absolute; 
-   right: 142px; 
-   top: 375px; 
-   width: 60px;
-   height: 50px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- #spotWelding_k2 { 
-   position: absolute; 
-   right: 142px; 
-   top: 320px; 
-   width: 60px;
-   height: 50px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- #spotWelding_k3 { 
-   position: absolute; 
-   right: 52px; 
-   top: 320px; 
-   width: 60px;
-   height: 50px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- #spotWelding_k4 { 
-   position: absolute; 
-   right: 52px; 
-   top: 375px; 
-   width: 60px;
-   height: 50px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- #spotWelding_k5 { 
-   position: absolute; 
-   right: 142px; 
-   top: 145px; 
-   width: 60px;
-   height: 60px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- #spotWelding_k6 { 
-   position: absolute; 
-   right: 142px; 
-   top: 80px; 
-   width: 60px;
-   height: 60px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- #spotWelding_k7 { 
-   position: absolute; 
-   right: 49px; 
-   top: 51px; 
-   width: 60px;
-   height: 60px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- #benkuri_1 { 
-   position: absolute; 
-   right: 247px; 
-   top: 133px; 
-   width: 80px;
-   height: 50px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- #benkuri_2 { 
-   position: absolute; 
-   right: 340px; 
-   top: 133px; 
-   width: 50px;
-   height: 50px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- #bennuki_1 { 
-   position: absolute; 
-   right: 265px; 
-   top: 337px; 
-   width: 45px;
-   height: 45px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
- #bennuki_2{ 
-   position: absolute; 
-   right: 265px; 
-   top: 381px; 
-   width: 45px;
-   height: 45px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
- #bennuki_3 { 
-   position: absolute; 
-   right: 342px; 
-   top: 337px; 
-   width: 45px;
-   height: 45px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
- #bennuki_4{ 
-   position: absolute; 
-   right: 342px; 
-   top: 381px; 
-   width: 45px;
-   height: 45px; 
-   border: solid 1px red; 
-   font-size: 24px; 
-   text-align: center; 
- }
-
- /*#bennuki_5 { 
-   position: absolute; 
-   right: 305px; 
-   top: 405px; 
-   width: 45px;
-   height: 45px; 
-   border: solid 0px green; 
-   font-size: 24px; 
-   text-align: center; 
-   }*/
-
-   #pressReedplate_1 { 
-     position: absolute; 
-     right: 428px; 
-     top: 353px; 
-     width: 45px;
-     height: 45px; 
-     border: solid 1px red; 
-     font-size: 24px; 
-     text-align: center; 
-   }
-   #pressReedplate_2 { 
-     position: absolute; 
-     right: 428px; 
-     top: 405px; 
-     width: 45px;
-     height: 45px; 
-     border: solid 1px red; 
-     font-size: 24px; 
-     text-align: center; 
-   }
-   #pressReedplate_3 { 
-     position: absolute; 
-     right: 555px; 
-     top: 353px; 
-     width: 45px;
-     height: 45px; 
-     border: solid 1px red; 
-     font-size: 24px; 
-     text-align: center; 
-   }
-   #pressReedplate_4 { 
-     position: absolute; 
-     right: 589px; 
-     top: 405px; 
-     width: 45px;
-     height: 45px; 
-     border: solid 1px red; 
-     font-size: 24px; 
-     text-align: center; 
-   }
-
    #spotWelding_k1 > div,
    #spotWelding_k2 > div, 
    #spotWelding_k3 > div,
@@ -283,10 +91,8 @@
   }
 
   .squarex {
-    border-radius: 4px;
+    /*border-radius: 4px;*/
     overflow: auto;
-    border: 1px solid 
-    white;
     font-size: 0.75em;
     width: 25px;
     letter-spacing: 1.1px;
@@ -328,32 +134,29 @@
                 <!-- <h2><center><a style="font-size: 30px; font-weight: bold;" class="text-red"> Smart Tracking Operator Reedplate</a></center></h2>
                   <h3><center><a style="font-size: 20px; font-weight: bold;" class="text-yellow">リードプレート作業者の位置把握スマートシステム</a></center></h3> -->
                   <div id="parent" style="">
-                    <img src="{{ url("images/maps_reed_putih.png") }}" width="1600px">
+                    <img src="{{ url("images/maps_reedplate_fix.png") }}" width="1200px">
 
-                    <div id="spotWelding_k1" class="square"></div>
-                    <div id="spotWelding_k2" class="square"></div>
-                    <div id="spotWelding_k3" class="square"></div>
-                    <div id="spotWelding_k4" class="square"></div>
-                    <div id="spotWelding_k5" class="square"></div>
-                    <div id="spotWelding_k6" class="square"></div>
-                    <div id="spotWelding_k7" class="square"></div>
+                    <div id="spotWelding_k1" class="squarex text-center" style="position: absolute; top: 395px; left: 990px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k2" class="squarex text-center" style="position: absolute; top: 347px; left: 990px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k3" class="squarex text-center" style="position: absolute; top: 347px; left: 1030px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k4" class="squarex text-center" style="position: absolute; top: 395px; left: 1030px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k5" class="squarex text-center" style="position: absolute; top: 161px; left: 980px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k6" class="squarex text-center" style="position: absolute; top: 114px; left: 980px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k7" class="squarex text-center" style="position: absolute; top: 54px; left: 1062px;width: 45px;height: 45px; border: 0;"></div>
 
-                    <div id="benkuri_1" class="square"></div>
-                    <div id="benkuri_2" class="square"></div>
+                    <div id="benkuri_1" class="squarex text-center" style="position: absolute; top: 175px; left: 700px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="benkuri_2" class="squarex text-center" style="position: absolute; top: 145px; left: 395px;width: 45px;height: 45px; border: 0;"></div>
 
-                    <div id="bennuki_1" class="square"></div>
-                    <div id="bennuki_2" class="square"></div>
-                    <div id="bennuki_3" class="square"></div>
-                    <div id="bennuki_4" class="square"></div>
-                    <!-- <div id="bennuki_5" class="square"></div> -->
+                    <div id="bennuki_1" class="squarex text-center" style="position: absolute; top: 453px; left: 660px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="bennuki_2" class="squarex text-center" style="position: absolute; top: 353px; left: 660px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="bennuki_3" class="squarex text-center" style="position: absolute; top: 583px; left: 730px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="bennuki_4" class="squarex text-center" style="position: absolute; top: 423px; left: 810px;width: 45px;height: 45px; border: 0;"></div>
 
-                    <div id="pressReedplate_1" class="square"></div>
-                    <div class="squarex text-center bg-green-active" style="position: absolute; top: 140px; left: 680px;">
-                      <div style="padding: 0px 4px;">25</div>
+                    <div id="pressReedplate_1" class="squarex text-center" style="position: absolute; top: 540px; left: 150px;width: 45px;height: 45px; border: 0;">
                     </div>
-                    <div id="pressReedplate_2" class="square"></div>
-                    <div id="pressReedplate_3" class="square"></div>
-                    <div id="pressReedplate_4" class="square"></div>
+                    <div id="pressReedplate_2" class="squarex text-center" style="position: absolute; top: 640px; left: 330px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="pressReedplate_3" class="squarex text-center" style="position: absolute; top: 320px; left: 370px;width: 200px;height: 45px;"></div>
+                    <div id="pressReedplate_4" class="squarex text-center" style="position: absolute; top: 489px; left: 550px;width: 45px;height: 45px; border: 0;"></div>
                   </div>
                   <br>
                 </div>
@@ -390,6 +193,8 @@
       call_data();
         // send();
         setInterval(call_data, 2000);
+
+        // setTimeout(function(){ return false}, 10000);
         // setInterval(send, 2000);      
         // drawChart();
         // setInterval(drawChart, 10000);
@@ -441,7 +246,7 @@
             
             success: function(data) {
 
-              if ("{{ $login }}" == "Display") {
+              if ("{{ $login }}" == "display") {
                 $.ajax({
                   url: '{{ url("index/reedplate/reader") }}',
                   type: 'POST',
@@ -513,7 +318,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#spotWelding_k1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#spotWelding_k1").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         } 
                         
@@ -525,7 +330,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#spotWelding_k2").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#spotWelding_k2").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -537,7 +342,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#spotWelding_k3").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#spotWelding_k3").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -549,7 +354,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#spotWelding_k4").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#spotWelding_k4").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -561,7 +366,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#spotWelding_k5").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#spotWelding_k5").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -573,7 +378,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#spotWelding_k6").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#spotWelding_k6").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -585,7 +390,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#spotWelding_k7").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#spotWelding_k7").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -597,7 +402,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#benkuri_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#benkuri_1").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -609,7 +414,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#benkuri_2").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#benkuri_2").append('<div style="position:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -622,7 +427,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#bennuki_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#bennuki_1").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -635,7 +440,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#bennuki_2").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#bennuki_2").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -648,7 +453,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#bennuki_3").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#bennuki_3").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -661,7 +466,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#bennuki_4").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#bennuki_4").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -673,7 +478,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#pressReedplate_4").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#pressReedplate_1").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -685,7 +490,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#pressReedplate_3").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#pressReedplate_2").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -697,7 +502,7 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#pressReedplate_2").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#pressReedplate_3").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
@@ -709,64 +514,71 @@
                           } 
                           else{
                             $("." + address).remove();
-                            $("#pressReedplate_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                            $("#pressReedplate_4").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                           }
                         }
 
                         // else if(data[i].reader == '4c66d0'){
                         //   $("." + address).remove();
-                        //   $("#pressReedplate_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //   $("#pressReedplate_1").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                         // }
 
-                        // else if(data[i].reader == '4c67db'){
-                        //   $("." + address).remove();
-                        //   $("#pressReedplate_3").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
-                        // }
+                        else if(data[i].reader == '4c67db'){
+                          if (data[i].distance > 5) {
+                            $("." + address).remove();
+                          } 
+                          else{
+                            $("." + address).remove();
+                            $("#pressReedplate_3").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
+                          }
+                        }
 
 
                         // if (data[i].reader == '4c6597') {
                         //     $("." + address).remove();
-                        //     $("#spotWelding_k1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#spotWelding_k1").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         //     $("." + address).remove();
-                        //     $("#spotWelding_k2").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#spotWelding_k2").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         //     $("." + address).remove();
-                        //     $("#spotWelding_k3").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#spotWelding_k3").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         //     $("." + address).remove();
-                        //     $("#spotWelding_k4").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#spotWelding_k4").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         //     $("." + address).remove();
-                        //     $("#spotWelding_k5").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#spotWelding_k5").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         //     $("." + address).remove();
-                        //     $("#spotWelding_k6").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#spotWelding_k6").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         //     $("." + address).remove();
-                        //     $("#spotWelding_k7").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#spotWelding_k7").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         // } else if (data[i].reader == '4c66c1') {
                         //     $("." + address).remove();
-                        //     $("#benkuri_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#benkuri_1").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         // } else if (data[i].reader == '#??') {
                         //     $("." + address).remove();
-                        //     $("#bennuki").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#bennuki").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         // } else if (data[i].reader == '#??') {
                         //     $("." + address).remove();
-                        //     $("#pressReedplate_1").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#pressReedplate_1").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         //     $("." + address).remove();
-                        //     $("#pressReedplate_2").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#pressReedplate_2").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         //     $("." + address).remove();
-                        //     $("#pressReedplate_3").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#pressReedplate_3").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
 
                         //     $("." + address).remove();
-                        //     $("#pressReedplate_4").append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
+                        //     $("#pressReedplate_4").append('<div style="display:inline-block" class="' + address + '"><img src="{{ url("images/icon_reedplate_fix.png") }}" width="20px" height= "20px"><div style="font-size:12px;">' + name + '</div></div>');
                         // }
+
+                        //.append('<div style="background-color: ' + color + ';width: 20px; height: 20px; display:inline-block; font-size:12px; color:black" class="' + address + '">' + name + '</div>');
 
                         name = ' ';
                       }
