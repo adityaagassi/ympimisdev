@@ -890,6 +890,9 @@ Route::post('post/welding/hsa_delete_queue', 'WeldingProcessController@deleteHsa
 Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 
+Route::get('index/welding/welding_board/{loc}', 'WeldingProcessController@indexWeldingBoard');
+Route::get('fetch/welding/welding_board', 'WeldingProcessController@fetchWeldingBoard');
+
 
 
 
@@ -975,6 +978,9 @@ Route::group(['nav' => 'S31', 'middleware' => 'permission'], function(){
 Route::get('index/workshop/workload', 'WorkshopController@indexWorkload');
 Route::get('fetch/workshop/workload', 'WorkshopController@fetchWorkload');
 Route::get('fetch/workshop/workload_operator_detail', 'WorkshopController@fetchWorkloadOperatorDetail');
+
+Route::get('index/workshop/operatorload', 'WorkshopController@indexOperatorload');
+Route::get('fetch/workshop/operatorload', 'WorkshopController@fetchOperatorload');
 
 
 Route::get('fetch/workshop/machine', 'WorkshopController@scanMachine');
@@ -1164,6 +1170,7 @@ Route::post('post/upload_kaizen', 'EmployeeController@UploadKaizenImage');
 
 
 Route::get('fetch/kaizen/detail', 'EmployeeController@fetchDetailKaizen');
+Route::post('execute/kaizen/excellent', 'EmployeeController@executeKaizenExcellent');
 
 Route::get('index/kaizen/{section}', 'EmployeeController@indexKaizen2');
 Route::get('fetch/cost', 'EmployeeController@fetchCost');
@@ -2290,6 +2297,9 @@ Route::post('post/display/ip_log', 'PingController@ip_log');
 //OFFICECLOCK
 Route::get('index/display/office_clock', 'OfficeClockController@index');
 Route::get('fetch/office_clock/visitor', 'OfficeClockController@fetchVisitor');
+Route::get('index/display/guest_room', 'OfficeClockController@guest_room');
+Route::get('index/display/guest_room2', 'OfficeClockController@guest_room2');
+Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
