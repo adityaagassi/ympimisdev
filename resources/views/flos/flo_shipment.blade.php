@@ -65,7 +65,6 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width: 5%">Container ID</th>
-										<th style="width: 5%">Cont. Code</th>
 										<th style="width: 7%">Destination</th>
 										<th style="width: 5%">Ship. Date</th>
 										<th style="width: 20%">Cont. Number</th>
@@ -76,7 +75,6 @@
 								</tbody>
 								<tfoot>
 									<tr>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -104,7 +102,7 @@
 				<form id="form_container" method="post" action="upload" enctype="multipart/form-data">
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
 					<div class="row">
-						<div class="col-md-12">
+						{{-- <div class="col-md-12">
 							<div class="col-md-6 col-md-offset-3">
 								<div class="col-md-12">
 									<div class="input-group">
@@ -112,6 +110,19 @@
 											<i class="fa fa-truck"></i>
 										</div>
 										<input type="text" class="form-control" id="container_number" name="container_number" placeholder="Container Number..." required>
+									</div>
+									<br>
+								</div>
+							</div>
+						</div> --}}
+						<div class="col-md-12">
+							<div class="col-md-6 col-md-offset-3">
+								<div class="col-md-12">
+									<div class="input-group">
+										<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+											<i class="fa fa-truck"></i>
+										</div>
+										<input type="text" class="form-control" name="container_id" id="container_id" value="" disabled>
 									</div>
 									<br>
 								</div>
@@ -151,7 +162,6 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<input type="hidden" name="container_id" id="container_id" value="">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 						<button type="submit" class="btn btn-primary">Confirm</button>
 					</div>
@@ -200,7 +210,7 @@
 						else{
 							openErrorGritter('Error', data.message);
 						}
-						
+
 					}
 				});
 			});
@@ -211,14 +221,10 @@
 				id:id,
 			}
 			$.get('{{ url("fetch/flo_container") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
-
 				if(xhr.status == 200){
 					if(result.status){
 						$('#container_id').val(result.container_id);
-						$('#container_number').val(result.container_number);
+						// $('#container_number').val(result.container_number);
 						$('#imagePreviewBefore').html("");
 						$('#imagePreviewProcess').html("");
 						$('#imagePreviewAfter').html("");
@@ -275,13 +281,11 @@
 					"type" : "get",
 					"url" : "{{ url("index/flo_container") }}",
 				},
-
 				"columns": [
 				{ "data": "container_id" },
-				{ "data": "container_code" },
 				{ "data": "destination_shortname" },
 				{ "data": "st_date" },
-				{ "data": "container_number" },
+				{ "data": "countainer_number" },
 				{ "data": "action" }
 				]
 			});
@@ -307,9 +311,6 @@
 					id:id,
 				}
 				$.post('{{ url("destroy/flo_attachment") }}', data, function(result, status, xhr){
-					console.log(status);
-					console.log(result);
-					console.log(xhr);
 					if(xhr.status == 200){
 						if(result.status){
 							$('#container_after').val('');

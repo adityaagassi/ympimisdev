@@ -30,6 +30,8 @@ use App\LogTransaction;
 use App\ErrorLog;
 use App\Mail\SendEmail;
 use App\KnockDown;
+use App\ShipmentSchedule;
+use App\MasterChecksheet;
 use Illuminate\Support\Facades\Mail;
 
 class FloController extends Controller
@@ -74,12 +76,14 @@ class FloController extends Controller
 		->where('status', '=', '2')
 		->get();
 
-		$container_schedules = ContainerSchedule::orderBy('shipment_date', 'asc')
-		->where('shipment_date', '>=', $first)
-		->where('shipment_date', '<=', $now)
+		// $container_schedules = ContainerSchedule::orderBy('shipment_date', 'asc')
+		// ->where('shipment_date', '>=', $first)
+		// ->where('shipment_date', '<=', $now)
         // ->where('shipment_date', '>=', DB::raw('DATE_FORMAT(now(), "%Y-%m-%d")'))
         // ->where('shipment_date', '<=', DB::raw('last_day(now())'))
-		->get();
+		// ->get();
+
+		$container_schedules = MasterChecksheet::whereNull('status')->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'master_checksheets.carier')->get();
 
 		return view('flos.flo_stuffing', array(
 			'flos' => $flos,
@@ -141,11 +145,38 @@ class FloController extends Controller
 
 	public function index_flo_invoice(){
 
-		$query = "select distinct invoice.invoice_number, date_format(container_schedules.shipment_date, '%d-%b-%Y') as st_date, container_schedules.destination_code, destinations.destination_name, date_format(bl_date, '%d-%b-%Y') as actual_bl_date, bl_date from
+		$query = "SELECT DISTINCT * 
+		FROM
 		(
-		select distinct invoice_number, container_id, bl_date from flos where bl_date is not null
-		union all
-		select distinct invoice_number, container_id, bl_date from knock_downs where bl_date is not null) as invoice left join container_schedules on container_schedules.container_id = invoice.container_id left join destinations on destinations.destination_code = container_schedules.destination_code order by bl_date desc";
+		SELECT
+		flos.invoice_number,
+		shipment_schedules.st_date,
+		shipment_schedules.destination_code,
+		destinations.destination_name,
+		flos.bl_date AS actual_bl_date,
+		shipment_schedules.bl_date AS bl_date 
+		FROM
+		flos
+		LEFT JOIN shipment_schedules ON shipment_schedules.id = flos.shipment_schedule_id
+		LEFT JOIN destinations ON shipment_schedules.destination_code = destinations.destination_code 
+		WHERE
+		flos.bl_date IS NOT NULL UNION ALL
+		SELECT
+		knock_downs.invoice_number,
+		shipment_schedules.st_date,
+		shipment_schedules.destination_code,
+		destinations.destination_name,
+		knock_downs.bl_date AS actual_bl_date,
+		shipment_schedules.bl_date AS bl_date 
+		FROM
+		knock_downs
+		LEFT JOIN knock_down_details ON knock_down_details.kd_number = knock_downs.kd_number
+		LEFT JOIN shipment_schedules ON shipment_schedules.id = knock_down_details.shipment_schedule_id
+		LEFT JOIN destinations ON shipment_schedules.destination_code = destinations.destination_code 
+		WHERE
+		knock_downs.bl_date IS NOT NULL 
+		ORDER BY
+		bl_date DESC ) AS final";
 
 		$invoices = db::select($query);
 
@@ -248,35 +279,24 @@ class FloController extends Controller
 	}
 
 	public function index_flo_container(Request $request){
-		// $level = Auth::user()->level_id;
-		// $invoices = DB::table('flos')
-		// ->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')
+		// $invoices = DB::table('shipment_schedules')
+		// ->leftJoin('flos', 'flos.shipment_schedule_id', 'shipment_schedules.id')
 		// ->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-		// ->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'shipment_schedules.shipment_condition_code')
 		// ->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'flos.container_id')
+		// ->select('shipment_schedules.st_date', 'destinations.destination_shortname', 'flos.container_id', 'container_schedules.container_code', 'container_schedules.container_number')
 		// ->whereNotNull('flos.invoice_number')
-		// ->select('container_schedules.container_id', 'container_schedules.container_code', 'destinations.destination_shortname', db::raw('shipment_schedules.st_date as shipment_date'), 'shipment_conditions.shipment_condition_name', 'container_schedules.container_number')
-		// ->distinct()
+		// ->groupBy('shipment_schedules.st_date', 'destinations.destination_shortname', 'flos.container_id', 'container_schedules.container_code', 'container_schedules.container_number')
 		// ->orderBy('shipment_schedules.st_date', 'desc')
 		// ->get();
 
-		$invoices = DB::table('shipment_schedules')
-		->leftJoin('flos', 'flos.shipment_schedule_id', 'shipment_schedules.id')
+		$invoices = ShipmentSchedule::leftJoin('flos', 'flos.shipment_schedule_id', '=', 'shipment_schedules.id')
+		->leftJoin('master_checksheets', 'master_checksheets.id_checkSheet', '=', 'flos.container_id')
 		->leftJoin('destinations', 'destinations.destination_code', '=', 'shipment_schedules.destination_code')
-		->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'flos.container_id')
-		// ->whereNull('flos.bl_date')
-		// ->whereRaw('shipment_schedules.id not in (select flos.shipment_schedule_id from flos where flos.container_id is null group by flos.shipment_schedule_id)')
-		->select('shipment_schedules.st_date', 'destinations.destination_shortname', 'flos.container_id', 'container_schedules.container_code', 'container_schedules.container_number')
+		->select('shipment_schedules.st_date', 'destinations.destination_shortname', 'flos.container_id', 'master_checksheets.countainer_number')
 		->whereNotNull('flos.invoice_number')
-		->groupBy('shipment_schedules.st_date', 'destinations.destination_shortname', 'flos.container_id', 'container_schedules.container_code', 'container_schedules.container_number')
+		->groupBy('shipment_schedules.st_date', 'destinations.destination_shortname', 'flos.container_id', 'master_checksheets.countainer_number')
 		->orderBy('shipment_schedules.st_date', 'desc')
 		->get();
-
-		// $response = array(
-		// 	'status' => true,
-		// 	'tes' => $invoices,
-		// );
-		// return Response::json($response);
 
 		return DataTables::of($invoices)
 		->addColumn('action', function($invoices){return '<center><a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" onClick="updateConfirmation(id)" id="' . $invoices->container_id . '"><i class="fa fa-upload"></i></a></center>';})
@@ -324,7 +344,9 @@ class FloController extends Controller
 
 	public function fetch_flo_container(Request $request){
 		$container_id = $request->input('id');
-		$container_schedule = ContainerSchedule::where('container_id', '=', $container_id)->first();
+		// $container_schedule = ContainerSchedule::where('container_id', '=', $container_id)->first();
+
+
 		$before_attachments = ContainerAttachment::where('container_id', '=', $container_id)
 		->where('file_path', 'like', '%before%')
 		->get();
@@ -349,8 +371,8 @@ class FloController extends Controller
 
 		$response = array(
 			'status' => true,
-			'container_id' => $container_schedule->container_id,
-			'container_number' => $container_schedule->container_number,
+			'container_id' => $container_id,
+			// 'container_number' => $container_schedule->container_number,
 			'file_before' => $file_before,
 			'file_process' => $file_process,
 			'file_after' => $file_after,
@@ -368,27 +390,12 @@ class FloController extends Controller
 		->groupBy('flos.flo_number')
 		->get();
 
-		// if(count($checks) > 0 ){
-		// 	$message = '';
-		// 	foreach ($checks as $check) {
-		// 		$message .= $check->flo_number.'<br>';
-		// 	}
-		// 	return response()->json([
-		// 		'status' => false,
-		// 		'message' => 'This FLO is not loaded:<br>'.$message
-		// 	]);
+		// if($request->get('container_number') != ""){
+		// 	$container_schedule = ContainerSchedule::where('container_id', '=', $request->get('container_id'))->first();
+		// 	$container_number = $container_schedule->container_number;
+		// 	$container_schedule->container_number = $request->get('container_number');
+		// 	$container_schedule->save();
 		// }
-
-		if($request->get('container_number') != ""){
-			$container_schedule = ContainerSchedule::where('container_id', '=', $request->get('container_id'))->first();
-			$container_number = $container_schedule->container_number;
-			$container_schedule->container_number = $request->get('container_number');
-			$container_schedule->save();
-			// if($container_number == null){
-			// 	$check2 = db::table('flos')->leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'flos.shipment_schedule_id')->where('flos.container_id', '=', $request->get('container_id'))->first();
-			// 	self::sendMail($check2->st_date);
-			// }
-		}
 
 		if($request->hasFile('container_before')){
 			$files = $request->file('container_before');
@@ -1167,6 +1174,19 @@ class FloController extends Controller
 			$flo->status = $request->get('status');
 
 			if($request->get('status') == '3'){
+				$checksheets = MasterChecksheet::leftJoin('detail_checksheets', 'detail_checksheets.id_checkSheet', '=', 'master_checksheets.id_checkSheet')
+				->where('master_checksheets.id_checkSheet', '=', $request->get('container_id'))
+				->where('detail_checksheets.gmc', '=', $flo->material_number)
+				->first();
+
+				if($checksheets == null){
+					$response = array(
+						'status' => false,
+						'message' => "Maaterial tidak ditemukan pada checksheet",
+					);
+					return Response::json($response);
+				}
+
 				$flo->invoice_number = $request->get('invoice_number');
 				$flo->container_id = $request->get('container_id');
 			}
