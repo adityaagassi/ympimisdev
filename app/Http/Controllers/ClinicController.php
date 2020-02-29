@@ -417,6 +417,7 @@ class ClinicController extends Controller{
 						'clinic_patient_detail' => $idx,
 						'quantity' => $medicines[$x]['quantity'],
 					]);
+					
 					DB::transaction(function() use ($idx, $clinic_medicine_log, $x, $bed){
 						$clinic_medicine_log[$x]->save();
 
@@ -435,7 +436,7 @@ class ClinicController extends Controller{
 					$clinic_patient = db::connection('clinic')->table('patient_list')
 					->where('idx', '=', $idx)
 					->update([
-						'status' => $clinic_patient_detail->id,
+						'status' => 'Yes',
 						'note' => $bed
 					]);
 				});
