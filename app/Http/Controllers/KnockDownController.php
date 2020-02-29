@@ -24,6 +24,7 @@ use App\ErrorLog;
 use App\OriginGroup;
 use App\ProductionSchedule;
 use App\UserActivityLog;
+use App\MasterChecksheet;
 use Carbon\Carbon;
 use DataTables;
 use Response;
@@ -302,10 +303,11 @@ class KnockDownController extends Controller{
 	public function indexKdStuffing(){
 		$first = date('Y-m-01');
 		$now = date('Y-m-d');
-		$container_schedules = ContainerSchedule::orderBy('shipment_date', 'asc')
-		->where('shipment_date', '>=', $first)
-		->where('shipment_date', '<=', $now)
-		->get();
+		// $container_schedules = ContainerSchedule::orderBy('shipment_date', 'asc')
+		// ->where('shipment_date', '>=', $first)
+		// ->where('shipment_date', '<=', $now)
+		// ->get();
+		$container_schedules = MasterChecksheet::whereNull('status')->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'master_checksheets.carier')->get();
 
 		return view('kd.kd_stuffing', array(
 			'container_schedules' => $container_schedules,
@@ -740,16 +742,30 @@ class KnockDownController extends Controller{
 		if(!$knock_down){
 			$response = array(
 				'status' => false,
-				'message' => 'Nomor KDO tidak ditemukan',
+				'message' => 'Nomor KDO tidak ditemukan'
 			);
 			return Response::json($response);
 		}
 
+		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
+
+		foreach ($knock_down_details as $knock_down_detail) {
+			$checksheet = MasterChecksheet::where('id_checkSheet', '=', $container_id)
+			->where('gmc', '=', $knock_down_detail->material_number)
+			->first();
+
+			if($checksheet == null){
+				$response = array(
+					'status' => false,
+					'message' => 'Terdapat material yang tidak ditemukan pada checksheet',
+				);
+				return Response::json($response);
+			}
+		}	
+
 		$knock_down->status = $status;
 		$knock_down->invoice_number = $invoice_number;
 		$knock_down->container_id = $container_id;
-
-		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
 
 		foreach ($knock_down_details as $knock_down_detail) {
 
