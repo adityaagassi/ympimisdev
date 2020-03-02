@@ -91,7 +91,7 @@
 						<th style="width: 0.66%; padding: 0;">Jumlah</th>
 					</tr>
 				</thead>
-				<tbody id="weldingTableBody">
+				<tbody id="weldingTableBody" style="font-size: 19px">
 				</tbody>
 				<tfoot>
 				</tfoot>
