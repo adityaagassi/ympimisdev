@@ -19,6 +19,7 @@ use App\WeldingLog;
 use App\WeldingInventory;
 use App\Employee;
 use Carbon\Carbon;
+use DateTime;
 
 
 class WeldingProcessController extends Controller
@@ -67,7 +68,7 @@ class WeldingProcessController extends Controller
 	}
 
 	public function indexEffHandling(){
-		$title = 'Efficiency Handling';
+		$title = 'Average Working Time';
 		$title_jp = '??';
 		$locations = $this->location_sx;
 
@@ -105,11 +106,19 @@ class WeldingProcessController extends Controller
 		$title = 'Saxophone Welding Board';
 		$title_jp = '??';
 
-		return view('processes.welding.display.welding_board', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'loc' => $loc,
-		))->with('page', 'welding-board');
+		if ($loc == 'hpp-sx') {
+			return view('processes.welding.display.welding_board_hpp', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'loc' => $loc,
+			))->with('page', 'welding-board');
+		}else{
+			return view('processes.welding.display.welding_board', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'loc' => $loc,
+			))->with('page', 'welding-board');
+		}
 	}
 
 	public function indexWeldingAchievement(){
@@ -270,8 +279,9 @@ class WeldingProcessController extends Controller
 	{
 		$loc = $request->get('loc');
 		$boards = array();
+		// $list_antrian = array();
 		if ($loc == 'hsa-sx') {
-			$work_stations = DB::SELECT("SELECT
+			$work_stations = DB::connection('welding_controller')->select("SELECT
 				mesin_nama,
 				ws_name,
 				m_mesin.operator_id,
@@ -281,7 +291,7 @@ class WeldingProcessController extends Controller
 				item_sedang.hsa_name AS gmcdescsedang,
 				detail_sedang.order_sedang_start_date AS waktu_sedang,
 				item_akan.hsa_kito_code AS gmcakan,
-				item_akan.hsa_name AS gmsdescakan,
+				item_akan.hsa_name AS gmcdescakan,
 				detail_akan.order_akan_start_date AS waktu_akan 
 				FROM
 				m_mesin
@@ -299,29 +309,218 @@ class WeldingProcessController extends Controller
 				AND (
 				mesin_type = 2 
 				OR mesin_type = 3)");
+		}elseif ($loc == 'phs-sx') {
+			$work_stations = DB::connection('welding_controller')->select("SELECT
+				mesin_nama,
+				ws_name,
+				m_mesin.operator_id,
+				operator_name,
+				operator_nik,
+				COALESCE ( item_sedang.phs_code, item_sedang_hsa.hsa_kito_code ) AS gmcsedang,
+				sedang.kanban_no AS kanban_no_sedang,
+				COALESCE ( item_sedang.phs_name, item_sedang_hsa.hsa_name ) AS gmcdescsedang,
+				detail_sedang.order_sedang_start_date AS waktu_sedang,
+				COALESCE(item_akan.phs_code,item_akan_hsa.hsa_kito_code) AS gmcakan,
+				akan.kanban_no AS kanban_no_akan,
+				COALESCE(item_akan.phs_name,item_akan_hsa.hsa_name) AS gmcdescakan,
+				detail_akan.order_akan_start_date AS waktu_akan
+				FROM
+				m_mesin
+				LEFT JOIN m_ws ON m_ws.ws_id = m_mesin.ws_id
+				LEFT JOIN m_operator ON m_operator.operator_id = m_mesin.operator_id
+				LEFT JOIN t_order sedang ON sedang.order_id = m_mesin.order_id_sedang
+				LEFT JOIN t_order akan ON akan.order_id = m_mesin.order_id_akan
+				LEFT JOIN m_phs item_sedang ON item_sedang.phs_id = sedang.part_id
+				LEFT JOIN m_phs item_akan ON item_akan.phs_id = akan.part_id
+				LEFT JOIN m_hsa item_sedang_hsa ON item_sedang_hsa.hsa_id = sedang.part_id
+				LEFT JOIN m_hsa item_akan_hsa ON item_akan_hsa.hsa_id = akan.part_id
+				LEFT JOIN t_order_detail detail_sedang ON m_mesin.order_id_sedang = detail_sedang.order_id
+				LEFT JOIN t_order_detail detail_akan ON m_mesin.order_id_akan = detail_akan.order_id 
+				WHERE
+				( detail_sedang.flow_id IS NULL OR detail_sedang.flow_id = 1 ) 
+				AND ( detail_akan.flow_id IS NULL OR detail_akan.flow_id = 1 ) 
+				AND (
+				mesin_type = 1 
+				AND m_mesin.department_id = 2)
+				");
+		}elseif ($loc == 'hpp-sx') {
+			$work_stations = DB::connection('welding_controller')->select("SELECT
+				mesin_nama,
+				ws_name,
+				m_mesin.operator_id,
+				operator_name,
+				operator_nik,
+				item_sedang.phs_code AS gmcsedang,
+				sedang.kanban_no AS kanban_no_sedang,
+				item_sedang.phs_name AS gmcdescsedang,
+				detail_sedang.order_sedang_start_date AS waktu_sedang,
+				item_akan.phs_code AS gmcakan,
+				akan.kanban_no AS kanban_no_akan,
+				item_akan.phs_name AS gmcdescakan,
+				detail_akan.order_akan_start_date AS waktu_akan 
+				FROM
+				m_mesin
+				LEFT JOIN m_ws ON m_ws.ws_id = m_mesin.ws_id
+				LEFT JOIN m_operator ON m_operator.operator_id = m_mesin.operator_id
+				LEFT JOIN t_order sedang ON sedang.order_id = m_mesin.order_id_sedang
+				LEFT JOIN t_order akan ON akan.order_id = m_mesin.order_id_akan
+				LEFT JOIN m_phs item_sedang ON item_sedang.phs_id = sedang.part_id
+				LEFT JOIN m_phs item_akan ON item_akan.phs_id = akan.part_id
+				LEFT JOIN t_order_detail detail_sedang ON m_mesin.order_id_sedang = detail_sedang.order_id
+				LEFT JOIN t_order_detail detail_akan ON m_mesin.order_id_akan = detail_akan.order_id 
+				WHERE
+				( detail_sedang.flow_id IS NULL OR detail_sedang.flow_id = 5 ) 
+				AND ( detail_akan.flow_id IS NULL OR detail_akan.flow_id = 5 ) 
+				AND (
+				mesin_type = 1 
+				AND m_mesin.department_id = 4)
+				");
 		}
 
 		foreach ($work_stations as $ws) {
+			$dt_now = new DateTime();
+
+			$dt_akan = new DateTime($ws->waktu_akan);
+			$akan_time = $dt_akan->diff($dt_now);
+
+			$dt_sedang = new DateTime($ws->waktu_sedang);
+			$sedang_time = $dt_sedang->diff($dt_now);
+
+			$lists = '';
+			$list_antrian = array();
+
+			if ($loc == 'hsa-sx') {
+				$lists = DB::connection('welding_controller')->select("SELECT
+					t_order.order_id,
+					t_order.part_id,
+					m_hsa.hsa_kito_code,
+					m_hsa.hsa_name,
+					m_ws.ws_name 
+					FROM
+					t_order
+					JOIN t_order_detail ON t_order.order_id = t_order_detail.order_id
+					JOIN m_hsa ON m_hsa.hsa_id = t_order.part_id
+					JOIN m_ws ON m_hsa.ws_id = m_ws.ws_id 
+					WHERE
+					t_order_detail.order_status = 1 
+					and t_order_detail.flow_id = 1
+					AND t_order.part_type = 2 
+					AND ws_name = '".$ws->ws_name."' 
+					ORDER BY
+					pesanan_id,order_id ASC");
+
+				if (count($lists) > 9) {
+					foreach ($lists as $key) {
+						if (isset($key)) {
+							array_push($list_antrian, $key->hsa_kito_code.'<br>'.$key->hsa_name);
+						}else{
+							array_push($list_antrian, '<br>');
+						}
+					}
+				}else{
+					for ($i=0; $i < 10; $i++) {
+						if (isset($lists[$i])) {
+							array_push($list_antrian, $lists[$i]->hsa_kito_code.'<br>'.$lists[$i]->hsa_name);
+						}else{
+							array_push($list_antrian, '<br>');
+						}
+					}
+				}
+			}elseif ($loc == 'phs-sx') {
+				$lists = DB::connection('welding_controller')->select("SELECT
+					t_order.order_id,
+					t_order.part_id,
+					m_phs.phs_code,
+					m_phs.phs_name,
+					m_ws.ws_name 
+				FROM
+					t_order
+					JOIN t_order_detail ON t_order.order_id = t_order_detail.order_id
+					JOIN m_phs ON m_phs.phs_id = t_order.part_id
+					JOIN m_ws ON m_phs.ws_id = m_ws.ws_id 
+				WHERE
+					t_order_detail.order_status = 1 
+					and t_order_detail.flow_id = 1
+					AND t_order.part_type = 1
+					AND ws_name = '".$ws->ws_name."' 
+				ORDER BY
+					pesanan_id,order_id ASC");
+
+				if (count($lists) > 9) {
+					foreach ($lists as $key) {
+						if (isset($key)) {
+							array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
+						}else{
+							array_push($list_antrian, '<br>');
+						}
+					}
+				}else{
+					for ($i=0; $i < 10; $i++) {
+						if (isset($lists[$i])) {
+							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
+						}else{
+							array_push($list_antrian, '<br>');
+						}
+					}
+				}
+			}elseif ($loc == 'hpp-sx') {
+				$lists = DB::connection('welding_controller')->select("SELECT
+					t_order.order_id,
+					t_order.part_id,
+					m_phs.phs_code,
+					m_phs.phs_name,
+					m_ws.ws_name 
+				FROM
+					t_order
+					JOIN t_order_detail ON t_order.order_id = t_order_detail.order_id
+					JOIN m_phs ON m_phs.phs_id = t_order.part_id
+					JOIN m_ws ON m_phs.ws_id = m_ws.ws_id 
+				WHERE
+					t_order_detail.order_status = 1 
+					and t_order_detail.flow_id = 5
+					AND t_order.part_type = 1
+					AND ws_name = '".$ws->ws_name."' 
+				ORDER BY
+					pesanan_id,order_id ASC");
+
+				if (count($lists) > 9) {
+					foreach ($lists as $key) {
+						if (isset($key)) {
+							array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
+						}else{
+							array_push($list_antrian, '<br>');
+						}
+					}
+				}else{
+					for ($i=0; $i < 10; $i++) {
+						if (isset($lists[$i])) {
+							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
+						}else{
+							array_push($list_antrian, '<br>');
+						}
+					}
+				}
+			}
+
 			array_push($boards, [
-				'ws' => $work_station->dev_name,
-				'employee_id' => $work_station->dev_operator_id,
-				'employee_name' => $employee_name,
-				'sedang' => $work_station->gmcsedang.'<br>'.$work_station->gmcdescsedang,
-				'akan' => $work_station->gmcakan.'<br>'.$work_station->gmcdescakan,
+				'ws' => $ws->mesin_nama.'<br>'.$ws->ws_name,
+				'employee_id' => $ws->operator_nik,
+				'employee_name' => $ws->operator_name,
+				'sedang' => $ws->gmcsedang.'<br>'.$ws->gmcdescsedang,
+				'akan' => $ws->gmcakan.'<br>'.$ws->gmcdescakan,
 				'akan_time' => $akan_time->format('%H:%i:%s'),
 				'sedang_time' => $sedang_time->format('%H:%i:%s'),
-				'selesai_time' => $selesai_time->format('%H:%i:%s'),
-				'selesai' => $selesai,
-				'queue_1' => $lists[0],
-				'queue_2' => $lists[1],
-				'queue_3' => $lists[2],
-				'queue_4' => $lists[3],
-				'queue_5' => $lists[4],
-				'queue_6' => $lists[5],
-				'queue_7' => $lists[6],
-				'queue_8' => $lists[7],
-				'queue_9' => $lists[8],
-				'queue_10' => $lists[9]
+				'queue_1' => $list_antrian[0],
+				'queue_2' => $list_antrian[1],
+				'queue_3' => $list_antrian[2],
+				'queue_4' => $list_antrian[3],
+				'queue_5' => $list_antrian[4],
+				'queue_6' => $list_antrian[5],
+				'queue_7' => $list_antrian[6],
+				'queue_8' => $list_antrian[7],
+				'queue_9' => $list_antrian[8],
+				'queue_10' => $list_antrian[9],
+				'jumlah_urutan' => count($lists)
 			]);
 		}
 
@@ -335,6 +534,7 @@ class WeldingProcessController extends Controller
 
 	public function fetchEffHandling(Request $request){
 		$date = '';
+		$location = '';
 		if(strlen($request->get("tanggal")) > 0){
 			$date = date('Y-m-d', strtotime($request->get("tanggal")));
 		}else{
@@ -359,6 +559,9 @@ class WeldingProcessController extends Controller
 				left join employee_syncs e on e.employee_id = result.operator_nik
 				where result.actual > 0
 				order by diff desc, material.hpl, result.phs_name, material.model asc");
+
+			$location = "PHS-SAX";
+
 		}else if($request->get('location') == 'hsa-sx'){
 			$time = db::select("select material.material_number, material.hpl, material.`key`, material.model, result.operator_nik, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, result.actual, result.std, (result.actual-result.std) as diff from
 				(SELECT hsa.hsa_kito_code, op.operator_nik, ceil(avg(timestampdiff(second,p.perolehan_start_date,p.perolehan_finish_date))) as actual, avg(p.perolehan_jumlah * std.time) as std  FROM soldering_db.t_perolehan p
@@ -377,18 +580,36 @@ class WeldingProcessController extends Controller
 				left join employee_syncs e on e.employee_id = result.operator_nik
 				where result.actual > 0
 				order by diff desc, material.hpl, material.`key`, material.model asc");
+
+			$location = "HSA-SAX";
+
 		}else{
-			$response = array(
-				'status' => false
-			);
-			return Response::json($response);	
+			$time = db::select("select material.material_number, material.hpl, material.`key`, material.model, result.operator_nik, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, result.actual, result.std, (result.actual-result.std) as diff from
+				(SELECT hsa.hsa_kito_code, op.operator_nik, ceil(avg(timestampdiff(second,p.perolehan_start_date,p.perolehan_finish_date))) as actual, avg(p.perolehan_jumlah * std.time) as std  FROM soldering_db.t_perolehan p
+				left join soldering_db.m_hsa hsa on hsa.hsa_id = p.part_id
+				left join standard_times std on std.material_number = hsa.hsa_kito_code
+				left join soldering_db.m_operator op on op.operator_id = p.operator_id
+				where p.flow_id = '1'
+				and p.part_type = '2'
+				and date(perolehan_finish_date) = '".$date."'
+				and p.operator_id <> 0
+				group by hsa.hsa_kito_code, op.operator_nik) result
+				left join
+				(select * from materials m
+				where m.mrpc = 's21' and m.hpl like '%KEY%') material
+				on material.material_number = result.hsa_kito_code
+				left join employee_syncs e on e.employee_id = result.operator_nik
+				where result.actual > 0
+				order by diff desc, material.hpl, material.`key`, material.model asc");
+
+			$location = "HSA-SAX";
 		}
 		
 		$response = array(
 			'status' => true,
 			'date' => $date,
 			'time' => $time,
-			'location' => $request->get('location'),
+			'location' => $location,
 		);
 		return Response::json($response);
 
@@ -1924,14 +2145,14 @@ class WeldingProcessController extends Controller
 		} else {
 			if($request->get('loc') == 'hsa-visual-sx'){
 				try{
-					$m_hsa_kartu = db::connection('welding_controller')->table('m_hsa_kartu')->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)->first();
+					$m_hsa_kartu = db::connection('welding')->table('m_hsa_kartu')->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)->first();
 
-					$order_id = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
+					$order_id = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
 					->where('part_id', '=', $m_hsa_kartu->hsa_id)
 					->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
 					->first();
 
-					$t_order_detail = db::connection('welding_controller')->table('t_order_detail')
+					$t_order_detail = db::connection('welding')->table('t_order_detail')
 					->where('order_id', '=', $order_id->order_id)
 					->where('flow_id', '=', '3')
 					->where('order_status', '=', '1')
@@ -1941,7 +2162,7 @@ class WeldingProcessController extends Controller
 						'order_status' => '6'
 					]);
 
-					$t_order = db::connection('welding_controller')->table('t_order')->where('part_type', '=', '2')
+					$t_order = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
 					->where('part_id', '=', $m_hsa_kartu->hsa_id)
 					->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
 					->update([
