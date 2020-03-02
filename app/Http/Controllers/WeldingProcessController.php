@@ -104,20 +104,32 @@ class WeldingProcessController extends Controller
 
 	public function indexWeldingBoard($loc){
 		$title = 'Saxophone Welding Board';
-		$title_jp = '??';
+		$title_jp = 'サックス溶接加工順';
 
 		if ($loc == 'hpp-sx') {
 			return view('processes.welding.display.welding_board_hpp', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
-			))->with('page', 'welding-board');
-		}else{
+			))->with('page', 'HPP');
+		}elseif ($loc == 'cuci-solder'){
+			return view('processes.welding.display.welding_board_cuci_solder', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'loc' => $loc,
+			))->with('page', 'CUCI SOLDER');
+		}elseif($loc == 'phs-sx'){
 			return view('processes.welding.display.welding_board', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
-			))->with('page', 'welding-board');
+			))->with('page', 'PHS');
+		}elseif($loc == 'hsa-sx'){
+			return view('processes.welding.display.welding_board', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'loc' => $loc,
+			))->with('page', 'HSA');
 		}
 	}
 
@@ -375,6 +387,25 @@ class WeldingProcessController extends Controller
 				mesin_type = 1 
 				AND m_mesin.department_id = 4)
 				");
+		}elseif ($loc == 'cuci-solder') {
+			$work_stations = DB::connection('welding_controller')->select("SELECT COALESCE
+				( m_hsa.hsa_kito_code, m_phs.phs_code ) AS gmc,
+				COALESCE ( m_hsa.hsa_name, m_phs.phs_name ) AS gmcdesc,
+				DATE_FORMAT( t_order_detail.order_store_date, '%d %M %Y %h:%i' ) as store_date,
+				t_order_detail.order_store_date AS waktu_akan,
+				t_order_detail.order_store_date AS waktu_sedang 
+			FROM
+				t_order
+				JOIN t_order_detail ON t_order.order_id = t_order_detail.order_id
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_order.part_id
+				LEFT JOIN m_phs ON m_phs.phs_id = t_order.part_id 
+			WHERE
+				t_order_detail.flow_id = 2 
+				AND t_order_detail.order_store_date NOT LIKE '%2000%' 
+				AND t_order_detail.order_status = 1 
+			ORDER BY
+				order_antrian_no ASC 
+				LIMIT 50");
 		}
 
 		foreach ($work_stations as $ws) {
@@ -500,28 +531,43 @@ class WeldingProcessController extends Controller
 						}
 					}
 				}
+			}elseif ($loc == 'cuci-solder') {
+				// for ($i=0; $i < 10; $i++) {
+				// 	if (isset($lists[$i])) {
+				// 		array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
+				// 	}else{
+				// 		array_push($list_antrian, '<br>');
+				// 	}
+				// }
+				var_dump($ws->gmc);
 			}
 
-			array_push($boards, [
-				'ws' => $ws->mesin_nama.'<br>'.$ws->ws_name,
-				'employee_id' => $ws->operator_nik,
-				'employee_name' => $ws->operator_name,
-				'sedang' => $ws->gmcsedang.'<br>'.$ws->gmcdescsedang,
-				'akan' => $ws->gmcakan.'<br>'.$ws->gmcdescakan,
-				'akan_time' => $akan_time->format('%H:%i:%s'),
-				'sedang_time' => $sedang_time->format('%H:%i:%s'),
-				'queue_1' => $list_antrian[0],
-				'queue_2' => $list_antrian[1],
-				'queue_3' => $list_antrian[2],
-				'queue_4' => $list_antrian[3],
-				'queue_5' => $list_antrian[4],
-				'queue_6' => $list_antrian[5],
-				'queue_7' => $list_antrian[6],
-				'queue_8' => $list_antrian[7],
-				'queue_9' => $list_antrian[8],
-				'queue_10' => $list_antrian[9],
-				'jumlah_urutan' => count($lists)
-			]);
+			if ($loc != 'cuci-solder') {
+				array_push($boards, [
+					'ws' => $ws->mesin_nama.'<br>'.$ws->ws_name,
+					'employee_id' => $ws->operator_nik,
+					'employee_name' => $ws->operator_name,
+					'sedang' => $ws->gmcsedang.'<br>'.$ws->gmcdescsedang,
+					'akan' => $ws->gmcakan.'<br>'.$ws->gmcdescakan,
+					'akan_time' => $akan_time->format('%H:%i:%s'),
+					'sedang_time' => $sedang_time->format('%H:%i:%s'),
+					'queue_1' => $list_antrian[0],
+					'queue_2' => $list_antrian[1],
+					'queue_3' => $list_antrian[2],
+					'queue_4' => $list_antrian[3],
+					'queue_5' => $list_antrian[4],
+					'queue_6' => $list_antrian[5],
+					'queue_7' => $list_antrian[6],
+					'queue_8' => $list_antrian[7],
+					'queue_9' => $list_antrian[8],
+					'queue_10' => $list_antrian[9],
+					'jumlah_urutan' => count($lists)
+				]);
+			}else{
+				array_push($boards, [
+					'sedang' => $ws->gmc.'<br>'.$ws->gmcdesc.'<br>'.$ws->store_date,
+				]);
+			}
 		}
 
 		$response = array(
