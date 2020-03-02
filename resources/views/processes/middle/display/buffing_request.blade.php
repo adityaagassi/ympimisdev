@@ -159,7 +159,7 @@
 
 				model = "<th style='width:45px'>#</th>";
 				quantity_kanban = "<th>Qty Kanban</th>";
-				quantity = "<th>Request</th>";
+				quantity = "<th>PC(s)</th>";
 				diff = "<th>Stock</th>";
 				chart = "<th></th>";
 

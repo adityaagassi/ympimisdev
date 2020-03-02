@@ -358,7 +358,7 @@
 				
 				var chart = Highcharts.chart('container1', {
 					title: {
-						text: result.location + ' AVG Actual Working Time VS AVG Standart Time',
+						text: result.location + ' Average Working Time VS Standart Time',
 						style: {
 							fontSize: '23px',
 							fontWeight: 'bold'
@@ -472,7 +472,7 @@
 				
 				var chart = Highcharts.chart('container2', {
 					title: {
-						text: result.location + ' AVG Actual Working Time VS AVG Standart Time',
+						text: result.location + ' Average Working Time VS Standart Time',
 						style: {
 							fontSize: '23px',
 							fontWeight: 'bold'
@@ -585,7 +585,7 @@
 
 				var chart = Highcharts.chart('container3', {
 					title: {
-						text: result.location + ' AVG Actual Working Time VS AVG Standart Time',
+						text: result.location + ' Average Working Time VS Standart Time',
 						style: {
 							fontSize: '23px',
 							fontWeight: 'bold'

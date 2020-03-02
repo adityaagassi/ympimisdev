@@ -33,6 +33,7 @@
 			<a href="{{ url('index/welding/welding_board','hsa-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">HSA Board</a>
 			<a href="{{ url('index/welding/welding_board','phs-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">PHS Board</a>
 			<a href="{{ url('index/welding/welding_board','hpp-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">HPP Board</a>
+			<a href="{{ url('index/welding/welding_board','cuci-solder') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Cuci Solder</a>
 			<a href="{{ url("index/middle/request/display/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Middle Process Material Request</a>
 			<a href="{{ url("index/welding/ng_rate?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate</a>
 			<a href="{{ url("index/welding/op_ng?tanggal=&location=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator NG Rate</a>
@@ -40,7 +41,7 @@
 			<a href="{{ url("index/welding/op_analysis") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Welding OP Analysis</a>
 			<a href="{{ url("index/welding/group_achievement?tanggal=&ws=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">WS Achievement</a>
 			<a href="{{ url("index/welding/eff_handling?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Average Working Time</a>
-			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Current Welding</a>
+			<a href="{{ url("index/welding/current_welding") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Current Welding</a>
 
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Display Handatsuke <i class="fa fa-angle-double-down"></i></span>
 			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Middle Process Material Request</a>

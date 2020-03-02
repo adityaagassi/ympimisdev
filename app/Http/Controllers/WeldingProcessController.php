@@ -43,6 +43,16 @@ class WeldingProcessController extends Controller
 		$this->fy = db::table('weekly_calendars')->select('fiscal_year')->distinct()->get();
 	}
 
+	public function indexCurrentWelding(){
+		$title = 'Current Welding';
+		$title_jp = '??';
+
+		return view('processes.welding.display.current_welding', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Current Welding');		
+	}
+
 	public function indexWeldingJig(){
 		return view('processes.welding.index_jig')->with('page', 'Welding Jig Handling');		
 	}
@@ -287,8 +297,44 @@ class WeldingProcessController extends Controller
 		))->with('page', 'Welding Process');		
 	}
 
-	public function fetchWeldingBoard(Request $request)
-	{
+	public function fetchCurrentwelding(){
+		$current = db::connection('welding')->select("SELECT mesin.mesin_id, mesin.ws_id, ws.ws_name, mesin.mesin_nama, datas.operator_nik, e.`name`, datas.part_type, datas.material_number, m.model, m.`key`, datas.sedang, ceil(s.time * v.lot_completion / 60) as std from
+			(SELECT * from m_mesin m
+			where m.flow_id = 1) as mesin
+			left join
+			(SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'PHS' as part_type, op.operator_nik, phs.phs_code as material_number, d.order_sedang_start_date as sedang FROM m_mesin m
+			left join t_order o on o.order_id = m.order_id_sedang
+			left join t_order_detail d on d.order_id = m.order_id_sedang
+			left join m_operator op on op.operator_id = m.operator_id
+			left join m_phs phs on o.part_id = phs.phs_id
+			where m.flow_id = 1
+			and d.flow_id = 1
+			and o.part_type = 1
+			union
+			SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'HSA' as part_type, op.operator_nik, hsa.hsa_kito_code as material_number, d.order_sedang_start_date FROM m_mesin m
+			left join t_order o on o.order_id = m.order_id_sedang
+			left join t_order_detail d on d.order_id = m.order_id_sedang
+			left join m_operator op on op.operator_id = m.operator_id
+			left join m_hsa hsa on o.part_id = hsa.hsa_id
+			where m.flow_id = 1
+			and d.flow_id = 1
+			and o.part_type = 2) as datas
+			on mesin.mesin_id = datas.mesin_id
+			left join m_ws ws on ws.ws_id = mesin.ws_id
+			left join ympimis.materials m on m.material_number = datas.material_number
+			left join ympimis.employee_syncs e on e.employee_id = datas.operator_nik
+			left join ympimis.standard_times s on s.material_number = datas.material_number
+			left join ympimis.material_volumes v on v.material_number = datas.material_number
+			order by mesin.ws_id asc");
+
+		$response = array(
+			'status' => true,
+			'current' => $current,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchWeldingBoard(Request $request){
 		$loc = $request->get('loc');
 		$boards = array();
 		// $list_antrian = array();
@@ -391,22 +437,25 @@ class WeldingProcessController extends Controller
 			$work_stations = DB::connection('welding_controller')->select("SELECT COALESCE
 				( m_hsa.hsa_kito_code, m_phs.phs_code ) AS gmc,
 				COALESCE ( m_hsa.hsa_name, m_phs.phs_name ) AS gmcdesc,
-				DATE_FORMAT( t_order_detail.order_store_date, '%d %M %Y %h:%i' ) as store_date,
+				DATE_FORMAT( t_order_detail.order_store_date, '%d %M %Y' ) as store_date,
+				DATE_FORMAT( t_order_detail.order_store_date, '%h:%i' ) AS store_time,
 				t_order_detail.order_store_date AS waktu_akan,
 				t_order_detail.order_store_date AS waktu_sedang 
-			FROM
+				FROM
 				t_order
 				JOIN t_order_detail ON t_order.order_id = t_order_detail.order_id
 				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_order.part_id
 				LEFT JOIN m_phs ON m_phs.phs_id = t_order.part_id 
-			WHERE
+				WHERE
 				t_order_detail.flow_id = 2 
 				AND t_order_detail.order_store_date NOT LIKE '%2000%' 
 				AND t_order_detail.order_status = 1 
-			ORDER BY
+				ORDER BY
 				order_antrian_no ASC 
 				LIMIT 50");
 		}
+
+		$indexCuci1 = 0;
 
 		foreach ($work_stations as $ws) {
 			$dt_now = new DateTime();
@@ -443,7 +492,8 @@ class WeldingProcessController extends Controller
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
 						if (isset($key)) {
-							array_push($list_antrian, $key->hsa_kito_code.'<br>'.$key->hsa_name);
+							$hsaname = explode(' ', $key->hsa_name);
+							array_push($list_antrian, $key->hsa_kito_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -451,7 +501,8 @@ class WeldingProcessController extends Controller
 				}else{
 					for ($i=0; $i < 10; $i++) {
 						if (isset($lists[$i])) {
-							array_push($list_antrian, $lists[$i]->hsa_kito_code.'<br>'.$lists[$i]->hsa_name);
+							$hsaname = explode(' ', $lists[$i]->hsa_name);
+							array_push($list_antrian, $lists[$i]->hsa_kito_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -464,23 +515,24 @@ class WeldingProcessController extends Controller
 					m_phs.phs_code,
 					m_phs.phs_name,
 					m_ws.ws_name 
-				FROM
+					FROM
 					t_order
 					JOIN t_order_detail ON t_order.order_id = t_order_detail.order_id
 					JOIN m_phs ON m_phs.phs_id = t_order.part_id
 					JOIN m_ws ON m_phs.ws_id = m_ws.ws_id 
-				WHERE
+					WHERE
 					t_order_detail.order_status = 1 
 					and t_order_detail.flow_id = 1
 					AND t_order.part_type = 1
 					AND ws_name = '".$ws->ws_name."' 
-				ORDER BY
+					ORDER BY
 					pesanan_id,order_id ASC");
 
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
 						if (isset($key)) {
-							array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
+							$hsaname = explode(' ', $key->phs_name);
+							array_push($list_antrian, $key->phs_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -488,7 +540,8 @@ class WeldingProcessController extends Controller
 				}else{
 					for ($i=0; $i < 10; $i++) {
 						if (isset($lists[$i])) {
-							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
+							$hsaname = explode(' ', $lists[$i]->phs_name);
+							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -501,23 +554,24 @@ class WeldingProcessController extends Controller
 					m_phs.phs_code,
 					m_phs.phs_name,
 					m_ws.ws_name 
-				FROM
+					FROM
 					t_order
 					JOIN t_order_detail ON t_order.order_id = t_order_detail.order_id
 					JOIN m_phs ON m_phs.phs_id = t_order.part_id
 					JOIN m_ws ON m_phs.ws_id = m_ws.ws_id 
-				WHERE
+					WHERE
 					t_order_detail.order_status = 1 
 					and t_order_detail.flow_id = 5
 					AND t_order.part_type = 1
 					AND ws_name = '".$ws->ws_name."' 
-				ORDER BY
+					ORDER BY
 					pesanan_id,order_id ASC");
 
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
 						if (isset($key)) {
-							array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
+							$hsaname = explode(' ', $key->phs_name);
+							array_push($list_antrian, $key->phs_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -525,21 +579,13 @@ class WeldingProcessController extends Controller
 				}else{
 					for ($i=0; $i < 10; $i++) {
 						if (isset($lists[$i])) {
-							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
+							$hsaname = explode(' ', $lists[$i]->phs_name);
+							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
 					}
 				}
-			}elseif ($loc == 'cuci-solder') {
-				// for ($i=0; $i < 10; $i++) {
-				// 	if (isset($lists[$i])) {
-				// 		array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
-				// 	}else{
-				// 		array_push($list_antrian, '<br>');
-				// 	}
-				// }
-				var_dump($ws->gmc);
 			}
 
 			if ($loc != 'cuci-solder') {
@@ -564,9 +610,11 @@ class WeldingProcessController extends Controller
 					'jumlah_urutan' => count($lists)
 				]);
 			}else{
+				$gmcdesc = explode(' ', $ws->gmcdesc);
 				array_push($boards, [
-					'sedang' => $ws->gmc.'<br>'.$ws->gmcdesc.'<br>'.$ws->store_date,
+					'queue' => $ws->gmc.'<br>'.$gmcdesc[0].' '.$gmcdesc[1].'<br>'.$ws->store_date.'<br>'.$ws->store_time
 				]);
+				$indexCuci1++;
 			}
 		}
 
@@ -1966,7 +2014,12 @@ class WeldingProcessController extends Controller
 		$queue = db::connection('welding')->select("select p.pesanan_id, ws.ws_name, p.hsa_kito_code, hsa.hsa_name, hsa.hsa_qty, p.pesanan_create_date from t_pesanan p
 			left join m_hsa hsa on hsa.hsa_kito_code = p.hsa_kito_code
 			left join m_ws ws on ws.ws_id = hsa.ws_id
-			where p.is_deleted = '0' ".$ws."
+			left join t_order o on o.pesanan_id = p.pesanan_id
+			left join t_order_detail d on d.order_id = o.order_id
+			where p.is_deleted = '0'
+			and d.order_status = 1
+			and d.flow_id = 1
+			and o.part_type = 2 ".$ws."
 			order by ws.ws_id, p.pesanan_create_date asc");
 
 		return DataTables::of($queue)
