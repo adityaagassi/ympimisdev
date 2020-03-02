@@ -597,11 +597,11 @@ class WorkshopController extends Controller{
 		}
 		if(strlen($request->get('targetTo')) > 0 ){
 			$targetTo = date('Y-m-d', strtotime($request->get('targetTo')));
-			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_ordersworkshop_job_orders.created_at)'), '<=', $targetTo);
+			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_orders.created_at)'), '<=', $targetTo);
 		}
 		if(strlen($request->get('finFrom')) > 0 ){
 			$finFrom = date('Y-m-d', strtotime($request->get('finFrom')));
-			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_ordersworkshop_job_orders.created_at)'), '>=', $finFrom);
+			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_orders.created_at)'), '>=', $finFrom);
 		}
 		if(strlen($request->get('finTo')) > 0 ){
 			$finTo = date('Y-m-d', strtotime($request->get('finTo')));
