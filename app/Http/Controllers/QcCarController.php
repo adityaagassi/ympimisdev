@@ -492,6 +492,7 @@ class QcCarController extends Controller
           if ($verif[0]->verifikatorchief != null || $verif[0]->verifikatorforeman != null || $verif[0]->verifikatorcoordinator != null) {
             if ($verif[0]->kategori == "Eksternal") {
                if ($qc_cars->checked_chief == NULL) {
+
                  $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorchief = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
                  $mails = DB::select($mailto);                 
 
@@ -524,8 +525,24 @@ class QcCarController extends Controller
             } else if ($verif[0]->kategori == "Internal") {
               
               if ($qc_cars->checked_foreman == NULL) {
-                $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorforeman = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'"; 
-                $mails = DB::select($mailto);
+                if ($qc_cars->pic == "PI9707010" || $qc_cars->pic == "PI9806004") { //jika pic pak hartono / mawan
+
+                  if ($qc_cars->pic == "PI9707010") { // pak mawan
+                    $mailto = "select distinct email, phone from users join employees on employees.employee_id = users.username where users.username = 'PI9707010'";
+                    $mails = DB::select($mailto);
+                  }
+                  else if ($qc_cars->pic == "PI9806004"){ // pak hartono
+                    $mailto = "select distinct email, phone from users join employees on employees.employee_id = users.username where users.username = 'PI9806004'";
+                    $mails = DB::select($mailto);
+                  }
+                }
+
+                else{
+                  $mailto = "select distinct email, phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_verifikators.verifikatorforeman = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'"; 
+                  $mails = DB::select($mailto);
+                }
+
+                
               }
               else {
                   if ($posisi == "foreman2") {

@@ -136,27 +136,27 @@
                   <div id="parent" style="">
                     <img src="{{ url("images/maps_reedplate_fix.png") }}" width="1200px">
 
-                    <div id="spotWelding_k1" class="squarex text-center" style="position: absolute; top: 395px; left: 990px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="spotWelding_k2" class="squarex text-center" style="position: absolute; top: 347px; left: 990px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="spotWelding_k3" class="squarex text-center" style="position: absolute; top: 347px; left: 1030px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="spotWelding_k4" class="squarex text-center" style="position: absolute; top: 395px; left: 1030px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="spotWelding_k5" class="squarex text-center" style="position: absolute; top: 161px; left: 980px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="spotWelding_k6" class="squarex text-center" style="position: absolute; top: 114px; left: 980px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="spotWelding_k7" class="squarex text-center" style="position: absolute; top: 54px; left: 1062px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k1" class="squarex text-center" style="position: absolute; top: 395px; left: 990px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k2" class="squarex text-center" style="position: absolute; top: 347px; left: 990px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k3" class="squarex text-center" style="position: absolute; top: 347px; left: 1030px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k4" class="squarex text-center" style="position: absolute; top: 395px; left: 1030px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k5" class="squarex text-center" style="position: absolute; top: 161px; left: 980px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k6" class="squarex text-center" style="position: absolute; top: 114px; left: 980px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="spotWelding_k7" class="squarex text-center" style="position: absolute; top: 54px; left: 1058px;width: 65px;height: 45px; border: 0;"></div>
 
-                    <div id="benkuri_1" class="squarex text-center" style="position: absolute; top: 175px; left: 700px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="benkuri_2" class="squarex text-center" style="position: absolute; top: 145px; left: 395px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="benkuri_1" class="squarex text-center" style="position: absolute; top: 175px; left: 700px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="benkuri_2" class="squarex text-center" style="position: absolute; top: 145px; left: 395px;width: 65px;height: 45px; border: 0;"></div>
 
-                    <div id="bennuki_1" class="squarex text-center" style="position: absolute; top: 453px; left: 660px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="bennuki_2" class="squarex text-center" style="position: absolute; top: 353px; left: 660px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="bennuki_3" class="squarex text-center" style="position: absolute; top: 583px; left: 730px;width: 45px;height: 45px; border: 0;"></div>
-                    <div id="bennuki_4" class="squarex text-center" style="position: absolute; top: 423px; left: 810px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="bennuki_1" class="squarex text-center" style="position: absolute; top: 453px; left: 660px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="bennuki_2" class="squarex text-center" style="position: absolute; top: 353px; left: 660px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="bennuki_3" class="squarex text-center" style="position: absolute; top: 583px; left: 730px;width: 65px;height: 45px; border: 0;"></div>
+                    <div id="bennuki_4" class="squarex text-center" style="position: absolute; top: 423px; left: 810px;width: 65px;height: 45px; border: 0;"></div>
 
-                    <div id="pressReedplate_1" class="squarex text-center" style="position: absolute; top: 540px; left: 150px;width: 45px;height: 45px; border: 0;">
+                    <div id="pressReedplate_1" class="squarex text-center" style="position: absolute; top: 540px; left: 150px;width: 65px;height: 45px; border: 0;">
                     </div>
-                    <div id="pressReedplate_2" class="squarex text-center" style="position: absolute; top: 640px; left: 330px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="pressReedplate_2" class="squarex text-center" style="position: absolute; top: 640px; left: 330px;width: 65px;height: 45px; border: 0;"></div>
                     <div id="pressReedplate_3" class="squarex text-center" style="position: absolute; top: 320px; left: 370px;width: 200px;height: 45px;"></div>
-                    <div id="pressReedplate_4" class="squarex text-center" style="position: absolute; top: 489px; left: 550px;width: 45px;height: 45px; border: 0;"></div>
+                    <div id="pressReedplate_4" class="squarex text-center" style="position: absolute; top: 489px; left: 550px;width: 65px;height: 45px; border: 0;"></div>
                   </div>
                   <br>
                 </div>
@@ -287,6 +287,7 @@
 
                   if (data[i].major == '111' && data[i].minor == '1900') {
                     color = 'salmon';
+        
                   } else if (data[i].major == '111' && data[i].minor == '1901') {
                     color = 'green';
                   } else if (data[i].major == '111' && data[i].minor == '1902') {

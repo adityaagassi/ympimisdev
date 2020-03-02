@@ -809,7 +809,7 @@ table > thead > tr > th{
 
               if (value.checked_chief_car == "Checked" || value.checked_foreman_car == "Checked" || value.checked_coordinator_car == "Checked") {
                   if (value.posisi_car == "chief" || value.posisi_car == "foreman2" || value.posisi_car == "coordinator") {
-                      if (d == 0) {  
+                      if (d == 0) {
                           statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';
                           color = 'style="background-color:red"';   
                           d = 1;
@@ -832,9 +832,24 @@ table > thead > tr > th{
                     // statuscfcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
                   }
                   else{
-                    statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';
-                    color = 'style="background-color:red"';
-                    d=1;
+                    if (value.department_name == "welding-surface treatment (wi-wst)") {
+                      if (value.kategori == "Internal") {
+                        statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namapiccar2+'</span></a>';
+                        color = 'style="background-color:red"';
+                        d=1;
+                      }
+                      else{
+                        statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';
+                        color = 'style="background-color:red"';
+                        d=1;
+                      }
+                      
+                    }
+                    else{
+                      statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';
+                      color = 'style="background-color:red"';
+                      d=1;
+                    }
                   }
 
 

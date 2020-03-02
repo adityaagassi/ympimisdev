@@ -95,22 +95,22 @@
 		<div class="col-xs-12">	
 			<?php $i = 0; foreach ($ip as $ip){ ?>
 
-			<div class="col-md-2 col-sm-3 col-xs-6">
-		          <div class="info-box" id="box_{{ $ip->remark }}">
-		            <span class="info-box-icon" style="height: 100px"><img src="{{ url('images', $ip->image) }}" style="padding: 10px"></span>
-
-		            <div class="info-box-content" > <!-- style="color: #333" -->
-		              <span class="info-box-text" style="font-size: 1vw">{{ $ip->remark }}</span>
-		              <span class="info-box-number" style="font-size: 1vw">{{ $ip->ip }}</span>
-
-		              <div class="progress">
-		                <div class="progress-bar" style="width: 100%"></div>
-		              </div>
-		              <span class="progress-description" id="status_{{ $ip->remark }}">Good </span> <span id="time_{{ $ip->remark }}"> </span> ms
-		            </div>
-		          </div>
-		          <!-- /.info-box -->
-		        </div>
+				<div class="col-md-3 col-sm-3 col-xs-6">
+					<div class="info-box" id="box_{{ $ip->remark }}">
+						<span class="info-box-icon" style="height:108px">
+							<img src="{{ url('images/ping', $ip->image) }}" style="padding: 10px">
+						</span>
+						<div class="info-box-content" > <!-- style="color: #333" -->
+							<span class="info-box-text">{{ $ip->remark }}</span>
+							<span class="info-box-number">{{ $ip->ip }}</span>
+							<div class="progress">
+								<div class="progress-bar" style="width: 100%"></div>
+							</div>
+							<span class="progress-description" id="status_{{ $ip->remark }}">Good</span>  <span id="time_{{ $ip->remark }}"> </span> ms
+						</div>
+					</div>
+					<!-- /.info-box -->
+				</div>
 
 				<!-- <div class="col-xs-4" style="padding: 0px;">
 					<div class="info-box bg-green">
@@ -128,53 +128,67 @@
 			              <span class="progress-description" id="status">Good</span>
 			            </div>
 		            </div>	
-				</div> -->
-			<?php $i++; } ?>
-			
-			
+		        </div> -->
+		        <?php $i++; } ?>
+		        <!-- <div class="col-md-2 col-sm-3 col-xs-6">
+		        	<div class="info-box" style=" display: flex;">
+		        		<div class="col-sm-5" style="background-color: black;  opacity: 0.5;">
+		        			<img src="{{ url('images/ping', $ip->image) }}" style="padding: 10px">
+		        		</div>
+		        		<div class="col-sm-7">
+		        			d 	<br>
+		        			d 	<br>
+		        			d 	<br>
+		        			d 	<br>
+		        			d 	<br>
+		        		</div>
+		        	</div> -->
+		        	<!-- /.info-box
+		        </div> -->
+
+		    </div>
+
 		</div>
 
-	</div>
+	</section>
 
-</section>
+	@endsection
+	@section('scripts')
+	<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
+	<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+	<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+	<script src="{{ url("js/jszip.min.js")}}"></script>
+	<script src="{{ url("js/vfs_fonts.js")}}"></script>
+	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+	<script src="{{ url("js/buttons.print.min.js")}}"></script>
+	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 
-@endsection
-@section('scripts')
-<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
-<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-<script src="{{ url("js/buttons.flash.min.js")}}"></script>
-<script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/vfs_fonts.js")}}"></script>
-<script src="{{ url("js/buttons.html5.min.js")}}"></script>
-<script src="{{ url("js/buttons.print.min.js")}}"></script>
-<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+	<script>
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 
-<script>
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
+		jQuery(document).ready(function() {
+			fetchip();
+			setInterval(fetchip, 10000);
 
-	jQuery(document).ready(function() {
-		fetchip();
-		setInterval(fetchip, 10000);
+		});
 
-	});
+		function fetchip(){
+			$.get('{{ url("fetch/display/ip") }}', function(result, status, xhr){
+				if(result.status){
+					$.each(result.data, function(key, value){
+						var url = '{{ url("fetch/display/fetch_hit") }}'+'/'+value.ip;
+						$.get(url, function(result, status, xhr){
+							var time;
 
-	function fetchip(){
-		$.get('{{ url("fetch/display/ip") }}', function(result, status, xhr){
-			if(result.status){
-				$.each(result.data, function(key, value){
-					var url = '{{ url("fetch/display/fetch_hit") }}'+'/'+value.ip;
-					$.get(url, function(result, status, xhr){
-						var time;
-
-						if (result.sta == 0) {
-							if (result.output.length == 8) {
-								timearray = /time\=(.*)?ms|time\<(.*)?ms /g.exec(result.output[2]);
+							if (result.sta == 0) {
+								if (result.output.length == 8) {
+									timearray = /time\=(.*)?ms|time\<(.*)?ms /g.exec(result.output[2]);
 								// (?<=This is)(.*)(?=sentence)
-								console.log(timearray);
+								// console.log(timearray);
 								if(timearray[1] != undefined){
 									time = timearray[1];
 								}else if(timearray[2] != undefined){
@@ -192,7 +206,7 @@
 							time = 0;
 						}
 						
-						var data = {
+						var data = {	
 							ip : value.ip,
 							remark : value.remark,
 							hasil_hit : time,
@@ -201,7 +215,7 @@
 
 						$.post('{{ url("post/display/ip_log") }}', data, function(result, status, xhr){
 							if(result.status){
-								openSuccessGritter("Success","IP Log Created");
+								// openSuccessGritter("Success","IP Log Created");
 							} else {
 								// audio_error.play();
 								openErrorGritter('Error',result.message);
@@ -210,7 +224,7 @@
 
 						if (true) {}
 
-						$('#status_'+value.remark).append().empty();
+							$('#status_'+value.remark).append().empty();
 						$('#status_'+value.remark).html(status);
 
 						$('#time_'+value.remark).append().empty();
@@ -235,32 +249,32 @@
 
 					});
 
-				});
-			}
-		});
-	}
+					});
+				}
+			});
+		}
 
-	function openSuccessGritter(title, message){
-      jQuery.gritter.add({
-        title: title,
-        text: message,
-        class_name: 'growl-success',
-        image: '{{ url("images/image-screen.png") }}',
-        sticky: false,
-        time: '3000'
-      });
-    }
+		function openSuccessGritter(title, message){
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-success',
+				image: '{{ url("images/image-screen.png") }}',
+				sticky: false,
+				time: '3000'
+			});
+		}
 
-    function openErrorGritter(title, message) {
-      jQuery.gritter.add({
-        title: title,
-        text: message,
-        class_name: 'growl-danger',
-        image: '{{ url("images/image-stop.png") }}',
-        sticky: false,
-        time: '3000'
-      });
-    }
+		function openErrorGritter(title, message) {
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-danger',
+				image: '{{ url("images/image-stop.png") }}',
+				sticky: false,
+				time: '3000'
+			});
+		}
 
-</script>
-@endsection
+	</script>
+	@endsection
