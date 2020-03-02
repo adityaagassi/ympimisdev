@@ -115,17 +115,20 @@
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Prioritas</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 25%;" id="text_priority"></td>
-						{{-- <td rowspan="6" style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 35%;">Lampiran</td> --}}
+					</tr>
+					<tr>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Pemesan</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 25%;" id="text_pemesan"></td>
 					</tr>
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Kategori</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_category"></td>						
 					</tr>
-					<tr>
+					<!-- <tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">PIC</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_pic"></td>
 
-					</tr>	
+					</tr> -->	
 					<tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Target Selesai</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_target_date"></td>
@@ -189,12 +192,23 @@
 
 					<tbody>
 						<tr>
-							<td style="width: 75%; color: white; font-size: 20px; background-color: rgb(50, 50, 50); padding: 0px;">
+							<!-- <td style="width: 25%;">
+								<div class="col-md-12" style="padding: 0px;" id="pause">
+									<button class="btn btn-warning" onclick="pause()" style="width: 100%; font-size: 20px;"><i class="fa fa-pause"></i> Pause</button>
+								</div>
+								<div class="col-md-12" style="padding: 0px;" id="resume">
+									<button class="btn btn-success" onclick="resume()" style="width: 100%; font-size: 20px;"><i class="fa fa-play"></i> Resume</button>
+								</div>
+							</td> -->
+							<td style="width: 50%; color: white; font-size: 20px; background-color: rgb(50, 50, 50); padding: 0px;">
 								<p style="margin: 0px;"><label id='hours'>00</label>:<label id='minutes'>00</label>:<label id='seconds'>00</label></p>
 							</td>
 							<td style="width: 25%;">
-								<div class="col-md-12" style="padding: 0px;">
+								<div class="col-md-12" style="padding: 0px;" id="finish">
 									<button class="btn btn-success" onclick="finish()" style="width: 100%; font-size: 20px;"><i class="fa fa-check"></i> Finish</button>
+								</div>
+								<div class="col-md-12" style="padding: 0px;" id="stat">
+									<font color="white" style="font-size: 2vw">PAUSED</font>
 								</div>
 							</td>
 						</tr>
@@ -272,6 +286,8 @@
 			$('#machine_table').hide();
 
 			$('#show-att').hide();
+			$('#resume').hide();
+			$("#stat").hide();
 
 			setInterval(setTime, 1000);
 		});
@@ -404,7 +420,7 @@
 							$('#text_material').html(result.wjo.material);						
 							$('#text_problem_description').html(result.wjo.problem_description);
 							$('#text_target_date').html(result.wjo.target_date);
-							$('#text_pic').html(result.wjo.name);
+							$('#text_pemesan').html(result.wjo.sub_section);
 
 							$('#text_drawing').append().empty();
 							
@@ -810,6 +826,20 @@ function finish(){
 	}
 
 
+}
+
+function pause() {
+	$("#pause").hide();
+	$("#resume").show();
+	$("#finish").hide();
+	$("#stat").show();
+}
+
+function resume() {
+	$("#pause").show();
+	$("#resume").hide();
+	$("#finish").show();
+	$("#stat").hide();
 }
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

@@ -1009,7 +1009,7 @@ Route::get('fetch/workshop/productivity', 'WorkshopController@fetchProductivity'
 Route::get('fetch/workshop/operator_detail', 'WorkshopController@fetchOperatorDetail');
 Route::get('fetch/workshop/machine_detail', 'WorkshopController@fetchmachineDetail');
 Route::get('fetch/workshop/process_detail', 'WorkshopController@fetchProcessDetail');
-
+Route::get('fetch/workshop/drawingMaterial', 'WorkshopController@fetchDrawingMaterial');
 
 Route::get('index/middle/op_analysis', 'MiddleProcessController@indexOpAnalysis');
 Route::get('fetch/middle/op_analysis', 'MiddleProcessController@fetchOpAnalysis');
