@@ -75,6 +75,7 @@
 										<th colspan="2">Action</th>
 									</tr>
 									<tr>
+										<th>Incoming Date</th>
 										<th>Employee</th>
 										<th>Department</th>
 										<th>Company</th>
@@ -218,6 +219,7 @@
 							var bg = "background-color: rgb(255, 204, 255);";
 						}
 						tableData += '<tr>';
+						tableData += '<td>'+ value.created_at +'</td>';
 						tableData += '<td>'+ value.name +'</td>';
 						tableData += '<td>'+ value.department +'</td>';
 						tableData += '<td>'+ value.company +'</td>';
