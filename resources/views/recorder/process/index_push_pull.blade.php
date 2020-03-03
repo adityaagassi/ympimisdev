@@ -52,7 +52,7 @@
 <section class="content" style="padding-top: 0px">
 	<input type="hidden" id="data" value="data">
 	<div class="row" style="padding-top: 0px">
-		<div class="col-md-6" style="padding-right: 20px;border-right: 2px solid red">
+		<div class="col-md-12" style="padding-right: 20px">
 			<div class="box box-solid" style="background-color: #f0f0f0">
 				<div class="box-body">
 					<div class="row">
@@ -107,7 +107,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6" style="padding-left: 20px;border-left: 2px solid red">
+		<!-- <div class="col-md-6" style="padding-left: 20px;border-left: 2px solid red">
 			<div class="box box-solid" style="background-color: #f0f0f0">
 				<div class="box-body">
 					<div class="row">
@@ -139,11 +139,11 @@
 									<input type="text" name="judgement_push_pull" id="judgement_push_pull" class="form-control" value="OK" required="required" pattern="" title="" style="width: 100%;height: 200px;font-size: 10vw;text-align: center;font-weight:bold;background-color: #57ff86;color: #163756;border: 1px solid black" disabled>
 								</div>
 							</div>
-							<span style="font-size: 20px; font-weight: bold;"><center>COLOR :</center></span>
-							<input type="text" name="color_push_pull" id="color_push_pull" class="form-control" value="YRS" required="required" pattern="" title="" style="width: 100%;height: 60px;background-color: #ffd0b0;font-size: 3vw;text-align: center;font-weight:bold;color: #163756;border: 1px solid black" disabled>
-							<span style="font-size: 20px; font-weight: bold;"><center>Jenis Middle:</center></span>
-							<input type="text" name="middle_type3" id="middle_type3" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 80px;background-color: #e7ff8c;font-size: 5vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
-							<input type="text" name="middle_type_desc3" id="middle_type_desc3" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 40px;background-color: #e7ff8c;font-size: 2vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
+							<span style="font-size: 20px; font-weight: bold;"><center>COLOR :</center></span> -->
+							<input type="hidden" name="color_push_pull" id="color_push_pull" class="form-control" value="YRS" required="required" pattern="" title="" style="width: 100%;height: 60px;background-color: #ffd0b0;font-size: 3vw;text-align: center;font-weight:bold;color: #163756;border: 1px solid black" disabled>
+							<!-- <span style="font-size: 20px; font-weight: bold;"><center>Jenis Middle:</center></span> -->
+							<input type="hidden" name="middle_type3" id="middle_type3" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 80px;background-color: #e7ff8c;font-size: 5vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
+							<input type="hidden" name="middle_type_desc3" id="middle_type_desc3" class="form-control" value="-" required="required" pattern="" title="" style="width: 100%;height: 40px;background-color: #e7ff8c;font-size: 2vw;text-align: center;color: #0d2443;font-weight:bold;border: 1px solid black" readonly>
 							<!-- <div class="row" style="padding-top: 20px">
 								<div class="col-xs-12">
 									<span style="font-size: 20px; font-weight: bold;"><center>Result:</center></span>
@@ -162,11 +162,11 @@
 									</table>
 								</div>
 							</div> -->
-						</div>
+						<!-- </div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<!-- <div class="row">
 		<div class="col-xs-12">
