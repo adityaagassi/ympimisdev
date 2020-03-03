@@ -651,10 +651,10 @@ class OvertimeController extends Controller
 
 			if(strlen($request->get('datefrom')) > 0){
 				$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-				$tanggal = "and A.ovtplanfrom >= '".$datefrom."' ";
+				$tanggal = "and A.ovtplanfrom >= '".$datefrom." 00:00:00' ";
 				if(strlen($request->get('dateto')) > 0){
 					$dateto = date('Y-m-d', strtotime($request->get('dateto')));
-					$tanggal = $tanggal."and A.ovtplanto <= '".$dateto."' ";
+					$tanggal = $tanggal."and A.ovtplanto <= '".$dateto." 23:59:59' ";
 				}
 			}
 
