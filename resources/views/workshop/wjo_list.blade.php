@@ -1368,10 +1368,10 @@
 				// }
 
 				var d1 = new Date($('#start_'+i).val()+' '+start_time);
-				var d2 = new Date ( d1 );
-				d2.setMinutes ( d1.getMinutes() + $("#process_qty_"+i).val() );
+				var d2 = new Date(d1.getTime() + $("#process_qty_"+i).val()*60000 );
 
-				// console.log(d2);
+				console.log ( d1 );
+				console.log ( d2 );
 				
 				// var d2 = new Date($('#finish_'+i).val()+' '+finish_time);
 
@@ -1388,7 +1388,7 @@
 					minutes = ':' + format_two_digits(d2.getMinutes());
 					$("#finish_"+i).val(year+month+day);
 					$("#finish_time"+i).val(hours+minutes);
-					// console.log ( d2 );
+					
 				}
 			});
 		}
