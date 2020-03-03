@@ -122,6 +122,14 @@ class QcReportController extends Controller
 
         return DataTables::of($cpar_details)
 
+        ->editColumn('tgl_permintaan',function($cpar_details){
+            return date('d F Y', strtotime($cpar_details->tgl_permintaan));
+          })
+
+        ->editColumn('tgl_balas',function($cpar_details){
+            return date('d F Y', strtotime($cpar_details->tgl_balas));
+          })
+
 
         ->editColumn('status_name',function($cpar_details){
             if($cpar_details->status_name == "Unverified CPAR") {

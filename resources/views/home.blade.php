@@ -205,10 +205,10 @@
                             <a href="{{ url("index/qa_ymmj/grafik_ymmj") }}">
                                 <i class="fa fa-caret-right"></i> Report YMMJ (YMMJへの報告)
                             </a>
-                            <br>
+                            <!-- <br>
                             <a href="{{ url("index/request_qa") }}">
                                 <i class="fa fa-caret-right"></i> Form Request CPAR QA (品保是正予防策依頼書)
-                            </a>
+                            </a> -->
                         </td>
                     </tr>
                     <tr>
@@ -222,6 +222,20 @@
                             <a href="{{ url("index/reedplate/working_time") }}">
                                 <i class="fa fa-caret-right"></i> Working Time Reedplate (リードプレート作業時間)
                             </a>                           
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Other Information (他の情報)</span>
+                            <br>
+                            <!-- <a href="{{ url("/index") }}">
+                                <i class="fa fa-caret-right"></i> CPAR Antar Departemen (部門間の是正措置報告)
+                            </a>
+                            <br> -->
+                            <a href="{{ url("/index/form_experience") }}">
+                                <i class="fa fa-caret-right"></i> Form Permasalahan & Kegagalan (問題・失敗のフォーム)
+                            </a>
                         </td>
                     </tr>
 
@@ -255,14 +269,14 @@
                 <tbody>
                     <tr>
                      <td>
-                        <a href="{{ url("index/report/overtime_outsource") }}">
+                    {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
-                        </a>
+                        </a> --}}
                         {{-- <br>
                             <a href="http://172.17.128.114/clinic-new/chart.php">
                                 <i class="fa fa-caret-right"></i> Clinic Visit ()
-                            </a> --}}
-                            <br>
+                            </a> 
+                            <br>--}}
                             <a href="{{ url("index/display/clinic_monitoring") }}">
                                 <i class="fa fa-caret-right"></i> Clinic Monitoring (クリニック監視)
                             </a>
@@ -274,10 +288,10 @@
                             <a href="{{ url("index/display/clinic_disease?month=") }}">
                                 <i class="fa fa-caret-right"></i> Clinic Diagnostic Data (クリニック見立てデータ)
                             </a>
-                            <br>
+                           {{--  <br>
                             <a href="{{ url("index/emergency_response") }}">
                                 <i class="fa fa-caret-right"></i> Emergency Condition (緊急事態)
-                            </a>
+                            </a> --}}
                             <br>
                             <a href="{{ url("index/toilet") }}">
                                 <i class="fa fa-caret-right"></i> Toilet Availability (トイレステイタス(空席・使用中))
@@ -293,6 +307,10 @@
                             <br>
                             <a href="{{ url("visitor_display") }}">
                                 <i class="fa fa-caret-right"></i> Visitor Monitoring (来客の管理)
+                            </a>
+                            <br>
+                            <a href="{{ url("visitor_display") }}">
+                                <i class="fa fa-caret-right"></i> Pantry Monitoring (???)
                             </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">
@@ -342,6 +360,10 @@
                             <br>
                             <a href="{{ url("index/kaizen2/report") }}">
                                 <i class="fa fa-caret-right"></i> Report Kaizen Excellent (エクセレント改善のリポート)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/kaizen2/value") }}">
+                                <i class="fa fa-caret-right"></i> Report Kaizen Reward (??)
                             </a>
                             <br>
                         </td>
@@ -724,6 +746,7 @@
                         </tr> --}}
                     </tbody>
                 </table>
+                
             </div>
         </div>
     </section>

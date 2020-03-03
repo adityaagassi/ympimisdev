@@ -133,8 +133,8 @@ table.table-bordered > tfoot > tr > th{
                 <td>{{$car->department_name}}</td>
                 <!-- <td>{{$car->name}}</td> -->
                 <td style="width: 10%">{{$car->lokasi}}</td>
-                <td>{{$car->tgl_permintaan}}</td>
-                <td>{{$car->tgl_balas}}</td>
+                <td><?php echo date('d F Y', strtotime($car->tgl_permintaan)) ?></td>
+                <td><?php echo date('d F Y', strtotime($car->tgl_balas)) ?></td>
                 <td>{{$car->kategori}}</td>
                 <td>{{$car->sumber_komplain}}</td>
                 <td>

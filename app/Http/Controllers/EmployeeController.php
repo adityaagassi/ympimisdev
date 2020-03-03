@@ -185,6 +185,7 @@ class EmployeeController extends Controller
 
           $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
 
+
           $sc = db::select($sections);
 
           if ($emp) {
@@ -204,10 +205,9 @@ class EmployeeController extends Controller
      {
           $username = Auth::user()->username;
 
-          $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
-          ->where('promotion_logs.employee_id','=', $username)
-          ->whereNull('valid_to')
-          ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or username in ('.$this->usr.'))')
+          $emp = User::leftJoin('employee_syncs','employee_syncs.employee_id','=','users.username')
+          ->where('employee_syncs.employee_id','=', $username)
+          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief") or username in ("'.$this->usr.'"))')
           ->select('position')
           ->first();
 
@@ -218,12 +218,18 @@ class EmployeeController extends Controller
 
           $sc = db::select($sections);
 
-          return view('employees.service.indexKaizenApplied', array(
-               'title' => 'e-Kaizen (Applied list)',
-               'position' => $emp,
-               'section' => $sc,
-               'user' => $dd,
-               'title_jp' => '??'))->with('page', 'Applied')->with('head','Kaizen');
+
+          if ($emp) {
+               return view('employees.service.indexKaizenApplied', array(
+                    'title' => 'e-Kaizen (Applied list)',
+                    'position' => $emp,
+                    'section' => $sc,
+                    'user' => $dd,
+                    'title_jp' => '??'))->with('page', 'Applied')->with('head','Kaizen');
+          } else {
+               return redirect()->back();
+          }
+
      }
 
      public function indexKaizenReport()
@@ -336,6 +342,24 @@ class EmployeeController extends Controller
           ))->with('page', 'Kaizen Upload Images');
      }
 
+     public function indexKaizenReward()
+     {
+          $username = Auth::user()->username;
+
+          $user = db::select("select username from users 
+               left join employee_syncs on employee_syncs.employee_id = users.username
+               where username = '".$username."' AND (role_code = 'MIS' OR username = 'PI0904007' OR position in ('Manager','foreman'))");
+
+          if ($user) {
+               return view('employees.report.report_kaizen_reward', array(
+                    'title' => 'e-Kaizen Reward',
+                    'title_jp' => '',
+               ))->with('page', 'Kaizen Reward');  
+          } else {
+               return redirect()->back();
+          }
+     }
+
      public function makeKaizen($id, $name, $section, $group){
           $ldr = "position = 'Leader'";
           if ($section == 'Assembly Process Control') {
@@ -348,7 +372,7 @@ class EmployeeController extends Controller
           // where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
           // and end_date is null and section = '".$section."'
           // order by name asc";
-          
+
           $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
 
 
@@ -2926,6 +2950,25 @@ public function executeKaizenExcellent(Request $request)
      $response = array(
           'status' => true,
           'message' => 'Kaizen Successfully Executed'
+     );
+     return Response::json($response);
+}
+
+public function getKaizenReward()
+{
+     $db = db::select("select DATE_FORMAT(CONCAT(mon,'-01'),'%M %Y') as  mons, doit, count(doit) as tot from 
+          (select DATE_FORMAT(propose_date,'%Y-%m') as mon, IF(total < 300,2000,IF(total >= 300 AND total <= 350,5000,IF(total > 350 AND total <= 400,10000,IF(total > 400 AND total <= 450,25000,50000)))) as doit from
+          (select propose_date,manager_point_1 * 40 m1, manager_point_2 * 30 m2, manager_point_3 * 30 m3, id_kaizen, (manager_point_1 * 40+ manager_point_2 * 30+ manager_point_3 * 30) as total from kaizen_scores 
+          join kaizen_forms on kaizen_scores.id_kaizen = kaizen_forms.id
+          where propose_date >= '2019-12-01'
+          order by id_kaizen asc) as total
+          ) as total2
+          group by doit, mon
+          order by mon asc, doit asc");
+
+     $response = array(
+          'status' => true,
+          'datas' => $db
      );
      return Response::json($response);
 }

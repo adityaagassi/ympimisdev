@@ -862,7 +862,6 @@ Route::get('fetch/welding/op_analysis', 'WeldingProcessController@fetchOpAnalysi
 Route::get('index/welding/welding_op_eff', 'WeldingProcessController@indexWeldingOpEff');
 Route::get('fetch/welding/welding_op_eff', 'WeldingProcessController@fetchWeldingOpEff');
 Route::get('fetch/welding/welding_op_eff_target', 'WeldingProcessController@fetchWeldingOpEffTarget');
-
 Route::get('index/welding/production_result', 'WeldingProcessController@indexProductionResult');
 Route::get('fetch/welding/production_result', 'WeldingProcessController@fetchProductionResult');
 Route::get('index/welding/kensa/{id}', 'WeldingProcessController@indexWeldingKensa');
@@ -874,24 +873,20 @@ Route::get('fetch/welding/resume', 'WeldingProcessController@fetchWeldingResume'
 Route::get('index/welding/group_achievement', 'WeldingProcessController@indexWeldingAchievement');
 Route::get('fetch/welding/group_achievement', 'WeldingProcessController@fetchGroupAchievement');
 Route::get('fetch/welding/group_achievement_detail', 'WeldingProcessController@fetchGroupAchievementDetail');
-
-
 Route::get('fetch/welding/accumulated_achievement', 'WeldingProcessController@fetchAccumulatedAchievement');
 Route::get('index/welding/eff_handling', 'WeldingProcessController@indexEffHandling');
 Route::get('fetch/welding/eff_handling', 'WeldingProcessController@fetchEffHandling');
-
-
 Route::get('index/welding/hsa_adjustment', 'WeldingProcessController@indexHsaAdjustment');
 Route::get('fetch/welding/hsa_queue', 'WeldingProcessController@fetchHsaQueue');
 Route::get('fetch/welding/hsa_stock', 'WeldingProcessController@fetchHsaStock');
 Route::post('post/welding/hsa_add_queue', 'WeldingProcessController@inputHsaQueue');
 Route::post('post/welding/hsa_delete_queue', 'WeldingProcessController@deleteHsaQueue');
-
 Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
-
 Route::get('index/welding/welding_board/{loc}', 'WeldingProcessController@indexWeldingBoard');
 Route::get('fetch/welding/welding_board', 'WeldingProcessController@fetchWeldingBoard');
+Route::get('index/welding/current_welding', 'WeldingProcessController@indexCurrentWelding');
+Route::get('fetch/welding/current_welding', 'WeldingProcessController@fetchCurrentWelding');
 
 
 
@@ -1179,6 +1174,8 @@ Route::get('index/kaizen2/resume', 'EmployeeController@indexKaizenResume');
 Route::get('fetch/kaizen/resume', 'EmployeeController@fetchKaizenResume');
 Route::get('fetch/kaizen/resume_detail', 'EmployeeController@fetchKaizenResumeDetail');
 Route::get('index/kaizen/aproval/resume', 'EmployeeController@indexKaizenApprovalResume');
+Route::get('index/kaizen2/value', 'EmployeeController@indexKaizenReward');
+Route::get('fetch/kaizen/value', 'EmployeeController@getKaizenReward');
 Route::get('kaizen/session', 'EmployeeController@setSession');
 
 //START CLINIC
@@ -1187,6 +1184,9 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::get('fetch/diagnose', 'ClinicController@fetchDiagnose');
 	Route::post('delete/diagnose', 'ClinicController@deleteVisitor');
 	Route::post('input/diagnose', 'ClinicController@inputDiagnose');
+	Route::get('index/clinic_visit_log', 'ClinicController@indexvisitLog');
+	Route::get('fetch/clinic_visit_log', 'ClinicController@fetchvisitLog');
+	Route::get('fetch/clinic_visit_log_excel', 'ClinicController@fetchvisitLogExcel');
 
 	Route::get('fetch/display/clinic_disease_detail', 'ClinicController@fetchDiseaseDetail');
 	Route::get('fetch/clinic_visit_detail', 'ClinicController@fetchClinicVisitDetail');
@@ -2048,6 +2048,18 @@ Route::get('index/weekly_report/print_weekly_report_email/{id}/{month}','WeeklyA
 Route::post('index/weekly_report/sendemail/{id}','WeeklyActivityReportController@sendemail');
 Route::post('index/weekly_report/approval/{id}/{month}','WeeklyActivityReportController@approval');
 
+//NG FINDING
+Route::get('index/ng_finding/index/{id}', 'NgFindingController@index');
+Route::post('index/ng_finding/filter_ng_finding/{id}', 'NgFindingController@filter_ng_finding');
+Route::post('index/ng_finding/store/{id}', 'NgFindingController@store');
+Route::get('index/ng_finding/getweeklyreport','NgFindingController@getweeklyreport')->name('ng_finding.getweeklyreport');
+Route::post('index/ng_finding/update/{id}','NgFindingController@update');
+Route::get('index/ng_finding/destroy/{id}/{area_check_id}', 'NgFindingController@destroy');
+Route::post('index/ng_finding/print_ng_finding/{id}','NgFindingController@print_ng_finding');
+Route::get('index/ng_finding/print_ng_finding_email/{id}/{month}','NgFindingController@print_ng_finding_email');
+Route::post('index/ng_finding/sendemail/{id}','NgFindingController@sendemail');
+Route::post('index/ng_finding/approval/{id}/{month}','NgFindingController@approval');
+
 //RECORDER PUSH PULL CHECK
 Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
@@ -2285,9 +2297,15 @@ Route::get('index/kanagata_lifetime/getkanagatalifetime','PressController@getkan
 Route::post('index/kanagata/update/{id}','PressController@update');
 Route::post('index/kanagata/reset','PressController@reset');
 
+//Form Failure
+Route::get('index/form_experience', 'FormExperienceController@index');
+Route::post('index/form_experience/filter', 'FormExperienceController@filter_form');
+Route::get('index/form_experience/create', 'FormExperienceController@create');
+Route::post('index/post/form_experience', 'FormExperienceController@post_form');
+Route::get('index/form_experience/edit/{id}', 'FormExperienceController@update');
+Route::post('index/update/form_experience', 'FormExperienceController@update_form');
 
 //IP
-
 Route::get('index/display/ip', 'PingController@indexIpMonitoring');
 Route::get('fetch/display/ip', 'PingController@fetch');
 Route::get('fetch/display/fetch_hit/{ip}', 'PingController@fetch_hit');
