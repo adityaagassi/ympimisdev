@@ -210,18 +210,18 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-xs-12">
+						<!-- <div class="col-xs-12">
 							<center><label for="exampleInputEmail1">ID Card Operator Push Pull</label></center>
 							<div class="input-group">
 								<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border:1px solid black">
 									<i class="glyphicon glyphicon-qrcode"></i>
-								</div>
-								<input class="form-control" style="text-align: center;width: 100%;border:1px solid black" type="text" id="operator2" placeholder="Scan ID Card" required>
-								<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border:1px solid black">
+								</div> -->
+								<!-- <input class="form-control" style="text-align: center;width: 100%;border:1px solid black" type="text" id="operator2" placeholder="Scan ID Card" required> -->
+								<!-- <div class="input-group-addon" id="icon-serial" style="font-weight: bold; border:1px solid black">
 									<i class="glyphicon glyphicon-qrcode"></i>
 								</div>
 							</div>
-						</div>
+						</div> -->
 						<center><label for="exampleInputEmail1">Color</label></center>
 						<div class="col-xs-12" id="color_choice">
 							<div class="col-xs-4" style="margin-top: 5px"><button style="width: 100%;font-size: 20px;background-color: #fffac4" class="btn btn-default" id="IVORY" onclick="getModel(this.id)">IVORY</button>
@@ -412,7 +412,7 @@
 	}
 
 	function submit() {
-		if ($('#operator').val() == '' || $('#operator2').val() == '') {
+		if ($('#operator').val() == '') {
 			alert('Isi Semua Data!');
 		}
 		else if($('#color_camera').val() == 'YRS'){
