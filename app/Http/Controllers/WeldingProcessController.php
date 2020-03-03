@@ -345,13 +345,15 @@ class WeldingProcessController extends Controller
 				m_mesin.operator_id,
 				operator_name,
 				operator_nik,
-				item_sedang.hsa_kito_code AS gmcsedang,
-				item_sedang.hsa_name AS gmcdescsedang,
+				COALESCE(item_sedang.hsa_kito_code,item_sedang_phs.phs_code) AS gmcsedang,
+				sedang.kanban_no AS kanban_no_sedang,
+				COALESCE(item_sedang.hsa_name,item_sedang_phs.phs_name) AS gmcdescsedang,
 				detail_sedang.order_sedang_start_date AS waktu_sedang,
-				item_akan.hsa_kito_code AS gmcakan,
-				item_akan.hsa_name AS gmcdescakan,
+				COALESCE(item_akan.hsa_kito_code,item_akan_phs.phs_name) AS gmcakan,
+				akan.kanban_no AS kanban_no_akan,
+				COALESCE(item_akan.hsa_name,item_akan_phs.phs_name) AS gmcdescakan,
 				detail_akan.order_akan_start_date AS waktu_akan 
-				FROM
+			FROM
 				m_mesin
 				LEFT JOIN m_ws ON m_ws.ws_id = m_mesin.ws_id
 				LEFT JOIN m_operator ON m_operator.operator_id = m_mesin.operator_id
@@ -359,13 +361,15 @@ class WeldingProcessController extends Controller
 				LEFT JOIN t_order akan ON akan.order_id = m_mesin.order_id_akan
 				LEFT JOIN m_hsa item_sedang ON item_sedang.hsa_id = sedang.part_id
 				LEFT JOIN m_hsa item_akan ON item_akan.hsa_id = akan.part_id
+				LEFT JOIN m_phs item_sedang_phs ON item_sedang_phs.phs_id = sedang.part_id
+				LEFT JOIN m_phs item_akan_phs ON item_akan_phs.phs_id = akan.part_id
 				LEFT JOIN t_order_detail detail_sedang ON m_mesin.order_id_sedang = detail_sedang.order_id
 				LEFT JOIN t_order_detail detail_akan ON m_mesin.order_id_akan = detail_akan.order_id 
-				WHERE
+			WHERE
 				( detail_sedang.flow_id IS NULL OR detail_sedang.flow_id = 1 ) 
 				AND ( detail_akan.flow_id IS NULL OR detail_akan.flow_id = 1 ) 
 				AND (
-				mesin_type = 2 
+					mesin_type = 2 
 				OR mesin_type = 3)");
 		}elseif ($loc == 'phs-sx') {
 			$work_stations = DB::connection('welding_controller')->select("SELECT
@@ -531,8 +535,8 @@ class WeldingProcessController extends Controller
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
 						if (isset($key)) {
-							$hsaname = explode(' ', $key->phs_name);
-							array_push($list_antrian, $key->phs_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
+							// $hsaname = explode(' ', $key->phs_name);
+							array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -540,8 +544,8 @@ class WeldingProcessController extends Controller
 				}else{
 					for ($i=0; $i < 10; $i++) {
 						if (isset($lists[$i])) {
-							$hsaname = explode(' ', $lists[$i]->phs_name);
-							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
+							// $hsaname = explode(' ', $lists[$i]->phs_name);
+							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -570,8 +574,8 @@ class WeldingProcessController extends Controller
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
 						if (isset($key)) {
-							$hsaname = explode(' ', $key->phs_name);
-							array_push($list_antrian, $key->phs_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
+							// $hsaname = explode(' ', $key->phs_name);
+							array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -579,8 +583,8 @@ class WeldingProcessController extends Controller
 				}else{
 					for ($i=0; $i < 10; $i++) {
 						if (isset($lists[$i])) {
-							$hsaname = explode(' ', $lists[$i]->phs_name);
-							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
+							// $hsaname = explode(' ', $lists[$i]->phs_name);
+							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
