@@ -2027,12 +2027,10 @@ class MiddleProcessController extends Controller
 			TIMESTAMPDIFF(SECOND,a.sedang_start_time,a.selesai_start_time)/60 as act,
 			a.material_qty, a.`check`
 			FROM (select * from data_log l
-			where date(l.selesai_start_time) = '".$date."'
-			".$group.") a
+			where date(l.selesai_start_time) = '".$date."') a
 			LEFT JOIN
 			(select * from data_log l
-			where date(l.selesai_start_time) = '".$date."'
-			".$group.") b
+			where date(l.selesai_start_time) = '".$date."') b
 			ON (a.operator_id = b.operator_id AND a.selesai_start_time < b.selesai_start_time)
 			WHERE b.selesai_start_time IS NULL
 			order by a.operator_id asc) dl
