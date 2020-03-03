@@ -509,7 +509,8 @@
 				var chart = Highcharts.chart('container', {
 
 					chart: {
-						type: 'column'
+						type: 'column',
+						backgroundColor: null
 					},
 
 					title: {
@@ -520,7 +521,10 @@
 						}
 					},
 					legend:{
-						enabled: false
+						enabled: true,
+						itemStyle: {
+							fontSize:'20px'
+						}
 					},
 					credits:{
 						enabled:false
@@ -530,7 +534,7 @@
 						type: 'category',
 						gridLineWidth: 5,
 						gridLineColor: 'RGB(204,255,255)',
-						labels: {
+						labels: {	
 							style: {
 								fontSize: '20px'
 							}
@@ -623,32 +627,38 @@
 						name: 'Plan',
 						data: planFL,
 						stack: 'FL',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
 					}, {
 						name: 'Plan',
 						data: planCL,
 						stack: 'CL',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
 					}, {
 						name: 'Plan',
 						data: planAS,
 						stack: 'AS',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
 					}, {
 						name: 'Plan',
 						data: planTS,
 						stack: 'TS',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
 					}, {
 						name: 'Plan',
 						data: planPN,
 						stack: 'PN',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
 					}, {
 						name: 'Plan',
 						data: planRC,
 						stack: 'RC',
-						color: 'rgba(255, 0, 0, 0.25)'
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
 					}, {
 						name: 'Plan',
 						data: planVN,
@@ -663,57 +673,63 @@
 						name: 'Actual',
 						data: actualCL,
 						stack: 'CL',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
 					}, {
 						name: 'Actual',
 						data: actualAS,
 						stack: 'AS',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
 					}, {
 						name: 'Actual',
 						data: actualTS,
 						stack: 'TS',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
 					}, {
 						name: 'Actual',
 						data: actualPN,
 						stack: 'PN',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
 					}, {
 						name: 'Actual',
 						data: actualRC,
 						stack: 'RC',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
 					}, {
 						name: 'Actual',
 						data: actualVN,
 						stack: 'VN',
-						color: 'rgba(0, 255, 0, 0.90)'
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
 					}]
 				});
 
-				$('.highcharts-xaxis-labels text').on('click', function () {
-					fillModal(this.textContent, 'all');
-				});
+$('.highcharts-xaxis-labels text').on('click', function () {
+	fillModal(this.textContent, 'all');
+});
 
-				$.each(chart.xAxis[0].ticks, function(i, tick) {
-					$('.highcharts-xaxis-labels text').hover(function () {
-						$(this).css('fill', '#33c570');
-						$(this).css('cursor', 'pointer');
+$.each(chart.xAxis[0].ticks, function(i, tick) {
+	$('.highcharts-xaxis-labels text').hover(function () {
+		$(this).css('fill', '#33c570');
+		$(this).css('cursor', 'pointer');
 
-					},
-					function () {
-						$(this).css('cursor', 'pointer');
-						$(this).css('fill', 'white');
-					});
-				});
+	},
+	function () {
+		$(this).css('cursor', 'pointer');
+		$(this).css('fill', 'white');
+	});
+});
 
 
-			}
-			else{
-				alert('Attempt to retrieve data failed.')
-			}
-		});
+}
+else{
+	alert('Attempt to retrieve data failed.')
+}
+});
 }
 
 

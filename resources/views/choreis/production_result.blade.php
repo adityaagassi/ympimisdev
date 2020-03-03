@@ -695,7 +695,7 @@
 							enabled: false
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Production Result</span><br><span style="color: rgba(96, 92, 168);">'+ result.week +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)',
+							text: '<span style="font-size: 3vw;">Production Result</span><br> <span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span><span style="color: rgba(96, 92, 168);"> (On '+ result.week +'</span>)',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -964,7 +964,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Production Accuracy</span><br><span style="color: rgba(96, 92, 168);">'+ result.week +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)',
+							text: '<span style="font-size: 3vw;">Production Accuracy</span><br> <span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span><span style="color: rgba(96, 92, 168);"> (On '+ result.week +'</span>)',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
@@ -1043,7 +1043,7 @@
 							type: 'column'
 						},
 						title: {
-							text: '<span style="font-size: 3vw;">Production Accuracy</span><br><span style="color: rgba(96, 92, 168);">'+ result.week +'</span> (<span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span>)',
+							text: '<span style="font-size: 3vw;">Production Accuracy</span><br> <span style="color: rgba(61, 153, 112);">'+ result.dateTitle +'</span><span style="color: rgba(96, 92, 168);"> (On '+ result.week +'</span>)',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
