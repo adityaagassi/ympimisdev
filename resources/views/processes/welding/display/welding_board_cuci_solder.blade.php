@@ -28,6 +28,10 @@
 		font-weight: bold;
 	}
 
+	.content-wrapper{
+		padding-top: 0px
+	}
+
 	hr {
 		margin: 0px;
 	}
@@ -73,22 +77,8 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<table id="buffingTable" class="table table-bordered">
-				<!-- <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;">
-					<tr>
-						<th style="width: 0.66%; padding: 0;">#1</th>
-						<th style="width: 0.66%; padding: 0;">#2</th>
-						<th style="width: 0.66%; padding: 0;">#3</th>
-						<th style="width: 0.66%; padding: 0;">#4</th>
-						<th style="width: 0.66%; padding: 0;">#5</th>
-						<th style="width: 0.66%; padding: 0;">#6</th>
-						<th style="width: 0.66%; padding: 0;">#7</th>
-						<th style="width: 0.66%; padding: 0;">#8</th>
-						<th style="width: 0.66%; padding: 0;">#9</th>
-						<th style="width: 0.66%; padding: 0;">#10</th>
-					</tr>
-				</thead> -->
 				<tbody id="weldingTableBody">
-					<tr style="color:white">
+					<tr style="color:white;background-color: #404040">
 						<td id="q0" style="height: 50px"></td>
 						<td id="q1"></td>
 						<td id="q2"></td>
@@ -100,7 +90,7 @@
 						<td id="q8"></td>
 						<td id="q9"></td>
 					</tr>
-					<tr style="color:white">
+					<tr style="color:white;background-color: #333333">
 						<td id="q10" style="height: 50px"></td>
 						<td id="q11"></td>
 						<td id="q12"></td>
@@ -112,7 +102,7 @@
 						<td id="q18"></td>
 						<td id="q19"></td>
 					</tr>
-					<tr style="color:white">
+					<tr style="color:white;background-color: #404040">
 						<td id="q20" style="height: 50px"></td>
 						<td id="q21"></td>
 						<td id="q22"></td>
@@ -124,7 +114,7 @@
 						<td id="q28"></td>
 						<td id="q29"></td>
 					</tr>
-					<tr style="color:white">
+					<tr style="color:white;background-color: #333333">
 						<td id="q30" style="height: 50px"></td>
 						<td id="q31"></td>
 						<td id="q32"></td>
@@ -136,7 +126,7 @@
 						<td id="q38"></td>
 						<td id="q39"></td>
 					</tr>
-					<tr style="color:white">
+					<tr style="color:white;background-color: #404040">
 						<td id="q40" style="height: 50px"></td>
 						<td id="q41"></td>
 						<td id="q42"></td>

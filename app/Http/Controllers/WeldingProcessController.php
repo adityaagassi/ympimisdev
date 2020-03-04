@@ -447,22 +447,16 @@ class WeldingProcessController extends Controller
 			$work_stations = DB::connection('welding_controller')->select("SELECT COALESCE
 				( m_hsa.hsa_kito_code, m_phs.phs_code ) AS gmc,
 				COALESCE ( m_hsa.hsa_name, m_phs.phs_name ) AS gmcdesc,
-				DATE_FORMAT( t_order_detail.order_store_date, '%d %M %Y' ) as store_date,
-				DATE_FORMAT( t_order_detail.order_store_date, '%h:%i' ) AS store_time,
-				t_order_detail.order_store_date AS waktu_akan,
-				t_order_detail.order_store_date AS waktu_sedang 
-				FROM
-				t_order
-				JOIN t_order_detail ON t_order.order_id = t_order_detail.order_id
-				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_order.part_id
-				LEFT JOIN m_phs ON m_phs.phs_id = t_order.part_id 
-				WHERE
-				t_order_detail.flow_id = 2 
-				AND t_order_detail.order_store_date NOT LIKE '%2000%' 
-				AND t_order_detail.order_status = 1 
-				ORDER BY
-				order_antrian_no ASC 
-				LIMIT 50");
+				DATE_FORMAT( t_before_cuci.order_store_date, '%d %M %Y' ) AS store_date,
+				DATE_FORMAT( t_before_cuci.order_store_date, '%H:%i' ) AS store_time,
+				t_before_cuci.order_store_date AS waktu_akan,
+				t_before_cuci.order_store_date AS waktu_sedang 
+			FROM
+				t_before_cuci
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id
+				LEFT JOIN m_phs ON m_phs.phs_id = t_before_cuci.part_id 
+			WHERE
+				t_before_cuci.order_status = 0");
 		}
 
 		$indexCuci1 = 0;
