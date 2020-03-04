@@ -113,28 +113,34 @@ class WeldingProcessController extends Controller
 	}
 
 	public function indexWeldingBoard($loc){
-		$title = 'Saxophone Welding Board';
-		$title_jp = 'サックス溶接加工順';
 
 		if ($loc == 'hpp-sx') {
+				$title = 'HPP Saxophone Welding Board';
+				$title_jp = 'HPP サックス溶接加工順';
 			return view('processes.welding.display.welding_board_hpp', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
 			))->with('page', 'HPP');
 		}elseif ($loc == 'cuci-solder'){
+				$title = 'Cuci Asam Saxophone Welding Board';
+				$title_jp = ' サックス溶接加工順';
 			return view('processes.welding.display.welding_board_cuci_solder', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
 			))->with('page', 'CUCI SOLDER');
 		}elseif($loc == 'phs-sx'){
+				$title = 'PHS Saxophone Welding Board';
+				$title_jp = 'PHS サックス溶接加工順';
 			return view('processes.welding.display.welding_board', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
 			))->with('page', 'PHS');
 		}elseif($loc == 'hsa-sx'){
+				$title = 'HSA Saxophone Welding Board';
+				$title_jp = 'HSA サックス溶接加工順';
 			return view('processes.welding.display.welding_board', array(
 				'title' => $title,
 				'title_jp' => $title_jp,

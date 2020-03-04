@@ -67,9 +67,9 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding: 0px;">
 	<input type="hidden" value="{{ $loc }}" id="loc">
-	<span style="padding-top: 0px">
+	<!-- <span style="padding-top: 0px">
 		<center><h1><b>{{ $page }}</b></h1></center>
-	</span>
+	</span> -->
 	<div class="row">
 		<div class="col-xs-12">
 			<table id="buffingTable" class="table table-bordered">

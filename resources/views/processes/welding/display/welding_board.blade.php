@@ -65,7 +65,7 @@
 			background: rgba(0, 0, 0, 0);
 		}
 		50%, 100% {
-			background-color: #f73939;
+			background-color: #4ff05a;
 		}
 	}
 </style>
@@ -86,9 +86,9 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding: 0px;">
 	<input type="hidden" value="{{ $loc }}" id="loc">
-	<span style="padding-top: 0px">
+	<!-- <span style="padding-top: 0px">
 		<center><h1><b>{{ $page }}</b></h1></center>
-	</span>
+	</span> -->
 	<div class="row">
 		<div class="col-xs-12">
 			<table id="buffingTable" class="table table-bordered">
@@ -186,6 +186,7 @@
 					var weldingTableBody = "";
 					var i = 0;
 					var color2 = "";
+					var color3 = "";
 
 					$.each(result.boards, function(index, value){
 						if (i % 2 === 0 ) {
@@ -196,11 +197,18 @@
 									color2 = 'class="akan"';
 								else
 									color2 = 'style="color:#ffd03a"';
+
+
+								if (value.sedang == "<br>")
+									color3 = 'class="sedang"';
+								else
+									color3 = 'style="color:#a4fa98"';
 							}
 							else {
 								// color = 'style="background-color: RGB(255,0,0)"';
 								color = '';
 								color2 = '';
+								color3 = '';
 							}
 						} else {
 							if (value.employee_id) {
@@ -210,11 +218,17 @@
 									color2 = 'class="akan"';
 								else
 									color2 = 'style="color:#ffd03a"';
+
+								if (value.sedang == "<br>")
+									color3 = 'class="sedang"';
+								else
+									color3 = 'style="color:#a4fa98"';
 							}
 							else {
 								// color = 'style="background-color: RGB(255,0,0)"';
 								color = 'style="background-color: #575c57"';
 								color2 = '';
+								color3 = '';
 							}
 						}
 
@@ -275,13 +289,13 @@
 								weldingTableBody += '<tr '+color+'>';
 								weldingTableBody += '<td height="5%">'+value.ws+'</td>';
 								weldingTableBody += '<td>Not Found</td>';
-								weldingTableBody += '<td style="color:#a4fa98">'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
+								weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
 								weldingTableBody += '<td '+color2+'>'+akan+'<p></p>'+setTimeAkan(index)+'</td>';
 							}else{
 								weldingTableBody += '<tr '+color+'>';
 								weldingTableBody += '<td height="5%">'+value.ws+'</td>';
 								weldingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-								weldingTableBody += '<td style="color:#a4fa98">'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
+								weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
 								weldingTableBody += '<td '+color2+'>'+akan+'<p></p>'+setTimeAkan(index)+'</td>';
 							}
 							weldingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
