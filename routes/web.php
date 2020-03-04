@@ -1473,6 +1473,7 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 });
 	Route::get('index/display/pantry_visit', 'PantryController@indexDisplayPantryVisit');
 	Route::get('fetch/pantry/realtime_visitor', 'PantryController@fetchPantryRealtimeVisitor');
+	Route::get('fetch/pantry/visitor', 'PantryController@fetchPantryVisitor');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
