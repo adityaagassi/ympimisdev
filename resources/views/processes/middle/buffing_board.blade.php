@@ -282,7 +282,7 @@
 						if(page != ''){
 							if(key[page].includes(value.ws.split("-")[1])){
 								buffingTableBody += '<tr '+color+'>';
-								buffingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
+								buffingTableBody += '<td height="5%" style="font-size:2vw;">'+value.ws.split("-")[1]+'</td>';
 								buffingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
 								buffingTableBody += '<td style="color:#a4fa98">'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
 								buffingTableBody += '<td '+color2+'>'+akan+'<p>'+setTimeAkan(index)+'</p></td>';
@@ -296,13 +296,13 @@
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-								buffingTableBody += '<td style="color:#fff">'+value.jumlah+'</td>';
+								buffingTableBody += '<td style="color:#fff; font-size:2vw;">'+value.jumlah+'</td>';
 								buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+setTimeSelesai(index)+'</p></td>';
 								buffingTableBody += '</tr>';
 							}
 						}else{
 							buffingTableBody += '<tr '+color+'>';
-							buffingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
+							buffingTableBody += '<td height="5%" style="font-size:2vw;">'+value.ws.split("-")[1]+'</td>';
 							buffingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
 							buffingTableBody += '<td style="color:#a4fa98">'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
 							buffingTableBody += '<td '+color2+'>'+akan+'<p>'+setTimeAkan(index)+'</p></td>';
@@ -316,7 +316,7 @@
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-							buffingTableBody += '<td style="color:#fff">'+value.jumlah+'</td>';
+							buffingTableBody += '<td style="color:#fff; font-size:2vw;">'+value.jumlah+'</td>';
 							buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+setTimeSelesai(index)+'</p></td>';
 							buffingTableBody += '</tr>';
 						}						
