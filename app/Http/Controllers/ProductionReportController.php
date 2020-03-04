@@ -60,7 +60,8 @@ class ProductionReportController extends Controller
                         'Cek Area',
                         'Jishu Hozen',
                         'Cek APD',
-                        'Weekly Report'];
+                        'Weekly Report',
+                        'Temuan NG'];
     }
 
     function index($id)
@@ -131,6 +132,9 @@ class ProductionReportController extends Controller
         }
         elseif($activity_type == "Weekly Report"){
             return redirect('/index/weekly_report/index/'.$id)->with('page', 'Weekly Report')->with('no', '13');
+        }
+        elseif($activity_type == "Temuan NG"){
+            return redirect('/index/ng_finding/index/'.$id)->with('page', 'Temuan NG')->with('no', '14');
         }
     }
 

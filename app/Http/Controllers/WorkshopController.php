@@ -1637,6 +1637,40 @@ class WorkshopController extends Controller{
 			on date.week_date = reject.date
 			order by week_date asc");
 
+		// $progress = db::select("select wjo.order_no, wjo.priority, concat(SPLIT_STRING(requester.name, ' ', 1), ' ', SPLIT_STRING(requester.name, ' ', 2)) as requester, wjo.item_name, wjo.quantity, concat(SPLIT_STRING(pic.name, ' ', 1), ' ', SPLIT_STRING(pic.name, ' ', 2)) as `pic`, coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date, step.std, step.actual from workshop_job_orders wjo
+		// 	left join (select * from workshop_job_order_logs where remark = 0) as requested
+		// 	on requested.order_no = wjo.order_no
+		// 	left join (select * from workshop_job_order_logs where remark = 1) as listed
+		// 	on listed.order_no = wjo.order_no
+		// 	left join (select * from workshop_job_order_logs where remark = 2) as approved
+		// 	on approved.order_no = wjo.order_no
+		// 	left join (select * from workshop_job_order_logs where remark = 2) as progress
+		// 	on progress.order_no = wjo.order_no
+		// 	left join employee_syncs pic on wjo.operator = pic.employee_id
+		// 	left join employee_syncs requester on wjo.created_by = requester.employee_id
+		// 	left join
+		// 	(select wjo.order_no, COALESCE(flow.std,0) as std, COALESCE(log.actual,0) as actual from workshop_job_orders wjo
+		// 	left join
+		// 	(select flow.order_no, count(flow.order_no) as std from workshop_flow_processes flow
+		// 	left join workshop_job_orders wjo
+		// 	on flow.order_no = wjo.order_no
+		// 	where wjo.remark < 4
+		// 	group by flow.order_no) flow
+		// 	on flow.order_no = wjo.order_no 
+		// 	left join
+		// 	(select log.order_no, count(log.order_no) as actual from workshop_logs log
+		// 	left join workshop_job_orders wjo
+		// 	on log.order_no = wjo.order_no
+		// 	where wjo.remark < 4
+		// 	group by log.order_no) log
+		// 	on log.order_no = wjo.order_no
+		// 	where wjo.remark < 4) step
+		// 	on step.order_no = wjo.order_no
+		// 	where date(wjo.created_at) >= '".$datefrom."'
+		// 	and date(wjo.created_at) <= '".$dateto."'
+		// 	and wjo.remark = 3
+		// 	order by wjo.priority desc, wjo.order_no asc");
+
 		$progress = db::select("select wjo.order_no, wjo.priority, concat(SPLIT_STRING(requester.name, ' ', 1), ' ', SPLIT_STRING(requester.name, ' ', 2)) as requester, wjo.item_name, wjo.quantity, concat(SPLIT_STRING(pic.name, ' ', 1), ' ', SPLIT_STRING(pic.name, ' ', 2)) as `pic`, coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date, step.std, step.actual from workshop_job_orders wjo
 			left join (select * from workshop_job_order_logs where remark = 0) as requested
 			on requested.order_no = wjo.order_no
@@ -1651,14 +1685,14 @@ class WorkshopController extends Controller{
 			left join
 			(select wjo.order_no, COALESCE(flow.std,0) as std, COALESCE(log.actual,0) as actual from workshop_job_orders wjo
 			left join
-			(select flow.order_no, count(flow.order_no) as std from workshop_flow_processes flow
+			(select flow.order_no, SUM(flow.std_time) as std from workshop_flow_processes flow
 			left join workshop_job_orders wjo
 			on flow.order_no = wjo.order_no
 			where wjo.remark < 4
 			group by flow.order_no) flow
 			on flow.order_no = wjo.order_no 
 			left join
-			(select log.order_no, count(log.order_no) as actual from workshop_logs log
+			(select log.order_no, SUM(TIMESTAMPDIFF(SECOND, started_at, log.created_at)) as actual from workshop_logs log
 			left join workshop_job_orders wjo
 			on log.order_no = wjo.order_no
 			where wjo.remark < 4
@@ -1833,7 +1867,7 @@ class WorkshopController extends Controller{
 		$op_workloads = db::select("select workshop_flow_processes.operator, process.shortname, workshop_flow_processes.order_no, start_plan, finish_plan, std_time from workshop_flow_processes
 			left join workshop_job_orders wjo on wjo.order_no = workshop_flow_processes.order_no
 			left join workshop_processes process on process.machine_code = workshop_flow_processes.machine_code
-			where wjo.remark < 4 and process.category = 'MACHINE' and start_plan is not null
+			where wjo.remark < 4 and start_plan is not null
 			ORDER BY workshop_flow_processes.operator, start_plan asc");
 
 		$response = array(
@@ -1847,8 +1881,8 @@ class WorkshopController extends Controller{
 
 	public function fetchDrawingMaterial()
 	{
-		$draw = db::select("select drawing_number, drawing_name, part_number, material, quantity from drawing_materials
-			group by drawing_number, drawing_name, part_number, material, quantity");
+		$draw = db::select("select drawing_number, drawing_name, part_number, material, quantity, part_name from drawing_materials
+			group by drawing_number, drawing_name, part_number, material, quantity, part_name");
 
 		$response = array(
 			'status' => true,
