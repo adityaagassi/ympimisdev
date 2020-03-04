@@ -162,6 +162,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
+						<input type="hidden" name="container_id" id="container_id" value="">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 						<button type="submit" class="btn btn-primary">Confirm</button>
 					</div>

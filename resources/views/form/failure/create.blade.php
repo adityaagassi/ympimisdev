@@ -2,18 +2,26 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-  .col-xs-8{
+  
+  .col-xs-2{
     padding-top: 5px;
   }
-  .col-xs-2{
+  .col-xs-3{
+    padding-top: 5px;
+  }
+  .col-xs-5{
     padding-top: 5px;
   }
   .col-xs-6{
     padding-top: 5px;
   }
-  .col-xs-10{
+  .col-xs-7{
     padding-top: 5px;
   }
+  .col-xs-8{
+    padding-top: 5px;
+  }
+  
 </style>
 @endsection
 @section('header')
@@ -62,32 +70,59 @@
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="row">
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_tgl">Tanggal</label>
-            <input type="text" id="form" class="form-control" value="{{ date('d F Y')}}" readonly>
-            <input type="hidden" id="form_tgl" class="form-control" value="{{ date('Y-m-d')}}" readonly>
+            @if(Auth::user()->username == "PI0507001")
+              <label for="form_nik">Identitas</label>
+              <select class="form-control select2" data-placeholder="Pilih Karyawan" name="form_nik" id="form_nik" style="width: 100% height: 35px; font-size: 15px;" onchange="selectemployee()" required>
+                  <option value=""></option>
+                  @foreach($leaders as $leader)
+                  <option value="{{ $leader->employee_id }}">{{ $leader->employee_id }} - {{ $leader->name }} - {{ $leader->section }}</option>
+                  @endforeach
+              </select>
+
+              <input type="hidden" class="form-control" name="form_nama" id="form_nama" placeholder="form_nama" required>
+
+            @else
+              <label for="form_identitas">Identitas</label>
+              <input type="text" id="form_identitas" class="form-control" value="{{$employee->employee_id}} - {{$employee->name}}" readonly>
+              <input type="hidden" id="form_nik" class="form-control" value="{{$employee->employee_id}}" readonly>
+              <input type="hidden" id="form_nama" class="form-control" value="{{$employee->name}}" readonly>
+
+            @endif
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_nik">NIK</label>
-            <input type="text" id="form_nik" class="form-control" value="{{$employee->employee_id}}" readonly>
+            <label for="form_bagian">Bagian</label>
+            @if(Auth::user()->username == "PI0507001")
+              <input type="text" id="form_bagian" class="form-control" readonly>
+            @else
+              @if($employee->group == null)
+              <input type="text" id="form_bagian" class="form-control" value="{{$employee->department}} - {{$employee->section}}" readonly>
+              @else
+              <input type="text" id="form_bagian" class="form-control" value="{{$employee->department}} - {{$employee->section}} - {{$employee->group}}" readonly>
+              @endif
+            @endif
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_nama">Nama</label>
-            <input type="text" id="form_nama" class="form-control" value="{{$employee->name}}" readonly>
+            <label for="form_tgl">Waktu Kejadian</label>
+            <div class="input-group date">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control datepicker" id="form_tgl" placeholder="Masukkan Tanggal Kejadian" required>
+            </div>
           </div>
-          <!--<div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_group">Group</label>
-            <input type="text" id="form_group" class="form-control" value="{{$employee->group}}" readonly>
-          </div> -->
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_ket">Section - Department</label>
-            <input type="text" id="form_ket" class="form-control" value="{{$employee->section}} - {{$employee->department}}" readonly>
-            <input type="hidden" id="form_sec" class="form-control" value="{{$employee->section}}" readonly>
-            <input type="hidden" id="form_dept" class="form-control" value="{{$employee->department}}" readonly>
+            <label for="form_loc">Lokasi Kejadian</label>
+            <select class="form-control select2" data-placeholder="Pilih Lokasi Kejadian" name="form_loc" id="form_loc" style="width: 100% height: 35px; font-size: 15px;" required>
+                <option value=""></option>
+                @foreach($sections as $section)
+                @if($section->group == null)
+                <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+                @else
+                <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
+                @endif
+                @endforeach
+            </select>
           </div>
-          <!-- <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_dept">Department</label>
-            <input type="text" id="form_dept" class="form-control" value="" readonly>
-          </div> -->
         </div>
         <div class="row">
           <div class="col-xs-2">
@@ -98,16 +133,24 @@
               <option>Kegagalan</option>
             </select>
           </div>
-          <div class="col-xs-10">
+          <div class="col-xs-5">
             <label for="form_judul">Judul Permasalahan / Kegagalan</label>
             <input type="text" id="form_judul" class="form-control" placeholder="Judul Permasalahan / Kegagalan">
+          </div>
+          <div class="col-xs-3">
+            <label for="form_ket">Nama Mesin / Equipment / Part</label>
+            <input type="text" id="form_ket" class="form-control" placeholder="Contoh : SAX, FL, Compressor, Chiller">
+          </div>
+          <div class="col-xs-2">
+            <label for="form_grup">Grup Kegagalan</label>
+            <input type="text" id="form_grup" class="form-control" placeholder="Contoh : Konslet">
           </div>
         </div>
         
         <div class="row">
           <div class="col-xs-6">
-            <label for="form_penyebab">Penyebab Permasalahan</label>
-            <textarea class="form-control" id="form_penyebab"></textarea>
+            <label for="form_deskripsi">Deskripsi Kegagalan / Permasalahan</label>
+            <textarea class="form-control" id="form_deskripsi"></textarea>
           </div>
           <div class="col-xs-6">
             <label for="form_perbaikan">Penanganan / Perbaikan Yang Dilakukan</label>
@@ -160,15 +203,41 @@
       $('.select2').select2({
         language : {
           noResults : function(params) {
-            return "There is no cpar with status 'close'";
+            // return "There is no cpar with status 'close'";
           }
         }
       });
+
+
     });
 
     $(function () {
       $('.select2').select2()
     });
+
+    $('.datepicker').datepicker({
+      format: "yyyy-mm",
+      startView: "months", 
+      minViewMode: "months",
+      autoclose: true,
+      orientation: 'bottom auto',
+    });
+
+    function selectemployee(){
+      var nik = document.getElementById("form_nik").value;
+
+      $.ajax({
+         url: "{{ url('index/form_experience/get_nama') }}?nik=" +nik, 
+         type : 'GET', 
+         success : function(data){
+            var obj = jQuery.parseJSON(data);
+            $('#form_nama').val(obj[0].name);
+            $('#form_bagian').val(obj[0].section +' - '+obj[0].department)
+         }
+      });      
+    }
+
+
 
     $("#form_submit").click( function() {
       $("#loading").show();
@@ -180,6 +249,13 @@
         return false;
       }
 
+      if ($("#form_tgl").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Tanggal Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
       if ($("#form_kategori").val() == "") {
         $("#loading").hide();
         alert("Kolom Kategori Harap diisi");
@@ -187,15 +263,30 @@
         return false;
       }
 
+      if ($("#form_loc").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Lokasi Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#form_ket").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Nama Mesin / Equipment / Part Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
       var data = {
         employee_id: $("#form_nik").val(),
         employee_name: $("#form_nama").val(),
-        tanggal: $("#form_tgl").val(),
         kategori: $("#form_kategori").val(),
-        section: $("#form_sec").val(),
-        department: $("#form_dept").val(),
+        tanggal_kejadian: $("#form_tgl").val(),
+        lokasi_kejadian: $("#form_loc").val(),
+        equipment: $("#form_ket").val(),
+        grup_kejadian: $("#form_grup").val(),
         judul: $("#form_judul").val(),
-        penyebab: CKEDITOR.instances.form_penyebab.getData(),
+        deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
         penanganan: CKEDITOR.instances.form_perbaikan.getData(),
         tindakan: CKEDITOR.instances.form_tindakan.getData(),
       };
@@ -203,13 +294,12 @@
       $.post('{{ url("index/post/form_experience") }}', data, function(result, status, xhr){
         $("#loading").hide();
         openSuccessGritter("Success","Berhasil Dibuat");
-        // window.history.go(-1);
         setTimeout(function(){ window.history.back(); }, 2000);
       });
 
     });
 
-    CKEDITOR.replace('form_penyebab' ,{
+    CKEDITOR.replace('form_deskripsi' ,{
       filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}'
     });
 

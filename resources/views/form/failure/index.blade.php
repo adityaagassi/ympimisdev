@@ -103,12 +103,13 @@ td{
           <table id="example1" class="table table-bordered table-striped table-hover" >
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
-                <th>Tanggal</th>
-                <th>Nama</th>
+                <!-- <th>Nama</th> -->
+                <th>Tanggal Kejadian</th>
+                <th>Lokasi Kejadian</th>
                 <th>Judul</th>
+                <th>Mesin / Equipment</th>
+                <th>Grup</th>
                 <th>Kategori</th>
-                <th>Bagian</th>
-                <th>Departemen</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -116,6 +117,7 @@ td{
             </tbody>
             <tfoot>
               <tr>
+                <!-- <th></th> -->
                 <th></th>
                 <th></th>
                 <th></th>
@@ -254,13 +256,14 @@ td{
           "data" : data,
         },
         "columns": [
-          { "data": "tanggal" },
-          { "data": "employee_name" },
-          { "data": "judul" },
-          { "data": "kategori" },
-          { "data": "section"},
-          { "data": "department"},
-          { "data": "action", "width": "10%"}
+          // { "data": "employee_name", "width": "10%"},
+          { "data": "tanggal_kejadian", "width": "10%"},
+          { "data": "lokasi_kejadian", "width": "20%"},
+          { "data": "judul", "width": "30%"},
+          { "data": "equipment", "width": "10%"},
+          { "data": "grup_kejadian", "width": "10%"},
+          { "data": "kategori", "width": "10%"},
+          { "data": "action", "width": "15%"}
         ]
       });
 

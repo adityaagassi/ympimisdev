@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FormFailure extends Model
 {
     protected $fillable = [
-		'kategori','employee_id','employee_name','section','department','tanggal','judul','penyebab','penanganan','tindakan','created_by'
+		'employee_id','employee_name','tanggal_kejadian','lokasi_kejadian','equipment','grup_kejadian','judul','kategori','deskripsi','penanganan','tindakan','created_by'
 	];
 
 	public function user()

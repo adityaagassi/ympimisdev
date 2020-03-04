@@ -34,7 +34,7 @@ class FormExperienceController extends Controller
     public function index()
     {	
     	$title = 'Form Permasalahan & Kegagalan';
-		$title_jp = '問題・失敗のフォーム';
+		  $title_jp = '問題・失敗のフォーム';
 
         $departments = Department::select('departments.id', 'departments.department_name')->get();
 
@@ -56,18 +56,25 @@ class FormExperienceController extends Controller
           $detail_table = $detail_table->where('form_failures.department', '=', $request->get('department_id'));
         }
 
-        $detail_table = $detail_table->orderBy('form_failures.id', 'ASC');
+        $detail_table = $detail_table->orderBy('form_failures.id', 'DESC');
         $details = $detail_table->get();
 
         return DataTables::of($details)
 
-        ->editColumn('tanggal',function($details){
-            return date('d F Y', strtotime($details->tanggal));
+        ->editColumn('tanggal_kejadian',function($details){
+            return date('F Y', strtotime($details->tanggal_kejadian));
+          })
+
+        ->editColumn('lokasi_kejadian',function($details){
+            return str_replace('_', ' - ', $details->lokasi_kejadian);
           })
 
         ->addColumn('action', function($details){
           $id = $details->id;
-          return '<a href="form_experience/edit/'.$id.'" class="btn btn-primary btn-xs">Edit</a>';
+          return '
+            <a href="form_experience/edit/'.$id.'" class="btn btn-primary btn-xs">Edit</a>
+            <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
+          ';
         })
 
         ->rawColumns(['action' => 'action'])
@@ -81,13 +88,25 @@ class FormExperienceController extends Controller
         $title = 'Form Permasalahan & Kegagalan';
         $title_jp = '問題・失敗のフォーム';
 
+        $sections = db::select("select DISTINCT department, section, `group` from employee_syncs
+        where department is not null
+        and section is not null
+        and grade_code not like '%L%'
+        order by department, section, `group` asc");
+
+        $leader = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+        where end_date is null
+        and (position like 'Leader%' or position like '%Staff%')");
+
         $emp = EmployeeSync::where('employee_id', Auth::user()->username)
         ->select('employee_id', 'name', 'position', 'department', 'section', 'group')->first();
 
         return view('form.failure.create', array(
             'title' => $title,
             'title_jp' => $title_jp,
-            'employee' => $emp
+            'employee' => $emp,
+            'sections' => $sections,
+            'leaders' => $leader
         ))->with('page', 'Form Permasalahan & Kegagalan');
     }
 
@@ -96,15 +115,18 @@ class FormExperienceController extends Controller
          try {
               $id_user = Auth::id();
 
+              $date_request = date('Y-m-01', strtotime($request->get('tanggal_kejadian')));
+
               $forms = FormFailure::create([
                    'employee_id' => $request->get('employee_id'),
                    'employee_name' => $request->get('employee_name'),
                    'kategori' => $request->get('kategori'),
-                   'section' => $request->get('section'),
-                   'department' => $request->get('department'),
-                   'tanggal' => $request->get('tanggal'),
+                   'tanggal_kejadian' => $date_request,
+                   'lokasi_kejadian' => $request->get('lokasi_kejadian'),
+                   'equipment' => $request->get('equipment'),
+                   'grup_kejadian' => $request->get('grup_kejadian'),
                    'judul' => $request->get('judul'),
-                   'penyebab' => $request->get('penyebab'),
+                   'deskripsi' => $request->get('deskripsi'),
                    'penanganan' => $request->get('penanganan'),
                    'tindakan' => $request->get('tindakan'),
                    'created_by' => $id_user
@@ -125,14 +147,21 @@ class FormExperienceController extends Controller
     {
         $form_failures = FormFailure::find($id);
 
+        $sections = db::select("select DISTINCT department, section, `group` from employee_syncs
+        where department is not null
+        and section is not null
+        and grade_code not like '%L%'
+        order by department, section, `group` asc");
+
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
-        $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+        $emp = EmployeeSync::where('employee_id', $form_failures->employee_id)
         ->select('employee_id', 'name', 'position', 'department', 'section', 'group')->first();
 
         return view('form.failure.edit', array(
             'employee' => $emp,
+            'sections' => $sections,
             'form_failures' => $form_failures
         ))->with('page', 'Form Permasalahan & Kegagalan');
     }
@@ -142,17 +171,21 @@ class FormExperienceController extends Controller
          try {
               $id_user = Auth::id();
 
+              $date_request = date('Y-m-01', strtotime($request->get('tanggal_kejadian')));
+
               $forms = FormFailure::where('id',$request->get('id'))
               ->update([
                    'kategori' => $request->get('kategori'),
+                   'tanggal_kejadian' => $date_request,
+                   'lokasi_kejadian' => $request->get('lokasi_kejadian'),
+                   'equipment' => $request->get('equipment'),
+                   'grup_kejadian' => $request->get('grup_kejadian'),
                    'judul' => $request->get('judul'),
-                   'penyebab' => $request->get('penyebab'),
+                   'deskripsi' => $request->get('deskripsi'),
                    'penanganan' => $request->get('penanganan'),
                    'tindakan' => $request->get('tindakan'),
                    'created_by' => $id_user
               ]);
-
-              // $forms->save();
 
          } catch (QueryException $e){
               $response = array(
@@ -161,6 +194,30 @@ class FormExperienceController extends Controller
               );
               return Response::json($response);
          }
+    }
+
+    public function print_form($id){
+
+        $form_failures = FormFailure::find($id);
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->setPaper('Legal', 'potrait');
+        $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+        
+        $pdf->loadView('form.failure.print', array(
+          'form_failures' => $form_failures,
+        ));
+
+        return $pdf->stream("Form ".$form_failures->judul.".pdf");
+    }
+
+    public function get_nik(Request $request)
+    {
+      $nik = $request->nik;
+      $query = "SELECT name,section,department FROM employee_syncs where employee_id = '$nik'";
+      $nama = DB::select($query);
+      return json_encode($nama);
     }
 
 }

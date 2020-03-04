@@ -2,16 +2,22 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-  .col-xs-8{
+  .col-xs-2{
     padding-top: 5px;
   }
-  .col-xs-2{
+  .col-xs-3{
+    padding-top: 5px;
+  }
+  .col-xs-5{
     padding-top: 5px;
   }
   .col-xs-6{
     padding-top: 5px;
   }
-  .col-xs-10{
+  .col-xs-7{
+    padding-top: 5px;
+  }
+  .col-xs-8{
     padding-top: 5px;
   }
 </style>
@@ -62,23 +68,52 @@
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="row">
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_tgl">Tanggal</label>
-            <input type="text" id="form" class="form-control" value="{{ $form_failures->tanggal }}" readonly>
-            <!-- <input type="hidden" id="form_tgl" class="form-control" value="{{ date('Y-m-d')}}" readonly> -->
+              <label for="form_identitas">Identitas</label>
+              <input type="text" id="form_identitas" class="form-control" value="{{$form_failures->employee_id}} - {{$form_failures->employee_name}}" readonly>
+              <input type="hidden" id="form_nik" class="form-control" value="{{$form_failures->employee_id}}" readonly>
+              <input type="hidden" id="form_nama" class="form-control" value="{{$form_failures->employee_name}}" readonly>
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_nik">NIK</label>
-            <input type="text" id="form_nik" class="form-control" value="{{$form_failures->employee_id}}" readonly>
+            <label for="form_bagian">Bagian</label>
+              @if($form_failures->group == null)
+              <input type="text" id="form_bagian" class="form-control" value="{{$employee->department}} - {{$employee->section}}" readonly>
+              @else
+              <input type="text" id="form_bagian" class="form-control" value="{{$employee->department}} - {{$employee->section}} - {{$employee->group}}" readonly>
+              @endif
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_nama">Nama</label>
-            <input type="text" id="form_nama" class="form-control" value="{{$form_failures->employee_name}}" readonly>
+            <label for="form_tgl">Waktu Kejadian</label>
+            <div class="input-group date">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control datepicker" id="form_tgl" placeholder="Masukkan Tanggal Kejadian" value="<?= date('Y-m', strtotime($form_failures->tanggal_kejadian)) ?>">
+            </div>
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="form_ket">Section - Department</label>
-            <input type="text" id="form_ket" class="form-control" value="{{$form_failures->section}} - {{$form_failures->department}}" readonly>
-            <input type="hidden" id="form_sec" class="form-control" value="{{$form_failures->section}}" readonly>
-            <input type="hidden" id="form_dept" class="form-control" value="{{$form_failures->department}}" readonly>
+            <label for="form_loc">Lokasi Kejadian</label>
+            <select class="form-control select2" data-placeholder="Pilih Lokasi Kejadian" name="form_loc" id="form_loc" style="width: 100% height: 35px; font-size: 15px;" required>
+                <option value=""></option>
+                <?php 
+                $lokasi = explode("_",$form_failures->lokasi_kejadian);
+                
+                ?>
+                @foreach($sections as $section)
+                  @if($section->group == null)
+                    @if($section->department == $lokasi[0] && $section->section == $lokasi[1])
+                    <option value="{{ $section->department }}_{{ $section->section }}" selected>{{ $section->department }} - {{ $section->section }}</option>
+                    @else
+                    <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+                    @endif
+                  @else
+                    @if($section->section == $lokasi[0] && $section->group == $lokasi[1])
+                    <option value="{{ $section->section }}_{{ $section->group }}" selected>{{ $section->section }} - {{ $section->group }}</option>
+                    @else
+                    <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
+                    @endif
+                  @endif
+                @endforeach
+            </select>
           </div>
         </div>
         <div class="row">
@@ -90,16 +125,24 @@
               <option <?php if($form_failures->kategori == "Kegagalan") echo "selected"; ?>>Kegagalan</option>
             </select>
           </div>
-          <div class="col-xs-10">
+          <div class="col-xs-5">
             <label for="form_judul">Judul Permasalahan / Kegagalan</label>
             <input type="text" id="form_judul" class="form-control" placeholder="Judul Permasalahan / Kegagalan" value="{{$form_failures->judul}}">
+          </div>
+          <div class="col-xs-3">
+            <label for="form_ket">Nama Mesin / Equipment / Part</label>
+            <input type="text" id="form_ket" class="form-control" placeholder="Contoh : SAX, FL, Compressor, Chiller" value="{{$form_failures->equipment}}">
+          </div>
+          <div class="col-xs-2">
+            <label for="form_grup">Grup Kegagalan</label>
+            <input type="text" id="form_grup" class="form-control" placeholder="Contoh : Konslet" value="{{$form_failures->grup_kejadian}}">
           </div>
         </div>
         
         <div class="row">
           <div class="col-xs-6">
             <label for="form_penyebab">Penyebab Permasalahan</label>
-            <textarea class="form-control" id="form_penyebab">{{$form_failures->penyebab}}</textarea>
+            <textarea class="form-control" id="form_deskripsi">{{$form_failures->deskripsi}}</textarea>
           </div>
           <div class="col-xs-6">
             <label for="form_perbaikan">Penanganan / Perbaikan Yang Dilakukan</label>
@@ -162,12 +205,27 @@
       $('.select2').select2()
     });
 
+    $('.datepicker').datepicker({
+      format: "yyyy-mm",
+      startView: "months", 
+      minViewMode: "months",
+      autoclose: true,
+      orientation: 'bottom auto',
+    });
+
     $("#form_submit").click( function() {
       $("#loading").show();
 
       if ($("#form_judul").val() == "") {
         $("#loading").hide();
         alert("Kolom Judul Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#form_tgl").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Tanggal Harap diisi");
         $("html").scrollTop(0);
         return false;
       }
@@ -179,16 +237,31 @@
         return false;
       }
 
+      if ($("#form_loc").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Lokasi Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#form_ket").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Nama Mesin / Equipment / Part Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
       var data = {
         id: "{{ $form_failures->id }}",
         employee_id: $("#form_nik").val(),
         employee_name: $("#form_nama").val(),
-        tanggal: $("#form_tgl").val(),
         kategori: $("#form_kategori").val(),
-        section: $("#form_sec").val(),
-        department: $("#form_dept").val(),
+        tanggal_kejadian: $("#form_tgl").val(),
+        lokasi_kejadian: $("#form_loc").val(),
+        equipment: $("#form_ket").val(),
+        grup_kejadian: $("#form_grup").val(),
         judul: $("#form_judul").val(),
-        penyebab: CKEDITOR.instances.form_penyebab.getData(),
+        deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
         penanganan: CKEDITOR.instances.form_perbaikan.getData(),
         tindakan: CKEDITOR.instances.form_tindakan.getData(),
       };
@@ -202,7 +275,7 @@
 
     });
 
-    CKEDITOR.replace('form_penyebab' ,{
+    CKEDITOR.replace('form_deskripsi' ,{
       filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}'
     });
 
