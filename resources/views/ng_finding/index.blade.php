@@ -288,7 +288,13 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Material Number</label>
-				  <input type="text" name="inputmaterialnumber" id="inputmaterialnumber" class="form-control" placeholder="Enter Material Number" value="ZW97290" required="required" title="">
+				  <!-- <input type="text" name="inputmaterialnumber" id="inputmaterialnumber" class="form-control" placeholder="Enter Material Number" value="ZW97290" required="required" title=""> -->
+				  <select class="form-control select2" name="inputmaterialnumber" id="inputmaterialnumber" style="width: 100%;" data-placeholder="Choose a Material ..." required>
+	                	<option value=""></option>
+	                	@foreach($mpdl as $mpdl)
+	                		<option value="{{ $mpdl->material_number }}">{{ $mpdl->material_number }} - {{ $mpdl->material_description }}</option>
+	                	@endforeach
+	                </select>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Quantity</label>
@@ -364,7 +370,12 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Material Number</label>
-				  <input type="text" name="editmaterialnumber" id="editmaterialnumber" class="form-control" placeholder="Enter Material Number" value="ZW97290" required="required" title="">
+				  <select class="form-control select2" name="editmaterialnumber" id="editmaterialnumber" style="width: 100%;" data-placeholder="Choose a Material ..." required>
+	                	<option value=""></option>
+	                	@foreach($mpdl2 as $mpdl2)
+	                		<option value="{{ $mpdl2->material_number }}">{{ $mpdl2->material_number }} - {{ $mpdl2->material_description }}</option>
+	                	@endforeach
+	                </select>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Quantity</label>
@@ -605,8 +616,8 @@
                   var data = data.data;
                   $("#editdepartment").val(data.department);
                   $("#editdate").val(data.date);
-                  // $("#editmaterialnumber").val(data.material_number).trigger('change.select2');
-                  $("#editmaterialnumber").val(data.material_number);
+                  $("#editmaterialnumber").val(data.material_number).trigger('change.select2');
+                  // $("#editmaterialnumber").val(data.material_number);
                   $("#editquantity").val(data.quantity);
                   $("#editfinder").val(data.finder).trigger('change.select2');
                   $("#editdefect").val(data.defect);

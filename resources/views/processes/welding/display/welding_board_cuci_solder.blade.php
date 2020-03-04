@@ -196,7 +196,11 @@
 			if(xhr.status == 200){
 				if(result.status){
 					for (var i = 0; i < result.boards.length; i++) {
-						$('#q'+i).html(result.boards[i].queue);
+						if (result.boards[i].queue == null) {
+							$('#q'+i).html("");
+						}else{
+							$('#q'+i).html(result.boards[i].queue);
+						}
 					}
 				}
 				else{

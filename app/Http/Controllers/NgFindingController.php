@@ -47,8 +47,8 @@ class NgFindingController extends Controller
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
-        // $mpdl = MaterialPlantDataList::get();
-        // $mpdl2 = MaterialPlantDataList::get();
+        $mpdl = MaterialPlantDataList::get();
+        $mpdl2 = MaterialPlantDataList::get();
 
     	$data = array('ng_finding' => $ng_finding,
     				  'departments' => $departments,
@@ -59,8 +59,8 @@ class NgFindingController extends Controller
                       'foreman' => $foreman,
                       'operator' => $operator,
                       'operator2' => $operator2,
-                      // 'mpdl' => $mpdl,
-                      // 'mpdl2' => $mpdl2,
+                      'mpdl' => $mpdl,
+                      'mpdl2' => $mpdl2,
                       'id_departments' => $id_departments);
     	return view('ng_finding.index', $data
     		)->with('page', 'Temuan NG');
