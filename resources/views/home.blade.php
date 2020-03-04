@@ -229,12 +229,12 @@
                         <td>
                             <span style="font-weight: bold;">Other Information (他の情報)</span>
                             <br>
-                            <!-- <a href="{{ url("/index") }}">
-                                <i class="fa fa-caret-right"></i> CPAR Antar Departemen (部門間の是正措置報告)
-                            </a>
-                            <br> -->
                             <a href="{{ url("/index/form_experience") }}">
                                 <i class="fa fa-caret-right"></i> Form Permasalahan & Kegagalan (問題・失敗のフォーム)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/cpar_departemen") }}">
+                                <i class="fa fa-caret-right"></i> CPAR Antar Departemen (部門間の是正措置報告)
                             </a>
                         </td>
                     </tr>
@@ -309,8 +309,8 @@
                                 <i class="fa fa-caret-right"></i> Visitor Monitoring (来客の管理)
                             </a>
                             <br>
-                            <a href="{{ url("visitor_display") }}">
-                                <i class="fa fa-caret-right"></i> Pantry Monitoring (???)
+                            <a href="{{ url("index/display/pantry_visit?tanggal=") }}">
+                                <i class="fa fa-caret-right"></i> Pantry Visit (???)
                             </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">
