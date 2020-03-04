@@ -78,6 +78,7 @@ table > thead > tr > th{
 		-ms-transform: translateY(-50%);
 		transform: translateY(-50%);
 	}
+	
 
 </style>
 @endsection
@@ -114,8 +115,6 @@ table > thead > tr > th{
 			</div>
 		</div>
 	</div>
-
-	
 </section>
 
 <div class="modal fade" id="myModal">

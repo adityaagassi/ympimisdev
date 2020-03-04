@@ -1471,6 +1471,8 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 
 	Route::get('index/display/pantry', 'PantryController@konfirmasiasd');
 });
+	Route::get('index/display/pantry_visit', 'PantryController@indexDisplayPantryVisit');
+	Route::get('fetch/pantry/realtime_visitor', 'PantryController@fetchPantryRealtimeVisitor');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
@@ -2052,8 +2054,8 @@ Route::post('index/weekly_report/approval/{id}/{month}','WeeklyActivityReportCon
 Route::get('index/ng_finding/index/{id}', 'NgFindingController@index');
 Route::post('index/ng_finding/filter_ng_finding/{id}', 'NgFindingController@filter_ng_finding');
 Route::post('index/ng_finding/store/{id}', 'NgFindingController@store');
-Route::get('index/ng_finding/getweeklyreport','NgFindingController@getweeklyreport')->name('ng_finding.getweeklyreport');
-Route::post('index/ng_finding/update/{id}','NgFindingController@update');
+Route::get('index/ng_finding/getngfinding','NgFindingController@getngfinding')->name('ng_finding.getngfinding');
+Route::post('index/ng_finding/update/{id}/{ng_finding_id}','NgFindingController@update');
 Route::get('index/ng_finding/destroy/{id}/{area_check_id}', 'NgFindingController@destroy');
 Route::post('index/ng_finding/print_ng_finding/{id}','NgFindingController@print_ng_finding');
 Route::get('index/ng_finding/print_ng_finding_email/{id}/{month}','NgFindingController@print_ng_finding_email');
@@ -2185,6 +2187,11 @@ Route::get('index/request_qa/print/{id}', 'QcRequestController@print_report');
 Route::post('index/request_qa/approval/{id}', 'QcRequestController@approval');
 Route::get('index/request_qa/verifikasi/{id}', 'QcRequestController@verifikasi');
 
+// CPAR Antar Departemen & Bagian
+
+Route::get('index/cpar_departemen', 'CparController@index');
+
+
 // Form Ketidaksesuaian
 Route::get('index/qa_ymmj', 'QcYmmjController@index');
 Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
@@ -2304,6 +2311,8 @@ Route::get('index/form_experience/create', 'FormExperienceController@create');
 Route::post('index/post/form_experience', 'FormExperienceController@post_form');
 Route::get('index/form_experience/edit/{id}', 'FormExperienceController@update');
 Route::post('index/update/form_experience', 'FormExperienceController@update_form');
+Route::get('index/form_experience/print/{id}', 'FormExperienceController@print_form');
+Route::get('index/form_experience/get_nama', 'FormExperienceController@get_nik');
 
 //IP
 Route::get('index/display/ip', 'PingController@indexIpMonitoring');
