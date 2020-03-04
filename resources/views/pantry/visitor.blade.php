@@ -75,7 +75,7 @@
 						</thead>
 						<tbody id="tableTotalBody">
 							<tr>
-								<td style="font-size: 40px; font-weight: bold;" id="total_person">99 Person(s)</td>
+								<td style="font-size: 40px; font-weight: bold;" id="total_person">99 Prsn(s)</td>
 								<td style="font-size: 40px; font-weight: bold;" id="total_duration">99 Min(s)</td>
 							</tr>
 						</tbody>
@@ -380,8 +380,8 @@
 		}
 
 		$.get('{{ url("fetch/pantry/visitor") }}', function(result, status, xhr) {
-			$('#total_person').text(result.total[0].qty_employee + ' Person(s)');
-			$('#total_duration').text(result.total[0].qty_duration + ' Minute(s)');
+			$('#total_person').text(result.total[0].qty_employee + ' Prsn(s)');
+			$('#total_duration').text(result.total[0].qty_duration + ' Min(s)');
 
 			var categories1 = [];
 			var series1 = [];
