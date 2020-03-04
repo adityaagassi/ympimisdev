@@ -120,9 +120,10 @@
 			autoclose: true,
 			todayHighlight: true
 		});
-		fetchRealtimeVisitor();
 		fetchVisitor();
-		// setInterval(fetchRealtimeVisitor, 5000);
+		setInterval(fetchVisitor, 20000);
+		fetchRealtimeVisitor();
+		setInterval(fetchRealtimeVisitor, 5000);
 		setInterval(setTime, 1000);
 	});
 
