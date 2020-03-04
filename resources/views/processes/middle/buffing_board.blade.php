@@ -106,6 +106,7 @@
 						<th style="width: 0.66%; padding: 0;">#8</th>
 						<th style="width: 0.66%; padding: 0;">#9</th>
 						<th style="width: 0.66%; padding: 0;">#10</th>
+						<th style="width: 0.66%; padding: 0;">Jumlah</th>
 						<th style="width: 0.66%; padding: 0; background-color: #f76a6a">Selesai</th>
 					</tr>
 				</thead>
@@ -276,11 +277,7 @@
 							totalSelesai[index] = 0;
 						}
 
-						// var key = [['C','D','E'],['F','G','H','J','82']];
-
 						var key = {first:['C','D','E'], second:['F','G','H','J','82']};
-
-						console.log(page);
 
 						if(page != ''){
 							if(key[page].includes(value.ws.split("-")[1])){
@@ -299,6 +296,7 @@
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
 								buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
+								buffingTableBody += '<td style="color:#fff">'+value.jumlah+'</td>';
 								buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+setTimeSelesai(index)+'</p></td>';
 								buffingTableBody += '</tr>';
 							}
@@ -318,6 +316,7 @@
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
 							buffingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
+							buffingTableBody += '<td style="color:#fff">'+value.jumlah+'</td>';
 							buffingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+setTimeSelesai(index)+'</p></td>';
 							buffingTableBody += '</tr>';
 						}						
