@@ -35,8 +35,10 @@
 		background-color: #ccff90;
 	}
 	table.table-bordered > tfoot > tr > th{
-		border:1px solid black);
-}
+		font-size: 16px;
+		border:1px solid black;
+		background-color: #ffffc2;
+	}
 </style>
 @stop
 @section('header')
@@ -122,6 +124,12 @@
 						</thead>
 						<tbody id="tableDetailBody">
 						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="3">Total Duration</th>
+								<th id="totalDetail">9</th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -593,6 +601,7 @@
 
 				var index = 1;
 				var resultData = "";
+				var total = 0;
 
 				$.each(result.details, function(key, value) {
 					resultData += '<tr>';
@@ -602,10 +611,12 @@
 					resultData += '<td>'+ value.duration +'</td>';
 					resultData += '</tr>';
 					index += 1;
+					total += parseFloat(value.duration);
 				});
 				$('#tableDetailBody').append(resultData);
 				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Stock: "+cat+"</span></center>");
 				$('#loading').hide();
+				$('#totalDetail').text(total);
 				$('#tableDetail').show();
 			}
 			else{
