@@ -75,7 +75,7 @@
 						</thead>
 						<tbody id="tableTotalBody">
 							<tr>
-								<td style="font-size: 40px; font-weight: bold;" id="total_person">99 Prsn(s)</td>
+								<td style="font-size: 40px; font-weight: bold;" id="total_person">99 Person(s)</td>
 								<td style="font-size: 40px; font-weight: bold;" id="total_duration">99 Min(s)</td>
 							</tr>
 						</tbody>
@@ -101,6 +101,33 @@
 		</div>
 	</div>
 </section>
+
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalDetailTitle"></h4>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<center>
+						<i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
+					</center>
+					<table class="table table-hover table-bordered table-striped" id="tableDetail">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 1%;">#</th>
+								<th style="width: 3%;">ID</th>
+								<th style="width: 9%;">Name</th>
+								<th style="width: 3%;">Duration(Min)</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailBody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 @endsection
 @section('scripts')
@@ -380,7 +407,7 @@
 			tanggal:tanggal
 		}
 
-		$.get('{{ url("fetch/pantry/visitor") }}', function(result, status, xhr) {
+		$.get('{{ url("fetch/pantry/visitor") }}', data, function(result, status, xhr) {
 			$('#total_person').text(result.total[0].qty_employee + ' Prsn(s)');
 			$('#total_duration').text(result.total[0].qty_duration + ' Min(s)');
 
@@ -448,7 +475,7 @@
 						point: {
 							events: {
 								click: function () {
-									fetchModal(this.category);
+									fetchVisitorDetail(this.category, 'duration');
 								}
 							}
 						}
@@ -528,7 +555,7 @@
 						point: {
 							events: {
 								click: function () {
-									fetchModal(this.category);
+									fetchVisitorDetail(this.category, 'hour');
 								}
 							}
 						}
@@ -546,31 +573,78 @@
 		});		
 	}
 
+	function fetchVisitorDetail(cat, typ){
+		$('#modalDetail').modal('show');
+		$('#loading').show();
+		$('#modalDetailTitle').html("");
+		$('#tableDetail').hide();
+
+		var tanggal = "{{$_GET['tanggal']}}";
+
+		var data = {
+			tanggal:tanggal,
+			category:cat,
+			type:typ
+		}
+
+		$.get('{{ url("fetch/pantry/visitor_detail") }}', data, function(result, status, xhr) {
+			if(result.status){
+				$('#tableDetailBody').html('');
+
+				var index = 1;
+				var resultData = "";
+
+				$.each(result.details, function(key, value) {
+					resultData += '<tr>';
+					resultData += '<td>'+ index +'</td>';
+					resultData += '<td>'+ value.employee_id +'</td>';
+					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.duration +'</td>';
+					resultData += '</tr>';
+					index += 1;
+				});
+				$('#tableDetailBody').append(resultData);
+				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Stock: "+cat+"</span></center>");
+				$('#loading').hide();
+				$('#tableDetail').show();
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		});
+	}
+
 	function fetchRealtimeVisitor(){
 		$.get('{{ url("fetch/pantry/realtime_visitor") }}', function(result, status, xhr) {
-			var tableData = "";
-			var count = 0;
-			in_time = [];
+			if(result.status){
+				var tableData = "";
+				var count = 0;
+				in_time = [];
 
-			$('#tableVisitorBody').html("");
+				$('#tableVisitorBody').html("");
 
-			$.each(result.visitors, function(key, value){
-				in_time.push(new Date(value.in_time));
+				$.each(result.visitors, function(key, value){
+					in_time.push(new Date(value.in_time));
 
-				tableData += '<tr>';
-				tableData += '<td>'+value.employee_id+'</td>';
-				tableData += '<td>'+value.name+'</td>';
-				tableData += '<td>';
-				tableData += '<span style="font-weight: bold;" id="hours'+ count +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[count]) / 3600)) +'</span>:';
-				tableData += '<span style="font-weight: bold;" id="minutes'+ count +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[count]) % 3600) / 60)) +'</span>:';
-				tableData += '<span style="font-weight: bold;" id="seconds'+ count +'">'+ pad(diff_seconds(new Date(), in_time[count]) % 60) +'</span>';
-				tableData += '</td>';
-				tableData += '</tr>';
+					tableData += '<tr>';
+					tableData += '<td>'+value.employee_id+'</td>';
+					tableData += '<td>'+value.name+'</td>';
+					tableData += '<td>';
+					tableData += '<span style="font-weight: bold;" id="hours'+ count +'">'+ pad(parseInt(diff_seconds(new Date(), in_time[count]) / 3600)) +'</span>:';
+					tableData += '<span style="font-weight: bold;" id="minutes'+ count +'">'+ pad(parseInt((diff_seconds(new Date(), in_time[count]) % 3600) / 60)) +'</span>:';
+					tableData += '<span style="font-weight: bold;" id="seconds'+ count +'">'+ pad(diff_seconds(new Date(), in_time[count]) % 60) +'</span>';
+					tableData += '</td>';
+					tableData += '</tr>';
 
-				++count;
-			});
+					++count;
+				});
 
-			$('#tableVisitorBody').append(tableData);
+				$('#tableVisitorBody').append(tableData);
+
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
 		});
 	}
 </script>

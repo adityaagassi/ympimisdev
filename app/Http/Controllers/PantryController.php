@@ -23,7 +23,7 @@ class PantryController extends Controller
 
     public function indexDisplayPantryVisit(){
         $title = 'Pantry Visitor Monitoring';
-        $title_jp = '';
+        $title_jp = '給湯室の来室者監視';
 
         return view('pantry.visitor', array(
             'title' => $title,
@@ -55,6 +55,87 @@ class PantryController extends Controller
 //     }           
 //     return $ok;  
 // } 
+
+    public function fetchPantryVisitorDetail(Request $request){
+        $date = date('Y-m-d');
+        $query = "";
+
+        if(strlen($request->get('tanggal')) > 0){
+            $date = date('Y-m-d', strtotime($request->get('tanggal')));
+        }
+
+        if($request->get('type') == 'duration'){
+            $query = "SELECT
+            final.employee_id,
+            ympimis.employee_syncs.name,
+            IF
+            (
+            duration < 1, '<1 Min', IF ( duration >= 1 
+            AND duration < 2, '<2 Min', IF ( duration >= 2 
+            AND duration < 3, '<3 Min', IF ( duration >= 3 
+            AND duration < 4, '<4 Min', IF ( duration >= 4 
+            AND duration < 5, '<5 Min', IF ( duration >= 5 
+            AND duration < 6, '<6 Min', IF ( duration >= 6 
+            AND duration < 7, '<7 Min', IF ( duration >= 7 
+            AND duration < 8,
+            '<8 Min',
+            '>8 Min' 
+            ) 
+            ) 
+            ) 
+            ) 
+            ) 
+            ) 
+            ) 
+            ) AS dur,
+            duration 
+            FROM
+            (
+            SELECT
+            employee_id,
+            SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) AS duration 
+            FROM
+            pantry_logs 
+            WHERE
+            date( in_time ) = '".$date."' 
+            GROUP BY
+            employee_id 
+            ) AS final
+            LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = final.employee_id 
+            HAVING
+            dur = '".$request->get('category')."' 
+            ORDER BY
+            duration desc";
+        }
+        else{
+            $query = "SELECT
+            pantry_logs.employee_id,
+            ympimis.employee_syncs.name,
+            concat( DATE_FORMAT( in_time, '%H:00' ), ' - ', DATE_FORMAT( date_add( in_time, INTERVAL 1 HOUR ), '%H:00' ) ) AS jam,
+            sum( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) AS duration 
+            FROM
+            pantry_logs
+            LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = pantry_logs.employee_id 
+            WHERE
+            date( in_time ) = '2020-03-05' 
+            GROUP BY
+            pantry_logs.employee_id,
+            concat( DATE_FORMAT( in_time, '%H:00' ), ' - ', DATE_FORMAT( date_add( in_time, INTERVAL 1 HOUR ), '%H:00' ) ),
+            ympimis.employee_syncs.name 
+            HAVING
+            jam = '".$request->get('category')."'
+            ORDER BY
+            duration desc";
+        }
+
+        $details = db::connection('pantry')->select($query);
+
+        $response = array(
+            'status' => true,
+            'details' => $details
+        );
+        return Response::json($response);
+    }
 
     public function pesanmenu()
     {
