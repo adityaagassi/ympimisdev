@@ -1692,11 +1692,18 @@ class WorkshopController extends Controller{
 			group by flow.order_no) flow
 			on flow.order_no = wjo.order_no 
 			left join
+			(select act.order_no, actual + IFNULL(waktu_kerja ,0) as actual from
 			(select log.order_no, SUM(TIMESTAMPDIFF(SECOND, started_at, log.created_at)) as actual from workshop_logs log
 			left join workshop_job_orders wjo
 			on log.order_no = wjo.order_no
 			where wjo.remark < 4
-			group by log.order_no) log
+			group by log.order_no) as act
+			left join (
+			select order_no, workshop_temp_processes.operator, TIMESTAMPDIFF(SECOND, workshop_temp_processes.started_at, now()) as waktu_kerja from workshop_temp_processes
+			left join workshop_job_orders on workshop_temp_processes.tag = workshop_job_orders.tag
+			where remark in (2,3)
+			) wjo2 on act.order_no = wjo2.order_no
+			) log
 			on log.order_no = wjo.order_no
 			where wjo.remark < 4) step
 			on step.order_no = wjo.order_no
