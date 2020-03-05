@@ -1184,10 +1184,11 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::get('fetch/diagnose', 'ClinicController@fetchDiagnose');
 	Route::post('delete/diagnose', 'ClinicController@deleteVisitor');
 	Route::post('input/diagnose', 'ClinicController@inputDiagnose');
-	Route::get('index/clinic_visit_log', 'ClinicController@indexvisitLog');
-	Route::get('fetch/clinic_visit_log', 'ClinicController@fetchvisitLog');
-	Route::get('fetch/clinic_visit_log_excel', 'ClinicController@fetchvisitLogExcel');
-
+	Route::get('index/clinic_visit_log', 'ClinicController@indexVisitLog');
+	Route::get('fetch/clinic_visit_log', 'ClinicController@fetchVisitLog');
+	Route::get('fetch/clinic_visit_log_excel', 'ClinicController@fetchVisitLogExcel');
+	Route::get('fetch/clinic_visit_edit_detail', 'ClinicController@fetchVisitEdit');
+	
 	Route::get('fetch/display/clinic_disease_detail', 'ClinicController@fetchDiseaseDetail');
 	Route::get('fetch/clinic_visit_detail', 'ClinicController@fetchClinicVisitDetail');
 
@@ -2222,6 +2223,8 @@ Route::get('index/qc_report/komplain_monitoring5', 'QcReportController@komplain_
 Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
 Route::get('index/qc_report/fetchKategori', 'QcReportController@fetchKategori');
 Route::get('index/qc_report/fetchSource', 'QcReportController@fetchSource');
+Route::get('index/qc_report/fetchEksternal', 'QcReportController@fetchEksternal');
+Route::get('index/qc_report/fetchSupplier', 'QcReportController@fetchSupplier');
 Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
 Route::get('index/qc_report/detail_kategori', 'QcReportController@detail_kategori');
 Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_dept');

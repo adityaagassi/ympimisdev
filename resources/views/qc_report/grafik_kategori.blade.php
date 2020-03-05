@@ -123,7 +123,7 @@ table > thead > tr > th{
   <div class="row">
     <div class="col-md-12" style="padding: 1px !important">
         <div class="col-md-2">
-          <select class="form-control select2" id="fy" name="fy" placeholder="Select Fiscal Year" style="border-color: #605ca8" onchange="aw()">
+          <select class="form-control select2" id="fy" name="fy" placeholder="Select Fiscal Year" style="border-color: #605ca8" onchange="changefy()">
             <option value="">Select Fiscal Year</option>
             @foreach($fys as $fiscal)
               <option value="{{ $fiscal->fiscal_year }}">{{ $fiscal->fiscal_year }}</option>
@@ -138,8 +138,11 @@ table > thead > tr > th{
       <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
           <div id="chartresume" style="width: 99%"></div>
       </div>
-      <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
-          <div id="chart" style="width: 99%"></div>
+      <div class="col-md-6" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
+          <div id="charteksternal" style="width: 99%"></div>
+      </div>
+      <div class="col-md-6" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
+          <div id="chartsupplier" style="width: 99%"></div>
       </div>
 <!--       <div class="col-md-4" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
           <div id="chartresume" style="width: 99%"></div>
@@ -241,13 +244,17 @@ table > thead > tr > th{
     });
     $('.select2').select2();
 
-    drawChart();
     drawChartResume();
+    drawChartEksternal();
+    drawChartSupplier();
+    // drawChart();
   });
 
-  function aw(){
-    drawChart();
-    drawChartResume();
+  function changefy(){
+     drawChartResume();
+     drawChartEksternal();
+     drawChartSupplier();
+     // drawChart();
   }
 
   $('.datepicker').datepicker({
@@ -434,7 +441,271 @@ table > thead > tr > th{
     })
   }
 
-   function drawChart() {
+  function drawChartEksternal() {
+    var fy = $('#fy').val();
+
+    var data = {
+      fy: fy,
+    };
+
+    $.get('{{ url("index/qc_report/fetchEksternal") }}', data, function(result, status, xhr) {
+      if(xhr.status == 200){
+        if(result.status){
+          var fiscal = result.fiscal;
+          if(fiscal == null){
+            fiscal = "All Years"
+          }
+
+          var kat = [], jml = [];
+
+          $.each(result.datas, function(key, value) {
+            kat.push(value.kategori_komplain);
+            jml.push(value.jumlah);
+          })
+
+          $('#charteksternal').highcharts({
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Complain Report By Type',
+              style: {
+                fontSize: '1.5vw',
+                fontWeight: 'bold'
+              }
+            },
+            subtitle: {
+              text: 'Eksternal Complaint On '+fiscal,
+              style: {
+                fontSize: '1.2vw',
+                fontWeight: 'bold'
+              }
+            },
+            xAxis: {
+              type: 'category',
+              categories: kat,
+              lineWidth:2,
+              lineColor:'#9e9e9e',
+              gridLineWidth: 1,
+              labels: {
+                style: {
+                  fontSize: '16px',
+                  fontWeight: 'bold'
+                }
+              },
+            },
+            yAxis: {
+              lineWidth:2,
+              lineColor:'#fff',
+              type: 'linear',
+              title: {
+                text: 'Total Kasus',
+                style: {
+                  color: '#eee',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                  fill: '#6d869f'
+                }
+              },
+              stackLabels: {
+                  enabled: true,
+                  style: {
+                      fontWeight: 'bold',
+                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                  }
+              }
+            },
+            legend: {
+              reversed: true,
+              itemStyle:{
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "bold",
+              },
+              enabled:false
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      ShowModal(this.category,fiscal);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: true,
+                  format: '{point.y}',
+                  style: {
+                      color: 'white',
+                      fontSize: '1vw'
+                  }
+                },
+              },
+              column: {
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' : ' + this.y;
+              }
+            },
+            series: [{
+                name: 'List',
+                data: jml,
+                colorByPoint : true
+            }
+            ]
+          })
+        } else{
+          alert('Attempt to retrieve data failed');
+        }
+      }
+    })
+  }
+
+  function drawChartSupplier() {
+    var fy = $('#fy').val();
+
+    var data = {
+      fy: fy,
+    };
+
+    $.get('{{ url("index/qc_report/fetchSupplier") }}', data, function(result, status, xhr) {
+      if(xhr.status == 200){
+        if(result.status){
+          var fiscal = result.fiscal;
+          if(fiscal == null){
+            fiscal = "All Years"
+          }
+
+          var kat = [], jml = [];
+
+          $.each(result.datas, function(key, value) {
+            kat.push(value.kategori_komplain);
+            jml.push(value.jumlah);
+          })
+
+          $('#chartsupplier').highcharts({
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Complain Report By Type',
+              style: {
+                fontSize: '1.5vw',
+                fontWeight: 'bold'
+              }
+            },
+            subtitle: {
+              text: 'Supplier On '+fiscal,
+              style: {
+                fontSize: '1.2vw',
+                fontWeight: 'bold'
+              }
+            },
+            xAxis: {
+              type: 'category',
+              categories: kat,
+              lineWidth:2,
+              lineColor:'#9e9e9e',
+              gridLineWidth: 1,
+              labels: {
+                style: {
+                  fontSize: '16px',
+                  fontWeight: 'bold'
+                }
+              },
+            },
+            yAxis: {
+              lineWidth:2,
+              lineColor:'#fff',
+              type: 'linear',
+              title: {
+                text: 'Total Kasus',
+                style: {
+                  color: '#eee',
+                  fontSize: '20px',
+                  fontWeight: 'bold',
+                  fill: '#6d869f'
+                }
+              },
+              stackLabels: {
+                  enabled: true,
+                  style: {
+                      fontWeight: 'bold',
+                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                  }
+              }
+            },
+            legend: {
+              reversed: true,
+              itemStyle:{
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "bold",
+              },
+              enabled:false
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      ShowModal(this.category,fiscal);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: true,
+                  format: '{point.y}',
+                  style: {
+                      color: 'white',
+                      fontSize: '1vw'
+                  }
+                },
+              },
+              column: {
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' : ' + this.y;
+              }
+            },
+            series: [{
+                name: 'List',
+                data: jml,
+                colorByPoint : true
+            }
+            ]
+          })
+        } else{
+          alert('Attempt to retrieve data failed');
+        }
+      }
+    })
+  }
+
+  function drawChart() {
     var fy = $('#fy').val();
 
     var data = {

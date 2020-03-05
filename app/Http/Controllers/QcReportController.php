@@ -878,7 +878,7 @@ class QcReportController extends Controller
           $fiscal = null;
       }       
 
-      $data = db::select("select count(cpar_no) as jumlah, kategori, fiscal_year, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null ".$f." GROUP BY kategori,fiscal_year order by fiscal_year,jumlah ASC");
+      $data = db::select("select count(cpar_no) as jumlah, kategori, sum(case when qc_cpars.status_code = '5' then 1 else 0 end) as UnverifiedCPAR, sum(case when qc_cpars.status_code = '6' then 1 else 0 end) as UnverifiedCAR, sum(case when qc_cpars.status_code = '7' then 1 else 0 end) as qaverification, sum(case when qc_cpars.status_code = '1' then 1 else 0 end) as close from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null ".$f." GROUP BY kategori order by fiscal_year,jumlah ASC");
 
       $eksternal = db::select("select count(cpar_no) as jumlah, kategori, qc_cpars.destination_code, fiscal_year, destination_shortname from qc_cpars LEFT JOIN statuses on statuses.status_code = qc_cpars.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date join destinations on qc_cpars.destination_code = destinations.destination_code where qc_cpars.deleted_at is null ".$f." GROUP BY destination_code,kategori,fiscal_year,destination_shortname order by fiscal_year, jumlah DESC");
 
@@ -889,6 +889,61 @@ class QcReportController extends Controller
         // 'kategori' =>  $kate,
         // 'departemen' => $dep,
         'eksternal' => $eksternal
+      );
+
+      return Response::json($response); 
+    }
+
+    public function fetchEksternal(Request $request)
+    {   
+
+      $tglnow = date('Y-m-d');
+
+      $fy = $request->get('fy');
+      
+      if ($fy != null) {
+          $f = 'and fiscal_year = "'.$fy.'"';
+          $fiscal = $fy;
+      }else{
+          $f = null;
+          $fiscal = null;
+      } 
+
+      $data = db::select("select alias as kategori_komplain, count(cpar_no) as jumlah from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date RIGHT JOIN qc_m_types on qc_cpars.kategori_komplain = qc_m_types.nama_master where qc_cpars.deleted_at is null and qc_m_types.kategori = 'Eksternal'  ".$f." GROUP BY nama_master,alias order by jumlah DESC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'fiscal' => $fiscal,
+      );
+
+      return Response::json($response); 
+    }
+
+    public function fetchSupplier(Request $request)
+    {   
+
+      $tglnow = date('Y-m-d');
+
+      $fy = $request->get('fy');
+      
+      if ($fy != null) {
+          $f = 'and fiscal_year = "'.$fy.'"';
+          $fiscal = $fy;
+      }else{
+          $f = null;
+          $fiscal = null;
+      } 
+
+      $data = db::select("select kategori_komplain, count(cpar_no) as jumlah from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null and qc_cpars.kategori = 'Supplier' and kategori_komplain is not null ".$f." GROUP BY kategori_komplain 
+        UNION 
+        select 'YMMJ', count(*) as jumlah from qc_ymmjs 
+        order by jumlah DESC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'fiscal' => $fiscal,
       );
 
       return Response::json($response); 
@@ -917,11 +972,11 @@ class QcReportController extends Controller
       // }
 
       if ($fy != null) {
-        $data = db::select("select kategori_komplain, count(cpar_no) as jumlah from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null ".$f." GROUP BY kategori_komplain order by jumlah DESC");
+        $data = db::select("select kategori_komplain, count(cpar_no) as jumlah from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null and kategori_komplain is not null ".$f." GROUP BY kategori_komplain order by jumlah DESC");
       }
       else{
 
-        $data = db::select("select kategori_komplain, count(cpar_no) as jumlah from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null ".$f." GROUP BY kategori_komplain 
+        $data = db::select("select kategori_komplain, count(cpar_no) as jumlah from qc_cpars LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null and kategori_komplain is not null ".$f." GROUP BY kategori_komplain 
           UNION 
           select 'YMMJ', count(*) as jumlah from qc_ymmjs 
           order by jumlah DESC");
@@ -1335,7 +1390,11 @@ class QcReportController extends Controller
       } 
       else {
           $fiscal = '';
-      }  
+      }
+
+      if ($kategori == "Finish Goods") {
+          $kategori = "FG";
+      }
 
       $query = "select qc_cpars.*,monthname(tgl_permintaan) as bulan,departments.department_name, qc_cars.id as id_car, statuses.status_name, qc_cars.id as id_car, destinations.destination_shortname  FROM qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cars.cpar_no = qc_cpars.cpar_no left join destinations on qc_cpars.destination_code = destinations.destination_code join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code LEFT JOIN weekly_calendars on qc_cpars.tgl_permintaan = week_date where qc_cpars.deleted_at is null and qc_cpars.kategori_komplain ='".$kategori."' ".$fiscal." ";
 

@@ -293,7 +293,7 @@ table.table-bordered > tfoot > tr > th{
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-            <button type="button" onclick="create_pic()" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-plus"></i> Create</button>
+            <button type="button" onclick="create_pic()" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-send"></i>    Confirm And Send</button>
           </div>
         </div>
       </div>
