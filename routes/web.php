@@ -1188,7 +1188,8 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::get('fetch/clinic_visit_log', 'ClinicController@fetchVisitLog');
 	Route::get('fetch/clinic_visit_log_excel', 'ClinicController@fetchVisitLogExcel');
 	Route::get('fetch/clinic_visit_edit_detail', 'ClinicController@fetchVisitEdit');
-	
+	Route::post('edit/diagnose', 'ClinicController@editDiagnose');
+
 	Route::get('fetch/display/clinic_disease_detail', 'ClinicController@fetchDiseaseDetail');
 	Route::get('fetch/clinic_visit_detail', 'ClinicController@fetchClinicVisitDetail');
 
@@ -1471,6 +1472,8 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 	Route::get('fetch/pantry/pesan','PantryController@getPesanan');
 
 	Route::get('index/display/pantry', 'PantryController@konfirmasiasd');
+	
+	Route::get('fetch/pantry/visitor_detail', 'PantryController@fetchPantryVisitorDetail');
 });
 	Route::get('index/display/pantry_visit', 'PantryController@indexDisplayPantryVisit');
 	Route::get('fetch/pantry/realtime_visitor', 'PantryController@fetchPantryRealtimeVisitor');
