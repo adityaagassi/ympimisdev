@@ -79,7 +79,7 @@ public function handle()
         $row['cost_center_code'] = $data['cost_center_code'];
         $row['gradecategory_name'] = $data['gradecategory_name'];
         $row['Penugasan'] = $data['Penugasan'];
-        $row['Union'] = $data['Union'];
+        // $row['Union'] = $data['Union'];
         $row['created_at'] = date('Y-m-d H:i:s');
         $row['updated_at'] = date('Y-m-d H:i:s');
 
