@@ -30,10 +30,10 @@
 			<a href="{{ url("index/welding/display_production_result?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Production Result</a>
 			
 			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Display Kosuha <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('index/welding/welding_board','hsa-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">HSA Board</a>
-			<a href="{{ url('index/welding/welding_board','phs-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">PHS Board</a>
-			<a href="{{ url('index/welding/welding_board','hpp-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">HPP Board</a>
-			<a href="{{ url('index/welding/welding_board','cuci-solder') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Cuci Solder</a>
+			<a href="{{ url('index/welding/welding_board','hsa-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">HSA Welding Board</a>
+			<a href="{{ url('index/welding/welding_board','phs-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">PHS Welding Board</a>
+			<a href="{{ url('index/welding/welding_board','hpp-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">HPP Welding Board</a>
+			<a href="{{ url('index/welding/welding_board','cuci-solder') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Cuci Asam Welding Board</a>
 			<a href="{{ url("index/middle/request/display/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Middle Process Material Request</a>
 			<a href="{{ url("index/welding/ng_rate?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate</a>
 			<a href="{{ url("index/welding/op_ng?tanggal=&location=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator NG Rate</a>
