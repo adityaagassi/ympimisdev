@@ -310,7 +310,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/display/pantry_visit?tanggal=") }}">
-                                <i class="fa fa-caret-right"></i> Pantry Visit (???)
+                                <i class="fa fa-caret-right"></i> Pantry Visitor Monitoring (給湯室の来室者監視)
                             </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">
