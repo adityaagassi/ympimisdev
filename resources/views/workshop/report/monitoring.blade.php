@@ -60,25 +60,25 @@
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 0px; padding: 0%;">
 			<div class="row" style="margin:0px;">
-					<div class="col-xs-2">
-						<div class="input-group date">
-							<div class="input-group-addon bg-green" style="border: none;">
-								<i class="fa fa-calendar"></i>
-							</div>
-							<input type="text" class="form-control datepicker" id="datefrom" placeholder="Select Date From">
+				<div class="col-xs-2">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border: none;">
+							<i class="fa fa-calendar"></i>
 						</div>
+						<input type="text" class="form-control datepicker" id="datefrom" placeholder="Select Date From">
 					</div>
-					<div class="col-xs-2">
-						<div class="input-group date">
-							<div class="input-group-addon bg-green" style="border: none;">
-								<i class="fa fa-calendar"></i>
-							</div>
-							<input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To">
+				</div>
+				<div class="col-xs-2">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border: none;">
+							<i class="fa fa-calendar"></i>
 						</div>
+						<input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To">
 					</div>
-					<div class="col-xs-1">
-						<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
-					</div>
+				</div>
+				<div class="col-xs-1">
+					<button class="btn btn-success" onclick="fillChart()">Update Chart</button>
+				</div>
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
 			</div>	
 			
@@ -95,7 +95,7 @@
 							<th style="border: 1px solid #333; width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">PIC</th>
 							<th style="border: 1px solid #333; padding-top: 0.25%; padding-bottom: 0.25%; width: 25%;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" colspan="3">Status</th>
 							<th style="border: 1px solid #333; width: 5%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Target<br>Date</th>
-							<th style="border: 1px solid #333; width: 20%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Progress</th>
+							<th style="border: 1px solid #333; width: 20%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px; border-top: 0px !important; text-transform: uppercase;" rowspan="2">Progress (in time)</th>
 						</tr>
 						<tr>
 							<th style="border: 1px solid #333; width: 5%; padding: 0; padding-top: 0.25%; padding-bottom: 0.25%; border-left:3px solid #f44336 !important;vertical-align: middle; text-transform: uppercase;">Requested</th>
@@ -169,21 +169,21 @@
 			}else{
 				var percent = (actual[i] / std[i]) * 100;
 				$('#progress_bar_'+i).append().empty();
-				if(percent <= 100){
+				// if(percent <= 100){
 					$('#progress_bar_'+i).addClass('active');
 					$('#progress_bar_'+i).addClass('progress-bar-success');
 					$('#progress_bar_'+i).html(Math.round(percent)+'%');
 					$('#progress_bar_'+i).css('width', percent+'%');
 					$('#progress_bar_'+i).css('color', 'white');
 					$('#progress_bar_'+i).css('font-weight', 'bold');
-				}else{
-					$('#progress_bar_'+i).addClass('active');
-					$('#progress_bar_'+i).addClass('progress-bar-success');
-					$('#progress_bar_'+i).html('100%');
-					$('#progress_bar_'+i).css('width', '100%');
-					$('#progress_bar_'+i).css('color', 'white');
-					$('#progress_bar_'+i).css('font-weight', 'bold');
-				}
+				// }else{
+				// 	$('#progress_bar_'+i).addClass('active');
+				// 	$('#progress_bar_'+i).addClass('progress-bar-success');
+				// 	$('#progress_bar_'+i).html('100%');
+				// 	$('#progress_bar_'+i).css('width', '100%');
+				// 	$('#progress_bar_'+i).css('color', 'white');
+				// 	$('#progress_bar_'+i).css('font-weight', 'bold');
+				// }
 			}
 		}
 

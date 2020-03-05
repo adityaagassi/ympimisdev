@@ -9,6 +9,7 @@
 	
 	td, th {
 		color: white;
+		text-align: center;
 	}
 
 	thead > tr > th {
@@ -23,6 +24,12 @@
 		font-family: 'JTM';
 		color: white;
 		font-size: 35pt;
+	}
+
+	.total {
+		background-color: white;
+		color: black;
+		border-color: black !important;
 	}
 </style>
 @stop
@@ -44,10 +51,6 @@
 			<div class="col-xs-12">
 				<table class="table table-bordered">
 					<thead>
-						<tr>
-							<th rowspan="2">Reward (IDR)</th>
-							<th id="cols" colspan="3">Kaizen Teian Quantity</th>
-						</tr>
 						<tr id="mon">
 						</tr>
 					</thead>
@@ -93,6 +96,7 @@
 			var ctg_isi = "";
 			var val;
 			var val_isi = "";
+			var sub_tot = "";
 
 			for(var i = 0; i < result.datas.length; i++){
 				val = result.datas[i].doit;
@@ -106,36 +110,82 @@
 
 			xCategories = unique(xCategories);
 
+			var ctg1 = "<tr>";
+			ctg_isi = '<th rowspan="2" style="vertical-align: middle;">Reward (IDR)</th>';
+
+			var total_tmp = [{ qty: 0, doit: 0}];
+
+
 			$.each(xCategories, function(index, value){
-				ctg_isi += "<th>"+value+"</th>";
+				ctg_isi += "<th colspan=2 style='border-right: 2px solid red'>"+value+"</th>";
+				ctg1 += "<th>Quantity</th>";
+				ctg1 += "<th style='border-right: 2px solid red'>Sub Total Reward</th>";
+				total_tmp.push({ qty: 0, doit: 0});
 			})
 
+			console.log(total_tmp);
+
+			ctg_isi += '<th colspan=2 style="vertical-align: middle;" class="total">TOTAL</th>';
+			ctg1 += "<th class='total'>Quantity</th>";
+			ctg1 += "<th class='total'>Sub Total Reward</th>";
+
+			ctg1 += "</tr>";
+
+			$("#mon").after(ctg1);
+
+
 			$.each(xValue, function(index, value){
+				var num = 0;
+				var qty_tot = 0;
+				var curr_tot = 0;
+
 				val_isi += "<tr>";
-				val_isi += "<th>"+value+"</th>";
+				doit = new Intl.NumberFormat().format(value);
+				val_isi += "<th>"+doit+"</th>";
 				var tmp = [];
 
 				$.each(xCategories, function(index2, value2){
 					var stat = 0;
 					$.each(result.datas, function(index3, value3){
 						if (value3.doit == value && value3.mons == value2) {
-							val_isi += "<td>"+value3.tot+"</td>";
-							tmp.push(value3.tot);
+							val_isi += "<td>"+new Intl.NumberFormat().format(value3.tot)+"</td>";
+							sub_doit = new Intl.NumberFormat().format(value3.tot * value3.doit);
+							val_isi += "<td style='border-right: 2px solid red'>"+sub_doit+"</td>";
+
+							curr_tot += value3.tot * value3.doit;
+							qty_tot += value3.tot;
+							tmp.push(value3.tot * value3.doit);
 							stat = 1;
+
+							total_tmp[index2].qty += value3.tot;
+							total_tmp[index2].doit += value3.tot * value3.doit;
 						}
 
 					})
 
 					if (stat == 0) {
 						val_isi += "<td>0</td>";
+						val_isi += "<td style='border-right: 2px solid red'>0</td>";
+						curr_tot += 0;
+						qty_tot += 0;
 						tmp.push(0);
 					}
+
 				})
+
+				// console.log(tot);
+				val_isi += "<td class='total'>"+new Intl.NumberFormat().format(qty_tot)+"</td>";
+				tot_doit = new Intl.NumberFormat().format(curr_tot);
+				val_isi += "<td class='total'>"+tot_doit+"</td>";
+
+				total_tmp[xCategories.length].qty += qty_tot;
+				total_tmp[xCategories.length].doit += curr_tot;
+
 
 				// $.each(xValue, function(index, value){
 				// 	$.each(result.datas, function(index3, value3){
 				// 		if (value3.doit == value) {
-							
+
 				// 		}
 
 				// 	})
@@ -145,7 +195,20 @@
 				val_isi += "</tr>";
 			})
 
-			// console.log(mainChart);
+			console.log(total_tmp);
+
+			val_isi += "<tr>";
+			val_isi += "<th class='total'>TOTAL</th>";
+
+			$.each(total_tmp, function(index, value){
+				val_isi += "<th class='total'>"+new Intl.NumberFormat().format(value.qty)+"</th>";
+				val_isi += "<th class='total' style='border-right: 2px solid red !important'>"+new Intl.NumberFormat().format(value.doit)+"</th>";
+			})
+
+			// val_isi += "<th>"+value.qty+"</th>";
+			// val_isi += "<th>"+new Intl.NumberFormat().format(value.doit)+"</th>";
+
+			val_isi += "</tr>";
 
 			$("#mon").append(ctg_isi);
 			$("#body").append(val_isi);
@@ -169,7 +232,7 @@
 
 			yAxis: {
 				title: {
-					text: 'Kaizen Quantity'
+					text: 'Kaizen Reward (IDR)'
 				}
 			},
 
