@@ -19,10 +19,27 @@
 			vertical-align: middle !important;
 		}
 
+		/*table {
+			page-break-inside: auto;
+		}*/
+
+		/*.page-break {
+		    page-break-after: always;
+		}*/
+
+		@page { margin: 100px 50px; }
+        .header { position: fixed; left: 0px; top: -100px; right: 0px; height: 100px; text-align: center; }
+        .footer { position: fixed; left: 0px; bottom: -50px; right: 0px; height: 50px;text-align: center;}
+        .footer .pagenum:before { content: counter(page); }
+
 	</style>
 	
+        <div class="footer">
+
+            Page <span class="pagenum"></span>
+        </div>
  	
-	<table class="table table-bordered" style="table-layout: fixed">
+	<table class="table table-bordered" style="table-layout: fixed;">
 		<thead>
 			<tr>
 				<td colspan="3" class="centera" >
@@ -218,6 +235,7 @@
 			<tr>
 				<td colspan="9"><?= $cpar->tindakan ?></td>
 			</tr>
+
 			<tr>
 				<td rowspan="2">3</td>
 				<td colspan="9">Verification Status</td>
