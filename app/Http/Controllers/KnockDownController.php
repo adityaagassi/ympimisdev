@@ -750,9 +750,9 @@ class KnockDownController extends Controller{
 		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
 
 		foreach ($knock_down_details as $knock_down_detail) {
-			$checksheet = MasterChecksheet::where('master_checksheet.id_checkSheet', '=', $container_id)
-			->leftJoin('detail_checksheet', 'detail_checksheet.id_checkSheet', '=', 'master_checksheet.id_checkSheet')
-			->where('detail_checksheet.gmc', '=', $knock_down_detail->material_number)
+			$checksheet = MasterChecksheet::where('master_checksheets.id_checkSheet', '=', $container_id)
+			->leftJoin('detail_checksheets', 'detail_checksheets.id_checkSheet', '=', 'master_checksheets.id_checkSheet')
+			->where('detail_checksheets.gmc', '=', $knock_down_detail->material_number)
 			->first();
 
 			if($checksheet == null){
