@@ -119,7 +119,7 @@
 			$.each(xCategories, function(index, value){
 				ctg_isi += "<th colspan=2 style='border-right: 2px solid red'>"+value+"</th>";
 				ctg1 += "<th>Quantity</th>";
-				ctg1 += "<th style='border-right: 2px solid red'>Sub Total Reward</th>";
+				ctg1 += "<th style='border-right: 2px solid red'>Sub Total Reward (IDR)</th>";
 				total_tmp.push({ qty: 0, doit: 0});
 			})
 
@@ -127,7 +127,7 @@
 
 			ctg_isi += '<th colspan=2 style="vertical-align: middle;" class="total">TOTAL</th>';
 			ctg1 += "<th class='total'>Quantity</th>";
-			ctg1 += "<th class='total'>Sub Total Reward</th>";
+			ctg1 += "<th class='total'>Sub Total Reward (IDR)</th>";
 
 			ctg1 += "</tr>";
 

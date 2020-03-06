@@ -412,6 +412,7 @@ Route::get('index/employee/service', 'EmployeeController@indexEmployeeService')-
 Route::get('fetch/report/kaizen', 'EmployeeController@fetchKaizen');
 Route::get('fetch/sub_leader', 'EmployeeController@fetchSubLeader');
 Route::get('create/ekaizen/{id}/{name}/{section}/{group}', 'EmployeeController@makeKaizen');
+Route::get('create/ekaizen/{id}/{name}/{section}', 'EmployeeController@makeKaizen2');
 Route::post('post/ekaizen', 'EmployeeController@postKaizen');
 Route::post('update/ekaizen', 'EmployeeController@updateKaizen');
 Route::get('get/ekaizen', 'EmployeeController@getKaizen');
@@ -841,11 +842,19 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	// end ng FL
 });
 
+//meeting
+Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
+	Route::get('index/meeting/index', 'MeetingController@index');
+	Route::get('index/meeting/create', 'MeetingController@create');
+	Route::get('index/meeting/list/{id}', 'MeetingController@list');
+});
+
 //welding process
 Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 	Route::post('input/welding/rework', 'WeldingProcessController@inputWeldingRework');
 	Route::post('input/welding/kensa', 'WeldingProcessController@inputWeldingKensa');
 });
+
 Route::get('index/welding/display_production_result', 'WeldingProcessController@indexDisplayProductionResult');
 Route::get('fetch/welding/display_production_result', 'WeldingProcessController@fetchDisplayProductionResult');
 Route::get('index/welding/report_ng', 'WeldingProcessController@indexReportNG');
@@ -964,6 +973,8 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::post('edit/workshop/drawing', 'WorkshopController@editDrawing');
 	Route::get('index/workshop/job_history', 'WorkshopController@indexJobHistory');
 	Route::get('fetch/workshop/job_history', 'WorkshopController@fetchJobHistory');
+	Route::get('index/workshop/receipt', 'WorkshopController@indexWJOReceipt');
+	Route::get('fetch/workshop/receipt', 'WorkshopController@fetchFinishedWJO');
 });
 
 Route::group(['nav' => 'S31', 'middleware' => 'permission'], function(){
@@ -1475,9 +1486,9 @@ Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 	
 	Route::get('fetch/pantry/visitor_detail', 'PantryController@fetchPantryVisitorDetail');
 });
-	Route::get('index/display/pantry_visit', 'PantryController@indexDisplayPantryVisit');
-	Route::get('fetch/pantry/realtime_visitor', 'PantryController@fetchPantryRealtimeVisitor');
-	Route::get('fetch/pantry/visitor', 'PantryController@fetchPantryVisitor');
+Route::get('index/display/pantry_visit', 'PantryController@indexDisplayPantryVisit');
+Route::get('fetch/pantry/realtime_visitor', 'PantryController@fetchPantryRealtimeVisitor');
+Route::get('fetch/pantry/visitor', 'PantryController@fetchPantryVisitor');
 
 Route::group(['nav' => 'S11', 'middleware' => 'permission'], function(){
 	Route::get('index/CheckSheet', 'CheckSheet@index');
@@ -2194,10 +2205,11 @@ Route::get('index/request_qa/verifikasi/{id}', 'QcRequestController@verifikasi')
 
 // CPAR Antar Departemen & Bagian
 
-Route::get('index/cpar_departemen', 'CparController@index');
+Route::get('index/cpar', 'CparController@index');
+Route::get('index/cpar/fetchDataTable', 'CparController@fetchDataTable');
+Route::get('index/cpar/create', 'CparController@create');
 
-
-// Form Ketidaksesuaian
+// Form Ketidaksesuaian YMMJ
 Route::get('index/qa_ymmj', 'QcYmmjController@index');
 Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
 Route::get('index/qa_ymmj/create', 'QcYmmjController@create');
