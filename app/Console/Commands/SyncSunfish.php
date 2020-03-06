@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\Employee;
 
 class SyncSunfish extends Command
 {
@@ -67,11 +68,10 @@ public function handle()
         $row['section'] = $data['Section'];
         $row['group'] = $data['Groups'];
         $row['sub_group'] = $data['Sub_Groups'];
-        $row['group'] = $data['Group'];
         $row['employment_status'] = $data['employ_code'];
         $row['cost_center'] = $data['cost_center_code'];
         $row['assignment'] = $data['Penugasan'];
-        $row['union'] = $data['Union'];
+        // $row['union'] = $data['Union'];
         $row['created_at'] = date('Y-m-d H:i:s');
         $row['updated_at'] = date('Y-m-d H:i:s');
         $row['nik_manager'] = $data['NIK_Manager'];
@@ -106,5 +106,31 @@ public function handle()
             $insert_user->save();
         }
     }
+
+    $employees = DB::table('employees')->get();
+    $employee_ids = array();
+    foreach ($employees as $employee) {
+        array_push($employee_ids, strtoupper($employee->employee_id));
+    }
+    foreach ($datas as $data) {
+        if(!in_array($data->Emp_no, $employee_ids)){
+            $insert_employee = New Employee([
+                'employee_id' => strtoupper($data->Emp_no),
+                'name' => ucwords($data->Full_name),
+                'gender' => strtoupper($data->gender),
+                'birth_place' => ucwords($data->birthplace),
+                'birth_date' => $data->birthdate,
+                'address' => ucwords($data->address),
+                'card_id' => $data->identity_no,
+                'hire_date' => $data->start_date,
+                'created_by' => '1'
+            ]);
+            $insert_employee->save();
+        }
+    }
+
+
+
+
 }
 }
