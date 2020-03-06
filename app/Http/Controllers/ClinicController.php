@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\CodeGenerator;
+use App\EmployeeSync;
 use App\ClinicPatient;
 use App\ClinicPatientDetail;
 use App\ClinicMedicine;
 use App\ClinicMedicineLog;
 use Response;
+use Excel;
 use DataTables;
 
 
@@ -120,7 +122,7 @@ class ClinicController extends Controller{
 		];
 		$this->paramedic = [
 			'Elis Kurniawati',
-			'Ichatus Solikha',
+			'Ahmad Fanani',
 			'Nanang Sugianto',
 		];
 		$this->purpose = [
@@ -179,6 +181,162 @@ class ClinicController extends Controller{
 			'title' => $title,
 			'title_jp' => $title_jp,
 		))->with('page', 'Diagnose')->with('head','Clinic');
+	}
+
+	public function indexVisitLog(){
+		$title = 'Clinic Visit Logs';
+		$title_jp = '??';
+		$employees = EmployeeSync::select('employee_id', 'name')->get();
+		$medicines = ClinicMedicine::select('medicine_name')->get();
+		$departments = db::select("SELECT DISTINCT
+			department 
+			FROM
+			employee_syncs 
+			WHERE
+			department IS NOT NULL 
+			ORDER BY
+			department ASC");
+
+
+		return view('clinic.visit_logs', array(
+			'diagnoses' => $this->diagnose,
+			'doctors' => $this->doctor,
+			'paramedics' => $this->paramedic,
+			'purposes' => $this->purpose,
+			'employees' => $employees,
+			'departments' => $departments,
+			'medicines' => $medicines,
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Visit Logs')->with('head','Clinic');
+	}
+
+	public function fetchVisitEdit(Request $request){
+
+		$patient = db::select("SELECT c.visited_at, c.employee_id, e.`name`, e.department, c.purpose, c.paramedic, c.doctor, GROUP_CONCAT(c.diagnose) as diagnose FROM clinic_patient_details c
+			left join employee_syncs e on e.employee_id = c.employee_id
+			where c.patient_list_id = '".$request->get('id')."'
+			group by c.visited_at, c.employee_id, e.`name`, e.department, c.purpose, c.paramedic, c.doctor");
+
+		$medicines = db::select("select * from clinic_medicine_logs
+			where clinic_patient_detail = '".$request->get('id')."'");
+
+		$response = array(
+			'status' => true,
+			'patient' => $patient,
+			'medicines' => $medicines,
+		);
+		return Response::json($response);		
+	}
+
+	public function fetchVisitLogExcel(Request $request){
+		$clinic_visit_logs = ClinicPatientDetail::leftJoin(db::raw('(select * from employee_syncs) as patient'), 'patient.employee_id', '=', 'clinic_patient_details.employee_id');
+		if(strlen($request->get('visitFrom')) > 0 ){
+			$visitFrom = date('Y-m-d', strtotime($request->get('visitFrom')));
+			$clinic_visit_logs = $clinic_visit_logs->where(db::raw('date(clinic_patient_details.visited_at)'), '>=', $visitFrom);
+		}
+		if(strlen($request->get('visitTo')) > 0 ){
+			$visitTo = date('Y-m-d', strtotime($request->get('visitTo')));
+			$clinic_visit_logs = $clinic_visit_logs->where(db::raw('date(clinic_patient_details.visited_at)'), '<=', $visitTo);
+		}
+		if($request->get('employee_id') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('patient.employee_id', $request->get('employee_id'));
+		}
+		if($request->get('department') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('patient.department', $request->get('department'));
+		}
+		if($request->get('purpose') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('clinic_patient_details.purpose', $request->get('purpose'));
+		}
+		if($request->get('paramedic') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('clinic_patient_details.paramedic', $request->get('paramedic'));
+		}
+		if($request->get('diagnose') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('clinic_patient_details.diagnose', $request->get('diagnose'));
+		}
+		$clinic_visit_logs = $clinic_visit_logs->groupBy('clinic_patient_details.visited_at',
+			'clinic_patient_details.patient_list_id',
+			'clinic_patient_details.employee_id',
+			'patient.name',
+			'patient.department',
+			'clinic_patient_details.paramedic',
+			'clinic_patient_details.purpose');
+		$clinic_visit_logs = $clinic_visit_logs->orderBy('clinic_patient_details.visited_at', 'asc')
+		->select(
+			'clinic_patient_details.visited_at',
+			'clinic_patient_details.patient_list_id',
+			'clinic_patient_details.employee_id',
+			db::raw('concat(SPLIT_STRING(patient.name, " ", 1)," ",SPLIT_STRING(patient.name, " ", 2)) as name'),
+			'patient.department',
+			'clinic_patient_details.paramedic',
+			'clinic_patient_details.purpose',
+			db::raw('group_concat(diagnose) as diagnose')
+		)->get();
+
+		return $request;
+
+		$data = array(
+			'clinic_visit_logs' => $clinic_visit_logs
+		);
+		ob_clean();
+		
+		Excel::create('Clinic Visit Logs', function($excel) use ($data){
+			$excel->sheet('Visit Logs', function($sheet) use ($data) {
+				return $sheet->loadView('clinic.visit_log_excel', $data);
+			});
+		})->export('xlsx');
+	}
+
+	public function fetchVisitLog(Request $request){
+		$clinic_visit_logs = ClinicPatientDetail::leftJoin(db::raw('(select * from employee_syncs) as patient'), 'patient.employee_id', '=', 'clinic_patient_details.employee_id');
+		if(strlen($request->get('visitFrom')) > 0 ){
+			$visitFrom = date('Y-m-d', strtotime($request->get('visitFrom')));
+			$clinic_visit_logs = $clinic_visit_logs->where(db::raw('date(clinic_patient_details.visited_at)'), '>=', $visitFrom);
+		}
+		if(strlen($request->get('visitTo')) > 0 ){
+			$visitTo = date('Y-m-d', strtotime($request->get('visitTo')));
+			$clinic_visit_logs = $clinic_visit_logs->where(db::raw('date(clinic_patient_details.visited_at)'), '<=', $visitTo);
+		}
+		if($request->get('employee_id') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('patient.employee_id', $request->get('employee_id'));
+		}
+		if($request->get('department') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('patient.department', $request->get('department'));
+		}
+		if($request->get('purpose') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('clinic_patient_details.purpose', $request->get('purpose'));
+		}
+		if($request->get('paramedic') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('clinic_patient_details.paramedic', $request->get('paramedic'));
+		}
+		if($request->get('diagnose') != 0 ){
+			$clinic_visit_logs = $clinic_visit_logs->whereIn('clinic_patient_details.diagnose', $request->get('diagnose'));
+		}
+		$clinic_visit_logs = $clinic_visit_logs->groupBy('clinic_patient_details.visited_at',
+			'clinic_patient_details.patient_list_id',
+			'clinic_patient_details.employee_id',
+			'patient.name',
+			'patient.department',
+			'clinic_patient_details.paramedic',
+			'clinic_patient_details.purpose');
+		$clinic_visit_logs = $clinic_visit_logs->orderBy('clinic_patient_details.visited_at', 'desc')
+		->select(
+			'clinic_patient_details.visited_at',
+			'clinic_patient_details.patient_list_id',
+			'clinic_patient_details.employee_id',
+			'patient.name',
+			'patient.department',
+			'clinic_patient_details.paramedic',
+			'clinic_patient_details.purpose',
+			db::raw('group_concat(diagnose) as diagnose')
+		)->get();
+
+		
+		$response = array(
+			'status' => true,
+			'logs' => $clinic_visit_logs,
+		);
+		return Response::json($response);
 	}
 
 	public function fetchDiagnose(Request $request){
@@ -355,6 +513,83 @@ class ClinicController extends Controller{
 		}	
 	}
 
+	public function editDiagnose(Request $request){
+		$idx = $request->get('id');
+		$employee_id = $request->get('employee_id');
+		$purpose = $request->get('purpose');
+		$paramedic = $request->get('paramedic');
+		$doctor = $request->get('doctor');
+		$visited_at = $request->get('visited_at');
+
+		try{
+
+			//Input Patient Diagnose
+			$delete = ClinicPatientDetail::where('patient_list_id', $idx)->forceDelete();
+			
+			if($request->get('diagnose') != null) {
+				$diagnoses = $request->get('diagnose');
+				for($x = 0; $x < count($diagnoses); $x++) {
+					$diagnose = 
+					$clinic_patient_detail = new ClinicPatientDetail([
+						'employee_id' => $employee_id,
+						'patient_list_id' => $idx,
+						'purpose' => $purpose,
+						'diagnose' => $diagnoses[$x],
+						'paramedic' => $paramedic,
+						'doctor' => $doctor,
+						'visited_at' => $visited_at,
+					]);
+					$clinic_patient_detail->save();	
+				}
+			}else{
+				$clinic_patient_detail = new ClinicPatientDetail([
+					'employee_id' => $employee_id,
+					'patient_list_id' => $idx,
+					'purpose' => $purpose,
+					'diagnose' => $diagnose,
+					'paramedic' => $paramedic,
+					'doctor' => $doctor,
+					'visited_at' => $visited_at,
+				]);
+				$clinic_patient_detail->save();
+			}
+
+			//Input Medicine
+			$delete = ClinicMedicineLog::where('clinic_patient_detail', $idx)->forceDelete();
+			
+			if($request->get('medicine') != null) {
+				$medicines = $request->get('medicine');
+				$clinic_medicine_log = [];
+				for($x = 0; $x < count($medicines); $x++) {
+					$clinic_medicine_log[$x] = new ClinicMedicineLog([
+						'medicine_name' => $medicines[$x]['medicine_name'],
+						'status' => 'out',
+						'clinic_patient_detail' => $idx,
+						'quantity' => $medicines[$x]['quantity'],
+					]);
+					
+					DB::transaction(function() use ($clinic_medicine_log, $x){
+						$clinic_medicine_log[$x]->save();
+					});
+				}
+			}			
+
+			$response = array(
+				'status' => true,
+				'message' => 'Patient Data`s successfully saved'
+			);
+			return Response::json($response);
+
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+	}
+
 	public function inputDiagnose(Request $request){
 		$idx = $request->get('id');
 		$employee_id = $request->get('nik');
@@ -430,17 +665,13 @@ class ClinicController extends Controller{
 					});
 				}
 			}else{
-				DB::transaction(function() use ($clinic_patient_detail, $idx, $bed){
-					$clinic_patient_detail->save();
-
-					$clinic_patient = db::connection('clinic')->table('patient_list')
-					->where('idx', '=', $idx)
-					->update([
-						'status' => 'Yes',
-						'note' => $bed
-					]);
-				});
-			}			
+				$clinic_patient = db::connection('clinic')->table('patient_list')
+				->where('idx', '=', $idx)
+				->update([
+					'status' => 'Yes',
+					'note' => $bed
+				]);
+			}		
 
 			$response = array(
 				'status' => true,
