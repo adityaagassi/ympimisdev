@@ -305,7 +305,7 @@ class PantryController extends Controller
         $hourly = db::connection('pantry')->select($query);
         $total = db::connection('pantry')->select($query2);
         $duration = db::connection('pantry')->select($query3);
-        $novisit = db::connection('pantry')->select($query4);
+        $novisit = db::select($query4);
 
         $response = array(
             'status' => true,
