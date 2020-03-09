@@ -43,8 +43,28 @@ class WeldingProcessController extends Controller
 		$this->fy = db::table('weekly_calendars')->select('fiscal_year')->distinct()->get();
 	}
 
+	public function indexMasterOperator(){
+		$title = 'Master Operator Welding';
+		$title_jp = '??';
+
+		$list_op = DB::SELECT("SELECT
+						* 
+					FROM
+						`employee_syncs` 
+					WHERE
+						department = 'Welding-Surface Treatment (WI-WST)' 
+						AND section = 'Welding Process'");
+
+		return view('processes.welding.master_operator', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'list_op2' => $list_op,
+			'list_op' => $list_op
+		))->with('page', 'Master Operator');		
+	}
+
 	public function indexCurrentWelding(){
-		$title = 'Current Welding';
+		$title = 'Ongoing Welding';
 		$title_jp = '??';
 
 		return view('processes.welding.display.current_welding', array(
@@ -98,7 +118,7 @@ class WeldingProcessController extends Controller
 			order by ws.ws_id asc");
 
 		$materials = Material::where('mrpc','=','s21')
-		->where('hpl', 'like', '%KEY%')
+		->where('hpl', 'like', 'st%KEY%')
 		->select('material_number', 'hpl', 'model', 'key', 'material_description')
 		->orderBy('key', 'asc')
 		->orderBy('model', 'asc')
@@ -115,32 +135,32 @@ class WeldingProcessController extends Controller
 	public function indexWeldingBoard($loc){
 
 		if ($loc == 'hpp-sx') {
-				$title = 'HPP Saxophone Welding Board';
-				$title_jp = 'HPP サックス溶接加工順';
+			$title = 'HPP Saxophone Welding Board';
+			$title_jp = 'HPP サックス溶接加工順';
 			return view('processes.welding.display.welding_board_hpp', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
 			))->with('page', 'HPP');
 		}elseif ($loc == 'cuci-solder'){
-				$title = 'Cuci Asam Saxophone Welding Board';
-				$title_jp = ' サックス溶接加工順';
+			$title = 'Cuci Asam Saxophone Welding Board';
+			$title_jp = ' サックス溶接加工順';
 			return view('processes.welding.display.welding_board_cuci_solder', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
 			))->with('page', 'CUCI SOLDER');
 		}elseif($loc == 'phs-sx'){
-				$title = 'PHS Saxophone Welding Board';
-				$title_jp = 'PHS サックス溶接加工順';
+			$title = 'PHS Saxophone Welding Board';
+			$title_jp = 'PHS サックス溶接加工順';
 			return view('processes.welding.display.welding_board', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
 			))->with('page', 'PHS');
 		}elseif($loc == 'hsa-sx'){
-				$title = 'HSA Saxophone Welding Board';
-				$title_jp = 'HSA サックス溶接加工順';
+			$title = 'HSA Saxophone Welding Board';
+			$title_jp = 'HSA サックス溶接加工順';
 			return view('processes.welding.display.welding_board', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
@@ -303,6 +323,77 @@ class WeldingProcessController extends Controller
 		))->with('page', 'Welding Process');		
 	}
 
+	public function fetchMasterOperator(Request $request)
+	{
+		$lists = DB::connection('welding_controller')->
+				SELECT("SELECT
+							* 
+						FROM
+							`m_operator`");
+
+		$response = array(
+			'status' => true,
+			'lists' => $lists
+		);
+		return Response::json($response);
+	}
+
+	public function addOperator(Request $request)
+	{
+		$list_op = DB::SELECT("SELECT
+						* 
+					FROM
+						`employee_syncs` 
+					WHERE
+						department = 'Welding-Surface Treatment (WI-WST)' 
+						AND section = 'Welding Process' 
+						AND employee_id = '".$request->get('operator')."'");
+
+		foreach ($list_op as $key) {
+			$operator_name = $key->name;
+		}
+
+		$tag = dechex($request->get('operator_code'));
+
+		$lists = DB::connection('welding_controller')
+				->table('m_operator')
+				->insert([
+						  'operator_name' => strtoupper($operator_name),
+						  'operator_code' => strtoupper($tag),
+						  'department_id' => 0,
+						  'ws_id' => 0,
+						  'operator_nik' => $request->get('operator'),
+						  'group' => $request->get('group'),
+						  'operator_create_date' => date('Y-m-d H:i:s')]);
+
+		$response = array(
+			'status' => true
+		);
+		return Response::json($response);
+	}
+
+	public function destroyOperator($id)
+	{
+		DB::connection('welding_controller')
+				->table('m_operator')
+				->where('operator_id','=',$id)->delete();
+
+		return redirect('index/welding/operator');
+	}
+
+	public function getOperator(Request $request)
+	{
+		$lists = DB::connection('welding_controller')
+				->table('m_operator')
+				->where('operator_id',$request->get('id'))->get();
+
+		$response = array(
+			'status' => true,
+			'lists' => $lists
+		);
+		return Response::json($response);
+	}
+
 	public function fetchCurrentwelding(){
 		$current = db::connection('welding')->select("SELECT mesin.mesin_id, mesin.ws_id, ws.ws_name, mesin.mesin_nama, datas.operator_nik, e.`name`, datas.part_type, datas.material_number, m.model, m.`key`, datas.sedang, ceil(s.time * v.lot_completion / 60) as std from
 			(SELECT * from m_mesin m
@@ -359,7 +450,7 @@ class WeldingProcessController extends Controller
 				akan.kanban_no AS kanban_no_akan,
 				COALESCE(item_akan.hsa_name,item_akan_phs.phs_name) AS gmcdescakan,
 				detail_akan.order_akan_start_date AS waktu_akan 
-			FROM
+				FROM
 				m_mesin
 				LEFT JOIN m_ws ON m_ws.ws_id = m_mesin.ws_id
 				LEFT JOIN m_operator ON m_operator.operator_id = m_mesin.operator_id
@@ -371,11 +462,11 @@ class WeldingProcessController extends Controller
 				LEFT JOIN m_phs item_akan_phs ON item_akan_phs.phs_id = akan.part_id
 				LEFT JOIN t_order_detail detail_sedang ON m_mesin.order_id_sedang = detail_sedang.order_id
 				LEFT JOIN t_order_detail detail_akan ON m_mesin.order_id_akan = detail_akan.order_id 
-			WHERE
+				WHERE
 				( detail_sedang.flow_id IS NULL OR detail_sedang.flow_id = 1 ) 
 				AND ( detail_akan.flow_id IS NULL OR detail_akan.flow_id = 1 ) 
 				AND (
-					mesin_type = 2 
+				mesin_type = 2 
 				OR mesin_type = 3)");
 		}elseif ($loc == 'phs-sx') {
 			$work_stations = DB::connection('welding_controller')->select("SELECT
@@ -451,11 +542,11 @@ class WeldingProcessController extends Controller
 				DATE_FORMAT( t_before_cuci.order_store_date, '%H:%i' ) AS store_time,
 				t_before_cuci.order_store_date AS waktu_akan,
 				t_before_cuci.order_store_date AS waktu_sedang 
-			FROM
+				FROM
 				t_before_cuci
 				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id
 				LEFT JOIN m_phs ON m_phs.phs_id = t_before_cuci.part_id 
-			WHERE
+				WHERE
 				t_before_cuci.order_status = 0");
 		}
 
@@ -1284,22 +1375,21 @@ class WeldingProcessController extends Controller
 			left join ympimis.employees e on e.employee_id = g.employee_id
 			where g.location = 'soldering') op
 			left join
-			(select op.operator_nik, hsa.hsa_kito_code as material_number, dl.finish, dl.perolehan_jumlah, hsa.hsa_timing, (dl.perolehan_jumlah * hsa.hsa_timing) as std, dl.act, ((dl.perolehan_jumlah * hsa.hsa_timing)/dl.act) as eff from
-			(select a.operator_id, a.part_id, time(a.perolehan_finish_date) as finish, timestampdiff(second, a.perolehan_start_date, a.perolehan_finish_date) as act, a.perolehan_jumlah from
+			(select op.operator_nik, dl.part_type, hsa.hsa_kito_code as hsa_material_number, phs.phs_code as phs_material_number, IF(dl.part_type = 1, phs.phs_code, hsa.hsa_kito_code) as material_number, dl.finish, dl.perolehan_jumlah, hsa.hsa_timing, (dl.perolehan_jumlah * hsa.hsa_timing) as std, dl.act, ((dl.perolehan_jumlah * hsa.hsa_timing)/dl.act) as eff from
+			(select a.operator_id, a.part_type, a.part_id, time(a.perolehan_finish_date) as finish, timestampdiff(second, a.perolehan_start_date, a.perolehan_finish_date) as act, a.perolehan_jumlah from
 			(select * from t_perolehan
 			where date(tanggaljam) = '".$date."'
-			and part_type = '2'
 			and flow_id = '1') a
 			left join
 			(select * from t_perolehan
 			where date(tanggaljam) = '".$date."'
-			and part_type = '2'
 			and flow_id = '1') b
 			on (a.operator_id = b.operator_id and a.perolehan_finish_date < b.perolehan_finish_date)
 			where b.perolehan_finish_date is null
 			order by a.operator_id asc) dl
 			left join m_operator op on op.operator_id = dl.operator_id
-			left join m_hsa hsa on hsa.hsa_id = dl.part_id) eff
+			left join m_hsa hsa on hsa.hsa_id = dl.part_id
+			left join m_phs phs on phs.phs_id = dl.part_id) eff
 			on op.employee_id = eff.operator_nik
 			left join ympimis.materials m on eff.material_number = m.material_number
 			order by op.`group`, op.`name` asc");
