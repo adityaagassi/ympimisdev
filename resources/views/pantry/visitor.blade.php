@@ -103,7 +103,7 @@
 								<th style="width: 30%; text-align: center;">Name</th>
 							</tr>					
 						</thead>
-						<tbody id="tableNoVisitBody">
+						<tbody id="tableNovisitBody">
 						</tbody>
 					</table>
 				</div>
