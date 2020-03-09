@@ -434,11 +434,11 @@
 			var index = 1;
 			var resultData = "";
 
-			$.each(result.details, function(key, value) {
+			$.each(result.novisit, function(key, value) {
 				resultData += '<tr>';
 				resultData += '<td>'+ index +'</td>';
 				resultData += '<td>'+ value.employee_id +'</td>';
-				resultData += '<td>'+ value.name +'</td>';
+				resultData += '<td>'+ value.NAME +'</td>';
 				resultData += '</tr>';
 				index += 1;
 			});
