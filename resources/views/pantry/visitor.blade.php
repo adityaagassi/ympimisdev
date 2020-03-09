@@ -94,6 +94,18 @@
 						<tbody id="tableVisitorBody">
 						</tbody>
 					</table>
+					<span style="color: white; font-size: 22px; font-weight: bold;"><i class="fa fa-caret-right"></i> Haven't Visited</span>
+					<table class="table table-bordered" id="tableNovisit" style="margin-bottom: 5px;">
+						<thead>
+							<tr>
+								<th style="width: 1%;">#</th>
+								<th style="width: 5%; text-align: center;">ID</th>
+								<th style="width: 30%; text-align: center;">Name</th>
+							</tr>					
+						</thead>
+						<tbody id="tableNoVisitBody">
+						</tbody>
+					</table>
 				</div>
 				<div class="col-xs-8">
 					<div id="container1" class="container1" style="width: 100%;"></div>
@@ -416,6 +428,22 @@
 		}
 
 		$.get('{{ url("fetch/pantry/visitor") }}', data, function(result, status, xhr) {
+
+			$('#tableNovisitBody').html('');
+
+			var index = 1;
+			var resultData = "";
+
+			$.each(result.details, function(key, value) {
+				resultData += '<tr>';
+				resultData += '<td>'+ index +'</td>';
+				resultData += '<td>'+ value.employee_id +'</td>';
+				resultData += '<td>'+ value.name +'</td>';
+				resultData += '</tr>';
+				index += 1;
+			});
+			$('#tableNovisitBody').append(resultData);
+
 			$('#total_person').text(result.total[0].qty_employee + ' Prsn(s)');
 			$('#total_duration').text(result.total[0].qty_duration + ' Min(s)');
 

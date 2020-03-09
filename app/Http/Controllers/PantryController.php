@@ -290,15 +290,29 @@ class PantryController extends Controller
         ) AS final2
         group by duration, indek order by indek asc";
 
+        $query4 = "SELECT
+        office_members.employee_id,
+        employee_syncs.NAME 
+        FROM
+        office_members
+        LEFT JOIN employee_syncs ON employee_syncs.employee_id = office_members.employee_id 
+        WHERE
+        office_members.employee_id NOT IN ( SELECT employee_id FROM ympipantry.pantry_logs WHERE date( in_time ) = '".$date."' ) 
+        AND office_members.remark = 'office' 
+        AND office_members.employee_id LIKE 'PI%' 
+        AND employee_syncs.employee_id IS NOT NULL";
+
         $hourly = db::connection('pantry')->select($query);
         $total = db::connection('pantry')->select($query2);
         $duration = db::connection('pantry')->select($query3);
+        $novisit = db::connection('pantry')->select($query4);
 
         $response = array(
             'status' => true,
             'hourly' => $hourly,
             'total' => $total,
-            'duration' => $duration
+            'duration' => $duration,
+            'novisit' => $novisit
 
         );
         return Response::json($response);
