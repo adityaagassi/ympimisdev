@@ -48,12 +48,12 @@ class WeldingProcessController extends Controller
 		$title_jp = '??';
 
 		$list_op = DB::SELECT("SELECT
-						* 
-					FROM
-						`employee_syncs` 
-					WHERE
-						department = 'Welding-Surface Treatment (WI-WST)' 
-						AND section = 'Welding Process'");
+			* 
+			FROM
+			`employee_syncs` 
+			WHERE
+			department = 'Welding-Surface Treatment (WI-WST)' 
+			AND section = 'Welding Process'");
 
 		return view('processes.welding.master_operator', array(
 			'title' => $title,
@@ -326,10 +326,10 @@ class WeldingProcessController extends Controller
 	public function fetchMasterOperator(Request $request)
 	{
 		$lists = DB::connection('welding_controller')->
-				SELECT("SELECT
-							* 
-						FROM
-							`m_operator`");
+		SELECT("SELECT
+			* 
+			FROM
+			`m_operator`");
 
 		$response = array(
 			'status' => true,
@@ -341,13 +341,13 @@ class WeldingProcessController extends Controller
 	public function addOperator(Request $request)
 	{
 		$list_op = DB::SELECT("SELECT
-						* 
-					FROM
-						`employee_syncs` 
-					WHERE
-						department = 'Welding-Surface Treatment (WI-WST)' 
-						AND section = 'Welding Process' 
-						AND employee_id = '".$request->get('operator')."'");
+			* 
+			FROM
+			`employee_syncs` 
+			WHERE
+			department = 'Welding-Surface Treatment (WI-WST)' 
+			AND section = 'Welding Process' 
+			AND employee_id = '".$request->get('operator')."'");
 
 		foreach ($list_op as $key) {
 			$operator_name = $key->name;
@@ -356,15 +356,15 @@ class WeldingProcessController extends Controller
 		$tag = dechex($request->get('operator_code'));
 
 		$lists = DB::connection('welding_controller')
-				->table('m_operator')
-				->insert([
-						  'operator_name' => strtoupper($operator_name),
-						  'operator_code' => strtoupper($tag),
-						  'department_id' => 0,
-						  'ws_id' => 0,
-						  'operator_nik' => $request->get('operator'),
-						  'group' => $request->get('group'),
-						  'operator_create_date' => date('Y-m-d H:i:s')]);
+		->table('m_operator')
+		->insert([
+			'operator_name' => strtoupper($operator_name),
+			'operator_code' => strtoupper($tag),
+			'department_id' => 0,
+			'ws_id' => 0,
+			'operator_nik' => $request->get('operator'),
+			'group' => $request->get('group'),
+			'operator_create_date' => date('Y-m-d H:i:s')]);
 
 		$response = array(
 			'status' => true
@@ -375,8 +375,8 @@ class WeldingProcessController extends Controller
 	public function destroyOperator($id)
 	{
 		DB::connection('welding_controller')
-				->table('m_operator')
-				->where('operator_id','=',$id)->delete();
+		->table('m_operator')
+		->where('operator_id','=',$id)->delete();
 
 		return redirect('index/welding/operator');
 	}
@@ -384,12 +384,47 @@ class WeldingProcessController extends Controller
 	public function getOperator(Request $request)
 	{
 		$lists = DB::connection('welding_controller')
-				->table('m_operator')
-				->where('operator_id',$request->get('id'))->get();
+		->table('m_operator')
+		->where('operator_id',$request->get('id'))->get();
 
 		$response = array(
 			'status' => true,
 			'lists' => $lists
+		);
+		return Response::json($response);
+	}
+
+	public function updateOperator(Request $request)
+	{
+		$list_op = DB::SELECT("SELECT
+			* 
+			FROM
+			`employee_syncs` 
+			WHERE
+			department = 'Welding-Surface Treatment (WI-WST)' 
+			AND section = 'Welding Process' 
+			AND employee_id = '".$request->get('operator')."'");
+
+		foreach ($list_op as $key) {
+			$operator_name = $key->name;
+		}
+
+		$tag = dechex($request->get('operator_code'));
+
+		$lists = DB::connection('welding_controller')
+		->table('m_operator')
+		->where('operator_id',$request->get('operator_id'))
+		->update([
+			'operator_name' => strtoupper($operator_name),
+			'operator_code' => strtoupper($tag),
+			'department_id' => 0,
+			'ws_id' => 0,
+			'operator_nik' => $request->get('operator'),
+			'group' => $request->get('group'),
+			'operator_create_date' => date('Y-m-d H:i:s')]);
+
+		$response = array(
+			'status' => true
 		);
 		return Response::json($response);
 	}
@@ -1369,13 +1404,13 @@ class WeldingProcessController extends Controller
 		->select('target')
 		->first();
 
-		$target = db::connection('welding')->select("select op.`group`, op.employee_id, op.`name`, eff.material_number, CONCAT(m.model,' ',m.`key`) as `key`, eff.finish, eff.act, eff.std, eff.eff from
+		$target = db::connection('welding')->select("select op.`group`, op.employee_id, op.`name`, eff.material_number, CONCAT(m.model,' ',m.`key`) as `key`, eff.finish, eff.act, (py  std.time*eff.qty) as std, (std.time*eff.qty/eff.act) as eff from
 			(select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`,
 			g.`group` from ympimis.employee_groups g
 			left join ympimis.employees e on e.employee_id = g.employee_id
 			where g.location = 'soldering') op
 			left join
-			(select op.operator_nik, dl.part_type, hsa.hsa_kito_code as hsa_material_number, phs.phs_code as phs_material_number, IF(dl.part_type = 1, phs.phs_code, hsa.hsa_kito_code) as material_number, dl.finish, dl.perolehan_jumlah, hsa.hsa_timing, (dl.perolehan_jumlah * hsa.hsa_timing) as std, dl.act, ((dl.perolehan_jumlah * hsa.hsa_timing)/dl.act) as eff from
+			(select op.operator_nik, dl.part_type, hsa.hsa_kito_code as hsa_material_number, phs.phs_code as phs_material_number, IF(dl.part_type = 1, phs.phs_code, hsa.hsa_kito_code) as material_number, dl.finish, dl.perolehan_jumlah, perolehan_jumlah as qty, dl.act, ((dl.perolehan_jumlah * hsa.hsa_timing)/dl.act) as eff from
 			(select a.operator_id, a.part_type, a.part_id, time(a.perolehan_finish_date) as finish, timestampdiff(second, a.perolehan_start_date, a.perolehan_finish_date) as act, a.perolehan_jumlah from
 			(select * from t_perolehan
 			where date(tanggaljam) = '".$date."'
@@ -1392,6 +1427,7 @@ class WeldingProcessController extends Controller
 			left join m_phs phs on phs.phs_id = dl.part_id) eff
 			on op.employee_id = eff.operator_nik
 			left join ympimis.materials m on eff.material_number = m.material_number
+			left join ympimis.standard_times std on std.material_number = eff.material_number
 			order by op.`group`, op.`name` asc");
 
 		$response = array(
