@@ -233,7 +233,7 @@
                                 <i class="fa fa-caret-right"></i> Form Permasalahan & Kegagalan (問題・失敗のフォーム)
                             </a>
                             <br>
-                            <a href="{{ url("/index/cpar_departemen") }}">
+                            <a href="{{ url("/index/cpar") }}">
                                 <i class="fa fa-caret-right"></i> CPAR Antar Departemen (部門間の是正措置報告)
                             </a>
                         </td>

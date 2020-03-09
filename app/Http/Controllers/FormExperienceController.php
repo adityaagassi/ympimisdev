@@ -41,7 +41,7 @@ class FormExperienceController extends Controller
 		return view('form.failure.index', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-            'departments' => $departments,
+      'departments' => $departments,
 		))->with('page', 'Form Permasalahan & Kegagalan');
     }
 
@@ -71,10 +71,17 @@ class FormExperienceController extends Controller
 
         ->addColumn('action', function($details){
           $id = $details->id;
-          return '
-            <a href="form_experience/edit/'.$id.'" class="btn btn-primary btn-xs">Edit</a>
-            <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
-          ';
+          if ($details->created_by == Auth::id() || Auth::user()->role_code == "MIS" || Auth::id() == "13") {
+            return '
+              <a href="form_experience/edit/'.$id.'" class="btn btn-primary btn-xs">Edit</a>
+              <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
+            ';
+          }
+          else{
+            return '
+              <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
+            ';
+          }
         })
 
         ->rawColumns(['action' => 'action'])

@@ -47,13 +47,13 @@
 			</tr>
 			<tr></tr>
 			<tr>
-				<td colspan="6"><b style="font-size: 9px">Deskripsi Kegagalan / Permasalahan</b> : <?= $form_failures->deskripsi ?></td>
+				<td colspan="6"><b style="font-size: 10px">Deskripsi Kegagalan / Permasalahan</b> : <?= $form_failures->deskripsi ?></td>
 			</tr>
 			<tr>
-				<td colspan="6"><b style="font-size: 9px">Penanganan / Perbaikan Yang Dilakukan</b> : <?= $form_failures->penanganan ?></td>
+				<td colspan="6"><b style="font-size: 10px">Penanganan / Perbaikan Yang Dilakukan</b> : <?= $form_failures->penanganan ?></td>
 			</tr>
 			<tr>
-				<td colspan="6"><b style="font-size: 9px">Tindakan Supaya Tidak Terjadi Lagi</b> : <?= $form_failures->tindakan ?></td>
+				<td colspan="6"><b style="font-size: 10px">Tindakan Supaya Tidak Terjadi Lagi</b> : <?= $form_failures->tindakan ?></td>
 			</tr>
 		</tbody>
 	</table>
