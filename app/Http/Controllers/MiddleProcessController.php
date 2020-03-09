@@ -3847,6 +3847,7 @@ class MiddleProcessController extends Controller
 		->select('idx','dev_name', 'dev_operator_id', 'dev_akan_num', 'dev_sedang_num', 'dev_selesai_num','dev_selesai_detected')
 		->whereRaw('SPLIT_STRING(dev_name, "-", 1) = "SXKEY"')
 		->where('enable_antrian', '!=', 'RPR')
+		->where('dev_name', '!=', 'SXKEY-G')
 		->orderBy('dev_name', 'asc')
 		->get();
 
