@@ -96,7 +96,7 @@ class FormExperienceController extends Controller
 
         $leader = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
         where end_date is null
-        and (position like 'Leader%' or position like '%Staff%')");
+        and (position like 'Leader%' or position like '%Staff%' or position like '%Chief%' or position like '%Foreman%')");
 
         $emp = EmployeeSync::where('employee_id', Auth::user()->username)
         ->select('employee_id', 'name', 'position', 'department', 'section', 'group')->first();
