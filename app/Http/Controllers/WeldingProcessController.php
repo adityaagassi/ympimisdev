@@ -1404,7 +1404,7 @@ class WeldingProcessController extends Controller
 		->select('target')
 		->first();
 
-		$target = db::connection('welding')->select("select op.`group`, op.employee_id, op.`name`, eff.material_number, CONCAT(m.model,' ',m.`key`) as `key`, eff.finish, eff.act, (py  std.time*eff.qty) as std, (std.time*eff.qty/eff.act) as eff from
+		$target = db::connection('welding')->select("select op.`group`, op.employee_id, op.`name`, eff.material_number, CONCAT(m.model,' ',m.`key`) as `key`, eff.finish, eff.act, (std.time*eff.qty) as std, (std.time*eff.qty/eff.act) as eff from
 			(select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`,
 			g.`group` from ympimis.employee_groups g
 			left join ympimis.employees e on e.employee_id = g.employee_id
