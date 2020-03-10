@@ -60,7 +60,7 @@ class EmailVisitorConfirmation extends Command
         }
         // var_dump(count($visitor));
         if(count($namamanager) > 0){
-            Mail::to($mail_to)->send(new SendEmail($namamanager, 'visitor_confirmation'));
+            Mail::to("mokhamad.khamdan.khabibi@music.yamaha.com")->send(new SendEmail($namamanager, 'visitor_confirmation'));
         }
     }
 }
