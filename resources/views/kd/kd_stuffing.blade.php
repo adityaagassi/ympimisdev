@@ -387,7 +387,7 @@
                },
                "columns": [
                { "data": "kd_number" },
-               { "data": "shipment_date" },
+               { "data": "Stuffing_date" },
                { "data": "actual_count" },
                { "data": "remark" },
                { "data": "invoice_number" },
@@ -480,7 +480,7 @@
                },
                "columns": [
                { "data": "kd_number" },
-               { "data": "shipment_date" },
+               { "data": "Stuffing_date" },
                { "data": "material_number" },
                { "data": "material_description" },
                { "data": "location" },
