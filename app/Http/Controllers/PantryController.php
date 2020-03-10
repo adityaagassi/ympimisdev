@@ -58,10 +58,37 @@ class PantryController extends Controller
 
     public function fetchPantryVisitorDetail(Request $request){
         $date = date('Y-m-d');
+        $day = date('N');
         $query = "";
 
         if(strlen($request->get('tanggal')) > 0){
             $date = date('Y-m-d', strtotime($request->get('tanggal')));
+            $day = date('N', strtotime($request->get('tanggal')));
+        }
+
+        $where = "";
+
+        if($day == 5){
+            $where = "AND (
+            TIME( in_time ) BETWEEN '07:00:00' 
+            AND '09:20:00' 
+            OR time( in_time ) BETWEEN '09:30:00' 
+            AND '12:00:00' 
+            OR time( in_time ) BETWEEN '13:10:00' 
+            AND '14:50:00' 
+            OR time( in_time ) BETWEEN '15:00:00' 
+            AND '16:00:00' ) ";
+        }
+        else{
+            $where = "AND (
+            TIME( in_time ) BETWEEN '07:00:00' 
+            AND '09:20:00' 
+            OR time( in_time ) BETWEEN '09:30:00' 
+            AND '12:00:00' 
+            OR time( in_time ) BETWEEN '12:40:00' 
+            AND '14:20:00' 
+            OR time( in_time ) BETWEEN '14:30:00' 
+            AND '16:00:00' ) ";
         }
 
         if($request->get('type') == 'duration'){
@@ -98,6 +125,7 @@ class PantryController extends Controller
             pantry_logs 
             WHERE
             date( in_time ) = '".$date."'
+            ".$where."
             GROUP BY
             employee_id 
             HAVING
@@ -120,6 +148,7 @@ class PantryController extends Controller
             LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = pantry_logs.employee_id 
             WHERE
             date( in_time ) = '".$date."'
+            ".$where."
             GROUP BY
             pantry_logs.employee_id,
             concat( DATE_FORMAT( in_time, '%H:00' ), ' - ', DATE_FORMAT( date_add( in_time, INTERVAL 1 HOUR ), '%H:00' ) ),
@@ -191,9 +220,37 @@ class PantryController extends Controller
 
     public function fetchPantryVisitor(Request $request){
         $date = date('Y-m-d');
+        $day = date('N');
+        $query = "";
 
         if(strlen($request->get('tanggal')) > 0){
             $date = date('Y-m-d', strtotime($request->get('tanggal')));
+            $day = date('N', strtotime($request->get('tanggal')));
+        }
+
+        $where = "";
+
+        if($day == 5){
+            $where = "AND (
+            TIME( in_time ) BETWEEN '07:00:00' 
+            AND '09:20:00' 
+            OR time( in_time ) BETWEEN '09:30:00' 
+            AND '12:00:00' 
+            OR time( in_time ) BETWEEN '13:10:00' 
+            AND '14:50:00' 
+            OR time( in_time ) BETWEEN '15:00:00' 
+            AND '16:00:00' ) ";
+        }
+        else{
+            $where = "AND (
+            TIME( in_time ) BETWEEN '07:00:00' 
+            AND '09:20:00' 
+            OR time( in_time ) BETWEEN '09:30:00' 
+            AND '12:00:00' 
+            OR time( in_time ) BETWEEN '12:40:00' 
+            AND '14:20:00' 
+            OR time( in_time ) BETWEEN '14:30:00' 
+            AND '16:00:00' ) ";
         }
 
         $query = "SELECT
@@ -208,7 +265,8 @@ class PantryController extends Controller
         pantry_logs
         LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = pantry_logs.employee_id 
         WHERE
-        date( in_time ) = '".$date."' 
+        date( in_time ) = '".$date."'
+        ".$where." 
         GROUP BY
         pantry_logs.employee_id,
         concat( DATE_FORMAT( in_time, '%H:00' ), ' - ', DATE_FORMAT( date_add( in_time, INTERVAL 1 HOUR ), '%H:00' ) ) 
@@ -228,6 +286,7 @@ class PantryController extends Controller
         pantry_logs 
         WHERE
         date( in_time ) = '".$date."'
+        ".$where."
         GROUP BY
         employee_id 
         HAVING
@@ -288,6 +347,7 @@ class PantryController extends Controller
         pantry_logs 
         WHERE
         date( in_time ) = '".$date."'
+        ".$where."
         GROUP BY
         employee_id 
         HAVING
