@@ -157,8 +157,38 @@
 					var weldingTableBody = "";
 					var i = 0;
 					var color2 = "";
+					var colorShift = "";
 
 					$.each(result.boards, function(index, value){
+						var startA = '{{ $startA }}';
+						var finishA = '{{ $finishA }}';
+						var startB = '{{ $startB }}';
+						var finishB = '{{ $finishB }}';
+						var startC = '{{ $startC }}';
+						var finishC = '{{ $finishC }}';
+
+						if (value.shift == 'A') {
+							if (value.jam_shift > startA || value.jam_shift < finishA) {
+								colorShift = '';
+							}else{
+								colorShift = 'style="background-color: #f73939;"';
+							}
+						}
+						if (value.shift == 'B') {
+							if (value.jam_shift > startB || value.jam_shift < finishB) {
+								colorShift = '';
+							}else{
+								colorShift = 'style="background-color: #f73939;"';
+							}
+						}
+						if (value.shift == 'C') {
+							if (value.jam_shift > startC || value.jam_shift < finishC) {
+								colorShift = '';
+							}else{
+								colorShift = 'style="background-color: #f73939;"';
+							}
+						}
+
 						if (i % 2 === 0 ) {
 							if (value.employee_id) {
 								color = '';
@@ -245,12 +275,12 @@
 							if (value.employee_id == null) {
 								weldingTableBody += '<tr '+color+'>';
 								weldingTableBody += '<td height="5%">'+value.ws+'</td>';
-								weldingTableBody += '<td>Not Found</td>';
+								weldingTableBody += '<td '+colorShift+'>Not Found</td>';
 								weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
 							}else{
 								weldingTableBody += '<tr '+color+'>';
 								weldingTableBody += '<td height="5%">'+value.ws+'</td>';
-								weldingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
+								weldingTableBody += '<td '+colorShift+'>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
 								weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
 							}
 							weldingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
