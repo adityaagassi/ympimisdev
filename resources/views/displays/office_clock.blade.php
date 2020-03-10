@@ -154,6 +154,7 @@ table > thead > tr > th{
 		$('#tanggal').html('{{$dateTitle}}');
 		// fillVisitor();
 		setInterval(fillVisitor,20000);
+
 		// setInterval(waktu,1000);
 	});
 
@@ -197,12 +198,14 @@ table > thead > tr > th{
 							document.getElementById("jam").style.fontSize = '10em';
 							document.getElementById("jam").style.marginBottom = '10px';
 							audio_clock.play();
+							// console.clear();
 						}
 						// document.getElementById("visitor").innerHTML = "PT. YAMAHA MUSICAL PRODUCTS INDONESIA";
 					}
 				}else{
 					// document.getElementById("visitor").innerHTML = "PT. YAMAHA MUSICAL PRODUCTS INDONESIA";
-					setInterval(waktu,1000);
+					myvar = setInterval(waktu,1000);
+					// console.clear();
 				}
 			}
 		});
