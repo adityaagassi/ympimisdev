@@ -461,7 +461,7 @@
 					backgroundColor: null
 				},
 				title: {
-					text: 'Pantry Visitor By Duration',
+					text: 'Pantry Visitor By Duration (07:00 - 16:00 exclude break)',
 					style: {
 						fontSize: '30px',
 						fontWeight: 'bold'
@@ -541,7 +541,7 @@
 					backgroundColor: null
 				},
 				title: {
-					text: 'Pantry Visitor By Hour',
+					text: 'Pantry Visitor By Hour (07:00 - 16:00 exclude break)',
 					style: {
 						fontSize: '30px',
 						fontWeight: 'bold'
