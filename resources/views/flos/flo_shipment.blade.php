@@ -122,7 +122,7 @@
 										<div class="input-group-addon" id="icon-serial" style="font-weight: bold">
 											<i class="fa fa-truck"></i>
 										</div>
-										<input type="text" class="form-control" name="container_id" id="container_id" value="" disabled>
+										<input type="text" class="form-control" name="container_id" id="container_id" readonly>
 									</div>
 									<br>
 								</div>
@@ -162,7 +162,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<input type="hidden" name="container_id" id="container_id" value="">
+						{{-- <input type="hidden" name="container_id" id="container_id"> --}}
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 						<button type="submit" class="btn btn-primary">Confirm</button>
 					</div>
