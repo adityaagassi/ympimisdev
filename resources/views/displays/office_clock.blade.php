@@ -115,8 +115,27 @@ table > thead > tr > th{
 				</tr>
 			</table> -->
 			<h1 id="jam" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
+			<h1 id="visitor_info" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
 			<center><span id="tanggal" style="font-size: 80px;background-color: rgb(75,30,120);color: #fff"></span></center>
 		<!-- </div> -->
+	</div>
+
+	<div class="modal modal-default fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">VISITOR INFORMATION</h4>
+				</div>
+				<div class="modal-body">
+					Are you sure delete?
+				</div>
+				<!-- <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a>
+				</div> -->
+			</div>
+		</div>
 	</div>
 
 	
@@ -152,8 +171,9 @@ table > thead > tr > th{
 		// fillChart();
 		// setInterval(fillChart, 7000);
 		$('#tanggal').html('{{$dateTitle}}');
+		$('#visitor_info').hide();
 		// fillVisitor();
-		setInterval(fillVisitor,20000);
+		setInterval(fillVisitor,10000);
 
 		// setInterval(waktu,1000);
 	});
@@ -179,32 +199,37 @@ table > thead > tr > th{
 	// window.setTimeout("waktu()", 1000);
  
 	function waktu() {
-		var waktu = new Date();
-		// var myvar = setInterval("waktu()", 1000);
+		var time = new Date();
+		// var myvar = setInterval("time()", 1000);
 		document.getElementById("jam").style.fontSize = '30em';
 		document.getElementById("jam").style.marginBottom = '-70px';
-		document.getElementById("jam").innerHTML = addZero(waktu.getHours())+':'+addZero(waktu.getMinutes());
-		// document.getElementById("menit").innerHTML = ;
+		document.getElementById("jam").innerHTML = addZero(time.getHours())+':'+addZero(time.getMinutes());
 	}
 
 	function fillVisitor() {
 		$.get('{{ url("fetch/office_clock/visitor") }}', function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
+					// clearInterval(myvar);
 					if (result.visitors.length > 0) {
 						for (var i = 0; i < result.visitors.length; i++) {
-							clearInterval(myvar);
-							document.getElementById("jam").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].department+')<br>';
-							document.getElementById("jam").style.fontSize = '10em';
-							document.getElementById("jam").style.marginBottom = '10px';
+							$('#visitor_info').show();
+							$('#jam').hide();
+							document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].department+')<br>';
+							document.getElementById("visitor_info").style.fontSize = '10em';
+							document.getElementById("visitor_info").style.marginBottom = '10px';
+							// $("#myModal").modal('show');
 							audio_clock.play();
 							// console.clear();
 						}
 						// document.getElementById("visitor").innerHTML = "PT. YAMAHA MUSICAL PRODUCTS INDONESIA";
 					}
 				}else{
+					$('#jam').show();
+					$('#visitor_info').hide();
 					// document.getElementById("visitor").innerHTML = "PT. YAMAHA MUSICAL PRODUCTS INDONESIA";
-					myvar = setInterval(waktu,1000);
+					// myvar = setInterval(waktu,1000);
+					// $("#myModal").modal('hide');
 					// console.clear();
 				}
 			}
