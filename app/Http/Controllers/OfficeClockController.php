@@ -55,7 +55,7 @@ class OfficeClockController extends Controller
     		$visitors = DB::SELECT("
     		SELECT
 				company,
-			name 
+			name,department
 			FROM
 				`visitors`
 				JOIN employee_syncs ON employee_syncs.employee_id = employee 

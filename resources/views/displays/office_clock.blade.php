@@ -193,7 +193,7 @@ table > thead > tr > th{
 					if (result.visitors.length > 0) {
 						for (var i = 0; i < result.visitors.length; i++) {
 							clearInterval(myvar);
-							document.getElementById("jam").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+')<br>';
+							document.getElementById("jam").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].department+')<br>';
 							document.getElementById("jam").style.fontSize = '10em';
 							document.getElementById("jam").style.marginBottom = '10px';
 							audio_clock.play();
