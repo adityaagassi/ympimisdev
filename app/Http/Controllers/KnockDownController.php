@@ -826,10 +826,20 @@ class KnockDownController extends Controller{
 
 		$knock_downs = KnockDown::leftJoin('knock_down_logs', 'knock_down_logs.kd_number', '=', 'knock_downs.kd_number')
 		->leftJoin('master_checksheets', 'master_checksheets.id_checkSheet', '=', 'knock_downs.container_id')
+		->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'knock_downs.container_id')
 		->where('knock_down_logs.status', '=', $status)
 		->where('knock_downs.status', '=', $status)
 		->orderBy('knock_down_logs.updated_at', 'desc')
-		->select('knock_downs.kd_number', 'master_checksheets.Stuffing_date', 'knock_downs.actual_count', 'knock_downs.remark', 'knock_down_logs.updated_at', 'knock_downs.invoice_number', 'knock_downs.container_id')
+		->select(
+			'knock_downs.kd_number',
+			'master_checksheets.Stuffing_date',
+			'container_schedules.shipment_date',
+			db::raw('IF(master_checksheets.Stuffing_date = null, master_checksheets.Stuffing_date, container_schedules.shipment_date) as st_date'),
+			'knock_downs.actual_count',
+			'knock_downs.remark',
+			'knock_down_logs.updated_at',
+			'knock_downs.invoice_number',
+			'knock_downs.container_id')
 		->get();
 
 		return DataTables::of($knock_downs)
@@ -850,9 +860,21 @@ class KnockDownController extends Controller{
 		$knock_down_details = KnockDownDetail::leftJoin('knock_downs','knock_down_details.kd_number','=','knock_downs.kd_number')
 		->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
 		->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'knock_down_details.storage_location')
+		->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'knock_downs.container_id')
 		->leftJoin('master_checksheets', 'master_checksheets.id_checkSheet', '=', 'knock_downs.container_id')
 		->where('knock_downs.status', '=', $status)
-		->select('knock_down_details.id', 'knock_down_details.kd_number', 'master_checksheets.Stuffing_date', 'knock_down_details.material_number', 'materials.material_description', 'storage_locations.location', 'knock_downs.updated_at', 'knock_downs.invoice_number', 'knock_downs.container_id', 'knock_down_details.quantity')
+		->select('knock_down_details.id',
+			'knock_down_details.kd_number',
+			'master_checksheets.Stuffing_date',
+			'container_schedules.shipment_date',
+			db::raw('IF(master_checksheets.Stuffing_date = null, master_checksheets.Stuffing_date, container_schedules.shipment_date) as st_date'),
+			'knock_down_details.material_number',
+			'materials.material_description',
+			'storage_locations.location',
+			'knock_downs.updated_at',
+			'knock_downs.invoice_number',
+			'knock_downs.container_id',
+			'knock_down_details.quantity')
 		->get();
 
 		return DataTables::of($knock_down_details)
