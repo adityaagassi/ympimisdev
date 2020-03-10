@@ -173,7 +173,7 @@ table > thead > tr > th{
 		$('#tanggal').html('{{$dateTitle}}');
 		$('#visitor_info').hide();
 		// fillVisitor();
-		setInterval(fillVisitor,10000);
+		setInterval(fillVisitor,30000);
 
 		// setInterval(waktu,1000);
 	});
@@ -216,7 +216,7 @@ table > thead > tr > th{
 							$('#visitor_info').show();
 							$('#jam').hide();
 							document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].department+')<br>';
-							document.getElementById("visitor_info").style.fontSize = '10em';
+							document.getElementById("visitor_info").style.fontSize = '9em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
 							// $("#myModal").modal('show');
 							audio_clock.play();
