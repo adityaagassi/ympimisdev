@@ -844,10 +844,13 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 
 //meeting
 Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
-	Route::get('index/meeting/index', 'MeetingController@index');
 	Route::get('index/meeting/create', 'MeetingController@create');
 	Route::get('index/meeting/list/{id}', 'MeetingController@list');
+	Route::post('delete/meeting', 'MeetingController@deleteMeeting');
 });
+Route::get('index/meeting', 'MeetingController@indexMeeting');
+Route::get('fetch/meeting', 'MeetingController@fetchMeeting');
+Route::get('fetch/meeting/detail', 'MeetingController@fetchMeetingDetail');
 
 //welding process
 Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
@@ -855,6 +858,12 @@ Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 	Route::post('input/welding/kensa', 'WeldingProcessController@inputWeldingKensa');
 });
 
+Route::get('index/welding/operator', 'WeldingProcessController@indexMasterOperator');
+Route::get('fetch/welding/operator', 'WeldingProcessController@fetchMasterOperator');
+Route::post('post/welding/add_operator', 'WeldingProcessController@addOperator');
+Route::get('index/welding/destroy_operator/{id}', 'WeldingProcessController@destroyOperator');
+Route::get('fetch/welding/get_operator', 'WeldingProcessController@getOperator');
+Route::post('index/welding/update_operator', 'WeldingProcessController@updateOperator');
 Route::get('index/welding/display_production_result', 'WeldingProcessController@indexDisplayProductionResult');
 Route::get('fetch/welding/display_production_result', 'WeldingProcessController@fetchDisplayProductionResult');
 Route::get('index/welding/report_ng', 'WeldingProcessController@indexReportNG');
@@ -975,6 +984,8 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::get('fetch/workshop/job_history', 'WorkshopController@fetchJobHistory');
 	Route::get('index/workshop/receipt', 'WorkshopController@indexWJOReceipt');
 	Route::get('fetch/workshop/receipt', 'WorkshopController@fetchFinishedWJO');
+	Route::get('fetch/workshop/picked', 'WorkshopController@fetchPickedWJO');
+	Route::get('scan/workshop/receipt', 'WorkshopController@scanWJOReceipt');
 });
 
 Route::group(['nav' => 'S31', 'middleware' => 'permission'], function(){
@@ -2208,6 +2219,8 @@ Route::get('index/request_qa/verifikasi/{id}', 'QcRequestController@verifikasi')
 Route::get('index/cpar', 'CparController@index');
 Route::get('index/cpar/fetchDataTable', 'CparController@fetchDataTable');
 Route::get('index/cpar/create', 'CparController@create');
+Route::post('post/cpar/create', 'CparController@post_create');
+Route::get('index/cpar/detail/{id}', 'CparController@detail');
 
 // Form Ketidaksesuaian YMMJ
 Route::get('index/qa_ymmj', 'QcYmmjController@index');

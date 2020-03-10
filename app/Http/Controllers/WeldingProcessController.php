@@ -134,6 +134,13 @@ class WeldingProcessController extends Controller
 
 	public function indexWeldingBoard($loc){
 
+		$startA = '07:00:00';
+		$finishA = '16:00:00';
+		$startB = '15:55:00';
+		$finishB = '00:15:00';
+		$startC = '23:30:00';
+		$finishC = '07:10:00';
+
 		if ($loc == 'hpp-sx') {
 			$title = 'HPP Saxophone Welding Board';
 			$title_jp = 'HPP サックス溶接加工順';
@@ -141,6 +148,12 @@ class WeldingProcessController extends Controller
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
+				'startA' => $startA,
+				'finishA' => $finishA,
+				'startB' => $startB,
+				'finishB' => $finishB,
+				'startC' => $startC,
+				'finishC' => $finishC,
 			))->with('page', 'HPP');
 		}elseif ($loc == 'cuci-solder'){
 			$title = 'Cuci Asam Saxophone Welding Board';
@@ -149,6 +162,12 @@ class WeldingProcessController extends Controller
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
+				'startA' => $startA,
+				'finishA' => $finishA,
+				'startB' => $startB,
+				'finishB' => $finishB,
+				'startC' => $startC,
+				'finishC' => $finishC,
 			))->with('page', 'CUCI SOLDER');
 		}elseif($loc == 'phs-sx'){
 			$title = 'PHS Saxophone Welding Board';
@@ -157,6 +176,12 @@ class WeldingProcessController extends Controller
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
+				'startA' => $startA,
+				'finishA' => $finishA,
+				'startB' => $startB,
+				'finishB' => $finishB,
+				'startC' => $startC,
+				'finishC' => $finishC,
 			))->with('page', 'PHS');
 		}elseif($loc == 'hsa-sx'){
 			$title = 'HSA Saxophone Welding Board';
@@ -165,6 +190,12 @@ class WeldingProcessController extends Controller
 				'title' => $title,
 				'title_jp' => $title_jp,
 				'loc' => $loc,
+				'startA' => $startA,
+				'finishA' => $finishA,
+				'startB' => $startB,
+				'finishB' => $finishB,
+				'startC' => $startC,
+				'finishC' => $finishC,
 			))->with('page', 'HSA');
 		}
 	}
@@ -477,6 +508,8 @@ class WeldingProcessController extends Controller
 				m_mesin.operator_id,
 				operator_name,
 				operator_nik,
+				m_operator.group as shift,
+				TIME(m_mesin.operator_change_date) as jam_shift,
 				COALESCE(item_sedang.hsa_kito_code,item_sedang_phs.phs_code) AS gmcsedang,
 				sedang.kanban_no AS kanban_no_sedang,
 				COALESCE(item_sedang.hsa_name,item_sedang_phs.phs_name) AS gmcdescsedang,
@@ -510,6 +543,8 @@ class WeldingProcessController extends Controller
 				m_mesin.operator_id,
 				operator_name,
 				operator_nik,
+				m_operator.group as shift,
+				TIME(m_mesin.operator_change_date) as jam_shift,
 				COALESCE ( item_sedang.phs_code, item_sedang_hsa.hsa_kito_code ) AS gmcsedang,
 				sedang.kanban_no AS kanban_no_sedang,
 				COALESCE ( item_sedang.phs_name, item_sedang_hsa.hsa_name ) AS gmcdescsedang,
@@ -544,6 +579,8 @@ class WeldingProcessController extends Controller
 				m_mesin.operator_id,
 				operator_name,
 				operator_nik,
+				m_operator.group as shift,
+				TIME(m_mesin.operator_change_date) as jam_shift,
 				item_sedang.phs_code AS gmcsedang,
 				sedang.kanban_no AS kanban_no_sedang,
 				item_sedang.phs_name AS gmcdescsedang,
@@ -723,6 +760,8 @@ class WeldingProcessController extends Controller
 					'ws' => $ws->mesin_nama.'<br>'.$ws->ws_name,
 					'employee_id' => $ws->operator_nik,
 					'employee_name' => $ws->operator_name,
+					'shift' => $ws->shift,
+					'jam_shift' => $ws->jam_shift,
 					'sedang' => $ws->gmcsedang.'<br>'.$ws->gmcdescsedang,
 					'akan' => $ws->gmcakan.'<br>'.$ws->gmcdescakan,
 					'akan_time' => $akan_time->format('%H:%i:%s'),

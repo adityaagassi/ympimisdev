@@ -18,6 +18,7 @@
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Kosuha <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url('index/welding/operator') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Master Operator</a>
 			<a href="{{ url("index/welding/kensa", "phs-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">PHS Kensa Visual</a>
 			<a href="{{ url("index/welding/kensa", "hsa-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">HSA Kensa Visual</a>
 			<a href="{{ url("index/welding/kensa", "hsa-dimensi-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa Dimensi</a>
