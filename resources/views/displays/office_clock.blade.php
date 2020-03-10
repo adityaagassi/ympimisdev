@@ -153,7 +153,7 @@ table > thead > tr > th{
 		// setInterval(fillChart, 7000);
 		$('#tanggal').html('{{$dateTitle}}');
 		// fillVisitor();
-		setInterval(fillVisitor,10000);
+		setInterval(fillVisitor,20000);
 		// setInterval(waktu,1000);
 	});
 
