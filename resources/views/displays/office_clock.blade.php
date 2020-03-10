@@ -215,7 +215,7 @@ table > thead > tr > th{
 						for (var i = 0; i < result.visitors.length; i++) {
 							$('#visitor_info').show();
 							$('#jam').hide();
-							document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+')<br>';
+							document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+' - '+result.visitors[i].department+')<br>';
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
 							// $("#myModal").modal('show');
