@@ -879,6 +879,12 @@ Route::get('index/welding/op_analysis', 'WeldingProcessController@indexOpAnalysi
 Route::get('fetch/welding/op_analysis', 'WeldingProcessController@fetchOpAnalysis');
 Route::get('index/welding/welding_op_eff', 'WeldingProcessController@indexWeldingOpEff');
 Route::get('fetch/welding/welding_op_eff', 'WeldingProcessController@fetchWeldingOpEff');
+
+Route::get('index/welding/welding_eff', 'WeldingProcessController@indexWeldingEff');
+Route::get('fetch/welding/welding_eff', 'WeldingProcessController@fetchWeldingEff');
+
+
+
 Route::get('fetch/welding/welding_op_eff_target', 'WeldingProcessController@fetchWeldingOpEffTarget');
 Route::get('index/welding/production_result', 'WeldingProcessController@indexProductionResult');
 Route::get('fetch/welding/production_result', 'WeldingProcessController@fetchProductionResult');
@@ -2221,6 +2227,13 @@ Route::get('index/cpar/fetchDataTable', 'CparController@fetchDataTable');
 Route::get('index/cpar/create', 'CparController@create');
 Route::post('post/cpar/create', 'CparController@post_create');
 Route::get('index/cpar/detail/{id}', 'CparController@detail');
+Route::get('index/cpar/fetch_item/{id}', 'CparController@fetch_item');
+Route::post('index/cpar/create_item', 'CparController@create_item');
+Route::get('index/cpar/edit_item', 'CparController@fetch_item_edit');
+Route::post('index/cpar/edit_item', 'CparController@edit_item');
+Route::post('index/cpar/delete_item', 'CparController@delete_item');
+Route::post('index/cpar/update_detail/{id}', 'CparController@update_detail');
+Route::get('index/cpar/print/{id}', 'CparController@print_report');
 
 // Form Ketidaksesuaian YMMJ
 Route::get('index/qa_ymmj', 'QcYmmjController@index');
@@ -2379,5 +2392,7 @@ Route::get('/trainingroom3', function () {
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
 	$notif = $controller->getNotif();
-	$view->with('notif', $notif);
+	$controller_visitor = new \App\Http\Controllers\VisitorController;
+	$notif_visitor = $controller_visitor->getNotifVisitor();
+	$view->with('notif', $notif)->with('notif_visitor', $notif_visitor);
 });

@@ -301,10 +301,10 @@
                                 <i class="fa fa-caret-right"></i> Internet Protocol Monitoring (IP管理)
                             </a>
                             <br>
-                            <a href="{{ url("visitor_confirmation_manager") }}">
+                            <!-- <a href="{{ url("visitor_confirmation_manager") }}">
                                 <i class="fa fa-caret-right"></i> Visitor Confirmation (来客の確認)
                             </a>
-                            <br>
+                            <br> -->
                             <a href="{{ url("visitor_display") }}">
                                 <i class="fa fa-caret-right"></i> Visitor Monitoring (来客の管理)
                             </a>

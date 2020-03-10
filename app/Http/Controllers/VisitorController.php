@@ -325,6 +325,28 @@ public function telpon()
 	->make(true);
 }
 
+public function getNotifVisitor()
+ {
+ 	$manager = Auth::user()->username;
+	$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
+
+	foreach ($emp_sync as $key) {
+		$position = $key->position;
+	}
+
+	$lists = DB::SELECT("select 
+		count(visitors.id) as notif
+		from visitors 
+		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
+		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
+		where visitors.remark is null and employee_syncs.nik_manager = '".$manager."'");
+
+	foreach ($lists as $val) {
+		$notif = $val->notif;
+	}
+    return $notif;
+ }
+
 public function confirmation_manager()
 {
 	// var_dump(stream_get_contents(fopen("\\\\172.17.128.87\\MIS\\Book1.csv", "r")));
@@ -344,10 +366,21 @@ public function confirmation_manager()
 		$position = $key->position;
 	}
 
+	$lists = DB::SELECT("select 
+		count(visitors.id) as notif
+		from visitors 
+		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
+		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
+		where visitors.remark is null and employee_syncs.nik_manager = '".$manager."'");
+
+	foreach ($lists as $val) {
+		$notif = $val->notif;
+	}
+
 	if (strpos($position, 'Manager') === false) {
 		return redirect('home');
 	}else{
-		return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager');
+		return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager')->with('notif_visitor', $notif);
 	}
 }
 

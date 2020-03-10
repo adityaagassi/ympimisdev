@@ -283,6 +283,26 @@
   <li class="header">Service Menu</li>
   @endif
 
+
+ @if(in_array('S33', $navs))
+  @if(isset($head) && $head == "Meeting")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-calendar"></i> <span>Meeting</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Meeting List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/meeting") }}"><i class="fa fa-list"></i><span>Meeting List</span></a>
+      </li>
+      @if(isset($page) && $page == "Pantry Menu")<li class="active">@else<li>@endif
+        <a href="{{ url("index/meeting/attendace") }}"><i class="fa fa-calendar-plus-o"></i>Meeting Attendance</a>
+      </li>
+    </ul>
+  </li>
+  @endif
+
   @if(in_array('S28', $navs))
   @if(isset($head) && $head == "Pantry")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
@@ -574,6 +594,10 @@
   @if(isset($page) && $page == "WJO Execution")<li class="active">@else<li>@endif
     <a href="{{ url("/index/workshop/wjo") }}"><i class="fa fa-archive"></i> <span>WJO</span></a>
   </li>
+
+  @if(isset($page) && $page == "WJO Receipt")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/workshop/receipt") }}"><i class="fa fa-envelope-o"></i> <span>WJO Receipt</span></a>
+  </li>
 </ul>
 </li>
 @endif
@@ -587,17 +611,34 @@
   </span>
 </a>
 <ul class="treeview-menu">
- @if(isset($page) && $page == "Diagnose")<li class="active">@else<li>@endif
+
+@if(isset($page) && $page == "Diagnose")<li class="active">@else<li>@endif
   <a href="{{ url("index/diagnose") }}"><i class="fa fa-stethoscope"></i> <span>Diagnose</span></a>
 </li>
 
-@if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
-  <a href=""><i class="fa fa-medkit"></i> <span>Medicines</span></a>
+@if(isset($page) && $page == "Visit Logs")<li class="active">@else<li>@endif
+  <a href="{{ url("index/clinic_visit_log") }}"><i class="fa fa-list-ul"></i> <span>Visit Logs</span></a>
 </li>
+
+{{-- @if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
+  <a href=""><i class="fa fa-medkit"></i> <span>Medicines</span></a>
+</li> --}}
 
 
 </ul>
 </li>
+@endif
+
+@if(in_array('M26', $navs))
+ @if(isset($page) && $page == "Visitor Confirmation By Manager")<li class="active">@else<li>@endif
+    <a href="{{ url("visitor_confirmation_manager") }}"><i class="fa fa-users"></i> <span>Visitor Confirmation</span>
+      @if(isset($notif_visitor)) 
+      <span class="pull-right-container">
+        <span class="label label-danger pull-right">{{$notif_visitor}}</span>
+      </span>
+      @endif
+    </a>
+  </li>
 @endif
 
 @if(in_array('R0', $navs))
