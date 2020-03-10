@@ -136,6 +136,7 @@ table > thead > tr > th{
 		}
 	});
 
+	var audio_clock = new Audio('{{ url("sounds/anouncement.mp3") }}');
 	var myvar = setInterval(waktu,1000);
 
 	jQuery(document).ready(function(){
@@ -195,6 +196,7 @@ table > thead > tr > th{
 							document.getElementById("jam").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+')<br>';
 							document.getElementById("jam").style.fontSize = '10em';
 							document.getElementById("jam").style.marginBottom = '10px';
+							audio_clock.play();
 						}
 						// document.getElementById("visitor").innerHTML = "PT. YAMAHA MUSICAL PRODUCTS INDONESIA";
 					}
