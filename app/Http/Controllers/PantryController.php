@@ -93,8 +93,24 @@ class PantryController extends Controller
 
         if($request->get('type') == 'duration'){
             $query = "SELECT
-            final.employee_id,
+            pantry_logs.employee_id,
             ympimis.employee_syncs.name,
+            time( pantry_logs.in_time ) AS in_time,
+            time( pantry_logs.out_time ) AS out_time,
+            round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) AS duration 
+            FROM
+            pantry_logs
+            LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = pantry_logs.employee_id 
+            WHERE
+            date( in_time ) = '".$date."' 
+            ".$where."
+            AND pantry_logs.employee_id in (
+            SELECT
+            employee_id 
+            FROM
+            (
+            SELECT
+            final.employee_id,
             IF
             (
             duration < 1, '<1 Min', IF ( duration >= 1 
@@ -114,8 +130,7 @@ class PantryController extends Controller
             ) 
             ) 
             ) 
-            ) AS dur,
-            duration 
+            ) AS dur 
             FROM
             (
             SELECT
@@ -125,38 +140,41 @@ class PantryController extends Controller
             pantry_logs 
             WHERE
             date( in_time ) = '".$date."'
-            ".$where."
+            AND round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) > 0.1
+            ".$where." 
             GROUP BY
-            employee_id 
+            employee_id
+            ) AS final 
+            HAVING
+            dur = '".$request->get('category')."' 
+            ORDER BY
+            duration DESC 
+            ) AS final2
+            )
             HAVING
             duration > 0.1
-            ) AS final
-            LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = final.employee_id 
-            HAVING
-            dur = '".$request->get('category')."'
             ORDER BY
-            duration desc";
+            pantry_logs.employee_id ASC,
+            pantry_logs.in_time ASC";
         }
         else{
             $query = "SELECT
             pantry_logs.employee_id,
             ympimis.employee_syncs.name,
+            time( pantry_logs.in_time ) AS in_time,
+            time( pantry_logs.out_time ) AS out_time,
             concat( DATE_FORMAT( in_time, '%H:00' ), ' - ', DATE_FORMAT( date_add( in_time, INTERVAL 1 HOUR ), '%H:00' ) ) AS jam,
-            sum( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) AS duration 
+            round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) AS duration 
             FROM
             pantry_logs
             LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = pantry_logs.employee_id 
             WHERE
             date( in_time ) = '".$date."'
             ".$where."
-            GROUP BY
-            pantry_logs.employee_id,
-            concat( DATE_FORMAT( in_time, '%H:00' ), ' - ', DATE_FORMAT( date_add( in_time, INTERVAL 1 HOUR ), '%H:00' ) ),
-            ympimis.employee_syncs.name 
             HAVING
-            jam = '".$request->get('category')."'
+            jam = '".$request->get('category')."' 
             ORDER BY
-            duration desc";
+            duration DESC";
         }
 
         $details = db::connection('pantry')->select($query);

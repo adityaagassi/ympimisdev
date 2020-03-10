@@ -131,14 +131,16 @@
 								<th style="width: 1%;">#</th>
 								<th style="width: 3%;">ID</th>
 								<th style="width: 9%;">Name</th>
-								<th style="width: 3%;">Duration(Min)</th>
+								<th style="width: 3%;">In Time</th>
+								<th style="width: 3%;">Out Time</th>
+								<th style="width: 2%;">Duration(Min)</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailBody">
 						</tbody>
 						<tfoot>
 							<tr>
-								<th colspan="3">Total Duration</th>
+								<th colspan="5">Total Duration</th>
 								<th id="totalDetail">9</th>
 							</tr>
 						</tfoot>
@@ -636,13 +638,15 @@
 					resultData += '<td>'+ index +'</td>';
 					resultData += '<td>'+ value.employee_id +'</td>';
 					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ value.in_time +'</td>';
+					resultData += '<td>'+ value.out_time +'</td>';
 					resultData += '<td>'+ value.duration +'</td>';
 					resultData += '</tr>';
 					index += 1;
-					total += parseFloat(value.duration);
+					total += Math.round(parseFloat(value.duration));
 				});
 				$('#tableDetailBody').append(resultData);
-				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>Stock: "+cat+"</span></center>");
+				$('#modalDetailTitle').html("<center><span style='font-size: 20px; font-weight: bold;'>"+cat+"</span></center>");
 				$('#loading').hide();
 				$('#totalDetail').text(total);
 				$('#tableDetail').show();
