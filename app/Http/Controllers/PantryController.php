@@ -97,14 +97,14 @@ class PantryController extends Controller
             FROM
             pantry_logs 
             WHERE
-            date( in_time ) = '".$date."' AND
-            SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1
+            date( in_time ) = '".$date."'
             GROUP BY
             employee_id 
             ) AS final
             LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = final.employee_id 
             HAVING
-            dur = '".$request->get('category')."' 
+            dur = '".$request->get('category')."'
+            AND duration > 0.1 
             ORDER BY
             duration desc";
         }
@@ -118,14 +118,14 @@ class PantryController extends Controller
             pantry_logs
             LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = pantry_logs.employee_id 
             WHERE
-            date( in_time ) = '".$date."' AND
-            SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1
+            date( in_time ) = '".$date."'
             GROUP BY
             pantry_logs.employee_id,
             concat( DATE_FORMAT( in_time, '%H:00' ), ' - ', DATE_FORMAT( date_add( in_time, INTERVAL 1 HOUR ), '%H:00' ) ),
             ympimis.employee_syncs.name 
             HAVING
             jam = '".$request->get('category')."'
+            AND duration > 0.1
             ORDER BY
             duration desc";
         }
@@ -227,10 +227,11 @@ class PantryController extends Controller
         FROM
         pantry_logs 
         WHERE
-        date( in_time ) = '".$date."' AND
-        SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1
+        date( in_time ) = '".$date."'
         GROUP BY
-        employee_id ) AS final";
+        employee_id 
+        HAVING
+        AND duration > 0.1) AS final";
 
         $query3 = "SELECT
         count(employee_id) as qty_employee, duration, indek 
@@ -286,10 +287,10 @@ class PantryController extends Controller
         FROM
         pantry_logs 
         WHERE
-        date( in_time ) = '".$date."' AND
-        SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1
+        date( in_time ) = '".$date."'
         GROUP BY
         employee_id 
+        AND duration > 0.1
         ) AS final 
         ) AS final2
         group by duration, indek order by indek asc";
