@@ -173,7 +173,7 @@ table > thead > tr > th{
 		$('#tanggal').html('{{$dateTitle}}');
 		$('#visitor_info').hide();
 		// fillVisitor();
-		setInterval(fillVisitor,30000);
+		setInterval(fillVisitor,40000);
 
 		// setInterval(waktu,1000);
 	});
