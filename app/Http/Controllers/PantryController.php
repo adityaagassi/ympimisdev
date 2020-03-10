@@ -297,8 +297,7 @@ class PantryController extends Controller
         office_members
         LEFT JOIN employee_syncs ON employee_syncs.employee_id = office_members.employee_id 
         WHERE
-        office_members.employee_id NOT IN ( SELECT employee_id FROM ympipantry.pantry_logs WHERE date( in_time ) = '".$date."' AND
-        SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1 GROUP BY employee_id ) 
+        office_members.employee_id NOT IN ( SELECT employee_id FROM ympipantry.pantry_logs WHERE date( in_time ) = '".$date."' GROUP BY employee_id ) 
         AND office_members.remark = 'office' 
         AND office_members.employee_id LIKE 'PI%' 
         AND employee_syncs.employee_id IS NOT NULL";
