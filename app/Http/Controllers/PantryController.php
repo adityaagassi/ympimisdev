@@ -97,7 +97,8 @@ class PantryController extends Controller
             FROM
             pantry_logs 
             WHERE
-            date( in_time ) = '".$date."' 
+            date( in_time ) = '".$date."' AND
+            SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1
             GROUP BY
             employee_id 
             ) AS final
@@ -117,7 +118,8 @@ class PantryController extends Controller
             pantry_logs
             LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = pantry_logs.employee_id 
             WHERE
-            date( in_time ) = '2020-03-05' 
+            date( in_time ) = '".$date."' AND
+            SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1
             GROUP BY
             pantry_logs.employee_id,
             concat( DATE_FORMAT( in_time, '%H:00' ), ' - ', DATE_FORMAT( date_add( in_time, INTERVAL 1 HOUR ), '%H:00' ) ),
@@ -225,7 +227,8 @@ class PantryController extends Controller
         FROM
         pantry_logs 
         WHERE
-        date( in_time ) = '".$date."' 
+        date( in_time ) = '".$date."' AND
+        SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1
         GROUP BY
         employee_id ) AS final";
 
@@ -283,7 +286,8 @@ class PantryController extends Controller
         FROM
         pantry_logs 
         WHERE
-        date( in_time ) = '".$date."' 
+        date( in_time ) = '".$date."' AND
+        SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1
         GROUP BY
         employee_id 
         ) AS final 
@@ -297,7 +301,8 @@ class PantryController extends Controller
         office_members
         LEFT JOIN employee_syncs ON employee_syncs.employee_id = office_members.employee_id 
         WHERE
-        office_members.employee_id NOT IN ( SELECT employee_id FROM ympipantry.pantry_logs WHERE date( in_time ) = '".$date."' ) 
+        office_members.employee_id NOT IN ( SELECT employee_id FROM ympipantry.pantry_logs WHERE date( in_time ) = '".$date."' AND
+        SUM( round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) ) > 0.1 GROUP BY employee_id ) 
         AND office_members.remark = 'office' 
         AND office_members.employee_id LIKE 'PI%' 
         AND employee_syncs.employee_id IS NOT NULL";
