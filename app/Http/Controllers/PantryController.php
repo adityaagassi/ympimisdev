@@ -100,8 +100,6 @@ class PantryController extends Controller
             date( in_time ) = '".$date."'
             GROUP BY
             employee_id 
-            HAVING 
-            duration > 0.1 
             ) AS final
             LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = final.employee_id 
             HAVING
@@ -229,9 +227,7 @@ class PantryController extends Controller
         WHERE
         date( in_time ) = '".$date."'
         GROUP BY
-        employee_id 
-        HAVING
-        duration > 0.1) AS final";
+        employee_id ) AS final";
 
         $query3 = "SELECT
         count(employee_id) as qty_employee, duration, indek 
@@ -290,8 +286,6 @@ class PantryController extends Controller
         date( in_time ) = '".$date."'
         GROUP BY
         employee_id 
-        HAVING
-        duration > 0.1
         ) AS final 
         ) AS final2
         group by duration, indek order by indek asc";
