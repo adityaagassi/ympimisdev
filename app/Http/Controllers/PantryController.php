@@ -304,6 +304,7 @@ class PantryController extends Controller
         pantry_logs 
         WHERE
         date( in_time ) = '".$date."'
+        AND round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) > 0.1
         ".$where."
         GROUP BY
         employee_id 
