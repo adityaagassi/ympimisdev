@@ -243,7 +243,7 @@
 			'paging': true,
 			'lengthChange': true,
 			'searching': true,
-			'ordering': true,
+			'ordering': false,
 			'order': [],
 			'info': true,
 			'autoWidth': true,
@@ -251,7 +251,7 @@
 			"bJQueryUI": true,
 			"bAutoWidth": false,
 			"processing": true,
-			"serverSide": true,
+			// "serverSide": true,
 			"ajax": {
 				"type" : "get",
 				"url" : "{{ url("fetch/welding/production_result") }}",

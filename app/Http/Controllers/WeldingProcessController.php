@@ -43,6 +43,13 @@ class WeldingProcessController extends Controller
 		$this->fy = db::table('weekly_calendars')->select('fiscal_year')->distinct()->get();
 	}
 
+	public function indexWeldingEff(){
+		return view('processes.welding.display.welding_eff', array(
+			'title' => 'Operator Efficiency',
+			'title_jp' => '作業者能率',
+		))->with('page', 'Operator Efficiency');
+	}
+
 	public function indexMasterOperator(){
 		$title = 'Master Operator Welding';
 		$title_jp = '??';
@@ -461,7 +468,7 @@ class WeldingProcessController extends Controller
 	}
 
 	public function fetchCurrentwelding(){
-		$current = db::connection('welding')->select("SELECT mesin.mesin_id, mesin.ws_id, ws.ws_name, mesin.mesin_nama, datas.operator_nik, e.`name`, datas.part_type, datas.material_number, m.model, m.`key`, datas.sedang, ceil(s.time * v.lot_completion / 60) as std from
+		$current = db::connection('welding_controller')->select("SELECT mesin.mesin_id, mesin.ws_id, ws.ws_name, mesin.mesin_nama, datas.operator_nik, e.`name`, datas.part_type, datas.material_number, m.model, m.`key`, datas.sedang, ceil(s.time * v.lot_completion / 60) as std from
 			(SELECT * from m_mesin m
 			where m.flow_id = 1) as mesin
 			left join
@@ -908,6 +915,15 @@ class WeldingProcessController extends Controller
 				left join m_operator op on op.operator_id = p.operator_id
 				left join ympimis.materials m on m.material_number = hsa.hsa_kito_code
 				where p.part_type = '2'
+				and p.flow_id = '1'
+				and date(p.tanggaljam) between '".$date_from."' and '".$date_to."'
+				order by p.tanggaljam asc");
+		}else if($request->get('location') == 'phs-sx'){
+			$results = db::connection('welding')->select("select op.operator_nik as employee_id, op.operator_name as `name`, p.perolehan_eff as tag, phs.phs_code as material_number, m.material_description, m.`key`, m.model, m.surface, p.perolehan_jumlah as quantity, if(p.part_type = '1', 'PHS', '') as location, p.tanggaljam as created_at from t_perolehan p
+				left join m_phs phs on p.part_id = phs.phs_id
+				left join m_operator op on op.operator_id = p.operator_id
+				left join ympimis.materials m on m.material_number = phs.phs_code
+				where p.part_type = '1'
 				and p.flow_id = '1'
 				and date(p.tanggaljam) between '".$date_from."' and '".$date_to."'
 				order by p.tanggaljam asc");

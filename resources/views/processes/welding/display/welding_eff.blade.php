@@ -151,7 +151,7 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Operator Overall Efficiency Details</b></h4>
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Operator Efficiency Details</b></h4>
 					<h5 class="modal-title" style="text-align: center;" id="judul"></h5>
 				</div>
 				<div class="modal-body">
@@ -160,74 +160,9 @@
 
 						<div class="col-md-12" style="margin-bottom: 20px;">
 							<div class="col-md-4">
-								<h5 class="modal-title">NG Rate</h5>
-								<h5 class="modal-title" id="ng_rate"></h5>
-							</div>
-							<div class="col-md-4">
-								<h5 class="modal-title">Post Rate</h5>
-								<h5 class="modal-title" id="posh_rate"></h5>
-							</div>
-							<div class="col-md-4">
-								<h5 class="modal-title">Operator Overall Efficiency</h5>
+								<h5 class="modal-title">Operator Efficiency</h5>
 								<h5 class="modal-title" id="op_eff"></h5>
 							</div>
-						</div>
-
-						<div class="col-md-7">
-							<table id="welding-ng-log" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead id="welding-ng-log-head" style="background-color: rgba(126,86,134,.7);">
-									<tr>
-										<th colspan="5" style="text-align: center;">NOT GOOD</th>
-									</tr>
-									<tr>
-										<th style="width: 20%">Finish Welding</th>
-										<th>Model</th>
-										<th>Key</th>
-										<th>OP Kensa</th>
-										<th>Material Qty</th>
-									</tr>
-								</thead>
-								<tbody id="welding-ng-log-body">
-								</tbody>
-							</table>
-						</div>
-
-						<div class="col-md-6">
-							<table id="welding-log" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead id="welding-log-head" style="background-color: rgba(126,86,134,.7);">
-									<tr>
-										<th colspan="5" style="text-align: center;">GOOD</th>
-									</tr>
-									<tr>
-										<th style="width: 20%">Finish Welding</th>
-										<th>Model</th>
-										<th>Key</th>
-										<th>OP Kensa</th>
-										<th>Material Qty</th>
-									</tr>
-								</thead>
-								<tbody id="welding-log-body">
-								</tbody>
-							</table>
-						</div>
-						
-						<div class="col-md-6">
-							<table id="welding-cek" class="table table-striped table-bordered" style="width: 100%;"> 
-								<thead id="welding-cek-head" style="background-color: rgba(126,86,134,.7);">
-									<tr>
-										<th colspan="5" style="text-align: center;">TOTAL CEK</th>
-									</tr>
-									<tr>
-										<th>Finish Welding</th>
-										<th>Model</th>
-										<th>Key</th>
-										<th>OP Kensa</th>
-										<th>Material Qty</th>
-									</tr>
-								</thead>
-								<tbody id="welding-cek-body">
-								</tbody>
-							</table>
 						</div>
 
 						<div class="col-md-12">
@@ -256,75 +191,6 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end modal -->
-
-	<!-- start modal detail  -->
-	<div class="modal fade" id="check-modal">
-		<div class="modal-dialog modal-md">
-			<div class="modal-content" style="color: black;">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">
-							&times;
-						</span>
-					</button>
-					<h4 class="modal-title" style="text-align: center;">
-						Handling Operator's Efficiency
-					</h4>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="box-body">
-								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-
-
-								<div id='scanner' class="col-xs-12">
-									<div class="col-xs-6 col-xs-offset-3">
-										<div id="loadingMessage">
-											🎥 Unable to access video stream (please make sure you have a webcam enabled)
-										</div>
-										<canvas style="width: 240px; height: 160px;" id="canvas" hidden></canvas>
-										<div id="output" hidden>
-											<div id="outputMessage">No QR code detected.</div>
-										</div>
-									</div>									
-								</div>
-								
-								<div class="form-group row" align="right">
-									<label class="col-sm-4">NIK</label>
-									<div class="col-sm-5" align="left">
-										<input type="text" class="form-control" id="input_employee_id">
-									</div>
-								</div>
-								<input type="hidden" id="employee_id">
-								<input type="hidden" id="date">
-
-								<div class="form-group row" align="right" id="field-name">
-									<label class="col-sm-4">Name</label>
-									<div class="col-sm-5" align="left">
-										<input type="text" class="form-control" id="name" readonly>
-									</div>
-								</div>
-
-								<div class="form-group row" align="right" id="field-key">
-									<label class="col-sm-4">Key</label>
-									<div class="col-sm-5" align="left">
-										<input type="text" class="form-control" id="key" readonly>
-									</div>
-								</div>
-								
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-danger" onclick="stopScan()"><span><i class="glyphicon glyphicon-remove-sign"></i> Cancel</span></button>
-					<button id="btn-check" class="btn btn-success" onclick="checkEff()"><span><i class="fa fa-check-square-o"></i> Check</span></button>
 				</div>
 			</div>
 		</div>
@@ -616,11 +482,6 @@
 
 		$('#myModal').modal('show');
 		$('#data-log-body').append().empty();
-		$('#welding-log-body').append().empty();
-		$('#welding-ng-log-body').append().empty();
-		$('#welding-cek-body').append().empty();
-		$('#ng_rate').append().empty();
-		$('#posh_rate').append().empty();
 		$('#op_eff').append().empty();
 		$('#judul').append().empty();
 
@@ -630,68 +491,6 @@
 			if(result.status){
 
 				$('#judul').append('<b>'+result.nik+' - '+result.nama+' on '+tgl+'</b>');
-
-				//Welding log
-				var total_good = 0;
-				var body = '';
-				for (var i = 0; i < result.good.length; i++) {
-					body += '<tr>';
-					body += '<td>'+result.good[i].welding_time+'</td>';
-					body += '<td>'+result.good[i].model+'</td>';
-					body += '<td>'+result.good[i].key+'</td>';
-					body += '<td>'+result.good[i].op_kensa+'</td>';
-					body += '<td>'+result.good[i].quantity+'</td>';
-					body += '</tr>';
-
-					total_good += parseInt(result.good[i].quantity);
-				}
-				body += '<tr>';
-				body += '<td  colspan="4" style="text-align: center;">Total</td>';
-				body += '<td>'+total_good+'</td>';
-				body += '</tr>';
-				$('#welding-log-body').append(body);
-
-
-				//Welding NG log
-				var total_ng = 0;
-				var body = '';
-				for (var i = 0; i < result.ng.length; i++) {
-					body += '<tr>';
-					body += '<td>'+result.ng[i].welding_time+'</td>';
-					body += '<td>'+result.ng[i].model+'</td>';
-					body += '<td>'+result.ng[i].key+'</td>';
-					body += '<td>'+result.ng[i].op_kensa+'</td>';
-					body += '<td>'+result.ng[i].quantity+'</td>';
-					body += '</tr>';
-
-					total_ng += parseInt(result.ng[i].quantity);
-				}
-				body += '<tr>';
-				body += '<td colspan="4" style="text-align: center;">Total</td>';
-				body += '<td>'+total_ng+'</td>';
-				body += '</tr>';
-				$('#welding-ng-log-body').append(body);
-
-				//Welding cek
-				var total_cek = 0;
-				var body = '';
-				for (var i = 0; i < result.cek.length; i++) {
-					body += '<tr>';
-					body += '<td>'+result.cek[i].welding_time+'</td>';
-					body += '<td>'+result.cek[i].model+'</td>';
-					body += '<td>'+result.cek[i].key+'</td>';
-					body += '<td>'+result.cek[i].op_kensa+'</td>';
-					body += '<td>'+result.cek[i].quantity+'</td>';
-					body += '</tr>';
-
-					total_cek += parseInt(result.cek[i].quantity);
-				}
-				body += '<tr>';
-				body += '<td colspan="4" style="text-align: center;">Total</td>';
-				body += '<td>'+total_cek+'</td>';
-				body += '</tr>';
-				$('#welding-cek-body').append(body);
-
 
 				//Data Log
 				var total_perolehan = 0;
@@ -724,21 +523,9 @@
 
 
 				//Resume
-				var ng_rate = total_ng / total_cek * 100;
-				var text_ng_rate = '= <sup>Total NG</sup>/<sub>Total Cek</sub> x 100%';
-				text_ng_rate += '<br>= <sup>'+ total_ng +'</sup>/<sub>'+ total_cek +'</sub> x 100%';
-				text_ng_rate += '<br>= <b>'+ ng_rate.toFixed(2) +'%</b>';
-				$('#ng_rate').append(text_ng_rate);
-
-				var posh_rate = ((total_cek - total_ng) / total_cek) * 100;
-				var text_posh_rate = '= <sup>(Total Cek - Total NG)</sup>/<sub>Total Cek</sub> x 100%';
-				text_posh_rate += '<br>= <sup>('+ total_cek + ' - ' + total_ng +')</sup>/<sub>'+ total_cek +'</sub> x 100%';
-				text_posh_rate += '<br>= <b>'+ posh_rate.toFixed(2) +'%</b>';
-				$('#posh_rate').append(text_posh_rate);
-
-				var op_eff = posh_rate * (total_std / total_act);
+				var op_eff = 100 * (total_std / total_act);
 				var text_op_eff = '= <sup>Total Standart time</sup>/<sub>Total Actual time</sub> x Posh Rate';
-				text_op_eff += '<br>= <sup>'+ total_std.toFixed(2) +'</sup>/<sub>'+ total_act.toFixed(2) +'</sub> x '+ posh_rate.toFixed(2) +'%';
+				text_op_eff += '<br>= <sup>'+ total_std.toFixed(2) +'</sup>/<sub>'+ total_act.toFixed(2) +'</sub>';
 				text_op_eff += '<br>= <b>'+ op_eff.toFixed(2) +'%</b>';
 				$('#op_eff').append(text_op_eff);
 
@@ -832,7 +619,7 @@ function fillChart() {
 					}
 					op_name.push(xAxis);
 
-					eff_value.push((result.rate[i].oof || 0));
+					eff_value.push((result.rate[i].eff || 0) * 100);
 
 
 
@@ -850,7 +637,7 @@ function fillChart() {
 					animation: false
 				},
 				title: {
-					text: 'Operators Overall Efficiency',
+					text: 'Operators Efficiency',
 					style: {
 						fontSize: '25px',
 						fontWeight: 'bold'
@@ -964,8 +751,7 @@ function fillChart() {
 					}
 					op_name.push(xAxis);
 
-					eff_value.push((result.rate[i].oof || 0));
-
+					eff_value.push((result.rate[i].eff || 0) * 100);
 
 
 					if(eff_value[loop-1] > parseInt(target)){
@@ -981,7 +767,7 @@ function fillChart() {
 					animation: false
 				},
 				title: {
-					text: 'Operators Overall Efficiency',
+					text: 'Operators Efficiency',
 					style: {
 						fontSize: '25px',
 						fontWeight: 'bold'
@@ -1096,7 +882,7 @@ function fillChart() {
 					}
 					op_name.push(xAxis);
 
-					eff_value.push((result.rate[i].oof || 0));
+					eff_value.push((result.rate[i].eff || 0) * 100);
 
 
 
@@ -1113,7 +899,7 @@ function fillChart() {
 					animation: false
 				},
 				title: {
-					text: 'Operators Overall Efficiency',
+					text: 'Operators Efficiency',
 					style: {
 						fontSize: '25px',
 						fontWeight: 'bold'
@@ -1250,7 +1036,7 @@ $.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result,
 				animation: false
 			},
 			title: {
-				text: 'Last Operators Efficiency Less '+target+'%',
+				text: 'Ongoing Operators Efficiency Less '+target+'%',
 				style: {
 					fontSize: '25px',
 					fontWeight: 'bold'
@@ -1363,7 +1149,7 @@ $.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result,
 				animation: false
 			},
 			title: {
-				text: 'Last Operators Efficiency Less '+target+'%',
+				text: 'Ongoing Operators Efficiency Less '+target+'%',
 				style: {
 					fontSize: '25px',
 					fontWeight: 'bold'
@@ -1472,7 +1258,7 @@ $.get('{{ url("fetch/welding/welding_op_eff_target") }}', data, function(result,
 				animation: false
 			},
 			title: {
-				text: 'Last Operators Efficiency Less '+target+'%',
+				text: 'Ongoing Operators Efficiency Less '+target+'%',
 				style: {
 					fontSize: '25px',
 					fontWeight: 'bold'
