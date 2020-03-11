@@ -9,7 +9,7 @@
 <section class="content-header">
 	<h1>
 		Activity Lists<span class="text-purple"> 活動リスト</span>
-		<small>Assembly (WI-A) <span class="text-purple"> アセンブリ（WI-A）</span></small>
+		<small>{{$dept}}</small>
 	</h1>
 </section>
 @stop
@@ -17,21 +17,34 @@
 <section class="content">
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
-			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Report <i class="fa fa-angle-double-down"></i></span>
+			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<?php $no = 1 ?>
 			@foreach($activity_list as $activity_list)
+				@if($activity_list->frequency == "Daily")
+					<?php $bgcolor = "background-color:#2A3E79;color:white" ?>
+					
+				@elseif($activity_list->frequency == "Weekly")
+					<?php $bgcolor = "background-color:#B93A2B;color:white" ?>
+					
+				@elseif($activity_list->frequency == "Monthly")
+					<?php $bgcolor = "background-color:#90EE7E" ?>
+					
+				@else($activity_list->frequency == "Conditional")
+					<?php $bgcolor = "background-color:white" ?>
+					
+				@endif
 				@if($activity_list->activity_type == "Pengecekan Foto")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Daily Check FG / KD</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Daily Check FG / KD</a>
 				@elseif($activity_list->activity_type == "Laporan Aktivitas")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Laporan Aktivitas Audit IK</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Laporan Aktivitas Audit IK</a>
 				@elseif($activity_list->activity_type == "Pengecekan")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit Pengecekan Product Pertama</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Audit Product Pertama</a>
 				@elseif($activity_list->activity_type == "Labelisasi")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Labeling Safety Sign</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Labeling Safety Sign</a>
 				@elseif($activity_list->activity_type == "Audit")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit NG Jelas</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Audit NG Jelas</a>
 				@else
-					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">{{ $activity_list->activity_type }}</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$no) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">{{ $activity_list->activity_type }}</a>
 				@endif
 			<?php $no++ ?>
 			@endforeach

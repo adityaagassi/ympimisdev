@@ -119,7 +119,7 @@ class ActivityListController extends Controller
       }
       $data = array('activity_list' => $activityList,
                     'department' => $department,
-                    'dept_name' => $dept_name,
+                    'dept_name' => strtoupper($dept_name),
                     'id' => $id,
                     'no' => $no,);
       return view('activity_list.filter', $data

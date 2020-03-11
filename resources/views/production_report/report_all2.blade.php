@@ -20,12 +20,10 @@
   <div class="row" style="padding:0">
     <h1 style="color:white">
       <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-        {{-- <button onclick="showModalResume()" class="btn btn-outline pull-right">Leader Task Resume</button> --}}
-        {{-- <a target="_blank" href="{{ url("index/activity_list/resume/".$id) }}" class="btn btn-outline pull-right">Leader Task Resume</a> --}}
       </div>
       <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
         <center>
-          <b>Leader Task  Monitoring Assembly (WI-A) (職長業務管理)</b>
+          <b style="font-size: 30px">{{$page}} {{$departments}} (職長業務管理)</b>
         </center>
       </div>
       <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">

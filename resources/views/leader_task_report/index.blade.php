@@ -9,7 +9,7 @@
 <section class="content-header">
 	<h1>
 		Leader Task Report<span class="text-purple"> ???</span>
-		<small>Assembly (WI-A) <span class="text-purple"> ??</span></small>
+		<small>{{$dept}} <span class="text-purple"> ??</span></small>
 	</h1>
 	<ol class="breadcrumb">
     {{-- <li></li> --}}

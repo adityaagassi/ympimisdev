@@ -58,7 +58,6 @@
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 			<a href="http://172.17.128.4/mirai/public/index/daily_check_fg/print_daily_check_email/{{ $activity_list_id }}/{{ $month }}">See Daily Check FG Data / Approval Data</a><br>
-			<a href="http://172.17.128.4/mirai/public/index/production_audit/report_audit/8">Audit Monitoring</a>
 		</center>
 	</div>
 </body>

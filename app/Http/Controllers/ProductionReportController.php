@@ -75,14 +75,20 @@ class ProductionReportController extends Controller
         ]);
         $activity->save();
 
+        $queryDept = DB::SELECT("SELECT * FROM departments where id = '".$id."'");
+
+        foreach ($queryDept as $key) {
+            $department = strtoupper($key->department_name);
+        }
+
         $role_code = Auth::user()->role_code;
-        $queryActivity = "SELECT DISTINCT(activity_type) FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null";
+        $queryActivity = "SELECT DISTINCT(activity_type),frequency FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null";
     	$activityList = DB::select($queryActivity);
         $data = array('activity_list' => $activityList,
                       'role_code' => $role_code,
                       'id' => $id);
         return view('production_report.index', $data
-          )->with('page', 'Leader Task Monitoring');
+          )->with('page', 'Leader Task Monitoring')->with('dept', $department);
     }
 
     function activity($id)
@@ -165,8 +171,8 @@ class ProductionReportController extends Controller
             'leader2' => $leader2,
             'leader3' => $leader3,
             'leader' => $leader,
-            'departments' => $departments,
-        ))->with('page', 'Leader Task Monitoring');
+            'departments' => strtoupper($departments),
+        ))->with('page', strtoupper('Leader Task Monitoring'));
     }
 
     public function fetchReportByLeader(Request $request,$id)

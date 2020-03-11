@@ -50,11 +50,15 @@ class LeaderTaskReportController extends Controller
     
     function index($id)
     {
-        $leader = DB::SELECT("SELECT DISTINCT(leader_dept) FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null");
+        $leader = DB::SELECT("SELECT DISTINCT(leader_dept),department_name FROM activity_lists join departments on activity_lists.department_id = departments.id where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null");
+
+        foreach ($leader as $key) {
+            $dept = $key->department_name;
+        }
         $data = array('leader' => $leader,
                       'id' => $id);
         return view('leader_task_report.index', $data
-          )->with('page', 'Leader Task Report');
+          )->with('page', 'Leader Task Report')->with('dept', strtoupper($dept));
     }
 
     function leader_task_list($id,$leader_name)

@@ -65,8 +65,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/index/first_product_audit/print_first_product_audit_email_daily/{{ $activity_list_id }}/{{ $id_first_product_audit }}/{{ substr($date,0,7) }}">See Audit Cek Produk Pertama / Approval Data</a><br>
-			{{-- <a href="http://172.17.128.4/mirai/public/index/audit_report_activity/report_audit_activity/8">Audit Report Activity Monitoring</a> --}}
+			<a href="http://172.17.128.4/mirai/public/index/first_product_audit/print_first_product_audit_email_daily/{{ $activity_list_id }}/{{ $id_first_product_audit }}/{{ substr($date,0,7) }}">See Audit Cek Produk Pertama / Approval Data</a>
 		</center>
 	</div>
 </body>
