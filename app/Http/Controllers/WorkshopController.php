@@ -943,9 +943,9 @@ class WorkshopController extends Controller{
 				$data = db::select("select w.*, u.`name` from workshop_job_orders w
 					left join employee_syncs u on w.created_by = u.employee_id
 					where order_no = '".$order_no."'");
-				
+
 				Mail::to('susilo.basri@music.yamaha.com')
-				->cc('aditya.agassi@music.yamaha.com')
+				->bcc(['aditya.agassi@music.yamaha.com', 'darma.bagus@music.yamaha.com'])
 				->send(new SendEmail($data, 'urgent_wjo'));
 			}
 
@@ -1445,11 +1445,11 @@ class WorkshopController extends Controller{
 	public function fetchListWJO(Request $request){
 		// DB::enableQueryLog();
 		$workshop_job_orders = WorkshopJobOrder::leftJoin(db::raw('(select employee_id, name from employee_syncs) as approver'), 'approver.employee_id', '=', 'workshop_job_orders.approved_by')
-		// ->leftJoin(db::raw('(SELECT order_no, operator FROM workshop_flow_processes WHERE id IN (SELECT min(id) FROM workshop_flow_processes GROUP BY order_no)) as operator'), 'operator.order_no', '=', 'workshop_job_orders.order_no')
-		// ->leftJoin(db::raw('(select employee_id, name from employee_syncs) as pic'), 'pic.employee_id', '=', 'operator.operator')
 		->leftJoin(db::raw('(select employee_id, name from employee_syncs) as requester'), 'requester.employee_id', '=', 'workshop_job_orders.created_by')
 		->leftJoin(db::raw('(SELECT process_code, process_name FROM processes where remark = "workshop") as processes'), 'processes.process_code', '=', 'workshop_job_orders.remark')
 		->leftJoin('workshop_tag_availabilities', 'workshop_tag_availabilities.tag', '=', 'workshop_job_orders.tag');
+		// ->leftJoin(db::raw('(SELECT order_no, operator FROM workshop_flow_processes WHERE id IN (SELECT min(id) FROM workshop_flow_processes GROUP BY order_no)) as operator'), 'operator.order_no', '=', 'workshop_job_orders.order_no')
+		// ->leftJoin(db::raw('(select employee_id, name from employee_syncs) as pic'), 'pic.employee_id', '=', 'operator.operator');
 
 		if(strlen($request->get('order')) > 0 ){
 			$workshop_job_orders = $workshop_job_orders->orderBy('workshop_job_orders.order_no', 'desc');
@@ -1531,8 +1531,11 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.item_name',
 			'workshop_job_orders.material',
 			'workshop_job_orders.quantity',
-			// db::raw('concat(SPLIT_STRING(pic.name, " ", 1), " ", SPLIT_STRING(pic.name, " ", 2)) as pic'),
-			db::raw('"-" as pic'),
+			db::raw('(SELECT concat( SPLIT_STRING ( `name`, " ", 1 ), " ", SPLIT_STRING ( `name`, " ", 2 ) ) AS pic FROM workshop_flow_processes 
+				LEFT JOIN employee_syncs on employee_syncs.employee_id = workshop_flow_processes.operator
+				WHERE order_no = workshop_job_orders.order_no 
+				order by id asc limit 1) as pic'),
+			// db::raw('"-" as pic'),
 			'workshop_job_orders.difficulty',
 			'workshop_job_orders.priority',
 			'workshop_job_orders.target_date',
