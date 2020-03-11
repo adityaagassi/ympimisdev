@@ -1444,7 +1444,8 @@ class WorkshopController extends Controller{
 
 	public function fetchListWJO(Request $request){
 		$workshop_job_orders = WorkshopJobOrder::leftJoin(db::raw('(select employee_id, name from employee_syncs) as approver'), 'approver.employee_id', '=', 'workshop_job_orders.approved_by')
-		->leftJoin(db::raw('(select employee_id, name from employee_syncs) as pic'), 'pic.employee_id', '=', 'workshop_job_orders.operator')
+		->leftJoin(db::raw('(SELECT order_no, operator FROM workshop_flow_processes WHERE id IN (SELECT min(id) FROM workshop_flow_processes GROUP BY order_no)) as operator'), 'operator.order_no', '=', 'workshop_job_orders.order_no')
+		->leftJoin(db::raw('(select employee_id, name from employee_syncs) as pic'), 'pic.employee_id', '=', 'operator.operator')
 		->leftJoin(db::raw('(select employee_id, name from employee_syncs) as requester'), 'requester.employee_id', '=', 'workshop_job_orders.created_by')
 		->leftJoin(db::raw('(SELECT process_code, process_name FROM processes where remark = "workshop") as processes'), 'processes.process_code', '=', 'workshop_job_orders.remark')
 		->leftJoin('workshop_tag_availabilities', 'workshop_tag_availabilities.tag', '=', 'workshop_job_orders.tag');

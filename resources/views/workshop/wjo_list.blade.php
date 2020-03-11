@@ -291,7 +291,7 @@
 										<th style="width: 1%;">Material</th>
 										<th style="width: 1%;">Qty</th>
 										<th style="width: 1%;">Approved By</th>
-										<!-- <th style="width: 1%;">PIC</th> -->
+										<th style="width: 1%;">PIC</th>
 										<th style="width: 1%;">Kesulitan</th>
 										<th style="width: 1%;">Target Selesai</th>
 										<th style="width: 1%;">Actual Selesai</th>
@@ -1626,7 +1626,7 @@
 						tableData += '<td'+ assign +'>'+ result.tableData[i].material +'</td>';
 						tableData += '<td'+ assign +'>'+ result.tableData[i].quantity +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].approver || '-') +'</td>';
-						// tableData += '<td'+ assign +'>'+ (result.tableData[i].pic || '-') +'</td>';
+						tableData += '<td'+ assign +'>'+ (result.tableData[i].pic || '-') +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].difficulty || '-') +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].target_date || '-') +'</td>';
 						tableData += '<td'+ assign +'>'+ (result.tableData[i].finish_date || '-') +'</td>';
