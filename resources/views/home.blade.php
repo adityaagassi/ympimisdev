@@ -468,6 +468,10 @@
                                 <i class="fa fa-caret-right"></i> Lotting (ロッティング)
                             </a>
                             <br>
+                            <a href="{{ url("/index/production_report/index/12") }}">
+                                <i class="fa fa-caret-right"></i> Parts Process (WI-PP) Report (???)
+                            </a>
+                            <br>
                             <a href="{{ url("/index/press/monitoring") }}">
                                 <i class="fa fa-caret-right"></i> Press Machine Monitoring (プレス機管理)
                             </a>
