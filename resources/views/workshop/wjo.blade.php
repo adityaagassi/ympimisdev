@@ -420,7 +420,7 @@
 							$('#text_material').html(result.wjo.material);						
 							$('#text_problem_description').html(result.wjo.problem_description);
 							$('#text_target_date').html(result.wjo.target_date);
-							$('#text_pemesan').html(result.wjo.sub_section);
+							$('#text_pemesan').html(result.wjo.sub_section+" | "+result.wjo.requester);
 
 							$('#text_drawing').append().empty();
 							

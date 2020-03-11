@@ -394,6 +394,7 @@ class WorkshopController extends Controller{
 	public function scanTag(Request $request){
 		$wjo = WorkshopJobOrder::leftJoin('workshop_materials', 'workshop_materials.item_number', '=', 'workshop_job_orders.item_number')
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_job_orders.operator')
+		->leftJoin(db::raw('employee_syncs es'), 'es.employee_id', '=', 'workshop_job_orders.created_by')
 		->leftJoin('workshop_tag_availabilities', 'workshop_tag_availabilities.tag', '=', 'workshop_job_orders.tag')
 		->where('workshop_job_orders.tag', '=', $request->get('tag'))
 		->whereBetween('workshop_job_orders.remark', array(2, 3))

@@ -151,14 +151,14 @@ table.table-bordered > tfoot > tr > th{
                 <input type="text" name="cat" id="cat" value="" hidden>
                 <input type="text" name="loc" id="loc" value="'+ value.bagian +'" hidden>
                 <input type="text" name="id" value="'+ value.id +'" hidden>
-                <label>TAG<span class="text-red">*</span></label>
-                <input class="form-control" style="width: 100%;" id="tag" name="tag" data-placeholder="Input a TAG..." required value="">
+                <label>TAG</label>
+                <input class="form-control" style="width: 100%;" id="tag" name="tag" data-placeholder="Input a TAG..." value="">
                 <label>Nama<span class="text-red">*</span></label>
                 <input class="form-control" style="width: 100%;" id="nama" name="nama" data-placeholder="Input a NAMA..." required value="">
                 <label>NIK<span class="text-red">*</span></label>
                 <input class="form-control" style="width: 100%;" id="nik" name="nik" data-placeholder="Input a NIK..." required value="">
-                <label>Line<span class="text-red">*</span></label>
-                <select class="form-control select2" style="width: 100%;" id="line" name="line" data-placeholder="Choose a Line..." required>@foreach($lines as $lines1)<option value="{{ $lines1 }}">{{ $lines1 }}</option> @endforeach</select></div><div class="form-group">
+                <label>Line</label>
+                <select class="form-control select2" style="width: 100%;" id="line" name="line" data-placeholder="Choose a Line..."><option></option>@foreach($lines as $lines1)<option value="{{ $lines1 }}">{{ $lines1 }}</option> @endforeach</select></div><div class="form-group">
                   <label>Bagian<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="bagian" name="bagian" data-placeholder="Choose a Bagian..." required>>@foreach($bagians as $bagians1)<option value="{{ $bagians1 }}">{{ $bagians1 }}</option>@endforeach</select></div><div class="form-group">
               </div>
             </div>
@@ -314,7 +314,7 @@ function editop(id){
           
           $.each(result.id_op, function(key, value) {
             
-            $('#modalDetailBodyEditHeader').append('<input type="text" name="cat" id="cat" value="'+ value.line +'" hidden><input type="text" name="loc" id="loc" value="'+ value.bagian +'" hidden><input type="text" name="id" value="'+ value.id +'" hidden><label>TAG<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="tag" name="tag" data-placeholder="Input a TAG..." required value="'+ value.tag +'"><label>Nama<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="nama" name="nama" data-placeholder="Input a NAMA..." required value="'+ value.nama +'"><label>NIK<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="nik" name="nik" data-placeholder="Input a NIK..." required value="'+ value.nik +'"><label>Line<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="line" name="line" data-placeholder="Choose a Line..." required>@foreach($lines as $lines)<option value="{{ $lines }}">{{ $lines }}</option> @endforeach</select></div><div class="form-group"><label>Bagian<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="bagian" name="bagian" data-placeholder="Choose a Bagian..." required>>@foreach($bagians as $bagians)<option value="{{ $bagians }}">{{ $bagians }}</option>@endforeach</select></div><div class="form-group">').find('.select2').select2();
+            $('#modalDetailBodyEditHeader').append('<input type="text" name="cat" id="cat" value="'+ value.line +'" hidden><input type="text" name="loc" id="loc" value="'+ value.bagian +'" hidden><input type="text" name="id" value="'+ value.id +'" hidden><label>TAG<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="tag" name="tag" data-placeholder="Input a TAG..." required value="'+ value.tag +'"><label>Nama<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="nama" name="nama" data-placeholder="Input a NAMA..." required value="'+ value.nama +'"><label>NIK<span class="text-red">*</span></label><input class="form-control" style="width: 100%;" id="nik" name="nik" data-placeholder="Input a NIK..." required value="'+ value.nik +'"><label>Line<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="line" name="line" data-placeholder="Choose a Line..."><option></option>@foreach($lines as $lines)<option value="{{ $lines }}">{{ $lines }}</option> @endforeach</select></div><div class="form-group"><label>Bagian<span class="text-red">*</span></label><select class="form-control select2" style="width: 100%;" id="bagian" name="bagian" data-placeholder="Choose a Bagian..." required>>@foreach($bagians as $bagians)<option value="{{ $bagians }}">{{ $bagians }}</option>@endforeach</select></div><div class="form-group">').find('.select2').select2();
            
           });    
 

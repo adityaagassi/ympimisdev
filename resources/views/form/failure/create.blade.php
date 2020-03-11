@@ -65,7 +65,7 @@
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New CPAR</h3> --}}
     </div>  
-    <form role="form" method="post" action="{{url('index/qc_report/create_action')}}" enctype="multipart/form-data">
+    <form role="form">
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="row">
@@ -191,6 +191,7 @@
 
 </script>
   <script>
+    
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -236,8 +237,6 @@
          }
       });      
     }
-
-
 
     $("#form_submit").click( function() {
       $("#loading").show();
