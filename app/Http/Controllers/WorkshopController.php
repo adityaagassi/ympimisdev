@@ -414,6 +414,7 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.problem_description',
 			'workshop_job_orders.target_date',
 			'workshop_job_orders.sub_section',
+			db::raw('concat(SPLIT_STRING(es.name, " ", 1)," ",SPLIT_STRING(es.name, " ", 2)) as requester'),
 			db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as name'),
 			'workshop_job_orders.attachment')
 		->first();
