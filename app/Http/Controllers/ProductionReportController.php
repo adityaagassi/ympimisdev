@@ -69,20 +69,20 @@ class ProductionReportController extends Controller
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
-        $activity =  new UserActivityLog([
-            'activity' => 'Assembly (WI-A) Report',
-            'created_by' => Auth::user()->id,
-        ]);
-        $activity->save();
-
         $queryDept = DB::SELECT("SELECT * FROM departments where id = '".$id."'");
 
         foreach ($queryDept as $key) {
             $department = strtoupper($key->department_name);
         }
 
+        $activity =  new UserActivityLog([
+            'activity' => strtoupper($department).' Report',
+            'created_by' => Auth::user()->id,
+        ]);
+        $activity->save();
+
         $role_code = Auth::user()->role_code;
-        $queryActivity = "SELECT DISTINCT(activity_type),frequency FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null";
+        $queryActivity = "SELECT DISTINCT(activity_type),frequency,no FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null ORDER BY no";
     	$activityList = DB::select($queryActivity);
         $data = array('activity_list' => $activityList,
                       'role_code' => $role_code,
@@ -101,46 +101,46 @@ class ProductionReportController extends Controller
     		$activity_type = $activityList->activity_type;
     	// }
     	if ($activity_type == "Audit") {
-    		return redirect('/index/production_audit/details/'.$id)->with('page', 'Production Audit')->with('no', '1');
+    		return redirect('/index/production_audit/details/'.$id)->with('page', 'Production Audit')->with('no', $activityList->no);
     	}
     	elseif($activity_type == "Training"){
-            return redirect('/index/training_report/index/'.$id)->with('page', 'Training')->with('no', '2');
+            return redirect('/index/training_report/index/'.$id)->with('page', 'Training')->with('no', $activityList->no);
     	}
     	elseif($activity_type == "Laporan Aktivitas"){
-            return redirect('/index/audit_report_activity/index/'.$id)->with('page', 'Laporan Aktivitas')->with('no', '4');
+            return redirect('/index/audit_report_activity/index/'.$id)->with('page', 'Laporan Aktivitas')->with('no', $activityList->no);
     	}
     	elseif($activity_type == "Sampling Check"){
-            return redirect('/index/sampling_check/index/'.$id)->with('page', 'Sampling Check')->with('no', '3');
+            return redirect('/index/sampling_check/index/'.$id)->with('page', 'Sampling Check')->with('no', $activityList->no);
     	}
     	elseif($activity_type == "Pengecekan Foto"){
-            return redirect('/index/daily_check_fg/product/'.$id)->with('page', 'Daily Check FG')->with('no', '8');
+            return redirect('/index/daily_check_fg/product/'.$id)->with('page', 'Daily Check FG')->with('no', $activityList->no);
     	}
         elseif($activity_type == "Interview"){
-            return redirect('/index/interview/index/'.$id)->with('page', 'Interview')->with('no', '7');
+            return redirect('/index/interview/index/'.$id)->with('page', 'Interview')->with('no', $activityList->no);
         }
         elseif($activity_type == "Labelisasi"){
-            return redirect('/index/labeling/index/'.$id)->with('page', 'Labeling')->with('no', '9');
+            return redirect('/index/labeling/index/'.$id)->with('page', 'Labeling')->with('no', $activityList->no);
         }
         elseif($activity_type == "Pengecekan"){
-            return redirect('/index/first_product_audit/list_proses/'.$id)->with('page', 'First Product Audit')->with('no', '6');
+            return redirect('/index/first_product_audit/list_proses/'.$id)->with('page', 'First Product Audit')->with('no', $activityList->no);
         }
         elseif($activity_type == "Pemahaman Proses"){
-            return redirect('/index/audit_process/index/'.$id)->with('page', 'Audit Process')->with('no', '5');
+            return redirect('/index/audit_process/index/'.$id)->with('page', 'Audit Process')->with('no', $activityList->no);
         }
         elseif($activity_type == "Cek Area"){
-            return redirect('/index/area_check/index/'.$id)->with('page', 'Area Check')->with('no', '10');
+            return redirect('/index/area_check/index/'.$id)->with('page', 'Area Check')->with('no', $activityList->no);
         }
         elseif($activity_type == "Jishu Hozen"){
-            return redirect('/index/jishu_hozen/nama_pengecekan/'.$id)->with('page', 'Jishu Hozen')->with('no', '11');
+            return redirect('/index/jishu_hozen/nama_pengecekan/'.$id)->with('page', 'Jishu Hozen')->with('no', $activityList->no);
         }
         elseif($activity_type == "Cek APD"){
-            return redirect('/index/apd_check/index/'.$id)->with('page', 'APD Check')->with('no', '12');
+            return redirect('/index/apd_check/index/'.$id)->with('page', 'APD Check')->with('no', $activityList->no);
         }
         elseif($activity_type == "Weekly Report"){
-            return redirect('/index/weekly_report/index/'.$id)->with('page', 'Weekly Report')->with('no', '13');
+            return redirect('/index/weekly_report/index/'.$id)->with('page', 'Weekly Report')->with('no', $activityList->no);
         }
         elseif($activity_type == "Temuan NG"){
-            return redirect('/index/ng_finding/index/'.$id)->with('page', 'Temuan NG')->with('no', '14');
+            return redirect('/index/ng_finding/index/'.$id)->with('page', 'Temuan NG')->with('no', $activityList->no);
         }
     }
 

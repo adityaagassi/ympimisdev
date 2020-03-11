@@ -1679,8 +1679,13 @@ class WorkshopController extends Controller{
 		// 	and date(wjo.created_at) <= '".$dateto."'
 		// 	and wjo.remark = 3
 		// 	order by wjo.priority desc, wjo.order_no asc");
-
-		$progress = db::select("select wjo.order_no, wjo.priority, concat(SPLIT_STRING(requester.name, ' ', 1), ' ', SPLIT_STRING(requester.name, ' ', 2)) as requester, wjo.item_name, wjo.quantity, concat(SPLIT_STRING(pic.name, ' ', 1), ' ', SPLIT_STRING(pic.name, ' ', 2)) as `pic`, coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date, step.std, step.actual from workshop_job_orders wjo
+		
+		$progress = db::select("select wjo.order_no, wjo.priority, concat(SPLIT_STRING(requester.name, ' ', 1), ' ', SPLIT_STRING(requester.name, ' ', 2)) as requester, wjo.item_name, wjo.quantity,
+			(SELECT concat( SPLIT_STRING ( `name`, ' ', 1 ), ' ', SPLIT_STRING ( `name`, ' ', 2 ) ) AS pic FROM workshop_flow_processes 
+			LEFT JOIN employee_syncs on employee_syncs.employee_id = workshop_flow_processes.operator
+			WHERE order_no = wjo.order_no 
+			order by id asc limit 1) as pic,
+			coalesce(date(requested.created_at), date(wjo.created_at)) as requested, date(listed.created_at) as listed, date(approved.created_at) as approved, date(progress.created_at) as progress, target_date, step.std, step.actual from workshop_job_orders wjo
 			left join (select * from workshop_job_order_logs where remark = 0) as requested
 			on requested.order_no = wjo.order_no
 			left join (select * from workshop_job_order_logs where remark = 1) as listed
