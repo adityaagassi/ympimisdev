@@ -203,287 +203,382 @@ class ProductionReportController extends Controller
 
       foreach($leaderrr as $leader){
         $dataleader = $leader->leader_dept; 
-        $data[] = db::select("select monthly.leader_name,
-        monthly.jumlah_activity_monthly,
-        monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit+monthly.jumlah_jishu_hozen as jumlah_monthly,
-        COALESCE(((monthly.jumlah_training  + monthly.jumlah_laporan_aktivitas+ monthly.jumlah_labeling+ monthly.jumlah_interview+ monthly.jumlah_first_product_audit+monthly.jumlah_jishu_hozen )/monthly.jumlah_activity_monthly)*100,0) as persen_monthly,
-        weekly.jumlah_activity_weekly as jumlah_activity_weekly,
-        IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 4,0,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 4 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 8,1,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 8 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)  < 12,2,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 12 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 16,3,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 16 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 20,4,
-                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 20 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 24,5,
-                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 24 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 28,6,
-                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 28 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 32,7,0))))))))
-                                as jumlah_weekly,
-        COALESCE((IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 4,0,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 4 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) < 8,1,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 8 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)  < 12,2,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 12 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 16,3,
-                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 16 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 20,4,
-                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 20 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 24,5,
-                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 24 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 28,6,
-                                IF((weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report) >= 28 && (weekly.jumlah_sampling_kd+weekly.jumlah_sampling_fg+weekly.jumlah_audit+weekly.jumlah_audit_process+weekly.jumlah_apd_check+weekly.jumlah_weekly_report)< 32,7,0))))))))/(weekly.jumlah_activity_weekly))*100,0) as persen_weekly,
-        (select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily as jumlah_activity_daily,
-        daily.jumlah_daily_check+daily.jumlah_area_check as jumlah_daily,
-        COALESCE(((daily.jumlah_daily_check+daily.jumlah_area_check)/((select count(week_date) from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender))*daily.jumlah_activity_daily))*100,0) as persen_daily,
-        daily.jumlah_day,
-        daily.cur_day,
-        (daily.cur_day / daily.jumlah_day)*100 as persen_cur_day,
-        prev.plan_prev as plan_prev,
-        prev.aktual_prev as aktual_prev,
-        prev.persen_prev as persen_prev
-        from 
-        (select count(activity_type) as jumlah_activity_monthly,
-        leader_dept as leader_name,
-        COALESCE((select count(DISTINCT(leader)) as jumlah_training
-                from training_reports
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(training_reports.date,'%Y-%m') = '".$bulan."'
-                    and actlist.frequency = 'Monthly'
-                                and training_reports.leader = '".$dataleader."'
-                                and training_reports.deleted_at is null 
-                                and actlist.department_id = '".$id."'
-                                GROUP BY training_reports.leader),0)
-        as jumlah_training,
-        COALESCE((select count(DISTINCT(leader)) as jumlah_laporan
-                from audit_report_activities
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$bulan."'
-                    and  actlist.frequency = 'Monthly'
-                                and audit_report_activities.leader = '".$dataleader."'
-                                and audit_report_activities.deleted_at is null 
-                                and actlist.department_id = '".$id."'
-                                GROUP BY audit_report_activities.leader),0)
-        as jumlah_laporan_aktivitas,
-        COALESCE((select count(DISTINCT(leader)) as jumlah_labeling
-                from labelings
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(labelings.date,'%Y-%m') = '".$bulan."'
-                    and  actlist.frequency = 'Monthly'
-                                and labelings.leader = '".$dataleader."'
-                                and labelings.deleted_at is null 
-                                and actlist.department_id = '".$id."'
-                                GROUP BY labelings.leader),0)
-        as jumlah_labeling,
-        COALESCE((select count(DISTINCT(leader)) as jumlah_interview
-                from interviews
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(interviews.date,'%Y-%m') = '".$bulan."'
-                    and  actlist.frequency = 'Monthly'
-                                and interviews.leader = '".$dataleader."'
-                                and interviews.deleted_at is null 
-                                and actlist.department_id = '".$id."'
-                                GROUP BY interviews.leader),0)
-        as jumlah_interview,
-                COALESCE((select count(DISTINCT(leader)) as jumlah_first_product_audit
-                from first_product_audit_details
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where month = '".$bulan."'
-                    and  actlist.frequency = 'Monthly'
-                                and first_product_audit_details.leader = '".$dataleader."'
-                                and first_product_audit_details.deleted_at is null 
-                                and actlist.department_id = '".$id."'
-                                GROUP BY first_product_audit_details.leader),0)
-        as jumlah_first_product_audit,
-        COALESCE((select count(DISTINCT(leader)) as jishu_hozens
-                from jishu_hozens
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where month = '".$bulan."'
-                    and  actlist.frequency = 'Monthly'
-                                and jishu_hozens.leader = '".$dataleader."'
-                                and jishu_hozens.deleted_at is null 
-                                and actlist.department_id = '".$id."'
-                                GROUP BY jishu_hozens.leader),0)
-        as jumlah_jishu_hozen
-        from activity_lists
-        where deleted_at is null 
-        and department_id = '".$id."'
-        and leader_dept = '".$dataleader."'
-        and activity_lists.frequency = 'Monthly'
-        GROUP BY leader_dept) monthly,
-
-        (select count(activity_type) as jumlah_activity_weekly,
-        leader_dept as leader_name,
-        COALESCE((select count(DISTINCT(sampling_checks.week_name)) as jumlah_sampling
-                from sampling_checks
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$bulan."'
-                    and  actlist.frequency = 'Weekly'
-                                and sampling_checks.leader = '".$dataleader."'
-                                and sampling_checks.deleted_at is null 
-                                and actlist.department_id = '".$id."'
-                                and actlist.activity_alias like '%FG%'
-                                GROUP BY sampling_checks.leader),0)
-        as jumlah_sampling_fg,
-        COALESCE((select count(DISTINCT(sampling_checks.week_name)) as jumlah_sampling
-                from sampling_checks
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$bulan."'
-                    and  actlist.frequency = 'Weekly'
-                                and sampling_checks.leader = '".$dataleader."'
-                                and sampling_checks.deleted_at is null 
-                                and actlist.department_id = '".$id."'
-                                and actlist.activity_alias like '%KD%'
-                                GROUP BY sampling_checks.leader),0)
-        as jumlah_sampling_kd,
-        COALESCE((select count(DISTINCT(audit_processes.week_name)) as jumlah_sampling
-                from audit_processes
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$bulan."'
-                    and  actlist.frequency = 'Weekly'
-                                and audit_processes.leader = '".$dataleader."'
-                                and audit_processes.deleted_at is null 
-                                and actlist.department_id = '".$id."'
-                                GROUP BY audit_processes.leader),0)
-        as jumlah_audit_process,
-        COALESCE((select count(DISTINCT(production_audits.week_name)) as jumlah_audit
-                from production_audits
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                                join point_check_audits as point_check on point_check.id = point_check_audit_id
-                    where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$bulan."'
-                    and actlist.frequency = 'Weekly'
-                                and point_check.leader = '".$dataleader."'
-                                and production_audits.deleted_at is null 
-                              and actlist.department_id = '".$id."'
-                                GROUP BY point_check.leader),0)
-        as jumlah_audit,
-        COALESCE((select count(DISTINCT(apd_checks.week_name)) as jumlah_audit
-                from apd_checks
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$bulan."'
-                    and actlist.frequency = 'Weekly'
-                                and apd_checks.leader = '".$dataleader."'
-                                and apd_checks.deleted_at is null 
-                              and actlist.department_id = '".$id."'
-                                GROUP BY apd_checks.leader),0)
-        as jumlah_apd_check,
-        COALESCE((select count(DISTINCT(weekly_activity_reports.week_name)) as jumlah_weekly_report
-                from weekly_activity_reports
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$bulan."'
-                    and actlist.frequency = 'Weekly'
-                                and weekly_activity_reports.leader = '".$dataleader."'
-                                and weekly_activity_reports.deleted_at is null 
-                              and actlist.department_id = '".$id."'
-                                GROUP BY weekly_activity_reports.leader),0)
-        as jumlah_weekly_report
-        from activity_lists
-        where deleted_at is null 
-        and department_id = '".$id."'
-        and leader_dept = '".$dataleader."'
-        and activity_lists.frequency = 'Weekly'
-        GROUP BY leader_dept) weekly,
-
-        (select COALESCE(count(activity_type),0) as jumlah_activity_daily,
-        COALESCE((select count(DISTINCT(daily_checks.production_date)) as jumlah_laporan
-                from daily_checks
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$bulan."'
-                    and  actlist.frequency = 'Daily'
-                                and daily_checks.leader = '".$dataleader."'
-                                and daily_checks.deleted_at is null 
-                                and actlist.department_id = '".$id."'),0)
-        as jumlah_daily_check,
-        COALESCE((select count(DISTINCT(area_checks.date)) as jumlah_area_check
-                from area_checks
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(area_checks.date,'%Y-%m') = '".$bulan."'
-                    and  actlist.frequency = 'Daily'
-                                and area_checks.leader = '".$dataleader."'
-                                and area_checks.deleted_at is null 
-                                and actlist.department_id = '".$id."'),0)
-        as jumlah_area_check,
-        (select count(week_date) as jumlah_day from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$bulan."' and week_date not in (select tanggal from ftm.kalender)) as jumlah_day,
-        4 as jumlah_week,
-        (SELECT IF(DATE_FORMAT(CURDATE(),'%Y-%m') != '".$bulan."',
-            (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat('".$bulan."','-01') AND LAST_DAY(concat('".$bulan."','-01')) and week_date not in (select tanggal from ftm.kalender)),
-            (select count(week_date) as jumlah_day from weekly_calendars where week_date between concat(DATE_FORMAT(CURDATE(),'%Y-%m'),'-01') AND CURDATE() and week_date not in (select tanggal from ftm.kalender))) as jumlah_day)
-        as cur_day,
-        (select count(DISTINCT(week_name)) as jumlah_week from weekly_calendars WHERE week_date between concat(left(curdate(),7),'-01') AND CURDATE()) as cur_week
-        from activity_lists
-        where deleted_at is null 
-        and department_id = '".$id."'
-        and leader_dept = '".$dataleader."'
-        and activity_lists.frequency = 'Daily'
-        GROUP BY leader_dept) daily,
-        (SELECT 
-            SUM(detail.plan) as plan_prev,
-            SUM(detail.jumlah_aktual) as aktual_prev,
-            (SUM(detail.jumlah_aktual)/SUM(detail.plan))*100 as persen_prev
-        from 
-        (select activity_lists.id as id_activity,
-            sum(plan_item) as plan,
-            IF(activity_type = 'Audit',
-            (select count(*) as jumlah_audit
-                from production_audits
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$prevMonth."'
-                                and leader_dept = '".$dataleader."'
-                                and actlist.department_id = '".$id."'
-                                and actlist.id = id_activity
-                    ),
-            IF(activity_type = 'Training',
-            (select count(*) as jumlah_training
-                from training_reports
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(training_reports.date,'%Y-%m') = '".$prevMonth."'
-                                and leader_dept = '".$dataleader."'
-                                and actlist.id = id_activity
-                                and actlist.department_id = '".$id."'
-                    ),
-            IF(activity_type = 'Laporan Aktivitas',
-            (select count(*) as jumlah_laporan
-                from audit_report_activities
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$prevMonth."'
-                                and leader_dept = '".$dataleader."'
-                                and actlist.id = id_activity
-                                and actlist.department_id = '".$id."'
-                    ),
-            IF(activity_type = 'Sampling Check',
-            (select count(*) as jumlah_sampling
-                from sampling_checks
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$prevMonth."'
-                                and leader_dept = '".$dataleader."'
-                                and actlist.id = id_activity
-                                and actlist.department_id = '".$id."'
-                    ),
-            IF(activity_type = 'Pengecekan Foto',
-            (select count(*) as jumlah_daily_check
-                from daily_checks
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(daily_checks.check_date,'%Y-%m') = '".$prevMonth."'
-                                and leader_dept = '".$dataleader."'
-                                and actlist.id = id_activity
-                                and actlist.department_id = '".$id."'
-                    ),
-            IF(activity_type = 'Labelisasi',
-            (select count(*) as jumlah_labeling
-                from labelings
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(labelings.date,'%Y-%m') = '".$prevMonth."'
-                                and labelings.leader = '".$dataleader."'
-                                and actlist.id = id_activity
-                                and actlist.department_id = '".$id."'
-                    ),
-            IF(activity_type = 'Pemahaman Proses',
-            (select count(*) as jumlah_audit_process
-                from audit_processes
-                    join activity_lists as actlist on actlist.id = activity_list_id
-                    where DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$prevMonth."'
-                                and audit_processes.leader = '".$dataleader."'
-                                and actlist.id = id_activity
-                                and actlist.department_id = '".$id."'
-                    ),0))))))) 
-            as jumlah_aktual
-                from activity_lists
-                        where leader_dept = '".$dataleader."'
-                        and department_id = '".$id."'
-                    and activity_name != 'Null'
-                    GROUP BY activity_type, plan_item,id,activity_name,leader_dept) detail) prev");
+        $data[] = db::select("SELECT
+            monthly.leader_name,
+            monthly.jumlah_activity_monthly,
+            monthly.jumlah_training + monthly.jumlah_laporan_aktivitas + monthly.jumlah_labeling + monthly.jumlah_interview + monthly.jumlah_first_product_audit + monthly.jumlah_jishu_hozen AS jumlah_monthly,
+            COALESCE (((
+                        monthly.jumlah_training + monthly.jumlah_laporan_aktivitas + monthly.jumlah_labeling + monthly.jumlah_interview + monthly.jumlah_first_product_audit + monthly.jumlah_jishu_hozen 
+                        )/ monthly.jumlah_activity_monthly 
+                    )* 100,
+                0 
+            ) AS persen_monthly,
+            weekly.jumlah_activity_weekly * 4 AS jumlah_activity_weekly,
+            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report ) AS jumlah_all_weekly,
+            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report )/(
+                weekly.jumlah_activity_weekly * 4 
+            )* 100 AS persen_weekly,
+            (
+            SELECT
+                count( week_date ) 
+            FROM
+                weekly_calendars 
+            WHERE
+                DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) = '".$bulan."' 
+            AND week_date NOT IN ( SELECT tanggal FROM ftm.kalender ))* daily.jumlah_activity_daily AS jumlah_activity_daily,
+            daily.jumlah_daily_check + daily.jumlah_area_check AS jumlah_daily,
+            COALESCE (((
+                        daily.jumlah_daily_check + daily.jumlah_area_check 
+                        )/((
+                        SELECT
+                            count( week_date ) 
+                        FROM
+                            weekly_calendars 
+                        WHERE
+                            DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) = '".$bulan."' 
+                        AND week_date NOT IN ( SELECT tanggal FROM ftm.kalender ))* daily.jumlah_activity_daily 
+                        ))* 100,
+                0 
+            ) AS persen_daily,
+            daily.jumlah_day,
+            daily.cur_day,
+            ( daily.cur_day / daily.jumlah_day )* 100 AS persen_cur_day 
+        FROM
+            (
+            SELECT
+                count( activity_type ) AS jumlah_activity_monthly,
+                leader_dept AS leader_name,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( leader )) AS jumlah_training 
+                    FROM
+                        training_reports
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( training_reports.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Monthly' 
+                        AND training_reports.leader = '".$dataleader."' 
+                        AND training_reports.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        training_reports.leader 
+                        ),
+                    0 
+                ) AS jumlah_training,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( leader )) AS jumlah_laporan 
+                    FROM
+                        audit_report_activities
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( audit_report_activities.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Monthly' 
+                        AND audit_report_activities.leader = '".$dataleader."' 
+                        AND audit_report_activities.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        audit_report_activities.leader 
+                        ),
+                    0 
+                ) AS jumlah_laporan_aktivitas,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( leader )) AS jumlah_labeling 
+                    FROM
+                        labelings
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( labelings.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Monthly' 
+                        AND labelings.leader = '".$dataleader."' 
+                        AND labelings.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        labelings.leader 
+                        ),
+                    0 
+                ) AS jumlah_labeling,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( leader )) AS jumlah_interview 
+                    FROM
+                        interviews
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( interviews.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Monthly' 
+                        AND interviews.leader = '".$dataleader."' 
+                        AND interviews.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        interviews.leader 
+                        ),
+                    0 
+                ) AS jumlah_interview,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( leader )) AS jumlah_first_product_audit 
+                    FROM
+                        first_product_audit_details
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        MONTH = '".$bulan."' 
+                        AND actlist.frequency = 'Monthly' 
+                        AND first_product_audit_details.leader = '".$dataleader."' 
+                        AND first_product_audit_details.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        first_product_audit_details.leader 
+                        ),
+                    0 
+                ) AS jumlah_first_product_audit,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( leader )) AS jishu_hozens 
+                    FROM
+                        jishu_hozens
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        MONTH = '".$bulan."' 
+                        AND actlist.frequency = 'Monthly' 
+                        AND jishu_hozens.leader = '".$dataleader."' 
+                        AND jishu_hozens.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        jishu_hozens.leader 
+                        ),
+                    0 
+                ) AS jumlah_jishu_hozen 
+            FROM
+                activity_lists 
+            WHERE
+                deleted_at IS NULL 
+                AND department_id = '".$id."' 
+                AND leader_dept = '".$dataleader."' 
+                AND activity_lists.frequency = 'Monthly' 
+            GROUP BY
+                leader_dept 
+            ) monthly,
+            (
+            SELECT
+                count( activity_type ) AS jumlah_activity_weekly,
+                leader_dept AS leader_name,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( sampling_checks.week_name )) AS jumlah_sampling 
+                    FROM
+                        sampling_checks
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( sampling_checks.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Weekly' 
+                        AND sampling_checks.leader = '".$dataleader."' 
+                        AND sampling_checks.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                        AND actlist.activity_alias LIKE '%FG%' 
+                    GROUP BY
+                        sampling_checks.leader 
+                        ),
+                    0 
+                ) AS jumlah_sampling_fg,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( sampling_checks.week_name )) AS jumlah_sampling 
+                    FROM
+                        sampling_checks
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( sampling_checks.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Weekly' 
+                        AND sampling_checks.leader = '".$dataleader."' 
+                        AND sampling_checks.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                        AND actlist.activity_alias LIKE '%KD%' 
+                    GROUP BY
+                        sampling_checks.leader 
+                        ),
+                    0 
+                ) AS jumlah_sampling_kd,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( audit_processes.week_name )) AS jumlah_sampling 
+                    FROM
+                        audit_processes
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( audit_processes.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Weekly' 
+                        AND audit_processes.leader = '".$dataleader."' 
+                        AND audit_processes.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        audit_processes.leader 
+                        ),
+                    0 
+                ) AS jumlah_audit_process,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( production_audits.week_name )) AS jumlah_audit 
+                    FROM
+                        production_audits
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id
+                        JOIN point_check_audits AS point_check ON point_check.id = point_check_audit_id 
+                    WHERE
+                        DATE_FORMAT( production_audits.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Weekly' 
+                        AND point_check.leader = '".$dataleader."' 
+                        AND production_audits.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        point_check.leader 
+                        ),
+                    0 
+                ) AS jumlah_audit,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( apd_checks.week_name )) AS jumlah_audit 
+                    FROM
+                        apd_checks
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( apd_checks.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Weekly' 
+                        AND apd_checks.leader = '".$dataleader."' 
+                        AND apd_checks.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        apd_checks.leader 
+                        ),
+                    0 
+                ) AS jumlah_apd_check,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( weekly_activity_reports.week_name )) AS jumlah_weekly_report 
+                    FROM
+                        weekly_activity_reports
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( weekly_activity_reports.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Weekly' 
+                        AND weekly_activity_reports.leader = '".$dataleader."' 
+                        AND weekly_activity_reports.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        weekly_activity_reports.leader 
+                        ),
+                    0 
+                ) AS jumlah_weekly_report 
+            FROM
+                activity_lists 
+            WHERE
+                deleted_at IS NULL 
+                AND department_id = '".$id."' 
+                AND leader_dept = '".$dataleader."' 
+                AND activity_lists.frequency = 'Weekly' 
+            GROUP BY
+                leader_dept 
+            ) weekly,
+            (
+            SELECT COALESCE
+                ( count( activity_type ), 0 ) AS jumlah_activity_daily,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( daily_checks.production_date )) AS jumlah_laporan 
+                    FROM
+                        daily_checks
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( daily_checks.production_date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Daily' 
+                        AND daily_checks.leader = '".$dataleader."' 
+                        AND daily_checks.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                        ),
+                    0 
+                ) AS jumlah_daily_check,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( area_checks.date )) AS jumlah_area_check 
+                    FROM
+                        area_checks
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT( area_checks.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Daily' 
+                        AND area_checks.leader = '".$dataleader."' 
+                        AND area_checks.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                        ),
+                    0 
+                ) AS jumlah_area_check,
+                (
+                SELECT
+                    count( week_date ) AS jumlah_day 
+                FROM
+                    weekly_calendars 
+                WHERE
+                    DATE_FORMAT( weekly_calendars.week_date, '%Y-%m' ) = '".$bulan."' 
+                AND week_date NOT IN ( SELECT tanggal FROM ftm.kalender )) AS jumlah_day,
+                4 AS jumlah_week,
+                (
+                SELECT
+                IF
+                    (
+                        DATE_FORMAT( CURDATE(), '%Y-%m' ) != '".$bulan."',
+                        (
+                        SELECT
+                            count( week_date ) AS jumlah_day 
+                        FROM
+                            weekly_calendars 
+                        WHERE
+                            week_date BETWEEN concat( '".$bulan."', '-01' ) 
+                            AND LAST_DAY(
+                            concat( '".$bulan."', '-01' )) 
+                        AND week_date NOT IN ( SELECT tanggal FROM ftm.kalender )),
+                        (
+                        SELECT
+                            count( week_date ) AS jumlah_day 
+                        FROM
+                            weekly_calendars 
+                        WHERE
+                            week_date BETWEEN concat( DATE_FORMAT( CURDATE(), '%Y-%m' ), '-01' ) 
+                            AND CURDATE() 
+                        AND week_date NOT IN ( SELECT tanggal FROM ftm.kalender ))) AS jumlah_day 
+                ) AS cur_day,
+                (
+                SELECT
+                    count(
+                    DISTINCT ( week_name )) AS jumlah_week 
+                FROM
+                    weekly_calendars 
+                WHERE
+                    week_date BETWEEN concat( LEFT ( curdate(), 7 ), '-01' ) 
+                AND CURDATE()) AS cur_week 
+            FROM
+                activity_lists 
+            WHERE
+                deleted_at IS NULL 
+                AND department_id = '".$id."' 
+                AND leader_dept = '".$dataleader."' 
+                AND activity_lists.frequency = 'Daily' 
+            GROUP BY
+            leader_dept 
+            ) daily");
       }
       $monthTitle = date("F Y", strtotime($bulan));
 

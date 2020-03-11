@@ -385,34 +385,34 @@
       (this.series[3].points[0].shapeArgs.r - this.series[3].points[0].shapeArgs.innerR) / 2 + offsetTop
       );
 
-    if (!this.series[4].label) {
-      if(this.series[4].points[0].y != null){
-        this.series[4].label = this.renderer
-        .label(this.series[4].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
-        .css({
-          'color': '#FFFFFF',
-          'fontWeight':'bold',
-          'textAlign': 'center'
-        })
-        .add(this.series[4].group);
-      }
-      else{
-        this.series[4].label = this.renderer
-        .label(' ', 0, 0, 'rect', 0, 0, true, true)
-        .css({
-          'color': '#FFFFFF',
-          'fontWeight':'bold',
-          'textAlign': 'center'
-        })
-        .add(this.series[4].group);
-      }
-    }
+    // if (!this.series[4].label) {
+    //   if(this.series[4].points[0].y != null){
+    //     this.series[4].label = this.renderer
+    //     .label(this.series[4].points[0].y+'%', 0, 0, 'rect', 0, 0, true, true)
+    //     .css({
+    //       'color': '#FFFFFF',
+    //       'fontWeight':'bold',
+    //       'textAlign': 'center'
+    //     })
+    //     .add(this.series[4].group);
+    //   }
+    //   else{
+    //     this.series[4].label = this.renderer
+    //     .label(' ', 0, 0, 'rect', 0, 0, true, true)
+    //     .css({
+    //       'color': '#FFFFFF',
+    //       'fontWeight':'bold',
+    //       'textAlign': 'center'
+    //     })
+    //     .add(this.series[4].group);
+    //   }
+    // }
 
-    this.series[4].label.translate(
-      this.chartWidth / 2 - this.series[4].label.width + offsetLeft,
-      this.plotHeight / 2 - this.series[4].points[0].shapeArgs.innerR -
-      (this.series[4].points[0].shapeArgs.r - this.series[4].points[0].shapeArgs.innerR) / 2 + offsetTop
-      );
+    // this.series[4].label.translate(
+    //   this.chartWidth / 2 - this.series[4].label.width + offsetLeft,
+    //   this.plotHeight / 2 - this.series[4].points[0].shapeArgs.innerR -
+    //   (this.series[4].points[0].shapeArgs.r - this.series[4].points[0].shapeArgs.innerR) / 2 + offsetTop
+    //   );
   }
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -442,8 +442,8 @@
               // }
               // else{
                 result_monthly = parseInt(result.datas[i][j].persen_monthly);
-                outerRadiusMonthly= '84%';
-                innerRadiusMonthly= '68%';
+                outerRadiusMonthly= '100%';
+                innerRadiusMonthly= '80%';
               // }
 
               // if(parseInt(result.datas[i][j].persen_weekly) == 0){
@@ -453,8 +453,8 @@
               // }
               // else{
                 result_weekly = parseInt(result.datas[i][j].persen_weekly);
-                outerRadiusWeekly= '68%';
-                innerRadiusWeekly= '52%';
+                outerRadiusWeekly= '80%';
+                innerRadiusWeekly= '60%';
               // }
 
               // if(parseInt(result.datas[i][j].persen_daily) == 0){
@@ -464,8 +464,8 @@
               // }
               // else{
                 result_daily = parseInt(result.datas[i][j].persen_daily);
-                outerRadiusDaily= '52%';
-                innerRadiusDaily= '36%';
+                outerRadiusDaily= '60%';
+                innerRadiusDaily= '40%';
               // }
 
               // if(parseInt(result.datas[i][j].persen_monthly) == 0){
@@ -644,25 +644,25 @@
                       enabled: false
                     },
                     series: [
-                    {
-                      name: 'Prev Month',
-                      color: Highcharts.getOptions().colors[0],
-                      data: [{
-                        color: Highcharts.getOptions().colors[0],
-                        outerRadius: '100%',
-                        innerRadius: '84%',
-                        y: result_prev,
-                        key: result.datas[i][j].leader_name
-                      }],
-                      showInLegend: true,
-                    },
+                    // {
+                    //   name: 'Prev Month',
+                    //   color: Highcharts.getOptions().colors[0],
+                    //   data: [{
+                    //     color: Highcharts.getOptions().colors[0],
+                    //     outerRadius: '100%',
+                    //     innerRadius: '80%',
+                    //     y: result_prev,
+                    //     key: result.datas[i][j].leader_name
+                    //   }],
+                    //   showInLegend: true,
+                    // },
                     {
                       name: 'Monthly',
                       color: Highcharts.getOptions().colors[1],
                       data: [{
                         color: Highcharts.getOptions().colors[1],
-                        radius: '84%',
-                        innerRadius: '68%',
+                        radius: '100%',
+                        innerRadius: '80%',
                         y: result_monthly,
                         key: result.datas[i][j].leader_name
                       }],
@@ -672,8 +672,8 @@
                       color: Highcharts.getOptions().colors[2],
                       data: [{
                         color: Highcharts.getOptions().colors[2],
-                        radius: '68%',
-                        innerRadius: '52%',
+                        radius: '80%',
+                        innerRadius: '60%',
                         y: result_weekly,
                         key: result.datas[i][j].leader_name
                       }],
@@ -684,8 +684,8 @@
                       color: Highcharts.getOptions().colors[3],
                       data: [{
                         color: Highcharts.getOptions().colors[3],
-                        radius: '52%',
-                        innerRadius: '36%',
+                        radius: '60%',
+                        innerRadius: '40%',
                         y: result_daily,
                         key: result.datas[i][j].leader_name
                       }],
@@ -696,7 +696,7 @@
                       color: '#ff70f8',
                       data: [{
                         color: '#ff70f8',
-                        radius: '36%',
+                        radius: '40%',
                         innerRadius: '20%',
                         y: cur_day,
                         key: result.datas[i][j].leader_name
@@ -810,40 +810,47 @@ function ShowModalChart(leader_name,frequency) {
                 }
                 // console.log(aktual);
                 // console.log(parseInt(aktual));
-                if(parseInt(aktual) < 4 ){
-                  total_aktual = 0;
-                }
-                else if(parseInt(aktual) >= 4 && parseInt(aktual) < 8 ){
-                  total_aktual = 1;
-                }
-                else if(parseInt(aktual) >= 8 && parseInt(aktual) < 12 ){
-                  total_aktual = 2;
-                }
-                else if(parseInt(aktual) >= 12 && parseInt(aktual) < 16 ){
-                  total_aktual = 3;
-                }
-                else if(parseInt(aktual) >= 16 && parseInt(aktual) < 20 ){
-                  total_aktual = 4;
-                }
-                else if(parseInt(aktual) >= 20 && parseInt(aktual) < 24 ){
-                  total_aktual = 5;
-                }
-                else if(parseInt(aktual) >= 24 && parseInt(aktual) < 28 ){
-                  total_aktual = 6;
-                }
-                else if(parseInt(aktual) >= 28 && parseInt(aktual) < 32 ){
-                  total_aktual = 7;
-                }
+                total_aktual = aktual;
+                // if(parseInt(aktual) < 4 ){
+                //   total_aktual = 0;
+                // }
+                // else if(parseInt(aktual) >= 4 && parseInt(aktual) < 8 ){
+                //   total_aktual = 1;
+                // }
+                // else if(parseInt(aktual) >= 8 && parseInt(aktual) < 12 ){
+                //   total_aktual = 2;
+                // }
+                // else if(parseInt(aktual) >= 12 && parseInt(aktual) < 16 ){
+                //   total_aktual = 3;
+                // }
+                // else if(parseInt(aktual) >= 16 && parseInt(aktual) < 20 ){
+                //   total_aktual = 4;
+                // }
+                // else if(parseInt(aktual) >= 20 && parseInt(aktual) < 24 ){
+                //   total_aktual = 5;
+                // }
+                // else if(parseInt(aktual) >= 24 && parseInt(aktual) < 28 ){
+                //   total_aktual = 6;
+                // }
+                // else if(parseInt(aktual) >= 28 && parseInt(aktual) < 32 ){
+                //   total_aktual = 7;
+                // }
                 
-                presentase = (total_aktual/total_plan)*100;
+                total_plan_item = total_plan * 4;
+                presentase = (total_aktual/total_plan_item)*100;
                 // console.log(presentase);
 
                 // console.log(dd);
                 // console.log(activity);
                 dd += '<tr>';
-                dd += '<td colspan="2"><b>Total Plan</b></td>';
+                dd += '<td colspan="2"><b>Total Plan Activity</b></td>';
                 dd += '<td colspan="5"><center><b>'+total_plan+'</b></center></td>';
                 dd += '</tr>';
+                dd += '<tr>';
+                dd += '<td colspan="2"><b>Total Plan Item</b></td>';
+                dd += '<td colspan="5"><center><b>'+total_plan_item+'</b></center></td>';
+                dd += '</tr>';
+                dd += '<tr>';
                 dd += '<tr>';
                 dd += '<td colspan="2"><b>Total Aktual</b></td>';
                 dd += '<td colspan="5"><center><b>'+total_aktual+'</b></center></td>';
