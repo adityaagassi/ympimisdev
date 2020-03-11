@@ -990,7 +990,7 @@ class MiddleProcessController extends Controller
 		$data = db::connection('digital_kanban')->select("select d.operator_id, IFNULL(u.`name`, 'Not Found') `name`, m.`key`, m.model, d.sedang_start_time, d.selesai_start_time, TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time) as act_time, s.time * d.material_qty as std_time from data_log d
 			left join users u on d.operator_id = u.username
 			left join materials m on m.material_number = d.material_number
-			left join standart_times s on s.material_number = d.material_number
+			left join standard_times s on s.material_number = d.material_number
 			where TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time) < (s.time * d.material_qty * ".$request->get('condition').") ".$tanggal);
 
 		return DataTables::of($data)->make(true);
@@ -1008,7 +1008,7 @@ class MiddleProcessController extends Controller
 		}
 
 		$qty = db::connection('digital_kanban')->select("select d.operator_id, u.`name`, count(idx) as jml from data_log d
-			left join users u on d.operator_id = u.username left join standart_times s on s.material_number = d.material_number
+			left join users u on d.operator_id = u.username left join standard_times s on s.material_number = d.material_number
 			where TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time) < (s.time * d.material_qty * ".$request->get('condition').") ".$tanggal." GROUP BY d.operator_id, u.`name` ORDER BY jml desc");
 
 		return DataTables::of($qty)->make(true);
@@ -1053,7 +1053,7 @@ class MiddleProcessController extends Controller
 
 		$data_log = db::connection('digital_kanban')->select("select d.material_number, m.model, m.`key`, akan_start_time as akan, sedang_start_time as sedang, selesai_start_time as selesai, material_qty, ROUND(TIMESTAMPDIFF(SECOND,sedang_start_time,selesai_start_time)/60,2) as act, ROUND((s.time * material_qty)/60,2) as std from data_log d
 			left join materials m on d.material_number = m.material_number
-			left join standart_times s on d.material_number = s.material_number
+			left join standard_times s on d.material_number = s.material_number
 			where operator_id = '".$nik[0]."'
 			and date(selesai_start_time) = '".$tgl."' order by selesai_start_time asc");
 
@@ -1232,7 +1232,7 @@ class MiddleProcessController extends Controller
 
 	public function fetchBuffingOpWorkMonthlyDetail(Request $request){
 		$detail = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
-			left join standart_times s on s.material_number = d.material_number
+			left join standard_times s on s.material_number = d.material_number
 			where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$request->get('bulan')."'
 			and operator_id = '".$request->get('nik')."'
 			GROUP BY d.operator_id, tgl
@@ -1279,7 +1279,7 @@ class MiddleProcessController extends Controller
 
 		$eff = db::connection("digital_kanban")->select("select operator_id, act, std, std/act as eff from (
 			select d.operator_id, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
-			left join standart_times s on s.material_number = d.material_number
+			left join standard_times s on s.material_number = d.material_number
 			where DATE_FORMAT(d.selesai_start_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."'
 			GROUP BY d.operator_id
 			HAVING act > 60) eff
@@ -1312,7 +1312,7 @@ class MiddleProcessController extends Controller
 			}
 
 			$act = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
-				left join standart_times s on s.material_number = d.material_number
+				left join standard_times s on s.material_number = d.material_number
 				where DATE_FORMAT(d.selesai_start_time,'%Y-%m-%d') between '".$datefrom."' and '".$dateto."'
 				GROUP BY d.operator_id, tgl
 				HAVING act > 60");
@@ -1324,7 +1324,7 @@ class MiddleProcessController extends Controller
 			}
 
 			$act = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
-				left join standart_times s on s.material_number = d.material_number
+				left join standard_times s on s.material_number = d.material_number
 				where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$bulan."'
 				GROUP BY d.operator_id, tgl
 				HAVING act > 60");
@@ -1679,7 +1679,7 @@ class MiddleProcessController extends Controller
 
 			}else if($request->get('condition') == 'eff'){
 				$operators = db::connection('digital_kanban')->select("select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
-					from data_log l left join standart_times t on l.material_number = t.material_number
+					from data_log l left join standard_times t on l.material_number = t.material_number
 					where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".date("Y-m-d")."'
 					GROUP BY l.operator_id
 					ORDER BY eff asc
@@ -1745,7 +1745,7 @@ class MiddleProcessController extends Controller
 			order by week_date asc");
 
 		$time_eff = db::connection('digital_kanban')->select("select DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') as tgl, l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
-			from data_log l left join standart_times t on l.material_number = t.material_number
+			from data_log l left join standard_times t on l.material_number = t.material_number
 			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."' ".$where_op2."
 			GROUP BY tgl, l.operator_id");
 
@@ -1772,7 +1772,7 @@ class MiddleProcessController extends Controller
 			(select LEFT(m.`key`,1) as `key`, sum(plan.plan) as plan from
 			(select b.material_child, ROUND(sum(a.quantity * t.time / 60),2) as plan from assy_picking_schedules a
 			left join bom_components b on a.material_number = b.material_parent
-			left join standart_times t on b.material_child = t.material_number
+			left join standard_times t on b.material_child = t.material_number
 			where quantity > 0
 			and due_date = '".$tanggal."'
 			and remark = 'SX51'
@@ -1782,13 +1782,13 @@ class MiddleProcessController extends Controller
 			left join
 			(select left(m.`key`,1) as `key`, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
 			left join materials m on m.material_number = l.material_number
-			left join standart_times s on s.material_number = l.material_number
+			left join standard_times s on s.material_number = l.material_number
 			where l.location = 'bff-kensa'
 			and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
 			GROUP BY left(m.`key`,1)) result
 			on plan.`key` = result.`key`");
 
-		$key = db::connection('digital_kanban')->select("select RIGHT(dev_name,1) as `key`, (count(dev_name)*3) as jml from dev_list
+		$key = db::connection('digital_kanban')->select("select RIGHT(dev_name,1) as `key`, (count(dev_name)*2) as jml from dev_list
 			where dev_name in ('SXKEY-C','SXKEY-D','SXKEY-E','SXKEY-F','SXKEY-G','SXKEY-H','SXKEY-J')
 			GROUP BY dev_name");
 
@@ -1813,7 +1813,7 @@ class MiddleProcessController extends Controller
 			(select due_date, sum(plan.plan) as plan from
 			(select a.due_date, b.material_child, ROUND(sum(a.quantity * t.time / 60),2) as plan from assy_picking_schedules a
 			left join bom_components b on a.material_number = b.material_parent
-			left join standart_times t on b.material_child = t.material_number
+			left join standard_times t on b.material_child = t.material_number
 			where quantity > 0
 			and a.due_date BETWEEN '".$datefrom."' and '".$dateto."' 
 			group by a.due_date, b.material_child
@@ -1823,7 +1823,7 @@ class MiddleProcessController extends Controller
 			left join
 			(select DATE_FORMAT(l.created_at,'%Y-%m-%d') as tgl, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
 			left join materials m on m.material_number = l.material_number
-			left join standart_times s on s.material_number = l.material_number
+			left join standard_times s on s.material_number = l.material_number
 			where l.location = 'bff-kensa'
 			and DATE_FORMAT(l.created_at,'%Y-%m-%d') BETWEEN '".$datefrom."' and '".$dateto."'
 			GROUP BY tgl) result
@@ -1927,7 +1927,7 @@ class MiddleProcessController extends Controller
 		(select LEFT(m.`key`,1) as `key`, sum(plan.plan) as plan from
 		(select b.material_child, ROUND(sum(a.quantity * t.time / 60),2) as plan from assy_picking_schedules a
 		left join bom_components b on a.material_number = b.material_parent
-		left join standart_times t on b.material_child = t.material_number
+		left join standard_times t on b.material_child = t.material_number
 		where quantity > 0
 		and due_date = '".$tanggal."'
 		group by b.material_child) plan
@@ -1936,7 +1936,7 @@ class MiddleProcessController extends Controller
 		left join
 		(select left(m.`key`,1) as `key`, ROUND(sum(l.quantity * s.time / 60),2) as result from middle_logs l
 		left join materials m on m.material_number = l.material_number
-		left join standart_times s on s.material_number = l.material_number
+		left join standard_times s on s.material_number = l.material_number
 		where l.location = 'bff-kensa'
 		and DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tanggal."'
 		GROUP BY left(m.`key`,1)) result
@@ -2011,7 +2011,7 @@ class MiddleProcessController extends Controller
 			WHERE b.selesai_start_time IS NULL
 			order by a.operator_id asc) dl
 			on dl.operator_id = e.employee_id
-			left join standart_times s on s.material_number = dl.material_number
+			left join standard_times s on s.material_number = dl.material_number
 			left join materials m on m.material_number = dl.material_number
 			where e.location = 'bff'
 			".$group."
@@ -2053,7 +2053,7 @@ class MiddleProcessController extends Controller
 		}
 
 		$working_time = db::connection('digital_kanban')->select("select e.`group`, e.employee_id, dl.act, dl.std from employee_groups e left join (select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))/60 as act, sum((l.material_qty*t.time))/60 as std from data_log l
-			left join standart_times t on l.material_number = t.material_number
+			left join standard_times t on l.material_number = t.material_number
 			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
 			GROUP BY l.operator_id) dl on dl.operator_id = e.employee_id
 			".$group."
@@ -2107,7 +2107,7 @@ class MiddleProcessController extends Controller
 
 			}else if($request->get('condition') == 'eff'){
 				$operators = db::connection('digital_kanban')->select("select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time)) as act, sum(material_qty * t.time) as std, (sum(material_qty * t.time)/sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))) as eff
-					from data_log l left join standart_times t on l.material_number = t.material_number
+					from data_log l left join standard_times t on l.material_number = t.material_number
 					where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".date("Y-m-d")."'
 					GROUP BY l.operator_id
 					ORDER BY eff asc
@@ -2224,7 +2224,7 @@ class MiddleProcessController extends Controller
 
 		$time_eff = db::connection('digital_kanban')->select("select e.`group`, e.employee_id, dl.act, dl.std, dl.std/dl.act as eff  from employee_groups e left join
 			(select l.operator_id, sum(TIMESTAMPDIFF(SECOND,l.sedang_start_time,l.selesai_start_time))/60 as act, sum((l.material_qty*t.time))/60 as std from data_log l
-			left join standart_times t on l.material_number = t.material_number
+			left join standard_times t on l.material_number = t.material_number
 			where DATE_FORMAT(l.selesai_start_time,'%Y-%m-%d') = '".$date."'
 			GROUP BY l.operator_id) dl on dl.operator_id = e.employee_id
 			WHERE e.location = 'bff'
