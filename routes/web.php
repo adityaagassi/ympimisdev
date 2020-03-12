@@ -881,9 +881,7 @@ Route::get('index/welding/welding_op_eff', 'WeldingProcessController@indexWeldin
 Route::get('fetch/welding/welding_op_eff', 'WeldingProcessController@fetchWeldingOpEff');
 
 Route::get('index/welding/welding_eff', 'WeldingProcessController@indexWeldingEff');
-Route::get('fetch/welding/welding_eff', 'WeldingProcessController@fetchWeldingEff');
-
-
+Route::get('fetch/welding/welding_op_eff_ongoing', 'WeldingProcessController@fetchWeldingEffOngoing');
 
 Route::get('fetch/welding/welding_op_eff_target', 'WeldingProcessController@fetchWeldingOpEffTarget');
 Route::get('index/welding/production_result', 'WeldingProcessController@indexProductionResult');

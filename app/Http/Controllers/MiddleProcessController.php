@@ -5707,7 +5707,7 @@ class MiddleProcessController extends Controller
 					$now = new DateTime();
 					$interval = $last->diff($now);
 
-					if ($interval->format('%I') < 2) {
+					if ($interval->format('%I') < 10) {
 						$response = array(
 							'status' => false,
 							'message' => "Interval scan terlalu cepat",

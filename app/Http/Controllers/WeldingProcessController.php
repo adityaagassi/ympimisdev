@@ -1475,6 +1475,52 @@ class WeldingProcessController extends Controller
 
 	}
 
+	public function fetchWeldingEffOngoing(Request $request){
+		$date = '';
+		if(strlen($request->get("tanggal")) > 0){
+			$date = date('Y-m-d', strtotime($request->get("tanggal")));
+		}else{
+			$date = date('Y-m-d');
+		}
+
+		$target = db::connection('welding_controller')->select("SELECT op.`group`, datas.operator_nik, e.`name`, datas.part_type, datas.material_number, m.model, m.`key`, datas.sedang, ceil(s.time * v.lot_completion / 60) as std from
+			(select g.employee_id, e.`name`, g.`group` from ympimis.employee_groups g
+			left join ympimis.employees e on e.employee_id = g.employee_id
+			where g.location = 'soldering') op
+			left join
+			(SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'PHS' as part_type, op.operator_nik, phs.phs_code as material_number, d.order_sedang_start_date as sedang FROM m_mesin m
+			left join t_order o on o.order_id = m.order_id_sedang
+			left join t_order_detail d on d.order_id = m.order_id_sedang
+			left join m_operator op on op.operator_id = m.operator_id
+			left join m_phs phs on o.part_id = phs.phs_id
+			where m.flow_id = 1
+			and d.flow_id = 1
+			and o.part_type = 1
+			union
+			SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'HSA' as part_type, op.operator_nik, hsa.hsa_kito_code as material_number, d.order_sedang_start_date FROM m_mesin m
+			left join t_order o on o.order_id = m.order_id_sedang
+			left join t_order_detail d on d.order_id = m.order_id_sedang
+			left join m_operator op on op.operator_id = m.operator_id
+			left join m_hsa hsa on o.part_id = hsa.hsa_id
+			where m.flow_id = 1
+			and d.flow_id = 1
+			and o.part_type = 2) as datas
+			on op.employee_id = datas.operator_nik
+			left join ympimis.materials m on m.material_number = datas.material_number
+			left join ympimis.employee_syncs e on e.employee_id = datas.operator_nik
+			left join ympimis.standard_times s on s.material_number = datas.material_number
+			left join ympimis.material_volumes v on v.material_number = datas.material_number
+			order by op.`group`, op.`name` asc");
+
+		$response = array(
+			'status' => true,
+			'date' => $date,
+			'target' => $target,
+		);
+		return Response::json($response);
+	}
+
+
 	public function fetchWeldingOpEffTarget(Request $request){
 		$date = '';
 		if(strlen($request->get("tanggal")) > 0){
