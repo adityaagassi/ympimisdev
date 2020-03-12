@@ -155,7 +155,7 @@ table > thead > tr > th{
 		}
 	});
 
-	var audio_clock = new Audio('{{ url("sounds/airport_new.mp3") }}');
+	var audio_clock = new Audio('{{ url("sounds/airport.mp3") }}');
 	var myvar = setInterval(waktu,1000);
 
 	jQuery(document).ready(function(){
