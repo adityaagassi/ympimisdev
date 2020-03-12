@@ -582,7 +582,7 @@ class WorkshopController extends Controller{
 	public function exportListWJO(Request $request){
 
 		$workshop_job_orders = WorkshopJobOrder::leftJoin(db::raw('(select employee_id, name from employee_syncs) as approver'), 'approver.employee_id', '=', 'workshop_job_orders.approved_by')
-		->leftJoin(db::raw('(select employee_id, name from employee_syncs) as pic'), 'pic.employee_id', '=', 'workshop_job_orders.operator')
+		// ->leftJoin(db::raw('(select employee_id, name from employee_syncs) as pic'), 'pic.employee_id', '=', 'workshop_job_orders.operator')
 		->leftJoin(db::raw('(SELECT process_code, process_name FROM processes where remark = "workshop") as processes'), 'processes.process_code', '=', 'workshop_job_orders.remark');
 
 		if(strlen($request->get('reqFrom')) > 0 ){
@@ -656,7 +656,10 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.rating',
 			'workshop_job_orders.note',
 			'approver.name as approver_name',
-			'pic.name as pic_name'
+			db::raw('(SELECT concat( SPLIT_STRING ( `name`, " ", 1 ), " ", SPLIT_STRING ( `name`, " ", 2 ) ) AS pic FROM workshop_flow_processes 
+				LEFT JOIN employee_syncs on employee_syncs.employee_id = workshop_flow_processes.operator
+				WHERE order_no = workshop_job_orders.order_no 
+				order by id asc limit 1) as pic_name')
 		)
 		->get();
 
