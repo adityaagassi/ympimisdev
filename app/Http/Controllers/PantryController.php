@@ -170,6 +170,7 @@ class PantryController extends Controller
             LEFT JOIN ympimis.employee_syncs ON ympimis.employee_syncs.employee_id = pantry_logs.employee_id 
             WHERE
             date( in_time ) = '".$date."'
+            AND round( TIMESTAMPDIFF( SECOND, pantry_logs.in_time, pantry_logs.out_time ) / 60, 2 ) > 0.1
             ".$where."
             HAVING
             jam = '".$request->get('category')."' 
