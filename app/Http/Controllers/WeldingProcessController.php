@@ -751,7 +751,7 @@ class WeldingProcessController extends Controller
 								$desc = $gmcdesc[0];
 							}
 							// $hsaname = explode(' ', $key->phs_name);
-							array_push($list_antrian, $key->phs_code.'<br>'.$desc);
+							array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -766,7 +766,7 @@ class WeldingProcessController extends Controller
 								$desc = $gmcdesc[0];
 							}
 							// $hsaname = explode(' ', $lists[$i]->phs_name);
-							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$desc);
+							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
