@@ -744,8 +744,14 @@ class WeldingProcessController extends Controller
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
 						if (isset($key)) {
+							$gmcdesc = explode(' ', $key->phs_name);
+							if (ISSET($gmcdesc[1])) {
+								$desc = $gmcdesc[0].' '.$gmcdesc[1];
+							}else{
+								$desc = $gmcdesc[0];
+							}
 							// $hsaname = explode(' ', $key->phs_name);
-							array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
+							array_push($list_antrian, $key->phs_code.'<br>'.$desc);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -753,8 +759,14 @@ class WeldingProcessController extends Controller
 				}else{
 					for ($i=0; $i < 10; $i++) {
 						if (isset($lists[$i])) {
+							$gmcdesc = explode(' ', $lists[$i]->phs_name);
+							if (ISSET($gmcdesc[1])) {
+								$desc = $gmcdesc[0].' '.$gmcdesc[1];
+							}else{
+								$desc = $gmcdesc[0];
+							}
 							// $hsaname = explode(' ', $lists[$i]->phs_name);
-							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
+							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$desc);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -763,14 +775,27 @@ class WeldingProcessController extends Controller
 			}
 
 			if ($loc != 'cuci-solder') {
+				$gmcdescsedang = explode(' ', $ws->gmcdescsedang);
+				if (ISSET($gmcdescsedang[1])) {
+					$descsedang = $gmcdescsedang[0].' '.$gmcdescsedang[1];
+				}else{
+					$descsedang = $gmcdescsedang[0];
+				}
+
+				$gmcdescakan = explode(' ', $ws->gmcdescakan);
+				if (ISSET($gmcdescakan[1])) {
+					$descakan = $gmcdescakan[0].' '.$gmcdescakan[1];
+				}else{
+					$descakan = $gmcdescakan[0];
+				}
 				array_push($boards, [
 					'ws' => $ws->mesin_nama.'<br>'.$ws->ws_name,
 					'employee_id' => $ws->operator_nik,
 					'employee_name' => $ws->operator_name,
 					'shift' => $ws->shift,
 					'jam_shift' => $ws->jam_shift,
-					'sedang' => $ws->gmcsedang.'<br>'.$ws->gmcdescsedang,
-					'akan' => $ws->gmcakan.'<br>'.$ws->gmcdescakan,
+					'sedang' => $ws->gmcsedang.'<br>'.$descsedang,
+					'akan' => $ws->gmcakan.'<br>'.$descakan,
 					'akan_time' => $akan_time->format('%H:%i:%s'),
 					'sedang_time' => $sedang_time->format('%H:%i:%s'),
 					'queue_1' => $list_antrian[0],
@@ -787,8 +812,13 @@ class WeldingProcessController extends Controller
 				]);
 			}else{
 				$gmcdesc = explode(' ', $ws->gmcdesc);
+				if (ISSET($gmcdesc[1])) {
+					$desc = $gmcdesc[0].' '.$gmcdesc[1];
+				}else{
+					$desc = $gmcdesc[0];
+				}
 				array_push($boards, [
-					'queue' => $ws->gmc.'<br>'.$gmcdesc[0].' '.$gmcdesc[1].'<br>'.$ws->store_date.'<br>'.$ws->store_time
+					'queue' => $ws->gmc.'<br>'.$desc.'<br>'.$ws->store_date.'<br>'.$ws->store_time
 				]);
 				$indexCuci1++;
 			}
