@@ -521,7 +521,7 @@ class WeldingProcessController extends Controller
 				sedang.kanban_no AS kanban_no_sedang,
 				COALESCE(item_sedang.hsa_name,item_sedang_phs.phs_name) AS gmcdescsedang,
 				detail_sedang.order_sedang_start_date AS waktu_sedang,
-				COALESCE(item_akan.hsa_kito_code,item_akan_phs.phs_name) AS gmcakan,
+				COALESCE(item_akan.hsa_kito_code,item_akan_phs.phs_code) AS gmcakan,
 				akan.kanban_no AS kanban_no_akan,
 				COALESCE(item_akan.hsa_name,item_akan_phs.phs_name) AS gmcdescakan,
 				detail_akan.order_akan_start_date AS waktu_akan 
