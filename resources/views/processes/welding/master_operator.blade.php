@@ -92,7 +92,7 @@
 					<tr>
 						<th>NIK</th>
 						<th>Nama Operator</th>
-						<th width="10%">Group</th>
+						<th width="10%">Shift</th>
 						<th>Created at</th>
 						<th>Action</th>
 					</tr>
@@ -167,13 +167,13 @@
 									</div>
 								</div>
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Group<span class="text-red">*</span></label>
+									<label class="col-sm-4">Shift<span class="text-red">*</span></label>
 									<div class="col-sm-5" align="left">
-										<select class="form-control select2" data-placeholder="Select Group" name="group" id="group" style="width: 100%">
+										<select class="form-control select2" data-placeholder="Select Shift" name="group" id="group" style="width: 100%">
 											<option value=""></option>
-											<option value="A">A - Shift 1</option>
-											<option value="B">B - Shift 2</option>
-											<option value="C">C - Shift 3</option>
+											<option value="A">Shift 1</option>
+											<option value="B">Shift 2</option>
+											<option value="C">Shift 3</option>
 										</select>
 									</div>
 								</div>
@@ -225,13 +225,13 @@
 									</div>
 								</div>
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Group<span class="text-red">*</span></label>
+									<label class="col-sm-4">Shift<span class="text-red">*</span></label>
 									<div class="col-sm-5" align="left">
-										<select class="form-control select3" data-placeholder="Select Group" name="editgroup" id="editgroup" style="width: 100%">
+										<select class="form-control select3" data-placeholder="Select Shift" name="editgroup" id="editgroup" style="width: 100%">
 											<option value=""></option>
-											<option value="A">A - Shift 1</option>
-											<option value="B">B - Shift 2</option>
-											<option value="C">C - Shift 3</option>
+											<option value="A">Shift 1</option>
+											<option value="B">Shift 2</option>
+											<option value="C">Shift 3</option>
 										</select>
 									</div>
 								</div>
@@ -326,7 +326,13 @@
 					tableData += '<tr>';
 					tableData += '<td>'+ value.operator_nik +'</td>';
 					tableData += '<td>'+ value.operator_name +'</td>';
-					tableData += '<td>'+ value.group +'</td>';
+					if (value.group == 'A') {
+						tableData += '<td>Shift 1</td>';
+					}else if (value.group == 'B') {
+						tableData += '<td>Shift 2</td>';
+					}else if (value.group == 'C') {
+						tableData += '<td>Shift 3</td>';
+					}
 					tableData += '<td>'+ value.operator_create_date +'</td>';
 					tableData += '<td><button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editOperator(\''+value.operator_id+'\');">Edit</button><a href="" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation(\''+value.operator_nik+'\',\''+value.operator_id+'\');">Delete</a></td>';
 					tableData += '</tr>';
