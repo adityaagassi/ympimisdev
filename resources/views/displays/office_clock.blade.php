@@ -175,8 +175,12 @@ table > thead > tr > th{
 		// fillVisitor();
 		setInterval(fillVisitor,40000);
 
-		// setInterval(waktu,1000);
+		setInterval(refresh,3600000);
 	});
+
+	function refresh() {
+		window.location.reload();
+	}
 
 	function addZero(i) {
 		if (i < 10) {
