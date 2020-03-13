@@ -134,8 +134,8 @@
 	                <thead style="background-color: rgba(126,86,134,.7);">
 	                  <tr>
 	                  	<th width="1%">No.</th>
-	                    <th>GMC</th>
-	                    <th>GMC Desc</th> 
+	                    <th>Material Number</th>
+	                    <th>Material Description</th> 
 	                    <th>WS</th>
 	                  </tr>
 	                </thead>
