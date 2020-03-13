@@ -183,10 +183,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<hr style="margin:2px;">
 
 					<strong><i class="fa fa-phone margin-r-5"></i> Nomor Telepon</strong>
-					<div class="pull-right"><button class="btn btn-sm btn-primary" style="padding: 2px 5px 2px 5px" data-toggle="modal" data-target="#editModal"><u><i class="fa fa-pencil"></i> Edit</button></u></div>
+					<!-- <div class="pull-right"><button class="btn btn-sm btn-primary" style="padding: 2px 5px 2px 5px" data-toggle="modal" data-target="#editModal"><u><i class="fa fa-pencil"></i> Edit</button></u></div> -->
 
 					<p class="text-muted"><i class="fa fa-mobile-phone margin-r-5"></i>&nbsp;&nbsp; {{$profil[0]->phone}}<br>
 						<i class="fa fa-whatsapp margin-r-5"></i> {{$profil[0]->wa_number}}</p>
+						<p style="color: red">* UPDATE NOMOR TELEPON HANYA BISA DILAKUKAN MELALUI SUNFISH OLEH ADMIN MASING MASING BAGIAN</p>
 
 					</div>
 					<!-- /.box-body -->
@@ -427,33 +428,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			</div>
 		</div>
 		<!-- /.col -->
-	</div>
-	<div id="editModal" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Edit Nomor yang bisa Dihubungi</h4>
-				</div>
-				<div class="modal-body">
-					<div class="row" style="margin-bottom: 2%">
-						<div class="col-xs-5" align="right"><label>Nomor Telepon<span class="text-red">*</span></label></div>
-						<div class="col-xs-6"><input type="text" class="form-control" placeholder="Active Phone Number" id="phone_number"></div>
-					</div>
-					<div class="row">
-						<div class="col-xs-5" align="right"><label>Nomor WhatsApp<span class="text-red">*</span></label></div>
-						<div class="col-xs-6"><input type="text" class="form-control" placeholder="WhatsApp Number" id="wa_number"></div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary" id="editData"><i class="fa fa-pencil"></i> Edit</button>
-				</div>
-			</div>
-
-		</div>
 	</div>
 
 	<!-- DETAIL -->
@@ -730,29 +704,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		$("#bulanAwal").val("");
 		$("#bulanAkhir").val("");
 		fill_kaizen();
-	});
-
-	$("#editData").click(function() {
-		var data = {
-			employee_id: "{{ $emp_id }}",
-			phone_number: $("#phone_number").val(),
-			wa_number: $("#wa_number").val()
-		}
-
-		if ($("#phone_number").val() == "{{$profil[0]->phone}}" && $("#wa_number").val() == "{{$profil[0]->wa_number}}") {
-			$('#editModal').modal('hide');
-			openSuccessGritter('Success','Tidak Ada Data yang Berubah');
-		} else {
-			$.get('{{ url("update/employee/number") }}', data, function(result, status, xhr){
-				if (result.status) {
-					$('#editModal').modal('hide');
-					openSuccessGritter('Success','Nomor Telepon Berhasil Diubah');
-				} else {
-					openErrorGritter('Error!', result.datas);
-				}
-			})
-		}
-
 	});
 
 	function check_chart() {
