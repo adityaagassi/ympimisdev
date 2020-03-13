@@ -79,6 +79,8 @@
 <section class="content" style="padding-top: 0; overflow-y:hidden; overflow-x:scroll;">
 	<div class="row">
 		<div class="col-xs-12" style="margin-top: 5px;">
+			<div id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
+			
 			<div id="chart"></div>
 
 			<!-- <table class="table table-bordered table-stripped" id="logs">
@@ -133,6 +135,24 @@
 		setInterval(drawTable, 2000);
 	});
 
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
+	}
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
 	function drawTable() {
 		var filter = '{{$_GET["filter"]}}';
 		var data = {
@@ -142,6 +162,9 @@
 
 		$.get('{{ url("fetch/middle/request/") }}', data, function(result, status, xhr){
 			if(result.status){
+				$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
+
 				$("#modelAll").empty();
 				$("#quantity").empty();
 				$("#quantity_kanban").empty();
