@@ -43,6 +43,19 @@ class WeldingProcessController extends Controller
 		$this->fy = db::table('weekly_calendars')->select('fiscal_year')->distinct()->get();
 	}
 
+	public function indexWeldingTrend(){
+		$emps = db::select("select eg.employee_id, e.`name` from employee_groups eg
+			left join employees e on eg.employee_id = e.employee_id
+			where eg.location = 'soldering'
+			order by e.`name`");
+
+		return view('processes.welding.display.welding_op_trend', array(
+			'title' => 'Welding Operator Trends',
+			'title_jp' => '',
+			'emps' => $emps
+		))->with('page', 'Operator Trends');
+	}
+
 	public function indexWeldingEff(){
 		return view('processes.welding.display.welding_eff', array(
 			'title' => 'Operator Efficiency',
@@ -644,7 +657,34 @@ class WeldingProcessController extends Controller
 			$list_antrian = array();
 
 			if ($loc == 'hsa-sx') {
-				$lists = DB::connection('welding_controller')->select("SELECT
+				if ($ws->ws_name == 'WS 2T') {
+					$lists = DB::connection('welding_controller')->select("SELECT
+					t_order.order_id,
+					t_order.part_id,
+					COALESCE(m_hsa.hsa_kito_code,m_phs.phs_code) as hsa_kito_code,
+					COALESCE(m_hsa.hsa_name,m_phs.phs_name) as hsa_name,
+					COALESCE(ws_phs.ws_name ,ws_hsa.ws_name) as ws_name
+					FROM
+					t_order
+					JOIN t_order_detail ON t_order.order_id = t_order_detail.order_id
+					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_order.part_id
+					LEFT JOIN m_phs ON m_phs.phs_id = t_order.part_id
+					LEFT JOIN m_ws as ws_phs ON m_phs.ws_id = ws_phs.ws_id 
+					LEFT JOIN m_ws as ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
+					WHERE
+					(t_order_detail.order_status = 1 
+					and t_order_detail.flow_id = 1
+					AND t_order.part_type = 1 
+					AND ws_phs.ws_name = '".$ws->ws_name."' )
+					OR
+					(t_order_detail.order_status = 1 
+					and t_order_detail.flow_id = 1
+					AND t_order.part_type = 1 
+					AND ws_phs.ws_name = '".$ws->ws_name."' )
+					ORDER BY
+					pesanan_id,order_id ASC");
+				}else{
+					$lists = DB::connection('welding_controller')->select("SELECT
 					t_order.order_id,
 					t_order.part_id,
 					m_hsa.hsa_kito_code,
@@ -662,6 +702,7 @@ class WeldingProcessController extends Controller
 					AND ws_name = '".$ws->ws_name."' 
 					ORDER BY
 					pesanan_id,order_id ASC");
+				}
 
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
