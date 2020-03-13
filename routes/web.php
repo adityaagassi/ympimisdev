@@ -847,10 +847,14 @@ Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 	Route::get('index/meeting/create', 'MeetingController@create');
 	Route::get('index/meeting/list/{id}', 'MeetingController@list');
 	Route::post('delete/meeting', 'MeetingController@deleteMeeting');
+	Route::post('edit/meeting', 'MeetingController@editMeeting');
+	Route::post('create/meeting', 'MeetingController@createMeeting');
 });
 Route::get('index/meeting', 'MeetingController@indexMeeting');
+Route::get('index/meeting/attendance', 'MeetingController@indexMeetingAttendance');
 Route::get('fetch/meeting', 'MeetingController@fetchMeeting');
 Route::get('fetch/meeting/detail', 'MeetingController@fetchMeetingDetail');
+Route::get('fetch/meeting/attendance', 'MeetingController@fetchMeetingAttendance');
 
 //welding process
 Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
@@ -879,10 +883,8 @@ Route::get('index/welding/op_analysis', 'WeldingProcessController@indexOpAnalysi
 Route::get('fetch/welding/op_analysis', 'WeldingProcessController@fetchOpAnalysis');
 Route::get('index/welding/welding_op_eff', 'WeldingProcessController@indexWeldingOpEff');
 Route::get('fetch/welding/welding_op_eff', 'WeldingProcessController@fetchWeldingOpEff');
-
 Route::get('index/welding/welding_eff', 'WeldingProcessController@indexWeldingEff');
 Route::get('fetch/welding/welding_op_eff_ongoing', 'WeldingProcessController@fetchWeldingEffOngoing');
-
 Route::get('fetch/welding/welding_op_eff_target', 'WeldingProcessController@fetchWeldingOpEffTarget');
 Route::get('index/welding/production_result', 'WeldingProcessController@indexProductionResult');
 Route::get('fetch/welding/production_result', 'WeldingProcessController@fetchProductionResult');
@@ -907,10 +909,11 @@ Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 Route::get('index/welding/welding_board/{loc}', 'WeldingProcessController@indexWeldingBoard');
 Route::get('fetch/welding/welding_board', 'WeldingProcessController@fetchWeldingBoard');
+Route::get('fetch/welding/fetch_detail', 'WeldingProcessController@fetchDetailWeldingBoard');
 Route::get('index/welding/current_welding', 'WeldingProcessController@indexCurrentWelding');
 Route::get('fetch/welding/current_welding', 'WeldingProcessController@fetchCurrentWelding');
-
-
+Route::get('index/welding/op_trend', 'WeldingProcessController@indexWeldingTrend');
+Route::get('fetch/welding/op_trend', 'WeldingProcessController@fetchWeldingTrend');
 
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -2232,6 +2235,11 @@ Route::post('index/cpar/edit_item', 'CparController@edit_item');
 Route::post('index/cpar/delete_item', 'CparController@delete_item');
 Route::post('index/cpar/update_detail/{id}', 'CparController@update_detail');
 Route::get('index/cpar/print/{id}', 'CparController@print_report');
+
+// Verifikasi CPAR Departemen
+
+Route::get('index/cpar/verifikasicpar/{id}', 'CparController@verifikasicpar');
+Route::post('index/cpar/approval/{id}', 'CparController@approval');
 
 // Form Ketidaksesuaian YMMJ
 Route::get('index/qa_ymmj', 'QcYmmjController@index');

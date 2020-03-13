@@ -127,6 +127,7 @@
 							<td style="width: 1%; font-weight: bold; font-size: 16px; background-color: rgb(220,220,220);">OP</td>
 							<td id="opwelding" style="width: 5%; font-weight: bold; font-size: 16px; background-color: rgb(100,100,100); color: yellow; border: 1px solid black"></td>
 							<input type="hidden" id="material_tag">
+							<input type="hidden" id="barcode_number">
 							<input type="hidden" id="material_number">
 							<input type="hidden" id="material_quantity">
 							<input type="hidden" id="employee_id">
@@ -220,14 +221,6 @@
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-
-	// $("#tag").on('change keyup paste', function() {
-	// 	if (this.value.length == 10) {
-	// 		console.log(this.value);
-	// 		getHeader(this.value);
-	// 		$(this).val("");
-	// 	}
-	// });
 
 	$('#tag').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
@@ -328,6 +321,12 @@
 				}
 				$('#started_at').val(result.started_at);
 				$('#material_tag').val(tag);
+				if($('#loc').val() == 'phs-visual-sx'){
+					$('#barcode_number').val(result.opwelding.phs_kartu_barcode);
+				}
+				else{
+					$('#barcode_number').val(result.opwelding.hsa_kartu_barcode);
+				}
 				$('#material_number').val(result.material.material_number);
 				$('#material_quantity').val(result.material.lot_completion);
 
@@ -464,6 +463,7 @@
 		var data = {
 			loc: $('#loc').val(),
 			tag: $('#material_tag').val(),
+			barcode_number: $('#barcode_number').val(),
 			material_number: $('#material_number').val(),
 			quantity: $('#material_quantity').val(),
 			employee_id: $('#op').text(),
