@@ -2814,6 +2814,7 @@ class WeldingProcessController extends Controller
 					['material_number' => $request->get('material_number'),
 					'location' => $request->get('loc'),
 					'quantity' => $request->get('cek'),
+					'barcode_number' => $request->get('barcode_number'),
 					'last_check' => $request->get('employee_id'),
 					'updated_at' => Carbon::now()]
 				);
