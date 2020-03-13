@@ -57,7 +57,7 @@ class ActivityListController extends Controller
     		)->with('page', 'Activity List');
     }
 
-    function filter($id,$no)
+    function filter($id,$no,$frequency)
     {
       $emp_id = Auth::user()->username;
       $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
@@ -112,10 +112,10 @@ class ActivityListController extends Controller
         $activity_type = 'Temuan NG';
       }
       if($role_code == "MIS" || $role_code == "S"){
-        $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->get();
+        $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();
       }
       else{
-        $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('leader_dept',$name)->where('activity_name','!=','Null')->get();
+        $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('leader_dept',$name)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();
       }
       $data = array('activity_list' => $activityList,
                     'department' => $department,

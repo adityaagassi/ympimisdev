@@ -910,6 +910,7 @@ Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKens
 Route::get('index/welding/welding_board/{loc}', 'WeldingProcessController@indexWeldingBoard');
 Route::get('fetch/welding/welding_board', 'WeldingProcessController@fetchWeldingBoard');
 Route::get('fetch/welding/fetch_detail', 'WeldingProcessController@fetchDetailWeldingBoard');
+Route::get('index/welding/master_kanban/{loc}', 'WeldingProcessController@indexMasterKanban');
 Route::get('index/welding/current_welding', 'WeldingProcessController@indexCurrentWelding');
 Route::get('fetch/welding/current_welding', 'WeldingProcessController@fetchCurrentWelding');
 Route::get('index/welding/op_trend', 'WeldingProcessController@indexWeldingTrend');
@@ -1791,7 +1792,7 @@ Route::get('index/activity_list/edit/{id}', 'ActivityListController@edit');
 Route::get('index/activity_list/edit_by_department/{id}/{department_id}/{no}', 'ActivityListController@edit_by_department');
 Route::post('index/activity_list/update/{id}', 'ActivityListController@update');
 Route::post('index/activity_list/update_by_department/{id}/{department_id}/{no}', 'ActivityListController@update_by_department');
-Route::get('index/activity_list/filter/{id}/{no}', 'ActivityListController@filter');
+Route::get('index/activity_list/filter/{id}/{no}/{frequency}', 'ActivityListController@filter');
 
 //production audit
 Route::get('index/production_audit/index/{id}/{product}/{proses}', 'ProductionAuditController@index');
@@ -2240,6 +2241,7 @@ Route::get('index/cpar/print/{id}', 'CparController@print_report');
 
 Route::get('index/cpar/verifikasicpar/{id}', 'CparController@verifikasicpar');
 Route::post('index/cpar/approval/{id}', 'CparController@approval');
+Route::get('index/cpar/sendemail/{id}', 'CparController@sendemail');
 
 // Form Ketidaksesuaian YMMJ
 Route::get('index/qa_ymmj', 'QcYmmjController@index');
