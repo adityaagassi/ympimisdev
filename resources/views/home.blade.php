@@ -224,17 +224,21 @@
                             </a>                           
                         </td>
                     </tr>
-
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Other Information (他の情報)</span>
-                            <br>
-                            <a href="{{ url("/index/form_experience") }}">
-                                <i class="fa fa-caret-right"></i> Form Permasalahan & Kegagalan (問題・失敗のフォーム)
-                            </a>
+                            <span style="font-weight: bold;">Company CPAR (???)</span>
                             <br>
                             <a href="{{ url("/index/cpar") }}">
                                 <i class="fa fa-caret-right"></i> CPAR Antar Departemen (部門間の是正措置報告)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Others (他の情報)</span>
+                            <br>
+                            <a href="{{ url("/index/form_experience") }}">
+                                <i class="fa fa-caret-right"></i> Form Permasalahan & Kegagalan (問題・失敗のフォーム)
                             </a>
                         </td>
                     </tr>

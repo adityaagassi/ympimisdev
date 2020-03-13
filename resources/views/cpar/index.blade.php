@@ -54,7 +54,16 @@ td {
     <!-- <small>Validate Your CPAR</small> -->
   </h1>
   <ol class="breadcrumb">
-     <a href="{{ url("index/cpar/create")}}" class="btn btn-success btn-sm" style="color:white;float: right"><i class="fa fa-plus"></i> Create {{ $page }}</a>
+    <?php 
+      if (strpos(strtolower($employee->position), 'operator') !== false) {
+
+      } else { ?>
+      
+        <a href="{{ url("index/cpar/create")}}" class="btn btn-success btn-sm" style="color:white;float: right"><i class="fa fa-plus"></i> Create {{ $page }} </a>
+      
+      <?php 
+      }
+     ?>
   </ol>
 </section>
 @endsection
@@ -246,7 +255,14 @@ td {
           tableData += '<td>'+ day +' '+month+' '+year +'</td>';
           tableData += '<td>'+ sec_f[0] + ' - '+ sec_f[1] +'</td>';
           tableData += '<td>'+ sec_t[0] + ' - '+ sec_t[1] +'</td>';
-          tableData += '<td><a href="{{ url("index/cpar/detail") }}/'+value.id+'" class="btn btn-primary btn-xs">Detail</a></td>';
+        
+          if("{{Auth::user()->username}}" == value.pelapor || "{{Auth::user()->role_code}}" == "MIS"){
+            tableData += '<td><a href="{{ url("index/cpar/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a> <a href="{{ url("index/cpar/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Detail</a></td>';            
+          }
+          else{
+            tableData += '<td><a href="{{ url("index/cpar/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a></td>';
+          }
+
           tableData += '</tr>';
           count += 1;
         });

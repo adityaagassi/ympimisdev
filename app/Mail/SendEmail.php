@@ -55,16 +55,16 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Unconfirmed Overtime (情報管理システムの未確認残業)')->view('mails.confirmation_overtime');
         }
         if($this->remark == 'cpar'){
-            return $this->from('ympimis@gmail.com')->priority(1)->subject('CPAR '.$this->data[0]->judul_komplain.' (是正防止処置要求)')->view('mails.cpar');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('CPAR '.$this->data[0]->judul_komplain.' (是正防止処置要求)')->view('mails.cpar');
         }
         if($this->remark == 'rejectcpar'){
-            return $this->from('ympimis@gmail.com')->priority(1)->subject('Penolakan Corrective and Preventive Action Request (CPAR) (是正防止処置要求)')->view('mails.rejectcpar');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Penolakan Corrective and Preventive Action Request (CPAR) (是正防止処置要求)')->view('mails.rejectcpar');
         }
         if($this->remark == 'car'){
-            return $this->from('ympimis@gmail.com')->priority(1)->subject('CAR '.$this->data[0]->judul_komplain.' (Corrective Action Report) (是正処置対策)')->view('mails.car');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('CAR '.$this->data[0]->judul_komplain.' (Corrective Action Report) (是正処置対策)')->view('mails.car');
         }
         if($this->remark == 'rejectcar'){
-            return $this->from('ympimis@gmail.com')->priority(1)->subject('Penolakan Corrective Action Report (CAR) (是正処置対策)')->view('mails.rejectcar');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Penolakan Corrective Action Report (CAR) (是正処置対策)')->view('mails.rejectcar');
         }
         if($this->remark == 'user_document'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Users Documents Reminder (ユーザ資料関連の催促メール)')->view('mails.user_document');
@@ -141,6 +141,16 @@ class SendEmail extends Mailable
         }
         if($this->remark == 'ng_finding'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Temuan NG (??)')->view('mails.ng_finding');
+        }
+        if($this->remark == 'cpar_dept'){
+            return $this->from('ympimis@gmail.com', 'PT. YMPI (CPAR Antar Departemen)')->priority(1)->subject('CPAR '.$this->data[0]->judul.' (是正防止処置要求)')->view('mails.cpar_dept');
+        }
+        if($this->remark == 'rejectcpar_dept'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('CPAR '.$this->data[0]->judul.' Telah Ditolak')->view('mails.rejectcpar_dept');
+        }
+
+        if($this->remark == 'machine'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Machine Error Information ()')->view('mails.machine_notification');
         }
     }
 }

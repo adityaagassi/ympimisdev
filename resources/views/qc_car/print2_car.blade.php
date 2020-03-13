@@ -48,11 +48,11 @@
   </div>   
   @endif
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
+  <div class="box box-primary" style="overflow-x: scroll;">
     {{-- <div class="box-header with-border">
       <h3 class="box-title">Detail User</h3>
     </div>   --}}
-      <div class="box-body">
+      <div class="box-body" >
       	<table class="table" style="border: 1px solid black;">
 			@foreach($cars as $car)
 		<thead>

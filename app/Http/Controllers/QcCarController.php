@@ -1371,7 +1371,7 @@ class QcCarController extends Controller
                       $cpar->save();
                   }
 
-                  $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
+                  $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$id."'";
                   $mails = DB::select($mailto);
 
                   foreach($mails as $mail){
@@ -1705,14 +1705,22 @@ class QcCarController extends Controller
               $to = "staff";
             }
             else if ($cars->car_cpar->kategori == "Internal") {
-              $to = "leader";
+              $to = "foreman";
             }
 
-            $mailto = "select distinct email from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$request->get('id')."'";
+            $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id='".$request->get('id')."'";
             $mails = DB::select($mailto);
 
             foreach($mails as $mail){
               $mailtoo = $mail->email;
+              $number = $mail->phone;
+            }
+            
+            if (strpos($number, '/') !== false) {
+              $number2 = explode("/", $number);
+              $mailnumber = '62'.substr($number2[0],1);
+            }else{
+              $mailnumber = '62'.substr($number, 1);
             }
 
             $cars->save();
@@ -1720,6 +1728,12 @@ class QcCarController extends Controller
             $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$request->get('id')."'";
 
             $cars2 = db::select($query2);
+
+            $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+            $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
+            $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$cars->car_cpar->judul_komplain." Dengan Nomor ".$cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
+            $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
+            $fd = @implode('', file($url));
 
             Mail::to($mailtoo)->send(new SendEmail($cars2, 'car'));
             // return redirect('/index/qc_car/verifikasigm/'.$request->get('id'))->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');

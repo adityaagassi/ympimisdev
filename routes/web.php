@@ -865,6 +865,7 @@ Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 Route::get('index/welding/operator', 'WeldingProcessController@indexMasterOperator');
 Route::get('fetch/welding/operator', 'WeldingProcessController@fetchMasterOperator');
 Route::post('post/welding/add_operator', 'WeldingProcessController@addOperator');
+Route::post('post/welding/add_kanban', 'WeldingProcessController@addKanban');
 Route::get('index/welding/destroy_operator/{id}', 'WeldingProcessController@destroyOperator');
 Route::get('fetch/welding/get_operator', 'WeldingProcessController@getOperator');
 Route::post('index/welding/update_operator', 'WeldingProcessController@updateOperator');
@@ -911,6 +912,8 @@ Route::get('index/welding/welding_board/{loc}', 'WeldingProcessController@indexW
 Route::get('fetch/welding/welding_board', 'WeldingProcessController@fetchWeldingBoard');
 Route::get('fetch/welding/fetch_detail', 'WeldingProcessController@fetchDetailWeldingBoard');
 Route::get('index/welding/master_kanban/{loc}', 'WeldingProcessController@indexMasterKanban');
+Route::get('fetch/welding/kanban', 'WeldingProcessController@fetchMasterKanban');
+Route::get('index/welding/destroy_kanban/{loc}/{id}', 'WeldingProcessController@destroyKanban');
 Route::get('index/welding/current_welding', 'WeldingProcessController@indexCurrentWelding');
 Route::get('fetch/welding/current_welding', 'WeldingProcessController@fetchCurrentWelding');
 Route::get('index/welding/op_trend', 'WeldingProcessController@indexWeldingTrend');
@@ -2241,6 +2244,7 @@ Route::get('index/cpar/print/{id}', 'CparController@print_report');
 
 Route::get('index/cpar/verifikasicpar/{id}', 'CparController@verifikasicpar');
 Route::post('index/cpar/approval/{id}', 'CparController@approval');
+Route::post('index/cpar/notapprove/{id}', 'CparController@notapprove');
 Route::get('index/cpar/sendemail/{id}', 'CparController@sendemail');
 
 // Form Ketidaksesuaian YMMJ

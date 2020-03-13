@@ -72,14 +72,22 @@
     Detail {{ $page }}
     <small>Detail CPAR</small>
   </h1>
-  <ol class="breadcrumb">
+  <ol class="breadcrumb" style="width: 500px">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
    <li><a href="#">Examples</a></li>
    <li class="active">Blank page</li> --}}
 
-    <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email Ke QA" onclick="sendemail({{ $cpar->id }})">Send Email</a>
+     @if($cpar->posisi == "sl" && (Auth::user()->username == $cpar->pelapor || Auth::user()->role_code == "MIS"))
+         <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cpar->id }})" style="width:200px">Send Email</a>
+     @elseif($cpar->posisi != "sl" && (Auth::user()->username == $cpar->pelapor || Auth::user()->role_code == "MIS"))
+          <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
+     @else
+         
+     @endif
 
-     <a class="btn btn-warning btn-sm pull-right" data-toggle="tooltip" title="Lihat Report" href="{{url('index/cpar/print', $cpar['id'])}}" target="_blank" style="margin-right: 5px">Preview Report CPAR</a>
+    
+
+     <a class="btn btn-warning btn-sm pull-right" data-toggle="tooltip" title="Lihat Report" href="{{url('index/cpar/print', $cpar['id'])}}" target="_blank" style="margin-right: 5px;width: 150px">Preview Report CPAR</a>
  </ol>
     
 </section>
@@ -129,7 +137,7 @@
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6">
               <label for="subject">Identitas<span class="text-red">*</span></label>
-              <input type="text" id="subject" class="form-control" value="{{$cpar->employee_id}} - {{$emp->name}}" readonly>
+              <input type="text" id="subject" class="form-control" value="{{$cpar->pelapor}} - {{$emp->name}}" readonly>
           </div>
         </div>
 
@@ -166,7 +174,7 @@
                     <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
                     @endif
                   @else
-                    @if($section->section == $secfrom[0] && $section->group == $secfrom[1])
+                    @if($section->group == $secfrom[0] && $section->section == $secfrom[1])
                     <option value="{{ $section->section }}_{{ $section->group }}" selected>{{ $section->section }} - {{ $section->group }}</option>
                     @else
                     <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
@@ -630,6 +638,21 @@
         dropdownParent: $('#EditModal')
       });
     })
+
+    function sendemail(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim CPAR ini?")) {
+        return false;
+      }
+
+      $.get('{{ url("index/cpar/sendemail/$cpar->id") }}', data, function(result, status, xhr){
+        openSuccessGritter("Success","Email Has Been Sent");
+        window.location.reload();
+      })
+    }
 
     CKEDITOR.replace('detail' ,{
       filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'

@@ -92,6 +92,7 @@
               <label for="subject">Identitas<span class="text-red">*</span></label>
               <input type="text" id="subject" class="form-control" value="{{$employee->employee_id}} - {{$employee->name}}" readonly>
               <input type="hidden" id="cpar_nik" class="form-control" value="{{$employee->employee_id}}" readonly>
+              <input type="hidden" id="cpar_pos" class="form-control" value="{{$employee->position}}" readonly>
           </div>
         </div>
 
@@ -114,17 +115,18 @@
         <div class="row" align="left">
           <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="section_from">Section From<span class="text-red">*</span></label>
-            <select class="form-control select2" style="width: 100%;" id="cpar_secfrom" name="cpar_secfrom" data-placeholder="Pilih Section Pelapor" required>
-                <option></option>
-                @foreach($sections as $section)
-                @if($section->group == null)
-                <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+            
+
+            <select class="form-control select2" style="width: 100%;" id="cpar_secfrom" name="cpar_secfrom" data-placeholder="Pilih Section Pelapor" required readonly="">
+                @foreach($secfrom as $sec)
+                @if($sec->group == null)
+                <option value="{{ $sec->department }}_{{ $sec->section }}">{{ $sec->department }} - {{ $sec->section }}</option>
                 @else
-                <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
+                <option value="{{ $sec->group }}_{{ $sec->section }}">{{ $sec->section }} - {{ $sec->group }}</option>
                 @endif
                 @endforeach
             </select>
-          </div>
+          </div>  
           <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="section_to">Section To<span class="text-red">*</span></label>
             <select class="form-control select2" style="width: 100%;" id="cpar_secto" name="cpar_secto" data-placeholder="Pilih Section" required>
@@ -220,6 +222,7 @@
       var data = {
         tanggal: $("#cpar_tgl").val(),
         employee_id: $("#cpar_nik").val(),
+        position: $("#cpar_pos").val(),
         kategori: $("#cpar_kategori").val(),
         judul: $("#cpar_judul").val(),
         secfrom: $("#cpar_secfrom").val(),
@@ -228,7 +231,7 @@
 
       $.post('{{ url("post/cpar/create") }}', data, function(result, status, xhr){
         $("#loading").hide();
-        openSuccessGritter("Success","CPAR Antar Departemen Berhasil Dibuat");
+        openSuccessGritter("Success","CPAR Berhasil Dibuat");
         setTimeout(function(){  window.location = "{{url('index/cpar/detail')}}/"+result.datas; }, 1000);
       });
     });
