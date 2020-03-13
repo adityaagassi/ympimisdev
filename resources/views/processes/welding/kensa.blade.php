@@ -298,6 +298,12 @@
 				if(result.opwelding){
 					if(result.opwelding.operator_nik){
 						if(result.opwelding.operator_nik.includes('PI')){
+							if($('#loc').val() == 'phs-visual-sx'){
+								$('#barcode_number').val(result.opwelding.phs_kartu_barcode);
+							}
+							else{
+								$('#barcode_number').val(result.opwelding.hsa_kartu_barcode);
+							}
 							$("#opwelding").text(result.opwelding.operator_nik+" "+result.opwelding.operator_name);	
 							$('#welding_time').val(result.opwelding.order_finish_date);
 							$('#kensa_id').val(result.opwelding.kensa_id);
@@ -321,12 +327,6 @@
 				}
 				$('#started_at').val(result.started_at);
 				$('#material_tag').val(tag);
-				if($('#loc').val() == 'phs-visual-sx'){
-					$('#barcode_number').val(result.opwelding.phs_kartu_barcode);
-				}
-				else{
-					$('#barcode_number').val(result.opwelding.hsa_kartu_barcode);
-				}
 				$('#material_number').val(result.material.material_number);
 				$('#material_quantity').val(result.material.lot_completion);
 

@@ -83,6 +83,43 @@ class WeldingProcessController extends Controller
 		))->with('page', 'Master Operator');		
 	}
 
+	public function indexMasterKanban($loc){
+
+		$list_ws = DB::connection('welding_controller')->select("SELECT * FROM m_ws");
+
+		if ($loc == 'hpp-sx') {
+			$title = 'HPP Saxophone Kanban Master';
+			$title_jp = 'HPP ??';
+			return view('processes.welding.master_kanban', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'loc' => $loc,
+				'list_ws' => $list_ws,
+				'list_ws2' => $list_ws,
+			))->with('page', 'HPP');
+		}elseif($loc == 'phs-sx'){
+			$title = 'PHS Saxophone Kanban Master';
+			$title_jp = 'PHS ??';
+			return view('processes.welding.master_kanban', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'loc' => $loc,
+				'list_ws' => $list_ws,
+				'list_ws2' => $list_ws,
+			))->with('page', 'PHS');
+		}elseif($loc == 'hsa-sx'){
+			$title = 'HSA Saxophone Kanban Master';
+			$title_jp = 'HSA ??';
+			return view('processes.welding.master_kanban', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'loc' => $loc,
+				'list_ws' => $list_ws,
+				'list_ws2' => $list_ws,
+			))->with('page', 'HSA');
+		}
+	}
+
 	public function indexCurrentWelding(){
 		$title = 'Ongoing Welding';
 		$title_jp = '??';
