@@ -591,11 +591,14 @@
 													</div>
 												</div>
 											</div>
-											<div class="col-xs-6" id="flows">
+											<div class="col-xs-12" id="flows">
+												
+											</div>
+											<!-- <div class="col-xs-6" id="flows">
 											</div>
 
 											<div class="col-xs-6" id="ops">
-											</div>
+											</div> -->
 											<div class="col-xs-12">
 												<br>
 												<button class="btn btn-success pull-right" onclick="edit_action()"><i class="fa fa-save" ></i> Save</button>
@@ -1333,13 +1336,6 @@
 		}
 
 		function on_change_flow(i) {
-			// var d1 = new Date ();
-			// var d2 = new Date ( d1 );
-			// d2.setMinutes ( d1.getMinutes() + 30 );
-			// alert ( d2 );
-
-			// return false;
-
 			$("#start_"+i+", #start_time"+i+", #process_qty_"+i).change(function() {
 				var start_time = "";
 				var finish_time = "";
@@ -1355,28 +1351,11 @@
 					}
 				}
 
-				// if ($("#finish_time"+i).val().indexOf(':') != -1) {
-				// 	if ($("#finish_time"+i).val().length <= 4) {
-				// 		finish_time = "0";
-				// 		finish_time += $("#finish_time"+i).val();
-				// 		finish_time += ":00";
-				// 	} else {
-				// 		finish_time = $("#finish_time"+i).val();
-				// 		finish_time += ":00";
-				// 	}
-
-				// }
-
 				var d1 = new Date($('#start_'+i).val()+' '+start_time);
 				var d2 = new Date(d1.getTime() + $("#process_qty_"+i).val()*60000 );
 
 				console.log ( d1 );
 				console.log ( d2 );
-				
-				// var d2 = new Date($('#finish_'+i).val()+' '+finish_time);
-
-				// var minutes =  (d2 - d1)/ 1000 / 60;
-
 
 				if (isNaN(d2) == false) {
 					// $("#process_qty_"+i).val(minutes);
@@ -1388,6 +1367,45 @@
 					minutes = ':' + format_two_digits(d2.getMinutes());
 					$("#finish_"+i).val(year+month+day);
 					$("#finish_time"+i).val(hours+minutes);
+					
+				}
+			});
+		}
+
+
+		function on_change_flow_edit(i) {
+
+			$("#edit_start_"+i+", #edit_start_time"+i+", #edit_process_qty_"+i).change(function() {
+				var start_time = "";
+				var finish_time = "";
+
+				if ($("#edit_start_time"+i).val().indexOf(':') != -1) {
+					if ($("#edit_start_time"+i).val().length <= 4) {
+						start_time = "0";
+						start_time += $("#edit_start_time"+i).val();
+						start_time += ":00";
+					} else {
+						start_time = $("#edit_start_time"+i).val();
+						start_time += ":00";
+					}
+				}
+
+				var d1 = new Date($('#edit_start_'+i).val()+' '+start_time);
+				var d2 = new Date(d1.getTime() + $("#edit_process_qty_"+i).val()*60000 );
+
+				console.log ( d1 );
+				console.log ( d2 );
+				
+				if (isNaN(d2) == false) {
+					// $("#process_qty_"+i).val(minutes);
+					year = d2.getFullYear();
+					month = '-' + format_two_digits(d2.getMonth()+1);
+					// console.log(d2.getMonth()+1);
+					day = '-' + format_two_digits(d2.getDate());
+					hours = format_two_digits(d2.getHours());
+					minutes = ':' + format_two_digits(d2.getMinutes());
+					$("#edit_finish_"+i).val(year+month+day);
+					$("#edit_finish_time"+i).val(hours+minutes);
 					
 				}
 			});
@@ -1605,7 +1623,7 @@
 						}else if(result.tableData[i].process_name == 'Listed'){
 							assign = ' onclick="showEdit(\''+result.tableData[i].order_no+'\')"';
 						}else if(result.tableData[i].process_name == 'InProgress'){
-							assign = ' onclick="showEdit(\''+result.tableData[i].order_no+'\')"';
+							assign = ' onclick="open_modal_detail(\''+result.tableData[i].order_no+'\')"';
 						}
 
 
@@ -1945,13 +1963,21 @@ function showAssignment(order_no) {
 function edit_action() {
 	$("#loading").show();
 
-	var pic = new Array();
+	var edit_pic = new Array();
+	var no = 1;
 	$(".pic").each(function() {
-		pic.push([$(this).attr('id'),$(this).val()]);
+		// pic.push([$(this).attr('id'),$(this).val()]);
+		edit_pic.push([
+			$(this).attr('id'),
+			$(this).val(),
+			$("#edit_process_qty_"+no).val(),
+			$("#edit_start_"+no).val(),
+			$("#edit_start_time"+no).val(),
+			$("#edit_finish_"+no).val(),
+			$("#edit_finish_time"+no).val()
+			])
+		no++;
 	});
-
-	// console.log(pic);
-	// return false;
 
 	$.ajax({
 		url: '{{ url("edit/workshop/wjo") }}',
@@ -1965,7 +1991,7 @@ function edit_action() {
 			edit_target_date : $("#edit_target_date").val(),
 			edit_difficulty : $("#edit_difficulty").val(),
 			edit_category : $("#edit_category").val(),
-			pic : pic,
+			pic : edit_pic,
 			// edit_pic : $("#edit_pic").val(),
 			edit_drawing_name : $("#edit_drawing_name").val(),
 			edit_drawing_number : $("#edit_drawing_number").val(),
@@ -2029,45 +2055,183 @@ function showEdit(order_no) {
 
 
 			$("#flows").empty();
-			$("#ops").empty();
+			// $("#ops").empty();
 
 			var flow = "";
-			var ops = "";
+			// var ops = "";
 			var operator_arr = <?php echo json_encode($operators); ?>;
+			var process_arr = <?php echo json_encode($processes); ?>;
 
-			$("select").select2("destroy").select2();
+			// $("select").select2("destroy").select2();
 
+			proses1 = 1;
+
+			var flow = '';
 			$.each(result.wjo, function(index, value){
-				flow += '<div class="form-group row" align="right">';
-				flow += '<label class="col-xs-4" style="margin-top: 1%;">'+value.sequence_process+'</label>';
-				flow += '<div class="col-xs-8" align="left">';
-				flow += '<input type="text" class="form-control" value="'+value.process_name+' / '+value.machine_name+'" disabled>';
-				flow += '</div></div>';
 
-
-				ops +='<div class="form-group row">';
-				ops +='<label class="col-xs-2" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>';
-				ops +='<div class="col-xs-10" align="left">';
-				ops +='<select class="form-control select2 pic" data-placeholder="Pilih PIC" style="width: 100% height: 35px; font-size: 15px;" id="'+value.flow_id+'" required>';
-
-				ops +='<option value=""></option>';
-				$.each(operator_arr, function(index2, value2){
-					if (value.operator == value2.operator_id) {
-						ops +='<option value="'+value2.operator_id+'" selected>'+value2.operator_id+' - '+value2.name+'</option>';
+				flow += '<div class="col-xs-12" style="margin-bottom: 1%; position: static;">';
+				flow += '<div class="col-xs-12" style="color: black; padding: 0px; position: static;">';
+				flow += '<div class="col-xs-1" style="color: black; padding: 0px;">';
+				flow += '<h3 style="margin: 0px;">'+ proses1 +'</h3>';
+				flow += '</div>';
+				flow += '<div class="col-xs-6" style="color: black; padding: 0px; position: static;">';
+				flow += '<select style="width: 100%;" class="form-control select5" name="edit_process_'+ value.flow_id +'" id="edit_process_'+ proses1 +'" data-placeholder="Select Process">';
+				$.each(process_arr, function(index3, value3){
+					if (value.process_name == value3.process_name && value.machine_name == value3.machine_name) {
+						flow +='<option value="'+value3.machine_code+'" selected>'+value3.process_name+' / '+value3.machine_name+'</option>';
 					} else {
-						ops +='<option value="'+value2.operator_id+'">'+value2.operator_id+' - '+value2.name+'</option>';
+						flow +='<option value="'+value3.machine_code+'">'+value3.process_name+' / '+value3.machine_name+'</option>';
 					}
 				})
-				ops +='</select>';
-				ops +='</div></div>';
+				// flow += '<option value=""></option>';
+				// flow += '@php $group = array(); @endphp';
+				// flow += '@foreach($machines as $machine)';
+				// flow += '@if(!in_array($machine->machine_name, $group))';
+				// flow += '<option value="{{ $machine->machine_code }}">{{ $machine->process_name }} - {{ $machine->machine_name }} - {{ $machine->area_name }}</option>';
+				// flow += '@php array_push($group, $machine->machine_name); @endphp';
+				// flow += '@endif';
+				// flow += '@endforeach';
+				flow += '</select>';
+				flow += '</div>';
+				flow += '<div class="col-xs-4">';
+				flow += '<select class="form-control select6 pic" data-placeholder="Pilih PIC" style="width: 100% height: 35px; font-size: 15px;" id="'+value.flow_id+'" required>';
+
+				// flow += '<option value=""></option>';
+				// flow += '@foreach($operators as $operator)';
+				// flow += '<option value="{{ $operator->operator_id }}">{{ $operator->operator_id }} - {{ $operator->name }}</option>';
+				// flow += '@endforeach';
+				$.each(operator_arr, function(index2, value2){
+					if (value.operator == value2.operator_id) {
+						flow +='<option value="'+value2.operator_id+'" selected>'+value2.operator_id+' - '+value2.name+'</option>';
+					} else {
+						flow +='<option value="'+value2.operator_id+'">'+value2.operator_id+' - '+value2.name+'</option>';
+					}
+				})
+				flow += '</select>';
+				flow += '</div>';
+				flow += '</div>';
+
+				flow += '<div class="col-xs-11 col-xs-offset-1" style="color: black; padding: 0px; padding-right: 1%;">';
+				flow += '<div class="col-xs-12" style="margin-top: 1%; padding: 0px;" align="left">';
+				flow += '<div class="form-group" align="right">';
+				flow += '<div class="col-xs-2" style="color: black; padding-left:0px">';
+				flow += '<div class="form-group" style="margin-bottom: 0px;">';
+				flow += '<input class="form-control" type="number" name="edit_process_qty_'+ proses1 +'" id="edit_process_qty_'+ proses1 +'" value="'+ value.std_time +'"  placeholder="Duration" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" required>';
+				flow += '</div>';
+				flow += '</div>';
+				flow += '<div class="col-xs-2" align="right" style="padding: 0px;">';
+				flow += '<div class="input-group date">';
+				flow += '<div class="input-group-addon bg-blue" style="border: none;">';
+				flow += '<i class="fa fa-calendar"></i>';
+				flow += '</div>';
+
+				var tgl_plan = value.start_plan.split(" ");
+				flow += '<input type="text" class="form-control datepicker" name="edit_start_'+ proses1 +'" id="edit_start_'+ proses1 +'" value="'+ tgl_plan[0] +'" placeholder="start Date" required>';
+				flow += '</div>';
+				flow += '</div>';
+				flow += '<div class="col-xs-2" align="right" style="padding: 0px;">';
+				flow += '<div class="input-group date">';
+				flow += '<div class="input-group-addon bg-blue" style="border: none;">';
+				flow += '<i class="fa fa-clock-o"></i>';
+				flow += '</div>';
+				flow += '<input type="text" class="form-control timepicker" id="edit_start_time'+ proses1 +'" name="edit_start_time'+ proses1 +'" value="'+ tgl_plan[1] +'" placeholder="select Time" required>';
+				flow += '</div>';
+				flow += '</div>';
+				flow += '<div class="col-xs-1" align="center" style="padding: 0px;">';
+				flow += '<label style="margin-top: 1%;padding: 0px;">~</label>';
+				flow += '</div>';
+				flow += '<div class="col-xs-2" align="right" style="padding: 0px;">';
+				flow += '<div class="input-group date">';
+				flow += '<div class="input-group-addon bg-blue" style="border: none;">';
+				flow += '<i class="fa fa-calendar"></i>';
+				flow += '</div>';
+
+				var tgl_finish = value.finish_plan.split(" ");
+				flow += '<input type="text" class="form-control datepicker" name="edit_finish_'+ proses1 +'" id="edit_finish_'+ proses1 +'" value="'+ tgl_finish[0] +'" placeholder="Finish Date" required>';
+				flow += '</div>';
+				flow += '</div>';
+				flow += '<div class="col-xs-2" align="right" style="padding: 0px;">';
+				flow += '<div class="input-group date">';
+				flow += '<div class="input-group-addon bg-blue" style="border: none;">';
+				flow += '<i class="fa fa-clock-o"></i>';
+				flow += '</div>';
+				flow += '<input type="text" class="form-control timepicker" id="edit_finish_time'+ proses1 +'" name="edit_finish_time'+ proses1 +'" value="'+ tgl_finish[1] +'" placeholder="select Time" required>';
+				flow += '</div>';
+				flow += '</div>';
+				flow += '</div>';
+				flow += '</div>';
+				flow += '</div>';
+				flow += '<div class="col-xs-12"><hr style="margin-top:10px; margin-bottom:10px"></div>';
+				flow += '</div>';
+
+				proses1++;
+
+
+				//-------------------------------------------------
+
+
+				// flow += '<div class="form-group row" align="right">';
+				// flow += '<label class="col-xs-4" style="margin-top: 1%;">'+value.sequence_process+'</label>';
+				// flow += '<div class="col-xs-8" align="left">';
+				// flow += '<input type="text" class="form-control" value="'+value.process_name+' / '+value.machine_name+'" disabled>';
+				// flow += '</div></div>';
+
+
+				// ops +='<div class="form-group row">';
+				// ops +='<label class="col-xs-2" style="margin-top: 1%;">PIC<span class="text-red">*</span></label>';
+				// ops +='<div class="col-xs-10" align="left">';
+				// ops +='<select class="form-control select2 pic" data-placeholder="Pilih PIC" style="width: 100% height: 35px; font-size: 15px;" id="'+value.flow_id+'" required>';
+
+				// ops +='<option value=""></option>';
+				// $.each(operator_arr, function(index2, value2){
+				// 	if (value.operator == value2.operator_id) {
+				// 		ops +='<option value="'+value2.operator_id+'" selected>'+value2.operator_id+' - '+value2.name+'</option>';
+				// 	} else {
+				// 		ops +='<option value="'+value2.operator_id+'">'+value2.operator_id+' - '+value2.name+'</option>';
+				// 	}
+				// })
+				// ops +='</select>';
+				// ops +='</div></div>';
 			})
 
+			// $("#ops").append(ops);
+			// $("select").select2();
+
 			$("#flows").append(flow);
-			$("#ops").append(ops);
-			$("select").select2();
+			// $('#process').append(add);
+
+			$(function () {
+				$('.select5').select2({
+					dropdownParent: $('#flows')
+				});
+			})
+
+			$(function () {
+				$('.select6').select2({
+					dropdownParent: $('#flows')
+				});
+			})
+
+			$('.datepicker').datepicker({
+				autoclose: true,
+				format: "yyyy-mm-dd",
+				todayHighlight: true,	
+			});
+
+			$('.timepicker').timepicker({
+				use24hours: true,
+				showInputs: false,
+				showMeridian: false,
+				minuteStep: 5,
+				defaultTime: '00:00',
+				timeFormat: 'hh:mm'
+			})
+
+			for (var i = 1; i < proses1; i++) {
+				on_change_flow_edit(i);
+			}
 
 			$("#modal-edit").modal('show');
-
 		}
 	});
 }
@@ -2217,6 +2381,10 @@ function open_modal_detail(wjo_num) {
 		$('#detail_material').val(result.detail.material);
 		$('#detail_problem_desc').val(result.detail.problem_description);
 		$('#detail_category').val(result.detail.category);
+
+		$('#detail_drawing_name').val(result.detail.drawing_name);
+		$('#detail_drawing_number').val(result.detail.item_number);
+		$('#detail_part_number').val(result.detail.part_number);
 
 
 		if (result.detail.remark <= 1) {

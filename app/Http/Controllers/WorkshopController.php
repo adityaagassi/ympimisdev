@@ -1198,11 +1198,14 @@ class WorkshopController extends Controller{
 		$drawing_name = $request->get('edit_drawing_name') ? $request->get('edit_drawing_name') : NULL;
 		$drawing_number = $request->get('edit_drawing_number') ? $request->get('edit_drawing_number') : NULL;
 		$part_number = $request->get('edit_part_number') ? $request->get('edit_part_number') : NULL;
-		
+
 		foreach ($request->get('pic') as $pics) {
 			$pic = WorkshopFlowProcess::find($pics[0]);
 
 			$pic->operator = $pics[1];
+			$pic->std_time = $pics[2];
+			$pic->start_plan = $pics[3]." ".$pics[4];
+			$pic->finish_plan = $pics[5]." ".$pics[6];
 
 			$pic->save();
 		}
