@@ -9,7 +9,7 @@ class WeldingInventory extends Model{
 	use SoftDeletes;
 
 	protected $fillable = [
-		'tag', 'material_number', 'location', 'quantity', 'remark', 'last_check'
+		'tag', 'material_number', 'location', 'quantity', 'remark', 'last_check', 'barcode_number'
 	];
 
 	public function material()
