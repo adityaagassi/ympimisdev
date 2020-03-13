@@ -118,6 +118,39 @@
 			</table>
 		</div>
 	</div>
+
+	<div class="modal fade" id="myModal">
+	    <div class="modal-dialog" style="width:1250px;">
+	      <div class="modal-content">
+	        <div class="modal-header" style="color: black">
+	          <h4 style="float: right;" id="modal-title"></h4>
+	          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+	          <br><h4 class="modal-title" id="judul_table"></h4>
+	        </div>
+	        <div class="modal-body">
+	          <div class="row">
+	            <div class="col-md-12">
+	              <table id="tableDetail" class="table table-striped table-hover" style="width: 100%;">
+	                <thead style="background-color: rgba(126,86,134,.7);">
+	                  <tr>
+	                  	<th width="1%">No.</th>
+	                    <th>GMC</th>
+	                    <th>GMC Desc</th> 
+	                    <th>WS</th>
+	                  </tr>
+	                </thead>
+	                <tbody id="bodyTableDetail" style="color: black">
+	                </tbody>
+	              </table>
+	            </div>
+	          </div>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
 </section>
 @endsection
 @section('scripts')
@@ -310,7 +343,7 @@
 							weldingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
 							weldingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
 							weldingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-							weldingTableBody += '<td '+colorJumlah+'>'+value.jumlah_urutan+'</td>';
+							weldingTableBody += '<td '+colorJumlah+' onclick="ShowModal(\''+value.ws_name+'\')">'+value.jumlah_urutan+'</td>';
 							weldingTableBody += '</tr>';
 
 						i += 1;
@@ -328,6 +361,74 @@
 		}
 		})
 		}
+
+		function ShowModal(ws_name) {
+		    $('#tableDetail').DataTable().clear();
+		    $('#tableDetail').DataTable().destroy();
+
+		    $("#myModal").modal("show");
+
+		    var data = {
+				loc : '{{$loc}}',
+				ws_name : ws_name
+			}
+		    $.get('{{ url("fetch/welding/fetch_detail") }}', data, function(result, status, xhr){
+				if(xhr.status == 200){
+					if(result.status){
+						akan_wld = [];
+						sedang = [];
+						selesai = [];
+
+						$('#bodyTableDetail').html("");
+						var bodyTableDetail = "";
+						var i = 1;
+						$.each(result.list_antrian, function(index, value){
+							bodyTableDetail += '<tr>';
+							bodyTableDetail += '<td>'+i+'</td>';
+							bodyTableDetail += '<td>'+value.gmc+'</td>';
+							bodyTableDetail += '<td>'+value.gmcdesc+'</td>';
+							bodyTableDetail += '<td>'+value.ws_name+'</td>';
+							bodyTableDetail += '</tr>';
+							i++;
+						});
+						$('#bodyTableDetail').append(bodyTableDetail);
+						$('#tableDetail').DataTable({
+							'dom': 'Bfrtip',
+							'responsive':true,
+							'lengthMenu': [
+							[ 20, 50, 100, -1 ],
+							[ '20 rows', '50 rows', '100 rows', 'Show all' ]
+							],
+							'buttons': {
+								buttons:[
+								{
+									extend: 'pageLength',
+									className: 'btn btn-default',
+								},
+								
+								]
+							},
+							'paging': true,
+							'lengthChange': true,
+							'pageLength': 20,
+							'searching': true,
+							'ordering': true,
+							'order': [],
+							'info': true,
+							'autoWidth': true,
+							"sPaginationType": "full_numbers",
+							"bJQueryUI": true,
+							"bAutoWidth": false,
+							"processing": true
+						});
+					}
+				}
+			});
+
+		    $('#judul_table').append().empty();
+		    $('#judul_table').append('<center>List Antrian di <b>'+ws_name+'</b></center>');
+		    
+		  }
 
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
