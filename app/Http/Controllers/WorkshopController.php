@@ -168,6 +168,10 @@ class WorkshopController extends Controller{
 		$title = 'Workshop Job Order Lists';
 		$title_jp = '作業依頼書一覧';
 
+		$process = WorkshopProcess::select('process_name','machine_name','machine_code')
+		->groupBy('process_name','machine_name','machine_code')
+		->get();
+
 		return view('workshop.wjo_list', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
@@ -176,6 +180,7 @@ class WorkshopController extends Controller{
 			'employees' => $this->employee,
 			'operators' => $this->operator,
 			'machines' => $this->machine,
+			'processes' => $process,
 		))->with('page', 'WJO List')->with('head', 'Workshop');	
 	}
 
