@@ -295,8 +295,8 @@
 						// JIKA Akan
 						if (value.akan == "<br>") {
 							akan = "";
-							akan_time = "";
-							akan_wld.push(true);
+							akan_time = getActualFullDate();
+							akan_wld.push(false);
 						} else {
 							akan = value.akan;
 							akan_time = value.akan_time;
@@ -311,9 +311,9 @@
 							sedang.push(true);
 						} else {
 							var sedang2 = "";
-							sedang_time = "";
-							sedang.push(false);
-							totalSedang[index] = 0;
+							sedang_time = getActualFullDate();
+							sedang.push(true);
+							// totalSedang[index] = 0;
 						}
 
 						var colorJumlah = 'style="background-color: #f73939;font-size:30px"';

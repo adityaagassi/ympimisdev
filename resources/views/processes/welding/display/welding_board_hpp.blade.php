@@ -272,9 +272,9 @@
 							sedang.push(true);
 						} else {
 							var sedang2 = "";
-							sedang_time = "";
-							sedang.push(false);
-							totalSedang[index] = 0;
+							sedang_time = getActualFullDate();
+							sedang.push(true);
+							// totalSedang[index] = 0;
 						}
 
 						// var key = [['C','D','E'],['F','G','H','J','82']];
@@ -413,6 +413,24 @@ else{
 		    $('#judul_table').append('<center>List Antrian di <b>'+ws_name+'</b></center>');
 		    
 		  }
+
+		  function addZero(i) {
+			if (i < 10) {
+				i = "0" + i;
+			}
+			return i;
+		}
+
+		function getActualFullDate() {
+			var d = new Date();
+			var day = addZero(d.getDate());
+			var month = addZero(d.getMonth()+1);
+			var year = addZero(d.getFullYear());
+			var h = addZero(d.getHours());
+			var m = addZero(d.getMinutes());
+			var s = addZero(d.getSeconds());
+			return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+		}
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
