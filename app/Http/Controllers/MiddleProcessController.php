@@ -166,6 +166,7 @@ class MiddleProcessController extends Controller
 
 		$emps = db::select("select eg.employee_id, e.`name` from employee_groups eg
 			left join employees e on eg.employee_id = e.employee_id
+			where eg.location = 'bff'
 			order by e.`name`");
 
 		return view('processes.middle.display.buffing_trend_eff', array(

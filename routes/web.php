@@ -49,7 +49,8 @@ Auth::routes();
 Route::get('/', function () {
 	if (Auth::check()) {
 		if (Auth::user()->role_code == 'emp-srv') {
-			return redirect()->action('EmployeeController@indexEmployeeService');
+			// return redirect()->action('EmployeeController@indexEmployeeService', ['id' => 1]);
+			return redirect()->route('emp_service', ['id' => 1]);
 			// return redirect()->route('index/employee/service/{ctg}', ['ctg' => 'home']);
 		} else {
 			return view('home');
@@ -849,6 +850,7 @@ Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 	Route::post('delete/meeting', 'MeetingController@deleteMeeting');
 	Route::post('edit/meeting', 'MeetingController@editMeeting');
 	Route::post('create/meeting', 'MeetingController@createMeeting');
+	Route::post('scan/meeting/attendance', 'MeetingController@scanMeetingAttendance');
 });
 Route::get('index/meeting', 'MeetingController@indexMeeting');
 Route::get('index/meeting/attendance', 'MeetingController@indexMeetingAttendance');
@@ -913,6 +915,10 @@ Route::get('fetch/welding/welding_board', 'WeldingProcessController@fetchWelding
 Route::get('fetch/welding/fetch_detail', 'WeldingProcessController@fetchDetailWeldingBoard');
 Route::get('index/welding/master_kanban/{loc}', 'WeldingProcessController@indexMasterKanban');
 Route::get('fetch/welding/kanban', 'WeldingProcessController@fetchMasterKanban');
+Route::get('fetch/welding/show_edit_kanban', 'WeldingProcessController@fetchShowEdit');
+Route::post('post/welding/edit_kanban', 'WeldingProcessController@editKanban');
+
+
 Route::get('index/welding/destroy_kanban/{loc}/{id}', 'WeldingProcessController@destroyKanban');
 Route::get('index/welding/current_welding', 'WeldingProcessController@indexCurrentWelding');
 Route::get('fetch/welding/current_welding', 'WeldingProcessController@fetchCurrentWelding');

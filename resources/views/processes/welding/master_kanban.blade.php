@@ -61,7 +61,7 @@
 	<h1>
 		{{ $title }}
 		<button class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#create_modal" style="margin-right: 5px">
-			<i class="fa fa-plus"></i>&nbsp;&nbsp;Add Operator
+			<i class="fa fa-plus"></i>&nbsp;&nbsp;Add Kanban
 		</button>
 	</h1>
 </section>
@@ -84,22 +84,25 @@
 	</div>   
 	@endif						
 	<div class="row">
-		<div class="col-xs-12 pull-left">
-			<!-- <h2 style="margin-top: 0px;">Master Operator Welding</h2> -->
-			<table id="tableOperator" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+		<div class="col-xs-12">
+			<table id="tableKanban" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th>NIK</th>
-						<th>Nama Operator</th>
-						<th width="10%">Shift</th>
-						<th>Created at</th>
+						<th width="15%">Material Number</th>
+						<th>Material Description</th>
+						<th>Jenis</th>
+						<th>WS</th>
+						<th width="10%">Qty</th>
+						<th width="10%">Standard Time</th>
 						<th>Action</th>
 					</tr>
 				</thead>
-				<tbody id="bodyTableOperator">
+				<tbody id="bodyTableKanban">
 				</tbody>
 				<tfoot>
 					<tr style="color: black">
+						<th></th>
+						<th></th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -139,7 +142,7 @@
 								&times;
 							</span>
 						</button>
-						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Add Operator</h1>
+						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Add Kanban</h1>
 					</div>
 				</div>
 				<div class="modal-body">
@@ -149,31 +152,52 @@
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Operator<span class="text-red">*</span></label>
+									<label class="col-sm-4">Materials<span class="text-red">*</span></label>
 									<div class="col-sm-5" align="left">
-										<select class="form-control select2" data-placeholder="Select Operator" name="operator" id="operator" style="width: 100%">
+										<input type="text" value="ZQ00001" id="material_number">
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Jenis<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<select class="form-control select2" data-placeholder="Select Jenis" name="jenis" id="jenis" style="width: 100%">
 											<option value=""></option>
-											@foreach($list_op as $list_op)
-											<option value="{{ $list_op->employee_id }}">{{ $list_op->employee_id }} - {{ $list_op->name }}</option>
+											<option value="0">Alto</option>
+											<option value="1">Tenor</option>
+											<option value="2">A82Z</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">WS<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<select class="form-control select2" data-placeholder="Select WS" name="ws" id="ws" style="width: 100%">
+											<option value=""></option>
+											@foreach($list_ws as $list_ws)
+											<option value="{{ $list_ws->ws_id }}">{{ $list_ws->ws_name }}</option>
 											@endforeach
 										</select>
 									</div>
 								</div>
+
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Operator Code<span class="text-red">*</span></label>
-									<div class="col-sm-5">
-										<input type="operator_code" class="form-control" id="operator_code" placeholder="Tap ID Card Operator" required>
+									<label class="col-sm-4">Qty<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<select class="form-control select2" data-placeholder="Select Qty" name="qty" id="qty" style="width: 100%">
+											<option value=""></option>
+											<option value="15">15</option>
+											<option value="8">8</option>
+											<option value="10">10</option>
+										</select>
 									</div>
 								</div>
+
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Shift<span class="text-red">*</span></label>
-									<div class="col-sm-5" align="left">
-										<select class="form-control select2" data-placeholder="Select Shift" name="group" id="group" style="width: 100%">
-											<option value=""></option>
-											<option value="A">Shift 1</option>
-											<option value="B">Shift 2</option>
-											<option value="C">Shift 3</option>
-										</select>
+									<label class="col-sm-4">Standard Time<span class="text-red">*</span></label>
+									<div class="col-sm-5">
+										<input type="std_time" class="form-control" id="std_time" placeholder="Standard Time" required>
 									</div>
 								</div>
 							</div>
@@ -181,7 +205,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success" onclick="addOperator()"><i class="fa fa-plus"></i> Add Operator</button>
+					<button class="btn btn-success" onclick="addKanban()"><i class="fa fa-plus"></i> Add Kanban</button>
 				</div>
 			</div>
 		</div>
@@ -191,13 +215,13 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<div class="col-xs-12" style="background-color: #00a65a; padding-right: 1%;">
+					<div class="col-xs-12" style="background-color: orange; padding-right: 1%;">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">
 								&times;
 							</span>
 						</button>
-						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Edit Operator</h1>
+						<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Edit Kanban</h1>
 					</div>
 				</div>
 				<div class="modal-body">
@@ -205,41 +229,53 @@
 						<div class="col-xs-12">
 							<div class="box-body">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-								<input type="hidden" name="operator_id" id="operator_id">
+								<input type="hidden" name="kanban_id" id="kanban_id">
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Operator<span class="text-red">*</span></label>
+									<label class="col-sm-4">Materials<span class="text-red">*</span></label>
 									<div class="col-sm-5" align="left">
-										<select class="form-control select3" data-placeholder="Select Operator" name="editoperator" id="editoperator" style="width: 100%">
+										<input class="form-control" type="text" id="editmaterial_number" readonly>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Desc<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<input class="form-control" type="text" id="editdesc" readonly>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">Qty<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<input class="form-control" type="text" id="editqty" readonly>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-sm-4">WS<span class="text-red">*</span></label>
+									<div class="col-sm-5" align="left">
+										<select class="form-control select3" data-placeholder="Select WS" name="editws" id="editws" style="width: 100%">
 											<option value=""></option>
-											@foreach($list_op2 as $list_op2)
-											<option value="{{ $list_op2->employee_id }}">{{ $list_op2->employee_id }} - {{ $list_op2->name }}</option>
+											@foreach($list_ws2 as $list_ws2)
+											<option value="{{ $list_ws2->ws_id }}">{{ $list_ws2->ws_name }}</option>
 											@endforeach
 										</select>
 									</div>
 								</div>
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Operator Code<span class="text-red">*</span></label>
+									<label class="col-sm-4">Standard Time<span class="text-red">*</span></label>
 									<div class="col-sm-5">
-										<input type="editoperator_code" class="form-control" id="editoperator_code" placeholder="Tap ID Card Operator" required>
+										<input type="editstd_time" class="form-control" id="editstd_time" placeholder="Standard Time" required>
 									</div>
 								</div>
-								<div class="form-group row" align="right">
-									<label class="col-sm-4">Shift<span class="text-red">*</span></label>
-									<div class="col-sm-5" align="left">
-										<select class="form-control select3" data-placeholder="Select Shift" name="editgroup" id="editgroup" style="width: 100%">
-											<option value=""></option>
-											<option value="A">Shift 1</option>
-											<option value="B">Shift 2</option>
-											<option value="C">Shift 3</option>
-										</select>
-									</div>
-								</div>
+
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-success" onclick="update()"><i class="fa fa-edit"></i> Update</button>
+					<span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&nbsp;&nbsp;&nbsp;&nbsp;Standard time per PC (dalam detik)&nbsp;&nbsp;&nbsp;</span><br>
 				</div>
 			</div>
 		</div>
@@ -315,38 +351,46 @@
 	}
 
 	function fillList(){
-		$.get('{{ url("fetch/welding/operator") }}', function(result, status, xhr){
+		var data = {
+			loc : "{{$loc}}"
+		};
+		$.get('{{ url("fetch/welding/kanban") }}', data,function(result, status, xhr){
 			if(result.status){
-				$('#tableOperator').DataTable().clear();
-				$('#tableOperator').DataTable().destroy();
-				$('#bodyTableOperator').html("");
+				$('#tableKanban').DataTable().clear();
+				$('#tableKanban').DataTable().destroy();
+				$('#bodyTableKanban').html("");
 				var tableData = "";
 				$.each(result.lists, function(key, value) {
 					tableData += '<tr>';
-					tableData += '<td>'+ value.operator_nik +'</td>';
-					tableData += '<td>'+ value.operator_name +'</td>';
-					if (value.group == 'A') {
-						tableData += '<td>Shift 1</td>';
-					}else if (value.group == 'B') {
-						tableData += '<td>Shift 2</td>';
-					}else if (value.group == 'C') {
-						tableData += '<td>Shift 3</td>';
+					tableData += '<td>'+ value.gmc +'</td>';
+					tableData += '<td>'+ value.gmcdesc +'</td>';
+					if (value.jenis == 0) {
+						var jenis = 'Alto';
+					}else if(value.jenis  == 1){
+						var jenis = 'Tenor';
+					}else if(value.jenis == 2){
+						var jenis = 'A82Z';
 					}
-					tableData += '<td>'+ value.operator_create_date +'</td>';
+					tableData += '<td>'+ jenis +'</td>';
+					tableData += '<td>'+ value.ws_name +'</td>';
+					tableData += '<td>'+ value.qty +'</td>';
+					tableData += '<td>'+ value.std_time +' Detik</td>';
 					tableData += '<td>';
-					tableData += '<a style="margin-right: 2%; padding: 3%; padding-top: 1%; padding-bottom: 1%; margin-top: 2%; margin-bottom: 2%;" type="button" class="btn btn-warning" data-toggle="modal" data-target="#edit-modal" onclick="editOperator(\''+value.operator_id+'\');">Edit</a>';
-					tableData += '<a style="padding: 3%; padding-top: 1%; padding-bottom: 1%; margin-top: 2%; margin-bottom: 2%;" href="" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation(\''+value.operator_nik+'\',\''+value.operator_id+'\');">Delete</a>';
+					tableData += '<a style="padding: 3%; padding-top: 2%; padding-bottom: 2%; margin-top: 2%; margin-bottom: 2%;" href="{{ url("index/welding/detail_kanban/") }}/{{ $loc }}/'+value.id+'" class="btn btn-primary">Details</a>';
+					tableData += '<a style="padding: 3%; padding-top: 2%; padding-bottom: 2%; margin-right: 2%; margin-left: 2%; margin-top: 2%; margin-bottom: 2%;" class="btn btn-warning" onclick="showEdit(\''+value.id+'\');">Edit</a>';
+					tableData += '<a style="padding: 3%; padding-top: 2%; padding-bottom: 2%; margin-top: 2%; margin-bottom: 2%;" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation(\''+value.gmc+'\',\''+value.id+'\');">Delete</a>';
 					tableData += '</td>';
 					tableData += '</tr>';
 				});
-				$('#bodyTableOperator').append(tableData);
+				$('#bodyTableKanban').append(tableData);
 
-				$('#tableOperator tfoot th').each(function(){
+
+				$('#tableKanban tfoot th').each(function(){
 					var title = $(this).text();
 					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
 				});
-				
-				var table = $('#tableOperator').DataTable({
+
+				var table = $('#tableKanban').DataTable({
 					'dom': 'Bfrtip',
 					'responsive':true,
 					'lengthMenu': [
@@ -382,8 +426,7 @@
 							exportOptions: {
 								columns: ':not(.notexport)'
 							}
-						}
-						]
+						}]
 					},
 					'paging': true,
 					'lengthChange': true,
@@ -411,8 +454,7 @@
 					} );
 				} );
 
-				$('#tableOperator tfoot tr').appendTo('#tableOperator thead');
-
+				$('#tableKanban tfoot tr').appendTo('#tableKanban thead');
 			}
 			else{
 				alert('Attempt to retrieve data failed');
@@ -421,46 +463,48 @@
 	}
 
 	function deleteConfirmation(name,id) {
-		var url	= '{{ url("index/welding/destroy_operator") }}';
+		var url	= '{{ url("index/welding/destroy_kanban") }}';
+		var loc = '{{ $loc }}'
 		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-		jQuery('#modalDeleteButton').attr("href", url+'/'+id);
+		jQuery('#modalDeleteButton').attr("href", url+'/'+loc+'/'+id);
 	}
 
-	function editOperator(id) {
+	function showEdit(id) {
 		var data = {
-			id:id
+			id:id,
+			loc : "{{$loc}}"
 		}
 
-		$.get('{{ url("fetch/welding/get_operator") }}',data, function(result, status, xhr){
+		$.get('{{ url("fetch/welding/show_edit_kanban") }}',data, function(result, status, xhr){
 			if(result.status){
-				$.each(result.lists, function(key, value) {
-					var hex = '{{ hexdec('+value.operator_code+') }}';
-					$("#editoperator").val(value.operator_nik).trigger('change.select2');
-					$("#editoperator_code").val(hex);
-					$("#operator_id").val(value.operator_id);
-					$("#editgroup").val(value.group).trigger('change.select2');
-				});
-			}
-			else{
-				alert('Attempt to retrieve data failed');
+				$("#editmaterial_number").val(result.lists[0].gmc);
+				$("#editdesc").val(result.lists[0].gmcdesc);
+				$("#editqty").val(result.lists[0].qty);
+				$("#editws").val(result.lists[0].id_ws).trigger('change.select2');
+				$("#editstd_time").val(result.lists[0].std_time);	
+
+
+				$('#edit-modal').modal('show');
 			}
 		});
 	}
 
 	function update() {
-		var operator_id = $('#operator_id').val();
-		var operator = $('#editoperator').val();
-		var operator_code = $('#editoperator_code').val();
-		var group = $('#editgroup').val();
+		var gmc = $('#editmaterial_number').val();
+		var ws = $('#editws').val();
+		var std = $('#editstd_time').val();
+		
 		var data = {
-			operator_id:operator_id,
-			operator:operator,
-			operator_code:operator_code,
-			group:group
+			gmc:gmc,
+			ws:ws,
+			std:std,
+			loc : "{{$loc}}"
 		}
 
-		$.post('{{ url("index/welding/update_operator") }}',data, function(result, status, xhr){
+		$.post('{{ url("post/welding/edit_kanban") }}',data, function(result, status, xhr){
 			if(result.status){
+
+				$('#edit-modal').modal('hide');
 				window.location.reload();
 				openSuccessGritter('Success','Update Operator Success');
 			}
@@ -469,33 +513,46 @@
 				openErrorGritter('Error','Update Failed');
 			}
 		});
+
 	}
 
-	function addOperator() {
-		var operator = $('#operator').val();
-		var operator_code = $('#operator_code').val();
-		var group = $('#group').val();
+	function addKanban() {
+		var material_number = $('#material_number').val();
+		var jenis = $('#jenis').val();
+		var ws = $('#ws').val();
+		var qty = $('#qty').val();
+		var std_time = $('#std_time').val();
+		var loc = '{{$loc}}';
 
-		if (operator != "" && operator_code != "" && group != "") {
+		if (material_number != "" && jenis != "" && ws != "" && qty != "" && std_time != "") {
 			var data = {
-				operator:operator,
-				operator_code:operator_code,
-				group:group
+				material_number:material_number,
+				jenis:jenis,
+				ws:ws,
+				qty:qty,
+				std_time:std_time,
+				loc:loc
 			}
-			
-			$.post('{{ url("post/welding/add_operator") }}', data, function(result, status, xhr){
-				if(result.status){
-					$("#operator").val("");
-					$("#operator_code").val("");
-					$("#group").val("");
 
-					$('#operator').prop('selectedIndex',0);
-					$('#group').prop('selectedIndex',0);
+			console.log(data);
+			
+			$.post('{{ url("post/welding/add_kanban") }}', data, function(result, status, xhr){
+				if(result.status){
+					$("#material_number").val("");
+					$("#jenis").val("");
+					$("#ws").val("");
+					$("#qty").val("");
+					$("#std_time").val("");
+
+					$('#material_number').prop('selectedIndex',0);
+					$('#jenis').prop('selectedIndex',0);
+					$('#ws').prop('selectedIndex',0);
+					$('#qty').prop('selectedIndex',0);
 
 					$("#create_modal").modal('hide');
 
 					window.location.reload();
-					openSuccessGritter('Success','Insert Operator Success');
+					openSuccessGritter('Success','Insert Kanban Success');
 				} else {
 					audio_error.play();
 					openErrorGritter('Error','Insert Failed');

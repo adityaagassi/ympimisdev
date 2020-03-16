@@ -17,12 +17,26 @@
 <section class="content">
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
-			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Kosuha <i class="fa fa-angle-double-down"></i></span>
+
+			@foreach(Auth::user()->role->permissions as $perm)
+			@php
+			$navs[] = $perm->navigation_code;
+			@endphp
+			@endforeach
+
+			@if(in_array('A10', $navs))
+			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Master Kosuha <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url('index/welding/operator') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Master Operator</a>
+			<a href="{{ url('index/welding/master_kanban','hsa-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Master Kanban HSA</a>
+			<a href="{{ url('index/welding/master_kanban','phs-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Master Kanban PHS</a>
+			<a href="{{ url('index/welding/master_kanban','hpp-sx') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Master Kanban HPP</a>
+			<a href="{{ url("index/middle/buffing_target/wld") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Welding Target</a>
+			@endif
+
+			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Kosuha <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/welding/kensa", "phs-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">PHS Kensa Visual</a>
 			<a href="{{ url("index/welding/kensa", "hsa-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">HSA Kensa Visual</a>
 			<a href="{{ url("index/welding/kensa", "hsa-dimensi-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Kensa Dimensi</a>
-			<a href="{{ url("index/middle/buffing_target/wld") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Welding Target</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process Handatsuke <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/process_stamp_sx_1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Stamp <b><i>IoT</i></b></a>
 		</div>
@@ -37,6 +51,7 @@
 			<a href="{{ url('index/welding/welding_board','cuci-solder') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Cuci Asam Welding Board</a>
 			<a href="{{ url("index/middle/request/display/043?filter=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Middle Process Material Request</a>
 			<a href="{{ url("index/welding/ng_rate?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">NG Rate</a>
+			<a href="{{ url("index/welding/op_trend") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Trends</a>
 			<a href="{{ url("index/welding/op_ng?tanggal=&location=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator NG Rate</a>
 			<a href="{{ url("index/welding/welding_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Efficiency</a>
 			<a href="{{ url("index/welding/welding_op_eff?tanggal=&group=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Operator Overall Efficiency</a>
@@ -73,6 +88,7 @@
 		}
 	});
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 
 	});
 </script>
