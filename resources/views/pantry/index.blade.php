@@ -119,6 +119,11 @@
 
 	</style>
 	@stop
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+	    <p style="position: absolute; color: White; top: 45%; left: 35%;">
+	      <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+	    </p>
+	  </div>
 	@section('header')
 	<section class="content-header">
 		<h1>
@@ -448,6 +453,7 @@
 			}
 
 			function konfirmasi(){
+				$("#loading").show();
 				var data = {
 					pemesan : $("#pemesan").val(),
 					menu : $("#menu").val(),
@@ -546,6 +552,7 @@
 			}
 
 			function hapus(id){
+				$("#loading").show();
 				var data = {
 					id : id,
 				}
@@ -562,6 +569,8 @@
 			}
 
 			function finalConfirm(){
+				$("#loading").show();
+
 				var data = {
 					pemesan : $("#pemesan").val()
 				}
@@ -572,6 +581,7 @@
 				// $('#myModal').modal('hide');
 				openSuccessGritter('Success', result.message);
 				daftarmenu();
+				$("#loading").hide();
 			}
 			else{
 				openErrorGritter('Error!', result.message);
