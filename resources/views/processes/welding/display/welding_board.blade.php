@@ -296,7 +296,7 @@
 						if (value.akan == "<br>") {
 							akan = "";
 							akan_time = getActualFullDate();
-							akan_wld.push(false);
+							akan_wld.push(true);
 						} else {
 							akan = value.akan;
 							akan_time = value.akan_time;
@@ -311,8 +311,8 @@
 							sedang.push(true);
 						} else {
 							var sedang2 = "";
-							sedang_time = getActualFullDate();
-							sedang.push(true);
+							sedang_time = "";
+							sedang.push(false);
 							// totalSedang[index] = 0;
 						}
 

@@ -272,8 +272,8 @@
 							sedang.push(true);
 						} else {
 							var sedang2 = "";
-							sedang_time = getActualFullDate();
-							sedang.push(true);
+							sedang_time = "";
+							sedang.push(false);
 							// totalSedang[index] = 0;
 						}
 
