@@ -174,8 +174,6 @@ table > thead > tr > th{
 		$('#visitor_info').hide();
 		// fillVisitor();
 		setInterval(fillVisitor,40000);
-
-		setInterval(refresh,3600000);
 	});
 
 	function refresh() {
@@ -208,6 +206,22 @@ table > thead > tr > th{
 		document.getElementById("jam").style.fontSize = '30em';
 		document.getElementById("jam").style.marginBottom = '-70px';
 		document.getElementById("jam").innerHTML = addZero(time.getHours())+':'+addZero(time.getMinutes());
+		var timeref = addZero(time.getHours())+':'+addZero(time.getMinutes())+':'+addZero(time.getSeconds());
+		if (timeref == '06:00:00') {
+			location.reload();
+		}
+		if (timeref == '07:00:00') {
+			location.reload();
+		}
+		if (timeref == '09:00:00') {
+			location.reload();
+		}
+		if (timeref == '12:00:00') {
+			location.reload();
+		}
+		if (timeref == '14:33:00') {
+			location.reload();
+		}
 	}
 
 	function fillVisitor() {
@@ -219,7 +233,7 @@ table > thead > tr > th{
 						for (var i = 0; i < result.visitors.length; i++) {
 							$('#visitor_info').show();
 							$('#jam').hide();
-							document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+' - '+result.visitors[i].department+')<br>';
+							document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+' - '+result.visitors[i].department+')<br>AT SECURITY<br>';
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
 							// $("#myModal").modal('show');
