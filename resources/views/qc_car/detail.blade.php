@@ -539,19 +539,23 @@ table.table-bordered > tfoot > tr > th{
     }
 
     CKEDITOR.replace('deskripsi' ,{
-        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}',
+        height: '300px'
     });
 
     CKEDITOR.replace('tindakan' ,{
-        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}',
+        height: '300px'
     });
 
     CKEDITOR.replace('penyebab' ,{
-        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}',
+        height: '300px'
     });
 
     CKEDITOR.replace('perbaikan' ,{
-        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}',
+        height: '300px'
     });
 
     function openSuccessGritter(title, message){

@@ -62,7 +62,7 @@ class FormExperienceController extends Controller
         return DataTables::of($details)
 
         ->editColumn('tanggal_kejadian',function($details){
-            return date('F Y', strtotime($details->tanggal_kejadian));
+            return date('Y F', strtotime($details->tanggal_kejadian));
           })
 
         ->editColumn('lokasi_kejadian',function($details){
@@ -141,6 +141,12 @@ class FormExperienceController extends Controller
 
               $forms->save();
 
+              $response = array(
+                'status' => true,
+                'datas' => "Berhasil",
+              );
+              return Response::json($response);
+
          } catch (QueryException $e){
               $response = array(
                    'status' => false,
@@ -193,6 +199,12 @@ class FormExperienceController extends Controller
                    'tindakan' => $request->get('tindakan'),
                    'created_by' => $id_user
               ]);
+
+              $response = array(
+                'status' => true,
+                'datas' => "Berhasil",
+              );
+              return Response::json($response);
 
          } catch (QueryException $e){
               $response = array(

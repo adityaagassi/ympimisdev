@@ -267,10 +267,15 @@
       };
 
       $.post('{{ url("index/update/form_experience") }}', data, function(result, status, xhr){
+        if(result.status == true){    
+          $("#loading").hide();
+          openSuccessGritter("Success","Berhasil Diedit");
+          setTimeout(function(){ window.history.back(); }, 2000);
+        }
+         else {
         $("#loading").hide();
-        openSuccessGritter("Success","Berhasil Diedit");
-        // window.history.go(-1);
-        setTimeout(function(){ window.history.back(); }, 2000);
+          openErrorGritter('Error!', result.datas);
+        }
       });
 
     });
@@ -298,6 +303,17 @@
         time: '3000'
       });
     }
+
+    function openErrorGritter(title, message) {
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '2000'
+        });
+      }
   </script>
 @stop
 

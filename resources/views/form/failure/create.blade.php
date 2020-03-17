@@ -291,23 +291,33 @@
       };
 
       $.post('{{ url("index/post/form_experience") }}', data, function(result, status, xhr){
-        $("#loading").hide();
-        openSuccessGritter("Success","Berhasil Dibuat");
-        setTimeout(function(){ window.history.back(); }, 2000);
+        if(result.status == true){    
+          $("#loading").hide();
+          openSuccessGritter("Success","Berhasil Dibuat");
+          setTimeout(function(){ window.history.back(); }, 2000); 
+        }
+        else {
+          $("#loading").hide();
+          openErrorGritter('Error!', result.datas);
+        }
+        
       });
 
     });
 
     CKEDITOR.replace('form_deskripsi' ,{
-      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}'
+      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+      height: '300px'
     });
 
     CKEDITOR.replace('form_perbaikan' ,{
-      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}'
+      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+      height: '300px'
     });
 
     CKEDITOR.replace('form_tindakan' ,{
-      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}'
+      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+      height: '300px'
     });
 
 
@@ -321,6 +331,18 @@
         time: '3000'
       });
     }
+
+    function openErrorGritter(title, message) {
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '2000'
+        });
+      }
+
   </script>
 @stop
 
