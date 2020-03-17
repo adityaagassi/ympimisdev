@@ -988,8 +988,13 @@ class WeldingProcessController extends Controller
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
 						if (isset($key)) {
-							$hsaname = explode(' ', $key->hsa_name);
-							array_push($list_antrian, $key->hsa_kito_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
+							$gmcdesc = explode(' ', $key->hsa_name);
+							if (ISSET($gmcdesc[1])) {
+								$desc = $gmcdesc[0].' '.$gmcdesc[1];
+							}else{
+								$desc = $gmcdesc[0];
+							}
+							array_push($list_antrian, $key->hsa_kito_code.'<br>'.$desc);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -997,8 +1002,13 @@ class WeldingProcessController extends Controller
 				}else{
 					for ($i=0; $i < 10; $i++) {
 						if (isset($lists[$i])) {
-							$hsaname = explode(' ', $lists[$i]->hsa_name);
-							array_push($list_antrian, $lists[$i]->hsa_kito_code.'<br>'.$hsaname[0].' '.$hsaname[1]);
+							$gmcdesc = explode(' ', $lists[$i]->hsa_name);
+							if (ISSET($gmcdesc[1])) {
+								$desc = $gmcdesc[0].' '.$gmcdesc[1];
+							}else{
+								$desc = $gmcdesc[0];
+							}
+							array_push($list_antrian, $lists[$i]->hsa_kito_code.'<br>'.$desc);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -2916,7 +2926,7 @@ class WeldingProcessController extends Controller
 
 	public function fetchWeldingStock(){
 
-		$stock = db::connection('welding')->select("select material.material_number, material.material_description, COALESCE(antrian.qty,0) as antrian, COALESCE(wip.qty,0) as wip, COALESCE(store.qty,0) as store from
+		$stock = db::connection('welding_controller')->select("select material.material_number, material.material_description, COALESCE(antrian.qty,0) as antrian, COALESCE(wip.qty,0) as wip, COALESCE(store.qty,0) as store from
 			(select * from ympimis.materials
 			where mrpc = 's21'
 			and hpl like '%key%') material
