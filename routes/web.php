@@ -903,11 +903,13 @@ Route::get('fetch/welding/group_achievement_detail', 'WeldingProcessController@f
 Route::get('fetch/welding/accumulated_achievement', 'WeldingProcessController@fetchAccumulatedAchievement');
 Route::get('index/welding/eff_handling', 'WeldingProcessController@indexEffHandling');
 Route::get('fetch/welding/eff_handling', 'WeldingProcessController@fetchEffHandling');
-Route::get('index/welding/hsa_adjustment', 'WeldingProcessController@indexHsaAdjustment');
-Route::get('fetch/welding/hsa_queue', 'WeldingProcessController@fetchHsaQueue');
-Route::get('fetch/welding/hsa_stock', 'WeldingProcessController@fetchHsaStock');
-Route::post('post/welding/hsa_add_queue', 'WeldingProcessController@inputHsaQueue');
-Route::post('post/welding/hsa_delete_queue', 'WeldingProcessController@deleteHsaQueue');
+
+Route::get('index/welding/welding_adjustment', 'WeldingProcessController@indexWeldingAdjustment');
+Route::get('fetch/welding/welding_queue', 'WeldingProcessController@fetchWeldingQueue');
+Route::get('fetch/welding/welding_stock', 'WeldingProcessController@fetchWeldingStock');
+Route::post('post/welding/welding_add_queue', 'WeldingProcessController@inputWeldingQueue');
+Route::post('post/welding/welding_delete_queue', 'WeldingProcessController@deleteWeldingQueue');
+
 Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 Route::get('index/welding/welding_board/{loc}', 'WeldingProcessController@indexWeldingBoard');
@@ -2246,12 +2248,21 @@ Route::post('index/cpar/delete_item', 'CparController@delete_item');
 Route::post('index/cpar/update_detail/{id}', 'CparController@update_detail');
 Route::get('index/cpar/print/{id}', 'CparController@print_report');
 
+
 // Verifikasi CPAR Departemen
 
 Route::get('index/cpar/verifikasicpar/{id}', 'CparController@verifikasicpar');
 Route::post('index/cpar/approval/{id}', 'CparController@approval');
 Route::post('index/cpar/notapprove/{id}', 'CparController@notapprove');
 Route::get('index/cpar/sendemail/{id}', 'CparController@sendemail');
+//car
+Route::post('index/cpar/update_car/{id}', 'CparController@update_car');
+Route::get('index/cpar/sendemailcar/{id}', 'CparController@sendemailcar');
+
+// Jawaban 
+
+Route::get('index/cpar/response/{id}', 'CparController@response');
+
 
 // Form Ketidaksesuaian YMMJ
 Route::get('index/qa_ymmj', 'QcYmmjController@index');
@@ -2389,6 +2400,11 @@ Route::get('fetch/office_clock/visitor', 'OfficeClockController@fetchVisitor');
 Route::get('index/display/guest_room', 'OfficeClockController@guest_room');
 Route::get('index/display/guest_room2', 'OfficeClockController@guest_room2');
 Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
+
+//MAINTENANCE
+Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
+	Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
+});
 
 //ROOMS
 Route::get('/meetingroom1', function () {

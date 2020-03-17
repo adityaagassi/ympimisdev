@@ -60,7 +60,6 @@
 <section class="content-header">
 	<h1>
 		{{ $title }}
-		<small>WIP Control <span class="text-purple"> ??</span></small>
 		<button class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#create_modal" style="margin-right: 5px">
 			<i class="fa fa-plus"></i>&nbsp;&nbsp;Add Queue
 		</button>
@@ -108,9 +107,9 @@
 						<th width="1%">WS</th>
 						<th>ID</th>
 						<th width="10%">Material</th>
+						<th width="1%">Surface</th>
 						<th>Material Description</th>
-						<th width="1%">Quantity</th>
-						<th>Created at</th>
+						<th width="18%">Created at</th>
 						<th width="1%"> Check</th>				
 					</tr>
 				</thead>
@@ -185,24 +184,24 @@
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Material<span class="text-red">*</span></label>
-									<div class="col-sm-5" align="left">
+									<label class="col-sm-3">Material<span class="text-red">*</span></label>
+									<div class="col-sm-6" align="left">
 										<select class="form-control select2" data-placeholder="Select Material" name="material" id="material" style="width: 100%">
 											<option value=""></option>
 											@foreach($materials as $material) 
-											<option value="{{ $material->material_number }}">{{ $material->key }} - {{ $material->model }}</option>
+											<option value="{{ $material->id }}-{{ $material->type }}">{{ $material->type }} - {{ $material->model }} - {{ $material->nickname }}</option>
 											@endforeach
 										</select>
 									</div>
 								</div>
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Kanban Qty.<span class="text-red">*</span></label>
+									<label class="col-sm-3">Kanban Qty.<span class="text-red">*</span></label>
 									<div class="col-sm-4">
 										<input type="number" class="form-control" id="kanban" placeholder="Kanban Qty" required>
 									</div>
 								</div>
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Date<span class="text-red">*</span></label>
+									<label class="col-sm-3">Date<span class="text-red">*</span></label>
 									<div class="col-sm-4" align="left">
 										<div class="input-group date">
 											<div class="input-group-addon bg-green" style="border: none;">
@@ -214,7 +213,7 @@
 								</div>
 
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Time<span class="text-red">*</span></label>
+									<label class="col-sm-3">Time<span class="text-red">*</span></label>
 									<div class="col-sm-4" align="left">
 										<div class="input-group date">
 											<div class="input-group-addon bg-green" style="border: none;">
@@ -393,17 +392,17 @@
 				"processing": true,
 				"ajax": {
 					"type" : "get",
-					"url" : "{{ url("fetch/welding/hsa_queue") }}",
+					"url" : "{{ url("fetch/welding/welding_queue") }}",
 					"data" : data
 				},
 
 				"columns": [
 				{ "data": "ws_name"},
-				{ "data": "pesanan_id"},
-				{ "data": "hsa_kito_code"},
-				{ "data": "hsa_name" },
-				{ "data": "hsa_qty"},
-				{ "data": "pesanan_create_date"},
+				{ "data": "proses_id"},
+				{ "data": "material_number"},
+				{ "data": "surface" },
+				{ "data": "material_description"},
+				{ "data": "antrian_date"},
 				{ "data": "check" }]
 			});
 
@@ -480,7 +479,7 @@
 				"processing": true,
 				"ajax": {
 					"type" : "get",
-					"url" : "{{ url("fetch/welding/hsa_stock") }}",
+					"url" : "{{ url("fetch/welding/welding_stock") }}",
 					"data" : data
 				},
 
@@ -511,13 +510,13 @@
 
 	function showSelected(elem) {
 		var id = $(elem).attr("id");
-		var data = id.split("+");
+		var data = id.split("#");
 		if ($(elem).is(':checked')) {
 			arr.push(data);
 			$("#selected1").empty();
 
 			$.each( arr, function( key, value ) {
-				$("#selected1").append(value[0]+" - "+value[1]+"<br>");
+				$("#selected1").append(value[0]+"  -  "+value[1]+"<br>");
 			});
 
 		} else {
@@ -525,7 +524,7 @@
 			$("#selected1").empty();
 
 			$.each( arr, function( key, value ) {
-				$("#selected1").append(value[0]+" - "+value[1]+"<br>");
+				$("#selected1").append(value[0]+"  -  "+value[1]+"<br>");
 			});
 		}
 	}
@@ -542,7 +541,7 @@
 			idx:idx
 		}
 
-		$.post('{{ url("post/welding/hsa_delete_queue") }}', arrs, function(result, status, xhr){
+		$.post('{{ url("post/welding/welding_delete_queue") }}', arrs, function(result, status, xhr){
 			if (result.status) {
 				$('#tableAdjust').DataTable().ajax.reload();
 				$('#tableStock').DataTable().ajax.reload();
@@ -570,7 +569,7 @@
 				time:time,
 			}
 			
-			$.post('{{ url("post/welding/hsa_add_queue") }}', data, function(result, status, xhr){
+			$.post('{{ url("post/welding/welding_add_queue") }}', data, function(result, status, xhr){
 				if(result.status){
 					$("#material").val("");
 					$("#kanban").val("");

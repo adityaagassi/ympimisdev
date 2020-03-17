@@ -86,6 +86,12 @@
 					<div id="container2" style="width: 100%; margin-top: 1%;"></div>					
 				</div>
 			</div>
+			<div class="col-xs-12">
+				<div id="content2">
+					<div id="container2" style="width: 100%; margin-top: 1%;"></div>					
+				</div>
+			</div>
+
 
 		</div>
 	</div>
@@ -352,11 +358,9 @@
 					xAxis = [];
 
 					for (var j = 0; j < result.ng.length; j++) {
-
 						if(result.op[i].employee_id == result.ng[j].employee_id){
 							data.push(result.ng[j].ng_rate);
 							xAxis.push(result.ng[j].series);
-
 						}
 					}
 					seriesData.push({name : result.op[i].employee_id + ' - ' +result.op[i].name, data: data});
@@ -387,6 +391,94 @@
 					yAxis: {
 						title: {
 							text: 'NG Rate (%) '
+						},
+						minorGridLineWidth: 0,
+						gridLineWidth: 0,
+						alternateGridColor: null
+					},
+					legend : {
+						enabled:false
+					},
+					credits: {
+						enabled:false
+					},
+					tooltip: {
+						valueSuffix: ' %'
+					},
+					plotOptions: {
+						spline: {
+							animation: false,
+							connectNulls: true,
+							lineWidth: 0.5,
+							shadow: {
+								width: 1,
+								opacity: 0.4
+							},
+							label: {
+								connectorAllowed: false
+							},
+							cursor: 'pointer',
+							marker: {
+								enabled: false
+							}
+						}
+					},
+					series: seriesData,
+					navigation: {
+						menuItemStyle: {
+							fontSize: '10px'
+						}
+					}
+				});
+
+
+
+				var seriesData = [];
+				var data = [];
+				var xAxis = [];
+
+				for (var i = 0; i < result.op.length; i++) {
+					data = [];
+					xAxis = [];
+
+					for (var j = 0; j < result.eff.length; j++) {
+						if(result.op[i].employee_id == result.eff[j].employee_id){
+							if(result.eff[j].eff != null){
+								data.push(parseFloat(result.eff[j].eff));
+							}else{
+								data.push(result.eff[j].eff);
+							}
+							xAxis.push(result.eff[j].series);
+						}
+					}
+					seriesData.push({name : result.op[i].employee_id + ' - ' +result.op[i].name, data: data});
+				}
+
+				console.log(seriesData);
+				console.log(xAxis);
+
+				var chart = Highcharts.chart('container2', {
+					chart: {
+						type: 'spline',
+					},
+					title: {
+						text: 'Trend Operator Efficiency',
+						align: 'left'
+					},
+					subtitle: {
+						text: 'From '+ datefrom +' To ' + dateto,
+						align: 'left'
+					},
+					xAxis: {
+						categories: xAxis,
+						type: 'category',
+						labels: {
+							overflow: 'justify'
+						}
+					},
+					yAxis: {
+						title: {
+							text: 'Efficiency (%) '
 						},
 						minorGridLineWidth: 0,
 						gridLineWidth: 0,

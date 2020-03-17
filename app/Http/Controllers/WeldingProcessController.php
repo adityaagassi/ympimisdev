@@ -190,14 +190,15 @@ class WeldingProcessController extends Controller
 			left join m_ws ws on ws.ws_id = hsa.ws_id
 			order by ws.ws_id asc");
 
-		$materials = Material::where('mrpc','=','s21')
-		->where('hpl', 'like', 'st%KEY%')
-		->select('material_number', 'hpl', 'model', 'key', 'material_description')
-		->orderBy('key', 'asc')
-		->orderBy('model', 'asc')
-		->get();
+		$materials = db::connection('welding_controller')->select("select welding.id, welding.material_number, welding.type, welding.model, CONCAT(m.`key`,' ',m.model) as nickname, m.material_description from
+			(select hsa_id as id, hsa_kito_code as material_number, 'HSA' as type, if(hsa_jenis = 0, 'ALTO', if(hsa_jenis = 1, 'TENOR', 'A82')) as model from m_hsa
+			union
+			select m_phs.phs_id as id, phs_code as material_number, if(m_phs.phs_ishpp = 1, 'HPP', 'PHS') as type, if(phs_jenis = 0, 'ALTO', if(phs_jenis = 1, 'TENOR', 'A82')) as model from m_phs
+			where m_phs.phs_ishpp = 0 and m_phs.phs_code not like '%H%') welding
+			left join ympimis.materials m on m.material_number = welding.material_number
+			order by welding.type, nickname asc");
 
-		return view('processes.welding.hsa_adjustment', array(
+		return view('processes.welding.welding_adjustment', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'materials' => $materials,
@@ -1191,74 +1192,74 @@ class WeldingProcessController extends Controller
 		$list_antrian = array();
 		if ($loc == 'hsa-sx') {
 			$lists = DB::connection('welding_controller')->select("SELECT
-					t_proses.proses_id,
-					t_proses.part_id,
-					COALESCE(m_hsa.hsa_kito_code,m_phs.phs_code) as gmc,
-					COALESCE(m_hsa.hsa_name,m_phs.phs_name) as gmcdesc,
-					COALESCE(ws_phs.ws_name ,ws_hsa.ws_name) as ws_name
-					FROM
-					t_proses
-					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
-					LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
-					LEFT JOIN m_ws as ws_phs ON m_phs.ws_id = ws_phs.ws_id 
-					LEFT JOIN m_ws as ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
-					WHERE
-					(t_proses.proses_status = 0
-					AND t_proses.part_type = 1 
-					AND ws_phs.ws_name = '".$ws_name."' )
-					OR
-					(t_proses.proses_status = 0 
-					AND t_proses.part_type = 2
-					AND ws_hsa.ws_name = '".$ws_name."' )
-					ORDER BY
-					pesanan_id,proses_id ASC");
+				t_proses.proses_id,
+				t_proses.part_id,
+				COALESCE(m_hsa.hsa_kito_code,m_phs.phs_code) as gmc,
+				COALESCE(m_hsa.hsa_name,m_phs.phs_name) as gmcdesc,
+				COALESCE(ws_phs.ws_name ,ws_hsa.ws_name) as ws_name
+				FROM
+				t_proses
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
+				LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
+				LEFT JOIN m_ws as ws_phs ON m_phs.ws_id = ws_phs.ws_id 
+				LEFT JOIN m_ws as ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
+				WHERE
+				(t_proses.proses_status = 0
+				AND t_proses.part_type = 1 
+				AND ws_phs.ws_name = '".$ws_name."' )
+				OR
+				(t_proses.proses_status = 0 
+				AND t_proses.part_type = 2
+				AND ws_hsa.ws_name = '".$ws_name."' )
+				ORDER BY
+				pesanan_id,proses_id ASC");
 			
 		}elseif ($loc == 'phs-sx') {
 			$lists = DB::connection('welding_controller')->select("SELECT
-					t_proses.proses_id,
-					t_proses.part_id,
-					COALESCE(m_hsa.hsa_kito_code,m_phs.phs_code) as gmc,
-					COALESCE(m_hsa.hsa_name,m_phs.phs_name) as gmcdesc,
-					COALESCE(ws_phs.ws_name ,ws_hsa.ws_name) as ws_name
-					FROM
-					t_proses
-					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
-					LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
-					LEFT JOIN m_ws as ws_phs ON m_phs.ws_id = ws_phs.ws_id 
-					LEFT JOIN m_ws as ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
-					WHERE
-					(t_proses.proses_status = 0
-					AND t_proses.part_type = 1 
-					AND ws_phs.ws_name = '".$ws_name."' )
-					OR
-					(t_proses.proses_status = 0 
-					AND t_proses.part_type = 2
-					AND ws_hsa.ws_name = '".$ws_name."' )
-					ORDER BY
-					pesanan_id,proses_id ASC");
+				t_proses.proses_id,
+				t_proses.part_id,
+				COALESCE(m_hsa.hsa_kito_code,m_phs.phs_code) as gmc,
+				COALESCE(m_hsa.hsa_name,m_phs.phs_name) as gmcdesc,
+				COALESCE(ws_phs.ws_name ,ws_hsa.ws_name) as ws_name
+				FROM
+				t_proses
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
+				LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
+				LEFT JOIN m_ws as ws_phs ON m_phs.ws_id = ws_phs.ws_id 
+				LEFT JOIN m_ws as ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
+				WHERE
+				(t_proses.proses_status = 0
+				AND t_proses.part_type = 1 
+				AND ws_phs.ws_name = '".$ws_name."' )
+				OR
+				(t_proses.proses_status = 0 
+				AND t_proses.part_type = 2
+				AND ws_hsa.ws_name = '".$ws_name."' )
+				ORDER BY
+				pesanan_id,proses_id ASC");
 		}elseif ($loc == 'hpp-sx') {
 			$lists = DB::connection('welding_controller')->select("SELECT
-					t_proses.proses_id,
-					t_proses.part_id,
-					COALESCE(m_hsa.hsa_kito_code,m_phs.phs_code) as gmc,
-					COALESCE(m_hsa.hsa_name,m_phs.phs_name) as gmcdesc,
-					COALESCE(ws_phs.ws_name ,ws_hsa.ws_name) as ws_name
-					FROM
-					t_proses
-					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
-					LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
-					LEFT JOIN m_ws as ws_phs ON m_phs.ws_id = ws_phs.ws_id 
-					LEFT JOIN m_ws as ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
-					WHERE
-					(t_proses.proses_status = 0
-					AND t_proses.part_type = 1 
-					AND ws_phs.ws_name = '".$ws_name."' )
-					OR
-					(t_proses.proses_status = 0 
-					AND t_proses.part_type = 2
-					AND ws_hsa.ws_name = '".$ws_name."' )
-					ORDER BY
-					pesanan_id,proses_id ASC");
+				t_proses.proses_id,
+				t_proses.part_id,
+				COALESCE(m_hsa.hsa_kito_code,m_phs.phs_code) as gmc,
+				COALESCE(m_hsa.hsa_name,m_phs.phs_name) as gmcdesc,
+				COALESCE(ws_phs.ws_name ,ws_hsa.ws_name) as ws_name
+				FROM
+				t_proses
+				LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
+				LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
+				LEFT JOIN m_ws as ws_phs ON m_phs.ws_id = ws_phs.ws_id 
+				LEFT JOIN m_ws as ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
+				WHERE
+				(t_proses.proses_status = 0
+				AND t_proses.part_type = 1 
+				AND ws_phs.ws_name = '".$ws_name."' )
+				OR
+				(t_proses.proses_status = 0 
+				AND t_proses.part_type = 2
+				AND ws_hsa.ws_name = '".$ws_name."' )
+				ORDER BY
+				pesanan_id,proses_id ASC");
 
 		}
 
@@ -3141,42 +3142,50 @@ class WeldingProcessController extends Controller
 	}
 
 	public function inputWeldingQueue(Request $request){
+
+
 		$material = $request->get('material');
+		$material = explode('-', $material);
+		$part_id = $material[0];
+		$type = $material[1];
 		$qty = $request->get('kanban');
 		$date = $request->get('date');
 		$time = $request->get('time');
 
-		$ws_id = db::connection('welding')
-		->table('m_hsa')
-		->where('hsa_kito_code', $material)
-		->first();
 
-		$antrian = db::connection('welding')->select("select ws.ws_name, count(p.pesanan_id) as antrian from t_pesanan p
-			left join m_hsa hsa on hsa.hsa_kito_code = p.hsa_kito_code
-			left join m_ws ws on ws.ws_id = hsa.ws_id
-			where p.is_deleted = '0'
-			and ws.ws_id = '". $ws_id->ws_id ."'
-			and pesanan_create_date < '". date('Y-m-d H:i:s', strtotime($date.' '.$time)) ."'
-			group by ws.ws_name");
-
-		if(count($antrian) > 0){
-			$antrian = $antrian[0]->antrian;
+		$part_type = '';
+		if($type = "HSA"){
+			$part_type = '2';
 		}else{
-			$antrian = 1;
+			$part_type = '1';
 		}
+
 
 		try {
 			for ($i=1; $i <= $qty; $i++) {
-				$queue = db::connection('welding')
-				->table('t_pesanan')
+				$unik = base_convert(microtime(false), 8, 36);
+				$proses_id = substr(str_replace("-","",$date), 2) . str_replace(":","",$time). $i . $unik;
+
+				$queue = db::connection('welding_controller')
+				->table('t_proses')
 				->insert([
-					'hsa_kito_code' => $material,
-					'pesanan_status' => '0',
-					'pesanan_create_date' => date('Y-m-d H:i:s', strtotime($date.' '.$time.':'.$i)),
-					'no_kanban' => '1',
-					'antrian' => ($antrian + $i),
-					'is_deleted' => '0'
+					'proses_id' => $proses_id,
+					'part_type' => $part_type,
+					'part_id' => $part_id,
+					'antrian_date' => date('Y-m-d H:i:s', strtotime($date.' '.$time.':'.$i)),
+					'proses_insert_date' => date('Y-m-d H:i:s', strtotime($date.' '.$time.':'.$i)),
+					'proses_sedang_start_date' => date('Y-m-d H:i:s', strtotime('2000-01-01 00:00:00')),
+					'proses_sedang_finish_date' => date('Y-m-d H:i:s', strtotime('2000-01-01 00:00:00')),
+					'proses_status' => '0',
+					'kanban_no' => 0,
+					'operator_id' => 0,
+					'mesin_id' => 0,
+					'pesanan_id' => 0,
+					'proses_isupdate' => '0',
+					'proses_isdelete' => '0',
+					'proses_isupload' => '0',
 				]);
+
 			}
 
 			$response = array(
@@ -3207,12 +3216,10 @@ class WeldingProcessController extends Controller
 						$idx = $idx.",";
 					}
 
-					$queue = db::connection('welding')
-					->table('t_pesanan')
-					->where('pesanan_id', $idxs[$x])
-					->update([
-						'is_deleted' => '1'
-					]);
+					$queue = db::connection('welding_controller')
+					->table('t_proses')
+					->where('proses_id', $idxs[$x])
+					->delete();
 				}
 			}
 
