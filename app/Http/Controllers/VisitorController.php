@@ -364,6 +364,7 @@ public function confirmation_manager()
 
 	foreach ($emp_sync as $key) {
 		$position = $key->position;
+		$department = $key->department;
 	}
 
 	$lists = DB::SELECT("select 
@@ -377,10 +378,18 @@ public function confirmation_manager()
 		$notif = $val->notif;
 	}
 
-	if (strpos($position, 'Manager') === false) {
-		return redirect('home');
+	if ($department == 'Logistic') {
+		if ($position == 'Manager' || $position == 'Foreman') {
+			return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager')->with('notif_visitor', $notif);
+		}else{
+			return redirect('home');
+		}
 	}else{
-		return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager')->with('notif_visitor', $notif);
+		if (strpos($position, 'Manager') === false) {
+			return redirect('home');
+		}else{
+			return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager')->with('notif_visitor', $notif);
+		}
 	}
 }
 
@@ -394,12 +403,21 @@ public function fetchVisitorByManager()
 	foreach ($emp_sync as $key) {
 		$name = $key->name;
 	}
-	$lists = DB::SELECT("select 
+	if ($manager_name == 'Dwi Misnanto') {
+		$lists = DB::SELECT("select 
+		visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
+		from visitors 
+		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
+		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
+		where visitors.remark is null and employee_syncs.department = 'Logistic'");
+	}else{
+		$lists = DB::SELECT("select 
 		visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
 		from visitors 
 		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
 		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
 		where visitors.remark is null and employee_syncs.nik_manager = '".$manager."'");
+	}
 
 	$response = array(
 		'status' => true,

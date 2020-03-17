@@ -162,6 +162,9 @@
 			}
 		});
 
+
+
+
 		jQuery(document).ready(function() { 
 			$('#nikkaryawan').keyboard();
 			$('#telp').keyboard();
@@ -169,8 +172,8 @@
 			// filltelpon();
 			fillList();
 			$('#tabelvisitor').css({'display':'block'})
-
-			$('.select2').select2({
+			// $('.select2').select2();
+			$('.select3').select2({
 				dropdownParent: $('#modal-default')
 			});
 			
@@ -301,7 +304,7 @@
 							}else{
 								$bg = "background-color: rgb(255, 204, 255);";
 							}
-							$('#apenlist').append('<div id="'+ value.tag +'" style="'+$bg+'height:20px"><div class="col-sm-2" style="padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_id0" name="visitor_id0" placeholder="No. KTP/SIM" required value="'+ value.id_number +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_name0" name="visitor_name0" placeholder="Full Name" required value="'+ value.full_name +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="status0" name="status0" placeholder="No Hp" value="'+ value.status +'" ></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="telp0" name="telp0" placeholder="No Hp" value="'+ value.telp +'" ></div><div class="col-sm-2"><input readonly type="text" class="form-control" id="'+ value.id +'" placeholder="Tag Number" name="'+no+'" value="'+ value.tag +'"  autofocus " "></div><div class="col-sm-2" style="padding-left:0px"><select class="form-control select2" data-placeholder="Select Remark" name="remark0" id="remark0" style="width: 100%"><option value="Belum Ditemui">Belum Ditemui</option><option value="Sudah Ditemui">Sudah Ditemui</option></select></div></div>	<br><br>');
+							$('#apenlist').append('<div id="'+ value.tag +'" style="'+$bg+'height:20px"><div class="col-sm-2" style="padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_id0" name="visitor_id0" placeholder="No. KTP/SIM" required value="'+ value.id_number +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_name0" name="visitor_name0" placeholder="Full Name" required value="'+ value.full_name +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="status0" name="status0" placeholder="No Hp" value="'+ value.status +'" ></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="telp0" name="telp0" placeholder="No Hp" value="'+ value.telp +'" ></div><div class="col-sm-2"><input readonly type="text" class="form-control" id="'+ value.id +'" placeholder="Tag Number" name="'+no+'" value="'+ value.tag +'"  autofocus " "></div><div class="col-sm-2" style="padding-left:0px"><select class="form-control select3" data-placeholder="Select Remark" name="remark0" id="remark0" style="width: 100%"><option value="Belum Ditemui">Belum Ditemui</option><option value="Sudah Ditemui">Sudah Ditemui</option></select></div></div>	<br><br>');
 							no++;
 						});
 
@@ -385,5 +388,9 @@
 			$('#modal-default').modal('hide');
 			fillList();
 		}
+
+		// $(function () {
+
+	 //    })
 	</script>
 	@endsection

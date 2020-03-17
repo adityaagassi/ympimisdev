@@ -41,21 +41,36 @@ class EmailVisitorConfirmation extends Command
      */
     public function handle()
     {
-        $mgr = DB::SELECT("SELECT * FROM `employee_syncs` where position like '%Manager%'");
+        $mgr = DB::SELECT("SELECT * FROM `employee_syncs` where position like '%Manager%' or name = 'Dwi Misnanto'");
         $mail_to = DB::SELECT("SELECT email FROM `send_emails` where remark = 'visitor_confirmation'");
         $namamanager = [];
 
         foreach ($mgr as $key) {
-            $visitor = DB::SELECT("select 
-            visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
-            from visitors 
-            LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
-            LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
-            where visitors.remark is null and employee_syncs.nik_manager = '".$key->employee_id."'");
+            if ($key->name == 'Dwi Misnanto') {
+                $visitor = DB::SELECT("select 
+                visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
+                from visitors 
+                LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
+                LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
+                where visitors.remark is null and employee_syncs.department = 'Logistic'");
+            }else{
+                $visitor = DB::SELECT("select 
+                visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
+                from visitors 
+                LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
+                LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
+                where visitors.remark is null and employee_syncs.nik_manager = '".$key->employee_id."'");
+            }
             if (count($visitor) > 0) {
-                $namamanager[] = [ 'manager_name' => $key->name,
-                'jumlah_visitor' => count($visitor)
-                ];
+                if ($key->name == 'Dwi Misnanto') {
+                    $namamanager[] = [ 'manager_name' => $key->name.' (Foreman '.$key->department.')',
+                        'jumlah_visitor' => count($visitor)
+                    ];
+                }else{
+                    $namamanager[] = [ 'manager_name' => $key->name,
+                        'jumlah_visitor' => count($visitor)
+                    ];
+                }
             }
         }
         if(count($namamanager) > 0){
