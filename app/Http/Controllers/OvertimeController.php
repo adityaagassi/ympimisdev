@@ -731,8 +731,8 @@ class OvertimeController extends Controller
 				B.Groups AS [group],
 				IIF (
 				total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+				CAST(floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2 AS FLOAT),
+				CAST(floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 AS FLOAT)
 				) AS ot,
 				UPPER ( A.remark ) AS keperluan 
 				FROM
