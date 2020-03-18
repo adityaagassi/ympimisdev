@@ -102,15 +102,15 @@
 	<div class="modal fade" id="myModal">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
-				<div class="modal-header" style="color: black">
+				<div class="modal-header" style="color: black; padding-bottom: : 0px;">
 					<h4 style="float: right;" id="modal-title"></h4>
 					<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
 					<br><h4 class="modal-title" id="judul_table"></h4>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body" style="padding-top: 0px;">
 					<div class="row">
 						<div class="col-md-12">
-							<table id="tableDetail" class="table table-striped table-hover" style="width: 100%;">
+							<table id="tableDetail" class="table table-bordered" style="width: 100%;">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width: 15%;">No.</th>

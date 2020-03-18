@@ -130,7 +130,7 @@
 				<div class="modal-body" style="padding-top: 0px;">
 					<div class="row">
 						<div class="col-md-12">
-							<table id="tableDetail" class="table table-bordered table-striped" style="width: 100%;">
+							<table id="tableDetail" class="table table-bordered" style="width: 100%;">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width: 15%;">No.</th>
