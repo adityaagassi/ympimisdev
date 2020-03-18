@@ -1003,6 +1003,7 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::get('fetch/workshop/job_history', 'WorkshopController@fetchJobHistory');
 	Route::get('index/workshop/receipt', 'WorkshopController@indexWJOReceipt');
 	Route::get('fetch/workshop/receipt', 'WorkshopController@fetchFinishedWJO');
+	Route::get('fetch/workshop/receipt/after', 'WorkshopController@fetchReceivedWJO');
 	Route::get('fetch/workshop/picked', 'WorkshopController@fetchPickedWJO');
 	Route::get('scan/workshop/receipt', 'WorkshopController@scanWJOReceipt');
 });

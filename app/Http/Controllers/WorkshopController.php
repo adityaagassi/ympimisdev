@@ -91,7 +91,7 @@ class WorkshopController extends Controller{
 		return view('workshop.report.operatorload', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-		))->with('page', 'Workshop Operator Work Schedule')->with('head', 'Workshop');	
+		))->with('page', 'Workshop Operator Work Schedule')->with('head', 'Workshop');
 	}
 
 	public function indexProductivity(){
@@ -196,6 +196,17 @@ class WorkshopController extends Controller{
 			'title_jp' => $title_jp,
 			'process' => $processes
 		))->with('page', 'WJO History')->with('head', 'Workshop');	
+	}
+
+	public function indexWJOReceipt()
+	{
+		$title = 'Workshop Receipt';
+		$title_jp = '?';
+
+		return view('workshop.wjo_receipt', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'WJO Receipt')->with('head', 'Workshop');	
 	}
 
 	public function editWJO(Request $request){
@@ -1705,7 +1716,6 @@ class WorkshopController extends Controller{
 			on approved.order_no = wjo.order_no
 			left join (select * from workshop_job_order_logs where remark = 2) as progress
 			on progress.order_no = wjo.order_no
-			left join employee_syncs pic on wjo.operator = pic.employee_id
 			left join employee_syncs requester on wjo.created_by = requester.employee_id
 			left join
 			(select wjo.order_no, COALESCE(flow.std,0) as std, COALESCE(log.actual,0) as actual from workshop_job_orders wjo

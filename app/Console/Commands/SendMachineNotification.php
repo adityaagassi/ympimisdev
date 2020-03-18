@@ -261,7 +261,7 @@ class SendMachineNotification extends Command
                                 $url = "http://gateway.onewaysms.co.id:10002/".$query_string;    
                                 $fd = @implode('', file($url));
 
-                                Mail::to($mail_tos)->send(new SendEmail($machine, 'machine'));
+                                Mail::to($mail_tos)->cc('rio.irvansyah@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
                             } 
                         }
                     } else {
