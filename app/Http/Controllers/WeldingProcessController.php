@@ -1070,6 +1070,11 @@ class WeldingProcessController extends Controller
 				}
 			}elseif ($loc == 'hpp-sx') {
 				$lists = DB::connection('welding_controller')->select("SELECT
+					queue.*,
+					CONCAT( m.model, ' ', m.`key` ) AS `name` 
+					FROM
+					(
+					SELECT
 					proses_id,
 					part_id,
 					COALESCE ( m_hsa.hsa_kito_code, m_phs.phs_code ) AS phs_code,
@@ -1080,17 +1085,14 @@ class WeldingProcessController extends Controller
 					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
 					LEFT JOIN m_phs ON m_phs.phs_id = t_proses.part_id
 					LEFT JOIN m_ws AS ws_phs ON m_phs.ws_id = ws_phs.ws_id
-					LEFT JOIN m_ws AS ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id
+					LEFT JOIN m_ws AS ws_hsa ON m_hsa.ws_id = ws_hsa.ws_id 
 					WHERE
-					(t_proses.proses_status = 0 
-					AND t_proses.part_type = 1
-					AND ws_phs.ws_name = '".$ws->ws_name."')
-					OR
-					(t_proses.proses_status = 0 
-					AND t_proses.part_type = 2
-					AND ws_hsa.ws_name = '".$ws->ws_name."')
+					( t_proses.proses_status = 0 AND t_proses.part_type = 1 AND ws_phs.ws_name = '".$ws->ws_name."' ) 
+					OR ( t_proses.proses_status = 0 AND t_proses.part_type = 2 AND ws_hsa.ws_name = '".$ws->ws_name."' ) 
 					ORDER BY
-					antrian_date ASC");
+					antrian_date ASC 
+					) queue
+					LEFT JOIN ympimis.materials m ON m.material_number = queue.phs_code");
 
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
@@ -1102,7 +1104,8 @@ class WeldingProcessController extends Controller
 								$desc = $gmcdesc[0];
 							}
 							// $hsaname = explode(' ', $key->phs_name);
-							array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
+							// array_push($list_antrian, $key->phs_code.'<br>'.$key->phs_name);
+							array_push($list_antrian, $key->phs_code.'<br>'.$key->name);
 						}else{
 							array_push($list_antrian, '<br>');
 						}
@@ -1117,7 +1120,8 @@ class WeldingProcessController extends Controller
 								$desc = $gmcdesc[0];
 							}
 							// $hsaname = explode(' ', $lists[$i]->phs_name);
-							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
+							// array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->phs_name);
+							array_push($list_antrian, $lists[$i]->phs_code.'<br>'.$lists[$i]->name);
 						}else{
 							array_push($list_antrian, '<br>');
 						}

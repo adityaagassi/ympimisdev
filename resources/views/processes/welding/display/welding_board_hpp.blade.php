@@ -91,7 +91,7 @@
 						<th style="width: 0.66%; padding: 0;">Jumlah</th>
 					</tr>
 				</thead>
-				<tbody id="weldingTableBody" style="font-size: 19px">
+				<tbody id="weldingTableBody">
 				</tbody>
 				<tfoot>
 				</tfoot>
@@ -100,37 +100,37 @@
 	</div>
 
 	<div class="modal fade" id="myModal">
-	    <div class="modal-dialog" style="width:1250px;">
-	      <div class="modal-content">
-	        <div class="modal-header" style="color: black">
-	          <h4 style="float: right;" id="modal-title"></h4>
-	          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-	          <br><h4 class="modal-title" id="judul_table"></h4>
-	        </div>
-	        <div class="modal-body">
-	          <div class="row">
-	            <div class="col-md-12">
-	              <table id="tableDetail" class="table table-striped table-hover" style="width: 100%;">
-	                <thead style="background-color: rgba(126,86,134,.7);">
-	                  <tr>
-	                  	<th width="1%">No.</th>
-	                    <th>Material Number</th>
-	                    <th>Material Description</th> 
-	                    <th>WS</th>
-	                  </tr>
-	                </thead>
-	                <tbody id="bodyTableDetail" style="color: black">
-	                </tbody>
-	              </table>
-	            </div>
-	          </div>
-	        </div>
-	        <div class="modal-footer">
-	          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-	        </div>
-	      </div>
-	    </div>
-	  </div>
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header" style="color: black">
+					<h4 style="float: right;" id="modal-title"></h4>
+					<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+					<br><h4 class="modal-title" id="judul_table"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<table id="tableDetail" class="table table-striped table-hover" style="width: 100%;">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 15%;">No.</th>
+										<th style="width: 15%;">WS</th>
+										<th style="width: 25%;">Material Number</th>
+										<th style="width: 45%;">Material Description</th> 
+									</tr>
+								</thead>
+								<tbody id="bodyTableDetail" style="color: black">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 @endsection
 @section('scripts')
@@ -147,17 +147,27 @@
 		setInterval(fetchTable, 1000);
 	});
 
-	var akan_wld = [];
 	var sedang = [];
+	var sedang_kosong = [];
 
-	var totalAkan = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var totalSedang = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var totalSedangKosong = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 
 	function setTimeSedang(index) {
 		if(sedang[index]){
 			totalSedang[index]++;
 			return pad(parseInt(totalSedang[index] / 3600)) + ':' + pad(parseInt((totalSedang[index] % 3600) / 60)) + ':' + pad((totalSedang[index] % 3600) % 60);
+		}else{
+			return '';
+		}
+	}
+
+	function setTimeSedangKosong(index) {
+		if(sedang_kosong[index]){
+			totalSedangKosong[index]++;
+			return pad(parseInt(totalSedangKosong[index] / 3600)) + ':' + pad(parseInt((totalSedangKosong[index] % 3600) / 60)) + ':' + pad((totalSedangKosong
+				[index] % 3600) % 60);
 		}else{
 			return '';
 		}
@@ -182,9 +192,8 @@
 		$.get('{{ url("fetch/welding/welding_board") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){
-					akan_wld = [];
 					sedang = [];
-					selesai = [];
+					sedang_kosong = [];
 
 					$('#weldingTableBody').html("");
 					var weldingTableBody = "";
@@ -238,7 +247,6 @@
 									color3 = 'style="color:#a4fa98"';
 							}
 							else {
-								// color = 'style="background-color: RGB(255,0,0)"';
 								color = '';
 								color2 = '';
 								color3 = '';
@@ -258,7 +266,6 @@
 									color3 = 'style="color:#a4fa98"';
 							}
 							else {
-								// color = 'style="background-color: RGB(255,0,0)"';
 								color = 'style="background-color: #575c57"';
 								color2 = '';
 								color3 = '';
@@ -269,66 +276,45 @@
 						if (value.sedang != "<br>") {
 							sedang_time = value.sedang_time;
 							var sedang2 = value.sedang;
+
 							sedang.push(true);
+							sedang_kosong.push(false);
+							totalSedangKosong[index] = 0;
 						} else {
 							var sedang2 = "";
 							sedang_time = "";
+
 							sedang.push(false);
-							// totalSedang[index] = 0;
+							sedang_kosong.push(true);
+							totalSedang[index] = 0;
 						}
 
-						// var key = [['C','D','E'],['F','G','H','J','82']];
-
-						var key = {first:['C','D','E'], second:['F','G','H','J','82']};
-
-						// console.log(page);
-
-						// if(page != ''){
-						// 	if(key[page].includes(value.ws.split("-")[1])){
-						// 		weldingTableBody += '<tr '+color+'>';
-						// 		weldingTableBody += '<td height="5%">'+value.ws.split("-")[1]+'</td>';
-						// 		weldingTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-						// 		weldingTableBody += '<td style="color:#a4fa98">'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
-						// 		weldingTableBody += '<td '+color2+'>'+akan+'<p>'+setTimeAkan(index)+'</p></td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_4+'</td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_5+'</td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_6+'</td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_7+'</td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
-						// 		weldingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-						// 		weldingTableBody += '<td '+colorSelesai+'>'+value.selesai+'<p>'+setTimeSelesai(index)+'</p></td>';
-						// 		weldingTableBody += '</tr>';
-						// 	}
-						// }else{
-							var colorJumlah = 'style="background-color: #f73939;font-size:30px"';
-							if (value.employee_id == null) {
-								weldingTableBody += '<tr '+color+'>';
-								weldingTableBody += '<td height="5%">'+value.ws+'</td>';
-								weldingTableBody += '<td '+colorShift+'>Not Found</td>';
-								weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
-							}else{
-								weldingTableBody += '<tr '+color+'>';
-								weldingTableBody += '<td height="5%">'+value.ws+'</td>';
-								weldingTableBody += '<td '+colorShift+'>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-								weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
-							}
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_4+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_5+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_6+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_7+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-							weldingTableBody += '<td '+colorJumlah+' onclick="ShowModal(\''+value.ws_name+'\')">'+value.jumlah_urutan+'</td>';
-							weldingTableBody += '</tr>';
-						// }						
+						
+						var colorJumlah = 'style="background-color: #f73939;font-size:30px"';
+						if (value.employee_id == null) {
+							weldingTableBody += '<tr '+color+'>';
+							weldingTableBody += '<td height="5%">'+value.ws+'</td>';
+							weldingTableBody += '<td '+colorShift+'>Not Found</td>';
+							weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+setTimeSedangKosong(index)+'</td>';
+						}else{
+							weldingTableBody += '<tr '+color+'>';
+							weldingTableBody += '<td height="5%">'+value.ws+'</td>';
+							weldingTableBody += '<td '+colorShift+'>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
+							weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+setTimeSedangKosong(index)+'</td>';
+						}
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_4+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_5+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_6+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_7+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
+						weldingTableBody += '<td '+colorJumlah+' onclick="ShowModal(\''+value.ws_name+'\')">'+value.jumlah_urutan+'</td>';
+						weldingTableBody += '</tr>';
+						
 
 						i += 1;
 
@@ -346,91 +332,91 @@ else{
 })
 }
 
-		function ShowModal(ws_name) {
-		    $('#tableDetail').DataTable().clear();
-		    $('#tableDetail').DataTable().destroy();
+function ShowModal(ws_name) {
+	$('#tableDetail').DataTable().clear();
+	$('#tableDetail').DataTable().destroy();
 
-		    $("#myModal").modal("show");
+	$("#myModal").modal("show");
 
-		    var data = {
-				loc : '{{$loc}}',
-				ws_name : ws_name
+	var data = {
+		loc : '{{$loc}}',
+		ws_name : ws_name
+	}
+	$.get('{{ url("fetch/welding/fetch_detail") }}', data, function(result, status, xhr){
+		if(xhr.status == 200){
+			if(result.status){
+				akan_wld = [];
+				sedang = [];
+				selesai = [];
+
+				$('#bodyTableDetail').html("");
+				var bodyTableDetail = "";
+				var i = 1;
+				$.each(result.list_antrian, function(index, value){
+					bodyTableDetail += '<tr>';
+					bodyTableDetail += '<td>'+i+'</td>';
+					bodyTableDetail += '<td>'+value.ws_name+'</td>';
+					bodyTableDetail += '<td>'+value.gmc+'</td>';
+					bodyTableDetail += '<td>'+value.gmcdesc+'</td>';
+					bodyTableDetail += '</tr>';
+					i++;
+				});
+				$('#bodyTableDetail').append(bodyTableDetail);
+				$('#tableDetail').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 20, 50, 100, -1 ],
+					[ '20 rows', '50 rows', '100 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 20,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
 			}
-		    $.get('{{ url("fetch/welding/fetch_detail") }}', data, function(result, status, xhr){
-				if(xhr.status == 200){
-					if(result.status){
-						akan_wld = [];
-						sedang = [];
-						selesai = [];
-
-						$('#bodyTableDetail').html("");
-						var bodyTableDetail = "";
-						var i = 1;
-						$.each(result.list_antrian, function(index, value){
-							bodyTableDetail += '<tr>';
-							bodyTableDetail += '<td>'+i+'</td>';
-							bodyTableDetail += '<td>'+value.gmc+'</td>';
-							bodyTableDetail += '<td>'+value.gmcdesc+'</td>';
-							bodyTableDetail += '<td>'+value.ws_name+'</td>';
-							bodyTableDetail += '</tr>';
-							i++;
-						});
-						$('#bodyTableDetail').append(bodyTableDetail);
-						$('#tableDetail').DataTable({
-							'dom': 'Bfrtip',
-							'responsive':true,
-							'lengthMenu': [
-							[ 20, 50, 100, -1 ],
-							[ '20 rows', '50 rows', '100 rows', 'Show all' ]
-							],
-							'buttons': {
-								buttons:[
-								{
-									extend: 'pageLength',
-									className: 'btn btn-default',
-								},
-								
-								]
-							},
-							'paging': true,
-							'lengthChange': true,
-							'pageLength': 20,
-							'searching': true,
-							'ordering': true,
-							'order': [],
-							'info': true,
-							'autoWidth': true,
-							"sPaginationType": "full_numbers",
-							"bJQueryUI": true,
-							"bAutoWidth": false,
-							"processing": true
-						});
-					}
-				}
-			});
-
-		    $('#judul_table').append().empty();
-		    $('#judul_table').append('<center>List Antrian di <b>'+ws_name+'</b></center>');
-		    
-		  }
-
-		  function addZero(i) {
-			if (i < 10) {
-				i = "0" + i;
-			}
-			return i;
 		}
+	});
 
-		function getActualFullDate() {
-			var d = new Date();
-			var day = addZero(d.getDate());
-			var month = addZero(d.getMonth()+1);
-			var year = addZero(d.getFullYear());
-			var h = addZero(d.getHours());
-			var m = addZero(d.getMinutes());
-			var s = addZero(d.getSeconds());
-			return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
-		}
+	$('#judul_table').append().empty();
+	$('#judul_table').append('<center>List Antrian di <b>'+ws_name+'</b></center>');
+
+}
+
+function addZero(i) {
+	if (i < 10) {
+		i = "0" + i;
+	}
+	return i;
+}
+
+function getActualFullDate() {
+	var d = new Date();
+	var day = addZero(d.getDate());
+	var month = addZero(d.getMonth()+1);
+	var year = addZero(d.getFullYear());
+	var h = addZero(d.getHours());
+	var m = addZero(d.getMinutes());
+	var s = addZero(d.getSeconds());
+	return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+}
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
