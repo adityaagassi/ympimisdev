@@ -236,12 +236,15 @@ public function inputtag(Request $request){
 		$visitorDetail = VisitorDetail::where('tag', 'like', '%'.$tag_visitor.'%')->orderby('id','desc')->first();
 
 		// foreach ($visitorDetail as $key) {
+		if(count($visitorDetail) > 0 ){
 			$id_visitor = $visitorDetail->id_visitor;
 		// }
 
 		$visitor = Visitor::find($id_visitor);
 		$visitor->location = 'Lobby';
 		$visitor->save();
+
+		$visitor2 = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->where('visitors.id',$id_visitor)->first();
 
 		$plc = PlcCounter::where('origin_group_code','visitor_lobby')->first();
     	$counter = $plc->plc_counter;
@@ -251,11 +254,10 @@ public function inputtag(Request $request){
 		$plccounter->plc_counter = 1;
 		$plccounter->save();
 
-		if(count($visitor) > 0 ){
 			$response = array(
 				'status' => true,
 				'message' => 'Scan Success',
-				'visitor' => $visitor
+				'visitor' => $visitor2
 			);
 			return Response::json($response);
 		}

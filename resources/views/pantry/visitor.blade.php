@@ -446,7 +446,7 @@
 			});
 			$('#tableNovisitBody').append(resultData);
 
-			$('#total_person').text(result.total[0].qty_employee + ' Prsn(s)');
+			$('#total_person').text(result.total[0].qty_employee + ' Person(s)');
 			$('#total_duration').text(result.total[0].qty_duration + ' Min(s)');
 
 			var categories1 = [];
