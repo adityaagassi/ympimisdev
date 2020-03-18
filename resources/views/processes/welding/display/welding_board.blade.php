@@ -120,37 +120,37 @@
 	</div>
 
 	<div class="modal fade" id="myModal">
-	    <div class="modal-dialog" style="width:1250px;">
-	      <div class="modal-content">
-	        <div class="modal-header" style="color: black">
-	          <h4 style="float: right;" id="modal-title"></h4>
-	          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-	          <br><h4 class="modal-title" id="judul_table"></h4>
-	        </div>
-	        <div class="modal-body">
-	          <div class="row">
-	            <div class="col-md-12">
-	              <table id="tableDetail" class="table table-striped table-hover" style="width: 100%;">
-	                <thead style="background-color: rgba(126,86,134,.7);">
-	                  <tr>
-	                  	<th width="1%">No.</th>
-	                    <th>Material Number</th>
-	                    <th>Material Description</th> 
-	                    <th>WS</th>
-	                  </tr>
-	                </thead>
-	                <tbody id="bodyTableDetail" style="color: black">
-	                </tbody>
-	              </table>
-	            </div>
-	          </div>
-	        </div>
-	        <div class="modal-footer">
-	          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-	        </div>
-	      </div>
-	    </div>
-	  </div>
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header" style="color: black; padding-bottom: : 0px;">
+					<h4 style="float: right;" id="modal-title"></h4>
+					<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+					<br><h4 class="modal-title" id="judul_table"></h4>
+				</div>
+				<div class="modal-body" style="padding-top: 0px;">
+					<div class="row">
+						<div class="col-md-12">
+							<table id="tableDetail" class="table table-bordered table-striped" style="width: 100%;">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th style="width: 15%;">No.</th>
+										<th style="width: 15%;">WS</th>
+										<th style="width: 25%;">Material Number</th>
+										<th style="width: 45%;">Material Description</th> 
+									</tr>
+								</thead>
+								<tbody id="bodyTableDetail" style="color: black">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 @endsection
 @section('scripts')
@@ -168,10 +168,15 @@
 	});
 
 	var akan_wld = [];
+	var akan_wld_kosong = [];
 	var sedang = [];
+	var sedang_kosong = [];
 
 	var totalAkan = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var totalAkanKosong = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
 	var totalSedang = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var totalSedangKosong = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 
 	function setTimeSedang(index) {
@@ -183,10 +188,29 @@
 		}
 	}
 
+	function setTimeSedangKosong(index) {
+		if(sedang_kosong[index]){
+			totalSedangKosong[index]++;
+			return pad(parseInt(totalSedangKosong[index] / 3600)) + ':' + pad(parseInt((totalSedangKosong[index] % 3600) / 60)) + ':' + pad((totalSedangKosong
+				[index] % 3600) % 60);
+		}else{
+			return '';
+		}
+	}
+
 	function setTimeAkan(index) {
-		if(!akan_wld[index]){
+		if(akan_wld[index]){
 			totalAkan[index]++;
 			return pad(parseInt(totalAkan[index] / 3600)) + ':' + pad(parseInt((totalAkan[index] % 3600) / 60)) + ':' + pad((totalAkan[index] % 3600) % 60);
+		}else{
+			return '';
+		}
+	}
+
+	function setTimeAkanKosong(index) {
+		if(akan_wld_kosong[index]){
+			totalAkanKosong[index]++;
+			return pad(parseInt(totalAkanKosong[index] / 3600)) + ':' + pad(parseInt((totalAkanKosong[index] % 3600) / 60)) + ':' + pad((totalAkanKosong[index] % 3600) % 60);
 		}else{
 			return '';
 		}
@@ -208,12 +232,15 @@
 		var data = {
 			loc : loc
 		}
+
 		$.get('{{ url("fetch/welding/welding_board") }}', data, function(result, status, xhr){
 			if(xhr.status == 200){
 				if(result.status){
 					akan_wld = [];
+					akan_wld_kosong = [];
 					sedang = [];
-					selesai = [];
+					sedang_kosong = [];
+
 
 					$('#weldingTableBody').html("");
 					var weldingTableBody = "";
@@ -292,59 +319,74 @@
 							}
 						}
 
-						// JIKA Akan
+
 						if (value.akan == "<br>") {
 							akan = "";
-							akan_time = getActualFullDate();
-							akan_wld.push(true);
+							akan_time = "";
+
+							akan_wld.push(false);
+							akan_wld_kosong.push(true);
+							totalAkan[index] = 0;
+
+
 						} else {
 							akan = value.akan;
 							akan_time = value.akan_time;
-							akan_wld.push(false);
-							// totalAkan[index] = 0;
+
+							akan_wld.push(true);
+							akan_wld_kosong.push(false);
+							totalAkanKosong[index] = 0;
+
+
 						}
 
-						//JIKA Sedang buffing
+
 						if (value.sedang != "<br>") {
 							sedang_time = value.sedang_time;
 							var sedang2 = value.sedang;
+
 							sedang.push(true);
+							sedang_kosong.push(false);
+							totalSedangKosong[index] = 0;
+
+
 						} else {
 							var sedang2 = "";
 							sedang_time = "";
+
 							sedang.push(false);
-							// totalSedang[index] = 0;
+							sedang_kosong.push(true);
+							totalSedang[index] = 0;
+
 						}
 
 						var colorJumlah = 'style="background-color: #f73939;font-size:30px"';
 
-						var key = {first:['C','D','E'], second:['F','G','H','J','82']};
-
-							if (value.employee_id == null) {
-								weldingTableBody += '<tr '+color+'>';
-								weldingTableBody += '<td height="5%">'+value.ws+'</td>';
-								weldingTableBody += '<td '+colorShift+'>Not Found</td>';
-								weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
-								weldingTableBody += '<td '+color2+'>'+akan+'<p></p>'+setTimeAkan(index)+'</td>';
-							}else{
-								weldingTableBody += '<tr '+color+'>';
-								weldingTableBody += '<td height="5%">'+value.ws+'</td>';
-								weldingTableBody += '<td '+colorShift+'>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-								weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+'</td>';
-								weldingTableBody += '<td '+color2+'>'+akan+'<p></p>'+setTimeAkan(index)+'</td>';
-							}
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_4+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_5+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_6+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_7+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
-							weldingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
-							weldingTableBody += '<td '+colorJumlah+' onclick="ShowModal(\''+value.ws_name+'\')">'+value.jumlah_urutan+'</td>';
-							weldingTableBody += '</tr>';
+						if (value.employee_id == null) {
+							weldingTableBody += '<tr '+color+'>';
+							weldingTableBody += '<td height="5%">'+value.ws+'</td>';
+							weldingTableBody += '<td '+colorShift+'>Not Found</td>';
+							weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+setTimeSedangKosong(index)+'</td>';
+							weldingTableBody += '<td '+color2+'>'+akan+'<p></p>'+setTimeAkan(index)+setTimeAkanKosong(index)+'</td>';
+						}else{
+							weldingTableBody += '<tr '+color+'>';
+							weldingTableBody += '<td height="5%">'+value.ws+'</td>';
+							weldingTableBody += '<td '+colorShift+'>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
+							weldingTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+setTimeSedangKosong(index)+'</td>';
+							weldingTableBody += '<td '+color2+'>'+akan+'<p></p>'+setTimeAkan(index)+setTimeAkanKosong(index)+'</td>';
+						}
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_4+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_5+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_6+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_7+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_8+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_9+'</td>';
+						weldingTableBody += '<td style="color:#fcff38">'+value.queue_10+'</td>';
+						weldingTableBody += '<td '+colorJumlah+' onclick="ShowModal(\''+value.ws_name+'\')">'+value.jumlah_urutan+'</td>';
+						weldingTableBody += '</tr>';
 
 						i += 1;
 
@@ -353,147 +395,147 @@
 						}
 					});
 
-		$('#weldingTableBody').append(weldingTableBody);
-		}
-		else{
-			alert('Attempt to retrieve data failed.');
-		}
-		}
-		})
-		}
+$('#weldingTableBody').append(weldingTableBody);
+}
+else{
+	alert('Attempt to retrieve data failed.');
+}
+}
+});
+}
 
-		function ShowModal(ws_name) {
-		    $('#tableDetail').DataTable().clear();
-		    $('#tableDetail').DataTable().destroy();
+function ShowModal(ws_name) {
+	$('#tableDetail').DataTable().clear();
+	$('#tableDetail').DataTable().destroy();
 
-		    $("#myModal").modal("show");
+	$("#myModal").modal("show");
 
-		    var data = {
-				loc : '{{$loc}}',
-				ws_name : ws_name
+	var data = {
+		loc : '{{$loc}}',
+		ws_name : ws_name
+	}
+	$.get('{{ url("fetch/welding/fetch_detail") }}', data, function(result, status, xhr){
+		if(xhr.status == 200){
+			if(result.status){
+				akan_wld = [];
+				sedang = [];
+				selesai = [];
+
+				$('#bodyTableDetail').html("");
+				var bodyTableDetail = "";
+				var i = 1;
+				$.each(result.list_antrian, function(index, value){
+					bodyTableDetail += '<tr>';
+					bodyTableDetail += '<td>'+i+'</td>';
+					bodyTableDetail += '<td>'+value.ws_name+'</td>';
+					bodyTableDetail += '<td>'+value.gmc+'</td>';
+					bodyTableDetail += '<td>'+value.gmcdesc+'</td>';
+					bodyTableDetail += '</tr>';
+					i++;
+				});
+				$('#bodyTableDetail').append(bodyTableDetail);
+				$('#tableDetail').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 20, 50, 100, -1 ],
+					[ '20 rows', '50 rows', '100 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 20,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
 			}
-		    $.get('{{ url("fetch/welding/fetch_detail") }}', data, function(result, status, xhr){
-				if(xhr.status == 200){
-					if(result.status){
-						akan_wld = [];
-						sedang = [];
-						selesai = [];
-
-						$('#bodyTableDetail').html("");
-						var bodyTableDetail = "";
-						var i = 1;
-						$.each(result.list_antrian, function(index, value){
-							bodyTableDetail += '<tr>';
-							bodyTableDetail += '<td>'+i+'</td>';
-							bodyTableDetail += '<td>'+value.gmc+'</td>';
-							bodyTableDetail += '<td>'+value.gmcdesc+'</td>';
-							bodyTableDetail += '<td>'+value.ws_name+'</td>';
-							bodyTableDetail += '</tr>';
-							i++;
-						});
-						$('#bodyTableDetail').append(bodyTableDetail);
-						$('#tableDetail').DataTable({
-							'dom': 'Bfrtip',
-							'responsive':true,
-							'lengthMenu': [
-							[ 20, 50, 100, -1 ],
-							[ '20 rows', '50 rows', '100 rows', 'Show all' ]
-							],
-							'buttons': {
-								buttons:[
-								{
-									extend: 'pageLength',
-									className: 'btn btn-default',
-								},
-								
-								]
-							},
-							'paging': true,
-							'lengthChange': true,
-							'pageLength': 20,
-							'searching': true,
-							'ordering': true,
-							'order': [],
-							'info': true,
-							'autoWidth': true,
-							"sPaginationType": "full_numbers",
-							"bJQueryUI": true,
-							"bAutoWidth": false,
-							"processing": true
-						});
-					}
-				}
-			});
-
-		    $('#judul_table').append().empty();
-		    $('#judul_table').append('<center>List Antrian di <b>'+ws_name+'</b></center>');
-		    
-		  }
-
-		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-
-		function openSuccessGritter(title, message){
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-success',
-				image: '{{ url("images/image-screen.png") }}',
-				sticky: false,
-				time: '3000'
-			});
 		}
+	});
 
-		function openErrorGritter(title, message) {
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-danger',
-				image: '{{ url("images/image-stop.png") }}',
-				sticky: false,
-				time: '3000'
-			});
-		}
+	$('#judul_table').append().empty();
+	$('#judul_table').append('<center>List Antrian di <b>'+ws_name+'</b></center>');
 
-		function addZero(i) {
-			if (i < 10) {
-				i = "0" + i;
-			}
-			return i;
-		}
+}
 
-		function getActualFullDate() {
-			var d = new Date();
-			var day = addZero(d.getDate());
-			var month = addZero(d.getMonth()+1);
-			var year = addZero(d.getFullYear());
-			var h = addZero(d.getHours());
-			var m = addZero(d.getMinutes());
-			var s = addZero(d.getSeconds());
-			return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
-		}
+var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-		function getActualTime() {
-			var d = new Date();
-			var h = addZero(d.getHours());
-			var m = addZero(d.getMinutes());
-			var s = addZero(d.getSeconds());
-			return h + ":" + m + ":" + s;
-		}
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
-		$.date = function(dateObject) {
-			var d = new Date(dateObject);
-			var day = d.getDate();
-			var month = d.getMonth() + 1;
-			var year = d.getFullYear();
-			if (day < 10) {
-				day = "0" + day;
-			}
-			if (month < 10) {
-				month = "0" + month;
-			}
-			var date = day + "/" + month + "/" + year;
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
-			return date;
-		};
+function addZero(i) {
+	if (i < 10) {
+		i = "0" + i;
+	}
+	return i;
+}
+
+function getActualFullDate() {
+	var d = new Date();
+	var day = addZero(d.getDate());
+	var month = addZero(d.getMonth()+1);
+	var year = addZero(d.getFullYear());
+	var h = addZero(d.getHours());
+	var m = addZero(d.getMinutes());
+	var s = addZero(d.getSeconds());
+	return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+}
+
+function getActualTime() {
+	var d = new Date();
+	var h = addZero(d.getHours());
+	var m = addZero(d.getMinutes());
+	var s = addZero(d.getSeconds());
+	return h + ":" + m + ":" + s;
+}
+
+$.date = function(dateObject) {
+	var d = new Date(dateObject);
+	var day = d.getDate();
+	var month = d.getMonth() + 1;
+	var year = d.getFullYear();
+	if (day < 10) {
+		day = "0" + day;
+	}
+	if (month < 10) {
+		month = "0" + month;
+	}
+	var date = day + "/" + month + "/" + year;
+
+	return date;
+};
 </script>
 @endsection
