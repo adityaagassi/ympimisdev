@@ -85,11 +85,8 @@
 											<div class="input-group-btn">
 												<button type="button" class="btn btn-warning"><i class="fa fa-search"></i>&nbsp;Search</button>
 											</div>
-											<!-- /btn-group -->
 											<input type="text" id="telp" class="form-control" placeholder="Search Telephone" onclick="emptytlp()">
 										</div>
-										<!-- /input-group -->
-										
 									</div>
 
 								</div>
@@ -97,7 +94,7 @@
 						</div>
 					</div>
 				</div>
-
+				<input type="text" id="tag_visitor" class="form-control" style="background-color: #3c3c3c;border: none">
 				<div class="row" id="telpon">
 					<div class="col-xs-12">
 						<div class="box">
@@ -113,13 +110,6 @@
 										</thead>
 										<tbody>
 										</tbody>
-										{{-- <tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>								
-											</tr>
-										</tfoot> --}}
 									</table>									
 								</div>
 							</div>
@@ -127,120 +117,6 @@
 					</div>
 				</div>
 			</div>
-
-			{{-- CONFIRMATION --}}
-			<!-- <div class="col-xs-6">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="box">
-							<div class="box-body">
-								<div class="form-group">					
-									<div  class="col-xs-9">
-										<input type="text" id="nikkaryawan" class="form-control" placeholder="Input or Scan NIK">
-									</div>
-									<div  class="col-xs-3">
-										<button class="btn btn-primary"  onclick="inputnik()">Submit</button>
-										<button class="btn btn-warning" onclick="hide()">Clear</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="row" style="display: none" id="tabelvisior">
-					<div class="col-xs-12">
-						<div class="box">
-							<div class="box-body">
-								<div class="table-responsive">
-									<table id="visitorlist" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr id="total">
-												<th colspan="6"><b id="totalvi"></b></th>								
-												<th colspan="2">Action</th>
-											</tr>
-											<tr>
-												<th >Id</th>
-												<th >Company</th>
-												<th >Full Name</th>
-												<th >Total</th>
-												<th >Purpose</th>
-												<th >Status</th>								
-												<th >Remark</th>
-												<th>Input Tag</th>
-											</tr>
-										</thead>
-										<tbody>
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>								
-											</tr>
-										</tfoot>
-									</table>
-									<div class="modal fade" id="modal-default">
-										<div class="modal-dialog modal-lg">
-											<div class="modal-content">
-												<div class="modal-header" style="background-color: rgba(126,86,134,.7)">
-													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-														<span aria-hidden="true">&times;</span></button>
-														<h4 class="modal-title">Visitor List</h4>
-														<div id="header">
-
-														</div>
-													</div>
-													<div class="modal-body">
-
-												{{-- 	Scan tag	
-
-												<div class="form-group">
-															<center><input type="text" id="tagvisit" name="tagvisit" placeholder="Input or Scan Visitor Id Card" style="width: 80%" class="form-control " onkeydown="inputag(this.id,this.name)"></center>
-														</div> --}}
-
-														<div  class="form-group">
-
-															<input type="text" name="lop" id="lop" value="1" hidden>
-
-															<div class="col-sm-2" style="padding-right: 0;">
-																No. KTP/SIM												
-															</div>
-															<div class="col-sm-4" style="padding-left: 1; padding-right: 0;">
-																Full Name												
-															</div>
-															<div class="col-sm-2" style="padding-left: 1; padding-right: 0;">
-																Status										
-															</div>
-															<div class="col-sm-2">												
-																No Hp	
-															</div>
-															<div class="col-sm-2">
-																Tag Number												
-															</div><br>
-															<div id="apenlist"><br>		
-															</div>
-
-														</div>
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-														<button type="button" class="btn btn-primary" onclick="inputag2();reloadtable(); ">Confirm All</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div> -->
 			</div>
 		</div>
 	</div>
@@ -268,6 +144,7 @@
 		jQuery(document).ready(function() { 
 			$('#nikkaryawan').keyboard();
 			$('#telp').keyboard();
+			$('#tag_visitor').focus();
 			// $('#nikkaryawan').val('asd');
 			filltelpon();
 			setTimeout(function(){
@@ -303,6 +180,36 @@
 			});
 		}
 
+		$('#tag_visitor').keydown(function(event) {
+			if (event.keyCode == 13 || event.keyCode == 9) {
+				if($("#tag_visitor").val().length >= 8){
+					var data = {
+						tag_visitor : $("#tag_visitor").val()
+					}
+					// alert($("#tag_visitor").val());
+
+					$.get('{{ url("scan/visitor/lobby") }}', data, function(result, status, xhr){
+						if(result.status){
+							$('#tag_visitor').val('');
+							openSuccessGritter('Success!', result.message);
+						}
+						else{
+							// audio_error.play();
+							openErrorGritter('Error', result.message);
+							$('#tag_visitor').val('');
+							$('#tag_visitor').focus();
+						}
+					});
+				}
+				else{
+					openErrorGritter('Error!', 'Tag Invalid.');
+					// audio_error.play();
+					$("#tag_visitor").val("");
+					$('#tag_visitor').focus();
+				}
+			}
+		});
+
 		function filllist(nik){
 
 			$('#visitorlist tfoot th').each( function () {
@@ -322,30 +229,6 @@
 						extend: 'pageLength',
 						className: 'btn btn-default',
 					},
-					// {
-					// 	extend: 'copy',
-					// 	className: 'btn btn-success',
-					// 	text: '<i class="fa fa-copy"></i> Copy',
-					// 	exportOptions: {
-					// 		columns: ':not(.notexport)'
-					// 	}
-					// },
-					// {
-					// 	extend: 'excel',
-					// 	className: 'btn btn-info',
-					// 	text: '<i class="fa fa-file-excel-o"></i> Excel',
-					// 	exportOptions: {
-					// 		columns: ':not(.notexport)'
-					// 	}
-					// },
-					// {
-					// 	extend: 'print',
-					// 	className: 'btn btn-warning',
-					// 	text: '<i class="fa fa-print"></i> Print',
-					// 	exportOptions: {
-					// 		columns: ':not(.notexport)'
-					// 	}
-					// },
 					]
 				},
 				'paging'        : true,
@@ -401,8 +284,6 @@
 				{ "data": "status"},
 				{ "data": "remark"},
 				{ "data": "edit"},
-
-			// { "data": "action"}
 			]
 		});
 
@@ -425,7 +306,6 @@
 
 			$('#telponlist tfoot th').each( function () {
 				var title = $(this).text();
-				// $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
 			});
 			var table = $('#telponlist').DataTable({
 				'dom': 'Bfrtip',
@@ -472,16 +352,6 @@
 			} );
 			table.columns().every( function () {
 				var that = this;
-
-				// $( 'input', this.footer() ).keyboard();
-
-				// $( 'input', this.footer() ).on( 'keyup change', function () {
-				// 	if ( that.search() !== this.value ) {
-				// 		that
-				// 		.search( this.value )
-				// 		.draw();
-				// 	}
-				// } );
 			});
 
 			$('#telponlist tfoot tr').appendTo('#telponlist thead');

@@ -12,6 +12,7 @@ use App\VisitorDetail;
 use App\Employee;
 use App\TelephoneList;
 use App\VisitorId;
+use App\PlcCounter;
 use DataTables;
 use File;
 use Storage;
@@ -41,10 +42,10 @@ class VisitorController extends Controller
 
 	public function registration()
 	{
-		$employees = "SELECT DISTINCT( employees.employee_id) as employee_id,employees.`name`,mutation_logs.department, cost_centers.department as shortname from employees
-		LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
-		LEFT JOIN cost_centers on mutation_logs.cost_center = cost_centers.cost_center
-		WHERE mutation_logs.valid_to is null and employees.end_date is null  ORDER BY mutation_logs.department asc";
+		$employees = "SELECT
+			* 
+		FROM
+			employee_syncs";
 		$employee = DB::select($employees);
 		return view('visitors.registration', array(
 			'employee' => $employee,
@@ -62,6 +63,9 @@ class VisitorController extends Controller
 				'company' => $request->get('company'),
 				'purpose' => $request->get('purpose'),
 				'status' => $request->get('status'),
+				'jenis' => $request->get('jenis'),
+				'location' => "Security",
+				'destination' => $request->get('destination'),
 				'employee'=> $request->get('employee'),
 				'transport'=>  $request->get('kendaraan'),
 				'pol'=>  $request->get('pol'),
@@ -217,7 +221,54 @@ public function inputtag(Request $request){
 
 }
 
-//-------------------- end lis
+//-------------------- end list
+
+//-------------------- at lobby
+
+	public function scanVisitorLobby(Request $request){
+
+		$tag_visitor = $request->get('tag_visitor');
+
+		if(strlen($tag_visitor) > 9){
+			$tag_visitor = substr($tag_visitor,0,9);
+		}
+
+		$visitorDetail = VisitorDetail::where('tag', 'like', '%'.$tag_visitor.'%')->orderby('id','desc')->first();
+
+		// foreach ($visitorDetail as $key) {
+			$id_visitor = $visitorDetail->id_visitor;
+		// }
+
+		$visitor = Visitor::find($id_visitor);
+		$visitor->location = 'Lobby';
+		$visitor->save();
+
+		$plc = PlcCounter::where('origin_group_code','visitor_lobby')->first();
+    	$counter = $plc->plc_counter;
+    	$id_plc = $plc->id;
+
+		$plccounter = PlcCounter::find($id_plc);
+		$plccounter->plc_counter = 1;
+		$plccounter->save();
+
+		if(count($visitor) > 0 ){
+			$response = array(
+				'status' => true,
+				'message' => 'Scan Success',
+				'visitor' => $visitor
+			);
+			return Response::json($response);
+		}
+		else{
+			$response = array(
+				'status' => false,
+				'message' => 'Tag Invalid'
+			);
+			return Response::json($response);
+		}
+	}
+
+//-------------------- end at lobby
 
 
 //--------------------- confirmation

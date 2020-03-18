@@ -85,13 +85,36 @@
 						</div>
 					</div>
 					<div class="form-group">
+						<label for="inputEmail3" class="col-sm-2 control-label">Jenis</label>
+						<div class="col-sm-9">
+							<select class="form-control select2" id="jenis" name="jenis" placeholder="Pilih Jenis" required>
+								<option style="color:grey;" value="">Pilih Jenis</option>
+								<option value="Subcont">Subcont</option>
+								<option value="Contractor">Contractor</option>
+								<option value="Officer">Officer</option>
+								<option value="VIP">VIP / VVIP</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="inputEmail3" class="col-sm-2 control-label">Destination</label>
+						<div class="col-sm-9">
+							<select class="form-control select2" id="destination" name="destination" placeholder="Pilih Destination" required>
+								<option style="color:grey;" value="">Pilih Destination</option>
+								<option value="Office">Office</option>
+								<option value="Warehouse">Warehouse</option>
+								<option value="Other">Other</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
 						<label for="inputEmail3" class="col-sm-2 control-label">Karyawan YMPI</label>
 						<div class="col-sm-9">
 							<input type="text" name="lop" id="lop" hidden>
 							<select class="form-control select2" id="status" name="employee" required>
 								<option style="color:grey;" value="">Pilih Karyawan YMPI</option>
 								@foreach($employee as $nomor => $employee)
-								<option value="{{$employee->employee_id}}">{{$employee->name}} - ( {{$employee->department}} - {{$employee->shortname}} )</option>
+								<option value="{{$employee->employee_id}}">{{$employee->name}} - ( {{$employee->department}} )</option>
 								@endforeach
 							</select>
 						</div>

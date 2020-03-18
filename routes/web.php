@@ -97,6 +97,7 @@ Route::get('visitor_getvisitSc', 'VisitorController@confirmation2');
 
 Route::get('visitor_confirmation_manager', 'VisitorController@confirmation_manager');
 Route::get('fetch/visitor/fetchVisitorByManager', 'VisitorController@fetchVisitorByManager');
+Route::get('scan/visitor/lobby', 'VisitorController@scanVisitorLobby');
 
 //end visitor control 
 
@@ -351,9 +352,6 @@ Route::get('index/recorder_repair/resume', 'AdditionalController@indexRecorderRe
 Route::get('fetch/recorder_repair/by_status', 'AdditionalController@fetchRecorderByStatus');
 Route::get('fetch/recorder_repair/by_model', 'AdditionalController@fetchRecorderByModel');
 Route::get('fetch/recorder_repair/by_date', 'AdditionalController@fetchRecorderByDate');
-
-
-
 
 //EMPLOYEE
 Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
@@ -851,6 +849,7 @@ Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 	Route::post('edit/meeting', 'MeetingController@editMeeting');
 	Route::post('create/meeting', 'MeetingController@createMeeting');
 	Route::post('scan/meeting/attendance', 'MeetingController@scanMeetingAttendance');
+	Route::get('fetch/meeting/add_participant', 'MeetingController@fetchAddParticipant');
 });
 Route::get('index/meeting', 'MeetingController@indexMeeting');
 Route::get('index/meeting/attendance', 'MeetingController@indexMeetingAttendance');
@@ -2256,14 +2255,17 @@ Route::get('index/cpar/verifikasicpar/{id}', 'CparController@verifikasicpar');
 Route::post('index/cpar/approval/{id}', 'CparController@approval');
 Route::post('index/cpar/notapprove/{id}', 'CparController@notapprove');
 Route::get('index/cpar/sendemail/{id}', 'CparController@sendemail');
-//car
-Route::post('index/cpar/update_car/{id}', 'CparController@update_car');
-Route::get('index/cpar/sendemailcar/{id}', 'CparController@sendemailcar');
 
-// Jawaban 
-
+// CAR Antar Departemen
 Route::get('index/cpar/response/{id}', 'CparController@response');
+Route::post('index/cpar/update_car/{id}', 'CparController@update_car');
 
+
+// Verifikasi CAR Departemen & Bagian
+Route::get('index/cpar/verifikasicar/{id}', 'CparController@verifikasicar');
+Route::post('index/cpar/approvalcar/{id}', 'CparController@approvalcar');
+Route::post('index/cpar/notapprovecar/{id}', 'CparController@notapprovecar');
+Route::get('index/cpar/sendemailcar/{id}', 'CparController@sendemailcar');
 
 // Form Ketidaksesuaian YMMJ
 Route::get('index/qa_ymmj', 'QcYmmjController@index');
@@ -2398,6 +2400,7 @@ Route::post('post/display/ip_log', 'PingController@ip_log');
 //OFFICECLOCK
 Route::get('index/display/office_clock', 'OfficeClockController@index');
 Route::get('fetch/office_clock/visitor', 'OfficeClockController@fetchVisitor');
+Route::get('fetch/office_clock/visitor_lobby', 'OfficeClockController@fetchVisitorLobby');
 Route::get('index/display/guest_room', 'OfficeClockController@guest_room');
 Route::get('index/display/guest_room2', 'OfficeClockController@guest_room2');
 Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
@@ -2405,6 +2408,7 @@ Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
 //MAINTENANCE
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
+	Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
 });
 
 //ROOMS

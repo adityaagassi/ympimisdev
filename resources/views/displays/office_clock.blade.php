@@ -101,44 +101,10 @@ table > thead > tr > th{
 @section('content')
 <section class="content" style="padding-top: 0px;padding-bottom: 0px;background-color: rgb(75,30,120)">
 	<div class="row" style="padding-bottom: 0px;">
-		<!-- <div class="col-xs-12" style="margin-top: 0px;"> -->
-			<!-- <table style="padding-bottom: 0px;border: 0px;width: 100%">
-				<tr style="padding-top: 0px;margin-top: 0px;border: 0px">
-					<td style="background-color: rgb(75,30,120);color: #fff;padding-top: 0px;margin-top: 0px;">
-						
-					</td>
-				</tr>
-				<tr style="border: 1px solid black">
-					<td colspan="3">
-						
-					</td>
-				</tr>
-			</table> -->
-			<h1 id="jam" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
-			<h1 id="visitor_info" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
-			<center><span id="tanggal" style="font-size: 80px;background-color: rgb(75,30,120);color: #fff"></span></center>
-		<!-- </div> -->
+		<h1 id="jam" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
+		<h1 id="visitor_info" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
+		<center><span id="tanggal" style="font-size: 80px;background-color: rgb(75,30,120);color: #fff"></span></center>
 	</div>
-
-	<div class="modal modal-default fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="myModalLabel">VISITOR INFORMATION</h4>
-				</div>
-				<div class="modal-body">
-					Are you sure delete?
-				</div>
-				<!-- <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a>
-				</div> -->
-			</div>
-		</div>
-	</div>
-
-	
 </section>
 
 @endsection
@@ -156,6 +122,7 @@ table > thead > tr > th{
 	});
 
 	var audio_clock = new Audio('{{ url("sounds/airport_new2.mp3") }}');
+	var audio_clock_lobby = new Audio('{{ url("sounds/airport_cring.mp3") }}');
 	var myvar = setInterval(waktu,1000);
 
 	jQuery(document).ready(function(){
@@ -165,14 +132,9 @@ table > thead > tr > th{
 		  gap: 20,
 		  delayBeforeStart: 0,
 		  direction: 'left',
-		  // duplicated: true
 		});
-		
-		// fillChart();
-		// setInterval(fillChart, 7000);
 		$('#tanggal').html('{{$dateTitle}}');
 		$('#visitor_info').hide();
-		// fillVisitor();
 		setInterval(fillVisitor,40000);
 	});
 
@@ -197,12 +159,9 @@ table > thead > tr > th{
 		var s = addZero(d.getSeconds());
 		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
 	}
-
-	// window.setTimeout("waktu()", 1000);
  
 	function waktu() {
 		var time = new Date();
-		// var myvar = setInterval("time()", 1000);
 		document.getElementById("jam").style.fontSize = '30em';
 		document.getElementById("jam").style.marginBottom = '-70px';
 		document.getElementById("jam").innerHTML = addZero(time.getHours())+':'+addZero(time.getMinutes());
@@ -228,27 +187,40 @@ table > thead > tr > th{
 		$.get('{{ url("fetch/office_clock/visitor") }}', function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
-					// clearInterval(myvar);
 					if (result.visitors.length > 0) {
 						for (var i = 0; i < result.visitors.length; i++) {
 							$('#visitor_info').show();
 							$('#jam').hide();
+							
 							document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+' - '+result.visitors[i].department+')<br>AT SECURITY<br>';
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
-							// $("#myModal").modal('show');
+							$("#visitor_info").css("color",'#fff');
 							audio_clock.play();
-							// console.clear();
 						}
-						// document.getElementById("visitor").innerHTML = "PT. YAMAHA MUSICAL PRODUCTS INDONESIA";
+					}
+					if (result.visitors_lobby.length > 0) {
+						for (var i = 0; i < result.visitors_lobby.length; i++) {
+							$('#visitor_info').show();
+							$('#jam').hide();
+
+							document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name+' - '+result.visitors_lobby[i].department+')<br>AT LOBBY<br>';
+							document.getElementById("visitor_info").style.fontSize = '7em';
+							document.getElementById("visitor_info").style.marginBottom = '10px';
+							// document.getElementsByClassName("content").style.backgroundColor = '#f07400';
+							$(".content").css("background-color",'#fff700');
+							$("#tanggal").css("background-color",'#fff700');
+							$("#tanggal").css("color",'#1100ff');
+							$("#visitor_info").css("color",'#1100ff');
+							audio_clock_lobby.play();
+						}
 					}
 				}else{
-					$('#jam').show();
 					$('#visitor_info').hide();
-					// document.getElementById("visitor").innerHTML = "PT. YAMAHA MUSICAL PRODUCTS INDONESIA";
-					// myvar = setInterval(waktu,1000);
-					// $("#myModal").modal('hide');
-					// console.clear();
+					$('#jam').show();
+					$(".content").css("background-color",'#4b1e78');
+					$("#tanggal").css("background-color",'#4b1e78');
+					$("#tanggal").css("color",'#fff');
 				}
 			}
 		});
