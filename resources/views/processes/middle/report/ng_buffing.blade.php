@@ -121,7 +121,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="nav-tabs-custom">
+					<div class="nav-tabs-custom" style="display: none;">
 						<div class="tab-content">
 							<div class="tab-pane active" id="tab_1">
 								<div class="row">
