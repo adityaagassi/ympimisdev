@@ -147,7 +147,7 @@ class SendMachineNotification extends Command
         // print_r($sms);
         // exit;
 
-        while (true) {
+        // while (true) {
             $temp_all = [];
             $json = file_get_contents('http://172.17.128.204/zed/dashboard/getData');
             $temp = explode("(ime)", $json);
@@ -272,7 +272,7 @@ class SendMachineNotification extends Command
                 }
             }
         }
-        sleep(2);
-    }
+        // sleep(2);
+    // }
 }
 }

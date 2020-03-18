@@ -78,7 +78,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('plan:injections')->weekdays()->dailyAt('08:40');
         $schedule->command('sync:sunfish')->weekdays()->dailyAt('03:01');
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
-        $schedule->command('notif:machine')->dailyAt('07:00');
+        $schedule->command('notif:machine')->everyMinute();
         // $schedule->command('email:kaizen')->everyMinute();
         // $schedule->command('employee:history')->monthlyOn(date('t'), '20:01');
 
