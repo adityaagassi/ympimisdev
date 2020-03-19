@@ -1001,6 +1001,7 @@ Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::post('edit/workshop/drawing', 'WorkshopController@editDrawing');
 	Route::get('index/workshop/job_history', 'WorkshopController@indexJobHistory');
 	Route::get('fetch/workshop/job_history', 'WorkshopController@fetchJobHistory');
+	Route::get('excel/workshop/job_history', 'WorkshopController@exportJobHistory');	
 	Route::get('index/workshop/receipt', 'WorkshopController@indexWJOReceipt');
 	Route::get('fetch/workshop/receipt', 'WorkshopController@fetchFinishedWJO');
 	Route::get('fetch/workshop/receipt/after', 'WorkshopController@fetchReceivedWJO');
@@ -2270,7 +2271,8 @@ Route::get('index/cpar/sendemailcar/{id}', 'CparController@sendemailcar');
 
 // Verifikasi Bagian
 Route::get('index/cpar/verifikasibagian/{id}', 'CparController@verifikasibagian');
-
+Route::post('index/cpar/close', 'CparController@closecar');
+Route::post('index/cpar/reject', 'CparController@rejectcar');
 
 // Form Ketidaksesuaian YMMJ
 Route::get('index/qa_ymmj', 'QcYmmjController@index');
@@ -2407,6 +2409,8 @@ Route::get('index/display/office_clock', 'OfficeClockController@index');
 Route::get('fetch/office_clock/visitor', 'OfficeClockController@fetchVisitor');
 Route::get('index/display/office_clock2', 'OfficeClockController@index2');
 Route::get('fetch/office_clock/visitor2', 'OfficeClockController@fetchVisitor2');
+Route::get('index/display/office_clock3', 'OfficeClockController@index3');
+Route::get('fetch/office_clock/visitor3', 'OfficeClockController@fetchVisitor3');
 Route::get('index/display/guest_room', 'OfficeClockController@guest_room');
 Route::get('index/display/guest_room2', 'OfficeClockController@guest_room2');
 Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
@@ -2414,6 +2418,7 @@ Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
 //MAINTENANCE
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
+	Route::get('fetch/maintenance/list_spk/user', 'MaintenanceController@fetchMaintenance');
 	Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
 });
 
