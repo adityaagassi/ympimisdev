@@ -79,7 +79,7 @@
         <ul class="treeview-menu">
 
           @if(isset($page) && $page == "welding-queue")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/welding/hsa_adjustment") }}"><i class="fa fa-exchange"></i> <span>HSA Queue</span></a>
+            <a href="{{ url("/index/welding/welding_adjustment") }}"><i class="fa fa-exchange"></i> <span>Welding Queue</span></a>
           </li>
 
           @if(isset($page) && $page == "buffing-queue")<li class="active">@else<li>@endif
@@ -340,7 +340,7 @@
 
   @if(in_array('S1', $navs))
   @if(isset($page) && $page == "FLO Band Instrument")<li class="active">@else<li>@endif
-    <a href="{{ secure_url("/index/flo_view/bi") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
+    <a href="{{ url("/index/flo_view/bi") }}"><i class="fa fa-pencil-square-o"></i> <span>FLO  <i class="fa fa-angle-right"></i> Band Inst.</span></a>
   </li>
   @endif
 

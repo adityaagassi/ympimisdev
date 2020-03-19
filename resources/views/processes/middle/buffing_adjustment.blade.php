@@ -84,6 +84,13 @@
 		{{ session('error') }}
 	</div>   
 	@endif
+
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
+
 	<div class="row">
 		<div class="col-xs-3">
 			<div class="form-group">
@@ -498,9 +505,14 @@
 				date:date,
 				time:time,
 			}
+
+			$("#loading").show();
+
 			
 			$.post('{{ url("post/middle/buffing_add_queue") }}', data, function(result, status, xhr){
 				if(result.status){
+					$("#loading").hide();
+
 					$("#rack").val("");
 					$("#material").val("");
 					$("#kanban").val("");
@@ -520,6 +532,7 @@
 					$('#tableAdjust').DataTable().ajax.reload();
 					openSuccessGritter('Success','Insert Queue Success');
 				} else {
+					$("#loading").hide();
 					audio_error.play();
 					openErrorGritter('Error','Insert Failed');
 				}

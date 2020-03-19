@@ -74,7 +74,7 @@
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Barrel <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/middle/barrel_board/barrel-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Barrel Board</a>
 			<a href="{{ url("index/middle/barrel_machine") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Machine Activity</a>
-			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Lacquering <i class="fa fa-angle-double-down"></i></span>
+			{{-- <span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display Lacquering <i class="fa fa-angle-double-down"></i></span> --}}
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
