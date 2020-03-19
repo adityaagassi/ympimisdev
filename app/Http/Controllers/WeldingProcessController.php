@@ -515,14 +515,14 @@ class WeldingProcessController extends Controller
 			$operator_name = $key->name;
 		}
 
-		$tag = dechex($request->get('operator_code'));
+		// $tag = dechex($request->get('operator_code'));
 
 		$lists = DB::connection('welding_controller')
 		->table('m_operator')
 		->where('operator_id',$request->get('operator_id'))
 		->update([
 			'operator_name' => strtoupper($operator_name),
-			'operator_code' => strtoupper($tag),
+			// 'operator_code' => strtoupper($tag),
 			'department_id' => 0,
 			'ws_id' => 0,
 			'operator_nik' => $request->get('operator'),
