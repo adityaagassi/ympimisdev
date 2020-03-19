@@ -45,10 +45,21 @@ class VisitorController extends Controller
 		$employees = "SELECT
 			* 
 		FROM
-			employee_syncs";
+			employee_syncs
+			LEFT JOIN office_members ON office_members.employee_id = employee_syncs.employee_id 
+		WHERE
+			position NOT LIKE '%Operator%'";
 		$employee = DB::select($employees);
+
+		$companies = "SELECT
+			DISTINCT(company)
+		FROM
+			visitors";
+		$company = DB::select($companies);
+
 		return view('visitors.registration', array(
 			'employee' => $employee,
+			'company' => $company,
 		))->with('page', 'Visitor Registration');
 	}
 
@@ -59,17 +70,57 @@ class VisitorController extends Controller
 		// var_dump($id);
 		try {
 			//----insert visitor
-			$visitor = new visitor([
-				'company' => $request->get('company'),
-				'purpose' => $request->get('purpose'),
-				'status' => $request->get('status'),
-				'jenis' => $request->get('jenis'),
-				'location' => "Security",
-				'destination' => $request->get('destination'),
-				'employee'=> $request->get('employee'),
-				'transport'=>  $request->get('kendaraan'),
-				'pol'=>  $request->get('pol'),
-			]);	
+			if ($request->get('company') == null) {
+				if ($request->get('pol') == null) {
+					$visitor = new visitor([
+						'company' => $request->get('company2'),
+						'purpose' => $request->get('purpose'),
+						'status' => $request->get('status'),
+						'jumlah' => $request->get('jumlah'),
+						'location' => "Security",
+						'destination' => $request->get('destination'),
+						'employee'=> $request->get('employee'),
+						'transport'=>  $request->get('kendaraan'),
+					]);
+				}else{
+					$visitor = new visitor([
+						'company' => $request->get('company2'),
+						'purpose' => $request->get('purpose'),
+						'status' => $request->get('status'),
+						'jumlah' => $request->get('jumlah'),
+						'location' => "Security",
+						'destination' => $request->get('destination'),
+						'employee'=> $request->get('employee'),
+						'transport'=>  $request->get('kendaraan'),
+						'pol'=>  $request->get('pol'),
+					]);
+				}
+			}else{
+				if ($request->get('pol') == null) {
+					$visitor = new visitor([
+						'company' => $request->get('company'),
+						'purpose' => $request->get('purpose'),
+						'status' => $request->get('status'),
+						'jumlah' => $request->get('jumlah'),
+						'location' => "Security",
+						'destination' => $request->get('destination'),
+						'employee'=> $request->get('employee'),
+						'transport'=>  $request->get('kendaraan'),
+					]);
+				}else{
+					$visitor = new visitor([
+						'company' => $request->get('company'),
+						'purpose' => $request->get('purpose'),
+						'status' => $request->get('status'),
+						'jumlah' => $request->get('jumlah'),
+						'location' => "Security",
+						'destination' => $request->get('destination'),
+						'employee'=> $request->get('employee'),
+						'transport'=>  $request->get('kendaraan'),
+						'pol'=>  $request->get('pol'),
+					]);
+				}
+			}
 			$visitor -> save();	
 			$id = Visitor::orderby('created_at','desc')->first();
 			//----insert detail
@@ -296,6 +347,10 @@ public function confirmation2()
 public function updateremark(Request $request){
 
 	try {
+		$header_lists = "select DISTINCT( visitors.id),company,name,mutation_logs.department,cost_centers.department as shortname from visitors LEFT JOIN employees on visitors.employee = employees.employee_id 
+		LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
+		LEFT JOIN cost_centers on mutation_logs.cost_center = cost_centers.cost_center
+		where visitors.id='".$id."'";
 		$id = $request->get('id');
 		$tag = $request->get('idtag');
 		$intime = date('H:i:s');
@@ -466,14 +521,14 @@ public function fetchVisitorByManager()
 	}
 	if ($manager_name == 'Dwi Misnanto') {
 		$lists = DB::SELECT("select 
-		visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
+		visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitors.jumlah as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
 		from visitors 
 		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
 		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
 		where visitors.remark is null and employee_syncs.department = 'Logistic'");
 	}else{
 		$lists = DB::SELECT("select 
-		visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
+		visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitors.jumlah as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
 		from visitors 
 		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
 		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
@@ -507,7 +562,7 @@ public function getvisit(Request $request)
 	left join employees on visitors.employee = employees.employee_id 
 	LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
 
-	where visitor_details.tag='".$id."' and visitor_details.out_time ='' ";
+	where visitor_details.tag='".$id."' and visitor_details.out_time ='' limit 1";
 
 	$ops = DB::select($op);
 

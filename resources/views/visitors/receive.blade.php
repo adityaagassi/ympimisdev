@@ -559,21 +559,19 @@
 
 							$.each(result.ops, function(key, value) {
 
-								if(value.remark =="Confirmed" || value.remark == 'Sudah Ditemui' || value.remark == 'Belum Ditemui' || value.remark == null){
+								if(value.remark == null || value.remark == 'Belum Ditemui'){
 									$('#apen').append('<div class="col-xs-12"> <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.id_number +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.full_name +'</b> </div> <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.in_time +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.company +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.name +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.department +'</b> </div></div>');
-									out(id);
-									openSuccessGritter('Success!', result.message);
+									openErrorGritter('Error!', 'Visitor Not Confirmed');
 								}
 								else{
-									openErrorGritter('Error!', 'Visitor Not Found');
+									out(id);
+									openSuccessGritter('Success!', result.message);
 								}
 							}); 
 
 							if (result.ops=="") {
 								openErrorGritter('Error!', 'Visitor Not Found');
 							}
-
-
 
 							$('#telp').val('');
 							$("#telp").focus(); 

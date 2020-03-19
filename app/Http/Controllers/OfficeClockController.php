@@ -66,7 +66,6 @@ class OfficeClockController extends Controller
 				company,
 				name,
 				department,
-				jenis,
 				location
 			FROM
 				`visitors`
@@ -90,7 +89,6 @@ class OfficeClockController extends Controller
 				company,
 				name,
 				department,
-				jenis,
 				location
 			FROM
 				`visitors`
@@ -161,7 +159,6 @@ class OfficeClockController extends Controller
 				company,
 				name,
 				department,
-				jenis,
 				location
 			FROM
 				`visitors`
@@ -185,7 +182,6 @@ class OfficeClockController extends Controller
 				company,
 				name,
 				department,
-				jenis,
 				location
 			FROM
 				`visitors`

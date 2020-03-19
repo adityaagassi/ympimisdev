@@ -43,7 +43,14 @@
 						<label for="inputEmail3" class="col-sm-2 control-label">Asal Perusahaan</label>
 						<div class="col-sm-9">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<input type="text" class="form-control" id="company" name="company" placeholder="Input Asal Perusahaan" required>
+							<select class="form-control select2" id="company2" name="company2" required>
+								<option style="color:grey;" value="">Pilih Asal Perusahaan</option>
+								@foreach($company as $company)
+									<option value="{{ $company->company }}">{{ $company->company }}</option>
+								@endforeach
+							</select>
+							<br><br>
+							<input type="text" class="form-control" id="company" name="company" placeholder="Input Asal Perusahaan (Jika Tidak Ada di List)">
 						</div>
 					</div>
 					<div class="form-group">
@@ -62,6 +69,7 @@
 								<option value="Bus">Bus</option>
 								<option value="SUV / MPV">SUV / MPV</option>
 								<option value="Container">Container</option>
+								<option value="Ojek Online">Grab / Gojek</option>
 								<option value="No Vehicle">No Vehicle</option>
 								<option value="Other">Other</option>
 							</select>
@@ -70,7 +78,7 @@
 					<div class="form-group">
 						<label for="inputEmail3" class="col-sm-2 control-label">Nomor Kendaraan</label>
 						<div class="col-sm-9">
-							<input class="form-control" id="pol" name="pol" placeholder="Input Nomor Kendaraan" required></input>
+							<input class="form-control" id="pol" name="pol" placeholder="Input Nomor Kendaraan (Kosongi Jika Tidak Ada)"></input>
 						</div>
 					</div>
 					<div class="form-group">
@@ -81,16 +89,6 @@
 								<option style="color:grey;" value="">Pilih Status</option>
 								<option value="Visitor">Visitor</option>
 								<option value="Vendor">Vendor</option>
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="inputEmail3" class="col-sm-2 control-label">Jenis</label>
-						<div class="col-sm-9">
-							<select class="form-control select2" id="jenis" name="jenis" placeholder="Pilih Jenis" required>
-								<option style="color:grey;" value="">Pilih Jenis</option>
-								<option value="Subcont">Subcont</option>
-								<option value="Contractor">Contractor</option>
 								<option value="Officer">Officer</option>
 								<option value="VIP">VIP / VVIP</option>
 							</select>
@@ -103,6 +101,8 @@
 								<option style="color:grey;" value="">Pilih Destination</option>
 								<option value="Office">Office</option>
 								<option value="Warehouse">Warehouse</option>
+								<option value="Kantin">Kantin</option>
+								<option value="Omi">Omi</option>
 								<option value="Other">Other</option>
 							</select>
 						</div>
@@ -120,24 +120,30 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail3" class="col-sm-2 control-label">ID/Nama <b id="total">(1)</b></label>
+						<label for="inputEmail3" class="col-sm-2 control-label">ID/Nama <b id="total"></b></label>
 						<input type="text" name="lop" id="lop" value="1" hidden>
 
 						<div class="col-sm-2" style="padding-right: 0;">
 							<input type="text" class="form-control" id="visitor_id0" name="visitor_id0" placeholder="No. KTP/SIM" required onchange="getdata(this.id)">
 						</div>
-						<div class="col-sm-4" style="padding-left: 1; padding-right: 0;">
+						<div class="col-sm-4" style=" padding-right: 0;">
 							<input type="text" class="form-control" id="visitor_name0" name="visitor_name0" placeholder="Full Name" required>
 						</div>
-						<div class="col-sm-2" style="padding-left: 1; padding-right: 0;">
+						<div class="col-sm-3" style=" padding-right: 0;">
 							<input type="text" class="form-control" id="telp0" name="telp0" placeholder="No Hp" >
 						</div>
-						<div class="col-sm-2">
+						<!-- <div class="col-sm-2">
 							&nbsp;<a class="btn btn-success" onclick='tambah("tambah","lop");' href="javascript:void(0)" style="padding: 6px 12px 6px 12px"><i class='fa fa-plus' ></i></a> 
-						</div><br><br>
+						</div><br><br> -->
 
 						<div id="tambah"></div>
 
+					</div>
+					<div class="form-group">
+						<label for="inputEmail3" class="col-sm-2 control-label">Jumlah Orang</label>
+						<div class="col-sm-9">
+							<input class="form-control" id="jumlah" name="jumlah" placeholder="Input Jumlah Orang" required value="1"></input>
+						</div>
 					</div>
 				</div>
 				<div class="box-footer">

@@ -226,12 +226,12 @@
 						tableData += '<td>'+ value.department +'</td>';
 						tableData += '<td>'+ value.company +'</td>';
 						tableData += '<td>'+ value.full_name +'</td>';
-						tableData += '<td>'+ value.total1 +'</td>';
+						tableData += '<td>'+ value.total1 +' Orang</td>';
 						tableData += '<td>'+ value.purpose +'</td>';
 						tableData += '<td>'+ value.status +'</td>';
 						if (value.remark == null) {
 							tableData += '<td style="'+bg+'"></td>';
-							tableData += '<td><a href="javascript:void(0)" data-toggle="modal-default" class="btn btn-sm btn-success" onClick="editop(id)" id="'+ value.id + '">Confirm</a></td>';
+							tableData += '<td><a href="javascript:void(0)" data-toggle="modal-default" class="btn btn-sm btn-success" onClick="inputag2(id)" id="'+ value.id + '">Sudah Ditemui</a></td>';
 						}
 						else{
 							tableData += '<td style="'+bg+'">'+ value.remark +'</td>';
@@ -304,7 +304,7 @@
 							}else{
 								$bg = "background-color: rgb(255, 204, 255);";
 							}
-							$('#apenlist').append('<div id="'+ value.tag +'" style="'+$bg+'height:20px"><div class="col-sm-2" style="padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_id0" name="visitor_id0" placeholder="No. KTP/SIM" required value="'+ value.id_number +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_name0" name="visitor_name0" placeholder="Full Name" required value="'+ value.full_name +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="status0" name="status0" placeholder="No Hp" value="'+ value.status +'" ></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="telp0" name="telp0" placeholder="No Hp" value="'+ value.telp +'" ></div><div class="col-sm-2"><input readonly type="text" class="form-control" id="'+ value.id +'" placeholder="Tag Number" name="'+no+'" value="'+ value.tag +'"  autofocus " "></div><div class="col-sm-2" style="padding-left:0px"><select class="form-control select3" data-placeholder="Select Remark" name="remark0" id="remark0" style="width: 100%"><option value="Belum Ditemui">Belum Ditemui</option><option value="Sudah Ditemui">Sudah Ditemui</option></select></div></div>	<br><br>');
+							$('#apenlist').append('<div id="'+ value.tag +'" style="'+$bg+'height:20px"><div class="col-sm-2" style="padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_id0" name="visitor_id0" placeholder="No. KTP/SIM" required value="'+ value.id_number +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_name0" name="visitor_name0" placeholder="Full Name" required value="'+ value.full_name +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="status0" name="status0" placeholder="No Hp" value="'+ value.status +'" ></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="telp0" name="telp0" placeholder="No Hp" value="'+ value.telp +'" ></div><div class="col-sm-2"><input readonly type="text" class="form-control" id="'+ value.id +'" placeholder="Tag Number" name="'+no+'" value="'+ value.tag +'"  autofocus " "></div><div class="col-sm-2" style="padding-left:0px"><select class="form-control select3" data-placeholder="Select Remark" name="remark0" id="remark0" style="width: 100%"><option value="Sudah Ditemui">Sudah Ditemui</option><option value="Belum Ditemui">Belum Ditemui</option></select></div></div>	<br><br>');
 							no++;
 						});
 
@@ -358,8 +358,8 @@
 
 		function inputag2(id) {
 			
-				var id = $('#idhead').text();
-				var remark = $('#remark0').val();
+				var id = id;
+				var remark = 'Sudah Ditemui';
 				var data = {
 					id:id,
 					remark:remark
