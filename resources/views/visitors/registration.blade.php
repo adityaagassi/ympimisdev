@@ -43,7 +43,7 @@
 						<label for="inputEmail3" class="col-sm-2 control-label">Asal Perusahaan</label>
 						<div class="col-sm-9">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<select class="form-control select2" id="company2" name="company2" required>
+							<select class="form-control select2" id="company2" name="company2">
 								<option style="color:grey;" value="">Pilih Asal Perusahaan</option>
 								@foreach($company as $company)
 									<option value="{{ $company->company }}">{{ $company->company }}</option>
