@@ -1932,4 +1932,119 @@ class WorkshopController extends Controller{
 		);
 		return Response::json($response);
 	}
+
+	public function fetchFinishedWJO()
+	{
+		$datas = WorkshopJobOrder::leftJoin("workshop_receipts", "workshop_job_orders.order_no","=","workshop_receipts.order_no")
+		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "workshop_job_orders.created_by")
+		->select(db::raw("DATE_FORMAT(workshop_job_orders.created_at, '%Y-%m-%d') as tgl_pengajuan"), "employee_syncs.name", db::raw("workshop_job_orders.sub_section as bagian"), "workshop_job_orders.order_no", "workshop_job_orders.priority" , "workshop_job_orders.type", "workshop_job_orders.item_name", "quantity", "target_date", "attachment")
+		->where("remark", "=", "4")
+		->whereNull("workshop_receipts.order_no")
+		->orderBy("workshop_job_orders.created_at")
+		->get();
+
+		return DataTables::of($datas)
+		->addColumn('action', function($datas){
+			return '<a href="javascript:void(0)" class="btn btn-xs btn-info" onClick="detailReport(id)" id="' . $datas->order_no . '">Details</a>';
+		})
+		->addColumn('att', function($datas){
+			if($datas->attachment){
+				return '<a href="javascript:void(0)" id="' . $datas->attachment . '" onClick="downloadAtt(id)" class="fa fa-paperclip"></a>';
+			}
+			else{
+				return '-';
+			}
+		})
+		->rawColumns([ 'att' => 'att','action' => 'action'])
+		->make(true);
+	}
+
+	public function fetchReceivedWJO()
+	{
+		$datas = db::table('workshop_receipts')
+		->leftJoin('workshop_job_orders','workshop_receipts.order_no','=','workshop_job_orders.order_no')
+		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "workshop_job_orders.created_by")
+		->leftJoin(db::raw("employee_syncs es"), "es.employee_id", "=", "workshop_receipts.receiver")
+		->select(db::raw("DATE_FORMAT(workshop_job_orders.created_at, '%Y-%m-%d') as tgl_pengajuan"), "employee_syncs.name", db::raw("workshop_job_orders.sub_section as bagian"), "workshop_job_orders.order_no", "workshop_job_orders.priority" , "workshop_job_orders.type", "workshop_job_orders.item_name", "quantity", db::raw("es.name as receiver"), "attachment")
+		->orderBy("workshop_receipts.created_at")
+		->get();
+
+		return DataTables::of($datas)
+		->addColumn('action', function($datas){
+			return '<a href="javascript:void(0)" class="btn btn-xs btn-info" onClick="detailReport(id)" id="' . $datas->order_no . '">Details</a>';
+		})
+		->addColumn('att', function($datas){
+			if($datas->attachment){
+				return '<a href="javascript:void(0)" id="' . $datas->attachment . '" onClick="downloadAtt(id)" class="fa fa-paperclip"></a>';
+			}
+			else{
+				return '-';
+			}
+		})
+		->rawColumns([ 'att' => 'att','action' => 'action'])
+		->make(true);
+	}
+
+	public function scanWJOReceipt(Request $request)
+	{
+
+		$cek = Employee::where('tag','=', $request->get('tag'))->first();
+
+		if (!$cek) {
+			$response = array(
+				'status' => false,
+				'message' => 'Karyawan tidak terdaftar'
+			);
+			return Response::json($response);
+		}
+
+		try {
+			DB::table('workshop_receipts')->insert(
+				[
+					'order_no' => $request->get('wjo'), 
+					'receiver' => $request->get('tag'),
+					'created_by' => Auth::user()->id,
+					'created_at' => date('Y-m-d H:i:s'),
+					'updated_at' => date('Y-m-d H:i:s')
+				]
+			);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Data Berhasil ditambahkan'
+			);
+			return Response::json($response);
+
+		} catch (QueryException $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchPickedWJO()
+	{
+		$datas = DB::table('workshop_receipts')
+		->leftJoin('workshop_job_orders','workshop_receipts.order_no', '=', 'workshop_job_orders.order_no')
+		->leftJoin('employee_syncs','employee_syncs.employee_id', '=', 'workshop_receipts.receiver')
+		->select('workshop_receipts.order_no','employee_syncs.name', db::raw('date_format(workshop_job_orders.created_at, "%Y-%m-%d") as tgl_pengajuan'), '')
+		->get();
+
+		return DataTables::of($datas)
+		->addColumn('action', function($datas){
+			return '<a href="javascript:void(0)" class="btn btn-xs btn-info" onClick="detailReport(id)" id="' . $datas->order_no . '">Details</a>';
+		})
+		->addColumn('att', function($datas){
+			if($datas->attachment){
+				return '<a href="javascript:void(0)" id="' . $datas->attachment . '" onClick="downloadAtt(id)" class="fa fa-paperclip"></a>';
+			}
+			else{
+				return '-';
+			}
+		})
+		->rawColumns([ 'att' => 'att','action' => 'action'])
+		->make(true);
+	}
 }
