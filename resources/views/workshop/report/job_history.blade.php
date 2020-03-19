@@ -90,14 +90,17 @@
 @section('header')
 <section class="content-header">
 	<h1>
+		<form method="GET" action="{{ url("excel/workshop/job_history") }}">
 		{{ $title }}
 		<small><span class="text-purple"> {{ $title_jp }}</span></small>
-		<div class="input-group date pull-right col-xs-2">
-			<div class="input-group-addon bg-default">
-				<i class="fa fa-calendar"></i>
+			<button class="btn btn-success pull-right" type="submit" style="margin-left: 20px"><i class="fa  fa-file-excel-o"></i> Excel</button>
+			<div class="input-group date pull-right col-xs-2">
+				<div class="input-group-addon bg-default">
+					<i class="fa fa-calendar"></i>
+				</div>
+				<input type="text" class="form-control datepicker" id="mon" placeholder="Pilih Bulan" onchange="get_data()" name="mon">
 			</div>
-			<input type="text" class="form-control datepicker" id="mon" placeholder="Pilih Bulan" onchange="get_data()">
-		</div>
+		</form>
 	</h1>
 </section>
 @stop

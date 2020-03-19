@@ -1940,7 +1940,7 @@ class WorkshopController extends Controller{
 		->select(db::raw("DATE_FORMAT(workshop_job_orders.created_at, '%Y-%m-%d') as tgl_pengajuan"), "employee_syncs.name", db::raw("workshop_job_orders.sub_section as bagian"), "workshop_job_orders.order_no", "workshop_job_orders.priority" , "workshop_job_orders.type", "workshop_job_orders.item_name", "quantity", "target_date", "attachment")
 		->where("remark", "=", "4")
 		->whereNull("workshop_receipts.order_no")
-		->orderBy("workshop_job_orders.created_at")
+		->orderBy("workshop_job_orders.created_at","desc")
 		->get();
 
 		return DataTables::of($datas)
@@ -2046,5 +2046,36 @@ class WorkshopController extends Controller{
 		})
 		->rawColumns([ 'att' => 'att','action' => 'action'])
 		->make(true);
+	}
+
+
+	public function exportJobHistory(Request $request)
+	{
+		if ($request->get('mon') == "") {
+			$mon = date('Y-m');
+			$mon2 = date('F Y');
+		} else {
+			$mon = $request->get('mon');
+			$mon2 = date('F Y', strtotime($request->get('mon')."-01"));
+		}
+
+		$excels = WorkshopLog::leftJoin("employee_syncs", "workshop_logs.operator_id" ,"=", "employee_syncs.employee_id")
+		->leftJoin("workshop_processes", "workshop_logs.machine_code", "=", "workshop_processes.machine_code")
+		->where(db::raw("DATE_FORMAT(started_at,'%Y-%m')"), "=", $mon)
+		->whereIn("workshop_logs.machine_code", array('M_26','M_27','M_28','M_8','M_9','M_10'))
+		->select(db::raw("GROUP_CONCAT(DISTINCT process_name) as ket"), "employee_id", "name", db::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(workshop_logs.created_at,started_at))) / 60 / 450) as hari"))
+		->groupBy("name", "employee_id")
+		->get();
+
+		$data = array(
+			'workshop' => $excels,
+			'mon' => $mon2
+		);
+		ob_clean();
+		Excel::create('WJO Job Histories', function($excel) use ($data){
+			$excel->sheet('WJO', function($sheet) use ($data) {
+				return $sheet->loadView('workshop.wjo_job_excel', $data);
+			});
+		})->export('xlsx');
 	}
 }
