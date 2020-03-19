@@ -205,7 +205,7 @@ table > thead > tr > th{
 	}
 
 	function fillVisitor() {
-		$.get('{{ url("fetch/office_clock/visitor") }}', function(result, status, xhr) {
+		$.get('{{ url("fetch/office_clock/visitor2") }}', function(result, status, xhr) {
 			if(xhr.status == 200){
 				if(result.status){
 					if (result.visitors.length > 0) {

@@ -73,8 +73,11 @@ class EmailVisitorConfirmation extends Command
                 }
             }
         }
+        $contactList = [];
+        $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+        $contactList[1] = 'aditya.agassi@music.yamaha.com';
         if(count($namamanager) > 0){
-            Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com','Mokhamad Khamdan Khabibi')->send(new SendEmail($namamanager, 'visitor_confirmation'));
+            Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($namamanager, 'visitor_confirmation'));
         }
     }
 }

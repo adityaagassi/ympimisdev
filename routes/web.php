@@ -17,6 +17,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('/index/emergency_response', 'TrialController@tes2');
+Route::get('/index/trials', 'TrialController@tes');
 Route::get('/index/unification_uniform', 'VoteController@indexUnificationUniform');
 Route::get('fetch/employee/data', 'TrialController@fetch_data');
 Route::get('happybirthday', 'TrialController@ultah');
@@ -2267,6 +2268,10 @@ Route::post('index/cpar/approvalcar/{id}', 'CparController@approvalcar');
 Route::post('index/cpar/notapprovecar/{id}', 'CparController@notapprovecar');
 Route::get('index/cpar/sendemailcar/{id}', 'CparController@sendemailcar');
 
+// Verifikasi Bagian
+Route::get('index/cpar/verifikasibagian/{id}', 'CparController@verifikasibagian');
+
+
 // Form Ketidaksesuaian YMMJ
 Route::get('index/qa_ymmj', 'QcYmmjController@index');
 Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
@@ -2400,7 +2405,8 @@ Route::post('post/display/ip_log', 'PingController@ip_log');
 //OFFICECLOCK
 Route::get('index/display/office_clock', 'OfficeClockController@index');
 Route::get('fetch/office_clock/visitor', 'OfficeClockController@fetchVisitor');
-Route::get('fetch/office_clock/visitor_lobby', 'OfficeClockController@fetchVisitorLobby');
+Route::get('index/display/office_clock2', 'OfficeClockController@index2');
+Route::get('fetch/office_clock/visitor2', 'OfficeClockController@fetchVisitor2');
 Route::get('index/display/guest_room', 'OfficeClockController@guest_room');
 Route::get('index/display/guest_room2', 'OfficeClockController@guest_room2');
 Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');

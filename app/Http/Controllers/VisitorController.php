@@ -251,8 +251,16 @@ public function inputtag(Request $request){
     	$id_plc = $plc->id;
 
 		$plccounter = PlcCounter::find($id_plc);
-		$plccounter->plc_counter = 1;
+		$plccounter->plc_counter = 0;
 		$plccounter->save();
+
+		$plc2 = PlcCounter::where('origin_group_code','visitor_lobby2')->first();
+    	$counter2 = $plc2->plc_counter;
+    	$id_plc2 = $plc2->id;
+
+		$plccounter2 = PlcCounter::find($id_plc2);
+		$plccounter2->plc_counter = 0;
+		$plccounter2->save();
 
 			$response = array(
 				'status' => true,

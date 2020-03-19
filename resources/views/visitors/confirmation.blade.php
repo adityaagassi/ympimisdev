@@ -121,6 +121,22 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="modal_tamu">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-body table-responsive no-padding">
+						<div class="form-group">
+							<h1 id="tamu"></h1>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	@endsection
 
 
@@ -191,10 +207,11 @@
 					$.get('{{ url("scan/visitor/lobby") }}', data, function(result, status, xhr){
 						if(result.status){
 							$('#tag_visitor').val('');
+							$('#modal_tamu').modal('show');
+							$('#tamu').html('<center><b>Tunggu Sebentar, '+result.visitor.name+' Akan menemui Anda.</b></center>');
 							openSuccessGritter('Success!', result.message);
 						}
 						else{
-							// audio_error.play();
 							openErrorGritter('Error', result.message);
 							$('#tag_visitor').val('');
 							$('#tag_visitor').focus();
@@ -202,6 +219,8 @@
 					});
 				}
 				else{
+					$('#modal_tamu').modal('show');
+					$('#tamu').html('<center><b>Tag Anda Tidak Ditemukan</b></center>');
 					openErrorGritter('Error!', 'Tag Invalid.');
 					// audio_error.play();
 					$("#tag_visitor").val("");
