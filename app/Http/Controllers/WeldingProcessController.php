@@ -489,9 +489,19 @@ class WeldingProcessController extends Controller
 
 	public function getOperator(Request $request)
 	{
-		$lists = DB::connection('welding_controller')
+		$list = DB::connection('welding_controller')
 		->table('m_operator')
 		->where('operator_id',$request->get('id'))->get();
+
+		$lists = array();
+		foreach ($list as $key) {
+			array_push($lists, [
+				'operator_id' => $key->operator_id,
+				'operator_code' => hexdec($key->operator_code),
+				'operator_nik' => $key->operator_nik,
+				'group' => $key->group,
+			]);
+		}
 
 		$response = array(
 			'status' => true,
