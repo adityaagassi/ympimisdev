@@ -114,7 +114,7 @@
 							<select class="form-control select2" id="status" name="employee" required>
 								<option style="color:grey;" value="">Pilih Karyawan YMPI</option>
 								@foreach($employee as $nomor => $employee)
-								<option value="{{$employee->employee_id}}">{{$employee->name}} - ( {{$employee->department}} )</option>
+								<option value="{{$employee->empid}}">{{$employee->name}} - ( {{$employee->department}} )</option>
 								@endforeach
 							</select>
 						</div>

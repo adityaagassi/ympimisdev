@@ -43,7 +43,7 @@ class VisitorController extends Controller
 	public function registration()
 	{
 		$employees = "SELECT
-			* 
+			*,employee_syncs.employee_id as empid
 		FROM
 			employee_syncs
 			LEFT JOIN office_members ON office_members.employee_id = employee_syncs.employee_id 
