@@ -559,7 +559,7 @@
 
 							$.each(result.ops, function(key, value) {
 
-								if(value.remark == null || value.remark == 'Belum Ditemui'){
+								if(value.remark == 'Belum Ditemui'){
 									$('#apen').append('<div class="col-xs-12"> <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.id_number +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.full_name +'</b> </div> <div class="col-sm-1" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.in_time +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.company +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.name +'</b> </div> <div class="col-sm-2" > <br><b style="font-size: 18px" id="visitor_id0" name="visitor_id0" >'+ value.department +'</b> </div></div>');
 									openErrorGritter('Error!', 'Visitor Not Confirmed');
 								}
