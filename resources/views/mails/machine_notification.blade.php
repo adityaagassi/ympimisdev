@@ -22,7 +22,7 @@
 
 			<h1>Machine Error Information</h1>
 
-			<h2>An error has occurred for 5 minutes for the {{$data}} Machine. Thank you</h2>
+			<h2>An error has occurred for {{$data['time']}} for the {{$data['machine']}} Machine. Thank you</h2>
 		</center>
 	</div>
 </body>

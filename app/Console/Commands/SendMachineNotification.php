@@ -173,20 +173,26 @@ class SendMachineNotification extends Command
                     if ($key[1] == '0') {
 
                         $get_mail = EmployeeSync::leftJoin('users' ,'employee_syncs.employee_id', '=', 'users.username')
-                        ->whereIn('position', ['chief','foreman','manager','deputy general manager','general manager'])
-                        ->whereRaw("(department in ('Maintenance', '".$ctg[2]."') OR department is null)")
+                        ->whereIn('position', ['chief','foreman','manager'])
+                        ->whereRaw("(department in ('Maintenance', '".$ctg[2]."'))")
                         ->where('division', '=', 'Production')
-                        ->select('employee_id', 'email', 'department',db::raw('REPLACE(phone, 0, 62) phone'), 'position')
+                        ->select('employee_id', 'email', 'department','phone', 'position')
                         ->get()
                         ->toArray();
 
                         foreach ($get_mail as $mail) {
                             if ($mail['position'] == 'Chief' || $mail['position'] == 'Foreman') {
-                                array_push($sms_tos, $mail['phone']);
+
+                                $mailnumber = '62'.substr($mail['phone'], 1);
+
+                                array_push($sms_tos, $mailnumber);
                             } else {
                                 array_push($mail_tos, $mail['email']);
                             }
                         }
+
+                        array_push($mail_tos, 'nadif@music.yamaha.com');
+                        array_push($mail_tos, 'duta.narendratama@music.yamaha.com');
 
                         $sms = implode (",", $sms_tos);
 
@@ -195,8 +201,9 @@ class SendMachineNotification extends Command
                                 [
                                     'machine_code' => $key[0],
                                     'machine_name' => $ctg[1],
-                                    'status' => "",
-                                    'started_at' => date('Y-m-d h:i:s')
+                                    'status_cf' => "",
+                                    'status_gm' => "",
+                                    'started_at' => date('Y-m-d H:i:s')
                                 ]
                             );
                         } else {
@@ -205,63 +212,42 @@ class SendMachineNotification extends Command
 
                             $dateDiff  = $datetime1->diff($datetime2);
 
-                            if ($dateDiff->i >= 5 && $temp->status == "") {
+                            $machine = [
+                                "machine" => $ctg[1]
+                            ];
+
+                            if ($dateDiff->i >= 15 && $temp->status_cf == "") {
                                 DB::table('maintenance_machine_logs')
                                 ->where('machine_code','=', $key[0])
-                                ->update(['status' => 'Notified']);
-
-                                // Mail::raw("Mesin ".$ctg[1]." Telah error selama ".$dateDiff->i, function ($message) {
-                                //     $message->to("eko.prasetyo.wicaksono@music.yamaha.com")
-                                //     ->subject("notif");
-                                // });
-
-                                $machine = $ctg[1];
-                        //         $mails = [];
-                        //         $smses = [];
-
-                        //         for ($i=0; $i < count($this->mail_tos); $i++) { 
-                        //            if ($ctg[2] == 'PP') {
-                        //             if ($this->mail_tos[$i][0] == 'Educational Instrument (EI)') {
-                        //                 $this->mail_tos[$i] = "";
-                        //             }
-
-                        //         } else {
-                        //             if ($this->mail_tos[$i][0] == 'Parts Process (WI-PP)') {
-                        //                 $this->mail_tos[$i] = "";
-                        //             }
-                        //         }   
-                        //     }
-
-
-                        //     for ($i=0; $i < count($this->sms_tos); $i++) { 
-                        //        if ($ctg[2] == 'PP') {
-                        //         if ($this->sms_tos[$i][0] == 'Educational Instrument (EI)') {
-                        //             $this->sms_tos[$i] = "";
-                        //         }
-
-                        //     } else {
-                        //         if ($this->sms_tos[$i][0] == 'Parts Process (WI-PP)') {
-                        //             $this->sms_tos[$i] = "";
-                        //         }
-                        //     }   
-                        // }
-
-                        // $this->mail_tos = array_filter($this->mail_tos);
-                        // $this->sms_tos = array_filter($this->sms_tos);
-
-                        // print_r($this->mail_tos);
-                        // print_r($this->sms_tos);
-                        // exit;
-                                
-                        // ---------  SINI ------------
+                                ->update(['status_cf' => 'Notified']);
 
                                 $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
                                 $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($sms);
-                                $query_string .= "&message=".rawurlencode(stripslashes("Informasi Error Mesin :\nTelah terjadi error selama 5 menit untuk Mesin ".$ctg[1].".\n\nTerimakasih")) . "&languagetype=1";        
+                                $query_string .= "&message=".rawurlencode(stripslashes("Informasi Error Mesin :\nTelah terjadi error selama 15 menit untuk Mesin ".$ctg[1].".\n\nTerimakasih")) . "&languagetype=1";        
                                 $url = "http://gateway.onewaysms.co.id:10002/".$query_string;    
                                 $fd = @implode('', file($url));
 
-                                Mail::to($mail_tos)->cc('rio.irvansyah@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
+                                $machine['time'] = "15 minutes";
+                                print_r($sms);
+
+
+                                Mail::to($mail_tos)->cc('aditya.agassi@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
+                            } else if ($dateDiff->h >= 1 && $temp->status_m == "") {
+                                DB::table('maintenance_machine_logs')
+                                ->where('machine_code','=', $key[0])
+                                ->update(['status_m' => 'Notified']);
+
+                                $machine['time'] = "an hour";
+
+                                Mail::to(['budhi.apriyanto@music.yamaha.com','takashiohkubo@yamaha.com'])->cc('aditya.agassi@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
+                            } else if ($dateDiff->h >= 2 && $temp->status_gm == "") {
+                                DB::table('maintenance_machine_logs')
+                                ->where('machine_code','=', $key[0])
+                                ->update(['status_gm' => 'Notified']);
+
+                                $machine['time'] = "two hours";
+
+                                Mail::to('yukitaka.hayakawa@music.yamaha.com')->cc('aditya.agassi@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
                             } 
                         }
                     } else {
@@ -271,8 +257,8 @@ class SendMachineNotification extends Command
                     }
                 }
             }
-        }
+        // }
         // sleep(2);
-    // }
+    }
 }
 }
