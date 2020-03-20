@@ -102,6 +102,13 @@ Route::get('scan/visitor/lobby', 'VisitorController@scanVisitorLobby');
 
 //end visitor control 
 
+//VISITOR TEMPERATURE
+
+Route::get('index/temperature', 'TemperatureController@index');
+Route::get('index/temperature/body_temperature_report', 'TemperatureController@indexBodyTemperatureReport');
+
+//END VISITOR TEMPERATURE
+
 //----- Start mesin injeksi
 Route::get('scan/injeksi/operator', 'InjectionsController@scanInjectionOperator');
 Route::get('index/injeksi', 'InjectionsController@index');
@@ -2155,6 +2162,7 @@ Route::get('index/webcam', 'WebcamController@index');
 Route::post('index/webcam/create', 'WebcamController@create');
 
 Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
+
 	//CPAR
 	Route::get('index/qc_report', 'QcReportController@index');
 	Route::get('index/qc_report/create', 'QcReportController@create');
@@ -2178,13 +2186,11 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_report/sign', 'QcReportController@sign');
 	Route::post('index/qc_report/save_sign', 'QcReportController@save_sign');
 
-
 	//verifikasi CPAR
 	Route::get('index/qc_report/statuscpar/{id}', 'QcReportController@statuscpar');
 	Route::get('index/qc_report/verifikasicpar/{id}', 'QcReportController@verifikasicpar');
 	Route::post('index/qc_report/checked/{id}', 'QcReportController@checked');
 	Route::post('index/qc_report/unchecked/{id}', 'QcReportController@unchecked');
-
 	
 	//CAR
 	Route::get('index/qc_car', 'QcCarController@index');
@@ -2200,7 +2206,6 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_car/verifikasigm/{id}', 'QcCarController@verifikasigm');
 	Route::post('index/qc_car/save_sign', 'QcCarController@save_sign');
 	
-
 	//Verifikator CAR
 	Route::get('index/qc_car/verifikator', 'QcCarController@verifikator');
 
@@ -2209,6 +2214,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_car/checked/{id}', 'QcCarController@checked');
 	Route::post('index/qc_car/unchecked/{id}', 'QcCarController@unchecked');
 	Route::post('index/qc_car/uncheckedGM/{id}', 'QcCarController@uncheckedGM');
+
 	//Verifikasi QA
 	Route::get('index/qc_report/verifikasiqa/{id}', 'QcReportController@verifikasiqa');
 	Route::post('index/qc_report/close1/{id}', 'QcReportController@close1');
@@ -2217,6 +2223,48 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::post('index/qc_report/deleteVerifikasi', 'QcReportController@deleteVerifikasi');
 });
 
+//CPAR
+Route::get('index/cpar/resume', 'QcReportController@resume');
+Route::get('fetch/cpar/resume', 'QcReportController@getResumeData');
+
+Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
+Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
+Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
+Route::get('index/qc_report/grafik_kategori', 'QcReportController@grafik_kategori');
+Route::get('index/qc_report/komplain_monitoring', 'QcReportController@komplain_monitoring');
+Route::get('index/qc_report/komplain_monitoring2', 'QcReportController@komplain_monitoring2');
+Route::get('index/qc_report/komplain_monitoring3', 'QcReportController@komplain_monitoring3');
+Route::get('index/qc_report/komplain_monitoring4', 'QcReportController@komplain_monitoring4');
+Route::get('index/qc_report/komplain_monitoring5', 'QcReportController@komplain_monitoring5');
+Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
+Route::get('index/qc_report/fetchKategori', 'QcReportController@fetchKategori');
+Route::get('index/qc_report/fetchSource', 'QcReportController@fetchSource');
+Route::get('index/qc_report/fetchEksternal', 'QcReportController@fetchEksternal');
+Route::get('index/qc_report/fetchSupplier', 'QcReportController@fetchSupplier');
+Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
+Route::get('index/qc_report/detail_kategori', 'QcReportController@detail_kategori');
+Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_dept');
+Route::get('index/qc_report/detail_monitoring', 'QcReportController@detail_monitoring');
+Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
+Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
+Route::get('index/qc_report/fetchtable', 'QcReportController@fetchtable');
+Route::get('index/qc_report/fetchMonitoring', 'QcReportController@fetchMonitoring');
+Route::get('index/qc_report/fetchGantt', 'QcReportController@fetchGantt');
+
+// Form Ketidaksesuaian YMMJ
+Route::get('index/qa_ymmj', 'QcYmmjController@index');
+Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
+Route::get('index/qa_ymmj/create', 'QcYmmjController@create');
+Route::post('index/qa_ymmj/create_action', 'QcYmmjController@create_action');
+Route::get('index/qa_ymmj/update/{id}', 'QcYmmjController@update');
+Route::post('index/qa_ymmj/update_action/{id}', 'QcYmmjController@update_action');
+Route::post('index/qa_ymmj/deletefiles', 'QcYmmjController@deletefiles');
+Route::get('index/qa_ymmj/grafik_ymmj', 'QcYmmjController@grafik_ymmj');
+Route::get('index/qa_ymmj/fetchGrafik', 'QcYmmjController@fetchGrafik');
+Route::get('index/qa_ymmj/fetchtable', 'QcYmmjController@fetchTable');
+Route::get('index/qa_ymmj/detail', 'QcYmmjController@detail');
+Route::get('index/qa_ymmj/print/{id}', 'QcYmmjController@print_ymmj');
+ 
 // Request CPAR QA
 
 Route::get('index/request_qa', 'QcRequestController@index');
@@ -2249,73 +2297,28 @@ Route::post('index/cpar/edit_item', 'CparController@edit_item');
 Route::post('index/cpar/delete_item', 'CparController@delete_item');
 Route::post('index/cpar/update_detail/{id}', 'CparController@update_detail');
 Route::get('index/cpar/print/{id}', 'CparController@print_report');
-
-
 // Verifikasi CPAR Departemen
-
 Route::get('index/cpar/verifikasicpar/{id}', 'CparController@verifikasicpar');
 Route::post('index/cpar/approval/{id}', 'CparController@approval');
 Route::post('index/cpar/notapprove/{id}', 'CparController@notapprove');
 Route::get('index/cpar/sendemail/{id}', 'CparController@sendemail');
-
 // CAR Antar Departemen
 Route::get('index/cpar/response/{id}', 'CparController@response');
 Route::post('index/cpar/update_car/{id}', 'CparController@update_car');
-
-
 // Verifikasi CAR Departemen & Bagian
 Route::get('index/cpar/verifikasicar/{id}', 'CparController@verifikasicar');
 Route::post('index/cpar/approvalcar/{id}', 'CparController@approvalcar');
 Route::post('index/cpar/notapprovecar/{id}', 'CparController@notapprovecar');
 Route::get('index/cpar/sendemailcar/{id}', 'CparController@sendemailcar');
-
 // Verifikasi Bagian
 Route::get('index/cpar/verifikasibagian/{id}', 'CparController@verifikasibagian');
 Route::post('index/cpar/close', 'CparController@closecar');
 Route::post('index/cpar/reject', 'CparController@rejectcar');
-
-// Form Ketidaksesuaian YMMJ
-Route::get('index/qa_ymmj', 'QcYmmjController@index');
-Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
-Route::get('index/qa_ymmj/create', 'QcYmmjController@create');
-Route::post('index/qa_ymmj/create_action', 'QcYmmjController@create_action');
-Route::get('index/qa_ymmj/update/{id}', 'QcYmmjController@update');
-Route::post('index/qa_ymmj/update_action/{id}', 'QcYmmjController@update_action');
-Route::post('index/qa_ymmj/deletefiles', 'QcYmmjController@deletefiles');
-Route::get('index/qa_ymmj/grafik_ymmj', 'QcYmmjController@grafik_ymmj');
-Route::get('index/qa_ymmj/fetchGrafik', 'QcYmmjController@fetchGrafik');
-Route::get('index/qa_ymmj/fetchtable', 'QcYmmjController@fetchTable');
-Route::get('index/qa_ymmj/detail', 'QcYmmjController@detail');
-Route::get('index/qa_ymmj/print/{id}', 'QcYmmjController@print_ymmj');
-
-Route::get('index/cpar/resume', 'QcReportController@resume');
-Route::get('fetch/cpar/resume', 'QcReportController@getResumeData');
-
-Route::get('index/qc_report/get_fiscal_year', 'QcReportController@get_fiscal');
-Route::get('index/qc_report/get_nomor_depan', 'QcReportController@get_nomor_depan');
-Route::get('index/qc_report/grafik_cpar', 'QcReportController@grafik_cpar');
-Route::get('index/qc_report/grafik_kategori', 'QcReportController@grafik_kategori');
-Route::get('index/qc_report/komplain_monitoring', 'QcReportController@komplain_monitoring');
-Route::get('index/qc_report/komplain_monitoring2', 'QcReportController@komplain_monitoring2');
-Route::get('index/qc_report/komplain_monitoring3', 'QcReportController@komplain_monitoring3');
-Route::get('index/qc_report/komplain_monitoring4', 'QcReportController@komplain_monitoring4');
-Route::get('index/qc_report/komplain_monitoring5', 'QcReportController@komplain_monitoring5');
-Route::get('index/qc_report/fetchReport', 'QcReportController@fetchReport');
-Route::get('index/qc_report/fetchKategori', 'QcReportController@fetchKategori');
-Route::get('index/qc_report/fetchSource', 'QcReportController@fetchSource');
-Route::get('index/qc_report/fetchEksternal', 'QcReportController@fetchEksternal');
-Route::get('index/qc_report/fetchSupplier', 'QcReportController@fetchSupplier');
-Route::get('index/qc_report/detail_cpar', 'QcReportController@detail_cpar');
-Route::get('index/qc_report/detail_kategori', 'QcReportController@detail_kategori');
-Route::get('index/qc_report/detail_cpar_dept', 'QcReportController@detail_cpar_dept');
-Route::get('index/qc_report/detail_monitoring', 'QcReportController@detail_monitoring');
-Route::post('index/qc_report/filter_cpar', 'QcReportController@filter_cpar');
-Route::get('index/qc_report/get_detailmaterial', 'QcReportController@getmaterialsbymaterialsnumber')->name('admin.getmaterialsbymaterialsnumber');
-Route::get('index/qc_report/fetchtable', 'QcReportController@fetchtable');
-Route::get('index/qc_report/fetchMonitoring', 'QcReportController@fetchMonitoring');
-Route::get('index/qc_report/fetchGantt', 'QcReportController@fetchGantt');
-
-
+//Monitoring CPAR
+Route::get('index/cpar/monitoring', 'CparController@monitoring');
+Route::get('fetch/cpar/monitoring', 'CparController@fetchMonitoring');
+Route::get('index/cpar/detail', 'CparController@detailMonitoring');
+Route::get('index/cpar/table', 'CparController@fetchTable');
 
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
@@ -2346,6 +2349,8 @@ Route::get('index/standart_temperature', 'TemperatureController@standart');
 Route::get('index/temperature/edit','TemperatureController@edit')->name('admin.temperaturedit');
 Route::post('index/temperature/aksi_edit', 'TemperatureController@aksi_edit');
 Route::get('index/temperature/delete/{id}','TemperatureController@delete');
+
+
 
 // BUFFING TOILET
 Route::get('index/toilet', 'RoomController@indexToilet');
@@ -2387,6 +2392,8 @@ Route::post('index/press/filter_report_kanagata_lifetime', 'PressController@filt
 Route::get('index/kanagata_lifetime/getkanagatalifetime','PressController@getkanagatalifetime')->name('kanagata_lifetime.getkanagatalifetime');
 Route::post('index/kanagata/update/{id}','PressController@update');
 Route::post('index/kanagata/reset','PressController@reset');
+//Master Kanagata
+Route::get('index/press/master_kanagata', 'PressController@indexMasterKanagata');
 
 //Form Failure
 Route::get('index/form_experience', 'FormExperienceController@index');
@@ -2420,6 +2427,9 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
 	Route::get('fetch/maintenance/list_spk/user', 'MaintenanceController@fetchMaintenance');
 	Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
+
+	Route::get('index/maintenance/list_spk', 'MaintenanceController@indexMaintenanceList');
+	Route::get('fetch/maintenance/list_spk', 'MaintenanceController@fetchMaintenanceList');
 });
 
 //ROOMS

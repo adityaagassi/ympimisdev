@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\standart_temperature;
+use App\BodyTemperature;
 use Response;
 use DataTables;
 
@@ -209,5 +210,27 @@ public function edit(Request $request)
         }
     }
 
+    public function index()
+    {
+      return view('temperature.index', array(
+        'title' => 'Temperature',
+        'title_jp' => ''
+      ))->with('page', 'Temperature');
+    }
 
+    public function indexBodyTemperatureReport()
+    {
+
+      $temperature = DB::SELECT("SELECT
+        *,
+        DATE( created_at ) AS tanggal 
+      FROM
+        `body_temperatures`");
+
+      return view('temperature.index_b_temp_report', array(
+        'title' => 'Body Temperature Report',
+        'title_jp' => '',
+        'temperature' => $temperature
+      ))->with('page', 'Body Temperature Report');
+    }
 }
