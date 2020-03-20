@@ -16,6 +16,7 @@ use App\PlcCounter;
 use DataTables;
 use File;
 use Storage;
+use App\BodyTemperature;
 
 class VisitorController extends Controller
 {
@@ -67,6 +68,7 @@ class VisitorController extends Controller
 	public function simpanheader(Request $request)
 	{
 		$lop = $request->get('lop2');
+		$lop_suhu = $request->get('lop_suhu2');
 		// var_dump($id);
 		try {
 			//----insert visitor
@@ -81,7 +83,6 @@ class VisitorController extends Controller
 						'destination' => $request->get('destination'),
 						'employee'=> $request->get('employee'),
 						'transport'=>  $request->get('kendaraan'),
-						'keterangan'=>  $request->get('keterangan'),
 					]);
 				}else{
 					$visitor = new visitor([
@@ -94,7 +95,6 @@ class VisitorController extends Controller
 						'employee'=> $request->get('employee'),
 						'transport'=>  $request->get('kendaraan'),
 						'pol'=>  $request->get('pol'),
-						'keterangan'=>  $request->get('keterangan'),
 					]);
 				}
 			}else{
@@ -108,7 +108,6 @@ class VisitorController extends Controller
 						'destination' => $request->get('destination'),
 						'employee'=> $request->get('employee'),
 						'transport'=>  $request->get('kendaraan'),
-						'keterangan'=>  $request->get('keterangan'),
 					]);
 				}else{
 					$visitor = new visitor([
@@ -121,12 +120,34 @@ class VisitorController extends Controller
 						'employee'=> $request->get('employee'),
 						'transport'=>  $request->get('kendaraan'),
 						'pol'=>  $request->get('pol'),
-						'keterangan'=>  $request->get('keterangan'),
 					]);
 				}
 			}
+
 			$visitor -> save();	
 			$id = Visitor::orderby('created_at','desc')->first();
+
+			for ($i=0; $i < $lop_suhu ; $i++) {
+
+				$nama = "nama".$i;
+				$suhu = "suhu".$i;
+				if ($request->get('company') == null) {
+					$suhunew = new BodyTemperature([
+						'company' => $request->get('company2'),
+						'name' => $request->get($nama),
+						'suhu' => $request->get($suhu),
+						'created_by' => Auth::id()
+					]);
+				}else{
+					$suhunew = new BodyTemperature([
+						'company' => $request->get('company'),
+						'name' => $request->get($nama),
+						'suhu' => $request->get($suhu),
+						'created_by' => Auth::id()
+					]);
+				}
+				$suhunew -> save();
+			}
 			//----insert detail
 			for ($i=0; $i < $lop ; $i++) {
 

@@ -146,10 +146,22 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="inputEmail3" class="col-sm-2 control-label">Suhu Tubuh</label>
-						<div class="col-sm-9">
-							<textarea class="form-control" id="keterangan" name="keterangan" placeholder="Suhu tubuh" required></textarea>
+						<label for="inputEmail3" class="col-sm-2 control-label">Suhu Tubuh <b id="total_suhu"></b></label>
+						<input type="text" name="lop_suhu" id="lop_suhu" value="1" hidden>
+						<input type="text" name="lop_suhu2" id="lop_suhu2" hidden>
+
+						<div class="col-sm-5" style="padding-right: 0;">
+							<input type="text" class="form-control" id="nama0" name="nama0" placeholder="Nama">
 						</div>
+						<div class="col-sm-3" style=" padding-right: 0;">
+							<input type="text" class="form-control" id="suhu0" name="suhu0" placeholder="Suhu Tubuh" >
+						</div>
+						<div class="col-sm-2">
+							&nbsp;<a class="btn btn-success" onclick='tambah_suhu("tambah_suhu","lop_suhu");' href="javascript:void(0)" style="padding: 6px 12px 6px 12px"><i class='fa fa-plus' ></i></a> 
+						</div><br><br>
+
+						<div id="tambah_suhu"></div>
+
 					</div>
 				</div>
 				<div class="box-footer">
@@ -209,13 +221,26 @@
 	function tambah(id,lop) {	
 
 
-		var divdata = $("<div id='"+no+"'><label for='inputEmail3' class='col-sm-2 control-label' id='nomor'></label><input type='text' name='lop' id='lop' value='1' hidden><div class='col-sm-2' style='padding-right: 0;'><input type='text' class='form-control' id='visitor_id"+no+"' name='visitor_id"+no+"' placeholder='No. KTP/SIM' required onchange='getdata(this.id)'></div><div class='col-sm-4' style='padding-left: 1; padding-right: 0;'><input type='text' class='form-control' id='visitor_name"+no+"' name='visitor_name"+no+"' placeholder='Full Name' required></div><div class='col-sm-2' style='padding-left: 1; padding-right: 0;'>	<input type='text' class='form-control' id='telp"+no+"' name='telp"+no+"' placeholder='No Hp' ></div><div class='col-sm-2'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <a class='btn btn-success' onclick='tambah(\""+id+"\",\""+lop+"\");' href='javascript:void(0)''><i class='fa fa-plus' ></i></a></div><br><br></div>");
+		var divdata = $("<div id='"+no+"'><label for='inputEmail3' class='col-sm-2 control-label' id='nomor'></label><input type='text' name='lop_suhu' id='lop_suhu' value='1' hidden><div class='col-sm-5' style='padding-right: 0;'><input type='text' class='form-control' id='nama"+no+"' name='nama"+no+"' placeholder='Nama' required></div><div class='col-sm-4' style='padding-left: 1; padding-right: 0;'><input type='text' class='form-control' id='suhu"+no+"' name='suhu"+no+"' placeholder='Suhu' required></div><div class='col-sm-2'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <a class='btn btn-success' onclick='tambah(\""+id+"\",\""+lop+"\");' href='javascript:void(0)''><i class='fa fa-plus' ></i></a></div><br><br></div>");
 
 		$("#"+id).append(divdata);			
 		no+=1;
-		$('#total').text("("+no+")");
+		$('#total_suhu').text("("+no+")");
 		document.getElementById("lop").value=no;
 		$('#lop2').val(no);
+
+	}
+
+	function tambah_suhu(id,lop) {	
+
+
+		var divdata = $("<div id='"+no+"'><label for='inputEmail3' class='col-sm-2 control-label' id='nomor'></label><input type='text' name='lop_suhu' id='lop_suhu' value='1' hidden><div class='col-sm-5' style='padding-right: 0;'><input type='text' class='form-control' id='nama"+no+"' name='nama"+no+"' placeholder='Nama' required></div><div class='col-sm-3' style='padding-left: 1; padding-right: 0;'><input type='text' class='form-control' id='suhu"+no+"' name='suhu"+no+"' placeholder='Suhu Tubuh' required></div><div class='col-sm-2'>&nbsp;<button onclick='kurang_suhu(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <a class='btn btn-success' onclick='tambah(\""+id+"\",\""+lop+"\");' href='javascript:void(0)''><i class='fa fa-plus' ></i></a></div><br><br></div>");
+
+		$("#"+id).append(divdata);			
+		no+=1;
+		$('#total_suhu').text("("+no+")");
+		document.getElementById("lop_suhu").value=no;
+		$('#lop_suhu2').val(no);
 
 	}
 
@@ -256,6 +281,39 @@
 		$('#lop2').val(no);
 	}
 
+	function kurang_suhu(elem,lop) {			
+		var ids = $(elem).parent('div').parent('div').attr('id');
+		var oldid = ids;
+		$(elem).parent('div').parent('div').remove();
+		var newid = parseInt(ids) + 1;
+		jQuery("#"+newid).attr("id",oldid);
+		jQuery("#nama"+newid).attr("name","nama"+oldid);
+		jQuery("#suhu"+newid).attr("name","suhu"+oldid);
+
+		jQuery("#nama"+newid).attr("id","nama"+oldid);
+		jQuery("#suhu"+newid).attr("id","suhu"+oldid);
+
+		no-=1;
+		var a = no -1;
+
+		for (var i =  ids; i <= a; i++) {	
+			var newid = parseInt(i) + 1;
+			var oldid = newid - 1;
+			jQuery("#"+newid).attr("id",oldid);
+			jQuery("#nama"+newid).attr("name","nama"+oldid);
+			jQuery("#suhu"+newid).attr("name","suhu"+oldid);
+
+			jQuery("#nama"+newid).attr("id","nama"+oldid);
+			jQuery("#suhu"+newid).attr("id","suhu"+oldid);
+
+			// alert(i)
+		}
+
+		$('#total_suhu').text("("+no+")");
+		document.getElementById("lop_suhu").value=no;
+		$('#lop_suhu2').val(no);
+	}
+
 	function getdata(id) {
 		var id = id;
 		var ids = id.substr(10, 1); 
@@ -274,11 +332,13 @@
 				if(result.status){
 					$.each(result.id_list, function(key, value) { 						
 						$('#'+nama+ids).val(value.full_name);
+						$('#nama0').val(value.full_name);
 						$('#'+telp+ids).val(value.telp);
 					});					
 					// openSuccessGritter('Success!', result.message);
 					if (result.id_list ==""){
 						$('#'+nama+ids).val('');
+						$('#nama0').val('');
 						$('#'+telp+ids).val('');					
 					// openErrorGritter('Error!', result.message);
 				}
