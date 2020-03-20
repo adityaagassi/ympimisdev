@@ -9,6 +9,6 @@ class BodyTemperature extends Model
 {
     use SoftDeletes;
 	protected $fillable = [
-		'company','name','suhu','created_by'
+		'company','name','kota','suhu','created_by'
 	];
 }

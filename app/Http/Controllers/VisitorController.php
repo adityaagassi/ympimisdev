@@ -131,10 +131,12 @@ class VisitorController extends Controller
 
 				$nama = "nama".$i;
 				$suhu = "suhu".$i;
+				$kota = "kota".$i;
 				if ($request->get('company') == null) {
 					$suhunew = new BodyTemperature([
 						'company' => $request->get('company2'),
 						'name' => $request->get($nama),
+						'kota' => $request->get($kota),
 						'suhu' => $request->get($suhu),
 						'created_by' => Auth::id()
 					]);
@@ -142,6 +144,7 @@ class VisitorController extends Controller
 					$suhunew = new BodyTemperature([
 						'company' => $request->get('company'),
 						'name' => $request->get($nama),
+						'kota' => $request->get($kota),
 						'suhu' => $request->get($suhu),
 						'created_by' => Auth::id()
 					]);
@@ -401,7 +404,11 @@ public function inputtag(Request $request){
 
 public function confirmation()
 {
-	return view('visitors.confirmation')->with('page', 'Visitor Confirmation');
+	$location = DB::SELECT("SELECT DISTINCT
+								( location ) 
+							FROM
+								telephone_lists");
+	return view('visitors.confirmation')->with('page', 'Visitor Confirmation')->with('location', $location);
 }
 
 public function confirmation2()

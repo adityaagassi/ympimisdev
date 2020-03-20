@@ -147,14 +147,17 @@
 					</div>
 					<div class="form-group">
 						<label for="inputEmail3" class="col-sm-2 control-label">Suhu Tubuh <b id="total_suhu"></b></label>
-						<input type="text" name="lop_suhu" id="lop_suhu" value="1" hidden>
-						<input type="text" name="lop_suhu2" id="lop_suhu2" hidden>
+						<input type="text" name="lop_suhu" id="lop_suhu" value="1">
+						<input type="text" name="lop_suhu2" id="lop_suhu2" value="1">
 
-						<div class="col-sm-5" style="padding-right: 0;">
-							<input type="text" class="form-control" id="nama0" name="nama0" placeholder="Nama">
+						<div class="col-sm-3" style="padding-right: 0;">
+							<input type="text" class="form-control" id="nama0" name="nama0" placeholder="Nama" required>
+						</div>
+						<div class="col-sm-2" style="padding-right: 0;">
+							<input type="text" class="form-control" id="kota0" name="kota0" placeholder="Asal Kota" required>
 						</div>
 						<div class="col-sm-3" style=" padding-right: 0;">
-							<input type="text" class="form-control" id="suhu0" name="suhu0" placeholder="Suhu Tubuh" >
+							<input type="text" class="form-control" id="suhu0" name="suhu0" placeholder="Suhu Tubuh" required>
 						</div>
 						<div class="col-sm-2">
 							&nbsp;<a class="btn btn-success" onclick='tambah_suhu("tambah_suhu","lop_suhu");' href="javascript:void(0)" style="padding: 6px 12px 6px 12px"><i class='fa fa-plus' ></i></a> 
@@ -234,7 +237,7 @@
 	function tambah_suhu(id,lop) {	
 
 
-		var divdata = $("<div id='"+no+"'><label for='inputEmail3' class='col-sm-2 control-label' id='nomor'></label><input type='text' name='lop_suhu' id='lop_suhu' value='1' hidden><div class='col-sm-5' style='padding-right: 0;'><input type='text' class='form-control' id='nama"+no+"' name='nama"+no+"' placeholder='Nama' required></div><div class='col-sm-3' style='padding-left: 1; padding-right: 0;'><input type='text' class='form-control' id='suhu"+no+"' name='suhu"+no+"' placeholder='Suhu Tubuh' required></div><div class='col-sm-2'>&nbsp;<button onclick='kurang_suhu(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <a class='btn btn-success' onclick='tambah(\""+id+"\",\""+lop+"\");' href='javascript:void(0)''><i class='fa fa-plus' ></i></a></div><br><br></div>");
+		var divdata = $("<div id='"+no+"'><label for='inputEmail3' class='col-sm-2 control-label' id='nomor'></label><input type='text' name='lop_suhu' id='lop_suhu' value='1' hidden><div class='col-sm-3' style='padding-right: 0;'><input type='text' class='form-control' id='nama"+no+"' name='nama"+no+"' placeholder='Nama' required></div><div class='col-sm-2' style='padding-right: 0;'><input type='text' class='form-control' id='kota"+no+"' name='kota"+no+"' placeholder='Asal Kota' required></div><div class='col-sm-3' style='padding-left: 1; padding-right: 0;'><input type='text' class='form-control' id='suhu"+no+"' name='suhu"+no+"' placeholder='Suhu Tubuh' required></div><div class='col-sm-2'>&nbsp;<button onclick='kurang_suhu(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <a class='btn btn-success' onclick='tambah(\""+id+"\",\""+lop+"\");' href='javascript:void(0)''><i class='fa fa-plus' ></i></a></div><br><br></div>");
 
 		$("#"+id).append(divdata);			
 		no+=1;
@@ -289,9 +292,11 @@
 		jQuery("#"+newid).attr("id",oldid);
 		jQuery("#nama"+newid).attr("name","nama"+oldid);
 		jQuery("#suhu"+newid).attr("name","suhu"+oldid);
+		jQuery("#kota"+newid).attr("name","kota"+oldid);
 
 		jQuery("#nama"+newid).attr("id","nama"+oldid);
 		jQuery("#suhu"+newid).attr("id","suhu"+oldid);
+		jQuery("#kota"+newid).attr("id","kota"+oldid);
 
 		no-=1;
 		var a = no -1;
@@ -302,9 +307,11 @@
 			jQuery("#"+newid).attr("id",oldid);
 			jQuery("#nama"+newid).attr("name","nama"+oldid);
 			jQuery("#suhu"+newid).attr("name","suhu"+oldid);
+			jQuery("#kota"+newid).attr("name","kota"+oldid);
 
 			jQuery("#nama"+newid).attr("id","nama"+oldid);
 			jQuery("#suhu"+newid).attr("id","suhu"+oldid);
+			jQuery("#kota"+newid).attr("id","kota"+oldid);
 
 			// alert(i)
 		}
