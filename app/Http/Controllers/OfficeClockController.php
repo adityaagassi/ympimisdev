@@ -54,8 +54,8 @@ class OfficeClockController extends Controller
     	$counter_lobby = $plc_lobby->plc_counter;
     	$id_plc_lobby = $plc_lobby->id;
 
-    	$visitor = Visitor::where('destination','Office')->get();
-    	$visitor_lobby = Visitor::where('location','Lobby')->get();
+    	$visitor = Visitor::where('destination','Office')->where('location','Security')->get();
+    	$visitor_lobby = Visitor::where('location','Lobby')->where('destination','Office')->get();
 
     	$jumlahvisitor = count($visitor);
     	$jumlahvisitor_lobby = count($visitor_lobby);
@@ -147,8 +147,8 @@ class OfficeClockController extends Controller
     	$counter_lobby = $plc_lobby->plc_counter;
     	$id_plc_lobby = $plc_lobby->id;
 
-    	$visitor = Visitor::where('destination','Office')->get();
-    	$visitor_lobby = Visitor::where('location','Lobby')->get();
+    	$visitor = Visitor::where('destination','Office')->where('location','Security')->get();
+    	$visitor_lobby = Visitor::where('location','Lobby')->where('destination','Office')->get();
 
     	$jumlahvisitor = count($visitor);
     	$jumlahvisitor_lobby = count($visitor_lobby);
@@ -240,8 +240,8 @@ class OfficeClockController extends Controller
     	$counter_lobby = $plc_lobby->plc_counter;
     	$id_plc_lobby = $plc_lobby->id;
 
-    	$visitor = Visitor::where('destination','Office')->get();
-    	$visitor_lobby = Visitor::where('location','Lobby')->get();
+    	$visitor = Visitor::where('destination','Office')->where('location','Security')->get();
+    	$visitor_lobby = Visitor::where('location','Lobby')->where('destination','Office')->get();
 
     	$jumlahvisitor = count($visitor);
     	$jumlahvisitor_lobby = count($visitor_lobby);

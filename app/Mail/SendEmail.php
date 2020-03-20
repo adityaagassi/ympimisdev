@@ -150,7 +150,11 @@ class SendEmail extends Mailable
         }
 
         if($this->remark == 'machine'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Machine Error Information ()')->view('mails.machine_notification');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Machine Error Information (設備エラー情報)')->view('mails.machine_notification');
+        }
+
+        if($this->remark == 'urgent_spk'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Urgent Maintenance Job Order ()')->view('mails.urgent_spk');
         }
     }
 }
