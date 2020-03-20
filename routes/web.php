@@ -2442,7 +2442,7 @@ Route::get('/trainingroom3', function () {
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
 	$notif = $controller->getNotif();
-	// $controller_visitor = new \App\Http\Controllers\VisitorController;
-	// $notif_visitor = $controller_visitor->getNotifVisitor();
-	$view->with('notif', $notif);
+	$controller_visitor = new \App\Http\Controllers\VisitorController;
+	$notif_visitor = $controller_visitor->getNotifVisitor();
+	$view->with('notif', $notif)->with('notif_visitor', $notif_visitor);
 });

@@ -193,20 +193,53 @@ class VisitorController extends Controller
 		
 		if ($nik !="") {			
 			// $where = "where employee = '".$nik."'";
-			$where=" where a.created_at2 >='".$kurang."' and a.created_at2<='".$tgl."' and employee in ( SELECT employee_id from mutation_logs WHERE department in ( SELECT department from mutation_logs WHERE employee_id ='".$nik."' and valid_to is null ) and valid_to is null)";
+			$where=" WHERE
+						a.created_at2 >= '".$kurang."'
+						AND a.created_at2 <= '".$tgl."'
+						AND employee IN (
+						SELECT
+							employee_id 
+						FROM
+							employee_syncs 
+						WHERE
+							employee_id = '".$nik."')";
 		}
 
 		if($nik =="asd"){
 			$where="WHERE a.created_at2 >='".$kurang."' and a.created_at2<='".$tgl."' ";
 		}
 
-		$op="SELECT *,count(DISTINCT(total1)) as total from (
-		select DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitors.employee, visitors.id, company, visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status, employees.name, mutation_logs.department, visitor_details.in_time, visitor_details.out_time, visitors.remark from visitors
-		left join visitor_details on visitors.id = visitor_details.id_visitor
-		LEFT JOIN employees on visitors.employee = employees.employee_id
-		LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
-
-	) a ".$where." GROUP BY a.id order by created_at desc";
+		$op="SELECT
+				*,
+				count(
+				DISTINCT ( total1 )) AS total 
+			FROM
+				(
+				SELECT
+					DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+					visitors.created_at,
+					visitors.employee,
+					visitors.id,
+					company,
+					visitor_details.full_name,
+					visitor_details.id_number AS total1,
+					purpose,
+					visitors.status,
+					employee_syncs.name,
+					employee_syncs.department,
+					visitor_details.in_time,
+					visitor_details.out_time,
+					visitors.remark 
+				FROM
+					visitors
+					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id
+				) a 
+			".$where."
+			GROUP BY
+				a.id 
+			ORDER BY
+				created_at DESC";
 	$ops = DB::select($op);
 	return DataTables::of($ops)
 
@@ -229,10 +262,17 @@ public function editlist(Request $request)
 {
 	$id = $request->get('id');
 	$id_list = VisitorDetail::where('id_visitor', '=', $request->get('id'))->get();
-	$header_lists = "select DISTINCT( visitors.id),company,name,mutation_logs.department,cost_centers.department as shortname from visitors LEFT JOIN employees on visitors.employee = employees.employee_id 
-	LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
-	LEFT JOIN cost_centers on mutation_logs.cost_center = cost_centers.cost_center
-	where visitors.id='".$id."'";
+	$header_lists = "SELECT DISTINCT
+						( visitors.id ),
+						company,
+						name,
+						employee_syncs.department,
+						employee_syncs.department AS shortname 
+					FROM
+						visitors
+						LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id
+					WHERE
+					visitors.id='".$id."'";
 	$header_list = DB::select($header_lists);
 	$response = array(
 		'status' => true,
@@ -347,10 +387,6 @@ public function confirmation2()
 public function updateremark(Request $request){
 
 	try {
-		$header_lists = "select DISTINCT( visitors.id),company,name,mutation_logs.department,cost_centers.department as shortname from visitors LEFT JOIN employees on visitors.employee = employees.employee_id 
-		LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id
-		LEFT JOIN cost_centers on mutation_logs.cost_center = cost_centers.cost_center
-		where visitors.id='".$id."'";
 		$id = $request->get('id');
 		$tag = $request->get('idtag');
 		$intime = date('H:i:s');
@@ -443,38 +479,50 @@ public function telpon()
 
 public function getNotifVisitor()
  {
- 	$manager = Auth::user()->username;
-	$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
+ 	if (Auth::user() !== null) {
+ 		$manager = Auth::user()->username;
+		$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
 
-	foreach ($emp_sync as $key) {
-		$position = $key->position;
-	}
+		foreach ($emp_sync as $key) {
+			$position = $key->position;
+		}
 
-	$lists = DB::SELECT("select 
-		count(visitors.id) as notif
-		from visitors 
-		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
-		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
-		where visitors.remark is null and employee_syncs.nik_manager = '".$manager."'");
+		if (Auth::user()->name == 'Dwi Misnanto') {
+			$lists = DB::SELECT("SELECT
+				count( visitors.id ) AS notif 
+					FROM
+						visitors
+						LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+						LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+					WHERE
+						visitors.remark IS NULL 
+						AND employee_syncs.department = 'Logistic'");
+		}else{
+			$lists = DB::SELECT("SELECT
+				count( visitors.id ) AS notif 
+					FROM
+						visitors
+						LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+						LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+					WHERE
+						(visitors.remark IS NULL 
+						AND employee_syncs.nik_manager = '".$manager."')
+						OR
+						(visitors.remark IS NULL 
+						AND employee_syncs.employee_id= '".$manager."')");
+		}
 
-	foreach ($lists as $val) {
-		$notif = $val->notif;
-	}
-    return $notif;
+		foreach ($lists as $val) {
+			$notif = $val->notif;
+		}
+	    if (count($notif) > 0) {
+	    	return $notif;
+	    }
+ 	}
  }
 
 public function confirmation_manager()
 {
-	// var_dump(stream_get_contents(fopen("\\\\172.17.128.87\\MIS\\Book1.csv", "r")));
-	// foreach (glob(public_path('*.csv')) as $filename) {
-	//       // echo "$filename size " . filesize($filename) . "\n";
-	//     // var_dump();
-	//     $data = substr($filename,-9,5);
-	//     $file = File::get($filename);
-	//     $filepecah = explode(' ', $file);
-	//     // var_dump(substr($filepecah[3], 7,2));
-	//     // var_dump($file);
-	//   }
 	$manager = Auth::user()->username;
 	$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
 
@@ -520,19 +568,54 @@ public function fetchVisitorByManager()
 		$name = $key->name;
 	}
 	if ($manager_name == 'Dwi Misnanto') {
-		$lists = DB::SELECT("select 
-		visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitors.jumlah as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
-		from visitors 
-		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
-		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
-		where visitors.remark is null and employee_syncs.department = 'Logistic'");
+		$lists = DB::SELECT("SELECT
+			visitors.id,
+			name,
+			department,
+			company,
+			DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+			visitors.created_at,
+			visitor_details.full_name,
+			visitors.jumlah AS total1,
+			purpose,
+			visitors.status,
+			visitor_details.in_time,
+			visitor_details.out_time,
+			visitors.remark 
+		FROM
+			visitors
+			LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+			LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+		WHERE
+			visitors.remark IS NULL 
+			AND employee_syncs.department = 'Logistic'
+		ORDER BY id DESC");
 	}else{
-		$lists = DB::SELECT("select 
-		visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitors.jumlah as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
-		from visitors 
-		LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
-		LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
-		where visitors.remark is null and employee_syncs.nik_manager = '".$manager."'");
+		$lists = DB::SELECT("SELECT
+			visitors.id,
+			name,
+			department,
+			company,
+			DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+			visitors.created_at,
+			visitor_details.full_name,
+			visitors.jumlah AS total1,
+			purpose,
+			visitors.status,
+			visitor_details.in_time,
+			visitor_details.out_time,
+			visitors.remark 
+		FROM
+			visitors
+			LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+			LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+		WHERE
+			(visitors.remark IS NULL 
+			AND employee_syncs.nik_manager = '".$manager."')
+			OR
+			(visitors.remark IS NULL 
+			AND employee_syncs.employee_id= '".$manager."')
+		ORDER BY id DESC");
 	}
 
 	$response = array(
@@ -650,12 +733,38 @@ public function filldisplay($nik, Request $request)
 		$where=" WHERE DATE_FORMAT(created_at,'%Y-%m-%d') ='".$date."' ";
 	}
 
-	$op = "SELECT *,count(DISTINCT(total1)) as total from (
-	select visitors.reason,visitors.employee, visitors.id, company, visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status, employees.name, mutation_logs.department, visitor_details.in_time, visitor_details.out_time, visitors.remark, visitors.created_at, DATE_FORMAT(visitors.created_at,'%Y-%m-%d')as tgl from visitors
-	left join visitor_details on visitors.id = visitor_details.id_visitor
-	LEFT JOIN employees on visitors.employee = employees.employee_id
-	LEFT JOIN mutation_logs on employees.employee_id = mutation_logs.employee_id) a ".$where."
-	GROUP BY a.id  order by a.id desc";
+	$op = "SELECT
+				*,
+				count(
+				DISTINCT ( total1 )) AS total 
+			FROM
+				(
+				SELECT
+					visitors.reason,
+					visitors.employee,
+					visitors.id,
+					company,
+					visitor_details.full_name,
+					visitor_details.id_number AS total1,
+					purpose,
+					visitors.status,
+					employee_syncs.name,
+					employee_syncs.department,
+					visitor_details.in_time,
+					visitor_details.out_time,
+					visitors.remark,
+					visitors.created_at,
+					DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) AS tgl 
+				FROM
+					visitors
+					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+				) a 
+			".$where."
+			GROUP BY
+				a.id 
+			ORDER BY
+				a.id DESC";
 
 	$ops = DB::select($op);
 
