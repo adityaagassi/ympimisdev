@@ -147,8 +147,8 @@
 					</div>
 					<div class="form-group">
 						<label for="inputEmail3" class="col-sm-2 control-label">Suhu Tubuh <b id="total_suhu"></b></label>
-						<input type="text" name="lop_suhu" id="lop_suhu" value="1">
-						<input type="text" name="lop_suhu2" id="lop_suhu2" value="1">
+						<input type="text" name="lop_suhu" id="lop_suhu" value="1" hidden>
+						<input type="text" name="lop_suhu2" id="lop_suhu2" value="1" hidden>
 
 						<div class="col-sm-3" style="padding-right: 0;">
 							<input type="text" class="form-control" id="nama0" name="nama0" placeholder="Nama" required>
