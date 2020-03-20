@@ -148,115 +148,116 @@ class SendMachineNotification extends Command
         // exit;
 
         // while (true) {
-            $temp_all = [];
-            $json = file_get_contents('http://172.17.128.204/zed/dashboard/getData');
-            $temp = explode("(ime)", $json);
-            unset($temp[count($temp) -1]);
+        $temp_all = [];
+        $json = file_get_contents('http://172.17.128.204/zed/dashboard/getData');
+        $temp = explode("(ime)", $json);
+        unset($temp[count($temp) -1]);
 
-            $json_z = file_get_contents('http://172.17.128.204/zed/dashboard/getDataSystem');
-            $tempz = explode("(ime)", $json_z);
-            unset($tempz[count($tempz) -1]);
+        $json_z = file_get_contents('http://172.17.128.204/zed/dashboard/getDataSystem');
+        $tempz = explode("(ime)", $json_z);
+        unset($tempz[count($tempz) -1]);
 
-            foreach ($temp as $mc) {
-                array_push($temp_all, [explode("#", $mc)[0], explode("#", $mc)[1]]);
-            }
+        foreach ($temp as $mc) {
+            array_push($temp_all, [explode("#", $mc)[0], explode("#", $mc)[1]]);
+        }
 
-            foreach ($tempz as $zpro) {
-               array_push($temp_all, [explode("#", $zpro)[0], explode("#", $zpro)[1]]);   
-           }
+        foreach ($tempz as $zpro) {
+         array_push($temp_all, [explode("#", $zpro)[0], explode("#", $zpro)[1]]);   
+     }
 
-           foreach ($temp_all as $key) {
-            foreach ($this->all as $ctg) {
-                if ($key[0] == $ctg[0]) {
-                    $temp = db::table('maintenance_machine_logs')->where('machine_code','=', $key[0])->first();
+     foreach ($temp_all as $key) {
+        foreach ($this->all as $ctg) {
+            if ($key[0] == $ctg[0]) {
+                $temp = db::table('maintenance_machine_logs')->where('machine_code','=', $key[0])->first();
 
-                    if ($key[1] == '0') {
+                if ($key[1] == '0') {
 
-                        $get_mail = EmployeeSync::leftJoin('users' ,'employee_syncs.employee_id', '=', 'users.username')
-                        ->whereIn('position', ['chief','foreman','manager'])
-                        ->whereRaw("(department in ('Maintenance', '".$ctg[2]."'))")
-                        ->where('division', '=', 'Production')
-                        ->select('employee_id', 'email', 'department','phone', 'position')
-                        ->get()
-                        ->toArray();
+                    $get_mail = EmployeeSync::leftJoin('users' ,'employee_syncs.employee_id', '=', 'users.username')
+                    ->whereIn('position', ['chief','foreman','manager'])
+                    ->whereRaw("(department in ('Maintenance', '".$ctg[2]."'))")
+                    ->where('division', '=', 'Production')
+                    ->select('employee_id', 'email', 'department','phone', 'position')
+                    ->get()
+                    ->toArray();
 
-                        foreach ($get_mail as $mail) {
-                            if ($mail['position'] == 'Chief' || $mail['position'] == 'Foreman') {
+                    foreach ($get_mail as $mail) {
+                        if ($mail['position'] == 'Chief' || $mail['position'] == 'Foreman') {
 
-                                $mailnumber = '62'.substr($mail['phone'], 1);
+                            $mailnumber = '62'.substr($mail['phone'], 1);
 
-                                array_push($sms_tos, $mailnumber);
-                            } else {
-                                array_push($mail_tos, $mail['email']);
-                            }
-                        }
-
-                        array_push($mail_tos, 'nadif@music.yamaha.com');
-                        array_push($mail_tos, 'duta.narendratama@music.yamaha.com');
-
-                        $sms = implode (",", $sms_tos);
-
-                        if (!$temp) {
-                            DB::table('maintenance_machine_logs')->insert(
-                                [
-                                    'machine_code' => $key[0],
-                                    'machine_name' => $ctg[1],
-                                    'status_cf' => "",
-                                    'status_gm' => "",
-                                    'started_at' => date('Y-m-d H:i:s')
-                                ]
-                            );
+                            array_push($sms_tos, $mailnumber);
                         } else {
-                            $datetime1 = new DateTime($temp->started_at);
-                            $datetime2 = new DateTime();
-
-                            $dateDiff  = $datetime1->diff($datetime2);
-
-                            $machine = [
-                                "machine" => $ctg[1]
-                            ];
-
-                            if ($dateDiff->i >= 15 && $temp->status_cf == "") {
-                                DB::table('maintenance_machine_logs')
-                                ->where('machine_code','=', $key[0])
-                                ->update(['status_cf' => 'Notified']);
-
-                                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($sms);
-                                $query_string .= "&message=".rawurlencode(stripslashes("Informasi Error Mesin :\nTelah terjadi error selama 15 menit untuk Mesin ".$ctg[1].".\n\nTerimakasih")) . "&languagetype=1";        
-                                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;    
-                                $fd = @implode('', file($url));
-
-                                $machine['time'] = "15 minutes";
-                                print_r($sms);
-
-
-                                Mail::to($mail_tos)->cc('aditya.agassi@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
-                            } else if ($dateDiff->h >= 1 && $temp->status_m == "") {
-                                DB::table('maintenance_machine_logs')
-                                ->where('machine_code','=', $key[0])
-                                ->update(['status_m' => 'Notified']);
-
-                                $machine['time'] = "an hour";
-
-                                Mail::to(['budhi.apriyanto@music.yamaha.com','takashiohkubo@yamaha.com'])->cc('aditya.agassi@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
-                            } else if ($dateDiff->h >= 2 && $temp->status_gm == "") {
-                                DB::table('maintenance_machine_logs')
-                                ->where('machine_code','=', $key[0])
-                                ->update(['status_gm' => 'Notified']);
-
-                                $machine['time'] = "two hours";
-
-                                Mail::to('yukitaka.hayakawa@music.yamaha.com')->cc('aditya.agassi@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
-                            } 
+                            array_push($mail_tos, $mail['email']);
                         }
+                    }
+
+                    array_push($mail_tos, 'nadif@music.yamaha.com');
+                    array_push($mail_tos, 'duta.narendratama@music.yamaha.com');
+
+                    $sms = implode (",", $sms_tos);
+
+                    if (!$temp) {
+                        DB::table('maintenance_machine_logs')->insert(
+                            [
+                                'machine_code' => $key[0],
+                                'machine_name' => $ctg[1],
+                                'status_cf' => "",
+                                'status_gm' => "",
+                                'started_at' => date('Y-m-d H:i:s')
+                            ]
+                        );
                     } else {
-                        if ($temp) {
-                            DB::table('maintenance_machine_logs')->where('machine_code', '=', $key[0])->delete();
-                        }
+                        $datetime1 = new DateTime($temp->started_at);
+                        $datetime2 = new DateTime();
+
+                        $dateDiff  = $datetime1->diff($datetime2);
+
+                        $machine = [
+                            "machine" => $ctg[1]
+                        ];
+
+                        if ($dateDiff->i >= 15 && $temp->status_cf == "") {
+                            DB::table('maintenance_machine_logs')
+                            ->where('machine_code','=', $key[0])
+                            ->update(['status_cf' => 'Notified']);
+
+                            $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+                            $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($sms);
+                            $query_string .= "&message=".rawurlencode(stripslashes("Informasi Error Mesin :\nTelah terjadi error selama 15 menit untuk Mesin ".$ctg[1].".\n\nTerimakasih")) . "&languagetype=1";        
+                            $url = "http://gateway.onewaysms.co.id:10002/".$query_string;    
+                            $fd = @implode('', file($url));
+
+                            $machine['time'] = "15 minutes";
+                            print_r($sms);
+
+
+                            Mail::to($mail_tos)->cc('aditya.agassi@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
+                        } else if ($dateDiff->h >= 1 && $temp->status_m == "") {
+                            DB::table('maintenance_machine_logs')
+                            ->where('machine_code','=', $key[0])
+                            ->update(['status_m' => 'Notified']);
+
+                            $machine['time'] = "an hour";
+
+                            Mail::to(['budhi.apriyanto@music.yamaha.com','takashiohkubo@yamaha.com'])->cc('aditya.agassi@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
+                        } else if ($dateDiff->h >= 2 && $temp->status_gm == "") {
+                            DB::table('maintenance_machine_logs')
+                            ->where('machine_code','=', $key[0])
+                            ->update(['status_gm' => 'Notified']);
+
+                            $machine['time'] = "two hours";
+                            $machine['jepang'] = true;
+
+                            Mail::to('yukitaka.hayakawa@music.yamaha.com')->cc('aditya.agassi@music.yamaha.com')->send(new SendEmail($machine, 'machine'));
+                        } 
+                    }
+                } else {
+                    if ($temp) {
+                        DB::table('maintenance_machine_logs')->where('machine_code', '=', $key[0])->delete();
                     }
                 }
             }
+        }
         // }
         // sleep(2);
     }
