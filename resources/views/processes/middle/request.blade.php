@@ -86,7 +86,9 @@
 
 	$('#tag').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($("#tag").val().length >= 10){
+
+			var tag_length = $("#tag").val().length;
+			if(tag_length >= 10 && tag_length <= 11){
 				var str = $("#tag").val();
 				scanTag(str);
 				$("#tag").focus();
