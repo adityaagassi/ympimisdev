@@ -70,10 +70,6 @@
 						<div class="table-responsive">
 							<table id="visitorList" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
-									<tr id="total">
-										<th colspan="8"><b id="totalvi"></b></th>								
-										<th colspan="2">Action</th>
-									</tr>
 									<tr>
 										<th>Incoming Date</th>
 										<th>Employee</th>
@@ -89,6 +85,20 @@
 								</thead>
 								<tbody id="visitorListBody">
 								</tbody>
+								<tfoot>
+									<tr style="color: black">
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
 							</table>
 						</div>
 					</div>
@@ -240,12 +250,18 @@
 					});
 					$('#judul').html('YMPI Visitor Confirmation of '+department);
 					$('#visitorListBody').append(tableData);
-					$('#visitorList').DataTable({
+
+					$('#visitorList tfoot th').each(function(){
+						var title = $(this).text();
+						$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
+					});
+						
+					var table = $('#visitorList').DataTable({
 						'dom': 'Bfrtip',
 						'responsive':true,
 						'lengthMenu': [
-						[ 5, 10, 25, -1 ],
-						[ '5 rows', '10 rows', '25 rows', 'Show all' ]
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 						],
 						'buttons': {
 							buttons:[
@@ -253,13 +269,36 @@
 								extend: 'pageLength',
 								className: 'btn btn-default',
 							},
-							
+							{
+								extend: 'copy',
+								className: 'btn btn-success',
+								text: '<i class="fa fa-copy"></i> Copy',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'print',
+								className: 'btn btn-warning',
+								text: '<i class="fa fa-print"></i> Print',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							}
 							]
 						},
 						'paging': true,
 						'lengthChange': true,
-						'pageLength': 5,
-						'searching': true,
+						'pageLength': 10,
+						'searching': true	,
 						'ordering': true,
 						'order': [],
 						'info': true,
@@ -269,6 +308,19 @@
 						"bAutoWidth": false,
 						"processing": true
 					});
+					table.columns().every( function () {
+						var that = this;
+
+						$( 'input', this.footer() ).on( 'keyup change', function () {
+							if ( that.search() !== this.value ) {
+								that
+								.search( this.value )
+								.draw();
+							}
+						} );
+					} );
+
+					$('#visitorList tfoot tr').appendTo('#visitorList thead');
 				}
 				else{
 					alert('Attempt to retrieve data failed');
