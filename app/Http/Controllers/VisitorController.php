@@ -404,11 +404,11 @@ public function inputtag(Request $request){
 
 public function confirmation()
 {
-	$location = DB::SELECT("SELECT DISTINCT
-								( location ) 
-							FROM
-								telephone_lists");
-	return view('visitors.confirmation')->with('page', 'Visitor Confirmation')->with('location', $location);
+	// $location = DB::SELECT("SELECT DISTINCT
+	// 							( location ) 
+	// 						FROM
+	// 							telephone_lists");
+	return view('visitors.confirmation')->with('page', 'Visitor Confirmation');
 }
 
 public function confirmation2()
