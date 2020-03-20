@@ -81,6 +81,7 @@ class VisitorController extends Controller
 						'destination' => $request->get('destination'),
 						'employee'=> $request->get('employee'),
 						'transport'=>  $request->get('kendaraan'),
+						'keterangan'=>  $request->get('keterangan'),
 					]);
 				}else{
 					$visitor = new visitor([
@@ -93,6 +94,7 @@ class VisitorController extends Controller
 						'employee'=> $request->get('employee'),
 						'transport'=>  $request->get('kendaraan'),
 						'pol'=>  $request->get('pol'),
+						'keterangan'=>  $request->get('keterangan'),
 					]);
 				}
 			}else{
@@ -106,6 +108,7 @@ class VisitorController extends Controller
 						'destination' => $request->get('destination'),
 						'employee'=> $request->get('employee'),
 						'transport'=>  $request->get('kendaraan'),
+						'keterangan'=>  $request->get('keterangan'),
 					]);
 				}else{
 					$visitor = new visitor([
@@ -118,6 +121,7 @@ class VisitorController extends Controller
 						'employee'=> $request->get('employee'),
 						'transport'=>  $request->get('kendaraan'),
 						'pol'=>  $request->get('pol'),
+						'keterangan'=>  $request->get('keterangan'),
 					]);
 				}
 			}
