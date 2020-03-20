@@ -470,7 +470,8 @@ class WeldingProcessController extends Controller
 			'ws_id' => 0,
 			'operator_nik' => $request->get('operator'),
 			'group' => $request->get('group'),
-			'operator_create_date' => date('Y-m-d H:i:s')]);
+			'operator_create_date' => date('Y-m-d H:i:s'),
+			'created_by' => Auth::id()]);
 
 		$response = array(
 			'status' => true
@@ -3179,11 +3180,13 @@ class WeldingProcessController extends Controller
 					'updated_at' => Carbon::now()]
 				);
 
-				if($request->get('kensa_id') != null){
-					$delete = db::connection('welding')
-					->table('t_kensa')
-					->where('kensa_id', $request->get('kensa_id'))
-					->delete();
+				if($request->get('loc') == 'hsa-dimensi-sx'){
+					if($request->get('kensa_id') != null){
+						$delete = db::connection('welding')
+						->table('t_kensa')
+						->where('kensa_id', $request->get('kensa_id'))
+						->delete();
+					}
 				}
 
 				$response = array(
