@@ -79,7 +79,7 @@
 		width: 12px;
 		height: 12px;
 		border-radius: 50%;
-		background: #90ee7e;
+		background: #9C27B0;
 		display: inline-block;
 	}
 	.kizu {
@@ -87,7 +87,7 @@
 		width: 12px;
 		height: 12px;
 		border-radius: 50%;
-		background: #f45b5b;
+		background: #607D8B;
 		display: inline-block;
 	}
 	.others {
@@ -274,28 +274,23 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="box-body">
-								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-
-								<div id='scanner' class="col-xs-12">
-									<div class="col-xs-6 col-xs-offset-3">
-										<div id="loadingMessage">
-											🎥 Unable to access video stream (please make sure you have a webcam enabled)
-										</div>
-										<canvas style="width: 240px; height: 160px;" id="canvas" hidden></canvas>
-										<div id="output" hidden>
-											<div id="outputMessage">No QR code detected.</div>
-										</div>
-									</div>									
-								</div>
+								<input type="hidden" value="{{csrf_token()}}" name="_token" />						
 								
+								<input type="hidden" id="date">
+
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">NIK</label>
+									<label class="col-sm-4">Tag</label>
 									<div class="col-sm-5" align="left">
-										<input type="text" class="form-control" id="input_employee_id">
+										<input type="text" class="form-control" id="input_tag">
 									</div>
 								</div>
-								<input type="hidden" id="employee_id">
-								<input type="hidden" id="date">
+
+								<div class="form-group row" align="right" id="field-nik">
+									<label class="col-sm-4">NIK</label>
+									<div class="col-sm-5" align="left">
+										<input type="text" class="form-control" id="employee_id" readonly>
+									</div>
+								</div>
 
 								<div class="form-group row" align="right" id="field-name">
 									<label class="col-sm-4">Name</label>
@@ -343,8 +338,19 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 20000);
 	});
+
+	var refreshIntervalId = setInterval(fillChart, 20000);
+
+	$('#myModal').on('shown.bs.modal', function () {
+		clearInterval(refreshIntervalId);
+	});
+
+	$('#myModal').on('hidden.bs.modal', function () {
+		fillChart();
+		refreshIntervalId = setInterval(fillChart, 20000);
+	});
+
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({
@@ -554,123 +560,92 @@
 			date: date,
 		}
 
+		$("#loading").show();
+
+
 		$.post('{{ url("update/middle/buffing_op_ng_check") }}', data, function(result, status, xhr) {
 			if(result.status){
+				$("#loading").hide();
+
 				openSuccessGritter('Success!', result.message);
 				$('#check-modal').modal('hide');
 			}else{
+				$("#loading").hide();
 				openErrorGritter('Error!', result.message);
-				$('#check-modal').modal('hide');
 			}
 
 		});
 	}
 
 	$('#check-modal').on('shown.bs.modal', function () {
-		$('#input_employee_id').focus();
+		$('#input_tag').focus();
+		clearInterval(refreshIntervalId);
 	});
 
-	$('#input_employee_id').keydown(function(event) {
+	$('#check-modal').on('hidden.bs.modal', function () {
+		fillChart();
+		refreshIntervalId = setInterval(fillChart, 20000);
+	});
+
+	$('#input_tag').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			showData();
+			if($("#input_tag").val().length == 10){
+				var data = {
+					employee_id : $("#input_tag").val()
+				}
+				
+				$.get('{{ url("scan/middle/operator/rfid") }}', data, function(result, status, xhr){
+					if(result.status){
+						var employee_id = $("#employee_id").val();
+						if(employee_id == result.employee.employee_id){
+							showData();
+						}else{
+							audio_error.play();
+							openErrorGritter('Error', 'Tag OP Wrong');
+							$('#input_tag').val('');
+						}
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#input_tag').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Tag Invalid.');
+				audio_error.play();
+				$("#operator").val("");
+			}			
 		}
+
+
 	});
 
-	function showData() {
-		if($("#input_employee_id").val().length >= 8){
-			if($("#input_employee_id").val() == $("#employee_id").val()){
-				$('#scanner').hide();
-				$('#field-name').show();
-				$('#field-key').show();
-				$('#btn-check').show();
-			}else{
-				openErrorGritter('Error!', 'NIK not match');
-				audio_error.play();
-				$('#scanner').show();
-				$("#input_employee_id").val("");
-				$("#input_employee_id").focus();	
-			}
-		}
-		else{
-			openErrorGritter('Error!', 'NIK Invalid');
-			audio_error.play();
-			$('#scanner').show();
-			$("#input_employee_id").val("");
-			$("#input_employee_id").focus();
-		}
-	}
+	function showData(){
 
-	function stopScan() {
-		$('#check-modal').modal('hide');
+		$('#field-nik').show();
+		$('#field-name').show();
+		$('#field-key').show();
+		$('#btn-check').show();
+
 	}
 
 	function showCheck(nik, nama, kunci, tgl) {
-		var video = document.createElement("video");
-		var canvasElement = document.getElementById("canvas");
-		var canvas = canvasElement.getContext("2d");
-		var loadingMessage = document.getElementById("loadingMessage");
-
-		var outputContainer = document.getElementById("output");
-		var outputMessage = document.getElementById("outputMessage");
-
-		function drawLine(begin, end, color) {
-			canvas.beginPath();
-			canvas.moveTo(begin.x, begin.y);
-			canvas.lineTo(end.x, end.y);
-			canvas.lineWidth = 4;
-			canvas.strokeStyle = color;
-			canvas.stroke();
-		}
-
-		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-			video.srcObject = stream;
-			video.setAttribute("playsinline", true);
-			video.play();
-			requestAnimationFrame(tick);
-		});
-
-		function tick() {
-			loadingMessage.innerText = "⌛ Loading video..."
-			if (video.readyState === video.HAVE_ENOUGH_DATA) {
-				loadingMessage.hidden = true;
-				canvasElement.hidden = false;
-
-				canvasElement.height = video.videoHeight;
-				canvasElement.width = video.videoWidth;
-				canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-				var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-				var code = jsQR(imageData.data, imageData.width, imageData.height, {
-					inversionAttempts: "dontInvert",
-				});
-				if (code) {
-					drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-					drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-					drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-					drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-					outputMessage.hidden = true;
-					$('#scanner').hide();
-					document.getElementById("input_employee_id").value = code.data.substr(0, 9);
-				} else {
-					outputMessage.hidden = false;
-				}
-			}
-			requestAnimationFrame(tick);
-		}
 
 		document.getElementById("employee_id").value = nik;
 		document.getElementById("name").value = nama;
 		document.getElementById("key").value = kunci;
 		document.getElementById("date").value = tgl;
-		$('#scanner').show();
 
+		$('#field-nik').hide();
 		$('#field-name').hide();
 		$('#field-key').hide();
 		$('#btn-check').hide();
 
 		$('#check-modal').modal('show');
-		$('#input_employee_id').val("");
-		$('#input_employee_id').focus();
-
+		$('#input_tag').val("");
+		$('#input_tag').focus();
 	}
 
 
@@ -747,7 +722,7 @@
 				var data = [];
 				var loop = 0;
 
-				console.table(result.ng_rate);
+				// console.table(result.ng_rate);
 
 				for(var i = 0; i < result.ng_rate.length; i++){
 					if(result.ng_rate[i].shift == 'A'){
@@ -1237,9 +1212,9 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 
 				if(ng_rate[loop-1] > parseInt(target)){
 					if(cek_a[loop-1] != null){
-						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 ,.3)'});
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(25,118,210 , .3)'});
 					}else{
-						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .3)'});
+						plotBands.push({from: (loop - 1.5), to: (loop - 0.5), color: 'rgba(255, 116, 116, .5)'});
 					}
 				}			
 
@@ -1332,27 +1307,27 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 			{
 				name: 'Buff Tarinai',
 				data: buff_tarinai,
-				color: '#2b908f'
+				color: '#00897B'
 			},
 			{
 				name: 'NG Soldering',
 				data: ng_soldering,
-				color: '#90ee7e'
+				color: '#F9A825'
 			},
 			{
 				name: 'Kizu',
 				data: kizu,
-				color: '#f45b5b'
+				color: '#aaeeee'
 			},
 			{
 				name: 'Buff Others (Aus, Nami, dll)',
 				data: others,
-				color: '#7798BF'
+				color: '#BCAAA4'
 			},
 			{
 				name: 'Buff Nagare',
 				data: buff_nagare,
-				color: '#aaeeee'
+				color: '#7798BF'
 			}
 			]
 		});
@@ -1538,27 +1513,27 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 			{
 				name: 'Buff Tarinai',
 				data: buff_tarinai,
-				color: '#2b908f'
+				color: '#00897B'
 			},
 			{
 				name: 'NG Soldering',
 				data: ng_soldering,
-				color: '#90ee7e'
+				color: '#F9A825'
 			},
 			{
 				name: 'Kizu',
 				data: kizu,
-				color: '#f45b5b'
+				color: '#aaeeee'
 			},
 			{
 				name: 'Buff Others (Aus, Nami, dll)',
 				data: others,
-				color: '#7798BF'
+				color: '#BCAAA4'
 			},
 			{
 				name: 'Buff Nagare',
 				data: buff_nagare,
-				color: '#aaeeee'
+				color: '#7798BF'
 			}
 			]
 		});
@@ -1742,27 +1717,27 @@ $.get('{{ url("fetch/middle/buffing_op_ng_target") }}', data, function(result, s
 			{
 				name: 'Buff Tarinai',
 				data: buff_tarinai,
-				color: '#2b908f'
+				color: '#00897B'
 			},
 			{
 				name: 'NG Soldering',
 				data: ng_soldering,
-				color: '#90ee7e'
+				color: '#F9A825'
 			},
 			{
 				name: 'Kizu',
 				data: kizu,
-				color: '#f45b5b'
+				color: '#aaeeee'
 			},
 			{
 				name: 'Buff Others (Aus, Nami, dll)',
 				data: others,
-				color: '#7798BF'
+				color: '#BCAAA4'
 			},
 			{
 				name: 'Buff Nagare',
 				data: buff_nagare,
-				color: '#aaeeee'
+				color: '#7798BF'
 			}
 			]
 		});

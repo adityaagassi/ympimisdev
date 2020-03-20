@@ -622,7 +622,7 @@ class MiddleProcessController extends Controller
 
 			$response = array(
 				'status' => true,
-				'message' => 'Check Efficiency successful',
+				'message' => 'Check NG Rate successful',
 				'material' => $material,
 				'ng_log' => $ng_log,
 			);
