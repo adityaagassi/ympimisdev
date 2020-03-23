@@ -38,7 +38,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Meeting Lists <span class="text-purple">???</span>
+		Meeting Lists <span class="text-purple">会議リスト</span>
 		<small>Filters <span class="text-purple">フィルター</span></small>
 	</h1>
 	<ol class="breadcrumb">

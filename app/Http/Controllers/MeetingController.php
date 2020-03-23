@@ -51,7 +51,7 @@ class MeetingController extends Controller
 		->get();
 
 		$title = "Meeting/Training Attendance List";
-		$title_jp = "??";
+		$title_jp = "会議の参加者リスト";
 
 		return view('meetings.list', array(
 			'title' => $title,

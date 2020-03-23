@@ -311,6 +311,10 @@
                             <a href="{{ url("index/temperature") }}">
                                 <i class="fa fa-caret-right"></i> Temperature (温度)
                             </a>
+                            <br>
+                            <a href="{{ url("index/temperature") }}">
+                                <i class="fa fa-caret-right"></i> Meeting List (会議リスト)
+                            </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">
                                 <i class="fa fa-caret-right"></i> Office Clock (??)
