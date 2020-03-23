@@ -43,6 +43,9 @@
 	</h1>
 	<ol class="breadcrumb">
 		<li>
+			<a href="{{ url('index/meeting/attendance?id=') }}" class="btn btn-primary btn-md" style="color:white"><i class="fa fa-users"></i>Meeting Attendance</a>
+		</li>
+		<li>
 			<a data-toggle="modal" data-target="#modalCreate" class="btn btn-success btn-md" style="color:white"><i class="fa fa-plus"></i>Create Meeting</a>
 		</li>
 	</ol>
