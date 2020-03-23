@@ -404,11 +404,69 @@ public function inputtag(Request $request){
 
 public function confirmation()
 {
-	// $location = DB::SELECT("SELECT DISTINCT
-	// 							( location ) 
-	// 						FROM
-	// 							telephone_lists");
-	return view('visitors.confirmation')->with('page', 'Visitor Confirmation');
+	$division = DB::SELECT("SELECT DISTINCT
+								( division ) 
+							FROM
+								telephone_lists");
+
+	$japan = DB::SELECT("SELECT *
+							FROM
+								telephone_lists
+							WHERE
+								division = 'JAPAN STAFF'
+							ORDER BY
+								id ASC");
+
+	$hrga = DB::SELECT("SELECT
+								* 
+							FROM
+								telephone_lists 
+							WHERE
+								division = 'HR&GA' 
+							ORDER BY
+								id ASC");
+
+	$production = DB::SELECT("SELECT *
+							FROM
+								telephone_lists
+							WHERE
+								division = 'PRODUCTION'
+							ORDER BY
+								id ASC");
+
+	$finance = DB::SELECT("SELECT *
+							FROM
+								telephone_lists
+							WHERE
+								division = 'FINANCE'
+							ORDER BY
+								id ASC");
+
+	$ps = DB::SELECT("SELECT *
+							FROM
+								telephone_lists
+							WHERE
+								division = 'PRODUCTION SUPPORT'
+							ORDER BY
+								id ASC");
+
+	$room = DB::SELECT("SELECT *
+							FROM
+								telephone_lists
+							WHERE
+								division = 'ROOM'
+							ORDER BY
+								id ASC");
+
+	return view('visitors.confirmation')
+	->with('page', 'Visitor Confirmation')
+	->with('japan',$japan)
+	->with('hrga',$hrga)
+	->with('production',$production)
+	->with('finance',$finance)
+	->with('ps',$ps)
+	->with('room',$room)
+	->with('division',$division);
 }
 
 public function confirmation2()

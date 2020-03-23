@@ -35,9 +35,24 @@
 	}
 	#loading, #error { display: none; }
 
-	.dataTables_filter {
-		display: none;
-	} 
+	.nav-tabs-custom > ul.nav.nav-tabs {
+		display: table;
+		width: 100%;
+		table-layout: fixed;
+	}
+	.nav-tabs-custom > ul.nav.nav-tabs > li {
+		float: none;
+		display: table-cell;
+	}
+	.nav-tabs-custom > ul.nav.nav-tabs > li > a {
+		text-align: center;
+	}
+	.vendor-tab{
+		width:100%;
+	}
+	.content-wrapper{
+		padding-top: 0px
+	}
 </style>
 @endsection
 
@@ -69,87 +84,218 @@
 </div>   
 @endif
 
-<div class="row">
-	<div class="col-xs-12">
-		{{-- <div class="box"> --}}
-			
-			{{-- TELP --}}
-			<div class="col-xs-12">
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="box">
-							<div class="box-body">
-								<div class="form-group">					
-									<div  class="col-xs-12">
-										<div class="input-group ">
-											<div class="input-group-btn">
-												<button type="button" class="btn btn-warning"><i class="fa fa-search"></i>&nbsp;Search</button>
-											</div>
-											<input type="text" id="telp" class="form-control" placeholder="Search Telephone" onclick="emptytlp()">
+<input type="text" id="tag_visitor" class="form-control" style="background-color: #3c3c3c;border: none;padding-top: 0px">
+<div class="box box-solid" style="padding-top: 0px">
+	<div class="box-body" style="padding-top: 0px">
+		
+		<div class="row" id="telpon">
+			<div class="col-md-12">
+				<div class="nav-tabs-custom">
+					<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px;">
+						<?php $index = 1; ?>
+						@foreach($division as $division)
+							<?php if ($index == 1){ ?>
+								<li class="vendor-tab active"><a href="#tab_<?php echo $index ?>" data-toggle="tab" id="tab_header_<?php echo $index ?>">{{ $division->division }}<br><span class="text-purple"></span></a></li>
+							<?php }else{ ?>
+								<li class="vendor-tab"><a href="#tab_<?php echo $index ?>" data-toggle="tab" id="tab_header_<?php echo $index ?>">{{ $division->division }}<br><span class="text-purple"></span></a></li>
+							<?php } ?>
+							<?php $index++ ?>
+						@endforeach
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab_1" style="height: 580px;">
+							<div class="col-md-12">
+								<div class="box box-solid">
+									<div class="box-body">
+										<div class="table-responsive">
+											<table id="example1" class="table table-bordered table-striped table-hover">
+												<thead style="background-color: rgba(126,86,134,.7);">	
+													<tr>
+														<th >Person</th>
+														<th >Department</th>
+														<th >Telephone</th>
+													</tr>
+												</thead>
+												<tbody>
+													@foreach($japan as $japan)
+													<tr>
+														<td>{{ $japan->person }}</td>
+														<td>{{ $japan->dept }}</td>
+														<td>{{ $japan->nomor }}</td>
+													</tr>
+													@endforeach
+												</tbody>
+											</table>
 										</div>
 									</div>
+								</div>
+							</div>
+						</div>
 
+						<div class="tab-pane" id="tab_2" style="height: 580px;">
+							<div class="col-md-12">
+								<div class="box box-solid">
+									<div class="box-body">
+										<div class="table-responsive">
+											<table id="example2" class="table table-bordered table-striped table-hover">
+												<thead style="background-color: rgba(126,86,134,.7);">	
+													<tr>
+														<th >Person</th>
+														<th >Department</th>
+														<th >Telephone</th>
+													</tr>
+												</thead>
+												<tbody>
+													@foreach($hrga as $hrga)
+													<tr>
+														<td>{{ $hrga->person }}</td>
+														<td>{{ $hrga->dept }}</td>
+														<td>{{ $hrga->nomor }}</td>
+													</tr>
+													@endforeach
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab_3" style="height: 580px;">
+							<div class="col-md-12">
+								<div class="box box-solid">
+									<div class="box-body">
+										<div class="table-responsive">
+											<table id="example3" class="table table-bordered table-striped table-hover">
+												<thead style="background-color: rgba(126,86,134,.7);">	
+													<tr>
+														<th >Person</th>
+														<th >Department</th>
+														<th >Telephone</th>
+													</tr>
+												</thead>
+												<tbody>
+													@foreach($production as $production)
+													<tr>
+														<td>{{ $production->person }}</td>
+														<td>{{ $production->dept }}</td>
+														<td>{{ $production->nomor }}</td>
+													</tr>
+													@endforeach
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab_4" style="height: 580px;">
+							<div class="col-md-12">
+								<div class="box box-solid">
+									<div class="box-body">
+										<div class="table-responsive">
+											<table id="example4" class="table table-bordered table-striped table-hover">
+												<thead style="background-color: rgba(126,86,134,.7);">	
+													<tr>
+														<th >Person</th>
+														<th >Department</th>
+														<th >Telephone</th>
+													</tr>
+												</thead>
+												<tbody>
+													@foreach($finance as $finance)
+													<tr>
+														<td>{{ $finance->person }}</td>
+														<td>{{ $finance->dept }}</td>
+														<td>{{ $finance->nomor }}</td>
+													</tr>
+													@endforeach
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab_5" style="height: 580px;">
+							<div class="col-md-12">
+								<div class="box box-solid">
+									<div class="box-body">
+										<div class="table-responsive">
+											<table id="example5" class="table table-bordered table-striped table-hover">
+												<thead style="background-color: rgba(126,86,134,.7);">	
+													<tr>
+														<th >Person</th>
+														<th >Department</th>
+														<th >Telephone</th>
+													</tr>
+												</thead>
+												<tbody>
+													@foreach($ps as $ps)
+													<tr>
+														<td>{{ $ps->person }}</td>
+														<td>{{ $ps->dept }}</td>
+														<td>{{ $ps->nomor }}</td>
+													</tr>
+													@endforeach
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane" id="tab_6" style="height: 580px;">
+							<div class="col-md-12">
+								<div class="box box-solid">
+									<div class="box-body">
+										<div class="table-responsive">
+											<table id="example6" class="table table-bordered table-striped table-hover">
+												<thead style="background-color: rgba(126,86,134,.7);">	
+													<tr>
+														<th >Person</th>
+														<th >Department</th>
+														<th >Telephone</th>
+													</tr>
+												</thead>
+												<tbody>
+													@foreach($room as $room)
+													<tr>
+														<td>{{ $room->person }}</td>
+														<td>{{ $room->dept }}</td>
+														<td>{{ $room->nomor }}</td>
+													</tr>
+													@endforeach
+												</tbody>
+											</table>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<input type="text" id="tag_visitor" class="form-control" style="background-color: #3c3c3c;border: none">
-				<div class="row" id="telpon">
-					<div class="col-xs-12">
-						<div class="box">
-							<div class="box-body">
-								<div class="table-responsive">
-									<table id="telponlist" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">											
-											<tr>
-												<th >Person</th>
-												<th >Department</th>
-												<th >Telephone</th>												
-											</tr>
-										</thead>
-										<tbody>
-										</tbody>
-									</table>									
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+				</div>			
 			</div>
 		</div>
 	</div>
-
-	<div class="modal fade" id="modal_tamu">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<div class="modal-body table-responsive no-padding">
-						<div class="form-group">
-							<h1 id="tamu"></h1>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
+</div>
 	@endsection
 
 
 	@section('scripts')
 
-	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+	<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
 	<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 	<script src="{{ url("js/buttons.flash.min.js")}}"></script>
 	<script src="{{ url("js/jszip.min.js")}}"></script>
 	<script src="{{ url("js/vfs_fonts.js")}}"></script>
 	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
 	<script src="{{ url("js/buttons.print.min.js")}}"></script>
-	<script src="{{ url("js/jqbtk.js")}}"></script>
+	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+	<script src="{{ url("js/jqbtk.js") }}"></script>
 	<script >
 		$.ajaxSetup({
 			headers: {
@@ -157,12 +303,9 @@
 			}
 		});
 
-		jQuery(document).ready(function() { 
-			$('#nikkaryawan').keyboard();
-			$('#telp').keyboard();
+		jQuery(document).ready(function() {
 			$('#tag_visitor').focus();
 			// $('#nikkaryawan').val('asd');
-			filltelpon();
 			setTimeout(function(){
 			      location = ''
 			    },60000);
@@ -170,7 +313,35 @@
 				dropdownAutoWidth : true,
 				width: '100%',
 			});
-			
+			reloadTable();
+		});
+
+		$(function() {
+			$(document).keydown(function(e) {
+				switch(e.which) {
+					case 48:
+					location.reload(true);
+					break;
+					case 49:
+					$("#tab_header_1").click()
+					break;
+					case 50:
+					$("#tab_header_2").click()
+					break;
+					case 51:
+					$("#tab_header_3").click()
+					break;
+					case 52:
+					$("#tab_header_4").click()
+					break;
+					case 53:
+					$("#tab_header_5").click()
+					break;
+					case 54:
+					$("#tab_header_6").click()
+					break;
+				}
+			});
 		});
 
 
@@ -202,7 +373,6 @@
 					var data = {
 						tag_visitor : $("#tag_visitor").val()
 					}
-					// alert($("#tag_visitor").val());
 
 					$.get('{{ url("scan/visitor/lobby") }}', data, function(result, status, xhr){
 						if(result.status){
@@ -222,25 +392,20 @@
 					$('#modal_tamu').modal('show');
 					$('#tamu').html('<center><b>Tag Anda Tidak Ditemukan</b></center>');
 					openErrorGritter('Error!', 'Tag Invalid.');
-					// audio_error.play();
 					$("#tag_visitor").val("");
 					$('#tag_visitor').focus();
 				}
 			}
 		});
 
-		function filllist(nik){
-
-			$('#visitorlist tfoot th').each( function () {
-				var title = $(this).text();
-				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-			});
-			var table = $('#visitorlist').DataTable({
+		function reloadTable() {			
+			$('#example1').DataTable().destroy();
+			var table = $('#example1').DataTable({
 				'dom': 'Bfrtip',
-				'responsive': true,
+				'responsive':true,
 				'lengthMenu': [
-				[ 10, 25, 50, -1 ],
-				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				[ -1 ],
+				[ 'Show all' ]
 				],
 				'buttons': {
 					buttons:[
@@ -250,88 +415,26 @@
 					},
 					]
 				},
-				'paging'        : true,
-				'lengthChange'  : true,
-				'searching'     : true,
-				'ordering'      : true,
-				'info'        : true,
-				'order'       : [],
-				'autoWidth'   : true,
+				'paging': true,
+				'lengthChange': true,
+				'pageLength': -1,
+				'searching': false,
+				'ordering': false,
+				'info': true,
+				'autoWidth': true,
 				"sPaginationType": "full_numbers",
 				"bJQueryUI": true,
 				"bAutoWidth": false,
 				"processing": true,
-				"serverSide": true,
-				"ajax": {
-					"type" : "get",
-					"url" : "{{ url("visitor_filllist") }}/"+nik+"",
-				},				
-				"columnDefs": [ {
-					"targets": [6],
-					"createdCell": function (td, cellData, rowData, row, col) {
-						if ( cellData =='Unconfirmed' ) {
-							$(td).css('background-color', 'RGB(255,204,255)')
-						}
-						else
-						{
-							$(td).css('background-color', 'RGB(204,255,255)')
-						}
-					}
-				}],
-
-				"footerCallback": function (tfoot, data, start, end, display) {
-					var intVal = function ( i ) {
-						return typeof i === 'string' ?
-						i.replace(/[\$,]/g, '')*1 :
-						typeof i === 'number' ?
-						i : 0;
-					};
-					var api = this.api();
-
-					var total_diff = api.column(3).data().reduce(function (a, b) {
-						return intVal(a)+intVal(b);
-					}, 0)
-					$('#totalvi').html("Visitor ( "+total_diff.toLocaleString()+" )");
-				},
-
-				"columns": [
-				{ "data": "id"},
-				{ "data": "company"},
-				{ "data": "full_name"},
-				{ "data": "total"},
-				{ "data": "purpose"},
-				{ "data": "status"},
-				{ "data": "remark"},
-				{ "data": "edit"},
-			]
-		});
-
-			table.columns().every( function () {
-				var that = this;
-
-				$( 'input', this.footer() ).on( 'keyup change', function () {
-					if ( that.search() !== this.value ) {
-						that
-						.search( this.value )
-						.draw();
-					}
-				} );
 			});
 
-			$('#visitorlist tfoot tr').appendTo('#visitorlist thead');
-		}
-
-		function filltelpon(){
-
-			$('#telponlist tfoot th').each( function () {
-				var title = $(this).text();
-			});
-			var table = $('#telponlist').DataTable({
+			$('#example2').DataTable().destroy();
+			var table = $('#example2').DataTable({
 				'dom': 'Bfrtip',
-				'responsive': true,
+				'responsive':true,
 				'lengthMenu': [
-				[ 10, 25, 50, -1 ],
-				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				[ -1 ],
+				[ 'Show all' ]
 				],
 				'buttons': {
 					buttons:[
@@ -339,186 +442,138 @@
 						extend: 'pageLength',
 						className: 'btn btn-default',
 					},
-					
 					]
 				},
-				'paging'        : true,
-				'lengthChange'  : true,
-				'searching'     : true,
-				'ordering'      : true,
-				'info'        : true,
-				'order'       : [],
-				'autoWidth'   : true,
+				'paging': true,
+				'lengthChange': true,
+				'pageLength': -1,
+				'searching': false,
+				'ordering': false,
+				'info': true,
+				'autoWidth': true,
 				"sPaginationType": "full_numbers",
 				"bJQueryUI": true,
 				"bAutoWidth": false,
 				"processing": true,
-				"serverSide": true,
-				"ajax": {
-					"type" : "get",
-					"url" : "{{ url("visitor_telpon") }}",
-				},			
-
-				"columns": [
-				{ "data": "person"},
-				{ "data": "dept"},
-				{ "data": "nomor"},
-
-				]
-			});
-			$('#telp').on( 'keyup', function () {
-				table.search( this.value ).draw();
-			} );
-			table.columns().every( function () {
-				var that = this;
 			});
 
-			$('#telponlist tfoot tr').appendTo('#telponlist thead');
-		}
+			$('#example1_filter').keyboard();
 
+			$('#example3').DataTable().destroy();
+			var table = $('#example3').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ -1 ],
+				[ 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'pageLength': -1,
+				'searching': false,
+				'ordering': false,
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true,
+			});
 
-		function editop(id){
-			$('#header').empty();
-			$("#apenlist").empty();						
-			$('#modal-default').modal({backdrop: 'static', keyboard: false});
+			$('#example4').DataTable().destroy();
+			var table = $('#example4').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ -1 ],
+				[ 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'pageLength': -1,
+				'searching': false,
+				'ordering': false,
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true,
+			});
 
-			var data = {
-				id : id
-			}
-			$.get('{{ url("visitor_getlist") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
-				var no =1;
-				if(xhr.status == 200){
-					if(result.status){
-						$('#header').html();
-						$('#apenlist').html();
+			$('#example5').DataTable().destroy();
+			var table = $('#example5').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ -1 ],
+				[ 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'pageLength': -1,
+				'searching': false,
+				'ordering': false,
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true,
+			});
 
-						$.each(result.header_list, function(key, value) { 
-							$('#header').append('<b id="idhead" hidden>'+ value.id +'</b><h4 class="modal-title">'+ value.company +'</h4><h4 class="modal-title">'+ value.name +'</h4><h4 class="modal-title">'+ value.department +'</h4>');
-						}); 				
-
-						$.each(result.id_list, function(key, value) {
-							if (value.remark =="Confirmed") {
-								$bg = "background-color: rgb(204, 255, 255);";
-							}else{
-								$bg = "background-color: rgb(255, 204, 255);";
-							}
-							$('#apenlist').append('<div id="'+ value.tag +'" style="'+$bg+'height:20px"><div class="col-sm-2" style="padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_id0" name="visitor_id0" placeholder="No. KTP/SIM" required value="'+ value.id_number +'"></div><div class="col-sm-4" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="visitor_name0" name="visitor_name0" placeholder="Full Name" required value="'+ value.full_name +'"></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="status0" name="status0" placeholder="No Hp" value="'+ value.status +'" ></div><div class="col-sm-2" style="padding-left: 1; padding-right: 0;"><input readonly type="text" class="form-control" id="telp0" name="telp0" placeholder="No Hp" value="'+ value.telp +'" ></div><div class="col-sm-2"><input readonly type="text" class="form-control" id="'+ value.id +'" placeholder="Tag Number" name="'+no+'" value="'+ value.tag +'"  autofocus " "></div></div>	<br><br>');
-							no++;
-						});
-
-
-						$("[name='tagvisit']").focus(); 		
-
-					}
-					else{
-						alert('Attempt to retrieve data failed');
-					}
-				}
-				else{
-					alert('Disconnected from server');
-				}
+			$('#example6').DataTable().destroy();
+			var table = $('#example6').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ -1 ],
+				[ 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'pageLength': -1,
+				'searching': false,
+				'ordering': false,
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true,
 			});
 		}
-
-		function inputag(id,name) {
-
-			if (event.keyCode == 13 || event.keyCode == 9) {
-				var id = $('#idhead').text();
-				var idtag = $('#tagvisit').val();
-				// var table = $('#visitorlist').DataTable();
-				var data = {
-					id:id,
-					idtag:idtag                  
-				}
-				$.post('{{ url("visitor_updateremark") }}', data, function(result, status, xhr){
-					console.log(status);
-					console.log(result);
-					console.log(xhr);
-					if(xhr.status == 200){
-						if(result.status){							
-							openSuccessGritter('Success!', result.message);
-							$('#tagvisit').val('');
-							$('#'+idtag).css({'background-color':'rgb(204, 255, 255)'})							
-						}
-						else{
-							openErrorGritter('Error!', result.message);
-							$('#tagvisit').val('');
-						}
-					}
-					else{
-						alert("Disconnected from server");
-					}
-				});				
-			}	
-		}
-
-		// update all remark
-
-		function inputag2(id) {
-			
-				var id = $('#idhead').text();
-				var data = {
-					id:id,            
-				}
-				$.post('{{ url("visitor_updateremarkall") }}', data, function(result, status, xhr){
-					console.log(status);
-					console.log(result);
-					console.log(xhr);
-					if(xhr.status == 200){
-						if(result.status){							
-							openSuccessGritter('Success!', result.message);
-												
-						}
-						else{
-							openErrorGritter('Error!', result.message);
-							
-						}
-					}
-					else{
-						alert("Disconnected from server");
-					}
-				});				
-				
-		}
-
-		function reloadtable() {
-
-			$('#visitorlist').DataTable().ajax.reload();
-			$('#modal-default').modal('hide');
-
-		}
-
-		function inputnik() {
-			
-			$('#visitorlist').DataTable().destroy();
-			var nik = $('#nikkaryawan').val();
-			$('#tabelvisior').css({'display':'block'})
-			filllist(nik);
-			// alert(nik);
-		}
-
-		function hide() {
-			$('#tabelvisior').css({'display':'none'})
-			$('#nikkaryawan').val('');
-
-		}
-
-		function cari(a){
-			if (a=="telp"){
-			 var table = $('#telponlist').DataTable();
-			 var telp = $('#telp').val();
-			 table.search( telp ).draw();
-			}
-		}
-
-		function emptytlp() {
-			$("#telp").val('');
-		}
-
-		
-
 	</script>
 	@endsection
