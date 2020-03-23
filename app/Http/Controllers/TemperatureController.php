@@ -220,18 +220,44 @@ public function edit(Request $request)
 
     public function indexBodyTemperatureReport()
     {
+      return view('temperature.index_b_temp_report', array(
+        'title' => 'Body Temperature Report',
+        'title_jp' => '体温リポート'
+      ))->with('page', 'Body Temperature Report');
+    }
+
+    public function fetchBodyTemperatureReport(Request $request)
+    {
+      $date_from = $request->get('tanggal_from');
+      $date_to = $request->get('tanggal_to');
+      if ($date_from == '') {
+        if ($date_to == '') {
+          $where = "";
+        }else{
+          $where = "WHERE DATE(created_at) BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND '".$date_to."'";
+        }
+      }else{
+        if ($date_to == '') {
+          $where = "WHERE DATE(created_at) BETWEEN '".$date_from."' AND DATE(NOW())";
+        }else{
+          $where = "WHERE DATE(created_at) BETWEEN '".$date_from."' AND '".$date_to."'";
+        }
+      }
 
       $temperature = DB::SELECT("SELECT
         *,
         DATE( created_at ) AS tanggal 
       FROM
-        `body_temperatures`");
+        `body_temperatures`
+      ".$where."");
 
-      return view('temperature.index_b_temp_report', array(
-        'title' => 'Body Temperature Report',
-        'title_jp' => '体温リポート',
-        'temperature' => $temperature
-      ))->with('page', 'Body Temperature Report');
+      $response = array(
+        'status' => true,
+        'datas' => $temperature
+      );
+
+      return Response::json($response);
+
     }
 
     public function indexBodyTempMonitoring()

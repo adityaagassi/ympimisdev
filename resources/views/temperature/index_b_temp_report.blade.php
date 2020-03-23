@@ -66,6 +66,38 @@
 		<div class="col-xs-12">
 			<div class="box box-solid">
 				<div class="box-body" style="overflow-x: scroll;">
+					<h4>Filter</h4>
+					<div class="row">
+						<div class="col-md-4 col-md-offset-2">
+							<div class="form-group">
+								<div class="input-group date">
+									<div class="input-group-addon bg-white">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control datepicker" id="tanggal_from" name="tanggal_from" placeholder="Select Date From" autocomplete="off">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<div class="input-group date">
+									<div class="input-group-addon bg-white">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control datepicker" id="tanggal_to"name="tanggal_to" placeholder="Select Date To" autocomplete="off">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-md-offset-2">
+							<div class="col-md-10">
+								<div class="form-group pull-right">
+									<a href="{{ url('index/temperature') }}" class="btn btn-warning">Back</a>
+									<a href="{{ url('index/temperature/body_temperature_report') }}" class="btn btn-danger">Clear</a>
+									<button class="btn btn-primary col-sm-14" onclick="fillList()">Search</button>
+								</div>
+							</div>
+						</div>
+					</div>
 					<table id="example1" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
@@ -76,16 +108,7 @@
 								<th>Suhu Tubuh</th>
 							</tr>
 						</thead>
-						<tbody>
-							@foreach($temperature as $temperature)
-							<tr>
-								<td>{{$temperature->tanggal}}</td>
-								<td>{{$temperature->company}}</td>
-								<td>{{$temperature->kota}}</td>
-								<td>{{$temperature->name}}</td>
-								<td>{{$temperature->suhu}}</td>
-							</tr>
-							@endforeach
+						<tbody id="example1Body">
 						</tbody>
 						<tfoot>
 							<tr>
@@ -141,25 +164,15 @@
 				}
 			}
 		});
+
+		fillList();
 	});
 	$('.datepicker').datepicker({
+		<?php $tgl_max = date('Y-m-d') ?>
 		autoclose: true,
-		format: "yyyy-mm",
-		startView: "months", 
-		minViewMode: "months",
-		autoclose: true,
-		
-
-	});
-
-	$('.datepicker2').datepicker({
-		autoclose: true,
-		format: "yyyy-mm",
-		startView: "months", 
-		minViewMode: "months",
-		autoclose: true,
-		
-
+		format: "yyyy-mm-dd",
+		todayHighlight: true,	
+		endDate: '<?php echo $tgl_max ?>'
 	});
 
 	
@@ -171,82 +184,114 @@
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
-	jQuery(document).ready(function() {
-		$('#example1 tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-		} );
-		var table = $('#example1').DataTable({
-			"order": [],
-			'dom': 'Bfrtip',
-			'responsive': true,
-			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			],
-			'buttons': {
-				buttons:[
-				{
-					extend: 'pageLength',
-					className: 'btn btn-default',
-				},
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				]
+	function fillList(){
+	var tanggal_from = $('#tanggal_from').val();
+	var tanggal_to = $('#tanggal_to').val();
+
+	var data = {
+		tanggal_from:tanggal_from,
+		tanggal_to:tanggal_to
+	}
+	$.get('{{ url("fetch/temperature/body_temp_report") }}',data, function(result, status, xhr){
+			if(result.status){
+				$('#example1').DataTable().clear();
+				$('#example1').DataTable().destroy();
+				$('#example1Body').html("");
+				var tableData = "";
+				$.each(result.datas, function(key, value) {
+					tableData += '<tr>';
+					tableData += '<td>'+ value.tanggal +'</td>';
+					tableData += '<td>'+ value.company +'</td>';
+					tableData += '<td>'+ value.kota +'</td>';
+					tableData += '<td>'+ value.name +'</td>';
+					tableData += '<td>'+ value.suhu +'</td>';
+					tableData += '</tr>';
+				});
+				$('#example1Body').append(tableData);
+
+				
+				var table = $('#example1').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+				
+				
+
+				$('#example1 tfoot th').each(function(){
+					var title = $(this).text();
+					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
+				});
+
+
+				
+
+				table.columns().every( function () {
+					var that = this;
+
+					$( 'input', this.footer() ).on( 'keyup change', function () {
+						if ( that.search() !== this.value ) {
+							that
+							.search( this.value )
+							.draw();
+						}
+					} );
+				} );
+
+				$('#example1 tfoot tr').appendTo('#example1 thead');
+
+			}
+			else{
+				alert('Attempt to retrieve data failed');
 			}
 		});
-
-		table.columns().every( function () {
-			var that = this;
-
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
-				}
-			} );
-		} );
-
-		$('#example1 tfoot tr').appendTo('#example1 thead');
-
-	});
-	$(function () {
-
-		$('#example2').DataTable({
-			'paging'      : true,
-			'lengthChange': false,
-			'searching'   : false,
-			'ordering'    : true,
-			'info'        : true,
-			'autoWidth'   : false
-		})
-	})
-	function deleteConfirmation(url, name, sampling_check_id,id) {
-		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-		jQuery('#modalDeleteButton').attr("href", url+'/'+sampling_check_id+'/'+id);
 	}
 </script>
 @endsection

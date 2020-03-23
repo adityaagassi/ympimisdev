@@ -26,7 +26,7 @@ Route::get('happybirthday', 'TrialController@ultah');
 Route::get('trialmail', 'TrialController@trialmail');
 
 Route::get('/trial', function () {
-	return view('trial');
+	return view('meetings.report');
 });
 Route::get('/trial2', function () {
 	return view('trial2');
@@ -106,6 +106,7 @@ Route::get('scan/visitor/lobby', 'VisitorController@scanVisitorLobby');
 
 Route::get('index/temperature', 'TemperatureController@index');
 Route::get('index/temperature/body_temperature_report', 'TemperatureController@indexBodyTemperatureReport');
+Route::get('fetch/temperature/body_temp_report', 'TemperatureController@fetchBodyTemperatureReport');
 Route::get('index/temperature/body_temp_monitoring', 'TemperatureController@indexBodyTempMonitoring');
 Route::get('fetch/temperature/fetch_body_temp_monitoring', 'TemperatureController@fetchBodyTempMonitoring');
 
@@ -860,6 +861,7 @@ Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
 	Route::post('create/meeting', 'MeetingController@createMeeting');
 	Route::post('scan/meeting/attendance', 'MeetingController@scanMeetingAttendance');
 	Route::get('fetch/meeting/add_participant', 'MeetingController@fetchAddParticipant');
+	Route::get('download/meeting', 'MeetingController@downloadMeeting');
 });
 Route::get('index/meeting', 'MeetingController@indexMeeting');
 Route::get('index/meeting/attendance', 'MeetingController@indexMeetingAttendance');
@@ -906,6 +908,7 @@ Route::get('scan/welding/kensa', 'WeldingProcessController@scanWeldingKensa');
 Route::get('fetch/welding/kensa_result', 'WeldingProcessController@fetchKensaResult');
 Route::get('index/welding/resume/{id}', 'WeldingProcessController@indexWeldingResume');
 Route::get('fetch/welding/resume', 'WeldingProcessController@fetchWeldingResume');
+Route::get('fetch/welding/key_resume', 'WeldingProcessController@fetchWeldingKeyResume');
 Route::get('index/welding/group_achievement', 'WeldingProcessController@indexWeldingAchievement');
 Route::get('fetch/welding/group_achievement', 'WeldingProcessController@fetchGroupAchievement');
 Route::get('fetch/welding/group_achievement_detail', 'WeldingProcessController@fetchGroupAchievementDetail');
@@ -2266,7 +2269,7 @@ Route::get('index/qa_ymmj/fetchGrafik', 'QcYmmjController@fetchGrafik');
 Route::get('index/qa_ymmj/fetchtable', 'QcYmmjController@fetchTable');
 Route::get('index/qa_ymmj/detail', 'QcYmmjController@detail');
 Route::get('index/qa_ymmj/print/{id}', 'QcYmmjController@print_ymmj');
- 
+
 // Request CPAR QA
 
 Route::get('index/request_qa', 'QcRequestController@index');
@@ -2432,6 +2435,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 
 	Route::get('index/maintenance/list_spk', 'MaintenanceController@indexMaintenanceList');
 	Route::get('fetch/maintenance/list_spk', 'MaintenanceController@fetchMaintenanceList');
+	Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
 });
 
 //ROOMS
