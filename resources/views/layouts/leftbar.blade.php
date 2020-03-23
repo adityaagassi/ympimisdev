@@ -149,6 +149,12 @@
       </li>
       @endif
 
+      @if(in_array('M24', $navs))
+      @if(isset($page) && $page == "Stocktaking")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/stocktaking") }}"><i class="fa fa-cubes"></i> <span>Stocktaking</span></a>
+      </li>
+      @endif
+
       @if(in_array('M5', $navs))
       @if(isset($page) && $page == "Material Volume")<li class="active">@else<li>@endif
         <a href="{{ url("/index/material_volume") }}"><i class="fa fa-cubes"></i> <span>Material Volume</span></a>
@@ -278,13 +284,12 @@
   </li>
   @endif
 
-
   @if(in_array('S0', $navs))
   <li class="header">Service Menu</li>
   @endif
 
 
- @if(in_array('S33', $navs))
+  @if(in_array('S33', $navs))
   @if(isset($head) && $head == "Meeting")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
       <i class="fa fa-calendar"></i> <span>Meeting</span>
@@ -439,6 +444,12 @@
     <a href="{{ url("/index/double") }}"><i class="fa fa-clock-o"></i> <span>Double Overtime</span></a>
   </li>
   @endif
+
+  @if(in_array('S35', $navs))
+  @if(isset($page) && $page == "CPAR Antar Departemen")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/cpar") }}"><i class="fa fa-clipboard"></i> <span>CPAR Across Department</span></a>
+  </li>
+  @endif  
 
   @if(in_array('S20', $navs))
   @if(isset($page) && $page == "qna")<li class="active">@else<li>@endif
@@ -602,6 +613,27 @@
 </li>
 @endif
 
+@if(in_array('S34', $navs))
+@if(isset($head) && $head == "Maintenance")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-wrench"></i> <span>Maintenance</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+ @if(isset($page) && $page == "Maintenance Form")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/maintenance/list/user") }}"><i class="fa fa-edit"></i> <span>Create SPK</span></a>
+</li>
+
+@if(isset($page) && $page == "Maintenance List")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/maintenance/list_spk") }}"><i class="fa fa-list"></i> <span>SPK List</span></a>
+</li>
+
+</ul>
+</li>
+@endif
+
 @if(in_array('S23', $navs))
 @if(isset($head) && $head == "Clinic")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
@@ -612,13 +644,13 @@
 </a>
 <ul class="treeview-menu">
 
-@if(isset($page) && $page == "Diagnose")<li class="active">@else<li>@endif
-  <a href="{{ url("index/diagnose") }}"><i class="fa fa-stethoscope"></i> <span>Diagnose</span></a>
-</li>
+  @if(isset($page) && $page == "Diagnose")<li class="active">@else<li>@endif
+    <a href="{{ url("index/diagnose") }}"><i class="fa fa-stethoscope"></i> <span>Diagnose</span></a>
+  </li>
 
-@if(isset($page) && $page == "Visit Logs")<li class="active">@else<li>@endif
-  <a href="{{ url("index/clinic_visit_log") }}"><i class="fa fa-list-ul"></i> <span>Visit Logs</span></a>
-</li>
+  @if(isset($page) && $page == "Visit Logs")<li class="active">@else<li>@endif
+    <a href="{{ url("index/clinic_visit_log") }}"><i class="fa fa-list-ul"></i> <span>Visit Logs</span></a>
+  </li>
 
 {{-- @if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
   <a href=""><i class="fa fa-medkit"></i> <span>Medicines</span></a>
@@ -629,16 +661,46 @@
 </li>
 @endif
 
-@if(in_array('M26', $navs))
- @if(isset($page) && $page == "Visitor Confirmation By Manager")<li class="active">@else<li>@endif
-    <a href="{{ url("visitor_confirmation_manager") }}"><i class="fa fa-users"></i> <span>Visitor Confirmation</span>
-      @if(isset($notif_visitor)) 
-      <span class="pull-right-container">
-        <span class="label label-danger pull-right">{{$notif_visitor}}</span>
-      </span>
-      @endif
-    </a>
+@if(in_array('S36', $navs))
+@if(isset($head) && $head == "Stocktaking")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-hospital-o"></i> <span>Stocktaking</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+
+  @if(isset($page) && $page == "input")<li class="active">@else<li>@endif
+    <a href="{{ url("") }}"><i class="fa fa-stethoscope"></i> <span>Input PI</span></a>
   </li>
+
+  @if(isset($page) && $page == "internal")<li class="active">@else<li>@endif
+    <a href="{{ url("") }}"><i class="fa fa-list-ul"></i> <span>Audit Internal</span></a>
+  </li>
+
+  @if(isset($page) && $page == "eksternal")<li class="active">@else<li>@endif
+    <a href="{{ url("") }}"><i class="fa fa-list-ul"></i> <span>Audit Eksternal</span></a>
+  </li>
+
+{{-- @if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
+  <a href=""><i class="fa fa-medkit"></i> <span>Medicines</span></a>
+</li> --}}
+
+</ul>
+</li>
+@endif
+
+@if(in_array('M26', $navs))
+@if(isset($page) && $page == "Visitor Confirmation By Manager")<li class="active">@else<li>@endif
+  <a href="{{ url("visitor_confirmation_manager") }}"><i class="fa fa-users"></i> <span>Visitor Confirmation</span>
+    @if(isset($notif_visitor)) 
+    <span class="pull-right-container">
+      <span class="label label-danger pull-right">{{$notif_visitor}}</span>
+    </span>
+    @endif
+  </a>
+</li>
 @endif
 
 @if(in_array('R0', $navs))
