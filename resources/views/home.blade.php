@@ -312,7 +312,7 @@
                                 <i class="fa fa-caret-right"></i> Temperature (温度)
                             </a>
                             <br>
-                            <a href="{{ url("index/temperature") }}">
+                            <a href="{{ url("index/meeting") }}">
                                 <i class="fa fa-caret-right"></i> Meeting List (会議リスト)
                             </a>
                             <!-- <br>
