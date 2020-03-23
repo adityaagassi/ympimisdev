@@ -156,5 +156,9 @@ class SendEmail extends Mailable
         if($this->remark == 'urgent_spk'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Urgent Maintenance Job Order ()')->view('mails.urgent_spk');
         }
+
+        if($this->remark == 'hrq'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Unanswered HR Question & Answer (HR Q&A)')->view('mails.hrq');
+        }
     }
 }

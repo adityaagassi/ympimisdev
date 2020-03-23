@@ -33,7 +33,8 @@ class Kernel extends ConsoleKernel
         Commands\SendEmailKaizen::class,
         Commands\EmployeeHistory::class,
         Commands\EmailVisitorConfirmation::class,
-        Commands\SendMachineNotification::class,
+        // Commands\SendMachineNotification::class,
+        Commands\EmailHrq::class,
     ];
 
     /**
@@ -75,10 +76,11 @@ class Kernel extends ConsoleKernel
         // $schedule->command('email:visitor_confirmation')->everyMinute();
         // $schedule->command('email:confirmation_overtime')->weekdays()->dailyAt('06:55');
 
-        $schedule->command('plan:injections')->weekdays()->dailyAt('08:40');
+        // $schedule->command('plan:injections')->weekdays()->dailyAt('08:40');
         $schedule->command('sync:sunfish')->weekdays()->dailyAt('03:01');
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
-        $schedule->command('notif:machine')->dailyAt('07:00');
+        $schedule->command('email:hrq')->weekdays()->dailyAt('07:45');
+        // $schedule->command('notif:machine')->dailyAt('07:00');
         // $schedule->command('email:kaizen')->everyMinute();
         // $schedule->command('employee:history')->monthlyOn(date('t'), '20:01');
 
