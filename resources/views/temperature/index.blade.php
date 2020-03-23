@@ -8,7 +8,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Temperature<span class="text-purple"> ??</span></small>
+		Temperature<span class="text-purple"> 温度</span></small>
 	</h1>
 </section>
 @stop
