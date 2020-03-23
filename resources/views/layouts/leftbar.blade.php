@@ -302,7 +302,7 @@
         <a href="{{ url("/index/meeting") }}"><i class="fa fa-list"></i><span>Meeting List</span></a>
       </li>
       @if(isset($page) && $page == "Pantry Menu")<li class="active">@else<li>@endif
-        <a href="{{ url("index/meeting/attendace") }}"><i class="fa fa-calendar-plus-o"></i>Meeting Attendance</a>
+        <a href="{{ url('index/meeting/attendance?id=') }}"><i class="fa fa-calendar-plus-o"></i>Meeting Attendance</a>
       </li>
     </ul>
   </li>
