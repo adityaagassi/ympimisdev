@@ -354,10 +354,8 @@ public function inputtag(Request $request){
 
 		$visitorDetail = VisitorDetail::where('tag', 'like', '%'.$tag_visitor.'%')->orderby('id','desc')->first();
 
-		// foreach ($visitorDetail as $key) {
 		if(count($visitorDetail) > 0 ){
 			$id_visitor = $visitorDetail->id_visitor;
-		// }
 
 		$visitor = Visitor::find($id_visitor);
 		$visitor->location = 'Lobby';
@@ -380,6 +378,22 @@ public function inputtag(Request $request){
 		$plccounter2 = PlcCounter::find($id_plc2);
 		$plccounter2->plc_counter = 0;
 		$plccounter2->save();
+
+		$plc_sec = PlcCounter::where('origin_group_code','visitor')->first();
+    	$counter_sec = $plc_sec->plc_counter;
+    	$id_plc_sec = $plc_sec->id;
+
+		$plccounter_sec = PlcCounter::find($id_plc_sec);
+		$plccounter_sec->plc_counter = $counter_sec - 1;
+		$plccounter_sec->save();
+
+		$plc_sec2 = PlcCounter::where('origin_group_code','visitor2')->first();
+    	$counter_sec2 = $plc_sec2->plc_counter;
+    	$id_plc_sec2 = $plc_sec2->id;
+
+		$plccounter_sec2 = PlcCounter::find($id_plc_sec2);
+		$plccounter_sec2->plc_counter = $counter_sec2 - 1;
+		$plccounter_sec2->save();
 
 			$response = array(
 				'status' => true,
