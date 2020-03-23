@@ -39,7 +39,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Body Temperature Report <span class="text-purple">??</span>
+		Body Temperature Report <span class="text-purple">体温リポート</span>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>

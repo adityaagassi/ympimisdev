@@ -23,7 +23,7 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
-			<!-- <a href="{{ url("index/press/monitoring") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Press Machine Monitoring</a> -->
+			<a href="{{ url("index/temperature/body_temp_monitoring?tanggal=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Body Temperature Monitoring</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>

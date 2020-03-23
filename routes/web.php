@@ -106,6 +106,8 @@ Route::get('scan/visitor/lobby', 'VisitorController@scanVisitorLobby');
 
 Route::get('index/temperature', 'TemperatureController@index');
 Route::get('index/temperature/body_temperature_report', 'TemperatureController@indexBodyTemperatureReport');
+Route::get('index/temperature/body_temp_monitoring', 'TemperatureController@indexBodyTempMonitoring');
+Route::get('fetch/temperature/fetch_body_temp_monitoring', 'TemperatureController@fetchBodyTempMonitoring');
 
 //END VISITOR TEMPERATURE
 

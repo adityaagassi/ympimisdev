@@ -213,10 +213,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">CPAR (是正予防策依頼)</span>
+                            <span style="font-weight: bold;">CPAR Across Department (部門跨ぐ是正予防対策)</span>
                             <br>
                             <a href="{{ url("/index/cpar") }}">
-                                <i class="fa fa-caret-right"></i> CPAR Antar Departemen (部門間の是正措置報告)
+                                <i class="fa fa-caret-right"></i> CPAR Form (???)
                             </a>
                             <br>
                             <a href="{{ url("/index/cpar/monitoring") }}">
@@ -309,7 +309,7 @@
                             </a>
                             <br>
                             <a href="{{ url("index/temperature") }}">
-                                <i class="fa fa-caret-right"></i> Temperature (??)
+                                <i class="fa fa-caret-right"></i> Temperature (温度)
                             </a>
                             <!-- <br>
                             <a href="{{ url("index/display/office_clock") }}">

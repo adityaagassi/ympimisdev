@@ -214,7 +214,7 @@ public function edit(Request $request)
     {
       return view('temperature.index', array(
         'title' => 'Temperature',
-        'title_jp' => ''
+        'title_jp' => '温度'
       ))->with('page', 'Temperature');
     }
 
@@ -229,8 +229,72 @@ public function edit(Request $request)
 
       return view('temperature.index_b_temp_report', array(
         'title' => 'Body Temperature Report',
-        'title_jp' => '',
+        'title_jp' => '体温リポート',
         'temperature' => $temperature
       ))->with('page', 'Body Temperature Report');
+    }
+
+    public function indexBodyTempMonitoring()
+    {
+      return view('temperature.index_b_temp_monitoring', array(
+        'title' => 'Body Temperature Monitoring',
+        'title_jp' => '体温監視'
+      ))->with('page', 'Body Temperature Monitoring');
+    }
+
+    public function fetchBodyTempMonitoring(Request $request)
+    {
+      $date_from = $request->get('tanggal_from');
+      $date_to = $request->get('tanggal_to');
+      if ($date_from == '') {
+        if ($date_to == '') {
+          $where = "";
+        }else{
+          $where = "AND week_date BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND '".$date_to."'";
+        }
+      }else{
+        if ($date_to == '') {
+          $where = "AND week_date BETWEEN '".$date_from."' AND DATE(NOW())";
+        }else{
+          $where = "AND week_date BETWEEN '".$date_from."' AND '".$date_to."'";
+        }
+      }
+      $temp = DB::SELECT("SELECT
+        DATE_FORMAT(week_date,'%d %b %Y') as week_date,
+        ( SELECT count( id ) AS total FROM body_temperatures WHERE DATE( created_at ) = week_date ) AS total,
+        ( SELECT ROUND( AVG( suhu ), 1 ) AS avg FROM body_temperatures WHERE DATE( created_at ) = week_date ) AS avg,
+        ( SELECT ROUND( MAX( suhu ), 1 ) AS max FROM body_temperatures WHERE DATE( created_at ) = week_date ) AS highest 
+      FROM
+        weekly_calendars 
+      WHERE
+        weekly_calendars.week_date BETWEEN CONCAT( YEAR ( NOW()), '-', MONTH ( NOW()), '-01' ) 
+        AND DATE(
+        NOW()) 
+        AND remark != 'H' 
+        AND week_date IN ( SELECT DATE( created_at ) AS date FROM body_temperatures ) 
+        ".$where."");
+
+      $temp_now = DB::SELECT("SELECT
+        DATE_FORMAT(week_date,'%d %b %Y') as week_date,
+        ( SELECT count( id ) AS total FROM body_temperatures WHERE DATE( created_at ) = week_date ) AS total,
+        ( SELECT ROUND( AVG( suhu ), 1 ) AS avg FROM body_temperatures WHERE DATE( created_at ) = week_date ) AS avg,
+        ( SELECT ROUND( MAX( suhu ), 1 ) AS max FROM body_temperatures WHERE DATE( created_at ) = week_date ) AS highest 
+      FROM
+        weekly_calendars 
+      WHERE
+        weekly_calendars.week_date BETWEEN CONCAT( YEAR ( NOW()), '-', MONTH ( NOW()), '-01' ) 
+        AND DATE(
+        NOW()) 
+        AND remark != 'H' 
+        AND week_date IN ( SELECT DATE( created_at ) AS date FROM body_temperatures ) 
+        AND week_date = DATE(NOW())");
+
+      $response = array(
+        'status' => true,
+        'datas' => $temp,
+        'datas_now' => $temp_now
+      );
+
+      return Response::json($response);
     }
 }
