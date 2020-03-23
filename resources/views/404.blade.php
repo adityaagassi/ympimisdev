@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="shortcut icon" type="image/x-icon" href="{{ url("favicon.png")}}" />
-  <meta charset="utf-8">
+  <link rel="shortcut icon" type="image/x-icon" href="{{ url("logo_mirai.png")}}" />
+  <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, user-scalable=yes, initial-scale=1.0" name="viewport">
   <title>YMPI 情報システム</title>
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="{{ url("bower_components/bootstrap/dist/css/bootstrap.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/font-awesome/css/font-awesome.min.css")}}">
   <link rel="stylesheet" href="{{ url("bower_components/Ionicons/css/ionicons.min.css")}}">
@@ -17,8 +17,22 @@
   <link rel="stylesheet" href="{{ url("dist/css/skins/skin-purple.css")}}">
   <link rel="stylesheet" href="{{ url("fonts/SourceSansPro.css")}}">
   <link rel="stylesheet" href="{{ url("css/buttons.dataTables.min.css")}}">
-  <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}">
+  {{-- <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}"> --}}
   @yield('stylesheets')
+  <style>
+    aside{
+      font-size: 12px;
+    }
+    .sidebar-menu > li > a {
+      padding: 7px 5px 7px 15px;
+      display: block;
+    }
+    .treeview-menu > li > a {
+      padding: 3px 5px 3px 15px;
+      display: block;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
   <div class="wrapper">
@@ -50,10 +64,10 @@
     <script src="{{ url("bower_components/jquery-slimscroll/jquery.slimscroll.min.js")}}"></script>
     <script src="{{ url("plugins/iCheck/icheck.min.js")}}"></script>
     <script src="{{ url("bower_components/fastclick/lib/fastclick.js")}}"></script>
-    <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script>
+    {{-- <script src="{{ url("bower_components/PACE/pace.min.js")}}"></script> --}}
     <script src="{{ url("dist/js/adminlte.min.js")}}"></script>
     <script src="{{ url("dist/js/demo.js")}}"></script>
-    <script>$(document).ajaxStart(function() { Pace.restart(); });</script>
+    {{-- <script>$(document).ajaxStart(function() { Pace.restart(); });</script> --}}
     @yield('scripts')
   </body>
   </html>
