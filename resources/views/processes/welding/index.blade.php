@@ -69,10 +69,10 @@
 			<a href="{{ url("index/welding/report_ng") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Not Good Record</a>
 			<a href="{{ url("index/welding/production_result") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Production Result</a>
 			<a href="{{ url("index/welding/report_hourly") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Hourly Report</a>
-			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report Kosuha <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/welding/resume", "phs-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">PHS Resume</a>
-			<a href="{{ url("index/welding/resume", "hsa-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">HSA Resume</a>
-			<a href="{{ url("index/welding/resume", "hsa-dimensi-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Dimensi Resume</a>
+			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report Kosuha <i class="fa fa-angle-double-down"></i></span>			
+			<a href="{{ url("index/welding/resume?bulan=&fy=&key=", "phs-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">PHS Resume</a>
+			<a href="{{ url("index/welding/resume?bulan=&fy=&key=", "hsa-visual-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">HSA Resume</a>
+			<a href="{{ url("index/welding/resume?bulan=&fy=&key=", "hsa-dimensi-sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Dimensi Resume</a>
 			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report Handatsuke <i class="fa fa-angle-double-down"></i></span>
 			<a href="" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Resume</a>
 		</div>

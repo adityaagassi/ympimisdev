@@ -136,6 +136,10 @@
 				</table>
 			</div>
 			<div style="padding-top: 5px;">
+				<div class="col-xs-12" style="text-align: center; padding: 0;" id="check_point_dimensi">
+				</div>
+			</div>
+			<div style="padding-top: 5px;">
 				<div class="col-xs-6" style="text-align: center; padding: 0;" id="attention_point">
 				</div>
 				<div class="col-xs-6" style="text-align: center; padding: 0;" id="check_point">
@@ -285,6 +289,7 @@
 	function getHeader(tag) {
 		$('#attention_point').html("");
 		$('#check_point').html("");
+		$('#check_point_dimensi').html("");
 		var location = $('#loc').val();
 		var data = {
 			tag : tag,
@@ -324,7 +329,11 @@
 				if(location == 'hsa-visual-sx'){
 					$('#attention_point').append('<img style="width: 100%; height: 445px;" src="'+result.attention_point+'">');
 					$('#check_point').append('<img style="width: 100%; height: 445px;" src="'+result.check_point+'">');	
+				}else if(location == 'hsa-dimensi-sx'){
+					$('#check_point_dimensi').append('<img style="width: 100%;" src="'+result.check_point_dimensi+'">');	
 				}
+
+
 				$('#started_at').val(result.started_at);
 				$('#material_tag').val(tag);
 				$('#material_number').val(result.material.material_number);

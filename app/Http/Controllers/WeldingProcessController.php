@@ -1473,6 +1473,232 @@ class WeldingProcessController extends Controller
 		->make(true);
 	}
 
+	public function fetchWeldingResume(Request $request){
+
+		$loc = $request->get('loc');
+		
+		$bulan = date('m-Y');
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = $request->get('bulan');
+		}
+
+		$fy = $request->get('fy');
+		if(strlen($request->get('fy')) == 0){
+			$date = db::table('weekly_calendars')
+			->where('week_date', date('Y-m-d'))
+			->first();
+
+			$fy = $date->fiscal_year;
+		}
+
+		$hpl = "";
+		if($request->get('fy') == "all"){
+			$hpl = "";
+		}else if($request->get('fy') == "askey"){
+			$hpl = "and materials.hpl = 'ASKEY'";
+		}else if($request->get('fy') == "tskey"){
+			$hpl = "and materials.hpl = 'ASKEY'";
+		}
+
+		$monthly = db::select("select bulan.bulan, ng.qty as ng, cek.qty as cek, ROUND((coalesce(ng.qty, 0) / coalesce(cek.qty, 0) * 100),2) as ng_rate from 
+			(select distinct date_format(week_date, '%Y-%m') as bulan from weekly_calendars
+			where fiscal_year = '".$fy."'
+			) as bulan
+			left join
+			(select date_format(welding_ng_logs.created_at, '%Y-%m') as bulan, sum(welding_ng_logs.quantity) as qty from welding_ng_logs
+			left join materials on materials.material_number = welding_ng_logs.material_number
+			where welding_ng_logs.location = '".$loc."'
+			".$hpl."
+			group by date_format(welding_ng_logs.created_at, '%Y-%m')
+			) as ng
+			on bulan.bulan = ng.bulan
+			left join
+			(select date_format(welding_check_logs.created_at, '%Y-%m') as bulan, sum(welding_check_logs.quantity) as qty from welding_check_logs
+			left join materials on materials.material_number = welding_check_logs.material_number
+			where welding_check_logs.location = '".$loc."'
+			".$hpl."
+			group by date_format(welding_check_logs.created_at, '%Y-%m')
+			) as cek
+			on bulan.bulan = cek.bulan
+			order by bulan.bulan asc");
+
+
+		$weekly = db::select("SELECT weeks.week_name, sum(ng.ng) as ng, sum(cek.cek) as cek, round((sum(ng.ng)/sum(cek.cek)*100),2) as ng_rate from
+			(SELECT week_name, week_date from weekly_calendars
+			where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') weeks
+			left join
+			(SELECT date(welding_ng_logs.created_at) as tgl, sum(welding_ng_logs.quantity) ng from welding_ng_logs
+			left join materials on materials.material_number = welding_ng_logs.material_number
+			where location = '".$loc."'
+			and DATE_FORMAT(welding_ng_logs.created_at,'%m-%Y') = '".$bulan."'
+			".$hpl."
+			GROUP BY tgl) ng
+			on weeks.week_date = ng.tgl
+			left join
+			(SELECT date(welding_check_logs.created_at) as tgl, sum(welding_check_logs.quantity) cek from welding_check_logs
+			left join materials on materials.material_number = welding_check_logs.material_number
+			where location = '".$loc."'
+			and DATE_FORMAT(welding_check_logs.created_at,'%m-%Y') = '".$bulan."'
+			".$hpl."
+			GROUP BY tgl) cek
+			on weeks.week_date = cek.tgl
+			GROUP BY weeks.week_name");
+
+		$daily_alto = db::select("SELECT dates.week_date, ng.ng, cek.cek , round((COALESCE(ng.ng,0)/cek.cek*100),2) as ng_rate from
+			(SELECT week_date from weekly_calendars
+			where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') dates
+			left join
+			(SELECT date(welding_ng_logs.created_at) as tgl, sum(welding_ng_logs.quantity) ng from welding_ng_logs
+			left join materials on materials.material_number = welding_ng_logs.material_number
+			where location = '".$loc."'
+			and DATE_FORMAT(welding_ng_logs.created_at,'%m-%Y') = '".$bulan."'
+			and materials.hpl = 'ASKEY'
+			GROUP BY tgl) ng
+			on dates.week_date = ng.tgl
+			left join
+			(SELECT date(welding_check_logs.created_at) as tgl, sum(welding_check_logs.quantity) cek from welding_check_logs
+			left join materials on materials.material_number = welding_check_logs.material_number
+			where location = '".$loc."'
+			and DATE_FORMAT(welding_check_logs.created_at,'%m-%Y') = '".$bulan."'
+			and materials.hpl = 'ASKEY'
+			GROUP BY tgl) cek
+			on dates.week_date = cek.tgl");
+
+		$daily_tenor = db::select("SELECT dates.week_date, ng.ng, cek.cek , round((COALESCE(ng.ng,0)/cek.cek*100),2) as ng_rate from
+			(SELECT week_date from weekly_calendars
+			where DATE_FORMAT(week_date,'%m-%Y') = '".$bulan."') dates
+			left join
+			(SELECT date(welding_ng_logs.created_at) as tgl, sum(welding_ng_logs.quantity) ng from welding_ng_logs
+			left join materials on materials.material_number = welding_ng_logs.material_number
+			where location = '".$loc."'
+			and DATE_FORMAT(welding_ng_logs.created_at,'%m-%Y') = '".$bulan."'
+			and materials.hpl = 'TSKEY'
+			GROUP BY tgl) ng
+			on dates.week_date = ng.tgl
+			left join
+			(SELECT date(welding_check_logs.created_at) as tgl, sum(welding_check_logs.quantity) cek from welding_check_logs
+			left join materials on materials.material_number = welding_check_logs.material_number
+			where location = '".$loc."'
+			and DATE_FORMAT(welding_check_logs.created_at,'%m-%Y') = '".$bulan."'
+			and materials.hpl = 'TSKEY'
+			GROUP BY tgl) cek
+			on dates.week_date = cek.tgl");
+
+
+		$response = array(
+			'status' => true,
+			'monthly' => $monthly,
+			'weekly' => $weekly,
+			'daily_alto' => $daily_alto,
+			'daily_tenor' => $daily_tenor,
+			'fy' => $fy,
+			'bulan' => $bulan
+		);
+		return Response::json($response);
+		
+	}
+
+
+	public function fetchWeldingKeyResume(Request $request){
+
+		$loc = $request->get('loc');
+		
+		$bulan = date('m-Y');
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = $request->get('bulan');
+		}
+
+		$askey = db::select("select cek.`key`, cek.hpl, cek.qty as cek, ng.qty as ng, round((coalesce(ng.qty,0)/cek.qty*100),2) as ng_rate from
+			(select materials.`key`, materials.hpl, sum(welding_check_logs.quantity) as qty from welding_check_logs
+			left join materials on materials.material_number = welding_check_logs.material_number
+			where date_format(welding_check_logs.created_at, '%m-%Y') = '".$bulan."'
+			and welding_check_logs.location = '".$loc."'
+			and materials.hpl = 'ASKEY'
+			group by materials.`key`, materials.hpl) cek
+			left join
+			(select materials.`key`, materials.hpl, sum(welding_ng_logs.quantity) as qty from welding_ng_logs
+			left join materials on materials.material_number = welding_ng_logs.material_number
+			where date_format(welding_ng_logs.created_at, '%m-%Y') = '".$bulan."'
+			and welding_ng_logs.location = '".$loc."'
+			and materials.hpl = 'ASKEY'
+			group by materials.`key`, materials.hpl) ng
+			on cek.`key` = ng.`key` and cek.hpl = ng.hpl
+			order by ng desc
+			limit 10");
+
+
+		$askey_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
+			(select b.`key`, a.ng_name from
+			(select ng_name from ng_lists
+			where location = '".$loc."') a
+			cross join
+			(select distinct `key` from materials
+			where `key` != ''
+			and origin_group_code = '043') b
+			order by `key` asc) ng_name
+			left join
+			(select materials.`key`, welding_ng_logs.ng_name, sum(welding_ng_logs.quantity) as jml from welding_ng_logs
+			left join materials on welding_ng_logs.material_number = materials.material_number
+			where DATE_FORMAT(welding_ng_logs.created_at,'%m-%Y') = '".$bulan."'
+			and welding_ng_logs.location = '".$loc."'
+			and materials.hpl = 'ASKEY'
+			group by materials.`key`, welding_ng_logs.ng_name) ng
+			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
+			order by `key` asc");
+
+
+		$tskey = db::select("select cek.`key`, cek.hpl, cek.qty as cek, ng.qty as ng, round((coalesce(ng.qty,0)/cek.qty*100),2) as ng_rate from
+			(select materials.`key`, materials.hpl, sum(welding_check_logs.quantity) as qty from welding_check_logs
+			left join materials on materials.material_number = welding_check_logs.material_number
+			where date_format(welding_check_logs.created_at, '%m-%Y') = '".$bulan."'
+			and welding_check_logs.location = '".$loc."'
+			and materials.hpl = 'TSKEY'
+			group by materials.`key`, materials.hpl) cek
+			left join
+			(select materials.`key`, materials.hpl, sum(welding_ng_logs.quantity) as qty from welding_ng_logs
+			left join materials on materials.material_number = welding_ng_logs.material_number
+			where date_format(welding_ng_logs.created_at, '%m-%Y') = '".$bulan."'
+			and welding_ng_logs.location = '".$loc."'
+			and materials.hpl = 'TSKEY'
+			group by materials.`key`, materials.hpl) ng
+			on cek.`key` = ng.`key` and cek.hpl = ng.hpl
+			order by ng desc
+			limit 10");
+
+
+		$tskey_detail = db::select("select ng_name.`key`, ng_name.ng_name, COALESCE(ng.jml,0) as jml from  
+			(select b.`key`, a.ng_name from
+			(select ng_name from ng_lists
+			where location = '".$loc."') a
+			cross join
+			(select distinct `key` from materials
+			where `key` != ''
+			and origin_group_code = '043') b
+			order by `key` asc) ng_name
+			left join
+			(select materials.`key`, welding_ng_logs.ng_name, sum(welding_ng_logs.quantity) as jml from welding_ng_logs
+			left join materials on welding_ng_logs.material_number = materials.material_number
+			where DATE_FORMAT(welding_ng_logs.created_at,'%m-%Y') = '".$bulan."'
+			and welding_ng_logs.location = '".$loc."'
+			and materials.hpl = 'TSKEY'
+			group by materials.`key`, welding_ng_logs.ng_name) ng
+			on ng_name.ng_name = ng.ng_name and ng_name.`key` = ng.`key`
+			order by `key` asc");
+
+
+		$response = array(
+			'status' => true,
+			'askey' => $askey,
+			'tskey' => $tskey,
+			'askey_detail' => $askey_detail,
+			'tskey_detail' => $tskey_detail,
+			'bulan' => $bulan
+		);
+		return Response::json($response);
+
+	}
+	
+
 	public function fetchNgRate(Request $request){
 		$now = date('Y-m-d');
 
@@ -2999,6 +3225,7 @@ class WeldingProcessController extends Controller
 			'started_at' => date('Y-m-d H:i:s'),
 			'attention_point' => asset("/welding/attention_point/".$material->model." ".$material->key." ".$material->surface.".jpg"),
 			'check_point' => asset("/welding/check_point/".$material->model." ".$material->key." ".$material->surface.".jpg"),
+			'check_point_dimensi' => asset("/welding/check_point_dimensi/".$zed_material->hsa_kito_code.".jpg"),
 		);
 		return Response::json($response);
 	}
