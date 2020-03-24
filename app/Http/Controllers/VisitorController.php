@@ -587,42 +587,44 @@ public function getNotifVisitor()
  		$manager = Auth::user()->username;
 		$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
 
-		foreach ($emp_sync as $key) {
-			$position = $key->position;
-			$name = $key->name;
-			$department = $key->department;
-		}
+		if (count($emp_sync) > 0) {
+			foreach ($emp_sync as $key) {
+				$position = $key->position;
+				$name = $key->name;
+				$department = $key->department;
+			}
 
-		if ($department == null && $name == 'Budhi Apriyanto') {
-			$lists = DB::SELECT("SELECT
-						count( visitors.id ) AS notif 
-					FROM
-						visitors
-						LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
-						LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
-					WHERE
-						( visitors.remark IS NULL AND employee_syncs.department = 'Production Engineering' ) 
-						OR (
-						visitors.remark IS NULL 
-						AND employee_syncs.department = 'Management Information System')");
-		}else{
-			$lists = DB::SELECT("SELECT
-						count( visitors.id ) AS notif 
-					FROM
-						visitors
-						LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
-						LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
-					WHERE
-						visitors.remark IS NULL 
-						AND employee_syncs.department = '".$department."'");
-		}
+			if ($department == null && $name == 'Budhi Apriyanto') {
+				$lists = DB::SELECT("SELECT
+							count( visitors.id ) AS notif 
+						FROM
+							visitors
+							LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+							LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+						WHERE
+							( visitors.remark IS NULL AND employee_syncs.department = 'Production Engineering' ) 
+							OR (
+							visitors.remark IS NULL 
+							AND employee_syncs.department = 'Management Information System')");
+			}else{
+				$lists = DB::SELECT("SELECT
+							count( visitors.id ) AS notif 
+						FROM
+							visitors
+							LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+							LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+						WHERE
+							visitors.remark IS NULL 
+							AND employee_syncs.department = '".$department."'");
+			}
 
-		foreach ($lists as $val) {
-			$notif = $val->notif;
+			foreach ($lists as $val) {
+				$notif = $val->notif;
+			}
+		    if (count($notif) > 0) {
+		    	return $notif;
+		    }
 		}
-	    if (count($notif) > 0) {
-	    	return $notif;
-	    }
  	}
  }
 
