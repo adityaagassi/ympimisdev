@@ -39,14 +39,14 @@ class PressController extends Controller
 		$product = OriginGroup::get();
         $product2 = OriginGroup::get();
 
-		// $mpdl = MaterialPlantDataList::get();
-  //       $mpdl2 = MaterialPlantDataList::get();
+		$mpdl = MaterialPlantDataList::get();
+        $mpdl2 = MaterialPlantDataList::get();
 
 		return view('press.master_kanagata', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-			// 'mpdl' => $mpdl,
-   //          'mpdl2' => $mpdl2,
+			'mpdl' => $mpdl,
+            'mpdl2' => $mpdl2,
 			'product' => $product,
             'product2' => $product2,
 		))->with('page', 'Master Kanagata');

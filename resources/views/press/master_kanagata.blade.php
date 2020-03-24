@@ -156,7 +156,13 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Material Number<span class="text-red">*</span></label>
 									<div class="col-sm-5">
-										<input type="material_number" class="form-control" id="material_number" placeholder="Material Number" value="VCP2930" required>
+										<!-- <input type="material_number" class="form-control" id="material_number" placeholder="Material Number" value="VCP2930" required> -->
+										<select class="form-control select2" data-placeholder="Select Materials" name="material_number" id="material_number" style="width: 100%">
+											<option value=""></option>
+											@foreach($mpdl as $mpdl)
+												<option value="{{ $mpdl->material_number }}">{{ $mpdl->material_number }} - {{ $mpdl->material_description }}</option>
+											@endforeach
+										</select>
 									</div>
 								</div>
 								<div class="form-group row" align="right">
@@ -227,7 +233,13 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Material Number<span class="text-red">*</span></label>
 									<div class="col-sm-5">
-										<input type="editmaterial_number" class="form-control" id="editmaterial_number" placeholder="Material Number" required>
+										<!-- <input type="editmaterial_number" class="form-control" id="editmaterial_number" placeholder="Material Number" required> -->
+										<select class="form-control select3" data-placeholder="Select Materials" name="editmaterial_number" id="editmaterial_number" style="width: 100%">
+											<option value=""></option>
+											@foreach($mpdl2 as $mpdl2)
+												<option value="{{ $mpdl2->material_number }}">{{ $mpdl2->material_number }} - {{ $mpdl2->material_description }}</option>
+											@endforeach
+										</select>
 									</div>
 								</div>
 								<div class="form-group row" align="right">
@@ -465,7 +477,7 @@
 					// var hex = '{{ hexdec('+value.operator_code+') }}';
 					// $("#editmaterial_number").val(value.operator_nik).trigger('change.select2');
 					$("#id").val(result.lists.id);
-					$("#editmaterial_number").val(result.lists.material_number);
+					$("#editmaterial_number").val(result.lists.material_number).trigger('change.select2');
 					$("#editmaterial_name").val(result.lists.material_name);
 					$("#editpart").val(result.lists.part).trigger('change.select2');
 					$("#editpunch_die_number").val(result.lists.punch_die_number);
