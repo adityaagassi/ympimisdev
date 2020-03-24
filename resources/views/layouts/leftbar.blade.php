@@ -574,6 +574,10 @@
   <a href="{{ url("/index/kaizen/applied") }}"><i class="fa fa-rocket"></i> <span>Applied List</span></a>
 </li>
 
+@if(isset($page) && $page == "Kaizen")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/kaizen/data") }}"><i class="fa fa-cubes"></i> <span>Kaizen Teian Data</span></a>
+</li>
+
 </ul>
 </li>
 @endif

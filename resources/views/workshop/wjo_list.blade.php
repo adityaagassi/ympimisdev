@@ -2116,7 +2116,7 @@ function showEdit(order_no) {
 				flow += '<div class="form-group" align="right">';
 				flow += '<div class="col-xs-2" style="color: black; padding-left:0px">';
 				flow += '<div class="form-group" style="margin-bottom: 0px;">';
-				flow += '<input class="form-control" type="number" name="edit_process_qty_'+ proses1 +'" id="edit_process_qty_'+ proses1 +'" value="'+ value.std_time +'"  placeholder="Duration" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" required>';
+				flow += '<input class="form-control" type="number" name="edit_process_qty_'+ proses1 +'" id="edit_process_qty_'+ proses1 +'" value="'+ value.std_time / 60 +'"  placeholder="Duration" style="width: 100%; height: 33px; font-size: 15px; text-align: center;" required>';
 				flow += '</div>';
 				flow += '</div>';
 				flow += '<div class="col-xs-2" align="right" style="padding: 0px;">';
