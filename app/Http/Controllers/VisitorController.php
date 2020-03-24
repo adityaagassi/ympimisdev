@@ -633,23 +633,27 @@ public function confirmation_manager()
 	$manager = Auth::user()->username;
 	$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
 
-	foreach ($emp_sync as $key) {
-		$position = $key->position;
-		$department = $key->department;
-	}
+	if (count($emp_sync) > 0) {
+		foreach ($emp_sync as $key) {
+			$position = $key->position;
+			$department = $key->department;
+		}
 
-	if ($department == 'Logistic') {
-		if ($position == 'Manager' || $position == 'Foreman') {
-			return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager');
+		if ($department == 'Logistic') {
+			if ($position == 'Manager' || $position == 'Foreman') {
+				return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager');
+			}else{
+				return redirect('home');
+			}
 		}else{
-			return redirect('home');
+			if (strpos($position, 'Manager') === false) {
+				return redirect('home');
+			}else{
+				return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager');
+			}
 		}
 	}else{
-		if (strpos($position, 'Manager') === false) {
-			return redirect('home');
-		}else{
-			return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager');
-		}
+		return redirect('home');
 	}
 }
 
@@ -660,66 +664,73 @@ public function fetchVisitorByManager()
 
 	$emp_sync = DB::SELECT("SELECT * FROM `employee_syncs` where employee_id = '".$manager."'");
 
-	foreach ($emp_sync as $key) {
-		$name = $key->name;
-		$department = $key->department;
-	}
-	if ($department == null && $name == 'Budhi Apriyanto') {
-		$lists = DB::SELECT("SELECT
-			visitors.id,
-			name,
-			department,
-			company,
-			DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
-			visitors.created_at,
-			visitor_details.full_name,
-			visitors.jumlah AS total1,
-			purpose,
-			visitors.status,
-			visitor_details.in_time,
-			visitor_details.out_time,
-			visitors.remark 
-		FROM
-			visitors
-			LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
-			LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
-		WHERE
-			( visitors.remark IS NULL AND employee_syncs.department = 'Production Engineering' ) 
-			OR ( visitors.remark IS NULL AND employee_syncs.department = 'Management Information System' ) 
-		ORDER BY
-			id DESC");
-	}else{
-		$lists = DB::SELECT("SELECT
-			visitors.id,
-			name,
-			department,
-			company,
-			DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
-			visitors.created_at,
-			visitor_details.full_name,
-			visitors.jumlah AS total1,
-			purpose,
-			visitors.status,
-			visitor_details.in_time,
-			visitor_details.out_time,
-			visitors.remark 
-		FROM
-			visitors
-			LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
-			LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
-		WHERE
-			visitors.remark IS NULL AND employee_syncs.department = '".$department."'
-		ORDER BY
-			id DESC");
-	}
+	if (count($emp_sync) > 0) {
+		foreach ($emp_sync as $key) {
+			$name = $key->name;
+			$department = $key->department;
+		}
+		if ($department == null && $name == 'Budhi Apriyanto') {
+			$lists = DB::SELECT("SELECT
+				visitors.id,
+				name,
+				department,
+				company,
+				DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+				visitors.created_at,
+				visitor_details.full_name,
+				visitors.jumlah AS total1,
+				purpose,
+				visitors.status,
+				visitor_details.in_time,
+				visitor_details.out_time,
+				visitors.remark 
+			FROM
+				visitors
+				LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+				LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+			WHERE
+				( visitors.remark IS NULL AND employee_syncs.department = 'Production Engineering' ) 
+				OR ( visitors.remark IS NULL AND employee_syncs.department = 'Management Information System' ) 
+			ORDER BY
+				id DESC");
+		}else{
+			$lists = DB::SELECT("SELECT
+				visitors.id,
+				name,
+				department,
+				company,
+				DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+				visitors.created_at,
+				visitor_details.full_name,
+				visitors.jumlah AS total1,
+				purpose,
+				visitors.status,
+				visitor_details.in_time,
+				visitor_details.out_time,
+				visitors.remark 
+			FROM
+				visitors
+				LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+				LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+			WHERE
+				visitors.remark IS NULL AND employee_syncs.department = '".$department."'
+			ORDER BY
+				id DESC");
+		}
 
-	$response = array(
-		'status' => true,
-		'lists' => $lists,
-		'manager_name' => $manager_name,
-		'name' => $name,
-	);
-	return Response::json($response);
+		$response = array(
+			'status' => true,
+			'lists' => $lists,
+			'manager_name' => $manager_name,
+			'name' => $name,
+		);
+		return Response::json($response);
+	}else{
+		$response = array(
+			'status' => false
+		);
+		return Response::json($response);
+	}
 }
 
 
