@@ -46,20 +46,52 @@ class EmailVisitorConfirmation extends Command
         $namamanager = [];
 
         foreach ($mgr as $key) {
-            if ($key->name == 'Dwi Misnanto') {
-                $visitor = DB::SELECT("select 
-                visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
-                from visitors 
-                LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
-                LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
-                where visitors.remark is null and employee_syncs.department = 'Logistic'");
+            if ($key->department == null && $key->name == 'Budhi Apriyanto') {
+                $visitor = DB::SELECT("SELECT
+                        visitors.id,
+                        name,
+                        department,
+                        company,
+                        DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+                        visitors.created_at,
+                        visitor_details.full_name,
+                        visitor_details.id_number AS total1,
+                        purpose,
+                        visitors.status,
+                        visitor_details.in_time,
+                        visitor_details.out_time,
+                        visitors.remark 
+                    FROM
+                        visitors
+                        LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+                        LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+                    WHERE
+                        ( visitors.remark IS NULL AND employee_syncs.department = 'Production Engineering' ) 
+                        OR (
+                        visitors.remark IS NULL 
+                        AND employee_syncs.department = 'Management Information System')");
             }else{
-                $visitor = DB::SELECT("select 
-                visitors.id,name,department,company,DATE_FORMAT(visitors.created_at,'%Y-%m-%d') created_at2,visitors.created_at,visitor_details.full_name, visitor_details.id_number as total1 ,purpose, visitors.status,visitor_details.in_time, visitor_details.out_time, visitors.remark 
-                from visitors 
-                LEFT JOIN visitor_details on visitors.id = visitor_details.id_visitor 
-                LEFT JOIN employee_syncs on visitors.employee = employee_syncs.employee_id
-                where visitors.remark is null and employee_syncs.nik_manager = '".$key->employee_id."'");
+                $visitor = DB::SELECT("SELECT
+                        visitors.id,
+                        name,
+                        department,
+                        company,
+                        DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+                        visitors.created_at,
+                        visitor_details.full_name,
+                        visitor_details.id_number AS total1,
+                        purpose,
+                        visitors.status,
+                        visitor_details.in_time,
+                        visitor_details.out_time,
+                        visitors.remark 
+                    FROM
+                        visitors
+                        LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+                        LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+                    WHERE
+                        visitors.remark IS NULL 
+                        AND employee_syncs.department = '".$key->department."'");
             }
             if (count($visitor) > 0) {
                 if ($key->name == 'Dwi Misnanto') {

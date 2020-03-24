@@ -236,7 +236,11 @@
 						tableData += '<td>'+ value.department +'</td>';
 						tableData += '<td>'+ value.company +'</td>';
 						tableData += '<td>'+ value.full_name +'</td>';
-						tableData += '<td>'+ value.total1 +' Orang</td>';
+						if (value.total1 == null) {
+							tableData += '<td>1 Orang</td>';
+						}else{
+							tableData += '<td>'+ value.total1 +' Orang</td>';
+						}
 						tableData += '<td>'+ value.purpose +'</td>';
 						tableData += '<td>'+ value.status +'</td>';
 						if (value.remark == null) {
