@@ -1219,7 +1219,7 @@ class WorkshopController extends Controller{
 			$pic = WorkshopFlowProcess::find($pics[0]);
 
 			$pic->operator = $pics[1];
-			$pic->std_time = $pics[2];
+			$pic->std_time = $pics[2] * 60;
 			$pic->start_plan = $pics[3]." ".$pics[4];
 			$pic->finish_plan = $pics[5]." ".$pics[6];
 
