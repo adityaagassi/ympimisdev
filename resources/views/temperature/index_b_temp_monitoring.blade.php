@@ -69,7 +69,7 @@
 					<div id="container1" class="container1" style="width: 100%;"></div>
 				</div>
 				<div class="col-xs-2" style="padding-right: 0;">
-					<div class="small-box" style="background: #52c9ed; height: 120px; margin-bottom: 5px;">
+					<div class="small-box" style="background: #cfcfcf; height: 120px; margin-bottom: 5px;">
 						<div class="inner" style="padding-bottom: 0px;">
 							<h3 style="margin-bottom: 0px;font-size: 1.5vw;text-align: right;"><b>TOTAL <span class="text-purple">トータル</span></b></h3>
 							<h5 style="font-size: 3.3vw; font-weight: bold;text-align: right;" id="total">0</h5>
@@ -78,7 +78,7 @@
 							<i class="fa fa-users"></i>
 						</div>
 					</div>
-					<div class="small-box" style="background: #00a65a; height: 120px; margin-bottom: 5px;">
+					<div class="small-box" style="background: #668eff; height: 120px; margin-bottom: 5px;">
 						<div class="inner" style="padding-bottom: 0px;">
 							<h3 style="margin-bottom: 0px;font-size: 1.5vw;text-align: right;"><b>AVG TEMP <span class="text-purple">体温平均</span></b></h3>
 							<h5 style="font-size: 3.3vw; font-weight: bold;text-align: right;" id="avg">0</h5>
@@ -87,7 +87,7 @@
 							<i class="fa fa-thermometer-half"></i>
 						</div>
 					</div>
-					<div class="small-box" style="background: #ff851b; height: 120px; margin-bottom: 5px;">
+					<div class="small-box" style="background: #eb5050; height: 120px; margin-bottom: 5px;">
 						<div class="inner" style="padding-bottom: 0px;">
 							<h3 style="margin-bottom: 0px;font-size: 1.5vw;text-align: right;"><b>HIGHEST TEMP <span class="text-purple">最高体温</span></b></h3>
 							<h5 style="font-size: 3.3vw; font-weight: bold;text-align: right;" id="highest">0</h5>
@@ -96,7 +96,7 @@
 							<i class="fa fa-thermometer-full"></i>
 						</div>
 					</div>
-					<div class="small-box" style="background: rgb(255,40,40); height: 120px; margin-bottom: 5px;">
+					<div class="small-box" style="background: #00d941; height: 120px; margin-bottom: 5px;">
 						<div class="inner" style="padding-bottom: 0px;">
 							<h3 style="margin-bottom: 0px;font-size: 1.5vw;text-align: right;"><b>LIMIT <span class="text-purple">リミット</span></b></h3>
 							<h5 style="font-size: 3.3vw; font-weight: bold;text-align: right;">37.5 <sup>o</sup>C</h5>
@@ -348,7 +348,7 @@
 						name: 'Avg Temp',
 						yAxis:1,
 						colorByPoint: false,
-						color:'#ff9800',
+						color:'#668eff',
 						animation: false,
 						dataLabels: {
 							enabled: true,
@@ -365,7 +365,7 @@
 						data: series2,
 						name: 'Highest Temp',
 						colorByPoint: false,
-						color: "#3f51b5",
+						color: "#eb5050",
 						animation: false,
 						dataLabels: {
 							enabled: true,
