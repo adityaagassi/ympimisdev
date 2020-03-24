@@ -17,8 +17,8 @@
 <section class="content">
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
-			{{-- <span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Stock Taking <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/stocktaking/silver", "fl_mpro") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Silver</a> --}}
+			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/press/master_kanagata") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Master Kanagata</a>
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Press Machine <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/press/create") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Press Machine Forging</a>
 		</div>

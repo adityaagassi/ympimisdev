@@ -2399,6 +2399,11 @@ Route::post('index/kanagata/update/{id}','PressController@update');
 Route::post('index/kanagata/reset','PressController@reset');
 //Master Kanagata
 Route::get('index/press/master_kanagata', 'PressController@indexMasterKanagata');
+Route::get('fetch/press/master_kanagata', 'PressController@fetchMasterKanagata');
+Route::post('post/press/add_kanagata', 'PressController@addKanagata');
+Route::get('index/press/destroy_kanagata/{id}', 'PressController@destroyKanagata');
+Route::get('fetch/press/get_kanagata', 'PressController@getKanagata');
+Route::post('post/press/update_kanagata', 'PressController@updateKanagata');
 
 //Form Failure
 Route::get('index/form_experience', 'FormExperienceController@index');

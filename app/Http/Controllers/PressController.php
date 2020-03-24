@@ -22,6 +22,7 @@ use App\User;
 use File;
 use DateTime;
 use Illuminate\Support\Arr;
+use App\OriginGroup;
 
 class PressController extends Controller
 {
@@ -29,6 +30,102 @@ class PressController extends Controller
     {
       $this->middleware('auth');
     }
+
+    public function indexMasterKanagata()
+    {
+    	$title = 'Master Kanagata';
+		$title_jp = '??';
+
+		$product = OriginGroup::get();
+        $product2 = OriginGroup::get();
+
+		// $mpdl = MaterialPlantDataList::get();
+  //       $mpdl2 = MaterialPlantDataList::get();
+
+		return view('press.master_kanagata', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			// 'mpdl' => $mpdl,
+   //          'mpdl2' => $mpdl2,
+			'product' => $product,
+            'product2' => $product2,
+		))->with('page', 'Master Kanagata');
+    }
+
+    public function fetchMasterKanagata()
+    {
+    	$lists = MpKanagata::get();
+
+		$response = array(
+			'status' => true,
+			'lists' => $lists
+		);
+		return Response::json($response);
+    }
+
+    public function addKanagata(Request $request)
+	{
+		$material = MaterialPlantDataList::where('material_number',$request->get('material_number'))->first();
+
+		$material_description = $material->material_description;
+
+		$lists = DB::table('mp_kanagatas')
+		->insert([
+			'material_number' => $request->get('material_number'),
+			'material_description' => $material_description,
+			'material_name' => $request->get('material_name'),
+			'process' => 'Forging',
+			'product' => $request->get('product'),
+			'part' => $request->get('part'),
+			'remark' => 'Press',
+			'punch_die_number' => $request->get('punch_die_number'),
+			'created_by' => Auth::id()]);
+
+		$response = array(
+			'status' => true
+		);
+		return Response::json($response);
+	}
+
+	public function destroyKanagata($id)
+	{
+		$mp_kanagata = MpKanagata::find($id);
+      	$mp_kanagata->delete();
+
+		return redirect('index/press/master_kanagata')->with('status', 'Kanagata has been deleted.');
+	}
+
+	public function getKanagata(Request $request)
+	{
+		$list = MpKanagata::find($request->get('id'));
+
+		$response = array(
+			'status' => true,
+			'lists' => $list
+		);
+		return Response::json($response);
+	}
+
+	public function updateKanagata(Request $request)
+	{
+		$material = MaterialPlantDataList::where('material_number',$request->get('material_number'))->first();
+
+		$material_description = $material->material_description;
+
+		$kanagata = MpKanagata::find($request->get('id'));
+		$kanagata->material_number = $request->get('material_number');
+		$kanagata->material_description = $material_description;
+		$kanagata->material_name = $request->get('material_name');
+		$kanagata->part = $request->get('part');
+		$kanagata->punch_die_number = $request->get('punch_die_number');
+		$kanagata->product = $request->get('product');
+		$kanagata->save();
+		
+		$response = array(
+			'status' => true
+		);
+		return Response::json($response);
+	}
 
 	public function scanPressOperator(Request $request){
 
