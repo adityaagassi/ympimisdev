@@ -306,15 +306,21 @@
 		jQuery(document).ready(function() {
 			$('#tag_visitor').focus();
 			// $('#nikkaryawan').val('asd');
-			setTimeout(function(){
-			      location = ''
-			    },60000);
+
+			// setTimeout(function(){
+			//       $("#tag_visitor").focus();
+			//     },60000);
+			setInterval(focusTag,60000);
 			$('.select2').select2({
 				dropdownAutoWidth : true,
 				width: '100%',
 			});
 			reloadTable();
 		});
+
+		function focusTag() {
+			$('#tag_visitor').focus();
+		}
 
 		$(function() {
 			$(document).keydown(function(e) {
