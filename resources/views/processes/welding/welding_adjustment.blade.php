@@ -100,7 +100,7 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-7 pull-left">
-			<h2 style="margin-top: 0px;">HSA Queue</h2>
+			<h2 style="margin-top: 0px;">Welding Queue</h2>
 			<table id="tableAdjust" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
@@ -138,7 +138,7 @@
 			</div>
 		</div>
 		<div class="col-xs-5 pull-left">
-			<h2 style="margin-top: 0px;">Stock</h2>
+			<h2 style="margin-top: 0px;">HSA Stock</h2>
 			<table id="tableStock" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
@@ -422,6 +422,9 @@
 
 
 
+		// $.get('{{ url("fetch/welding/welding_stock") }}', data, function(result, status, xhr) {
+
+		// });
 
 
 		$('#tableStock tfoot th').each(function(){
@@ -433,8 +436,8 @@
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
-			[ 10, 20, 50, -1 ],
-			[ '10 rows', '20 rows', '50 rows', 'Show all' ]
+			[ 20, 50, 100, -1 ],
+			[ '20 rows', '50 rows', '100 rows', 'Show all' ]
 			],
 			'buttons': {
 				buttons:[

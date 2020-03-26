@@ -191,7 +191,8 @@
 		$('.select2').select2();
 
 		drawChart();
-
+		setInterval(drawChart, 300000);
+		
 	});
 
 	function changeFy() {

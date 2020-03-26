@@ -160,6 +160,29 @@
 						<div class="nav-tabs-custom">
 							<div class="tab-content">
 								<div class="tab-pane active">
+									<div id="chart_ng_as" style="width: 99%;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-6" style="padding-left: 0.5%;">
+						<div class="nav-tabs-custom">
+							<div class="tab-content">
+								<div class="tab-pane active">
+									<div id="chart_ng_ts" style="width: 99%;"></div>
+								</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-xs-12" style="padding:0px;">
+					<div class="col-xs-6" style="padding-right: 0.5%;">
+						<div class="nav-tabs-custom">
+							<div class="tab-content">
+								<div class="tab-pane active">
 									<div id="chart_ng_askey" style="width: 99%;"></div>
 								</div>
 							</div>
@@ -1326,6 +1349,11 @@ $.get('{{ url("fetch/welding/key_resume") }}', data, function(result, status, xh
 
 	}
 
+
+});
+
+
+$.get('{{ url("fetch/welding/ng_resume") }}', data, function(result, status, xhr) {
 
 });
 

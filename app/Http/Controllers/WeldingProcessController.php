@@ -1697,6 +1697,41 @@ class WeldingProcessController extends Controller
 		return Response::json($response);
 
 	}
+
+
+	public function fetchWeldingNgResume(Request $request){
+		$loc = $request->get('loc');
+		
+		$bulan = date('m-Y');
+		if(strlen($request->get('bulan')) > 0){
+			$bulan = $request->get('bulan');
+		}
+		
+		$askey_ng = db::select("select welding_ng_logs.ng_name, sum(welding_ng_logs.quantity) as qty from welding_ng_logs
+			left join materials on materials.material_number = welding_ng_logs.material_number
+			where date_format(welding_ng_logs.created_at, '%m-%Y') = '".$bulan."'
+			and welding_ng_logs.location = '".$loc."'
+			and materials.hpl = 'ASKEY'
+			group by welding_ng_logs.ng_name
+			order by qty desc");
+
+		$tskey_ng = db::select("select welding_ng_logs.ng_name, sum(welding_ng_logs.quantity) as qty from welding_ng_logs
+			left join materials on materials.material_number = welding_ng_logs.material_number
+			where date_format(welding_ng_logs.created_at, '%m-%Y') = '".$bulan."'
+			and welding_ng_logs.location = '".$loc."'
+			and materials.hpl = 'TSKEY'
+			group by welding_ng_logs.ng_name
+			order by qty desc");
+
+		$response = array(
+			'status' => true,
+			'askey_ng' => $askey_ng,
+			'tskey_ng' => $tskey_ng,
+			'bulan' => $bulan
+		);
+		return Response::json($response);
+
+	}
 	
 
 	public function fetchNgRate(Request $request){
@@ -3117,43 +3152,81 @@ class WeldingProcessController extends Controller
 
 	public function fetchWeldingStock(){
 
-		$stock = db::connection('welding')->select("select material.material_number, material.material_description, COALESCE(antrian.qty,0) as antrian, COALESCE(wip.qty,0) as wip, COALESCE(store.qty,0) as store from
-			(select * from ympimis.materials
-			where mrpc = 's21'
-			and hpl like '%key%') material
+
+		$stores = db::select("select material.material_number, material.description, COALESCE(inventory.qty,0) as qty from
+			(select m.material_number, m.description from kitto.materials m
+			where m.location = 'SX21'
+			and m.category = 'KEY') as material
 			left join
 			(select i.material_number, count(i.material_number) as qty from kitto.inventories i
-			left join kitto.materials m on i.material_number = m.material_number
 			where i.lot > 0 
-			and m.location = 'SX21'
-			and m.category = 'KEY'
-			group by i.material_number) store
-			on material.material_number = store.material_number
-			left join
-			(select p.hsa_kito_code, count(p.hsa_kito_code) as qty from t_pesanan p
-			where p.is_deleted = 0
-			group by p.hsa_kito_code) antrian
-			on material.material_number = antrian.hsa_kito_code
-			left join
-			(select hsa.hsa_kito_code as material_number, qty.qty from
-			(select part.part_id, count(part.part_id) as qty  from
-			(select m.order_id_sedang as order_id, o.part_type, o.part_id from m_mesin m
-			left join t_order o on m.order_id_sedang = o.order_id
-			where m.order_id_sedang <> ''
-			or m.order_id_sedang <> null
-			and o.part_type = '2'
-			union
-			select m.order_id_akan as order_id, o.part_type, o.part_id from m_mesin m
-			left join t_order o on m.order_id_akan = o.order_id
-			where m.order_id_akan <> ''
-			or m.order_id_akan <> null
-			and o.part_type = '2') part
-			group by part.part_id) qty
-			left join m_hsa hsa on hsa.hsa_id = qty.part_id) wip
-			on material.material_number = wip.material_number");
+			group by i.material_number) as inventory
+			on material.material_number = inventory.material_number
+			order by material.description asc");
+
+		$queues = db::connection('welding_controller')->select("SELECT m_hsa.hsa_kito_code as material_number, count(m_hsa.hsa_kito_code) as qty FROM t_proses
+			left join m_hsa on m_hsa.hsa_id = t_proses.part_id
+			where t_proses.proses_status = 0
+			and t_proses.part_type = 2
+			and t_proses.proses_id not in (select order_id_akan from m_mesin)
+			group by m_hsa.hsa_kito_code");
+
+		// $stock = db::connection('welding')->select("select material.material_number, material.material_description, COALESCE(antrian.qty,0) as antrian, COALESCE(wip.qty,0) as wip, COALESCE(store.qty,0) as store from
+		// 	(select * from ympimis.materials
+		// 	where mrpc = 's21'
+		// 	and hpl like '%key%') material
+		// 	left join
+		// 	(select i.material_number, count(i.material_number) as qty from kitto.inventories i
+		// 	left join kitto.materials m on i.material_number = m.material_number
+		// 	where i.lot > 0 
+		// 	and m.location = 'SX21'
+		// 	and m.category = 'KEY'
+		// 	group by i.material_number) store
+		// 	on material.material_number = store.material_number
+		// 	left join
+		// 	(select p.hsa_kito_code, count(p.hsa_kito_code) as qty from t_pesanan p
+		// 	where p.is_deleted = 0
+		// 	group by p.hsa_kito_code) antrian
+		// 	on material.material_number = antrian.hsa_kito_code
+		// 	left join
+		// 	(select hsa.hsa_kito_code as material_number, qty.qty from
+		// 	(select part.part_id, count(part.part_id) as qty  from
+		// 	(select m.order_id_sedang as order_id, o.part_type, o.part_id from m_mesin m
+		// 	left join t_order o on m.order_id_sedang = o.order_id
+		// 	where m.order_id_sedang <> ''
+		// 	or m.order_id_sedang <> null
+		// 	and o.part_type = '2'
+		// 	union
+		// 	select m.order_id_akan as order_id, o.part_type, o.part_id from m_mesin m
+		// 	left join t_order o on m.order_id_akan = o.order_id
+		// 	where m.order_id_akan <> ''
+		// 	or m.order_id_akan <> null
+		// 	and o.part_type = '2') part
+		// 	group by part.part_id) qty
+		// 	left join m_hsa hsa on hsa.hsa_id = qty.part_id) wip
+		// 	on material.material_number = wip.material_number");
+		
+
+
+		$stock = array();
+		foreach ($stores as $store) {
+			$queue_qty = 0;
+			foreach ($queues as $queue) {
+				if($store->material_number == $queue->material_number){
+					$queue_qty = $queue->qty;
+				}
+
+			}
+
+			array_push($stock, [
+				'material_number' => $store->material_number,
+				'material_description' => $store->description,
+				'store' => $store->qty,
+				'antrian' => $queue_qty
+			]);
+		}
 
 		return DataTables::of($stock)->make(true);
-
 	}
 
 	public function scanWeldingKensa(Request $request){
@@ -3216,6 +3289,15 @@ class WeldingProcessController extends Controller
 			->select('materials.model', 'materials.key', 'materials.surface', 'materials.material_number', 'materials.hpl', 'material_volumes.lot_completion')
 			->first();
 		}
+
+	
+
+		$delete = db::connection('welding_controller')
+		->table('t_cuci')
+		->where('kartu_code', $tag)
+		->delete();
+		
+
 
 		$response = array(
 			'status' => true,
@@ -3328,36 +3410,36 @@ class WeldingProcessController extends Controller
 				return Response::json($response);
 			}
 		} else {
-			if($request->get('loc') == 'hsa-visual-sx'){
-				try{
-					$m_hsa_kartu = db::connection('welding')->table('m_hsa_kartu')->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)->first();
+			// if($request->get('loc') == 'hsa-visual-sx'){
+			// 	try{
+			// 		$m_hsa_kartu = db::connection('welding')->table('m_hsa_kartu')->where('m_hsa_kartu.hsa_kartu_code', '=', $tag)->first();
 
-					$order_id = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
-					->where('part_id', '=', $m_hsa_kartu->hsa_id)
-					->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
-					->first();
+			// 		$order_id = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
+			// 		->where('part_id', '=', $m_hsa_kartu->hsa_id)
+			// 		->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
+			// 		->first();
 
-					$t_order_detail = db::connection('welding')->table('t_order_detail')
-					->where('order_id', '=', $order_id->order_id)
-					->where('flow_id', '=', '3')
-					->where('order_status', '=', '1')
-					->update([
-						'order_sedang_start_date' => $request->get('started_at'),
-						'order_sedang_finish_date' => date('Y-m-d H:i:s'),
-						'order_status' => '6'
-					]);
+			// 		$t_order_detail = db::connection('welding')->table('t_order_detail')
+			// 		->where('order_id', '=', $order_id->order_id)
+			// 		->where('flow_id', '=', '3')
+			// 		->where('order_status', '=', '1')
+			// 		->update([
+			// 			'order_sedang_start_date' => $request->get('started_at'),
+			// 			'order_sedang_finish_date' => date('Y-m-d H:i:s'),
+			// 			'order_status' => '6'
+			// 		]);
 
-					$t_order = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
-					->where('part_id', '=', $m_hsa_kartu->hsa_id)
-					->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
-					->update([
-						'order_status' => '5'
-					]);
-				}
-				catch(\Exception $e){
+			// 		$t_order = db::connection('welding')->table('t_order')->where('part_type', '=', '2')
+			// 		->where('part_id', '=', $m_hsa_kartu->hsa_id)
+			// 		->where('t_order.kanban_no', '=', $m_hsa_kartu->hsa_kartu_no)
+			// 		->update([
+			// 			'order_status' => '5'
+			// 		]);
+			// 	}
+			// 	catch(\Exception $e){
 
-				}
-			}
+			// 	}
+			// }
 			try{
 
 				$welding_log = new WeldingLog([
@@ -3407,7 +3489,7 @@ class WeldingProcessController extends Controller
 					'updated_at' => Carbon::now()]
 				);
 
-				if($request->get('loc') == 'hsa-dimensi-sx'){
+				if($request->get('loc') != 'hsa-visual-sx'){
 					if($request->get('kensa_id') != null){
 						$delete = db::connection('welding')
 						->table('t_kensa')
@@ -3530,7 +3612,7 @@ class WeldingProcessController extends Controller
 	}
 
 	function dec2hex($number){
-		
+
 		$hexvalues = array('0','1','2','3','4','5','6','7',
 			'8','9','A','B','C','D','E','F');
 		$hexval = '';

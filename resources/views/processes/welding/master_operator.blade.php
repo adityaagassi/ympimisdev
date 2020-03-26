@@ -59,7 +59,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $title }}
+		{{ $title }} <span class="text-purple">{{ $title_jp }}</span>
 		<button class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#create_modal" style="margin-right: 5px">
 			<i class="fa fa-plus"></i>&nbsp;&nbsp;Add Operator
 		</button>
@@ -434,9 +434,9 @@
 		$.get('{{ url("fetch/welding/get_operator") }}',data, function(result, status, xhr){
 			if(result.status){
 				$.each(result.lists, function(key, value) {
-					var hex = '{{ hexdec('+value.operator_code+') }}';
+					// var hex = '{{ hexdec('+value.operator_code+') }}';
 					$("#editoperator").val(value.operator_nik).trigger('change.select2');
-					$("#editoperator_code").val(hex);
+					$("#editoperator_code").val(value.operator_code);
 					$("#operator_id").val(value.operator_id);
 					$("#editgroup").val(value.group).trigger('change.select2');
 				});

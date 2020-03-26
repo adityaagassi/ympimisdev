@@ -86,6 +86,7 @@ Route::post('visitor_inputtag', 'VisitorController@inputtag');
 Route::get('visitor_confirmation', 'VisitorController@confirmation');
 Route::post('visitor_updateremark', 'VisitorController@updateremark');
 Route::post('visitor_updateremarkall', 'VisitorController@updateremarkall');
+Route::get('visitor_confirm_manager/{id}', 'VisitorController@confirm_manager');
 Route::get('visitor_leave', 'VisitorController@leave');
 Route::get('visitor_getvisit', 'VisitorController@getvisit');
 Route::post('visitor_out', 'VisitorController@out');
@@ -909,6 +910,7 @@ Route::get('fetch/welding/kensa_result', 'WeldingProcessController@fetchKensaRes
 Route::get('index/welding/resume/{id}', 'WeldingProcessController@indexWeldingResume');
 Route::get('fetch/welding/resume', 'WeldingProcessController@fetchWeldingResume');
 Route::get('fetch/welding/key_resume', 'WeldingProcessController@fetchWeldingKeyResume');
+Route::get('fetch/welding/ng_resume', 'WeldingProcessController@fetchWeldingKeyResume');
 Route::get('index/welding/group_achievement', 'WeldingProcessController@indexWeldingAchievement');
 Route::get('fetch/welding/group_achievement', 'WeldingProcessController@fetchGroupAchievement');
 Route::get('fetch/welding/group_achievement_detail', 'WeldingProcessController@fetchGroupAchievementDetail');
@@ -2290,40 +2292,40 @@ Route::get('index/request_qa/verifikasi/{id}', 'QcRequestController@verifikasi')
 
 // CPAR Antar Departemen & Bagian
 
-Route::get('index/cpar', 'CparController@index');
-Route::get('index/cpar/fetchDataTable', 'CparController@fetchDataTable');
-Route::get('index/cpar/create', 'CparController@create');
-Route::post('post/cpar/create', 'CparController@post_create');
-Route::get('index/cpar/detail/{id}', 'CparController@detail');
-Route::get('index/cpar/fetch_item/{id}', 'CparController@fetch_item');
-Route::post('index/cpar/create_item', 'CparController@create_item');
-Route::get('index/cpar/edit_item', 'CparController@fetch_item_edit');
-Route::post('index/cpar/edit_item', 'CparController@edit_item');
-Route::post('index/cpar/delete_item', 'CparController@delete_item');
-Route::post('index/cpar/update_detail/{id}', 'CparController@update_detail');
-Route::get('index/cpar/print/{id}', 'CparController@print_report');
+Route::get('index/form_ketidaksesuaian', 'CparController@index');
+Route::get('index/form_ketidaksesuaian/fetchDataTable', 'CparController@fetchDataTable');
+Route::get('index/form_ketidaksesuaian/create', 'CparController@create');
+Route::post('post/form_ketidaksesuaian/create', 'CparController@post_create');
+Route::get('index/form_ketidaksesuaian/detail/{id}', 'CparController@detail');
+Route::get('index/form_ketidaksesuaian/fetch_item/{id}', 'CparController@fetch_item');
+Route::post('index/form_ketidaksesuaian/create_item', 'CparController@create_item');
+Route::get('index/form_ketidaksesuaian/edit_item', 'CparController@fetch_item_edit');
+Route::post('index/form_ketidaksesuaian/edit_item', 'CparController@edit_item');
+Route::post('index/form_ketidaksesuaian/delete_item', 'CparController@delete_item');
+Route::post('index/form_ketidaksesuaian/update_detail/{id}', 'CparController@update_detail');
+Route::get('index/form_ketidaksesuaian/print/{id}', 'CparController@print_report');
 // Verifikasi CPAR Departemen
-Route::get('index/cpar/verifikasicpar/{id}', 'CparController@verifikasicpar');
-Route::post('index/cpar/approval/{id}', 'CparController@approval');
-Route::post('index/cpar/notapprove/{id}', 'CparController@notapprove');
-Route::get('index/cpar/sendemail/{id}', 'CparController@sendemail');
+Route::get('index/form_ketidaksesuaian/verifikasicpar/{id}', 'CparController@verifikasicpar');
+Route::post('index/form_ketidaksesuaian/approval/{id}', 'CparController@approval');
+Route::post('index/form_ketidaksesuaian/notapprove/{id}', 'CparController@notapprove');
+Route::get('index/form_ketidaksesuaian/sendemail/{id}', 'CparController@sendemail');
 // CAR Antar Departemen
-Route::get('index/cpar/response/{id}', 'CparController@response');
-Route::post('index/cpar/update_car/{id}', 'CparController@update_car');
+Route::get('index/form_ketidaksesuaian/response/{id}', 'CparController@response');
+Route::post('index/form_ketidaksesuaian/update_car/{id}', 'CparController@update_car');
 // Verifikasi CAR Departemen & Bagian
-Route::get('index/cpar/verifikasicar/{id}', 'CparController@verifikasicar');
-Route::post('index/cpar/approvalcar/{id}', 'CparController@approvalcar');
-Route::post('index/cpar/notapprovecar/{id}', 'CparController@notapprovecar');
-Route::get('index/cpar/sendemailcar/{id}', 'CparController@sendemailcar');
+Route::get('index/form_ketidaksesuaian/verifikasicar/{id}', 'CparController@verifikasicar');
+Route::post('index/form_ketidaksesuaian/approvalcar/{id}', 'CparController@approvalcar');
+Route::post('index/form_ketidaksesuaian/notapprovecar/{id}', 'CparController@notapprovecar');
+Route::get('index/form_ketidaksesuaian/sendemailcar/{id}', 'CparController@sendemailcar');
 // Verifikasi Bagian
-Route::get('index/cpar/verifikasibagian/{id}', 'CparController@verifikasibagian');
-Route::post('index/cpar/close', 'CparController@closecar');
-Route::post('index/cpar/reject', 'CparController@rejectcar');
+Route::get('index/form_ketidaksesuaian/verifikasibagian/{id}', 'CparController@verifikasibagian');
+Route::post('index/form_ketidaksesuaian/close', 'CparController@closecar');
+Route::post('index/form_ketidaksesuaian/reject', 'CparController@rejectcar');
 //Monitoring CPAR
-Route::get('index/cpar/monitoring', 'CparController@monitoring');
-Route::get('fetch/cpar/monitoring', 'CparController@fetchMonitoring');
-Route::get('index/cpar/detail', 'CparController@detailMonitoring');
-Route::get('index/cpar/table', 'CparController@fetchTable');
+Route::get('index/form_ketidaksesuaian/monitoring', 'CparController@monitoring');
+Route::get('fetch/form_ketidaksesuaian/monitoring', 'CparController@fetchMonitoring');
+Route::get('index/form_ketidaksesuaian/detail', 'CparController@detailMonitoring');
+Route::get('index/form_ketidaksesuaian/table', 'CparController@fetchTable');
 
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
@@ -2397,6 +2399,7 @@ Route::post('index/press/filter_report_kanagata_lifetime', 'PressController@filt
 Route::get('index/kanagata_lifetime/getkanagatalifetime','PressController@getkanagatalifetime')->name('kanagata_lifetime.getkanagatalifetime');
 Route::post('index/kanagata/update/{id}','PressController@update');
 Route::post('index/kanagata/reset','PressController@reset');
+Route::get('index/prod_result/getprodresult','PressController@getprodresult')->name('prod_result.getprodresult');
 //Master Kanagata
 Route::get('index/press/master_kanagata', 'PressController@indexMasterKanagata');
 Route::get('fetch/press/master_kanagata', 'PressController@fetchMasterKanagata');
@@ -2441,6 +2444,14 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/list_spk', 'MaintenanceController@indexMaintenanceList');
 	Route::get('fetch/maintenance/list_spk', 'MaintenanceController@fetchMaintenanceList');
 	Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
+
+	Route::post('post/maintenance/member', 'MaintenanceController@postMemberSPK');
+	Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
+
+	Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
+
+	// -----------  APAR -----------
+	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
 });
 
 //ROOMS
