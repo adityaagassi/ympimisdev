@@ -60,9 +60,9 @@
 		</p>
 	</div>
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-9">
 			<div class="row">
-				<div class="col-md-2">
+				<div class="col-md-3">
 					<div class="form-group">
 						<label>Date From</label>
 						<div class="input-group date">
@@ -73,7 +73,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-3">
 					<div class="form-group">
 						<label>Date To</label>
 						<div class="input-group date">
@@ -84,7 +84,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<div class="form-group">
 						<label>Location</label>
 						<select class="form-control select2" multiple="multiple" name="location" id="location" data-placeholder="Select Location" style="width: 100%;">
@@ -107,20 +107,16 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-xs-9">
+				<div class="col-xs-12">
 					<div class="form-group pull-right">
 						<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
 						<button id="search" onClick="fetchTable()" class="btn btn-primary">Search</button>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-xs-9">
+				<div class="col-xs-12">
 					<table id="table" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
@@ -142,6 +138,16 @@
 					<center>
 						<i class="fa fa-spinner fa-spin" id="loading2" style="font-size: 80px;"></i>
 					</center>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-3">
+			<div class="small-box" style="background: #ff851b; height: 150px; margin-bottom: 5px; margin-top: 10px;">
+				<div class="inner" style="padding-bottom: 0px;">
+					<h3 style="margin-bottom: 0px;font-size: 2vw;"><b>Meeting Chart <span class="text-purple"></span></b></h3>
+				</div>
+				<div class="icon" style="padding-top: 40px;">
+					<i class="fa fa-line-chart"></i>
 				</div>
 			</div>
 		</div>
@@ -653,6 +659,12 @@
 			if(result.status){
 				$('#loadingscreen').hide();
 				$('#modalCreate').modal('hide');
+				$('#createSubject').val("");
+				$('#createDescription').val("");
+				$('#createStart').val("");
+				$('#createEnd').val("");
+				$('#tableParticipant').html("");
+				participants = [];
 				fetchTable();
 				openSuccessGritter('Success!', result.message)
 			}

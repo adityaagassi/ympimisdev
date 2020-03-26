@@ -194,12 +194,16 @@
 			fetchAttendance(id);
 		}
 
-		setInterval($('#tag').focus(), 20000);
+		setInterval(foc, 20000);
 
 		$('.select2').select2();
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+	function foc(){
+		$('#tag').focus();
+	}
 
 	$('#tag').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
@@ -306,7 +310,6 @@
 					tableData += "</tr>";
 					no++;
 				});
-
 
 				$('#meet5').text(total_hadir);
 				$('#meet6').text(total_belum_hadir);
