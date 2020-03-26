@@ -131,6 +131,34 @@ class VisitorController extends Controller
 			$visitor -> save();	
 			$id = Visitor::orderby('created_at','desc')->first();
 
+			for ($i=0; $i < $lop_suhu ; $i++) {
+
+				$nama = "nama".$i;
+				$suhu = "suhu".$i;
+				$kota = "kota".$i;
+				$namavis = $request->get($nama);
+				$kotavis = $request->get($kota);
+				$suhuvis = $request->get($suhu);
+				if ($request->get('company') == null) {
+					$suhunew = new BodyTemperature([
+						'company' => $request->get('company2'),
+						'name' => $request->get($nama),
+						'kota' => $request->get($kota),
+						'suhu' => $request->get($suhu),
+						'created_by' => Auth::id()
+					]);
+				}else{
+					$suhunew = new BodyTemperature([
+						'company' => $request->get('company'),
+						'name' => $request->get($nama),
+						'kota' => $request->get($kota),
+						'suhu' => $request->get($suhu),
+						'created_by' => Auth::id()
+					]);
+				}
+				$suhunew -> save();
+			}
+
 			if ($request->get('destination') == 'Office') {
 
 				$emp_sync = DB::SELECT("SELECT * FROM employee_syncs WHERE employee_id = '".$request->get('employee')."'");
@@ -151,6 +179,9 @@ class VisitorController extends Controller
 					$namamanager[] = [ 'employees' => $name,
 	                    'department' => $department,
 	                    'company' => $company,
+	                    'nama' => $namavis,
+	                    'kota' => $kotavis,
+	                    'suhu' => $suhuvis,
 	                    'id' => $id->id
 	                ];
 				}
@@ -161,30 +192,6 @@ class VisitorController extends Controller
 				Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($namamanager, 'incoming_visitor'));
 			}
 
-			for ($i=0; $i < $lop_suhu ; $i++) {
-
-				$nama = "nama".$i;
-				$suhu = "suhu".$i;
-				$kota = "kota".$i;
-				if ($request->get('company') == null) {
-					$suhunew = new BodyTemperature([
-						'company' => $request->get('company2'),
-						'name' => $request->get($nama),
-						'kota' => $request->get($kota),
-						'suhu' => $request->get($suhu),
-						'created_by' => Auth::id()
-					]);
-				}else{
-					$suhunew = new BodyTemperature([
-						'company' => $request->get('company'),
-						'name' => $request->get($nama),
-						'kota' => $request->get($kota),
-						'suhu' => $request->get($suhu),
-						'created_by' => Auth::id()
-					]);
-				}
-				$suhunew -> save();
-			}
 			//----insert detail
 			for ($i=0; $i < $lop ; $i++) {
 
