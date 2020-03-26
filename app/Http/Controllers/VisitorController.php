@@ -169,21 +169,57 @@ class VisitorController extends Controller
 						$name = $key->name;
 					}
 
-					$mail_to = DB::SELECT("SELECT
+					if ($department == null && $name == 'Budhi Apriyanto') {
+						$department = 'Production Engineering';
+						$mail_to = DB::SELECT("SELECT
 							email 
 						FROM
 							send_emails 
 						WHERE
 							remark = '".$department."'");
 
-					$namamanager[] = [ 'employees' => $name,
-	                    'department' => $department,
-	                    'company' => $company,
-	                    'nama' => $namavis,
-	                    'kota' => $kotavis,
-	                    'suhu' => $suhuvis,
-	                    'id' => $id->id
-	                ];
+						$namamanager[] = [ 'employees' => $name,
+		                    'department' => $department,
+		                    'company' => $company,
+		                    'nama' => $namavis,
+		                    'kota' => $kotavis,
+		                    'suhu' => $suhuvis,
+		                    'id' => $id->id
+		                ];
+					}elseif ($department == null && $name == 'Arief Soekamto') {
+						$department = 'Human Resources';
+						$mail_to = DB::SELECT("SELECT
+							email 
+						FROM
+							send_emails 
+						WHERE
+							remark = '".$department."'");
+
+						$namamanager[] = [ 'employees' => $name,
+		                    'department' => $department,
+		                    'company' => $company,
+		                    'nama' => $namavis,
+		                    'kota' => $kotavis,
+		                    'suhu' => $suhuvis,
+		                    'id' => $id->id
+		                ];
+					}else{
+						$mail_to = DB::SELECT("SELECT
+							email 
+						FROM
+							send_emails 
+						WHERE
+							remark = '".$department."'");
+
+						$namamanager[] = [ 'employees' => $name,
+		                    'department' => $department,
+		                    'company' => $company,
+		                    'nama' => $namavis,
+		                    'kota' => $kotavis,
+		                    'suhu' => $suhuvis,
+		                    'id' => $id->id
+		                ];
+					}
 				}
 
 				$contactList = [];
