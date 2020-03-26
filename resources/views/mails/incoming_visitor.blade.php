@@ -43,7 +43,7 @@
 						<td style="width: 2%; border:1px solid black;">{{$data[0]['kota']}}</td>
 					</tr>
 					<tr>
-						<td style="width: 1%; border:1px solid black; background-color: rgb(56, 181, 14);">Temperature</td>
+						<td style="width: 1%; border:1px solid black; background-color: rgb(56, 181, 14);">Body Temperature</td>
 						<td style="width: 2%; border:1px solid black;">{{$data[0]['suhu']}} °C</td>
 					</tr>
 				</tbody>
