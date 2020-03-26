@@ -3290,26 +3290,37 @@ class WeldingProcessController extends Controller
 			->first();
 		}
 
-	
-
 		$delete = db::connection('welding_controller')
 		->table('t_cuci')
 		->where('kartu_code', $tag)
 		->delete();
+
+		if($request->get('location') == 'hsa-dimensi-sx'){
+			$response = array(
+				'status' => true,
+				'message' => 'Material ditemukan',
+				'material' => $material,
+				'opwelding' => $zed_operator,
+				'started_at' => date('Y-m-d H:i:s'),
+				'attention_point' => asset("/welding/attention_point/".$material->model." ".$material->key." ".$material->surface.".jpg"),
+				'check_point' => asset("/welding/check_point/".$material->model." ".$material->key." ".$material->surface.".jpg"),
+				'check_point_dimensi' => asset("/welding/check_point_dimensi/".$zed_material->hsa_kito_code.".jpg"),
+			);
+			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => true,
+				'message' => 'Material ditemukan',
+				'material' => $material,
+				'opwelding' => $zed_operator,
+				'started_at' => date('Y-m-d H:i:s'),
+				'attention_point' => asset("/welding/attention_point/".$material->model." ".$material->key." ".$material->surface.".jpg"),
+				'check_point' => asset("/welding/check_point/".$material->model." ".$material->key." ".$material->surface.".jpg")
+			);
+			return Response::json($response);
+		}
 		
-
-
-		$response = array(
-			'status' => true,
-			'message' => 'Material ditemukan',
-			'material' => $material,
-			'opwelding' => $zed_operator,
-			'started_at' => date('Y-m-d H:i:s'),
-			'attention_point' => asset("/welding/attention_point/".$material->model." ".$material->key." ".$material->surface.".jpg"),
-			'check_point' => asset("/welding/check_point/".$material->model." ".$material->key." ".$material->surface.".jpg"),
-			'check_point_dimensi' => asset("/welding/check_point_dimensi/".$zed_material->hsa_kito_code.".jpg"),
-		);
-		return Response::json($response);
+		
 	}
 
 	public function inputWeldingRework(Request $request){
