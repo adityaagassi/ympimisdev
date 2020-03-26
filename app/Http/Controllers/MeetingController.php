@@ -11,6 +11,7 @@ use PDF;
 use Excel;
 use App\Meeting;
 use App\MeetingDetail;
+use App\MeetingLog;
 use App\EmployeeSync;
 use Illuminate\Support\Facades\DB;
 
@@ -61,11 +62,23 @@ class MeetingController extends Controller
 	}
 
 	public function downloadMeeting(Request $request){
+
 		$reports = Meeting::where('meetings.id', '=', $request->get('id'))
 		->leftJoin('meeting_details', 'meeting_details.meeting_id', '=', 'meetings.id')
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
-		->select('meetings.id', 'meetings.start_time', 'meetings.end_time', 'meetings.subject', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.status', 'meeting_details.attend_time')
+		->select('meetings.id', 'meetings.start_time', 'meetings.end_time', 'meetings.subject', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.status', 'meeting_details.attend_time', 'meetings.status as meeting_status')
 		->get();
+
+
+		if($reports[0]->meeting_status == 'close'){
+			$reports = Meeting::where('meetings.id', '=', $request->get('id'))
+			->leftJoin('meeting_logs', 'meeting_logs.meeting_id', '=', 'meetings.id')
+			->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_logs.employee_id')
+			->select('meetings.id', 'meetings.start_time', 'meetings.end_time', 'meetings.subject', 'meeting_logs.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_logs.status', 'meeting_logs.attend_time', 'meetings.status as meeting_status')
+			->get();
+		}
+
+
 		$paths = array();
 
 		if($request->get('cat') == 'pdf'){
@@ -249,14 +262,22 @@ class MeetingController extends Controller
 
 	public function fetchMeetingAttendance(Request $request){
 
-		$attendances = MeetingDetail::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
-		->leftJoin('meetings', 'meetings.id', '=', 'meeting_details.meeting_id')
+		$attendances = Meeting::leftJoin('meeting_details', 'meetings.id', '=', 'meeting_details.meeting_id')
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
 		->leftJoin('employee_syncs as org', 'org.employee_id', '=', 'meetings.organizer_id')
 		// ->leftJoin('employee_syncs as org', 'employee_syncs.employee_id', '=', 'meetings.organizer_id')
-		->where('meeting_details.meeting_id', '=', $request->get('id'))
-		->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), db::raw('if(meetings.start_time < meeting_details.attend_time, 1, 0) as late'), 'meetings.organizer_id', 'meetings.subject', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status')
+		->where('meetings.id', '=', $request->get('id'))
+		->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), db::raw('if(meetings.start_time < meeting_details.attend_time, 1, 0) as late'), 'meetings.organizer_id', 'meetings.subject', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
 		->orderBy('meeting_details.status', 'asc')
 		->get();
+
+		if($attendances[0]->meeting_status == 'close'){
+			$response = array(
+				'status' => false,
+				'message' => 'This meeting already closed.'
+			);
+			return Response::json($response);
+		}
 
 		$response = array(
 			'status' => true,
@@ -358,13 +379,33 @@ class MeetingController extends Controller
 			return Response::json($response);
 		}
 
-		$meeting->subject = $request->get('subject');
-		$meeting->description = $request->get('description');
-		$meeting->location = $request->get('location');
-		$meeting->start_time = $request->get('start_time');
-		$meeting->end_time = $request->get('end_time');
-		$meeting->status = $request->get('status');
-		$meeting->save();
+		try{
+
+			if($request->get('status') == 'close'){
+				$qry = "
+				insert into meeting_logs (meeting_id, employee_tag, employee_id, `status`, remark, attend_time, organizer_id, `subject`, description, location, start_time, end_time, created_by, created_at, updated_at)
+				select meeting_details.meeting_id, meeting_details.employee_tag, meeting_details.employee_id, meeting_details.`status`, meeting_details.remark, meeting_details.attend_time, meetings.organizer_id, meetings.`subject`, meetings.description, meetings.location, meetings.start_time, meetings.end_time, meetings.created_by, now(), now() from meeting_details left join meetings on meetings.id = meeting_details.meeting_id where meeting_details.meeting_id = '".$request->get('id')."'";
+
+				$logs = db::select($qry);
+
+				$delete_details = MeetingDetail::where('meeting_id', '=', $request->get('id'))->forceDelete();
+
+				$meeting->subject = $request->get('subject');
+				$meeting->description = $request->get('description');
+				$meeting->location = $request->get('location');
+				$meeting->start_time = $request->get('start_time');
+				$meeting->end_time = $request->get('end_time');
+				$meeting->status = $request->get('status');
+				$meeting->save();
+			}
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
 
 		$response = array(
 			'status' => true,
@@ -378,6 +419,14 @@ class MeetingController extends Controller
 			$delete = MeetingDetail::where('meeting_details.id', '=', $request->get('id'))
 			->leftJoin('meetings', 'meetings.id', '=', 'meeting_details.meeting_id')
 			->first();
+
+			if($delete == null){
+				$response = array(
+					'status' => false,
+					'message' => "This meeting already closed"
+				);
+				return Response::json($response);
+			}
 
 			if(Auth::user()->username != $delete->organizer_id){
 				$response = array(
@@ -418,11 +467,20 @@ class MeetingController extends Controller
 		->select('meetings.id', 'meetings.subject', 'meetings.description', 'meetings.location', db::raw('date_format(meetings.start_time, "%Y-%m-%d %k:%i") as start_time'), db::raw('date_format(meetings.end_time, "%Y-%m-%d %k:%i") as end_time'), 'meetings.status')
 		->first();
 
-		$meeting_details = MeetingDetail::where('meeting_details.meeting_id', '=', $request->get('id'))
-		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
-		->select('meeting_details.id', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.status')
-		->orderBy('meeting_details.created_at', 'asc')
-		->get();
+		if($meeting->status == 'open'){
+			$meeting_details = MeetingDetail::where('meeting_details.meeting_id', '=', $request->get('id'))
+			->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
+			->select('meeting_details.id', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.status')
+			->orderBy('meeting_details.id', 'asc')
+			->get();
+		}
+		else{
+			$meeting_details = MeetingLog::where('meeting_logs.meeting_id', '=', $request->get('id'))
+			->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_logs.employee_id')
+			->select('meeting_logs.id', 'meeting_logs.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_logs.status')
+			->orderBy('meeting_logs.id', 'asc')
+			->get();
+		}
 
 		$response = array(
 			'status' => true,
