@@ -213,7 +213,13 @@ table > thead > tr > th{
 							$('#visitor_info').show();
 							$('#jam').hide();
 							
-							document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+' - '+result.visitors[i].department+')<br>AT SECURITY<br>';
+							if (result.visitors[i].department == null && result.visitors[i].nama == 'Budhi Apriyanto') {
+								document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+' - Production Engineering)<br>AT SECURITY<br>';
+							}else if (result.visitors[i].department == null && result.visitors[i].nama == 'Arief Soekamto') {
+								document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+' - Human Resources)<br>AT SECURITY<br>';
+							}else{
+								document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+' - '+result.visitors[i].department+')<br>AT SECURITY<br>';
+							}
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
 							$("#visitor_info").css("color",'#fff');
@@ -225,7 +231,14 @@ table > thead > tr > th{
 							$('#visitor_info').show();
 							$('#jam').hide();
 
-							document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name+' - '+result.visitors_lobby[i].department+')<br>AT LOBBY<br>';
+							if (result.visitors_lobby[i].department == null && result.visitors_lobby[i].nama == 'Budhi Apriyanto') {
+								document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name+' - Production Engineering)<br>AT LOBBY<br>';
+							}else if (result.visitors_lobby[i].department == null && result.visitors_lobby[i].nama == 'Arief Soekamto') {
+								document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name+' - Human Resources)<br>AT LOBBY<br>';
+							}else{
+								document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name+' - '+result.visitors_lobby[i].department+')<br>AT LOBBY<br>';
+							}
+
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
 							// document.getElementsByClassName("content").style.backgroundColor = '#f07400';
