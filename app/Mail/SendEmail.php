@@ -139,14 +139,17 @@ class SendEmail extends Mailable
         if($this->remark == 'visitor_confirmation'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Visitor Confirmation (来客の確認)')->view('mails.visitor_confirmation');
         }
+        if($this->remark == 'incoming_visitor'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Incoming Visitor (??)')->view('mails.incoming_visitor');
+        }
         if($this->remark == 'ng_finding'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Temuan NG (??)')->view('mails.ng_finding');
         }
         if($this->remark == 'cpar_dept'){
-            return $this->from('ympimis@gmail.com', 'PT. YMPI (CPAR Antar Departemen)')->priority(1)->subject('CPAR '.$this->data[0]->judul.' (是正防止処置要求)')->view('mails.cpar_dept');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Form Ketidaksesuaian '.$this->data[0]->judul.' ')->view('mails.cpar_dept');
         }
         if($this->remark == 'rejectcpar_dept'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('CPAR '.$this->data[0]->judul.' Telah Ditolak')->view('mails.rejectcpar_dept');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Form Ketidaksesuaian '.$this->data[0]->judul.' Telah Ditolak')->view('mails.rejectcpar_dept');
         }
 
         if($this->remark == 'machine'){

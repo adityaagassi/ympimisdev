@@ -17,6 +17,8 @@ use DataTables;
 use File;
 use Storage;
 use App\BodyTemperature;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendEmail;
 
 class VisitorController extends Controller
 {
@@ -73,6 +75,7 @@ class VisitorController extends Controller
 		try {
 			//----insert visitor
 			if ($request->get('company') == null) {
+				$company = $request->get('company2');
 				if ($request->get('pol') == null) {
 					$visitor = new visitor([
 						'company' => $request->get('company2'),
@@ -98,6 +101,7 @@ class VisitorController extends Controller
 					]);
 				}
 			}else{
+				$company = $request->get('company');
 				if ($request->get('pol') == null) {
 					$visitor = new visitor([
 						'company' => $request->get('company'),
@@ -126,6 +130,36 @@ class VisitorController extends Controller
 
 			$visitor -> save();	
 			$id = Visitor::orderby('created_at','desc')->first();
+
+			if ($request->get('destination') == 'Office') {
+
+				$emp_sync = DB::SELECT("SELECT * FROM employee_syncs WHERE employee_id = '".$request->get('employee')."'");
+
+				if (count($emp_sync) > 0) {
+					foreach ($emp_sync as $key) {
+						$department = $key->department;
+						$name = $key->name;
+					}
+
+					$mail_to = DB::SELECT("SELECT
+							email 
+						FROM
+							send_emails 
+						WHERE
+							remark = '".$department."'");
+
+					$namamanager[] = [ 'employees' => $name,
+	                    'department' => $department,
+	                    'company' => $company,
+	                    'id' => $id->id
+	                ];
+				}
+
+				$contactList = [];
+		        $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+		        $contactList[1] = 'aditya.agassi@music.yamaha.com';
+				Mail::to($mail_to)->bcc($contactList,'Contact List')->send(new SendEmail($namamanager, 'incoming_visitor'));
+			}
 
 			for ($i=0; $i < $lop_suhu ; $i++) {
 
@@ -357,43 +391,43 @@ public function inputtag(Request $request){
 		if(count($visitorDetail) > 0 ){
 			$id_visitor = $visitorDetail->id_visitor;
 
-		$visitor = Visitor::find($id_visitor);
-		$visitor->location = 'Lobby';
-		$visitor->save();
+			$visitor = Visitor::find($id_visitor);
+			$visitor->location = 'Lobby';
+			$visitor->save();
 
-		$visitor2 = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->where('visitors.id',$id_visitor)->first();
+			$visitor2 = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->where('visitors.id',$id_visitor)->first();
 
-		$plc = PlcCounter::where('origin_group_code','visitor_lobby')->first();
-    	$counter = $plc->plc_counter;
-    	$id_plc = $plc->id;
+			$plc = PlcCounter::where('origin_group_code','visitor_lobby')->first();
+	    	$counter = $plc->plc_counter;
+	    	$id_plc = $plc->id;
 
-		$plccounter = PlcCounter::find($id_plc);
-		$plccounter->plc_counter = 0;
-		$plccounter->save();
+			$plccounter = PlcCounter::find($id_plc);
+			$plccounter->plc_counter = 0;
+			$plccounter->save();
 
-		$plc2 = PlcCounter::where('origin_group_code','visitor_lobby2')->first();
-    	$counter2 = $plc2->plc_counter;
-    	$id_plc2 = $plc2->id;
+			$plc2 = PlcCounter::where('origin_group_code','visitor_lobby2')->first();
+	    	$counter2 = $plc2->plc_counter;
+	    	$id_plc2 = $plc2->id;
 
-		$plccounter2 = PlcCounter::find($id_plc2);
-		$plccounter2->plc_counter = 0;
-		$plccounter2->save();
+			$plccounter2 = PlcCounter::find($id_plc2);
+			$plccounter2->plc_counter = 0;
+			$plccounter2->save();
 
-		$plc_sec = PlcCounter::where('origin_group_code','visitor')->first();
-    	$counter_sec = $plc_sec->plc_counter;
-    	$id_plc_sec = $plc_sec->id;
+			$plc_sec = PlcCounter::where('origin_group_code','visitor')->first();
+	    	$counter_sec = $plc_sec->plc_counter;
+	    	$id_plc_sec = $plc_sec->id;
 
-		$plccounter_sec = PlcCounter::find($id_plc_sec);
-		$plccounter_sec->plc_counter = $counter_sec - 1;
-		$plccounter_sec->save();
+			$plccounter_sec = PlcCounter::find($id_plc_sec);
+			$plccounter_sec->plc_counter = $counter_sec - 1;
+			$plccounter_sec->save();
 
-		$plc_sec2 = PlcCounter::where('origin_group_code','visitor2')->first();
-    	$counter_sec2 = $plc_sec2->plc_counter;
-    	$id_plc_sec2 = $plc_sec2->id;
+			$plc_sec2 = PlcCounter::where('origin_group_code','visitor2')->first();
+	    	$counter_sec2 = $plc_sec2->plc_counter;
+	    	$id_plc_sec2 = $plc_sec2->id;
 
-		$plccounter_sec2 = PlcCounter::find($id_plc_sec2);
-		$plccounter_sec2->plc_counter = $counter_sec2 - 1;
-		$plccounter_sec2->save();
+			$plccounter_sec2 = PlcCounter::find($id_plc_sec2);
+			$plccounter_sec2->plc_counter = $counter_sec2 - 1;
+			$plccounter_sec2->save();
 
 			$response = array(
 				'status' => true,
@@ -568,6 +602,41 @@ public function updateremarkall(Request $request){
 			'message' => $e->getMessage()
 		);
 		return Response::json($response);
+	}
+
+}
+
+public function confirm_manager($id){
+
+	try {
+	    $intime = date('H:i:s');
+		$visitordetail = VisitorDetail::where('id_visitor','=', $id)		
+		->withTrashed()
+		->update(['remark' => 'Sudah Ditemui']);
+
+		$visitor = Visitor::where('id','=', $id)		     
+		->first();
+		$visitor->remark = 'Sudah Ditemui';
+		$visitor->save();
+
+		$datavisitor = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->where('visitors.id',$id)->first();
+
+		$name = $datavisitor->name;
+		$department = $datavisitor->department;
+		$company = $datavisitor->company;
+
+		$message = $name.'('.$department.') telah terkonfirmasi menemui '.$company;
+		return view('visitors.visitor_confirm_manager', array(
+			'head' => $id,
+			'message' => $message,
+		))->with('page', 'Visitor Confirmation');
+	}
+	catch(\Exception $e){
+		$message = $name.'('.$department.') telah terkonfirmasi menemui '.$company;
+		return view('visitors.visitor_confirm_manager', array(
+			'head' => $id,
+			'message' => $message,
+		))->with('page', 'Visitor Confirmation');
 	}
 
 }

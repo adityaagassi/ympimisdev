@@ -435,8 +435,7 @@
 					else{
 						alert("Disconnected from server");
 					}
-				});				
-				
+				});
 		}
 
 		function reloadtable() {

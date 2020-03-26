@@ -86,7 +86,7 @@ Route::post('visitor_inputtag', 'VisitorController@inputtag');
 Route::get('visitor_confirmation', 'VisitorController@confirmation');
 Route::post('visitor_updateremark', 'VisitorController@updateremark');
 Route::post('visitor_updateremarkall', 'VisitorController@updateremarkall');
-Route::get('visitor_confirm_manager/{id}', 'VisitorController@confirm_manager');
+Route::get('visitor_confirm_manager/{id}', 'VisitorNotificationController@confirm_manager');
 Route::get('visitor_leave', 'VisitorController@leave');
 Route::get('visitor_getvisit', 'VisitorController@getvisit');
 Route::post('visitor_out', 'VisitorController@out');
