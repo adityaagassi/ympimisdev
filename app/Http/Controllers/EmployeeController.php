@@ -455,7 +455,7 @@ class EmployeeController extends Controller
           $first_sunfish = date('Y-m-d', strtotime('-3 months', strtotime($now)));
           $last_mirai = date('Y-m-t', strtotime($now));
 
-          $employees = db::select("select date_format(period, '%M %Y') as period, date_format(period, '%Y-%m') as period2, count(full_name) as total, sum(if(employ_code = 'OUTSOURCE', 1, 0)) as outsource, sum(if(employ_code = 'CONTRACT1', 1, 0)) as contract1, sum(if(employ_code = 'CONTRACT2', 1, 0)) as contract2, sum(if(employ_code = 'PERMANENT', 1, 0)) as permanent, sum(if(employ_code = 'PROBATION', 1, 0)) as probation, sum(if(gender = 'L', 1, 0)) as male, sum(if(gender = 'P', 1, 0)) as female, sum(if(`Union` = 'NONE' or `Union` is null, 1, 0)) as no_union, sum(if(`Union` = 'SPSI', 1, 0)) as spsi, sum(if(`Union` = 'sbm', 1, 0)) as sbm, sum(if(`Union` = 'spmi', 1, 0)) as spmi from employee_histories where end_date is null and date_format(period, '%Y-%m-%d') >= '".$first."' and date_format(period, '%Y-%m') <= '".$last."' group by date_format(period, '%Y-%m'), date_format(period, '%M %Y') order by period2 asc");
+          $employees = db::select("select date_format(period, '%M %Y') as period, date_format(period, '%Y-%m') as period2, count(full_name) as total, sum(if(employ_code = 'OUTSOURCE', 1, 0)) as outsource, sum(if(employ_code = 'CONTRACT1', 1, 0)) as contract1, sum(if(employ_code = 'CONTRACT2', 1, 0)) as contract2, sum(if(employ_code = 'PERMANENT', 1, 0)) as permanent, sum(if(employ_code = 'PROBATION', 1, 0)) as probation, sum(if(gender = 'L', 1, 0)) as male, sum(if(gender = 'P', 1, 0)) as female, sum(if(`labor_union` = 'NONE' or `labor_union` is null, 1, 0)) as no_union, sum(if(`labor_union` = 'SPSI', 1, 0)) as spsi, sum(if(`labor_union` = 'sbm', 1, 0)) as sbm, sum(if(`labor_union` = 'spmi', 1, 0)) as spmi from employee_histories where end_date is null and date_format(period, '%Y-%m-%d') >= '".$first."' and date_format(period, '%Y-%m') <= '".$last."' group by date_format(period, '%Y-%m'), date_format(period, '%M %Y') order by period2 asc");
 
           $mirai_overtimes1 = array();
           $sunfish_overtimes1 = array();
@@ -488,7 +488,7 @@ class EmployeeController extends Controller
                     CASE
 
                     WHEN A.total_ot IS NOT NULL THEN
-                    floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+                    ROUND( A.total_ot / 60.0, 2 ) ELSE ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 )
                     END 
                     ) AS ot 
                     FROM
@@ -592,7 +592,7 @@ class EmployeeController extends Controller
                     FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
                     B.Department,
                     SUM (
-                    IIF(IIF(A.total_ot is not null, floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2, floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2) > 3, 1 , null)
+                    IIF(IIF(A.total_ot is not null, ROUND( A.total_ot / 60.0, 2 ), ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 ) > 3, 1 , null)
                     ) AS ot_3 
                     FROM
                     VIEW_YMPI_Emp_OvertimePlan A
@@ -638,7 +638,7 @@ class EmployeeController extends Controller
                     CASE
 
                     WHEN A.total_ot IS NOT NULL THEN
-                    floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+                    ROUND( A.total_ot / 60.0, 2 ) ELSE ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 )
                     END 
                     ) > 14 THEN
                     1 ELSE NULL 
@@ -685,7 +685,7 @@ class EmployeeController extends Controller
                     CASE
 
                     WHEN A.total_ot IS NOT NULL THEN
-                    floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2 ELSE floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
+                    ROUND( A.total_ot / 60.0, 2 ) ELSE ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 )
                     END 
                     ) > 56 THEN
                     1 ELSE NULL 
@@ -1597,7 +1597,7 @@ public function indexEmployeeService(Request $request)
                1,
                NULL 
                )) AS tunjangan,
-               SUM ( floor(( total_ot / 60.0 ) * 2 + 0.5 ) / 2 ) as overtime
+               SUM ( ROUND( total_ot / 60.0, 2 ) ) as overtime
                FROM
                VIEW_YMPI_Emp_Attendance 
                WHERE
@@ -1756,7 +1756,7 @@ public function indexReportJabatan()
 }
 
 public function fetchReportManpower(){
-     $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, employ_code, Department, grade_code, pos_name_en, gender, case when [union] is null then 'NONE' else [union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null");
+     $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, employ_code, Department, grade_code, pos_name_en, gender, case when [labor_union] is null then 'NONE' else [labor_union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null");
 
      $response = array(
           'status' => true,
@@ -1770,7 +1770,7 @@ public function fetchReportManpowerDetail(Request $request){
      $where = "";
      $where = "and ".$request->get('filter')." = '".$request->get('category')."'";
 
-     $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, Division, Department, convert(varchar, start_date, 105) as start_date, employ_code, grade_code, pos_name_en, gender, case when [union] is null then 'NONE' else [union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null ".$where." order by Emp_no asc");
+     $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, Division, Department, convert(varchar, start_date, 105) as start_date, employ_code, grade_code, pos_name_en, gender, case when [labor_union] is null then 'NONE' else [labor_union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null ".$where." order by Emp_no asc");
 
      $response = array(
           'status' => true,
