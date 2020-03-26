@@ -183,11 +183,11 @@ class OvertimeController extends Controller
 			format ( A.ovtplanfrom, 'yyyy-MM-dd' ) AS date,
 			format ( A.ovtplanfrom, 'HH:mm:ss' ) AS ovt_from,
 			format ( A.ovtplanto, 'HH:mm:ss' ) AS ovt_to,
-			CAST(floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 AS FLOAT) AS ot_plan,
+			CAST(ROUND(A.TOTAL_OVT_PLAN / 60.0, 2) AS FLOAT) AS ot_plan,
 			A.daytype,
 			format ( A.ActualStart, 'HH:mm:ss' ) AS log_from,
 			format ( A.ActualEnd, 'HH:mm:ss' ) AS log_to,
-			CAST(floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2 AS FLOAT) AS ot_actual
+			CAST(ROUND( A.total_ot / 60.0, 2) AS FLOAT) AS ot_actual
 			FROM
 			VIEW_YMPI_Emp_OvertimePlan A
 			LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
@@ -731,8 +731,8 @@ class OvertimeController extends Controller
 				B.Groups AS [group],
 				IIF (
 				total_ot IS NOT NULL,
-				CAST(floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2 AS FLOAT),
-				CAST(floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 AS FLOAT)
+				CAST(ROUND( A.total_ot / 60.0, 2 ) AS FLOAT),
+				CAST(ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 ) AS FLOAT)
 				) AS ot,
 				UPPER ( A.remark ) AS keperluan 
 				FROM
