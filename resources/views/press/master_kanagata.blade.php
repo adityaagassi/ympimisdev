@@ -153,7 +153,7 @@
 						<div class="col-xs-12">
 							<div class="box-body">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-								<div class="form-group row" align="right">
+								<div class="form-group row">
 									<label class="col-sm-4">Material Number<span class="text-red">*</span></label>
 									<div class="col-sm-5">
 										<!-- <input type="material_number" class="form-control" id="material_number" placeholder="Material Number" value="VCP2930" required> -->
@@ -230,7 +230,7 @@
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 								<input type="hidden" name="id" id="id">
 								
-								<div class="form-group row" align="right">
+								<div class="form-group row">
 									<label class="col-sm-4">Material Number<span class="text-red">*</span></label>
 									<div class="col-sm-5">
 										<!-- <input type="editmaterial_number" class="form-control" id="editmaterial_number" placeholder="Material Number" required> -->
