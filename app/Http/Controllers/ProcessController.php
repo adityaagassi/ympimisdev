@@ -2769,8 +2769,6 @@ public function fetchResultSaxnew(Request $request)
 		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
 	}
 
-	var_dump($nextday);
-
 	$first = date('Y-m-01');
 	if(date('Y-m-d') != date('Y-m-01')){
 		$last = date('Y-m-d', strtotime(Carbon::yesterday()));
