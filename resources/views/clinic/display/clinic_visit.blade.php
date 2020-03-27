@@ -226,18 +226,40 @@
 				var visit = [];
 				var percentage = [];
 
+
+				var pemeriksaan = [];
+				var konsultasi = [];
+				var istirahat = [];
+				var kecelakaan = [];
+
 				var sum = 0;
 				for (i = 0; i < result.clinic_visit.length; i++) {
+
 					department.push(result.clinic_visit[i].department);
 					visit.push(parseInt(result.clinic_visit[i].qty));
 					sum += parseInt(result.clinic_visit[i].qty);
+
+
+					for (var j = 0; j < result.clinic_visit_detail.length; j++) {
+						if(result.clinic_visit[i].department == result.clinic_visit_detail[j].department){
+							if(result.clinic_visit_detail[j].purpose == 'Pemeriksaan Kesehatan'){
+								pemeriksaan.push(result.clinic_visit_detail[j].qty);
+							}else if(result.clinic_visit_detail[j].purpose == 'Konsultasi Kesehatan'){
+								konsultasi.push(result.clinic_visit_detail[j].qty);
+							}else if(result.clinic_visit_detail[j].purpose == 'Istirahat Sakit'){
+								istirahat.push(result.clinic_visit_detail[j].qty);
+							}else if(result.clinic_visit_detail[j].purpose == 'Kecelakaan Kerja'){
+								kecelakaan.push(result.clinic_visit_detail[j].qty);
+							}
+						}
+					}
+
 				}
 
 				for (i = 0; i < result.clinic_visit.length; i++) {
 					percentage.push(parseInt(result.clinic_visit[i].qty) / sum * 100);
 				}
 
-				console.log(percentage);
 
 				Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
 					return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
@@ -246,7 +268,7 @@
 
 				Highcharts.chart('container2', {
 					chart: {
-						zoomType: 'xy'
+						zoomType: 'column'
 					},
 					title: {
 						text: 'Clinic Visit VS Number of Employees'
@@ -260,10 +282,17 @@
 					xAxis: {
 						categories: department,
 					},
+					
 					yAxis: [{
 						title: {
 							text: 'Patient(s)'
-						}
+						},
+						stackLabels: {
+							enabled: true,
+							style: {
+								color: 'black',
+							}
+						},
 					},{
 						title: {
 							text: '(%) Employees'
@@ -272,7 +301,7 @@
 							format: '{value} %',
 
 						},
-						opposite: true
+						opposite: true,
 
 					}],
 					tooltip: {
@@ -282,21 +311,17 @@
 						enabled: false
 					},
 					legend: {
-						align: 'right',
-						x: -50,
-						verticalAlign: 'top',
-						y: 30,
 						itemStyle:{
 							color: "white",
 							fontSize: "12px",
 							fontWeight: "bold",
 
 						},
-						floating: true,
 						shadow: false
 					},
 					plotOptions: {
 						column:{
+							stacking: 'normal',
 							dataLabels: {
 								enabled: true,
 								format: '{point.y}',
@@ -329,15 +354,41 @@
 					},
 					series: [
 					{
-						name: 'Clinic Visit',
-						data: visit,
+						name: 'Pemeriksaan Kesehatan',
 						type: 'column',
-						color: 'rgb(144,238,126)',
+						data: pemeriksaan,
+						color: '#2b908f',
 						tooltip: {
 							valueSuffix: ' Person(s)'
 						}
 					},
 					{
+						name: 'Konsultasi Kesehatan',
+						type: 'column',
+						data: konsultasi,
+						color: '#90ee7e',
+						tooltip: {
+							valueSuffix: ' Person(s)'
+						}
+					},
+					{
+						name: 'Istirahat Sakit',
+						type: 'column',
+						data: istirahat,
+						color: '#f45b5b',
+						tooltip: {
+							valueSuffix: ' Person(s)'
+						}
+					},
+					{
+						name: 'Kecelakaan Kerja',
+						type: 'column',
+						data: kecelakaan,
+						color: '#7798BF',
+						tooltip: {
+							valueSuffix: ' Person(s)'
+						}
+					},{
 						name: 'Percent Employees',
 						data: percentage,
 						yAxis: 1,
@@ -358,272 +409,272 @@
 			}
 		});
 
+}
+
+function showDetail(department, month) {
+	var data = {
+		department : department,
+		month : month
 	}
 
-	function showDetail(department, month) {
-		var data = {
-			department : department,
-			month : month
-		}
+	$.get('{{ url("fetch/clinic_visit_detail") }}', data, function(result, status, xhr){
+		if(result.status){
+			$('#modal-detail').modal('show');
 
-		$.get('{{ url("fetch/clinic_visit_detail") }}', data, function(result, status, xhr){
-			if(result.status){
-				$('#modal-detail').modal('show');
+			$('#detail').DataTable().clear();
+			$('#detail').DataTable().destroy();
+			$('#detail-body').html("");
 
-				$('#detail').DataTable().clear();
-				$('#detail').DataTable().destroy();
-				$('#detail-body').html("");
+			$('#judul-detail').append().empty();
+			$('#judul-detail').append('<b>'+ department +' on '+ bulanText(month) +'</b>');
 
-				$('#judul-detail').append().empty();
-				$('#judul-detail').append('<b>'+ department +' on '+ bulanText(month) +'</b>');
+			var body = '';
+			for (var i = 0; i < result.detail.length; i++) {
+				body += '<tr>';
+				body += '<td>'+ result.detail[i].employee_id +'</td>';
+				body += '<td>'+ result.detail[i].name +'</td>';
+				body += '<td>'+ result.detail[i].paramedic +'</td>';
+				body += '<td>'+ result.detail[i].visited_at +'</td>';
+				body += '<td>'+ result.detail[i].purpose +'</td>';
+				body += '</tr>';
+			}
 
-				var body = '';
-				for (var i = 0; i < result.detail.length; i++) {
-					body += '<tr>';
-					body += '<td>'+ result.detail[i].employee_id +'</td>';
-					body += '<td>'+ result.detail[i].name +'</td>';
-					body += '<td>'+ result.detail[i].paramedic +'</td>';
-					body += '<td>'+ result.detail[i].visited_at +'</td>';
-					body += '<td>'+ result.detail[i].purpose +'</td>';
-					body += '</tr>';
-				}
-
-				$('#detail-body').append(body);
-				$('#detail').DataTable({
-					'dom': 'Bfrtip',
-					'responsive':true,
-					'lengthMenu': [
-					[ 10, 25, 50, -1 ],
-					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-					],
-					'buttons': {
-						buttons:[
-						{
-							extend: 'pageLength',
-							className: 'btn btn-default',
-						},
-						]
+			$('#detail-body').append(body);
+			$('#detail').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ 10, 25, 50, -1 ],
+				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
 					},
-					'paging': true,
-					'lengthChange': true,
-					'pageLength': 10,
-					'searching': true,
-					'ordering': true,
-					'order': [],
-					'info': true,
-					'autoWidth': true,
-					"sPaginationType": "full_numbers",
-					"bJQueryUI": true,
-					"bAutoWidth": false,
-					"processing": true
-				});
-			}
-		});
-	}
-
-	Highcharts.createElement('link', {
-		href: '{{ url("fonts/UnicaOne.css")}}',
-		rel: 'stylesheet',
-		type: 'text/css'
-	}, null, document.getElementsByTagName('head')[0]);
-
-	Highcharts.theme = {
-		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-		chart: {
-			backgroundColor: {
-				linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-				stops: [
-				[0, '#3c3c3c']
-				]
-			},
-			style: {
-				fontFamily: 'sans-serif'
-			},
-			plotBorderColor: '#606063'
-		},
-		title: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase',
-				fontSize: '20px'
-			}
-		},
-		subtitle: {
-			style: {
-				color: '#E0E0E3',
-				textTransform: 'uppercase'
-			}
-		},
-		xAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			title: {
-				style: {
-					color: '#A0A0A3'
-
-				}
-			}
-		},
-		yAxis: {
-			gridLineColor: '#707073',
-			labels: {
-				style: {
-					color: '#E0E0E3'
-				}
-			},
-			lineColor: '#707073',
-			minorGridLineColor: '#505053',
-			tickColor: '#707073',
-			tickWidth: 1,
-			title: {
-				style: {
-					color: '#A0A0A3'
-				}
-			}
-		},
-		tooltip: {
-			backgroundColor: 'rgba(0, 0, 0, 0.85)',
-			style: {
-				color: '#F0F0F0'
-			}
-		},
-		plotOptions: {
-			series: {
-				dataLabels: {
-					color: 'white'
+					]
 				},
-				marker: {
-					lineColor: '#333'
-				}
-			},
-			boxplot: {
-				fillColor: '#505053'
-			},
-			candlestick: {
-				lineColor: 'white'
-			},
-			errorbar: {
-				color: 'white'
-			}
+				'paging': true,
+				'lengthChange': true,
+				'pageLength': 10,
+				'searching': true,
+				'ordering': true,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true
+			});
+		}
+	});
+}
+
+Highcharts.createElement('link', {
+	href: '{{ url("fonts/UnicaOne.css")}}',
+	rel: 'stylesheet',
+	type: 'text/css'
+}, null, document.getElementsByTagName('head')[0]);
+
+Highcharts.theme = {
+	colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+	'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+	chart: {
+		backgroundColor: {
+			linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+			stops: [
+			[0, '#3c3c3c']
+			]
 		},
-		legend: {
-			itemStyle: {
-				color: '#E0E0E3'
-			},
-			itemHoverStyle: {
-				color: '#FFF'
-			},
-			itemHiddenStyle: {
-				color: '#606063'
-			}
+		style: {
+			fontFamily: 'sans-serif'
 		},
-		credits: {
-			style: {
-				color: '#666'
-			}
-		},
+		plotBorderColor: '#606063'
+	},
+	title: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase',
+			fontSize: '20px'
+		}
+	},
+	subtitle: {
+		style: {
+			color: '#E0E0E3',
+			textTransform: 'uppercase'
+		}
+	},
+	xAxis: {
+		gridLineColor: '#707073',
 		labels: {
 			style: {
-				color: '#707073'
+				color: '#E0E0E3'
 			}
 		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		title: {
+			style: {
+				color: '#A0A0A3'
 
-		drilldown: {
-			activeAxisLabelStyle: {
-				color: '#F0F0F3'
+			}
+		}
+	},
+	yAxis: {
+		gridLineColor: '#707073',
+		labels: {
+			style: {
+				color: '#E0E0E3'
+			}
+		},
+		lineColor: '#707073',
+		minorGridLineColor: '#505053',
+		tickColor: '#707073',
+		tickWidth: 1,
+		title: {
+			style: {
+				color: '#A0A0A3'
+			}
+		}
+	},
+	tooltip: {
+		backgroundColor: 'rgba(0, 0, 0, 0.85)',
+		style: {
+			color: '#F0F0F0'
+		}
+	},
+	plotOptions: {
+		series: {
+			dataLabels: {
+				color: 'white'
 			},
-			activeDataLabelStyle: {
-				color: '#F0F0F3'
+			marker: {
+				lineColor: '#333'
 			}
 		},
-
-		navigation: {
-			buttonOptions: {
-				symbolStroke: '#DDDDDD',
-				theme: {
-					fill: '#505053'
-				}
-			}
+		boxplot: {
+			fillColor: '#505053'
 		},
+		candlestick: {
+			lineColor: 'white'
+		},
+		errorbar: {
+			color: 'white'
+		}
+	},
+	legend: {
+		itemStyle: {
+			color: '#E0E0E3'
+		},
+		itemHoverStyle: {
+			color: '#FFF'
+		},
+		itemHiddenStyle: {
+			color: '#606063'
+		}
+	},
+	credits: {
+		style: {
+			color: '#666'
+		}
+	},
+	labels: {
+		style: {
+			color: '#707073'
+		}
+	},
 
-		rangeSelector: {
-			buttonTheme: {
-				fill: '#505053',
-				stroke: '#000000',
-				style: {
-					color: '#CCC'
+	drilldown: {
+		activeAxisLabelStyle: {
+			color: '#F0F0F3'
+		},
+		activeDataLabelStyle: {
+			color: '#F0F0F3'
+		}
+	},
+
+	navigation: {
+		buttonOptions: {
+			symbolStroke: '#DDDDDD',
+			theme: {
+				fill: '#505053'
+			}
+		}
+	},
+
+	rangeSelector: {
+		buttonTheme: {
+			fill: '#505053',
+			stroke: '#000000',
+			style: {
+				color: '#CCC'
+			},
+			states: {
+				hover: {
+					fill: '#707073',
+					stroke: '#000000',
+					style: {
+						color: 'white'
+					}
 				},
-				states: {
-					hover: {
-						fill: '#707073',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
-					},
-					select: {
-						fill: '#000003',
-						stroke: '#000000',
-						style: {
-							color: 'white'
-						}
+				select: {
+					fill: '#000003',
+					stroke: '#000000',
+					style: {
+						color: 'white'
 					}
 				}
-			},
-			inputBoxBorderColor: '#505053',
-			inputStyle: {
-				backgroundColor: '#333',
-				color: 'silver'
-			},
-			labelStyle: {
-				color: 'silver'
 			}
 		},
-
-		navigator: {
-			handles: {
-				backgroundColor: '#666',
-				borderColor: '#AAA'
-			},
-			outlineColor: '#CCC',
-			maskFill: 'rgba(255,255,255,0.1)',
-			series: {
-				color: '#7798BF',
-				lineColor: '#A6C7ED'
-			},
-			xAxis: {
-				gridLineColor: '#505053'
-			}
+		inputBoxBorderColor: '#505053',
+		inputStyle: {
+			backgroundColor: '#333',
+			color: 'silver'
 		},
+		labelStyle: {
+			color: 'silver'
+		}
+	},
 
-		scrollbar: {
-			barBackgroundColor: '#808083',
-			barBorderColor: '#808083',
-			buttonArrowColor: '#CCC',
-			buttonBackgroundColor: '#606063',
-			buttonBorderColor: '#606063',
-			rifleColor: '#FFF',
-			trackBackgroundColor: '#404043',
-			trackBorderColor: '#404043'
+	navigator: {
+		handles: {
+			backgroundColor: '#666',
+			borderColor: '#AAA'
 		},
+		outlineColor: '#CCC',
+		maskFill: 'rgba(255,255,255,0.1)',
+		series: {
+			color: '#7798BF',
+			lineColor: '#A6C7ED'
+		},
+		xAxis: {
+			gridLineColor: '#505053'
+		}
+	},
 
-		legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-		background2: '#505053',
-		dataLabelsColor: '#B0B0B3',
-		textColor: '#C0C0C0',
-		contrastTextColor: '#F0F0F3',
-		maskColor: 'rgba(255,255,255,0.3)'
-	};
-	Highcharts.setOptions(Highcharts.theme);
+	scrollbar: {
+		barBackgroundColor: '#808083',
+		barBorderColor: '#808083',
+		buttonArrowColor: '#CCC',
+		buttonBackgroundColor: '#606063',
+		buttonBorderColor: '#606063',
+		rifleColor: '#FFF',
+		trackBackgroundColor: '#404043',
+		trackBorderColor: '#404043'
+	},
 
-	
+	legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+	background2: '#505053',
+	dataLabelsColor: '#B0B0B3',
+	textColor: '#C0C0C0',
+	contrastTextColor: '#F0F0F3',
+	maskColor: 'rgba(255,255,255,0.3)'
+};
+Highcharts.setOptions(Highcharts.theme);
+
+
 </script>
 @endsection

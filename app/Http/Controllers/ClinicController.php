@@ -129,7 +129,8 @@ class ClinicController extends Controller{
 			'Pemeriksaan Kesehatan',
 			'Konsultasi Kesehatan',
 			'Laktasi',
-			'Istirahat',
+			'Istirahat Sakit',
+			'Kecelakaan Kerja',
 			'Medical Check Up',
 			'Mengantar Karyawan Sakit',
 			'Mengantar Medical Check Up',
@@ -377,25 +378,22 @@ class ClinicController extends Controller{
 		$month = "";
 
 		if(strlen($request->get('month')) > 0){
-			$date = "WHERE DATE_FORMAT(week_date,'%Y-%m') ='".$request->get('month')."'";
-			$date_log = "where DATE_FORMAT(tanggal,'%Y-%m') = '".$request->get('month')."'";
 			$month = $request->get('month');
-
 		}else{
-			$date = "WHERE DATE_FORMAT(week_date,'%Y-%m') ='".date('Y-m')."'";
-			$date_log = "WHERE DATE_FORMAT(tanggal,'%Y-%m') = '".date('Y-m')."'";
 			$month = date('Y-m');
-
 		}
 
-		$clinic_visit = db::connection("clinic")->select("select DATE_FORMAT(date.week_date,'%d %b %Y') as week_date, COALESCE(log.sum,0) as visit from
-			(select week_date, DATE_FORMAT(week_date,'%a') as `day` from ympimis.weekly_calendars
-			".$date." and remark <> 'H'
-			order by week_date asc) as date
-			left join 
-			(select tanggal, count(employee_id) as sum from patient_logs
-			".$date_log." group by tanggal) as log
-			on date.week_date = log.tanggal");
+		$clinic_visit = db::select("SELECT DATE_FORMAT( date.week_date, '%d %b %Y' ) AS week_date, COALESCE ( log.sum, 0 ) AS visit FROM
+			(SELECT week_date, DATE_FORMAT( week_date, '%a' ) AS `day` FROM weekly_calendars
+			WHERE	DATE_FORMAT( week_date, '%Y-%m' ) = '".$month."'
+			AND remark <> 'H' 
+			ORDER BY week_date ASC) AS date
+			LEFT JOIN
+			(SELECT log.tanggal AS tanggal, count( log.patient_list_id ) AS sum FROM
+			(SELECT DISTINCT date( visited_at ) as tanggal, patient_list_id FROM clinic_patient_details
+			WHERE DATE_FORMAT( visited_at, '%Y-%m' ) = '".$month."') AS log
+			GROUP BY tanggal) AS log
+			ON date.week_date = log.tanggal");
 
 		$response = array(
 			'status' => true,
@@ -423,9 +421,34 @@ class ClinicController extends Controller{
 			group by e.department
 			order by qty desc");
 
+		$clinic_visit_detail = db::select("select dept.department, dept.purpose, COALESCE(qty.qty,0) as qty from
+			(select dept.department, purpose.purpose from
+			(select distinct department from employee_syncs
+			where department is not null
+			order by department asc) as dept
+			cross join
+			(SELECT 'Pemeriksaan Kesehatan' AS purpose
+			UNION ALL
+			SELECT 'Konsultasi Kesehatan' AS purpose
+			UNION ALL
+			SELECT 'Istirahat Sakit' AS purpose
+			UNION ALL
+			SELECT 'Kecelakaan Kerja' AS purpose) as purpose) as dept
+			left join
+			(SELECT e.department, visit.purpose, count( visit.employee_id ) AS qty FROM
+			(SELECT DISTINCT c.employee_id, c.patient_list_id, c.purpose FROM clinic_patient_details c 
+			WHERE	DATE_FORMAT( c.created_at, '%Y-%m' ) = '".$month."'
+			AND c.purpose IN ( 'Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja' ) 
+			) visit
+			LEFT JOIN employee_syncs e ON visit.employee_id = e.employee_id 
+			WHERE e.department IS NOT NULL 
+			GROUP BY e.department, visit.purpose) as qty
+			on dept.department = qty.department and dept.purpose = qty. purpose");
+
 		$response = array(
 			'status' => true,
 			'clinic_visit' => $clinic_visit,
+			'clinic_visit_detail' => $clinic_visit_detail,
 			'month' => $month,
 		);
 		return Response::json($response);
