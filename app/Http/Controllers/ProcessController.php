@@ -2761,13 +2761,15 @@ public function indexfetchResultSaxnew(){
 public function fetchResultSaxnew(Request $request)
 {
 	if(date('D')=='Fri' ){
-		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
+		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
 	}else if(date('D')=='Sat' ){
 		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
 	}		
 	else{
 		$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
 	}
+
+	var_dump($nextday);
 
 	$first = date('Y-m-01');
 	if(date('Y-m-d') != date('Y-m-01')){
