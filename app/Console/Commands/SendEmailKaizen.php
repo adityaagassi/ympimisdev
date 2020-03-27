@@ -146,6 +146,7 @@ class SendEmailKaizen extends Command
 }
 
 array_push($mail_tos,'eko.prasetyo.wicaksono@music.yamaha.com');
+array_push($mail_tos,'rani.nurdiyana.sari@music.yamaha.com');
 // print_r($mail_tos);
 
 $kaizens = [
