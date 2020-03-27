@@ -83,36 +83,17 @@
 			
 			<div id="chart"></div>
 
-			<!-- <table class="table table-bordered table-stripped" id="logs">
-				<thead>
-					<tr>
-						<th>Material Number</th>
-						<th>Model and Key</th>
-						<th>Descriptions</th>
-						<th>Quantity</th>
-						<th>Kanban Quantity</th>
-					</tr>
-				</thead>
-				<tbody id="tbody">
-				</tbody>
-			</table> -->
-
-			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px; font-size: 1vw">
-				<tr id="modelAll" style="font-size: 1.8vw">
-					<!-- <th>#</th> -->
-				</tr>
-				<tr id="quantity_kanban">
-					<!-- <th>Total Qty Kanban</th> -->
-				</tr>
-				<tr id="quantity">
-					<!-- <th>Total Quantity</th> -->
-				</tr>
-				<tr id="diff">
-					
-				</tr>
-				<tr id="chart2">
-					
-				</tr>
+		
+			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px;">
+				<tr id="modelAll" style="font-size: 1.8vw"></tr>
+				<tr id="quantity_kanban" style="font-size: 1.5vw; border-top: 4px solid #f44336 !important"></tr>
+				<tr id="quantity" style="font-size: 1.5vw"></tr>
+				<tr id="solder" style="font-size: 1.5vw; border-top: 4px solid #f44336 !important"></tr>
+				<tr id="cuci" style="font-size: 1.5vw"></tr>
+				<tr id="kensa" style="font-size: 1.5vw"></tr>
+				<tr id="diff" style="font-size: 1.5vw"></tr>
+				<tr id="total" style="font-size: 1.5vw"></tr>				
+				<tr id="chart2" style="font-size: 1vw; border-top: 4px solid #f44336 !important"></tr>
 			</table>
 		</div>
 	</div>
@@ -168,8 +149,13 @@
 				$("#modelAll").empty();
 				$("#quantity").empty();
 				$("#quantity_kanban").empty();
-				$("#chart2").empty();
+				$("#solder").empty();
+				$("#cuci").empty();
+				$("#kensa").empty();
 				$("#diff").empty();
+				$("#total").empty();
+				$("#chart2").empty();
+
 
 				var material_req = [];
 				var cat = [];
@@ -181,218 +167,92 @@
 				var max = 0;
 
 				model = "<th style='width:45px'>#</th>";
-				quantity_kanban = "<th>Qty Kanban</th>";
+				quantity_kanban = "<th>Kanban</th>";
 				quantity = "<th>PC(s)</th>";
+
+				solder = "<th>HSA</th>";
+				cuci = "<th>Cuci</th>";
+				kensa = "<th>Kensa</th>";
 				diff = "<th>Stock</th>";
-				chart = "<th></th>";
+				total = "<th>Total</th>";
+
+				
+				chart = "<th><p><i class='fa fa-fw fa-clock-o'></i> Last Updated: "+ getActualFullDate() +"</p></th>";
 
 				$.each(result.datas, function(index, value){
-					// if (value.quantity >= value.lot_transfer * 2) {
-
-
-						if(value.model[0] == 'A'){
-							if(value.model == 'A82'){
-								model += "<th style='background-color: #e5e5df;'>"+value.model+" "+value.key+"</th>";
-							}else{
-								model += "<th style='background-color: #ffff66;'>"+value.model+" "+value.key+"</th>";
-							}
-						}else if(value.model[0] == 'T'){
-							model += "<th style='background-color: #1565C0;'>"+value.model+" "+value.key+"</th>";
+					if(value.model[0] == 'A'){
+						if(value.model == 'A82'){
+							model += "<th style='background-color: #e5e5df;'>"+value.model+" "+value.key+"</th>";
+						}else{
+							model += "<th style='background-color: #ffff66;'>"+value.model+" "+value.key+"</th>";
 						}
+					}else if(value.model[0] == 'T'){
+						model += "<th style='background-color: #1565C0;'>"+value.model+" "+value.key+"</th>";
+					}
 
-						if (parseInt(value.inventory_quantity) - value.quantity < 0) {
-							color2 = "style='background-color:#eb2b21'";
-						} else {
-							color2 = "style='background-color:#12b522'";
-						}
+					if (parseInt(value.inventory_quantity) - value.quantity < 0) {
+						color2 = "style='background-color:#eb2b21'";
+					} else {
+						color2 = "style='background-color:#12b522'";
+					}
 
-						quantity += "<td>"+value.quantity+"</td>";
-						quantity_kanban += "<td>"+value.kanban+"</td>";
-						diff += "<td "+color2+">"+parseInt(value.inventory_quantity)+"</td>";
-						limit.push(value.kanban);
-					// }
+					sum_total = parseInt(value.solder) + parseInt(value.cuci) + parseInt(value.kensa) + parseInt(value.inventory_quantity);
+					if (sum_total - value.quantity < 0) {
+						color3 = "style='background-color: rgb(255,204,255); color: #333;'";
+					} else {
+						color3 = "style='background-color: rgb(204, 255, 255); color: #333;'";
+					}
 
-					// if (value.quantity >= value.lot_transfer * 2) {
-					// 	cat.push(value.model+" "+value.key);
-					// 	material_req.push((value.quantity / value.lot_transfer));
-					// 	limit.push(2);	
-					// }
+					quantity += "<td>"+value.quantity+"</td>";
+					quantity_kanban += "<td>"+value.kanban+"</td>";
+
+					solder += "<td>"+value.solder+"</td>";
+					cuci += "<td>"+value.cuci+"</td>";
+					kensa += "<td>"+value.kensa+"</td>";
+					
+					diff += "<td "+color2+">"+parseInt(value.inventory_quantity)+"</td>";
+					total += "<td "+color3+">"+sum_total+"</td>";
+
+
+
+					limit.push(value.kanban);
 				})
 
 				max = (Math.max(...limit));
 
 				$.each(result.datas, function(index, value){
-					// if (value.quantity / value.lot_transfer >= 2) {
 
-						high = value.kanban / max * 100;
+					high = value.kanban / max * 100;
 
-						if (value.kanban >= 4) {
-							color = "#e0391f";
-						} else if (value.kanban >= 2) {
-							color = "#facf23";
-						}
-						else {
-							color = "lime";
-						}
+					if (value.kanban >= 4) {
+						color = "#e0391f";
+					} else if (value.kanban >= 2) {
+						color = "#facf23";
+					}
+					else {
+						color = "lime";
+					}
 
-						chart += "<td style='height:400px'><div style='height:"+(100 - high)+"%'></div><div style='margin: 10px 3px 0px 3px; background-color: "+color+"; height:"+high+"%; font-size:1.5vw'>"+value.kanban+"</div></td>";
-					// }
-					// kosong = (max - (value.quantity / value.lot_transfer)) / max * 100;
-					// chart += '<div style="margin: 0px 3px 0px 3px; background-color: #3c3c3c; height: '+kosong+'%" id="kosong"></div>';
+					chart += "<td style='height:300px'><div style='height:"+(100 - high)+"%'></div><div style='margin: 10px 3px 0px 3px; background-color: "+color+"; height:"+high+"%; font-size:1.5vw'>"+value.kanban+"</div></td>";
 
-					// isi = (value.quantity / value.lot_transfer) / max * 100;
-
-					// if ((value.quantity / value.lot_transfer) > 0) isi2 = (value.quantity / value.lot_transfer); else isi2 = '';
-					// chart += '<div style="line-height: 80%; text-align: center; margin: 0px 3px 0px 3px; background-color: #7cb5ec; height: '+isi+'%" id="welding">'+isi2+'</div>';
 				})
-
-				// chart = "<td></td>";
-
-				// chart += "<td><div style='height:100px'>DD</div></td>";
 
 				$("#modelAll").append(model);
 				$("#quantity").append(quantity);
 				$("#quantity_kanban").append(quantity_kanban);
+
+				$("#solder").append(solder);
+				$("#cuci").append(cuci);
+				$("#kensa").append(kensa);
 				$("#diff").append(diff);
+				$("#total").append(total);
+
 				$("#chart2").append(chart);
 
-				//CHART
-				// Highcharts.chart('chart', {
-				// 	chart: {
-				// 		backgroundColor: null,
-				// 		type: 'column',
-				// 	},
-				// 	exporting: { enabled: false },
-				// 	title: {
-				// 		text: null
-				// 	},
-				// 	tooltip: {
-				// 		pointFormat: 'Quantity: <b>{point.y} Kanban</b>'
-				// 	},
-				// 	xAxis: {
-				// 		labels: {
-				// 			style: {
-				// 				color: '#9dff69',
-				// 				fontSize: '12px',
-				// 				fontWeight: 'bold'
-				// 			}
-				// 		},
-				// 		categories: cat
-				// 	},
-				// 	yAxis: {
-				// 		tickInterval: 1,
-				// 		title: {
-				// 			text: 'Quantity (Kanban)'
-				// 		},
-				// 		plotLines: [{
-				// 			color: 'red',
-				// 			width: 2,
-				// 			value: 2,
-				// 			zIndex: 5,
-				// 			dashStyle: 'Dash'
-				// 		}]
-				// 	},
-				// 	plotOptions: {
-				// 		column: {
-				// 			allowPointSelect: true,
-				// 			borderColor: 'black',
-				// 			dataLabels: {
-				// 				enabled: true,
-				// 				format: '<b>{point.name}<br/>{point.y}</b>',
-				// 				distance: -50,
-				// 				style:{
-				// 					fontSize:'14px',
-				// 					textOutline:0,
-				// 				},
-				// 			},
-				// 			zones: [{
-				// 				value: 2, 
-				// 				color: '#46e83a' 
-				// 			},{
-				// 				color: '#f55656' 
-				// 			}]
-				// 		}, 
-				// 		series: {
-				// 			animation: false
-				// 		}
-				// 	},
-				// 	credits: {
-				// 		enabled: false
-				// 	},
-				// 	series: [{
-				// 		name: 'Material',
-				// 		data: material_req
-				// 	}]
-				// });
+
 			}
 		})
-}
-
-
-	// function drawTable() {
-	// 	var data = {
-	// 		option:"{{$option}}"
-	// 	}
-
-	// 	$.get('{{ url("fetch/middle/request/") }}', data, function(result, status, xhr){
-	// 		if(result.status){
-	// 			var tableData = "";
-	// 			$('#logs').DataTable().destroy();
-	// 			$("#tbody").empty();
-	// 			var material_req = [];
-	// 			var cat = [];
-	// 			var limit = [];
-
-	// 			$.each(result.datas, function(index, value) {
-
-	// 				if (value.quantity >= (value.lot_transfer*2)) {
-
-	// 				}
-
-	// 				tableData += "<tr>";
-	// 				tableData += "<td>"+value.material_number+"</td>";
-	// 				tableData += "<td>"+value.model+" "+value.key+"</td>";
-	// 				tableData += "<td>"+value.material_description+"</td>";
-	// 				tableData += "<td>"+value.quantity+"</td>";
-	// 				tableData += "<td>"+(value.quantity / value.lot_transfer)+"</td>";
-	// 				tableData += "</tr>";
-
-	// 				if (value.quantity >= value.lot_transfer) {
-	// 					cat.push(value.model+" "+value.key);
-	// 					material_req.push((value.quantity / value.lot_transfer));
-	// 					limit.push(2);	
-	// 				}
-
-	// 			})
-
-	// 			$("#tbody").append(tableData);
-	// 			$('#logs').DataTable({
-	// 				"paging": true,
-	// 				'searching': false,
-	// 				'responsive':true,
-	// 				'lengthMenu': [
-	// 				[ 10, 25, 50, -1 ],
-	// 				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-	// 				],
-	// 				'ordering': false,
-	// 				'lengthChange': false,
-	// 				'info': false,
-	// 				'sPaginationType': "full_numbers",
-	// 				"columnDefs": [ {
-	// 					"targets": 0,
-	// 					"orderable": false
-	// 				} ]
-	// 			});
-
-			// }
-	// 	})
-	// }
-
-	$('.datepicker').datepicker({
-		<?php $tgl_max = date('d-m-Y') ?>
-		autoclose: true
-	});
-
+	}
 
 </script>
 @endsection

@@ -145,7 +145,7 @@
 						<th width="10%">Material</th>
 						<th>Material Description</th>
 						<th width="1%">Antrian</th>
-						{{-- <th width="1%">WIP</th> --}}
+						<th width="1%">WIP</th>
 						<th width="1%">Store</th>				
 					</tr>
 				</thead>
@@ -156,7 +156,7 @@
 						<th></th>
 						<th></th>
 						<th></th>
-						{{-- <th></th> --}}
+						<th></th>
 						<th></th>
 					</tr>
 				</tfoot>
@@ -421,12 +421,6 @@
 		$('#tableAdjust tfoot tr').appendTo('#tableAdjust thead');
 
 
-
-		// $.get('{{ url("fetch/welding/welding_stock") }}', data, function(result, status, xhr) {
-
-		// });
-
-
 		$('#tableStock tfoot th').each(function(){
 			var title = $(this).text();
 			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
@@ -436,8 +430,8 @@
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
-			[ 20, 50, 100, -1 ],
-			[ '20 rows', '50 rows', '100 rows', 'Show all' ]
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 			],
 			'buttons': {
 				buttons:[
@@ -490,7 +484,7 @@
 				{ "data": "material_number" },
 				{ "data": "material_description"},
 				{ "data": "antrian"},
-				// { "data": "wip"},
+				{ "data": "wip"},
 				{ "data": "store" }]
 			});
 

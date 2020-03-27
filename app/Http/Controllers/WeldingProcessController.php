@@ -3171,6 +3171,57 @@ class WeldingProcessController extends Controller
 			and t_proses.proses_id not in (select order_id_akan from m_mesin)
 			group by m_hsa.hsa_kito_code");
 
+
+		$wips = array();
+
+
+		$server_18 = db::select("select materials.material_number, COALESCE(inventory.qty,0) as qty from materials
+			left join
+			(select material_number, count(material_number) as qty from welding_inventories
+			where location like '%hsa%'
+			group by material_number) inventory
+			on materials.material_number = inventory.material_number
+			where materials.mrpc = 's21'
+			and materials.hpl like '%KEY%'");
+
+		$server_13 = db::connection('welding_controller')->select("select material_number, sum(qty) as qty from
+			(select material_number, count(material_number) as qty from
+			(select order_id_sedang_gmc as material_number from m_mesin
+			where order_id_sedang_gmc is not null
+			and order_id_sedang_gmc <> ''
+			union
+			select order_id_akan_gmc as material_number from m_mesin
+			where order_id_akan_gmc is not null
+			and order_id_akan_gmc <> '') solder
+			group by material_number
+			union
+			select m_hsa.hsa_kito_code as material_number, count(m_hsa.hsa_kito_code) as qty from t_before_cuci
+			left join m_hsa on m_hsa.hsa_id = t_before_cuci.part_id
+			where t_before_cuci.part_type = 2
+			and t_before_cuci.order_status = 0
+			group by m_hsa.hsa_kito_code
+			union all
+			select m_hsa.hsa_kito_code, count(m_hsa.hsa_kito_code) as qty from t_cuci
+			left join m_hsa_kartu on m_hsa_kartu.hsa_kartu_code = t_cuci.kartu_code
+			left join m_hsa on m_hsa.hsa_id = m_hsa_kartu.hsa_id
+			where m_hsa.hsa_kito_code is not null
+			group by m_hsa.hsa_kito_code) as wip
+			group by material_number");
+
+		foreach ($server_18 as $data1) {
+			$wip_qty = $data1->qty;
+			foreach ($server_13 as $data2) {
+				if($data1->material_number == $data2->material_number){
+					$wip_qty =  $wip_qty + $data2->qty;
+				}
+			}
+
+			array_push($wips, [
+				'material_number' => $data1->material_number,
+				'qty' => $wip_qty
+			]);
+		}
+
 		// $stock = db::connection('welding')->select("select material.material_number, material.material_description, COALESCE(antrian.qty,0) as antrian, COALESCE(wip.qty,0) as wip, COALESCE(store.qty,0) as store from
 		// 	(select * from ympimis.materials
 		// 	where mrpc = 's21'
@@ -3207,6 +3258,8 @@ class WeldingProcessController extends Controller
 		// 	on material.material_number = wip.material_number");
 		
 
+		// dd($wips);
+
 
 		$stock = array();
 		foreach ($stores as $store) {
@@ -3218,10 +3271,18 @@ class WeldingProcessController extends Controller
 
 			}
 
+			$wip_qty = 0;
+			foreach ($wips as $wip) {
+				if($store->material_number == $wip['material_number']){
+					$wip_qty = $wip['qty'];
+				}
+			}
+
 			array_push($stock, [
 				'material_number' => $store->material_number,
 				'material_description' => $store->description,
 				'store' => $store->qty,
+				'wip' => $wip_qty,
 				'antrian' => $queue_qty
 			]);
 		}

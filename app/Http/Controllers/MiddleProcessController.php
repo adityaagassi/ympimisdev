@@ -5774,13 +5774,111 @@ class MiddleProcessController extends Controller
 			$filter = " and materials.model like '%82%'";
 		}
 
-		$query = "select middle_material_requests.material_number, materials.model, materials.key, middle_material_requests.quantity/material_volumes.lot_transfer as kanban, middle_material_requests.quantity, coalesce(kitto.kanban,0) as inventory_kanban, coalesce(kitto.quantity, 0) as inventory_quantity from ympimis.middle_material_requests left join (select kitto.inventories.material_number, count(kitto.inventories.material_number) as kanban, sum(kitto.inventories.lot) as quantity from kitto.inventories where kitto.inventories.lot > 0 group by kitto.inventories.material_number) as kitto on kitto.material_number = ympimis.middle_material_requests.material_number left join material_volumes on material_volumes.material_number = middle_material_requests.material_number left join materials on materials.material_number = middle_material_requests.material_number where middle_material_requests.quantity > 0 and materials.origin_group_code = '".$request->get('origin_group_code')."'".$filter." ORDER BY middle_material_requests.quantity/material_volumes.lot_transfer DESC, materials.key ASC"; 
+		$solders = db::connection('welding_controller')->select("select material_number, count(material_number) as qty from
+			(select order_id_sedang_gmc as material_number from m_mesin
+			where order_id_sedang_gmc is not null
+			and order_id_sedang_gmc <> ''
+			union all
+			select order_id_akan_gmc as material_number from m_mesin
+			where order_id_akan_gmc is not null
+			and order_id_akan_gmc <> '') solder
+			group by material_number");
 
-		$log_request = db::select($query);
+		$cucis = db::connection('welding_controller')->select("select material_number, sum(qty) as qty from
+			(select m_hsa.hsa_kito_code as material_number, count(m_hsa.hsa_kito_code) as qty from t_before_cuci
+			left join m_hsa on m_hsa.hsa_id = t_before_cuci.part_id
+			where t_before_cuci.part_type = 2
+			and t_before_cuci.order_status = 0
+			group by m_hsa.hsa_kito_code
+			union all
+			select m_hsa.hsa_kito_code as material_number, count(m_hsa.hsa_kito_code) as qty from t_cuci
+			left join m_hsa_kartu on m_hsa_kartu.hsa_kartu_code = t_cuci.kartu_code
+			left join m_hsa on m_hsa.hsa_id = m_hsa_kartu.hsa_id
+			where m_hsa.hsa_kito_code is not null
+			group by m_hsa.hsa_kito_code) cuci
+			group by material_number");
+
+		$kensas = db::select("select material_number, count(material_number) as qty from welding_inventories
+			where location like '%hsa%'
+			group by material_number");
+
+		$requests = db::select("SELECT
+			middle_material_requests.material_number,
+			materials.model,
+			materials.key,
+			material_volumes.lot_transfer,
+			middle_material_requests.quantity / material_volumes.lot_transfer AS kanban,
+			middle_material_requests.quantity,
+			COALESCE ( kitto.kanban, 0 ) AS inventory_kanban,
+			COALESCE ( kitto.quantity, 0 ) AS inventory_quantity 
+			FROM
+			ympimis.middle_material_requests
+			LEFT JOIN (
+			SELECT
+			kitto.inventories.material_number,
+			count( kitto.inventories.material_number ) AS kanban,
+			sum( kitto.inventories.lot ) AS quantity 
+			FROM
+			kitto.inventories 
+			WHERE
+			kitto.inventories.lot > 0 
+			GROUP BY
+			kitto.inventories.material_number 
+			) AS kitto ON kitto.material_number = ympimis.middle_material_requests.material_number
+			LEFT JOIN material_volumes ON material_volumes.material_number = middle_material_requests.material_number
+			LEFT JOIN materials ON materials.material_number = middle_material_requests.material_number 
+			WHERE
+			middle_material_requests.quantity > 0 
+			AND materials.origin_group_code = '".$request->get('origin_group_code')."'".$filter." 
+			ORDER BY
+			middle_material_requests.quantity / material_volumes.lot_transfer DESC,
+			materials.key ASC,
+			materials.model ASC");
+
+
+		$log_request = array();
+		foreach ($requests as $request) {
+			
+			$qty_solder = 0;
+			foreach ($solders as $solder) {
+				if($request->material_number == $solder->material_number){
+					$qty_solder = $solder->qty;
+				}
+			}
+
+			$qty_cuci = 0;
+			foreach ($cucis as $cuci) {
+				if($request->material_number == $cuci->material_number){
+					$qty_cuci = $cuci->qty;
+				}
+			}
+
+			$qty_kensa = 0;
+			foreach ($kensas as $kensa) {
+				if($request->material_number == $kensa->material_number){
+					$qty_kensa = $kensa->qty;
+				}
+			}
+
+
+			array_push($log_request, [
+				"material_number" => $request->material_number,
+				"model" => $request->model,
+				"key" => $request->key,
+				"kanban" => $request->kanban,
+				"quantity" => $request->quantity,
+				"inventory_kanban" => $request->inventory_kanban,
+				"inventory_quantity" => $request->inventory_quantity,
+				"solder" => $qty_solder * $request->lot_transfer,
+				"cuci" => $qty_cuci * $request->lot_transfer,
+				"kensa" => $qty_kensa * $request->lot_transfer,
+			]);
+		}
+
 
 		$response = array(
 			'status' => true,
-			'datas' => $log_request
+			'datas' => $log_request,
 		);
 		return Response::json($response);
 	}
