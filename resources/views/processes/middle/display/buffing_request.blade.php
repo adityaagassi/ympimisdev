@@ -86,8 +86,8 @@
 		
 			<table id="assyTable" class="table table-bordered" style="padding: 0px; margin-bottom: 0px;">
 				<tr id="modelAll" style="font-size: 1.8vw"></tr>
-				<tr id="quantity_kanban" style="font-size: 1.5vw; border-top: 4px solid #f44336 !important"></tr>
-				<tr id="quantity" style="font-size: 1.5vw"></tr>
+				{{-- <tr id="quantity_kanban" style="font-size: 1.5vw; border-top: 4px solid #f44336 !important"></tr> --}}
+				<tr id="quantity" style="font-size: 1.5vw; border-top: 4px solid #f44336 !important"></tr>
 				<tr id="solder" style="font-size: 1.5vw; border-top: 4px solid #f44336 !important"></tr>
 				<tr id="cuci" style="font-size: 1.5vw"></tr>
 				<tr id="kensa" style="font-size: 1.5vw"></tr>
@@ -143,7 +143,7 @@
 
 		$.get('{{ url("fetch/middle/request/") }}', data, function(result, status, xhr){
 			if(result.status){
-				$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+				// $('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
 
 				$("#modelAll").empty();
@@ -177,7 +177,7 @@
 				total = "<th>Total</th>";
 
 				
-				chart = "<th><p><i class='fa fa-fw fa-clock-o'></i> Last Updated: "+ getActualFullDate() +"</p></th>";
+				chart = "<th style='vertical-align: text-top;'><p><i class='fa fa-fw fa-clock-o'></i> Last Updated: "+ getActualFullDate() +"</p></th>";
 
 				$.each(result.datas, function(index, value){
 					if(value.model[0] == 'A'){
@@ -187,7 +187,7 @@
 							model += "<th style='background-color: #ffff66;'>"+value.model+" "+value.key+"</th>";
 						}
 					}else if(value.model[0] == 'T'){
-						model += "<th style='background-color: #1565C0;'>"+value.model+" "+value.key+"</th>";
+						model += "<th style='background-color: #1565C0; color: #e5e5df;'>"+value.model+" "+value.key+"</th>";
 					}
 
 					if (parseInt(value.inventory_quantity) - value.quantity < 0) {
