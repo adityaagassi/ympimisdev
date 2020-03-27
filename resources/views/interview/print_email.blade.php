@@ -214,12 +214,27 @@
 				<?php $no++ ?>
 				@endforeach
 				<tr>
-					<td colspan="2">Keterangan :</td>
-					<td style="vertical-align: middle;"><center><label class="label label-success">OK</label></center></td>
-					<td style="vertical-align: middle;"><center><label class="label label-warning">OK (Kurang Lancar)</label></center></td>
-					<td style="vertical-align: middle;"><center><label class="label label-danger">Not OK</label></center></td>
+					<td colspan="6">Foto :</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+				@foreach($interviewPicture as $interviewPicture)
+					@if($interviewPicture->extension == 'jpg' || $interviewPicture->extension == 'png' || $interviewPicture->extension == 'jpeg' || $interviewPicture->extension == 'JPG')
+                		<a target="_blank" href="{{ url('/data_file/interview/'.$interviewPicture->picture) }}" class="btn"><img width="200px" src="{{ url('/data_file/interview/'.$interviewPicture->picture) }}"></a>
+                	@else
+                		<a target="_blank" href="{{ url('/data_file/interview/'.$interviewPicture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
+                	@endif
+					<!-- <img width="200px" src="{{ url('/data_file/interview/'.$interviewPicture->picture) }}" alt=""> -->
+				@endforeach
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="border-top: 1px solid black">Keterangan :</td>
+					<td style="vertical-align: middle;border-top: 1px solid black"><center><label class="label label-success">OK</label></center></td>
+					<td style="vertical-align: middle;border-top: 1px solid black"><center><label class="label label-warning">OK (Kurang Lancar)</label></center></td>
+					<td style="vertical-align: middle;border-top: 1px solid black"><center><label class="label label-danger">Not OK</label></center></td>
 					@if($interview->approval == Null && $role_code != 'M')
-					<td align="right" colspan="8"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td align="right" colspan="8" style="border-top: 1px solid black"><button class="btn btn-success" type="submit">Submit</button></td>
 					@endif
 				</tr>
 				</form>

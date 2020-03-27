@@ -297,7 +297,7 @@ table.table-bordered > tfoot > tr > th{
 
 				      <div class="box">
 				      	<div class="box-header">
-							<h3 class="box-title">Interview Pictures <span class="text-purple"></span></h3>
+							<h3 class="box-title">Interview Pictures / Files <span class="text-purple"></span></h3>
 							<form role="form" method="post" action="{{url('index/interview/insertpicture/'.$interview_id)}}" enctype="multipart/form-data">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
@@ -314,7 +314,7 @@ table.table-bordered > tfoot > tr > th{
 				          <table id="example3" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
-				                <th>Pictures</th>
+				                <th>Pictures / Files</th>
 				                <th>Action</th>
 				              </tr>
 				            </thead>
@@ -322,7 +322,7 @@ table.table-bordered > tfoot > tr > th{
 				              @foreach($interview_picture as $interview_picture)
 				              <tr>
 				                <td>
-				                	@if($interview_picture->extension == 'jpg' || $interview_picture->extension == 'png')
+				                	@if($interview_picture->extension == 'jpg' || $interview_picture->extension == 'png' || $interview_picture->extension == 'jpeg' || $interview_picture->extension == 'JPG')
 				                	<a target="_blank" href="{{ url('/data_file/interview/'.$interview_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/data_file/interview/'.$interview_picture->picture) }}"></a>
 				                	@else
 				                	<a target="_blank" href="{{ url('/data_file/interview/'.$interview_picture->picture) }}" class="btn"><img width="100px" src="{{ url('/images/file.png') }}"></a>
