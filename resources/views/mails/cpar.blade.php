@@ -51,11 +51,11 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Request Date</td>
-						<td style="border:1px solid black; text-align: center;">{{$tgl_permintaan}}</td>
+						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($tgl_permintaan)) ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Request Due Date</td>
-						<td style="border:1px solid black; text-align: center;">{{$tgl_balas}}</td>
+						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($tgl_balas)) ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Location</td>

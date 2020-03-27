@@ -45,7 +45,7 @@ class CparController extends Controller
       return view('cpar.index', array(
        'emp' => $emp_id,
        'employee' => $employee
-     ))->with('page', 'CPAR Antar Departemen');
+     ))->with('page', 'Form Laporan Ketidaksesuaian');
     }
 
     public function fetchDataTable(Request $request)
@@ -141,7 +141,7 @@ class CparController extends Controller
         'secfrom' => $secfrom,
         'sections' => $sections,
         'employee' => $emp
-      ))->with('page', 'CPAR Antar Departemen');
+      ))->with('page', 'Form Laporan Ketidaksesuaian');
     }
 
     public function post_create(request $request)
@@ -232,6 +232,7 @@ class CparController extends Controller
         'foreman' => $foreman,
         'manager' => $manager,
         'posisi' => 'sl',
+        'status' => 'cpar',
         'created_by' => $id_user
       ]);
 
@@ -277,7 +278,7 @@ class CparController extends Controller
       'emp' => $emp,
       'sections' => $sections,
       'materials' => $materials
-    ))->with('page', 'CPAR Antar Departemen');
+    ))->with('page', 'Form Laporan Ketidaksesuaian');
   }
 
       //GMC
@@ -332,7 +333,7 @@ class CparController extends Controller
         'id_cpar' => $request->get('id_cpar'),
         'item' => $request->get('item'),
         'item_desc' => $request->get('item_desc'),
-                  // 'supplier' => $request->get('supplier'),
+        // 'supplier' => $request->get('supplier'),
         'detail' => $request->get('detail'),
         'jml_cek' => $request->get('jml_cek'),
         'jml_ng' => $request->get('jml_ng'),
@@ -441,15 +442,15 @@ class CparController extends Controller
       $req->waktu = $request->get('waktu');
       $req->aksi = $request->get('aksi');
       $req->save();
-      return redirect('/index/cpar/detail/'.$req->id)->with('status', 'Data has been updated.')->with('page', 'CPAR Antar Departemen');
+      return redirect('/index/form_ketidaksesuaian/detail/'.$req->id)->with('status', 'Data has been updated.')->with('page', 'Form Laporan Ketidaksesuaian');
     }
     catch (QueryException $e){
       $error_code = $e->errorInfo[1];
       if($error_code == 1062){
-        return back()->with('error', 'Already exist.')->with('page', 'Request CPAR');
+        return back()->with('error', 'Already exist.')->with('page', 'Form Ketidaksesuaian');
       }
       else{
-        return back()->with('error', $e->getMessage())->with('page', 'Request CPAR');
+        return back()->with('error', $e->getMessage())->with('page', 'Form Ketidaksesuaian');
       }
     }
   }
@@ -477,6 +478,20 @@ class CparController extends Controller
         $pos = "manager";
       }
 
+      if ($cpar->chief_car != null) {
+        $pos2 = "chief_car";
+      }
+
+      // apakah foremannya ada
+      else if($cpar->foreman_car != null) {
+        $pos2 = "foreman_car";
+      }
+
+      // apakah manager ada
+      else{
+        $pos2 = "manager_car";
+      }
+
     }
     else if($cpar->grade == "Leader"){
       //foreman ada
@@ -492,12 +507,27 @@ class CparController extends Controller
         $pos = "manager";
       }
 
+      //foreman ada
+      if($cpar->foreman_car != null) {
+        $pos2 = "foreman_car";
+      }
+
+      else if ($cpar->chief_car != null) {
+        $pos2 = "chief_car";
+      }
+
+      else{
+        $pos2 = "manager_car";
+      }
     }
 
-    $qa = CparDepartment::select('cpar_departments.*','sl.name as slname','cf.name as cfname','m.name as mname')
+    $qa = CparDepartment::select('cpar_departments.*','sl.name as slname','cf.name as cfname','m.name as mname','pic.name as picname','cfcar.name as cfcarname','mcar.name as mcarname')
     ->leftjoin('employee_syncs as sl','cpar_departments.pelapor','=','sl.employee_id')
     ->leftjoin('employee_syncs as cf','cpar_departments.'.$pos,'=','cf.employee_id')
     ->leftjoin('employee_syncs as m','cpar_departments.manager','=','m.employee_id')
+    ->leftjoin('employee_syncs as pic','cpar_departments.pic_car','=','pic.employee_id')
+    ->leftjoin('employee_syncs as cfcar','cpar_departments.'.$pos2,'=','cfcar.employee_id')
+    ->leftjoin('employee_syncs as mcar','cpar_departments.manager_car','=','mcar.employee_id')
     ->where('cpar_departments.id','=',$id)
     ->get();
 
@@ -517,6 +547,10 @@ class CparController extends Controller
       'sl' => $qa[0]->slname,
       'cf' => $qa[0]->cfname,
       'm' => $qa[0]->mname,
+      'pic' => $qa[0]->picname,
+      'cfcar' => $qa[0]->cfcarname,
+      'mcar' => $qa[0]->mcarname,
+      'cpar' => $cpar
     ));
 
     return $pdf->stream("Form ".$qa[0]->judul.".pdf");
@@ -574,13 +608,20 @@ class CparController extends Controller
     ->where('cpar_departments.id','=',$id)
     ->get();
 
-    return view('cpar.verifikasi_cpar', array(
-      'cpar' => $cpar,
-      'items' => $items,
-      'sl' => $qa[0]->slname,
-      'cf' => $qa[0]->cfname,
-      'm' => $qa[0]->mname,
-    ))->with('page', 'CPAR Departemen');
+    if ($cpar->posisi == 'sl' || $cpar->posisi == 'cf' || $cpar->posisi == 'm' || $cpar->posisi == 'dept') {
+      return view('cpar.verifikasi_cpar', array(
+        'cpar' => $cpar,
+        'items' => $items,
+        'sl' => $qa[0]->slname,
+        'cf' => $qa[0]->cfname,
+        'm' => $qa[0]->mname,
+      ))->with('page', 'Form Ketidaksesuaian');
+    }
+    else{
+      return redirect('index/form_ketidaksesuaian');
+    }
+
+    
   }
 
 
@@ -590,60 +631,6 @@ class CparController extends Controller
 
     if(count($approve) == 3){
       $cpar = CparDepartment::find($id);
-
-      // if ($cpar->posisi == "sl") {
-
-      //   if ($cpar->chief == null && $cpar->foreman == null) {
-      //       $cpar->posisi = "m";
-      //       $cpar->approvalcf = "Approved";
-      //       $cpar->approvalm = "Approved";
-      //       $cpar->datem = date('Y-m-d H:i:s');
-      //   }
-      //   else{
-      //       $cpar->posisi = "cf";
-      //       $cpar->approvalcf = "Approved";
-      //       $cpar->datecf = date('Y-m-d H:i:s');
-      //   }
-
-
-      //   if($cpar->grade == "Staff"){
-      
-      //     //apakah chiefnya ada
-      //     if ($cpar->chief != null) {
-      //       $pos = "chief";
-      //     }
-
-      //     // apakah foremannya ada
-      //     else if($cpar->foreman != null) {
-      //       $pos = "foreman";
-      //     }
-
-      //     // apakah manager ada
-      //     else{
-      //       $pos = "manager";
-      //     }
-
-      //   }
-        
-      //   else if($cpar->grade == "Leader"){
-      //     //foreman ada
-      //     if($cpar->foreman != null) {
-      //       $pos = "foreman";
-      //     }
-
-      //     else if ($cpar->chief != null) {
-      //       $pos = "chief";
-      //     }
-
-      //     else{
-      //       $pos = "manager";
-      //     }
-
-      //   }
-
-      //   $mailto = "select distinct employees.name,email,phone from cpar_departments join employees on cpar_departments.".$pos." = employees.employee_id join users on employees.employee_id = users.username where cpar_departments.id = '".$cpar->id."'";
-      //   $mails = DB::select($mailto);
-      // }
 
       if ($cpar->posisi == "cf") {
         $cpar->posisi = "m";
@@ -658,12 +645,85 @@ class CparController extends Controller
           $number = $mail->phone;
         }
       }
+
       else if ($cpar->posisi == "m") {
+
         $cpar->approvalm = "Approved";
         $cpar->datem = date('Y-m-d H:i:s');
+        $cpar->status = "car";
 
-        $mailtoo = "select distinct employees.name,email,phone from cpar_departments join employees on cpar_departments.manager = employees.employee_id join users on employees.employee_id = users.username where cpar_departments.id = '".$cpar->id."'";
-        $mails = DB::select($mailto);
+        $sec = explode("_", $cpar->section_to);
+        $secfrom = explode("_", $cpar->section_from);
+        //get departemen
+        $dept = EmployeeSync::where('section','=', $sec[1])
+        ->select('department')->first();
+
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = '".$dept->department."' and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%') and (section is null or section != '".$secfrom[1]."')";
+
+        $mailtoo = DB::select($mails);
+
+        $cpar->tanggal_car = date('Y-m-d H:i:s');
+
+        //get chief foreman manager from departemen TUJUAN
+
+        $cfm2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position in ('chief','foreman','manager')");
+
+
+        $chief2 = null;
+        $foreman2 = null;
+        $manager2 = null;
+        $chiefcount2 = 0;
+        $foremancount2 = 0;
+
+        if ($cfm2 != null) {
+          foreach ($cfm2 as $position) {
+
+            $pos = $position->position;
+
+            // Manager 
+            if ($pos == "Manager") {
+              $manager2 = $position->employee_id;
+              $cpar->manager_car = $manager2;
+            }
+
+            // Chief
+            if ($pos == "Chief") {
+              if ($chiefcount2 == 0) {
+                $chief2 = $position->employee_id;
+                $chiefcount2 = 1;
+
+                $cpar->chief_car = $chief2;
+              }
+              else{
+                $cf2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Chief' and section='".$sec[1]."'");
+
+                $chief2 = $cf2[0]->employee_id;
+
+                $cpar->chief_car = $chief2;
+              }
+            }
+
+            // Foreman
+            if ($pos == "Foreman") {
+              if ($foremancount2 == 0) {
+                $foreman2 = $position->employee_id;
+                $foremancount2 = 1;
+
+                $cpar->foreman_car = $foreman2;
+              } else {
+                $f2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Foreman' and section='".$sec[1]."'");
+
+                $foreman2 = $f2[0]->employee_id;
+                $cpar->foreman_car = $foreman2;
+              }
+
+            }
+
+          }
+        }
+
+        $cpar->posisi = 'dept';
+
       }
 
       $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$cpar->id;
@@ -674,13 +734,12 @@ class CparController extends Controller
 
       $cpar->save();
 
-      return redirect('/index/cpar/verifikasicpar/'.$id)->with('status', 'CPAR Approved')->with('page', 'CPAR');
+      return redirect('/index/form_ketidaksesuaian/verifikasicpar/'.$id)->with('status', 'CPAR Approved')->with('page', 'Form Ketidaksesuian');
     }
     else{
-      return redirect('/index/cpar/verifikasicpar/'.$id)->with('error', 'CPAR Not Approved')->with('page', 'CPAR');
+      return redirect('/index/form_ketidaksesuaian/verifikasicpar/'.$id)->with('error', 'CPAR Not Approved')->with('page', 'Form Ketidaksesuian');
     }          
   }
-
 
   public function sendemail(Request $request,$id)
       {
@@ -692,7 +751,6 @@ class CparController extends Controller
                 $cpar->posisi = "m";
                 $cpar->approvalcf = "Approved";
                 $cpar->datecf = date('Y-m-d H:i:s');
-                // $cpar->approvalm = "Approved";
             }
             else{
                 $cpar->posisi = "cf";
@@ -779,7 +837,753 @@ class CparController extends Controller
           }
 
           Mail::to($mailtoo)->send(new SendEmail($tolak, 'rejectcpar_dept'));
-          return redirect('/index/cpar/verifikasicpar/'.$id)->with('status', 'CPAR Not Approved')->with('page', 'CPAR Antar Departemen');
+          return redirect('/index/form_ketidaksesuaian/verifikasicpar/'.$id)->with('status', 'CPAR Not Approved')->with('page', 'Form Laporan Ketidaksesuaian');
       }
+
+      // Form Ketidaksesuaian
+
+      public function response($id){
+          $emp_id = Auth::user()->username;
+          $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+          $cpar = CparDepartment::find($id);
+
+          $employee = EmployeeSync::where('employee_id', Auth::user()->username)
+          ->select('employee_id', 'name', 'position')->first();
+
+          if ($cpar->posisi != 'sl' && $cpar->posisi != 'cf' && $cpar->posisi != 'm') {
+            return view('cpar.detail_car', array(
+              'cpar' => $cpar,
+              'employee' => $employee,
+            ))->with('page', 'Form Ketidaksesuaian');
+          }
+          else{
+            return redirect('index/form_ketidaksesuaian');
+          }
+          
+      }
+
+      public function update_car(Request $request, $id)
+      {
+        try{
+          $car = CparDepartment::find($id);
+          $car->pic_car = $request->get('pic_car');
+          $car->deskripsi_car = $request->get('deskripsi_car');
+          $car->penanganan_car = $request->get('penanganan_car');
+          $car->save();
+
+          return redirect('/index/form_ketidaksesuaian/response/'.$car->id)->with('status', 'Data has been updated.')->with('page', 'Form Ketidaksesuaian');
+        }
+        catch (QueryException $e){
+          $error_code = $e->errorInfo[1];
+          if($error_code == 1062){
+            return back()->with('error', 'Already exist.')->with('page', 'Form Ketidaksesuaian');
+          }
+          else{
+            return back()->with('error', $e->getMessage())->with('page', 'Form Ketidaksesuaian');
+          }
+        }
+      }
+
+      public function sendemailcar(Request $request,$id)
+      {
+          $id_user = Auth::id();
+
+          $cpar = CparDepartment::find($id);
+
+          if ($cpar->posisi == "dept") {
+            if ($cpar->chief_car == null && $cpar->foreman_car == null) {
+                $cpar->posisi = "deptm";
+                $cpar->approvalcf_car = "Approved";
+                $cpar->datecf_car = date('Y-m-d H:i:s');
+            }
+            else{
+                $cpar->posisi = "deptcf";
+            }
+
+            if($cpar->grade == "Staff"){
+          
+              //apakah chiefnya ada
+              if ($cpar->chief_car != null) {
+                $posi = "chief_car";
+              }
+              // apakah foremannya ada
+              else if($cpar->foreman_car != null) {
+                $posi = "foreman_car";
+              }
+              // apakah manager ada
+              else{
+                $posi = "manager_car";
+              }
+            }
+            
+            else if($cpar->grade == "Leader"){
+              //foreman ada
+              if($cpar->foreman_car != null) {
+                $posi = "foreman_car";
+              }
+              else if ($cpar->chief_car != null) {
+                $posi = "chief_car";
+              }
+              else{
+                $posi = "manager_car";
+              }
+
+            }
+
+            $mailto = "select distinct employees.name,email,phone from cpar_departments join employees on cpar_departments.".$posi." = employees.employee_id join users on employees.employee_id = users.username where cpar_departments.id = '".$cpar->id."'";
+            $mails = DB::select($mailto);
+          }
+
+          foreach($mails as $mail){
+            $mailtoo = $mail->email;
+            $number = $mail->phone;
+          }
+
+          $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$cpar->id;
+          $cpar_dept = db::select($isimail);
+
+          Mail::to($mailtoo)->send(new SendEmail($cpar_dept, 'cpar_dept'));
+          $cpar->save();      
+    }
+
+
+    public function verifikasicar($id){
+      $car = CparDepartment::find($id);
+
+      if($car->grade == "Staff"){
+        
+        //apakah chiefnya ada
+        if ($car->chief_car != null) {
+          $pos = "chief_car";
+        }
+
+        // apakah foremannya ada
+        else if($car->foreman_car != null) {
+          $pos = "foreman_car";
+        }
+
+        // apakah manager ada
+        else{
+          $pos = "manager_car";
+        }
+
+    }
+    else if($car->grade == "Leader"){
+      //foreman ada
+      if($car->foreman_car != null) {
+        $pos = "foreman_car";
+      }
+
+      else if ($car->chief_car != null) {
+        $pos = "chief_car";
+      }
+
+      else{
+        $pos = "manager_car";
+      }
+
+    }
+
+    $qa = CparDepartment::select('cpar_departments.*','pic.name as picname','cfcar.name as cfname','mcar.name as mname')
+    ->leftjoin('employee_syncs as pic','cpar_departments.pic_car','=','pic.employee_id')
+    ->leftjoin('employee_syncs as cfcar','cpar_departments.'.$pos,'=','cfcar.employee_id')
+    ->leftjoin('employee_syncs as mcar','cpar_departments.manager_car','=','mcar.employee_id')
+    ->where('cpar_departments.id','=',$id)
+    ->get();
+
+    $items = CparItem::select('cpar_items.*')
+    ->join('cpar_departments','cpar_items.id_cpar','=','cpar_departments.id')
+        // ->join('material_plant_data_lists','cpar_items.item','=','material_plant_data_lists.material_number')
+    ->where('cpar_departments.id','=',$id)
+    ->get();
+
+    if ($car->posisi == 'dept' || $car->posisi == 'deptcf' || $car->posisi == 'deptm' || $car->posisi == 'verif') {
+      return view('cpar.verifikasi_car', array(
+        'car' => $car,
+        'items' => $items,
+        'pic' => $qa[0]->picname,
+        'cfcar' => $qa[0]->cfname,
+        'mcar' => $qa[0]->mname,
+      ))->with('page', 'Penanganan Form Laporan Ketidaksesuaian');
+    }
+    else{
+      return redirect('index/form_ketidaksesuaian');
+    }
+
+ 
+  }
+
+
+  public function approvalcar(Request $request,$id)
+  {
+    $approve = $request->get('approve');
+
+    if(count($approve) == 3){
+      $car = CparDepartment::find($id);
+
+      if ($car->posisi == "deptcf") {
+        $car->posisi = "deptm";
+        $car->approvalcf_car = "Approved";
+        $car->datecf_car = date('Y-m-d H:i:s');
+
+        $mailto = "select distinct employees.name,email,phone from cpar_departments join employees on cpar_departments.manager_car = employees.employee_id join users on employees.employee_id = users.username where cpar_departments.id = '".$car->id."'";
+        $mails = DB::select($mailto);
+
+        foreach($mails as $mail){
+          $mailtoo = $mail->email;
+          $number = $mail->phone;
+        }
+
+        $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$car->id;
+
+        $car_dept = db::select($isimail);
+
+        Mail::to($mailtoo)->send(new SendEmail($car_dept, 'cpar_dept'));
+      }
+
+      else if ($car->posisi == "deptm") {
+        $car->posisi = "verif";
+        $car->status = "verification";
+        $car->approvalm_car = "Approved";
+        $car->datem_car = date('Y-m-d H:i:s');
+
+        $sec = explode("_", $car->section_to);
+        $secfrom = explode("_", $car->section_from);
+        
+        //get departemen
+        
+        $dept = EmployeeSync::where('section','=', $secfrom[1])
+        ->select('department')->first();
+
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = '".$dept->department."' and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%') and (section is null or section != '".$sec[1]."')";
+
+        $mailtoo = DB::select($mails);
+
+        $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$car->id;
+
+        $car_dept = db::select($isimail);
+
+        Mail::to($mailtoo)->send(new SendEmail($car_dept, 'cpar_dept'));
+      }
+
+      
+
+      $car->save();
+
+      return redirect('/index/form_ketidaksesuaian/verifikasicar/'.$id)->with('status', 'Form Approved')->with('page', 'Form Ketidaksesuaian');
+    }
+    else{
+      return redirect('/index/form_ketidaksesuaian/verifikasicar/'.$id)->with('error', 'Form Not Approved')->with('page', 'Form Ketidaksesuaian');
+    }          
+  }
+
+
+  public function notapprovecar(Request $request,$id)
+    {
+      $alasan = $request->get('alasan_car');
+
+      $car = CparDepartment::find($id);
+      
+      $car->alasan_car = $alasan;
+      $car->datereject_car = date('Y-m-d H:i:s');
+
+      if ($car->posisi == "deptcf") {
+        $car->posisi = "dept";              
+      }
+
+      else if ($car->posisi == "deptm") {
+        $car->posisi = "dept";
+        $car->approvalcf_car = null;
+        $car->datecf_car = null;
+      }
+
+      $car->save();
+
+      $query = "select * from cpar_departments where cpar_departments.id='".$id."'";
+      $tolak = db::select($query);
+
+      $mailto = "select distinct employees.name,email,phone from cpar_departments join employees on cpar_departments.pic_car = employees.employee_id join users on employees.employee_id = users.username where cpar_departments.id = '".$car->id."'";
+      $mails = DB::select($mailto);
+
+      foreach($mails as $mail){
+        $mailtoo = $mail->email;
+        $number = $mail->phone;
+      }
+
+      Mail::to($mailtoo)->send(new SendEmail($tolak, 'rejectcpar_dept'));
+      return redirect('/index/form_ketidaksesuaian/verifikasicar/'.$id)->with('status', 'CAR Not Approved')->with('page', 'Form Laporan Ketidaksesuaian');
+    }
+
+    public function verifikasibagian($id){
+      $verifikasi = CparDepartment::find($id);
+
+      if($verifikasi->grade == "Staff"){
+        
+        //apakah chiefnya ada
+        if ($verifikasi->chief_car != null) {
+          $pos = "chief_car";
+        }
+
+        // apakah foremannya ada
+        else if($verifikasi->foreman_car != null) {
+          $pos = "foreman_car";
+        }
+
+        // apakah manager ada
+        else{
+          $pos = "manager_car";
+        }
+    }
+
+    else if($verifikasi->grade == "Leader"){
+      //foreman ada
+      if($verifikasi->foreman_car != null) {
+        $pos = "foreman_car";
+      }
+
+      else if ($verifikasi->chief_car != null) {
+        $pos = "chief_car";
+      }
+
+      else{
+        $pos = "manager_car";
+      }
+
+    }
+
+    $qa = CparDepartment::select('cpar_departments.*','pic.name as picname','cfcar.name as cfname','mcar.name as mname')
+    ->leftjoin('employee_syncs as pic','cpar_departments.pic_car','=','pic.employee_id')
+    ->leftjoin('employee_syncs as cfcar','cpar_departments.'.$pos,'=','cfcar.employee_id')
+    ->leftjoin('employee_syncs as mcar','cpar_departments.manager_car','=','mcar.employee_id')
+    ->where('cpar_departments.id','=',$id)
+    ->get();
+
+    $items = CparItem::select('cpar_items.*')
+    ->join('cpar_departments','cpar_items.id_cpar','=','cpar_departments.id')
+    ->where('cpar_departments.id','=',$id)
+    ->get();
+
+    if ($verifikasi->posisi == 'verif' || $verifikasi->posisi == 'close' || $verifikasi->posisi == 'dept') {
+      return view('cpar.verifikasi_bagian', array(
+        'verifikasi' => $verifikasi,
+        'items' => $items,
+        'pic' => $qa[0]->picname,
+        'cfcar' => $qa[0]->cfname,
+        'mcar' => $qa[0]->mname,
+      ))->with('page', 'Verifikasi Bagian');
+    }
+    else{
+      return redirect('index/form_ketidaksesuaian');
+    }
+
+    
+  }
+
+  public function closecar(Request $request){
+    try {
+      $data = CparDepartment::where('id','=' , $request->get('id'))
+      ->first();
+
+      $data->posisi = "close";
+      $data->status = "close";
+      $data->save();
+
+      $response = array(
+        'status' => true,
+        'message' => 'Success Close CPAR'
+      );
+      return Response::json($response);
+
+      } catch (QueryException $e) {
+          $response = array(
+            'status' => false,
+            'message' => 'error'
+          );
+          return Response::json($response);
+      }
+  }
+
+  public function rejectcar(Request $request){
+    try {
+        $dataa = CparDepartment::where('id','=' , $request->get('id'))
+        ->first();
+        
+        $dataa->status = "car";
+        $dataa->reject_all = $request->get('catatan');
+
+        $dataa->approvalcf_car = null;
+        $dataa->approvalm_car = null;        
+        $dataa->datecf_car = null;
+        $dataa->datem_car = null;
+
+        $sec = explode("_", $dataa->section_to);
+        $secfrom = explode("_", $dataa->section_from);
+
+        //get departemen
+        $dept = EmployeeSync::where('section','=', $sec[1])
+        ->select('department')->first();
+
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = '".$dept->department."' and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%') and (section is null or section != '".$secfrom[1]."')";
+
+        $mailtoo = DB::select($mails);
+
+        // $mailto = "select distinct employees.name,email from cpar_departments join employees on cpar_departments.pic_car = employees.employee_id join users on employees.employee_id = users.username where cpar_departments.id = '".$request->get('id')."'";
+        // $mails = DB::select($mailto);
+
+        // foreach($mails as $mail){
+        //   $mailtoo = $mail->email;
+        // }
+
+        $dataa->save();
+
+        $query = "select * from cpar_departments where cpar_departments.id='".$request->get('id')."'";
+        $tolak = db::select($query);
+
+        Mail::to($mailtoo)->send(new SendEmail($tolak, 'rejectcpar_dept'));
+
+        $data2 = CparDepartment::where('id','=' , $request->get('id'))->first();
+        $data2->posisi = "dept";
+        $data2->save();
+        
+        $response = array(
+          'status' => true,
+          'message' => 'Success Reject Data'
+        );
+        return Response::json($response);
+
+      } 
+
+      catch (QueryException $e) {
+        $response = array(
+          'status' => false,
+          'message' => 'error'
+        );
+      
+        return Response::json($response);
+      }
+  }
+
+
+  // Display Monitoring
+
+
+  public function monitoring(){
+
+    $sec = db::select("select DISTINCT section from employee_syncs");
+
+    return view('cpar.monitoring',  
+      array(
+          'title' => 'Monitoring Form Laporan Ketidaksesuaian', 
+          'title_jp' => '不適合報告フォームの管理',
+          'sections' => $sec
+        )
+      )->with('page', 'Form Laporan Ketidaksesuaian');
+  }
+
+  public function fetchMonitoring(Request $request){
+
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }
+
+      if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+      }
+
+      $status = $request->get('status');
+
+      if ($status != null) {
+          $cat = json_encode($status);
+          $kat = str_replace(array("[","]"),array("(",")"),$cat);
+
+          $kate = 'and cpar_departments.status in'.$kat;
+      }else{
+          $kate = '';
+      }
+
+      $section_from = $request->get('section_from');
+
+      if ($section_from != null) {
+          $secfff = json_encode($section_from);
+          $secff = str_replace(array("[","]"),array("",""),$secfff);
+          $secf = str_replace(",","|",$secff);
+          $secf = str_replace('"',"",$secf);
+
+          $secf = 'and cpar_departments.section_from REGEXP "'.$secf.'"';
+      } else {
+          $secf = '';
+      }
+
+      $section_to = $request->get('section_to');
+
+      if ($section_to != null) {
+          $secttt = json_encode($section_to);
+          $sectt = str_replace(array("[","]"),array("",""),$secttt);
+          $sect = str_replace(",","|",$sectt);
+          $sect = str_replace('"',"",$sect);
+
+          $sect = 'and cpar_departments.section_to REGEXP "'.$sect.'"';
+      } else {
+          $sect = '';
+      }
+
+      //per month
+
+      // $data = db::select("select count(id) as kasus, monthname(tanggal) as bulan, year(tanggal) as tahun, sum(case when cpar_departments.`status` = 'cpar' then 1 else 0 end) as cpar, sum(case when cpar_departments.`status` = 'car' then 1 else 0 end) as car, sum(case when cpar_departments.`status` = 'verification' then 1 else 0 end) as verif, sum(case when cpar_departments.`status` = 'close' then 1 else 0 end) as close from cpar_departments where cpar_departments.deleted_at is null group by bulan, tahun order by tahun, bulan ASC");
+
+
+      //per tgl
+      $data = db::select("
+        select date.week_date, coalesce(cpar.qty, 0) as cpar, coalesce(car.qty, 0) as car, coalesce(verification.qty, 0) as verification, coalesce(`close`.qty, 0) as close from 
+        (select week_date from weekly_calendars 
+        where date(week_date) >= '".$datefrom."'
+        and date(week_date) <= '".$dateto."') date
+        left join
+        (select date(tanggal) as date, count(id) as qty from cpar_departments
+        where date(tanggal) >= '".$datefrom."' and date(tanggal) <= '".$dateto."' and `status` = 'cpar' and cpar_departments.deleted_at is null ".$kate." ".$secf." ".$sect."
+        group by date(tanggal)) cpar
+        on date.week_date = cpar.date
+        left join
+        (select date(tanggal) as date, count(id) as qty from cpar_departments
+        where date(tanggal) >= '".$datefrom."' and date(tanggal) <= '".$dateto."' and `status` = 'car' and cpar_departments.deleted_at is null ".$kate." ".$secf." ".$sect."
+        group by date(tanggal)) car
+        on date.week_date = car.date
+        left join
+        (select date(tanggal) as date, count(id) as qty from cpar_departments
+        where date(tanggal) >= '".$datefrom."' and date(tanggal) <= '".$dateto."' and `status` = 'verification' and cpar_departments.deleted_at is null ".$kate." ".$secf." ".$sect."
+        group by date(tanggal)) verification
+        on date.week_date = verification.date
+        left join
+        (select date(tanggal) as date, count(id) as qty from cpar_departments
+        where date(tanggal) >= '".$datefrom."' and date(tanggal) <= '".$dateto."' and `status` = 'close' and cpar_departments.deleted_at is null ".$kate." ".$secf." ".$sect."
+        group by date(tanggal)) close
+        on date.week_date = `close`.date
+        order by week_date asc");
+
+
+      $year = date('Y');
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'year' => $year,
+        'section_from' => $secf,
+        'section_to' => $sect
+      );
+
+      return Response::json($response);
+  }
+
+  public function detailMonitoring(Request $request){
+
+      $tgl = $request->get("tgl");
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }
+
+      if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+      }
+
+      $status = $request->get('status');
+
+      if ($status != null) {
+
+          if ($status == "CPAR") {
+            $status = "cpar";
+          }
+
+          if ($status == "Penanganan") {
+            $status = "car";
+          }
+
+          if ($status == "Verifikasi") {
+            $status = "verification";
+          }
+
+          $stat = 'and cpar_departments.status = "'.$status.'"';
+      }else{
+          $stat = '';
+      }
+
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom != null && $dateto != null) {
+          $df = 'and cpar_departments.tanggal between "'.$datefrom.'" and "'.$dateto.'"';
+      }else{
+          $df = '';
+      }
+
+      $section_from = $request->get('sf');
+
+      if ($section_from != null) {
+          $sf = $section_from;
+      }else{
+          $sf = '';
+      }
+
+      $section_to = $request->get('st');
+
+      if ($section_to != null) {
+          $st = $section_to;
+      }else{
+          $st = '';
+      }
+
+      $query = "select cpar_departments.* FROM cpar_departments where cpar_departments.deleted_at is null and tanggal = '".$tgl."' ".$stat." ".$df." ".$sf." ".$st."";
+
+      $detail = db::select($query);
+
+      return DataTables::of($detail)
+
+      ->addColumn('action', function($detail){
+        $id = $detail->id;
+        return '<a href="print/'.$id.'" class="btn btn-warning btn-xs" target="_blank">Report</a>';
+      })
+
+      ->editColumn('tanggal', function($detail){
+        return date('d F Y', strtotime($detail->tanggal));
+      })
+
+      ->editColumn('section_from', function($detail){
+        $secf = $detail->section_from;
+        $sf = explode("_", $secf);
+        return $sf[0]." - ".$sf[1];
+      })
+
+      ->editColumn('section_to', function($detail){
+        $sect = $detail->section_to;
+        $st = explode("_", $sect);
+        return $st[0]." - ".$st[1];
+      })
+
+      ->editColumn('status', function($detail){
+        if($detail->status == "cpar") {
+            return '<label class="label label-danger"> Pembuatan CPAR </label>';
+          }
+          else if($detail->status == "car"){
+            return '<label class="label label-warning"> Pembuatan Penanganan </label>';
+          }
+          else if($detail->status == "verification"){
+            return '<label class="label label-primary"> Proses Verifikasi </label>';
+          }
+          else if($detail->status == "close"){
+            return '<label class="label label-success"> Closed </label>';
+          }
+      })
+
+
+      ->rawColumns(['action' => 'action','status' => 'status'])
+      ->make(true);
+  }
+
+
+  public function fetchtable(Request $request)
+    {
+
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }
+
+      if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+      }
+
+      $status = $request->get('status');
+
+      if ($status != null) {
+          $cat = json_encode($status);
+          $kat = str_replace(array("[","]"),array("(",")"),$cat);
+
+          $kate = 'and cpar_departments.status in'.$kat;
+      }else{
+          $kate = 'and cpar_departments.status not in ("close")';
+      }
+
+      $section_from = $request->get('section_from');
+
+      if ($section_from != null) {
+          $secfff = json_encode($section_from);
+          $secff = str_replace(array("[","]"),array("",""),$secfff);
+          $secf = str_replace(",","|",$secff);
+          $secf = str_replace('"',"",$secf);
+
+          $secf = 'and cpar_departments.section_from REGEXP "'.$secf.'"';
+      } else {
+          $secf = '';
+      }
+
+      $section_to = $request->get('section_to');
+
+      if ($section_to != null) {
+          $secttt = json_encode($section_to);
+          $sectt = str_replace(array("[","]"),array("",""),$secttt);
+          $sect = str_replace(",","|",$sectt);
+          $sect = str_replace('"',"",$sect);
+
+          $sect = 'and cpar_departments.section_to REGEXP "'.$sect.'"';
+      } else {
+          $sect = '';
+      }
+
+      $data = db::select("select id, kategori, `status`, judul, tanggal, reject_all, section_from, section_to, posisi, (select name from employee_syncs where employee_id = cpar_departments.pelapor) as pelapor, 
+        (CASE 
+        WHEN cpar_departments.chief is null and cpar_departments.foreman is null THEN 'Tidak Ada'
+        WHEN cpar_departments.grade = 'Staff' THEN 
+        (IF(cpar_departments.chief is not null,(select name from employee_syncs where employee_id = cpar_departments.chief),(select name from employees where employee_id = cpar_departments.foreman)))
+        WHEN cpar_departments.grade = 'Leader' THEN
+        (IF(cpar_departments.foreman is not null,(select name from employee_syncs where employee_id = cpar_departments.foreman),(select name from employees where employee_id = cpar_departments.chief)))
+        END) 
+        as namacf,
+        approvalcf, datecf,
+        (select name from employee_syncs where employee_id = cpar_departments.manager) as namam,
+        approvalm, datem, tanggal_car,
+        (select name from employee_syncs where employee_id = cpar_departments.pic_car) as namapiccar,
+        (CASE 
+        WHEN cpar_departments.chief_car is null and cpar_departments.foreman_car is null THEN 'Tidak Ada'
+        WHEN cpar_departments.grade = 'Staff' THEN 
+        (IF(cpar_departments.chief_car is not null,(select name from employee_syncs where employee_id = cpar_departments.chief_car),(select name from employees where employee_id = cpar_departments.foreman_car)))
+        WHEN cpar_departments.grade = 'Leader' THEN
+        (IF(cpar_departments.foreman_car is not null,(select name from employee_syncs where employee_id = cpar_departments.foreman_car),(select name from employees where employee_id = cpar_departments.chief_car)))
+        END) 
+        as namacfcar,
+        approvalcf_car,datecf_car,
+        (select name from employee_syncs where employee_id = cpar_departments.manager_car) as namamcar,
+        approvalm_car,datem_car
+        from cpar_departments where cpar_departments.deleted_at is null and tanggal between '".$datefrom."' and '".$dateto."' ".$kate." ".$secf." ".$sect." ");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data
+      );
+
+      return Response::json($response); 
+
+      // CPAR Monitoring　是正予防対策モニタリング
+      // Monitoring Form Laporan Ketidaksesuaian 部門間の是正予防対策のモニタリング
+      // CPAR Department Monitoring 部門是正予防対策のモニタリング
+      // CPAR Across Department 部門跨ぐ是正予防対策
+      // CPAR Across Department Monitoring 部門跨ぐ是正予防対策のモニタリング
+      // Temperature　温度
+      // Body Temperature Report　体温リポート
+      // Body Temperature Monitoring　体温監視
+      // Totalトータル
+      // Average Temp体温平均
+      // Highest Temp最高体温
+      // Limitリミット
+    }
+
+
+
+
 
 }

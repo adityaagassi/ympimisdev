@@ -10,7 +10,7 @@ class CparDepartment extends Model
     use SoftDeletes;
 
 	protected $fillable = [
-		'kategori','judul','tanggal','section_from','section_to','target','jumlah','waktu','aksi','posisi','pelapor','grade','chief','foreman','manager','approvalcf','datecf','approvalm','datem','alasan','datereject','created_by'
+		'kategori','judul','tanggal','section_from','section_to','target','jumlah','waktu','aksi','posisi','status','pelapor','grade','chief','foreman','manager','approvalcf','datecf','approvalm','datem','alasan','datereject','tanggal_car','pic_car','deskripsi_car','penanganan_car','chief_car','foreman_car','manager_car','approvalcf_car','datecf_car','approvalm_car','datem_car','alasan_car','datereject_car','reject_all','created_by'
 	];
 
 	public function user()

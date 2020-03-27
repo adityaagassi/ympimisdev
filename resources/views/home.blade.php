@@ -213,14 +213,15 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">CPAR Across Department (部門跨ぐ是正予防対策)</span>
+                            <span style="font-weight: bold;">Incompatible Report Form (不適合報告フォーム)</span>
                             <br>
-                            <a href="{{ url("/index/cpar") }}">
-                                <i class="fa fa-caret-right"></i> CPAR Form (???)
+                            <a href="{{ url("/index/form_ketidaksesuaian") }}">
+                                <i class="fa fa-caret-right"></i> Create Form Ketidaksesuaian (不適合報告フォームを作成)
                             </a>
                             <br>
-                            <a href="{{ url("/index/cpar/monitoring") }}">
-                                <i class="fa fa-caret-right"></i> CPAR Monitoring (???)
+                            <a href="{{ url("/index/form_ketidaksesuaian/monitoring") }}">
+                                <!-- <i class="fa fa-caret-right"></i> Incompatible Report Monitoring (不適合報告フォームの管理) -->
+                                <i class="fa fa-caret-right"></i> Monitoring Form Ketidaksesuaian (不適合報告フォームの管理)
                             </a>
                         </td>
                     </tr>
@@ -229,7 +230,7 @@
                             <span style="font-weight: bold;">Others (他の情報)</span>
                             <br>
                             <a href="{{ url("/index/form_experience") }}">
-                                <i class="fa fa-caret-right"></i> Form Permasalahan & Kegagalan (問題・失敗のフォーム)
+                                <i class="fa fa-caret-right"></i> Form Failures Report (問題・失敗のフォーム)
                             </a>
                         </td>
                     </tr>
@@ -463,6 +464,20 @@
                                     <br>
                                     <a href="{{ url("index/maintenance/list/user") }}">
                                         <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
+                                    </a>
+                                    <br>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td>
+                                    <span style="font-weight: bold;">APAR (??)</span>
+                                    <br>
+                                    <a href="{{ secure_url("index/maintenance/aparCheck") }}">
+                                        <i class="fa fa-caret-right"></i> Check APAR (??)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/maintenance/apar") }}">
+                                        <i class="fa fa-caret-right"></i> APAR Monitoring (??)
                                     </a>
                                     <br>
                                 </td>

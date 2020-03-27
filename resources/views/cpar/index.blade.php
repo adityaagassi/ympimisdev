@@ -59,7 +59,7 @@ td {
 
       } else { ?>
       
-        <a href="{{ url("index/cpar/create")}}" class="btn btn-success btn-sm" style="color:white;float: right"><i class="fa fa-plus"></i> Create {{ $page }} </a>
+        <a href="{{ url("index/form_ketidaksesuaian/create")}}" class="btn btn-success btn-sm" style="color:white;float: right"><i class="fa fa-plus"></i> Buat {{ $page }} </a>
       
       <?php 
       }
@@ -89,7 +89,7 @@ td {
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title">Filter <span class="text-purple">CPAR</span></h3>
+          <h3 class="box-title">Filter <span class="text-purple">Laporan Ketidaksesuaian</span></h3>
         </div>
         <div class="box-body">
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -104,7 +104,7 @@ td {
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
               <div class="form-group">
                 <select class="form-control select2" data-placeholder="Select Section From" name="section_from" id="section_from" style="width: 100%;padding-left: 0">
                   <option></option>
@@ -117,7 +117,7 @@ td {
                   <option></option>
                 </select>
               </div>
-            </div>
+            </div> -->
             <div class="col-md-3">
                 <a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
                 <button id="search" onClick="fillTable($('#tgl').val(),$('#section_from').val(),$('#section_to').val())" class="btn btn-primary">Search</button>
@@ -228,7 +228,7 @@ td {
         section_from:section_from,
         sec_to:sec_to
     }
-      $.get('{{ url("index/cpar/fetchDataTable") }}', data, function(result, status, xhr){
+      $.get('{{ url("index/form_ketidaksesuaian/fetchDataTable") }}', data, function(result, status, xhr){
       if(result.status){
         $('#tableResult').DataTable().clear();
         $('#tableResult').DataTable().destroy();
@@ -257,10 +257,10 @@ td {
           tableData += '<td>'+ sec_t[0] + ' - '+ sec_t[1] +'</td>';
         
           if("{{Auth::user()->username}}" == value.pelapor || "{{Auth::user()->role_code}}" == "MIS"){
-            tableData += '<td><a href="{{ url("index/cpar/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a> <a href="{{ url("index/cpar/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Detail</a></td>';            
+            tableData += '<td><a href="{{ url("index/form_ketidaksesuaian/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a> <a href="{{ url("index/form_ketidaksesuaian/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Detail</a></td>';            
           }
           else{
-            tableData += '<td><a href="{{ url("index/cpar/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a></td>';
+            tableData += '<td><a href="{{ url("index/form_ketidaksesuaian/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a></td>';
           }
 
           tableData += '</tr>';

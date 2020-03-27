@@ -61,35 +61,34 @@
   
   #loading, #error { display: none; }
 
-  img {
-      width: 100%;
-  }
 </style>
 @endsection
 @section('header')
 <section class="content-header">
   <h1>
     Detail {{ $page }}
-    <small>Detail CPAR</small>
+    <small>Detail Form Ketidaksesuaian</small>
   </h1>
   <ol class="breadcrumb" style="width: 500px">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
    <li><a href="#">Examples</a></li>
    <li class="active">Blank page</li> --}}
 
-     @if($cpar->posisi == "sl" && (Auth::user()->username == $cpar->pelapor || Auth::user()->role_code == "MIS"))
-         <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cpar->id }})" style="width:200px">Send Email</a>
-     @elseif($cpar->posisi != "sl" && (Auth::user()->username == $cpar->pelapor || Auth::user()->role_code == "MIS"))
-          <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
-     @else
-         
-     @endif
+   <?php $user = STRTOUPPER(Auth::user()->username)?>
 
-    
+   @if($cpar->posisi == "sl" && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
+   <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cpar->id }})" style="width:200px">Send Email</a>
+   @elseif($cpar->posisi != "sl" && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
+   <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
+   @else
+   
+   @endif
 
-     <a class="btn btn-warning btn-sm pull-right" data-toggle="tooltip" title="Lihat Report" href="{{url('index/cpar/print', $cpar['id'])}}" target="_blank" style="margin-right: 5px;width: 150px">Preview Report CPAR</a>
+   
+
+   <a class="btn btn-warning btn-sm pull-right" data-toggle="tooltip" title="Lihat Report" href="{{url('index/form_ketidaksesuaian/print', $cpar['id'])}}" target="_blank" style="margin-right: 5px;width: 150px">Preview Form Report</a>
  </ol>
-    
+ 
 </section>
 
 @endsection
@@ -127,17 +126,17 @@
         <div class="row" align="left">
           <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="tgl">Tanggal</label>
-              <div class="input-group date">
-                <div class="input-group-addon">
-                  <i class="fa fa-calendar"></i>
-                </div>
-                <input type="text" class="form-control pull-right" placeholder="" value="{{ date('d F Y', strtotime($cpar->tanggal)) }}" disabled>
-                <input type="hidden" class="form-control pull-right" id="id_cpar" name="id_cpar" placeholder="" value="{{ $cpar->id }}">
+            <div class="input-group date">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
               </div>
+              <input type="text" class="form-control pull-right" placeholder="" value="{{ date('d F Y', strtotime($cpar->tanggal)) }}" disabled>
+              <input type="hidden" class="form-control pull-right" id="id_cpar" name="id_cpar" placeholder="" value="{{ $cpar->id }}">
+            </div>
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6">
-              <label for="subject">Identitas<span class="text-red">*</span></label>
-              <input type="text" id="subject" class="form-control" value="{{$cpar->pelapor}} - {{$emp->name}}" readonly>
+            <label for="subject">Identitas<span class="text-red">*</span></label>
+            <input type="text" id="subject" class="form-control" value="{{$cpar->pelapor}} - {{$emp->name}}" readonly>
           </div>
         </div>
 
@@ -148,70 +147,70 @@
                 <option value="Critical" <?php if($cpar->kategori == "Critical") echo "selected"; ?>>Critical (Berhubungan Dengan Safety, Fungsi Dan Ketidaksesuaian Dimensi/Design)</option>
                 <option value="Major" <?php if($cpar->kategori == "Major") echo "selected"; ?>>Major (Berhubungan Dengan Visual pada Area yang langsung dapat terlihat)</option>
                 <option value="Minor" <?php if($cpar->kategori == "Minor") echo "selected"; ?>>Minor (Berhubungan Dengan Visual pada Area tidak langsung dapat terlihat)</option>
-            </select> -->
-            <input type="text" id="cpar_kategori" class="form-control" value="{{$cpar->kategori}}" readonly>
+              </select> -->
+              <input type="text" id="cpar_kategori" class="form-control" value="{{$cpar->kategori}}" readonly>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+              <label for="subject">Judul Komplain<span class="text-red">*</span></label>
+              <input type="text" class="form-control" name="cpar_judul" id="cpar_judul" placeholder="Judul Ketidaksesuaian" value="{{$cpar->judul}}" disabled="">
+            </div>
           </div>
-          <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="subject">Judul Komplain<span class="text-red">*</span></label>
-            <input type="text" class="form-control" name="cpar_judul" id="cpar_judul" placeholder="Judul Ketidaksesuaian" value="{{$cpar->judul}}" disabled="">
-          </div>
-        </div>
 
-        <div class="row" align="left">
-          <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="section_from">Section From<span class="text-red">*</span></label>
-            <select class="form-control select2" style="width: 100%;" id="cpar_secfrom" name="cpar_secfrom" data-placeholder="Pilih Section Pelapor" disabled="">
+          <div class="row" align="left">
+            <div class="col-xs-6 col-sm-6 col-md-6">
+              <label for="section_from">Section From<span class="text-red">*</span></label>
+              <select class="form-control select2" style="width: 100%;" id="cpar_secfrom" name="cpar_secfrom" data-placeholder="Pilih Section Pelapor" disabled="">
                 <option></option>
                 <?php 
                 $secfrom = explode("_",$cpar->section_from);
                 
                 ?>
                 @foreach($sections as $section)
-                  @if($section->group == null)
-                    @if($section->department == $secfrom[0] && $section->section == $secfrom[1])
-                    <option value="{{ $section->department }}_{{ $section->section }}" selected>{{ $section->department }} - {{ $section->section }}</option>
-                    @else
-                    <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
-                    @endif
-                  @else
-                    @if($section->group == $secfrom[0] && $section->section == $secfrom[1])
-                    <option value="{{ $section->section }}_{{ $section->group }}" selected>{{ $section->section }} - {{ $section->group }}</option>
-                    @else
-                    <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
-                    @endif
-                  @endif
+                @if($section->group == null)
+                @if($section->department == $secfrom[0] && $section->section == $secfrom[1])
+                <option value="{{ $section->department }}_{{ $section->section }}" selected>{{ $section->department }} - {{ $section->section }}</option>
+                @else
+                <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+                @endif
+                @else
+                @if($section->group == $secfrom[0] && $section->section == $secfrom[1])
+                <option value="{{ $section->section }}_{{ $section->group }}" selected>{{ $section->section }} - {{ $section->group }}</option>
+                @else
+                <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
+                @endif
+                @endif
                 @endforeach
-            </select>
-          </div>
-          <div class="col-xs-6 col-sm-6 col-md-6">
-            <label for="section_to">Section To<span class="text-red">*</span></label>
-            <select class="form-control select2" style="width: 100%;" id="cpar_secto" name="cpar_secto" data-placeholder="Pilih Section" disabled="">
+              </select>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+              <label for="section_to">Section To<span class="text-red">*</span></label>
+              <select class="form-control select2" style="width: 100%;" id="cpar_secto" name="cpar_secto" data-placeholder="Pilih Section" disabled="">
                 <option></option>
                 <?php 
                 $secfrom = explode("_",$cpar->section_to);
                 
                 ?>
                 @foreach($sections as $section)
-                  @if($section->group == null)
-                    @if($section->department == $secfrom[0] && $section->section == $secfrom[1])
-                    <option value="{{ $section->department }}_{{ $section->section }}" selected>{{ $section->department }} - {{ $section->section }}</option>
-                    @else
-                    <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
-                    @endif
-                  @else
-                    @if($section->section == $secfrom[0] && $section->group == $secfrom[1])
-                    <option value="{{ $section->section }}_{{ $section->group }}" selected>{{ $section->section }} - {{ $section->group }}</option>
-                    @else
-                    <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
-                    @endif
-                  @endif
+                @if($section->group == null)
+                @if($section->department == $secfrom[0] && $section->section == $secfrom[1])
+                <option value="{{ $section->department }}_{{ $section->section }}" selected>{{ $section->department }} - {{ $section->section }}</option>
+                @else
+                <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+                @endif
+                @else
+                @if($section->group == $secfrom[0] && $section->section == $secfrom[1])
+                <option value="{{ $section->section }}_{{ $section->group }}" selected>{{ $section->section }} - {{ $section->group }}</option>
+                @else
+                <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
+                @endif
+                @endif
                 @endforeach
-            </select>
+              </select>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
-  </div>
+      </form>
+    </div>
 
     <div class="row">
       <div class="col-xs-12">
@@ -253,63 +252,63 @@
     <div class="row" style="margin-top: 10px">
       <div class="col-xs-12">
         <div class="box">
-          <form role="form" method="post" action="{{url('index/cpar/update_detail', $cpar->id)}}" enctype="multipart/form-data">
-          <div class="box-body">
-            <input type="hidden" value="{{csrf_token()}}" name="_token" />
-            <div class="form-group row" align="left">
-              <label class="col-sm-12" style="font-size: 18px">Penanganan Oleh Section Pelapor</label>
-              
-              <div class="col-sm-6">
-                <label class="col-sm-12" style="font-size: 14px;padding-left: 0">
-                  Target Per Hari
-                </label>  
-
-                <div class="col-sm-10" style="padding-left: 0">
-                  <input type="text" class="form-control" name="target" placeholder="Masukkan Target Per Hari" value="{{ $cpar->target }}">
-                </div>
-                <div class="col-sm-2" style="padding-left: 0; vertical-align: middle;margin-top: 0.5vw">
-                  Pcs / Hari
-                </div>
-
-                <label class="col-sm-12" style="font-size: 14px;padding-left: 0">
-                  Jumlah Perkiraan Keterlambatan
-                </label> 
-
-                <div class="col-sm-10" style="padding-left: 0">
-                  <input type="text" class="form-control" name="jumlah" placeholder="Masukkan Jumlah Perkiraan Keterlambatan" value="{{ $cpar->jumlah }}">
-                </div>
+          <form role="form" method="post" action="{{url('index/form_ketidaksesuaian/update_detail', $cpar->id)}}" enctype="multipart/form-data">
+            <div class="box-body">
+              <input type="hidden" value="{{csrf_token()}}" name="_token" />
+              <div class="form-group row" align="left">
+                <label class="col-sm-12" style="font-size: 18px">Penanganan Oleh Section Pelapor</label>
                 
-                <div class="col-sm-2" style="padding-left: 0; vertical-align: middle;margin-top: 0.5vw">
-                  Pcs
-                </div> 
+                <div class="col-sm-6">
+                  <label class="col-sm-12" style="font-size: 14px;padding-left: 0">
+                    Target Per Hari
+                  </label>  
 
-                <label class="col-sm-12" style="font-size: 14px;padding-left: 0">
-                  Waktu Yang Dibutuhkan Untuk Penanganan Masalah
-                </label>  
+                  <div class="col-sm-10" style="padding-left: 0">
+                    <input type="text" class="form-control" name="target" placeholder="Masukkan Target Per Hari" value="{{ $cpar->target }}">
+                  </div>
+                  <div class="col-sm-2" style="padding-left: 0; vertical-align: middle;margin-top: 0.5vw">
+                    Pcs / Hari
+                  </div>
 
-                <div class="col-sm-10" style="padding-left: 0">
-                  <input type="text" class="form-control" name="waktu" placeholder="Masukkan Waktu Yang Dibutuhkan" value="{{ $cpar->waktu }}">
-                </div>                 
-                <div class="col-sm-2" style="padding-left: 0; vertical-align: middle;margin-top: 0.5vw">
-                  Menit
-                </div> 
-              </div>
+                  <label class="col-sm-12" style="font-size: 14px;padding-left: 0">
+                    Jumlah Perkiraan Keterlambatan
+                  </label> 
 
-              <div class="col-sm-6">              
-                <label class="col-sm-12" style="font-size: 14px;padding-left: 0">Corrective Action Oleh section Terkait</label>
-                <div class="col-sm-12" style="padding-left: 0">
-                  <textarea type="text" class="form-control" name="aksi" placeholder="Masukkan Deskripsi"><?= $cpar->aksi ?></textarea>
+                  <div class="col-sm-10" style="padding-left: 0">
+                    <input type="text" class="form-control" name="jumlah" placeholder="Masukkan Jumlah Perkiraan Keterlambatan" value="{{ $cpar->jumlah }}">
+                  </div>
+                  
+                  <div class="col-sm-2" style="padding-left: 0; vertical-align: middle;margin-top: 0.5vw">
+                    Pcs
+                  </div> 
+
+                  <label class="col-sm-12" style="font-size: 14px;padding-left: 0">
+                    Waktu Yang Dibutuhkan Untuk Penanganan Masalah
+                  </label>  
+
+                  <div class="col-sm-10" style="padding-left: 0">
+                    <input type="text" class="form-control" name="waktu" placeholder="Masukkan Waktu Yang Dibutuhkan" value="{{ $cpar->waktu }}">
+                  </div>                 
+                  <div class="col-sm-2" style="padding-left: 0; vertical-align: middle;margin-top: 0.5vw">
+                    Menit
+                  </div> 
                 </div>
-              </div>
 
-              <div class="col-sm-12"> 
-                <br>
-                <center>
-                  <button type="submit" class="btn btn-success" style="width: 40%;font-size: 20px;font-weight: bold">Update Data</button>
-                </center>
+                <div class="col-sm-6">              
+                  <label class="col-sm-12" style="font-size: 14px;padding-left: 0">Penanganan Oleh Section Terkait (Pelapor)</label>
+                  <div class="col-sm-12" style="padding-left: 0">
+                    <textarea type="text" class="form-control" name="aksi" placeholder="Masukkan Deskripsi"><?= $cpar->aksi ?></textarea>
+                  </div>
+                </div>
+
+                <div class="col-sm-12"> 
+                  <br>
+                  <center>
+                    <button type="submit" class="btn btn-success" style="width: 40%;font-size: 20px;font-weight: bold">Update Data</button>
+                  </center>
+                </div>
               </div>
             </div>
-          </div>
           </form>
         </div>
       </div>
@@ -326,25 +325,25 @@
         <div class="modal-body">
           <div class="box-body">
             <input type="hidden" value="{{csrf_token()}}" name="_token" />
-           <div class="form-group row" align="left">
-            <div class="col-sm-1"></div>
-            <label class="col-sm-2">No Item<span class="text-red">*</span></label>
-            <div class="col-sm-8">
-              <select class="form-control select3" id="item" name="item" style="width: 100%;" data-placeholder="Pilih Item" required>
-                <option value=""></option>
-                @foreach($materials as $material)
-                <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
-                @endforeach
-              </select>
+            <div class="form-group row" align="left">
+              <div class="col-sm-1"></div>
+              <label class="col-sm-2">No Item<span class="text-red">*</span></label>
+              <div class="col-sm-8">
+                <select class="form-control select3" id="item" name="item" style="width: 100%;" data-placeholder="Pilih Item" required>
+                  <option value=""></option>
+                  @foreach($materials as $material)
+                  <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="form-group row" align="left">
-            <div class="col-sm-1"></div>
-            <label class="col-sm-2">Nama Material<span class="text-red">*</span></label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="item_desc" placeholder="Nama Material" required readonly>
+            <div class="form-group row" align="left">
+              <div class="col-sm-1"></div>
+              <label class="col-sm-2">Nama Material<span class="text-red">*</span></label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control" id="item_desc" placeholder="Nama Material" required readonly>
+              </div>
             </div>
-          </div>
           <!-- <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
             <label class="col-sm-2">Supplier</span></label>
@@ -406,19 +405,19 @@
       <div class="modal-body">
         <div class="box-body">
           <input type="hidden" value="{{csrf_token()}}" name="_token" />
-         <div class="form-group row" align="left">
-          <div class="col-sm-1"></div>
-          <label class="col-sm-2">No Item<span class="text-red">*</span></label>
-          <div class="col-sm-8">
-            <select class="form-control select4" id="item_edit" style="width: 100%;" data-placeholder="Pilih Material" required>
-              <option value=""></option>
-              @foreach($materials as $material)
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">No Item<span class="text-red">*</span></label>
+            <div class="col-sm-8">
+              <select class="form-control select4" id="item_edit" style="width: 100%;" data-placeholder="Pilih Material" required>
+                <option value=""></option>
+                @foreach($materials as $material)
                 <option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
-              @endforeach
-            </select>
+                @endforeach
+              </select>
+            </div>
           </div>
-        </div>
-        <div class="form-group row" align="left">
+          <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
             <label class="col-sm-2">Nama Material<span class="text-red">*</span></label>
             <div class="col-sm-8">
@@ -433,12 +432,12 @@
           </div>
         </div> -->
         <div class="form-group row" align="left">
-            <div class="col-sm-1"></div>
-            <label class="col-sm-2">Detail Ketidaksesuaian<span class="text-red">*</span></label>
-            <div class="col-sm-8" align="left">
-              <textarea class="form-control" id="detail_edit" placeholder="Detail Ketidaksesuaian" required></textarea>
-            </div>
+          <div class="col-sm-1"></div>
+          <label class="col-sm-2">Detail Ketidaksesuaian<span class="text-red">*</span></label>
+          <div class="col-sm-8" align="left">
+            <textarea class="form-control" id="detail_edit" placeholder="Detail Ketidaksesuaian" required></textarea>
           </div>
+        </div>
         <div class="form-group row" align="left">
           <div class="col-sm-1"></div>
           <label class="col-sm-2">Jumlah Cek</span></label>
@@ -477,7 +476,7 @@
   </div>
 </div>
 </div>
-
+</section>
 @endsection
 
 
@@ -536,7 +535,7 @@
       "serverSide": true,
       "ajax": {
         "type" : "get",
-        "url" : "{{ url("index/cpar/fetch_item",$cpar->id) }}"
+        "url" : "{{ url("index/form_ketidaksesuaian/fetch_item",$cpar->id) }}"
       },
       "columns": [
       { "data": "item"},
@@ -602,29 +601,29 @@
   
   </script>
   <script>
-        $("#item").change(function(){
-            $.ajax({
-                url: "{{ route('admin.getmaterialsbymaterialsnumber') }}?materials_number=" + $(this).val(),
-                method: 'GET',
-                success: function(data) {
-                  var json = data,
-                  obj = JSON.parse(json);
-                  $('#item_desc').val(obj.material_description);
-                }
-            });
-        });
+    $("#item").change(function(){
+      $.ajax({
+        url: "{{ route('admin.getmaterialsbymaterialsnumber') }}?materials_number=" + $(this).val(),
+        method: 'GET',
+        success: function(data) {
+          var json = data,
+          obj = JSON.parse(json);
+          $('#item_desc').val(obj.material_description);
+        }
+      });
+    });
 
-        $("#item_edit").change(function(){
-            $.ajax({
-                url: "{{ route('admin.getmaterialsbymaterialsnumber') }}?materials_number=" + $(this).val(),
-                method: 'GET',
-                success: function(data) {
-                  var json = data,
-                  obj = JSON.parse(json);
-                  $('#item_desc_edit').val(obj.material_description);
-                }
-            });
-        });
+    $("#item_edit").change(function(){
+      $.ajax({
+        url: "{{ route('admin.getmaterialsbymaterialsnumber') }}?materials_number=" + $(this).val(),
+        method: 'GET',
+        success: function(data) {
+          var json = data,
+          obj = JSON.parse(json);
+          $('#item_desc_edit').val(obj.material_description);
+        }
+      });
+    });
 
     $(function () {
       $('.select2').select2()
@@ -648,7 +647,7 @@
         return false;
       }
 
-      $.get('{{ url("index/cpar/sendemail/$cpar->id") }}', data, function(result, status, xhr){
+      $.get('{{ url("index/form_ketidaksesuaian/sendemail/$cpar->id") }}', data, function(result, status, xhr){
         openSuccessGritter("Success","Email Has Been Sent");
         window.location.reload();
       })
@@ -663,7 +662,7 @@
     });
 
     CKEDITOR.replace('aksi' ,{
-        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
     });
 
     function getPersen() {
@@ -672,26 +671,26 @@
       var hasil = parseInt(def) / parseInt(samp) * 100;
       var hasil2 = parseFloat(Math.round(hasil * 100) / 100).toFixed(2);
       if (!isNaN(hasil)) {
-         document.getElementById('presentase_ng').value = hasil2;
-      }
-    }
+       document.getElementById('presentase_ng').value = hasil2;
+     }
+   }
 
-    function getPersenEdit() {
-      var def = document.getElementById("jumlah_ng_edit").value;
-      var samp = document.getElementById("jumlah_cek_edit").value;
-      var hasiledit = parseInt(def) / parseInt(samp) * 100;
-      var hasiledit2 = parseFloat(Math.round(hasiledit * 100) / 100).toFixed(2);
-      if (!isNaN(hasiledit)) {
-         document.getElementById('presentase_ng_edit').value = hasiledit2;
-      }
-    }
+   function getPersenEdit() {
+    var def = document.getElementById("jumlah_ng_edit").value;
+    var samp = document.getElementById("jumlah_cek_edit").value;
+    var hasiledit = parseInt(def) / parseInt(samp) * 100;
+    var hasiledit2 = parseFloat(Math.round(hasiledit * 100) / 100).toFixed(2);
+    if (!isNaN(hasiledit)) {
+     document.getElementById('presentase_ng_edit').value = hasiledit2;
+   }
+ }
 
-    function create() {
+ function create() {
 
-      var data = {
-        id_cpar: $("#id_cpar").val(),
-        item: $("#item").val(),
-        item_desc: $("#item_desc").val(),
+  var data = {
+    id_cpar: $("#id_cpar").val(),
+    item: $("#item").val(),
+    item_desc: $("#item_desc").val(),
         // supplier : $("#supplier").val(),
         detail : CKEDITOR.instances.detail.getData(),
         jml_cek : $("#jumlah_cek").val(),
@@ -701,7 +700,7 @@
 
       // console.log(data);
 
-      $.post('{{ url("index/cpar/create_item") }}', data, function(result, status, xhr){
+      $.post('{{ url("index/form_ketidaksesuaian/create_item") }}', data, function(result, status, xhr){
         // console.log(result.status);
         if (result.status == true) {
           $('#example1').DataTable().ajax.reload(null, false);
@@ -716,11 +715,11 @@
       modal_this = this
       $(document).on('focusin.modal', function (e) {
         if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length 
-        && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') 
-        && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
+          && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') 
+          && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
           modal_this.$element.focus()
-        }
-      })
+      }
+    })
     };
 
     function modalEdit(id) {
@@ -729,7 +728,7 @@
         id:id
       };
       
-      $.get('{{ url("index/cpar/edit_item") }}', data, function(result, status, xhr){
+      $.get('{{ url("index/form_ketidaksesuaian/edit_item") }}', data, function(result, status, xhr){
         $("#id_edit").val(id);
         $("#item_edit").val(result.datas.item).trigger('change.select2');
         $("#item_desc_edit").val(result.datas.item_desc);
@@ -753,7 +752,7 @@
         presentase_ng: $("#presentase_ng_edit").val()
       };
 
-      $.post('{{ url("index/cpar/edit_item") }}', data, function(result, status, xhr){
+      $.post('{{ url("index/form_ketidaksesuaian/edit_item") }}', data, function(result, status, xhr){
         if (result.status == true) {
           $('#example1').DataTable().ajax.reload(null, false);
           openSuccessGritter("Success","Item has been edited.");
@@ -772,7 +771,7 @@
         return false;
       }
 
-      $.post('{{ url("index/cpar/delete_item") }}', data, function(result, status, xhr){
+      $.post('{{ url("index/form_ketidaksesuaian/delete_item") }}', data, function(result, status, xhr){
         $('#example1').DataTable().ajax.reload(null, false);
         openSuccessGritter("Success","Delete Item");
       })

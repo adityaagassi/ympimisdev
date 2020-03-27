@@ -19,7 +19,16 @@
 			vertical-align: middle !important;
 		}
 
+		@page { margin: 100px 50px; }
+        .header { position: fixed; left: 0px; top: -100px; right: 0px; height: 100px; text-align: center; }
+        .footer { position: fixed; left: 0px; bottom: -50px; right: 0px; height: 50px;text-align: center;}
+        .footer .pagenum:before { content: counter(page); }
+
 	</style>
+
+	<div class="footer">
+        Page <span class="pagenum"></span>
+    </div>
 	
 	<table class="table table-bordered" style="table-layout: fixed">
 		<thead>
@@ -28,7 +37,7 @@
 				<td colspan="2" rowspan="2" class="centera" >
 					<img width="90" src="{{ public_path() . '/waves.jpg' }}" alt="" style="vertical-align: middle !important">
 				</td>
-				<td colspan="8" style="text-align: center; vertical-align: middle;font-size: 14px;font-weight: bold">Form Laporan Ketidaksesuaian Material</td>
+				<td colspan="8" style="text-align: center; vertical-align: middle;font-size: 14px;font-weight: bold">Form Laporan Ketidaksesuaian</td>
 			</tr>
 			<tr>
 				<td colspan="1" style="text-align: center; vertical-align: middle;font-size: 11px;">Subject</td>
@@ -113,13 +122,16 @@
 					   @else
 					    -
 					   @endif
+					</b>
 				</td>
 				<td colspan="3">Waktu Penanganan Masalah : 
+					<b>
 					@if($req->waktu != "") 
 						{{ $req->waktu }} Menit
 					@else
 					    -
 					@endif
+					</b>
 				</td>
 			</tr>
 			<tr>
@@ -174,5 +186,72 @@
 			@endforeach
 		</tbody>
 	</table>
+	@if($cpar->posisi != "sl" && $cpar->posisi != "cf" && $cpar->posisi != "m")
+	<div style="page-break-after: always;"></div>
+	<table class="table table-bordered" style="table-layout: fixed">
+		<thead>
+			<tr>
+
+				<td colspan="8" style="text-align: center; vertical-align: middle;font-size: 12px;font-weight: bold">
+					Penanganan / Keputusan Oleh Departemen Terkait
+				</td>
+				<td colspan="2" style="text-align: center; vertical-align: middle;font-size: 12px;font-weight: bold">
+					<?= date('d F Y', strtotime($cpar->tanggal_car))?>
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td colspan="10"><b>Deskripsi Permasalahan</b></td>
+			</tr>
+			<tr>
+				<td colspan="10"><?= $cpar->deskripsi_car ?></td>
+			</tr>
+			<tr>
+				<td colspan="10"><b>Penanganan</b></td>
+			</tr>
+			<tr>
+				<td colspan="10"><?= $cpar->penanganan_car ?></td>
+			</tr>
+			<tr>
+				<td>Pelapor</td>
+				<td>Mengetahui</td>
+				<td>Mengetahui</td>
+				<td colspan="7" rowspan="4">&nbsp;</td>
+			</tr>
+			<tr>
+				<td rowspan="2" style="vertical-align: middle;">
+					@if($cpar->posisi == "dept")
+	                  {{$pic}}
+	                @elseif($cpar->approvalcf_car == "Approved" || $cpar->approvalm_car == "Approved")
+	                  {{$pic}}
+	                @else
+
+	                @endif
+				</td>
+				<td rowspan="2" style="vertical-align: middle;">
+					@if($cpar->approvalcf_car == "Approved" || $cpar->approvalm_car == "Approved")
+					  {{$cfcar}}
+	                @else
+
+	                @endif
+				</td>
+				<td rowspan="2" style="vertical-align: middle;">
+					@if($cpar->approvalm_car == "Approved")
+					  {{$mcar}}
+	                @else
+	                  
+	                @endif
+				</td>
+			</tr>
+			<tr></tr>
+			<tr>
+				<td>Leader / Staff</td>
+	            <td>Foreman / Chief</td>
+	            <td>Manager</td>
+			</tr>
+		</tbody>
+	</table>
+	@endif
 </body>
 </html>
