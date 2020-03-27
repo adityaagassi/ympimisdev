@@ -106,9 +106,6 @@ table.table-bordered{
 
 	function fillPlannew(){
 		$.get('{{ url("fetch/fetchResultSaxnew") }}', function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status = 200){
 				if(result.status){
 					$('#planTablenew').DataTable().destroy();
