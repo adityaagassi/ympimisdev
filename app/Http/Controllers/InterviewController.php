@@ -482,6 +482,8 @@ class InterviewController extends Controller
         $interviewDetailQuery = "select * from interview_details join employees on interview_details.nik = employees.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
         $interviewDetail = DB::select($interviewDetailQuery);
 
+        $interviewPicture = InterviewPicture::where('interview_id',$interview_id)->get();
+
         if($interview == null){
             return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Interview');
         }else{
@@ -493,6 +495,7 @@ class InterviewController extends Controller
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
                           'interview_id' => $interview_id,
+                          'interviewPicture' => $interviewPicture,
                           'id_departments' => $id_departments);
             return view('interview.print', $data
                 )->with('page', 'Interview');
@@ -513,6 +516,8 @@ class InterviewController extends Controller
         $interviewDetailQuery = "select * from interview_details join employees on interview_details.nik = employees.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
         $interviewDetail = DB::select($interviewDetailQuery);
 
+        $interviewPicture = InterviewPicture::where('interview_id',$interview_id)->get();
+
         if($interview == null){
             return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Interview');
         }else{
@@ -525,6 +530,7 @@ class InterviewController extends Controller
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
                           'interview_id' => $interview_id,
+                          'interviewPicture' => $interviewPicture,
                           'id_departments' => $id_departments);
             return view('interview.print_email', $data
                 )->with('page', 'Interview');
