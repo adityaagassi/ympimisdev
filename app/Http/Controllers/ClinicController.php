@@ -415,7 +415,7 @@ class ClinicController extends Controller{
 		$clinic_visit = db::select("select e.department, count(visit.employee_id) as qty from
 			(select distinct c.employee_id, c.patient_list_id from clinic_patient_details c
 			where DATE_FORMAT(c.created_at,'%Y-%m') = '".$month."'
-			and c.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat')) visit
+			and c.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja')) visit
 			left join employee_syncs e on visit.employee_id = e.employee_id
 			where e.department is not null
 			group by e.department
@@ -459,7 +459,7 @@ class ClinicController extends Controller{
 		$detail =  db::select("select distinct d.patient_list_id, d.employee_id, e.`name`, d.paramedic, d.visited_at, d.purpose  from clinic_patient_details d
 			left join ympimis.employee_syncs e on e.employee_id = d.employee_id
 			where DATE_FORMAT(d.visited_at,'%Y-%m') = '".$request->get('month')."'
-			and d.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat')
+			and d.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja')
 			and e.department like '%".$request->get('department')."%'");
 
 		$response = array(
