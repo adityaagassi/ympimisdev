@@ -98,6 +98,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<input type="text" id="search" class="form-control" placeholder="Search . . .">
 								<select class="form-control select2" id="category">
 									<option value="">All</option>
+									<option value="Great Day">Great Day</option>
 									<option value="Absensi">Absensi</option>
 									<option value="Lembur">Lembur</option>
 									<option value="Cuti">Cuti</option>
