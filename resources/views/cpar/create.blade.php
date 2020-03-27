@@ -175,7 +175,6 @@
           <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="subject">Kategori Komplain<span class="text-red">*</span></label>
              <select class="form-control select2" style="width: 100%;" id="cpar_kategori" name="cpar_kategori" data-placeholder="Pilih Kategori" onchange="selectkomplain()" required>
-                <option></option>
                 <option value="Service">Service</option>
                 <option value="Kualitas">Kualitas</option>
             </select>
@@ -220,7 +219,7 @@
             <span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&#8650; Form Ketidaksesuaian Kualitas akan dikirim Ke QA Jika Terdapat Salah Satu kondisi Dibawah. Jika tidak, akan dikirim ke departemen bersangkutan&nbsp;&nbsp;&#8650;</span><br><br>
             <div style="height: 40px;padding-right: 10px;padding-left: 10px;margin-bottom: 10px">       
               <span style="vertical-align: middle;line-height: 20px">
-                <b><i class="fa fa-arrow-right"></i> Temuan NG Jelas</b>
+                <b><i class="fa fa-arrow-right"></i> Defect yang berhubungan dengan spec produk</b>
               </span>
               <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative">Tidak
                 <input type="radio" checked="checked" id="keterangan1" name="keterangan1" value="0">
@@ -232,12 +231,12 @@
                 <span class="checkmark"></span>
               </label>
               <br>
-              Contoh : Zagane Lepas, Kunci Belum Solder, Salah Pasang Small Cover, Bari Recorder, Reed Pianica Tidak Keluar
+              Contoh : Salah Type Kunci, Parts Tidak Lengkap, Keri Lepas, Salah Spring
               <br><br>
             </div>
-            <div style="height: 60px;padding-right: 10px;padding-left: 10px;">       
-              <span style="vertical-align: middle;line-height: 20px;">
-                <b><i class="fa fa-arrow-right"></i> Temuan NG Memerlukan Recheck FSTK atau Repair "Off line"</b>
+            <div style="height: 40px;padding-right: 10px;padding-left: 10px;margin-bottom: 10px">       
+              <span style="vertical-align: middle;line-height: 20px">
+                <b><i class="fa fa-arrow-right"></i> Defect yang berhubungan dengan kelengkapan quantity produk</b>
               </span>
               <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative">Tidak
                 <input type="radio" checked="checked" id="keterangan2" name="keterangan2" value="0">
@@ -246,6 +245,40 @@
               &nbsp;&nbsp;
               <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative;margin-left: 5px;margin-right: 10px">Iya
                 <input type="radio" id="keterangan2" name="keterangan2" value="1">
+                <span class="checkmark"></span>
+              </label>
+              <br>
+              Contoh : Accessories Kurang
+              <br><br>
+            </div>
+            <div style="height: 40px;padding-right: 10px;padding-left: 10px;margin-bottom: 10px">       
+              <span style="vertical-align: middle;line-height: 20px">
+                <b><i class="fa fa-arrow-right"></i> Defect yang dapat mengganggu fungsi utama produk</b>
+              </span>
+              <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative">Tidak
+                <input type="radio" checked="checked" id="keterangan3" name="keterangan3" value="0">
+                <span class="checkmark"></span>
+              </label>
+              &nbsp;&nbsp;
+              <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative;margin-left: 5px;margin-right: 10px">Iya
+                <input type="radio" id="keterangan3" name="keterangan3" value="1">
+                <span class="checkmark"></span>
+              </label>
+              <br>
+              Contoh : Tidak Bunyi, Bunyi Tersendat, Buka - Tutup Case
+              <br><br>
+            </div>
+            <div style="height: 60px;padding-right: 10px;padding-left: 10px;">       
+              <span style="vertical-align: middle;line-height: 20px;">
+                <b><i class="fa fa-arrow-right"></i> Temuan NG Memerlukan Recheck FSTK atau Repair "Off line"</b>
+              </span>
+              <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative">Tidak
+                <input type="radio" checked="checked" id="keterangan4" name="keterangan4" value="0">
+                <span class="checkmark"></span>
+              </label>
+              &nbsp;&nbsp;
+              <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative;margin-left: 5px;margin-right: 10px">Iya
+                <input type="radio" id="keterangan4" name="keterangan4" value="1">
                 <span class="checkmark"></span>
               </label>
               <br>
@@ -287,9 +320,9 @@
           <br>&emsp; - Material Indirect yang Datang Tidak Sesuai Dengan PO
         </p>
         <p><b>Kategori Komplain Kualitas</b> merupakan komplain yang berhubungan ketidaksesuaian kualitas material atau proses produksi. Contoh: 
-          <br>&emsp; - 
-          <br>&emsp; - 
-
+          <br>&emsp; - Defect yang berhubungan dengan fungsi
+          <br>&emsp; - Defect Visual pada area terlihat
+          <br>&emsp; - Defect Visual pada area tidak terlihat
         </p>
 
         <!-- sesuai dengan standar dan ketentuan dari masing - masing departemen.</p> -->
@@ -337,14 +370,26 @@
         
         var ket1 = document.querySelector('input[name="keterangan1"]:checked').value;
         var ket2 = document.querySelector('input[name="keterangan2"]:checked').value;
+        var ket3 = document.querySelector('input[name="keterangan3"]:checked').value;
+        var ket4 = document.querySelector('input[name="keterangan4"]:checked').value;
 
-        if (ket1 == "1" || ket2 == "1") {
-          kate = "qa";
-        } else {
+        if (ket1 == "1") {
+          kate = "_Spec";
+        } 
+        else if (ket2 == "1"){
+          kate = "_Qty";
+        }
+        else if (ket3 == "1"){
+          kate = "_Fungsi";
+        }
+        else if (ket4 == "1"){
+          kate = "_Recheck";
+        }
+        else{
           kate = "";
         }
 
-      }else{
+      } else{
         kate = "";
       }
 
@@ -412,7 +457,7 @@
       if (getkomplain == "Kualitas"){
         $("#kat_komplain").show();
 
-      }else{
+      } else{
         $("#kat_komplain").hide();
       }
     }

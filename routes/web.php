@@ -31,7 +31,7 @@ Route::get('/trial', function () {
 Route::get('/trial2', function () {
 	return view('trial2');
 });
-Route::get('print/trial', 'TrialController@tes');
+Route::get('print/trial', 'TrialController@stocktaking');
 Route::get('trial_machine', 'TrialController@fetch_machine');
 
 Route::get('/machinery_monitoring', function () {
@@ -2309,6 +2309,7 @@ Route::get('index/form_ketidaksesuaian/verifikasicpar/{id}', 'CparController@ver
 Route::post('index/form_ketidaksesuaian/approval/{id}', 'CparController@approval');
 Route::post('index/form_ketidaksesuaian/notapprove/{id}', 'CparController@notapprove');
 Route::get('index/form_ketidaksesuaian/sendemail/{id}', 'CparController@sendemail');
+Route::get('index/form_ketidaksesuaian/sendemailqa/{id}', 'CparController@sendemailqa');
 // CAR Antar Departemen
 Route::get('index/form_ketidaksesuaian/response/{id}', 'CparController@response');
 Route::post('index/form_ketidaksesuaian/update_car/{id}', 'CparController@update_car');
@@ -2326,6 +2327,11 @@ Route::get('index/form_ketidaksesuaian/monitoring', 'CparController@monitoring')
 Route::get('fetch/form_ketidaksesuaian/monitoring', 'CparController@fetchMonitoring');
 Route::get('index/form_ketidaksesuaian/detail', 'CparController@detailMonitoring');
 Route::get('index/form_ketidaksesuaian/table', 'CparController@fetchTable');
+
+//approve or Reject CPAR By QA
+
+Route::get('index/form_ketidaksesuaian/approveqa/{id}', 'CparController@approveqa');
+Route::get('index/form_ketidaksesuaian/rejectqa/{id}', 'CparController@rejectqa');
 
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
@@ -2452,6 +2458,9 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
+	Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
+	Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
+	Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
 });
 
 //ROOMS

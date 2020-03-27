@@ -109,8 +109,8 @@ table > thead > tr > th{
 @section('header')
 <section class="content-header">
   <h1>
-    CPAR <span class="text-purple">Grafik</span>
-    <small>Berdasarkan Bulan<span class="text-purple"> </span></small>
+    Form Ketidaksesuaian <span class="text-purple">Grafik</span>
+    <small>Berdasarkan Tanggal<span class="text-purple"> </span></small>
   </h1>
   <ol class="breadcrumb" id="last_update">
   </ol>
@@ -197,8 +197,8 @@ table > thead > tr > th{
                 <th style="width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" rowspan="2">Date</th>
                 <th style="width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" rowspan="2">From</th>
                 <th style="width: 8%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" rowspan="2">To</th>
-                <th style="width: 27%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="3">CPAR</th>
-                <th style="width: 27%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="3">CAR</th>
+                <th style="width: 27%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="3">Form Ketidaksesuaian</th>
+                <th style="width: 27%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="3">Penanganan</th>
                 <th style="width: 10%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;background-color:#448aff;">Verification</th>
               </tr>
               <tr>

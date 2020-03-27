@@ -2291,7 +2291,7 @@ class QcReportController extends Controller
           $emailcpar = db::select($query);
 
           $checked = $request->get('checked');
-          if(count($checked) == 14 || count($checked) == 19 || count($checked) == 25 || count($checked) == 31 || count($checked) == 37){
+          if(count($checked) == 14 || count($checked) == 20 || count($checked) == 26 || count($checked) == 32 || count($checked) == 38){
             $cpars = QcCpar::find($id);
             if ($cpars->posisi == "chief") {
               $cpars->checked_chief = "Checked";              

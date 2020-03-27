@@ -802,6 +802,34 @@ class CparController extends Controller
           $cpar->save();      
     }
 
+    public function sendemailqa(Request $request,$id)
+      {
+          $id_user = Auth::id();
+          $cpar = CparDepartment::find($id);
+
+          if ($cpar->posisi == "sl") {
+            $cpar->posisi = "qa";
+          }
+          
+          $cpar->save();
+
+          $getchief = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where section = 'QA Process Control' and position = 'Chief'";
+
+          $chief = DB::select($getchief);
+          
+          if ($chief != null) {
+            foreach ($chief as $cf) {
+              $cfh = $cf->email;
+            }             
+          }
+
+          $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$cpar->id;
+          $cpar_dept = db::select($isimail);
+
+          Mail::to($cfh)->send(new SendEmail($cpar_dept, 'cpar_dept'));
+          
+    }
+
 
     // CPAR Reject
 
@@ -860,7 +888,6 @@ class CparController extends Controller
           else{
             return redirect('index/form_ketidaksesuaian');
           }
-          
       }
 
       public function update_car(Request $request, $id)
@@ -1567,23 +1594,138 @@ class CparController extends Controller
       );
 
       return Response::json($response); 
-
-      // CPAR Monitoring　是正予防対策モニタリング
-      // Monitoring Form Laporan Ketidaksesuaian 部門間の是正予防対策のモニタリング
-      // CPAR Department Monitoring 部門是正予防対策のモニタリング
-      // CPAR Across Department 部門跨ぐ是正予防対策
-      // CPAR Across Department Monitoring 部門跨ぐ是正予防対策のモニタリング
-      // Temperature　温度
-      // Body Temperature Report　体温リポート
-      // Body Temperature Monitoring　体温監視
-      // Totalトータル
-      // Average Temp体温平均
-      // Highest Temp最高体温
-      // Limitリミット
     }
 
 
 
 
+    //QA
 
+    public function approveqa($id){
+        $cpar = CparDepartment::find($id);
+        $cpar->kategori = "Kualitas";
+        $cpar->status = "close";
+
+        $cpar->save();
+
+        $message = 'Kasus dengan Judul '.$cpar->judul;
+        $message2 ='Berhasil di setujui untuk diterbikan CPAR';
+        return view('cpar.approval_message', array(
+          'stat' => 'Approved',
+          'judul' => $cpar->judul,
+          'message' => $message,
+          'message2' => $message2,
+        ))->with('page', 'CPAR Approval');
+
+    }
+
+    public function rejectqa($id){
+
+        $cpar = CparDepartment::find($id);
+
+        $data2 = CparDepartment::where('id','=' , $cpar->id)->first();
+        $data2->posisi = "m";
+        $data2->save();
+
+        $cpar->approvalcf = "Approved";
+        $cpar->datecf = date('Y-m-d H:i:s');
+        $cpar->approvalm = "Approved";
+        $cpar->datem = date('Y-m-d H:i:s');
+        $cpar->status = "car";
+
+        $sec = explode("_", $cpar->section_to);
+        $secfrom = explode("_", $cpar->section_from);
+        //get departemen
+        $dept = EmployeeSync::where('section','=', $sec[1])
+        ->select('department')->first();
+
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = '".$dept->department."' and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%') and (section is null or section != '".$secfrom[1]."')";
+
+        $mailtoo = DB::select($mails);
+
+        $cpar->tanggal_car = date('Y-m-d H:i:s');
+
+        //get chief foreman manager from departemen TUJUAN
+
+        $cfm2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position in ('chief','foreman','manager')");
+
+
+        $chief2 = null;
+        $foreman2 = null;
+        $manager2 = null;
+        $chiefcount2 = 0;
+        $foremancount2 = 0;
+
+        if ($cfm2 != null) {
+          foreach ($cfm2 as $position) {
+
+            $pos = $position->position;
+
+            // Manager 
+            if ($pos == "Manager") {
+              $manager2 = $position->employee_id;
+              $cpar->manager_car = $manager2;
+            }
+
+            // Chief
+            if ($pos == "Chief") {
+              if ($chiefcount2 == 0) {
+                $chief2 = $position->employee_id;
+                $chiefcount2 = 1;
+
+                $cpar->chief_car = $chief2;
+              }
+              else{
+                $cf2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Chief' and section='".$sec[1]."'");
+
+                $chief2 = $cf2[0]->employee_id;
+
+                $cpar->chief_car = $chief2;
+              }
+            }
+
+            // Foreman
+            if ($pos == "Foreman") {
+              if ($foremancount2 == 0) {
+                $foreman2 = $position->employee_id;
+                $foremancount2 = 1;
+
+                $cpar->foreman_car = $foreman2;
+              } else {
+                $f2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Foreman' and section='".$sec[1]."'");
+
+                $foreman2 = $f2[0]->employee_id;
+                $cpar->foreman_car = $foreman2;
+              }
+
+            }
+
+          }
+        }
+
+        $cpar->posisi = 'dept';
+
+        $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$cpar->id;
+
+        $cpar_dept = db::select($isimail);
+
+        //cc
+
+        // $dept = EmployeeSync::where('section','=', $sec[1])
+        // ->select('department')->first();
+
+        Mail::to($mailtoo)->send(new SendEmail($cpar_dept, 'cpar_dept'));
+
+        
+
+        $message = 'Kasus dengan Judul '.$cpar->judul;
+        $message2 ='Berhasil di reject dan dikirimkan ke departemen terkait untuk ditangani';
+        return view('cpar.approval_message', array(
+          'stat' => 'Reject',
+          'judul' => $cpar->judul,
+          'message' => $message,
+          'message2' => $message2,
+        ))->with('page', 'CPAR Approval');
+ 
+    }
 }

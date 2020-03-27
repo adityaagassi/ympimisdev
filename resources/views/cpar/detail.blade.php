@@ -76,8 +76,12 @@
 
    <?php $user = STRTOUPPER(Auth::user()->username)?>
 
-   @if($cpar->posisi == "sl" && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
+   @if($cpar->posisi == "sl" && ($cpar->kategori == "Service" || $cpar->kategori == "Kualitas") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
    <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cpar->id }})" style="width:200px">Send Email</a>
+
+   @elseif($cpar->posisi == "sl" && ($cpar->kategori == "Kualitas_Spec" || $cpar->kategori == "Kualitas_Qty" || $cpar->kategori == "Kualitas_Fungsi" || $cpar->kategori == "Kualitas_Recheck") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
+   <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemailqa({{ $cpar->id }})" style="width:200px">Send Email ke QA</a>
+
    @elseif($cpar->posisi != "sl" && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
    <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
    @else
@@ -648,6 +652,21 @@
       }
 
       $.get('{{ url("index/form_ketidaksesuaian/sendemail/$cpar->id") }}', data, function(result, status, xhr){
+        openSuccessGritter("Success","Email Has Been Sent");
+        window.location.reload();
+      })
+    }
+
+    function sendemailqa(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim CPAR ini ke QA?")) {
+        return false;
+      }
+
+      $.get('{{ url("index/form_ketidaksesuaian/sendemailqa/$cpar->id") }}', data, function(result, status, xhr){
         openSuccessGritter("Success","Email Has Been Sent");
         window.location.reload();
       })

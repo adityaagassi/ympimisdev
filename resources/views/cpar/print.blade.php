@@ -154,7 +154,7 @@
 			</tr>
 			<tr>
 				<td rowspan="2" style="vertical-align: middle;">
-					@if($req->posisi == "sl" || $req->posisi == "cf" || $req->posisi == "m")
+					@if($req->posisi == "sl" || $req->posisi == "cf" || $req->posisi == "m" || $req->posisi == "qa")
 	                  {{$sl}}
 	                @elseif($req->approvalcf == "Approved" || $req->approvalm == "Approved")
 	                  {{$sl}}
