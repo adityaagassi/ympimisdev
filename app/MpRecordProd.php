@@ -18,6 +18,11 @@ class MpRecordProd extends Model
         return $this->belongsTo('App\Employee', 'pic', 'employee_id')->withTrashed();
     }
 
+    public function material()
+    {
+        return $this->belongsTo('App\MpMaterial', 'material_number', 'material_number')->withTrashed();
+    }
+
     public function user()
 	{
 		return $this->belongsTo('App\User', 'created_by')->withTrashed();

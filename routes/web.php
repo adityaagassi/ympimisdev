@@ -2411,9 +2411,10 @@ Route::post('index/press/filter_report_prod_result', 'PressController@filter_rep
 Route::get('index/press/report_kanagata_lifetime', 'PressController@report_kanagata_lifetime');
 Route::post('index/press/filter_report_kanagata_lifetime', 'PressController@filter_report_kanagata_lifetime');
 Route::get('index/kanagata_lifetime/getkanagatalifetime','PressController@getkanagatalifetime')->name('kanagata_lifetime.getkanagatalifetime');
-Route::post('index/kanagata/update/{id}','PressController@update');
+Route::post('index/kanagata/update/{id}','PressController@updateKanagataLifetime');
 Route::post('index/kanagata/reset','PressController@reset');
 Route::get('index/prod_result/getprodresult','PressController@getprodresult')->name('prod_result.getprodresult');
+Route::post('index/prod_result/update/{id}','PressController@updateProdResult');
 //Master Kanagata
 Route::get('index/press/master_kanagata', 'PressController@indexMasterKanagata');
 Route::get('fetch/press/master_kanagata', 'PressController@fetchMasterKanagata');

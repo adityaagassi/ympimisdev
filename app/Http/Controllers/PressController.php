@@ -29,6 +29,13 @@ class PressController extends Controller
     public function __construct()
     {
       $this->middleware('auth');
+      $this->mesin = ['Amada 1',
+      			'Amada 2',
+      			'Amada 3',
+      			'Amada 4',
+      			'Amada 5',
+      			'Amada 6',
+      			'Amada 7'];
     }
 
     public function indexMasterKanagata()
@@ -651,16 +658,30 @@ class PressController extends Controller
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
 
-		$prod_result = db::select("select *
-			from mp_record_prods
-			join employee_groups on employee_groups.employee_id = mp_record_prods.pic
-			join employees on employee_groups.employee_id = employees.employee_id
-			join mp_materials on mp_record_prods.material_number= mp_materials.material_number
-			ORDER BY mp_record_prods.id desc");
+		$prod_result = db::select("SELECT
+				*,
+				mp_record_prods.id AS prod_result_id 
+			FROM
+				mp_record_prods
+				JOIN employee_groups ON employee_groups.employee_id = mp_record_prods.pic
+				JOIN employees ON employee_groups.employee_id = employees.employee_id
+				JOIN mp_materials ON mp_record_prods.material_number = mp_materials.material_number 
+			ORDER BY
+				mp_record_prods.id DESC");
+
+		$emp = DB::SELECT("SELECT
+				* 
+			FROM
+				employee_groups
+				JOIN employee_syncs ON employee_groups.employee_id = employee_syncs.employee_id 
+			WHERE
+				location = 'Press'");
 
 		$data = array(
                 	'process' => $process,
                 	'prod_result' => $prod_result,
+                	'mesin' => $this->mesin,
+                	'emp' => $emp,
                 	'machine' => $machine);
 		return view('press.report_prod_result',$data)->with('page', 'Press Machine Production Result')->with('title_jp', "??");
 	}
@@ -846,7 +867,125 @@ class PressController extends Controller
         }
     }
 
-    function update(Request $request,$id)
+    function getprodresult(Request $request)
+    {
+          try{
+        	$detail = MpRecordProd::find($request->get("id"));
+            $data = array('prod_result_id' => $detail->id,
+            			  'date' => $detail->date,
+                          'pic' => $detail->pic,
+                          'pic_name' => $detail->employee_pic->name,
+                          'shift' => $detail->shift,
+                          'product' => $detail->product,
+                          'material_number' => $detail->material_number,
+                          'part' => $detail->material->material_name,
+                          'process' => $detail->process,
+                      	  'machine' => $detail->machine,
+                      		'punch_number' => $detail->punch_number,
+                      		'die_number' => $detail->die_number,
+                      		'data_ok' => $detail->data_ok,
+                      		'punch_value' => $detail->punch_value,
+                      		'die_value' => $detail->die_value,
+                      		'start_time' => $detail->start_time,
+                      		'end_time' => $detail->end_time,
+                      		'lepas_molding' => $detail->lepas_molding,
+                      		'pasang_molding' => $detail->pasang_molding,
+                      		'process_time' => $detail->process_time,
+                      		'kensa_time' => $detail->kensa_time,
+                      		'electric_supply_time' => $detail->electric_supply_time,);
+
+            $response = array(
+              'status' => true,
+              'data' => $data
+            );
+            return Response::json($response);
+
+          }
+          catch (QueryException $beacon){
+            $error_code = $beacon->errorInfo[1];
+            if($error_code == 1062){
+             $response = array(
+              'status' => false,
+              'datas' => "Name already exist",
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'datas' => "Update  Error.",
+            );
+             return Response::json($response);
+            }
+        }
+    }
+
+    function updateProdResult(Request $request,$id)
+    {
+        try{
+                $prod_result = MpRecordProd::find($id);
+
+                $date = $prod_result->date;
+              	$pic = $prod_result->pic;
+              	$pic_name = $prod_result->employee_pic->name;
+              	$shift = $prod_result->shift;
+              	$product = $prod_result->product;
+              	$material_number = $prod_result->material_number;
+              	$part = $prod_result->material->material_name;
+              	$process = $prod_result->process;
+          	  	$machine = $prod_result->machine;
+          		$punch_number = $prod_result->punch_number;
+          		$die_number = $prod_result->die_number;
+          		$punch_value = $prod_result->punch_value;
+          		$die_value = $prod_result->die_value;
+
+          		$kanagatas = DB::SELECT("SELECT
+					* 
+				FROM
+					`mp_kanagata_logs` 
+				WHERE
+					date = '".$date."' 
+					AND pic = '".$pic."' 
+					AND shift = '".$shift."' 
+					AND product = '".$product."' 
+					AND material_number = '".$material_number."' 
+					AND machine = '".$machine."' 
+					AND punch_number = '".$punch_number."' 
+					AND die_number = '".$die_number."' 
+					AND punch_value = '".$punch_value."' 
+					AND die_value = '".$die_value."'");
+
+                foreach ($kanagatas as $key) {
+                	$id_kanagata = $key->id;
+                }
+
+                $prod_result->date = $request->get('date');
+                $prod_result->pic = $request->get('pic');
+                $prod_result->machine = $request->get('mesin');
+                $prod_result->save();
+
+                $kanagata = MpKanagataLog::find($id_kanagata);
+
+                $kanagata->date = $request->get('date');
+                $kanagata->pic = $request->get('pic');
+                $kanagata->machine = $request->get('mesin');
+                $kanagata->save();
+
+              $response = array(
+                'status' => true,
+              );
+
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    function updateKanagataLifetime(Request $request,$id)
     {
         try{
                 $kanagata_lifetime = MpKanagataLog::find($id);
