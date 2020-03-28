@@ -2336,9 +2336,9 @@ public function fetchAttendanceData(Request $request)
           $attend_code = "";
 
           for($x = 0; $x < $attend_codelen; $x++) {
-               $attend_code = $attend_code."'".$attend_codes[$x]."'";
+               $attend_code = $attend_code."A.attend_code like '%".$attend_codes[$x]."%'";
                if($x != $attend_codelen-1){
-                    $attend_code = "%".$attend_code."% or ";
+                    $attend_code = $attend_code." or ";
                }
           }
           $addattend_code = "and (".$attend_code.") ";
