@@ -441,6 +441,7 @@ Route::get('index/report/daily_attendance', 'EmployeeController@indexDailyAttend
 Route::get('fetch/report/daily_attendance', 'EmployeeController@fetchDailyAttendance');
 Route::get('fetch/report/detail_daily_attendance', 'EmployeeController@detailDailyAttendance');
 Route::get('index/report/attendance_data', 'EmployeeController@attendanceData');
+Route::get('fetch/report/attendance_data', 'EmployeeController@fetchAttendanceData');
 // Presence
 Route::get('index/report/presence', 'EmployeeController@indexPresence');
 Route::get('fetch/report/presence', 'EmployeeController@fetchPresence');
@@ -449,7 +450,7 @@ Route::get('fetch/report/detail_presence', 'EmployeeController@detailPresence');
 Route::get('index/report/absence', 'EmployeeController@indexAbsence');
 Route::get('fetch/report/absence', 'EmployeeController@fetchAbsence');
 Route::get('fetch/report/detail_absence', 'EmployeeController@detailAbsence');
-
+Route::get('fetch/absence/employee', 'EmployeeController@fetchAbsenceEmployee');
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
@@ -1474,7 +1475,6 @@ Route::get('fetch/getReportVisualDaily', 'Pianica@getReportVisualDaily');
 //end pianica
 
 //stock taking
-
 Route::group(['nav' => 'M23', 'middleware' => 'permission'], function(){
 	Route::get('index/bom_output', 'StockTakingController@bom_output');
 	Route::get('fetch/bom_output', 'StockTakingController@fetch_bom_output');
@@ -1484,7 +1484,6 @@ Route::group(['nav' => 'M24', 'middleware' => 'permission'], function(){
 	Route::get('index/material_plant_data_list', 'StockTakingController@mpdl');
 	Route::get('fetch/material_plant_data_list', 'StockTakingController@fetchmpdl');
 });
-
 
 Route::group(['nav' => 'S22', 'middleware' => 'permission'], function(){
 	Route::get('index/stocktaking/silver/{id}', 'StockTakingController@indexSilver');
@@ -1497,6 +1496,15 @@ Route::group(['nav' => 'S22', 'middleware' => 'permission'], function(){
 Route::get('index/stocktaking/silver_report', 'StockTakingController@indexSilverReport');
 Route::get('fetch/stocktaking/silver_report', 'StockTakingController@fetchSilverReport');
 Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetchSilverReportModal');
+
+
+
+Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
+Route::get('index/stocktaking/audit_1', 'StockTakingController@indexAudit1');
+Route::get('index/stocktaking/audit_2', 'StockTakingController@indexAudit2');
+
+
+
 
 Route::group(['nav' => 'S28', 'middleware' => 'permission'], function(){
 	//Pesanan + master
@@ -2461,6 +2469,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
 	Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
 	Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
+	Route::get('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 });
 
 //ROOMS

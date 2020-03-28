@@ -356,7 +356,7 @@ class EmployeeController extends Controller
           if ($section == 'Assembly Process Control') {
                $ldr = "grade_name = 'Staff'";
           }
-          
+
           $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
 
           // $q_subleader = "select employees.name, position, employees.employee_id from employees 
@@ -453,7 +453,7 @@ class EmployeeController extends Controller
 
      public function makeKaizen2($id, $name, $section){
           $group = "";
-          
+
           $ldr = "position = 'Leader'";
           if ($section == 'Assembly Process Control') {
                $ldr = "grade_name = 'Staff'";
@@ -1625,13 +1625,13 @@ public function indexEmployeeService(Request $request)
                COUNT (
                IIF ( Attend_Code LIKE '%Mangkir%', 1, NULL )) AS mangkir,
                COUNT (
-               IIF ( Attend_Code LIKE '%CK%' OR Attend_Code LIKE '%CUTI%', 1, NULL )) AS cuti,
+               IIF ( Attend_Code LIKE '%CK%' OR Attend_Code LIKE '%CUTI%' OR Attend_Code LIKE '%UPL%', 1, NULL )) AS cuti,
                COUNT (
                IIF ( Attend_Code LIKE '%Izin%', 1, NULL )) AS izin,
                COUNT (
                IIF ( Attend_Code LIKE '%SAKIT%', 1, NULL )) AS sakit,
                COUNT (
-               IIF ( Attend_Code LIKE '%LTI%', 1, NULL )) AS terlambat,
+               IIF ( Attend_Code LIKE '%LTI%' OR Attend_Code LIKE '%TELAT%', 1, NULL )) AS terlambat,
                COUNT (
                IIF ( Attend_Code LIKE '%PC%', 1, NULL )) AS pulang_cepat,
                COUNT (
@@ -3175,6 +3175,28 @@ public function getKaizenReward()
           'datas' => $db
      );
      return Response::json($response);
+}
+
+public function fetchAbsenceEmployee(Request $request)
+{
+    $username = Auth::user()->username;
+
+    $att_selected = "";
+
+    foreach ($this->attend as $att) {
+        if ($att['attend_type'] == $request->get('attend_code')) {
+          $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
+     }
+}
+
+$absence = db::connection('sunfish')->select("SELECT Attend_Code, format ( shiftstarttime, 'dd MMMM yyyy' ) as date_absence FROM VIEW_YMPI_Emp_Attendance where format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."' and ".$att_selected." Emp_no = '".$username."'");
+
+$response = array(
+     'status' => true,
+     'datas' => $absence,
+     'params' => $att_selected
+);
+return Response::json($response);
 }
 
 public function setSession(Request $request)
