@@ -3179,22 +3179,25 @@ public function getKaizenReward()
 
 public function fetchAbsenceEmployee(Request $request)
 {
-    $username = Auth::user()->username;
+ $username = Auth::user()->username;
 
-    $att_selected = "";
+ $att_selected = "";
 
-    foreach ($this->attend as $att) {
-        if ($att['attend_type'] == $request->get('attend_code')) {
-          $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
-     }
+ foreach ($this->attend as $att) {
+  if ($att['attend_type'] == $request->get('attend_code')) {
+     $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
 }
+}
+
+$att_selected = substr($att_selected, 0, -2);
+$att_selected = "(".$att_selected.")";
+$att_selected .= " AND";
 
 $absence = db::connection('sunfish')->select("SELECT Attend_Code, format ( shiftstarttime, 'dd MMMM yyyy' ) as date_absence FROM VIEW_YMPI_Emp_Attendance where format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."' and ".$att_selected." Emp_no = '".$username."'");
 
 $response = array(
      'status' => true,
-     'datas' => $absence,
-     'params' => $att_selected
+     'datas' => $absence
 );
 return Response::json($response);
 }

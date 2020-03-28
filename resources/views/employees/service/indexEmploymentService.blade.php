@@ -91,10 +91,12 @@
 	#kz_after > p > img {
 		max-width:420px;
 	}
-	#kz_sekarang > p > img, #kz_perbaikan > p > img {
-	/*	max-width: 25%;
-	max-height: 25%;*/
-}
+	span > a {
+		color: white
+	}
+	span > a:hover {
+		color: white
+	}
 
 </style>
 @stop
@@ -236,40 +238,40 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									<td>{{$presence->periode}}</td>
 									<td>
 										@if ($presence->mangkir > 0) 
-										<span class="badge bg-yellow">{{$presence->mangkir}}</span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Mangkir','{{$presence->periode}}')">{{$presence->mangkir}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
 									<td>
 										@if ($presence->izin > 0) 
-										<span class="badge bg-yellow">{{$presence->izin}}</span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Izin','{{$presence->periode}}')">{{$presence->izin}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
 									<td>
 										@if ($presence->sakit > 0)
-										<span class="badge bg-yellow">{{$presence->sakit}}</span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Sakit','{{$presence->periode}}')">{{$presence->sakit}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
 									<td>@if ($presence->terlambat > 0)
-										<span class="badge bg-yellow">{{$presence->terlambat}}</span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Terlambat','{{$presence->periode}}')">{{$presence->terlambat}}</a></span>
 										@else 
 										- 
 									@endif</td>
 									<td>
 										@if ($presence->pulang_cepat > 0)
-										<span class="badge bg-yellow">{{$presence->pulang_cepat}}</span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Pulang Cepat','{{$presence->periode}}')">{{$presence->pulang_cepat}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
 									<td>
 										@if ($presence->cuti > 0) 
-										<span class="badge bg-yellow">{{$presence->cuti}}</span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Cuti','{{$presence->periode}}')">{{$presence->cuti}}</a></span>
 										@else 
 										- 
 										@endif
@@ -294,6 +296,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<!-- <p style="font-size: 28px; font-weight: bold;">Server SUNFISH sedang bermasalah, mohon bersabar dan maaf atas ketidaknyamanannya.</p> -->
 							</tbody>
 						</table>
+						<!-- <small style="color: red; background-color: yellow">NB : Untuk Melihat data detail bisa dilakukan dengan menekan angka pada kategori.</small> -->
 					</div>
 					<!-- /.box-body -->
 				</div>
@@ -601,6 +604,37 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		<!-- /.modal-dialog -->
 	</div>
 
+	<!-- Modal Absen Detail -->
+	<div class="modal fade" id="modalAbsenceDetail">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<table class="table table-bordered">
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+									<tr>
+										<th>Tanggal</th>
+										<th>Keterangan</th>
+									</tr>
+									<tr id="laoding_absence">
+										<th colspan="2"><i class="fa fa-spinner fa-pulse"></i> Loading</th>
+									</tr>
+								</thead>
+								<tbody id="body_absence"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>				
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
 	<!-- MODAL ANNOUNCEMENT -->
 	<div class="modal fade" id="modalBerita">
 		<div class="modal-dialog modal-lg modal-default">
@@ -623,13 +657,13 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 											Alur Penanganan Corona Virus
 										</div> -->
 									</div>
-									<!-- <div class="item">
-										<img class="img-responsive" src="http://placehold.it/1200x600/fffccc/000&text=Two" alt="...">
-										<div class="carousel-caption">
-											Another Image
-										</div>
-									</div>
 									<div class="item">
+										<img class="img-responsive" src="{{url('images/announchement2.png')}}" alt="...">
+										<!-- <div class="carousel-caption">
+											Another Image
+										</div> -->
+									</div>
+									<!-- <div class="item">
 										<img class="img-responsive" src="http://placehold.it/1200x600/fcf00c/000&text=Three" alt="...">
 										<div class="carousel-caption">
 											Another Image
@@ -637,10 +671,10 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									</div> -->
 								</div>
 								<!-- Controls -->
-								<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+								<a class="left carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="prev">
 									<span class="glyphicon glyphicon-chevron-left"></span>
 								</a>
-								<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+								<a class="right carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="next">
 									<span class="glyphicon glyphicon-chevron-right"></span>
 								</a>
 							</div>
@@ -958,6 +992,31 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		$.get('{{ url("fetch/sub_leader") }}', function(result, status, xhr){
 
 			fill_chat();
+		})
+	}
+
+	function cek(kode, period) {
+		var data = {
+			attend_code: kode,
+			period: period
+		}
+		$("#modalAbsenceDetail").modal('show');
+		$("#laoding_absence").show();
+		$("#body_absence").empty();
+
+		$.get('{{ url("fetch/absence/employee") }}', data, function(result, status, xhr){
+			$("#laoding_absence").hide();
+			var body = "";
+
+			$.each(result.datas, function(index2, value2){
+				body += "<tr>";
+				body += "<td>"+value2.date_absence+"</td>";
+				body += "<td>"+value2.Attend_Code+"</td>";
+				body += "</tr>";
+			})
+
+			$("#body_absence").append(body);
+
 		})
 	}
 
