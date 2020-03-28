@@ -56,6 +56,46 @@ class EmployeeController extends Controller
                '0',
           ];
 
+          $this->attend = [
+               [ 'attend_code' => 'ABS', 'attend_name' =>  'Absent', 'attend_type' => '-'],
+               [ 'attend_code' => 'CK1', 'attend_name' =>  'Keluarga Meninggal', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'CK10', 'attend_name' => 'Melahirkan', 'attend_type' =>  'Cuti'],
+               [ 'attend_code' => 'CK11', 'attend_name' => 'Keguguran', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'CK12', 'attend_name' => 'Ibadah Haji / Ziarah Keagamaan', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'CK13', 'attend_name' => 'Musibah', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'CK15', 'attend_name' => 'Saudara Kandung Menikah', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'CK2', 'attend_name' =>  'Keluarga Serumah Meninggal', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'CK3', 'attend_name' =>  'Menikah', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'CK4', 'attend_name' =>  'Menikahkan', 'attend_type' =>  'Cuti'],
+               [ 'attend_code' => 'CK5', 'attend_name' =>  'Menghitankan', 'attend_type' =>  'Cuti'],
+               [ 'attend_code' => 'CK6', 'attend_name' =>  'Membaptiskan', 'attend_type' =>  'Cuti'],
+               [ 'attend_code' => 'CK7', 'attend_name' =>  'Istri Keguguran / Melahirkan', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'CK8', 'attend_name' =>  'Tugas Negara', 'attend_type' =>  'Cuti'],
+               [ 'attend_code' => 'CK9', 'attend_name' =>  'Haid', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'CUTI', 'attend_name' => 'Cuti', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'IMP', 'attend_name' =>  'Izin Meninggalkan Pekerjaan', 'attend_type' => 'Izin Meninggalkan Pekerjaan'],
+               [ 'attend_code' => 'Izin', 'attend_name' => 'Izin', 'attend_type' => 'Izin'],
+               [ 'attend_code' => 'Mangkir', 'attend_name' =>   'Mangkir',  'attend_type' => 'Mangkir'],
+               [ 'attend_code' => 'OFF', 'attend_name' =>  'OFF', 'attend_type' => '-'],
+               [ 'attend_code' => 'PC',  'attend_name' =>  'Pulang Cepat', 'attend_type' =>  'Pulang Cepat'],
+               [ 'attend_code' => 'SAKIT', 'attend_name' => 'Sakit Surat Dokter', 'attend_type' => 'Sakit'],
+               [ 'attend_code' => 'UPL', 'attend_name' =>  'Cuti Tidak Di Bayar', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'EAI', 'attend_name' =>  'Early In', 'attend_type' => '-'],
+               [ 'attend_code' => 'EAO', 'attend_name' =>  'Early Out', 'attend_type' => '-'],
+               [ 'attend_code' => 'LTI', 'attend_name' =>  'Late In', 'attend_type' =>  'Terlambat'],
+               [ 'attend_code' => 'NSI', 'attend_name' =>  'No Swipe In', 'attend_type' =>   'Tidak Ceklog Masuk'],
+               [ 'attend_code' => 'NSO', 'attend_name' =>  'No Swipe Out',  'attend_type' =>  'Tidak Ceklog Pulang'],
+               [ 'attend_code' => 'ODT', 'attend_name' =>  'Dinas',  'attend_type' =>   'Dinas Luar'],
+               [ 'attend_code' => 'PRS', 'attend_name' =>  'Present', 'attend_type' =>  'Hadir'],
+               [ 'attend_code' => 'PRSOFF', 'attend_name' =>    'PRSOFF', 'attend_type' =>   '-'],
+               [ 'attend_code' => 'STSHIFT2', 'attend_name' =>  'Shift 2', 'attend_type' =>  '-'],
+               [ 'attend_code' => 'STSHIFT3', 'attend_name' =>  'Shift 3', 'attend_type' =>  '-'],
+               [ 'attend_code' => 'STSHIFTG', 'attend_name' =>  'Shift Group', 'attend_type' =>   '-'],
+               [ 'attend_code' => 'TELAT', 'attend_name' =>     'Izin Telat Masuk', 'attend_type' =>  'Terlambat'],
+               [ 'attend_code' => 'TRN', 'attend_name' =>  'Training', 'attend_type' => '-'],
+               [ 'attend_code' => 'UNPR', 'attend_name' => 'Unproductive', 'attend_type' =>  '-']
+          ];
+
           $this->status = [
                'Percobaan',
                'Kontrak 1',
@@ -108,8 +148,22 @@ class EmployeeController extends Controller
 
      public function attendanceData()
      {
-          return view('employees.report.attendance_data'); 
+          $title = 'Attendance Data';
+          $title_jp = '出席データ';
+          $attend_codes = $this->attend;
+
+          $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
+
+          $datas = db::select($q);
+
+          return view('employees.report.attendance_data', array(
+               'title' => $title,
+               'title_jp' => $title_jp,
+               'datas' => $datas,
+               'attend_codes' => $attend_codes
+          ));
      }
+
 
      public function getNotif()
      {
@@ -2194,17 +2248,132 @@ public function fetchDetailQuestion(Request $request)
      );
      return Response::json($response);
 }
-//------------- End Absence ------
 
 public function fetchAttendanceData(Request $request)
 {
-     $datas = "select employee_id, `name` from employees where (end_date is null or end_date >= '2019-09-01') and hire_date <= '2019-09-01'";
 
-     $response = array(
-          'status' => true,
-          'datas' => $datas
-     );
-     return Response::json($response);
+     $tanggal = "";
+     $addcostcenter = "";
+     $adddepartment = "";
+     $addsection = "";
+     $addgrup = "";
+     $addnik = "";
+     $addattend_code = "";
+
+     if(strlen($request->get('datefrom')) > 0){
+          $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+          $tanggal = "and A.shiftstarttime >= '".$datefrom." 00:00:00' ";
+          if(strlen($request->get('dateto')) > 0){
+               $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+               $tanggal = $tanggal."and A.shiftendtime <= '".$dateto." 23:59:59' ";
+          }
+     }
+
+     if($request->get('cost_center_code') != null) {
+          $costcenter = implode(",", $request->get('cost_center_code'));
+          $addcostcenter = 'and B.cost_center_code in (\''.$costcenter.'\') ';
+     }
+
+     if($request->get('department') != null) {
+          $departments = $request->get('department');
+          $deptlength = count($departments);
+          $department = "";
+
+          for($x = 0; $x < $deptlength; $x++) {
+               $department = $department."'".$departments[$x]."'";
+               if($x != $deptlength-1){
+                    $department = $department.",";
+               }
+          }
+          $adddepartment = "and B.Department in (".$department.") ";
+     }
+
+     if($request->get('section') != null) {
+          $sections = $request->get('section');
+          $sectlength = count($sections);
+          $section = "";
+
+          for($x = 0; $x < $sectlength; $x++) {
+               $section = $section."'".$sections[$x]."'";
+               if($x != $sectlength-1){
+                    $section = $section.",";
+               }
+          }
+          $addsection = "and B.[Section] in (".$section.") ";
+     }
+
+     if($request->get('group') != null) {
+          $groups = $request->get('group');
+          $grplen = count($groups);
+          $group = "";
+
+          for($x = 0; $x < $grplen; $x++) {
+               $group = $group."'".$groups[$x]."'";
+               if($x != $grplen-1){
+                    $group = $group.",";
+               }
+          }
+          $addgrup = "and B.Groups in (".$group.") ";
+     }
+
+     if($request->get('employee_id') != null) {
+          $niks = $request->get('employee_id');
+          $niklen = count($niks);
+          $nik = "";
+
+          for($x = 0; $x < $niklen; $x++) {
+               $nik = $nik."'".$niks[$x]."'";
+               if($x != $niklen-1){
+                    $nik = $nik.",";
+               }
+          }
+          $addnik = "and A.Emp_no in (".$nik.") ";
+     }
+
+     if($request->get('attend_code') != null) {
+          $attend_codes = $request->get('attend_code');
+          $attend_codelen = count($attend_codes);
+          $attend_code = "";
+
+          for($x = 0; $x < $attend_codelen; $x++) {
+               $attend_code = $attend_code."'".$attend_codes[$x]."'";
+               if($x != $attend_codelen-1){
+                    $attend_code = "%".$attend_code."% or ";
+               }
+          }
+          $addattend_code = "and (".$attend_code.") ";
+     }
+
+     $qry = "SELECT
+     format ( A.shiftstarttime, 'yyyy-MM-dd' ) AS tanggal,
+     A.emp_no,
+     B.Full_name,
+     B.Department,
+     B.section,
+     B.groups,
+     B.cost_center_code,
+     A.shiftdaily_code,
+     A.starttime,
+     A.endtime,
+     A.Attend_Code 
+     FROM
+     VIEW_YMPI_Emp_Attendance A
+     LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON A.emp_no = B.emp_no 
+     WHERE
+     A.emp_no IS NOT NULL ".$tanggal."".$addcostcenter."".$adddepartment."".$addsection."".$addgrup."".$addnik."".$addattend_code."
+     ORDER BY
+     A.emp_no ASC";
+
+     $attendances = db::connection('sunfish')->select($qry);
+     
+     return DataTables::of($attendances)->make(true);
+
+     // $response = array(
+     //      'status' => true,
+     //      'attendances' => $attendances,
+     //      'qry' => $qry
+     // );
+     // return Response::json($response);
 }
 
 public function editNumber(Request $request)
