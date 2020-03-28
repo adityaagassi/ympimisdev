@@ -79,7 +79,7 @@ class EmployeeController extends Controller
                [ 'attend_code' => 'OFF', 'attend_name' =>  'OFF', 'attend_type' => '-'],
                [ 'attend_code' => 'PC',  'attend_name' =>  'Pulang Cepat', 'attend_type' =>  'Pulang Cepat'],
                [ 'attend_code' => 'SAKIT', 'attend_name' => 'Sakit Surat Dokter', 'attend_type' => 'Sakit'],
-               [ 'attend_code' => 'UPL', 'attend_name' =>  'Cuti Tidak Di Bayar', 'attend_type' => 'Cuti'],
+               [ 'attend_code' => 'UPL', 'attend_name' =>  'Cuti Tidak Di Bayar', 'attend_type' => '-'],
                [ 'attend_code' => 'EAI', 'attend_name' =>  'Early In', 'attend_type' => '-'],
                [ 'attend_code' => 'EAO', 'attend_name' =>  'Early Out', 'attend_type' => '-'],
                [ 'attend_code' => 'LTI', 'attend_name' =>  'Late In', 'attend_type' =>  'Terlambat'],
