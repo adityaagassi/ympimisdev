@@ -462,9 +462,6 @@ table.table-bordered > tfoot > tr > th{
                 }
             });
 		}
-    	
-      // jQuery('#formedit2').attr("action", url+'/'+interview_id+'/'+detail_id);
-      // console.log($('#formedit2').attr("action"));
     }
 
     function reset_kanagata(url,kanagata,kanagata_number) {

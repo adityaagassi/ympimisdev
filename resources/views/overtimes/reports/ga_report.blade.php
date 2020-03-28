@@ -294,6 +294,22 @@
                               extend: 'pageLength',
                               className: 'btn btn-default',
                          },
+                            {
+                              extend: 'copy',
+                              className: 'btn btn-success',
+                              text: '<i class="fa fa-copy"></i> Copy',
+                              exportOptions: {
+                                columns: ':not(.notexport)'
+                              }
+                            },
+                            {
+                              extend: 'excel',
+                              className: 'btn btn-info',
+                              text: '<i class="fa fa-file-excel-o"></i> Excel',
+                              exportOptions: {
+                                columns: ':not(.notexport)'
+                              }
+                            },
                          ]
                     },
                     'paging': true,
