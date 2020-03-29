@@ -783,6 +783,16 @@ Route::group(['nav' => 'A5', 'middleware' => 'permission'], function(){
 	Route::get('show/status/{id}', 'StatusController@show');
 });
 
+
+Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
+	Route::post('print/return', 'TransactionController@printReturn');
+	Route::get('reprint/return', 'TransactionController@reprintReturn');
+});
+Route::get('index/return', 'TransactionController@indexReturn');
+Route::get('fetch/return/list', 'TransactionController@fetchReturnList');
+Route::get('fetch/return/resume', 'TransactionController@fetchReturnResume');
+
+
 Route::group(['nav' => 'S1', 'middleware' => 'permission'], function(){
 	Route::get('index/flo_view/bi', 'FloController@index_bi');
 });
@@ -1500,6 +1510,12 @@ Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetch
 
 
 Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
+Route::get('fetch/stocktaking/material_detail', 'StockTakingController@fetchMaterialDetail');
+Route::get('fetch/stocktaking/store_list', 'StockTakingController@fetchStoreList');
+Route::post('fetch/stocktaking/update_count', 'StockTakingController@updateCount');
+
+
+
 Route::get('index/stocktaking/audit_1', 'StockTakingController@indexAudit1');
 Route::get('index/stocktaking/audit_2', 'StockTakingController@indexAudit2');
 

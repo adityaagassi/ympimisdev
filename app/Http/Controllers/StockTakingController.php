@@ -13,6 +13,7 @@ use Response;
 use File;
 use App\MaterialPlantDataList;
 use App\BomOutput;
+use App\StocktakingList;
 use App\StocktakingSilverList;
 use App\StocktakingSilverLog;
 
@@ -119,17 +120,86 @@ class StockTakingController extends Controller
 	}
 
 	//Stock Taking Bulanan
-
-	public function mpdl() {
-		$title = 'Material Plant data List';
+	public function indexCount(){
+		$title = 'Monthly Stock Taking';
 		$title_jp = '???';
 
-		return view('stocktakings.mpdl', array(
+		return view('stocktakings.monthly.count', array(
 			'title' => $title,
-			'title_jp' => $title_jp,
-			'storage_locations' => $this->storage_location,
-			'base_units' => $this->base_unit,
-		))->with('page', 'Material Plant Data List')->with('head', 'MPDL');
+			'title_jp' => $title_jp
+		))->with('page', 'Monthly Stock Taking Count')->with('head', 'Stocktaking');
+	}
+
+	public function fetchMaterialDetail(Request $request){
+		$material = db::select("SELECT
+			s.id,
+			s.store,
+			s.category,
+			s.material_number,
+			mpdl.material_description,
+			m.`key`,
+			m.model,
+			m.surface,
+			mpdl.bun,
+			s.location,
+			mpdl.storage_location,
+			v.lot_completion,
+			v.lot_transfer,
+			IF
+			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
+			s.quantity,
+			s.remark
+			FROM
+			stocktaking_lists s
+			LEFT JOIN materials m ON m.material_number = s.material_number
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
+			WHERE
+			s.id = ". $request->get('id'));
+
+		$response = array(
+			'status' => true,
+			'material' => $material,
+		);
+		return Response::json($response);
+
+	}
+
+	public function fetchStoreList(Request $request){
+		$store = db::select("SELECT
+			s.id,
+			s.store,
+			s.category,
+			s.material_number,
+			mpdl.material_description,
+			m.`key`,
+			m.model,
+			m.surface,
+			mpdl.bun,
+			s.location,
+			mpdl.storage_location,
+			v.lot_completion,
+			v.lot_transfer,
+			IF
+			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
+			s.quantity,
+			s.remark
+			FROM
+			stocktaking_lists s
+			LEFT JOIN materials m ON m.material_number = s.material_number
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
+			WHERE
+			s.store = '". $request->get('store'). "'
+			ORDER BY
+			s.remark DESC,
+			s.quantity DESC");
+
+		$response = array(
+			'status' => true,
+			'store' => $store,
+		);
+		return Response::json($response);
 	}
 
 	public function fetchmpdl(Request $request){
@@ -148,6 +218,41 @@ class StockTakingController extends Controller
 
 		return DataTables::of($material_plant_data_lists)->make(true);
 	}
+	
+	public function fetch_bom_output(Request $request){
+		$bom_outputs = BomOutput::orderBy('bom_outputs.id', 'asc');
+		$bom_outputs = $bom_outputs->select('bom_outputs.material_parent', 'bom_outputs.material_child', 'bom_outputs.usage', 'bom_outputs.um')
+		->get();
+
+		return DataTables::of($bom_outputs)->make(true);
+	}
+
+	public function updateCount(Request $request){
+
+		$id = $request->get('id');
+		$quantity = $request->get('quantity');
+		
+		try {
+
+			$update = StocktakingList::where('id', $id)
+			->update([
+				'quantity' => $quantity
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Save Count PI Successfully'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+
+	}
 
 	public function bom_output(){
 		$title = 'BOM Output';
@@ -159,18 +264,17 @@ class StockTakingController extends Controller
 			'base_units' => $this->base_unit,
 		))->with('page', 'BOM Output')->with('head', 'BOM');
 	}
-	
-	public function fetch_bom_output(Request $request){
-		$bom_outputs = BomOutput::orderBy('bom_outputs.id', 'asc');
 
-		// if($request->get('base_unit') != null){
-		// 	$bom_outputs = $bom_outputs->whereIn('bom_outputs.um', $request->get('base_unit'));
-		// }
+	public function mpdl() {
+		$title = 'Material Plant data List';
+		$title_jp = '???';
 
-		$bom_outputs = $bom_outputs->select('bom_outputs.material_parent', 'bom_outputs.material_child', 'bom_outputs.usage', 'bom_outputs.um')
-		->get();
-
-		return DataTables::of($bom_outputs)->make(true);
+		return view('stocktakings.mpdl', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'storage_locations' => $this->storage_location,
+			'base_units' => $this->base_unit,
+		))->with('page', 'Material Plant Data List')->with('head', 'MPDL');
 	}
 
 
