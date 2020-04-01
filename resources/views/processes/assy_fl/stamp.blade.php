@@ -383,7 +383,9 @@
 	}
 
 	function model(id){
-		$('#model').val(id);
+		// $('#model').val(id);
+
+		document.getElementById("model").value = id;
 	}
 
 	function adjust(){
