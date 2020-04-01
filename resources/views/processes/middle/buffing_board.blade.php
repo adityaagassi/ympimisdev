@@ -90,7 +90,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<table id="buffingTable" class="table table-bordered">
-				<thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;">
+				<thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 18px;">
 					<tr>
 						<th style="width: 0.66%; padding: 0;">WS</th>
 						<th style="width: 0.66%; padding: 0;">Operator</th>
@@ -110,7 +110,7 @@
 						<th style="width: 0.66%; padding: 0; background-color: #f76a6a">Selesai</th>
 					</tr>
 				</thead>
-				<tbody id="buffingTableBody">
+				<tbody id="buffingTableBody" style="font-size: 18px;">
 				</tbody>
 				<tfoot>
 				</tfoot>
@@ -277,7 +277,7 @@
 							totalSelesai[index] = 0;
 						}
 
-						var key = {first:['C','D','E'], second:['F','G','H','J','82']};
+						var key = {first:['82','C','D'], second:['E','F'], third:['G','H','J']};
 
 						if(page != ''){
 							if(key[page].includes(value.ws.split("-")[1])){
