@@ -79,7 +79,7 @@ class EmployeeController extends Controller
                [ 'attend_code' => 'OFF', 'attend_name' =>  'OFF', 'attend_type' => '-'],
                [ 'attend_code' => 'PC',  'attend_name' =>  'Pulang Cepat', 'attend_type' =>  'Pulang Cepat'],
                [ 'attend_code' => 'SAKIT', 'attend_name' => 'Sakit Surat Dokter', 'attend_type' => 'Sakit'],
-               [ 'attend_code' => 'UPL', 'attend_name' =>  'Cuti Tidak Di Bayar', 'attend_type' => '-'],
+               [ 'attend_code' => 'UPL', 'attend_name' =>  'Cuti Tidak Di Bayar', 'attend_type' => 'Cuti'],
                [ 'attend_code' => 'EAI', 'attend_name' =>  'Early In', 'attend_type' => '-'],
                [ 'attend_code' => 'EAO', 'attend_name' =>  'Early Out', 'attend_type' => '-'],
                [ 'attend_code' => 'LTI', 'attend_name' =>  'Late In', 'attend_type' =>  'Terlambat'],
@@ -509,7 +509,7 @@ class EmployeeController extends Controller
           $first_sunfish = date('Y-m-d', strtotime('-3 months', strtotime($now)));
           $last_mirai = date('Y-m-t', strtotime($now));
 
-          $employees = db::select("select date_format(period, '%M %Y') as period, date_format(period, '%Y-%m') as period2, count(full_name) as total, sum(if(employ_code = 'OUTSOURCE', 1, 0)) as outsource, sum(if(employ_code = 'CONTRACT1', 1, 0)) as contract1, sum(if(employ_code = 'CONTRACT2', 1, 0)) as contract2, sum(if(employ_code = 'PERMANENT', 1, 0)) as permanent, sum(if(employ_code = 'PROBATION', 1, 0)) as probation, sum(if(gender = 'L', 1, 0)) as male, sum(if(gender = 'P', 1, 0)) as female, sum(if(`labor_union` = 'NONE' or `labor_union` is null, 1, 0)) as no_union, sum(if(`labor_union` = 'SPSI', 1, 0)) as spsi, sum(if(`labor_union` = 'sbm', 1, 0)) as sbm, sum(if(`labor_union` = 'spmi', 1, 0)) as spmi from employee_histories where end_date is null and date_format(period, '%Y-%m-%d') >= '".$first."' and date_format(period, '%Y-%m') <= '".$last."' group by date_format(period, '%Y-%m'), date_format(period, '%M %Y') order by period2 asc");
+          $employees = db::select("select date_format(period, '%M %Y') as period, date_format(period, '%Y-%m') as period2, count(full_name) as total, sum(if(employ_code = 'OUTSOURCE', 1, 0)) as outsource, sum(if(employ_code = 'CONTRACT1', 1, 0)) as contract1, sum(if(employ_code = 'CONTRACT2', 1, 0)) as contract2, sum(if(employ_code = 'PERMANENT', 1, 0)) as permanent, sum(if(employ_code = 'PROBATION', 1, 0)) as probation, sum(if(gender = 'L', 1, 0)) as male, sum(if(gender = 'P', 1, 0)) as female, sum(if(`Labour_Union` = 'NONE' or `Labour_Union` is null, 1, 0)) as no_union, sum(if(`Labour_Union` = 'SPSI', 1, 0)) as spsi, sum(if(`Labour_Union` = 'sbm', 1, 0)) as sbm, sum(if(`Labour_Union` = 'spmi', 1, 0)) as spmi from employee_histories where end_date is null and date_format(period, '%Y-%m-%d') >= '".$first."' and date_format(period, '%Y-%m') <= '".$last."' group by date_format(period, '%Y-%m'), date_format(period, '%M %Y') order by period2 asc");
 
           $mirai_overtimes1 = array();
           $sunfish_overtimes1 = array();
@@ -1810,7 +1810,7 @@ public function indexReportJabatan()
 }
 
 public function fetchReportManpower(){
-     $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, employ_code, Department, grade_code, pos_name_en, gender, case when [labor_union] is null then 'NONE' else [labor_union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null");
+     $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, employ_code, Department, grade_code, pos_name_en, gender, case when [Labour_Union] is null then 'NONE' else [Labour_Union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null");
 
      $response = array(
           'status' => true,
@@ -1824,7 +1824,7 @@ public function fetchReportManpowerDetail(Request $request){
      $where = "";
      $where = "and ".$request->get('filter')." = '".$request->get('category')."'";
 
-     $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, Division, Department, convert(varchar, start_date, 105) as start_date, employ_code, grade_code, pos_name_en, gender, case when [labor_union] is null then 'NONE' else [labor_union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null ".$where." order by Emp_no asc");
+     $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, Division, Department, convert(varchar, start_date, 105) as start_date, employ_code, grade_code, pos_name_en, gender, case when [Labour_Union] is null then 'NONE' else [Labour_Union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null ".$where." order by Emp_no asc");
 
      $response = array(
           'status' => true,
@@ -2178,9 +2178,23 @@ public function fetchAbsence(Request $request)
           $tgl = date("d-m-Y");
      }
 
-     $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and shift <> 'OFF' and shift <> 'X' GROUP BY shift ORDER BY jml";
+     $absence = db::connection('sunfish')->select("
+          select VIEW_YMPI_Emp_Attendance.emp_no, FORMAT (shiftstarttime, 'dd MMMM yyyy') as tanggal, official_name, Attend_Code, concat(Department, ' / ', [Section]) as bagian from VIEW_YMPI_Emp_Attendance
+          join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = VIEW_YMPI_Emp_Attendance.emp_no
+          where FORMAT (shiftstarttime, 'dd-MM-yyyy') = '".$tgl."' and
+          Attend_Code NOT LIKE '%PRS%' AND
+          Attend_Code NOT LIKE '%PRSOFF%' AND
+          Attend_Code NOT LIKE '%STSHIFT2%' AND
+          Attend_Code NOT LIKE '%STSHIFT3%' AND
+          Attend_Code NOT LIKE '%STSHIFTG%' AND
+          Attend_Code NOT LIKE '%OFF%' AND
+          Attend_Code NOT LIKE '%NSI%' AND
+          Attend_Code NOT LIKE '%NSO%'
+          ");
 
-     $absence = db::connection('mysql3')->select($query);
+     // $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and shift <> 'OFF' and shift <> 'X' GROUP BY shift ORDER BY jml";
+
+     // $absence = db::connection('mysql3')->select($query);
      $titleChart = date('j F Y',strtotime($tgl));
 
      $response = array(
