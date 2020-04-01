@@ -356,16 +356,27 @@
            type : 'GET', 
            success : function(data){
               var obj = jQuery.parseJSON(data);
-              var nomordepan = obj;
-              // if (nomordepan == "") {
-              //   nomordepan = 1;
-              // }
+              var nomordepan = obj.nomor;
+              var fy = obj.year;
               var no = nomordepan.split("/");
-              var number = parseInt(no[0])
+
+              //get fiscal year from nomor cpar (196.E)
+              var nomorsatu = no[1];
+              var nomorreal = nomorsatu.split(".");
+
+              if (lastthree != nomorreal[0]) {
+                var number = 0;
+              }
+              else{
+                var number = parseInt(no[0]);
+              }
+
               $('#nomordepan').val(number+1);
               var nomordepan = $('#nomordepan').val();
               var truenumber = addZero(nomordepan);
+              
               // var nomorsplit = nomor.split("/");
+
               nomorcpar.value = truenumber+"/"+lastthree+"."+kategori+"/"+romawi+"/"+gettahun;
            }
         });

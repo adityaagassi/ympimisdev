@@ -1716,7 +1716,7 @@ class CparController extends Controller
 
         Mail::to($mailtoo)->send(new SendEmail($cpar_dept, 'cpar_dept'));
 
-        
+        $cpar->save();
 
         $message = 'Kasus dengan Judul '.$cpar->judul;
         $message2 ='Berhasil di reject dan dikirimkan ke departemen terkait untuk ditangani';

@@ -219,10 +219,10 @@
             <span class="pull-left" style="font-weight: bold; background-color: yellow; color: rgb(255,0,0);">&#8650; Form Ketidaksesuaian Kualitas akan dikirim Ke QA Jika Terdapat Salah Satu kondisi Dibawah. Jika tidak, akan dikirim ke departemen bersangkutan&nbsp;&nbsp;&#8650;</span><br><br>
             <div style="height: 40px;padding-right: 10px;padding-left: 10px;margin-bottom: 10px">       
               <span style="vertical-align: middle;line-height: 20px">
-                <b><i class="fa fa-arrow-right"></i> Defect yang berhubungan dengan spec produk</b>
+                <b><i class="fa fa-arrow-right"></i> Apakah Defect berhubungan dengan Spec Produk ?</b>
               </span>
               <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative">Tidak
-                <input type="radio" checked="checked" id="keterangan1" name="keterangan1" value="0">
+                <input type="radio" id="keterangan1" name="keterangan1" value="0">
                 <span class="checkmark"></span>
               </label>
               &nbsp;&nbsp;
@@ -236,10 +236,10 @@
             </div>
             <div style="height: 40px;padding-right: 10px;padding-left: 10px;margin-bottom: 10px">       
               <span style="vertical-align: middle;line-height: 20px">
-                <b><i class="fa fa-arrow-right"></i> Defect yang berhubungan dengan kelengkapan quantity produk</b>
+                <b><i class="fa fa-arrow-right"></i> Apakah Defect berhubungan dengan Kelengkapan Part atau Aksesoris Produk ?</b>
               </span>
               <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative">Tidak
-                <input type="radio" checked="checked" id="keterangan2" name="keterangan2" value="0">
+                <input type="radio" id="keterangan2" name="keterangan2" value="0">
                 <span class="checkmark"></span>
               </label>
               &nbsp;&nbsp;
@@ -253,10 +253,10 @@
             </div>
             <div style="height: 40px;padding-right: 10px;padding-left: 10px;margin-bottom: 10px">       
               <span style="vertical-align: middle;line-height: 20px">
-                <b><i class="fa fa-arrow-right"></i> Defect yang dapat mengganggu fungsi utama produk</b>
+                <b><i class="fa fa-arrow-right"></i> Apakah Defect dapat Mengganggu Fungsi Utama Produk ?</b>
               </span>
               <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative">Tidak
-                <input type="radio" checked="checked" id="keterangan3" name="keterangan3" value="0">
+                <input type="radio" id="keterangan3" name="keterangan3" value="0">
                 <span class="checkmark"></span>
               </label>
               &nbsp;&nbsp;
@@ -268,17 +268,36 @@
               Contoh : Tidak Bunyi, Bunyi Tersendat, Buka - Tutup Case
               <br><br>
             </div>
-            <div style="height: 60px;padding-right: 10px;padding-left: 10px;">       
-              <span style="vertical-align: middle;line-height: 20px;">
-                <b><i class="fa fa-arrow-right"></i> Temuan NG Memerlukan Recheck FSTK atau Repair "Off line"</b>
+            <div style="height: 40px;padding-right: 10px;padding-left: 10px;margin-bottom: 10px">       
+              <span style="vertical-align: middle;line-height: 20px">
+                <b><i class="fa fa-arrow-right"></i> Apakah Defect memiliki Potensi Melukai atau Mencederai Customer (Terkait Product Liability) ?</b>
               </span>
               <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative">Tidak
-                <input type="radio" checked="checked" id="keterangan4" name="keterangan4" value="0">
+                <input type="radio" id="keterangan4" name="keterangan4" value="0">
                 <span class="checkmark"></span>
               </label>
               &nbsp;&nbsp;
               <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative;margin-left: 5px;margin-right: 10px">Iya
                 <input type="radio" id="keterangan4" name="keterangan4" value="1">
+                <span class="checkmark"></span>
+              </label>
+              <br>
+              Contoh : Bari Pada Recorder, Sax Key H-6 Sudut Lever Tajam
+              <br><br>
+            </div>
+            
+
+            <div style="height: 60px;padding-right: 10px;padding-left: 10px;">       
+              <span style="vertical-align: middle;line-height: 20px;">
+                <b><i class="fa fa-arrow-right"></i> Apakah Ada Potensi Barang Sudah Terkirim ke FSTK ? </b>
+              </span>
+              <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative">Tidak
+                <input type="radio" id="keterangan5" name="keterangan5" value="0">
+                <span class="checkmark"></span>
+              </label>
+              &nbsp;&nbsp;
+              <label class="radio pull-right" style="margin-top: 5px;right: 0;position: relative;margin-left: 5px;margin-right: 10px">Iya
+                <input type="radio" id="keterangan5" name="keterangan5" value="1">
                 <span class="checkmark"></span>
               </label>
               <br>
@@ -367,22 +386,57 @@
       var kate;
 
       if (getkomplain == "Kualitas"){
-        
-        var ket1 = document.querySelector('input[name="keterangan1"]:checked').value;
-        var ket2 = document.querySelector('input[name="keterangan2"]:checked').value;
-        var ket3 = document.querySelector('input[name="keterangan3"]:checked').value;
-        var ket4 = document.querySelector('input[name="keterangan4"]:checked').value;
+
+        var ket1 = $('input[name="keterangan1"]:checked').val();
+        var ket2 = $('input[name="keterangan2"]:checked').val();
+        var ket3 = $('input[name="keterangan3"]:checked').val();
+        var ket4 = $('input[name="keterangan4"]:checked').val();
+        var ket5 = $('input[name="keterangan5"]:checked').val();
+
+        if (ket1 == undefined) {
+          $("#loading").hide();
+          alert("Keterangan untuk QA tidak diisi");
+          $("html").scrollTop(0);
+          return false;
+        }
+        else if (ket2 == undefined) {
+          $("#loading").hide();
+          alert("Keterangan untuk QA tidak diisi");
+          $("html").scrollTop(0);
+          return false;
+        }
+        else if (ket3 == undefined) {
+          $("#loading").hide();
+          alert("Keterangan untuk QA tidak diisi");
+          $("html").scrollTop(0);
+          return false;
+        }
+        else if (ket4 == undefined) {
+          $("#loading").hide();
+          alert("Keterangan untuk QA tidak diisi");
+          $("html").scrollTop(0);
+          return false;
+        }
+        else if (ket5 == undefined) {
+          $("#loading").hide();
+          alert("Keterangan untuk QA tidak diisi");
+          $("html").scrollTop(0);
+          return false;
+        }
 
         if (ket1 == "1") {
           kate = "_Spec";
         } 
         else if (ket2 == "1"){
-          kate = "_Qty";
+          kate = "_Part";
         }
         else if (ket3 == "1"){
           kate = "_Fungsi";
         }
         else if (ket4 == "1"){
+          kate = "_Luka";
+        }
+        else if (ket5 == "1"){
           kate = "_Recheck";
         }
         else{

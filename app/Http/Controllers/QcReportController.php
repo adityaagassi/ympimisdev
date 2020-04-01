@@ -709,14 +709,26 @@ class QcReportController extends Controller
 
     public function get_nomor_depan(Request $request)
     {
+      $datenow = date('Y-m-d');
+      $nomor = '';
       $kategori = $request->kategori;
+
       $query = "SELECT * FROM `qc_cpars` where kategori = '$kategori' ORDER BY id DESC LIMIT 1";
       $nomordepan = DB::select($query);
-      $nomor = '';
-      foreach ($nomordepan as $nomors) {
-        $nomor = $nomors->cpar_no;
+      
+
+      $query2 = "SELECT fiscal_year FROM `weekly_calendars` where week_date = '$datenow'";
+      $tahun = DB::select($query2);
+
+      foreach ($tahun as $year) {
+        $result['year'] = $year->fiscal_year;
       }
-      return json_encode($nomor);
+
+      foreach ($nomordepan as $nomors) {
+        // $nomor = $nomors->cpar_no;
+        $result['nomor'] = $nomors->cpar_no;
+      }
+      return json_encode($result);
     }
 
     //grafik CPAR

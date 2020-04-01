@@ -79,7 +79,7 @@
    @if($cpar->posisi == "sl" && ($cpar->kategori == "Service" || $cpar->kategori == "Kualitas") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
    <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cpar->id }})" style="width:200px">Send Email</a>
 
-   @elseif($cpar->posisi == "sl" && ($cpar->kategori == "Kualitas_Spec" || $cpar->kategori == "Kualitas_Qty" || $cpar->kategori == "Kualitas_Fungsi" || $cpar->kategori == "Kualitas_Recheck") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
+   @elseif($cpar->posisi == "sl" && ($cpar->kategori == "Kualitas_Spec" || $cpar->kategori == "Kualitas_Part" || $cpar->kategori == "Kualitas_Fungsi" || $cpar->kategori == "Kualitas_Luka" || $cpar->kategori == "Kualitas_Recheck") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
    <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemailqa({{ $cpar->id }})" style="width:200px">Send Email ke QA</a>
 
    @elseif($cpar->posisi != "sl" && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))

@@ -809,18 +809,33 @@ table > thead > tr > th{
               var stat = "";
             }
 
+            if (value.posisi == "qa" && value.status == "cpar") {
+              qa = 'style="background-color:red"';
+              ketqa = 'Proses Verifikasi oleh QA'; 
+            }
+            else if (value.posisi == "qa" && value.status == "close"){
+              qa = 'style="background-color:green"';
+              ketqa = 'Masuk Kategori Diterbitkan CPAR oleh QA'; 
+            }
+
+
             table += '<tr>';
             table += '<td '+reject+'>'+value.judul+''+stat+'</td>';
             table += '<td style="border-left:3px solid #f44336"><span class="label label-warning">'+value.tanggal+'</span></td>';
             table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(sf[1])+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(st[1])+'</td>';  
+            table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(st[1])+'</td>';
             table += '<td style="border-left:3px solid #f44336">'+statusawal+'</td>';
-            table += '<td>'+statuscf+'</td>';
-            table += '<td>'+statusm+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+statuspic+'</td>';
-            table += '<td>'+statuscfcar+'</td>';
-            table += '<td>'+statusmcar+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+statusverifikasi+'</td>';
+            if (value.posisi != "qa") {
+              table += '<td>'+statuscf+'</td>';
+              table += '<td>'+statusm+'</td>';
+              table += '<td style="border-left:3px solid #f44336">'+statuspic+'</td>';
+              table += '<td>'+statuscfcar+'</td>';
+              table += '<td>'+statusmcar+'</td>';
+              table += '<td style="border-left:3px solid #f44336">'+statusverifikasi+'</td>';
+            }else{
+              table += '<td colspan="6" '+qa+'>'+ketqa+'</td>';
+            }
+          
             table += '</tr>';
 
               

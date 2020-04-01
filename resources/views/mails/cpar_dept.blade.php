@@ -56,13 +56,16 @@
 						$katt = explode("_",$kategori);
 					  	
 					  	if ($katt[1] == "Spec"){
-					  		$a = "Defect yang berhubungan dengan spec produk";
+					  		$a = "Defect yang berhubungan dengan Spec Produk";
 					  	}
-					  	else if ($katt[1] == "Qty") {
-					  		$a = "Defect yang berhubungan dengan kelengkapan quantity produk";
+					  	else if ($katt[1] == "Part") {
+					  		$a = "Defect yang berhubungan dengan kelengkapan Part atau Aksesoris Produk";
 					  	}
 					  	else if ($katt[1] == "Fungsi") {
-					  		$a = "Defect yang dapat mengganggu fungsi utama produk";
+					  		$a = "Defect yang dapat mengganggu Fungsi Utama Produk";
+					  	}
+					  	else if ($katt[1] == "Luka") {
+					  		$a = "Temuan NG Berpotensi Melukai atau Mencederai Customer";
 					  	}
 					  	else if ($katt[1] == "Recheck") {
 					  		$a = "Temuan NG Memerlukan Recheck FSTK atau Repair Off line";
@@ -83,8 +86,7 @@
 			</table>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-			
-			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/print/{{ $id }}">Cek report Form Ketidaksesuaian Material</a><br>
+			<a href="http://172.17.128.4/mirai/public/index/form_ketidaksesuaian/print/{{ $id }}">Cek Report Form Ketidaksesuaian Material</a><br>
 
 			<br>
 			<span style="font-weight: bold;"><i>Apakah anda ingin menerbitkan CPAR Berdasarkan kasus ini ?</i></span><br>
