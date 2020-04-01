@@ -646,7 +646,7 @@ class EmployeeController extends Controller
                     FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
                     B.Department,
                     SUM (
-                    IIF(IIF(A.total_ot is not null, ROUND( A.total_ot / 60.0, 2 ), ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 ) > 3, 1 , null)
+                    IIF(IIF(A.total_ot is not null, ROUND( A.total_ot / 60.0, 2 ), ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 )) > 3, 1 , null)
                     ) AS ot_3 
                     FROM
                     VIEW_YMPI_Emp_OvertimePlan A
