@@ -377,9 +377,20 @@ class WorkshopController extends Controller{
 					'workshop_materials.file_name')
 				->first();
 
-				$temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)
-				->where('operator', '=', Auth::user()->username)
-				->first();
+				$current_machine = WorkshopProcess::where('tag', '=', $request->get('machine_tag'))->first();
+
+				// $temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)
+				// ->where('operator', '=', Auth::user()->username)
+				// ->first();
+
+				$temp = new WorkshopTempProcess([
+					'tag' => $wjo->tag,
+					'operator' => $tag->employee_id,
+					'machine_code' => $current_machine->machine_code,
+					'started_at' => date('Y-m-d H:i:s')
+				]);
+				$temp->save();
+
 				$started_at = $temp->started_at;
 
 				$response = array(
@@ -451,9 +462,10 @@ class WorkshopController extends Controller{
 		->first();
 		$listed_time = $listed_time->created_at;
 
-		$process = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+		$process = WorkshopFlowProcess::leftJoin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_flow_processes.operator')
 		->where('workshop_flow_processes.order_no', '=', $wjo->order_no)
-		->select('workshop_flow_processes.sequence_process', 'workshop_flow_processes.order_no', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.std_time', 'workshop_flow_processes.status')
+		->select('workshop_flow_processes.sequence_process', 'workshop_flow_processes.order_no', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.std_time', 'workshop_flow_processes.status','name')
 		->orderBy('sequence_process', 'asc')
 		->get();
 
@@ -464,12 +476,20 @@ class WorkshopController extends Controller{
 		->orderBy('sequence_process', 'asc')
 		->get();
 
+		$current_proccess = WorkshopTempProcess::leftJoin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_temp_processes.machine_code')
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_temp_processes.operator')
+		->where('workshop_temp_processes.tag', '=', $request->get('tag'))
+		->select(db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as pic'), 'process_name', 'machine_name')
+		->orderBy('workshop_temp_processes.id', 'asc')
+		->get();
+
 		$response = array(
 			'status' => true,
 			'wjo' => $wjo,
 			'listed_time' => $listed_time,
 			'flow_process' => $process,
 			'wjo_log' => $workshop_log,
+			'current_proccess' => $current_proccess,
 			'file_path' => $file_path,
 			'message' => 'WJO ditemukan'
 		);
@@ -477,7 +497,126 @@ class WorkshopController extends Controller{
 		
 	}
 
-	public function scanMachine(Request $request){
+	// public function scanMachine(Request $request){
+	// 	$current_machine = WorkshopProcess::where('tag', '=', $request->get('machine_tag'))->first();
+	// 	if(!$current_machine){
+	// 		$response = array(
+	// 			'status' => false,
+	// 			'message' => 'Mesin tidak ditemukan'
+	// 		);
+	// 		return Response::json($response);
+	// 	}
+
+	// 	$wjo = WorkshopJobOrder::where('order_no', '=', $request->get('order_no'))->first();
+
+	// 	$temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)
+	// 	->where('operator', '=', Auth::user()->username)
+	// 	->first();
+	// 	if(!$temp){
+	// 		$temp = new WorkshopTempProcess([
+	// 			'tag' => $wjo->tag,
+	// 			'operator' => Auth::user()->username,
+	// 			'started_at' => date('Y-m-d H:i:s'),
+	// 		]);
+	// 		$temp->save();
+	// 	}
+	// 	$started_at = $temp->started_at;
+
+
+	// 	$wjo_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
+	// 	->where('order_no', '=', $wjo->order_no)
+	// 	->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_logs.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name')
+	// 	->orderBy('sequence_process', 'desc')
+	// 	->first();
+
+	// 	if($wjo_log){
+	// 		$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+	// 		->where('order_no', '=', $wjo->order_no)
+	// 		->where('status', '=', 1)
+	// 		->where('sequence_process', '=', ($wjo_log->sequence_process + 1))
+	// 		->select('workshop_flow_processes.order_no', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.status')
+	// 		->first();
+
+	// 		if($flow){
+	// 			if($flow->process_name != $current_machine->process_name){
+	// 				$response = array(
+	// 					'status' => false,
+	// 					'message' => 'Proses tidak sama dengan sebelumnya',
+	// 					'order_no' => $wjo->order_no,
+	// 					'sequence_process' => ($wjo_log->sequence_process + 1)
+	// 				);
+	// 				return Response::json($response);
+	// 			}
+	// 		}
+	// 	}else{
+	// 		$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+	// 		->where('order_no', '=', $wjo->order_no)
+	// 		->where('status', '=', 1)
+	// 		->where('sequence_process', '=', 1)
+	// 		->select('workshop_flow_processes.order_no', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.status')
+	// 		->first();
+
+	// 		if($flow){
+	// 			if($flow->process_name != $current_machine->process_name){
+	// 				$response = array(
+	// 					'status' => false,
+	// 					'message' => 'Proses tidak sama dengan sebelumnya',
+	// 					'order_no' => $wjo->order_no,
+	// 					'sequence_process' => 1						
+	// 				);
+	// 				return Response::json($response);
+	// 			}
+	// 		}
+	// 	}
+
+
+	// 	$wjo_remark = WorkshopJobOrder::where('order_no', '=', $wjo->order_no)
+	// 	->update([
+	// 		'remark' => 3
+	// 	]);
+
+	// 	$wjo_log = WorkshopJobOrderLog::where('order_no', $wjo->order_no)
+	// 	->where('remark', 3)
+	// 	->first();
+	// 	if(!$wjo_log){
+	// 		$wjo_log = new WorkshopJobOrderLog([
+	// 			'order_no' => $wjo->order_no,
+	// 			'remark' => 3,
+	// 			'created_by' => $request->get('operator_id')
+	// 		]);
+	// 		$wjo_log->save();	
+	// 	}
+
+
+	// 	$process = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
+	// 	->where('workshop_flow_processes.order_no', '=', $wjo->order_no)
+	// 	->select('workshop_flow_processes.sequence_process', 'workshop_flow_processes.order_no', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.std_time', 'workshop_flow_processes.status')
+	// 	->orderBy('sequence_process', 'asc')
+	// 	->get();
+
+	// 	$workshop_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
+	// 	->leftJOin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_logs.operator_id')
+	// 	->where('workshop_logs.order_no', '=', $wjo->order_no)
+	// 	->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name', db::raw('timestampdiff(second, workshop_logs.started_at, workshop_logs.created_at) as actual'), db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as pic'))
+	// 	->orderBy('sequence_process', 'asc')
+	// 	->get();
+
+	// 	$response = array(
+	// 		'status' => true,
+	// 		'wjo' => $wjo,
+	// 		'started_at' => $started_at,
+	// 		'flow_process' => $process,
+	// 		'wjo_log' => $workshop_log,
+	// 		'current_machine' => $current_machine,
+	// 		'message' => 'WJO ditemukan'
+	// 	);
+	// 	return Response::json($response);
+
+	// }
+
+
+	public function scanMachine(Request $request)
+	{
 		$current_machine = WorkshopProcess::where('tag', '=', $request->get('machine_tag'))->first();
 		if(!$current_machine){
 			$response = array(
@@ -487,111 +626,131 @@ class WorkshopController extends Controller{
 			return Response::json($response);
 		}
 
+		$current_proccess = WorkshopLog::where('order_no', '=', $request->get('order_no'))->first();
+
 		$wjo = WorkshopJobOrder::where('order_no', '=', $request->get('order_no'))->first();
 
-		$temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)
-		->where('operator', '=', Auth::user()->username)
-		->first();
-		if(!$temp){
-			$temp = new WorkshopTempProcess([
-				'tag' => $wjo->tag,
-				'operator' => Auth::user()->username,
-				'started_at' => date('Y-m-d H:i:s'),
-			]);
-			$temp->save();
-		}
-		$started_at = $temp->started_at;
+		$current_temp = WorkshopTempProcess::where('tag', '=', $wjo->tag)->where('machine_code', '=',$current_machine->machine_code)->first();
 
-
-		$wjo_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
-		->where('order_no', '=', $wjo->order_no)
-		->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_logs.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name')
+		$process_act = WorkshopLog::where("order_no","=",$request->get('order_no'))
 		->orderBy('sequence_process', 'desc')
 		->first();
 
-		if($wjo_log){
-			$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
-			->where('order_no', '=', $wjo->order_no)
-			->where('status', '=', 1)
-			->where('sequence_process', '=', ($wjo_log->sequence_process + 1))
-			->select('workshop_flow_processes.order_no', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.status')
-			->first();
+		if ($current_proccess) {
+			if ($current_temp) {
+				$wjo_log = new WorkshopLog([
+					'order_no' => $wjo->order_no,
+					'sequence_process' => $process_act->sequence_process + 1,
+					'machine_code' => $current_machine->machine_code,
+					'operator_id' => $request->get('operator_id'),
+					'started_at' => $current_temp->started_at,
+					'created_by' => $request->get('operator_id')
+				]);
+				$wjo_log->save();
 
-			if($flow){
-				if($flow->process_name != $current_machine->process_name){
+				$temp2 = WorkshopTempProcess::where('tag', $wjo->tag)->where('machine_code', $current_machine->machine_code)->forcedelete();
+				
+			} else {
+				// Check dengan flow proses
+
+				$process = WorkshopFlowProcess::where("order_no","=",$request->get('order_no'))
+				->where('sequence_process', "=", $process_act->sequence_process + 1)
+				// ->where('machine_code', '=', $current_machine->machine_code)
+				->first();
+
+				if ($process) {
+					if ($process->machine_code != $current_machine->machine_code && $process->status == 1) {
+						$response = array(
+							'status' => false,
+							'message' => 'Proses Tidak Sesuai Plan',
+							'order_no' => $request->get('order_no'),
+							'sequence_process' => $process_act->sequence_process + 1
+						);
+						return Response::json($response);
+					}
+				} else {
+					$process2 = WorkshopFlowProcess::where("order_no","=",$request->get('order_no'))
+					->first();
+
+					if ($process2->status == 1) {
+						$response = array(
+							'status' => false,
+							'message' => 'Proses Tidak Sesuai Plan',
+							'order_no' => $request->get('order_no'),
+							'sequence_process' => $process_act->sequence_process + 1
+						);
+						return Response::json($response);
+					}
+				}
+
+				// ---------------------------
+
+				$temp = new WorkshopTempProcess([
+					'tag' => $wjo->tag,
+					'operator' => $request->get('operator_id'),
+					'machine_code' => $current_machine->machine_code,
+					'started_at' => date('Y-m-d H:i:s')
+				]);
+				$temp->save();
+			}
+
+		} else {
+			if ($current_temp) {
+				$wjo_log = new WorkshopLog([
+					'order_no' => $wjo->order_no,
+					'sequence_process' => 1,
+					'machine_code' => $current_machine->machine_code,
+					'operator_id' => $request->get('operator_id'),
+					'started_at' => $current_temp->started_at,
+					'created_by' => $request->get('operator_id')
+				]);
+				$wjo_log->save();
+
+				$temp2 = WorkshopTempProcess::where('tag', $wjo->tag)->where('machine_code', $current_machine->machine_code)->forcedelete();
+				
+			} else {
+				// Check dengan flow proses
+
+				$process = WorkshopFlowProcess::where("order_no","=",$request->get('order_no'))
+				->where('sequence_process', "=", '1')
+				// ->where('machine_code', "=", $current_machine->machine_code)
+				->first();
+
+				if ($process->machine_code != $current_machine->machine_code && $process->status == 1) {
 					$response = array(
 						'status' => false,
-						'message' => 'Proses tidak sama dengan sebelumnya',
-						'order_no' => $wjo->order_no,
-						'sequence_process' => ($wjo_log->sequence_process + 1)
+						'message' => 'Proses Tidak Sesuai Plan',
+						'order_no' => $request->get('order_no'),
+						'sequence_process' => 1
 					);
 					return Response::json($response);
 				}
-			}
-		}else{
-			$flow = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
-			->where('order_no', '=', $wjo->order_no)
-			->where('status', '=', 1)
-			->where('sequence_process', '=', 1)
-			->select('workshop_flow_processes.order_no', 'workshop_flow_processes.sequence_process', 'workshop_flow_processes.machine_code', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.status')
-			->first();
 
-			if($flow){
-				if($flow->process_name != $current_machine->process_name){
-					$response = array(
-						'status' => false,
-						'message' => 'Proses tidak sama dengan sebelumnya',
-						'order_no' => $wjo->order_no,
-						'sequence_process' => 1						
-					);
-					return Response::json($response);
-				}
+				// ---------------
+
+				$temp = new WorkshopTempProcess([
+					'tag' => $wjo->tag,
+					'operator' => $request->get('operator_id'),
+					'machine_code' => $current_machine->machine_code,
+					'started_at' => date('Y-m-d H:i:s')
+				]);
+				$temp->save();
+
+				$wjo_log = new WorkshopJobOrderLog([
+					'order_no' => $request->get('order_no'),
+					'remark' => 3,
+					'created_by' => $request->get('operator_id')
+				]);
+				$wjo_log->save();
+
 			}
 		}
-		
-
-		$wjo_remark = WorkshopJobOrder::where('order_no', '=', $wjo->order_no)
-		->update([
-			'remark' => 3
-		]);
-
-		$wjo_log = WorkshopJobOrderLog::where('order_no', $wjo->order_no)
-		->where('remark', 3)
-		->first();
-		if(!$wjo_log){
-			$wjo_log = new WorkshopJobOrderLog([
-				'order_no' => $wjo->order_no,
-				'remark' => 3,
-				'created_by' => $request->get('operator_id')
-			]);
-			$wjo_log->save();	
-		}
-
-
-		$process = WorkshopFlowProcess::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_flow_processes.machine_code')
-		->where('workshop_flow_processes.order_no', '=', $wjo->order_no)
-		->select('workshop_flow_processes.sequence_process', 'workshop_flow_processes.order_no', 'workshop_processes.machine_name', 'workshop_processes.process_name', 'workshop_flow_processes.std_time', 'workshop_flow_processes.status')
-		->orderBy('sequence_process', 'asc')
-		->get();
-
-		$workshop_log = WorkshopLog::leftJOin('workshop_processes', 'workshop_processes.machine_code', '=', 'workshop_logs.machine_code')
-		->leftJOin('employee_syncs', 'employee_syncs.employee_id', '=', 'workshop_logs.operator_id')
-		->where('workshop_logs.order_no', '=', $wjo->order_no)
-		->select('workshop_logs.order_no', 'workshop_logs.sequence_process', 'workshop_processes.machine_name', 'workshop_processes.process_name', db::raw('timestampdiff(second, workshop_logs.started_at, workshop_logs.created_at) as actual'), db::raw('concat(SPLIT_STRING(employee_syncs.name, " ", 1), " ", SPLIT_STRING(employee_syncs.name, " ", 2)) as pic'))
-		->orderBy('sequence_process', 'asc')
-		->get();
 
 		$response = array(
 			'status' => true,
-			'wjo' => $wjo,
-			'started_at' => $started_at,
-			'flow_process' => $process,
-			'wjo_log' => $workshop_log,
-			'current_machine' => $current_machine,
-			'message' => 'WJO ditemukan'
+			'message' => 'Adaw'
 		);
 		return Response::json($response);
-
 	}
 
 
@@ -837,7 +996,7 @@ class WorkshopController extends Controller{
 			// 	$flow_process->save();
 			// }
 
-			
+
 
 			DB::transaction(function() use ($wjo, $workshop_log, $temp){
 				$wjo->save();
@@ -1092,7 +1251,7 @@ class WorkshopController extends Controller{
 
 			$flow_processes = [];
 			$exist_arr = [];
-			
+
 			for($x = 1; $x <= $request->get('assign_proses'); $x++) {
 				$stat = 0;
 
@@ -1239,7 +1398,7 @@ class WorkshopController extends Controller{
 		$wjo->drawing_name = $drawing_name;
 		$wjo->item_number = $drawing_number;
 		$wjo->part_number = $part_number;
-		
+
 		try{
 			DB::transaction(function() use ($wjo){
 				$wjo->save();
@@ -1448,7 +1607,7 @@ class WorkshopController extends Controller{
 			'detail' => $detail
 		);
 		return Response::json($response);
-		
+
 	}
 
 	public function fetchDrawing(){
@@ -1495,11 +1654,11 @@ class WorkshopController extends Controller{
 		}
 		if(strlen($request->get('targetTo')) > 0 ){
 			$targetTo = date('Y-m-d', strtotime($request->get('targetTo')));
-			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_ordersworkshop_job_orders.created_at)'), '<=', $targetTo);
+			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_orders.created_at)'), '<=', $targetTo);
 		}
 		if(strlen($request->get('finFrom')) > 0 ){
 			$finFrom = date('Y-m-d', strtotime($request->get('finFrom')));
-			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_ordersworkshop_job_orders.created_at)'), '>=', $finFrom);
+			$workshop_job_orders = $workshop_job_orders->where(db::raw('date(workshop_job_orders.created_at)'), '>=', $finFrom);
 		}
 		if(strlen($request->get('finTo')) > 0 ){
 			$finTo = date('Y-m-d', strtotime($request->get('finTo')));
@@ -1797,6 +1956,10 @@ class WorkshopController extends Controller{
 		$date = date('Y-m-d', strtotime($request->get('date')));
 		$name = $request->get('name');
 
+		if (strpos($name, "'") !== false) {
+			$name = explode("'", $name)[0];
+		}
+
 		$detail = db::select("select concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, p.machine_name, p.process_name, l.started_at, l.created_at, l.order_no  from workshop_logs l
 			left join employee_syncs e on e.employee_id = l.operator_id
 			left join workshop_processes p on p.machine_code = l.machine_code
@@ -2062,7 +2225,7 @@ class WorkshopController extends Controller{
 		$excels = WorkshopLog::leftJoin("employee_syncs", "workshop_logs.operator_id" ,"=", "employee_syncs.employee_id")
 		->leftJoin("workshop_processes", "workshop_logs.machine_code", "=", "workshop_processes.machine_code")
 		->where(db::raw("DATE_FORMAT(started_at,'%Y-%m')"), "=", $mon)
-		->whereIn("workshop_logs.machine_code", array('M_26','M_27','M_28','M_8','M_9','M_10'))
+		->whereIn("workshop_logs.machine_code", array('M_26','M_27','M_28','M_8','M_9','M_10','M_36'))
 		->select(db::raw("GROUP_CONCAT(DISTINCT process_name) as ket"), "employee_id", "name", db::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(workshop_logs.created_at,started_at))) / 60 / 450) as hari"))
 		->groupBy("name", "employee_id")
 		->get();
