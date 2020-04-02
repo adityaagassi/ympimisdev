@@ -1797,6 +1797,10 @@ class WorkshopController extends Controller{
 		$date = date('Y-m-d', strtotime($request->get('date')));
 		$name = $request->get('name');
 
+		if (strpos($name, "'") !== false) {
+			$name = explode("'", $name)[0];
+		}
+
 		$detail = db::select("select concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name`, p.machine_name, p.process_name, l.started_at, l.created_at, l.order_no  from workshop_logs l
 			left join employee_syncs e on e.employee_id = l.operator_id
 			left join workshop_processes p on p.machine_code = l.machine_code
