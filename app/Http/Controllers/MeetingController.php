@@ -20,8 +20,7 @@ class MeetingController extends Controller
 	private $location;
 	public function __construct()
 	{
-		$employees = EmployeeSync::whereNotNull('section')
-		->orderBy('employee_id', 'asc')
+		$employees = EmployeeSync::orderBy('employee_id', 'asc')
 		->get();
 
 		$this->middleware('auth');
