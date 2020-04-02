@@ -787,9 +787,11 @@ Route::group(['nav' => 'A5', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 	Route::post('print/return', 'TransactionController@printReturn');
 	Route::get('reprint/return', 'TransactionController@reprintReturn');
+	Route::post('confirm/return', 'TransactionController@confirmReturn');
 });
 Route::get('index/return', 'TransactionController@indexReturn');
 Route::get('fetch/return/list', 'TransactionController@fetchReturnList');
+Route::get('fetch/return', 'TransactionController@fetchReturn');
 Route::get('fetch/return/resume', 'TransactionController@fetchReturnResume');
 
 
@@ -865,7 +867,7 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 });
 
 //meeting
-Route::group(['nav' => 'S32', 'middleware' => 'permission'], function(){
+Route::group(['nav' => 'S33', 'middleware' => 'permission'], function(){
 	Route::get('index/meeting/create', 'MeetingController@create');
 	Route::get('index/meeting/list/{id}', 'MeetingController@list');
 	Route::post('delete/meeting', 'MeetingController@deleteMeeting');
@@ -1509,15 +1511,24 @@ Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetch
 
 
 
+Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktaking');
+
+
 Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
 Route::get('fetch/stocktaking/material_detail', 'StockTakingController@fetchMaterialDetail');
 Route::get('fetch/stocktaking/store_list', 'StockTakingController@fetchStoreList');
 Route::post('fetch/stocktaking/update_count', 'StockTakingController@updateCount');
+Route::get('index/stocktaking/audit/{id}', 'StockTakingController@indexAudit');
 
 
 
-Route::get('index/stocktaking/audit_1', 'StockTakingController@indexAudit1');
-Route::get('index/stocktaking/audit_2', 'StockTakingController@indexAudit2');
+Route::get('index/stocktaking/summary_of_counting', 'StockTakingController@indexSummaryOfCounting');
+Route::get('fetch/stocktaking/summary_of_counting', 'StockTakingController@fetchSummaryOfCounting');
+Route::get('print/stocktaking/summary_of_counting', 'StockTakingController@printSummaryOfCounting');
+
+
+
+
 
 
 
@@ -2484,10 +2495,19 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
 	Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
+	Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
+
 	Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
 	Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
-	Route::get('post/maintenance/apar/check', 'MaintenanceController@postCheck');
+	Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
+
+	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 });
+
+//ASSEMBLIES
+Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
+Route::get('scan/assembly/operator', 'AssemblyProcessController@scanAssemblyOperator');
+Route::get('scan/assembly/kensa', 'AssemblyProcessController@scanAssemblyKensa');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
