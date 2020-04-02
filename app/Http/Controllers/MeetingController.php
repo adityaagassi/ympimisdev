@@ -162,6 +162,8 @@ class MeetingController extends Controller
 		$id = Auth::id();
 		$employee = db::table('employees')->where('tag', '=', $request->get('tag'))->first();
 
+
+
 		if($employee == null){
 			$response = array(
 				'status' => false,
@@ -191,17 +193,18 @@ class MeetingController extends Controller
 				$meeting_detail->attend_time = date('Y-m-d H:i:s');
 			}
 			else{
+
 				$meeting_detail = new MeetingDetail([
 					'meeting_id' => $request->get('meeting_id'),
-					'emplyee_tag' => $employee->tag,
-					'emplyee_id' => $employee->employee_id,
+					'employee_tag' => $employee->tag,
+					'employee_id' => $employee->employee_id,
 					'status' => 2,
 					'attend_time' => date('Y-m-d H:i:s'),
 					'created_by' => $id
 				]);
 			}
-
 			$meeting_detail->save();
+
 		}
 		catch(\Exception $e){
 			$response = array(
