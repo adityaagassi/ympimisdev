@@ -486,7 +486,7 @@
 			use24hours: true,
 			showInputs: false,
 			showMeridian: false,
-			minuteStep: 1,
+			minuteStep: 30,
 			defaultTime: '00:00',
 			timeFormat: 'h:mm'
 		});
@@ -546,6 +546,11 @@
 		}
 		$.get('{{ url("fetch/meeting/add_participant") }}', data, function(result, status, xhr){
 			if(result.status){
+				$("#addAssignment").prop('selectedIndex', 0).change();
+				$("#addPosition").prop('selectedIndex', 0).change();
+				$("#addDepartment").prop('selectedIndex', 0).change();
+				$("#addEmployee").prop('selectedIndex', 0).change();
+				
 				tableData = "";
 				$.each(result.participants, function(key, value) {
 					tableData += "<tr>";
