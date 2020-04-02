@@ -123,11 +123,6 @@
 						</a>
 					</li>
 					<li>
-						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Hadir Terlambat
-							<span class="pull-right text-green" id="meet7">0</span>
-						</a>
-					</li>
-					<li>
 						<a href="#" style="font-size: 18px; font-weight: bold; padding-top: 5px; padding-bottom: 5px;">Hadir Tanpa Undangan
 							<span class="pull-right text-green" id="meet8">0</span>
 						</a>
@@ -263,7 +258,6 @@
 				var total_undangan = 0;
 				var total_hadir = 0;
 				var total_belum_hadir = 0;
-				var total_terlambat = 0;
 				var total_hadir_tanpa = 0;				
 
 				$.each(result.attendances, function(key, value){
@@ -285,7 +279,6 @@
 					if(value.status == '2'){
 						total_hadir_tanpa += 1;
 					}
-					total_terlambat += value.late;
 
 					tableData += "<tr "+color+">";
 					tableData += "<td style='font-size: 18px;'>"+no+"</td>";
@@ -313,7 +306,6 @@
 
 				$('#meet5').text(total_hadir);
 				$('#meet6').text(total_belum_hadir);
-				$('#meet7').text(total_terlambat);
 				$('#meet8').text(total_hadir_tanpa);
 				$('#meet9').text(total_undangan);
 

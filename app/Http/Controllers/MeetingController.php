@@ -269,8 +269,8 @@ class MeetingController extends Controller
 		->leftJoin('employee_syncs as org', 'org.employee_id', '=', 'meetings.organizer_id')
 		// ->leftJoin('employee_syncs as org', 'employee_syncs.employee_id', '=', 'meetings.organizer_id')
 		->where('meetings.id', '=', $request->get('id'))
-		->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), db::raw('if(meetings.start_time < meeting_details.attend_time, 1, 0) as late'), 'meetings.organizer_id', 'meetings.subject', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
-		->orderBy('meeting_details.status', 'asc')
+		->select('org.name as organizer_name', db::raw('date_format(meetings.start_time, "%a, %d %b %Y %H:%i") as start_time'), db::raw('date_format(meetings.end_time, "%a, %d %b %Y %H:%i") as end_time'), db::raw('timestampdiff(minute, meetings.start_time, meetings.end_time) as diff'), 'meetings.organizer_id', 'meetings.subject', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.attend_time', 'meeting_details.status', 'meetings.status as meeting_status')
+		->orderBy('meeting_details.attend_time', 'desc')
 		->get();
 
 		if($attendances[0]->meeting_status == 'close'){
