@@ -66,35 +66,11 @@ class EmailVisitorConfirmation extends Command
                         LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
                         LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
                     WHERE
-                        ( visitors.remark IS NULL AND employee_syncs.name = 'Budhi Apriyanto' ) 
-                        OR (
-                        visitors.remark IS NULL 
-                        AND employee_syncs.department = 'Management Information System')");
-            }elseif ($key->name == 'Susilo Basri Prasetyo') {
-                $visitor = DB::SELECT("SELECT
-                        visitors.id,
-                        name,
-                        department,
-                        company,
-                        DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
-                        visitors.created_at,
-                        visitor_details.full_name,
-                        visitor_details.id_number AS total1,
-                        purpose,
-                        visitors.status,
-                        visitor_details.in_time,
-                        visitor_details.out_time,
-                        visitors.remark 
-                    FROM
-                        visitors
-                        LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
-                        LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
-                    WHERE
                         ( visitors.remark IS NULL AND employee_syncs.department = 'Production Engineering' ) 
                         OR (
                         visitors.remark IS NULL 
-                        AND employee_syncs.department = 'Maintenance')");
-            }elseif($key->name != 'Takashi Ohkubo'){
+                        AND employee_syncs.department = 'Management Information System')");
+            }else{
                 $visitor = DB::SELECT("SELECT
                         visitors.id,
                         name,
