@@ -2179,7 +2179,7 @@ public function fetchAbsence(Request $request)
      }
 
      $absence = db::connection('sunfish')->select("
-          select VIEW_YMPI_Emp_Attendance.emp_no, FORMAT (shiftstarttime, 'dd MMMM yyyy') as tanggal, official_name, Attend_Code, concat(Department, ' / ', [Section]) as bagian, 1 as count from VIEW_YMPI_Emp_Attendance
+          select VIEW_YMPI_Emp_Attendance.emp_no, FORMAT (shiftstarttime, 'dd MMMM yyyy') as tanggal, official_name, Attend_Code, concat(Department, ' / ', [Section]) as bagian from VIEW_YMPI_Emp_Attendance
           join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = VIEW_YMPI_Emp_Attendance.emp_no
           where FORMAT (shiftstarttime, 'dd-MM-yyyy') = '".$tgl."' and
           Attend_Code NOT LIKE '%PRS%' AND
@@ -2590,11 +2590,6 @@ public function fetchDataKaizen()
      $dprt2 = [];
      foreach ($dprt as $dpr) {
           array_push($dprt2, $dpr->section);
-     }
-
-     if (strpos($dprt[0]->section, 'Maintenance') !== false) {
-          array_push($dprt2, 'PE Control');
-          array_push($dprt2, 'PE Field');
      }
 
      $dprt3 = implode("','", $dprt2);
@@ -3198,14 +3193,14 @@ public function getKaizenReward()
 
 public function fetchAbsenceEmployee(Request $request)
 {
-    $username = Auth::user()->username;
+ $username = Auth::user()->username;
 
-    $att_selected = "";
+ $att_selected = "";
 
-    foreach ($this->attend as $att) {
-        if ($att['attend_type'] == $request->get('attend_code')) {
-          $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
-     }
+ foreach ($this->attend as $att) {
+  if ($att['attend_type'] == $request->get('attend_code')) {
+     $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
+}
 }
 
 $att_selected = substr($att_selected, 0, -2);
