@@ -120,11 +120,11 @@
 									<div class="form-group">
 										<div class="col-xs-12" style="padding: 0px;">
 											<span style="font-weight: bold; font-size: 16px;">Surgical Masker:</span>
-											<input type="number" class="form-control" id="masker" style="text-align:center; width: 100%; height: 35px; font-size: 15px;">
+											<input type="number" class="form-control" min="0" id="masker" style="text-align:center; width: 100%; height: 35px; font-size: 15px;">
 										</div>
 										<div class="col-xs-12" style="padding: 0px;">
-											<span style="font-weight: bold; font-size: 16px;">Masker:</span>
-											<input type="number" class="form-control" id="glove" style="text-align:center; width: 100%; height: 35px; font-size: 15px;">
+											<span style="font-weight: bold; font-size: 16px;">Latex Glove:</span>
+											<input type="number" class="form-control" min="0" id="glove" style="text-align:center; width: 100%; height: 35px; font-size: 15px;">
 										</div>
 									</div>									
 								</div>
