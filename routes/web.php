@@ -1259,9 +1259,14 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::get('fetch/clinic_visit_log_excel', 'ClinicController@fetchVisitLogExcel');
 	Route::get('fetch/clinic_visit_edit_detail', 'ClinicController@fetchVisitEdit');
 	Route::post('edit/diagnose', 'ClinicController@editDiagnose');
-
 	Route::get('fetch/display/clinic_disease_detail', 'ClinicController@fetchDiseaseDetail');
 	Route::get('fetch/clinic_visit_detail', 'ClinicController@fetchClinicVisitDetail');
+
+
+	Route::get('index/medicines', 'ClinicController@indexMedicines');
+	Route::get('fetch/medicines', 'ClinicController@fetchMedicines');
+	Route::post('edit/medicine_stock', 'ClinicController@editMedicineStock');
+
 
 
 });
@@ -2326,7 +2331,6 @@ Route::post('index/request_qa/approval/{id}', 'QcRequestController@approval');
 Route::get('index/request_qa/verifikasi/{id}', 'QcRequestController@verifikasi');
 
 // CPAR Antar Departemen & Bagian
-
 Route::get('index/form_ketidaksesuaian', 'CparController@index');
 Route::get('index/form_ketidaksesuaian/fetchDataTable', 'CparController@fetchDataTable');
 Route::get('index/form_ketidaksesuaian/create', 'CparController@create');
@@ -2362,11 +2366,16 @@ Route::get('index/form_ketidaksesuaian/monitoring', 'CparController@monitoring')
 Route::get('fetch/form_ketidaksesuaian/monitoring', 'CparController@fetchMonitoring');
 Route::get('index/form_ketidaksesuaian/detail', 'CparController@detailMonitoring');
 Route::get('index/form_ketidaksesuaian/table', 'CparController@fetchTable');
-
 //approve or Reject CPAR By QA
-
 Route::get('index/form_ketidaksesuaian/approveqa/{id}', 'CparController@approveqa');
 Route::get('index/form_ketidaksesuaian/rejectqa/{id}', 'CparController@rejectqa');
+
+
+//Audit Internal ISO
+Route::get('index/audit_iso', 'CparController@audit');
+Route::get('index/audit_iso/fetchDataTable', 'CparController@fetchDataAudit');
+Route::get('index/audit_iso/create', 'CparController@audit_create');
+Route::post('post/audit_iso/create', 'CparController@audit_post_create');
 
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
@@ -2494,6 +2503,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
+	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
 	Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
 	Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
 

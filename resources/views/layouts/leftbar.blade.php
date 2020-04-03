@@ -443,14 +443,8 @@
     </span>
   </a>
   <ul class="treeview-menu">
-    @if(isset($page) && $page == "Count")<li class="active">@else<li>@endif
-      <a href="{{ secure_url("index/stocktaking/count") }}"><i class="fa fa-tablet"></i> Count</a>
-    </li>
-    @if(isset($page) && $page == "Audit 1")<li class="active">@else<li>@endif
-      <a href="{{ url("index/stocktaking/audit_1") }}"><i class="fa fa-check"></i> Audit 1</a>
-    </li>
-    @if(isset($page) && $page == "Audit_2")<li class="active">@else<li>@endif
-      <a href="{{ url("index/stocktaking/audit_2") }}"><i class="fa fa-check-square-o"></i> Audit 2</a>
+    @if(isset($page) && $page == "Monthly Stock Taking")<li class="active">@else<li>@endif
+      <a href="{{ url("index/stocktaking/menu") }}"><i class="fa fa-list-alt"></i> Monthly Stock Taking</a>
     </li>
   </ul>
 </li>
@@ -661,6 +655,16 @@
   <a href="{{ url("/index/maintenance/spk") }}"><i class="fa fa-gears"></i> <span>SPK</span></a>
 </li>
 
+@if(isset($page) && $page == "APAR")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/maintenance/aparTool ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Fire Extinguisher</span></a>
+
+@if(isset($page) && $page == "APAR Check")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Check Extinguisher Tools</span></a>
+
+  @if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/maintenance/apar/expire") }}"><i class="fa fa-shield"></i> <span>Quarantine Extinguisher Tools</span></a>
+  </li>
+
 </ul>
 </li>
 @endif
@@ -683,44 +687,15 @@
     <a href="{{ url("index/clinic_visit_log") }}"><i class="fa fa-list-ul"></i> <span>Visit Logs</span></a>
   </li>
 
-{{-- @if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
-  <a href=""><i class="fa fa-medkit"></i> <span>Medicines</span></a>
-</li> --}}
+  @if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
+    <a href="{{ url("index/medicines") }}"><i class="fa fa-medkit"></i> <span>Medicines</span></a>
+  </li>
 
 
 </ul>
 </li>
 @endif
 
-@if(in_array('S36', $navs))
-@if(isset($head) && $head == "Stocktaking")<li class="treeview active">@else<li class="treeview">@endif
-  <a href="#">
-   <i class="fa fa-hospital-o"></i> <span>Stocktaking</span>
-   <span class="pull-right-container">
-    <i class="fa fa-angle-left pull-right"></i>
-  </span>
-</a>
-<ul class="treeview-menu">
-
-  @if(isset($page) && $page == "input")<li class="active">@else<li>@endif
-    <a href="{{ url("") }}"><i class="fa fa-stethoscope"></i> <span>Input PI</span></a>
-  </li>
-
-  @if(isset($page) && $page == "internal")<li class="active">@else<li>@endif
-    <a href="{{ url("") }}"><i class="fa fa-list-ul"></i> <span>Audit Internal</span></a>
-  </li>
-
-  @if(isset($page) && $page == "eksternal")<li class="active">@else<li>@endif
-    <a href="{{ url("") }}"><i class="fa fa-list-ul"></i> <span>Audit Eksternal</span></a>
-  </li>
-
-{{-- @if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
-  <a href=""><i class="fa fa-medkit"></i> <span>Medicines</span></a>
-</li> --}}
-
-</ul>
-</li>
-@endif
 
 @if(in_array('M26', $navs))
 @if(isset($page) && $page == "Visitor Confirmation By Manager")<li class="active">@else<li>@endif

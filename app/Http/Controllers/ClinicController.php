@@ -126,14 +126,15 @@ class ClinicController extends Controller{
 			'Nanang Sugianto',
 		];
 		$this->purpose = [
+			'Petugas Cek Suhu',
 			'Pemeriksaan Kesehatan',
 			'Konsultasi Kesehatan',
-			'Laktasi',
 			'Istirahat Sakit',
+			'Laktasi',			
 			'Kecelakaan Kerja',
 			'Medical Check Up',
 			'Mengantar Karyawan Sakit',
-			'Mengantar Medical Check Up',
+			'Mengantar Medical Check Up'			
 		];
 
 	}
@@ -166,6 +167,16 @@ class ClinicController extends Controller{
 			'title' => $title,
 			'title_jp' => $title_jp,
 		))->with('page', $title)->with('head','Clinic');
+	}
+
+	public function indexMedicines(){
+		$title = "Clinic Medicines Data";
+		$title_jp = '??';
+
+		return view('clinic.medicines', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', $title)->with('head','Clinic');	
 	}
 
 	public function indexDiagnose(){
@@ -210,6 +221,18 @@ class ClinicController extends Controller{
 			'title' => $title,
 			'title_jp' => $title_jp,
 		))->with('page', 'Visit Logs')->with('head','Clinic');
+	}
+
+	public function fetchMedicines(){
+		$medicine = ClinicMedicine::get();
+
+		return DataTables::of($medicine)
+		->addColumn('button', function($medicine){
+			return '<button style="padding: 3%;" class="btn btn-md btn-success" id="'.$medicine->id.'#'.$medicine->medicine_name.'#'.$medicine->quantity.'" onclick="addStock(this)">Edit Stock</button>';
+		})
+		->rawColumns([ 'button' => 'button'])
+		->make(true);
+
 	}
 
 	public function fetchVisitEdit(Request $request){
@@ -627,6 +650,9 @@ class ClinicController extends Controller{
 		$family_name = $request->get('family_name');
 		$visited_at = $request->get('date');
 
+		$masker = $request->get('masker');
+		$glove = $request->get('glove');
+
 		try{
 			//Input Patient Diagnose
 			
@@ -661,6 +687,21 @@ class ClinicController extends Controller{
 					'visited_at' => $visited_at,
 				]);
 				$clinic_patient_detail->save();
+
+
+				if($purpose == 'Petugas Cek Suhu'){
+					if($masker > 0){
+						$clinic_medicine = ClinicMedicine::where('medicine_name', 'Surgical Masker')->first();
+						$clinic_medicine->quantity = $clinic_medicine->quantity - $masker;
+						$clinic_medicine->save();
+					}
+
+					if($glove > 0){
+						$clinic_medicine = ClinicMedicine::where('medicine_name', 'Latex Glove')->first();
+						$clinic_medicine->quantity = $clinic_medicine->quantity - $glove;
+						$clinic_medicine->save();
+					}
+				}
 			}
 
 
@@ -675,9 +716,14 @@ class ClinicController extends Controller{
 						'clinic_patient_detail' => $idx,
 						'quantity' => $medicines[$x]['quantity'],
 					]);
+
+
+					$clinic_medicine[$x] = ClinicMedicine::where('medicine_name', $medicines[$x]['medicine_name'])->first();
+					$clinic_medicine[$x]->quantity = $clinic_medicine[$x]->quantity - $medicines[$x]['quantity'];
 					
-					DB::transaction(function() use ($idx, $clinic_medicine_log, $x, $bed){
+					DB::transaction(function() use ($idx, $clinic_medicine_log, $clinic_medicine, $x, $bed){
 						$clinic_medicine_log[$x]->save();
+						$clinic_medicine[$x]->save();
 
 						$clinic_patient = db::connection('clinic')->table('patient_list')
 						->where('idx', '=', $idx)
@@ -699,6 +745,29 @@ class ClinicController extends Controller{
 			$response = array(
 				'status' => true,
 				'message' => 'Patient Data`s successfully saved'
+			);
+			return Response::json($response);
+
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function editMedicineStock(Request $request){
+		$id = $request->get('id');
+		$quantity = $request->get('quantity');
+		
+		try{
+			$medicine = ClinicMedicine::where('id', $id)->first();
+			$medicine->quantity = $medicine->quantity + $quantity;
+			$medicine->save();
+
+			$response = array(
+				'status' => true
 			);
 			return Response::json($response);
 
