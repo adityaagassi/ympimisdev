@@ -1943,6 +1943,7 @@ class WorkshopController extends Controller{
 		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "workshop_job_orders.created_by")
 		->select(db::raw("DATE_FORMAT(workshop_job_orders.created_at, '%Y-%m-%d') as tgl_pengajuan"), "employee_syncs.name", db::raw("workshop_job_orders.sub_section as bagian"), "workshop_job_orders.order_no", "workshop_job_orders.priority" , "workshop_job_orders.type", "workshop_job_orders.item_name", "quantity", "target_date", "attachment")
 		->where("remark", "=", "4")
+		->where(db::raw("DATE_FORMAT(workshop_job_orders.created_at, '%Y-%m-%d')"), ">=", "2020-04-01")
 		->whereNull("workshop_receipts.order_no")
 		->orderBy("workshop_job_orders.created_at","desc")
 		->get();
