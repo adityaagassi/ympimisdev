@@ -8,8 +8,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $page }}<span class="text-purple"> {{ $jpn }}</span>
-		{{-- <small>Flute <span class="text-purple"> ??? </span></small> --}}
+		{{ $page }}<span class="text-purple"> 成形</span>
 	</h1>
 </section>
 @stop

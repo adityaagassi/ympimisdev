@@ -16,9 +16,15 @@ use App\CycleTimeMesinInjection;
 use App\CapacityPartInjection;
 use App\CapacityMesinInjection;
 use App\MesinLogInjection;
-
+use App\NgLogMesinInjection;
+use App\NgTempMesinInjection;
+use App\MoldingInjectionLog;
+use App\MoldingInjectionMaster;
+use App\HistoryMoldingInjectionTemp;
+use App\HistoryMoldingInjection;
+use App\MaintenanceMoldingTemp;
+use App\MaintenanceMoldingLog;
 use App\PlanMesinInjectionTmp;
-
 use App\StatusMesinInjection;
 use App\WorkingMesinInjection;
 use Response;
@@ -33,6 +39,16 @@ class InjectionsController extends Controller
 
     public function __construct()
     {
+        $this->middleware('auth');
+        if (isset($_SERVER['HTTP_USER_AGENT']))
+        {
+            $http_user_agent = $_SERVER['HTTP_USER_AGENT']; 
+            if (preg_match('/Word|Excel|PowerPoint|ms-office/i', $http_user_agent)) 
+            {
+                // Prevent MS office products detecting the upcoming re-direct .. forces them to launch the browser to this link
+                die();
+            }
+        }
         $this->mesin = [
           'MESIN1',
           'MESIN2',
