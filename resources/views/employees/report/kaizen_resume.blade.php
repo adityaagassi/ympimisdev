@@ -196,7 +196,7 @@
 					},
 
 					title: {
-						text: 'Grafik Kaizen Teian FY196'
+						text: 'Grafik Kaizen Teian '+result.fiscal
 					},
 
 					xAxis: {

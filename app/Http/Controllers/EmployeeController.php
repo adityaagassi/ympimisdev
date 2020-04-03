@@ -3021,7 +3021,7 @@ public function fetchKaizenResume(Request $request)
           $tanggal = date('Y-m-t', strtotime($request->get('tanggal').'-01'));
      }
 
-     $fiscal = db::table('weekly_calendars')->where('week_date', '=', $tanggal)->first();
+     $fiscal = db::table('weekly_calendars')->where('week_date', '=', $tanggal)->select('fiscal_year')->first();
 
      try {
 
@@ -3057,6 +3057,7 @@ public function fetchKaizenResume(Request $request)
      $response = array(
           'status' => true,
           'datas' => $datas,
+          'fiscal' => $fiscal->fiscal_year,
           'message' => 'Success'
      );
      return Response::json($response);
