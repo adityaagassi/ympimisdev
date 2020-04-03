@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\EscposImage;
+use Yajra\DataTables\Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -120,6 +124,10 @@ class StockTakingController extends Controller
 	}
 
 	//Stock Taking Bulanan
+	public function indexMonthlyStocktaking(){
+		return view('stocktakings.monthly.index')->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
+	}
+
 	public function indexCount(){
 		$title = 'Monthly Stock Taking';
 		$title_jp = '???';
@@ -128,6 +136,215 @@ class StockTakingController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'Monthly Stock Taking Count')->with('head', 'Stocktaking');
+	}
+
+	public function indexAudit($id){
+		$title = 'Audit '. $id;
+		$title_jp = '???';
+
+		if($id == 1){
+			return view('stocktakings.monthly.audit_1', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'target' => 10
+			))->with('page', 'Monthly Stock Audit 1')->with('head', 'Stocktaking');
+		
+		}else if($id == 2){
+			return view('stocktakings.monthly.audit_2', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'target' => 5
+			))->with('page', 'Monthly Stock Audit 2')->with('head', 'Stocktaking');
+		}	
+	}
+
+	public function indexSummaryOfCounting(){
+		$title = 'Summary of Counting';
+		$title_jp = '???';
+
+		return view('stocktakings.monthly.summary_of_counting', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Summary Of Counting')->with('head', 'Stocktaking');
+	}
+
+	public function printSummaryOfCounting(Request $request){
+
+		$store = '';
+		if(strlen($request->get('store')) > 0){
+			$stores = explode(',', $request->get('store'));
+			for ($i=0; $i < count($stores); $i++) {
+				$store = $store."'".$stores[$i]."'";
+				if($i != (count($stores)-1)){
+					$store = $store.',';
+				}
+			}
+			$store = " WHERE s.store in (".$store.") ";
+		}
+
+		
+
+
+		try {
+			$lists = db::select("SELECT
+				s.id,
+				s.store,
+				s.category,
+				s.material_number,
+				mpdl.material_description,
+				m.`key`,
+				m.model,
+				m.surface,
+				mpdl.bun,
+				s.location,
+				mpdl.storage_location,
+				v.lot_completion,
+				v.lot_transfer,
+				IF
+				( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot 
+				FROM
+				stocktaking_lists s
+				LEFT JOIN materials m ON m.material_number = s.material_number
+				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+				LEFT JOIN material_volumes v ON v.material_number = s.material_number"
+				.$store);
+
+			foreach ($lists as $list) {
+				$this->printSummary($list);
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Print Successful'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+		
+	}
+
+	public function printSummary($list){
+		$printer_name = 'TESTPRINTER';
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		// $id = '136';
+		// $store = 'SUBASSY-CL-2B';
+		// $category = '(ASSY)';
+		// $material_number = 'W528860';
+		// $sloc = 'CL91';
+		// $description = 'CL-250N 7 ASSY CORK&PAD PACKED(YMPI) J';
+		// $key = '7';
+		// $model = 'CL250';
+		// $surface = 'NICKEL';
+		// $uom = 'PC';
+		// $lot = '';
+
+		$id = $list->id;
+		$store = $list->store;
+		$category = '('.$list->category.')';
+		$material_number = $list->material_number;
+		$sloc = $list->location;
+		$description = $list->material_description;
+		$key = $list->key;
+		$model = $list->model;
+		$surface = $list->surface;
+		$uom = $list->bun;
+		$lot = $list->lot;
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setReverseColors(true);
+		$printer->setTextSize(2, 2);
+		$printer->text("  Summary of Counting  "."\n");
+		$printer->initialize();
+		$printer->setTextSize(3, 3);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($store."\n");
+		if($list->category == 'ASSY'){
+			$printer->setReverseColors(true);			
+		}
+		$printer->text($category."\n");
+		$printer->feed(1);
+		$printer->qrCode($id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->feed(1);
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(4, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($material_number."\n");
+		$printer->text($sloc."\n\n");
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(2, 1);
+		$printer->text($description."\n");
+		$printer->feed(1);
+		$printer->text($model."-".$key."-".$surface."\n");
+		if(strlen($lot) == 0){
+			$printer->text("Lot: \xDB\xDB ".$uom."\n");
+			$printer->textRaw("\xda".str_repeat("\xc4", 22)."\xbf\n");
+			$printer->textRaw("\xb3Lot:".str_repeat("\xDB", 18)."\xb3\n");
+			$printer->textRaw("\xc0".str_repeat("\xc4", 22)."\xd9\n");
+		}
+		else{
+			$printer->text("Lot: ".$lot." ".$uom."\n");
+			$printer->textRaw("\xda".str_repeat("\xc4", 22)."\xbf\n");
+			$printer->textRaw("\xb3Lot:".str_repeat(" ", 18)."\xb3\n");
+			$printer->textRaw("\xc0".str_repeat("\xc4", 22)."\xd9\n");
+		}
+		$printer->textRaw("\xda".str_repeat("\xc4", 22)."\xbf\n");
+		$printer->textRaw("\xb3Z1 :".str_repeat(" ", 18)."\xb3\n");
+		$printer->textRaw("\xc0".str_repeat("\xc4", 22)."\xd9\n");
+		$printer->feed(2);
+		$printer->cut();
+		$printer->close();
+	}
+
+	public function fetchSummaryOfCounting(Request $request){
+
+		$store = '';
+		if(strlen($request->get('store')) > 0){
+			$stores = explode(',', $request->get('store'));
+			for ($i=0; $i < count($stores); $i++) {
+				$store = $store."'".$stores[$i]."'";
+				if($i != (count($stores)-1)){
+					$store = $store.',';
+				}
+			}
+			$store = " WHERE s.store in (".$store.") ";
+		}
+
+		$summary = db::select("SELECT
+			s.id,
+			s.store,
+			s.category,
+			s.material_number,
+			mpdl.material_description,
+			m.`key`,
+			m.model,
+			m.surface,
+			mpdl.bun,
+			s.location,
+			mpdl.storage_location,
+			v.lot_completion,
+			v.lot_transfer,
+			IF
+			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot 
+			FROM
+			stocktaking_lists s
+			LEFT JOIN materials m ON m.material_number = s.material_number
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number"
+			.$store.
+			"ORDER BY s.store ASC");
+
+
+		return DataTables::of($summary)->make(true);
 	}
 
 	public function fetchMaterialDetail(Request $request){
@@ -266,7 +483,7 @@ class StockTakingController extends Controller
 	}
 
 	public function mpdl() {
-		$title = 'Material Plant data List';
+		$title = 'Material Plant Data List';
 		$title_jp = '???';
 
 		return view('stocktakings.mpdl', array(

@@ -3,7 +3,6 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css/jquery.numpad.css") }}" rel="stylesheet">
 
-
 <style type="text/css">
 	/*Start CSS Numpad*/
 	.nmpd-grid {border: none; padding: 20px;}
@@ -71,6 +70,12 @@
 		text-align: center;
 		font-weight: bold;
 	}
+	#progress-text {
+		text-align: center;
+		font-weight: bold;
+		font-size: 1.75vw;
+		color: #fff;
+	}
 
 </style>
 @stop
@@ -78,102 +83,29 @@
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0;">
+	<input type="hidden" id="target" value="{{ $target }}">
+
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
-		
-		<div class="col-xs-7" style="padding-left: 0px;">
+
+		<div class="col-xs-6 col-xs-offset-3" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
 				<div class="input-group input-group-lg">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
 						<i class="fa fa-qrcode"></i>
 					</div>
-					<input type="text" class="form-control" placeholder="SCAN QR CODE" id="qr_code">
+					<input type="text" class="form-control" placeholder="SCAN STORE" id="qr_code">
 					<span class="input-group-btn">
-						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>&nbsp;Scan QR</button>
+						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>&nbsp;&nbsp;Scan</button>
 					</span>
 				</div>
 			</div>
-
-			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				<table class="table table-bordered" style="width: 100%; margin-bottom: 0px">
-					<thead>
-						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 18px;" colspan="2">SUMMARY OF COUNTING</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Store</td>
-							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="store"></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Category</td>
-							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="category"></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Material Number</td>
-							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="material_number"></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Location</td>
-							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="location"></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Material Desc.</td>
-							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="material_description"></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Model Key Surface</td>
-							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="model_key_surface"></td>
-						</tr>
-						<tr>
-							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Lot</td>
-							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="lot_uom"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
 		</div>
 
-		<div class="col-xs-5" style="margin-top: 5%;">
-			<div class="col-xs-12">
-				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">Lot</label>
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;" id="text_lot"></label>
-					<div class="col-xs-6" align="right">
-						<input type="text" style="font-size:25px; height: 45px;" onchange="changeVal()" class="form-control numpad" placeholder="INPUT LOT HERE" id="lot">
-					</div>
-				</div>	
-			</div>
-			<div class="col-xs-12">	
-				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">Z1</label>
-					<div class="col-xs-6 col-xs-offset-3" align="right">
-						<input type="text" style="font-size:25px; height: 45px;" onchange="changeVal()" class="form-control numpad" placeholder="INPUT Z1 HERE" id="z1">
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-12">		
-				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">Total</label>
-					<div class="col-xs-6 col-xs-offset-3" align="right">
-						<input type="text" style="font-size:30px; height: 45px;" class="form-control" id="total" readonly="">
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-12" align="right">
-				<div class="input-group input-group-lg">
-					<button type="button" style="font-size:25px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
-
-					<button type="button" style="font-size:25px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
-				</div>
-			</div>
-		</div>
-		
-		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-top: 2%;">
+		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-top: 1%;">
 			<table class="table table-bordered" id="store_table">
 				<thead>
 					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="7" id='store_title'>STORE</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='store_title'>STORE</th>
 					</tr>
 					<tr>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#</th>
@@ -183,11 +115,28 @@
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL DESCRIPTION</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">REMARK</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">COUNT PI</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">AUDIT 1</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">AUDIT 2</th>
+
 					</tr>
 				</thead>
 				<tbody id="store_body">
 				</tbody>
 			</table>
+		</div>
+
+		<div class="col-xs-12" style="padding: 0px;">
+			<div class="col-xs-9" style="padding: 0px;">
+				<div class="progress active" style="height: 40px; margin-bottom: 10px;">
+					<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%; padding: 0.75%;">
+						<span id="progress-text">40% Complete</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-3">
+				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; margin-right: 1%; padding: 11%; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" id="confirm" class="btn btn-danger">&nbsp;CANCEL&nbsp;</button>
+				<button type="button" style="font-size:19px; height: 40px; font-weight: bold; padding: 3%; padding-top: 0px; padding-bottom: 0px;" onclick="confirm()" id="confirm" class="btn btn-success" disabled>FINAL CONFIRM</button>
+			</div>
 		</div>
 
 		<div class="modal modal-default fade" id="scanModal">
@@ -337,12 +286,13 @@
 			var data = {
 				id : code
 			}
-
-
 			
 			$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
-
 				if (result.status) {
+					$('#scanner').hide();
+					$('#scanModal').modal('hide');
+					$(".modal-backdrop").remove();
+
 					if(result.material[0].remark == 'USE'){
 						$('#qr_code').prop('disabled', true);
 						openSuccessGritter('Success', 'QR Code Successfully');
@@ -367,15 +317,13 @@
 					}else{
 						canc();
 						openErrorGritter('Error', 'QR Code No Use');
-					}					
+					}
+
+					
 
 				} else {
 					openErrorGritter('Error', 'QR Code Not Registered');
 				}
-
-				$('#scanner').hide();
-				$('#scanModal').modal('hide');
-				$(".modal-backdrop").remove();
 			});
 
 		}
