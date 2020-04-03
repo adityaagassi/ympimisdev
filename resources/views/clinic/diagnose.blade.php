@@ -98,9 +98,9 @@
 										@endforeach
 									</select>
 								</div>
-							</div>
+							</div>							
 
-							<div class="col-xs-4" style="color: black;">
+							<div class="col-xs-4" style="color: black;" id="bed-field">
 								<div class="col-xs-2" style="padding: 0px;">
 									<span style="font-weight: bold; font-size: 16px;">Bed:<span class="text-red">*</span></span>
 								</div>
@@ -110,7 +110,24 @@
 										<input type="radio" name="bed" value="No" checked="checked"> No<br>
 									</div>									
 								</div>
+							</div>
 
+							<div class="col-xs-12" style="color: black;" id="cek-suhu">
+								<div class="col-xs-12" style="padding: 0px;">
+									<span style="font-weight: bold; font-size: 16px;">Equipment:<span class="text-red">*</span></span>
+								</div>
+								<div class="col-xs-2" style="padding: 0px;">
+									<div class="form-group">
+										<div class="col-xs-12" style="padding: 0px;">
+											<span style="font-weight: bold; font-size: 16px;">Surgical Masker:</span>
+											<input type="number" class="form-control" id="masker" style="text-align:center; width: 100%; height: 35px; font-size: 15px;">
+										</div>
+										<div class="col-xs-12" style="padding: 0px;">
+											<span style="font-weight: bold; font-size: 16px;">Masker:</span>
+											<input type="number" class="form-control" id="glove" style="text-align:center; width: 100%; height: 35px; font-size: 15px;">
+										</div>
+									</div>									
+								</div>
 							</div>
 
 							<div id='pemeriksaan-kesehatan'>
@@ -216,6 +233,7 @@
 			</div>
 		</div>
 	</div>
+
 </section>
 
 @endsection
@@ -244,6 +262,8 @@
 		$('body').toggleClass("sidebar-collapse");
 		$('#family-field').hide();
 		$('#pemeriksaan-kesehatan').hide();
+		$('#cek-suhu').hide();
+		$('#bed-field').hide();
 		document.getElementById("family-check-box").checked = false;
 
 		fillVisitor();
@@ -262,8 +282,24 @@
 	$('#purpose').on('change', function() {
 		if(this.value == 'Pemeriksaan Kesehatan'){
 			$('#pemeriksaan-kesehatan').show();
+			$('#bed-field').show();
+			$('#cek-suhu').hide();
+		}else if(this.value == 'Konsultasi Kesehatan'){
+			$('#pemeriksaan-kesehatan').hide();
+			$('#bed-field').show();
+			$('#cek-suhu').hide();
+		}else if(this.value == 'Istirahat Sakit'){
+			$('#pemeriksaan-kesehatan').hide();
+			$('#bed-field').show();
+			$('#cek-suhu').hide();
+		}else if(this.value == 'Petugas Cek Suhu'){
+			$('#pemeriksaan-kesehatan').hide();
+			$('#bed-field').hide();
+			$('#cek-suhu').show();
 		}else{
 			$('#pemeriksaan-kesehatan').hide();
+			$('#bed-field').hide();
+			$('#cek-suhu').hide();
 		}
 	});
 
@@ -305,6 +341,10 @@
 		var diagnose = $("#diagnose").val();
 		var doctor = $("#doctor").val();
 
+		var masker = $("#masker").val();
+		var glove = $("#glove").val();
+
+
 		var radios = document.getElementsByName('bed');
 		for (var i = 0, length = radios.length; i < length; i++) {
 			if (radios[i].checked) {
@@ -343,6 +383,8 @@
 			diagnose : diagnose,
 			doctor : doctor,
 			medicine : medicines,
+			masker : masker,
+			glove : glove,
 		}
 
 		$.post('{{ url("input/diagnose") }}', data,  function(result, status, xhr){
@@ -354,6 +396,8 @@
 				$("#section").val("");
 				$("#family").val("");
 				$("#family_name").val("");
+				$("#masker").val("");
+				$("#glove").val("");
 
 				$('#bed').prop('selectedIndex', 0).change();
 				$('#purpose').prop('selectedIndex', 0).change();
