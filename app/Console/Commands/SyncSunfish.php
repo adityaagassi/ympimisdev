@@ -71,7 +71,7 @@ public function handle()
         $row['employment_status'] = $data['employ_code'];
         $row['cost_center'] = $data['cost_center_code'];
         $row['assignment'] = $data['Penugasan'];
-        // $row['union'] = $data['Union'];
+        $row['union'] = $data['Labour_Union'];
         $row['created_at'] = date('Y-m-d H:i:s');
         $row['updated_at'] = date('Y-m-d H:i:s');
         $row['nik_manager'] = $data['NIK_Manager'];
