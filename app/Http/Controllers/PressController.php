@@ -714,7 +714,8 @@ class PressController extends Controller
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
 
-		$prod_result = db::select("select *
+		$prod_result = db::select("select *,
+				mp_record_prods.id AS prod_result_id 
 			from mp_record_prods
 			join employee_groups on employee_groups.employee_id = mp_record_prods.pic
 			join employees on employee_groups.employee_id = employees.employee_id
@@ -722,9 +723,19 @@ class PressController extends Controller
 			".$date."
 			ORDER BY mp_record_prods.id desc");
 
+		$emp = DB::SELECT("SELECT
+				* 
+			FROM
+				employee_groups
+				JOIN employee_syncs ON employee_groups.employee_id = employee_syncs.employee_id 
+			WHERE
+				location = 'Press'");
+
 		$data = array(
                 	'process' => $process,
                 	'prod_result' => $prod_result,
+                	'emp' => $emp,
+                	'mesin' => $this->mesin,
                 	'machine' => $machine);
 		return view('press.report_prod_result',$data)->with('page', 'Press Machine Production Result')->with('title_jp', "??");
 	}
