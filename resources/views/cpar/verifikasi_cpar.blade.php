@@ -408,7 +408,7 @@
                 <input type="hidden" value="{{csrf_token()}}" name="_token" />
                 <h4>Berikan alasan tidak menyetujui form ini</h4>
                 <textarea class="form-control" required="" name="alasan" style="height: 250px;"></textarea> 
-                *Form Akan Dikirim kembali lagi ke Leader / Staff masing - masing departemen
+                *Form Akan Dikirim kembali ke Pembuat Form Ketidaksesuaian
             </div>    
           </div>
           <div class="modal-footer">

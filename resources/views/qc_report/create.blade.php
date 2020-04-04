@@ -44,7 +44,7 @@
               @foreach($managers as $manager)
               <option value="{{ $manager->employee_id }}">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
               @endforeach
-              <option value="PI0109004">Budhi Apriyanto - Manager production engineering</option>
+              <!-- <option value="PI0109004">Budhi Apriyanto - Manager production engineering</option> -->
             </select>
           </div>
           <label class="col-sm-1">Judul Komplain<span class="text-red">*</span></label>
