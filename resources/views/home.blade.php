@@ -232,11 +232,46 @@
                             <a href="{{ url("/index/form_experience") }}">
                                 <i class="fa fa-caret-right"></i> Form Failures Report (問題・失敗のフォーム)
                             </a>
+                            <br>
+                            <a href="{{ url("/index/audit_iso") }}">
+                                <i class="fa fa-caret-right"></i> Audit Internal ISO E-IRCA ()
+                            </a>
                         </td>
                     </tr>
 
                 </tbody>
             </table>
+
+            <table class="table table-bordered">
+                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                    <tr>
+                        <th>Stock Taking<br>棚卸し</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Monthly Stock Taking (??)</span>
+                            <br>
+                            <a href="{{ url("/index/stocktaking/menu") }}">
+                                <i class="fa fa-caret-right"></i> Monthly Stock Taking (??)
+                            </a>
+                            <br>
+                        </td>                     
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">Silver Stock Taking (銀材棚卸し)</span>
+                            <br>
+                            <a href="{{ url("/index/stocktaking/silver_report") }}">
+                                <i class="fa fa-caret-right"></i> Silver Stock Taking Report (銀材棚卸し報告)
+                            </a>
+                            <br>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
         <div class="col-md-3" style="padding-left: 3px; padding-right: 3px;">
             <table class="table table-bordered">
@@ -264,7 +299,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                       <td>
+                     <td>
                         {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                             <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                         </a> --}}
@@ -277,7 +312,7 @@
                                 <i class="fa fa-caret-right"></i> Clinic Monitoring (クリニック監視)
                             </a>
                             <br>
-                            <a href="{{ url("index/display/clinic_visit?month=") }}">
+                            <a href="{{ url("index/display/clinic_visit?datefrom=&dateto=") }}">
                                 <i class="fa fa-caret-right"></i> Clinic Visit (クリニック訪問)
                             </a>
                             <br>
@@ -468,16 +503,16 @@
                                     <br>
                                 </td>
                             </tr>
-                             <tr>
+                            <tr>
                                 <td>
-                                    <span style="font-weight: bold;">APAR (??)</span>
+                                    <span style="font-weight: bold;">Fire Extinguisher (??)</span>
                                     <br>
                                     <a href="{{ secure_url("index/maintenance/aparCheck") }}">
-                                        <i class="fa fa-caret-right"></i> Check APAR (??)
+                                        <i class="fa fa-caret-right"></i> Check Tools (??)
                                     </a>
                                     <br>
                                     <a href="{{ url("index/maintenance/apar") }}">
-                                        <i class="fa fa-caret-right"></i> APAR Monitoring (??)
+                                        <i class="fa fa-caret-right"></i> Tools Monitoring (??)
                                     </a>
                                     <br>
                                 </td>
