@@ -384,7 +384,6 @@
 
 	function model(id){
 		// $('#model').val(id);
-
 		document.getElementById("model").value = id;
 	}
 
@@ -544,7 +543,8 @@
 						fillSerialNumber();
 						openSuccessGritter('Success!', result.message);
 					}
-					setTimeout(stamp, 200);
+					// setTimeout(stamp, 200);
+					stamp();
 				}
 				else{
 					audio_error.play();
