@@ -154,13 +154,14 @@
 										Check Date
 									</td>
 									<td class="label-primary" id="check_date" style="font-weight: bold; text-align: center;font-size: 17px;">
-										{{ date('Y-m-d h:i:s') }}
+										{{ date('Y-m-d H:i:s') }}
 									</td>
 									<td class="label-success" style="font-weight: bold; text-align: center;font-size: 17px;">
 										Product
 									</td>
 									<td class="label-success" id="prod_type" style="font-weight: bold; text-align: center;font-size: 17px;">
 									</td>
+									<input type="hidden" id="push_block_id_gen">
 								</tr>
 							</table>
 						</div>
