@@ -57,26 +57,37 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0;">
 	<div class="row">
-		<form method="GET" action="{{ action('ClinicController@indexClinicVisit') }}">
-			<div class="col-xs-2">
-				<div class="input-group date">
-					<div class="input-group-addon bg-green" style="border: none;">
-						<i class="fa fa-calendar"></i>
+		<div class="col-xs-12">
+			<form method="GET" action="{{ action('ClinicController@indexClinicVisit') }}">
+				<div class="col-xs-2">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border: none;">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" name="datefrom" id="datefrom" placeholder="Select Date From">
 					</div>
-					<input type="text" class="form-control datepicker" name="month" id="month" placeholder="Select Month">
 				</div>
-			</div>
-			<div class="col-xs-1">
-				<button class="btn btn-success" type="submit">Update Chart</button>
-			</div>
-		</form>
-		<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
+				<div class="col-xs-2">
+					<div class="input-group date">
+						<div class="input-group-addon bg-green" style="border: none;">
+							<i class="fa fa-calendar"></i>
+						</div>
+						<input type="text" class="form-control datepicker" name="dateto" id="dateto" placeholder="Select Date To">
+					</div>
+				</div>
+				<div class="col-xs-1">
+					<button class="btn btn-success" type="submit">Update Chart</button>
+				</div>
+			</form>
+			<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 1vw;"></div>
+		</div>	
 
-		<div class="col-xs-12">
+		<div class="col-xs-8">
 			<div id="container1" style="min-width: 300px; height: 200px; margin: 0 auto"></div>
-		</div>
-		<div class="col-xs-12">
 			<div id="container2" style="min-width: 300px; margin: 0 auto"></div>
+		</div>
+		<div class="col-xs-4">
+			<div id="container3" style="height: 600px; margin: 0 auto"></div>
 		</div>
 	</div>
 
@@ -113,6 +124,41 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="modal-masker" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" style="text-transform: uppercase; text-align: center;"><b>Surgical Masker Detail</b></h4>
+					<h5 class="modal-title" style="text-align: center;" id="judul-masker"></h5>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<table id="masker" class="table table-striped table-bordered" style="width: 100%;"> 
+								<thead id="masker-head" style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Visited at</th>
+										<th>Employee ID</th>
+										<th>Name</th>
+										<th>Paramedic</th>
+										<th>Purpose</th>
+										<th>Masker Qty</th>
+									</tr>
+								</thead>
+								<tbody id="masker-body">
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 
 </section>
@@ -137,10 +183,8 @@
 	});
 
 	$('.datepicker').datepicker({
-		<?php $tgl_max = date('Y-m') ?>
-		format: "yyyy-mm",
-		startView: "months", 
-		minViewMode: "months",
+		<?php $tgl_max = date('Y-m-d') ?>
+		format: "yyyy-mm-dd",
 		autoclose: true,
 		endDate: '<?php echo $tgl_max ?>'
 	});
@@ -155,10 +199,12 @@
 	}
 
 	function fillChart() {
-		var month = "{{$_GET['month']}}";
+		var datefrom = "{{$_GET['datefrom']}}";
+		var dateto = "{{$_GET['dateto']}}";
 
 		var data = {
-			month:month,
+			datefrom:datefrom,
+			dateto:dateto,
 		}
 
 		$.get('{{ url("fetch/daily_clinic_visit") }}', data, function(result, status, xhr) {
@@ -178,7 +224,7 @@
 						text: 'Daily Clinic Visit'
 					},
 					subtitle: {
-						text: 'on '+ bulanText(result.month),
+						text: 'on '+ result.datefrom +' ~ '+ result.dateto,
 						style: {
 							fontSize: '1vw',
 						}
@@ -271,10 +317,10 @@
 						zoomType: 'column'
 					},
 					title: {
-						text: 'Clinic Visit VS Number of Employees'
+						text: 'Clinic Visit'
 					},
 					subtitle: {
-						text: 'on '+ bulanText(result.month),
+						text: 'on '+ result.datefrom +' ~ '+ result.dateto,
 						style: {
 							fontSize: '1vw',
 						}
@@ -337,7 +383,7 @@
 							point: {
 								events: {
 									click: function () {
-										showDetail(this.category, result.month);
+										showDetail(this.category, result.datefrom, result.dateto);
 									}
 								}
 							},
@@ -409,12 +455,87 @@
 			}
 		});
 
+
+
+$.get('{{ url("fetch/clinic_masker") }}', data, function(result, status, xhr) {
+	if(result.status){
+
+		var category = [];
+		var quantity = [];
+
+		for (var i = 0; i < result.masker.length; i++) {
+			category.push(result.masker[i].department);
+			quantity.push(parseInt(result.masker[i].quantity));
+		}
+
+		Highcharts.chart('container3', {
+			chart: {
+				type: 'bar'
+			},
+			title: {
+				text: 'Surgical Mask'
+			},
+			subtitle: {
+				text: 'on '+ result.datefrom +' ~ '+ result.dateto,
+				style: {
+					fontSize: '1vw',
+				}
+			},
+			xAxis: {
+				categories: category
+			},
+			yAxis: {
+				min: 0,
+				title: {
+					text: 'Masker(s)'
+				}
+			},
+			legend: {
+				enabled: false
+			},
+			plotOptions: {
+				series:{
+					dataLabels: {
+						enabled: true,
+						format: '{point.y}',
+						style:{
+							fontSize: '15px'
+						}
+					},
+					animation: false,
+					pointPadding: 0.93,
+					groupPadding: 0.93,
+					borderWidth: 0.93,
+					cursor: 'pointer',
+					point: {
+						events: {
+							click: function () {
+								showMaskerDetail(this.category, result.datefrom, result.dateto);
+							}
+						}
+					},
+				}
+			},
+			credits: {
+				enabled: false
+			},
+			series: [{
+				name: 'Surgical Masker',
+				data: quantity,
+				colorByPoint: true,
+			}]
+		});
+	}
+});
+
+
 }
 
-function showDetail(department, month) {
+function showDetail(department, datefrom, dateto) {
 	var data = {
 		department : department,
-		month : month
+		datefrom : datefrom,
+		dateto : dateto
 	}
 
 	$.get('{{ url("fetch/clinic_visit_detail") }}', data, function(result, status, xhr){
@@ -426,7 +547,7 @@ function showDetail(department, month) {
 			$('#detail-body').html("");
 
 			$('#judul-detail').append().empty();
-			$('#judul-detail').append('<b>'+ department +' on '+ bulanText(month) +'</b>');
+			$('#judul-detail').append('<b>'+ department +' on '+ datefrom +' ~ '+ dateto +'</b>');
 
 			var body = '';
 			for (var i = 0; i < result.detail.length; i++) {
@@ -441,6 +562,69 @@ function showDetail(department, month) {
 
 			$('#detail-body').append(body);
 			$('#detail').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ 10, 25, 50, -1 ],
+				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'pageLength': 10,
+				'searching': true,
+				'ordering': true,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true
+			});
+		}
+	});
+}
+
+function showMaskerDetail(department, datefrom, dateto) {
+	var data = {
+		department : department,
+		datefrom : datefrom,
+		dateto : dateto
+	}
+
+	$.get('{{ url("fetch/clinic_masker_detail") }}', data, function(result, status, xhr){
+		if(result.status){
+			$('#modal-masker').modal('show');
+
+			$('#masker').DataTable().clear();
+			$('#masker').DataTable().destroy();
+			$('#masker-body').html("");
+
+			$('#judul-masker').append().empty();
+			$('#judul-masker').append('<b>'+ department +' on '+ datefrom +' ~ '+ dateto +'</b>');
+
+			var body = '';
+			for (var i = 0; i < result.detail.length; i++) {
+				body += '<tr>';
+				body += '<td>'+ result.detail[i].visited_at +'</td>';
+				body += '<td>'+ result.detail[i].employee_id +'</td>';
+				body += '<td>'+ result.detail[i].name +'</td>';
+				body += '<td>'+ result.detail[i].paramedic +'</td>';
+				body += '<td>'+ result.detail[i].purpose +'</td>';
+				body += '<td>'+ result.detail[i].quantity +'</td>';
+				body += '</tr>';
+			}
+
+			$('#masker-body').append(body);
+			$('#masker').DataTable({
 				'dom': 'Bfrtip',
 				'responsive':true,
 				'lengthMenu': [

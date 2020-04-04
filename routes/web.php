@@ -1278,6 +1278,10 @@ Route::get('fetch/daily_clinic_visit', 'ClinicController@fetchDailyClinicVisit')
 Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
 Route::get('fetch/display/clinic_disease', 'ClinicController@fetchDisease');
 
+Route::get('fetch/clinic_masker', 'ClinicController@fetchClinicMasker');
+Route::get('fetch/clinic_masker_detail', 'ClinicController@fetchClinicMaskerDetail');
+
+
 //END CLINIC
 
 
@@ -2168,6 +2172,7 @@ Route::post('index/ng_finding/approval/{id}/{month}','NgFindingController@approv
 Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
+Route::get('index/fetch_mesin_parameter', 'RecorderProcessController@fetch_mesin_parameter');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
 Route::post('index/push_block_recorder/create_temp', 'RecorderProcessController@create_temp');
 Route::post('index/push_block_recorder/update_temp', 'RecorderProcessController@update_temp');
@@ -2377,6 +2382,7 @@ Route::get('index/audit_iso/fetchDataTable', 'CparController@fetchDataAudit');
 Route::get('index/audit_iso/create', 'CparController@audit_create');
 Route::post('post/audit_iso/create', 'CparController@audit_post_create');
 
+
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
 Route::get('mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
@@ -2512,6 +2518,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
 
 	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
+	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
 });
 
 //ASSEMBLIES

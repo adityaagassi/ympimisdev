@@ -396,48 +396,56 @@ class ClinicController extends Controller{
 	}
 
 	public function fetchDailyClinicVisit(Request $request){
-		$date = "";
-		$date_log = "";
-		$month = "";
 
-		if(strlen($request->get('month')) > 0){
-			$month = $request->get('month');
-		}else{
-			$month = date('Y-m');
+		$datefrom = date('Y-m-01');
+		$dateto = date('Y-m-d');
+
+		if(strlen($request->get('datefrom'))>0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		}
+		if(strlen($request->get('dateto'))>0){
+			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 		}
 
 		$clinic_visit = db::select("SELECT DATE_FORMAT( date.week_date, '%d %b %Y' ) AS week_date, COALESCE ( log.sum, 0 ) AS visit FROM
 			(SELECT week_date, DATE_FORMAT( week_date, '%a' ) AS `day` FROM weekly_calendars
-			WHERE	DATE_FORMAT( week_date, '%Y-%m' ) = '".$month."'
+			WHERE	DATE_FORMAT( week_date, '%Y-%m-%d' ) >= '".$datefrom."'
+			AND DATE_FORMAT( week_date, '%Y-%m-%d' ) <= '".$dateto."'
 			AND remark <> 'H' 
 			ORDER BY week_date ASC) AS date
 			LEFT JOIN
 			(SELECT log.tanggal AS tanggal, count( log.patient_list_id ) AS sum FROM
 			(SELECT DISTINCT date( visited_at ) as tanggal, patient_list_id FROM clinic_patient_details
-			WHERE DATE_FORMAT( visited_at, '%Y-%m' ) = '".$month."') AS log
+			WHERE DATE_FORMAT( visited_at, '%Y-%m-%d' ) >= '".$datefrom."'
+			AND DATE_FORMAT( visited_at, '%Y-%m-%d' ) <= '".$dateto."'
+			AND purpose IN ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja')) AS log
 			GROUP BY tanggal) AS log
 			ON date.week_date = log.tanggal");
 
 		$response = array(
 			'status' => true,
 			'clinic_visit' => $clinic_visit,
-			'month' => $month,
+			'datefrom' => date_format(date_create($datefrom), "d M Y"),
+			'dateto' => date_format(date_create($dateto), "d M Y")
 		);
 		return Response::json($response);
 	}
 
 	public function fetchClinicVisit(Request $request){
-		$month = "";
+		$datefrom = date('Y-m-01');
+		$dateto = date('Y-m-d');
 
-		if(strlen($request->get('month')) > 0){
-			$month = $request->get('month');
-		}else{
-			$month = date('Y-m');
+		if(strlen($request->get('datefrom'))>0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		}
+		if(strlen($request->get('dateto'))>0){
+			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 		}
 
 		$clinic_visit = db::select("select e.department, count(visit.employee_id) as qty from
 			(select distinct c.employee_id, c.patient_list_id from clinic_patient_details c
-			where DATE_FORMAT(c.created_at,'%Y-%m') = '".$month."'
+			where DATE_FORMAT(c.created_at,'%Y-%m-%d') >= '".$datefrom."'
+			and DATE_FORMAT(c.created_at,'%Y-%m-%d') <= '".$dateto."'
 			and c.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja')) visit
 			left join employee_syncs e on visit.employee_id = e.employee_id
 			where e.department is not null
@@ -460,7 +468,8 @@ class ClinicController extends Controller{
 			left join
 			(SELECT e.department, visit.purpose, count( visit.employee_id ) AS qty FROM
 			(SELECT DISTINCT c.employee_id, c.patient_list_id, c.purpose FROM clinic_patient_details c 
-			WHERE	DATE_FORMAT( c.created_at, '%Y-%m' ) = '".$month."'
+			WHERE	DATE_FORMAT( c.created_at, '%Y-%m-%d' ) >= '".$datefrom."'
+			AND	DATE_FORMAT( c.created_at, '%Y-%m-%d' ) <= '".$dateto."'
 			AND c.purpose IN ( 'Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja' ) 
 			) visit
 			LEFT JOIN employee_syncs e ON visit.employee_id = e.employee_id 
@@ -472,16 +481,20 @@ class ClinicController extends Controller{
 			'status' => true,
 			'clinic_visit' => $clinic_visit,
 			'clinic_visit_detail' => $clinic_visit_detail,
-			'month' => $month,
+			'datefrom' => date_format(date_create($datefrom), "d M Y"),
+			'dateto' => date_format(date_create($dateto), "d M Y")
 		);
 		return Response::json($response);
 	}
 
 	public function fetchClinicVisitDetail(Request $request){
+		$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 
 		$detail =  db::select("select distinct d.patient_list_id, d.employee_id, e.`name`, d.paramedic, d.visited_at, d.purpose  from clinic_patient_details d
 			left join ympimis.employee_syncs e on e.employee_id = d.employee_id
-			where DATE_FORMAT(d.visited_at,'%Y-%m') = '".$request->get('month')."'
+			where DATE_FORMAT(d.visited_at,'%Y-%m-%d') >= '".$datefrom."'
+			and DATE_FORMAT(d.visited_at,'%Y-%m-%d') <= '".$dateto."'
 			and d.purpose in ('Pemeriksaan Kesehatan', 'Konsultasi Kesehatan', 'Istirahat Sakit', 'Kecelakaan Kerja')
 			and e.department like '%".$request->get('department')."%'");
 
@@ -490,6 +503,57 @@ class ClinicController extends Controller{
 			'detail' => $detail,
 		);
 		return Response::json($response);		
+	}
+
+	public function fetchClinicMasker(Request $request){
+		$datefrom = date('Y-m-01');
+		$dateto = date('Y-m-d');
+
+		if(strlen($request->get('datefrom'))>0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		}
+		if(strlen($request->get('dateto'))>0){
+			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+		}
+
+		$masker = db::select("SELECT e.department, SUM(m.quantity) as quantity FROM clinic_medicine_logs m 
+			LEFT JOIN clinic_patient_details p ON p.patient_list_id = m.clinic_patient_detail
+			LEFT JOIN employee_syncs e ON e.employee_id = p.employee_id
+			WHERE m.medicine_name = 'Surgical Masker'
+			AND m.`status` = 'out'
+			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') >= '".$datefrom."'
+			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') <= '".$dateto."'
+			GROUP BY e.department
+			ORDER BY quantity DESC");
+
+		$response = array(
+			'status' => true,
+			'masker' => $masker,
+			'datefrom' => date_format(date_create($datefrom), "d M Y"),
+			'dateto' => date_format(date_create($dateto), "d M Y")
+		);
+		return Response::json($response);
+	}
+
+	public function fetchClinicMaskerDetail(Request $request){
+		$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+
+		$detail =  db::select("SELECT p.visited_at, p.employee_id, e.`name`, p.paramedic, p.purpose, m.quantity FROM clinic_medicine_logs m 
+			LEFT JOIN clinic_patient_details p ON p.patient_list_id = m.clinic_patient_detail
+			LEFT JOIN employee_syncs e ON e.employee_id = p.employee_id
+			WHERE m.medicine_name = 'Surgical Masker'
+			AND m.`status` = 'out'
+			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') >= '".$datefrom."'
+			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') <= '".$dateto."'
+			AND e.department like '%".$request->get('department')."%'
+			ORDER BY p.visited_at ASC");
+
+		$response = array(
+			'status' => true,
+			'detail' => $detail,
+		);
+		return Response::json($response);
 	}
 
 
@@ -765,6 +829,14 @@ class ClinicController extends Controller{
 			$medicine = ClinicMedicine::where('id', $id)->first();
 			$medicine->quantity = $medicine->quantity + $quantity;
 			$medicine->save();
+
+
+			$medicine_log = new ClinicMedicineLog([
+				'medicine_name' => $medicine->medicine_name,
+				'status' => 'in',
+				'quantity' => $quantity,
+			]);
+			$medicine_log->save();	
 
 			$response = array(
 				'status' => true

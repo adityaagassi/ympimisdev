@@ -690,11 +690,26 @@
   @if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
     <a href="{{ url("index/medicines") }}"><i class="fa fa-medkit"></i> <span>Medicines</span></a>
   </li>
-
-
 </ul>
 </li>
 @endif
+
+
+@if(isset($head) && $head == "APD")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-user-md"></i> <span>APD</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+
+  @if(isset($page) && $page == "APD")<li class="active">@else<li>@endif
+    <a href="{{ url("index/apd") }}"><i class="fa fa-minus-square"></i> <span>APD </span></a>
+  </li>
+
+</ul>
+</li>
 
 
 @if(in_array('M26', $navs))
