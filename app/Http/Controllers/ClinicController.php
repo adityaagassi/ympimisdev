@@ -516,14 +516,15 @@ class ClinicController extends Controller{
 			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 		}
 
-		$masker = db::select("SELECT e.department, SUM(m.quantity) as quantity FROM clinic_medicine_logs m 
+		$masker = db::select("SELECT medicine.department, SUM(medicine.quantity) AS quantity FROM
+			(SELECT DISTINCT m.id, e.department, m.quantity FROM clinic_medicine_logs m
 			LEFT JOIN clinic_patient_details p ON p.patient_list_id = m.clinic_patient_detail
-			LEFT JOIN employee_syncs e ON e.employee_id = p.employee_id
+			LEFT JOIN employee_syncs e ON e.employee_id = p.employee_id 
 			WHERE m.medicine_name = 'Surgical Masker'
-			AND m.`status` = 'out'
-			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') >= '".$datefrom."'
-			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') <= '".$dateto."'
-			GROUP BY e.department
+			AND m.`status` = 'out' 
+			AND DATE_FORMAT( m.created_at, '%Y-%m-%d' ) >= '".$datefrom."' 
+			AND DATE_FORMAT( m.created_at, '%Y-%m-%d' ) <= '".$dateto."') medicine
+			GROUP BY medicine.department 
 			ORDER BY quantity DESC");
 
 		$response = array(
@@ -539,11 +540,11 @@ class ClinicController extends Controller{
 		$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
 		$dateto = date('Y-m-d', strtotime($request->get('dateto')));
 
-		$detail =  db::select("SELECT p.visited_at, p.employee_id, e.`name`, p.paramedic, p.purpose, m.quantity FROM clinic_medicine_logs m 
+		$detail =  db::select("SELECT DISTINCT m.id, p.visited_at, p.employee_id, e.`name`, p.paramedic, p.purpose, m.quantity FROM clinic_medicine_logs m
 			LEFT JOIN clinic_patient_details p ON p.patient_list_id = m.clinic_patient_detail
-			LEFT JOIN employee_syncs e ON e.employee_id = p.employee_id
+			LEFT JOIN employee_syncs e ON e.employee_id = p.employee_id 
 			WHERE m.medicine_name = 'Surgical Masker'
-			AND m.`status` = 'out'
+			AND m.`status` = 'out' 
 			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') >= '".$datefrom."'
 			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') <= '".$dateto."'
 			AND e.department like '%".$request->get('department')."%'
@@ -758,12 +759,28 @@ class ClinicController extends Controller{
 						$clinic_medicine = ClinicMedicine::where('medicine_name', 'Surgical Masker')->first();
 						$clinic_medicine->quantity = $clinic_medicine->quantity - $masker;
 						$clinic_medicine->save();
+
+						$medicine_log = new ClinicMedicineLog([
+							'medicine_name' => 'Surgical Masker',
+							'status' => 'out',
+							'clinic_patient_detail' => $idx,
+							'quantity' => $masker,
+						]);
+						$medicine_log->save();
 					}
 
 					if($glove > 0){
 						$clinic_medicine = ClinicMedicine::where('medicine_name', 'Latex Glove')->first();
 						$clinic_medicine->quantity = $clinic_medicine->quantity - $glove;
 						$clinic_medicine->save();
+
+						$medicine_log = new ClinicMedicineLog([
+							'medicine_name' => 'Latex Glove',
+							'status' => 'out',
+							'clinic_patient_detail' => $idx,
+							'quantity' => $glove,
+						]);
+						$medicine_log->save();
 					}
 				}
 			}
