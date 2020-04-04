@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use App\EmployeeSync;
 use App\MaterialPlantDataList;
 use App\CparItem;
+use App\StandarisasiAudit;
 
 class CparController extends Controller
 {
@@ -223,7 +224,7 @@ class CparController extends Controller
       $cpar = new CparDepartment([
         'tanggal' => $request->get('tanggal'),
         'kategori' => $request->get('kategori'),
-        'judul' => $request->get('judul'),
+        'judul' => ucwords($request->get('judul')),
         'section_from' => $request->get('secfrom'),
         'section_to' => $request->get('secto'),
         'pelapor' => $request->get('employee_id'),
@@ -1726,6 +1727,165 @@ class CparController extends Controller
           'message' => $message,
           'message2' => $message2,
         ))->with('page', 'CPAR Approval');
- 
     }
+
+
+
+    // AUDIT ISO STANDARISASI
+
+    public function audit() {
+     
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+      $employee = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position')->first();
+
+      return view('cpar.audit_index', array(
+       'emp' => $emp_id,
+       'employee' => $employee
+      ))->with('page', 'Audit ISO');
+    }
+
+    public function fetchDataAudit(Request $request)
+    {
+      $tanggal = $request->get("tanggal");
+
+      if ($tanggal == null) {
+        $tgl = '';
+      }
+      else{
+        $tgl = "where auditor_date = '".$tanggal."'"; 
+      }
+
+      $query = "SELECT * FROM standarisasi_audits ".$tgl." order by id desc";
+      $detail = db::select($query);
+
+      $response = array(
+        'status' => true,
+        'lists' => $detail,
+      );
+      return Response::json($response);
+    }
+
+
+    // Buat Audit
+
+    public function audit_create()
+    {
+      $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position', 'department')->first();
+
+      $leader = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+        where end_date is null and (position like 'Leader%' or position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+
+      return view('cpar.audit_create', array(
+        'employee' => $emp,
+        'leaders' => $leader
+      ))->with('page', 'Form Audit ISO');
+    }
+
+    public function audit_post_create(Request $request)
+    {
+      try {
+        $id_user = Auth::id();
+
+        $audits = StandarisasiAudit::create([
+           'auditor' => $request->get('auditor'),
+           'auditor_name' => $request->get('auditor_name'),
+           'auditor_date' => $request->get('auditor_date'),
+           'auditor_jenis' => $request->get('auditor_jenis'),
+           'auditor_lokasi' => $request->get('auditor_lokasi'),
+           'auditor_kategori' => $request->get('auditor_kategori'),
+           'auditor_persyaratan' => $request->get('auditor_persyaratan'),
+           'auditor_permasalahan' => $request->get('auditor_permasalahan'),
+           'auditor_penyebab' => $request->get('auditor_penyebab'),
+           'auditor_bukti' => $request->get('auditor_bukti'),
+           'auditee' => $request->get('auditee'),
+           'auditee_name' => $request->get('auditee_name'),
+           'auditee_due_date' => $request->get('auditee_due_date'),
+           'posisi' => 'auditor',
+           'status' => 'cpar',
+           'created_by' => $id_user
+        ]);
+
+        $audits->save();
+
+        $response = array(
+          'status' => true,
+          'datas' => "Berhasil",
+        );
+        return Response::json($response);
+
+     } catch (QueryException $e){
+        $response = array(
+             'status' => false,
+             'datas' => $e->getMessage()
+        );
+        return Response::json($response);
+       }
+    }
+
+    public function audit_get_nama(Request $request){
+      $auditee = $request->auditee;
+      $query = "SELECT name,section,department FROM employee_syncs where employee_id = '$auditee'";
+      $nama = DB::select($query);
+      return json_encode($nama);
+    }
+
+
+
+    public function audit_detail($id)
+    {
+        $audits = StandarisasiAudit::find($id);
+
+        $emp_id = Auth::user()->username;
+        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+        $emp = EmployeeSync::where('employee_id', $audits->employee_id)
+        ->select('employee_id', 'name', 'position', 'department', 'section', 'group')->first();
+
+        $leader = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+        where end_date is null and (position like 'Leader%' or position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+
+        return view('cpar.audit_detail', array(
+            'audits' => $audits,
+            'employee' => $emp,
+            'leaders' => $leader
+        ))->with('page', 'Form Audit ISO');
+    }
+
+    public function audit_post_detail(Request $request)
+    {
+         try {
+              $id_user = Auth::id();
+
+              $forms = StandarisasiAudit::where('id',$request->get('id'))
+              ->update([
+                   'auditor_kategori' => $request->get('auditor_kategori'),
+                   'auditor_persyaratan' => $request->get('auditor_persyaratan'),
+                   'auditor_permasalahan' => $request->get('auditor_permasalahan'),
+                   'auditor_penyebab' => $request->get('auditor_penyebab'),
+                   'auditor_bukti' => $request->get('auditor_bukti'),
+                   'auditee' => $request->get('auditee'),
+                   'auditee_name' => $request->get('auditee_name'),
+                   'auditee_due_date' => $request->get('auditee_due_date'),
+                   'created_by' => $id_user
+              ]);
+
+              $response = array(
+                'status' => true,
+                'datas' => "Berhasil",
+              );
+              return Response::json($response);
+
+         } catch (QueryException $e){
+              $response = array(
+                   'status' => false,
+                   'datas' => $e->getMessage()
+              );
+              return Response::json($response);
+         }
+    }
+
 }

@@ -94,7 +94,7 @@
         
         <?php foreach ($cparss as $cpars): ?>
 
-        <br> To : {{ $cpars->posisi }}
+        <!-- <br> To : <?= strtoupper($cpars->posisi) ?> -->
 
         <a data-toggle="modal" data-target="#statusmodal{{$cpars->id}}" class="btn btn-primary btn-sm pull-right">Cek Status Verifikasi</a>
 
@@ -335,7 +335,13 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2">Source Of Complain</td>
+                  @if($cpars->kategori == "Supplier")
+                  <td colspan="2">Vendor</td>
+                  @elseif($cpars->kategori == "Eksternal")
+                  <td colspan="2">Customer</td>
+                  @elseif($cpars->kategori == "Internal")
+                  <td colspan="2">Jenis Komplain</td>
+                  @endif
                   <?php 
                     if($cpars->kategori_komplain == "FG"){
                       $kategori = "Finished Goods";
@@ -685,7 +691,7 @@
                 </tr>
                 <tr>
                   <td colspan="2">Departemen</td>
-                  <td colspan="2">{{ $cpars->department_name }}</td>
+                  <td colspan="2"><?= ucwords($cpars->department_name)?></td>
                   <td colspan="2">
                     @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")

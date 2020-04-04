@@ -87,7 +87,7 @@
 			</tr>
 			<tr>
 				<td colspan="5" style="border: none !important">Issue Date : <b><?php echo date('d F Y', strtotime($cpar->tgl_permintaan)) ?></b></td>
-				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Department : <b>{{$cpar->department_name}}</b></td>
+				<td colspan="4" style="border: none !important; border-right: 1px solid black !important;">Department : <b><?= ucwords($cpar->department_name)?></b></td>
 			</tr>
 			<tr>
 				<td colspan="5" style="border: none !important">Request Due Date : <b><?php echo date('d F Y', strtotime($cpar->tgl_balas)) ?></b><br>(CPAR Return to QA)</td>

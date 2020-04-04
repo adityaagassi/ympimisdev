@@ -282,6 +282,24 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal modal-default fade" id="modal_tamu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<center><h4 class="modal-title" id="myModalLabel">Information</h4></center>
+			</div>
+			<div class="modal-body">
+				<h1 id="tamu"></h1>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				<!-- <a id="modalDeleteButton" href="#" type="button" class="btn btn-danger">Delete</a> -->
+			</div>
+		</div>
+	</div>
+</div>
 	@endsection
 
 
