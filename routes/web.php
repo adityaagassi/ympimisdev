@@ -31,6 +31,7 @@ Route::get('/trial', function () {
 Route::get('/trial2', function () {
 	return view('trial2');
 });
+Route::get('/fetch/trial2', 'TrialController@temp');
 Route::get('print/trial', 'TrialController@stocktaking');
 Route::get('trial_machine', 'TrialController@fetch_machine');
 
@@ -40,6 +41,8 @@ Route::get('/machinery_monitoring', function () {
 		'title_jp' => ''
 	));
 });
+
+
 
 Route::get('/information_board', function () {
 	return view('information_board')->with('title', 'INFORMATION BOARD')->with('title_jp', '情報板');
@@ -880,6 +883,7 @@ Route::group(['nav' => 'S33', 'middleware' => 'permission'], function(){
 Route::get('index/meeting', 'MeetingController@indexMeeting');
 Route::get('index/meeting/attendance', 'MeetingController@indexMeetingAttendance');
 Route::get('fetch/meeting', 'MeetingController@fetchMeeting');
+Route::get('fetch/meeting/group', 'MeetingController@fetchMeetingGroup');
 Route::get('fetch/meeting/detail', 'MeetingController@fetchMeetingDetail');
 Route::get('fetch/meeting/attendance', 'MeetingController@fetchMeetingAttendance');
 
@@ -1226,6 +1230,7 @@ Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen/applied', 'EmployeeController@indexKaizenApplied');
 	Route::post('assess/kaizen', 'EmployeeController@assessKaizen');
 	Route::post('apply/kaizen', 'EmployeeController@applyKaizen');
+	Route::get('index/kaizen/data', 'EmployeeController@indexKaizenData');
 });
 
 Route::get('index/upload_kaizen', 'EmployeeController@indexUploadKaizenImage');
@@ -2168,11 +2173,10 @@ Route::get('index/ng_finding/print_ng_finding_email/{id}/{month}','NgFindingCont
 Route::post('index/ng_finding/sendemail/{id}','NgFindingController@sendemail');
 Route::post('index/ng_finding/approval/{id}/{month}','NgFindingController@approval');
 
-//RECORDER PUSH PULL CHECK
+//RECORDER PUSH BLOCK CHECK
 Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
-Route::get('index/fetch_mesin_parameter', 'RecorderProcessController@fetch_mesin_parameter');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
 Route::post('index/push_block_recorder/create_temp', 'RecorderProcessController@create_temp');
 Route::post('index/push_block_recorder/update_temp', 'RecorderProcessController@update_temp');
@@ -2191,6 +2195,12 @@ Route::get('index/recorder/detail_monitoring2', 'RecorderProcessController@detai
 Route::post('index/recorder/print_report_push_block/{remark}', 'RecorderProcessController@print_report_push_block');
 Route::get('index/recorder/get_push_pull','RecorderProcessController@get_push_pull')->name('recorder.get_push_pull');
 Route::post('index/recorder/update/{id}','RecorderProcessController@update');
+
+//MACHINE PARAMETER
+Route::get('index/machine_parameter','RecorderProcessController@indexMachineParameter');
+Route::get('index/fetch_mesin_parameter', 'RecorderProcessController@fetch_mesin_parameter');
+Route::post('index/push_block_recorder/create_parameter', 'RecorderProcessController@create_parameter');
+Route::get('index/push_block_recorder/get_parameter','RecorderProcessController@get_parameter')->name('recorder.get_parameter');
 
 //RECORDER TORQUE CHECK
 Route::get('index/recorder_process_torque/{remark}', 'RecorderProcessController@index_torque');
@@ -2381,6 +2391,11 @@ Route::get('index/audit_iso', 'CparController@audit');
 Route::get('index/audit_iso/fetchDataTable', 'CparController@fetchDataAudit');
 Route::get('index/audit_iso/create', 'CparController@audit_create');
 Route::post('post/audit_iso/create', 'CparController@audit_post_create');
+Route::get('index/audit_iso/get_nama', 'CparController@audit_get_nama');
+Route::get('index/audit_iso/get_nomor_depan', 'CparController@audit_get_nomor');
+Route::get('index/audit_iso/detail/{id}', 'CparController@audit_detail');
+Route::post('post/audit_iso/detail', 'CparController@audit_post_detail');
+Route::get('index/audit_iso/verifikasistd/{id}', 'CparController@verifikasistd');
 
 
 //CUBEACON WAREHOUSE
@@ -2519,6 +2534,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 
 	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
+	Route::post('post/maintenance/apar/replace', 'MaintenanceController@createTool');
 });
 
 //ASSEMBLIES

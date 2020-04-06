@@ -73,6 +73,7 @@ class MeetingController extends Controller
 		->leftJoin('meeting_details', 'meeting_details.meeting_id', '=', 'meetings.id')
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
 		->select('meetings.id', 'meetings.start_time', 'meetings.end_time', 'meetings.subject', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.status', 'meeting_details.attend_time', 'meetings.status as meeting_status')
+		->where('meetings.status', '<>', '0')
 		->get();
 
 
@@ -80,7 +81,8 @@ class MeetingController extends Controller
 			$reports = Meeting::where('meetings.id', '=', $request->get('id'))
 			->leftJoin('meeting_logs', 'meeting_logs.meeting_id', '=', 'meetings.id')
 			->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_logs.employee_id')
-			->select('meetings.id', 'meetings.start_time', 'meetings.end_time', 'meetings.subject', 'meeting_logs.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_logs.status', 'meeting_logs.attend_time', 'meetings.status as meeting_status')
+			->select('meetings.id', 'meetings.start_time', 'meetings.end_time', 'meetings.subject', 'meeting_logs.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_logs.status', 'meeting_logs.attend_time', 'meetings.status as meeting_status', 'meetings.organizer_id')
+			->where('meetings.status', '<>', '0')
 			->get();
 		}
 
