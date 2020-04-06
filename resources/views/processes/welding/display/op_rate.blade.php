@@ -728,7 +728,7 @@
 					yAxis: {
 						title: {
 							enabled: true,
-							text: "Overall Efficiency (%)"
+							text: "NG Rate (%)"
 						},
 						min: 0,
 						plotLines: [{
@@ -886,7 +886,7 @@
 					yAxis: {
 						title: {
 							enabled: true,
-							text: "Overall Efficiency (%)"
+							text: "NG Rate (%)"
 						},
 						min: 0,
 						plotLines: [{
@@ -978,7 +978,7 @@
 				// for(var i = 0; i < result.ng_rate.length; i++){
 				// 	if(result.ng_rate[i].shift == 'C'){
 				// 		loop += 1;
-						
+
 
 				// 		var name_temp = result.ng_rate[i].name.split(" ");
 				// 		var xAxis = '';
@@ -1248,9 +1248,8 @@
 						type: 'category',
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
-						lineWidth:2,
-						lineColor:'#9e9e9e',
 						labels: {
+							rotation: -45,
 							style: {
 								fontSize: '12px',
 								fontWeight: 'bold'
@@ -1260,13 +1259,8 @@
 					},
 					yAxis: {
 						title: {
+							enabled: true,
 							text: 'Qty NG Pc(s)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
 						},
 						labels:{
 							enabled:false,
@@ -1463,26 +1457,19 @@
 						type: 'category',
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
-						lineWidth:2,
-						lineColor:'#9e9e9e',
 						labels: {
+							rotation: -45,
 							style: {
 								fontSize: '12px',
 								fontWeight: 'bold'
 							}
 						},
 						plotBands: plotBands
-
 					},
 					yAxis: {
 						title: {
+							enabled: true,
 							text: 'Qty NG Pc(s)',
-							style: {
-								color: '#eee',
-								fontSize: '16px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
 						},
 						labels:{
 							enabled:false,
@@ -1492,7 +1479,7 @@
 						},
 						type: 'linear',
 						
-					},		
+					},
 					tooltip: {
 						headerFormat: '<span> {point.category}</span><br/>',
 						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.category}<br>{series.name}</span>: <b>{point.y}</b><br/>',
@@ -1690,7 +1677,7 @@
 		// 					}
 		// 				},
 		// 				plotBands: plotBands
-						
+
 		// 			},
 		// 			yAxis: {
 		// 				title: {
@@ -1780,11 +1767,11 @@
 		// 		});
 
 
-			}
-			else{
-				alert('Attempt to retrieve data failed');
-			}
-		});
+	}
+	else{
+		alert('Attempt to retrieve data failed');
+	}
+});
 }
 
 $.date = function(dateObject) {
