@@ -343,6 +343,8 @@
 	jQuery(document).ready(function(){
 		$('.select2').select2();
 		fillChart();
+		setInterval(fillChart, 20000);
+		
 	});
 
 	function openSuccessGritter(title, message){
