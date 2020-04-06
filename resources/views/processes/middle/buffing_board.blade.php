@@ -130,7 +130,7 @@
 
 	jQuery(document).ready(function() {
 		fetchTable();
-		// setInterval(fetchTable, 1000);
+		setInterval(fetchTable, 1000);
 	});
 
 	var akan_bff = [];
@@ -331,7 +331,6 @@
 
 $('#buffingTableBody').append(buffingTableBody);
 
-fetchTable();
 
 }
 else{
