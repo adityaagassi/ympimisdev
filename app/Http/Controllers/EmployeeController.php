@@ -146,6 +146,13 @@ class EmployeeController extends Controller
                'title_jp' => '??'))->with('page', 'Kaizen');
      }
 
+     public function indexKaizenData()
+     {
+          return view('employees.service.kaizenData', array(
+               'title' => 'e-Kaizen Datas',
+               'title_jp' => '??'))->with('page', 'Kaizen');
+     }
+
      public function attendanceData()
      {
           $title = 'Attendance Data';
@@ -2167,7 +2174,9 @@ public function indexAbsence()
 {
      return view('employees.report.absence',array(
           'title' => 'Absence',
-          'title_jp' => '欠勤'))->with('page', 'Absence Data');
+          'title_jp' => '欠勤',
+          'absence_category' => $this->attend
+     ))->with('page', 'Absence Data');
 }
 
 public function fetchAbsence(Request $request)
@@ -2179,7 +2188,7 @@ public function fetchAbsence(Request $request)
      }
 
      $absence = db::connection('sunfish')->select("
-          select VIEW_YMPI_Emp_Attendance.emp_no, FORMAT (shiftstarttime, 'dd MMMM yyyy') as tanggal, official_name, Attend_Code, concat(Department, ' / ', [Section]) as bagian from VIEW_YMPI_Emp_Attendance
+          select VIEW_YMPI_Emp_Attendance.emp_no, FORMAT (shiftstarttime, 'dd MMMM yyyy') as tanggal, official_name, Attend_Code, concat( Division,' / ', Department, ' / ', [Section]) as bagian from VIEW_YMPI_Emp_Attendance
           join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = VIEW_YMPI_Emp_Attendance.emp_no
           where FORMAT (shiftstarttime, 'dd-MM-yyyy') = '".$tgl."' and
           Attend_Code NOT LIKE '%PRS%' AND
@@ -3194,14 +3203,14 @@ public function getKaizenReward()
 
 public function fetchAbsenceEmployee(Request $request)
 {
- $username = Auth::user()->username;
+    $username = Auth::user()->username;
 
- $att_selected = "";
+    $att_selected = "";
 
- foreach ($this->attend as $att) {
-  if ($att['attend_type'] == $request->get('attend_code')) {
-     $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
-}
+    foreach ($this->attend as $att) {
+        if ($att['attend_type'] == $request->get('attend_code')) {
+          $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
+     }
 }
 
 $att_selected = substr($att_selected, 0, -2);

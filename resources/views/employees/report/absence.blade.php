@@ -3,56 +3,56 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
-  .morecontent span {
-    display: none;
-  }
-  .morelink {
-    display: block;
-  }
+	.morecontent span {
+		display: none;
+	}
+	.morelink {
+		display: block;
+	}
 
-  thead>tr>th{
-    text-align:center;
-    overflow:hidden;
-    padding: 3px;
-  }
-  tbody>tr>td{
-    text-align:center;
-  }
-  tfoot>tr>th{
-    text-align:center;
-  }
-  th:hover {
-    overflow: visible;
-  }
-  td:hover {
-    overflow: visible;
-  }
-  table.table-bordered{
-    border:1px solid black;
-  }
-  table.table-bordered > thead > tr > th{
-    border:1px solid black;
-  }
-  table.table-bordered > tbody > tr > td{
-    border:1px solid black;
-    vertical-align: middle;
-    padding:0;
-  }
-  table.table-bordered > tfoot > tr > th{
-    border:1px solid black;
-    padding:0;
-  }
-  td{
-    overflow:hidden;
-    text-overflow: ellipsis;
-  }
-  .dataTable > thead > tr > th[class*="sort"]:after{
-    content: "" !important;
-  }
-  #queueTable.dataTable {
-    margin-top: 0px!important;
-  }
-  #loading, #error { display: none; }
+	thead>tr>th{
+		text-align:center;
+		overflow:hidden;
+		padding: 3px;
+	}
+	tbody>tr>td{
+		text-align:center;
+	}
+	tfoot>tr>th{
+		text-align:center;
+	}
+	th:hover {
+		overflow: visible;
+	}
+	td:hover {
+		overflow: visible;
+	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid black;
+		vertical-align: middle;
+		padding:0;
+	}
+	table.table-bordered > tfoot > tr > th{
+		border:1px solid black;
+		padding:0;
+	}
+	td{
+		overflow:hidden;
+		text-overflow: ellipsis;
+	}
+	.dataTable > thead > tr > th[class*="sort"]:after{
+		content: "" !important;
+	}
+	#queueTable.dataTable {
+		margin-top: 0px!important;
+	}
+	#error { display: none; }
 </style>
 @stop
 @section('header')
@@ -83,78 +83,47 @@
 						<div class="tab-pane active" id="tab_1">
 							<div id="tidak_ada_data"></div>
 							<div id="absence" style="width: 99%;"></div>
+							<div id="loading" style="font-size: 25px; text-align: center;"><i class="fa fa-spinner fa-pulse fa-lg"></i>&nbsp;Loading . . .</div>
 							<div id ="container" style ="margin: 0 auto"></div>
 							<br>
 							<table class="table table-striped">
-								<tr>
-									<th bgcolor="#605ca8" colspan="4" class="text-center" style="color: white"><i class="fa fa-bullhorn"></i> Keterangan</th>
-								</tr>
-								<tr></tr>
-								<tr>
-									<td>CT</td>
-									<td>: Cuti Tahunan</td>
-									<td>Sn</td>
-									<td>: Cuti Khusus Saudara Kandung Nikah</td>
-								</tr>
-								<tr>
-									<td>CK</td>
-									<td>: Cuti Khusus Lainnya</td>
-									<td>N</td>
-									<td>: Cuti Khusus Menikah</td>
-								</tr>
-								<tr>
-									<td>Im</td>
-									<td>: Istri Melahirkan</td>
-									<td>SD</td>
-									<td>: Sakit dengan Surat Dokter</td>
-								</tr>
-								<tr>
-									<td>Km</td>
-									<td>: Cuti Khusus Kematian</td>
-									<td>S</td>
-									<td>: Sakit Belum Ada Surat Dokter</td>
-								</tr>
-								<tr>
-									<td>K</td>
-									<td>: Cuti Pra-Lahir</td>
-									<td>I</td>
-									<td>: Ijin</td>
-								</tr>
-								<tr>
-									<td>M</td>
-									<td>: Cuti Pasca-Lahir</td>
-									<td>DL</td>
-									<td>: Dinas Luar</td>
-								</tr>
-								<tr>
-									<td>A</td>
-									<td>: Alpha</td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr bgcolor="#6cadc9">
-									<td>T</td>
-									<td>: Terlambat</td>
-									<td>PC</td>
-									<td>: Pulang Cepat</td>
-								</tr>
-							</table>
+								<thead>
+									<tr>
+										<th bgcolor="#605ca8" colspan="4" class="text-center" style="color: white"><i class="fa fa-bullhorn"></i> Keterangan</th>
+									</tr>
+								</thead>
+								<tbody>
 
+									<?php 
+									for ($i=1; $i <= count($absence_category); $i++) { 
+										if ($i % 2 == 0) { ?>
+											<td style="border-right: 1px solid #605ca8; border-left: 1px solid #605ca8;"><?= $absence_category[$i-1]['attend_code'] ?></td>
+											<td><?= $absence_category[$i-1]['attend_name'] ?></td>
+										</tr>
+										
+									<?php } else { ?>
+										<tr>
+											<td style="border-right: 1px solid #605ca8; border-left: 1px solid #605ca8;"><?= $absence_category[$i-1]['attend_code'] ?></td>
+											<td><?= $absence_category[$i-1]['attend_name'] ?></td>
+										<?php } 
+									} ?>
+								</tbody>
+							</table>
 						</div>
 						<div class="tab-pane" id="tab_2">
 							<div id = "container2" style = "width: 850px; margin: 0 auto"></div>
 						</div>
 
-						
+
 						<!-- /.tab-pane -->
 					</div>
 					<!-- /.tab-content -->
 				</div>
-				
+
 			</div>		
 		</div>
 	</div>
-	
+
 
 	<!-- start modal -->
 	<div class="modal fade" id="myModal">
@@ -174,11 +143,11 @@
 										<th>Tanggal</th>
 										<th>NIK</th>
 										<th>Nama karyawan</th>
-										<th>Section</th>
+										<th>Bagian</th>
 										<th>Absensi</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="body_detail">
 								</tbody>
 							</table>
 						</div>
@@ -210,12 +179,16 @@
 		}
 	});
 
+	var absences = [];
+
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 
 		$('#myModal').on('hidden.bs.modal', function () {
 			$('#tabel_detail').DataTable().clear();
 		});
+
+		$("#loading").hide();
 
 		drawChart();
 	});
@@ -229,23 +202,32 @@
 
 	function drawChart(){
 		var tanggal = $('#tgl').val();
+		$("#loading").show();
 		
 		var data = {
 			tgl:tanggal
 		}
 
 		$.get('{{ url("fetch/report/absence") }}', data, function(result, status, xhr) {  
-			
-			if(result.absence.length > 0){
-				$('#tidak_ada_data').append().empty();
-				var shift = [];
-				var jml = [];
-				var titleChart = result.titleChart;
+			$("#loading").hide();
 
-				for (var i = 0; i < result.absence.length; i++) {
-					shift.push(result.absence[i].shift);
-					jml.push(parseInt(result.absence[i].jml));
+			if(result.absence.length > 0){
+				absences = result.absence;
+
+				var counts = {};
+				
+				for(var i = 0; i < absences.length; i++){
+					var key = absences[i].Attend_Code;
+					if(!counts[key]) counts[key] = 0;
+					counts[key]++;
 				}
+
+				shift = Object.keys(counts);
+				jml = Object.values(counts);
+
+				$('#tidak_ada_data').append().empty();
+
+				var titleChart = result.titleChart;
 
 				Highcharts.chart('absence', {
 					chart: {
@@ -276,7 +258,7 @@
 							point: {
 								events: {
 									click: function (event) {
-										showDetail(event.point.category,result.tgl);
+										showDetail(event.point.category, result.tgl);
 									}
 								}
 							},
@@ -309,20 +291,37 @@
 
 	}
 
-	function showDetail(shift,tgl) {
-		tabel = $('#tabel_detail').DataTable();
-		tabel.destroy();
+	function showDetail(shift, tgl) {
+		$('#tabel_detail').DataTable().clear();
+		$('#tabel_detail').DataTable().destroy();
+		// console.log(shift, tgl);
 
 		var tanggal = parseInt(tgl.slice(0, 2));
 		var bulan = parseInt(tgl.slice(3, 5));
 		var tahun = tgl.slice(6, 10);
 		var bulanText = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+		$("#body_detail").empty();
+		body = "";
+
+		$.each(absences, function(index, value){
+			if (value.Attend_Code == shift){
+				body += "<tr>";
+				body += "<td>"+value.tanggal+"</td>";
+				body += "<td>"+value.emp_no+"</td>";
+				body += "<td>"+value.official_name+"</td>";
+				body += "<td>"+value.bagian+"</td>";
+				body += "<td>"+value.Attend_Code+"</td>";
+				body += "</tr>";
+			}
+		})
+
+		$("#body_detail").append(body);
 		$('#myModal').modal('show');
 
 		var table = $('#tabel_detail').DataTable({
 			'dom': 'Bfrtip',
-			'responsive': true,
+			'responsive':true,
 			'lengthMenu': [
 			[ 10, 25, 50, -1 ],
 			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
@@ -332,31 +331,6 @@
 				{
 					extend: 'pageLength',
 					className: 'btn btn-default',
-					// text: '<i class="fa fa-print"></i> Show',
-				},
-				{
-					extend: 'copy',
-					className: 'btn btn-success',
-					text: '<i class="fa fa-copy"></i> Copy',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'excel',
-					className: 'btn btn-info',
-					text: '<i class="fa fa-file-excel-o"></i> Excel',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
-				},
-				{
-					extend: 'print',
-					className: 'btn btn-warning',
-					text: '<i class="fa fa-print"></i> Print',
-					exportOptions: {
-						columns: ':not(.notexport)'
-					}
 				},
 				]
 			},
@@ -364,29 +338,12 @@
 			'lengthChange': true,
 			'searching': true,
 			'ordering': true,
-			'order': [],
 			'info': true,
 			'autoWidth': true,
 			"sPaginationType": "full_numbers",
 			"bJQueryUI": true,
 			"bAutoWidth": false,
 			"processing": true,
-			"serverSide": true,
-			"ajax": {
-				"type" : "get",
-				"url" : "{{ url("fetch/report/detail_absence") }}",
-				"data" : {
-					shift : shift,
-					tgl : tgl
-				}
-			},
-			"columns": [
-			{ "data": "tanggal" },
-			{ "data": "nik" },
-			{ "data": "nama" },
-			{ "data": "section" },
-			{ "data": "absensi"}
-			]
 		});
 
 		$('#judul_table').append().empty();
