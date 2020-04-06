@@ -13,6 +13,7 @@ use App\Meeting;
 use App\MeetingDetail;
 use App\MeetingLog;
 use App\EmployeeSync;
+use App\MeetingGroup;
 use Illuminate\Support\Facades\DB;
 
 class MeetingController extends Controller
@@ -23,8 +24,12 @@ class MeetingController extends Controller
 		$employees = EmployeeSync::orderBy('employee_id', 'asc')
 		->get();
 
+		$meeting_groups = MeetingGroup::orderBy('subject', 'asc')
+		->get();
+
 		$this->middleware('auth');
 		$this->employee = $employees;
+		$this->meeting_group = $meeting_groups;
 		$this->location = [
 			'Filling Room',
 			'Meeting Room 1',
@@ -37,9 +42,11 @@ class MeetingController extends Controller
 	}
 
 	public function indexMeeting(){
+
 		return view('meetings.index', array(
 			'locations' => $this->location,
-			'employees' => $this->employee
+			'employees' => $this->employee,
+			'meeting_groups' => $this->meeting_group
 		))->with('page', 'Meeting')->with('head', 'Meeting List');
 	}
 
@@ -288,6 +295,19 @@ class MeetingController extends Controller
 		return Response::json($response);
 	}
 
+	public function fetchMeetingGroup(Request $request){
+		$groups = MeetingGroup::where('subject', '=', $request->get('id'))
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_groups.employee_id')
+		->select('meeting_groups.employee_id', 'meeting_groups.subject', 'meeting_groups.description', 'employee_syncs.assignment', 'employee_syncs.name', 'employee_syncs.position', 'employee_syncs.department')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'groups' => $groups
+		);
+		return Response::json($response);
+	}
+
 	public function fetchMeeting(Request $request){
 		$meetings = Meeting::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meetings.organizer_id');
 
@@ -418,27 +438,43 @@ class MeetingController extends Controller
 
 	public function deleteMeeting(Request $request){
 		if($request->get('cat') == 'audience'){
-			$delete = MeetingDetail::where('meeting_details.id', '=', $request->get('id'))
-			->leftJoin('meetings', 'meetings.id', '=', 'meeting_details.meeting_id')
-			->first();
+			try{
+				$delete = MeetingDetail::where('meeting_details.id', '=', $request->get('id'))
+				->first();
 
-			if($delete == null){
+				$meeting = Meeting::where('id', '=', $delete->meeting_id)->first();
+
+				if($delete == null){
+					$response = array(
+						'status' => false,
+						'message' => "This meeting already closed"
+					);
+					return Response::json($response);
+				}
+
+				if(Auth::user()->username != $meeting->organizer_id){
+					$response = array(
+						'status' => false,
+						'message' => "You don't have permission"
+					);
+					return Response::json($response);
+				}
+				$delete->delete();
+
+				$response = array(
+					'status' => true,
+					'message' => 'Delete participant success'
+				);
+				return Response::json($response);
+			}
+			catch(\Exception $e){
 				$response = array(
 					'status' => false,
-					'message' => "This meeting already closed"
+					'message' => $e->getMessage(),
 				);
 				return Response::json($response);
 			}
 
-			if(Auth::user()->username != $delete->organizer_id){
-				$response = array(
-					'status' => false,
-					'message' => "You don't have permission"
-				);
-				return Response::json($response);
-			}
-
-			$delete->delete();
 		}
 		else if($request->get('cat') == 'meeting'){
 			$delete = Meeting::where('meetings.id', '=', $request->get('id'))
@@ -455,13 +491,15 @@ class MeetingController extends Controller
 			$delete2 = MeetingDetail::where('meeting_details.meeting_id', '=', $delete->id)
 			->delete();
 			$delete->delete();
+
+
+			$response = array(
+				'status' => true,
+				'message' => 'Delete meeting success'
+			);
+			return Response::json($response);
 		}
 
-		$response = array(
-			'status' => true,
-			'message' => 'Delete '.$request->get('cat').' success'
-		);
-		return Response::json($response);
 	}
 
 	public function fetchMeetingDetail(Request $request){
@@ -472,14 +510,14 @@ class MeetingController extends Controller
 		if($meeting->status == 'open'){
 			$meeting_details = MeetingDetail::where('meeting_details.meeting_id', '=', $request->get('id'))
 			->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_details.employee_id')
-			->select('meeting_details.id', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.status')
+			->select('meeting_details.id', 'meeting_details.meeting_id', 'meeting_details.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_details.status')
 			->orderBy('meeting_details.id', 'asc')
 			->get();
 		}
 		else{
 			$meeting_details = MeetingLog::where('meeting_logs.meeting_id', '=', $request->get('id'))
 			->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'meeting_logs.employee_id')
-			->select('meeting_logs.id', 'meeting_logs.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_logs.status')
+			->select('meeting_logs.id', 'meeting_details.meeting_id', 'meeting_logs.employee_id', 'employee_syncs.name', 'employee_syncs.department', 'meeting_logs.status')
 			->orderBy('meeting_logs.id', 'asc')
 			->get();
 		}

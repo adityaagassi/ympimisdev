@@ -277,8 +277,26 @@
 						<div class="col-xs-12" style="padding-bottom: 5px;">
 							<div class="form-group">
 								<label for="createSubject" class="col-sm-2 control-label">Title<span class="text-red">*</span></label>
-								<div class="col-sm-10">
-									<input type="text" style="width: 100%" class="form-control" id="createSubject" placeholder="Enter Title">
+								<div class="col-sm-8">
+									<div class="input-group">
+										<div class="input-group-btn">
+											<button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">Group<span class="fa fa-caret-down"></span></button>
+											<ul class="dropdown-menu">
+												@php
+												$groups = array();
+												@endphp
+												@foreach($meeting_groups as $meeting_group)
+												@if(!in_array($meeting_group->subject, $groups))
+												<li><a href="javascript:void(0)" id="{{ $meeting_group->subject }}" onclick="addGroup(id)">{{ $meeting_group->subject }}</a></li>
+												@php
+												array_push($groups, $meeting_group->subject);
+												@endphp
+												@endif
+												@endforeach
+											</ul>
+										</div>
+										<input type="text" style="width: 100%" class="form-control" id="createSubject" placeholder="Enter Title">
+									</div>
 								</div>
 							</div>
 							<div class="form-group">
@@ -289,7 +307,7 @@
 							</div>
 							<div class="form-group">
 								<label for="createLocation" class="col-sm-2 control-label">Location<span class="text-red">*</span></label>
-								<div class="col-sm-10">
+								<div class="col-sm-8">
 									<select class="form-control select4" name="createLocation" id="createLocation" data-placeholder="Select Location" style="width: 100%;">
 										<option></option>
 										@foreach($locations as $location)
@@ -531,6 +549,39 @@
 
 	var participants = [];
 
+	function addGroup(id){
+		var data = {
+			id:id
+		}
+		$.get('{{ url("fetch/meeting/group") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#createSubject').val(result.groups[0].subject);
+				$('#createDescription').val(result.groups[0].description);
+				tableData = "";
+				$.each(result.groups, function(key, value){
+					tableData += "<tr>";
+					tableData += "<tr id='rowParticipant"+value.employee_id+"'>";
+					tableData += "<td>"+value.employee_id+"</td>";
+					tableData += "<td>"+value.name+"</td>";
+					tableData += "<td>"+value.assignment+"</td>";
+					tableData += "<td>"+value.position+"</td>";
+					tableData += "<td>"+value.department+"</td>";
+					tableData += "<td>";
+					tableData += "<a href='javascript:void(0)' onclick='remParticipant(id)' id='"+value.employee_id+"' class='btn btn-danger btn-sm' style='margin-right:5px;'><i class='fa fa-trash'></i></a>";
+					tableData += "</td>";
+					tableData += "</tr>";
+					participants.push(value.employee_id);	
+				});
+
+				$('#tableParticipantBody').append(tableData);
+				openSuccessGritter('Success!', result.message);
+			}
+			else{
+				openErrorGritter('Error!', result.message);
+			}
+		});
+	}
+
 	function addParticipant(id){
 		$('#loadingscreen').show();
 		var assignment = $('#addAssignment').val();
@@ -550,7 +601,7 @@
 				$("#addPosition").prop('selectedIndex', 0).change();
 				$("#addDepartment").prop('selectedIndex', 0).change();
 				$("#addEmployee").prop('selectedIndex', 0).change();
-				
+
 				tableData = "";
 				$.each(result.participants, function(key, value) {
 					tableData += "<tr>";
