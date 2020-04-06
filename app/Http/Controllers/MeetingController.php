@@ -31,6 +31,7 @@ class MeetingController extends Controller
 		$this->employee = $employees;
 		$this->meeting_group = $meeting_groups;
 		$this->location = [
+			'Guest Room',
 			'Filling Room',
 			'Meeting Room 1',
 			'Meeting Room 2',
