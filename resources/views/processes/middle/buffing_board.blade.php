@@ -130,7 +130,7 @@
 
 	jQuery(document).ready(function() {
 		fetchTable();
-		setInterval(fetchTable, 1000);
+		// setInterval(fetchTable, 1000);
 	});
 
 	var akan_bff = [];
@@ -327,14 +327,12 @@
 							employee_id: value.employee_id
 						}
 
-						// if (value.employee_id && (value.dev_akan_detected == 0 && value.dev_sedang_detected == 0)) {
-						// 	$.get('{{ url("log/middle/buffing/ins") }}', data2);
-						// } else if (value.employee_id && value.dev_sedang_detected == 1) {
-						// 	$.get('{{ url("log/middle/buffing/up") }}', data2);
-						// }
 					});
 
 $('#buffingTableBody').append(buffingTableBody);
+
+fetchTable();
+
 }
 else{
 	alert('Attempt to retrieve data failed.');

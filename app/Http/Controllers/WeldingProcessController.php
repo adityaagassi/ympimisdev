@@ -845,34 +845,27 @@ class WeldingProcessController extends Controller
 	}
 
 	public function fetchCurrentwelding(){
-		$current = db::connection('welding_controller')->select("SELECT mesin.mesin_id, mesin.ws_id, ws.ws_name, mesin.mesin_nama, datas.operator_nik, e.`name`, datas.part_type, datas.material_number, m.model, m.`key`, datas.sedang, ceil(s.time * v.lot_completion / 60) as std from
-			(SELECT * from m_mesin m
-			where m.flow_id = 1) as mesin
-			left join
-			(SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'PHS' as part_type, op.operator_nik, phs.phs_code as material_number, d.order_sedang_start_date as sedang FROM m_mesin m
-			left join t_order o on o.order_id = m.order_id_sedang
-			left join t_order_detail d on d.order_id = m.order_id_sedang
-			left join m_operator op on op.operator_id = m.operator_id
-			left join m_phs phs on o.part_id = phs.phs_id
-			where m.flow_id = 1
-			and d.flow_id = 1
-			and o.part_type = 1
-			union
-			SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'HSA' as part_type, op.operator_nik, hsa.hsa_kito_code as material_number, d.order_sedang_start_date FROM m_mesin m
-			left join t_order o on o.order_id = m.order_id_sedang
-			left join t_order_detail d on d.order_id = m.order_id_sedang
-			left join m_operator op on op.operator_id = m.operator_id
-			left join m_hsa hsa on o.part_id = hsa.hsa_id
-			where m.flow_id = 1
-			and d.flow_id = 1
-			and o.part_type = 2) as datas
-			on mesin.mesin_id = datas.mesin_id
-			left join m_ws ws on ws.ws_id = mesin.ws_id
-			left join ympimis.materials m on m.material_number = datas.material_number
-			left join ympimis.employee_syncs e on e.employee_id = datas.operator_nik
-			left join ympimis.standard_times s on s.material_number = datas.material_number
-			left join ympimis.material_volumes v on v.material_number = datas.material_number
-			order by mesin.ws_id asc");
+		$current = db::connection('welding_controller')->select("SELECT mesin.mesin_id, mesin.ws_id, ws.ws_name, mesin.mesin_nama, mesin.operator_nik, e.`name`, datas.part_type, datas.material_number, m.model,m.`key`, datas.sedang, ceil( s.time * v.lot_completion / 60 ) AS std FROM
+			(SELECT * FROM m_mesin m WHERE m.mesin_nama like '%Sol#%') AS mesin
+			LEFT JOIN
+			(SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'PHS' AS part_type, op.operator_nik, m.order_id_sedang_gmc AS material_number, p.proses_sedang_start_date AS sedang FROM m_mesin m
+			LEFT JOIN t_proses p ON p.proses_id = m.order_id_sedang
+			LEFT JOIN m_operator op ON op.operator_id = m.operator_id
+			WHERE	m.flow_id = 1
+			AND p.part_type = 1
+			UNION
+			SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'HSA' AS part_type, op.operator_nik, m.order_id_sedang_gmc AS material_number, p.proses_sedang_start_date AS sedang FROM m_mesin m
+			LEFT JOIN t_proses p ON p.proses_id = m.order_id_sedang
+			LEFT JOIN m_operator op ON op.operator_id = m.operator_id
+			WHERE m.flow_id = 1 
+			AND p.part_type = 2) AS datas
+			ON mesin.mesin_id = datas.mesin_id
+			LEFT JOIN m_ws ws ON ws.ws_id = mesin.ws_id
+			LEFT JOIN ympimis.materials m ON m.material_number = datas.material_number
+			LEFT JOIN ympimis.employee_syncs e ON e.employee_id = mesin.operator_nik
+			LEFT JOIN ympimis.standard_times s ON s.material_number = datas.material_number
+			LEFT JOIN ympimis.material_volumes v ON v.material_number = datas.material_number 
+			ORDER BY mesin.ws_id ASC");
 
 		$response = array(
 			'status' => true,
@@ -2254,34 +2247,28 @@ class WeldingProcessController extends Controller
 			$date = date('Y-m-d');
 		}
 
-		$target = db::connection('welding_controller')->select("SELECT op.`group`, datas.operator_nik, e.`name`, datas.part_type, datas.material_number, m.model, m.`key`, datas.sedang, ceil(s.time * v.lot_completion / 60) as std from
-			(select g.employee_id, e.`name`, g.`group` from ympimis.employee_groups g
-			left join ympimis.employees e on e.employee_id = g.employee_id
-			where g.location = 'soldering') op
-			left join
-			(SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'PHS' as part_type, op.operator_nik, phs.phs_code as material_number, d.order_sedang_start_date as sedang FROM m_mesin m
-			left join t_order o on o.order_id = m.order_id_sedang
-			left join t_order_detail d on d.order_id = m.order_id_sedang
-			left join m_operator op on op.operator_id = m.operator_id
-			left join m_phs phs on o.part_id = phs.phs_id
-			where m.flow_id = 1
-			and d.flow_id = 1
-			and o.part_type = 1
-			union
-			SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'HSA' as part_type, op.operator_nik, hsa.hsa_kito_code as material_number, d.order_sedang_start_date FROM m_mesin m
-			left join t_order o on o.order_id = m.order_id_sedang
-			left join t_order_detail d on d.order_id = m.order_id_sedang
-			left join m_operator op on op.operator_id = m.operator_id
-			left join m_hsa hsa on o.part_id = hsa.hsa_id
-			where m.flow_id = 1
-			and d.flow_id = 1
-			and o.part_type = 2) as datas
-			on op.employee_id = datas.operator_nik
-			left join ympimis.materials m on m.material_number = datas.material_number
-			left join ympimis.employee_syncs e on e.employee_id = datas.operator_nik
-			left join ympimis.standard_times s on s.material_number = datas.material_number
-			left join ympimis.material_volumes v on v.material_number = datas.material_number
-			order by op.`group`, op.`name` asc");
+		$target = db::connection('welding_controller')->select("SELECT op.`group`, datas.operator_nik, e.`name`, datas.part_type, datas.material_number, m.model, m.`key`,	datas.sedang, ceil( s.time * v.lot_completion / 60 ) AS std FROM
+			(SELECT g.employee_id, e.`name`, g.`group` FROM ympimis.employee_groups g
+			LEFT JOIN ympimis.employees e ON e.employee_id = g.employee_id
+			WHERE g.location = 'soldering' ) op
+			LEFT JOIN
+			(SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'PHS' AS part_type, op.operator_nik, m.order_id_sedang_gmc AS material_number, p.proses_sedang_start_date AS sedang FROM m_mesin m
+			LEFT JOIN t_proses p ON p.proses_id = m.order_id_sedang
+			LEFT JOIN m_operator op ON op.operator_id = m.operator_id
+			WHERE	m.flow_id = 1
+			AND p.part_type = 1
+			UNION
+			SELECT m.mesin_id, m.ws_id, m.mesin_nama, 'HSA' AS part_type, op.operator_nik, m.order_id_sedang_gmc AS material_number, p.proses_sedang_start_date AS sedang FROM m_mesin m
+			LEFT JOIN t_proses p ON p.proses_id = m.order_id_sedang
+			LEFT JOIN m_operator op ON op.operator_id = m.operator_id
+			WHERE m.flow_id = 1 
+			AND p.part_type = 2) AS datas
+			ON op.employee_id = datas.operator_nik
+			LEFT JOIN ympimis.materials m ON m.material_number = datas.material_number
+			LEFT JOIN ympimis.employee_syncs e ON e.employee_id = datas.operator_nik
+			LEFT JOIN ympimis.standard_times s ON s.material_number = datas.material_number
+			LEFT JOIN ympimis.material_volumes v ON v.material_number = datas.material_number
+			ORDER BY op.`group`, op.`name` ASC");
 
 		$response = array(
 			'status' => true,

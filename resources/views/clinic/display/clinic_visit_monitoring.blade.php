@@ -204,7 +204,7 @@
 		fillVisitor();
 		setTime();
 
-		setInterval(fillVisitor, 10000);
+		setInterval(fillVisitor, 5000);
 		setInterval(setTime, 1000);
 
 	});
