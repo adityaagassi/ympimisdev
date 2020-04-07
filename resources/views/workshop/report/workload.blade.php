@@ -56,6 +56,11 @@
 		text-overflow: ellipsis;
 	}
 
+	.urgent {
+		background-color:"red"; 
+		color:"white";
+	}
+
 </style>
 @endsection
 @section('header')
@@ -922,18 +927,18 @@ function showOperatorDetail(name) {
 			var body = '';
 			for (var i = 0; i < result.detail.length; i++) {
 				if (result.detail[i].priority == 'Urgent') {
-					style = "style='background-color:\"red\"; color:\"white\"'";
+					style = "class = 'urgent'";
 				} else {
 					style = "";
 				}
 
-				body += '<tr '+style+'>';
-				body += '<td>'+ result.detail[i].name +'</td>';
-				body += '<td>'+ result.detail[i].order_no +'</td>';
-				body += '<td>'+ result.detail[i].target_date +'</td>';
-				body += '<td>'+ result.detail[i].tag_number +'</td>';
-				body += '<td style="text-transform: capitalize;">'+ result.detail[i].item_name +'</td>';
-				body += '<td>'+ result.detail[i].workload +'</td>';
+				body += '<tr>';
+				body += '<td class="urgent">'+ result.detail[i].name +'</td>';
+				body += '<td class="urgent">'+ result.detail[i].order_no +'</td>';
+				body += '<td class="urgent">'+ result.detail[i].target_date +'</td>';
+				body += '<td class="urgent">'+ result.detail[i].tag_number +'</td>';
+				body += '<td class="urgent" style="text-transform: capitalize;">'+ result.detail[i].item_name +'</td>';
+				body += '<td class="urgent">'+ result.detail[i].workload +'</td>';
 				body += '</tr>';
 			}
 
