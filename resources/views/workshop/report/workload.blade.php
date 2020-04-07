@@ -933,12 +933,12 @@ function showOperatorDetail(name) {
 				}
 
 				body += '<tr>';
-				body += '<td class="urgent">'+ result.detail[i].name +'</td>';
-				body += '<td class="urgent">'+ result.detail[i].order_no +'</td>';
-				body += '<td class="urgent">'+ result.detail[i].target_date +'</td>';
-				body += '<td class="urgent">'+ result.detail[i].tag_number +'</td>';
-				body += '<td class="urgent" style="text-transform: capitalize;">'+ result.detail[i].item_name +'</td>';
-				body += '<td class="urgent">'+ result.detail[i].workload +'</td>';
+				body += '<td '+style+'>'+ result.detail[i].name +'</td>';
+				body += '<td '+style+'>'+ result.detail[i].order_no +'</td>';
+				body += '<td '+style+'>'+ result.detail[i].target_date +'</td>';
+				body += '<td '+style+'>'+ result.detail[i].tag_number +'</td>';
+				body += '<td '+style+' style="text-transform: capitalize;">'+ result.detail[i].item_name +'</td>';
+				body += '<td '+style+'>'+ result.detail[i].workload +'</td>';
 				body += '</tr>';
 			}
 
