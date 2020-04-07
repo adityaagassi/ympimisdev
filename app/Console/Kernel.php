@@ -35,6 +35,7 @@ class Kernel extends ConsoleKernel
         Commands\EmailVisitorConfirmation::class,
         // Commands\SendMachineNotification::class,
         Commands\EmailHrq::class,
+        Commands\RoomTemperatureLog::class,
     ];
 
     /**
@@ -80,9 +81,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('sync:sunfish')->weekdays()->dailyAt('03:01');
         $schedule->command('email:kaizen')->weekdays()->dailyAt('08:45');
         $schedule->command('email:hrq')->weekdays()->dailyAt('07:45');
+        $schedule->command('log:room_temperature')->everyThirtyMinutes();
         // $schedule->command('notif:machine')->dailyAt('07:00');
         // $schedule->command('email:kaizen')->everyMinute();
-        // $schedule->command('employee:history')->monthlyOn(date('t'), '20:01');
+        $schedule->command('employee:history')->monthlyOn(date('t'), '20:01');
 
         // $schedule->command('email:user_document')->weekdays()->dailyAt('07:00');
     }

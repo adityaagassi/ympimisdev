@@ -975,7 +975,7 @@
 						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir</td>";
 					}
 					if(value.status == 2){
-						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir Tanpa Undangan</td>";
+						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir</td>";
 					}
 					tableData += "<td><button class='btn btn-danger btn-sm' id='"+value.id+"' onclick='deleteAudience(id)'><i class='fa fa-trash'></i></button></td>";
 					tableData += "</tr>";

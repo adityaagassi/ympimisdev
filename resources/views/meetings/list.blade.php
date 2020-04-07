@@ -292,7 +292,7 @@
 						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir</td>";
 					}
 					if(value.status == 2){
-						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir Tanpa Undangan</td>";
+						tableData += "<td style='background-color: RGB(204,255,255);'>"+value.status+" - Hadir</td>";
 					}
 					if(value.attend_time == null){
 						tableData += "<td style='font-size: 18px;'>-</td>";
