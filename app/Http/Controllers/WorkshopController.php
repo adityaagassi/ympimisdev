@@ -2067,7 +2067,7 @@ class WorkshopController extends Controller{
 		$excels = WorkshopLog::leftJoin("employee_syncs", "workshop_logs.operator_id" ,"=", "employee_syncs.employee_id")
 		->leftJoin("workshop_processes", "workshop_logs.machine_code", "=", "workshop_processes.machine_code")
 		->where(db::raw("DATE_FORMAT(started_at,'%Y-%m')"), "=", $mon)
-		->whereIn("workshop_logs.machine_code", array('M_26','M_27','M_28','M_8','M_9','M_10'))
+		->whereIn("workshop_logs.machine_code", array('M_26','M_27','M_28','M_8','M_9','M_10','M_36'))
 		->select(db::raw("GROUP_CONCAT(DISTINCT process_name) as ket"), "employee_id", "name", db::raw("CEIL(SUM(TIME_TO_SEC(TIMEDIFF(workshop_logs.created_at,started_at))) / 60 / 450) as hari"))
 		->groupBy("name", "employee_id")
 		->get();
