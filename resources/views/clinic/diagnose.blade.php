@@ -489,7 +489,7 @@
 				var tableData = "";
 				var count = 0;
 				for (var i = 0; i < result.visitor.length; i++) {
-					if(result.visitor[i].employee_id.includes('PI')){
+					// if(result.visitor[i].employee_id.includes('PI')){
 						tableData += '<tr>';
 						tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ ++count +'</td>';
 						tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ result.visitor[i].in_time +'</td>';
@@ -497,7 +497,7 @@
 						tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')">'+ (result.visitor[i].name || 'Not Found') +'</td>';
 						tableData += '<td onclick="fillVisitorIdentity(\''+result.visitor[i].idx+'\')" style="text-align: center;">'+ (result.visitor[i].section || 'Not Found') +'</td>';
 						tableData += '</tr>';
-					}
+					// }
 					
 				}
 				$('#tableBodyList').append(tableData);
