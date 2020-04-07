@@ -57,8 +57,8 @@
 	}
 
 	.urgent {
-		background-color:"red"; 
-		color:"white";
+		background-color : #f56954; 
+		color : white;
 	}
 
 </style>
