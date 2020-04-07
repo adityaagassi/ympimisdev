@@ -1420,18 +1420,18 @@ class WorkshopController extends Controller{
 	public function fetchWorkloadOperatorDetail(Request $request){
 		$name = $request->get('name');
 
-		$detail = db::select('select concat(SPLIT_STRING(emp.`name`, " ", 1)," ",SPLIT_STRING(emp.`name`, " ", 2)) as `name`, workload.order_no, wjo.target_date, tag.remark as tag_number, wjo.item_name, round((workload.workload/60), 0) as workload from			
-			(select workload.order_no, workload.operator, sum(workload.workload) workload from
-			(select flow.order_no, flow.operator, sum(std_time) as workload from workshop_flow_processes flow
+		$detail = db::select('select concat(SPLIT_STRING(emp.`name`, " ", 1)," ",SPLIT_STRING(emp.`name`, " ", 2)) as `name`, workload.order_no, wjo.target_date, tag.remark as tag_number, wjo.item_name, round((workload.workload/60), 0) as workload, workload.priority from			
+			(select workload.order_no, workload.operator, sum(workload.workload) workload, priority from
+			(select flow.order_no, flow.operator, sum(std_time) as workload, wjo.priority from workshop_flow_processes flow
 			left join workshop_job_orders wjo on wjo.order_no = flow.order_no
 			where wjo.remark < 4
-			group by flow.order_no, flow.operator
+			group by flow.order_no, flow.operator, priority
 			union all
-			select log.order_no, log.operator_id as operator, -sum(TIMESTAMPDIFF(second,log.started_at,log.created_at)) as workload from workshop_logs log
+			select log.order_no, log.operator_id as operator, -sum(TIMESTAMPDIFF(second,log.started_at,log.created_at)) as workload, wjo.priority from workshop_logs log
 			left join workshop_job_orders wjo on wjo.order_no = log.order_no
 			where wjo.remark < 4
-			group by log.order_no, log.operator_id) as workload
-			group by workload.order_no, workload.operator
+			group by log.order_no, log.operator_id, priority) as workload
+			group by workload.order_no, workload.operator, priority
 			having workload > 0) workload
 			left join employee_syncs emp
 			on emp.employee_id = workload.operator

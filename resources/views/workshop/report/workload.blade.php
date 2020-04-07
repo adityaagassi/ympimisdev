@@ -921,7 +921,13 @@ function showOperatorDetail(name) {
 
 			var body = '';
 			for (var i = 0; i < result.detail.length; i++) {
-				body += '<tr>';
+				if (result.detail[i].priority == 'Urgent') {
+					style = "style='background-color:\"red\"; color:\"white\"'";
+				} else {
+					style = "";
+				}
+
+				body += '<tr '+style+'>';
 				body += '<td>'+ result.detail[i].name +'</td>';
 				body += '<td>'+ result.detail[i].order_no +'</td>';
 				body += '<td>'+ result.detail[i].target_date +'</td>';
