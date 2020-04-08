@@ -43,7 +43,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		User Document <span class="text-purple">????</span>
+		User Document <span class="text-purple"> ユーザの在留資格等に関する書類 </span>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -617,6 +617,9 @@
 		$.post('{{ url("fetch/user_document_renew") }}', data, function(result, status, xhr){
 			if(result.status){
 				$("#renew_modal").modal('hide');
+
+				$("#renew_valid_from").val('');
+				$("#renew_valid_to").val('');
 
 				$('#docTable').DataTable().ajax.reload();
 				openSuccessGritter('Success','Renew Document Success');
