@@ -662,7 +662,7 @@
   <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Check Extinguisher Tools</span></a>
 
   @if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
-    <a href="{{ url("/index/maintenance/apar/expire") }}"><i class="fa fa-shield"></i> <span>Quarantine Extinguisher Tools</span></a>
+    <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-shield"></i> <span>Quarantine Extinguisher Tools</span></a>
   </li>
 
 </ul>
@@ -697,7 +697,7 @@
 
 @if(isset($head) && $head == "APD")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
-   <i class="fa fa-user-md"></i> <span>APD</span>
+   <i class="fa fa-list-alt"></i> <span>APD</span>
    <span class="pull-right-container">
     <i class="fa fa-angle-left pull-right"></i>
   </span>
@@ -705,7 +705,7 @@
 <ul class="treeview-menu">
 
   @if(isset($page) && $page == "APD")<li class="active">@else<li>@endif
-    <a href="{{ url("index/apd") }}"><i class="fa fa-minus-square"></i> <span>APD </span></a>
+    <a href="{{ url("index/apd") }}"><i class="fa fa-user-md"></i> <span>APD </span></a>
   </li>
 
 </ul>

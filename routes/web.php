@@ -31,7 +31,7 @@ Route::get('/trial', function () {
 Route::get('/trial2', function () {
 	return view('trial2');
 });
-Route::get('/fetch/trial2', 'TrialController@temp');
+Route::get('/fetch/trial2', 'PlcController@fetchTemperature');
 Route::get('print/trial', 'TrialController@stocktaking');
 Route::get('trial_machine', 'TrialController@fetch_machine');
 
@@ -115,6 +115,10 @@ Route::get('index/temperature/body_temp_monitoring', 'TemperatureController@inde
 Route::get('fetch/temperature/fetch_body_temp_monitoring', 'TemperatureController@fetchBodyTempMonitoring');
 
 //END VISITOR TEMPERATURE
+
+// ROOM Temperature
+Route::get('index/temperature/room_temperature', 'TemperatureController@RoomTemperature');
+Route::get('fetch/temperature/room_temperature', 'TemperatureController@fetchRoomTemperature');
 
 //----- Start mesin injeksi
 Route::get('scan/injeksi/operator', 'InjectionsController@scanInjectionOperator');
@@ -1224,6 +1228,7 @@ Route::group(['nav' => 'S20', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S21', 'middleware' => 'permission'], function(){
 	Route::get('index/kaizen', 'EmployeeController@indexKaizen');
 	Route::get('fetch/kaizen', 'EmployeeController@fetchDataKaizen');
+	Route::get('fetch/kaizen/data', 'EmployeeController@fetchDataKaizenAll');
 	Route::get('fetch/kaizen/applied', 'EmployeeController@fetchAppliedKaizen');
 	Route::get('index/kaizen/detail/{id}/{ctg}', 'EmployeeController@indexKaizenAssessment');
 	Route::post('input/kaizen/detail/note', 'EmployeeController@inputKaizenDetailNote');
@@ -2149,6 +2154,13 @@ Route::get('index/apd_check/print_apd_check_email/{id}/{month}','ApdCheckControl
 Route::post('index/apd_check/sendemail/{id}','ApdCheckController@sendemail');
 Route::post('index/apd_check/approval/{id}/{month}','ApdCheckController@approval');
 
+
+//APD
+Route::get('index/apd', 'APDController@indexAPD');
+Route::get('fetch/apd', 'APDController@fetchAPD');
+Route::get('fetch/apd_detail', 'APDController@fetchAPDDetail');
+Route::post('input/apd', 'APDController@inputAPD');
+
 //WEEKLY REPORT
 Route::get('index/weekly_report/index/{id}', 'WeeklyActivityReportController@index');
 Route::post('index/weekly_report/filter_weekly_report/{id}', 'WeeklyActivityReportController@filter_weekly_report');
@@ -2198,9 +2210,12 @@ Route::post('index/recorder/update/{id}','RecorderProcessController@update');
 
 //MACHINE PARAMETER
 Route::get('index/machine_parameter','RecorderProcessController@indexMachineParameter');
+Route::post('index/filter_machine_parameter','RecorderProcessController@filterMachineParameter');
 Route::get('index/fetch_mesin_parameter', 'RecorderProcessController@fetch_mesin_parameter');
 Route::post('index/push_block_recorder/create_parameter', 'RecorderProcessController@create_parameter');
 Route::get('index/push_block_recorder/get_parameter','RecorderProcessController@get_parameter')->name('recorder.get_parameter');
+Route::post('index/push_block_recorder/update_parameter/{id}', 'RecorderProcessController@update_parameter');
+Route::get('index/push_block_recorder/delete_parameter/{id}', 'RecorderProcessController@delete_parameter');
 
 //RECORDER TORQUE CHECK
 Route::get('index/recorder_process_torque/{remark}', 'RecorderProcessController@index_torque');
@@ -2396,6 +2411,7 @@ Route::get('index/audit_iso/get_nomor_depan', 'CparController@audit_get_nomor');
 Route::get('index/audit_iso/detail/{id}', 'CparController@audit_detail');
 Route::post('post/audit_iso/detail', 'CparController@audit_post_detail');
 Route::get('index/audit_iso/verifikasistd/{id}', 'CparController@verifikasistd');
+Route::post('index/audit_iso/approval/{id}', 'CparController@audit_approval');
 
 
 //CUBEACON WAREHOUSE
@@ -2531,10 +2547,11 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
 	Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
 	Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
+	Route::get('fetch/maintenance/apar/list/check', 'MaintenanceController@fetchAparCheck2');
 
 	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
-	Route::post('post/maintenance/apar/replace', 'MaintenanceController@createTool');
+	Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
 });
 
 //ASSEMBLIES
@@ -2557,6 +2574,10 @@ Route::get('/trainingroom2', function () {
 });
 Route::get('/trainingroom3', function () {
 	return view('rooms.trainingroom3');
+});
+
+Route::get('/welcome_trial', function () {
+	return view('trials.welcome_trial');
 });
 
 View::composer('*', function ($view) {
