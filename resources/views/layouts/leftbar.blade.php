@@ -658,14 +658,14 @@
 @if(isset($page) && $page == "APAR")<li class="active">@else<li>@endif
   <a href="{{ url("/index/maintenance/aparTool ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Fire Extinguisher</span></a>
 
-@if(isset($page) && $page == "APAR Check")<li class="active">@else<li>@endif
-  <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Check Extinguisher Tools</span></a>
+  @if(isset($page) && $page == "APAR Check")<li class="active">@else<li>@endif
+    <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Check Extinguisher Tools</span></a>
 
-  @if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
-    <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-shield"></i> <span>Quarantine Extinguisher Tools</span></a>
-  </li>
+    @if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
+      <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-shield"></i> <span>Quarantine Extinguisher Tools</span></a>
+    </li>
 
-</ul>
+  </ul>
 </li>
 @endif
 
@@ -690,6 +690,11 @@
   @if(isset($page) && $page == "Medicines")<li class="active">@else<li>@endif
     <a href="{{ url("index/medicines") }}"><i class="fa fa-medkit"></i> <span>Medicines</span></a>
   </li>
+
+  @if(isset($page) && $page == "Surgical Mask Logs")<li class="active">@else<li>@endif
+    <a href="{{ url("index/mask_visit_log") }}"><i class="fa fa-list-ul"></i> <span>Surgical Mask Logs</span></a>
+  </li>
+  
 </ul>
 </li>
 @endif

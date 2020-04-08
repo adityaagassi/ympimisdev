@@ -139,6 +139,16 @@ class ClinicController extends Controller{
 
 	}
 
+	public function indexMaskLog(){
+		$title = "Surgical Mask Log";
+		$title_jp = '??';
+
+		return view('clinic.mask_log', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', $title)->with('head','Clinic');
+	}
+
 	public function indexClinicDisease(){
 		$title = "Clinic Diagnostic Data";
 		$title_jp = 'クリニック見立てデータ';
@@ -532,6 +542,26 @@ class ClinicController extends Controller{
 			'masker' => $masker,
 			'datefrom' => date_format(date_create($datefrom), "d M Y"),
 			'dateto' => date_format(date_create($dateto), "d M Y")
+		);
+		return Response::json($response);
+	}
+
+	public function fetchMaskLog(Request $request){
+		$datefrom = date('Y-m-d', strtotime($request->get('visitFrom')));
+		$dateto = date('Y-m-d', strtotime($request->get('visitTo')));
+
+		$logs =  db::select("SELECT DISTINCT m.id, p.visited_at, p.employee_id, e.`name`, p.paramedic, p.purpose, m.quantity FROM clinic_medicine_logs m
+			LEFT JOIN clinic_patient_details p ON p.patient_list_id = m.clinic_patient_detail
+			LEFT JOIN employee_syncs e ON e.employee_id = p.employee_id 
+			WHERE m.medicine_name = 'Surgical Masker'
+			AND m.`status` = 'out' 
+			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') >= '".$datefrom."'
+			AND DATE_FORMAT(m.created_at, '%Y-%m-%d') <= '".$dateto."'
+			ORDER BY p.visited_at ASC");
+
+		$response = array(
+			'status' => true,
+			'logs' => $logs,
 		);
 		return Response::json($response);
 	}

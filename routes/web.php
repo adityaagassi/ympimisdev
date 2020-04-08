@@ -1271,11 +1271,16 @@ Route::group(['nav' => 'S23', 'middleware' => 'permission'], function(){
 	Route::post('edit/diagnose', 'ClinicController@editDiagnose');
 	Route::get('fetch/display/clinic_disease_detail', 'ClinicController@fetchDiseaseDetail');
 	Route::get('fetch/clinic_visit_detail', 'ClinicController@fetchClinicVisitDetail');
+	
+	Route::get('index/mask_visit_log', 'ClinicController@indexMaskLog');
+	Route::get('fetch/mask_visit_log', 'ClinicController@fetchMaskLog');
+	Route::get('fetch/clinic_masker_detail', 'ClinicController@fetchClinicMaskerDetail');
 
 
 	Route::get('index/medicines', 'ClinicController@indexMedicines');
 	Route::get('fetch/medicines', 'ClinicController@fetchMedicines');
 	Route::post('edit/medicine_stock', 'ClinicController@editMedicineStock');
+
 
 
 
@@ -1287,9 +1292,8 @@ Route::get('fetch/display_patient', 'ClinicController@fetchPatient');
 Route::get('fetch/daily_clinic_visit', 'ClinicController@fetchDailyClinicVisit');
 Route::get('fetch/clinic_visit', 'ClinicController@fetchClinicVisit');
 Route::get('fetch/display/clinic_disease', 'ClinicController@fetchDisease');
-
 Route::get('fetch/clinic_masker', 'ClinicController@fetchClinicMasker');
-Route::get('fetch/clinic_masker_detail', 'ClinicController@fetchClinicMaskerDetail');
+
 
 
 //END CLINIC
