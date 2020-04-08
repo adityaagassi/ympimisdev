@@ -273,7 +273,7 @@
 								<span style="font-weight: bold; font-size: 16px;">Jumlah:<span class="text-red">*</span></span>
 							</div>
 							<div class="col-xs-4">
-								<input class="form-control" type="number" name="quantity" id="quantity" placeholder="Jumlah Barang" style="width: 100%; height: 33px; font-size: 15px;" required>
+								<input class="form-control" type="number" name="quantity" id="quantity" placeholder="Jumlah Barang" style="width: 100%; height: 33px; font-size: 15px;" min="0" required>
 							</div>
 						</div>
 						<div class="col-xs-12" style="padding-bottom: 1%;">
@@ -574,10 +574,13 @@
 		fetchTable('all');
 	});
 
-
-	// $('#createModal').on('shown.bs.modal', function () {
-	// 	$('.select2').select2();
-	// });
+	$("#quantity").change(function(){
+		var val = $(this).val();
+		if(val.includes('-')) {
+			val = val.replace("-", "");
+			$(this).val(val);
+		}
+	}) 
 
 	$(function () {
 		$('.select2').select2()
