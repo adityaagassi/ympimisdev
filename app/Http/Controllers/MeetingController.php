@@ -38,7 +38,11 @@ class MeetingController extends Controller
 			'Meeting Room 3',
 			'Training Room 1',
 			'Training Room 2',
-			'Training Room 3'
+			'Training Room 3',
+			'Meeting Room Leader WSTA',
+			'Meeting Area M-Pro',
+			'Partition Room PE M-Pro',
+			'QA Incoming Room'
 		];
 	}
 
