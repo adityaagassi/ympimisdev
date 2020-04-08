@@ -75,7 +75,9 @@ class TransactionController extends Controller
 					'gl_account' => "",
 					'reason_code' => "",
 					'user_id' => "1",
-					'active' => "1"
+					'active' => "1",
+					'created_at' => date("Y-m-d H:i:s"),
+					'updated_at' => date("Y-m-d H:i:s")
 				]);
 
 				$return_completion = db::connection('mysql2')->table('histories')->insert([
@@ -194,6 +196,23 @@ class TransactionController extends Controller
 		->distinct()
 		->get();
 
+		if($lists == null){
+			$lists = db::table('return_additionals')->select('material_number', 'description', 'issue_location', 'receive_location')
+			->where('receive_location', '=', $request->get('loc'))
+			->orderBy('issue_location', 'asc')
+			->orderBy('material_number', 'asc')
+			->distinct()
+			->get();
+		}
+
+		if($lists == null){
+			$response = array(
+				'status' => false,
+				'message' => 'Lokasi terpilih tidak memiliki list material'
+			);
+			return Response::json($response);
+		}
+
 		$response = array(
 			'status' => true,
 			'lists' => $lists,
@@ -240,7 +259,30 @@ class TransactionController extends Controller
 
 	public function returnSlip($id, $material, $description, $issue, $receive, $quantity, $created_by){
 		$user = User::where('id', '=', $created_by)->first();
-		$printer_name = 'TESTPRINTER';
+
+		if(Auth::user()->role == 'MIS' || Auth::user()->role == 'S'){
+			$printer_name = 'MIS';
+		}
+		else{
+			if($receive == 'CL91'){
+				$printer_name = 'FLO Printer 102';
+			}
+			if($receive == 'SX91'){
+				$printer_name = 'FLO Printer 103';
+			}
+			if($receive == 'FL91'){
+				$printer_name = 'FLO Printer 101';			
+			}
+			if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
+				$printer_name = 'Middle-Printer';			
+			}
+			if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
+				$printer_name = 'Welding-Printer';			
+			}
+			else{
+				$printer_name = 'MIS';
+			}
+		}
 
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
@@ -250,16 +292,16 @@ class TransactionController extends Controller
 		$printer->setReverseColors(true);
 		$printer->setTextSize(3, 3);
 		$printer->text(" SLIP RETURN "."\n");
-		$printer->feed(1);
+		// $printer->feed(1);
 		$printer->qrCode('RE'.$id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-		$printer->feed(1);
+		// $printer->feed(1);
 		$printer->initialize();
 		$printer->setEmphasis(true);
 		$printer->setTextSize(4, 2);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->text($material."\n");
 		$printer->text($receive." -> ".$issue."\n");
-		$printer->feed(1);
+		// $printer->feed(1);
 		$printer->initialize();
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->setEmphasis(true);
@@ -273,10 +315,10 @@ class TransactionController extends Controller
 		$printer->initialize();
 		$printer->setEmphasis(true);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		$printer->textRaw("\xda".str_repeat("\xc4", 46)."\xbf\n");
-		$printer->textRaw($user->name."\n");
-		$printer->textRaw("\xc0".str_repeat("\xc4", 46)."\xd9\n");
-		$printer->feed(2);
+		// $printer->textRaw("\xda".str_repeat("\xc4", 46)."\xbf\n");
+		$printer->textRaw($user->name." (".date("d-M-Y H:i:s").")\n");
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 46)."\xd9\n");
+		$printer->feed(1);
 		$printer->cut();
 		$printer->close();
 	}
