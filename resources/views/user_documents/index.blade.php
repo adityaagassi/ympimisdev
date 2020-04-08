@@ -113,8 +113,8 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="">Category</th>
-										<th style="">No. Document</th>
 										<th style="">Employee ID</th>
+										<th style="">No. Document</th>
 										<th style="width: 20%">Name</th>
 										<th style="">Valid From</th>
 										<th style="">Valid To</th>
@@ -157,15 +157,20 @@
 
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Document Number<span class="text-red">*</span></label>
-									<div class="col-sm-5" align="left">
+									<div class="col-sm-7" align="left">
 										<input type="text" class="form-control" id="create_document_number" placeholder="Document Number" required>
 									</div>
 								</div>
 
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Employee ID<span class="text-red">*</span></label>
-									<div class="col-sm-5" align="left">
-										<input type="text" class="form-control" id="create_employee_id" placeholder="Employee ID" required>
+									<div class="col-sm-7" align="left">
+										<select class="form-control select2" id='create_employee_id' data-placeholder="Employee ID" style="width: 100%;" required>
+											<option></option>
+											@foreach($employees as $employee_id)
+											<option value="{{ $employee_id->employee_id }}">{{ $employee_id->employee_id }} - {{ $employee_id->name }}</option>
+											@endforeach
+										</select>
 									</div>
 								</div>
 
@@ -239,7 +244,7 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Document Number</label>
 									<div class="col-sm-5" align="left">
-										<input type="text" class="form-control" id="renew_document_number" readonly>
+										<input type="text" class="form-control" id="renew_document_number">
 									</div>
 								</div>
 
@@ -275,7 +280,7 @@
 											<div class="input-group-addon bg-green" style="border: none;">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker" id="renew_valid_from">
+											<input type="text" class="form-control datepicker" id="renew_valid_from" placeholder="select Date">
 										</div>
 									</div>
 
@@ -287,7 +292,7 @@
 											<div class="input-group-addon bg-green" style="border: none;">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker" id="renew_valid_to">
+											<input type="text" class="form-control datepicker" id="renew_valid_to" placeholder="select Date">
 										</div>
 									</div>
 								</div>
@@ -539,8 +544,8 @@
 				}
 			}],
 			"columns": [
-			{ "data": "category" },
 			{ "data": "document_number" },
+			{ "data": "category" },
 			{ "data": "employee_id" },
 			{ "data": "name" },
 			{ "data": "valid_from" },
@@ -552,6 +557,14 @@
 		});	
 
 	}
+
+	$('#create_modal').on('hidden.bs.modal', function () {
+		$('#create_document_number').val('');
+		$('#create_employee_id').prop('selectedIndex', 0).change();
+		$('#create_category').prop('selectedIndex', 0).change();
+		$('#create_valid_from').val('');
+		$('#create_valid_to').val('');
+	});
 
 	function create(){
 		var documentNumber = $('#create_document_number').val();
@@ -572,11 +585,17 @@
 			if(result.status){
 				$("#create_modal").modal('hide');
 
+				$('#create_document_number').val('');
+				$('#create_employee_id').prop('selectedIndex', 0).change();
+				$('#create_category').prop('selectedIndex', 0).change();
+				$('#create_valid_from').val('');
+				$('#create_valid_to').val('');
+
 				$('#docTable').DataTable().ajax.reload();
-				openSuccessGritter('Success','Renew Document Success');
+				openSuccessGritter('Success','Create Document Success');
 			}else{
 				audio_error.play();
-				openErrorGritter('Error','Renew Document Failed');
+				openErrorGritter('Error','Create Document Failed');
 			}
 		});
 	}
@@ -603,13 +622,23 @@
 		});
 	}
 
+	$('#renew_modal').on('hidden.bs.modal', function () {
+		$("#renew_document_number").val('');
+		$("#renew_valid_from").val('');
+		$("#renew_valid_to").val('');
+	});
+
 	function renew(){
 		var documentNumber = $('#renew_document_number').val();
+		var employee_id = $('#renew_employee_id').val();
+		var category = $('#renew_category').val();
 		var validFrom = $('#renew_valid_from').val();
 		var validTo = $('#renew_valid_to').val();
 		
 		var data = {
 			documentNumber:documentNumber,
+			employee_id:employee_id,
+			category:category,
 			validFrom:validFrom,
 			validTo:validTo
 		}
@@ -618,6 +647,7 @@
 			if(result.status){
 				$("#renew_modal").modal('hide');
 
+				$("#renew_document_number").val('');
 				$("#renew_valid_from").val('');
 				$("#renew_valid_to").val('');
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use App\UserDocument;
+use App\EmployeeSync;
 use Response;
 use DataTables;
 
@@ -39,10 +40,14 @@ class UserDocumentController extends Controller
 	public function index(){
 		$document_numbers = UserDocument::select('document_number')->get();
 		$users = UserDocument::leftJoin('users', 'users.username', '=', 'user_documents.employee_id')->select('user_documents.employee_id', 'users.name')->distinct()->get();
+
+		$employees = EmployeeSync::get();
+
 		return view('user_documents.index', array(
 			'categories' => $this->category,
 			'document_numbers' => $document_numbers,
 			'users' => $users,
+			'employees' => $employees,
 		))->with('page', 'User Document');
 	}
 
@@ -94,7 +99,10 @@ class UserDocumentController extends Controller
 
 	public function fetchUserDocumentRenew(Request $request){	
 		try{		
-			$renew_document = UserDocument::where('document_number', '=', $request->get('documentNumber'))->update([
+			$renew_document = UserDocument::where('employee_id', $request->get('employee_id'))
+			->where('category', $request->get('category'))
+			->update([
+				'document_number' => $request->get('documentNumber'),
 				'valid_from' => $request->get('validFrom'),
 				'valid_to' => $request->get('validTo'),
 			]);
