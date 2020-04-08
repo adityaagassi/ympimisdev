@@ -42,7 +42,11 @@ class MeetingController extends Controller
 			'Meeting Room Leader WSTA',
 			'Meeting Area M-Pro',
 			'Partition Room PE M-Pro',
-			'QA Incoming Room'
+			'QA Incoming Room',
+			'Genba Training Center',
+			'Assembly',
+			'Surface Treatment',
+			'Welding'
 		];
 	}
 
