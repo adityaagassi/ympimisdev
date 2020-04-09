@@ -308,6 +308,11 @@
                                 <i class="fa fa-caret-right"></i> Clinic Visit ()
                             </a> 
                             <br>--}}
+
+                            <a href="{{ url("index/mirai_mobile/index") }}">
+                                <i class="fa fa-caret-right"></i> MIRAI Mobile Report(??)
+                            </a>
+                            <br>
                             <a href="{{ url("index/display/clinic_monitoring") }}">
                                 <i class="fa fa-caret-right"></i> Clinic Monitoring (クリニック監視)
                             </a>
@@ -345,7 +350,11 @@
                             </a>
                             <br>
                             <a href="{{ url("index/temperature") }}">
-                                <i class="fa fa-caret-right"></i> Temperature (温度)
+                                <i class="fa fa-caret-right"></i> Body Temperature (温度)
+                            </a>
+                            <br>
+                            <a href="{{ url("index/temperature/room_temperature") }}">
+                                <i class="fa fa-caret-right"></i> Room Temperature (温度)
                             </a>
                             <br>
                             <a href="{{ url("index/meeting") }}">
