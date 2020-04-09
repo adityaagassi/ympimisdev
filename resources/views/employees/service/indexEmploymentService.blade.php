@@ -652,6 +652,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
 									<div class="item active">
+										<img class="img-responsive" src="{{url('images/announchement4.png')}}" alt="...">
+										<!-- <div class="carousel-caption">
+											Another Image
+										</div> -->
+									</div>
+									<div class="item">
 										<img class="img-responsive" src="{{url('images/announchement3.jpg')}}" alt="...">
 										<!-- <div class="carousel-caption">
 											Another Image
