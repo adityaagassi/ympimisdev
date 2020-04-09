@@ -60,7 +60,7 @@
 <section class="content-header">
 	<h1>
 		{{ $title }}
-		<small><span class="text-purple"> ??</span></small>
+		<small><span class="text-purple"> </span></small>
 		<button class="btn btn-success pull-right" data-toggle="modal"  data-target="#pick-modal" style="margin-right: 5px">
 			<i class="fa fa-plus-square"></i>&nbsp;&nbsp;Ambil APD
 		</button>
