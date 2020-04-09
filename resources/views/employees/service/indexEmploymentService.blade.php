@@ -652,6 +652,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
 									<div class="item active">
+										<img class="img-responsive" src="{{url('images/announchement3.jpg')}}" alt="...">
+										<!-- <div class="carousel-caption">
+											Another Image
+										</div> -->
+									</div>
+									<div class="item">
 										<center><img class="img-responsive" src="{{url('images/corona.jpg')}}" alt="..." width="600px"></center>
 										<!-- <div class="carousel-caption">
 											Alur Penanganan Corona Virus
