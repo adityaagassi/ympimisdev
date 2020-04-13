@@ -166,13 +166,13 @@
               <table id="example2" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
-                    <th>Kategori</th> 
-                    <th>Judul</th>
-                    <th>Tanggal</th>    
-                    <th>Section From</th>
-                    <th>Section To</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>Tanggal</th>
+                    <th>NIK</th> 
+                    <th>Nama</th>
+                    <th>Department</th>
+                    <th>Section</th>
+                    <!-- <th>Status</th>
+                    <th>Action</th> -->
                   </tr>
                 </thead>
                 <tbody>
@@ -440,13 +440,13 @@
         }
       },
       "columns": [
-      { "data": "kategori", "width": "5%"},
-      { "data": "judul" },
-      { "data": "tanggal" , "width": "10%"},
-      { "data": "section_from"},
-      { "data": "section_to"},
-      { "data": "status", "width": "7%"},
-      { "data": "action", "width": "5%"}
+      { "data": "answer_date", "width": "5%"},
+      { "data": "employee_id" },
+      { "data": "name"},
+      { "data": "department"},
+      { "data": "section"},
+      // { "data": "status", "width": "7%"},
+      // { "data": "action", "width": "5%"}
       ]    });
 
     $('#judul_table').append().empty();

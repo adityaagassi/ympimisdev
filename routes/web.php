@@ -16,6 +16,11 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
+Route::get('trial2', 'TrialController@trial2');
+Route::get('trial_loc', 'TrialController@trialLoc');
+Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
+
+
 Route::get('/index/emergency_response', 'TrialController@tes2');
 Route::get('/index/trials', 'TrialController@tes');
 Route::get('/index/unification_uniform', 'VoteController@indexUnificationUniform');
@@ -27,6 +32,9 @@ Route::get('trialmail', 'TrialController@trialmail');
 
 Route::get('/trial', function () {
 	return view('meetings.report');
+});
+Route::get('/trial3', function () {
+	return view('trial');
 });
 Route::get('/trial2', function () {
 	return view('trial2');
@@ -797,10 +805,11 @@ Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 	Route::post('confirm/return', 'TransactionController@confirmReturn');
 });
 Route::get('index/return', 'TransactionController@indexReturn');
+Route::get('index/return/data', 'TransactionController@indexReturnData');
+Route::get('fetch/return/data', 'TransactionController@fetchReturnData');
 Route::get('fetch/return/list', 'TransactionController@fetchReturnList');
 Route::get('fetch/return', 'TransactionController@fetchReturn');
 Route::get('fetch/return/resume', 'TransactionController@fetchReturnResume');
-
 
 Route::group(['nav' => 'S1', 'middleware' => 'permission'], function(){
 	Route::get('index/flo_view/bi', 'FloController@index_bi');
@@ -2552,6 +2561,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
 	Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
 	Route::get('fetch/maintenance/apar/list/check', 'MaintenanceController@fetchAparCheck2');
+	// Route::get('fetch/maintenance/apar/byCode', 'MaintenanceController@fetchAparbyCode');
 
 	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
@@ -2583,6 +2593,18 @@ Route::get('/trainingroom3', function () {
 Route::get('/welcome_trial', function () {
 	return view('trials.welcome_trial');
 });
+
+
+// MIRAI MOBILE
+Route::get('index/mirai_mobile/index', 'MiraiMobileController@index');
+
+Route::get('index/mirai_mobile/healthy_report', 'MiraiMobileController@display_health');
+Route::get('fetch/mirai_mobile/healthy_report', 'MiraiMobileController@fetch_health');
+Route::get('index/mirai_mobile/detail', 'MiraiMobileController@fetch_detail');
+
+Route::get('index/mirai_mobile/report', 'MiraiMobileController@health');
+Route::get('fetch/mirai_mobile/report', 'MiraiMobileController@fetchHealthData');
+Route::get('fetch/location_employee', 'MiraiMobileController@fetchLocationEmployee');
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;

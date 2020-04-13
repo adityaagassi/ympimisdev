@@ -36,45 +36,45 @@ class MiraiMobileController extends Controller
 
   public function fetch_detail(Request $request){
 
-      $tgl = $request->get("tgl");
+    $tgl = $request->get("tgl");
 
-      if(strlen($request->get('datefrom')) > 0){
-        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+    if(strlen($request->get('datefrom')) > 0){
+      $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+    }
+
+    if(strlen($request->get('dateto')) > 0){
+      $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+    }
+
+    $status = $request->get('status');
+
+    if ($status != null) {
+
+      $stat = 'and employee_id = "'.$status.'"';
+
+
+      if ($status == "Employee Submit") {
+        $data = DB::connection('mobile')->select("SELECT DISTINCT(quiz_logs.employee_id),quiz_logs.answer_date,employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees LEFT JOIN quiz_logs on quiz_logs.employee_id = employees.employee_id where quiz_logs.employee_id is not null and employees.end_date is null");
       }
 
-      if(strlen($request->get('dateto')) > 0){
-        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+      if ($status == "Employee Not Submit") {
+        $data = DB::connection('mobile')->select("SELECT DISTINCT(quiz_logs.employee_id),quiz_logs.answer_date,employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees LEFT JOIN quiz_logs on quiz_logs.employee_id = employees.employee_id where quiz_logs.employee_id is null and employees.end_date is null");
       }
+    }else{
+      $stat = '';
+    }
 
-      $status = $request->get('status');
+    return DataTables::of($data)
 
-      if ($status != null) {
+    ->editColumn('answer_date', function($detail){
+      return date('d F Y', strtotime($detail->answer_date));
+    })
+    ->editColumn('status', function($detail){
 
-          $stat = 'and employee_id = "'.$status.'"';
+    })
 
-
-          if ($status == "Employee Submit") {
-            $data = DB::connection('mobile')->select("SELECT DISTINCT(quiz_logs.employee_id),quiz_logs.answer_date,employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees LEFT JOIN quiz_logs on quiz_logs.employee_id = employees.employee_id where quiz_logs.employee_id is not null and employees.end_date is null");
-          }
-
-          if ($status == "Employee Not Submit") {
-            $data = DB::connection('mobile')->select("SELECT DISTINCT(quiz_logs.employee_id),quiz_logs.answer_date,employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees LEFT JOIN quiz_logs on quiz_logs.employee_id = employees.employee_id where quiz_logs.employee_id is null and employees.end_date is null");
-          }
-      }else{
-          $stat = '';
-      }
-
-      return DataTables::of($data)
-
-      ->editColumn('answer_date', function($detail){
-        return date('d F Y', strtotime($detail->answer_date));
-      })
-      ->editColumn('status', function($detail){
-
-      })
-
-      ->rawColumns(['status' => 'status'])
-      ->make(true);
+    ->rawColumns(['status' => 'status'])
+    ->make(true);
   }
 
   public function fetchHealthData(Request $request)
@@ -87,47 +87,68 @@ class MiraiMobileController extends Controller
       $tgl = "where tanggal = '".$tanggal."'";
     }
 
-    $data = DB::connection('mobile')->select("SELECT
-      employee_id,
-      name,
-      DATE(
-      NOW()) AS answer_date,
-      (
-      SELECT
-        CONCAT(MIN( created_at ),'/',latitude,'/',longitude) AS masuk 
-      FROM
-        quiz_logs 
-      WHERE
-        employee_id = employees.employee_id 
-        AND answer_date = DATE(
-        NOW())) AS masuk,
-      (
-      SELECT
-      CONCAT(IF
-        (
-          TIMESTAMPDIFF(
-            MINUTE,
-            MIN( created_at ),
-          MAX( created_at )) < 60,
-          NULL,
-        IF
-          (
-            MAX( created_at ) = MIN( created_at ),
-            NULL,
-          MAX( created_at ))),'/',latitude,'/',longitude) AS keluar 
-      FROM
-        quiz_logs 
-      WHERE
-        employee_id = employees.employee_id 
-        AND answer_date = DATE(
-        NOW())) AS keluar
-    FROM
-      `employees`
-      ".$tgl."");
+    // $data = DB::connection('mobile')->select("SELECT
+    //   employee_id,
+    //   name,
+    //   DATE(
+    //   NOW()) AS answer_date,
+    //   (
+    //   SELECT
+    //   CONCAT(MIN( created_at ),'/',latitude,'/',longitude) AS masuk 
+    //   FROM
+    //   quiz_logs 
+    //   WHERE
+    //   employee_id = employees.employee_id 
+    //   AND answer_date = DATE(
+    //   NOW())) AS masuk,
+    //   (
+    //   SELECT
+    //   CONCAT(IF
+    //   (
+    //   TIMESTAMPDIFF(
+    //   MINUTE,
+    //   MIN( created_at ),
+    //   MAX( created_at )) < 60,
+    //   NULL,
+    //   IF
+    //   (
+    //   MAX( created_at ) = MIN( created_at ),
+    //   NULL,
+    //   MAX( created_at ))),'/',latitude,'/',longitude) AS keluar 
+    //   FROM
+    //   quiz_logs 
+    //   WHERE
+    //   employee_id = employees.employee_id 
+    //   AND answer_date = DATE(
+    //   NOW())) AS keluar
+    //   FROM
+    //   `employees`
+    //   ".$tgl."");
+
+    $q =  'select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_in)),null) time_in, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out from
+    (
+    SELECT employee_id, `name`, answer_date, latitude as masuk, longitude as masuk1, 0 as keluar, 0 as keluar2, id as id_in, 0 as id_out, DATE_FORMAT(created_at, "%H") as jam_in, 0 as jam_out, TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_in, 0 as time_out FROM quiz_logs
+    WHERE id IN (
+    SELECT MIN(id)
+    FROM quiz_logs
+    GROUP BY employee_id, `name`, answer_date
+    )
+    union all
+    SELECT employee_id, `name`, answer_date, 0 as masuk, 0 as masuk1, latitude as keluar, longitude as keluar2, 0 as id_in, id as id_out, 0 as jam_in,  DATE_FORMAT(created_at, "%H") as jam_out, 0 as time_in,  TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_out FROM quiz_logs
+    WHERE id IN (
+    SELECT MAX(id)
+    FROM quiz_logs
+    GROUP BY employee_id, `name`, answer_date
+    )
+    ) as semua
+    group by employee_id, `name`, answer_date
+
+
+    ';
 
     $response = array(
       'status' => true,
-      'lists' => $data,
+      'lists' => DB::connection('mobile')->select($q),
     );
     return Response::json($response);
   }
@@ -157,9 +178,9 @@ class MiraiMobileController extends Controller
 
       //per tgl
     $data = DB::connection('mobile')->select("
-      select distinct answer_date, 
-      (select count(employee_id) as emp from employees where end_date is null) as karyawan,
-      (select count(employee_id) as emp from employees where end_date is null) - emplo.mengisi as belum,
+     select distinct answer_date, 
+      (select count(employee_id) as emp from employees where end_date is null and keterangan is null) as karyawan,
+      (select count(employee_id) as emp from employees where end_date is null and keterangan is null) - emplo.mengisi as belum,
       emplo.mengisi
       from
       (select answer_date, count(employee_id) as mengisi from
@@ -176,6 +197,59 @@ class MiraiMobileController extends Controller
       'datas' => $data,
     );
 
+    return Response::json($response);
+  }
+
+  public function fetchLocationEmployee(Request $request){
+
+    $loc = $this->getLocation($request->get('lat'), $request->get('lng'));
+
+    $loc1 = json_encode($loc);
+
+    $loc2 = explode('\"',$loc1);
+
+    $keyStateDistrict = array_search('state_district', $loc2);
+    $keyVillage = array_search('village', $loc2);
+    $keyState = array_search('state', $loc2);
+    $keyPostcode = array_search('postcode', $loc2);
+    $keyCountry = array_search('country', $loc2);
+
+    $data = array(
+      'city' => $loc2[$keyStateDistrict + 2],
+      'village' => $loc2[$keyVillage + 2],
+      'province' => $loc2[$keyState + 2],
+      'postcode' => $loc2[$keyPostcode + 2],
+      'country' => $loc2[$keyCountry + 2]
+    );
+
+    $response = array(
+      'status' => true,
+      'data' => $data,
+    );
+    return Response::json($response);
+
+  }
+
+
+
+  public function getLocation($lat, $long){
+
+    $url = "https://locationiq.org/v1/reverse.php?key=29e75d503929a1&lat=".$lat."&lon=".$long."&format=json";
+    $curlHandle = curl_init();
+    curl_setopt($curlHandle, CURLOPT_URL, $url);
+    curl_setopt($curlHandle, CURLOPT_HEADER, 0);
+    curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curlHandle, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($curlHandle, CURLOPT_TIMEOUT,30);
+    curl_setopt($curlHandle, CURLOPT_POST, 1);
+    $results = curl_exec($curlHandle);
+    curl_close($curlHandle);
+
+    $response = array(
+      'status' => true,
+      'data' => $results,
+    );
     return Response::json($response);
   }
 }
