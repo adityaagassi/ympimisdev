@@ -54,7 +54,7 @@ class MiraiMobileController extends Controller
 
 
       if ($status == "Employee Submit") {
-        $data = DB::connection('mobile')->select("SELECT DISTINCT(quiz_logs.employee_id),quiz_logs.answer_date,employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees LEFT JOIN quiz_logs on quiz_logs.employee_id = employees.employee_id where quiz_logs.employee_id is not null and employees.end_date is null");
+        $data = DB::connection('mobile')->select("SELECT DISTINCT(quiz_logs.employee_id),quiz_logs.answer_date,employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees LEFT JOIN quiz_logs on quiz_logs.employee_id = employees.employee_id where quiz_logs.employee_id is not null and employees.end_date is null and answer_date = DATE(NOW()) and employees.keterangan is null");
       }
 
       if ($status == "Employee Not Submit") {
@@ -184,7 +184,7 @@ class MiraiMobileController extends Controller
       emplo.mengisi
       from
       (select answer_date, count(employee_id) as mengisi from
-      (select answer_date, employee_id from quiz_logs
+      (select answer_date, quiz_logs.employee_id from quiz_logs left join employees on quiz_logs.employee_id = employees.employee_id where keterangan is null
       group by employee_id, answer_date) dd
       group by answer_date) emplo");
 
