@@ -46,35 +46,40 @@ class MiraiMobileController extends Controller
       $dateto = date('Y-m-d', strtotime($request->get('dateto')));
     }
 
-    $status = $request->get('status');
+    // $status = $request->get('status');
 
-    if ($status != null) {
+    // if ($status != null) {
 
-      $stat = 'and employee_id = "'.$status.'"';
+    //   $stat = 'and employee_id = "'.$status.'"';
 
 
-      if ($status == "Employee Submit") {
-        $data = DB::connection('mobile')->select("SELECT DISTINCT(quiz_logs.employee_id),quiz_logs.answer_date,employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees LEFT JOIN quiz_logs on quiz_logs.employee_id = employees.employee_id where quiz_logs.employee_id is not null and employees.end_date is null and answer_date = DATE(NOW()) and employees.keterangan is null");
-      }
+      // if ($status == "Employee Submit") {
+      //   $data = DB::connection('mobile')->select("SELECT DISTINCT(quiz_logs.employee_id),quiz_logs.answer_date,employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees LEFT JOIN quiz_logs on quiz_logs.employee_id = employees.employee_id where quiz_logs.employee_id is not null and employees.end_date is null and answer_date = DATE(NOW()) and employees.keterangan is null");
+      // }
 
-      if ($status == "Employee Not Submit") {
-        $data = DB::connection('mobile')->select("SELECT DISTINCT(quiz_logs.employee_id),quiz_logs.answer_date,employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees LEFT JOIN quiz_logs on quiz_logs.employee_id = employees.employee_id where quiz_logs.employee_id is null and employees.end_date is null");
-      }
-    }else{
-      $stat = '';
-    }
+      // if ($status == "Employee Not Submit") {
+        $data = DB::connection('mobile')->select("select employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees where employees.employee_id not in (select DISTINCT(quiz_logs.employee_id) from quiz_logs LEFT JOIN employees on quiz_logs.employee_id = employees.employee_id where answer_date = '".$tgl."' and employees.end_date is null and employees.keterangan is null) and end_date is null and keterangan is null");
+      // }
+    // }else{
+    //   $stat = '';
+    // }
 
-    return DataTables::of($data)
+    // return DataTables::of($data)
 
-    ->editColumn('answer_date', function($detail){
-      return date('d F Y', strtotime($detail->answer_date));
-    })
-    ->editColumn('status', function($detail){
+    // ->editColumn('answer_date', function($detail){
+    //   return date('d F Y', strtotime($detail->answer_date));
+    // })
+    // ->editColumn('status', function($detail){
 
-    })
+    // })
 
-    ->rawColumns(['status' => 'status'])
-    ->make(true);
+    // ->rawColumns(['status' => 'status'])
+    // ->make(true);
+    $response = array(
+      'status' => true,
+      'lists' => $data,
+    );
+    return Response::json($response);
   }
 
   public function fetchHealthData(Request $request)
