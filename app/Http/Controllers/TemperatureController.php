@@ -43,7 +43,7 @@ class TemperatureController extends Controller
                     'employee' => $employee,
                ))->with('page', 'Self Check Body Temperature');
           }
-          if($id == 12){
+          if($id == 2){
                return view('temperature.omron2', array(
                     'title' => 'Self Check Body Temperature',
                     'title_jp' => '',
