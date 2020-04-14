@@ -123,6 +123,11 @@ Route::get('index/temperature/body_temp_monitoring', 'TemperatureController@inde
 Route::get('fetch/temperature/fetch_body_temp_monitoring', 'TemperatureController@fetchBodyTempMonitoring');
 
 //END VISITOR TEMPERATURE
+Route::get('index/temperature/omron/{id}', 'TemperatureController@indexOmron');
+Route::get('fetch/temperature/omron', 'TemperatureController@fetchOmron');
+Route::post('input/temperature/omron_operator', 'TemperatureController@inputOmronOperator');
+
+//OMRON TEMPERATURE
 
 // ROOM Temperature
 Route::get('index/temperature/room_temperature', 'TemperatureController@RoomTemperature');
