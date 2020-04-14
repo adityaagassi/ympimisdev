@@ -332,7 +332,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->employee_id)
+                      @elseif(Auth::user()->username == $cars->employee_id && Auth::user()->username != "PI0109004")
                         @if ($cars->posisi == "manager")
                           @if($cars->checked_manager == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
