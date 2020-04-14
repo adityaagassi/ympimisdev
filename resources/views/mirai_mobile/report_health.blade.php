@@ -83,6 +83,7 @@
               <tr>
                 <!-- <th>Nama</th> -->
                 <th>Tanggal</th>
+                <th>NIK</th>
                 <th>Nama</th>
                 <th>Jam Masuk</th>
                 <th>Location Masuk</th>
@@ -98,6 +99,7 @@
             <tfoot>
               <tr>
                 <!-- <th></th> -->
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -173,8 +175,9 @@
           var month = months[d.getMonth()];
           var year = d.getFullYear();      
 
-          tableData += '<tr>';
+          tableData += '<tr>';     
           tableData += '<td>'+ day +' '+month+' '+year +'</td>';
+          tableData += '<td>'+ value.employee_id +'</td>';     
           tableData += '<td>'+ value.name +'</td>';
           tableData += '<td>'+ value.time_in +'</td>';
           tableData += '<td><a target="_blank" href="https://172.17.128.87/miraidev/public/trial3?lat='+value.lat_in+'&long='+value.lng_in+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
@@ -220,6 +223,30 @@
             {
               extend: 'pageLength',
               className: 'btn btn-default',
+            },
+            {
+              extend: 'copy',
+              className: 'btn btn-success',
+              text: '<i class="fa fa-copy"></i> Copy',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'excel',
+              className: 'btn btn-info',
+              text: '<i class="fa fa-file-excel-o"></i> Excel',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'print',
+              className: 'btn btn-warning',
+              text: '<i class="fa fa-print"></i> Print',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
             },
             ]
           },
