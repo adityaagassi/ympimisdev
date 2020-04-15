@@ -22,13 +22,15 @@
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("/index/mirai_mobile/healthy_report") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Employee Healthy Report</a>
+			<a href="{{ url("/radar_covid") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Radar Covid19</a>
+
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			 <!-- <a href="{{ url("/stamp/log") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Log Process</a> -->
-			<a href="{{ url("index/mirai_mobile/report") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Attendance Report</a>
-			<!-- <a href="{{ url("/index/displayWipFl") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Chart Inventory</a>  -->
+			<a href="{{ url("index/mirai_mobile/report_attendance") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Attendance Report</a>
+			<a href="{{ url("/index/mirai_mobile") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Employee Shift Report</a> 
 		</div>
+
 	</div>
 </section>
 @endsection

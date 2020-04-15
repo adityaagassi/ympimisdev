@@ -310,7 +310,7 @@
                             <br>--}}
 
                             <a href="{{ url("index/mirai_mobile/index") }}">
-                                <i class="fa fa-caret-right"></i> MIRAI Mobile Report(??)
+                                <i class="fa fa-caret-right"></i> MIRAI Mobile Report(モバイルMIRAIの記録)
                             </a>
                             <br>
                             <a href="{{ url("index/display/clinic_monitoring") }}">

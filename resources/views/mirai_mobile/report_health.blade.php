@@ -159,7 +159,7 @@
       tanggal:tanggal
     }
 
-    $.get('{{ url("fetch/mirai_mobile/report") }}', data, function(result, status, xhr){
+    $.get('{{ url("fetch/mirai_mobile/report_attendance") }}', data, function(result, status, xhr){
       if(result.status){
         $('#tableResult').DataTable().clear();
         $('#tableResult').DataTable().destroy();

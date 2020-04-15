@@ -2607,9 +2607,13 @@ Route::get('index/mirai_mobile/healthy_report', 'MiraiMobileController@display_h
 Route::get('fetch/mirai_mobile/healthy_report', 'MiraiMobileController@fetch_health');
 Route::get('index/mirai_mobile/detail', 'MiraiMobileController@fetch_detail');
 
-Route::get('index/mirai_mobile/report', 'MiraiMobileController@health');
-Route::get('fetch/mirai_mobile/report', 'MiraiMobileController@fetchHealthData');
+Route::get('index/mirai_mobile/report_attendance', 'MiraiMobileController@health');
+Route::get('fetch/mirai_mobile/report_attendance', 'MiraiMobileController@fetchHealthData');
 Route::get('fetch/location_employee', 'MiraiMobileController@fetchLocationEmployee');
+
+Route::get('/radar_covid', function () {
+	return view('mirai_mobile.radar_covid');
+});
 
 View::composer('*', function ($view) {
 	$controller = new \App\Http\Controllers\EmployeeController;
