@@ -46,7 +46,7 @@
 @endsection
 
 <script type="text/javascript">
-	window.setInterval("reloadIFrame();", 1800000);
+	// window.setInterval("reloadIFrame();", 1800000);
 
 	function reloadIFrame() {
 		document.getElementById("covid").src="https://radarcovid19.jatimprov.go.id/";	}
