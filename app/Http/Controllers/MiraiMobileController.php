@@ -34,6 +34,16 @@ class MiraiMobileController extends Controller
     ))->with('page', 'Employee Health Report');
   }
 
+  public function shift(){
+    $title = 'Employee Work Grup';
+    $title_jp = '';
+
+    return view('mirai_mobile.report_shift', array(
+      'title' => $title,
+      'title_jp' => $title_jp
+    ))->with('page', 'Employee Work Grup');
+  }
+
   public function fetch_detail(Request $request){
 
     $tgl = $request->get("tgl");
@@ -130,7 +140,7 @@ class MiraiMobileController extends Controller
     //   `employees`
     //   ".$tgl."");
 
-    $q =  'select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_in)),null) time_in, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out from
+    $q =  'select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, SEC_TO_TIME(SUM(time_in)) time_in, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out from
     (
     SELECT employee_id, `name`, answer_date, latitude as masuk, longitude as masuk1, 0 as keluar, 0 as keluar2, id as id_in, 0 as id_out, DATE_FORMAT(created_at, "%H") as jam_in, 0 as jam_out, TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_in, 0 as time_out FROM quiz_logs
     WHERE id IN (
@@ -146,10 +156,18 @@ class MiraiMobileController extends Controller
     GROUP BY employee_id, `name`, answer_date
     )
     ) as semua
-    group by employee_id, `name`, answer_date
+    group by employee_id, `name`, answer_date';
 
+    $response = array(
+      'status' => true,
+      'lists' => DB::connection('mobile')->select($q),
+    );
+    return Response::json($response);
+  }
 
-    ';
+  public function fetchShiftData(Request $request)
+  {
+    $q =  'select * from groups';
 
     $response = array(
       'status' => true,
