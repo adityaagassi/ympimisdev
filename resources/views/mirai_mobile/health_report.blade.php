@@ -143,11 +143,15 @@
           <button class="btn btn-success" onclick="drawChart()">Update Chart</button>
         </div>
         <div class="col-xs-7">
-          <a class="btn btn-success pull-right" href="{{url('index/mirai_mobile/report')}}">See Report</a>
+          <a class="btn btn-success pull-right" href="{{url('index/mirai_mobile/report_attendance')}}">See Report</a>
         </div>
       </div>
       <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
         <div id="chart" style="width: 99%; height: 400px;"></div>
+      </div>
+
+      <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
+        <div id="chart2" style="width: 99%; height: 400px;"></div>
       </div>
     </div>
   </div>
@@ -367,200 +371,395 @@
                 }
                 ]
               })
+
+        // ------------------  DATA SAKIT ------------------
+
+
+        var Demam = [];
+        var Batuk = [];
+        var Pusing = [];
+        var Tenggorokan_Sakit = [];
+        var Sesak_Nafas = [];
+        var Indera_Perasa = [];
+        var Pernah_Berinteraksi = [0,0,0,0];
+        var tgls = [];
+        
+        $.each(result.sakit, function(key, value) {
+          if(value.question == "Demam") {
+            Demam.push(value.count);
+          }
+          if(value.question == "Batuk") {
+            Batuk.push(value.count);            
+          }
+          if(value.question == "Pusing") {
+            Pusing.push(value.count);
+          }
+          if(value.question == "Tenggorokan Sakit") {
+            Tenggorokan_Sakit.push(value.count);
+          }
+          if(value.question == "Sesak Nafas") {
+            Sesak_Nafas.push(value.count);
+          }
+          if(value.question == "Indera Perasa & Penciuman Terganggu") {
+            Indera_Perasa.push(value.count);
+          }
+          if(value.question == "Pernah Berinteraksi dengan Suspect / Positif COVID-19") {
+            Pernah_Berinteraksi.push(value.count);
+          }
+
+          tgls.push(value.answer_date);
+        })
+
+
+        var param = [Demam,
+        Batuk,
+        Pusing,
+        Tenggorokan_Sakit,
+        Sesak_Nafas,
+        Indera_Perasa,
+        Pernah_Berinteraksi,
+        tgls];
+
+        drawChartSick(param);
       } else{
         alert('Attempt to retrieve data failed');
       }
     })
-  }
+}
 
-  // function ShowModal(tgl,status) {
-  function ShowModal(tgl) {
+function drawChartSick(param) {
+  var tgl = $.unique(param[7]);
 
-    $("#myModal").modal("show");
-
-    var data = {
-      tgl:tgl
-    }
-
-    $.get('{{ url("index/mirai_mobile/detail") }}', data, function(result, status, xhr){
-      if(result.status){
-        $('#tableResult').DataTable().clear();
-        $('#tableResult').DataTable().destroy();
-        $('#tableBodyResult').html("");
-        var tableData = "";
-        var count = 1;
-
-        $.each(result.lists, function(key, value) {
-
-          var d = new Date(tgl);
-          var day = d.getDate();
-          var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-          var month = months[d.getMonth()];
-          var year = d.getFullYear();      
-
-          tableData += '<tr>';
-          tableData += '<td>'+ day +' '+month+' '+year +'</td>';
-          tableData += '<td>'+ value.employee_id +'</td>';
-          tableData += '<td>'+ value.name +'</td>';
-          tableData += '<td>'+ value.department +'</td>';
-          tableData += '<td>'+ value.section +'</td>';
-          tableData += '<td>'+ value.group +'</td>';
-          tableData += '</tr>';
-          count += 1;
-        });
-
-        $('#tableBodyResult').append(tableData);
-
-        $('#tableResult tfoot th').each( function () {
-          var title = $(this).text();
-          $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-        } );
-        var table = $('#tableResult').DataTable({
-          'dom': 'Bfrtip',
-          'responsive':true,
-          'lengthMenu': [
-          [ 5, 10, 25, -1 ],
-          [ '5 rows', '10 rows', '25 rows', 'Show all' ]
-          ],
-          'buttons': {
-            buttons:[
-            {
-              extend: 'pageLength',
-              className: 'btn btn-default',
-            },
-            ]
-          },
-          'paging': true,
-          'lengthChange': true,
-          'pageLength': 15,
-          'searching': true,
-          'ordering': true,
-          'order': [],
-          'info': true,
-          'autoWidth': true,
-          "sPaginationType": "full_numbers",
-          "bJQueryUI": true,
-          "bAutoWidth": false,
-          "processing": true
-        });
-      }
-      else{
-        alert('Attempt to retrieve data failed');
-      }
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#tableResult tfoot tr').appendTo('#tableResult thead');
-
-    });
-
-    $('#judul_table').append().empty();
-    $('#judul_table').append('<center><b>List yang Tidak Mengisi Tanggal '+tgl+'</b></center>'); 
-  }
-
-  Highcharts.createElement('link', {
-    href: '{{ url("fonts/UnicaOne.css")}}',
-    rel: 'stylesheet',
-    type: 'text/css'
-  }, null, document.getElementsByTagName('head')[0]);
-
-  Highcharts.theme = {
-    colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-    '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+  $('#chart2').highcharts({
     chart: {
-      backgroundColor: {
-        linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-        stops: [
-        [0, '#2a2a2b']
-        ]
-      },
-      style: {
-        fontFamily: 'sans-serif'
-      },
-      plotBorderColor: '#606063'
+      type: 'column'
     },
     title: {
+      text: 'Laporan Gejala Penyakit Karyawan YMPI',
       style: {
-        color: '#E0E0E3',
-        textTransform: 'uppercase',
-        fontSize: '20px'
+        fontSize: '25px',
+        fontWeight: 'bold'
       }
     },
     subtitle: {
+      text: 'By Date',
       style: {
-        color: '#E0E0E3',
-        textTransform: 'uppercase'
+        fontSize: '1vw',
+        fontWeight: 'bold'
       }
     },
     xAxis: {
-      gridLineColor: '#707073',
+      type: 'category',
+      categories: tgl,
+      lineWidth:2,
+      lineColor:'#9e9e9e',
+      gridLineWidth: 1,
       labels: {
         style: {
-          color: '#E0E0E3'
+          fontSize: '20px',
+          fontWeight: 'bold'
         }
       },
-      lineColor: '#707073',
-      minorGridLineColor: '#505053',
-      tickColor: '#707073',
-      title: {
-        style: {
-          color: '#A0A0A3'
-
-        }
-      }
     },
     yAxis: {
-      gridLineColor: '#707073',
-      labels: {
+      lineWidth:2,
+      lineColor:'#fff',
+      type: 'linear',
+      title: {
+        text: 'Total Karyawan',
         style: {
-          color: '#E0E0E3'
+          color: '#eee',
+          fontSize: '25px',
+          fontWeight: 'bold',
+          fill: '#6d869f'
         }
       },
-      lineColor: '#707073',
-      minorGridLineColor: '#505053',
-      tickColor: '#707073',
-      tickWidth: 1,
+              // tickInterval: 1,  
+              stackLabels: {
+                enabled: true,
+                style: {
+                  fontWeight: 'bold',
+                  color: (Highcharts.theme && Highcharts.theme.textColor) || 'black',
+                  fontSize: '2vw'
+                }
+              }
+            },
+            legend: {
+              reversed: true,
+              itemStyle:{
+                color: "white",
+                fontSize: "14px",
+                fontWeight: "bold",
+
+              },
+              shadow: false
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      // ShowModal(this.category,this.series.name);
+                      ShowModal(this.category);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: false,
+                  format: '{point.y}',
+                  style:{
+                    fontSize: '1.5vw'
+                  }
+                }
+              },
+              column: {
+                color:  Highcharts.ColorString,
+                stacking: 'normal',
+                borderRadius: 1,
+                dataLabels: {
+                  enabled: true,
+                }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' : ' + this.y;
+              }
+            },
+            series: [
+            {
+              name: 'Batuk',
+              data: param[1],
+              color : '#5cb85c'
+            },
+            {
+              name: 'Demam',
+              data: param[0],
+              color : '#1abc9c'
+            },
+            {
+              name: 'Pusing',
+              data: param[2],
+              color : '#9b59b6'
+            },
+            {
+              name: 'Tenggorokan Sakit',
+              data: param[3],
+              color : '#34495e'
+            },
+            {
+              name: 'Sesak Nafas',
+              data: param[4],
+              color : '#f39c12'
+            },
+            {
+              name: 'Indera Perasa & Penciuman Terganggu',
+              data: param[5],
+              color : '#e67e22'
+            },
+            {
+              name: 'Pernah Berinteraksi dengan Suspect / Positif COVID-19',
+              data: param[6],
+              color : '#e74c3c'
+            }
+            ]
+          })
+}
+
+  // function ShowModal(tgl,status) {
+    function ShowModal(tgl) {
+
+      $("#myModal").modal("show");
+
+      var data = {
+        tgl:tgl
+      }
+
+      $.get('{{ url("index/mirai_mobile/detail") }}', data, function(result, status, xhr){
+        if(result.status){
+          $('#tableResult').DataTable().clear();
+          $('#tableResult').DataTable().destroy();
+          $('#tableBodyResult').html("");
+          var tableData = "";
+          var count = 1;
+
+          $.each(result.lists, function(key, value) {
+
+            var d = new Date(tgl);
+            var day = d.getDate();
+            var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            var month = months[d.getMonth()];
+            var year = d.getFullYear();      
+
+            tableData += '<tr>';
+            tableData += '<td>'+ day +' '+month+' '+year +'</td>';
+            tableData += '<td>'+ value.employee_id +'</td>';
+            tableData += '<td>'+ value.name +'</td>';
+            tableData += '<td>'+ value.department +'</td>';
+            tableData += '<td>'+ value.section +'</td>';
+            tableData += '<td>'+ value.group +'</td>';
+            tableData += '</tr>';
+            count += 1;
+          });
+
+          $('#tableBodyResult').append(tableData);
+
+          $('#tableResult tfoot th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+          } );
+          var table = $('#tableResult').DataTable({
+            'dom': 'Bfrtip',
+            'responsive':true,
+            'lengthMenu': [
+            [ 5, 10, 25, -1 ],
+            [ '5 rows', '10 rows', '25 rows', 'Show all' ]
+            ],
+            'buttons': {
+              buttons:[
+              {
+                extend: 'pageLength',
+                className: 'btn btn-default',
+              },
+              ]
+            },
+            'paging': true,
+            'lengthChange': true,
+            'pageLength': 15,
+            'searching': true,
+            'ordering': true,
+            'order': [],
+            'info': true,
+            'autoWidth': true,
+            "sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bAutoWidth": false,
+            "processing": true
+          });
+        }
+        else{
+          alert('Attempt to retrieve data failed');
+        }
+        table.columns().every( function () {
+          var that = this;
+
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+              that
+              .search( this.value )
+              .draw();
+            }
+          } );
+        } );
+
+        $('#tableResult tfoot tr').appendTo('#tableResult thead');
+
+      });
+
+      $('#judul_table').append().empty();
+      $('#judul_table').append('<center><b>List yang Tidak Mengisi Tanggal '+tgl+'</b></center>'); 
+    }
+
+    Highcharts.createElement('link', {
+      href: '{{ url("fonts/UnicaOne.css")}}',
+      rel: 'stylesheet',
+      type: 'text/css'
+    }, null, document.getElementsByTagName('head')[0]);
+
+    Highcharts.theme = {
+      colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+      '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+      chart: {
+        backgroundColor: {
+          linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+          stops: [
+          [0, '#2a2a2b']
+          ]
+        },
+        style: {
+          fontFamily: 'sans-serif'
+        },
+        plotBorderColor: '#606063'
+      },
       title: {
         style: {
-          color: '#A0A0A3'
+          color: '#E0E0E3',
+          textTransform: 'uppercase',
+          fontSize: '20px'
         }
-      }
-    },
-    tooltip: {
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
-      style: {
-        color: '#F0F0F0'
-      }
-    },
-    plotOptions: {
-      series: {
-        dataLabels: {
-          color: 'white'
+      },
+      subtitle: {
+        style: {
+          color: '#E0E0E3',
+          textTransform: 'uppercase'
+        }
+      },
+      xAxis: {
+        gridLineColor: '#707073',
+        labels: {
+          style: {
+            color: '#E0E0E3'
+          }
         },
-        marker: {
-          lineColor: '#333'
+        lineColor: '#707073',
+        minorGridLineColor: '#505053',
+        tickColor: '#707073',
+        title: {
+          style: {
+            color: '#A0A0A3'
+
+          }
         }
       },
-      boxplot: {
-        fillColor: '#505053'
+      yAxis: {
+        gridLineColor: '#707073',
+        labels: {
+          style: {
+            color: '#E0E0E3'
+          }
+        },
+        lineColor: '#707073',
+        minorGridLineColor: '#505053',
+        tickColor: '#707073',
+        tickWidth: 1,
+        title: {
+          style: {
+            color: '#A0A0A3'
+          }
+        }
       },
-      candlestick: {
-        lineColor: 'white'
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+        style: {
+          color: '#F0F0F0'
+        }
       },
-      errorbar: {
-        color: 'white'
-      }
-    },
-    legend: {
+      plotOptions: {
+        series: {
+          dataLabels: {
+            color: 'white'
+          },
+          marker: {
+            lineColor: '#333'
+          }
+        },
+        boxplot: {
+          fillColor: '#505053'
+        },
+        candlestick: {
+          lineColor: 'white'
+        },
+        errorbar: {
+          color: 'white'
+        }
+      },
+      legend: {
         // itemStyle: {
         //   color: '#E0E0E3'
         // },

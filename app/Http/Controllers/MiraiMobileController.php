@@ -68,7 +68,7 @@ class MiraiMobileController extends Controller
       // }
 
       // if ($status == "Employee Not Submit") {
-        $data = DB::connection('mobile')->select("select employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees where employees.employee_id not in (select DISTINCT(quiz_logs.employee_id) from quiz_logs LEFT JOIN employees on quiz_logs.employee_id = employees.employee_id where answer_date = '".$tgl."' and employees.end_date is null and employees.keterangan is null) and end_date is null and keterangan is null");
+    $data = DB::connection('mobile')->select("select employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees where employees.employee_id not in (select DISTINCT(quiz_logs.employee_id) from quiz_logs LEFT JOIN employees on quiz_logs.employee_id = employees.employee_id where answer_date = '".$tgl."' and employees.end_date is null and employees.keterangan is null) and end_date is null and keterangan is null");
       // }
     // }else{
     //   $stat = '';
@@ -140,7 +140,8 @@ class MiraiMobileController extends Controller
     //   `employees`
     //   ".$tgl."");
 
-    $q =  'select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, SEC_TO_TIME(SUM(time_in)) time_in, IF(SUM(id_out) - SUM(id_in) <> 6 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out from
+    $q =  'select att.*, groups.remark from
+    (select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, SEC_TO_TIME(SUM(time_in)) time_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out from
     (
     SELECT employee_id, `name`, answer_date, latitude as masuk, longitude as masuk1, 0 as keluar, 0 as keluar2, id as id_in, 0 as id_out, DATE_FORMAT(created_at, "%H") as jam_in, 0 as jam_out, TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_in, 0 as time_out FROM quiz_logs
     WHERE id IN (
@@ -156,7 +157,8 @@ class MiraiMobileController extends Controller
     GROUP BY employee_id, `name`, answer_date
     )
     ) as semua
-    group by employee_id, `name`, answer_date';
+    group by employee_id, `name`, answer_date) as att
+    left join groups on att.employee_id = groups.employee_id AND att.answer_date = groups.tanggal';
 
     $response = array(
       'status' => true,
@@ -188,7 +190,7 @@ class MiraiMobileController extends Controller
 
   public function fetch_health(Request $request){
 
-    $datefrom = date("Y-m-d",  strtotime('-30 days'));
+    $datefrom = date("Y-m-d", strtotime('-30 days'));
     $dateto = date("Y-m-d");
 
     if(strlen($request->get('datefrom')) > 0){
@@ -202,14 +204,24 @@ class MiraiMobileController extends Controller
       //per tgl
     $data = DB::connection('mobile')->select("
      select distinct answer_date, 
-      (select count(employee_id) as emp from employees where end_date is null and keterangan is null) as karyawan,
-      (select count(employee_id) as emp from employees where end_date is null and keterangan is null) - emplo.mengisi as belum,
-      emplo.mengisi
-      from
-      (select answer_date, count(employee_id) as mengisi from
-      (select answer_date, quiz_logs.employee_id from quiz_logs left join employees on quiz_logs.employee_id = employees.employee_id where keterangan is null
-      group by employee_id, answer_date) dd
-      group by answer_date) emplo");
+     (select count(employee_id) as emp from employees where end_date is null and keterangan is null) as karyawan,
+     (select count(employee_id) as emp from employees where end_date is null and keterangan is null) - emplo.mengisi as belum,
+     emplo.mengisi
+     from
+     (select answer_date, count(employee_id) as mengisi from
+     (select answer_date, quiz_logs.employee_id from quiz_logs left join employees on quiz_logs.employee_id = employees.employee_id where keterangan is null
+     group by employee_id, answer_date) dd
+     group by answer_date) emplo");
+
+    $data_sakit = DB::connection('mobile')->select("
+      select cat.answer_date, cat.question, IFNULL(ans,0) as count from
+      (select distinct answer_date, question from quiz_logs where question <> 'Suhu Tubuh') cat
+      left join
+      (select answer_date, question, count(answer) ans from quiz_logs where answer = 'Iya' group by question, answer_date) as tidak
+      on cat.question = tidak.question and cat.answer_date = tidak.answer_date");
+
+    $cat_sakit = DB::connection('mobile')->select("
+      select distinct answer_date, question from quiz_logs where question <> 'Suhu Tubuh'");
 
     // $q2 = DB::connection('mobile')->select("SELECT employee_id, `name`, answer_date, latitude as masuk, longitude as masuk1, 0 as keluar, 0 as keluar2 FROM `quiz_logs` group by employee_id, `name`, answer_date");
 
@@ -218,6 +230,8 @@ class MiraiMobileController extends Controller
     $response = array(
       'status' => true,
       'datas' => $data,
+      'sakit' => $data_sakit,
+      'cat_sakit' => $cat_sakit
     );
 
     return Response::json($response);
@@ -252,8 +266,6 @@ class MiraiMobileController extends Controller
     return Response::json($response);
 
   }
-
-
 
   public function getLocation($lat, $long){
 

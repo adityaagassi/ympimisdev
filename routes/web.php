@@ -2603,13 +2603,19 @@ Route::get('/welcome_trial', function () {
 // MIRAI MOBILE
 Route::get('index/mirai_mobile/index', 'MiraiMobileController@index');
 
+//Display Health
 Route::get('index/mirai_mobile/healthy_report', 'MiraiMobileController@display_health');
 Route::get('fetch/mirai_mobile/healthy_report', 'MiraiMobileController@fetch_health');
 Route::get('index/mirai_mobile/detail', 'MiraiMobileController@fetch_detail');
 
+//report attendance
 Route::get('index/mirai_mobile/report_attendance', 'MiraiMobileController@health');
 Route::get('fetch/mirai_mobile/report_attendance', 'MiraiMobileController@fetchHealthData');
 Route::get('fetch/location_employee', 'MiraiMobileController@fetchLocationEmployee');
+
+//report shift
+Route::get('index/mirai_mobile/report_shift', 'MiraiMobileController@shift');
+Route::get('fetch/mirai_mobile/report_shift', 'MiraiMobileController@fetchShiftData');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');
