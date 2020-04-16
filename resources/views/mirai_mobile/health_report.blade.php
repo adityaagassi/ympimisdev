@@ -147,11 +147,11 @@
         </div>
       </div>
       <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
-        <div id="chart" style="width: 99%; height: 400px;"></div>
+        <div id="chart" style="width: 99%; height: 450px;"></div>
       </div>
 
       <div class="col-md-12" style="margin-top: 5px; padding-right: 0;padding-left: 10px">
-        <div id="chart2" style="width: 99%; height: 400px;"></div>
+        <div id="chart2" style="width: 99%; height: 450px;"></div>
       </div>
     </div>
   </div>
@@ -501,7 +501,7 @@ function drawChartSick(param) {
                   events: {
                     click: function () {
                       // ShowModal(this.category,this.series.name);
-                      ShowModal(this.category);
+                      ShowModalSakit(this.category,this.series.name);
                     }
                   }
                 },
@@ -664,6 +664,100 @@ function drawChartSick(param) {
 
       $('#judul_table').append().empty();
       $('#judul_table').append('<center><b>List yang Tidak Mengisi Tanggal '+tgl+'</b></center>'); 
+    }
+
+    function ShowModalSakit(tgl,penyakit) {
+
+      $("#myModal").modal("show");
+
+      var data = {
+        tgl:tgl,
+        penyakit:penyakit
+      }
+
+      $.get('{{ url("index/mirai_mobile/detail_sakit") }}', data, function(result, status, xhr){
+        if(result.status){
+          $('#tableResult').DataTable().clear();
+          $('#tableResult').DataTable().destroy();
+          $('#tableBodyResult').html("");
+          var tableData = "";
+          var count = 1;
+
+          $.each(result.lists, function(key, value) {
+
+            var d = new Date(tgl);
+            var day = d.getDate();
+            var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            var month = months[d.getMonth()];
+            var year = d.getFullYear();      
+
+            tableData += '<tr>';
+            tableData += '<td>'+ day +' '+month+' '+year +'</td>';
+            tableData += '<td>'+ value.employee_id +'</td>';
+            tableData += '<td>'+ value.name +'</td>';
+            tableData += '<td>'+ value.department +'</td>';
+            tableData += '<td>'+ value.section +'</td>';
+            tableData += '<td>'+ value.group +'</td>';
+            tableData += '</tr>';
+            count += 1;
+          });
+
+          $('#tableBodyResult').append(tableData);
+
+          $('#tableResult tfoot th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+          } );
+          var table = $('#tableResult').DataTable({
+            'dom': 'Bfrtip',
+            'responsive':true,
+            'lengthMenu': [
+            [ 5, 10, 25, -1 ],
+            [ '5 rows', '10 rows', '25 rows', 'Show all' ]
+            ],
+            'buttons': {
+              buttons:[
+              {
+                extend: 'pageLength',
+                className: 'btn btn-default',
+              },
+              ]
+            },
+            'paging': true,
+            'lengthChange': true,
+            'pageLength': 15,
+            'searching': true,
+            'ordering': true,
+            'order': [],
+            'info': true,
+            'autoWidth': true,
+            "sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bAutoWidth": false,
+            "processing": true
+          });
+        }
+        else{
+          alert('Attempt to retrieve data failed');
+        }
+        table.columns().every( function () {
+          var that = this;
+
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+              that
+              .search( this.value )
+              .draw();
+            }
+          } );
+        } );
+
+        $('#tableResult tfoot tr').appendTo('#tableResult thead');
+
+      });
+
+      $('#judul_table').append().empty();
+      $('#judul_table').append('<center><b>List yang '+penyakit+' Tanggal '+tgl+'</b></center>'); 
     }
 
     Highcharts.createElement('link', {
