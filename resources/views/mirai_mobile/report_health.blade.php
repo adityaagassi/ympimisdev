@@ -89,8 +89,7 @@
                 <th>Location Masuk</th>
                 <th>Jam Keluar</th>
                 <th>Location Keluar</th>
-                <!-- <th>Latitude</th>
-                <th>Longitude</th> -->
+                <th>Status</th>
                 <!-- <th>Action</th> -->
               </tr>
             </thead>
@@ -99,6 +98,7 @@
             <tfoot>
               <tr>
                 <!-- <th></th> -->
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -201,6 +201,7 @@
           // });
           tableData += '<td>'+ value.time_out +'</td>';
           tableData += '<td><a target="_blank" href="https://172.17.128.87/miraidev/public/trial3?lat='+value.lat_out+'&long='+value.lng_out+'" class="btn btn-warning btn-sm"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;Location</a></td>';
+          tableData += '<td>'+ value.remark +'</td>';
           tableData += '</tr>';
           count += 1;
         });
