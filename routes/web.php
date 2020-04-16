@@ -1,4 +1,4 @@
-	<?php
+		<?php
 
 
 /*
@@ -17,6 +17,9 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('trial2', 'TrialController@trial2');
+Route::get('fetch_trial2', 'TrialController@fetchProductionAchievment');
+
+
 Route::get('trial_loc', 'TrialController@trialLoc');
 Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
 
@@ -36,9 +39,7 @@ Route::get('/trial', function () {
 Route::get('/trial3', function () {
 	return view('trial');
 });
-Route::get('/trial2', function () {
-	return view('trial2');
-});
+
 Route::get('/fetch/trial2', 'PlcController@fetchTemperature');
 Route::get('print/trial', 'TrialController@stocktaking');
 Route::get('trial_machine', 'TrialController@fetch_machine');
@@ -500,6 +501,10 @@ Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 
 Route::get('index/fg_production_schedule', 'ProductionScheduleController@indexProductionData');
 Route::get('fetch/fg_production_schedule', 'ProductionScheduleController@fetchProductionData');
+
+Route::get('index/production_achievement', 'ChoreiController@indexProductionAchievement');
+Route::get('fetch/production_achievement', 'ChoreiController@fetchProductionAchievement');
+
 
 Route::group(['nav' => 'R4', 'middleware' => 'permission'], function(){
 	Route::get('index/ch_daily_production_result', 'ChoreiController@index_ch_daily_production_result');
@@ -2607,11 +2612,14 @@ Route::get('index/mirai_mobile/index', 'MiraiMobileController@index');
 Route::get('index/mirai_mobile/healthy_report', 'MiraiMobileController@display_health');
 Route::get('fetch/mirai_mobile/healthy_report', 'MiraiMobileController@fetch_health');
 Route::get('index/mirai_mobile/detail', 'MiraiMobileController@fetch_detail');
+Route::get('index/mirai_mobile/detail_sakit', 'MiraiMobileController@fetch_detail_sakit');
 
 //report attendance
 Route::get('index/mirai_mobile/report_attendance', 'MiraiMobileController@health');
 Route::get('fetch/mirai_mobile/report_attendance', 'MiraiMobileController@fetchHealthData');
 Route::get('fetch/location_employee', 'MiraiMobileController@fetchLocationEmployee');
+Route::get('index/mirai_mobile/report_attendance_sbh', 'MiraiMobileController@healthSbh');
+Route::get('fetch/mirai_mobile/report_attendance_sbh', 'MiraiMobileController@fetchHealthDataSbh');
 
 //report shift
 Route::get('index/mirai_mobile/report_shift', 'MiraiMobileController@shift');

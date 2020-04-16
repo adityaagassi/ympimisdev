@@ -16,6 +16,16 @@ class ChoreiController extends Controller
 	{
 		$this->middleware('auth');
 	}
+
+	public function indexProductionAchievement(){
+		$title = 'Production Achievement';
+		$title_jp = '';
+
+		return view('choreis.production_achievement', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Production Achievement');
+	}
 	
 	public function index_ch_daily_production_result(){
 		$activity =  new UserActivityLog([
@@ -392,5 +402,179 @@ class ChoreiController extends Controller
 			'last' => $last,
 		);
 		return Response::json($response);
+	}
+
+	public function fetchProductionAchievement(Request $request){
+
+		$date = db::select("select week_date, remark from weekly_calendars
+			where week_date <= '2020-04-16'
+			and remark <> 'H'
+			order by week_date desc
+			limit 5");
+
+		$datefrom = $date[4]->week_date;
+		$dateto = date('Y-m-d');
+		$origin_group = '043';
+
+		if(strlen($request->get('datefrom'))>0){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		}
+		if(strlen($request->get('dateto'))>0){
+			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+		}
+		if(strlen($request->get('origin_group'))>0){
+			$origin_group = $request->get('origin_group');
+		}
+
+		$data = db::select("SELECT
+			due_date,
+			origin_group_code,
+			sum( target ) as target,
+			sum( surface_treatment ) as surface_treatment,
+			sum( welding ) as welding 
+			FROM
+			(
+			SELECT
+			assy_picking_schedules.due_date,
+			materials.origin_group_code,
+			CEIL(
+			IF
+			(
+			materials.origin_group_code = '043',
+			sum( assy_picking_schedules.quantity ) / 34,
+			IF
+			( materials.origin_group_code = '042', sum( assy_picking_schedules.quantity ) / 21, sum( assy_picking_schedules.quantity ) / 20 ) 
+			) 
+			) AS target,
+			0 AS surface_treatment,
+			0 AS welding 
+			FROM
+			assy_picking_schedules
+			LEFT JOIN materials ON materials.material_number = assy_picking_schedules.material_number 
+			WHERE
+			assy_picking_schedules.due_date >= '".$datefrom."' 
+			AND assy_picking_schedules.due_date <= '".$dateto."' 
+			AND materials.hpl IN ( 'ASKEY', 'TSKEY', 'CLKEY', 'FLKEY' ) 
+			AND materials.origin_group_code = '".$origin_group."'
+			GROUP BY
+			assy_picking_schedules.due_date,
+			materials.origin_group_code UNION ALL
+			SELECT
+			date( kitto.histories.created_at ) AS due_date,
+			ympimis.materials.origin_group_code,
+			0 AS target,
+			CEIL(
+			IF
+			(
+			ympimis.materials.origin_group_code = '043',
+			sum( kitto.histories.lot ) / 34,
+			IF
+			(
+			ympimis.materials.origin_group_code = '042',
+			sum( kitto.histories.lot ) / 21,
+			sum( kitto.histories.lot ) / 20 
+			) 
+			) 
+			) AS surface_treatment,
+			0 AS welding 
+			FROM
+			kitto.histories
+			LEFT JOIN kitto.materials ON kitto.materials.id = kitto.histories.completion_material_id
+			LEFT JOIN ympimis.materials ON ympimis.materials.material_number = kitto.materials.material_number 
+			WHERE
+			date( kitto.histories.created_at ) >= '".$datefrom."' 
+			AND date( kitto.histories.created_at ) <= '".$dateto."' 
+			AND kitto.histories.category LIKE 'completion%' 
+			AND ympimis.materials.hpl IN ( 'ASKEY', 'TSKEY', 'CLKEY', 'FLKEY' ) 
+			AND ympimis.materials.origin_group_code = '".$origin_group."'
+			AND kitto.histories.completion_location IN ( 'SX51', 'CL51', 'FL51' ) 
+			GROUP BY
+			date( kitto.histories.created_at ),
+			ympimis.materials.origin_group_code UNION ALL
+			SELECT
+			date( kitto.histories.created_at ) AS due_date,
+			ympimis.materials.origin_group_code,
+			0 AS target,
+			0 AS surface_treatment,
+			CEIL(
+			IF
+			(
+			ympimis.materials.origin_group_code = '043',
+			sum( kitto.histories.lot ) / 34,
+			IF
+			(
+			ympimis.materials.origin_group_code = '042',
+			sum( kitto.histories.lot ) / 21,
+			sum( kitto.histories.lot ) / 20 
+			) 
+			) 
+			) AS welding 
+			FROM
+			kitto.histories
+			LEFT JOIN kitto.materials ON kitto.materials.id = kitto.histories.completion_material_id
+			LEFT JOIN ympimis.materials ON ympimis.materials.material_number = kitto.materials.material_number 
+			WHERE
+			date( kitto.histories.created_at ) >= '".$datefrom."' 
+			AND date( kitto.histories.created_at ) <= '".$dateto."' 
+			AND kitto.histories.category LIKE 'completion%' 
+			AND ympimis.materials.hpl IN ( 'ASKEY', 'TSKEY', 'CLKEY', 'FLKEY' ) 
+			AND ympimis.materials.origin_group_code = '".$origin_group."'
+			AND kitto.histories.completion_location IN ( 'SX21', 'CL21', 'FL21' ) 
+			GROUP BY
+			date( kitto.histories.created_at ) ,
+			ympimis.materials.origin_group_code
+			) AS wst 
+			GROUP BY
+			due_date,
+			origin_group_code");
+
+
+		$data2 = db::select("SELECT
+			target.due_date,
+			target.origin_group_code,
+			target.target,
+			result.result 
+			FROM
+			(
+			SELECT
+			production_schedules.due_date,
+			materials.origin_group_code,
+			sum( production_schedules.quantity ) AS target 
+			FROM
+			production_schedules
+			LEFT JOIN materials ON production_schedules.material_number = materials.material_number 
+			WHERE
+			production_schedules.due_date >= '".$datefrom."' 
+			AND production_schedules.due_date <= '".$dateto."' 
+			AND materials.origin_group_code = '".$origin_group."'
+			GROUP BY
+			production_schedules.due_date,
+			materials.origin_group_code 
+			) AS target
+			LEFT JOIN (
+			SELECT
+			date( flo_details.created_at ) AS date,
+			flo_details.origin_group_code,
+			sum( quantity ) AS result 
+			FROM
+			flo_details 
+			WHERE
+			date( flo_details.created_at ) >= '".$datefrom."' 
+			AND date( flo_details.created_at ) <= '".$dateto."' 
+			AND flo_details.origin_group_code = '".$origin_group."'
+			GROUP BY
+			date,
+			flo_details.origin_group_code 
+		) AS result ON result.date = target.due_date");
+
+		$response = array(
+			'status' => true,
+			'data' => $data,
+			'data2' => $data2,
+			'datefrom' => $datefrom,
+			'dateto' => $dateto,
+			'origin_group' => $origin_group,
+		);
+		return Response::json($response);		
 	}
 }
