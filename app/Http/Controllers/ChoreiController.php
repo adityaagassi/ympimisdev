@@ -412,7 +412,7 @@ class ChoreiController extends Controller
 			order by week_date desc
 			limit 5");
 
-		$datefrom = $date[4]->week_date;
+		$datefrom = date('Y-m-d', strtotime("-5 day", strtotime(date("Y-m-d"))));
 		$dateto = date('Y-m-d');
 		$origin_group = '043';
 
