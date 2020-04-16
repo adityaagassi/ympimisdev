@@ -72,7 +72,7 @@ public function handle()
         from VIEW_YMPI_Emp_OvertimePlan
         where VIEW_YMPI_Emp_OvertimePlan.emp_no <> 'SUNFISH' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom >= '".$first." 00:00:00' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom <= '".$now." 23:59:59'
         group by VIEW_YMPI_Emp_OvertimePlan.emp_no
-        ) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no order by ot.jam desc
+        ) as ot left join VIEW_YMPI_Emp_OrgUnit on VIEW_YMPI_Emp_OrgUnit.Emp_no = ot.emp_no where jam > 0 order by ot.jam desc
         ");
     $ofc_1 = db::table('office_members')->get();
 
