@@ -20,7 +20,7 @@ class TemperatureController extends Controller
      public function RoomTemperature(){
           return view('temperature.temperatureMap', array(
                'title' => 'Room Temperature Map',
-               'title_jp' => '',
+               'title_jp' => '室内温度のマップ',
           ))->with('page', 'Room Temperature');
      }
 

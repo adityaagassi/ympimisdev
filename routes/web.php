@@ -2582,6 +2582,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
 Route::get('scan/assembly/operator', 'AssemblyProcessController@scanAssemblyOperator');
 Route::get('scan/assembly/kensa', 'AssemblyProcessController@scanAssemblyKensa');
+Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexFlutePrintLabel');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
@@ -2624,6 +2625,10 @@ Route::get('fetch/mirai_mobile/report_attendance_sbh', 'MiraiMobileController@fe
 //report shift
 Route::get('index/mirai_mobile/report_shift', 'MiraiMobileController@shift');
 Route::get('fetch/mirai_mobile/report_shift', 'MiraiMobileController@fetchShiftData');
+
+//report location
+Route::get('index/mirai_mobile/report_location', 'MiraiMobileController@location');
+Route::get('fetch/mirai_mobile/report_location', 'MiraiMobileController@fetchLocation');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');

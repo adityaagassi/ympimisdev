@@ -350,11 +350,11 @@
                             </a>
                             <br>
                             <a href="{{ url("index/temperature") }}">
-                                <i class="fa fa-caret-right"></i> Body Temperature (温度)
+                                <i class="fa fa-caret-right"></i> Body Temperature (体温)
                             </a>
                             <br>
                             <a href="{{ url("index/temperature/room_temperature") }}">
-                                <i class="fa fa-caret-right"></i> Room Temperature (温度)
+                                <i class="fa fa-caret-right"></i> Room Temperature (室内温度)
                             </a>
                             <br>
                             <a href="{{ url("index/meeting") }}">

@@ -29,6 +29,7 @@
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/mirai_mobile/report_attendance") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Attendance Report</a>
 			<a href="{{ url("index/mirai_mobile/report_shift") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Employee Shift Report</a> 
+			<a href="{{ url("index/mirai_mobile/report_location") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Employee Location</a> 
 		</div>
 
 	</div>
