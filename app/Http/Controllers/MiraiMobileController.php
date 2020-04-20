@@ -47,6 +47,7 @@ class MiraiMobileController extends Controller
   public function fetch_detail(Request $request){
 
     $tgl = $request->get("tgl");
+    // $remark = $request->get("remark");
 
     if(strlen($request->get('datefrom')) > 0){
       $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
@@ -55,8 +56,63 @@ class MiraiMobileController extends Controller
     if(strlen($request->get('dateto')) > 0){
       $dateto = date('Y-m-d', strtotime($request->get('dateto')));
     }
-
-    $data = DB::connection('mobile')->select("select employees.employee_id,employees.name,employees.department,employees.section,employees.group from employees where employees.employee_id not in (select DISTINCT(quiz_logs.employee_id) from quiz_logs LEFT JOIN employees on quiz_logs.employee_id = employees.employee_id where answer_date = '".$tgl."' and employees.end_date is null and employees.keterangan is null) and end_date is null and keterangan is null");
+    
+    $data = DB::connection('mobile')->select("SELECT
+      employee_id,
+      name,
+      kode,
+      department,
+      section,
+      groupes,
+      COALESCE(created_at,'Tidak Tersedia') as created_at,
+      COALESCE(time(created_at),'Tidak Tersedia') as jam,
+      remark
+    FROM
+      (
+      SELECT
+        groups.employee_id,
+        groups.name,
+        groups.kode,
+        employees.department,
+        employees.section,
+        employees.group as groupes,
+    --    log.department,
+        log.created_at,
+      IF
+        (
+          time( log.created_at ) > '07:00:00' 
+          AND time( log.created_at ) <= '08:00:00', 'LTI', IF ( time( log.created_at ) > '08:00:00' 
+            OR log.created_at IS NULL,
+            'ABS',
+          IF
+          ( time( log.created_at ) <= '07:00:00', 'PRS', 'Unidentified' ))) AS remark 
+      FROM
+        groups
+        LEFT JOIN (
+        SELECT
+          employee_id,
+          name,
+          department,
+          min( created_at ) AS created_at 
+        FROM
+          quiz_logs 
+        WHERE
+          date( created_at ) = '".$tgl."' 
+        GROUP BY
+          employee_id,
+          name,
+          department 
+        ) AS log ON log.employee_id = groups.employee_id 
+      JOIN employees on groups.employee_id = employees.employee_id
+      WHERE
+        groups.tanggal = '".$tgl."' 
+        AND groups.remark = 'OFF' 
+        AND groups.employee_id NOT IN ( SELECT employee_id FROM LEAVES ) 
+      ORDER BY
+        remark,
+        created_at 
+      ) AS LOG ORDER BY remark
+      ");
 
     $response = array(
       'status' => true,
@@ -164,17 +220,51 @@ class MiraiMobileController extends Controller
       $dateto = date('Y-m-d', strtotime($request->get('dateto')));
     }
 
+    $data = DB::connection('mobile')->select("  
+SELECT
+    groups.tanggal,
+    count( groups.employee_id ) AS total,
+    SUM(
+    IF
+    ( time( log.created_at ) > '07:00:00' AND time( log.created_at ) <= '08:00:00', 1, 0 )) AS lti,
+    SUM(
+    IF
+    ( time( log.created_at ) > '08:00:00' OR log.created_at IS NULL, 1, 0 )) AS abs,
+    SUM(
+    IF
+    ( time( log.created_at ) <= '07:00:00', 1, 0 )) AS prs
+  FROM
+    groups
+    LEFT JOIN (
+    SELECT
+      employee_id,
+      NAME,
+      department,
+      answer_date,
+      min( created_at ) AS created_at 
+    FROM
+      quiz_logs 
+    GROUP BY
+      employee_id,
+      NAME,
+      department,
+      answer_date
+    ) AS log ON log.employee_id = groups.employee_id and log.answer_date = groups.tanggal
+  WHERE
+    groups.remark = 'OFF' 
+  AND groups.employee_id NOT IN ( SELECT employee_id FROM `leaves` )
+  group by groups.tanggal");
       //per tgl
-    $data = DB::connection('mobile')->select("
-     select distinct answer_date, 
-     (select count(employee_id) as emp from employees where end_date is null and keterangan is null) as karyawan,
-     (select count(employee_id) as emp from employees where end_date is null and keterangan is null) - emplo.mengisi as belum,
-     emplo.mengisi
-     from
-     (select answer_date, count(employee_id) as mengisi from
-     (select answer_date, quiz_logs.employee_id from quiz_logs left join employees on quiz_logs.employee_id = employees.employee_id where keterangan is null
-     group by employee_id, answer_date) dd
-     group by answer_date) emplo");
+    // $data = DB::connection('mobile')->select("
+    //  select distinct answer_date, 
+    //  (select count(employee_id) as emp from employees where end_date is null and keterangan is null) as karyawan,
+    //  (select count(employee_id) as emp from employees where end_date is null and keterangan is null) - emplo.mengisi as belum,
+    //  emplo.mengisi
+    //  from
+    //  (select answer_date, count(employee_id) as mengisi from
+    //  (select answer_date, quiz_logs.employee_id from quiz_logs left join employees on quiz_logs.employee_id = employees.employee_id where keterangan is null
+    //  group by employee_id, answer_date) dd
+    //  group by answer_date) emplo");
 
     $data_sakit = DB::connection('mobile')->select("
       SELECT

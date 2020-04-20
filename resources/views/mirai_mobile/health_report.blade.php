@@ -51,6 +51,7 @@
     width: 100%;
     padding: 3px;
     box-sizing: border-box;
+    color: black;
   }
   thead>tr>th{
     text-align:center;
@@ -63,7 +64,7 @@
   }
   table > thead > tr > th{
     border:2px solid #f4f4f4;
-    color: white;
+    /*color: white;*/
   }
   #tabelmonitor{
     font-size: 0.83vw;
@@ -176,9 +177,58 @@
                     <th>Department</th>
                     <th>Section</th>
                     <th>Group</th>
+                    <th>Jam</th>
+                    <th>Remark</th>
                   </tr>
                 </thead>
                 <tbody id="tableBodyResult">
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalSakit">
+    <div class="modal-dialog" style="width:1250px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="tableResultSakit" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th>Tanggal</th>
+                    <th>NIK</th> 
+                    <th>Nama</th>
+                    <th>Department</th>
+                    <th>Section</th>
+                    <th>Group</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBodyResultSakit">
                 </tbody>
               </table>
             </div>
@@ -241,14 +291,16 @@
       if(result.status){
 
         var employeeall = []; 
-        var employeensubmit = [];
-        var employeenotsubmit = []; 
+        var employeeabs = [];
+        var employeeprs = []; 
+        var employeelti = [];
         var tgl = [];
 
         $.each(result.datas, function(key, value) {
-          tgl.push(value.answer_date);
-          employeensubmit.push(value.mengisi);
-          employeenotsubmit.push(value.belum);
+          tgl.push(value.tanggal);
+          employeeabs.push(parseInt(value.abs));
+          employeeprs.push(parseInt(value.prs));
+          employeelti.push(parseInt(value.lti));
         })
 
         $('#chart').highcharts({
@@ -326,8 +378,8 @@
                 point: {
                   events: {
                     click: function () {
-                      // ShowModal(this.category,this.series.name);
                       ShowModal(this.category);
+                      // ShowModal(this.category);
                     }
                   }
                 },
@@ -359,18 +411,23 @@
               }
             },
             series: [
-            {
-              name: 'Employee Not Submit',
-              data: employeenotsubmit,
-              color : '#ff6666'
-            },
-            {
-              name: 'Employee Submit',
-              data: employeensubmit,
-                  color : '#5cb85c' //00f57f
-                }
-                ]
-              })
+              {
+                name: 'Employee Absence',
+                data: employeeabs,
+                color : '#ff6666'
+              },
+              {
+                name: 'Employee Late',
+                data: employeelti,
+                    color : '#ffe666' //00f57f
+              },
+              {
+                name: 'Employee Presence',
+                data: employeeprs,
+                    color : '#5cb85c' //00f57f
+              }
+            ]
+        })
 
         // ------------------  DATA SAKIT ------------------
 
@@ -577,9 +634,26 @@ function drawChartSick(param) {
 
       $("#myModal").modal("show");
 
+      // if (remark === 'Employee Absence') {
+      //   var rmrk = 'ABS';
+      //   var judul = 'Tidak Mengisi';
+      // }else if(remark === 'Employee Presence'){
+      //   var rmrk = 'PRS';
+      //   var judul = 'Mengisi Tepat Waktu';
+      // }else{
+      //   var rmrk = 'LTI';
+      //   var judul = 'Terlambat Mengisi';
+      // }
       var data = {
-        tgl:tgl
+        tgl:tgl,
+        // remark : rmrk
       }
+
+      var d = new Date(tgl);
+      var day = d.getDate();
+      var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      var month = months[d.getMonth()];
+      var year = d.getFullYear();
 
       $.get('{{ url("index/mirai_mobile/detail") }}', data, function(result, status, xhr){
         if(result.status){
@@ -591,11 +665,11 @@ function drawChartSick(param) {
 
           $.each(result.lists, function(key, value) {
 
-            var d = new Date(tgl);
-            var day = d.getDate();
-            var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            var month = months[d.getMonth()];
-            var year = d.getFullYear();      
+            // var d = new Date(tgl);
+            // var day = d.getDate();
+            // var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            // var month = months[d.getMonth()];
+            // var year = d.getFullYear();
 
             tableData += '<tr>';
             tableData += '<td>'+ day +' '+month+' '+year +'</td>';
@@ -603,7 +677,15 @@ function drawChartSick(param) {
             tableData += '<td>'+ value.name +'</td>';
             tableData += '<td>'+ value.department +'</td>';
             tableData += '<td>'+ value.section +'</td>';
-            tableData += '<td>'+ value.group +'</td>';
+            tableData += '<td>'+ value.groupes +'</td>';
+            tableData += '<td>'+ value.jam +'</td>';
+            if (value.remark == 'ABS') {
+              tableData += '<td>Tidak Mengisi</td>';
+            }else if(value.remark == 'LTI'){
+              tableData += '<td>Telat Mengisi</td>';
+            }else{
+              tableData += '<td>Mengisi Tepat Waktu</td>';
+            }
             tableData += '</tr>';
             count += 1;
           });
@@ -616,59 +698,84 @@ function drawChartSick(param) {
           } );
           var table = $('#tableResult').DataTable({
             'dom': 'Bfrtip',
-            'responsive':true,
-            'lengthMenu': [
-            [ 5, 10, 25, -1 ],
-            [ '5 rows', '10 rows', '25 rows', 'Show all' ]
-            ],
-            'buttons': {
-              buttons:[
-              {
-                extend: 'pageLength',
-                className: 'btn btn-default',
-              },
-              ]
+          'responsive':true,
+          'lengthMenu': [
+          [ 5, 10, 25, -1 ],
+          [ '5 rows', '10 rows', '25 rows', 'Show all' ]
+          ],
+          'buttons': {
+            buttons:[
+            {
+              extend: 'pageLength',
+              className: 'btn btn-default',
             },
-            'paging': true,
-            'lengthChange': true,
-            'pageLength': 15,
-            'searching': true,
-            'ordering': true,
-            'order': [],
-            'info': true,
-            'autoWidth': true,
-            "sPaginationType": "full_numbers",
-            "bJQueryUI": true,
-            "bAutoWidth": false,
-            "processing": true
+            {
+              extend: 'copy',
+              className: 'btn btn-success',
+              text: '<i class="fa fa-copy"></i> Copy',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'excel',
+              className: 'btn btn-info',
+              text: '<i class="fa fa-file-excel-o"></i> Excel',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            {
+              extend: 'print',
+              className: 'btn btn-warning',
+              text: '<i class="fa fa-print"></i> Print',
+              exportOptions: {
+                columns: ':not(.notexport)'
+              }
+            },
+            ]
+          },
+          'paging': true,
+          'lengthChange': true,
+          'pageLength': 15,
+          'searching': true,
+          'ordering': true,
+          'order': [],
+          'info': true,
+          'autoWidth': true,
+          "sPaginationType": "full_numbers",
+          "bJQueryUI": true,
+          "bAutoWidth": false,
+          "processing": true
           });
+
+          table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                that
+                .search( this.value )
+                .draw();
+              }
+            } );
+          } );
+
+          $('#tableResult tfoot tr').appendTo('#tableResult thead');
         }
         else{
           alert('Attempt to retrieve data failed');
         }
-        table.columns().every( function () {
-          var that = this;
-
-          $( 'input', this.footer() ).on( 'keyup change', function () {
-            if ( that.search() !== this.value ) {
-              that
-              .search( this.value )
-              .draw();
-            }
-          } );
-        } );
-
-        $('#tableResult tfoot tr').appendTo('#tableResult thead');
 
       });
 
       $('#judul_table').append().empty();
-      $('#judul_table').append('<center><b>List yang Tidak Mengisi Tanggal '+tgl+'</b></center>'); 
+      $('#judul_table').append('<center><b>List Tanggal '+day +' '+month+' '+year+'</b></center>'); 
     }
 
     function ShowModalSakit(tgl,penyakit) {
 
-      $("#myModal").modal("show");
+      $("#myModalSakit").modal("show");
 
       var data = {
         tgl:tgl,
@@ -677,9 +784,9 @@ function drawChartSick(param) {
 
       $.get('{{ url("index/mirai_mobile/detail_sakit") }}', data, function(result, status, xhr){
         if(result.status){
-          $('#tableResult').DataTable().clear();
-          $('#tableResult').DataTable().destroy();
-          $('#tableBodyResult').html("");
+          $('#tableResultSakit').DataTable().clear();
+          $('#tableResultSakit').DataTable().destroy();
+          $('#tableBodyResultSakit').html("");
           var tableData = "";
           var count = 1;
 
@@ -702,13 +809,13 @@ function drawChartSick(param) {
             count += 1;
           });
 
-          $('#tableBodyResult').append(tableData);
+          $('#tableBodyResultSakit').append(tableData);
 
-          $('#tableResult tfoot th').each( function () {
+          $('#tableResultSakit tfoot th').each( function () {
             var title = $(this).text();
             $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
           } );
-          var table = $('#tableResult').DataTable({
+          var table = $('#tableResultSakit').DataTable({
             'dom': 'Bfrtip',
             'responsive':true,
             'lengthMenu': [
@@ -752,11 +859,11 @@ function drawChartSick(param) {
           } );
         } );
 
-        $('#tableResult tfoot tr').appendTo('#tableResult thead');
+        $('#tableResultSakit tfoot tr').appendTo('#tableResultSakit thead');
 
       });
 
-      $('#judul_table').append().empty();
+      $('#judul_table_sakit').append().empty();
       $('#judul_table').append('<center><b>List yang '+penyakit+' Tanggal '+tgl+'</b></center>'); 
     }
 
