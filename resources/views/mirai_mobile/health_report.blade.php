@@ -682,7 +682,7 @@ function drawChartSick(param) {
             if (value.remark == 'ABS') {
               tableData += '<td>Tidak Mengisi</td>';
             }else if(value.remark == 'LTI'){
-              tableData += '<td>Telat Mengisi</td>';
+              tableData += '<td>Terlambat Mengisi</td>';
             }else{
               tableData += '<td>Mengisi Tepat Waktu</td>';
             }
