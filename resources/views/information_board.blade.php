@@ -40,7 +40,7 @@
 						<div class="timeline-body">
 							Diinformasikan bahwa per tanggal <i style="color: red;">01 Januari 2020</i>, pembuatan <i style="color: red;">form lembur</i> menggunakan <i style="color: red;">Sunfish</i> pada link berikut:
 							<br>
-							<a href="http://172.17.144.11/sf6/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Sunfish Overtime <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+							<a href="http://172.17.128.8/sf6/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Sunfish Overtime <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
 							<br>
 							<br>
 							Data HRq belum terupdate karena sedang dalam masa transisi ke data Sunfish.
