@@ -16,7 +16,7 @@ class MiraiMobileController extends Controller
   public function index()
   {
     $title = 'MIRAI Mobile Report';
-    $title_jp = '??';
+    $title_jp = 'モバイルMIRAIの記録';
 
     return view('mirai_mobile.index', array(
       'title' => $title,
@@ -84,14 +84,14 @@ class MiraiMobileController extends Controller
       employees.section,
       employees.group
       FROM
-        quiz_logs
-        LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id 
+      quiz_logs
+      LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id 
       WHERE
-        answer_date = '".$tgl."' 
-        AND employees.end_date IS NULL 
-        AND employees.keterangan IS NULL 
-        AND question = '".$penyakit."'
-        AND answer = 'Iya'");
+      answer_date = '".$tgl."' 
+      AND employees.end_date IS NULL 
+      AND employees.keterangan IS NULL 
+      AND question = '".$penyakit."'
+      AND answer = 'Iya'");
 
     $response = array(
       'status' => true,
@@ -102,14 +102,7 @@ class MiraiMobileController extends Controller
 
   public function fetchHealthData(Request $request)
   {
-    $tanggal = $request->get("tanggal");
-    if ($tanggal == null) {
-      $tgl = '';
-    }
-    else{
-      $tgl = "where tanggal = '".$tanggal."'";
-    }
-
+    $tgl = date('Y-m-d', strtotime($request->get('tanggal')));
     $q =  'select att.*, groups.remark from
     (select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, SEC_TO_TIME(SUM(time_in)) time_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out from
     (
@@ -128,7 +121,7 @@ class MiraiMobileController extends Controller
     )
     ) as semua
     group by employee_id, `name`, answer_date) as att
-    left join groups on att.employee_id = groups.employee_id AND att.answer_date = groups.tanggal';
+    left join groups on att.employee_id = groups.employee_id AND att.answer_date = groups.tanggal where att.answer_date = "'.$tgl.'"';
 
     $response = array(
       'status' => true,
@@ -184,29 +177,29 @@ class MiraiMobileController extends Controller
      group by answer_date) emplo");
 
     $data_sakit = DB::connection('mobile')->select("
-            SELECT
-  cat.answer_date,
-  cat.question,
-  IFNULL( ans, 0 ) AS count 
-FROM
-  ( SELECT DISTINCT answer_date, question FROM quiz_logs WHERE question <> 'Suhu Tubuh' ) cat
-  LEFT JOIN (
-  SELECT
-    answer_date,
-    question,
-    count( answer ) ans 
-  FROM
-    quiz_logs
-    LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id 
-  WHERE
-    answer = 'Iya' 
-    AND keterangan IS NULL 
-    AND end_date IS NULL 
-  GROUP BY
-    question,
-    answer_date 
-  ) AS tidak ON cat.question = tidak.question 
-  AND cat.answer_date = tidak.answer_date");
+      SELECT
+      cat.answer_date,
+      cat.question,
+      IFNULL( ans, 0 ) AS count 
+      FROM
+      ( SELECT DISTINCT answer_date, question FROM quiz_logs WHERE question <> 'Suhu Tubuh' ) cat
+      LEFT JOIN (
+      SELECT
+      answer_date,
+      question,
+      count( answer ) ans 
+      FROM
+      quiz_logs
+      LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id 
+      WHERE
+      answer = 'Iya' 
+      AND keterangan IS NULL 
+      AND end_date IS NULL 
+      GROUP BY
+      question,
+      answer_date 
+      ) AS tidak ON cat.question = tidak.question 
+      AND cat.answer_date = tidak.answer_date");
 
     $cat_sakit = DB::connection('mobile')->select("
       select distinct answer_date, question from quiz_logs where question <> 'Suhu Tubuh'");
@@ -275,4 +268,40 @@ FROM
     );
     return Response::json($response);
   }
+
+  public function location(){
+    $tglnow = date('Y-m-d');
+
+    return view('mirai_mobile.emp_location',  
+      array('title' => 'Resume Employee Location', 
+        'title_jp' => ''
+      )
+    )->with('page', 'Resume Employee Location');
+  }
+
+  public function fetchLocation()
+  {
+
+    $employee_location = db::connection('mobile')->select("SELECT act.answer_date, employees.department, count(act.employee_id) as jumlah from
+      (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
+      WHERE id IN (
+      SELECT MIN(id)
+      FROM quiz_logs
+      GROUP BY employee_id, `name`, answer_date
+      )) as act
+      left join employees on employees.employee_id = act.employee_id
+      where act.city <> employees.kota and answer_date >= '2020-04-15'
+      group by employees.department, answer_date");
+
+    $period = db::table('weekly_calendars')->where('week_date', '>=', '2020-04-15')->where('week_date', '<=', date('y-m-d'))->select('week_date')->orderBy('week_date', 'desc')->get();
+
+    $response = array(
+      'status' => true,
+      'period' => $period,
+      'emp_location' => $employee_location
+    );
+    return Response::json($response);
+  }
+
+
 }
