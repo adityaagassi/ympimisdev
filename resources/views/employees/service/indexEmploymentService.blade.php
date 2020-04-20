@@ -390,6 +390,26 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			<div class="col-md-9" style="padding-top: 0;">
 				<ul class="timeline">
 					<li class="time-label">
+						<span style="background-color: red; color: white;">
+							20 April 2020
+						</span>
+					</li>
+					<li>
+						<i class="fa fa-info-circle" style="background-color: red; color: white;"></i>
+						<div class="timeline-item">
+							<h3 class="timeline-header" style="color: red; font-weight: bold;">Informasi Terkait Pelanggaran Kode Etik Power Harassment (Pelecehan Keskuasaan)</h3>
+							<div class="timeline-body">
+								Surat informasi dapat didownload melalui link di bawah ini:
+								<br>
+								<a href="{{ asset('\files\info\Pengumuman_Kasus_COC.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Pengumuman Kasus COC <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+								<br>
+								Buku kepatuhan kode etik karyawn didownload melalui link di bawah ini:
+								<br>
+								<a href="{{ asset('\files\info\Kode_Etik_Kepatuhan_rev4.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Kode Etik Kepatuhan Rev4.0 <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+							</div>
+						</div>
+					</li>
+					<li class="time-label">
 						<span style="background-color: #00a65a; color: white;">
 							24 January 2019
 						</span>
