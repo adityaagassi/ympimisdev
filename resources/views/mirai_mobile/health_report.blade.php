@@ -212,7 +212,7 @@
         <div class="modal-header">
           <h4 style="float: right;" id="modal-title"></h4>
           <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-          <br><h4 class="modal-title" id="judul_table"></h4>
+          <br><h4 class="modal-title" id="judul_table_sakit"></h4>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -782,6 +782,12 @@ function drawChartSick(param) {
         penyakit:penyakit
       }
 
+      var d = new Date(tgl);
+      var day = d.getDate();
+      var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      var month = months[d.getMonth()];
+      var year = d.getFullYear();      
+
       $.get('{{ url("index/mirai_mobile/detail_sakit") }}', data, function(result, status, xhr){
         if(result.status){
           $('#tableResultSakit').DataTable().clear();
@@ -791,12 +797,6 @@ function drawChartSick(param) {
           var count = 1;
 
           $.each(result.lists, function(key, value) {
-
-            var d = new Date(tgl);
-            var day = d.getDate();
-            var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            var month = months[d.getMonth()];
-            var year = d.getFullYear();      
 
             tableData += '<tr>';
             tableData += '<td>'+ day +' '+month+' '+year +'</td>';
@@ -864,7 +864,7 @@ function drawChartSick(param) {
       });
 
       $('#judul_table_sakit').append().empty();
-      $('#judul_table').append('<center><b>List yang '+penyakit+' Tanggal '+tgl+'</b></center>'); 
+      $('#judul_table_sakit').append('<center><b>List yang '+penyakit+' Tanggal '+day +' '+month+' '+year+'</b></center>'); 
     }
 
     Highcharts.createElement('link', {
