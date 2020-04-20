@@ -73,6 +73,13 @@
     {{ session('error') }}
   </div>   
   @endif
+
+  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+    <p style="position: absolute; color: White; top: 45%; left: 45%;">
+      <span style="font-size: 5vw;"><i class="fa fa-spin fa-circle-o-notch"></i></span>
+    </p>
+  </div>
+
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -169,6 +176,7 @@
   }
 
   function fillTable(){
+    $('#loading').show();
     var tanggal = $('#tanggal').val();
     var data = {
       tanggal:tanggal
@@ -279,31 +287,30 @@
           "bAutoWidth": false,
           "processing": true
         });
+
+
+        table.columns().every( function () {
+          var that = this;
+
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+              that
+              .search( this.value )
+              .draw();
+            }
+          } );
+        } );
+
+        $('#tableResult tfoot tr').appendTo('#tableResult thead');
+
+        $('#loading').hide();
       }
       else{
+        $('#loading').hide();
         alert('Attempt to retrieve data failed');
       }
-      table.columns().every( function () {
-        var that = this;
 
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#tableResult tfoot tr').appendTo('#tableResult thead');
-
-    });
-
-
-
-
-
-      // $('#judul_table').append().empty();
+    });      // $('#judul_table').append().empty();
       // $('#judul_table').append('<center>Pengecekan Tanggal <b>'+tanggal+'</b> dengan Judgement <b>'+jdgm+'</b> (<b>'+remark+'</b>)</center>');
       
     }
