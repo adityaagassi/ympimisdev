@@ -332,7 +332,7 @@ class QcYmmjController extends Controller
 
     public function fetchTable(Request $request)
     {
-      $data = db::select("select nomor, DATE_FORMAT(tgl_kejadian, '%d %M %Y') as tgl_kejadian, lokasi, judul, no_invoice, qty_cek, qty_ng, penanganan, file from qc_ymmjs order by tgl_kejadian desc ");
+      $data = db::select("select nomor, tgl_kejadian, lokasi, judul, no_invoice, qty_cek, qty_ng, penanganan, file from qc_ymmjs order by tgl_kejadian desc ");
 
       $response = array(
         'status' => true,

@@ -413,10 +413,18 @@ table > thead > tr > th{
           $('#tabelisi').html("");
           var table = "";
 
+
           $.each(result.datas, function(key, value) {
+
+            var d = new Date(value.tgl_kejadian);
+            var day = d.getDate();
+            var months = ["Januari", "Februari", "Maret", "Apr", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            var month = months[d.getMonth()];
+            var year = d.getFullYear();
+
             table += '<tr>';
             table += '<td>'+value.nomor+'</td>'; 
-            table += '<td>'+value.tgl_kejadian+'</td>';
+            table += '<td>'+ day +' '+month+' '+year +'</td>';
             table += '<td>'+value.judul+'</td>';
             table += '<td>'+value.lokasi+'</td>';
             table += '<td>'+value.no_invoice+'</td>';

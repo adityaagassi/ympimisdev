@@ -2919,7 +2919,7 @@ public function fetchResultFlStamp(Request $request)
 		}
 	}
 	if (date('D')=='Fri' || date('D')=='Sat') {
-		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
+		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
 	}
 
 	// if(date('D')=='Fri' ){
