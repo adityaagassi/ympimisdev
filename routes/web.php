@@ -2629,6 +2629,7 @@ Route::get('fetch/mirai_mobile/report_shift', 'MiraiMobileController@fetchShiftD
 //report location
 Route::get('index/mirai_mobile/report_location', 'MiraiMobileController@location');
 Route::get('fetch/mirai_mobile/report_location', 'MiraiMobileController@fetchLocation');
+Route::get('fetch/mirai_mobile/report_location/detail', 'MiraiMobileController@fetchLocationDetail');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');
