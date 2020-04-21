@@ -2898,29 +2898,29 @@ public function fetchResultFlStamp(Request $request)
 	// }
 
 	$i = 1;
-    $nextday = date('Y-m-d', strtotime(carbon::now()->addDays($i)));
-    $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
-    foreach ($weekly_calendars as $key) {
-        if ($key->week_date == $nextday) {
-            if ($key->remark == 'H') {
-                $nextday = date('Y-m-d', strtotime(carbon::now()->addDays(++$i)));
-            }
-        }
-    }
+	$nextday = date('Y-m-d', strtotime(carbon::now()->addDays($i)));
+	$weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
+	foreach ($weekly_calendars as $key) {
+		if ($key->week_date == $nextday) {
+			if ($key->remark == 'H') {
+				$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(++$i)));
+			}
+		}
+	}
 
-    $j = 2;
-    $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
-    $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
-    foreach ($weekly_calendars as $key) {
-        if ($key->week_date == $nextdayplus1) {
-            if ($key->remark == 'H') {
-                $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
-            }
-        }
-    }
-    if (date('D')=='Fri' || date('D')=='Sat') {
-        $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
-    }
+	$j = 2;
+	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
+	$weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
+	foreach ($weekly_calendars as $key) {
+		if ($key->week_date == $nextdayplus1) {
+			if ($key->remark == 'H') {
+				$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
+			}
+		}
+	}
+	if (date('D')=='Fri' || date('D')=='Sat') {
+		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
+	}
 
 	// if(date('D')=='Fri' ){
 	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));

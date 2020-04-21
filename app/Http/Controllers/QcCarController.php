@@ -986,9 +986,9 @@ class QcCarController extends Controller
             else if ($qc_cars->posisi == "dgm") {
               $qc_cars->checked_manager = "Checked";
               $qc_cars->approved_dgm = "Checked";  
-              $qc_cars->email_status = "SentGM";
-              $qc_cars->email_send_date = date('Y-m-d');
-              $qc_cars->posisi = "gm";
+              // $qc_cars->email_status = "SentGM";
+              // $qc_cars->email_send_date = date('Y-m-d');
+              // $qc_cars->posisi = "gm";
               $qc_cars->save();
             }
 
@@ -1096,6 +1096,12 @@ class QcCarController extends Controller
             } 
             else if ($qc_cars->posisi == "manager") {
               $to = "dgm";
+            }
+            else if ($qc_cars->posisi == "dgm") {
+              $to = "gm";
+            } 
+            else if ($qc_cars->posisi == "gm") {
+              $to = "gm";
             }
 
             $mailto = "select distinct email,phone from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id join departments on qc_verifikators.department_id = departments.id join employees on qc_cpars.".$to." = employees.employee_id join users on employees.employee_id = users.username where qc_cars.id ='".$id."'";
