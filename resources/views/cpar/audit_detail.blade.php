@@ -219,6 +219,12 @@
               <input type="text" class="form-control datepicker2" id="auditee_due_date" placeholder="Masukkan Due Date" value="{{$audits->auditee_due_date}}">
             </div>
 
+            <br>
+
+            <label for="auditee">Nomor Audit CPAR</label>
+              <input type="text" class="form-control" id="audit_no" placeholder="Audit CPAR" value="{{$audits->audit_no}}" required readonly>
+            </div>
+
           </div>
         </div>
         <div class="row">
@@ -227,7 +233,7 @@
               <a class="btn btn-danger" href="{{ url('index/audit_iso') }}">Cancel</a>
             </div>
             <div class="btn-group">
-              <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
+              <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Save </button>
             </div>
           </div>
         </div>

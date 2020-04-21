@@ -100,7 +100,7 @@ td {
                   <div class="input-group-addon">
                     <i class="fa fa-calendar"></i>
                   </div>
-                  <input type="text" class="form-control pull-right" id="tgl" name="tgl" placeholder="Tanggal">
+                  <input type="text" class="form-control pull-right" id="tgl" name="tgl" placeholder="Tanggal Audit">
                 </div>
               </div>
             </div>
@@ -118,12 +118,14 @@ td {
             <table id="tableResult" class="table table-bordered table-striped table-hover">
               <thead style="background-color: rgba(126,86,134,.7);">
                 <tr>
+                  <th>Nomor</th>
                   <th>Tanggal Audit</th>
                   <th>Auditor</th>
                   <th>Kategori</th>
                   <th>Lokasi</th> 
                   <th>Auditee</th>
-                  <th>Tgl Auditee</th>
+                  <th>Due Date Auditee</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -131,6 +133,8 @@ td {
               </tbody>
               <tfoot>
                 <tr>
+                  <th></th>
+                  <th></th>
                   <th></th>
                   <th></th>
                   <th></th>
@@ -236,18 +240,27 @@ td {
         var year2 = e.getFullYear();
 
         tableData += '<tr>';
-        tableData += '<td>'+ day +' '+month+' '+year +'</td>';
+        tableData += '<td width="5%">'+ value.audit_no +'</td>';
+        tableData += '<td width="10%">'+ day +' '+month+' '+year +'</td>';
         tableData += '<td>'+ value.auditor_name +'</td>';
         tableData += '<td>'+ value.auditor_kategori +'</td>';
         tableData += '<td>'+ value.auditor_lokasi +'</td>';
         tableData += '<td>'+ value.auditee_name+ '</td>';
-        tableData += '<td>'+ day2 +' '+month2+' '+year2+'</td>';
-      
-        if("{{Auth::user()->username}}" == value.auditor || "{{Auth::user()->username}}" == value.auditee || "{{Auth::user()->role_code}}" == "MIS"){
-          tableData += '<td><a href="{{ url("index/audit_iso/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a> <a href="{{ url("index/audit_iso/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Detail</a></td>';            
+        tableData += '<td width="12%">'+ day2 +' '+month2+' '+year2+'</td>';
+   
+        if (value.status == "cpar") {
+          tableData += '<td><span class="label label-success"> Open </span></td>';          
         }
         else{
-          tableData += '<td><a href="{{ url("index/audit_iso/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a></td>';
+          tableData += '<td><span class="label label-success"> Open </span></td>';     
+        }
+
+
+        if("{{Auth::user()->username}}" == value.auditor || "{{Auth::user()->username}}" == value.auditee || "{{Auth::user()->role_code}}" == "MIS"){
+          tableData += '<td width="15%"><a href="{{ url("index/audit_iso/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a> <a href="{{ url("index/audit_iso/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Detail</a></td>';            
+        }
+        else{
+          tableData += '<td width="15%"><a href="{{ url("index/audit_iso/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a></td>';
         }
 
         tableData += '</tr>';

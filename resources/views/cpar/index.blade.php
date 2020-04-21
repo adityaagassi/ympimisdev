@@ -54,16 +54,7 @@ td {
     <!-- <small>Validate Your CPAR</small> -->
   </h1>
   <ol class="breadcrumb">
-    <?php 
-      if (strpos(strtolower($employee->position), 'operator') !== false) {
-
-      } else { ?>
-      
-        <a href="{{ url("index/form_ketidaksesuaian/create")}}" class="btn btn-success btn-sm" style="color:white;float: right"><i class="fa fa-plus"></i> Buat {{ $page }} </a>
-      
-      <?php 
-      }
-     ?>
+    
   </ol>
 </section>
 @endsection
@@ -104,20 +95,6 @@ td {
                 </div>
               </div>
             </div>
-            <!-- <div class="col-md-3">
-              <div class="form-group">
-                <select class="form-control select2" data-placeholder="Select Section From" name="section_from" id="section_from" style="width: 100%;padding-left: 0">
-                  <option></option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-3" style="padding-left: 0">
-              <div class="form-group">
-                <select class="form-control select2" data-placeholder="Select Section To" name="section_to" id="section_to" style="width: 100%;padding-left: 0">
-                  <option></option>
-                </select>
-              </div>
-            </div> -->
             <div class="col-md-3">
                 <a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
                 <button id="search" onClick="fillTable($('#tgl').val(),$('#section_from').val(),$('#section_to').val())" class="btn btn-primary">Search</button>

@@ -187,6 +187,12 @@
               <input type="text" class="form-control datepicker2" id="auditee_due_date" placeholder="Masukkan Due Date">
             </div>
 
+            <br>
+
+            <label for="auditee">Nomor Audit CPAR</label>
+              <input type="text" class="form-control" id="audit_no" placeholder="Audit CPAR" required readonly>
+            </div>
+
           </div>
         </div>
         <div class="row">
@@ -263,6 +269,46 @@
       if (getkat != null) {
         $("#syarat").show();
       }
+
+      var auditno = document.getElementById("audit_no");
+
+      if (getkat == "ISO 9001") {
+        kategori = "Q";
+      }
+      else if (getkat == "ISO 14001"){
+        kategori = "E";
+      }
+      else if (getkat == "ISO 45001"){
+        kategori = "S";
+      }
+
+      $.ajax({
+        url: "{{ url('index/audit_iso/get_nomor_depan') }}?kategori=" + getkat, 
+        type : 'GET', 
+        success : function(data){
+            var obj = jQuery.parseJSON(data);
+            var nomordepan = obj;
+            // console.log(nomordepan);
+            if (obj != null) {
+              if (nomordepan == 0) {
+                var lastnum = 0;
+              }
+              if (nomordepan.length == 2) {
+                var lastnum = nomordepan.substr(nomordepan.length - 1);              
+              }
+              else if (nomordepan.length == 3) {
+                var lastnum = nomordepan.substr(nomordepan.length - 2);
+              }              
+              else if (nomordepan.length == 4) {
+                var lastnum = nomordepan.substr(nomordepan.length - 3);
+              }
+            }
+
+            no = parseInt(lastnum) + 1;
+            auditno.value = kategori+no;
+        }
+      });
+
     }
 
     $('.datepicker').datepicker({
@@ -342,6 +388,7 @@
         auditor_jenis: $("#auditor_jenis").val(),
         auditor_lokasi: $("#auditor_lokasi").val(),
         auditor_kategori: $("#auditor_kategori").val(),
+        audit_no: $("#audit_no").val(),
         auditor_persyaratan: type.join(),
         auditor_permasalahan: CKEDITOR.instances.auditor_permasalahan.getData(),
         auditor_penyebab: CKEDITOR.instances.auditor_penyebab.getData(),
@@ -355,7 +402,7 @@
         if(result.status == true){    
           $("#loading").hide();
           openSuccessGritter("Success","Data Berhasil Dibuat");
-          setTimeout(function(){ window.history.back(); }, 2000); 
+          setTimeout(function(){  window.location = "{{url('index/audit_iso/detail')}}/"+result.id; }, 1000);
         }
         else {
           $("#loading").hide();

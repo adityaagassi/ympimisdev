@@ -1804,6 +1804,7 @@ class CparController extends Controller
            'auditee' => $request->get('auditee'),
            'auditee_name' => $request->get('auditee_name'),
            'auditee_due_date' => $request->get('auditee_due_date'),
+           'audit_no' => $request->get('audit_no'),
            'posisi' => 'auditor',
            'status' => 'cpar',
            'created_by' => $id_user
@@ -1811,10 +1812,20 @@ class CparController extends Controller
 
         $audits->save();
 
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization'";
+        $mailtoo = DB::select($mails);
+
+        $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audits->id;
+        $auditiso = db::select($isimail);
+
+        Mail::to($mailtoo)->send(new SendEmail($auditiso, 'std_audit'));
+
         $response = array(
           'status' => true,
           'datas' => "Berhasil",
+          'id' => $audits->id
         );
+
         return Response::json($response);
 
      } catch (QueryException $e){
@@ -1833,7 +1844,26 @@ class CparController extends Controller
       return json_encode($nama);
     }
 
+    public function audit_get_nomor(Request $request)
+    {
+      $datenow = date('Y-m-d');
+      $nomor = '';
+      $kategori = $request->kategori;
 
+      $query = "SELECT * FROM `standarisasi_audits` where auditor_kategori = '$kategori' ORDER BY id DESC LIMIT 1";
+      $nomordepan = DB::select($query);
+
+      if ($nomordepan != null) {
+        foreach ($nomordepan as $nomors) {
+          $nomor = $nomors->audit_no;
+        }
+      }
+      else{
+        $nomor = 0;
+      }
+
+      return json_encode($nomor);
+    }
 
     public function audit_detail($id)
     {
@@ -1887,5 +1917,57 @@ class CparController extends Controller
               return Response::json($response);
          }
     }
+
+    // Verifikasi oleh STD
+
+  public function verifikasistd($id){
+    $audit = StandarisasiAudit::find($id);
+
+    if ($audit->posisi == 'auditor') {
+      return view('cpar.verifikasi_std', array(
+        'audit' => $audit,
+      ))->with('page', 'CPAR Audit Internal');
+    }
+    else{
+      return redirect('index/audit_iso');
+    }
+  }
+
+  public function audit_approval(Request $request,$id)
+  {
+    $approve = $request->get('approve');
+
+    if(count($approve) == 4){
+      $audit = StandarisasiAudit::find($id);
+
+      if ($audit->posisi == "auditor") {
+        $audit->posisi = "std";
+        $audit->status = "verifikasi";
+        $audit->approval_std = "Approved";
+        $audit->approval_date = date('Y-m-d H:i:s');
+
+        // $mailto = "select distinct employees.name,email,phone from cpar_departments join employees on cpar_departments.manager = employees.employee_id join users on employees.employee_id = users.username where cpar_departments.id = '".$cpar->id."'";
+        // $mails = DB::select($mailto);
+
+        // foreach($mails as $mail){
+        //   $mailtoo = $mail->email;
+        //   $number = $mail->phone;
+        // }
+
+      }
+
+      
+      // $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audit->id;
+      // $audits = db::select($isimail);
+      // Mail::to($mailtoo)->send(new SendEmail($audits, 'audits'));
+
+      $audit->save();
+
+      return redirect('/index/audit_iso/verifikasistd/'.$id)->with('status', 'Audit Approved')->with('page', 'Audit ISO');
+    }
+    else{
+      return redirect('/index/audit_iso/verifikasistd/'.$id)->with('error', 'Audit Not Approved')->with('page', 'Audit ISO');
+    }          
+  }
 
 }

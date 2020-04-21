@@ -241,6 +241,15 @@ td{
                         $("#"+value2.id).parent().addClass('bg-green-active');
                     }
 
+                    else if (value.upper_limit != null && value.lower_limit != null) {
+                        if (value.value > value.upper_limit || value.value < value.lower_limit ) {
+                          $("#"+value2.id).parent().addClass('bg-red-active');
+                        }
+                        else{
+                          $("#"+value2.id).parent().addClass('bg-green-active');
+                        }
+                    }
+
                     else if (value.upper_limit != null ) {
                       if (value.value > value.upper_limit ) {
                         $("#"+value2.id).parent().addClass('bg-red-active');
@@ -275,6 +284,15 @@ td{
 
                     if (value.upper_limit == null && value.lower_limit == null) {
                         $("#"+value3.id).parent().addClass('bg-green-active');
+                    }
+
+                    else if (value.upper_limit != null && value.lower_limit != null) {
+                        if (value.value > value.upper_limit || value.value < value.lower_limit ) {
+                          $("#"+value2.id).parent().addClass('bg-red-active');
+                        }
+                        else{
+                          $("#"+value2.id).parent().addClass('bg-green-active');
+                        }
                     }
 
                     else if (value.upper_limit != null ) {
