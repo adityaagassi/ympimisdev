@@ -625,6 +625,10 @@
                                     <a href="{{ url("/index/display/sub_assy/welding_cl?date=&order2=") }}">
                                         <i class="fa fa-caret-right"></i> Clarinet Picking Monitor (クラリネットピッキング監視)
                                     </a>
+                                    <br>
+                                    <a href="{{ url("/index/production_report/index/15") }}">
+                                        <i class="fa fa-caret-right"></i> Welding Process Report (???)
+                                    </a>
                                 </td>
                             </tr>
                             <tr>
