@@ -1747,9 +1747,14 @@ Route::get('index/get_snfl', 'ProcessController@getsnsaxfl');
 Route::post('index/print_FL', 'ProcessController@print_FL');
 Route::get('edit/stampLabelFL', 'ProcessController@editStampLabelFL');
 Route::post('update/stampLabelFL', 'ProcessController@updateStampLabelFL');
-Route::get('index/label_besarFL/{id}/{gmc}/{remark}', 'ProcessController@label_besarFL');
 Route::get('index/getModelReprintAllFL', 'ProcessController@getModelReprintAllFL');
-Route::get('index/label_kecil_fl/{id}/{remark}', 'ProcessController@label_kecil_fl');
+
+Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_besar_outer_fl');
+Route::get('index/fl_label_besar/{id}/{gmc}/{remark}', 'ProcessController@label_besar_fl');
+Route::get('index/fl_label_kecil/{id}/{remark}', 'ProcessController@label_kecil_fl');
+Route::get('index/fl_label_kecil2/{id}/{remark}', 'ProcessController@label_kecil2_fl');
+
+
 Route::get('index/label_des_fl/{id}', 'ProcessController@label_des_fl');
 
 
@@ -2434,8 +2439,11 @@ Route::get('index/audit_iso/get_nomor_depan', 'CparController@audit_get_nomor');
 Route::get('index/audit_iso/detail/{id}', 'CparController@audit_detail');
 Route::post('post/audit_iso/detail', 'CparController@audit_post_detail');
 Route::get('index/audit_iso/verifikasistd/{id}', 'CparController@verifikasistd');
-Route::post('index/audit_iso/approval/{id}', 'CparController@audit_approval');
-
+Route::post('index/audit_iso/approval/{id}', 'CparController@std_approval');
+Route::post('index/audit_iso/comment/{id}', 'CparController@std_comment');
+Route::post('index/audit_iso/reject/{id}', 'CparController@std_reject');
+Route::get('index/audit_iso/response/{id}', 'CparController@std_response');
+Route::post('index/audit_iso/update_response/{id}', 'CparController@update_response');
 
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');

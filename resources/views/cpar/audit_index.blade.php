@@ -251,6 +251,15 @@ td {
         if (value.status == "cpar") {
           tableData += '<td><span class="label label-success"> Open </span></td>';          
         }
+        else if (value.status == "rejected") {
+          tableData += '<td><span class="label label-danger"> Rejected </span></td>';          
+        }
+        else if (value.status == "commended") {
+          tableData += '<td><span class="label label-warning"> Revision </span></td>';          
+        }
+        else if (value.status == "car") {
+          tableData += '<td><span class="label label-success"> Penanganan </span></td>';          
+        }
         else{
           tableData += '<td><span class="label label-success"> Open </span></td>';     
         }

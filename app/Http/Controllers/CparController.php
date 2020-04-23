@@ -1755,10 +1755,10 @@ class CparController extends Controller
         $tgl = '';
       }
       else{
-        $tgl = "where auditor_date = '".$tanggal."'"; 
+        $tgl = "and auditor_date = '".$tanggal."'"; 
       }
 
-      $query = "SELECT * FROM standarisasi_audits ".$tgl." order by id desc";
+      $query = "SELECT * FROM standarisasi_audits where deleted_at is null ".$tgl." order by id desc";
       $detail = db::select($query);
 
       $response = array(
@@ -1805,7 +1805,7 @@ class CparController extends Controller
            'auditee_name' => $request->get('auditee_name'),
            'auditee_due_date' => $request->get('auditee_due_date'),
            'audit_no' => $request->get('audit_no'),
-           'posisi' => 'auditor',
+           'posisi' => 'std',
            'status' => 'cpar',
            'created_by' => $id_user
         ]);
@@ -1892,7 +1892,7 @@ class CparController extends Controller
 
               $forms = StandarisasiAudit::where('id',$request->get('id'))
               ->update([
-                   'auditor_kategori' => $request->get('auditor_kategori'),
+                   'auditor_kategori' => $request->get('auditor_kategori'), 
                    'auditor_persyaratan' => $request->get('auditor_persyaratan'),
                    'auditor_permasalahan' => $request->get('auditor_permasalahan'),
                    'auditor_penyebab' => $request->get('auditor_penyebab'),
@@ -1923,7 +1923,7 @@ class CparController extends Controller
   public function verifikasistd($id){
     $audit = StandarisasiAudit::find($id);
 
-    if ($audit->posisi == 'auditor') {
+    if ($audit->posisi == 'std' || $audit->posisi == 'auditor' || $audit->posisi == 'auditee') {
       return view('cpar.verifikasi_std', array(
         'audit' => $audit,
       ))->with('page', 'CPAR Audit Internal');
@@ -1933,41 +1933,141 @@ class CparController extends Controller
     }
   }
 
-  public function audit_approval(Request $request,$id)
+  public function std_approval(Request $request,$id)
   {
     $approve = $request->get('approve');
 
     if(count($approve) == 4){
       $audit = StandarisasiAudit::find($id);
 
-      if ($audit->posisi == "auditor") {
-        $audit->posisi = "std";
-        $audit->status = "verifikasi";
+      if ($audit->posisi == "std") {
+        $audit->posisi = "auditee";
+        $audit->status = "car";
         $audit->approval_std = "Approved";
         $audit->approval_date = date('Y-m-d H:i:s');
 
-        // $mailto = "select distinct employees.name,email,phone from cpar_departments join employees on cpar_departments.manager = employees.employee_id join users on employees.employee_id = users.username where cpar_departments.id = '".$cpar->id."'";
-        // $mails = DB::select($mailto);
+        $audit->save();
 
-        // foreach($mails as $mail){
-        //   $mailtoo = $mail->email;
-        //   $number = $mail->phone;
-        // }
+        $mailto = "select distinct employees.name,email from standarisasi_audits join employees on standarisasi_audits.auditee = employees.employee_id join users on employees.employee_id = users.username where standarisasi_audits.id = '".$audit->id."'";
+        $mails = DB::select($mailto);
+
+        foreach($mails as $mail){
+          $mailtoo = $mail->email;
+        }
+      
+        $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audit->id;
+        $audits = db::select($isimail);
+
+        Mail::to($mailtoo)->send(new SendEmail($audits, 'std_audit'));
 
       }
 
-      
-      // $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audit->id;
-      // $audits = db::select($isimail);
-      // Mail::to($mailtoo)->send(new SendEmail($audits, 'audits'));
-
-      $audit->save();
 
       return redirect('/index/audit_iso/verifikasistd/'.$id)->with('status', 'Audit Approved')->with('page', 'Audit ISO');
     }
     else{
       return redirect('/index/audit_iso/verifikasistd/'.$id)->with('error', 'Audit Not Approved')->with('page', 'Audit ISO');
     }          
+  }
+
+  public function std_comment(Request $request,$id)
+  {
+      $alasan = $request->get('alasan');
+      $audit = StandarisasiAudit::find($id);
+
+      $audit->alasan = $alasan;
+      $audit->approval_date = date('Y-m-d H:i:s');
+
+      if ($audit->posisi == "std") {
+        $audit->posisi = "auditor";
+        $audit->status = "commended";
+      }
+
+      $audit->save();
+
+      $query = "select * from standarisasi_audits where standarisasi_audits.id='".$id."'";
+      $komentar = db::select($query);
+
+      $mailto = "select distinct employees.name,email from standarisasi_audits join employees on standarisasi_audits.auditor = employees.employee_id join users on employees.employee_id = users.username where standarisasi_audits.id = '".$audit->id."'";
+      $mails = DB::select($mailto);
+
+      foreach($mails as $mail){
+        $mailtoo = $mail->email;
+      }
+
+      Mail::to($mailtoo)->send(new SendEmail($komentar, 'reject_std_audit'));
+      return redirect('/index/audit_iso/verifikasistd/'.$id)->with('status', 'Audit Not Approved')->with('page', 'Audit ISO');
+  }
+
+  public function std_reject(Request $request,$id)
+  {
+      $alasan = $request->get('alasan');
+      $audit = StandarisasiAudit::find($id);
+
+      $audit->alasan = $alasan;
+      $audit->approval_date = date('Y-m-d H:i:s');
+
+      if ($audit->posisi == "std") {
+        $audit->posisi = "std";
+        $audit->status = "rejected";
+      }
+
+      $audit->save();
+
+      $query = "select * from standarisasi_audits where standarisasi_audits.id='".$id."'";
+      $reject = db::select($query);
+
+      $mailto = "select distinct employees.name,email from standarisasi_audits join employees on standarisasi_audits.auditor = employees.employee_id join users on employees.employee_id = users.username where standarisasi_audits.id = '".$audit->id."'";
+      $mails = DB::select($mailto);
+
+      foreach($mails as $mail){
+        $mailtoo = $mail->email;
+      }
+
+      Mail::to($mailtoo)->send(new SendEmail($reject, 'reject_std_audit'));
+      return redirect('/index/audit_iso/verifikasistd/'.$id)->with('status', 'Audit Not Approved')->with('page', 'Audit ISO');
+  }
+
+  public function std_response($id){
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+      $std = StandarisasiAudit::find($id);
+
+      $employee = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position')->first();
+
+      if ($std->posisi == 'auditee') {
+        return view('cpar.audit_response', array(
+          'std' => $std,
+          'employee' => $employee,
+        ))->with('page', 'Audit ISO');
+      }
+      else{
+        return redirect('index/audit_iso');
+      }
+  }
+
+  public function update_response(Request $request, $id)
+  {
+    try {
+      $audit = StandarisasiAudit::find($id);
+      $audit->auditee_perbaikan = $request->get('auditee_perbaikan');
+      $audit->auditee_pencegahan = $request->get('auditee_pencegahan');
+      $audit->auditee_biaya = $request->get('auditee_biaya');
+      $audit->save();
+
+      return redirect('/index/audit_iso/response/'.$audit->id)->with('status', 'Data has been updated.')->with('page', 'Audit ISO');
+    }
+    catch (QueryException $e){
+      $error_code = $e->errorInfo[1];
+      if($error_code == 1062){
+        return back()->with('error', 'Already exist.')->with('page', 'Audit ISO');
+      }
+      else{
+        return back()->with('error', $e->getMessage())->with('page', 'Audit ISO');
+      }
+    }
   }
 
 }

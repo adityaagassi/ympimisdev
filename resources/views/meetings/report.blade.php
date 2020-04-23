@@ -51,7 +51,13 @@
 					<td style="border: 1px solid black;">{{ $report->employee_id }}</td>
 					<td style="border: 1px solid black;">{{ $report->name }}</td>
 					<td style="border: 1px solid black;">{{ $report->department }}</td>
-					<td style="border: 1px solid black;">Hadir</td>
+					<td style="border: 1px solid black;">
+						@if($report->status == 0)
+						Tidak Hadir
+						@else
+						Hadir
+						@endif
+					</td>
 					<td style="border: 1px solid black;"></td>
 				</tr>
 				<?php $no++; ?>

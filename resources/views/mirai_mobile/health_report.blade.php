@@ -411,23 +411,23 @@
               }
             },
             series: [
-              {
-                name: 'Employee Absence',
-                data: employeeabs,
-                color : '#ff6666'
-              },
-              {
-                name: 'Employee Late',
-                data: employeelti,
+            {
+              name: 'Employee Absence',
+              data: employeeabs,
+              color : '#ff6666'
+            },
+            {
+              name: 'Employee Late',
+              data: employeelti,
                     color : '#ffe666' //00f57f
-              },
-              {
-                name: 'Employee Presence',
-                data: employeeprs,
+                  },
+                  {
+                    name: 'Employee Presence',
+                    data: employeeprs,
                     color : '#5cb85c' //00f57f
-              }
-            ]
-        })
+                  }
+                  ]
+                })
 
         // ------------------  DATA SAKIT ------------------
 
@@ -438,7 +438,7 @@
         var Tenggorokan_Sakit = [];
         var Sesak_Nafas = [];
         var Indera_Perasa = [];
-        var Pernah_Berinteraksi = [0,0,0,0];
+        var Pernah_Berinteraksi = [];
         var tgls = [];
         
         $.each(result.sakit, function(key, value) {
@@ -698,55 +698,55 @@ function drawChartSick(param) {
           } );
           var table = $('#tableResult').DataTable({
             'dom': 'Bfrtip',
-          'responsive':true,
-          'lengthMenu': [
-          [ 5, 10, 25, -1 ],
-          [ '5 rows', '10 rows', '25 rows', 'Show all' ]
-          ],
-          'buttons': {
-            buttons:[
-            {
-              extend: 'pageLength',
-              className: 'btn btn-default',
+            'responsive':true,
+            'lengthMenu': [
+            [ 5, 10, 25, -1 ],
+            [ '5 rows', '10 rows', '25 rows', 'Show all' ]
+            ],
+            'buttons': {
+              buttons:[
+              {
+                extend: 'pageLength',
+                className: 'btn btn-default',
+              },
+              {
+                extend: 'copy',
+                className: 'btn btn-success',
+                text: '<i class="fa fa-copy"></i> Copy',
+                exportOptions: {
+                  columns: ':not(.notexport)'
+                }
+              },
+              {
+                extend: 'excel',
+                className: 'btn btn-info',
+                text: '<i class="fa fa-file-excel-o"></i> Excel',
+                exportOptions: {
+                  columns: ':not(.notexport)'
+                }
+              },
+              {
+                extend: 'print',
+                className: 'btn btn-warning',
+                text: '<i class="fa fa-print"></i> Print',
+                exportOptions: {
+                  columns: ':not(.notexport)'
+                }
+              },
+              ]
             },
-            {
-              extend: 'copy',
-              className: 'btn btn-success',
-              text: '<i class="fa fa-copy"></i> Copy',
-              exportOptions: {
-                columns: ':not(.notexport)'
-              }
-            },
-            {
-              extend: 'excel',
-              className: 'btn btn-info',
-              text: '<i class="fa fa-file-excel-o"></i> Excel',
-              exportOptions: {
-                columns: ':not(.notexport)'
-              }
-            },
-            {
-              extend: 'print',
-              className: 'btn btn-warning',
-              text: '<i class="fa fa-print"></i> Print',
-              exportOptions: {
-                columns: ':not(.notexport)'
-              }
-            },
-            ]
-          },
-          'paging': true,
-          'lengthChange': true,
-          'pageLength': 15,
-          'searching': true,
-          'ordering': true,
-          'order': [],
-          'info': true,
-          'autoWidth': true,
-          "sPaginationType": "full_numbers",
-          "bJQueryUI": true,
-          "bAutoWidth": false,
-          "processing": true
+            'paging': true,
+            'lengthChange': true,
+            'pageLength': 15,
+            'searching': true,
+            'ordering': true,
+            'order': [],
+            'info': true,
+            'autoWidth': true,
+            "sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bAutoWidth": false,
+            "processing": true
           });
 
           table.columns().every( function () {
