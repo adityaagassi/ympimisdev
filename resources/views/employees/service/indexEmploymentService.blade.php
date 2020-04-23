@@ -403,7 +403,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<br>
 								<a href="{{ asset('\files\info\Pengumuman_Kasus_COC.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Pengumuman Kasus COC <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
 								<br>
-								Buku kepatuhan kode etik karyawn didownload melalui link di bawah ini:
+								Buku kepatuhan kode etik karyawan dapat didownload melalui link di bawah ini:
 								<br>
 								<a href="{{ asset('\files\info\Kode_Etik_Kepatuhan_rev4.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Kode Etik Kepatuhan Rev4.0 <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
 							</div>
@@ -672,12 +672,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
 									<div class="item active">
-										<img class="img-responsive" src="{{url('images/announchement4.png')}}" alt="...">
-										<!-- <div class="carousel-caption">
-											Another Image
-										</div> -->
-									</div>
-									<div class="item">
 										<img class="img-responsive" src="{{url('images/announchement3.jpg')}}" alt="...">
 										<!-- <div class="carousel-caption">
 											Another Image

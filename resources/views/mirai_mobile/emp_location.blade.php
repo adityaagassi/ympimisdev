@@ -151,7 +151,7 @@
 										<th>ID Karyawan</th>
 										<th>Nama Karyawan</th>
 										<th>Departemen</th>
-										<th>Kota Abasensi</th>
+										<th>Kota Absensi</th>
 										<th>Kota Domisili</th>
 									</tr>
 								</thead>

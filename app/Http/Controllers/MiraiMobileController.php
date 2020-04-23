@@ -289,10 +289,11 @@ class MiraiMobileController extends Controller
       question,
       answer_date 
       ) AS tidak ON cat.question = tidak.question 
-      AND cat.answer_date = tidak.answer_date");
+      AND cat.answer_date = tidak.answer_date
+      WHERE cat.answer_date >= '2020-04-15'");
 
     $cat_sakit = DB::connection('mobile')->select("
-      select distinct answer_date, question from quiz_logs where question <> 'Suhu Tubuh'");
+      select distinct answer_date, question from quiz_logs where question <> 'Suhu Tubuh' and answer_date >= '2020-04-15'");
 
     // $q2 = DB::connection('mobile')->select("SELECT employee_id, `name`, answer_date, latitude as masuk, longitude as masuk1, 0 as keluar, 0 as keluar2 FROM `quiz_logs` group by employee_id, `name`, answer_date");
 
