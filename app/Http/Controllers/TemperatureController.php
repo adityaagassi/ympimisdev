@@ -107,7 +107,7 @@ class TemperatureController extends Controller
                ]);
           }
 
-          $log = db::connection('omron'.$request->get('id'))->select("SELECT tag, max(temperature) as temperature FROM `op_log_data` where tag <> '-' and max(temperature) > 0 group by tag");
+          $log = db::connection('omron'.$request->get('id'))->select("SELECT tag, max(temperature) as temperature FROM `op_log_data` group by tag having tag <> '-' and temperature > 0");
 
           foreach ($log as $val) {
                $mirai = db::table('temperature_body_logs')->insert([
