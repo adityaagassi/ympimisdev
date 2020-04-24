@@ -33,10 +33,10 @@
 				<div class="col-md-12">
 					<input type="text" id="tag" style="background-color: #3c3c3c; border-color: #3c3c3c;">
 				</div>
-				<input type="hidden" id="employee_tag" value="{{ $employee == '-' ? '' : $employee->tag }}">
 			</div>
 		</div>
 		<div class="col-md-4" style="padding-left: 0;">
+			<input type="hidden" id="employee_tag" value="{{ $employee == '-' ? '' : $employee->tag }}">
 			<img style="width: 100%;" src="{{ asset('images/omron_manual.jpg') }}">
 		</div>
 	</div>
