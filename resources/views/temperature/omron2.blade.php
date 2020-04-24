@@ -30,13 +30,11 @@
 				<div class="col-md-12" style="background-color: #90ee7e; text-align: center; font-size: 7vw; font-weight: bold; padding:0;" id="kondisi">
 					-
 				</div>
-				<div class="col-md-12">
-					<input type="text" id="tag" style="background-color: #3c3c3c; border-color: #3c3c3c;">
-				</div>
 			</div>
 		</div>
 		<div class="col-md-4" style="padding-left: 0;">
-				<input type="hidden" id="employee_tag" value="{{ $employee == '-' ? '' : $employee->tag }}">
+			<input type="text" id="tag" style="background-color: #3c3c3c; border-color: #3c3c3c;">
+			<input type="hidden" id="employee_tag" value="{{ $employee == '-' ? '' : $employee->tag }}">
 			<img style="width: 100%;" src="{{ asset('images/omron_manual.jpg') }}">
 		</div>
 	</div>

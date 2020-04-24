@@ -62,9 +62,8 @@ class TemperatureController extends Controller
      public function fetchOmron(Request $request){
 
           $calibration = $request->get('calibration');
-
           $suhu = 0;
-          if(strlen($request->get('tag')) > 0){
+          if($request->get('tag') != ""){
                $omron = db::connection('omron'.$request->get('id'))->table('log_data')->orderBy('created', 'desc')->first();
                if(count($omron) > 0 ){
                     $suhu = $omron->suhu-$calibration;
@@ -73,13 +72,19 @@ class TemperatureController extends Controller
                     'tag' => $request->get('tag'),
                     'temperature' => $suhu
                ]);
+               $response = array(
+                    'status' => true,
+                    'suhu' => $suhu
+               );
+               return Response::json($response);
           }
-
           $response = array(
                'status' => true,
                'suhu' => $suhu,
+               'message' => 'Tidak ada login'
           );
           return Response::json($response);
+
      }
      
      public function inputOmronOperator(Request $request){
