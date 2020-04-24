@@ -145,15 +145,13 @@ class StockTakingController extends Controller
 		if($id == 1){
 			return view('stocktakings.monthly.audit_1', array(
 				'title' => $title,
-				'title_jp' => $title_jp,
-				'target' => 10
+				'title_jp' => $title_jp
 			))->with('page', 'Monthly Stock Audit 1')->with('head', 'Stocktaking');
-		
+
 		}else if($id == 2){
 			return view('stocktakings.monthly.audit_2', array(
 				'title' => $title,
-				'title_jp' => $title_jp,
-				'target' => 5
+				'title_jp' => $title_jp
 			))->with('page', 'Monthly Stock Audit 2')->with('head', 'Stocktaking');
 		}	
 	}
@@ -305,6 +303,47 @@ class StockTakingController extends Controller
 		$printer->close();
 	}
 
+	public function fetchCheckAudit(Request $request, $audit){
+
+		$minimum = 0;
+		if($audit == 'audit1'){
+			$minimum = 10;
+		}else if($audit == 'audit2'){
+			$minimum = 5;
+		}
+
+		$actual = db::select("SELECT
+			( SELECT count( id ) AS total FROM stocktaking_lists
+			WHERE remark = 'USE'
+			AND store = '".$request->get('store')."'
+			AND ".$audit." IS NOT NULL )
+			/
+			( SELECT count( id ) AS total
+			FROM stocktaking_lists
+			WHERE remark = 'USE'
+			AND store = '".$request->get('store')."' )
+			* 100
+			AS percentage");
+
+
+		if($actual[0]->percentage >= $minimum){
+			$response = array(
+				'status' => true,
+				'actual' => $actual[0]->percentage,
+				'minimum' => $minimum
+			);
+			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => false,
+				'actual' => $actual[0]->percentage,
+				'minimum' => $minimum
+			);
+			return Response::json($response);
+		}
+		
+	}
+
 	public function fetchSummaryOfCounting(Request $request){
 
 		$store = '';
@@ -400,7 +439,9 @@ class StockTakingController extends Controller
 			IF
 			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
 			s.quantity,
-			s.remark
+			s.remark,
+			s.audit1,
+			s.audit2
 			FROM
 			stocktaking_lists s
 			LEFT JOIN materials m ON m.material_number = s.material_number
@@ -409,8 +450,7 @@ class StockTakingController extends Controller
 			WHERE
 			s.store = '". $request->get('store'). "'
 			ORDER BY
-			s.remark DESC,
-			s.quantity DESC");
+			s.id");
 
 		$response = array(
 			'status' => true,
@@ -442,6 +482,32 @@ class StockTakingController extends Controller
 		->get();
 
 		return DataTables::of($bom_outputs)->make(true);
+	}
+
+	public function updateAudit(Request $request, $audit){
+		$id = $request->get('id');
+		$quantity = $request->get('quantity');
+
+		try {
+
+			$update = StocktakingList::where('id', $id)
+			->update([
+				$audit => $quantity
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update Successfully'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+
 	}
 
 	public function updateCount(Request $request){

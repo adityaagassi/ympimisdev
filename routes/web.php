@@ -1560,7 +1560,10 @@ Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
 Route::get('fetch/stocktaking/material_detail', 'StockTakingController@fetchMaterialDetail');
 Route::get('fetch/stocktaking/store_list', 'StockTakingController@fetchStoreList');
 Route::post('fetch/stocktaking/update_count', 'StockTakingController@updateCount');
+
 Route::get('index/stocktaking/audit/{id}', 'StockTakingController@indexAudit');
+Route::get('fetch/stocktaking/check_confirm/{id}', 'StockTakingController@fetchCheckAudit');
+Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@updateAudit');
 
 
 
