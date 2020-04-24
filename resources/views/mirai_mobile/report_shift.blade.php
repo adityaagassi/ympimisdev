@@ -233,23 +233,24 @@
           "bAutoWidth": false,
           "processing": true
         });
+
+        table.columns().every( function () {
+          var that = this;
+
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+              that
+              .search( this.value )
+              .draw();
+            }
+          } );
+        } );
+
+        $('#tableResult tfoot tr').appendTo('#tableResult thead');
       }
       else{
         alert('Attempt to retrieve data failed');
       }
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#tableResult tfoot tr').appendTo('#tableResult thead');
 
     });
 

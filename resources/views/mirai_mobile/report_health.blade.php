@@ -232,9 +232,9 @@
         $('#tableBodyResult').append(tableData);
 
         $('#tableResult tfoot th').each( function () {
-          var title = $(this).text();
-          $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-        } );
+            var title = $(this).text();
+            $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+          } );
         var table = $('#tableResult').DataTable({
           'dom': 'Bfrtip',
           'responsive':true,
@@ -290,18 +290,18 @@
 
 
         table.columns().every( function () {
-          var that = this;
+            var that = this;
 
-          $( 'input', this.footer() ).on( 'keyup change', function () {
-            if ( that.search() !== this.value ) {
-              that
-              .search( this.value )
-              .draw();
-            }
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                that
+                .search( this.value )
+                .draw();
+              }
+            } );
           } );
-        } );
 
-        $('#tableResult tfoot tr').appendTo('#tableResult thead');
+          $('#tableResult tfoot tr').appendTo('#tableResult thead');
 
         $('#loading').hide();
       }

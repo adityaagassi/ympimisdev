@@ -382,11 +382,11 @@ class MiraiMobileController extends Controller
       )) as act
       left join employees on employees.employee_id = act.employee_id
       join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = act.employee_id AND all_groups.tanggal = act.answer_date
-      where act.city <> employees.kota and answer_date >= '2020-04-15'
+      where act.city <> employees.kota and answer_date >= '2020-04-13'
       group by employees.department, answer_date
       ");
 
-    $period = db::table('weekly_calendars')->where('week_date', '>=', '2020-04-15')->where('week_date', '<=', date('y-m-d'))->select('week_date')->orderBy('week_date', 'desc')->get();
+    $period = db::table('weekly_calendars')->where('week_date', '>=', '2020-04-13')->where('week_date', '<=', date('y-m-d'))->select('week_date')->orderBy('week_date', 'desc')->get();
 
     $response = array(
       'status' => true,
@@ -398,6 +398,18 @@ class MiraiMobileController extends Controller
 
   public function fetchLocationDetail(Request $request)
   {
+    if ($request->get('department') != "") {
+      $dept = "AND employees.department = '".$request->get('department')."'";
+    }else{
+      $dept = "";
+    }
+
+    if ($request->get('date') != "") {
+      $date = "AND answer_date = '".$request->get('date')."'";
+    }else{
+      $date = "";
+    }
+
     $location_detail = db::connection('mobile')->select("SELECT quiz.employee_id, quiz.`name`, quiz.city, employees.kota, employees.department FROM 
       (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
       WHERE id IN (
@@ -407,7 +419,35 @@ class MiraiMobileController extends Controller
       )) as quiz
       left join employees on employees.employee_id = quiz.employee_id
       join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = quiz.employee_id AND all_groups.tanggal = quiz.answer_date
-      where quiz.city <> employees.kota and answer_date = '".$request->get('date')."' AND employees.department = '".$request->get('department')."'
+      where quiz.city <> employees.kota ".$date." ".$dept."
+      ");
+
+    $response = array(
+      'status' => true,
+      'location_detail' => $location_detail
+    );
+    return Response::json($response);
+  }
+
+  public function fetchLocationDetailAll(Request $request)
+  {
+
+    if ($request->get('date') != "") {
+      $date = "WHERE answer_date = '".$request->get('date')."'";
+    }else{
+      $date = "";
+    }
+
+    $location_detail = db::connection('mobile')->select("SELECT quiz.employee_id, quiz.`name`, quiz.city, employees.kota, employees.department FROM 
+      (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
+      WHERE id IN (
+      SELECT MIN(id)
+      FROM quiz_logs
+      GROUP BY employee_id, `name`, answer_date
+      )) as quiz
+      left join employees on employees.employee_id = quiz.employee_id
+      join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = quiz.employee_id AND all_groups.tanggal = quiz.answer_date
+      ".$date."
       ");
 
     $response = array(

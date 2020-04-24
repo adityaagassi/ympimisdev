@@ -1,4 +1,4 @@
-		<?php
+<?php
 
 
 /*
@@ -964,8 +964,7 @@ Route::get('fetch/welding/welding_stock', 'WeldingProcessController@fetchWelding
 Route::post('post/welding/welding_add_queue', 'WeldingProcessController@inputWeldingQueue');
 Route::post('post/welding/welding_delete_queue', 'WeldingProcessController@deleteWeldingQueue');
 
-Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
-Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
+
 Route::get('index/welding/welding_board/{loc}', 'WeldingProcessController@indexWeldingBoard');
 Route::get('fetch/welding/welding_board', 'WeldingProcessController@fetchWeldingBoard');
 Route::get('fetch/welding/fetch_detail', 'WeldingProcessController@fetchDetailWeldingBoard');
@@ -980,6 +979,14 @@ Route::get('index/welding/current_welding', 'WeldingProcessController@indexCurre
 Route::get('fetch/welding/current_welding', 'WeldingProcessController@fetchCurrentWelding');
 Route::get('index/welding/op_trend', 'WeldingProcessController@indexWeldingTrend');
 Route::get('fetch/welding/op_trend', 'WeldingProcessController@fetchWeldingTrend');
+
+//JIG
+Route::group(['nav' => 'M27', 'middleware' => 'permission'], function(){
+
+});
+Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
+Route::get('index/welding/jig/data', 'WeldingProcessController@indexWeldingJigData');
+Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
@@ -1555,7 +1562,6 @@ Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetch
 
 Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktaking');
 
-
 Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
 Route::get('fetch/stocktaking/material_detail', 'StockTakingController@fetchMaterialDetail');
 Route::get('fetch/stocktaking/store_list', 'StockTakingController@fetchStoreList');
@@ -1565,15 +1571,9 @@ Route::get('index/stocktaking/audit/{id}', 'StockTakingController@indexAudit');
 Route::get('fetch/stocktaking/check_confirm/{id}', 'StockTakingController@fetchCheckAudit');
 Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@updateAudit');
 
-
-
 Route::get('index/stocktaking/summary_of_counting', 'StockTakingController@indexSummaryOfCounting');
 Route::get('fetch/stocktaking/summary_of_counting', 'StockTakingController@fetchSummaryOfCounting');
 Route::get('print/stocktaking/summary_of_counting', 'StockTakingController@printSummaryOfCounting');
-
-
-
-
 
 
 
@@ -2641,6 +2641,7 @@ Route::get('fetch/mirai_mobile/report_shift', 'MiraiMobileController@fetchShiftD
 Route::get('index/mirai_mobile/report_location', 'MiraiMobileController@location');
 Route::get('fetch/mirai_mobile/report_location', 'MiraiMobileController@fetchLocation');
 Route::get('fetch/mirai_mobile/report_location/detail', 'MiraiMobileController@fetchLocationDetail');
+Route::get('fetch/mirai_mobile/report_location/detail_all', 'MiraiMobileController@fetchLocationDetailAll');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');
