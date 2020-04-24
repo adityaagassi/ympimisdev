@@ -61,11 +61,13 @@ class TemperatureController extends Controller
 
      public function fetchOmron(Request $request){
 
+          $calibration = $request->get('calibration');
+
           $suhu = 0;
           if(strlen($request->get('tag')) > 0){
                $omron = db::connection('omron'.$request->get('id'))->table('log_data')->orderBy('created', 'desc')->first();
                if(count($omron) > 0 ){
-                    $suhu = $omron->suhu-1.4;
+                    $suhu = $omron->suhu-$calibration;
                }
                $op_log_data = db::connection('omron'.$request->get('id'))->table('op_log_data')->insert([
                     'tag' => $request->get('tag'),

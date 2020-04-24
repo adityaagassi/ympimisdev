@@ -86,7 +86,8 @@
 		var employee_tag = $('#employee_tag').val();
 		var data = {
 			id:2,
-			tag:employee_tag
+			tag:employee_tag,
+			calibration:1.4
 		}
 		console.log(data);
 		$.get('{{ url("fetch/temperature/omron") }}', data, function(result, status, xhr) {
