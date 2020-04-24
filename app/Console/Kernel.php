@@ -36,6 +36,7 @@ class Kernel extends ConsoleKernel
         // Commands\SendMachineNotification::class,
         Commands\EmailHrq::class,
         Commands\RoomTemperatureLog::class,
+        Commands\UpdateAddress::class,
     ];
 
     /**
@@ -87,6 +88,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('employee:history')->monthlyOn(date('t'), '20:01');
 
         // $schedule->command('email:user_document')->weekdays()->dailyAt('07:00');
+        
+        $schedule->command('update:address')->dailyAt('08:00');
+        $schedule->command('update:address')->dailyAt('18:00');
     }
 
     /**
