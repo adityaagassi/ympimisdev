@@ -2037,7 +2037,7 @@ class CparController extends Controller
       $employee = EmployeeSync::where('employee_id', Auth::user()->username)
       ->select('employee_id', 'name', 'position')->first();
 
-      if ($std->posisi == 'auditee') {
+      if ($std->posisi == 'auditee' || $std->posisi == 'auditor_final') {
         return view('cpar.audit_response', array(
           'std' => $std,
           'employee' => $employee,
@@ -2055,6 +2055,7 @@ class CparController extends Controller
       $audit->auditee_perbaikan = $request->get('auditee_perbaikan');
       $audit->auditee_pencegahan = $request->get('auditee_pencegahan');
       $audit->auditee_biaya = $request->get('auditee_biaya');
+      $audit->auditee_date = date('Y-m-d');
       $audit->save();
 
       return redirect('/index/audit_iso/response/'.$audit->id)->with('status', 'Data has been updated.')->with('page', 'Audit ISO');
@@ -2070,4 +2071,79 @@ class CparController extends Controller
     }
   }
 
+  public function sendemailpenanganan(Request $request,$id)
+      {
+          $id_user = Auth::id();
+          $auditee = StandarisasiAudit::find($id);
+
+          if ($auditee->posisi == "auditee") {
+            $auditee->posisi = "auditor_final";
+            $auditee->status = "verif";          
+            $auditee->save();      
+
+            $mailto = "select distinct employees.name,email from standarisasi_audits join employees on standarisasi_audits.auditor = employees.employee_id join users on employees.employee_id = users.username where standarisasi_audits.id = '".$auditee->id."'";
+            $mails = DB::select($mailto);
+
+            $mailtostd = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization'";
+            $mailstd = DB::select($mailtostd);
+
+          }
+
+          foreach($mails as $mail){
+            $mailtoo = $mail->email;
+          }
+
+          $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$auditee->id;
+          $audits = db::select($isimail);
+
+          Mail::to($mailtoo)->send(new SendEmail($audits, 'std_audit'));
+
+          Mail::to($mailstd)->send(new SendEmail($audits, 'std_audit'));
+          return redirect('/index/audit_iso/response/'.$id)->with('status', 'Audit Has Been Sent')->with('page', 'Audit ISO');
+
+    }
+
+    public function audit_post_detail_last(Request $request)
+    {
+         try {
+              $id_user = Auth::id();
+
+              $forms = StandarisasiAudit::where('id',$request->get('id'))
+              ->update([
+                   'auditor_catatan' => $request->get('auditor_catatan'),
+                   'auditor_manfaat' => $request->get('auditor_manfaat'),
+                   'created_by' => $id_user
+              ]);
+
+              $response = array(
+                'status' => true,
+                'datas' => "Berhasil",
+              );
+              return Response::json($response);
+
+         } catch (QueryException $e){
+              $response = array(
+                   'status' => false,
+                   'datas' => $e->getMessage()
+              );
+              return Response::json($response);
+         }
+    }
+
+
+  public function print_audit($id)
+  {
+    $audit = StandarisasiAudit::find($id);
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->getDomPDF()->set_option("enable_php", true);
+    $pdf->setPaper('A4', 'potrait');
+    $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+    $pdf->loadView('cpar.print_audit', array(
+      'audit' => $audit,
+    ));
+
+    return $pdf->stream("Form ".$audit->audit_no.".pdf");
+  }
 }

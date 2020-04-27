@@ -40,6 +40,13 @@ Route::get('/trial3', function () {
 	return view('trial');
 });
 
+Route::get('/trialPrint', function () {
+	return view('maintenance/apar/print');
+});
+Route::get('/index/apar/print', function () {
+	return view('maintenance/apar/aparPrint');
+});
+
 Route::get('/fetch/trial2', 'PlcController@fetchTemperature');
 Route::get('print/trial', 'TrialController@stocktaking');
 Route::get('trial_machine', 'TrialController@fetch_machine');
@@ -2441,12 +2448,15 @@ Route::get('index/audit_iso/get_nama', 'CparController@audit_get_nama');
 Route::get('index/audit_iso/get_nomor_depan', 'CparController@audit_get_nomor');
 Route::get('index/audit_iso/detail/{id}', 'CparController@audit_detail');
 Route::post('post/audit_iso/detail', 'CparController@audit_post_detail');
+Route::post('post/audit_iso/detail_last', 'CparController@audit_post_detail_last');
 Route::get('index/audit_iso/verifikasistd/{id}', 'CparController@verifikasistd');
 Route::post('index/audit_iso/approval/{id}', 'CparController@std_approval');
 Route::post('index/audit_iso/comment/{id}', 'CparController@std_comment');
 Route::post('index/audit_iso/reject/{id}', 'CparController@std_reject');
 Route::get('index/audit_iso/response/{id}', 'CparController@std_response');
 Route::post('index/audit_iso/update_response/{id}', 'CparController@update_response');
+Route::get('index/audit_iso/sendemailpenanganan/{id}', 'CparController@sendemailpenanganan');
+Route::get('index/audit_iso/print/{id}', 'CparController@print_audit');
 
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');

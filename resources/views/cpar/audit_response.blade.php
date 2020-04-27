@@ -76,7 +76,7 @@
 
     <?php $user = STRTOUPPER(Auth::user()->username)?>
 
-    @if($std->deskripsi_car != null && $std->penanganan_car != null)
+    @if($std->auditee_perbaikan != null && $std->auditee_pencegahan != null && $std->auditee_perbaikan != null)
 
      @if($std->posisi == "auditee" && ($user == $std->auditee || Auth::user()->role_code == "MIS"))
          <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemailpenanganan({{ $std->id }})" style="width:200px">Send Email</a>

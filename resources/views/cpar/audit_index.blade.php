@@ -258,8 +258,13 @@ td {
           tableData += '<td><span class="label label-warning"> Revision </span></td>';          
         }
         else if (value.status == "car") {
-          tableData += '<td><span class="label label-success"> Penanganan </span></td>';          
+          tableData += '<td><span class="label label-warning"> Penanganan </span></td>';          
         }
+
+        else if (value.status == "verif") {
+          tableData += '<td><span class="label label-success"> Verifikasi Jawaban </span></td>';          
+        }
+
         else{
           tableData += '<td><span class="label label-success"> Open </span></td>';     
         }

@@ -3,13 +3,13 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
   
-  .col-xs-2{
+  .col-xs-2 {
     padding-top: 5px;
   }
-  .col-xs-10{
+  .col-xs-10 {
     padding-top: 5px;
   }
-  .col-xs-3{
+  .col-xs-3 {
     padding-top: 5px;
   }
   .col-xs-5{
@@ -227,6 +227,9 @@
 
           </div>
         </div>
+
+        @if($audits->posisi != "auditor_final")
+
         <div class="row">
           <div class="col-sm-4 col-sm-offset-5" style="padding-top: 10px">
             <div class="btn-group">
@@ -237,6 +240,40 @@
             </div>
           </div>
         </div>
+
+
+        @elseif($audits->posisi == "auditor_final")
+
+        <hr>
+
+        <div class="box-body">
+
+          <div class="row">
+            <div class="col-xs-6">
+              <label for="auditor_catatan">Catatan Efektifitas Penyelesaian Masalah</label>
+              <textarea class="form-control" id="auditor_catatan">{{$audits->auditor_catatan}}</textarea>
+            </div>
+            <div class="col-xs-6">
+              <label for="auditor_manfaat">Manfaat Bagi Perusahaan</label>
+              <textarea class="form-control" id="auditor_manfaat">{{$audits->auditor_manfaat}}</textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4 col-sm-offset-5" style="padding-top: 10px">
+              <div class="btn-group">
+                <a class="btn btn-danger" href="{{ url('index/audit_iso') }}">Cancel</a>
+              </div>
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary pull-right" id="form_submit2"><i class="fa fa-edit"></i>&nbsp; Save </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        @endif
+
       </div>
     </form>
   </div>
@@ -363,7 +400,45 @@
         if(result.status == true){    
           $("#loading").hide();
           openSuccessGritter("Success","Berhasil Diedit");
-          setTimeout(function(){ window.history.back(); }, 2000);
+          location.reload();
+        }
+         else {
+        $("#loading").hide();
+          openErrorGritter('Error!', result.datas);
+        }
+      });
+
+    });
+
+
+    $("#form_submit2").click( function() {
+      $("#loading").show();
+
+      if ($("#auditor_catatan").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Catatan Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#auditor_manfaat").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Manfaat Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      var data = {
+        id: "{{ $audits->id }}",
+        auditor_catatan: $("#auditor_catatan").val(),
+        auditor_manfaat: $("#auditor_manfaat").val()
+      };
+
+      $.post('{{ url("post/audit_iso/detail_last") }}', data, function(result, status, xhr){
+        if(result.status == true){    
+          $("#loading").hide();
+          openSuccessGritter("Success","Berhasil Diedit");
+          location.reload();
         }
          else {
         $("#loading").hide();
