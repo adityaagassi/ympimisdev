@@ -51,6 +51,7 @@ class LabelingController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
     	$data = array('labeling' => $labeling,
     				  'departments' => $departments,
@@ -59,6 +60,7 @@ class LabelingController extends Controller
                       'leader' => $leader,
                       'foreman' => $foreman,
     				  'id' => $id,
+                      'frequency' => $frequency,
                       'id_departments' => $id_departments);
     	return view('labeling.index', $data
     		)->with('page', 'Labeling');
@@ -88,6 +90,7 @@ class LabelingController extends Controller
         $id_departments = $activityList->departments->id;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
         // }
         $data = array(
                       'labeling' => $labeling,
@@ -97,6 +100,7 @@ class LabelingController extends Controller
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'id' => $id,
+                      'frequency' => $frequency,
                       'id_departments' => $id_departments);
         return view('labeling.index', $data
             )->with('page', 'Labeling');

@@ -38,6 +38,7 @@ class PointCheckController extends Controller
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
+        $frequency = $activityList->frequency;
 
     	$pointCheckAudit = PointCheckAudit::where('activity_list_id',$id)
             ->orderBy('point_check_audits.id','desc')->get();
@@ -45,6 +46,7 @@ class PointCheckController extends Controller
     	$data = array('pointCheckAudit' => $pointCheckAudit,
     				  'product' => $product,
     				  'departments' => $departments,
+                      'frequency' => $frequency,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
     				  'id' => $id,

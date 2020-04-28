@@ -67,7 +67,7 @@ table.table-bordered > tfoot > tr > th{
 				<div class="box-body">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="form-group pull-right">
-							<a href="{{ url('index/activity_list/filter/'.$id_departments.'/11') }}" class="btn btn-warning">Back</a>
+							<a href="{{ url('index/activity_list/filter/'.$id_departments.'/11/'.$frequency) }}" class="btn btn-warning">Back</a>
 						</div>
 					</div>
 				  <div class="row">

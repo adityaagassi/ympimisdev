@@ -44,6 +44,7 @@ class AreaCheckPointController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
     	$data = array('area_check_point' => $area_check_point,
     				  'departments' => $departments,
@@ -52,6 +53,7 @@ class AreaCheckPointController extends Controller
                       'leader' => $leader,
                       'foreman' => $foreman,
     				  'id' => $id,
+              'frequency' => $frequency,
                       'id_departments' => $id_departments);
     	return view('area_check_point.index', $data
     		)->with('page', 'Area Check Point');

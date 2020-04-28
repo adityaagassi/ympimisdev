@@ -57,7 +57,7 @@ class FirstProductAuditController extends Controller
     				          'id' => $id,
                       'id_departments' => $id_departments);
     	return view('first_product_audit.index', $data
-    		)->with('page', 'First Product Audit');
+    		)->with('page', 'Audit Product Pertama');
     }
 
     function list_proses($id)
@@ -72,6 +72,7 @@ class FirstProductAuditController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $data = array('first_product_audit' => $first_product_audit,
                 'departments' => $departments,
@@ -80,9 +81,10 @@ class FirstProductAuditController extends Controller
                 'leader' => $leader,
                 'foreman' => $foreman,
                 'id' => $id,
+                'frequency' => $frequency,
                 'id_departments' => $id_departments);
         return view('first_product_audit.list_proses', $data
-          )->with('page', 'First Product Audit');
+          )->with('page', 'Audit Product Pertama');
     }
 
     function show($id,$first_product_audit_id)
@@ -99,7 +101,7 @@ class FirstProductAuditController extends Controller
                       'activity_name' => $activity_name,
                       'id' => $id);
         return view('first_product_audit.view', $data
-            )->with('page', 'First Product Audit');
+            )->with('page', 'Audit Product Pertama');
     }
 
     public function destroy($id,$first_product_audit_id)

@@ -49,11 +49,13 @@ class TrainingReportController extends Controller
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
+        $frequency = $activityList->frequency;
         // var_dump($productionAudit);
     	$data = array('training_report' => $trainingReport,
                       'product' => $product,
                       'product2' => $product2,
     				  'departments' => $departments,
+                      'frequency' => $frequency,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
     				  'id' => $id,
@@ -104,6 +106,7 @@ class TrainingReportController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $frequency = $activityList->frequency;
         // }
         $data = array('product' => $product,
                       'product2' => $product2,
@@ -112,6 +115,7 @@ class TrainingReportController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,
+                      'frequency' => $frequency,
                       'id_departments' => $id_departments);
         return view('training_report.index', $data
             )->with('page', 'Training Report');

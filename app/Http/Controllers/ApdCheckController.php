@@ -49,6 +49,7 @@ class ApdCheckController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
         // var_dump($productionAudit);
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $subsection = DB::select($querySubSection);
@@ -67,6 +68,7 @@ class ApdCheckController extends Controller
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
     				  'id' => $id,
+              'frequency' => $frequency,
     				  'apd' => $this->apd,
     				  'apd2' => $this->apd,
     				  'pic' => $pic,
@@ -87,6 +89,7 @@ class ApdCheckController extends Controller
         $id_departments = $activityList->departments->id;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
@@ -141,6 +144,7 @@ class ApdCheckController extends Controller
                       'apd' => $this->apd,
                       'apd2' => $this->apd,
                       'pic' => $pic,
+                      'frequency' => $frequency,
                       'pic2' => $pic2,
                       'leader' => $leader,
                       'foreman' => $foreman,

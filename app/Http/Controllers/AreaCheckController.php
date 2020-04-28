@@ -45,6 +45,7 @@ class AreaCheckController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $subsection = DB::select($querySubSection);
@@ -75,6 +76,7 @@ class AreaCheckController extends Controller
                       'leader' => $leader,
                       'foreman' => $foreman,
     				  'id' => $id,
+              'frequency' => $frequency,
                       'id_departments' => $id_departments);
     	return view('area_check.index', $data
     		)->with('page', 'Area Check');
@@ -104,6 +106,7 @@ class AreaCheckController extends Controller
         $id_departments = $activityList->departments->id;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $subsection = DB::select($querySubSection);
@@ -134,6 +137,7 @@ class AreaCheckController extends Controller
                       'pic2' => $pic2,
                       'foreman' => $foreman,
                       'id' => $id,
+                      'frequency' => $frequency,
                       'id_departments' => $id_departments);
         return view('area_check.index', $data
             )->with('page', 'Area Check');

@@ -46,6 +46,7 @@ class InterviewController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $subsection = DB::select($querySubSection);
@@ -66,6 +67,7 @@ class InterviewController extends Controller
             				  'leader' => $leader,
                       'foreman' => $foreman,
                       'section' => $section,
+                      'frequency' => $frequency,
             				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
             				  'id' => $id,
@@ -83,6 +85,7 @@ class InterviewController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $sub_section = DB::select($querySubSection);
@@ -140,6 +143,7 @@ class InterviewController extends Controller
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'section' => $section,
+                      'frequency' => $frequency,
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,

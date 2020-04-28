@@ -47,6 +47,7 @@ class WeeklyActivityReportController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
         // var_dump($productionAudit);
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $subsection = DB::select($querySubSection);
@@ -63,6 +64,7 @@ class WeeklyActivityReportController extends Controller
                       'report_type' => $this->report_type,
                       'report_type2' => $this->report_type,
             				  'id' => $id,
+                      'frequency' => $frequency,
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'id_departments' => $id_departments);
@@ -79,6 +81,7 @@ class WeeklyActivityReportController extends Controller
         $id_departments = $activityList->departments->id;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
@@ -128,6 +131,7 @@ class WeeklyActivityReportController extends Controller
                       'report_type' => $this->report_type,
                       'report_type2' => $this->report_type,
                       'id' => $id,
+                      'frequency' => $frequency,
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'id_departments' => $id_departments);

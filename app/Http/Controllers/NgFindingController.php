@@ -42,6 +42,7 @@ class NgFindingController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
@@ -55,6 +56,7 @@ class NgFindingController extends Controller
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
     				  'id' => $id,
+              'frequency' => $frequency,
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'operator' => $operator,
@@ -75,6 +77,7 @@ class NgFindingController extends Controller
         $id_departments = $activityList->departments->id;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
@@ -119,6 +122,7 @@ class NgFindingController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,
+                      'frequency' => $frequency,
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'operator' => $operator,

@@ -45,6 +45,7 @@ class AuditGuidanceController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
         $bulan = date('Y-m');
 
@@ -61,6 +62,7 @@ class AuditGuidanceController extends Controller
                       'foreman' => $foreman,
                       'fy' => $fy,
     				  'id' => $id,
+              'frequency' => $frequency,
                       'id_departments' => $id_departments);
     	return view('audit_guidance.index', $data
     		)->with('page', 'Schedule Audit');
@@ -95,6 +97,7 @@ class AuditGuidanceController extends Controller
         $id_departments = $activityList->departments->id;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
         // }
         $data = array(
                       'audit_guidance' => $audit_guidance,
@@ -105,6 +108,7 @@ class AuditGuidanceController extends Controller
                       'foreman' => $foreman,
                       'fy' => $fy,
                       'id' => $id,
+                      'frequency' => $frequency,
                       'id_departments' => $id_departments);
         return view('audit_guidance.index', $data
             )->with('page', 'Schedule Audit');

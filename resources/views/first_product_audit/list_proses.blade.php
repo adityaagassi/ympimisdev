@@ -44,8 +44,8 @@
 	</h1>
 	<ol class="breadcrumb">
 		<li>
-			<a style="color:white" href="{{ url('index/activity_list/filter/'.$id_departments.'/6') }}" class="btn btn-warning">Back</a>
-			<a style="color:white" href="{{ url('index/first_product_audit/create/'.$id) }}" class="btn btn-primary">Create {{ $page }}</a>
+			<a style="color:white" href="{{ url('index/activity_list/filter/'.$id_departments.'/6/'.$frequency) }}" class="btn btn-warning">Back</a>
+			<a style="color:white" href="{{ url('index/first_product_audit/create/'.$id) }}" class="btn btn-primary">Tambah {{ $page }}</a>
 		</li>
 	</ol>
 </section>

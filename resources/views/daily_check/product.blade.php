@@ -74,7 +74,7 @@ table.table-bordered > tfoot > tr > th{
 				<div class="box-body">
 					<div class="box-header">
 						<h3 class="box-title">Product <span class="text-purple">{{ $activity_name }}</span></h3>
-						<a class="btn btn-warning pull-right" href="{{ url('index/activity_list/filter/'.$id_departments.'/8') }}">Back</a>
+						<a class="btn btn-warning pull-right" href="{{ url('index/activity_list/filter/'.$id_departments.'/8/'.$frequency) }}">Back</a>
 					</div>
 				  <div class="row">
 				    <div class="col-xs-12">

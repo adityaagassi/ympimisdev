@@ -75,6 +75,7 @@ class DailyCheckController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
         
     	$data = array('dailyCheck' => $dailyCheck,
                       'product' => $this->product,
@@ -84,6 +85,7 @@ class DailyCheckController extends Controller
                       'leader' => $leader,
                       'foreman' => $foreman,
     				  'id' => $id,
+              'frequency' => $frequency,
                       'id_departments' => $id_departments);
     	return view('daily_check.product', $data
     		)->with('page', 'Daily Check');

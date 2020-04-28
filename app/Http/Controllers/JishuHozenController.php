@@ -42,6 +42,7 @@ class JishuHozenController extends Controller
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
+        $frequency = $activityList->frequency;
 
         $query_jishu_hozen_point = "select DISTINCT(nama_pengecekan),id from jishu_hozen_points where activity_list_id='".$id."' and leader = '".$leader."'";
         $jishu_hozen_point = DB::select($query_jishu_hozen_point);
@@ -51,6 +52,7 @@ class JishuHozenController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,
+                      'frequency' => $frequency,
                       'leader' => $leader,
                       'id_departments' => $id_departments);
         return view('jishu_hozen.point', $data

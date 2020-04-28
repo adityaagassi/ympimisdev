@@ -69,7 +69,7 @@ table.table-bordered > tfoot > tr > th{
 					<div class="col-md-12 col-md-offset-9">
 						<div class="col-md-3">
 							<div class="form-group pull-right">
-								<a href="{{ url('index/activity_list/filter/'.$id_departments.'/1') }}" class="btn btn-warning">Back</a>
+								<a href="{{ url('index/activity_list/filter/'.$id_departments.'/1/'.$frequency) }}" class="btn btn-warning">Back</a>
 								<a href="{{ url('index/point_check_audit/create/'.$id) }}" class="btn btn-primary">Create Point Check</a>
 							</div>
 						</div>

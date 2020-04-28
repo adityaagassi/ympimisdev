@@ -68,7 +68,7 @@ table.table-bordered > tfoot > tr > th{
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="form-group pull-right">
 							{{-- <a href="{{ url('index/audit_guidance/create/'.$id) }}" class="btn btn-primary">Create Schedule {{ $activity_alias }}</a> --}}
-							<a href="{{ url('index/activity_list/filter/'.$id_departments.'/11') }}" class="btn btn-warning">Back</a>&nbsp
+							<a href="{{ url('index/activity_list/filter/'.$id_departments.'/11/'.$frequency) }}" class="btn btn-warning">Back</a>&nbsp
 							<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
 								Create Point Check
 							</button>

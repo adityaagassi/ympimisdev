@@ -52,6 +52,7 @@ class AuditProcessController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
 
     	$data = array('audit_process' => $audit_process,
     				  'departments' => $departments,
@@ -60,6 +61,7 @@ class AuditProcessController extends Controller
                       'leader' => $leader,
                       'foreman' => $foreman,
     				  'id' => $id,
+              'frequency' => $frequency,
                       'id_departments' => $id_departments);
     	return view('audit_process.index', $data
     		)->with('page', 'Audit Process');
@@ -89,6 +91,7 @@ class AuditProcessController extends Controller
         $id_departments = $activityList->departments->id;
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
+        $frequency = $activityList->frequency;
         // }
         $data = array(
                       'audit_process' => $audit_process,
@@ -98,6 +101,7 @@ class AuditProcessController extends Controller
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'id' => $id,
+                      'frequency' => $frequency,
                       'id_departments' => $id_departments);
         return view('audit_process.index', $data
             )->with('page', 'Audit Process');

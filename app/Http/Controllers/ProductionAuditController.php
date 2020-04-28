@@ -101,6 +101,7 @@ class ProductionAuditController extends Controller
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
+        $frequency = $activityList->frequency;
 
         $queryProductionAudit = "select DISTINCT(proses), product from point_check_audits where activity_list_id='".$id."' and leader = '".$leader."'";
         $productionAudit = DB::select($queryProductionAudit);
@@ -108,7 +109,7 @@ class ProductionAuditController extends Controller
         $data = array('production_audit' => $productionAudit,
                       // 'product' => $product,
                       // 'proses' => $proses,
-                      // 'product2' => $product2,
+                      'frequency' => $frequency,
                       'departments' => $departments,
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,

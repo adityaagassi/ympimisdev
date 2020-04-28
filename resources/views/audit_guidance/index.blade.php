@@ -87,7 +87,7 @@ table.table-bordered > tfoot > tr > th{
 						<div class="col-md-12 col-md-offset-4">
 							<div class="col-md-3">
 								<div class="form-group pull-right">
-									<a href="{{ url('index/activity_list/filter/'.$id_departments.'/4') }}" class="btn btn-warning">Back</a>
+									<a href="{{ url('index/activity_list/filter/'.$id_departments.'/4/'.$frequency) }}" class="btn btn-warning">Back</a>
 									<a href="{{ url('index/audit_guidance/index/'.$id) }}" class="btn btn-danger">Clear</a>
 									<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 								</div>

@@ -88,7 +88,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/5') }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/5/'.$frequency) }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/audit_process/index/'.$id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
