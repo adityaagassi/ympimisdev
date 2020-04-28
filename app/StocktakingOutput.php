@@ -2,16 +2,15 @@
 
 namespace App;
 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
-class StocktakingList extends Model{
-
+class StocktakingOutput extends Model{
 	use SoftDeletes;
 
 	protected $fillable = [
-		'store', 'category', 'material_number', 'location', 'remark', 'process', 'quantity', 'audit1', 'audit2', 'created_by' 
+		'material_number', 'store', 'location', 'quantity' 
 	];
 
 }

@@ -218,6 +218,8 @@ class StockTakingController extends Controller
 			}
 		}
 
+		dd($this->$insert_assy);
+
 		foreach (array_chunk($insert,1000) as $t) {
 			$output = StocktakingOutput::insert($t);
 		}
@@ -226,30 +228,35 @@ class StockTakingController extends Controller
 	}
 
 	public function breakdown($material){
-		dd($material);
-
-		$quantity = $material->final_count;
 
 		$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
 			FROM bom_outputs b
 			LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
 			WHERE b.material_parent = '".$material->material_child."'");
 
-		// for ($i=0; $i < count($assy); $i++) {
 
-		// 	if($assy[$i]->spt == 50){
-		// 		$this->breakdown($assy[$i]);
-		// 	}else{
-		// 		$row = array();
-		// 		$row['material_number'] = $assy[$i]->material_child;
-		// 		$row['store'] = $assy[$i]->store;
-		// 		$row['location'] = $assy[$i]->location;
-		// 		$row['quantity'] = $assy[$i]->quantity;
-		// 		$row['created_at'] = Carbon::now();
-		// 		$row['updated_at'] = Carbon::now();
-		// 		$insert[] = $row;
-		// 	}
-		// }
+		for ($i=0; $i < count($breakdown); $i++) {
+
+			if($breakdown[$i]->spt == 50){
+				$row = array();
+				$row['material_child'] = $material->material_child;
+				$row['store'] = $material->store;
+				$row['location'] = $material->location;
+				$row['quantity'] = $material->quantity * ($breakdown[$i]->usage / $breakdown[$i]->divider);
+				$row['created_at'] = Carbon::now();
+				$row['updated_at'] = Carbon::now();
+				$this->breakdown($row);
+			}else{
+				$row = array();
+				$row['material_number'] = $material->material_child;
+				$row['store'] = $material->store;
+				$row['location'] = $material->location;
+				$row['quantity'] = $material->quantity * ($breakdown[$i]->usage / $breakdown[$i]->divider);
+				$row['created_at'] = Carbon::now();
+				$row['updated_at'] = Carbon::now();
+				$this->insert_assy[] = $row;
+			}
+		}
 
 	}
 

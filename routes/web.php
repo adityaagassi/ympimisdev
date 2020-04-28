@@ -17,8 +17,9 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('trial2', 'TrialController@trial2');
-Route::get('fetch_trial2', 'TrialController@fetchProductionAchievment');
 
+
+Route::get('fetch_trial2', 'StockTakingController@printSummary');
 
 Route::get('trial_loc', 'TrialController@trialLoc');
 Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
@@ -666,6 +667,11 @@ Route::group(['nav' => 'M4', 'middleware' => 'permission'], function(){
 	Route::get('view/material', 'MaterialController@view');
 	Route::post('import/material', 'MaterialController@import');
 });
+
+Route::get('index/material/request', 'MaterialController@indexMaterialRequest');
+Route::get('fetch/material/request_list', 'MaterialController@fetchMaterialRequestList');
+Route::get('index/material/receive', 'MaterialController@indexMaterialReceive');
+Route::get('index/material/data', 'MaterialController@indexMaterialData');
 
 Route::group(['nav' => 'M5', 'middleware' => 'permission'], function(){
 	Route::get('index/material_volume', 'MaterialVolumeController@index');
@@ -1569,18 +1575,26 @@ Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetch
 
 Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktaking');
 
+//Summary of Counting
+Route::get('index/stocktaking/summary_of_counting', 'StockTakingController@indexSummaryOfCounting');
+Route::get('fetch/stocktaking/summary_of_counting', 'StockTakingController@fetchSummaryOfCounting');
+Route::get('print/stocktaking/summary_of_counting', 'StockTakingController@printSummaryOfCounting');
+
+//Count
 Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
 Route::get('fetch/stocktaking/material_detail', 'StockTakingController@fetchMaterialDetail');
 Route::get('fetch/stocktaking/store_list', 'StockTakingController@fetchStoreList');
 Route::post('fetch/stocktaking/update_count', 'StockTakingController@updateCount');
 
+//Audit
 Route::get('index/stocktaking/audit/{id}', 'StockTakingController@indexAudit');
+Route::get('fetch/stocktaking/audit_store_list', 'StockTakingController@fetchAuditStoreList');
 Route::get('fetch/stocktaking/check_confirm/{id}', 'StockTakingController@fetchCheckAudit');
 Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@updateAudit');
+Route::post('fetch/stocktaking/update_process/{id}', 'StockTakingController@updateProcessAudit');
 
-Route::get('index/stocktaking/summary_of_counting', 'StockTakingController@indexSummaryOfCounting');
-Route::get('fetch/stocktaking/summary_of_counting', 'StockTakingController@fetchSummaryOfCounting');
-Route::get('print/stocktaking/summary_of_counting', 'StockTakingController@printSummaryOfCounting');
+//Audit
+Route::get('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
 
 
 
@@ -2603,7 +2617,13 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
 Route::get('scan/assembly/operator', 'AssemblyProcessController@scanAssemblyOperator');
 Route::get('scan/assembly/kensa', 'AssemblyProcessController@scanAssemblyKensa');
+Route::post('input/assembly/kensa', 'AssemblyProcessController@inputAssemblyKensa');
+Route::get('fetch/assembly/ng_detail', 'AssemblyProcessController@showNgDetail');
+Route::get('fetch/assembly/ng_temp', 'AssemblyProcessController@fetchNgTemp');
+Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');
+Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNgTemp');
 Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexFlutePrintLabel');
+
 
 //ROOMS
 Route::get('/meetingroom1', function () {

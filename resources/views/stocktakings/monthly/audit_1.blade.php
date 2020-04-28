@@ -132,7 +132,7 @@
 			</div>
 			<div class="col-xs-3">
 				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; margin-right: 1%; padding: 9.5%; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" id="cancel" class="btn btn-danger">&nbsp;CANCEL&nbsp;</button>
-				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; padding: 9.5%; padding-top: 0px; padding-bottom: 0px;" onclick="confirm()" id="confirm" class="btn btn-success" disabled>CONFIRM</button>
+				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; padding: 9.5%; padding-top: 0px; padding-bottom: 0px;" onclick="conf()" id="confirm" class="btn btn-success" disabled>CONFIRM</button>
 			</div>
 		</div>
 	</div>
@@ -374,12 +374,12 @@
 
 	function fillStore(store){
 		var data = {
-			store : store
+			store : store,
+			process : 1
 		}
 
-		$.get('{{ url("fetch/stocktaking/store_list") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/stocktaking/audit_store_list") }}', data, function(result, status, xhr){
 			if (result.status) {
-
 				if(result.store.length <= 0){
 					openErrorGritter('Error', 'Store Not Found');
 					return false;
@@ -415,12 +415,16 @@
 					body += '<td '+css+'>'+result.store[i].quantity+'</td>';
 					body += '<td '+css+'>'+(result.store[i].audit1 || '')+'</td>';
 
-					if(result.store[i].audit1){
-						body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="cancAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button></td>';
+					if(result.store[i].process < 2){
+						if(result.store[i].audit1){
+							body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="cancAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button></td>';
+						}else{
+							body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-success form-control"><span><i class="fa fa-check-square-o"></i></span></button></td>';
+						}
 					}else{
-						body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-success form-control"><span><i class="fa fa-check-square-o"></i></span></button></td>';
-
+						body += '<td '+css+'>-</td>';
 					}
+
 					body += '</tr>';
 
 				}
@@ -429,7 +433,13 @@
 				checkConf(store);
 
 			}else {
-				openErrorGritter('Error', 'Store Not Found');
+				$('#qr_code').val();
+
+				if(result.message){
+					openErrorGritter('Error', result.message);
+				}else{
+					openErrorGritter('Error', 'Store Not Found');					
+				}
 			}
 		});
 	}
@@ -587,6 +597,31 @@
 				openSuccessGritter('Error', result.message);
 			}
 		});
+	}
+
+	function conf() {
+		$("#loading").show();
+
+		var str = $("#store_title").text();
+		var store = str.replace("STORE : ", "");
+
+		var data = {
+			store : store	
+		}
+
+		if(confirm("Data akan dihitung oleh sistem.\nData tidak dapat dikembalikan.")){
+
+			$.post('{{ url("fetch/stocktaking/update_process/audit1") }}', data, function(result, status, xhr){
+				if (result.status) {
+					openSuccessGritter('Success', result.message);
+				}else{
+					openErrorGritter('Error', result.message);
+				}
+			});
+		}else{
+			$("#loading").hide();
+		}
+		
 	}
 
 	function changeVal(){
