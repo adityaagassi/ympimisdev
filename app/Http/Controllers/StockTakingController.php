@@ -18,13 +18,13 @@ use File;
 use App\MaterialPlantDataList;
 use App\BomOutput;
 use App\StocktakingList;
+use App\StocktakingOutput;
 use App\StocktakingSilverList;
 use App\StocktakingSilverLog;
 
 class StockTakingController extends Controller
 {
-	public function __construct()
-	{
+	public function __construct(){
 		$this->middleware('auth');
 		$this->storage_location = [
 			'203',
@@ -121,6 +121,9 @@ class StockTakingController extends Controller
 			'BAG',
 			'PAA'
 		];
+
+		$this->insert_assy = array();
+
 	}
 
 	//Stock Taking Bulanan
@@ -166,6 +169,74 @@ class StockTakingController extends Controller
 		))->with('page', 'Summary Of Counting')->with('head', 'Stocktaking');
 	}
 
+	public function indexCountPI(){
+
+		StocktakingOutput::truncate();
+
+		$this->countPISingle();
+		$this->countPIAssy();
+
+	}
+
+	public function countPISingle(){
+		$single = StocktakingList::where('category', 'SINGLE')->get();
+
+		for ($i=0; $i < count($single); $i++) {
+
+			$insert = new StocktakingOutput([
+				'material_number' => $single[$i]->material_number,
+				'store' => $single[$i]->store,
+				'location' => $single[$i]->location,
+				'quantity' => $single[$i]->quantity
+			]);
+			$insert->save();
+		}
+	}
+
+	public function countPIAssy(){
+
+		$assy = db::select("SELECT s.material_number, s.store, s.location, s.final_count, b.material_child, b.`usage`, b.divider, m.spt, (s.final_count*(b.`usage`/b.divider)) as quantity FROM stocktaking_lists s
+			left join bom_outputs b on s.material_number = b.material_parent
+			left join material_plant_data_lists m on m.material_number = b.material_child 
+			where s.category = 'ASSY'");
+
+		$insert = array();
+
+		for ($i=0; $i < count($assy); $i++) {
+
+			if($assy[$i]->spt == 50){
+				$this->breakdown($assy[$i]);
+			}else{
+				$row = array();
+				$row['material_number'] = $assy[$i]->material_child;
+				$row['store'] = $assy[$i]->store;
+				$row['location'] = $assy[$i]->location;
+				$row['quantity'] = $assy[$i]->quantity;
+				$row['created_at'] = Carbon::now();
+				$row['updated_at'] = Carbon::now();
+				$insert[] = $row;
+			}
+		}
+
+		foreach (array_chunk($insert,1000) as $t) {
+			$output = StocktakingOutput::insert($t);
+		}
+
+
+	}
+
+	public function breakdown($material){
+		dd($material);
+
+		$quantity = $material->final_count;
+
+		$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
+			FROM bom_outputs b
+			LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
+			WHERE b.material_parent = 'WY76000'");
+
+	}
+
 	public function printSummaryOfCounting(Request $request){
 
 		$store = '';
@@ -179,9 +250,6 @@ class StockTakingController extends Controller
 			}
 			$store = " WHERE s.store in (".$store.") ";
 		}
-
-		
-
 
 		try {
 			$lists = db::select("SELECT
@@ -227,7 +295,7 @@ class StockTakingController extends Controller
 	}
 
 	public function printSummary($list){
-		$printer_name = 'TESTPRINTER';
+		$printer_name = 'MIS';
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
@@ -459,6 +527,58 @@ class StockTakingController extends Controller
 		return Response::json($response);
 	}
 
+	public function fetchAuditStoreList(Request $request){
+
+		$process = $request->get('process');
+		$current = StocktakingList::where('store', $request->get('store'))->first();
+
+		//Cek proses saat ini
+		// if($current->process != $process){
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'message' => 'Proses tidak sesuai urutan',
+		// 	);
+		// 	return Response::json($response);
+		// }
+
+		$store = db::select("SELECT
+			s.id,
+			s.store,
+			s.category,
+			s.material_number,
+			mpdl.material_description,
+			m.`key`,
+			m.model,
+			m.surface,
+			mpdl.bun,
+			s.location,
+			mpdl.storage_location,
+			v.lot_completion,
+			v.lot_transfer,
+			IF
+			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
+			s.remark,
+			s.process,
+			s.quantity,
+			s.audit1,
+			s.audit2
+			FROM
+			stocktaking_lists s
+			LEFT JOIN materials m ON m.material_number = s.material_number
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
+			WHERE
+			s.store = '". $request->get('store'). "'
+			ORDER BY
+			s.id");
+
+		$response = array(
+			'status' => true,
+			'store' => $store,
+		);
+		return Response::json($response);
+	}
+
 	public function fetchmpdl(Request $request){
 		$material_plant_data_lists = MaterialPlantDataList::orderBy('material_plant_data_lists.material_number', 'asc');
 
@@ -484,6 +604,53 @@ class StockTakingController extends Controller
 		return DataTables::of($bom_outputs)->make(true);
 	}
 
+	public function updateProcessAudit(Request $request, $audit){
+
+		if($audit == 'audit1'){
+			$process = 2;
+		}else if($audit == 'audit2'){
+			$process = 3;
+		}
+
+		try {
+			$updateStore = StocktakingList::where('store', $request->get('store'))
+			->update([
+				'process' => $process
+			]);
+
+			if($audit = 'audit2'){
+				$store = StocktakingList::where('store', $request->get('store'))->get();
+
+				for ($i = 0; $i < count($store); $i++) {
+					$final = 0;
+					if($store[$i]->audit2 > 0){
+						$final = $store[$i]->audit2;
+					}else if($store[$i]->audit1 > 0){
+						$final = $store[$i]->audit1;
+					}else{
+						$final = $store[$i]->quantity;
+					}
+					$updateStore = StocktakingList::where('id', $store[$i]->id)
+					->update([
+						'final_count' => $final
+					]);
+				}
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Audit Successfully'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function updateAudit(Request $request, $audit){
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
@@ -507,19 +674,25 @@ class StockTakingController extends Controller
 			);
 			return Response::json($response);
 		}
-
 	}
 
 	public function updateCount(Request $request){
 
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
-		
+
 		try {
 
 			$update = StocktakingList::where('id', $id)
 			->update([
 				'quantity' => $quantity
+			]);
+
+			$store = StocktakingList::where('id', $id)->first();
+
+			$updateStore = StocktakingList::where('store', $store->store)
+			->update([
+				'process' => 1
 			]);
 
 			$response = array(
