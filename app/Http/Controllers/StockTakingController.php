@@ -233,7 +233,23 @@ class StockTakingController extends Controller
 		$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
 			FROM bom_outputs b
 			LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
-			WHERE b.material_parent = 'WY76000'");
+			WHERE b.material_parent = '".$material->material_child."'");
+
+		// for ($i=0; $i < count($assy); $i++) {
+
+		// 	if($assy[$i]->spt == 50){
+		// 		$this->breakdown($assy[$i]);
+		// 	}else{
+		// 		$row = array();
+		// 		$row['material_number'] = $assy[$i]->material_child;
+		// 		$row['store'] = $assy[$i]->store;
+		// 		$row['location'] = $assy[$i]->location;
+		// 		$row['quantity'] = $assy[$i]->quantity;
+		// 		$row['created_at'] = Carbon::now();
+		// 		$row['updated_at'] = Carbon::now();
+		// 		$insert[] = $row;
+		// 	}
+		// }
 
 	}
 
@@ -366,7 +382,11 @@ class StockTakingController extends Controller
 		$printer->textRaw("\xda".str_repeat("\xc4", 22)."\xbf\n");
 		$printer->textRaw("\xb3Z1 :".str_repeat(" ", 18)."\xb3\n");
 		$printer->textRaw("\xc0".str_repeat("\xc4", 22)."\xd9\n");
-		$printer->feed(2);
+		$printer->feed(1);
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_RIGHT);
+		$printer->text(Carbon::now()."\n");
+		$printer->feed(1);
 		$printer->cut();
 		$printer->close();
 	}
