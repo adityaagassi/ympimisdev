@@ -1001,6 +1001,16 @@ Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/jig/data', 'WeldingProcessController@indexWeldingJigData');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 
+Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
+	Route::get('index/supplier', 'AccountingController@master_supplier');
+	Route::get('fetch/supplier', 'AccountingController@fetch_supplier');
+});
+
+Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
+	Route::get('index/purchase_item', 'AccountingController@master_item');
+	Route::get('fetch/purchase_item', 'AccountingController@fetch_item');
+});
+
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
