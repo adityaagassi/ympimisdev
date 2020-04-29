@@ -420,7 +420,7 @@ class MaintenanceController extends Controller
 	{
 		DB::connection()->enableQueryLog();
 
-		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date'), db::raw("(MONTH(exp_date) - MONTH(now())) as age_left"), 'remark', 'last_check');
+		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', db::raw("(MONTH(exp_date) - MONTH(now())) as age_left"), 'remark', 'last_check');
 
 		if ($request->get('type')) {
 			$apars = $apars->where('remark', '=', $request->get('type'));
@@ -436,6 +436,10 @@ class MaintenanceController extends Controller
 
 		if ($request->get('expMon')) {
 			$apars = $apars->where(db::raw('DATE_FORMAT(exp_date,"%m-%Y")'), '=', $request->get('expMon'));
+		}
+
+		if ($request->get('order')) {
+			$apars = $apars->orderBy($request->get('order'), $request->get('order2'));
 		}
 
 		$apars = $apars->get();
@@ -639,6 +643,19 @@ class MaintenanceController extends Controller
 		);
 		return Response::json($response);
 	}
+
+	// public function fetchAparbyCode(Request $request)
+	// {
+	// 	$utl = Utility::where('remark', '=', 'APAR')
+	// 	->where('utility_code', '=', $request->get('utility_code'))
+	// 	->first();
+
+	// 	$response = array(
+	// 		'status' => true,
+	// 		'data' => $utl
+	// 	);
+	// 	return Response::json($response);
+	// }
 
 	public function printApar($apar){
 		$printer_name = 'TESTPRINTER';

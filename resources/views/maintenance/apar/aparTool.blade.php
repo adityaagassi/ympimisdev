@@ -38,8 +38,15 @@
 	.disabledTab{
 		pointer-events: none;
 	}
-	.panel {
-		/*border: 3px solid transparent ;*/
+	.progress {
+		height: 50px;
+		margin-bottom: 0px;
+	}
+
+	.progress-bar {
+		line-height: 50px;
+		font-size: 3vw;
+
 	}
 </style>
 @stop
@@ -69,35 +76,13 @@
 							</div>
 							<!-- <input type="text" class="form-control pull-right" style="width: 25%"> -->
 						</div>
-						<div class="col-xs-4">
-							<!-- <div id="chart1" style="width: 100%; height: 200px; margin: 0 auto"></div> -->
-							<p style="text-align: center; font-weight: bold ;font-size: 20px">Factory I</p>
-							<div class="panel panel-success bg-green" style="margin:0px 20px 0px 20px;">
-								<div class="panel-body text-center">
-									<label style="font-size: 22pt" id="f1_info">0 / 0</label><br>
-									<label style="font-size: 28pt">&nbsp;</label>
-								</div>
+						<div class="col-xs-12">
+							<div class="progress progress-sm active" id="progress">
+								
 							</div>
+							<div class="text-center" style="font-size: 20px; font-weight: bold;" id="all_info">0 / 0</div>
 						</div>
-						<div class="col-xs-4">
-							<!-- <div id="chart2" style="width: 100%; height: 200px; margin: 0 auto"></div> -->
-							<p style="text-align: center; font-weight: bold ;font-size: 20px">Factory II</p>
-							<div class="panel panel-success bg-green" style="margin:0px 20px 0px 20px;">
-								<div class="panel-body text-center">
-									<label style="font-size: 22pt" id="f2_info">0 / 0</label><br>
-									<label style="font-size: 28pt">&nbsp;</label>
-								</div>
-							</div>
-						</div>
-						<div class="col-xs-4">
-							<p style="text-align: center; font-weight: bold ;font-size: 20px">All</p>
-							<div class="panel panel-success bg-green" style="margin:0px 20px 0px 20px;">
-								<div class="panel-body text-center">
-									<label style="font-size: 22pt" id="all_info">0 / 0</label><br>
-									<label style="font-size: 28pt" id="all_persentase">0%</label>
-								</div>
-							</div>
-						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -283,216 +268,270 @@
 	</div>
 </section>
 
-<div class="modal modal-danger fade in" id="modaledit" >
+<div class="modal fade in" id="editModal" >
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">×</span></button>
-					<h4 class="modal-title">Danger Modal</h4>
+				<div class="col-xs-12" style="background-color: #f39c12;">
+					<h1 style="text-align: center; margin:5px; font-weight: bold; color: white">Edit Extinguisher</h1>
 				</div>
-				<div class="modal-body" id="modalDeleteBody">
-					<p>One fine body…</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-					<a id="a" name="modalDeleteButton" href="#" type="button" onclick="hapus(this.id)" class="btn btn-danger">Delete</a>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Extinguisher Code</label>
+							<div class="col-xs-4" align="left">
+								<input type="text" class="form-control" id="edit_code" disabled>
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Extinguisher Name</label>
+							<div class="col-xs-6" align="left">
+								<input type="text" class="form-control" id="edit_name">
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Type</label>
+							<div class="col-xs-4" align="left">
+								<input type="text" class="form-control" id="edit_type">
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Capacity</label>
+							<div class="col-xs-4" align="left">
+								<input type="text" class="form-control" id="edit_capacity">
+							</div>
+						</div>
+
+						<div class="form-group row" align="right" style="margin-bottom: 5px !important">
+							<label class="col-xs-4" style="margin-top: 1%;">Location</label>
+							<div class="col-xs-4" align="left">
+								<input type="text" class="form-control" id="edit_location1">
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;"> </label>
+							<div class="col-xs-4" align="left">
+								<input type="text" class="form-control" id="edit_location2">
+							</div>
+							
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Exp. Date</label>
+							<div class="col-xs-4" align="left">
+								<input type="text" class="form-control" id="edit_exp">
+							</div>
+						</div>
+
+					</div>
 				</div>
 			</div>
 
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success pull-left" onclick="saveExtinguisher()"><i class="fa fa-check"></i> Save</button>
+				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+			</div>
 		</div>
 
 	</div>
 
-	@endsection
-	@section('scripts')
-	<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
-	<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-	<script src="{{ url("js/buttons.flash.min.js")}}"></script>
-	<script src="{{ url("js/jszip.min.js")}}"></script>
-	<script src="{{ url("js/vfs_fonts.js")}}"></script>
-	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
-	<script src="{{ url("js/buttons.print.min.js")}}"></script>
+</div>
 
-	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-	<script src="{{ url("js/highcharts.js")}}"></script>
-	<script src="{{ url("js/exporting.js")}}"></script>
-	<script>
-		var no = 2;
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
+@endsection
+@section('scripts')
+<script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 
-		var lokasi = <?php echo json_encode($locations) ?>;
-		var checkedDataArr = [];
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
+<script src="{{ url("js/exporting.js")}}"></script>
+<script>
+	var no = 2;
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
 
-		const monthNames = ["January", "February", "March", "April", "May", "June",
-		"July", "August", "September", "October", "November", "December"
-		];
+	var lokasi = <?php echo json_encode($locations) ?>;
+	var checkedDataArr = [];
+
+	const monthNames = ["January", "February", "March", "April", "May", "June",
+	"July", "August", "September", "October", "November", "December"
+	];
 
 
-		jQuery(document).ready(function() {
-			$('body').toggleClass("sidebar-collapse");
+	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 
-			fillToolTable("");
+		fillToolTable("");
 
-			$("#location").empty();
-			$("#extinguisher_location2").empty();
+		$("#location").empty();
+		$("#extinguisher_location2").empty();
 
-			lks = "<option></option>";
-			$.each(lokasi, function(index, value){
-				lks += "<option value='"+value.group+"'>"+value.group+"</option>";
-			})
-			$("#location").append(lks);
-			$("#extinguisher_location2").append(lks);
-			
-		});
+		lks = "<option></option>";
+		$.each(lokasi, function(index, value){
+			lks += "<option value='"+value.group+"'>"+value.group+"</option>";
+		})
+		$("#location").append(lks);
+		$("#extinguisher_location2").append(lks);
 
-		function location_change(elem, target) {
-			var area = $(elem).val();
+	});
 
-			$(target).empty();
-			lks = "<option></option>";
-			$.each(lokasi, function(index, value){
-				if (area) {
-					if (value.location == area) {
-						lks += "<option value='"+value.group+"'>"+value.group+"</option>";
-					}
-				} else {
+	function location_change(elem, target) {
+		var area = $(elem).val();
+
+		$(target).empty();
+		lks = "<option></option>";
+		$.each(lokasi, function(index, value){
+			if (area) {
+				if (value.location == area) {
 					lks += "<option value='"+value.group+"'>"+value.group+"</option>";
 				}
-			})
-			$(target).append(lks);
-		}
-
-
-		$(function () {
-			$('.datepicker').datepicker({
-				autoclose: true,
-				format: "mm-yyyy",
-				viewMode: "months", 
-				minViewMode: "months"
-			});
-
-			$('#cek_date').datepicker({
-				autoclose: true,
-				format: "yyyy-mm",
-				viewMode: "months", 
-				minViewMode: "months"
-			});
-			
-
-			$("#extinguisher_location1").select2({
-				dropdownParent: $('#modalCreate'),
-				tags: true
-			});
-
-			$('#extinguisher_exp').datepicker({
-				autoclose: true,
-				todayHighlight: true,
-				format: 'yyyy-mm-dd',
-			});
-
-			$('.select2').select2({
-				dropdownParent: $('#modalCreate'),
-				dropdownAutoWidth : true,
-				width: '100%',
-			});
-
-			$('.select2').select2({
-				dropdownAutoWidth : true,
-				width: '100%',
-			});
+			} else {
+				lks += "<option value='"+value.group+"'>"+value.group+"</option>";
+			}
 		})
+		$(target).append(lks);
+	}
 
 
-		function fillToolTable(data){
-			$('#toolTable').DataTable().clear();
-			$('#toolTable').DataTable().destroy();
+	$(function () {
+		$('.datepicker').datepicker({
+			autoclose: true,
+			format: "mm-yyyy",
+			viewMode: "months", 
+			minViewMode: "months"
+		});
 
-			$('#body_tool').html("");
+		$('#cek_date').datepicker({
+			autoclose: true,
+			format: "yyyy-mm",
+			viewMode: "months", 
+			minViewMode: "months"
+		});
 
-			var body = "";
 
-			$.get('{{ url("fetch/maintenance/apar/list") }}', data, function(result, status, xhr){
-				checkedDataArr = result.apar;
-				checkedData("");
-				$.each(result.apar, function(index, value){
-					body += "<tr>";
-					body += "<td>"+value.utility_code+"</td>";
-					body += "<td>"+value.utility_name+"</td>";
-					body += "<td>"+value.type+"</td>";
-					body += "<td>"+value.capacity+"</td>";
-					body += "<td>"+value.location+" - "+value.group+"</td>";
-					body += "<td>"+value.remark+"</td>";
-					body += "<td>"+(value.last_check || "-")+"</td>";
-					body += "<td>"+value.exp_date+"</td>";
-					body += "<td><button class='btn btn-xs btn-warning'>Edit</button>&nbsp;<button class='btn btn-xs btn-danger'>Delete</button></td>";
-					body += "</tr>";
-				})
+		$("#extinguisher_location1").select2({
+			dropdownParent: $('#modalCreate'),
+			tags: true
+		});
 
-				$("#body_tool").append(body);
+		$('#extinguisher_exp').datepicker({
+			autoclose: true,
+			todayHighlight: true,
+			format: 'yyyy-mm-dd',
+		});
 
-				var table = $('#toolTable').DataTable({
-					'dom': 'Bfrtip',
-					'responsive':true,
-					'lengthMenu': [
-					[ 10, 25, 50, -1 ],
-					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-					],
-					'buttons': {
-						buttons:[
-						{
-							extend: 'pageLength',
-							className: 'btn btn-default',
-						},
-						]
-					},
-					'paging': true,
-					'lengthChange': true,
-					'searching': true,
-					'ordering': true,
-					'info': true,
-					'autoWidth': true,
-					"sPaginationType": "full_numbers",
-					"bJQueryUI": true,
-					"bAutoWidth": false,
-					"processing": true,
-				});		
+		$('.select2').select2({
+			dropdownParent: $('#modalCreate'),
+			dropdownAutoWidth : true,
+			width: '100%',
+		});
+
+		$('.select2').select2({
+			dropdownAutoWidth : true,
+			width: '100%',
+		});
+	})
+
+
+	function fillToolTable(data){
+		$('#toolTable').DataTable().clear();
+		$('#toolTable').DataTable().destroy();
+
+		$('#body_tool').html("");
+
+		var body = "";
+
+		$.get('{{ url("fetch/maintenance/apar/list") }}', data, function(result, status, xhr){
+			checkedDataArr = result.apar;
+			checkedData("");
+			$.each(result.apar, function(index, value){
+				body += "<tr>";
+				body += "<td>"+value.utility_code+"</td>";
+				body += "<td>"+value.utility_name+"</td>";
+				body += "<td>"+value.type+"</td>";
+				body += "<td>"+value.capacity+"</td>";
+				body += "<td>"+value.location+" - "+value.group+"</td>";
+				body += "<td>"+value.remark+"</td>";
+				body += "<td>"+(value.last_check || "-")+"</td>";
+				body += "<td>"+value.exp_date2+"</td>";
+				body += "<td><button class='btn btn-xs btn-warning' onclick='edit(\""+value.utility_code+"\", this)'>Edit</button>&nbsp;<button class='btn btn-xs btn-danger'>Delete</button></td>";
+				body += "</tr>";
 			})
-		}
 
-		function checkedData(mon_check) {
-			aparCheck = [];
+			$("#body_tool").append(body);
 
-			$.each(checkedDataArr, function(index, value){
-				if (value.remark == 'APAR') {
-					if (value.last_check) {
-						var from = value.last_check.split(" ");
-						from = from[0].split("-");
+			var table = $('#toolTable').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				'lengthMenu': [
+				[ 10, 25, 50, -1 ],
+				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					{
+						extend: 'pageLength',
+						className: 'btn btn-default',
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'searching': true,
+				'ordering': true,
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true,
+			});		
+		})
+	}
 
-						if (mon_check == "") {
-							now = new Date();
-						} else {
-							now = new Date(mon_check+"-01");
-						}
+	function checkedData(mon_check) {
+		aparCheck = [];
 
-						$("#judul").text(monthNames[now.getMonth()]+" "+now.getFullYear());
+		$.each(checkedDataArr, function(index, value){
+			if (value.remark == 'APAR') {
+				if (value.last_check) {
+					var from = value.last_check.split(" ");
+					from = from[0].split("-");
 
-						if (from[0] == now.getFullYear() && parseInt(from[1]) == (now.getMonth()+1)) {
-							check = 1;
-						} else {
-							check = 0;
-						}
+					if (mon_check == "") {
+						now = new Date();
+					} else {
+						now = new Date(mon_check+"-01");
+					}
+
+					$("#judul").text(monthNames[now.getMonth()]+" "+now.getFullYear());
+
+					if (from[0] == now.getFullYear() && parseInt(from[1]) == (now.getMonth()+1)) {
+						check = 1;
 					} else {
 						check = 0;
 					}
-
-					aparCheck.push({'area': value.location, 'apar_code': value.utility_code, 'apar_name': value.utility_name, 'checked' : check});
+				} else {
+					check = 0;
 				}
-			})
+
+				aparCheck.push({'area': value.location, 'apar_code': value.utility_code, 'apar_name': value.utility_name, 'checked' : check});
+			}
+		})
 
 			// console.log(aparCheck);
 
@@ -519,17 +558,12 @@
 			}
 
 
-			$("#f1_info").text(cek1+" / "+countsAll.Factory_I);
-			$("#f2_info").text(cek2+" / "+countsAll.Factory_II);
-
 			var all_check = (cek1 + cek2);
 			var all = (countsAll.Factory_I+countsAll.Factory_II);
 
 			$("#all_info").text(all_check+" / "+all);
-			$("#all_persentase").text((all_check / all * 100).toFixed(2)+" %");
-
-			console.log(countsCheck);
-			console.log(countsAll);
+			var persentase = (all_check / all * 100).toFixed(2);
+			$("#progress").append('<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="'+persentase+'" aria-valuemin="0" aria-valuemax="100" style="width: '+persentase+'%">'+persentase+'%</div>');
 		}
 
 		function searching() {
@@ -547,6 +581,24 @@
 			$('.select2').val('').trigger("change");
 
 			$("#expMon").val('');
+		}
+
+		function edit(code, elem) {
+			elm = [];
+			$( elem ).parent().parent().children().each( function(index) {
+				elm.push($( elem ).parent().parent().children().eq(index).text());
+			});
+
+			$("#editModal").modal('show');
+			console.log(elm);
+
+			$("#edit_code").val(elm[0]);
+			$("#edit_name").val(elm[1]);
+			$("#edit_type").val(elm[2]);
+			$("#edit_capacity").val(elm[3]);
+			$("#edit_location1").val(elm[4].split(" - ")[0]);
+			$("#edit_location2").val(elm[4].split(" - ")[1]);
+			$("#edit_exp").val(elm[7]);
 		}
 
 		function type_change(elem) {
