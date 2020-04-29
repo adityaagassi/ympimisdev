@@ -182,6 +182,7 @@
                     <label class="col-xs-2" style="margin-top: 1%;">Location</label>
                     <div class="col-xs-10">
                       <input type="text" class="form-control" id="location" readonly>
+                      <input type="hidden" id="type">
                     </div>
                   </div>
 
@@ -196,11 +197,11 @@
                   </div>
 
                   <div class="form-group row">
-                    <label class="col-xs-2" style="margin-top: 1%;">Exp. Date</label>
+                    <label class="col-xs-2" style="margin-top: 1%;">Entry Date</label>
                     <div class="col-xs-5">
                       <div class="input-group">
                         <span class="input-group-addon bg-purple"><i class="fa fa-calendar"></i></span>
-                        <input type="text" class="form-control datepicker" id="expired" placeholder="Pilih Tanggal Kadaluarsa" style="background-color: white !important;">
+                        <input type="text" class="form-control datepicker" id="pengisian" placeholder="Pilih Tanggal Pengisian" style="background-color: white !important;">
                       </div>
                     </div>
                   </div>
@@ -262,7 +263,7 @@
 
 
           if (value.location == "Factory I") {
-            fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\")'>";
+            fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
             fi += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
             fi += "<td>"+value.utility_name+"</td>";
             fi += "<td>"+value.group+"</td>";
@@ -270,7 +271,7 @@
             fi += "<td>"+value.exp+" Month Left</td>";
             fi += "</tr>";
           } else {
-            fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\")'>";
+            fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
             fii += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
             fii += "<td>"+value.utility_name+"</td>";
             fii += "<td>"+value.group+"</td>";
@@ -346,12 +347,13 @@
     }
 
 
-    function openModal(kode, nama, lokasi, id) {
+    function openModal(kode, nama, lokasi, id, type) {
       $("#modaledit").modal("show");
 
       $("#code").val(kode);
       $("#name").val(nama);
       $("#location").val(lokasi);
+      $("#type").val(type);
       $("#capacity").val($('#'+id).val());
     }
 
@@ -458,11 +460,14 @@
       var data = {
         code : $("#code").val(),
         capacity : $("#capacity").val(),
-        exp : $("#expired").val()
+        entry_date : $("#pengisian").val(),
+        type : $("#type").val()
       }
 
       $.post('{{ url("post/maintenance/apar/replace") }}', data, function(result, status, xhr) {
-
+        openSuccessGritter("Success", "APAR Was Successfully Replaced");
+      }).fail(function(result) {
+        openErrorGritter( "Error", "" );
       })
     }
 

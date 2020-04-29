@@ -420,7 +420,7 @@ class MaintenanceController extends Controller
 	{
 		DB::connection()->enableQueryLog();
 
-		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', db::raw("(MONTH(exp_date) - MONTH(now())) as age_left"), 'remark', 'last_check');
+		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', db::raw("(MONTH(exp_date) - MONTH(now())) as age_left"), 'remark', 'last_check', db::raw('DATE_FORMAT(entry_date, "%d %M %Y") as entry_date2'));
 
 		if ($request->get('type')) {
 			$apars = $apars->where('remark', '=', $request->get('type'));
@@ -550,7 +550,8 @@ class MaintenanceController extends Controller
 	{
 		$exp = Utility::where('remark', '=', 'APAR')
 		->where(db::raw('(MONTH(exp_date) - MONTH(now()))'), '<=', '2')
-		->select('id', 'utility_code', 'utility_name', 'exp_date', 'group', 'location', 'last_check', db::raw('(MONTH(exp_date) - MONTH(now())) as exp'), 'capacity')
+		->where(db::raw('YEAR(exp_date)'), '=', db::raw('YEAR(now())'))
+		->select('id', 'utility_code', 'utility_name', 'exp_date', 'group', 'location', 'last_check', db::raw('(MONTH(exp_date) - MONTH(now())) as exp'), 'capacity', 'type')
 		->orderBy('exp_date')
 		->get();
 
@@ -610,11 +611,22 @@ class MaintenanceController extends Controller
 		->where('utility_code', '=', $request->get('code'))
 		->first();
 
+		$additional = "";
+
+		if ($request->get('type') == 'powder') {
+			$additional = " + 3 year";
+		} else if ($request->get('type') == 'liquid') {
+			$additional = " + 5 year";
+		} else if ($request->get('type') == 'CO2') {
+			$additional = " + 5 year";
+		}
+
 		Utility::where('remark', '=', 'APAR')
 		->where('utility_code', '=', $request->get('code'))
 		->update([
 			'capacity' => $request->get('capacity'), 
-			'exp_date' => $request->exp, 
+			'entry_date' => $request->entry_date, 
+			'exp_date' => date("Y-m-d", strtotime(date("Y-m-d", strtotime($request->entry_date)) . $additional)), 
 			'last_check' => date('Y-m-d H:i:s'),
 			'status' => null
 		]);

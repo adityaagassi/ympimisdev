@@ -107,6 +107,7 @@
             <th>APAR CODE</th>
             <th>APAR NAME</th>
             <th>LOCATION</th>
+            <th>ENTRY DATE</th>
             <th>LAST CHECK</th>
             <th>EXP. DATE</th>
           </tr>
@@ -188,7 +189,7 @@
 
           $.each(result.apar, function(index, value){
             if (value.remark == 'APAR') {
-              var dt = value.exp_date.split('-').join('/');
+              var dt = value.entry_date2.split('-').join('/');
               if (value.last_check) {
                 var dt_check = value.last_check.split(" ")[0].split('-').join('/');
               } else {
@@ -199,17 +200,20 @@
               var cekdate = new Date(dt_check);
               var nowdate = new Date();
 
-              if (mydate.getWeek() <= nowdate.getWeek()) {
+              if (Math.floor(mydate.getDate() / 7) <= Math.floor(nowdate.getDate() / 7) && !value.last_check) {
                 bg = "class='alert'";
               } else {
                 bg = "";
               }
 
+
               if (value.location == "Factory I" && mon % 2 === 0) {
+                console.log(Math.floor(mydate.getDate() / 7) +" "+Math.floor(nowdate.getDate() / 7)+" | "+mydate.getWeek()+"  "+nowdate.getWeek());
                 body += "<tr>";
                 body += "<td "+bg+">"+value.utility_code+"</td>";
                 body += "<td "+bg+">"+value.utility_name+"</td>";
-                body += "<td "+bg+">"+value.location+"</td>";
+                body += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+                body += "<td "+bg+">"+value.entry_date2+"</td>";
                 body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
                 body += "<td "+bg+">"+value.exp_date2+"</td>";
                 body += "</tr>";
@@ -218,7 +222,8 @@
                   body += "<tr>";
                   body += "<td "+bg+">"+value.utility_code+"</td>";
                   body += "<td "+bg+">"+value.utility_name+"</td>";
-                  body += "<td "+bg+">"+value.location+"</td>";
+                  body += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+                  body += "<td "+bg+">"+value.entry_date2+"</td>";
                   body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
                   body += "<td "+bg+">"+value.exp_date2+"</td>";
                   body += "</tr>";
