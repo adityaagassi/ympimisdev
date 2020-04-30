@@ -106,6 +106,17 @@
       <li class="header">Master Menu</li>
       @endif
 
+      @if(in_array('M28', $navs))
+      @if(isset($page) && $page == "Supplier")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/supplier") }}"><i class="fa fa-bus"></i> <span>Supplier</span></a>
+      </li>
+      @endif
+
+      @if(in_array('M29', $navs))
+      @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i> <span>Purchase Item</span></a>
+      </li>
+      @endif
 
       @if(in_array('M13', $navs))
       @if(isset($page) && $page == "Bill Of Material")<li class="active">@else<li>@endif
@@ -288,6 +299,28 @@
   </li>
   @endif
 
+  @if(in_array('S38', $navs))
+  @if(isset($head) && $head == "Material Delivery")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-send-o"></i> <span>Material Delivery</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Material Request")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/meeting") }}"><i class="fa fa-list"></i><span>Material Request</span></a>
+      </li>
+      @if(isset($page) && $page == "Material Request")<li class="active">@else<li>@endif
+        <a href="{{ url('index/meeting/attendance?id=') }}"><i class="fa fa-calendar-plus-o"></i>Material Receive</a>
+      </li>
+      @if(isset($page) && $page == "Material Delivery Data")<li class="active">@else<li>@endif
+        <a href="{{ url('index/meeting/attendance?id=') }}"><i class="fa fa-calendar-plus-o"></i>Material Delivery Data</a>
+      </li>
+    </ul>
+  </li>
+  @endif
+
 
   @if(in_array('S33', $navs))
   @if(isset($head) && $head == "Meeting")<li class="treeview active">@else<li class="treeview">@endif
@@ -449,18 +482,6 @@
   </ul>
 </li>
 
-
-@if(in_array('S14', $navs))
-@if(isset($page) && $page == "Overtime Form")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/overtime/overtime_form") }}"><i class="fa fa-clock-o"></i> <span> <span>Overtime Form</span></a>
-</li>
-@endif
-
-@if(in_array('S17', $navs))
-@if(isset($page) && $page == "overtimeDouble")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/double") }}"><i class="fa fa-clock-o"></i> <span>Double Overtime</span></a>
-</li>
-@endif
 
 @if(in_array('S35', $navs))
 @if(isset($page) && $page == "Form Ketidaksesuaian")<li class="active">@else<li>@endif
