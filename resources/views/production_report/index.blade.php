@@ -16,6 +16,23 @@
 @section('content')
 <section class="content">
 	<div class="row">
+		<div class="col-xs-12" style="text-align: center;">
+			<div class="col-xs-12" style="text-align: center;">
+				<span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Keterangan <i class="fa fa-angle-double-down"></i></span>
+			</div>
+			<div class="col-xs-3" style="text-align: center;">
+				<button class="btn btn-success btn-block" style="background-color:#2A3E79;color:white">Daily</button>
+			</div>
+			<div class="col-xs-3" style="text-align: center;">
+				<button class="btn btn-success btn-block" style="background-color:#B93A2B;color:white">Weekly</button>
+			</div>
+			<div class="col-xs-3" style="text-align: center;">
+				<button class="btn btn-success btn-block" style="background-color:#90EE7E;color: black">Monthly</button>
+			</div>
+			<div class="col-xs-3" style="text-align: center;">
+				<button class="btn btn-success btn-block" style="background-color:white;color: black">Conditional</button>
+			</div>
+		</div>
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<?php $no = 1 ?>
