@@ -643,7 +643,7 @@
 		lot_uom = (lot_uom || 0);
 		z1 = (z1 || 0);
 
-		var total = (parseInt(lot) * parseInt(lot_uom)) + parseInt(z1);
+		var total = (parseFloat(lot) * parseFloat(lot_uom)) + parseFloat(z1);
 		document.getElementById("total").value = total;
 	}
 
