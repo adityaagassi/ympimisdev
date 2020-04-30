@@ -1603,7 +1603,7 @@ Route::get('fetch/stocktaking/check_confirm/{id}', 'StockTakingController@fetchC
 Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@updateAudit');
 Route::post('fetch/stocktaking/update_process/{id}', 'StockTakingController@updateProcessAudit');
 
-//Audit
+//Count PI
 Route::get('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
 
 

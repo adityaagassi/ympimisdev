@@ -22,8 +22,12 @@ use App\StocktakingOutput;
 use App\StocktakingSilverList;
 use App\StocktakingSilverLog;
 
-class StockTakingController extends Controller
-{
+class StockTakingController extends Controller{
+
+	private $assy_output = array();
+	private $cek = array();
+	private $temp = array();
+
 	public function __construct(){
 		$this->middleware('auth');
 		$this->storage_location = [
@@ -103,7 +107,6 @@ class StockTakingController extends Controller
 			'YCJR',
 			'ZPA0'
 		];
-
 		$this->base_unit = [
 			'PC',
 			'L',
@@ -121,9 +124,6 @@ class StockTakingController extends Controller
 			'BAG',
 			'PAA'
 		];
-
-		$this->insert_assy = array();
-
 	}
 
 	//Stock Taking Bulanan
@@ -171,11 +171,45 @@ class StockTakingController extends Controller
 
 	public function indexCountPI(){
 
-		StocktakingOutput::truncate();
+		$data = db::select("SELECT DISTINCT process FROM stocktaking_lists");
 
-		$this->countPISingle();
-		$this->countPIAssy();
+		if(count($data) > 1){
+			$response = array(
+				'status' => false,
+				'message' => 'Proses tidak sesuai urutan',
+			);
+			return Response::json($response);
+		}else{
+			if($data[0]->process < 3){
+				$response = array(
+					'status' => false,
+					'message' => 'Proses tidak sesuai urutan',
+				);
+				return Response::json($response);
+			}
+		}
 
+		try{
+			DB::transaction(function() {
+				StocktakingOutput::truncate();
+				$update = StocktakingList::where('process', 3)->update(['process' => 4]);
+			});
+
+			$this->countPISingle();
+			$this->countPIAssy();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Count PI Berhasil'
+			);
+			return Response::json($response);
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function countPISingle(){
@@ -200,12 +234,19 @@ class StockTakingController extends Controller
 			left join material_plant_data_lists m on m.material_number = b.material_child 
 			where s.category = 'ASSY'");
 
-		$insert = array();
 
 		for ($i=0; $i < count($assy); $i++) {
 
 			if($assy[$i]->spt == 50){
-				$this->breakdown($assy[$i]);
+				$row = array();
+				$row['material_number'] = $assy[$i]->material_child;
+				$row['store'] = $assy[$i]->store;
+				$row['location'] = $assy[$i]->location;
+				$row['quantity'] = $assy[$i]->quantity;
+				$row['created_at'] = Carbon::now();
+				$row['updated_at'] = Carbon::now();
+
+				$this->cek[] = $row;
 			}else{
 				$row = array();
 				$row['material_number'] = $assy[$i]->material_child;
@@ -214,49 +255,59 @@ class StockTakingController extends Controller
 				$row['quantity'] = $assy[$i]->quantity;
 				$row['created_at'] = Carbon::now();
 				$row['updated_at'] = Carbon::now();
-				$insert[] = $row;
+
+				$this->assy_output[] = $row;
+
 			}
 		}
 
-		dd($this->$insert_assy);
+		while(count($this->cek) > 0) {
+			$this->breakdown();
+		}
 
-		foreach (array_chunk($insert,1000) as $t) {
+		foreach (array_chunk($this->assy_output,1000) as $t) {
 			$output = StocktakingOutput::insert($t);
 		}
 
 
 	}
 
-	public function breakdown($material){
+	public function breakdown(){
 
-		$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
-			FROM bom_outputs b
-			LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
-			WHERE b.material_parent = '".$material->material_child."'");
+		$this->temp = array();
 
+		for ($i=0; $i < count($this->cek); $i++) {
+			$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
+				FROM bom_outputs b
+				LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
+				WHERE b.material_parent = '".$this->cek[$i]['material_number']."'");
 
-		for ($i=0; $i < count($breakdown); $i++) {
+			for ($j=0; $j < count($breakdown); $j++) {
 
-			if($breakdown[$i]->spt == 50){
-				$row = array();
-				$row['material_child'] = $material->material_child;
-				$row['store'] = $material->store;
-				$row['location'] = $material->location;
-				$row['quantity'] = $material->quantity * ($breakdown[$i]->usage / $breakdown[$i]->divider);
-				$row['created_at'] = Carbon::now();
-				$row['updated_at'] = Carbon::now();
-				$this->breakdown($row);
-			}else{
-				$row = array();
-				$row['material_number'] = $material->material_child;
-				$row['store'] = $material->store;
-				$row['location'] = $material->location;
-				$row['quantity'] = $material->quantity * ($breakdown[$i]->usage / $breakdown[$i]->divider);
-				$row['created_at'] = Carbon::now();
-				$row['updated_at'] = Carbon::now();
-				$this->insert_assy[] = $row;
+				if($breakdown[$j]->spt == 50){
+					$row = array();
+					$row['material_number'] = $breakdown[$j]->material_child;
+					$row['store'] = $this->cek[$i]['store'];
+					$row['location'] = $this->cek[$i]['location'];
+					$row['quantity'] = $this->cek[$i]['quantity'] * ($breakdown[$j]->usage / $breakdown[$j]->divider) ;
+					$row['created_at'] = Carbon::now();
+					$row['updated_at'] = Carbon::now();
+					$this->temp[] = $row;
+				}else{
+					$row = array();
+					$row['material_number'] = $breakdown[$j]->material_child;
+					$row['store'] = $this->cek[$i]['store'];
+					$row['location'] = $this->cek[$i]['location'];
+					$row['quantity'] = $this->cek[$i]['quantity'] * ($breakdown[$j]->usage / $breakdown[$j]->divider) ;
+					$row['created_at'] = Carbon::now();
+					$row['updated_at'] = Carbon::now();
+					$this->assy_output[] = $row;
+				}
 			}
 		}
+
+		$this->cek = array();
+		$this->cek = $this->temp;
 
 	}
 
@@ -560,13 +611,13 @@ class StockTakingController extends Controller
 		$current = StocktakingList::where('store', $request->get('store'))->first();
 
 		//Cek proses saat ini
-		// if($current->process != $process){
-		// 	$response = array(
-		// 		'status' => false,
-		// 		'message' => 'Proses tidak sesuai urutan',
-		// 	);
-		// 	return Response::json($response);
-		// }
+		if($process > $current->process){
+			$response = array(
+				'status' => false,
+				'message' => 'Proses sebelumnya belum selesai',
+			);
+			return Response::json($response);
+		}
 
 		$store = db::select("SELECT
 			s.id,
@@ -645,7 +696,7 @@ class StockTakingController extends Controller
 				'process' => $process
 			]);
 
-			if($audit = 'audit2'){
+			if($audit == 'audit2'){
 				$store = StocktakingList::where('store', $request->get('store'))->get();
 
 				for ($i = 0; $i < count($store); $i++) {

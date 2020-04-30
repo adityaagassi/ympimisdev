@@ -395,7 +395,8 @@
 				$("#store_title").text("STORE : " + store.toUpperCase());
 
 				$('#progress-confirm').show();
-
+				$('#confirm').hide();
+				$('#progress-bar').removeClass('active');	
 
 				var body = '';
 				var num = '';
@@ -417,12 +418,16 @@
 					body += '<td '+css+'>'+(result.store[i].audit1 || '')+'</td>';
 					body += '<td '+css+'>'+(result.store[i].audit2 || '')+'</td>';
 
-					if(result.store[i].process < 3){
+					if(result.store[i].process == 2){
 						if(result.store[i].audit2){
 							body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="cancAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button></td>';
 						}else{
 							body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-success form-control"><span><i class="fa fa-check-square-o"></i></span></button></td>';
 						}
+
+						$('#confirm').show();
+						$('#progress-bar').addClass('active');
+
 					}else{
 						body += '<td '+css+'>-</td>';
 					}
@@ -617,6 +622,8 @@
 			$.post('{{ url("fetch/stocktaking/update_process/audit2") }}', data, function(result, status, xhr){
 				if (result.status) {
 					openSuccessGritter('Success', result.message);
+					
+					fillStore(store);
 				}else{
 					openErrorGritter('Error', result.message);
 				}
