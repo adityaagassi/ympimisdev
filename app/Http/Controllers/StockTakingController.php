@@ -449,6 +449,71 @@ class StockTakingController extends Controller{
 		$printer->close();
 	}
 
+	public function fetchVariance(){
+
+		$date = date('Y-m-d');
+		
+		$variance = db::select("SELECT location, sum(variance) AS variance, sum(ok) AS ok from
+			(SELECT location, material_number, IF(sum(pi)-sum(book) <> 0, 1, 0) AS variance, IF(sum(pi)-sum(book) <> 0, 0, 1) AS ok FROM
+			(SELECT storage_location AS location, material_number, unrestricted AS book,	0 AS pi FROM storage_location_stocks
+			WHERE date(created_at) = '".$date."' 
+			AND storage_location = 'CLB9'
+			UNION ALL
+			SELECT location, material_number, 0 AS book, sum(quantity) AS pi FROM	stocktaking_outputs 
+			GROUP BY location, material_number) AS variance 
+			GROUP BY location, material_number) AS variance_count 
+			GROUP BY location");
+
+		$response = array(
+			'status' => true,
+			'variance' => $variance
+		);
+		return Response::json($response);
+	}
+
+	public function fetchVarianceDetail(Request $request){
+		
+		$variance_detail = db::select("SELECT variance.location, variance.material_number, materials.material_description, sum(variance.pi) AS pi, sum(variance.book) AS book, sum(variance.pi)-sum(variance.book) AS diff, 
+			abs(sum(pi)-sum(book)) AS diff_abs FROM
+			(SELECT storage_location AS location, material_number, unrestricted AS book, 0 AS pi FROM storage_location_stocks
+			WHERE date(created_at) = '2020-04-30' 
+			AND storage_location = '".$request->get('location')."'
+			UNION ALL
+			SELECT location, material_number, 0 AS book, sum(quantity) AS pi FROM	stocktaking_outputs
+			WHERE location = '".$request->get('location')."'
+			GROUP BY location, material_number) AS variance
+			LEFT JOIN materials ON variance.material_number = materials.material_number
+			GROUP BY variance.location, variance.material_number, materials.material_description 
+			ORDER BY diff_abs DESC");
+
+		$response = array(
+			'status' => true,
+			'variance_detail' => $variance_detail
+		);
+		return Response::json($response);
+
+	}
+
+	public function fetchPercentage(){
+
+		$location = db::select("SELECT
+			location.location,
+			COALESCE(fill.qty,0) as fill,
+			COALESCE(location.qty,0) as total,
+			COALESCE(fill.qty,0) / COALESCE(location.qty,0) * 100 as persen
+			FROM
+			(SELECT location, COUNT( id ) AS qty FROM stocktaking_lists GROUP BY location ) AS location
+			LEFT JOIN
+			( SELECT location, COUNT( id ) AS qty FROM stocktaking_lists WHERE quantity IS NOT NULL GROUP BY location ) AS fill
+			ON location.location = fill.location");
+
+		$response = array(
+			'status' => true,
+			'location' => $location
+		);
+		return Response::json($response);	
+	}
+
 	public function fetchCheckAudit(Request $request, $audit){
 
 		$minimum = 0;

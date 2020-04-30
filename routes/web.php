@@ -1582,8 +1582,12 @@ Route::get('fetch/stocktaking/silver_report', 'StockTakingController@fetchSilver
 Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetchSilverReportModal');
 
 
-
+//Index Monthly
 Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktaking');
+Route::get('fetch/stocktaking/percentage_location', 'StockTakingController@fetchPercentage');
+Route::get('fetch/stocktaking/variance', 'StockTakingController@fetchVariance');
+Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVarianceDetail');
+
 
 //Summary of Counting
 Route::get('index/stocktaking/summary_of_counting', 'StockTakingController@indexSummaryOfCounting');
@@ -2630,10 +2634,14 @@ Route::get('scan/assembly/kensa', 'AssemblyProcessController@scanAssemblyKensa')
 Route::post('input/assembly/kensa', 'AssemblyProcessController@inputAssemblyKensa');
 Route::get('fetch/assembly/ng_detail', 'AssemblyProcessController@showNgDetail');
 Route::get('fetch/assembly/ng_temp', 'AssemblyProcessController@fetchNgTemp');
+Route::get('fetch/assembly/ng_temp_by_id', 'AssemblyProcessController@fetchNgTempById');
 Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');
 Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNgTemp');
+Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');
 Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexFlutePrintLabel');
 
+Route::get('index/board/{location}', 'AssemblyProcessController@indexAssemblyBoard');
+Route::get('fetch/assembly/board', 'AssemblyProcessController@fetchAssemblyBoard');
 
 //ROOMS
 Route::get('/meetingroom1', function () {
