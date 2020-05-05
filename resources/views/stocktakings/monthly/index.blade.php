@@ -47,15 +47,28 @@
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 
 			<a href="{{ url("index/stocktaking/summary_of_counting") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Summary of Counting</a>
-			<a href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Count</a>
+			<a href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input No Use</a>
+			<a href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input PI</a>
 			<a href="{{ url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 1</a>
 			<a href="{{ url("index/stocktaking/audit/"."2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 2</a>
-			<a href="javascript:void(0)" onClick="countPI()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Count PI</a>
+			<a href="javascript:void(0)" onClick="countPI()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Breakdown PI</a>
+			<a href="{{ url("index/stocktaking/unmatch") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Unmatch</a>
+			<a href="{{ url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
 
+
+			<br>
+
+			<span style="font-size: 30px; color: purple;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
+			<form method="GET" action="{{ url("export/stocktaking/inquiry") }}">
+				<button type="submit" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple; margin-top: 5px;"> Inquiry</button>
+			</form>
+			<form method="GET" action="{{ url("export/stocktaking/variance") }}">
+				<button type="submit" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple; margin-top: 5px;"> Variance</button>
+			</form>
 
 		</div>
 		<div class="col-xs-9" style="text-align: center; color: red;">
-			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
+			<span style="font-size: 30px; "><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 			<br>
 
 			<div class="col-xs-6">
@@ -65,8 +78,11 @@
 			</div>
 
 			<div class="col-xs-12">
-				<div id="container"></div>
+				<div id="container1"></div>
+			</div>
 
+			<div class="col-xs-12">
+				<div id="container2"></div>
 			</div>
 
 		</div>
@@ -127,6 +143,8 @@
 		$('body').toggleClass("sidebar-collapse");
 
 		percentage();
+
+		filledList();
 		variance();
 	});
 
@@ -180,6 +198,112 @@
 		});
 	}
 
+	function filledList() {
+		$.get('{{ url("fetch/stocktaking/filled_list") }}', function(result, status, xhr){
+			if(result.status){
+
+				var location = [];
+				var fill = [];
+				var empty = [];
+
+				for (var i = 0; i < result.location.length; i++) {
+					location.push(result.location[i].location);
+					fill.push(parseInt(result.location[i].qty));
+					empty.push(parseInt(result.location[i].empty));
+				}
+
+				Highcharts.chart('container1', {
+					chart: {
+						type: 'column',
+						backgroundColor: {
+							linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+							stops: []
+						},
+					},
+					title: {
+						text: 'Input',
+						style: {
+							fontSize: '30px',
+							fontWeight: 'bold'
+						}
+					},	
+					legend:{
+						enabled: false
+					},
+					credits:{	
+						enabled:false
+					},
+					xAxis: {
+						categories: location,
+						type: 'category',
+						gridLineWidth: 5,
+						gridLineColor: 'RGB(204,255,255)',
+						labels: {
+							style: {
+								fontSize: '20px'
+							}
+						},
+					},
+					yAxis: {
+						title: {
+							enabled:false,
+						},
+						labels: {
+							enabled:false
+						}
+					},
+					tooltip: {
+						formatter: function () {
+							return '<b>' + this.x + '</b><br/>' +
+							this.series.name + ': ' + this.y + '<br/>' +
+							'Total: ' + this.point.stackTotal;
+						}
+					},
+					plotOptions: {
+						column: {
+							stacking: 'percent',
+						},
+						series:{
+							animation: false,
+							pointPadding: 0.93,
+							groupPadding: 0.93,
+							borderWidth: 0.93,
+							cursor: 'pointer',
+							dataLabels: {
+								enabled: true,
+								formatter: function() {
+									return this.y;
+								},
+								style: {
+									fontSize:'18px',
+									fontWeight: 'bold',
+								}
+							},
+							point: {
+								events: {
+									click: function () {
+										fillVarianceModal(this.category);
+									}
+								}
+							}
+						}
+					},
+					series: [{
+						name: 'Empty',
+						data: empty,
+						color: 'rgb(255,116,116)'
+					}, {
+						name: 'Filled',
+						data: fill,
+						color: 'rgb(144,238,126)'
+					}]
+				});
+
+
+			}
+		});
+	}
+
 	function variance() {
 		$.get('{{ url("fetch/stocktaking/variance") }}', function(result, status, xhr){
 			if(result.status){
@@ -194,7 +318,7 @@
 					ok.push(parseInt(result.variance[i].ok));
 				}
 
-				Highcharts.chart('container', {
+				Highcharts.chart('container2', {
 					chart: {
 						type: 'column',
 						backgroundColor: {
@@ -203,7 +327,7 @@
 						},
 					},
 					title: {
-						text: 'Monthly Stocktaking Report',
+						text: 'Variance',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -288,8 +412,8 @@
 
 	function fillVarianceModal(location) {
 
-		$('#modalVariance').modal('show');
 		$('#loading').show();
+		$('#tableVariance').hide();
 		
 		var data = {
 			location : location
@@ -339,8 +463,20 @@
 				$('#modalDetailTotal4').html('');
 				$('#modalDetailTotal4').append(resultTotal4.toLocaleString());
 
+				$('#modalVariance').modal('show');
+				$('#tableVariance').show();
+
+
 			}
 		});
+	}
+
+	function exportInquiry() {
+		$.get('{{ url("export/stocktaking/inquiry") }}', function(result, status, xhr){});
+	}
+
+	function exportVariance() {
+		$.get('{{ url("export/stocktaking/variance") }}', function(result, status, xhr){});
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

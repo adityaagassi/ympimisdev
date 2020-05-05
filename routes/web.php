@@ -1591,6 +1591,9 @@ Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetch
 //Index Monthly
 Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktaking');
 Route::get('fetch/stocktaking/percentage_location', 'StockTakingController@fetchPercentage');
+
+Route::get('fetch/stocktaking/filled_list', 'StockTakingController@fetchfilledList');
+
 Route::get('fetch/stocktaking/variance', 'StockTakingController@fetchVariance');
 Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVarianceDetail');
 

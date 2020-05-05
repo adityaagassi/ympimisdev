@@ -11,16 +11,18 @@ use Yajra\DataTables\Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use DataTables;
-use Response;
-use File;
 use App\MaterialPlantDataList;
 use App\BomOutput;
 use App\StocktakingList;
 use App\StocktakingOutput;
 use App\StocktakingSilverList;
 use App\StocktakingSilverLog;
+use Carbon\Carbon;
+use DataTables;
+use Response;
+use Excel;
+use DateTime;
+use File;
 
 class StockTakingController extends Controller{
 
@@ -221,7 +223,7 @@ class StockTakingController extends Controller{
 				'material_number' => $single[$i]->material_number,
 				'store' => $single[$i]->store,
 				'location' => $single[$i]->location,
-				'quantity' => $single[$i]->quantity
+				'quantity' => $single[$i]->final_count
 			]);
 			$insert->save();
 		}
@@ -449,17 +451,54 @@ class StockTakingController extends Controller{
 		$printer->close();
 	}
 
+	public function exportInquiry(){
+
+		$title = 'Inquiry'.date('M').date('d').'_'.date('H.i');	
+
+		$inquiries = db::select("SELECT
+			stocktaking_lists.id,
+			stocktaking_lists.location,
+			storage_locations.location AS loc,
+			stocktaking_lists.store,
+			stocktaking_lists.material_number,
+			material_plant_data_lists.material_description,
+			stocktaking_lists.category,
+			material_plant_data_lists.bun,
+			stocktaking_lists.final_count,
+			date_format( stocktaking_lists.updated_at, '%d-%M-%y' ) AS updated_at 
+			FROM
+			stocktaking_lists
+			LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_lists.material_number
+			LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_lists.location");
+
+		$data = array(
+			'inquiries' => $inquiries
+		);
+
+		ob_clean();
+		Excel::create($title, function($excel) use ($data){
+			$excel->sheet('Inquiry', function($sheet) use ($data) {
+				return $sheet->loadView('stocktakings.monthly.report.inquiry_excel', $data);
+			});
+		})->export('xlsx');
+		
+	}
+
+	public function exportVariance(){
+		
+	}
+
 	public function fetchVariance(){
 
 		$date = date('Y-m-d');
 		
 		$variance = db::select("SELECT location, sum(variance) AS variance, sum(ok) AS ok from
 			(SELECT location, material_number, IF(sum(pi)-sum(book) <> 0, 1, 0) AS variance, IF(sum(pi)-sum(book) <> 0, 0, 1) AS ok FROM
-			(SELECT storage_location AS location, material_number, unrestricted AS book,	0 AS pi FROM storage_location_stocks
+			(SELECT storage_location AS location, material_number, unrestricted AS book, 0 AS pi FROM storage_location_stocks
 			WHERE date(created_at) = '".$date."' 
 			AND storage_location = 'CLB9'
 			UNION ALL
-			SELECT location, material_number, 0 AS book, sum(quantity) AS pi FROM	stocktaking_outputs 
+			SELECT location, material_number, 0 AS book, sum(quantity) AS pi FROM stocktaking_outputs 
 			GROUP BY location, material_number) AS variance 
 			GROUP BY location, material_number) AS variance_count 
 			GROUP BY location");
@@ -472,18 +511,19 @@ class StockTakingController extends Controller{
 	}
 
 	public function fetchVarianceDetail(Request $request){
+		$date = date('Y-m-d');
 		
-		$variance_detail = db::select("SELECT variance.location, variance.material_number, materials.material_description, sum(variance.pi) AS pi, sum(variance.book) AS book, sum(variance.pi)-sum(variance.book) AS diff, 
+		$variance_detail = db::select("SELECT variance.location, variance.material_number, mpdl.material_description, sum(variance.pi) AS pi, sum(variance.book) AS book, sum(variance.pi)-sum(variance.book) AS diff, 
 			abs(sum(pi)-sum(book)) AS diff_abs FROM
 			(SELECT storage_location AS location, material_number, unrestricted AS book, 0 AS pi FROM storage_location_stocks
-			WHERE date(created_at) = '2020-04-30' 
+			WHERE date(created_at) = '".$date."' 
 			AND storage_location = '".$request->get('location')."'
 			UNION ALL
 			SELECT location, material_number, 0 AS book, sum(quantity) AS pi FROM	stocktaking_outputs
 			WHERE location = '".$request->get('location')."'
 			GROUP BY location, material_number) AS variance
-			LEFT JOIN materials ON variance.material_number = materials.material_number
-			GROUP BY variance.location, variance.material_number, materials.material_description 
+			LEFT JOIN material_plant_data_lists mpdl ON variance.material_number = mpdl.material_number
+			GROUP BY variance.location, variance.material_number, mpdl.material_description 
 			ORDER BY diff_abs DESC");
 
 		$response = array(
@@ -492,6 +532,23 @@ class StockTakingController extends Controller{
 		);
 		return Response::json($response);
 
+	}
+
+	public function fetchfilledList(){
+		$location = db::select("SELECT location, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
+			(SELECT location, 0 AS qty, count( id ) AS total FROM stocktaking_lists 
+			GROUP BY location
+			UNION ALL
+			SELECT location, count( id ) AS qty, 0 AS total FROM stocktaking_lists
+			WHERE quantity IS NOT NULL 
+			GROUP BY location) AS list 
+			GROUP BY location");
+
+		$response = array(
+			'status' => true,
+			'location' => $location
+		);
+		return Response::json($response);
 	}
 
 	public function fetchPercentage(){
@@ -713,7 +770,8 @@ class StockTakingController extends Controller{
 			WHERE
 			s.store = '". $request->get('store'). "'
 			ORDER BY
-			s.id");
+			s.category,
+			s.material_number");
 
 		$response = array(
 			'status' => true,
