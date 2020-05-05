@@ -244,11 +244,7 @@ class TemperatureController extends Controller
                ( SELECT ROUND( MAX( suhu ), 1 ) AS max FROM body_temperatures WHERE DATE( created_at ) = week_date ) AS highest 
                FROM
                weekly_calendars 
-               WHERE
-               weekly_calendars.week_date BETWEEN CONCAT( YEAR ( NOW()), '-', MONTH ( NOW()), '-01' ) 
-               AND DATE(
-               NOW()) 
-               AND remark != 'H' 
+               WHERE remark != 'H' 
                AND week_date IN ( SELECT DATE( created_at ) AS date FROM body_temperatures ) 
                ".$where."");
 
