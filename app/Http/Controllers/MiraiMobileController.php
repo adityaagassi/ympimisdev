@@ -411,7 +411,7 @@ class MiraiMobileController extends Controller
       $date = "";
     }
 
-    $location_detail = db::connection('mobile')->select("SELECT quiz.employee_id, quiz.`name`, quiz.city, employees.kota, employees.department FROM 
+    $location_detail = db::connection('mobile')->select("SELECT quiz.answer_date,quiz.employee_id, quiz.`name`, quiz.city, employees.kota, employees.department FROM 
       (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
       WHERE id IN (
       SELECT MIN(id)
@@ -439,7 +439,7 @@ class MiraiMobileController extends Controller
       $date = "";
     }
 
-    $location_detail = db::connection('mobile')->select("SELECT quiz.employee_id, quiz.`name`, quiz.city, employees.kota, employees.department FROM 
+    $location_detail = db::connection('mobile')->select("SELECT quiz.answer_date,quiz.employee_id, quiz.`name`, quiz.city, employees.kota, employees.department FROM 
       (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
       WHERE id IN (
       SELECT MIN(id)

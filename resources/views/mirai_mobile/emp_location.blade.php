@@ -119,6 +119,7 @@
 								<table class="table" id="tableDetail">
 								<thead>
 									<tr>
+										<th>Tanggal</th>
 										<th>ID Karyawan</th>
 										<th>Nama Karyawan</th>
 										<th>Departemen</th>
@@ -155,6 +156,7 @@
 								<table class="table" id="tableDetailAll">
 								<thead>
 									<tr>
+										<th>Tanggal</th>
 										<th>ID Karyawan</th>
 										<th>Nama Karyawan</th>
 										<th>Departemen</th>
@@ -346,6 +348,7 @@
 				$("#bodyDetail").html("");
 				$.each(result.location_detail, function(key, value) {
 					body += "<tr>";
+					body += "<td>"+value.answer_date+"</td>";
 					body += "<td>"+value.employee_id+"</td>";
 					body += "<td>"+value.name+"</td>";
 					body += "<td>"+value.department+"</td>";
@@ -444,6 +447,7 @@
 
 				$.each(result.location_detail, function(key, value) {
 					body += "<tr>";
+					body += "<td>"+value.answer_date+"</td>";
 					body += "<td>"+value.employee_id+"</td>";
 					body += "<td>"+value.name+"</td>";
 					body += "<td>"+value.department+"</td>";
