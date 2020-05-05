@@ -21,16 +21,16 @@
 				<span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Keterangan <i class="fa fa-angle-double-down"></i></span>
 			</div>
 			<div class="col-xs-3" style="text-align: center;">
-				<button class="btn btn-success btn-block" style="font-size: 24px;background-color:#2A3E79;color:white">Daily</button>
+				<button class="btn btn-success btn-block" style="font-size: 24px;background-color:#2A3E79;color:white">Harian</button>
 			</div>
 			<div class="col-xs-3" style="text-align: center;">
-				<button class="btn btn-success btn-block" style="font-size: 24px;background-color:#B93A2B;color:white">Weekly</button>
+				<button class="btn btn-success btn-block" style="font-size: 24px;background-color:#B93A2B;color:white">Mingguan</button>
 			</div>
 			<div class="col-xs-3" style="text-align: center;">
-				<button class="btn btn-success btn-block" style="font-size: 24px;background-color:#90EE7E;color: black">Monthly</button>
+				<button class="btn btn-success btn-block" style="font-size: 24px;background-color:#90EE7E;color: black">Bulanan</button>
 			</div>
 			<div class="col-xs-3" style="text-align: center;">
-				<button class="btn btn-success btn-block" style="font-size: 24px;background-color:white;color: black">Conditional</button>
+				<button class="btn btn-success btn-block" style="font-size: 24px;background-color:white;color: black">Kondisional</button>
 			</div>
 		</div>
 		<div class="col-xs-4" style="text-align: center;">
