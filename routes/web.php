@@ -401,6 +401,10 @@ Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
 	Route::get('fetch/report/manpower_detail', 'EmployeeController@fetchReportManpowerDetail');
 });
 
+
+Route::get('index/report/employee_resume', 'EmployeeController@indexEmployeeResume');
+Route::get('fetch/report/employee_resume', 'EmployeeController@fetchEmployeeResume');
+
 Route::get('index/report/gender', 'EmployeeController@indexReportGender');
 Route::get('fetch/report/gender2', 'EmployeeController@fetchReportGender2');
 Route::get('index/report/stat', 'EmployeeController@indexReportStatus');
@@ -1011,6 +1015,8 @@ Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 	Route::get('fetch/purchase_item', 'AccountingController@fetch_item');
 });
 
+Route::get('purchase_requisition', 'AccountingController@purchase_requisition');
+Route::get('fetch/purchase_requisition', 'AccountingController@fetch_purchase_requisition');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -1587,6 +1593,9 @@ Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktak
 Route::get('fetch/stocktaking/percentage_location', 'StockTakingController@fetchPercentage');
 Route::get('fetch/stocktaking/variance', 'StockTakingController@fetchVariance');
 Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVarianceDetail');
+
+Route::get('export/stocktaking/inquiry', 'StockTakingController@exportInquiry');
+Route::get('export/stocktaking/variance', 'StockTakingController@exportVariance');
 
 
 //Summary of Counting
@@ -2625,6 +2634,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
 	Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
+	Route::get('print/apar/qr', 'MaintenanceController@print_apar2');
 });
 
 //ASSEMBLIES
@@ -2633,6 +2643,7 @@ Route::get('scan/assembly/operator', 'AssemblyProcessController@scanAssemblyOper
 Route::get('scan/assembly/kensa', 'AssemblyProcessController@scanAssemblyKensa');
 Route::post('input/assembly/kensa', 'AssemblyProcessController@inputAssemblyKensa');
 Route::get('fetch/assembly/ng_detail', 'AssemblyProcessController@showNgDetail');
+Route::get('fetch/assembly/onko', 'AssemblyProcessController@fetchOnko');
 Route::get('fetch/assembly/ng_temp', 'AssemblyProcessController@fetchNgTemp');
 Route::get('fetch/assembly/ng_temp_by_id', 'AssemblyProcessController@fetchNgTempById');
 Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');

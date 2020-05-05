@@ -145,6 +145,10 @@
                                 <td>
                                     <span style="font-weight: bold;">Presence Information (出勤情報)</span>
                                     <br>
+                                    <a href="{{ url("index/report/employee_resume") }}">
+                                        <i class="fa fa-caret-right"></i> Employee Resume (従業員のまとめ)
+                                    </a>
+                                    <br>
                                     <a href="{{ url("index/report/daily_attendance")}}">
                                         <i class="fa fa-caret-right"></i>Attendance (出勤)
                                     </a>

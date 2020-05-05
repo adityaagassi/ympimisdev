@@ -118,6 +118,161 @@ class EmployeeController extends Controller
                'status' => $this->status))->with('page', 'Master Employee')->with('head', 'Employees Data');
      }
 
+     public function indexEmployeeResume(){
+          $title = 'Employee Resume';
+          $title_jp = '従業員のまとめ';
+
+          // $datas = db::table('employee_syncs')->select("select * from employee_syncs");
+
+          $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
+
+          $datas = db::select($q);
+
+          return view('employees.report.employee_resume', array(
+               'title' => $title,
+               'title_jp' => $title_jp,
+               'datas' => $datas
+          ));
+     }
+
+     public function fetchEmployeeResume(Request $request){
+
+          $tanggal = "";
+          $addcostcenter = "";
+          $adddepartment = "";
+          $addsection = "";
+          $addgrup = "";
+          $addnik = "";
+
+          if(strlen($request->get('datefrom')) > 0){
+               $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+               $tanggal = "and tanggal >= '".$datefrom."' ";
+               if(strlen($request->get('dateto')) > 0){
+                    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+                    $tanggal = $tanggal."and tanggal <= '".$dateto."' ";
+               }
+          }
+
+          if($request->get('cost_center_code') != null) {
+               $costcenter = implode(",", $request->get('cost_center_code'));
+               $addcostcenter = "and bagian.cost_center in (".$costcenter.") ";
+          }
+
+          if($request->get('department') != null) {
+               $departments = $request->get('department');
+               $deptlength = count($departments);
+               $department = "";
+
+               for($x = 0; $x < $deptlength; $x++) {
+                    $department = $department."'".$departments[$x]."'";
+                    if($x != $deptlength-1){
+                         $department = $department.",";
+                    }
+               }
+               $adddepartment = "and bagian.department in (".$department.") ";
+          }
+
+          if($request->get('section') != null) {
+               $sections = $request->get('section');
+               $sectlength = count($sections);
+               $section = "";
+
+               for($x = 0; $x < $sectlength; $x++) {
+                    $section = $section."'".$sections[$x]."'";
+                    if($x != $sectlength-1){
+                         $section = $section.",";
+                    }
+               }
+               $addsection = "and bagian.section in (".$section.") ";
+          }
+
+          if($request->get('group') != null) {
+               $groups = $request->get('group');
+               $grplen = count($groups);
+               $group = "";
+
+               for($x = 0; $x < $grplen; $x++) {
+                    $group = $group."'".$groups[$x]."'";
+                    if($x != $grplen-1){
+                         $group = $group.",";
+                    }
+               }
+               $addgrup = "and bagian.group in (".$group.") ";
+          }
+
+          if($request->get('employee_id') != null) {
+               $niks = $request->get('employee_id');
+               $niklen = count($niks);
+               $nik = "";
+
+               for($x = 0; $x < $niklen; $x++) {
+                    $nik = $nik."'".$niks[$x]."'";
+                    if($x != $niklen-1){
+                         $nik = $nik.",";
+                    }
+               }
+               $addnik = "and ovr.nik in (".$nik.") ";
+          }
+
+          $presences = db::connection('sunfish')->select("SELECT
+               A.Emp_no,
+               B.Full_name,
+               B.Department,
+               format ( A.shiftstarttime, 'yyyy-MM' ) AS orderer,
+               format ( A.shiftstarttime, 'MMMM yyyy' ) AS periode,
+               COUNT (
+               IIF ( A.Attend_Code LIKE '%Mangkir%', 1, NULL )) AS mangkir,
+               COUNT (
+               IIF ( A.Attend_Code LIKE '%CK%' OR A.Attend_Code LIKE '%CUTI%' OR A.Attend_Code LIKE '%UPL%', 1, NULL )) AS cuti,
+               COUNT (
+               IIF ( A.Attend_Code LIKE '%Izin%', 1, NULL )) AS izin,
+               COUNT (
+               IIF ( A.Attend_Code LIKE '%SAKIT%', 1, NULL )) AS sakit,
+               COUNT (
+               IIF ( A.Attend_Code LIKE '%LTI%' OR A.Attend_Code LIKE '%TELAT%', 1, NULL )) AS terlambat,
+               COUNT (
+               IIF ( A.Attend_Code LIKE '%PC%', 1, NULL )) AS pulang_cepat,
+               COUNT (
+               IIF (
+               A.Attend_Code LIKE '%ABS%' 
+               OR A.Attend_Code LIKE '%CK10%' 
+               OR A.Attend_Code LIKE '%CK11%' 
+               OR A.Attend_Code LIKE '%CK12%' 
+               OR A.Attend_Code LIKE '%CK8%' 
+               OR A.Attend_Code LIKE '%Izin%' 
+               OR A.Attend_Code LIKE '%Mangkir%' 
+               OR A.Attend_Code LIKE '%PC%' 
+               OR A.Attend_Code LIKE '%SAKIT%' 
+               OR A.Attend_Code LIKE '%UPL%' 
+               OR A.Attend_Code LIKE '%LTI%' 
+               OR A.Attend_Code LIKE '%TELAT%',
+               1,
+               NULL 
+               )) AS tunjangan,
+               ISNULL(SUM (  A.total_ot / 60.0 ),0) AS overtime 
+               FROM
+               VIEW_YMPI_Emp_Attendance AS A
+               left join VIEW_YMPI_Emp_OrgUnit as B on B.Emp_no = A.Emp_no
+               WHERE
+               YEAR(A.shiftstarttime) >= '2020'
+               AND A.shiftstarttime <= '2020-04-30 23:59:59'
+               GROUP BY
+               format ( A.shiftstarttime, 'MMMM yyyy' ),
+               format ( A.shiftstarttime, 'yyyy-MM' ),
+               A.Emp_no,
+               B.Full_name,
+               B.Department
+               ORDER BY
+               A.Emp_no asc,
+               orderer ASC");
+
+          $response = array(
+               'status' => true,
+               'presences' => $presences,
+          );
+          return Response::json($response);
+     }
+
      public function indexTotalMeeting()
      {
           $title_jp = "トータルミーティング";
@@ -3203,14 +3358,14 @@ public function getKaizenReward()
 
 public function fetchAbsenceEmployee(Request $request)
 {
-    $username = Auth::user()->username;
+ $username = Auth::user()->username;
 
-    $att_selected = "";
+ $att_selected = "";
 
-    foreach ($this->attend as $att) {
-        if ($att['attend_type'] == $request->get('attend_code')) {
-          $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
-     }
+ foreach ($this->attend as $att) {
+  if ($att['attend_type'] == $request->get('attend_code')) {
+     $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
+}
 }
 
 $att_selected = substr($att_selected, 0, -2);
