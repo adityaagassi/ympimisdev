@@ -383,6 +383,7 @@ class MiraiMobileController extends Controller
       left join employees on employees.employee_id = act.employee_id
       join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = act.employee_id AND all_groups.tanggal = act.answer_date
       where act.city <> employees.kota and answer_date >= '2020-04-13'
+      and employees.department is not null
       group by employees.department, answer_date
       ");
 
