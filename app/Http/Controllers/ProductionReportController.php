@@ -843,7 +843,7 @@ class ProductionReportController extends Controller
 
         $date = db::select("select week_date from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."' and week_date not in (select tanggal from ftm.kalender)");
 
-        $act_name = DB::select("select activity_name from activity_lists where 
+        $act_name = DB::select("select activity_name,frequency,activity_type from activity_lists where 
              leader_dept = '".$leader_name."'
             and activity_lists.department_id = '".$id."'
             and activity_lists.frequency = '".$frequency."'");

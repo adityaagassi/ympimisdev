@@ -949,6 +949,7 @@ else if(frequency == 'Daily'){
       var body = '';
       var head = '';
       var jj = [];
+      var act_type = [];
       var no = 1;
       var aa = 1;
       var bb = 0;
@@ -960,9 +961,7 @@ else if(frequency == 'Daily'){
         if(result.act_name[a].activity_name != null){
           head += '<th>'+result.act_name[a].activity_name+'</th>';
           bb += 1;
-        }
-        else{
-          head += '<th></th>';
+          act_type.push(result.act_name[a].activity_type);
         }
       }
       // console.log(result.act_name);
@@ -973,23 +972,33 @@ else if(frequency == 'Daily'){
         body += '<tr>';
         body += '<td>'+no+'</td>';
         body += '<td>'+result.date[i].week_date+'</td>';
-        if(parseInt(result.detail[i].jumlah_daily_check) != 0 && parseInt(result.detail[i].jumlah_area_check) != 0){
-          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_daily_check+'</td>';
-          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_area_check+'</td>';
+        if (act_type[0] == 'Cek Area') {
+          if(parseInt(result.detail[i].jumlah_area_check) != 0){
+            body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_area_check+'</td>';
+          }else{
+            body += '<td style="background-color: #f7ff59"></td>';
+          }
         }
-        if(parseInt(result.detail[i].jumlah_daily_check) != 0 && parseInt(result.detail[i].jumlah_area_check) == 0){
-          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_daily_check+'</td>';
-          body += '<td style="background-color: #f7ff59"></td>';
+        if (act_type[0] == 'Pengecekan Foto') {
+          if(parseInt(result.detail[i].jumlah_daily_check) != 0){
+            body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_daily_check+'</td>';
+          }else{
+            body += '<td style="background-color: #f7ff59"></td>';
+          }
         }
-        else if(parseInt(result.detail[i].jumlah_daily_check) == 0 && parseInt(result.detail[i].jumlah_area_check) != 0){
-          body += '<td style="background-color: #f7ff59"></td>';
-          body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_area_check+'</td>';
+        if (act_type[1] == 'Pengecekan Foto') {
+          if(parseInt(result.detail[i].jumlah_daily_check) != 0){
+            body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_daily_check+'</td>';
+          }else{
+            body += '<td style="background-color: #f7ff59"></td>';
+          }
         }
-        else if(parseInt(result.detail[i].jumlah_area_check) == 0 && parseInt(result.detail[i].jumlah_daily_check) == 0){
-          // body += '<td style="background-color: #f7ff59"></td>';
-          // body += '<td style="background-color: #f7ff59"></td>';
-          body += '<td style="background-color: #f7ff59"></td>';
-          body += '<td style="background-color: #f7ff59"></td>';
+        if (act_type[1] == 'Cek Area') {
+          if(parseInt(result.detail[i].jumlah_area_check) != 0){
+            body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_area_check+'</td>';
+          }else{
+            body += '<td style="background-color: #f7ff59"></td>';
+          }
         }
         body += '</tr>';
         total_plan += parseInt(result.detail[i].plan) * bb;
