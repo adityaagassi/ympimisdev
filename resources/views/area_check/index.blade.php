@@ -275,8 +275,8 @@
 	            </div>
 	            <div class="form-group">
 	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
-	                  <option value=""></option>
+	                <select class="form-control" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+	                  <!-- <option value=""></option> -->
 	                  @foreach($subsection as $subsection)
 	                  <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
 	                  @endforeach
@@ -291,8 +291,8 @@
             	<div class="form-group">
             		<?php $no = 1 ?>
 	              <label>Point Check<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="inputpoint_check" id="inputpoint_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required>
-	                  <option value=""></option>
+	                <select class="form-control" name="inputpoint_check" id="inputpoint_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required>
+	                  <!-- <option value=""></option> -->
 	                  @foreach($point_check as $point_check)
 	                    <option value="{{ $point_check->id }}">{{ $no }}. {{ $point_check->point_check }}</option>
 	                    <?php $no++ ?>
@@ -351,8 +351,8 @@
 	            </div>
 	            <div class="form-group">
 	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
-	                  <option value=""></option>
+	                <select class="form-control" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+	                  <!-- <option value=""></option> -->
 	                  @foreach($subsection2 as $subsection2)
 	                  <option value="{{ $subsection2->sub_section_name }}">{{ $subsection2->sub_section_name }}</option>
 	                  @endforeach
@@ -367,8 +367,8 @@
             	<div class="form-group">
 	              <label>Point Check<span class="text-red">*</span></label>
 	              <?php $no = 1 ?>
-	                <select class="form-control select2" name="editpoint_check" id="editpoint_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required>
-	                  <option value=""></option>
+	                <select class="form-control" name="editpoint_check" id="editpoint_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required>
+	                  <!-- <option value=""></option> -->
 	                  @foreach($point_check2 as $point_check2)
 	                    <option value="{{ $point_check2->id }}">{{ $no }}. {{ $point_check2->point_check }}</option>
 	                    <?php $no++ ?>
