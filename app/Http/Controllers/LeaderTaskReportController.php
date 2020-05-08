@@ -150,7 +150,13 @@ class LeaderTaskReportController extends Controller
                         where leader = '".$leader_name."'
                         and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
-                        and deleted_at is null),null)))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Temuan NG',
+                        (SELECT DISTINCT(CONCAT('/index/ng_finding/print_ng_finding_email/',id_activity_list,'/','".$month."')) FROM ng_findings
+                        where leader = '".$leader_name."'
+                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and deleted_at is null),null))))))))))))))
                 as link,
                 IF(activity_type = 'Audit',
                         (SELECT count(DISTINCT(week_name)) FROM production_audits
@@ -228,7 +234,13 @@ class LeaderTaskReportController extends Controller
                         where leader = '".$leader_name."'
                         and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
-                        and deleted_at is null),null)))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Temuan NG',
+                        (SELECT count(DISTINCT(id)) FROM ng_findings
+                        where leader = '".$leader_name."'
+                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and deleted_at is null),null))))))))))))))
                 as jumlah
                         from activity_lists
                         where leader_dept = '".$leader_name."'
@@ -340,7 +352,13 @@ class LeaderTaskReportController extends Controller
                         where leader = '".$leader_name."'
                         and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
-                        and deleted_at is null),null)))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Temuan NG',
+                        (SELECT DISTINCT(CONCAT('/index/ng_finding/print_ng_finding_email/',id_activity_list,'/','".$month."')) FROM ng_findings
+                        where leader = '".$leader_name."'
+                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and deleted_at is null),null))))))))))))))
                 as link,
                 IF(activity_type = 'Audit',
                         (SELECT count(DISTINCT(week_name)) FROM production_audits
@@ -418,7 +436,13 @@ class LeaderTaskReportController extends Controller
                         where leader = '".$leader_name."'
                         and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
-                        and deleted_at is null),null)))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Temuan NG',
+                        (SELECT count(DISTINCT(id)) FROM ng_findings
+                        where leader = '".$leader_name."'
+                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and deleted_at is null),null))))))))))))))
                 as jumlah
                         from activity_lists
                         where leader_dept = '".$leader_name."'
