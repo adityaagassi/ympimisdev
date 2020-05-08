@@ -24,7 +24,7 @@
             <tr>
                 <td>{{ $tr->id }}</td>
                 <td>{{ $tr->location }}</td>
-                <td>{{ $tr->loc }}</td>
+                <td>{{ $tr->group }}</td>
                 <td>{{ $tr->store }}</td>
                 <td>{{ $tr->material_number }}</td>
                 <td>{{ $tr->material_description }}</td>

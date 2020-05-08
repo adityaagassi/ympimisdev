@@ -29,9 +29,24 @@
 @stop
 @section('header')
 <section class="content-header">
-	<h1>
-		Monthly Stock Taking<span class="text-purple"> 表面処理</span>
-	</h1>
+	<div class="row">
+		<div class="col-xs-9">
+			<h2 style="margin-top: 0px;">Monthly Stock Taking<span class="text-purple"> 表面処理</span></h2>
+		</div>
+		<div class="col-xs-3">
+			<div class="col-xs-10 pull-right" style="padding: 0px;">
+				<div class="input-group date">
+					<div class="input-group-addon bg-green">
+						<i class="fa fa-calendar"></i>
+					</div>
+					<input style="text-align: center;" type="text" class="form-control datepicker" name="month" id="month" placeholder="Select Month" readonly>
+				</div>
+			</div>
+
+			<div class="pull-right" id="last_update" style="color: black; margin: 0px; padding-top: 0px; padding-right: 0px; font-size: 1vw;"></div>
+
+		</div>
+	</div>
 </section>
 @stop
 @section('content')
@@ -43,11 +58,10 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xs-3" style="text-align: center;">
+		<div class="col-xs-3" style="text-align: center;">			
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
-
 			<a href="{{ url("index/stocktaking/summary_of_counting") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Summary of Counting</a>
-			<a href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input No Use</a>
+			<a href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input No Use</a>
 			<a href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input PI</a>
 			<a href="{{ url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 1</a>
 			<a href="{{ url("index/stocktaking/audit/"."2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 2</a>
@@ -70,13 +84,6 @@
 		<div class="col-xs-9" style="text-align: center; color: red;">
 			<span style="font-size: 30px; "><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 			<br>
-
-			<div class="col-xs-6">
-				<table class="table" id="store_table">
-					<tbody id="store_body"></tbody>
-				</table>
-			</div>
-
 			<div class="col-xs-12">
 				<div id="container1"></div>
 			</div>
@@ -123,6 +130,34 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="modalInput">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+						<table class="table table-hover table-bordered table-striped" id="tableInput">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th>Group</th>
+									<th>Location</th>
+									<th>Store</th>
+									<th>Material</th>
+									<th>Description</th>
+									<th>Qty</th>
+									<th>Audit 1</th>
+									<th>Audit 2</th>
+									<th>PI</th>
+								</tr>
+							</thead>
+							<tbody id="bodyInput">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 @endsection
 @section('scripts')
@@ -142,12 +177,26 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 
-		percentage();
+		$('.datepicker').datepicker({
+			<?php $tgl_max = date('Y-m') ?>
+			format: "yyyy-mm",
+			startView: "months", 
+			minViewMode: "months",
+			autoclose: true,
+			endDate: '<?php echo $tgl_max ?>'
+
+		});
+		$('#month').blur();
 
 		filledList();
 		variance();
+
+		setInterval(filledList, 300000);
+		setInterval(variance, 300000);
+
 	});
 
+	
 
 	function countPI() {
 		$("#loading").show();
@@ -164,52 +213,20 @@
 		});
 	}
 
-	function percentage() {
-
-		$.get('{{ url("fetch/stocktaking/percentage_location") }}', function(result, status, xhr){
-			if(result.status){
-
-				$("#store_body").empty();
-				var body = '';
-				for (var i = 0; i < result.location.length; i++) {
-
-					var active = '';
-					if(parseInt(result.location[i].persen) < 100){
-						active = ' active';
-					}
-
-					body += '<tr>';
-					body += '<td style="width: 15%;">'+result.location[i].location+'</td>';
-					
-					body += '<td style="width: 75%;">';
-					body += '<div class="progress-group">';
-					body += '<div class="progress" style="height: 20px; margin: 0px;">';
-					body += '<div class="progress-bar progress-bar-success progress-bar-striped'+ active +'" id="progress-bar" style="width: '+Math.ceil(result.location[i].persen)+'%;"></div>';
-					body += '</div>';
-					body += '</div>';
-					body += '</td>';
-
-					body += '<td style="width: 10%;">'+Math.ceil(result.location[i].persen)+'%</td>';
-					body += '</tr>';
-				}
-
-				$("#store_body").append(body);
-			}
-		});
-	}
 
 	function filledList() {
 		$.get('{{ url("fetch/stocktaking/filled_list") }}', function(result, status, xhr){
 			if(result.status){
+				$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
-				var location = [];
+				var area = [];
 				var fill = [];
 				var empty = [];
 
-				for (var i = 0; i < result.location.length; i++) {
-					location.push(result.location[i].location);
-					fill.push(parseInt(result.location[i].qty));
-					empty.push(parseInt(result.location[i].empty));
+				for (var i = 0; i < result.data.length; i++) {
+					area.push(result.data[i].area);
+					fill.push(parseInt(result.data[i].qty));
+					empty.push(parseInt(result.data[i].empty));
 				}
 
 				Highcharts.chart('container1', {
@@ -234,7 +251,7 @@
 						enabled:false
 					},
 					xAxis: {
-						categories: location,
+						categories: area,
 						type: 'category',
 						gridLineWidth: 5,
 						gridLineColor: 'RGB(204,255,255)',
@@ -282,7 +299,7 @@
 							point: {
 								events: {
 									click: function () {
-										fillVarianceModal(this.category);
+										fillInputModal(this.category, this.series.name);
 									}
 								}
 							}
@@ -298,6 +315,74 @@
 						color: 'rgb(144,238,126)'
 					}]
 				});
+
+
+			}
+		});
+	}
+
+	function fillInputModal(group, series) {
+
+		$('#loading').show();
+		$('#tableInput').hide();
+		
+		var data = {
+			group : group,
+			series : series
+		}
+
+		$.get('{{ url("fetch/stocktaking/filled_list_detail") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#bodyInput').html('');
+				$('#loading').hide();
+
+				var color = ''
+				if(series == "Empty"){
+					color = 'style="background-color: rgb(255,116,116);"';
+				}else{
+					color = 'style="background-color: rgb(144,238,126);"'			
+				}
+
+				var body = '';
+				for (var i = 0; i < result.input_detail.length; i++) {
+					body += '<tr '+ color +'">';
+					body += '<td style="width: 1%">'+ result.input_detail[i].area +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].location +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].store +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].material_number +'</td>';
+					body += '<td style="width: 10%">'+ (result.input_detail[i].material_description || '-') +'</td>';
+					
+					if(result.input_detail[i].quantity != null){
+						body += '<td style="width: 1%;">'+ result.input_detail[i].quantity.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+
+					if(result.input_detail[i].audit1 != null){
+						body += '<td style="width: 1%;">'+ result.input_detail[i].audit1.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+
+					if(result.input_detail[i].audit2 != null){
+						body += '<td style="width: 1%;">'+ result.input_detail[i].audit2.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+
+					if(result.input_detail[i].final_count != null){
+						body += '<td style="width: 1%; font-weight: bold;">'+ result.input_detail[i].final_count.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+					
+
+					body += '</tr>';
+				}
+
+				$('#bodyInput').append(body);
+				$('#modalInput').modal('show');
+				$('#tableInput').show();
 
 
 			}
@@ -477,6 +562,24 @@
 
 	function exportVariance() {
 		$.get('{{ url("export/stocktaking/variance") }}', function(result, status, xhr){});
+	}
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+	
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

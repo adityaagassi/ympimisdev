@@ -133,6 +133,26 @@ class StockTakingController extends Controller{
 		return view('stocktakings.monthly.index')->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
 	}
 
+	public function indexRevise(){
+		$title = 'Revise';
+		$title_jp = '???';
+
+		return view('stocktakings.monthly.revise', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Revise')->with('head', 'Stocktaking');
+	}
+
+	public function indexNoUse(){
+		$title = 'No Use';
+		$title_jp = '???';
+
+		return view('stocktakings.monthly.no_use', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'No Use')->with('head', 'Stocktaking');
+	}
+
 	public function indexCount(){
 		$title = 'Monthly Stock Taking';
 		$title_jp = '???';
@@ -458,7 +478,7 @@ class StockTakingController extends Controller{
 		$inquiries = db::select("SELECT
 			stocktaking_lists.id,
 			stocktaking_lists.location,
-			storage_locations.location AS loc,
+			storage_locations.area AS `group`,
 			stocktaking_lists.store,
 			stocktaking_lists.material_number,
 			material_plant_data_lists.material_description,
@@ -485,7 +505,34 @@ class StockTakingController extends Controller{
 	}
 
 	public function exportVariance(){
-		
+		$title = 'Variance_Report'.date('M').date('d').'_'.date('H.i');	
+
+		$variances = db::select("SELECT
+			storage_locations.area as `group`,
+			material_plant_data_lists.valcl,
+			stocktaking_lists.material_number,
+			material_plant_data_lists.material_description,
+			stocktaking_lists.location,
+			storage_locations.location AS location_name,
+			material_plant_data_lists.bun AS uom,
+			material_plant_data_lists.standard_price AS std,
+			stocktaking_lists.final_count AS pi
+			FROM
+			stocktaking_lists
+			LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_lists.material_number
+			LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_lists.location
+			ORDER BY `group`, location, material_number ASC");
+
+		$data = array(
+			'variances' => $variances
+		);
+
+		ob_clean();
+		Excel::create($title, function($excel) use ($data){
+			$excel->sheet('Inquiry', function($sheet) use ($data) {
+				return $sheet->loadView('stocktakings.monthly.report.variance_excel', $data);
+			});
+		})->export('xlsx');
 	}
 
 	public function fetchVariance(){
@@ -535,40 +582,46 @@ class StockTakingController extends Controller{
 	}
 
 	public function fetchfilledList(){
-		$location = db::select("SELECT location, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
-			(SELECT location, 0 AS qty, count( id ) AS total FROM stocktaking_lists 
-			GROUP BY location
+		$data = db::select("SELECT area, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
+			(SELECT sl.area, 0 AS qty, count(s.id) AS total FROM stocktaking_lists s
+			LEFT JOIN storage_locations sl on sl.storage_location = s.location
+			GROUP BY sl.area
 			UNION ALL
-			SELECT location, count( id ) AS qty, 0 AS total FROM stocktaking_lists
-			WHERE quantity IS NOT NULL 
-			GROUP BY location) AS list 
-			GROUP BY location");
+			SELECT sl.area, count(s.id) AS qty, 0 AS total FROM stocktaking_lists s
+			LEFT JOIN storage_locations sl on sl.storage_location = s.location
+			WHERE s.quantity IS NOT NULL 
+			GROUP BY sl.area) AS list 
+			GROUP BY area");
 
 		$response = array(
 			'status' => true,
-			'location' => $location
+			'data' => $data
 		);
 		return Response::json($response);
 	}
 
-	public function fetchPercentage(){
+	public function fetchfilledListDetail(Request $request){
+		$group = $request->get('group');
 
-		$location = db::select("SELECT
-			location.location,
-			COALESCE(fill.qty,0) as fill,
-			COALESCE(location.qty,0) as total,
-			COALESCE(fill.qty,0) / COALESCE(location.qty,0) * 100 as persen
-			FROM
-			(SELECT location, COUNT( id ) AS qty FROM stocktaking_lists GROUP BY location ) AS location
-			LEFT JOIN
-			( SELECT location, COUNT( id ) AS qty FROM stocktaking_lists WHERE quantity IS NOT NULL GROUP BY location ) AS fill
-			ON location.location = fill.location");
+		$quantity = '';
+		if($request->get('series') == 'Empty'){
+			$quantity = 's.quantity IS NULL';
+		}else if ($request->get('series') == 'Filled') {
+			$quantity = 's.quantity IS NOT NULL';
+		}
+		
+		$input_detail = db::select("SELECT sl.area, s.location, s.store, s.material_number, mpdl.material_description, s.quantity, s.audit1, s.audit2, s.final_count FROM stocktaking_lists s
+			LEFT JOIN storage_locations sl on sl.storage_location = s.location
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			WHERE sl.area = '".$group."'
+			AND ".$quantity."
+			ORDER BY sl.area, s.location, s.store, s.material_number ASC");
 
 		$response = array(
 			'status' => true,
-			'location' => $location
+			'input_detail' => $input_detail
 		);
-		return Response::json($response);	
+		return Response::json($response);
 	}
 
 	public function fetchCheckAudit(Request $request, $audit){
@@ -609,7 +662,7 @@ class StockTakingController extends Controller{
 			);
 			return Response::json($response);
 		}
-		
+
 	}
 
 	public function fetchSummaryOfCounting(Request $request){
@@ -628,6 +681,7 @@ class StockTakingController extends Controller{
 
 		$summary = db::select("SELECT
 			s.id,
+			sl.area,
 			s.store,
 			s.category,
 			s.material_number,
@@ -646,9 +700,10 @@ class StockTakingController extends Controller{
 			stocktaking_lists s
 			LEFT JOIN materials m ON m.material_number = s.material_number
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
-			LEFT JOIN material_volumes v ON v.material_number = s.material_number"
-			.$store.
-			"ORDER BY s.store ASC");
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number
+			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
+			".$store."
+			ORDER BY s.store ASC");
 
 
 		return DataTables::of($summary)->make(true);
@@ -660,12 +715,14 @@ class StockTakingController extends Controller{
 			s.store,
 			s.category,
 			s.material_number,
+			s.process,
 			mpdl.material_description,
 			m.`key`,
 			m.model,
 			m.surface,
 			mpdl.bun,
 			s.location,
+			sl.area,
 			mpdl.storage_location,
 			v.lot_completion,
 			v.lot_transfer,
@@ -677,7 +734,8 @@ class StockTakingController extends Controller{
 			stocktaking_lists s
 			LEFT JOIN materials m ON m.material_number = s.material_number
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
-			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number
+			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
 			WHERE
 			s.id = ". $request->get('id'));
 
@@ -687,9 +745,87 @@ class StockTakingController extends Controller{
 		);
 		return Response::json($response);
 
+
 	}
 
 	public function fetchStoreList(Request $request){
+		$store = db::select("SELECT
+			s.id,
+			s.store,
+			s.category,
+			s.material_number,
+			mpdl.material_description,
+			m.`key`,
+			m.model,
+			m.surface,
+			mpdl.bun,
+			s.location,
+			sl.area,
+			mpdl.storage_location,
+			v.lot_completion,
+			v.lot_transfer,
+			IF
+			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
+			s.quantity,
+			s.remark,
+			s.audit1,
+			s.audit2
+			FROM
+			stocktaking_lists s
+			LEFT JOIN materials m ON m.material_number = s.material_number
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number
+			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
+			WHERE
+			s.store = '". $request->get('store'). "'
+			ORDER BY
+			s.remark DESC,
+			s.category ASC,
+			s.material_number ASC");
+
+		$response = array(
+			'status' => true,
+			'store' => $store,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchRevise(Request $request){
+
+		$process = $request->get('process');
+		$current = StocktakingList::where('store', $request->get('store'))->first();
+
+		$null = StocktakingList::where('store', $request->get('store'))
+		->whereNull('final_count')
+		->get();
+
+		//Cek Store
+		if($current == null){
+			$response = array(
+				'status' => false,
+				'message' => 'Store tidak ditemukan',
+			);
+			return Response::json($response);
+		}
+
+		//Cek qty sudah terisi ?
+		if(count($null) > 0){
+			$response = array(
+				'status' => false,
+				'message' => 'Proses sebelumnya belum selesai',
+			);
+			return Response::json($response);
+		}
+
+		//Cek proses saat ini
+		if($process > $current->process){
+			$response = array(
+				'status' => false,
+				'message' => 'Proses sebelumnya belum selesai',
+			);
+			return Response::json($response);
+		}
+
 		$store = db::select("SELECT
 			s.id,
 			s.store,
@@ -706,10 +842,12 @@ class StockTakingController extends Controller{
 			v.lot_transfer,
 			IF
 			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
-			s.quantity,
 			s.remark,
+			s.process,
+			s.quantity,
 			s.audit1,
-			s.audit2
+			s.audit2,
+			s.final_count
 			FROM
 			stocktaking_lists s
 			LEFT JOIN materials m ON m.material_number = s.material_number
@@ -718,7 +856,8 @@ class StockTakingController extends Controller{
 			WHERE
 			s.store = '". $request->get('store'). "'
 			ORDER BY
-			s.id");
+			s.category,
+			s.material_number");
 
 		$response = array(
 			'status' => true,
@@ -727,10 +866,33 @@ class StockTakingController extends Controller{
 		return Response::json($response);
 	}
 
+
 	public function fetchAuditStoreList(Request $request){
 
 		$process = $request->get('process');
 		$current = StocktakingList::where('store', $request->get('store'))->first();
+
+		$null = StocktakingList::where('store', $request->get('store'))
+		->whereNull('quantity')
+		->get();
+
+		//Cek Store
+		if($current == null){
+			$response = array(
+				'status' => false,
+				'message' => 'Store tidak ditemukan',
+			);
+			return Response::json($response);
+		}
+
+		//Cek qty sudah terisi ?
+		if(count($null) > 0){
+			$response = array(
+				'status' => false,
+				'message' => 'Proses sebelumnya belum selesai',
+			);
+			return Response::json($response);
+		}
 
 		//Cek proses saat ini
 		if($process > $current->process){
@@ -796,13 +958,36 @@ class StockTakingController extends Controller{
 
 		return DataTables::of($material_plant_data_lists)->make(true);
 	}
-	
+
 	public function fetch_bom_output(Request $request){
 		$bom_outputs = BomOutput::orderBy('bom_outputs.id', 'asc');
 		$bom_outputs = $bom_outputs->select('bom_outputs.material_parent', 'bom_outputs.material_child', 'bom_outputs.usage', 'bom_outputs.um')
 		->get();
 
 		return DataTables::of($bom_outputs)->make(true);
+	}
+
+	public function updateNoUse(Request $request){
+		try {
+
+			$update = StocktakingList::whereIn('id', $request->get('id'))
+			->update([
+				'remark' => 'NO USE',
+				'quantity' => 0
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update No Use Successfully'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function updateProcessAudit(Request $request, $audit){
@@ -876,6 +1061,40 @@ class StockTakingController extends Controller{
 			return Response::json($response);
 		}
 	}
+
+	public function updateRevise(Request $request){
+		$id = $request->get('id');
+		$quantity = $request->get('quantity');
+
+		$remark = '';
+		if($quantity > 0){
+			$remark = 'USE';
+		}else{
+			$remark = 'NO USE';
+		}
+
+		try {
+
+			$update = StocktakingList::where('id', $id)
+			->update([
+				'remark' => $remark,
+				'final_count' => $quantity
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update Successfully'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
 
 	public function updateCount(Request $request){
 

@@ -440,12 +440,15 @@
 				checkConf(store);
 
 			}else {
-				$('#qr_code').val();
+				$('#scanner').hide();
+				$('#scanModal').modal('hide');
+				$(".modal-backdrop").remove();
+				canc();
 
 				if(result.message){
 					openErrorGritter('Error', result.message);
 				}else{
-					openErrorGritter('Error', 'Store Not Found');				
+					openErrorGritter('Error', 'Store tidak ditemukan');				
 				}
 			}
 		});
@@ -472,7 +475,7 @@
 			id : id
 		}
 
-		if(confirm("Data ini akan dihapus.\nData tidak dapat dikembalikan.")){
+		if(confirm("Data Audit 2 yang dipilih akan dihapus.\nData tidak dapat dikembalikan.")){
 			$.post('{{ url("fetch/stocktaking/update_audit/audit2") }}', data, function(result, status, xhr){
 				if(result.status){
 					openSuccessGritter('Success', result.message);
@@ -617,7 +620,7 @@
 			store : store	
 		}
 
-		if(confirm("Data akan dihitung oleh sistem.\nData tidak dapat dikembalikan.")){
+		if(confirm("Data Audit 2 akan disimpan oleh sistem.\nData tidak dapat dikembalikan.")){
 
 			$.post('{{ url("fetch/stocktaking/update_process/audit2") }}', data, function(result, status, xhr){
 				if (result.status) {

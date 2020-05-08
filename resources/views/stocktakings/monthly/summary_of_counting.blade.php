@@ -85,14 +85,15 @@
 							<table id="storeTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width:10%;">Store</th>
+										<th style="width:5%;">Group</th>
+										<th style="width:5%;">Location</th>
+										<th style="width:5%;">Store</th>
 										<th style="width:5%;">Category</th>
 										<th style="width:10%;">Material Number</th>
 										<th style="width:25%;">Material Desc</th>
 										<th style="width:5%;">Key</th>
 										<th style="width:5%;">Model</th>
 										<th style="width:5%;">Surface</th>
-										<th style="width:5%;">Location</th>
 										<th style="width:5%;">UoM</th>
 										<th style="width:5%;">Lot</th>
 									</tr>
@@ -239,6 +240,8 @@
 				"data" : data
 			},
 			"columns": [
+			{ "data": "area"},
+			{ "data": "location"},
 			{ "data": "store"},
 			{ "data": "category"},
 			{ "data": "material_number"},
@@ -246,7 +249,6 @@
 			{ "data": "key"},
 			{ "data": "model"},
 			{ "data": "surface"},
-			{ "data": "location"},
 			{ "data": "bun"},
 			{ "data": "lot"}
 			]

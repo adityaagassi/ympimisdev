@@ -48,6 +48,10 @@ Route::get('/index/apar/print', function () {
 	return view('maintenance/apar/aparPrint');
 });
 
+Route::get('/qr', function () {
+	return view('maintenance/apar/aparQr');
+});
+
 Route::get('/fetch/trial2', 'PlcController@fetchTemperature');
 Route::get('print/trial', 'TrialController@stocktaking');
 Route::get('trial_machine', 'TrialController@fetch_machine');
@@ -1588,23 +1592,26 @@ Route::get('fetch/stocktaking/silver_report', 'StockTakingController@fetchSilver
 Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetchSilverReportModal');
 
 
+
 //Index Monthly
 Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktaking');
-Route::get('fetch/stocktaking/percentage_location', 'StockTakingController@fetchPercentage');
 
 Route::get('fetch/stocktaking/filled_list', 'StockTakingController@fetchfilledList');
-
+Route::get('fetch/stocktaking/filled_list_detail', 'StockTakingController@fetchfilledListDetail');
 Route::get('fetch/stocktaking/variance', 'StockTakingController@fetchVariance');
 Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVarianceDetail');
 
 Route::get('export/stocktaking/inquiry', 'StockTakingController@exportInquiry');
 Route::get('export/stocktaking/variance', 'StockTakingController@exportVariance');
 
-
 //Summary of Counting
 Route::get('index/stocktaking/summary_of_counting', 'StockTakingController@indexSummaryOfCounting');
 Route::get('fetch/stocktaking/summary_of_counting', 'StockTakingController@fetchSummaryOfCounting');
 Route::get('print/stocktaking/summary_of_counting', 'StockTakingController@printSummaryOfCounting');
+
+//No Use
+Route::get('index/stocktaking/no_use', 'StockTakingController@indexNoUse');
+Route::post('fetch/stocktaking/update_no_use', 'StockTakingController@updateNoUse');
 
 //Count
 Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
@@ -1620,7 +1627,17 @@ Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@update
 Route::post('fetch/stocktaking/update_process/{id}', 'StockTakingController@updateProcessAudit');
 
 //Count PI
+Route::get('index/stocktaking/unmatch', 'StockTakingController@indexUnmatch');
+
+//Unmatch
 Route::get('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
+
+//Revise
+Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
+Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
+Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
+
+
 
 
 

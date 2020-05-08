@@ -110,30 +110,15 @@
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">CATEGORY</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL NUMBER</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL DESCRIPTION</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">REMARK</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">UOM</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">COUNT PI</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">AUDIT 1</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">PI</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">ACTION</th>
 					</tr>
 				</thead>
 				<tbody id="store_body">
 				</tbody>
 			</table>
-		</div>
-
-		<div class="col-xs-12" style="padding: 0px;" id="progress-confirm">
-			<div class="col-xs-9" style="padding: 0px;">
-				<div class="progress-group">
-					<div class="progress" style="height: 40px; margin-bottom: 10px;">
-						<span id="progress-text" style="padding-top: 0.8%;">0% Complete</span>
-						<div class="progress-bar progress-bar-success progress-bar-striped active" id="progress-bar" style="padding-top: 0.8%;"></div>
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-3">
-				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; margin-right: 1%; padding: 9.5%; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" id="cancel" class="btn btn-danger">&nbsp;CANCEL&nbsp;</button>
-				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; padding: 9.5%; padding-top: 0px; padding-bottom: 0px;" onclick="conf()" id="confirm" class="btn btn-success" disabled>CONFIRM</button>
-			</div>
 		</div>
 	</div>
 
@@ -182,28 +167,11 @@
 			</div>
 		</div>
 		<div class="col-xs-5">
-			<div class="col-xs-12">
-				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">Lot</label>
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;" id="text_lot"></label>
-					<div class="col-xs-6" align="right">
-						<input type="text" style="font-size:25px; height: 45px;" onchange="changeVal()" class="form-control numpad" placeholder="INPUT LOT HERE" id="lot">
-					</div>
-				</div>	
-			</div>
-			<div class="col-xs-12">	
-				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">Z1</label>
-					<div class="col-xs-6 col-xs-offset-3" align="right">
-						<input type="text" style="font-size:25px; height: 45px;" onchange="changeVal()" class="form-control numpad" placeholder="INPUT Z1 HERE" id="z1">
-					</div>
-				</div>
-			</div>
 			<div class="col-xs-12">		
 				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">Total</label>
+					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">PI</label>
 					<div class="col-xs-6 col-xs-offset-3" align="right">
-						<input type="text" style="font-size:30px; height: 45px;" class="form-control" id="total" readonly="">
+						<input type="text" style="font-size:30px; height: 45px;" class="form-control numpad" placeholder="INPUT PI HERE" id="total">
 					</div>
 				</div>
 			</div>
@@ -267,7 +235,6 @@
 	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
 
 	var vdo;
-	var lot_uom;
 
 	jQuery(document).ready(function() {
 
@@ -375,11 +342,18 @@
 	function fillStore(store){
 		var data = {
 			store : store,
-			process : 1
+			process : 3
 		}
 
-		$.get('{{ url("fetch/stocktaking/audit_store_list") }}', data, function(result, status, xhr){
+		$('#store_body').html("");
+		$("#store_title").text("");
+		$("#store_title").text("STORE");
+
+
+		$.get('{{ url("fetch/stocktaking/revise") }}', data, function(result, status, xhr){
 			if (result.status) {
+
+
 				if(result.store.length <= 0){
 					openErrorGritter('Error', 'Store Not Found');
 					return false;
@@ -413,40 +387,17 @@
 					body += '<td '+css+'>'+result.store[i].category+'</td>';
 					body += '<td '+css+'>'+result.store[i].material_number+'</td>';
 					body += '<td '+css+'>'+result.store[i].material_description+'</td>';
+					body += '<td '+css+'>'+result.store[i].remark+'</td>';
 					body += '<td '+css+'>'+result.store[i].bun+'</td>';
-					if(result.store[i].quantity != null){
-						body += '<td '+css+'>'+result.store[i].quantity+'</td>';
-					}else{
-						body += '<td '+css+'>'+'-'+'</td>';							
-					}
-
-					if(result.store[i].audit1 != null){
-						body += '<td '+css+'>'+result.store[i].audit1+'</td>';
-					}else{
-						body += '<td '+css+'></td>';							
-					}
+					body += '<td '+css+'>'+result.store[i].final_count+'</td>';
+					body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showRevise(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-pencil"></i></span></button></td>';
 					
-					if(result.store[i].process == 1){
-						if(result.store[i].audit1){
-							body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="cancAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button></td>';
-						}else{
-							body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-success form-control"><span><i class="fa fa-check-square-o"></i></span></button></td>';
-						}
-
-						$('#confirm').show();
-						$('#progress-bar').addClass('active');
-
-					}else{
-						body += '<td '+css+'>-</td>';
-					}
-
 					body += '</tr>';
 
 				}
 				$("#store_body").append(body);
 
-				checkConf(store);
-
+				canc();
 			}else {
 				$('#scanner').hide();
 				$('#scanModal').modal('hide');
@@ -468,34 +419,7 @@
 		$('#qr_code').focus();
 		$('#qr_code').blur();
 
-		$('#store_body').html("");
-		$("#store_title").text("");
-		$("#store_title").text("STORE");
 
-		$('#progress-confirm').hide();
-	}
-
-	function cancAudit(id) {
-		$("#loading").show();
-
-		var data = {
-			id : id
-		}
-
-		if(confirm("Data Audit 1 yang dipilih akan dihapus.\nData tidak dapat dikembalikan.")){
-			$.post('{{ url("fetch/stocktaking/update_audit/audit1") }}', data, function(result, status, xhr){
-				if(result.status){
-					openSuccessGritter('Success', result.message);
-
-					var id = $("#qr_code").val();
-					fillStore(id);
-				}else{
-					openSuccessGritter('Error', result.message);
-				}
-			});
-		}else{
-			$("#loading").hide();
-		}
 	}
 
 	function cancInput() {
@@ -513,51 +437,10 @@
 		$('#text_lot').html("");
 		$('#lot').prop('disabled', false);
 
-		document.getElementById("lot").value = '';
-		document.getElementById("z1").value = '';
 		document.getElementById("total").value = '';
-
-		lot_uom = 0;
 	}
 
-	function checkConf(store) {
-		var data = {
-			store : store
-		}
-
-		$.get('{{ url("fetch/stocktaking/check_confirm/audit1") }}', data, function(result, status, xhr){
-			if(result.status){
-				$('#confirm').prop('disabled', false);
-			}else{
-				$('#confirm').prop('disabled', true);
-			}
-
-			var persen = Math.floor(parseFloat(result.actual) / parseFloat(result.minimum) * 100);
-			if(persen > 0 && persen < 100){
-				$('#progress-bar').css('width', persen+'%');
-				$('#progress-bar').css('font-size', '1.5vw');
-				$('#progress-bar').css('font-weight', 'bold');
-				$('#progress-bar').html(persen + "% Complete");
-
-				$('#progress-text').append().empty();
-			}else if(persen == 0){
-				$('#progress-bar').css('width', '0%');
-				$('#progress-bar').append().empty();
-				
-				$('#progress-text').css('color', '#333');
-				$('#progress-text').html("0% Complete");
-			}else{
-				$('#progress-bar').css('width', '100%');
-				$('#progress-bar').css('font-size', '1.5vw');
-				$('#progress-bar').css('font-weight', 'bold');
-				$('#progress-bar').html("100% Complete");
-				
-				$('#progress-text').append().empty();
-			}
-		});
-	}
-
-	function showAudit(id) {
+	function showRevise(id) {
 		$('#input').show();		
 		$('#main').hide();		
 
@@ -603,10 +486,13 @@
 			quantity : quantity
 		}
 
-		$.post('{{ url("fetch/stocktaking/update_audit/audit1") }}', data, function(result, status, xhr){
+		$.post('{{ url("fetch/stocktaking/update_revise") }}', data, function(result, status, xhr){
 			if (result.status) {
 				openSuccessGritter('Success', result.message);
-				var store = $("#qr_code").val();
+
+				var storeTitle = $("#store_title").text();
+				var split = storeTitle.split(" : ");
+				var store = split[1];
 
 				fillStore(store);
 				cancInput();
@@ -614,47 +500,6 @@
 				openSuccessGritter('Error', result.message);
 			}
 		});
-	}
-
-	function conf() {
-		$("#loading").show();
-
-		var str = $("#store_title").text();
-		var store = str.replace("STORE : ", "");
-
-		var data = {
-			store : store	
-		}
-
-		if(confirm("Data Audit 1 akan disimpan oleh sistem.\nData tidak dapat dikembalikan.")){
-
-			$.post('{{ url("fetch/stocktaking/update_process/audit1") }}', data, function(result, status, xhr){
-				if (result.status) {
-					openSuccessGritter('Success', result.message);
-					var store = $("#qr_code").val();
-
-					fillStore(store);
-				}else{
-					openErrorGritter('Error', result.message);
-				}
-			});
-		}else{
-			$("#loading").hide();
-		}
-		
-	}
-
-	function changeVal(){
-
-		var lot = $("#lot").val();
-		var z1 = $("#z1").val();
-
-		lot = (lot || 0);
-		lot_uom = (lot_uom || 0);
-		z1 = (z1 || 0);
-
-		var total = (parseFloat(lot) * parseFloat(lot_uom)) + parseFloat(z1);
-		document.getElementById("total").value = total;
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

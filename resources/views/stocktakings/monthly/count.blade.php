@@ -271,52 +271,66 @@
 
 		$('#qr_code').keydown(function(event) {
 			if (event.keyCode == 13 || event.keyCode == 9) {
+				var id = $("#qr_code").val();
 
-				var data = {
-					id : $("#qr_code").val()
-				}
-
-				$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
-
-					if (result.status) {
-						if(result.material[0].remark == 'USE'){
-							$('#qr_code').prop('disabled', true);
-							openSuccessGritter('Success', 'QR Code Successfully');
-
-							$("#store").text(result.material[0].store);
-							$("#category").text(result.material[0].category);
-							$("#material_number").text(result.material[0].material_number);
-							$("#location").text(result.material[0].location);
-							$("#material_description").text(result.material[0].material_description);
-							$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
-							$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
-							lot_uom = (result.material[0].lot || 1);
-
-							if(result.material[0].lot > 0){
-								$("#text_lot").text(result.material[0].lot + ' x');
-							}else{
-								$("#text_lot").text('- x');
-								$('#lot').prop('disabled', true);
-							}
-
-							fillStore(result.material[0].store);
-						}else{
-							canc();
-							openErrorGritter('Error', 'QR Code No Use');
-						}					
-
-					} else {
-						openErrorGritter('Error', 'QR Code Not Registered');
+				if(numberValidation(id)){
+					var data = {
+						id : id
 					}
 
-					$('#scanner').hide();
-					$('#scanModal').modal('hide');
-					$(".modal-backdrop").remove();
-				});	
+					$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
 
+						if (result.status) {
+							if(result.material[0].remark == 'USE'){
+								$('#qr_code').prop('disabled', true);
+								openSuccessGritter('Success', 'QR Code Successfully');
 
+								$("#store").text(result.material[0].store);
+								$("#category").text(result.material[0].category);
+								$("#material_number").text(result.material[0].material_number);
+								$("#location").text(result.material[0].location);
+								$("#material_description").text(result.material[0].material_description);
+								$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
+								$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
+								lot_uom = (result.material[0].lot || 1);
+
+								if(result.material[0].lot > 0){
+									$("#text_lot").text(result.material[0].lot + ' x');
+								}else{
+									$("#text_lot").text('- x');
+									$('#lot').prop('disabled', true);
+								}
+
+								fillStore(result.material[0].store);
+							}else{
+								canc();
+								openErrorGritter('Error', 'QR Code No Use');
+							}					
+
+						} else {
+							openErrorGritter('Error', 'QR Code Not Registered');
+						}
+
+						$('#scanner').hide();
+						$('#scanModal').modal('hide');
+						$(".modal-backdrop").remove();
+					});
+				}else{
+					canc();
+					openErrorGritter('Error', 'QR Code Tidak Terdaftar');
+				}	
 			}
 		});
+
+		function numberValidation(id){
+			var number = /^[0-9]+$/;
+
+			if(!id.match(number)){
+				return false;
+			}else{
+				return true;
+			}
+		}
 
 
 		function showCheck(kode) {
@@ -418,7 +432,7 @@
 					}					
 
 				} else {
-					openErrorGritter('Error', 'QR Code Not Registered');
+					openErrorGritter('Error', 'QR Code Tidak Terdaftar');
 				}
 
 				$('#scanner').hide();
@@ -437,17 +451,21 @@
 				if (result.status) {
 					$("#store_body").empty();
 					$("#store_title").text("");
-					$("#store_title").text(store);
+					$("#store_title").text("STORE : " + store);
 
 
 					var body = '';
 					var num = '';
 					for (var i = 0; i < result.store.length; i++) {
-						if(result.store[i].category == 'SINGLE'){
-							var css = 'style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
+						if(result.store[i].remark == 'USE'){
+							if(result.store[i].category == 'SINGLE'){
+								var css = 'style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
+							}else{
+								var css = 'style="padding: 0px; background-color: rgb(250,250,210); text-align: center; color: #000000; font-size: 15px;"';
+							}
 						}else{
-							var css = 'style="padding: 0px; background-color: rgb(250,250,210); text-align: center; color: #000000; font-size: 15px;"';
-						}
+							var css = 'style="padding: 0px; text-align: center; color: #000000; font-size: 15px;"';
+						}						
 
 						num++;
 
@@ -458,7 +476,11 @@
 						body += '<td '+css+'>'+result.store[i].material_number+'</td>';
 						body += '<td '+css+'>'+result.store[i].material_description+'</td>';
 						body += '<td '+css+'>'+result.store[i].remark+'</td>';
-						body += '<td '+css+'>'+result.store[i].quantity+'</td>';
+						if(result.store[i].quantity != null){
+							body += '<td '+css+'>'+result.store[i].quantity+'</td>';
+						}else{
+							body += '<td '+css+'>'+'-'+'</td>';							
+						}
 						body += '</tr>';
 
 					}

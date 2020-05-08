@@ -3,35 +3,33 @@
 <head>
 </head>
 <body>
-    @if(isset($inquiries) && count($inquiries) > 0)
+    @if(isset($variances) && count($variances) > 0)
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Loc</th>
-                <th>Kode Slip</th>
-                <th>Store</th>
+                <th>Group</th>
+                <th>Valcl</th>
                 <th>GMC</th>
                 <th>Description</th>
-                <th>Jenis Slip</th>
-                <th>UOM</th>
-                <th>Qty</th>
-                <th>Last Update</th>
+                <th>Loc</th>
+                <th>Loc Name</th>
+                <th>Uom</th>
+                <th>Std</th>
+                <th>PI</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($inquiries as $tr)
+            @foreach($variances as $tr)
             <tr>
-                <td>{{ $tr->id }}</td>
-                <td>{{ $tr->location }}</td>
-                <td>{{ $tr->id }}</td>
-                <td>{{ $tr->store }}</td>
+                <td>{{ $tr->group }}</td>
+                <td>{{ $tr->valcl }}</td>
                 <td>{{ $tr->material_number }}</td>
                 <td>{{ $tr->material_description }}</td>
-                <td>{{ $tr->category }}</td>
-                <td>{{ $tr->bun }}</td>
-                <td>{{ $tr->final_count }}</td>
-                <td>{{ $tr->updated_at }}</td>
+                <td>{{ $tr->location }}</td>
+                <td>{{ $tr->location_name }}</td>
+                <td>{{ $tr->uom }}</td>
+                <td>{{ $tr->std }}</td>
+                <td>{{ $tr->pi }}</td>
             </tr>
             @endforeach
         </tbody>
