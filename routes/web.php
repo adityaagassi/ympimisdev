@@ -2654,7 +2654,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
 	Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
-	Route::get('print/apar/qr', 'MaintenanceController@print_apar2');
+	Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_check}', 'MaintenanceController@print_apar2');
 });
 
 //ASSEMBLIES
@@ -2721,6 +2721,7 @@ Route::get('index/mirai_mobile/report_location', 'MiraiMobileController@location
 Route::get('fetch/mirai_mobile/report_location', 'MiraiMobileController@fetchLocation');
 Route::get('fetch/mirai_mobile/report_location/detail', 'MiraiMobileController@fetchLocationDetail');
 Route::get('fetch/mirai_mobile/report_location/detail_all', 'MiraiMobileController@fetchLocationDetailAll');
+Route::get('export/mirai_mobile/report_location', 'MiraiMobileController@exportList');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');

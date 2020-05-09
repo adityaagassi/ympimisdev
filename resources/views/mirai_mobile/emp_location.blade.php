@@ -74,9 +74,14 @@
 				<input type="text" class="form-control datepicker" id="tanggal" placeholder="Select Date" autocomplete="off">
 			</div>
 		</div>
-		<div class="col-xs-2">
-			<button id="search" onClick="detailAll($('#tanggal').val())" class="btn bg-olive">Download All</button>
+		<div class="col-xs-1">
+			<button id="search" style="width: 100%" onClick="detailAll($('#tanggal').val())" class="btn bg-olive">Download All</button>
 		</div>
+		<form method="GET" action="{{ url("export/mirai_mobile/report_location") }}">
+			<div class="col-xs-1">
+				<button type="submit" style="width: 100%" class="btn btn-success"><i class="fa fa-download"></i> Excel</button>
+			</div>
+		</form>
 		<div class="col-xs-3 pull-right">
 			<p class="pull-right" id="last_update"></p>
 		</div>
@@ -215,6 +220,13 @@
 
 			drawNumber();
 		});
+
+
+		function exp(){
+			$.get('{{ url("export/mirai_mobile/report_location") }}', function(result, status, xhr){
+
+			});
+		}
 
 		function addZero(i) {
 			if (i < 10) {

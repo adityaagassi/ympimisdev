@@ -9,6 +9,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Response;
 use DataTables;
+use Excel;
 
 class MiraiMobileController extends Controller
 {
@@ -456,6 +457,35 @@ class MiraiMobileController extends Controller
       'location_detail' => $location_detail
     );
     return Response::json($response);
+  }
+
+  public function exportList(Request $request){
+
+     $location_detail = db::connection('mobile')->select("SELECT act.answer_date, employees.department, act.employee_id, act.`name`, city, kota from
+      (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
+      WHERE id IN (
+      SELECT MIN(id)
+      FROM quiz_logs
+      GROUP BY employee_id, `name`, answer_date
+      )) as act
+      left join employees on employees.employee_id = act.employee_id
+      join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = act.employee_id AND all_groups.tanggal = act.answer_date
+      where act.city <> employees.kota and answer_date >= '2020-04-13'
+      and employees.department is not null
+      ");
+
+    $data = array(
+      'location' => $location_detail
+    );
+
+    ob_clean();
+    
+    Excel::create('List Lokasi Yang Tidak Sesuai', function($excel) use ($data){
+      $excel->sheet('Location', function($sheet) use ($data) {
+        return $sheet->loadView('mirai_mobile.location_excel', $data);
+      });
+    })->export('xlsx');
+
   }
 
 
