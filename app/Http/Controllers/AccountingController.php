@@ -93,4 +93,52 @@ class AccountingController extends Controller
 
 		return DataTables::of($items)->make(true);
 	}
+
+	public function purchase_requisition(){
+        $title = 'Purchase Requisition';
+        $title_jp = '???';
+
+        return view('accounting_purchasing.report.purchase_requisition', array(
+          'title' => $title,
+          'title_jp' => $title_jp
+        ))->with('page', 'Purchase Requisition')->with('head', 'PR');
+    }
+
+    public function fetch_purchase_requisition(Request $request)
+	{
+	     $tanggal = "";
+	     $adddepartment = "";
+	
+	     if(strlen($request->get('datefrom')) > 0){
+	          $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+	          $tanggal = "and A.submission_date >= '".$datefrom." 00:00:00' ";
+	          if(strlen($request->get('dateto')) > 0){
+	               $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+	               $tanggal = $tanggal."and A.submission_date,  <= '".$dateto." 23:59:59' ";
+	          }
+	     }
+
+	     if($request->get('department') != null) {
+	          $departments = $request->get('department');
+	          $deptlength = count($departments);
+	          $department = "";
+
+	          for($x = 0; $x < $deptlength; $x++) {
+	               $department = $department."'".$departments[$x]."'";
+	               if($x != $deptlength-1){
+	                    $department = $department.",";
+	               }
+	          }
+	          $adddepartment = "and A.Department in (".$department.") ";
+	     }
+
+	     $qry = "SELECT	* FROM acc_purchase_requisitions A
+	     WHERE A.deleted_at IS NULL ".$tanggal."".$adddepartment."
+	     ORDER BY
+	     A.id ASC";
+
+	     $attendances = DB::select($qry);
+	     
+	     return DataTables::of($attendances)->make(true);
+	}
 }

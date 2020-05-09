@@ -2299,6 +2299,9 @@ class QcReportController extends Controller
 
       public function checked(Request $request,$id)
       {
+
+          $id_user = Auth::id();
+
           $query = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code where qc_cpars.id='".$id."'";
           $emailcpar = db::select($query);
 
@@ -2322,10 +2325,56 @@ class QcReportController extends Controller
               $cpars->progress = "50";            
             }
             else if ($cpars->posisi == "gm") {
+
               $cpars->approved_gm = "Checked"; 
+              $mailto = "select distinct employees.name,email from qc_cpars join employees on qc_cpars.employee_id = employees.employee_id join users on employees.employee_id = users.username where qc_cpars.id='".$id."'";
+              $mails = DB::select($mailto);
+
+              foreach($mails as $mail){
+                $mailtoo = $mail->email;
+              }
+
+              $cpars->email_status = "SentBagian";
+              $cpars->email_send_date = date('Y-m-d');
+              $cpars->posisi = "bagian";
+              $cpars->received_manager = "Received";
+              $cpars->progress = "60";
+              $cpars->save();
+
+              $cars = new QcCar([
+                'cpar_no' => $cpars->cpar_no,
+                'posisi' => 'bagian',
+                'email_status' => 'SentBagian',
+                'email_send_date' => date('Y-m-d'),
+                'tinjauan' => '0',
+                'progress' => '15',
+                'created_by' => $id_user
+              ]);
+
+              $cars->save();
+
+              $ttd = new QcTtdCoba([
+                'ttd' => 'no_sign',
+                'cpar_no' => $cpars->cpar_no,
+                'created_by' => $id_user
+              ]);
+
+              $ttd->save();
+
+              $query2 = "select qc_cpars.*,departments.department_name,employees.name,statuses.status_name, qc_cars.id as id_car FROM qc_cpars join departments on departments.id = qc_cpars.department_id join employees on qc_cpars.employee_id = employees.employee_id join statuses on qc_cpars.status_code = statuses.status_code join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no where qc_cpars.id='".$id."'";
+
+              $cpars2 = db::select($query2);
+
+              Mail::to($mailtoo)->send(new SendEmail($cpars2, 'cpar'));
+              
             }
             $cpars->save();
-            return redirect('/index/qc_report/verifikasicpar/'.$id)->with('status', 'CPAR Approved')->with('page', 'CPAR');
+            if ($cpars->posisi == "bagian") {
+              return redirect('/index/qc_report/verifikasigm/'.$id)->with('status', 'CPAR Approved')->with('page', 'CPAR');
+            }
+            else{
+              return redirect('/index/qc_report/verifikasicpar/'.$id)->with('status', 'CPAR Approved')->with('page', 'CPAR');
+            }
           }
           else{
             return redirect('/index/qc_report/verifikasicpar/'.$id)->with('error', 'CPAR Not Approved')->with('page', 'CPAR');

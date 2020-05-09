@@ -451,7 +451,7 @@
    
         @endif
 
-        <?php if ($cpars->ttd == null) { ?>
+        <?php if ($cpars->ttd == null && $cpars->posisi != "bagian") { ?>
 
         <table class="table table-hover">
             <thead>
@@ -470,7 +470,7 @@
                 </div>
                 <div class="page-body clearfix">
                   <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-9">
                       <div class="panel panel-default">
                         <input type="hidden" value="{{csrf_token()}}" name="_token" />
                         <div class="panel-heading">Digital Signature : </div>
@@ -492,6 +492,16 @@
                         </div>
                       </div>
                     </div>
+                    <div class="col-md-3">
+                      <div class="panel panel-default">
+                        <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                        <div class="panel-heading">Approval Without Sign : </div>
+                        <div class="panel-body center-text"  style="padding: 20px">
+                          <a data-toggle="modal" data-target="#approved{{$cpars->id}}" class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Verifikasi</button>
+                          <a data-toggle="modal" data-target="#notapproved{{$cpars->id}}" class="btn btn-danger col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px;margin-top: 10px">Reject CPAR</a> 
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -506,6 +516,68 @@
   </div>
 
   @endif
+
+  <div class="modal modal-success fade" id="approved{{$cpars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form role="form" method="post" action="{{url('index/qc_report/checked/'.$cpars->id)}}">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Approval Confirmation</h4>
+          </div>
+          <div class="modal-body">
+            <div class="box-body">
+                <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <input type="hidden" name="checked[]" checked="">
+                <h4>Are you sure to approve this CPAR without Sign?</h4>
+            </div>    
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-outline">Approved</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal modal-danger fade" id="notapproved{{$cpars->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form role="form" method="post" action="{{url('index/qc_report/unchecked/'.$cpars->id)}}">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Not Approved</h4>
+          </div>
+          <div class="modal-body">
+            <div class="box-body">
+                <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                <h4>Reason Not Approved</h4>
+                <textarea class="form-control" required="" name="alasan" style="height: 250px;"></textarea> 
+                *CPAR Will Be Sent To Staff/Leader
+            </div>    
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-outline">Not Approved</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
 
 @endsection
