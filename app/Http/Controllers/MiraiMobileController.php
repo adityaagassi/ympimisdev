@@ -488,5 +488,44 @@ class MiraiMobileController extends Controller
 
   }
 
+  public function indication(){
+    $tglnow = date('Y-m-d');
+    $q = "Select distinct question from quiz_logs where question <> 'Suhu Tubuh'";
+
+    return view('mirai_mobile.report_indication',  
+      array(
+        'title' => 'Resume Gejala Penyakit Karyawan', 
+        'title_jp' => '',
+        'question' => DB::connection('mobile')->select($q)
+      )
+    )->with('page', 'Resume Gejala Penyakit Karyawan');
+  }
+
+  public function fetchIndicationData(Request $request)
+  {
+    // $q =  "SELECT
+    //   answer_date,
+    //   question,
+    //   quiz_logs.employee_id,
+    //   quiz_logs.`name`,
+    //   quiz_logs.department
+    //   FROM
+    //   quiz_logs
+    //   LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id 
+    //   WHERE
+    //   answer = 'Iya' 
+    //   AND keterangan IS NULL 
+    //   AND end_date IS NULL 
+    //   AND answer_date >= '2020-04-11'";
+
+    $q = "select quiz_logs.employee_id, quiz_logs.`name`, quiz_logs.`department`, date(quiz_logs.created_at) as date, sum(IF(question = 'Demam' and answer = 'iya', 1, 0)) as Demam, sum(IF(question = 'Batuk' and answer = 'iya', 1, 0)) as Batuk, sum(IF(question = 'Pusing' and answer = 'iya', 1, 0)) as Pusing, sum(IF(question = 'Tenggorokan Sakit' and answer = 'iya', 1, 0)) as Tenggorokan, sum(IF(question = 'Sesak Nafas' and answer = 'iya', 1, 0)) as Sesak, sum(IF(question = 'Indera Perasa & Penciuman Terganggu' and answer = 'iya', 1, 0)) as Indera, sum(IF(question = 'Pernah Berinteraksi dengan Suspect / Positif COVID-19' and answer = 'iya', 1, 0)) as Kontak from quiz_logs LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id WHERE keterangan IS NULL AND end_date IS NULL AND answer_date >= '2020-04-11' group by employee_id, `name`, date(created_at),department having Demam = 1 or Batuk = 1 or Pusing = 1 or Tenggorokan = 1 or Sesak = 1 or Indera = 1 or Kontak = 1 order by date";
+
+    $response = array(
+      'status' => true,
+      'lists' => DB::connection('mobile')->select($q),
+    );
+    return Response::json($response);
+  }
+
 
 }

@@ -2723,6 +2723,10 @@ Route::get('fetch/mirai_mobile/report_location/detail', 'MiraiMobileController@f
 Route::get('fetch/mirai_mobile/report_location/detail_all', 'MiraiMobileController@fetchLocationDetailAll');
 Route::get('export/mirai_mobile/report_location', 'MiraiMobileController@exportList');
 
+//report shift
+Route::get('index/mirai_mobile/report_indication', 'MiraiMobileController@indication');
+Route::get('fetch/mirai_mobile/report_indication', 'MiraiMobileController@fetchIndicationData');
+
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');
 });

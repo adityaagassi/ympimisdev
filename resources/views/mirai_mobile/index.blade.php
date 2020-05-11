@@ -30,6 +30,7 @@
 			<a href="{{ url("index/mirai_mobile/report_attendance") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Attendance Data</a>
 			<a href="{{ url("index/mirai_mobile/report_shift") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Group Data</a> 
 			<a href="{{ url("index/mirai_mobile/report_location") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Location Data</a> 
+			<a href="{{ url("index/mirai_mobile/report_indication") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Health Indication Data</a>
 		</div>
 
 	</div>
