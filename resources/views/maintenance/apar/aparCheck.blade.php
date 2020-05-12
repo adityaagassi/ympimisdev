@@ -149,6 +149,7 @@
 			<button class="btn btn-lg btn-success" style="width: 100%" id="btn-check"><i class="fa fa-check"></i> Check</button>
 		</div>
 
+
 		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
 			<table class="table table-bordered">
 				<thead>
@@ -208,6 +209,7 @@
 		apar = [];
 		var vdo;
 		var apar_checks = [];
+		hasil_check = "";
 
 		jQuery(document).ready(function() {
 			// $("#check").hide();
@@ -334,6 +336,11 @@
 
 			$.get('{{ url("fetch/maintenance/apar/history") }}', data, function(result, status, xhr) {
 				$.each(result.check, function(index, value){
+					
+					// if (typeof value.check !== 'undefined') {
+					// 	return false;
+					// }
+
 					style = 'style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
 
 					bd += "<tr>";
@@ -343,6 +350,10 @@
 					var cek = "BAIK";
 					if (~value.check.indexOf("0")) {
 						cek = "KURANG";
+					}
+
+					if (index == 0) {
+						hasil_check = cek;
 					}
 
 					bd += "<td "+style+">"+cek+"</td>";
@@ -391,6 +402,10 @@
 					$(".check").prop('checked', false).parent().removeClass('active');
 
 					openSuccessGritter('Success', 'Check Berhasil Ditambahkan');
+					console.log(hasil_check);
+
+					// window.open('{{ url("print/apar/qr/".'+result.checked_apar.utility_code+'."/".'+result.checked_apar.utility_name+'."/".'+result.checked_apark.exp_date+'."/".'+result.checked_apark.last_check+'."/".'+hasil_check+') }}', '_blank');
+					window.open('{{ url("print/apar/qr/") }}/'+result.checked_apar.utility_code+'/'+result.checked_apar.utility_name+'/'+result.checked_apar.exp_date+'/'+result.checked_apar.last_check+'/'+hasil_check, '_blank');
 				}
 			})
 		})
@@ -427,10 +442,11 @@
 					exp_date = arr_selected.age_left+" bulan lagi - "+arr_selected.exp_date;
 				}
 				$("#apar_expired").text(exp_date);
-				get_history(arr_selected.apar_id);
 
 				t_body = "";
 				$("#body_check_list").empty();
+
+				// console.log(apar_checks);
 
 				$.each(apar_checks, function(index, value){
 					var cek = "";
@@ -444,6 +460,8 @@
 				});
 
 				$("#body_check_list").append(t_body);
+
+				get_history(arr_selected.apar_id);
 
 			} else {
 				openErrorGritter('Error', 'QR Code Not Registered');
@@ -509,5 +527,6 @@
 			var s = addZero(d.getSeconds());
 			return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
 		}
+
 	</script>
 	@endsection

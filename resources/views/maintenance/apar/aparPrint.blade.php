@@ -1,80 +1,57 @@
-<!-- This work is licensed under the W3C Software and Document License
-     (http://www.w3.org/Consortium/Legal/2015/copyright-software-and-document).
- -->
- <html>
- <head>
- 	<title>TES 1</title>
- 	<meta name="viewport" content="width=device-width">
- 	<style>
- 		.error {
- 			color: #d22;
- 		}
- 		input[type="button"] {
- 			height: 30px
- 		}
- 		.cropped {
- 			width: 200px;
- 			height: 200px;
- 			background-position: center center;
- 			background-repeat: no-repeat;
- 		}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>APAR PRINT</title>
+	<style type="text/css">
+		@font-face {
+			font-family: 'Bebas';
+			font-style: normal;
+			font-weight: normal;
+			src: url(<?php echo public_path() . '/fonts/Bebas-Regular.ttf' ?> ) format('truetype');
+		}
 
- 	</style>
- </head>
- <body>
- 	<table border="1">
- 		<tr>
- 			<td colspan="2" style="text-align: center;">
- 				<b>AP-215</b> <br>
- 				Transformer T-Pro-A-TRN-T-PRO-02
- 			</td>
- 		</tr>
- 		<tr>
- 			<td style="width: 50%"><img src="{{url('qr.png')}}" class="cropped"></td>
- 			<td style="text-align: left" id="title">
- 				Exp. 02-07-2020 <br>
- 				Last Check : 06-04-2020 (BAIK)
- 			</td>
- 		</tr>
- 	</table>
- 	<script type="text/javascript">
- 		function onLoad() {     
- 			if (navigator.share === undefined) {
+		body {
+			font-family: 'Bebas';
+		}
 
- 				if (window.location.protocol === 'http:') {
+		b {
+			font-family: 'Bebas' !important;
+		}
 
- 					window.location.replace(window.location.href.replace(/^http:/, 'https:'));
+		.cropped {
+			width: 100px;
+			height: 100px;
+			background-position: center center;
+			background-repeat: no-repeat;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		
+		@page { margin: 0px; }
+	</style>
+</head>
+<?php 
+include public_path(). "/qr_generator/qrlib.php"; 
 
- 					const title_input = document.querySelector('#title');
+QRcode::png($data['apar_code'], public_path().'/apar-qr.png');
+?>
+<body>
 
- 					const title = title_input.disabled ? undefined : title_input.files;
-
- 					navigator.share({title});
- 				} else {
- 					logError('Error: You need to use a browser that supports this draft ' +
- 						'proposal.');
- 				}
- 			}
- 		}
-
- 		function logError(message) {
- 			logText(message, true);
- 		}
-
- 		function logText(message, isError) {
- 			if (isError)
- 				console.error(message);
- 			else
- 				console.log(message);
-
- 			const p = document.createElement('p');
- 			if (isError)
- 				p.setAttribute('class', 'error');
- 			document.querySelector('#output').appendChild(p);
- 			p.appendChild(document.createTextNode(message));
- 		}
-
- 		window.addEventListener('load', onLoad);
- 	</script>
- </body>
- </html>
+	<table width="100%">
+		<tr>
+			<td colspan="2" style="text-align: center; color: white; background-color: black;">
+				<b>{{$data['apar_code']}}</b> <br>
+				{{$data['apar_name']}}
+			</td>
+		</tr>
+		<tr>
+			<td style="width: 45%"><img src="{{ public_path() . '/apar-qr.png' }}" class="cropped"></td>
+			<td style="text-align: left">
+				Exp. {{$data['exp_date']}} <br>
+				Last Check : <br> {{$data['last_check']}} <br>({{$data['status']}})
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

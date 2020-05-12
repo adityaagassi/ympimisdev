@@ -85,7 +85,7 @@
       /*opacity: 0;*/
     }
     50%, 100% {
-      background-color: rgb(240, 46, 49);
+      background-color: #f55359;
     }
   }
 </style>
@@ -98,16 +98,35 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
   <div class="row">
-    <div class="col-xs-12">
-      <h2 style="color: white; text-align: center">APAR Check on April</h2>
+    <div class="col-xs-2 pull-left">
+      <button id="btn_hydrant" class="btn btn-primary" onclick="change_mode('hydrant')"><i class="fa fa-tint"></i>&nbsp; HYDRANT</button>
+      <button id="btn_apar" class="btn btn-success" onclick="change_mode('apar')"><i class="fa fa-fire-extinguisher"></i>&nbsp; APAR</button>
+    </div>
 
+    <div class="col-xs-2 pull-right">
+      <div class="input-group date">
+        <div class="input-group-addon bg-purple" style="border: none;">
+          <i class="fa fa-calendar"></i>
+        </div>
+        <input type="text" class="form-control datepicker" id="bulan" onchange="drawTable()" placeholder="Pilih Bulan">
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <h2 style="color: white; text-align: center" id="judul"></h2>
+      <div class="col-sm-10 col-xs-6 col-xs-offset-1">
+        <div class="description-block border-right">
+          <span class="description-text">
+            <span style="color: #54f775; font-weight: bold; font-size: 20pt" id="datas_check">CHECKED 0 </span>
+            <span style="color: #f55359; font-weight: bold; font-size: 20pt" id="datas"> / 0 MUST CHECKED</span>
+          </span>
+        </div>
+      </div>
       <table class="table table-bordered" width="100%">
         <thead>
           <tr>
             <th>APAR CODE</th>
             <th>APAR NAME</th>
             <th>LOCATION</th>
-            <th>ENTRY DATE</th>
             <th>LAST CHECK</th>
             <th>EXP. DATE</th>
           </tr>
@@ -168,97 +187,195 @@
         }
       });
 
+      $("#btn_apar").hide();
+      var modes = "apar";
+
       jQuery(document).ready(function() {
         $('body').toggleClass("sidebar-collapse");
-        get_apar()
+        var now = new Date();
+        get_apar(now);
       });
 
-      function get_apar() {
-        var dt = new Date();
-        mon = dt.getMonth()+1;
+      function get_apar(dt_param) {
+        mon = dt_param.getMonth()+1;
+
+        var checked = 0;
+        var all_check = 0;
+
+        $("#judul").text("APAR Check on "+ dt_param.toLocaleString('default', { month: 'long' }));
 
         $("#body").empty();
         var body = "";
 
         var data = {
-          order: 'exp_date2',
-          order2: 'asc',
+          mon: mon
         }
 
-        $.get('{{ url("fetch/maintenance/apar/list") }}', data, function(result, status, xhr){
+        $.get('{{ url("fetch/maintenance/apar/list/monitoring") }}', data, function(result, status, xhr){
+          checked = 0;
 
-          $.each(result.apar, function(index, value){
-            if (value.remark == 'APAR') {
-              var dt = value.entry_date2.split('-').join('/');
-              if (value.last_check) {
-                var dt_check = value.last_check.split(" ")[0].split('-').join('/');
-              } else {
-                var dt_check = "1999/01/01";
-              }
+          $.each(result.check_list, function(index, value){
+            bg = "";
 
-              var mydate = new Date(dt);
-              var cekdate = new Date(dt_check);
-              var nowdate = new Date();
+            var nowdate = new Date();
 
-              if (Math.floor(mydate.getDate() / 7) <= Math.floor(nowdate.getDate() / 7) && !value.last_check) {
+            if (value.cek == 1) {
+              bg = "style='background-color:#54f775'";
+              checked++;
+            } else {
+              if (value.week <= Math.floor(nowdate.getDate() / 7)) {
                 bg = "class='alert'";
               } else {
                 bg = "";
               }
-
-
-              if (value.location == "Factory I" && mon % 2 === 0) {
-                console.log(Math.floor(mydate.getDate() / 7) +" "+Math.floor(nowdate.getDate() / 7)+" | "+mydate.getWeek()+"  "+nowdate.getWeek());
-                body += "<tr>";
-                body += "<td "+bg+">"+value.utility_code+"</td>";
-                body += "<td "+bg+">"+value.utility_name+"</td>";
-                body += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
-                body += "<td "+bg+">"+value.entry_date2+"</td>";
-                body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
-                body += "<td "+bg+">"+value.exp_date2+"</td>";
-                body += "</tr>";
-              } else {
-                if (value.location == "Factory II" && mon % 2 === 1) {
-                  body += "<tr>";
-                  body += "<td "+bg+">"+value.utility_code+"</td>";
-                  body += "<td "+bg+">"+value.utility_name+"</td>";
-                  body += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
-                  body += "<td "+bg+">"+value.entry_date2+"</td>";
-                  body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
-                  body += "<td "+bg+">"+value.exp_date2+"</td>";
-                  body += "</tr>";
-
-                }
-              }
             }
+
+            body += "<tr>";
+            body += "<td "+bg+">"+value.utility_code+"</td>";
+            body += "<td "+bg+">"+value.utility_name+"</td>";
+            body += "<td "+bg+">"+value.location+"</td>";
+            body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
+            body += "<td "+bg+">"+value.exp_date2+"</td>";
+            body += "</tr>";
+
           })
+
+
+          $("#datas_check").text("CHECKED "+checked);
+          $("#datas").text(" / "+result.check_list.length+" MUST CHECKED");
 
           $("#body").append(body);
         })
       }
 
-      var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+      function drawTable() {
+        if (modes == "apar") {
+          mon = $("#bulan").val();
+          mon = mon.split("-");
 
-      function openSuccessGritter(title, message){
-        jQuery.gritter.add({
-          title: title,
-          text: message,
-          class_name: 'growl-success',
-          image: '{{ url("images/image-screen.png") }}',
-          sticky: false,
-          time: '3000'
-        });
+          var dt = new Date(mon[1], mon[0] - 1, '01');
+
+          if(isValidDate(dt)) {
+            get_apar(dt);
+          } else {
+            get_apar(new Date());
+          }
+        } else {
+          drawHydrant();
+        }
       }
 
-      function openErrorGritter(title, message) {
-        jQuery.gritter.add({
-          title: title,
-          text: message,
-          class_name: 'growl-danger',
-          image: '{{ url("images/image-stop.png") }}',
-          sticky: false,
-          time: '3000'
-        });
-      }	
-    </script>
-    @endsection
+
+      function drawHydrant() {
+       mon = $("#bulan").val();
+       mon = mon.split("-");
+
+       var dt = new Date(mon[1], mon[0] - 1, '01');
+
+       if(isValidDate(dt)) {
+       } else {
+        dt = new Date();
+      }
+
+      mon = dt.getMonth()+1;
+
+      var checked = 0;
+      var all_check = 0;
+
+      $("#judul").text("HYDRANT Check on "+ dt.toLocaleString('default', { month: 'long' }));
+
+      $("#body").empty();
+      var body = "";
+
+      var data = {
+        mon: mon
+      }
+
+      $.get('{{ url("fetch/maintenance/hydrant/list/monitoring") }}', data, function(result, status, xhr){
+        $.each(result.check_list, function(index, value){
+          bg = "";
+
+          var nowdate = new Date();
+
+          if (value.cek == 1) {
+            bg = "style='background-color:#54f775'";
+            checked++;
+          } else {
+            if (value.week <= Math.floor(nowdate.getDate() / 7)) {
+              bg = "class='alert'";
+            } else {
+              bg = "";
+            }
+          }
+
+          body += "<tr>";
+          body += "<td "+bg+">"+value.utility_code+"</td>";
+          body += "<td "+bg+">"+value.utility_name+"</td>";
+          body += "<td "+bg+">"+value.location+"</td>";
+          body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
+          body += "<td "+bg+">"+(value.exp_date2 || '-')+"</td>";
+          body += "</tr>";
+
+        })
+
+
+        $("#datas_check").text("CHECKED "+checked);
+        $("#datas").text(" / "+result.check_list.length+" MUST CHECKED");
+
+        $("#body").append(body);
+      })
+
+    }
+
+    function change_mode(mode) {
+      modes = mode;
+      console.log(mode);
+      if (mode == "hydrant") {
+        $("#btn_hydrant").hide();
+        $("#btn_apar").show();
+
+        drawHydrant();
+      } else {
+        $("#btn_apar").hide();
+        $("#btn_hydrant").show();
+
+        drawTable();
+      }
+    }
+
+    var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+    function isValidDate(d) {
+      return d instanceof Date && !isNaN(d);
+    }
+
+    $(".datepicker").datepicker( {
+      autoclose: true,
+      format: "mm-yyyy",
+      viewMode: "months", 
+      minViewMode: "months"
+    });
+
+    function openSuccessGritter(title, message){
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-success',
+        image: '{{ url("images/image-screen.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
+
+    function openErrorGritter(title, message) {
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-danger',
+        image: '{{ url("images/image-stop.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }	
+  </script>
+  @endsection

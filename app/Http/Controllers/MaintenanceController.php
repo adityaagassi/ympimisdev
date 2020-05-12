@@ -24,6 +24,8 @@ use App\UtilityCheck;
 
 use App\Http\Controllers\Controller;
 
+use PDF;
+
 class MaintenanceController extends Controller
 {
 	public function __construct(){
@@ -134,6 +136,7 @@ class MaintenanceController extends Controller
 		$check = db::table("utility_check_lists")
 		->select('check_point', 'remark')
 		->get();
+		// $check = "";
 
 		return view('maintenance.apar.aparCheck', array(
 			'title' => $title,
@@ -420,7 +423,7 @@ class MaintenanceController extends Controller
 	{
 		DB::connection()->enableQueryLog();
 
-		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', db::raw("(MONTH(exp_date) - MONTH(now())) as age_left"), 'remark', 'last_check', db::raw('DATE_FORMAT(entry_date, "%d %M %Y") as entry_date2'));
+		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', db::raw("(MONTH(exp_date) - MONTH(now())) as age_left"), 'remark', 'last_check');
 
 		if ($request->get('type')) {
 			$apars = $apars->where('remark', '=', $request->get('type'));
@@ -550,8 +553,7 @@ class MaintenanceController extends Controller
 	{
 		$exp = Utility::where('remark', '=', 'APAR')
 		->where(db::raw('(MONTH(exp_date) - MONTH(now()))'), '<=', '2')
-		->where(db::raw('YEAR(exp_date)'), '=', db::raw('YEAR(now())'))
-		->select('id', 'utility_code', 'utility_name', 'exp_date', 'group', 'location', 'last_check', db::raw('(MONTH(exp_date) - MONTH(now())) as exp'), 'capacity', 'type')
+		->select('id', 'utility_code', 'utility_name', 'exp_date', 'group', 'location', 'last_check', db::raw('(MONTH(exp_date) - MONTH(now())) as exp'), 'capacity')
 		->orderBy('exp_date')
 		->get();
 
@@ -611,22 +613,11 @@ class MaintenanceController extends Controller
 		->where('utility_code', '=', $request->get('code'))
 		->first();
 
-		$additional = "";
-
-		if ($request->get('type') == 'powder') {
-			$additional = " + 3 year";
-		} else if ($request->get('type') == 'liquid') {
-			$additional = " + 5 year";
-		} else if ($request->get('type') == 'CO2') {
-			$additional = " + 5 year";
-		}
-
 		Utility::where('remark', '=', 'APAR')
 		->where('utility_code', '=', $request->get('code'))
 		->update([
 			'capacity' => $request->get('capacity'), 
-			'entry_date' => $request->entry_date, 
-			'exp_date' => date("Y-m-d", strtotime(date("Y-m-d", strtotime($request->entry_date)) . $additional)), 
+			'exp_date' => $request->exp, 
 			'last_check' => date('Y-m-d H:i:s'),
 			'status' => null
 		]);
@@ -669,44 +660,117 @@ class MaintenanceController extends Controller
 	// 	return Response::json($response);
 	// }
 
-	public function printApar($apar){
-		$printer_name = 'TESTPRINTER';
-		$connector = new WindowsPrintConnector($printer_name);
-		$printer = new Printer($connector);
+	// public function printApar($apar){
+	// 	$printer_name = 'TESTPRINTER';
+	// 	$connector = new WindowsPrintConnector($printer_name);
+	// 	$printer = new Printer($connector);
 
-		$utility_code = $apar->utility_code;
-		$utility_name = $apar->utility_name;
-		$expired_date = $apar->exp_date;
+	// 	$utility_code = $apar->utility_code;
+	// 	$utility_name = $apar->utility_name;
+	// 	$expired_date = $apar->exp_date;
 
-		$qr = $utility_code."/".$utility_name;
+	// 	$qr = $utility_code."/".$utility_name;
 
-		if (is_null($apar->status)) {
-			$status = "BAIK";
-		} else {
-			$status = "KURANG";
+	// 	if (is_null($apar->status)) {
+	// 		$status = "BAIK";
+	// 	} else {
+	// 		$status = "KURANG";
+	// 	}
+
+	// 	$last_check = $apar->last_check;
+
+	// 	$printer->setJustification(Printer::JUSTIFY_CENTER);
+	// 	$printer->setEmphasis(true);
+	// 	$printer->setReverseColors(true);
+	// 	$printer->setTextSize(2, 1);
+	// 	$printer->text("  APAR  "."\n");
+	// 	$printer->initialize();
+	// 	$printer->setTextSize(2, 1);
+	// 	$printer->setJustification(Printer::JUSTIFY_CENTER);
+	// 	$printer->text($utility_code."\n");
+	// 	$printer->text($utility_name."\n");
+	// 	$printer->qrCode($qr, Printer::QR_ECLEVEL_L, 5, Printer::QR_MODEL_2);
+	// 	$printer->initialize();
+	// 	$printer->setEmphasis(true);
+	// 	$printer->setTextSize(1, 1);
+	// 	$printer->setJustification(Printer::JUSTIFY_CENTER);
+	// 	$printer->text("Exp.  ".$expired_date."\n");
+	// 	$printer->text("Last Check : ".$last_check." (".$status.") \n");
+	// 	$printer->feed(1);
+	// 	$printer->cut();
+	// 	$printer->close();
+	// }
+
+	public function print_apar2($apar_id, $apar_name, $exp_date, $last_check, $hasil_check)
+	{
+		$data = [
+			'apar_code' => $apar_id,
+			'apar_name' => $apar_name,
+			'exp_date' => $exp_date,
+			'last_check' => $last_check,
+			'status' => $hasil_check,
+		];
+		
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->getDomPDF()->set_option("enable_php", true);
+		$pdf->setPaper([0, 0, 141.732, 184.252], 'landscape');
+		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+		$pdf->loadView('maintenance.apar.aparPrint', array(
+			'data' => $data
+		));
+
+		// return $pdf->download("APAR_QR.pdf");
+
+		// $pdf->save(public_path() . "/APAR_QR.pdf");
+
+		return $pdf->stream("APAR_QR.pdf");
+	}
+
+	public function fetch_apar_monitoring(Request $request)
+	{
+		if ($request->get('mon') % 2 === 0) {
+			$loc = "Factory I";
+		} else if ($request->get('mon') % 2 === 1){
+			$loc = "Factory II";
 		}
 
-		$last_check = $apar->last_check;
+		$check = Utility::where("location", "=", $loc)
+		->where("remark", "=", "APAR")
+		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', 'last_check', db::raw('IF(IFNULL(MONTH(last_check), 0) >= '.$request->get('mon').', 1, 0) as cek'), db::raw('IFNULL(FLOOR((DayOfMonth(last_check)-1)/7)+1, FLOOR((DayOfMonth(exp_date)-1)/7)+1) AS `week`'))
+		->orderBy("cek", "ASC")
+		->orderBy("week", "ASC")
+		->get();
 
-		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		$printer->setEmphasis(true);
-		$printer->setReverseColors(true);
-		$printer->setTextSize(2, 1);
-		$printer->text("  APAR  "."\n");
-		$printer->initialize();
-		$printer->setTextSize(2, 1);
-		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		$printer->text($utility_code."\n");
-		$printer->text($utility_name."\n");
-		$printer->qrCode($qr, Printer::QR_ECLEVEL_L, 5, Printer::QR_MODEL_2);
-		$printer->initialize();
-		$printer->setEmphasis(true);
-		$printer->setTextSize(1, 1);
-		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		$printer->text("Exp.  ".$expired_date."\n");
-		$printer->text("Last Check : ".$last_check." (".$status.") \n");
-		$printer->feed(1);
-		$printer->cut();
-		$printer->close();
+		$response = array(
+			'status' => true,
+			'check_list' => $check,
+		);
+		return Response::json($response);
+	}
+
+	public function fetch_hydrant_monitoring(Request $request)
+	{
+		DB::connection()->enableQueryLog();
+		
+		if ($request->get('mon') % 2 === 0) {
+			$loc = "Factory I";
+		} else if ($request->get('mon') % 2 === 1){
+			$loc = "Factory II";
+		}
+
+		$check = Utility::where("location", "=", $loc)
+		->where("remark", "=", "HYDRANT")
+		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', 'last_check', db::raw('IF(IFNULL(MONTH(last_check), 0) >= '.$request->get('mon').', 1, 0) as cek'), db::raw('IFNULL(FLOOR((DayOfMonth(last_check)-1)/7)+1, FLOOR((DayOfMonth("2020-01-01")-1)/7)+1) AS `week`'))
+		->orderBy("cek", "ASC")
+		->orderBy("week", "ASC")
+		->get();
+
+		$response = array(
+			'status' => true,
+			'check_list' => $check,
+			'query' => DB::getQueryLog()
+		);
+		return Response::json($response);
 	}
 }
