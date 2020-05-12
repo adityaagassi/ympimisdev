@@ -2649,6 +2649,10 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
 	Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
 	Route::get('fetch/maintenance/apar/list/check', 'MaintenanceController@fetchAparCheck2');
+	Route::get('fetch/maintenance/apar/list/monitoring', 'MaintenanceController@fetch_apar_monitoring');
+	Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
+
+Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_check}', 'MaintenanceController@print_apar2');
 	// Route::get('fetch/maintenance/apar/byCode', 'MaintenanceController@fetchAparbyCode');
 
 	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
@@ -2738,9 +2742,3 @@ View::composer('*', function ($view) {
 	$notif_visitor = $controller_visitor->getNotifVisitor();
 	$view->with('notif', $notif)->with('notif_visitor', $notif_visitor);
 });
-
-
-Route::get('fetch/maintenance/apar/list/monitoring', 'MaintenanceController@fetch_apar_monitoring');
-	Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
-
-Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_check}', 'MaintenanceController@print_apar2');
