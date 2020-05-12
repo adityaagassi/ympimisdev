@@ -182,6 +182,17 @@ class MaintenanceController extends Controller
 		))->with('page', 'APAR')->with('head', 'Maintenance');
 	}
 
+	public function indexAparResume()
+	{
+		$title = 'Fire Extinguiser Resume';
+		$title_jp = '??';
+
+		return view('maintenance.apar.aparResume', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'APAR')->with('head', 'Maintenance');
+	}
+
 	// -----------------------  END INDEX --------------------
 
 	public function fetchMaintenance(Request $request)
@@ -752,7 +763,7 @@ class MaintenanceController extends Controller
 	public function fetch_hydrant_monitoring(Request $request)
 	{
 		DB::connection()->enableQueryLog();
-		
+
 		if ($request->get('mon') % 2 === 0) {
 			$loc = "Factory I";
 		} else if ($request->get('mon') % 2 === 1){
@@ -772,5 +783,45 @@ class MaintenanceController extends Controller
 			'query' => DB::getQueryLog()
 		);
 		return Response::json($response);
+	}
+
+	public function fetch_apar_resume(Request $request)
+	{
+		$getCheckedData = DB::select('SELECT mon, jml_tot, IFNULL(jml,0) as jml FROM
+			(SELECT COUNT(entry) as jml_tot, mst.mo, mon from
+			(SELECT id, IF(location = "FACTORY I", 1, 0) as mo, DATE_FORMAT(entry_date,"%Y-%m-%d") as entry from utilities) utl
+			left join
+			(select DATE_FORMAT(week_date,"%Y-%m") as mon, MOD(MONTH(week_date),2) as mo from weekly_calendars where week_date >= "2020-01-01" group by DATE_FORMAT(week_date,"%Y-%m"), mo) mst on mst.mo = utl.mo
+			where DATE_FORMAT(entry, "%Y-%m") <= mon
+			group by mon, mst.mo) base
+			left join (
+			SELECT count(utility_id) as jml, cek_date from 
+			(SELECT utility_checks.utility_id, DATE_FORMAT(check_date, "%Y-%m") as cek_date from utility_checks
+			left join utilities on utility_checks.utility_id = utilities.id
+			where utilities.remark = "APAR"
+			group by utility_id, DATE_FORMAT(check_date, "%Y-%m")
+			) checked_data
+			group by cek_date
+			) as cek on base.mon = cek.cek_date
+			where base.mon <= DATE_FORMAT(now(),"%Y-%m")');
+
+		$getAparNew = DB::select('SELECT mstr.mon, IFNULL(new.jml,0) as new, IFNULL(exp.jml,0) as exp FROM
+			(select DATE_FORMAT(week_date,"%Y-%m") as mon from weekly_calendars where week_date >= "2020-01-01" group by DATE_FORMAT(week_date,"%Y-%m")) mstr
+			left join 
+			(select count(id) as jml, DATE_FORMAT(entry_date,"%Y-%m") as mon from utilities
+			where DATE_FORMAT(entry_date,"%Y-%m") >= "2020-01" and remark = "APAR"
+			group by DATE_FORMAT(entry_date,"%Y-%m")) as new on mstr.mon = new.mon
+			left join
+			(select count(id) as jml, DATE_FORMAT(exp_date,"%Y-%m") as mon from utilities where exp_date < now() and remark = "APAR"
+			group by DATE_FORMAT(exp_date,"%Y-%m")) as exp on mstr.mon = exp.mon
+			where mstr.mon <= DATE_FORMAT(now(),"%Y-%m")');
+
+		$response = array(
+			'status' => true,
+			'check_list' => $getCheckedData,
+			'replace_list' => $getAparNew,
+		);
+		return Response::json($response);
+
 	}
 }
