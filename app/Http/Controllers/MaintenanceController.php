@@ -36,6 +36,13 @@ class MaintenanceController extends Controller
 		->whereNotNull("group")
 		->select("employee_id", "name")
 		->get();
+
+		$this->apar_type = [
+			['type' => 'powder', 'valid' => 5],
+			['type' => 'liquid', 'valid' => 3],
+			['type' => 'CO2', 'valid' => 3],
+			['type' => 'foam', 'valid' => 2]
+		];
 	}
 
 	// -----------------------  START INDEX --------------------
@@ -191,6 +198,23 @@ class MaintenanceController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'APAR')->with('head', 'Maintenance');
+	}
+
+	public function indexAparUses()
+	{
+		$title = 'Fire Extinguiser Uses';
+		$title_jp = '??';
+
+		$employee = EmployeeSync::where('employee_id', '=', Auth::user()->username)
+		->select('employee_id', 'name', 'section', 'group')
+		->first();
+
+		return view('maintenance.apar.aparUses', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'employee_id' => Auth::user()->username,
+			'name' => $employee->name,
+		))->with('page', 'APAR Uses')->with('head', 'Maintenance');
 	}
 
 	// -----------------------  END INDEX --------------------
@@ -564,6 +588,7 @@ class MaintenanceController extends Controller
 	{
 		$exp = Utility::where('remark', '=', 'APAR')
 		->where(db::raw('(MONTH(exp_date) - MONTH(now()))'), '<=', '2')
+		->whereRaw('YEAR(exp_date) = YEAR(now())')
 		->select('id', 'utility_code', 'utility_name', 'exp_date', 'group', 'location', 'last_check', db::raw('(MONTH(exp_date) - MONTH(now())) as exp'), 'capacity')
 		->orderBy('exp_date')
 		->get();
@@ -624,12 +649,20 @@ class MaintenanceController extends Controller
 		->where('utility_code', '=', $request->get('code'))
 		->first();
 
+
+		foreach ($this->apar_type as $type) {
+			if ($utl->type == $type['type']) {
+				$exp_date = date("Y-m-d", strtotime('+5 years', strtotime($request->get('entry_date'))));
+			}
+		}
+
 		Utility::where('remark', '=', 'APAR')
 		->where('utility_code', '=', $request->get('code'))
 		->update([
 			'capacity' => $request->get('capacity'), 
-			'exp_date' => $request->exp, 
+			'exp_date' => $exp_date, 
 			'last_check' => date('Y-m-d H:i:s'),
+			'entry_date' => $request->get('entry_date'),
 			'status' => null
 		]);
 
@@ -789,7 +822,7 @@ class MaintenanceController extends Controller
 	{
 		$getCheckedData = DB::select('SELECT mon, jml_tot, IFNULL(jml,0) as jml FROM
 			(SELECT COUNT(entry) as jml_tot, mst.mo, mon from
-			(SELECT id, IF(location = "FACTORY I", 1, 0) as mo, DATE_FORMAT(entry_date,"%Y-%m-%d") as entry from utilities) utl
+			(SELECT id, IF(location = "FACTORY I", 0, 1) as mo, DATE_FORMAT(entry_date,"%Y-%m-%d") as entry from utilities) utl
 			left join
 			(select DATE_FORMAT(week_date,"%Y-%m") as mon, MOD(MONTH(week_date),2) as mo from weekly_calendars where week_date >= "2020-01-01" group by DATE_FORMAT(week_date,"%Y-%m"), mo) mst on mst.mo = utl.mo
 			where DATE_FORMAT(entry, "%Y-%m") <= mon
@@ -803,7 +836,7 @@ class MaintenanceController extends Controller
 			) checked_data
 			group by cek_date
 			) as cek on base.mon = cek.cek_date
-			where base.mon <= DATE_FORMAT(now(),"%Y-%m")');
+			');
 
 		$getAparNew = DB::select('SELECT mstr.mon, IFNULL(new.jml,0) as new, IFNULL(exp.jml,0) as exp FROM
 			(select DATE_FORMAT(week_date,"%Y-%m") as mon from weekly_calendars where week_date >= "2020-01-01" group by DATE_FORMAT(week_date,"%Y-%m")) mstr
@@ -812,9 +845,9 @@ class MaintenanceController extends Controller
 			where DATE_FORMAT(entry_date,"%Y-%m") >= "2020-01" and remark = "APAR"
 			group by DATE_FORMAT(entry_date,"%Y-%m")) as new on mstr.mon = new.mon
 			left join
-			(select count(id) as jml, DATE_FORMAT(exp_date,"%Y-%m") as mon from utilities where exp_date < now() and remark = "APAR"
+			(select count(id) as jml, DATE_FORMAT(exp_date,"%Y-%m") as mon from utilities where remark = "APAR"
 			group by DATE_FORMAT(exp_date,"%Y-%m")) as exp on mstr.mon = exp.mon
-			where mstr.mon <= DATE_FORMAT(now(),"%Y-%m")');
+			');
 
 		$response = array(
 			'status' => true,
@@ -823,5 +856,32 @@ class MaintenanceController extends Controller
 		);
 		return Response::json($response);
 
+	}
+
+	public function fetch_apar_resume_detail(Request $request)
+	{
+		$detailCheck = DB::select('SELECT utilities.utility_code, utilities.utility_name, utilities.location, utilities.`group`, 1 as cek from utility_checks
+			left join utilities on utility_checks.utility_id = utilities.id
+			where utilities.remark = "APAR" and DATE_FORMAT(check_date, "%M %Y") = "'.$request->get('mon').'"
+			group by utilities.utility_code, utilities.utility_name, utilities.location, utilities.`group`, DATE_FORMAT(check_date, "%Y-%m")
+			union all			
+			SELECT utility_code, utility_name, location, `group`, 0 as cek from utilities 
+			LEFT join utility_checks on utilities.id = utility_checks.utility_id
+			where utilities.remark = "APAR" AND location = "FACTORY I" AND DATE_FORMAT(entry_date, "%Y-%m") <= "'.$request->get('mon2').'" AND (DATE_FORMAT(check_date, "%Y-%m") <> "'.$request->get('mon2').'" OR check_date is null)
+			GROUP BY utility_code, utility_name, location, `group`
+			ORDER BY cek asc
+			');
+
+		$detailNew = DB::select('select utility_code, utility_name, location, `group`, exp_date as dt, "Expired" as stat from utilities where remark = "APAR" and DATE_FORMAT(exp_date,"%M %Y") = "'.$request->get('mon').'"
+			union all
+			select utility_code, utility_name, location, `group`, DATE_FORMAT(entry_date,"%Y-%m-%d") as dt, "Replace/New" as stat from utilities where remark = "APAR" and DATE_FORMAT(entry_date,"%M %Y") = "'.$request->get('mon').'"
+			order by dt asc');
+
+		$response = array(
+			'status' => true,
+			'check_detail_list' => $detailCheck,
+			'replace_list' => $detailNew,
+		);
+		return Response::json($response);
 	}
 }

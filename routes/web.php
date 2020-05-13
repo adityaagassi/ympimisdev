@@ -2645,6 +2645,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
 	Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
 	Route::get('index/maintenance/apar/resume', 'MaintenanceController@indexAparResume');
+	Route::get('index/maintenance/apar/uses', 'MaintenanceController@indexAparUses');
 
 	Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
 	Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
@@ -2653,6 +2654,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/apar/list/monitoring', 'MaintenanceController@fetch_apar_monitoring');
 	Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
 	Route::get('fetch/maintenance/apar/resume', 'MaintenanceController@fetch_apar_resume');
+	Route::get('fetch/maintenance/apar/resume/detail', 'MaintenanceController@fetch_apar_resume_detail');
 
 Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_check}', 'MaintenanceController@print_apar2');
 	// Route::get('fetch/maintenance/apar/byCode', 'MaintenanceController@fetchAparbyCode');
@@ -2663,7 +2665,7 @@ Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_c
 	Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_check}', 'MaintenanceController@print_apar2');
 });
 
-//ASSEMBLIES
+//Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
 Route::get('scan/assembly/operator', 'AssemblyProcessController@scanAssemblyOperator');
 Route::get('scan/assembly/kensa', 'AssemblyProcessController@scanAssemblyKensa');
@@ -2679,6 +2681,12 @@ Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexF
 
 Route::get('index/board/{location}', 'AssemblyProcessController@indexAssemblyBoard');
 Route::get('fetch/assembly/board', 'AssemblyProcessController@fetchAssemblyBoard');
+
+Route::get('index/assembly/request/display/{id}', 'AssemblyProcessController@indexRequestDisplay');
+Route::get('fetch/assembly/request', 'AssemblyProcessController@fetchRequest');
+
+Route::get('index/assembly/ng_rate', 'AssemblyProcessController@indexNgRate');
+Route::get('fetch/assembly/ng_rate', 'AssemblyProcessController@fetchNgRate');
 
 //ROOMS
 Route::get('/meetingroom1', function () {

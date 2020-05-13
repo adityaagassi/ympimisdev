@@ -678,13 +678,19 @@
 
 @if(isset($page) && $page == "APAR")<li class="active">@else<li>@endif
   <a href="{{ url("/index/maintenance/aparTool ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Fire Extinguisher</span></a>
+</li>
 
-  @if(isset($page) && $page == "APAR Check")<li class="active">@else<li>@endif
-    <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Check Extinguisher Tools</span></a>
+@if(isset($page) && $page == "APAR Check")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Check Extinguisher Tools</span></a>
+</li>
 
-    @if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
-      <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-shield"></i> <span>Quarantine Extinguisher Tools</span></a>
-    </li>
+@if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-shield"></i> <span>Quarantine Extinguisher Tools</span></a>
+</li>
+
+@if(isset($page) && $page == "APAR Uses")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/index/maintenance/apar/uses") }}"><i class="fa fa-shield"></i> <span>Use Fire Extinguisher</span></a>
+</li>
 
   </ul>
 </li>

@@ -104,6 +104,76 @@
     <div class="col-xs-12">
       <div id="resume_chart"></div>
     </div>
+
+    <div class="modal fade" id="modal_detail">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="judul_modal"></h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="nav-tabs-custom">
+                  <ul class="nav nav-tabs">
+                    <li class="active" style="width: 49%;"><a href="#tab_1" data-toggle="tab" style="text-align: center;"><b>Checked Data</b></a></li>
+                    <li style="width: 49%;"><a href="#tab_2" data-toggle="tab" style="text-align: center;"><b>Replacement Data</b></a></li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+                      <center><b>Checked Data</b></center><br>
+                      <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detail_check">
+                        <thead style="background-color: rgba(126,86,134,.7);">
+                          <tr>
+                            <th>APAR Code</th>
+                            <th>APAR Name</th>
+                            <th>Location</th>
+                          </tr>
+                        </thead>
+                        <tbody id="body_check"></tbody>
+                      </table>
+                    </div>
+                    <!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2">
+                      <center><b>Expired Data</b></center><br>
+                      <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detail_expired">
+                        <thead style="background-color: rgba(126,86,134,.7);">
+                          <tr>
+                            <th>APAR Code</th>
+                            <th>APAR Name</th>
+                            <th>Location</th>
+                            <th>Expired Date</th>
+                          </tr>
+                        </thead>
+                        <tbody id="body_expired"></tbody>
+                      </table>
+
+                      <center><b>Replace/New Data</b></center><br>
+                      <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detail_replace">
+                        <thead style="background-color: rgba(126,86,134,.7);">
+                          <tr>
+                            <th>APAR Code</th>
+                            <th>APAR Name</th>
+                            <th>Location</th>
+                            <th>Entry Date</th>
+                          </tr>
+                        </thead>
+                        <tbody id="body_replace"></tbody>
+                      </table>
+                    </div>
+                    <!-- /.tab-pane -->
+                  </div>
+                  <!-- /.tab-content -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 </section>
@@ -195,7 +265,14 @@
 
         plotOptions: {
           column: {
-            stacking: 'normal'
+            stacking: 'normal',
+            point: {
+              events: {
+                click: function () {
+                  detail(this.category);
+                }
+              }
+            }
           }
         },
 
@@ -219,6 +296,76 @@
       });
 
     })
+  }
+
+  function detail(mon) {
+    console.log(mon);
+    $("#judul_modal").html("<b>"+mon+"</b>");
+    $("#modal_detail").modal('show');
+
+    dt = months.indexOf(mon.split(' ')[0])+1;
+
+    mon2 = mon.split(' ')[1]+"-"+('0' + dt).slice(-2);
+
+    var data = {
+      mon: mon,
+      mon2: mon2
+    }
+
+    $.get('{{ url("fetch/maintenance/apar/resume/detail") }}', data, function(result, status, xhr) {
+
+      $("#body_check").empty();
+      $("#body_expired").empty();
+      $("#body_replace").empty();
+
+      body_check_detail = "";
+      body_expired = "";
+      body_replace = "";
+
+      $.each(result.check_detail_list, function(index, value){
+
+        if (value.cek == 1) {
+          bg = "style='background-color:#54f775'";
+        } else {
+          bg = "style='background-color:#f45b5b; color:white'";
+        }
+
+        body_check_detail += "<tr>";
+        body_check_detail += "<td "+bg+">"+value.utility_code+"</td>";
+        body_check_detail += "<td "+bg+">"+value.utility_name+"</td>";
+        body_check_detail += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+        body_check_detail += "</tr>";
+      })
+
+      $("#body_check").append(body_check_detail);
+
+      $.each(result.replace_list, function(index, value){
+       if (value.stat == "Expired") {
+        bg = "style='background-color:#f45b5b; color:white'";
+
+        body_expired += "<tr>";
+        body_expired += "<td "+bg+">"+value.utility_code+"</td>";
+        body_expired += "<td "+bg+">"+value.utility_name+"</td>";
+        body_expired += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+        body_expired += "<td "+bg+">"+value.dt+"</td>";
+        body_expired += "</tr>";
+      } else {
+        bg = "style='background-color:#54f775'";
+
+        body_replace += "<tr>";
+        body_replace += "<td "+bg+">"+value.utility_code+"</td>";
+        body_replace += "<td "+bg+">"+value.utility_name+"</td>";
+        body_replace += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+        body_replace += "<td "+bg+">"+value.dt+"</td>";
+        body_replace += "</tr>";
+      }
+    })
+
+      $("#body_expired").append(body_expired);
+      $("#body_replace").append(body_replace);
+
+    })
+
   }
 
 

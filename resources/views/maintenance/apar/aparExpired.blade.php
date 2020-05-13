@@ -466,6 +466,8 @@
 
       $.post('{{ url("post/maintenance/apar/replace") }}', data, function(result, status, xhr) {
         openSuccessGritter("Success", "APAR Was Successfully Replaced");
+        $("#modaledit").modal("hide");
+        get_expire_data();
       }).fail(function(result) {
         openErrorGritter( "Error", "" );
       })
