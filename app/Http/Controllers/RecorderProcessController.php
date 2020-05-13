@@ -12,6 +12,7 @@ use App\PushBlockMaster;
 use App\PushBlockRecorder;
 use App\PushBlockRecorderTemp;
 use App\PushBlockRecorderResume;
+use App\PushBlockParameter;
 use App\CodeGenerator;
 use App\User;
 use App\RcPushPullLog;
@@ -78,6 +79,16 @@ class RecorderProcessController extends Controller
                       '#10',
                       '#11',];
 
+      $this->molding = ['HJ 01',
+                      'HJ 02',
+                      'HJ 03',
+                      'HJ 04',
+                      'HJ 05',
+                      'BL 01',
+                      'BL 02',
+                      'BL 03',
+                      'BL 04'];
+
       $this->mail = ['budhi.apriyanto@music.yamaha.com',
                     'khoirul.umam@music.yamaha.com',
                     'aditya.agassi@music.yamaha.com',
@@ -93,7 +104,20 @@ class RecorderProcessController extends Controller
 
 	public function index_push_block($remark){
 		$name = Auth::user()->name;
-		return view('recorder.process.index_push_block')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Push Block Check')->with('title', 'Recorder Push Block Check')->with('title_jp', 'リコーダープッシュブロック検査')->with('name', $name)->with('product_type', $this->product_type)->with('mesin', $this->mesin)->with('mesin2', $this->mesin)->with('batas_bawah', '3')->with('batas_atas', '17')->with('batas_tinggi', '0.2')->with('remark', $remark);
+		return view('recorder.process.index_push_block')
+    ->with('page', 'Process Assy Recorder')
+    ->with('head', 'Recorder Push Block Check')
+    ->with('title', 'Recorder Push Block Check')
+    ->with('title_jp', 'リコーダープッシュブロック検査')
+    ->with('name', $name)
+    ->with('product_type', $this->product_type)
+    ->with('mesin', $this->mesin)
+    ->with('mesin2', $this->mesin)
+    ->with('mesin3', $this->mesin)
+    ->with('batas_bawah', '3')
+    ->with('batas_atas', '17')
+    ->with('batas_tinggi', '0.2')
+    ->with('remark', $remark);
 	}
 
   public function scanPushPullOperator(Request $request){
@@ -171,6 +195,40 @@ class RecorderProcessController extends Controller
         }
     }
 
+    function fetch_mesin_parameter(Request $request)
+    {
+          try{
+            $mesin = $request->get("mesin");
+
+            $detail = PushBlockParameter::where('mesin',$mesin)->orderBy('id','desc')->first();
+
+            $response = array(
+              'status' => true,
+              // 'id' => $detail->id,
+              'detail' => $detail
+            );
+            return Response::json($response);
+
+          }
+          catch (QueryException $beacon){
+            $error_code = $beacon->errorInfo[1];
+            if($error_code == 1062){
+             $response = array(
+              'status' => false,
+              'datas' => "Get Data Failed",
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'datas' => "Get Data Failed",
+            );
+             return Response::json($response);
+            }
+        }
+    }
+
     function create(Request $request)
     {
         	try{    
@@ -187,6 +245,7 @@ class RecorderProcessController extends Controller
                 $product_type = $request->get('product_type');
                 PushBlockRecorder::create([
                   'push_block_code' => $request->get('push_block_code'),
+                  'push_block_id_gen' => $request->get('push_block_id_gen'),
                     'check_date' => $request->get('check_date'),
                     'injection_date_head' => $request->get('injection_date_head'),
                     'mesin_head' => $request->get('mesin_head'),
@@ -203,36 +262,6 @@ class RecorderProcessController extends Controller
                     'created_by' => $id_user
                 ]);
                 $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->delete();
-                // foreach ($temptemp as $key) {
-                //   $delete = PushBlockRecorderTemp::find($key->id);
-                //   $delete->delete();
-                // }
-                // $bodyHtml = "<html><h2>NG Report of Recorder Push Block Check</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Push Pull : ".$push_pull[$i]."</p><p>Judgement : ".$judgement[$i]."</p></html>";
-
-                // $bodyHtml2 = "<html><h2>NG Report of Hight Gauge Check Block Recorder</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Hight Gauge : ".$ketinggian[$i]."</p><p>Judgement : ".$judgementketinggian[$i]."</p></html>";
-
-                // if($judgement[$i] == 'NG'){
-                //   foreach($this->mail as $mail_to){
-                //     Mail::raw([], function($message) use($bodyHtml,$mail_to) {
-                //         $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-                //         $message->to($mail_to);
-                //         $message->subject('NG Report of Recorder Push Block Check');
-                //         $message->setBody($bodyHtml, 'text/html' );
-                //         // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
-                //     });
-                //   }
-                // }
-                // if($judgementketinggian[$i] == 'NG'){
-                //   foreach($this->mail as $mail_to){
-                //     Mail::raw([], function($message) use($bodyHtml2,$mail_to) {
-                //         $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-                //         $message->to($mail_to);
-                //         $message->subject('NG Report of Hight Gauge Check Block Recorder');
-                //         $message->setBody($bodyHtml2, 'text/html' );
-                //         // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
-                //     });
-                //   }
-                // }
               }
 
               $response = array(
@@ -255,11 +284,19 @@ class RecorderProcessController extends Controller
               $head = $request->get('head');
               $block = $request->get('block');
               $push_block_code = $request->get('push_block_code');
+              if ($push_block_code == 'After Injection') {
+                $front = 'AI';
+              }else{
+                $front = 'FSA';
+              }
+
+              $push_block_id_gen = $front."_".$request->get('check_date')."_".$request->get('product_type')."_".$request->get('pic_check');
               for($i = 0; $i<16;$i++){
                 $check_date = $request->get('check_date');
                 $product_type = $request->get('product_type');
                 PushBlockRecorderTemp::create([
                   'push_block_code' => $request->get('push_block_code'),
+                  'push_block_id_gen' => $push_block_id_gen,
                     'check_date' => $request->get('check_date'),
                     'injection_date_head' => $request->get('injection_date_head'),
                     'mesin_head' => $request->get('mesin_head'),
@@ -271,38 +308,12 @@ class RecorderProcessController extends Controller
                     'pic_check' => $request->get('pic_check'),
                     'created_by' => $id_user
                 ]);
-
-                // $bodyHtml = "<html><h2>NG Report of Recorder Push Block Check</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Push Pull : ".$push_pull[$i]."</p><p>Judgement : ".$judgement[$i]."</p></html>";
-
-                // $bodyHtml2 = "<html><h2>NG Report of Hight Gauge Check Block Recorder</h2><p>Location : ".$push_block_code."</p><p>Check Date : ".$check_date."</p><p>Product Type : ".$product_type."</p><p>Head : ".$head[$i]."</p><p>Block : ".$block[$i]."</p><p>Hight Gauge : ".$ketinggian[$i]."</p><p>Judgement : ".$judgementketinggian[$i]."</p></html>";
-
-                // if($judgement[$i] == 'NG'){
-                //   foreach($this->mail as $mail_to){
-                //     Mail::raw([], function($message) use($bodyHtml,$mail_to) {
-                //         $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-                //         $message->to($mail_to);
-                //         $message->subject('NG Report of Recorder Push Block Check');
-                //         $message->setBody($bodyHtml, 'text/html' );
-                //         // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
-                //     });
-                //   }
-                // }
-                // if($judgementketinggian[$i] == 'NG'){
-                //   foreach($this->mail as $mail_to){
-                //     Mail::raw([], function($message) use($bodyHtml2,$mail_to) {
-                //         $message->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia');
-                //         $message->to($mail_to);
-                //         $message->subject('NG Report of Hight Gauge Check Block Recorder');
-                //         $message->setBody($bodyHtml2, 'text/html' );
-                //         // $message->addPart("5% off its awesome\n\nGo get it now!", 'text/plain');
-                //     });
-                //   }
-                // }
               }
 
               $response = array(
                 'status' => true,
                 'message' => 'Success Create Temp',
+                'push_block_id_gen' => $push_block_id_gen
               );
               return Response::json($response);
             }catch(\Exception $e){
@@ -392,6 +403,7 @@ class RecorderProcessController extends Controller
 
               PushBlockRecorderResume::create([
                 'remark' => $remark,
+                'push_block_id_gen' => $request->get('push_block_id_gen'),
                   'check_date' => $request->get('check_date'),
                   'injection_date_head' => $request->get('injection_date_head'),
                   'mesin_head' => $request->get('mesin_head'),
@@ -446,12 +458,100 @@ class RecorderProcessController extends Controller
                   'pic_check' => $request->get('pic_check'),
                 );
                 // foreach($this->mail as $mail_to){
-                    Mail::to($this->mail)->send(new SendEmail($data_height, 'height_check'));
+                $contactList = [];
+                $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+                // $contactList[1] = 'aditya.agassi@music.yamaha.com';
+                    Mail::to($this->mail)->bcc($contactList,'Contact List')->send(new SendEmail($data_height, 'height_check'));
                 // }
               }
 
               $response = array(
                 'status' => true,
+              );
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    function create_parameter(Request $request)
+    {
+          try{    
+              $id_user = Auth::id();
+
+              $name = Auth::user()->name;
+
+              $front = 'FSA';
+
+              if ($request->get('pic_check') == null) {
+                $push_block_id_gen = $front."_".$request->get('check_date')."_".$request->get('product_type')."_".$name;
+              }else{
+                $push_block_id_gen = $front."_".$request->get('check_date')."_".$request->get('product_type')."_".$request->get('pic_check');
+              }
+
+              PushBlockParameter::create([
+                'push_block_code' => $request->get('push_block_code'),
+                'push_block_id_gen' => $push_block_id_gen,
+                  'check_date' => $request->get('check_date'),
+                  'reason' => $request->get('reason'),
+                  'product_type' => $request->get('product_type'),
+                  'mesin' => $request->get('mesin'),
+                  'molding' => $request->get('molding'),
+                  'nh' => $request->get('nh'),
+                  'h1' => $request->get('h1'),
+                  'h2' => $request->get('h2'),
+                  'h3' => $request->get('h3'),
+                  'dryer' => $request->get('dryer'),
+                  'mtc_temp' => $request->get('mtc_temp'),
+                  'mtc_press' => $request->get('mtc_press'),
+                  'chiller_temp' => $request->get('chiller_temp'),
+                  'chiller_press' => $request->get('chiller_press'),
+                  'clamp' => $request->get('clamp'),
+                  'ph4' => $request->get('ph4'),
+                  'ph3' => $request->get('ph3'),
+                  'ph2' => $request->get('ph2'),
+                  'ph1' => $request->get('ph1'),
+                  'trh3' => $request->get('trh3'),
+                  'trh2' => $request->get('trh2'),
+                  'trh1' => $request->get('trh1'),
+                  'vh' => $request->get('vh'),
+                  'pi' => $request->get('pi'),
+                  'ls10' => $request->get('ls10'),
+                  'vi5' => $request->get('vi5'),
+                  'vi4' => $request->get('vi4'),
+                  'vi3' => $request->get('vi3'),
+                  'vi2' => $request->get('vi2'),
+                  'vi1' => $request->get('vi1'),
+                  'ls4' => $request->get('ls4'),
+                  'ls4d' => $request->get('ls4d'),
+                  'ls4c' => $request->get('ls4c'),
+                  'ls4b' => $request->get('ls4b'),
+                  'ls4a' => $request->get('ls4a'),
+                  'ls5' => $request->get('ls5'),
+                  've1' => $request->get('ve1'),
+                  've2' => $request->get('ve2'),
+                  'vr' => $request->get('vr'),
+                  'ls31a' => $request->get('ls31a'),
+                  'ls31' => $request->get('ls31'),
+                  'srn' => $request->get('srn'),
+                  'rpm' => $request->get('rpm'),
+                  'bp' => $request->get('bp'),
+                  'tr1inj' => $request->get('tr1inj'),
+                  'tr3cool' => $request->get('tr3cool'),
+                  'tr4int' => $request->get('tr4int'),
+                  'mincush' => $request->get('mincush'),
+                  'fill' => $request->get('fill'),
+                  'circletime' => $request->get('circletime'),
+                  'created_by' => $id_user
+              ]);
+
+              $response = array(
+                'status' => true,
+                'message' => 'Success Create Parameter',
               );
               return Response::json($response);
             }catch(\Exception $e){
@@ -1481,6 +1581,264 @@ class RecorderProcessController extends Controller
     public function index_torque($remark){
       $name = Auth::user()->name;
       return view('recorder.process.index_torque')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Torque Check')->with('title', 'Recorder Torque Check')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('mesin', $this->mesin)->with('mesin2', $this->mesin)->with('batas_bawah_hm', '15')->with('batas_atas_hm', '73')->with('batas_bawah_mf', '15')->with('batas_atas_mf', '78')->with('remark', $remark);
+    }
+
+    public function indexMachineParameter()
+    {
+      $parameters = PushBlockParameter::orderBy('push_block_parameters.id', 'desc')
+        ->get();
+
+      return view('recorder.process.index_machine_parameter')
+      ->with('page', 'Machine Parameter')
+      ->with('head', 'Machine Parameter')
+      ->with('title', 'Machine Parameter')
+      ->with('title_jp', '???')
+      ->with('mesin', $this->mesin)
+      ->with('mesin2', $this->mesin)
+      ->with('mesin3', $this->mesin)
+      ->with('molding', $this->molding)
+      ->with('molding2', $this->molding)
+      ->with('molding3', $this->molding)
+      ->with('parameter', $parameters)
+      ->with('product_type', $this->product_type)
+      ->with('product_type2', $this->product_type);
+    }
+
+    function get_parameter(Request $request)
+    {
+          try{
+            $detail = PushBlockParameter::find($request->get("id"));
+            $data = array('push_block_id' => $detail->id,
+                          'check_date' => $detail->check_date,
+                          'reason' => $detail->reason,
+                          'product_type' => $detail->product_type,
+                          'mesin' => $detail->mesin,
+                          'molding' => $detail->molding,
+                          'nh' => $detail->nh,
+                          'h1' => $detail->h1,
+                          'h2' => $detail->h2,
+                          'h3' => $detail->h3,
+                          'dryer' => $detail->dryer,
+                          'mtc_temp' => $detail->mtc_temp,
+                          'mtc_press' => $detail->mtc_press,
+                          'chiller_temp' => $detail->chiller_temp,
+                          'chiller_press' => $detail->chiller_press,
+                          'clamp' => $detail->clamp,
+                          'ph4' => $detail->ph4,
+                          'ph3' => $detail->ph3,
+                          'ph2' => $detail->ph2,
+                          'ph1' => $detail->ph1,
+                          'trh3' => $detail->trh3,
+                          'trh2' => $detail->trh2,
+                          'trh1' => $detail->trh1,
+                          'vh' => $detail->vh,
+                          'pi' => $detail->pi,
+                          'ls10' => $detail->ls10,
+                          'vi5' => $detail->vi5,
+                          'vi4' => $detail->vi4,
+                          'vi3' => $detail->vi3,
+                          'vi2' => $detail->vi2,
+                          'vi1' => $detail->vi1,
+                          'ls4' => $detail->ls4,
+                          'ls4d' => $detail->ls4d,
+                          'ls4c' => $detail->ls4c,
+                          'ls4b' => $detail->ls4b,
+                          'ls4a' => $detail->ls4a,
+                          'ls5' => $detail->ls5,
+                          've1' => $detail->ve1,
+                          've2' => $detail->ve2,
+                          'vr' => $detail->vr,
+                          'ls31a' => $detail->ls31a,
+                          'ls31' => $detail->ls31,
+                          'srn' => $detail->srn,
+                          'rpm' => $detail->rpm,
+                          'bp' => $detail->bp,
+                          'tr1inj' => $detail->tr1inj,
+                          'tr3cool' => $detail->tr3cool,
+                          'tr4int' => $detail->tr4int,
+                          'mincush' => $detail->mincush,
+                          'fill' => $detail->fill,
+                          'circletime' => $detail->circletime,
+                        );
+
+            $response = array(
+              'status' => true,
+              'data' => $data
+            );
+            return Response::json($response);
+
+          }
+          catch (QueryException $beacon){
+            $error_code = $beacon->errorInfo[1];
+            if($error_code == 1062){
+             $response = array(
+              'status' => false,
+              'datas' => "Gagal Ambil Data",
+            );
+             return Response::json($response);
+           }
+           else{
+             $response = array(
+              'status' => false,
+              'datas' => "Gagal Ambil Data.",
+            );
+             return Response::json($response);
+            }
+        }
+    }
+
+    function update_parameter(Request $request,$id)
+    {
+          try{    
+              $id_user = Auth::id();
+
+              $parameter = PushBlockParameter::find($id);
+              $parameter->reason = $request->get('reason');
+              $parameter->product_type = $request->get('product_type');
+              $parameter->mesin = $request->get('mesin');
+              $parameter->molding = $request->get('molding');
+              $parameter->nh = $request->get('nh');
+              $parameter->h1 = $request->get('h1');
+              $parameter->h2 = $request->get('h2');
+              $parameter->h3 = $request->get('h3');
+              $parameter->dryer = $request->get('dryer');
+              $parameter->mtc_temp = $request->get('mtc_temp');
+              $parameter->mtc_press = $request->get('mtc_press');
+              $parameter->chiller_temp = $request->get('chiller_temp');
+              $parameter->chiller_press = $request->get('chiller_press');
+              $parameter->clamp = $request->get('clamp');
+              $parameter->ph4 = $request->get('ph4');
+              $parameter->ph3 = $request->get('ph3');
+              $parameter->ph2 = $request->get('ph2');
+              $parameter->ph1 = $request->get('ph1');
+              $parameter->trh3 = $request->get('trh3');
+              $parameter->trh2 = $request->get('trh2');
+              $parameter->trh1 = $request->get('trh1');
+              $parameter->vh = $request->get('vh');
+              $parameter->pi = $request->get('pi');
+              $parameter->ls10 = $request->get('ls10');
+              $parameter->vi5 = $request->get('vi5');
+              $parameter->vi4 = $request->get('vi4');
+              $parameter->vi3 = $request->get('vi3');
+              $parameter->vi2 = $request->get('vi2');
+              $parameter->vi1 = $request->get('vi1');
+              $parameter->ls4 = $request->get('ls4');
+              $parameter->ls4d = $request->get('ls4d');
+              $parameter->ls4c = $request->get('ls4c');
+              $parameter->ls4b = $request->get('ls4b');
+              $parameter->ls4a = $request->get('ls4a');
+              $parameter->ls5 = $request->get('ls5');
+              $parameter->ve1 = $request->get('ve1');
+              $parameter->ve2 = $request->get('ve2');
+              $parameter->vr = $request->get('vr');
+              $parameter->ls31a = $request->get('ls31a');
+              $parameter->ls31 = $request->get('ls31');
+              $parameter->srn = $request->get('srn');
+              $parameter->rpm = $request->get('rpm');
+              $parameter->bp = $request->get('bp');
+              $parameter->tr1inj = $request->get('tr1inj');
+              $parameter->tr3cool = $request->get('tr3cool');
+              $parameter->tr4int = $request->get('tr4int');
+              $parameter->mincush = $request->get('mincush');
+              $parameter->fill = $request->get('fill');
+              $parameter->circletime = $request->get('circletime');
+              $parameter->save();
+
+              $response = array(
+                'status' => true,
+                'message' => 'Success Create Parameter',
+              );
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    function delete_parameter(Request $request,$id)
+    {
+          try{    
+              $id_user = Auth::id();
+
+              $parameter = PushBlockParameter::find($id);
+              $parameter->delete();
+
+              return redirect('/index/machine_parameter')
+              ->with('status', 'Parameter has been deleted.')
+              ->with('page', 'Machine Parameter');
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    public function filterMachineParameter(Request $request)
+    {
+      $mesin = $request->get('mesin_filter');
+      $date_from = $request->get('date_from');
+      $date_to = $request->get('date_to');
+      $datenow = date('Y-m-d');
+
+      if($request->get('date_to') == null){
+        if($request->get('date_from') == null){
+          $date = "";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$datenow."'";
+        }
+      }
+      elseif($request->get('date_to') != null){
+        if($request->get('date_from') == null){
+          $date = "and date(check_date) <= '".$date_to."'";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$date_to."'";
+        }
+      }
+
+      $mesin = '';
+      if($request->get('mesin_filter') != null){
+        $mesins =  explode(",", $request->get('mesin_filter'));
+        for ($i=0; $i < count($mesins); $i++) {
+          $mesin = $mesin."'".$mesins[$i]."'";
+          if($i != (count($mesins)-1)){
+            $mesin = $mesin.',';
+          }
+        }
+        $mesinin = " and `mesin` in (".$mesin.") ";
+      }
+      else{
+        $mesinin = "";
+      }
+
+      $parameters = DB::SELECT("SELECT
+        * 
+      FROM
+        push_block_parameters 
+        where push_block_code = 'First Shot Approval'
+        ".$date." ".$mesinin." ORDER BY
+          push_block_parameters.id DESC");
+
+      return view('recorder.process.index_machine_parameter')
+      ->with('page', 'Machine Parameter')
+      ->with('head', 'Machine Parameter')
+      ->with('title', 'Machine Parameter')
+      ->with('title_jp', '???')
+      ->with('mesin', $this->mesin)
+      ->with('mesin2', $this->mesin)
+      ->with('mesin3', $this->mesin)
+      ->with('molding', $this->molding)
+      ->with('molding2', $this->molding)
+      ->with('molding3', $this->molding)
+      ->with('parameter', $parameters)
+      ->with('product_type', $this->product_type)
+      ->with('product_type2', $this->product_type);
     }
 }
   

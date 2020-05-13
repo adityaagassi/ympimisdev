@@ -33,9 +33,17 @@
 			<a href="{{ url("index/opmesin") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Machine Operationing</a>
 
 			<a href="{{ url("index/machine_operational") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Like Asprova View</a>
+
 			<button type="button" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;" data-toggle="modal" data-target="#push-pull-check-modal">
 				Recorder Push Block Check
 			</button>
+
+			<a href="{{ url('index/machine_parameter') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Machine Parameter</a>
+
+			<!-- <a href="{{ url("index/injection/molding") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Molding Setup</a>
+
+			<a href="{{ url("index/injection/molding_maintenance") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Molding Maintenance</a> -->
+
 			<!-- <a href="{{ url("index/recorder_process_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Push Block Check</a> -->
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
