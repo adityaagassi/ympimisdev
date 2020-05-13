@@ -147,27 +147,27 @@ class WeldingProcessController extends Controller
 	}
 
 	public function indexWeldingJig(){
-		return view('processes.welding.index_jig')->with('page', 'Welding Jig Handling');		
+		return view('processes.welding.jig.index')->with('page', 'Welding Digital Jig Handling');		
 	}
 
 	public function indexWeldingKensaJig(){
 		$title = 'Welding Kensa Jig';
 		$title_jp = '??';
 
-		return view('processes.welding.kensa_jig', array(
+		return view('processes.welding.jig.kensa', array(
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'Welding Kensa Jig');
 	}
 
-	public function indexWeldingRepairJig(){
-		$title = 'Welding Repair Jig';
-		$title_jp = '??';
+	public function indexWeldingJigData(){
+		$title = "Wedling Jig Data";
+		$title_jp = "??";
 
-		return view('processes.welding.display.repair_jig', array(
+		return view('processes.welding.jig.data', array(
 			'title' => $title,
 			'title_jp' => $title_jp
-		))->with('page', 'Welding Repair Jig');
+		))->with('page', 'Welding Jig Data');
 	}
 
 	public function indexEffHandling(){
@@ -1756,8 +1756,8 @@ class WeldingProcessController extends Controller
 
 		if(strlen($request->get('tanggal'))>0){
 			$now = date('Y-m-d', strtotime($request->get('tanggal')));
-			$ngs = $ngs->whereRaw('date(welding_ng_logs.created_at) = "'.$now.'"');
-			$checks = $checks->whereRaw('date(welding_check_logs.created_at) = "'.$now.'"');
+			// $ngs = $ngs->whereRaw('date(welding_ng_logs.created_at) = "'.$now.'"');
+			// $checks = $checks->whereRaw('date(welding_check_logs.created_at) = "'.$now.'"');
 		}
 
 		$ng = db::select("select SUM(quantity) as jumlah,ng_name,SUM(quantity) / (select SUM(welding_check_logs.quantity) as total_check from welding_check_logs where deleted_at is null ".$addlocation." and DATE(welding_check_logs.created_at)='".$now."') * 100 as rate from welding_ng_logs where date(created_at) = '".$now."' ".$addlocation." group by ng_name order by jumlah desc");
