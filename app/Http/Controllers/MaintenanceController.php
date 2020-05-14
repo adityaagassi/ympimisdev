@@ -21,6 +21,7 @@ use App\MaintenanceJobOrder;
 use App\MaintenanceJobProcess;
 use App\Utility;
 use App\UtilityCheck;
+use App\UtilityUse;
 
 use App\Http\Controllers\Controller;
 
@@ -781,9 +782,9 @@ class MaintenanceController extends Controller
 
 		$check = Utility::where("location", "=", $loc)
 		->where("remark", "=", "APAR")
-		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', 'last_check', db::raw('IF(IFNULL(MONTH(last_check), 0) >= '.$request->get('mon').', 1, 0) as cek'), db::raw('IFNULL(FLOOR((DayOfMonth(last_check)-1)/7)+1, FLOOR((DayOfMonth(exp_date)-1)/7)+1) AS `week`'))
+		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', 'last_check', db::raw('DATE_FORMAT(entry_date, "%Y-%m-%d") entry'), db::raw("DAY(entry_date) as hari"), db::raw('IF(DAY(NOW()) >= DAY(entry_date), -1, IF(DAY(NOW()) >= IF(DAY(entry_date)-7 < 0,1,DAY(entry_date)-7) AND DAY(NOW()) <= DAY(entry_date), 0, IF(IFNULL(MONTH(last_check), 0) >= '.$request->get('mon').', 2, 1)))  as cek'), db::raw('IFNULL(FLOOR((DayOfMonth(last_check)-1)/7)+1, FLOOR((DayOfMonth(exp_date)-1)/7)+1) AS `week`'))
 		->orderBy("cek", "ASC")
-		->orderBy("week", "ASC")
+		->orderBy("hari", "ASC")
 		->get();
 
 		$response = array(
@@ -855,7 +856,11 @@ class MaintenanceController extends Controller
 			'replace_list' => $getAparNew,
 		);
 		return Response::json($response);
+	}
 
+	public function fetch_apar_resume_week(Request $request)
+	{
+		
 	}
 
 	public function fetch_apar_resume_detail(Request $request)
@@ -881,6 +886,27 @@ class MaintenanceController extends Controller
 			'status' => true,
 			'check_detail_list' => $detailCheck,
 			'replace_list' => $detailNew,
+		);
+		return Response::json($response);
+	}
+
+	public function check_apar_use(request $request)
+	{
+		$use = new UtilityUse;
+
+		$use->utility_id = $request->get('utility_id');
+		$use->created_by = Auth::user()->username;
+
+		$use->save();
+	}
+
+	public function fetch_apar_use(Request $request)
+	{
+		$apar_use = UtilityUse::leftJoin('utilities', 'utilities.id', '=', 'utility_uses.utility_id')->select('utility_code', 'utility_name', 'location', 'group', 'remark', 'utility_uses.created_at')->orderBy('created_at', "DESC")->get();
+
+		$response = array(
+			'status' => true,
+			'use_list' => $apar_use
 		);
 		return Response::json($response);
 	}

@@ -97,7 +97,7 @@
 		</div>
 
 		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-			<table class="table table-bordered" style="width: 100%; margin-bottom: 0px">
+			<table class="table table-bordered" style="width: 100%; margin-bottom: 0px" id="table_use_list">
 				<thead>
 					<tr>
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 18px;" colspan="5">History of APAR use</th>
@@ -110,7 +110,7 @@
 						<th>Use Date/Time</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="body_use_list">
 				</tbody>
 			</table>
 		</div>
@@ -119,7 +119,7 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title text-center"><b>SCAN QR HERE</b></h4>
+						<h4 class="modal-title text-center" id="judul" style="font-weight: bold;">SCAN QR HERE</h4>
 					</div>
 					<div class="modal-body">
 						<div id='scanner' class="col-xs-12">
@@ -134,8 +134,41 @@
 							</div>									
 						</div>
 
+						<div id="status" class="col-xs-12" style="display: none">
+							<table width="100%" border="1">
+								<tr>
+									<td style="padding: 0px; text-align: center; color: white; background-color: #7e5686; font-size:20px; width: 30%;">CATEGORY</td>
+									<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="apar_category"></td>
+								</tr>
+								<tr>
+									<td style="padding: 0px; text-align: center; color: white; background-color: #7e5686; font-size:20px; width: 30%;">APAR CODE</td>
+									<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="apar_code"></td>
+								</tr>
+								<tr>
+									<td style="padding: 0px; text-align: center; color: white; background-color: #7e5686; font-size:20px; width: 30%;">APAR NAME</td>
+									<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="apar_name"></td>
+								</tr>
+								<tr>
+									<td style="padding: 0px; text-align: center; color: white; background-color: #7e5686; font-size:20px; width: 30%;">LOCATION</td>
+									<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="apar_location"></td>
+								</tr>
+								<tr>
+									<td style="padding: 0px; text-align: center; color: white; background-color: #7e5686; font-size:20px; width: 30%;">TYPE</td>
+									<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="apar_type"></td>
+								</tr>
+							</table>
+							<br>
+							<table width="100%">
+								<tr>
+									<td><button class="btn btn-success pull-left" onclick="use(true)"><i class="fa fa-check"></i> YES</button></td>
+									<td><button class="btn btn-danger pull-right" onclick="use(false)"><i class="fa fa-close"></i> NO</button></td>
+								</tr>
+							</table>
+						</div>
+
 						<p style="visibility: hidden;">camera</p>
 						<input type="hidden" id="apar_code">
+						<input type="hidden" id="apar_id">
 					</div>
 				</div>
 			</div>
@@ -154,10 +187,68 @@
 		});
 
 		var vdo;
+		apar = [];
 
 		jQuery(document).ready(function() {
-			
+			getAparList();
+			getAparUseList();
 		});
+
+		function getAparList() {
+			$.get('{{ url("fetch/maintenance/apar/list") }}', function(result, status, xhr) {
+				$.each(result.apar, function(index, value){
+					apar.push({
+						'apar_id'  : value.id,
+						'apar_code' :  value.utility_code, 
+						'apar_name' :  value.utility_name,
+						'jenis' :  value.type,
+						'lokasi' :  value.group,
+						'kapasitas' :  value.capacity,
+						'lokasi2' :  value.location,
+						'exp_date' :  value.exp_date,
+						'age_left' :  value.age_left,
+						'item' :  value.remark,
+					});
+				});
+			})
+		}
+
+		function getAparUseList() {
+			$.get('{{ url("fetch/maintenance/apar/use/list") }}', function(result, status, xhr) {
+				$('#table_use_list').DataTable().clear();
+				$('#table_use_list').DataTable().destroy();
+				$("#body_use_list").empty();
+
+				body = "";
+				$.each(result.use_list, function(index, value){
+					body += "<tr>";
+					body += "<td>"+value.utility_code+"</td>";
+					body += "<td>"+value.utility_name+"</td>";
+					body += "<td>"+value.group+" - "+value.location+"</td>";
+					body += "<td>"+value.remark+"</td>";
+					body += "<td>"+value.created_at+"</td>";
+					body += "</tr>";
+				});
+				$("#body_use_list").append(body);
+
+				var table = $('#table_use_list').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'paging': true,
+					'lengthChange': false,
+					'searching': false,
+					'ordering': true,
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bAutoWidth": false
+				});
+			})
+		}
 
 		function stopScan() {
 			$('#scanModal').modal('hide');
@@ -251,7 +342,6 @@
 			var arr_selected = [];
 			$.each(apar, function(index, value){
 				if (value.apar_code == code.split("/")[0]) {
-					// console.log(value.apar_name);
 					arr_selected = value;
 					stat = true;
 				}
@@ -259,51 +349,38 @@
 
 			if (stat) {
 				$('#scanner').hide();
-				$('#scanModal').modal('hide');
-				// $("#check").show();
-				$('#check').children().show();
+				$('#status').show();
+				$('#apar_category').text(arr_selected.item);
+				$('#apar_code').text(arr_selected.apar_code);
+				$('#apar_name').text(arr_selected.apar_name);
+				$('#apar_location').text(arr_selected.lokasi2+" - "+arr_selected.lokasi);
+				$('#apar_type').text(arr_selected.jenis);
+				$('#apar_id').val(arr_selected.apar_id);
+				$('#judul').text('Use This Fire Estiquisher?');
 
 				videoOff();
 				openSuccessGritter('Success', 'QR Code Successfully');
-				// console.log(arr_selected);
-				$("#apar_id").val(arr_selected.apar_id);
-				$("#apar_code").text(arr_selected.apar_code);
-				$("#apar_name").text(arr_selected.apar_name);
-				$("#apar_location").text(arr_selected.lokasi2+" - "+arr_selected.lokasi);
-				$("#apar_type").text(arr_selected.jenis);
-				$("#apar_capacity").text(arr_selected.kapasitas);
-
-				var exp_date = "-";
-				if (arr_selected.item == "APAR") {
-					exp_date = arr_selected.age_left+" bulan lagi - "+arr_selected.exp_date;
-				}
-				$("#apar_expired").text(exp_date);
-
-				t_body = "";
-				$("#body_check_list").empty();
-
-				// console.log(apar_checks);
-
-				$.each(apar_checks, function(index, value){
-					var cek = "";
-					if (arr_selected.item == value.remark) {
-						t_body += "<tr>";
-						t_body += "<td style='padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 90%;'>"+value.check_point+"</td>";
-						t_body += "<td style='padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;'><div class='checkbox'>";
-						t_body += "<label><input type='checkbox' class='check'>OK</label></div></td>";
-						t_body += "</tr>";
-					}
-				});
-
-				$("#body_check_list").append(t_body);
-
-				get_history(arr_selected.apar_id);
-
 			} else {
 				openErrorGritter('Error', 'QR Code Not Registered');
 				audio_error.play();
 			}
+			$('#check-modal').modal('hide');
 
+		}
+
+		function use(param) {
+			if (param) {
+				var data = {
+					utility_id : $('#apar_id').val()
+				}
+				$.post('{{ url("use/maintenance/apar") }}', data, function(result, status, xhr) {
+					openSuccessGritter('Success', 'Digunakan');
+					getAparUseList();
+					$("#scanModal").modal('hide');
+				})
+			} else {
+				openInfoGritter('Success', 'Tidak Jadi digunakan');
+			}
 		}
 
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -314,6 +391,17 @@
 				text: message,
 				class_name: 'growl-success',
 				image: '{{ url("images/image-screen.png") }}',
+				sticky: false,
+				time: '4000'
+			});
+		}
+
+		function openInfoGritter(title, message){
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-info',
+				image: '{{ url("images/image-info.png") }}',
 				sticky: false,
 				time: '4000'
 			});

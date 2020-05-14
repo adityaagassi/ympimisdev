@@ -2654,14 +2654,17 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/apar/list/monitoring', 'MaintenanceController@fetch_apar_monitoring');
 	Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
 	Route::get('fetch/maintenance/apar/resume', 'MaintenanceController@fetch_apar_resume');
+	Route::get('fetch/maintenance/apar/resumeWeek', 'MaintenanceController@fetch_apar_resume_week');
 	Route::get('fetch/maintenance/apar/resume/detail', 'MaintenanceController@fetch_apar_resume_detail');
-
-Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_check}', 'MaintenanceController@print_apar2');
+	Route::get('fetch/maintenance/apar/use/list', 'MaintenanceController@fetch_apar_use');
+	Route::get('fetch/maintenance/apar/use/check', 'MaintenanceController@check_apar_use');
 	// Route::get('fetch/maintenance/apar/byCode', 'MaintenanceController@fetchAparbyCode');
 
 	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
 	Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
+	Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
+
 	Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_check}', 'MaintenanceController@print_apar2');
 });
 

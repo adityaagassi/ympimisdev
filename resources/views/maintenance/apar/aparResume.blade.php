@@ -103,6 +103,7 @@
     </div>
     <div class="col-xs-12">
       <div id="resume_chart"></div>
+      <div id="resume_chart_weekly"></div>
     </div>
 
     <div class="modal fade" id="modal_detail">
@@ -201,8 +202,93 @@
 
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
-    drawChart();
+
+    // RESUME APAR PER BULAN
+    // drawChart();
+
+    drawChartWeek();
   });
+
+  function drawChartWeek() {
+    $.get('{{ url("fetch/maintenance/apar/resumeWeek") }}', function(result, status, xhr) {
+
+      var ctg = [];
+      var all_check = [];
+      var checked = [];
+      var exp = [];
+      var replace = [];
+
+      $.each(result.check_list, function(index, value){
+        var nowdate = new Date('2020/'+value.mon.split('-')[1]+'/01');
+        
+        ctg.push(months[nowdate.getMonth()]+" "+nowdate.getFullYear());
+
+
+        all_check.push(value.jml_tot);
+        checked.push(value.jml);
+      })
+
+
+      Highcharts.chart('resume_chart', {
+
+        chart: {
+          type: 'column'
+        },
+
+        title: {
+          text: 'APAR Resume'
+        },
+
+        xAxis: {
+          categories: ctg
+        },
+
+        yAxis: {
+          allowDecimals: false,
+          min: 0,
+          title: {
+            text: 'Number of Fire Extinguisher'
+          }
+        },
+
+        tooltip: {
+          formatter: function () {
+            return '<b>' + this.x + '</b><br/>' +
+            this.series.name + ': ' + this.y + '<br/>' +
+            'Total: ' + this.point.stackTotal;
+          }
+        },
+
+        credits: {
+          enabled: false
+        }
+        ,
+
+        plotOptions: {
+          column: {
+            stacking: 'normal',
+            point: {
+              events: {
+                click: function () {
+                  detail(this.category);
+                }
+              }
+            }
+          }
+        },
+
+        series: [{
+          name: 'Total Check',
+          data: all_check,
+        }, {
+          name: 'Checked',
+          data: checked,
+          stack: 'check'
+        }]
+      });
+
+    })
+  }
 
   function drawChart() {
     $.get('{{ url("fetch/maintenance/apar/resume") }}', function(result, status, xhr) {

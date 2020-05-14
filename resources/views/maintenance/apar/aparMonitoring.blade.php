@@ -88,6 +88,24 @@
       background-color: #f55359;
     }
   }
+
+  .alert2 {
+    -webkit-animation: alerts 1s infinite;  /* Safari 4+ */
+    -moz-animation: alerts 1s infinite;  /* Fx 5+ */
+    -o-animation: alerts 1s infinite;  /* Opera 12+ */
+    animation: alerts 1s infinite;  /* IE 10+, Fx 29+ */
+  }
+  
+  @-webkit-keyframes alerts {
+    0%, 49% {
+      background: #fffcb7; 
+      color: #333;
+    }
+    50%, 100% {
+      background-color: #262626;
+      color: #fff;
+    }
+  }
 </style>
 @stop
 @section('header')
@@ -127,7 +145,7 @@
             <th>APAR CODE</th>
             <th>APAR NAME</th>
             <th>LOCATION</th>
-            <th>LAST CHECK</th>
+            <th>MUST CHECK BEFORE</th>
             <th>EXP. DATE</th>
           </tr>
         </thead>
@@ -189,6 +207,7 @@
 
       $("#btn_apar").hide();
       var modes = "apar";
+      var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
       jQuery(document).ready(function() {
         $('body').toggleClass("sidebar-collapse");
@@ -218,26 +237,26 @@
             bg = "";
 
             var nowdate = new Date();
+            var entrydate = new Date(value.entry);
 
-            if (value.cek == 1) {
+            if (value.cek == 2) {
               bg = "style='background-color:#54f775'";
               checked++;
+            } else if(value.cek == 1) {
+              bg = "";
+            } else if(value.cek == 0){
+              bg = "class='alert'";
             } else {
-              if (value.week <= Math.floor(nowdate.getDate() / 7)) {
-                bg = "class='alert'";
-              } else {
-                bg = "";
-              }
+              bg = "class='alert2'";
             }
 
             body += "<tr>";
             body += "<td "+bg+">"+value.utility_code+"</td>";
             body += "<td "+bg+">"+value.utility_name+"</td>";
             body += "<td "+bg+">"+value.location+"</td>";
-            body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
+            body += "<td "+bg+">"+pad(entrydate.getDate(),2)+" "+months[nowdate.getMonth()]+" "+nowdate.getFullYear()+"</td>";
             body += "<td "+bg+">"+value.exp_date2+"</td>";
             body += "</tr>";
-
           })
 
 
@@ -347,6 +366,12 @@
 
     function isValidDate(d) {
       return d instanceof Date && !isNaN(d);
+    }
+
+    function pad(num, size) {
+      var s = num+"";
+      while (s.length < size) s = "0" + s;
+      return s;
     }
 
     $(".datepicker").datepicker( {
