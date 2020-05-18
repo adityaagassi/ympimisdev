@@ -98,11 +98,20 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
   <div class="row">   
+    <div class="col-xs-2 pull-right">
+      <div class="input-group date">
+        <div class="input-group-addon bg-purple" style="border: none;">
+          <i class="fa fa-calendar"></i>
+        </div>
+        <input type="text" class="form-control datepicker" id="bulan" onchange="drawChartWeek()" placeholder="Pilih Bulan">
+      </div>
+    </div>
+
     <div class="col-xs-12">
       <h2 style="color: white; text-align: center" id="judul"></h2>
     </div>
     <div class="col-xs-12">
-      <div id="resume_chart"></div>
+      <!-- <div id="resume_chart"></div> -->
       <div id="resume_chart_weekly"></div>
     </div>
 
@@ -126,6 +135,7 @@
                       <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detail_check">
                         <thead style="background-color: rgba(126,86,134,.7);">
                           <tr>
+                            <th>No.</th>
                             <th>APAR Code</th>
                             <th>APAR Name</th>
                             <th>Location</th>
@@ -140,6 +150,7 @@
                       <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detail_expired">
                         <thead style="background-color: rgba(126,86,134,.7);">
                           <tr>
+                            <th>No.</th>
                             <th>APAR Code</th>
                             <th>APAR Name</th>
                             <th>Location</th>
@@ -153,6 +164,7 @@
                       <table class="table table-bordered table-stripped table-responsive" style="width: 100%" id="detail_replace">
                         <thead style="background-color: rgba(126,86,134,.7);">
                           <tr>
+                            <th>No.</th>
                             <th>APAR Code</th>
                             <th>APAR Name</th>
                             <th>Location</th>
@@ -210,33 +222,50 @@
   });
 
   function drawChartWeek() {
-    $.get('{{ url("fetch/maintenance/apar/resumeWeek") }}', function(result, status, xhr) {
+    var data = {
+      mon : $("#bulan").val()
+    }
+
+    $.get('{{ url("fetch/maintenance/apar/resumeWeek") }}', data, function(result, status, xhr) {
 
       var ctg = [];
       var all_check = [];
       var checked = [];
       var exp = [];
       var replace = [];
+      var mon = "";
+      var mondate;
 
-      $.each(result.check_list, function(index, value){
-        var nowdate = new Date('2020/'+value.mon.split('-')[1]+'/01');
+      $.each(result.cek_week, function(index, value){
+        mon = value.mon+"-01";
+        mon = mon.split('-');
+        mon = mon.join('/');
+
+        mondate = new Date(mon);
+        // var nowdate = new Date('2020/'+value.mon.split('-')[1]+'/01');
         
-        ctg.push(months[nowdate.getMonth()]+" "+nowdate.getFullYear());
+        ctg.push(value.wek);
 
 
-        all_check.push(value.jml_tot);
-        checked.push(value.jml);
+        all_check.push(parseInt(value.uncek) - parseInt(value.cek));
+        checked.push(parseInt(value.cek));
+      })
+
+      $.each(result.replace_week, function(index, value){
+        exp.push(value.exp);
+        replace.push(value.entry);
       })
 
 
-      Highcharts.chart('resume_chart', {
+      Highcharts.chart('resume_chart_weekly', {
 
         chart: {
           type: 'column'
         },
 
         title: {
-          text: 'APAR Resume'
+          text: 'APAR Resume Weekly <br />'+months[mondate.getMonth()]+" "+mondate.getFullYear(),
+          html: true
         },
 
         xAxis: {
@@ -270,7 +299,7 @@
             point: {
               events: {
                 click: function () {
-                  detail(this.category);
+                  detail_week(this.category, months[mondate.getMonth()]+" "+mondate.getFullYear());
                 }
               }
             }
@@ -280,10 +309,19 @@
         series: [{
           name: 'Total Check',
           data: all_check,
+          stack: 'check'
         }, {
           name: 'Checked',
           data: checked,
           stack: 'check'
+        }, {
+          name: 'Replaced / New',
+          data: replace,
+          stack: 'exp'
+        }, {
+          name: 'Expired',
+          data: exp,
+          stack: 'exp'
         }]
       });
 
@@ -385,7 +423,6 @@
   }
 
   function detail(mon) {
-    console.log(mon);
     $("#judul_modal").html("<b>"+mon+"</b>");
     $("#modal_detail").modal('show');
 
@@ -454,11 +491,104 @@
 
   }
 
+  function detail_week(week, title) {
 
+    var mon = $("#bulan").val();
+
+    $("#judul_modal").html("<b>"+title+"</b> week #"+week);
+    $("#modal_detail").modal('show');
+
+    var data = {
+      mon: mon,
+      week: week
+    }
+
+    $.get('{{ url("fetch/maintenance/apar/resume/detail/week") }}', data, function(result, status, xhr) {
+     $("#body_check").empty();
+     $("#body_expired").empty();
+     $("#body_replace").empty();
+
+     body_check_detail = "";
+     body_expired = "";
+     body_replace = "";
+
+     num_cek = 1;
+     num_exp = 1;
+     num_new = 1;
+
+     var arr_cek_all = result.check_detail_list;
+     console.log(arr_cek_all);
+
+     $.each(arr_cek_all, function(index, value){
+      $.each(result.check_detail_list, function(index2, value2){
+        if (value.utility_code == value2.utility_code && value2.cek == 1 && value.cek == 0) {
+            arr_cek_all[index] = "kosong";
+        }
+
+      })
+    })
+
+     console.table(arr_cek_all);
+
+     $.each(result.check_detail_list, function(index, value){
+
+      if (value.cek == 1) {
+        bg = "style='background-color:#54f775'";
+      } else {
+        bg = "style='background-color:#f45b5b; color:white'";
+      }
+
+
+      body_check_detail += "<tr>";
+      body_check_detail += "<td "+bg+">"+num_cek+"</td>";
+      body_check_detail += "<td "+bg+">"+value.utility_code+"</td>";
+      body_check_detail += "<td "+bg+">"+value.utility_name+"</td>";
+      body_check_detail += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+      body_check_detail += "</tr>";
+
+      num_cek++;
+    })
+
+     $("#body_check").append(body_check_detail);
+
+     $.each(result.replace_list, function(index, value){
+      if (value.exp == 1) {
+        bg = "style='background-color:#f45b5b; color:white'";
+
+        body_expired += "<tr>";
+        body_expired += "<td "+bg+">"+num_exp+"</td>";
+        body_expired += "<td "+bg+">"+value.utility_code+"</td>";
+        body_expired += "<td "+bg+">"+value.utility_name+"</td>";
+        body_expired += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+        body_expired += "<td "+bg+">"+value.dt+"</td>";
+        body_expired += "</tr>";
+
+        num_exp++;
+      } else {
+        bg = "style='background-color:#54f775'";
+
+        body_replace += "<tr>";
+        body_replace += "<td "+bg+">"+num_new+"</td>";
+        body_replace += "<td "+bg+">"+value.utility_code+"</td>";
+        body_replace += "<td "+bg+">"+value.utility_name+"</td>";
+        body_replace += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+        body_replace += "<td "+bg+">"+value.dt+"</td>";
+        body_replace += "</tr>";
+
+        num_new++;
+      }
+    })
+
+     $("#body_expired").append(body_expired);
+     $("#body_replace").append(body_replace);
+
+   })
+
+  }
 
   $(".datepicker").datepicker( {
     autoclose: true,
-    format: "mm-yyyy",
+    format: "yyyy-mm",
     viewMode: "months", 
     minViewMode: "months"
   });

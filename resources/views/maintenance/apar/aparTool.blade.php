@@ -62,7 +62,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-12" style="display: none">
 			<div class="box box-solid">
 				<div class="box-body">
 					<div class="row">

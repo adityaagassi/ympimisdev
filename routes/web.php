@@ -2655,6 +2655,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
 	Route::get('fetch/maintenance/apar/resume', 'MaintenanceController@fetch_apar_resume');
 	Route::get('fetch/maintenance/apar/resumeWeek', 'MaintenanceController@fetch_apar_resume_week');
+	Route::get('fetch/maintenance/apar/resume/detail/week', 'MaintenanceController@fetch_apar_resume_detail_week');
 	Route::get('fetch/maintenance/apar/resume/detail', 'MaintenanceController@fetch_apar_resume_detail');
 	Route::get('fetch/maintenance/apar/use/list', 'MaintenanceController@fetch_apar_use');
 	Route::get('fetch/maintenance/apar/use/check', 'MaintenanceController@check_apar_use');

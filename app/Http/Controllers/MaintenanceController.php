@@ -782,7 +782,7 @@ class MaintenanceController extends Controller
 
 		$check = Utility::where("location", "=", $loc)
 		->where("remark", "=", "APAR")
-		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', 'last_check', db::raw('DATE_FORMAT(entry_date, "%Y-%m-%d") entry'), db::raw("DAY(entry_date) as hari"), db::raw('IF(DAY(NOW()) >= DAY(entry_date), -1, IF(DAY(NOW()) >= IF(DAY(entry_date)-7 < 0,1,DAY(entry_date)-7) AND DAY(NOW()) <= DAY(entry_date), 0, IF(IFNULL(MONTH(last_check), 0) >= '.$request->get('mon').', 2, 1)))  as cek'), db::raw('IFNULL(FLOOR((DayOfMonth(last_check)-1)/7)+1, FLOOR((DayOfMonth(exp_date)-1)/7)+1) AS `week`'))
+		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', 'last_check', db::raw('DATE_FORMAT(entry_date, "%Y-%m-%d") entry'), db::raw("DAY(entry_date) as hari"), db::raw('IF(DAY(NOW()) >= DAY(entry_date), -1, IF(IFNULL(MONTH(last_check), 0) >= '.$request->get('mon').', 2, IF(DAY(NOW()) >= IF(DAY(entry_date)-7 < 0,1,DAY(entry_date)-7) AND DAY(NOW()) <= DAY(entry_date), 0, 1)))  as cek'), db::raw('IFNULL(FLOOR((DayOfMonth(last_check)-1)/7)+1, FLOOR((DayOfMonth(exp_date)-1)/7)+1) AS `week`'))
 		->orderBy("cek", "ASC")
 		->orderBy("hari", "ASC")
 		->get();
@@ -860,7 +860,60 @@ class MaintenanceController extends Controller
 
 	public function fetch_apar_resume_week(Request $request)
 	{
+		$ym = Date('Y-m');
+
+		$mon = Date('m');
+
+		if ($request->get('mon')) {
+			$ym = $request->get('mon');
+
+			$mon = explode("-", $request->get('mon'));
+			$mon = $mon[1];
+		}
+
+		$mon = intval($mon);
+
+		if ($mon % 2 === 0) {
+			$loc = "Factory I";
+		} else if ($mon % 2 === 1){
+			$loc = "Factory II";
+		}
+
+		$cek_week = db::select('select "'.$ym.'" as mon, wek, sum(jml_cek) as uncek, sum(cek) as cek from
+			(SELECT wek, COUNT(weeks) as jml_cek, 0 as cek from
+			(SELECT IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) as weeks from utilities where remark = "APAR" and location = "'.$loc.'") un
+			right join
+			(select FLOOR((DayOfMonth(week_date)-1)/7)+1 as wek from weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = "'.$ym.'" GROUP BY wek) mstr on mstr.wek+1 = un.weeks
+			group by wek
+
+			union all
+			select mstr.wek, 0 as jml_cek, count(cek.wek) as cek from
+			(select utility_id, FLOOR((DayOfMonth(check_date)-1)/7)+1 as wek from utility_checks 
+			left join utilities on utilities.id = utility_checks.utility_id
+			where location = "'.$loc.'" and utilities.remark = "APAR" and DATE_FORMAT(check_date,"%Y-%m") = "'.$ym.'"
+			group by utility_id, wek) cek
+			right join
+			(select FLOOR((DayOfMonth(week_date)-1)/7)+1 as wek from weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = "'.$ym.'" GROUP BY wek) mstr on mstr.wek = cek.wek
+			group by mstr.wek) semua
+			group by wek');
+
+		$replace_week = db::select('select "'.$ym.'" as mon, mstr.wek, IFNULL(entry,0) entry, IFNULL(exp,0) exp from
+			(select 0 as entry, count(exp_date) as exp, FLOOR((DayOfMonth(exp_date)-1)/7)+1 as wek from utilities where remark = "APAR" and location = "'.$loc.'" and DATE_FORMAT(exp_date,"%Y-%m") = "'.$ym.'"
+			group by wek
+
+			union all
+
+			select count(entry_date) as entry, 0 as exp, FLOOR((DayOfMonth(exp_date)-1)/7)+1 as wek from utilities where remark = "APAR" and location = "'.$loc.'" and DATE_FORMAT(entry_date,"%Y-%m") = "'.$ym.'"
+			group by wek
+			) as replaced
+			right join (select FLOOR((DayOfMonth(week_date)-1)/7)+1 as wek from weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = "'.$ym.'" GROUP BY wek) mstr on mstr.wek = replaced.wek');
 		
+		$response = array(
+			'status' => true,
+			'cek_week' => $cek_week,
+			'replace_week' => $replace_week,
+		);
+		return Response::json($response);
 	}
 
 	public function fetch_apar_resume_detail(Request $request)
@@ -886,6 +939,53 @@ class MaintenanceController extends Controller
 			'status' => true,
 			'check_detail_list' => $detailCheck,
 			'replace_list' => $detailNew,
+		);
+		return Response::json($response);
+	}
+
+	public function fetch_apar_resume_detail_week(Request $request)
+	{
+		DB::connection()->enableQueryLog();
+		$ym = Date('Y-m');
+
+		$mon = Date('m');
+
+		if ($request->get('mon')) {
+			$ym = $request->get('mon');
+
+			$mon = explode("-", $request->get('mon'));
+			$mon = $mon[1];
+		}
+
+		$mon = intval($mon);
+
+		if ($mon % 2 === 0) {
+			$loc = "Factory I";
+		} else if ($mon % 2 === 1){
+			$loc = "Factory II";
+		}
+
+
+		$detail_cek = db::select('select * from 
+			(SELECT utility_code, utility_name, location, `group`, IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) as wek, 0 as cek from utilities where remark = "APAR" and location = "'.$loc.'"
+			union all
+			select utility_code, utility_name, location, `group`, FLOOR((DayOfMonth(check_date)-1)/7)+1+1 as wek, 1 as cek from utility_checks 
+			left join utilities on utilities.id = utility_checks.utility_id
+			where location = "'.$loc.'" and utilities.remark = "APAR" and DATE_FORMAT(check_date,"%Y-%m") = "'.$ym.'"
+			group by utility_code, utility_name, location, `group`, wek) semua
+			where wek = '.$request->get('week').'+1');
+
+		$detail_replace = db::select('select * from
+			(select utility_code, utility_name, location, `group`, FLOOR((DayOfMonth(exp_date)-1)/7)+1 as wek, exp_date as dt, 1 as exp from utilities where remark = "APAR" and location = "'.$loc.'" and DATE_FORMAT(exp_date,"%Y-%m") = "'.$ym.'"
+			union all
+			select utility_code, utility_name, location, `group`, FLOOR((DayOfMonth(exp_date)-1)/7)+1 as wek, DATE_FORMAT(entry_date,"%Y-%m-%d") as dt, 0 as exp from utilities where remark = "APAR" and location = "'.$loc.'" and DATE_FORMAT(entry_date,"%Y-%m") = "'.$ym.'") as semua
+			where wek = '.$request->get('week'));
+
+		$response = array(
+			'status' => true,
+			'check_detail_list' => $detail_cek,
+			'replace_list' => $detail_replace,
+			'query' => DB::getQueryLog()
 		);
 		return Response::json($response);
 	}
