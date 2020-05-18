@@ -244,7 +244,7 @@
         mondate = new Date(mon);
         // var nowdate = new Date('2020/'+value.mon.split('-')[1]+'/01');
         
-        ctg.push(value.wek);
+        ctg.push("Week "+value.wek);
 
 
         all_check.push(parseInt(value.uncek) - parseInt(value.cek));
@@ -269,14 +269,25 @@
         },
 
         xAxis: {
-          categories: ctg
+          categories: ctg,
+          labels: {
+            style: {
+              fontSize : '18px'
+            }
+          }
         },
 
         yAxis: {
           allowDecimals: false,
-          min: 0,
           title: {
             text: 'Number of Fire Extinguisher'
+          },
+          stackLabels: {
+            enabled: true,
+            align: 'center',
+            style : {
+              fontSize : '15px'
+            }
           }
         },
 
@@ -290,8 +301,7 @@
 
         credits: {
           enabled: false
-        }
-        ,
+        },
 
         plotOptions: {
           column: {
@@ -301,6 +311,12 @@
                 click: function () {
                   detail_week(this.category, months[mondate.getMonth()]+" "+mondate.getFullYear());
                 }
+              }
+            },
+            dataLabels: {
+              enabled: true,
+              style : {
+                fontSize : '18px'
               }
             }
           }
@@ -494,13 +510,15 @@
   function detail_week(week, title) {
 
     var mon = $("#bulan").val();
+    var wek = week.split(' ')[1];
+    console.log(wek);
 
-    $("#judul_modal").html("<b>"+title+"</b> week #"+week);
+    $("#judul_modal").html("<b>"+title+"</b> "+week);
     $("#modal_detail").modal('show');
 
     var data = {
       mon: mon,
-      week: week
+      week: wek
     }
 
     $.get('{{ url("fetch/maintenance/apar/resume/detail/week") }}', data, function(result, status, xhr) {
@@ -517,18 +535,15 @@
      num_new = 1;
 
      var arr_cek_all = result.check_detail_list;
-     console.log(arr_cek_all);
 
      $.each(arr_cek_all, function(index, value){
       $.each(result.check_detail_list, function(index2, value2){
         if (value.utility_code == value2.utility_code && value2.cek == 1 && value.cek == 0) {
-            arr_cek_all[index] = "kosong";
+          arr_cek_all[index] = "kosong";
         }
 
       })
     })
-
-     console.table(arr_cek_all);
 
      $.each(result.check_detail_list, function(index, value){
 
