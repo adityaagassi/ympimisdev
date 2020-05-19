@@ -598,7 +598,9 @@ class RecorderProcessController extends Controller
 
     public function report_push_block($remark)
     {
-        $push_block_check = PushBlockRecorder::where('push_block_code',$remark)->orderBy('push_block_recorders.id','desc')
+        $from = date('Y-m').'-01';
+        $to = date('Y-m-d');
+        $push_block_check = PushBlockRecorder::where('push_block_code',$remark)->orderBy('push_block_recorders.id','desc')->whereBetween('check_date', [$from, $to])
               ->get();
 
         $data = array('push_block_check' => $push_block_check,
