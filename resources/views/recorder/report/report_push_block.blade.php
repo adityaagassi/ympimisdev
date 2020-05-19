@@ -130,45 +130,6 @@
 							</form>
 						</div>
 						<div class="col-xs-6">
-							<!-- <div class="box-header">
-								<h3 class="box-title">Save PDF</h3>
-							</div>
-							<form role="form" method="post" action="{{url('index/recorder/print_report_push_block/'.$remark)}}">
-								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-								<div class="col-md-12">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label for="">Date From</label>
-											<div class="input-group date">
-												<div class="input-group-addon bg-white">
-													<i class="fa fa-calendar"></i>
-												</div>
-												<input type="text" class="form-control datepicker" id="date_from_print" name="date_from_print" placeholder="Select Date From" autocomplete="off" required>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label for="">Date To</label>
-											<div class="input-group date">
-												<div class="input-group-addon bg-white">
-													<i class="fa fa-calendar"></i>
-												</div>
-												<input type="text" class="form-control datepicker" id="date_to_print" name="date_to_print" placeholder="Select Date To" autocomplete="off" required>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-12">
-								</div>
-								<div class="col-md-12">
-									<div class="col-md-12">
-										<div class="form-group pull-right">
-											<button type="submit" class="btn btn-primary col-sm-14">Save PDF</button>
-										</div>
-									</div>
-								</div>
-							</form> -->
 						</div>
 					</div>
 					<div class="row">
@@ -195,29 +156,31 @@
 											</tr>
 										</thead>
 										<tbody>
-											@foreach($push_block_check as $push_block_check)
-											<tr>
-												<td>{{ $push_block_check->check_date }}</td>
-												<td>{{ $push_block_check->injection_date_head }}</td>
-												<td>{{ $push_block_check->mesin_head }}</td>
-												<td>{{ $push_block_check->injection_date_block }}</td>
-												<td>{{ $push_block_check->mesin_block }}</td>
-												<td>{{ $push_block_check->product_type }}</td>
-												<td>{{ $push_block_check->head }}</td>
-												<td>{{ $push_block_check->block }}</td>
-												<td>{{ $push_block_check->push_pull }}</td>
-												<td>{{ $push_block_check->judgement }}</td>
-												<td>{{ $push_block_check->ketinggian }}</td>
-												<td>{{ $push_block_check->judgement2 }}</td>
-												<td>{{ $push_block_check->pic_check }}</td>
-												<td><center>
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_push_block('{{ url("index/recorder/update") }}','{{ $push_block_check->id }}');">
-											               <i class="fa fa-edit"></i>
-											            </button>
-													</center>
-												</td>
-											</tr>
-											@endforeach
+											<?php if (ISSET($push_block_check)): ?>
+												@foreach($push_block_check as $push_block_check)
+												<tr>
+													<td>{{ $push_block_check->check_date }}</td>
+													<td>{{ $push_block_check->injection_date_head }}</td>
+													<td>{{ $push_block_check->mesin_head }}</td>
+													<td>{{ $push_block_check->injection_date_block }}</td>
+													<td>{{ $push_block_check->mesin_block }}</td>
+													<td>{{ $push_block_check->product_type }}</td>
+													<td>{{ $push_block_check->head }}</td>
+													<td>{{ $push_block_check->block }}</td>
+													<td>{{ $push_block_check->push_pull }}</td>
+													<td>{{ $push_block_check->judgement }}</td>
+													<td>{{ $push_block_check->ketinggian }}</td>
+													<td>{{ $push_block_check->judgement2 }}</td>
+													<td>{{ $push_block_check->pic_check }}</td>
+													<td><center>
+															<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_push_block('{{ url("index/recorder/update") }}','{{ $push_block_check->id }}');">
+												               <i class="fa fa-edit"></i>
+												            </button>
+														</center>
+													</td>
+												</tr>
+												@endforeach
+											<?php endif ?>
 										</tbody>
 										<tfoot>
 											<tr>
