@@ -416,7 +416,7 @@ class MiraiMobileController extends Controller
 
   public function fetchLocationDetail(Request $request)
   {
-    if ($request->get('department') != "" and $request->get('department') != 'Management Information System') {
+    if ($request->get('department') != "" && $request->get('department') != 'Management Information System') {
       $dept = "AND employees.department = '".$request->get('department')."'";
     }else{
       $dept = "";
