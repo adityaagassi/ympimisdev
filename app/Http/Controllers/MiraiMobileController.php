@@ -29,10 +29,18 @@ class MiraiMobileController extends Controller
     $title = 'Employee Health Report';
     $title_jp = '従業員の健康報告';
 
+
+  if(Auth::user()->role_code == 'HR' || Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
     return view('mirai_mobile.report_health', array(
       'title' => $title,
       'title_jp' => $title_jp
     ))->with('page', 'Employee Health Report');
+  }
+
+    return view('404',  
+      array('message' => 'Silahkan menghubungi bagian HR untuk data absensi MIRAI Mobile.'
+      )
+    );
   }
 
   public function shift(){
@@ -364,11 +372,19 @@ class MiraiMobileController extends Controller
   public function location(){
     $tglnow = date('Y-m-d');
 
+  if(Auth::user()->role_code == 'HR' || Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
+
     return view('mirai_mobile.emp_location',  
       array('title' => 'Resume Employee Location', 
         'title_jp' => ''
       )
     )->with('page', 'Resume Employee Location');
+  }
+
+  return view('404',  
+      array('message' => 'Silahkan menghubungi bagian HR untuk data absensi MIRAI Mobile.'
+      )
+    );
   }
 
   public function fetchLocation()
@@ -384,7 +400,7 @@ class MiraiMobileController extends Controller
       left join employees on employees.employee_id = act.employee_id
       join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = act.employee_id AND all_groups.tanggal = act.answer_date
       where act.city <> employees.kota and answer_date >= '2020-04-13'
-      and employees.department is not null
+      and employees.department is not null and employees.department <> 'Management Information System'
       group by employees.department, answer_date
       ");
 
@@ -471,7 +487,7 @@ class MiraiMobileController extends Controller
       left join employees on employees.employee_id = act.employee_id
       join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = act.employee_id AND all_groups.tanggal = act.answer_date
       where act.city <> employees.kota and answer_date >= '2020-04-13'
-      and employees.department is not null
+      and employees.department is not null and empliyees.department <> 'Management Information System'
       ");
 
     $data = array(

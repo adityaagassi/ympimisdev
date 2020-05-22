@@ -20,6 +20,7 @@ Route::get('trial2', 'TrialController@trial2');
 
 
 Route::get('fetch_trial2', 'StockTakingController@printSummary');
+Route::get('trial_print', 'StockTakingController@printSummary');
 
 Route::get('trial_loc', 'TrialController@trialLoc');
 Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
@@ -2681,6 +2682,7 @@ Route::get('fetch/assembly/ng_temp_by_id', 'AssemblyProcessController@fetchNgTem
 Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');
 Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNgTemp');
 Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');
+Route::get('fetch/assembly/get_process_before', 'AssemblyProcessController@getProcessBefore');
 Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexFlutePrintLabel');
 
 Route::get('index/board/{location}', 'AssemblyProcessController@indexAssemblyBoard');

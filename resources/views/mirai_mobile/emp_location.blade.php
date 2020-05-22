@@ -75,7 +75,7 @@
 			</div>
 		</div>
 		<div class="col-xs-1">
-			<button id="search" style="width: 100%" onClick="detailAll($('#tanggal').val())" class="btn bg-olive">Download All</button>
+			<!-- <button id="search" style="width: 100%" onClick="detailAll($('#tanggal').val())" class="btn bg-olive">Download All</button> -->
 		</div>
 		<form method="GET" action="{{ url("export/mirai_mobile/report_location") }}">
 			<div class="col-xs-1">
