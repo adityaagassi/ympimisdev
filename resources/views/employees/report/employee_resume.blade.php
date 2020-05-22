@@ -260,7 +260,7 @@
 	jQuery(document).ready(function() {
 		$('#datefrom').datepicker({
 			<?php $tgl_max = date('m-Y') ?>
-			format: "mm-yyyy",
+			format: "yyyy-mm",
 			startView: "months", 
 			minViewMode: "months",
 			autoclose: true,
@@ -269,7 +269,7 @@
 		});
 		$('#dateto').datepicker({
 			<?php $tgl_max = date('m-Y') ?>
-			format: "mm-yyyy",
+			format: "yyyy-mm",
 			startView: "months", 
 			minViewMode: "months",
 			autoclose: true,
@@ -306,9 +306,23 @@
 
 	function fillTable(){
 		$('#loading').show();
+		var datefrom = $('#datefrom').val();
+		var dateto = $('#dateto').val();
+		var cost_center_code = $('#cost_center_code').val();
+		var section = $('#section').val();
+		var department = $('#department').val();
+		var group = $('#group').val();
+		var employee_id = $('#employee_id').val();
+		
 		var data = {
-
-		}		
+			datefrom:datefrom,
+			dateto:dateto,
+			cost_center_code:cost_center_code,
+			section:section,
+			department:department,
+			group:group,
+			employee_id:employee_id,
+		}	
 		$.get('{{ url("fetch/report/employee_resume") }}', data, function(result, status, xhr) {
 			if(result.status){
 				var tableData = "";

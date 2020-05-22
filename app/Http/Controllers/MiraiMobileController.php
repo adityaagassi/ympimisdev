@@ -390,7 +390,7 @@ class MiraiMobileController extends Controller
   public function fetchLocation()
   {
 
-    $employee_location = db::connection('mobile')->select("SELECT act.answer_date, employees.department, if(employees.department = 'Management Information System', 0, count(act.employee_id)) as jumlah from
+    $employee_location = db::connection('mobile')->select("SELECT act.answer_date, employees.department, if(employees.department = 'Management Information System' and act.answer_date >= '2020-04-15', 0, count(act.employee_id)) as jumlah from
       (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
       WHERE id IN (
       SELECT MIN(id)
@@ -399,7 +399,7 @@ class MiraiMobileController extends Controller
       )) as act
       left join employees on employees.employee_id = act.employee_id
       join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = act.employee_id AND all_groups.tanggal = act.answer_date
-      where act.city <> employees.kota and answer_date >= '2020-04-15'
+      where act.city <> employees.kota and answer_date >= '2020-04-13'
       and employees.department is not null
       group by employees.department, answer_date
       ");
