@@ -295,6 +295,9 @@
 										jml = value2.jumlah;
 										a = a+jml;
 									}
+									if(jml == 0){
+										jml = '-';
+									}
 								}
 							});
 							if (jml == "-") {
