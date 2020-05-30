@@ -169,16 +169,16 @@ class MiraiMobileController extends Controller
   {
     $tgl = date('Y-m-d', strtotime($request->get('tanggal')));
     $q =  'select att.*, groups.remark from
-    (select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, SEC_TO_TIME(SUM(time_in)) time_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out from
+    (select employee_id, `name`, answer_date, SUM(masuk) lat_in, SUM(masuk1) lng_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar),null) lat_out, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SUM(keluar2),null) lng_out, SEC_TO_TIME(SUM(time_in)) time_in, IF(SUM(id_out) - SUM(id_in) <> 7 AND SUM(jam_out) - SUM(jam_in) > 1, SEC_TO_TIME(SUM(time_out)),null) time_out, TRIM("," FROM GROUP_CONCAT(village)) as village, TRIM("," FROM GROUP_CONCAT(city)) as city from
     (
-    SELECT employee_id, `name`, answer_date, latitude as masuk, longitude as masuk1, 0 as keluar, 0 as keluar2, id as id_in, 0 as id_out, DATE_FORMAT(created_at, "%H") as jam_in, 0 as jam_out, TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_in, 0 as time_out FROM quiz_logs
+    SELECT employee_id, `name`, answer_date, latitude as masuk, longitude as masuk1, 0 as keluar, 0 as keluar2, id as id_in, 0 as id_out, DATE_FORMAT(created_at, "%H") as jam_in, 0 as jam_out, TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_in, 0 as time_out, village, city FROM quiz_logs
     WHERE id IN (
     SELECT MIN(id)
     FROM quiz_logs
     GROUP BY employee_id, `name`, answer_date
     )
     union all
-    SELECT employee_id, `name`, answer_date, 0 as masuk, 0 as masuk1, latitude as keluar, longitude as keluar2, 0 as id_in, id as id_out, 0 as jam_in,  DATE_FORMAT(created_at, "%H") as jam_out, 0 as time_in,  TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_out FROM quiz_logs
+    SELECT employee_id, `name`, answer_date, 0 as masuk, 0 as masuk1, latitude as keluar, longitude as keluar2, 0 as id_in, id as id_out, 0 as jam_in,  DATE_FORMAT(created_at, "%H") as jam_out, 0 as time_in,  TIME_TO_SEC(DATE_FORMAT(created_at, "%H:%i")) as time_out, "" as village, "" as city FROM quiz_logs
     WHERE id IN (
     SELECT MAX(id)
     FROM quiz_logs
@@ -390,7 +390,7 @@ class MiraiMobileController extends Controller
   public function fetchLocation()
   {
 
-    $employee_location = db::connection('mobile')->select("SELECT act.answer_date, employees.department, if(employees.department = 'Management Information System' and act.answer_date >= '2020-04-15', 0, count(act.employee_id)) as jumlah from
+    $employee_location = db::connection('mobile')->select("SELECT act.answer_date, employees.department, count(act.employee_id) as jumlah from
       (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
       WHERE id IN (
       SELECT MIN(id)
@@ -399,8 +399,7 @@ class MiraiMobileController extends Controller
       )) as act
       left join employees on employees.employee_id = act.employee_id
       join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = act.employee_id AND all_groups.tanggal = act.answer_date
-      where act.city <> employees.kota and answer_date >= '2020-04-13'
-      and employees.department is not null
+      where act.city <> employees.kota and answer_date >= '2020-04-13' and employees.department <> 'Management Information System'
       group by employees.department, answer_date
       ");
 
@@ -428,7 +427,7 @@ class MiraiMobileController extends Controller
       $date = "";
     }
 
-    $location_detail = db::connection('mobile')->select("SELECT quiz.answer_date,quiz.employee_id, quiz.`name`, quiz.city, employees.kota, employees.department FROM 
+    $location_detail = db::connection('mobile')->select("SELECT quiz.employee_id, quiz.`name`, quiz.city, employees.kota, employees.department FROM 
       (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
       WHERE id IN (
       SELECT MIN(id)
@@ -437,7 +436,7 @@ class MiraiMobileController extends Controller
       )) as quiz
       left join employees on employees.employee_id = quiz.employee_id
       join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = quiz.employee_id AND all_groups.tanggal = quiz.answer_date
-      where quiz.city <> employees.kota ".$date." ".$dept."
+      where quiz.city <> employees.kota ".$date." ".$dept." AND employees.department <> 'Management Information System'
       ");
 
     $response = array(
