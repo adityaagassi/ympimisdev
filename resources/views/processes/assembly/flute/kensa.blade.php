@@ -1,6 +1,7 @@
 @extends('layouts.display')
 @section('stylesheets')
-<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link href="{{ url('css/jquery.gritter.css') }}" rel="stylesheet">
+<link href="{{ url('bower_components/roundslider/dist/roundslider.min.css') }}" rel="stylesheet" />
 <style type="text/css">
 	thead>tr>th{
 		text-align:center;
@@ -46,13 +47,12 @@
 		overflow:hidden;
 		text-overflow: ellipsis;
 	}
-	#ngList {
-		height:480px;
-		overflow-y: scroll;
-	}
 	#ngTemp {
 		height:200px;
 		overflow-y: scroll;
+	}
+	#historyLocation{
+		overflow-x: scroll;
 	}
 	#ngAll {
 		height:480px;
@@ -69,6 +69,7 @@
 <section class="content" style="padding-top: 0;">
 	<input type="hidden" id="loc" value="{{ $loc }}">
 	<input type="hidden" id="loc_spec" value="{{ $loc_spec }}">
+	<input type="hidden" id="process" value="{{ $process }}">
 	<input type="hidden" id="started_at">
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
 		<div class="col-xs-7" style="padding-right: 0; padding-left: 0">
@@ -123,18 +124,21 @@
 				</table>
 			</div>
 			<div style="padding-top: 5px">
-				<table style="width: 100%;padding-top: 5px" border="1">
-					<tbody id="details">
-					</tbody>
-				</table>
+				<div id="historyLocation">
+					<table class="table table-bordered" style="width: 100%;padding-top: 5px;">
+						<tbody id="details">
+						</tbody>
+					</table>
+				</div>
 			</div>
 			<div style="padding-top: 5px">
 				<div id="ngTemp">
 					<table id="ngTempTable" class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 						<thead>
 							<tr>
-								<th style="width: 65%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >NG Name</th>
-								<th style="width: 65%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Value / Jumlah</th>
+								<th style="width: 40%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >NG Name</th>
+								<th style="width: 40%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Value / Jumlah</th>
+								<th style="width: 20%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Onko</th>
 							</tr>
 						</thead>
 						<tbody id="ngTempBody">
@@ -201,21 +205,107 @@
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
 					<h4 id="judul_ng">NG List</h4>
-					<input type="hidden" id="loop" value="'+indexNg+'">
+					<div>
+						<div class="col-xs-12" id="ngDetail">
+						</div>
+						<div class="col-xs-12" id="ngDetailFix" style="display: none;padding-top: 5px">
+							<center><button class="btn btn-primary" style="width:100%;font-size: 25px;font-weight: bold;" onclick="getNgChange()" id="ngFix">NG
+							</button></center>
+							<input type="hidden" id="ngFix2" value="NG">
+						</div>
+					</div>
+
+					<h4 id="judul_onko" style="padding-top: 10px">Pilih Onko</h4>
+					<div>
+						<div class="col-xs-12" id="onkoBody">
+						</div>
+						<div class="col-xs-12" id="onkoBodyFix" style="display: none;padding-top: 5px">
+							<center><button class="btn btn-warning" style="width:100%;font-size: 25px;font-weight: bold" onclick="getOnkoChange()" id="onkoFix">ONKO
+							</button></center>
+							<input type="hidden" id="onkoFix2" value="ONKO">
+						</div>
+					</div>
+					<input type="text" id="operator_id_before" value="OPID">
+
+					<div style="padding-top: 10px">
+						<button id="confNg" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgTemp()" class="btn btn-success">CONFIRM</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalNgTanpoAwase">
+	<div class="modal-dialog modal-lg" style="width: 1200px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-body table-responsive no-padding">
+					<h4 id="judul_ng">NG List Tanpo Awase</h4>
 					<div id="ngList">
-						<table id="ngDetail" class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
+						<div class="col-xs-12" id="onkoBodyFixTanpoAwase" style="display: none;padding-top: 5px">
+							<center><button class="btn btn-primary" style="width:100%;font-size: 20px" onclick="getOnkoChangeTanpoAwase()" id="onkoFixTanpoAwase">ONKO
+							</button></center>
+							<input type="hidden" id="onkoFixTanpoAwase2">
+							<input type="hidden" id="idOnkoTanpoAwase">
+						</div>
+						<div class="col-xs-12" style="padding-top: 5px" id="onkoBodyTanpoAwase">
+						</div>
+						<div>
+							<input type="hidden" id="value1" value="0">
+							<input type="hidden" id="value2" value="0">
+							<input type="hidden" id="value3" value="0">
+							<input type="hidden" id="value4" value="0">
+							<input type="hidden" id="value5" value="0">
+							<input type="hidden" id="value6" value="0">
+							<input type="hidden" id="value7" value="0">
+							<input type="hidden" id="value8" value="0">
+							<input type="hidden" id="value9" value="0">
+							<input type="hidden" id="value10" value="0">
+							<input type="hidden" id="value11" value="0">
+							<input type="hidden" id="value12" value="0">
+							<input type="hidden" id="value13" value="0">
+							<input type="hidden" id="value14" value="0">
+							<input type="hidden" id="value15" value="0">
+							<input type="hidden" id="value16" value="0">
+						</div>
+						<input type="text" id="operator_id_before_tanpoawase" value="OPID">
+						<button id="confNgOnkoTanpoAwase" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgOnkoTanpoAwase()" class="btn btn-success">CONFIRM</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalNgOnko">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-body table-responsive no-padding">
+					<h4 id="judul_ng">Pilih Onko</h4>
+					<div>
+						<table id="ngOnko" class="table table-bordered" style="width: 100%; margin-bottom: 2px;" border="1">
 							<thead>
 								<tr>
-									<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
+									<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Location</th>
 									<th style="width: 65%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >NG Name</th>
-									<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >#</th>
-									<th style="width: 15%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Count</th>
+									<th style="width: 10%; background-color: rgb(220,220,220); padding:0;font-size: 20px;" >Jumlah</th>
 								</tr>
 							</thead>
-							<tbody id="ngDetailBody">
+							<tbody id="ngOnkoBody">
 							</tbody>
 						</table>
-						<button id="confNg" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgTemp()" class="btn btn-success">CONFIRM</button>
+
+						<!-- <div class="col-xs-12" id="onkoBody">
+						</div>
+						<div class="col-xs-12" id="onkoBodyFix" style="display: none;padding-top: 5px">
+							<center><button class="btn btn-primary" style="width:100%;font-size: 20px" onclick="getOnkoChange()" id="onkoFix">ONKO
+							</button></center>
+							<input type="hidden" id="onkoFix2">
+							<input type="hidden" id="idOnko">
+						</div> -->
+						<button id="confNgOnko" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgOnko()" class="btn btn-success">CONFIRM</button>
 					</div>
 				</div>
 			</div>
@@ -226,6 +316,7 @@
 @endsection
 @section('scripts')
 <script src="{{ url('js/jquery.gritter.min.js') }}"></script>
+<script src="{{ url('bower_components/roundslider/dist/roundslider.min.js') }}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -280,29 +371,6 @@
 			}
 		}
 	});
-
-	function fetchResult(employee_id){
-		var location = $('#loc').val();
-		var data = {
-			employee_id:employee_id,
-			location:location
-		}
-		$.get('{{ url("fetch/welding/kensa_result") }}', data, function(result, status, xhr){
-			var pctgAS = (result.ngs[0].askey/result.oks[0].askey)*100
-			var pctgTS = (result.ngs[0].tskey/result.oks[0].tskey)*100
-			var pctgZ = (result.ngs[0].z/result.oks[0].z)*100
-
-			$('#result1').text(result.oks[0].askey);
-			$('#result2').text(result.ngs[0].askey);
-			$('#result3').text(pctgAS.toFixed(2)+'%');
-			$('#result4').text(result.oks[0].tskey);
-			$('#result5').text(result.ngs[0].tskey);
-			$('#result6').text(pctgTS.toFixed(2)+'%');
-			$('#result7').text(result.oks[0].z);
-			$('#result8').text(result.ngs[0].z);
-			$('#result9').text(pctgZ.toFixed(2)+'%');
-		});
-	}
 
 	function getHeader(tag) {
 		var location = $('#loc').val();
@@ -366,46 +434,348 @@
 			$("#tag").focus();
 		}
 		else{
-			var btn = document.getElementById('confNg');
-			btn.disabled = false;
-			btn.innerText = 'Confirm'
+			if (ng_name === "Tanpo Awase") {
+				$('#modalNgTanpoAwase').modal('show');
+				var btn = document.getElementById('confNgOnkoTanpoAwase');
+				btn.disabled = false;
+				btn.innerText = 'CONFIRM';
 
-			var location = '{{$loc_spec}}';
-			var data = {
-				ng_name:ng_name,
-				location:location
-			}
-			$('#modalNg').modal('show');
-			var bodyDetail = "";
-			$('#ngDetailBody').html("");
-			var index = 1;
-			var indexNg = 1;
+				$('#onkoBodyTanpoAwase').show();
+				$('#onkoBodyFixTanpoAwase').hide();
+				$('#onkoFixTanpoAwase').html("ONKO");
+				$('#onkoFixTanpoAwase2').val("ONKO");
+				$('#idOnkoTanpoAwase').val("ONKO");
 
-			$.get('{{ url("fetch/assembly/ng_detail") }}', data, function(result, status, xhr){
-				$.each(result.ng_detail, function(key, value) {
-					if (index % 2 == 0) {
-						var color = 'style="background-color: #fffcb7"';
-					}else{
-						var color = 'style="background-color: #ffd8b7"'
-					}
-					index++;
-					bodyDetail += "<tr "+color+">";
-					bodyDetail += '<td id="minus" onclick="minus('+index+')" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">-</td>';
-					if (value.ng_name == value.ng_detail) {
-						bodyDetail += '<td style="font-size: 20px;" id="ng'+index+'">'+value.ng_detail+'</td>';
-					}else{
-						bodyDetail += '<td style="font-size: 20px;" id="ng'+index+'">'+value.ng_name+' - '+value.ng_detail+'</td>';
-					}
-					bodyDetail += '<td id="plus" onclick="plus('+index+')" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 45px; cursor: pointer;" class="unselectable">+</td>';
-					bodyDetail += '<td style="font-weight: bold; font-size: 45px; background-color: rgb(100,100,100); color: yellow;"><span id="count'+index+'">0</span></td>';
-					bodyDetail += "</tr>";
-					indexNg++;
-					$('#judul_ng').html(value.ng_name);
+				var bodyNgTemp = "";
+				var bodyNgOnko = "";
+				$('#onkoBodyTanpoAwase').html("");
+				var index = 1;
+				var index2 = 1;
+
+				var location = '{{$loc_spec}}';
+				var data2 = {
+					ng_name:ng_name,
+					location:location,
+					process:$('#process').val()
+				}
+
+				$.get('{{ url("fetch/assembly/ng_detail") }}', data2, function(result, status, xhr){
+					$.each(result.ng_detail, function(key, value) {
+						var data3 = {
+							tag : $('#tag2').val(),
+							serial_number : $('#serial_number2').val(),
+							model : $('#model2').val(),
+							process_before : value.process_before,
+						}
+						$.get('{{ url("fetch/assembly/get_process_before") }}',data3, function(result, status, xhr){
+							$.each(result.details, function(key, value) {
+								$('#operator_id_before_tanpoawase').val(value.operator_id);
+							});
+						});
+					});
 				});
 
-				$('#loop').val(indexNg);
-				$('#ngDetailBody').append(bodyDetail);
-			});
+				var data = {
+					process:"tanpoawase"
+				}
+
+				$.get('{{ url("fetch/assembly/onko") }}', data, function(result, status, xhr){
+
+					$.each(result.onko, function(key, value) {
+						// bodyNgOnko += '<div class="col-xs-3" style="padding-top: 5px">';
+						// bodyNgOnko += '<center><button class="btn btn-primary" id="'+value.key+' ('+value.nomor+')" style="width: 180px;font-size: 15px" onclick="getOnkoTanpoAwase(this.id,'+value.id+')">'+value.key+' ('+value.nomor+')';
+						// bodyNgOnko += '</button></center></div>';
+						bodyNgOnko += '<div class="col-xs-3">'
+						bodyNgOnko += '<div style="text-align:center;font-weight:bold;font-size:20px">'+value.keynomor+'</div>';
+						bodyNgOnko += '<div id="slider'+index+'"></div>';
+						bodyNgOnko += '</div>'
+						index++;
+					});
+
+					$('#onkoBodyTanpoAwase').append(bodyNgOnko);
+
+					$("#slider1").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value1").val(value.value);
+					    }
+					});
+
+					$("#slider2").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value2").val(value.value);
+					    }
+					});
+
+					$("#slider3").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value3").val(value.value);
+					    }
+					});
+
+					$("#slider4").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value4").val(value.value);
+					    }
+					});
+
+					$("#slider5").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value5").val(value.value);
+					    }
+					});
+
+					$("#slider6").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value6").val(value.value);
+					    }
+					});
+
+					$("#slider7").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value7").val(value.value);
+					    }
+					});
+
+					$("#slider8").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value8").val(value.value);
+					    }
+					});
+
+					$("#slider9").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value9").val(value.value);
+					    }
+					});
+
+					$("#slider10").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value10").val(value.value);
+					    }
+					});
+
+					$("#slider11").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value11").val(value.value);
+					    }
+					});
+
+					$("#slider12").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value12").val(value.value);
+					    }
+					});
+
+					$("#slider13").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 180,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value13").val(value.value);
+					    }
+					});
+
+					$("#slider14").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value14").val(value.value);
+					    }
+					});
+
+					$("#slider15").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value15").val(value.value);
+					    }
+					});
+
+					$("#slider16").roundSlider({
+					    sliderType: "range",
+					    handleShape: "dot",
+					    width: 35,
+					    radius: 100,
+					    value: 0,
+					    lineCap: "square",
+					    startAngle: 90,
+					    handleSize: "+12",
+					    max: "12",
+					    drag: function (value) {
+					        $("#value16").val(value.value);
+					    }
+					});
+				});
+
+			}else{
+				$('#modalNg').modal('show');
+				var btn = document.getElementById('confNg');
+				btn.disabled = false;
+				btn.innerText = 'Confirm'
+
+				var location = '{{$loc_spec}}';
+				var data = {
+					ng_name:ng_name,
+					location:location,
+					process:$('#process').val()
+				}
+				var bodyDetail = "";
+				$('#ngDetailFix').hide();
+				$('#ngDetail').show();
+				$('#ngDetail').html("");
+
+				var bodyNgOnko = "";
+				$('#onkoBodyFix').hide();
+				$('#onkoBody').show();
+				$('#onkoBody').html("");
+
+				$.get('{{ url("fetch/assembly/ng_detail") }}', data, function(result, status, xhr){
+					$.each(result.ng_detail, function(key, value) {
+						bodyDetail += '<div class="col-xs-4" style="padding-top: 10px">';
+						bodyDetail += '<center><button class="btn btn-primary" id="'+value.ng_name+' - '+value.ng_detail+'" style="width: 250px;font-size: 25px;" onclick="getNg(this.id,\''+value.process_before+'\')">'+value.ng_name+' - '+value.ng_detail;
+						bodyDetail += '</button></center></div>';
+						$('#judul_ng').html(value.ng_name);
+					});
+
+					$('#ngDetail').append(bodyDetail);
+
+					$.each(result.onko, function(key, value) {
+						bodyNgOnko += '<div class="col-xs-3" style="padding-top: 5px">';
+						bodyNgOnko += '<center><button class="btn btn-warning" id="'+value.key+' ('+value.nomor+')" style="width: 180px;font-size: 20px" onclick="getOnko(this.id)">'+value.key+' ('+value.nomor+')';
+						bodyNgOnko += '</button></center></div>';
+					});
+
+					$('#onkoBody').append(bodyNgOnko);
+				});
+			}
 		}
 	}
 
@@ -436,7 +806,12 @@
 				index++;
 				bodyNgTemp += "<tr "+color+">";
 				bodyNgTemp += '<td style="font-size: 20px;">'+value.ng_name+'</td>';
-				bodyNgTemp += '<td style="font-size: 20px;">'+value.value_atas+'</td>';
+				if (value.value_bawah == null) {
+					bodyNgTemp += '<td style="font-size: 20px;">'+value.value_atas+'</td>';
+				}else{
+					bodyNgTemp += '<td style="font-size: 20px;">'+value.value_atas+' - '+value.value_bawah+'</td>';
+				}
+				bodyNgTemp += '<td style="font-size: 20px;">'+value.ongko+'</td>';
 				bodyNgTemp += "</tr>";
 			});
 
@@ -444,49 +819,187 @@
 		});
 	}
 
-	function confNgTemp() {
-		var loop = $('#loop').val();
-		// var total = 0;
-		var count_ng = 0;
-		var ng = [];
-		var count_text = [];
-		for (var i = 1; i <= loop; i++) {
-			if($('#count'+i).text() > 0){
-				ng.push([$('#ng'+i).text(), $('#count'+i).text()]);
-				count_text.push('#count'+i);
-				count_ng += 1;
-			}
-		}
-
+	function getNg(value,process_before) {
 		var data = {
 			tag : $('#tag2').val(),
-			employee_id : $('#employee_id').val(),
 			serial_number : $('#serial_number2').val(),
 			model : $('#model2').val(),
-			location : $('#location_now2').val(),
-			started_at : $('#started_at').val(),
-			ng: ng,
-			count_text: count_text,
-			origin_group_code : '041'
+			process_before : process_before,
+		}
+		$.get('{{ url("fetch/assembly/get_process_before") }}',data, function(result, status, xhr){
+			$.each(result.details, function(key, value) {
+				$('#operator_id_before').val(value.operator_id);
+			});
+		});
+		$('#ngDetail').hide();
+		$('#ngDetailFix').show();
+		$('#ngFix').html(value);
+		$('#ngFix2').val(value);
+	}
+
+	function getNgChange() {
+		$('#ngDetail').show();
+		$('#ngDetailFix').hide();
+		$('#ngFix').html("NG");
+		$('#ngFix2').val("NG");
+		$('#operator_id_before').val("OPID");
+	}
+
+	function getOnko(value) {
+		$('#onkoBody').hide();
+		$('#onkoBodyFix').show();
+		$('#onkoFix').html(value);
+		$('#onkoFix2').val(value);
+	}
+
+	function getOnkoChange() {
+		$('#onkoBody').show();
+		$('#onkoBodyFix').hide();
+		$('#onkoFix').html("ONKO");
+		$('#onkoFix2').val("ONKO");
+	}
+
+	function getOnkoTanpoAwase(value,id) {
+		$('#onkoBodyTanpoAwase').hide();
+		$('#onkoBodyFixTanpoAwase').show();
+		$('#onkoFixTanpoAwase').html(value);
+		$('#onkoFixTanpoAwase2').val(value);
+		$('#idOnkoTanpoAwase').val(id);
+	}
+
+	function getOnkoChangeTanpoAwase() {
+		$('#onkoBodyTanpoAwase').show();
+		$('#onkoBodyFixTanpoAwase').hide();
+		$('#onkoFixTanpoAwase').html("ONKO");
+		$('#onkoFix2TanpoAwase').val("ONKO");
+		$('#idOnkoTanpoAwase').val("ONKO");
+	}
+
+	function confNgOnkoTanpoAwase() {
+		var onko = [];
+		var value_atas = [];
+		var value_bawah = [];
+		var onko_ng = [];
+		var index = 0;
+
+		var data = {
+			process:"tanpoawase"
 		}
 
-		$.post('{{ url("input/assembly/ng_temp") }}', data, function(result, status, xhr){
-			if(result.status){
-				var btn = document.getElementById('confNg');
-				btn.disabled = true;
-				btn.innerText = 'Posting...'
-				$('#modalNg').modal('hide');
-				fetchNgTemp();
-				openSuccessGritter('Success!', result.message);
+		var btn = document.getElementById('confNgOnkoTanpoAwase');
+		btn.disabled = true;
+		btn.innerText = 'Posting...';
+
+		$.get('{{ url("fetch/assembly/onko") }}',data, function(result, status, xhr){
+			$.each(result.onko, function(key, value) {
+				onko.push(value.keynomor);
+				index++;
+			});
+
+			for (var i = 0; i < index; i++) {
+				var a = i+1;
+				var idvalue = '#value'+a;
+				if ($(idvalue).val() == "0" || $(idvalue).val() == '0,0') {
+					
+				}else{
+					onko_ng.push(onko[i]);
+					var valuesplit = $(idvalue).val().split(",");
+					value_atas.push(valuesplit[0]);
+					value_bawah.push(valuesplit[1]);
+				}
 			}
-			else{
-				var btn = document.getElementById('confNg');
-				btn.disabled = false;
-				btn.innerText = 'CONFIRM';
-				audio_error.play();
-				openErrorGritter('Error!', result.message);
+
+			var data = {
+				tag : $('#tag2').val(),
+				employee_id : $('#employee_id').val(),
+				serial_number : $('#serial_number2').val(),
+				model : $('#model2').val(),
+				location : $('#location_now2').val(),
+				started_at : $('#started_at').val(),
+				ng:"Tanpo Awase",
+				onko: onko_ng,
+				value_atas: value_atas,
+				value_bawah:value_bawah,
+				origin_group_code : '041',
+				operator_id : $('#operator_id_before_tanpoawase').val(),
 			}
+
+			$.post('{{ url("input/assembly/ng_temp") }}', data, function(result, status, xhr){
+				if(result.status){
+					var btn = document.getElementById('confNgOnkoTanpoAwase');
+					btn.disabled = true;
+					btn.innerText = 'Posting...';
+					$('#value1').val('0');
+					$('#value2').val('0');
+					$('#value3').val('0');
+					$('#value4').val('0');
+					$('#value5').val('0');
+					$('#value6').val('0');
+					$('#value7').val('0');
+					$('#value8').val('0');
+					$('#value9').val('0');
+					$('#value10').val('0');
+					$('#value11').val('0');
+					$('#value12').val('0');
+					$('#value13').val('0');
+					$('#value14').val('0');
+					$('#value15').val('0');
+					$('#value16').val('0');
+					$('#modalNgTanpoAwase').modal('hide');
+					fetchNgTemp();
+					openSuccessGritter('Success!', result.message);
+				}
+				else{
+					var btn = document.getElementById('confNgOnkoTanpoAwase');
+					btn.disabled = false;
+					btn.innerText = 'CONFIRM';
+					audio_error.play();
+					openErrorGritter('Error!', result.message);
+				}
+			});
 		});
+	}
+
+	function confNgTemp() {
+		if ($('#ngFix2').val() == "NG" || $('#onkoFix2').val() == "ONKO") {
+			audio_error.play();
+			openErrorGritter('Error!', "Harus Dipilih Semua!");
+		}else{
+			var btn = document.getElementById('confNg');
+			btn.disabled = true;
+			btn.innerText = 'Posting...';
+
+			var data = {
+				tag : $('#tag2').val(),
+				employee_id : $('#employee_id').val(),
+				serial_number : $('#serial_number2').val(),
+				model : $('#model2').val(),
+				location : $('#location_now2').val(),
+				started_at : $('#started_at').val(),
+				ng: $('#ngFix2').val(),
+				onko: $('#onkoFix2').val(),
+				origin_group_code : '041',
+				operator_id : $('#operator_id_before').val()
+			}
+
+			$.post('{{ url("input/assembly/ng_temp") }}', data, function(result, status, xhr){
+				if(result.status){
+					var btn = document.getElementById('confNg');
+					btn.disabled = true;
+					btn.innerText = 'Posting...';
+					$('#modalNg').modal('hide');
+					fetchNgTemp();
+					openSuccessGritter('Success!', result.message);
+				}
+				else{
+					var btn = document.getElementById('confNg');
+					btn.disabled = false;
+					btn.innerText = 'CONFIRM';
+					audio_error.play();
+					openErrorGritter('Error!', result.message);
+				}
+			});
+		}
 	}
 
 	function disabledButton() {
@@ -590,7 +1103,9 @@
 			return false;
 		}
 
-		disabledButton();
+		var btn = document.getElementById('conf1');
+		btn.disabled = true;
+		btn.innerText = 'Posting...';
 
 		var data = {
 			tag : $('#tag2').val(),

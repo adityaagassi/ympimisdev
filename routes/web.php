@@ -1022,6 +1022,21 @@ Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 
 Route::get('purchase_requisition', 'AccountingController@purchase_requisition');
 Route::get('fetch/purchase_requisition', 'AccountingController@fetch_purchase_requisition');
+Route::post('create/purchase_requisition', 'AccountingController@create_purchase_requisition');
+
+Route::get('investment', 'AccountingController@investment');
+Route::get('fetch/investment', 'AccountingController@fetch_investment');
+Route::get('investment/create', 'AccountingController@create_investment');
+Route::post('investment/create_post', 'AccountingController@create_investment_post');
+Route::get('investment/detail/{id}', 'AccountingController@detail_investment');
+Route::post('investment/update_post', 'AccountingController@detail_investment_post');
+
+Route::post('investment/create_investment_item', 'AccountingController@create_investment_item');
+Route::get('investment/fetch_investment_item/{id}', 'AccountingController@fetch_investment_item');
+Route::post('investment/edit_investment_item', 'AccountingController@edit_investment_item');
+Route::get('investment/edit_investment_item', 'AccountingController@fetch_investment_item_edit');
+Route::post('investment/delete_investment_item', 'AccountingController@delete_investment_item');
+Route::get('investment/get_detailitem', 'AccountingController@getitemdesc')->name('admin.getitemdesc');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -2694,6 +2709,9 @@ Route::get('fetch/assembly/request', 'AssemblyProcessController@fetchRequest');
 Route::get('index/assembly/ng_rate', 'AssemblyProcessController@indexNgRate');
 Route::get('fetch/assembly/ng_rate', 'AssemblyProcessController@fetchNgRate');
 
+Route::get('index/assembly/op_ng', 'AssemblyProcessController@indexOpRate');
+Route::get('fetch/assembly/op_ng', 'AssemblyProcessController@fetchOpRate');
+
 //ROOMS
 Route::get('/meetingroom1', function () {
 	return view('rooms.meetingroom1');
@@ -2718,6 +2736,10 @@ Route::get('/welcome_trial', function () {
 
 // MIRAI MOBILE
 Route::get('index/mirai_mobile/index', 'MiraiMobileController@index');
+
+// CORONA
+Route::get('index/corona_information', 'MiraiMobileController@indexCoronaInformation');
+Route::get('fetch/corona_information', 'MiraiMobileController@fetchCoronaInformation');
 
 //Display Health
 Route::get('index/mirai_mobile/healthy_report', 'MiraiMobileController@display_health');
