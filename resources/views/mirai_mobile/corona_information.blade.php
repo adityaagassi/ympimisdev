@@ -370,215 +370,217 @@
 	});
 
 	function fetchChart(){
+		$('#loading').show();
 		var date_now = $('#datepicker').val();
 		var data = {
 			date_now:date_now
 		}
 		$.get('{{ url("fetch/corona_information") }}', data, function(result, status, xhr){
-			var newIndonesiaSeries = [];
-			var newJakartaSeries = [];
-			var newBekasiSeries = [];
-			var newSurabayaSeries = [];
-			var newPasuruanSeries = [];
+			if(result.status){
+				var newIndonesiaSeries = [];
+				var newJakartaSeries = [];
+				var newBekasiSeries = [];
+				var newSurabayaSeries = [];
+				var newPasuruanSeries = [];
 
-			var id_infected = [];
-			var id_new = [];
+				var id_infected = [];
+				var id_new = [];
 
-			var jkt_infected = [];
-			var jkt_new = [];
+				var jkt_infected = [];
+				var jkt_new = [];
 
-			var bks_infected = [];
-			var bks_new = [];
+				var bks_infected = [];
+				var bks_new = [];
 
-			var sby_infected = [];
-			var sby_new = [];
+				var sby_infected = [];
+				var sby_new = [];
 
-			var psr_infected = [];
-			var psr_new = [];
+				var psr_infected = [];
+				var psr_new = [];
 
-			$.each(result.corona_informations, function(key, value) {
-				var num_infected = (value.past_week_infected*(100000/value.population)).toFixed(2);
+				$.each(result.corona_informations, function(key, value) {
+					var num_infected = (value.past_week_infected*(100000/value.population)).toFixed(2);
 
-				if(value.area == 'Indonesia'){
-					newIndonesiaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-					id_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
-					id_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
-				}
-				if(value.area == 'Jakarta'){
-					newJakartaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-					jkt_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
-					jkt_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
-				}
-				if(value.area == 'Bekasi'){
-					newBekasiSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-					bks_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
-					bks_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
-				}
-				if(value.area == 'Surabaya'){
-					newSurabayaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-					sby_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
-					sby_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
-				}
-				if(value.area == 'Pasuruan'){
-					newPasuruanSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-					psr_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
-					psr_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
-				}
-			});
-
-			$.each(result.detail_yesterday, function(key, value) {
-				if(value.area == 'Indonesia'){
-					$('#id_rasio_1').text(value.curr_infected.toLocaleString());
-					$('#id_rasio_2').text(value.new_infected.toLocaleString());
-				}
-				if(value.area == 'Jakarta'){
-					$('#jkt_rasio_1').text(value.curr_infected.toLocaleString());
-					$('#jkt_rasio_2').text(value.new_infected.toLocaleString());
-				}
-				if(value.area == 'Bekasi'){
-					$('#bks_rasio_1').text(value.curr_infected.toLocaleString());
-					$('#bks_rasio_2').text(value.new_infected.toLocaleString());
-				}
-				if(value.area == 'Surabaya'){
-					$('#sby_rasio_1').text(value.curr_infected.toLocaleString());
-					$('#sby_rasio_2').text(value.new_infected.toLocaleString());
-				}
-				if(value.area == 'Pasuruan'){
-					$('#psr_rasio_1').text(value.curr_infected.toLocaleString());
-					$('#psr_rasio_2').text(value.new_infected.toLocaleString());
-				}
-			});
-
-			$.each(result.detail_now, function(key, value){
-
-				if(value.area == 'Indonesia'){
-					$('#id_curr').text(value.curr_infected.toLocaleString());
-					$('#id_new').text(value.new_infected.toLocaleString());
-					$('#id_cum').text(value.acc_infected.toLocaleString());
-					$('#id_death').text(value.acc_dead.toLocaleString());
-					$('#id_discharge').text(value.acc_recovered.toLocaleString());
-				}
-				if(value.area == 'Jakarta'){
-					$('#jkt_curr').text(value.curr_infected.toLocaleString());
-					$('#jkt_new').text(value.new_infected.toLocaleString());
-					$('#jkt_cum').text(value.acc_infected.toLocaleString());
-					$('#jkt_death').text(value.acc_dead.toLocaleString());
-					$('#jkt_discharge').text(value.acc_recovered.toLocaleString());
-				}
-				if(value.area == 'Bekasi'){
-					$('#bks_curr').text(value.curr_infected.toLocaleString());
-					$('#bks_new').text(value.new_infected.toLocaleString());
-					$('#bks_cum').text(value.acc_infected.toLocaleString());
-					$('#bks_death').text(value.acc_dead.toLocaleString());
-					$('#bks_discharge').text(value.acc_recovered.toLocaleString());
-				}
-				if(value.area == 'Surabaya'){
-					$('#sby_curr').text(value.curr_infected.toLocaleString());
-					$('#sby_new').text(value.new_infected.toLocaleString());
-					$('#sby_cum').text(value.acc_infected.toLocaleString());
-					$('#sby_death').text(value.acc_dead.toLocaleString());
-					$('#sby_discharge').text(value.acc_recovered.toLocaleString());
-				}
-				if(value.area == 'Pasuruan'){
-					$('#psr_curr').text(value.curr_infected.toLocaleString());
-					$('#psr_new').text(value.new_infected.toLocaleString());
-					$('#psr_cum').text(value.acc_infected.toLocaleString());
-					$('#psr_death').text(value.acc_dead.toLocaleString());
-					$('#psr_discharge').text(value.acc_recovered.toLocaleString());
-				}
-			});
-
-			window.chart = Highcharts.stockChart('new_infected', {
-				rangeSelector: {
-					selected: 0
-				},
-				chart: {
-					type: 'line'
-				},
-				scrollbar:{
-					enabled:false
-				},
-				navigator:{
-					enabled:false
-				},
-				title: {
-					text: '過去1週間の100,000人あたりの新規感染者数',
-					style: {
-						fontSize: '24px'
+					if(value.area == 'Indonesia'){
+						newIndonesiaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
+						id_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						id_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 					}
-				},
-				xAxis: {
-					type: 'datetime',
-					tickInterval: 24 * 3600 * 1000,
-					scrollbar: {
-						enabled: true
+					if(value.area == 'Jakarta'){
+						newJakartaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
+						jkt_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						jkt_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 					}
-				},
-				yAxis: {
-					min:0,
+					if(value.area == 'Bekasi'){
+						newBekasiSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
+						bks_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						bks_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
+					}
+					if(value.area == 'Surabaya'){
+						newSurabayaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
+						sby_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						sby_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
+					}
+					if(value.area == 'Pasuruan'){
+						newPasuruanSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
+						psr_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						psr_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
+					}
+				});
+
+				$.each(result.detail_yesterday, function(key, value) {
+					if(value.area == 'Indonesia'){
+						$('#id_rasio_1').text(value.curr_infected.toLocaleString());
+						$('#id_rasio_2').text(value.new_infected.toLocaleString());
+					}
+					if(value.area == 'Jakarta'){
+						$('#jkt_rasio_1').text(value.curr_infected.toLocaleString());
+						$('#jkt_rasio_2').text(value.new_infected.toLocaleString());
+					}
+					if(value.area == 'Bekasi'){
+						$('#bks_rasio_1').text(value.curr_infected.toLocaleString());
+						$('#bks_rasio_2').text(value.new_infected.toLocaleString());
+					}
+					if(value.area == 'Surabaya'){
+						$('#sby_rasio_1').text(value.curr_infected.toLocaleString());
+						$('#sby_rasio_2').text(value.new_infected.toLocaleString());
+					}
+					if(value.area == 'Pasuruan'){
+						$('#psr_rasio_1').text(value.curr_infected.toLocaleString());
+						$('#psr_rasio_2').text(value.new_infected.toLocaleString());
+					}
+				});
+
+				$.each(result.detail_now, function(key, value){
+
+					if(value.area == 'Indonesia'){
+						$('#id_curr').text(value.curr_infected.toLocaleString());
+						$('#id_new').text(value.new_infected.toLocaleString());
+						$('#id_cum').text(value.acc_infected.toLocaleString());
+						$('#id_death').text(value.acc_dead.toLocaleString());
+						$('#id_discharge').text(value.acc_recovered.toLocaleString());
+					}
+					if(value.area == 'Jakarta'){
+						$('#jkt_curr').text(value.curr_infected.toLocaleString());
+						$('#jkt_new').text(value.new_infected.toLocaleString());
+						$('#jkt_cum').text(value.acc_infected.toLocaleString());
+						$('#jkt_death').text(value.acc_dead.toLocaleString());
+						$('#jkt_discharge').text(value.acc_recovered.toLocaleString());
+					}
+					if(value.area == 'Bekasi'){
+						$('#bks_curr').text(value.curr_infected.toLocaleString());
+						$('#bks_new').text(value.new_infected.toLocaleString());
+						$('#bks_cum').text(value.acc_infected.toLocaleString());
+						$('#bks_death').text(value.acc_dead.toLocaleString());
+						$('#bks_discharge').text(value.acc_recovered.toLocaleString());
+					}
+					if(value.area == 'Surabaya'){
+						$('#sby_curr').text(value.curr_infected.toLocaleString());
+						$('#sby_new').text(value.new_infected.toLocaleString());
+						$('#sby_cum').text(value.acc_infected.toLocaleString());
+						$('#sby_death').text(value.acc_dead.toLocaleString());
+						$('#sby_discharge').text(value.acc_recovered.toLocaleString());
+					}
+					if(value.area == 'Pasuruan'){
+						$('#psr_curr').text(value.curr_infected.toLocaleString());
+						$('#psr_new').text(value.new_infected.toLocaleString());
+						$('#psr_cum').text(value.acc_infected.toLocaleString());
+						$('#psr_death').text(value.acc_dead.toLocaleString());
+						$('#psr_discharge').text(value.acc_recovered.toLocaleString());
+					}
+				});
+
+				window.chart = Highcharts.stockChart('new_infected', {
+					rangeSelector: {
+						selected: 0
+					},
+					chart: {
+						type: 'line'
+					},
+					scrollbar:{
+						enabled:false
+					},
+					navigator:{
+						enabled:false
+					},
 					title: {
-						text: null
-					}
-				},
-				plotOptions: {
-					line: {
-						dataLabels: {
-							enabled: false
-						},
-						enableMouseTracking: true
-					}
-				},
-				credits: {
-					enabled : false
-				},
-				legend: {
-					enabled: true,
-					layout: 'vertical',
-					align: 'right',
-					verticalAlign: 'middle'
-				},
-				series: [{
-					name: '"Indonesia"',
-					data: newIndonesiaSeries,
-					lineWidth: 1,
-					marker: {
+						text: '過去1週間の100,000人あたりの新規感染者数',
+						style: {
+							fontSize: '24px'
+						}
+					},
+					xAxis: {
+						type: 'datetime',
+						tickInterval: 24 * 3600 * 1000,
+						scrollbar: {
+							enabled: true
+						}
+					},
+					yAxis: {
+						min:0,
+						title: {
+							text: null
+						}
+					},
+					plotOptions: {
+						line: {
+							dataLabels: {
+								enabled: false
+							},
+							enableMouseTracking: true
+						}
+					},
+					credits: {
+						enabled : false
+					},
+					legend: {
 						enabled: true,
-						radius: 3
-					}
-				},{
-					name: '"Special State of Jakarta" (YI / YMMI, resident residence district)',
-					data: newJakartaSeries,
-					lineWidth: 1,
-					marker: {
-						enabled: true,
-						radius: 3
-					}
-				},{
-					name: '"Bekasi Prefecture + Bekasi City" (YMMA / YMPA area)',
-					data: newBekasiSeries,
-					lineWidth: 1,
-					marker: {
-						enabled: true,
-						radius: 3
-					}
-				},{
-					name: '"Surabaya City" (residential district)',
-					data: newSurabayaSeries,
-					lineWidth: 1,
-					marker: {
-						enabled: true,
-						radius: 3
-					}
-				},{
-					name: '"Pasuruan + Pasuruan City" (YMPI / YEMI area)',
-					data: newPasuruanSeries,
-					lineWidth: 1,
-					marker: {
-						enabled: true,
-						radius: 3
-					}
-				}]
-			});
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'middle'
+					},
+					series: [{
+						name: '"Indonesia"',
+						data: newIndonesiaSeries,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					},{
+						name: '"Special State of Jakarta" (YI / YMMI, resident residence district)',
+						data: newJakartaSeries,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					},{
+						name: '"Bekasi Prefecture + Bekasi City" (YMMA / YMPA area)',
+						data: newBekasiSeries,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					},{
+						name: '"Surabaya City" (residential district)',
+						data: newSurabayaSeries,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					},{
+						name: '"Pasuruan + Pasuruan City" (YMPI / YEMI area)',
+						data: newPasuruanSeries,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					}]
+				});
 
 			//INDONESIA
 
@@ -1449,8 +1451,14 @@
 					}
 				}]
 			});
+			$('#loading').hide();
+		}
+		else{
+			$('#loading').hide();
+			alert('Attempt to retrieve data failed.');
+		}
 
-		});
+	});
 }
 
 </script>
