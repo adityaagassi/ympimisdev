@@ -61,9 +61,9 @@
 									<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
 								</tr>
 								<tr>
-									<th id="id_curr" style="background-color: rgb(255, 242, 204)">999</th>
-									<th id="id_new">999</th>
-									<th id="id_cum" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="id_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+									<th id="id_new">Not Updated</th>
+									<th id="id_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 								</tr>
 								<tr>
 									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
@@ -71,8 +71,8 @@
 									<th style="width:5%;"></th>
 								</tr>
 								<tr>
-									<th id="id_rasio_1">999</th>
-									<th id="id_rasio_2">999</th>
+									<th id="id_rasio_1">Not Updated</th>
+									<th id="id_rasio_2">Not Updated</th>
 									<th></th>
 								</tr>
 								<tr>
@@ -81,9 +81,9 @@
 									<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
 								</tr>
 								<tr>
-									<th id="id_death" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="id_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 									<th></th>
-									<th id="id_discharge" style="background-color: rgb(255, 217, 102)">999</th>
+									<th id="id_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
 								</tr>
 							</thead>
 						</table>
@@ -121,9 +121,9 @@
 									<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
 								</tr>
 								<tr>
-									<th id="jkt_curr" style="background-color: rgb(255, 242, 204)">999</th>
-									<th id="jkt_new">999</th>
-									<th id="jkt_cum" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="jkt_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+									<th id="jkt_new">Not Updated</th>
+									<th id="jkt_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 								</tr>
 								<tr>
 									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
@@ -131,8 +131,8 @@
 									<th style="width:5%;"></th>
 								</tr>
 								<tr>
-									<th id="jkt_rasio_1">999</th>
-									<th id="jkt_rasio_2">999</th>
+									<th id="jkt_rasio_1">Not Updated</th>
+									<th id="jkt_rasio_2">Not Updated</th>
 									<th></th>
 								</tr>
 								<tr>
@@ -141,9 +141,9 @@
 									<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
 								</tr>
 								<tr>
-									<th id="jkt_death" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="jkt_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 									<th></th>
-									<th id="jkt_discharge" style="background-color: rgb(255, 217, 102)">999</th>
+									<th id="jkt_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
 								</tr>
 							</thead>
 						</table>
@@ -181,9 +181,9 @@
 									<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
 								</tr>
 								<tr>
-									<th id="bks_curr" style="background-color: rgb(255, 242, 204)">999</th>
-									<th id="bks_new">999</th>
-									<th id="bks_cum" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="bks_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+									<th id="bks_new">Not Updated</th>
+									<th id="bks_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 								</tr>
 								<tr>
 									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
@@ -191,8 +191,8 @@
 									<th style="width:5%;"></th>
 								</tr>
 								<tr>
-									<th id="bks_rasio_1">999</th>
-									<th id="bks_rasio_2">999</th>
+									<th id="bks_rasio_1">Not Updated</th>
+									<th id="bks_rasio_2">Not Updated</th>
 									<th></th>
 								</tr>
 								<tr>
@@ -201,9 +201,9 @@
 									<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
 								</tr>
 								<tr>
-									<th id="bks_death" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="bks_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 									<th></th>
-									<th id="bks_discharge" style="background-color: rgb(255, 217, 102)">999</th>
+									<th id="bks_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
 								</tr>
 							</thead>
 						</table>
@@ -241,9 +241,9 @@
 									<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
 								</tr>
 								<tr>
-									<th id="sby_curr" style="background-color: rgb(255, 242, 204)">999</th>
-									<th id="sby_new">999</th>
-									<th id="sby_cum" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="sby_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+									<th id="sby_new">Not Updated</th>
+									<th id="sby_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 								</tr>
 								<tr>
 									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
@@ -251,8 +251,8 @@
 									<th style="width:5%;"></th>
 								</tr>
 								<tr>
-									<th id="sby_rasio_1">999</th>
-									<th id="sby_rasio_2">999</th>
+									<th id="sby_rasio_1">Not Updated</th>
+									<th id="sby_rasio_2">Not Updated</th>
 									<th></th>
 								</tr>
 								<tr>
@@ -261,9 +261,9 @@
 									<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
 								</tr>
 								<tr>
-									<th id="sby_death" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="sby_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 									<th></th>
-									<th id="sby_discharge" style="background-color: rgb(255, 217, 102)">999</th>
+									<th id="sby_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
 								</tr>
 							</thead>
 						</table>
@@ -301,9 +301,9 @@
 									<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
 								</tr>
 								<tr>
-									<th id="psr_curr" style="background-color: rgb(255, 242, 204)">999</th>
-									<th id="psr_new">999</th>
-									<th id="psr_cum" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="psr_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+									<th id="psr_new">Not Updated</th>
+									<th id="psr_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 								</tr>
 								<tr>
 									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
@@ -311,8 +311,8 @@
 									<th style="width:5%;"></th>
 								</tr>
 								<tr>
-									<th id="psr_rasio_1">999</th>
-									<th id="psr_rasio_2">999</th>
+									<th id="psr_rasio_1">Not Updated</th>
+									<th id="psr_rasio_2">Not Updated</th>
 									<th></th>
 								</tr>
 								<tr>
@@ -321,9 +321,9 @@
 									<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
 								</tr>
 								<tr>
-									<th id="psr_death" style="background-color: rgb(255, 242, 204)">999</th>
+									<th id="psr_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
 									<th></th>
-									<th id="psr_discharge" style="background-color: rgb(255, 217, 102)">999</th>
+									<th id="psr_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
 								</tr>
 							</thead>
 						</table>
