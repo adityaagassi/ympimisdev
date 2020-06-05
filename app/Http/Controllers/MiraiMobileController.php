@@ -25,21 +25,56 @@ class MiraiMobileController extends Controller
     ))->with('page', 'MIRAI Mobile');
   }
 
+  public function indexCoronaInformation(){
+    $title = 'Daily Corona Data';
+    $title_jp = 'インドネシア国内の新型コロナウイルス感染症の感染拡大データ';
+
+    return view('mirai_mobile.corona_information', array(
+      'title' => $title,
+      'title_jp' => $title_jp
+    ))->with('page', 'MIRAI Mobile');
+  }
+
+  public function fetchCoronaInformation(Request $request){
+    $corona_informations = db::table('corona_informations')->orderBy('date', 'ASC')->get();
+
+    $now = date('Y-m-d');
+    $yesterday = date('Y-m-d',strtotime("-1 days"));
+    if(strlen($request->get('date_now')) > 0 ){
+      $now = date('Y-m-d', strtotime($request->get('date_now')));
+      $yesterday = date('Y-m-d', strtotime('-1 days', strtotime($request->get('date_now'))));
+    }
+
+
+    $detail_now = db::table('corona_informations')->orderBy('date', 'ASC')->where('date', '=', $now)->get();
+    $detail_yesterday = db::table('corona_informations')->orderBy('date', 'ASC')->where('date', '=', $yesterday)->get();
+
+    $response = array(
+      'status' => true,
+      'corona_informations' => $corona_informations,
+      'detail_now' => $detail_now,
+      'detail_yesterday' => $detail_yesterday,
+      'now' => $now
+    );
+    return Response::json($response);
+
+  }
+
   public function health(){
     $title = 'Employee Health Report';
     $title_jp = '従業員の健康報告';
 
 
-  if(Auth::user()->role_code == 'HR' || Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
-    return view('mirai_mobile.report_health', array(
-      'title' => $title,
-      'title_jp' => $title_jp
-    ))->with('page', 'Employee Health Report');
-  }
+    if(Auth::user()->role_code == 'HR' || Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
+      return view('mirai_mobile.report_health', array(
+        'title' => $title,
+        'title_jp' => $title_jp
+      ))->with('page', 'Employee Health Report');
+    }
 
     return view('404',  
       array('message' => 'Silahkan menghubungi bagian HR untuk data absensi MIRAI Mobile.'
-      )
+    )
     );
   }
 
@@ -372,18 +407,18 @@ class MiraiMobileController extends Controller
   public function location(){
     $tglnow = date('Y-m-d');
 
-  if(Auth::user()->role_code == 'HR' || Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
+    if(Auth::user()->role_code == 'HR' || Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
 
-    return view('mirai_mobile.emp_location',  
-      array('title' => 'Resume Employee Location', 
-        'title_jp' => ''
-      )
-    )->with('page', 'Resume Employee Location');
-  }
+      return view('mirai_mobile.emp_location',  
+        array('title' => 'Resume Employee Location', 
+          'title_jp' => ''
+        )
+      )->with('page', 'Resume Employee Location');
+    }
 
-  return view('404',  
+    return view('404',  
       array('message' => 'Silahkan menghubungi bagian HR untuk data absensi MIRAI Mobile.'
-      )
+    )
     );
   }
 
@@ -476,48 +511,48 @@ class MiraiMobileController extends Controller
 
   public function exportList(Request $request){
 
-     $location_detail = db::connection('mobile')->select("SELECT act.answer_date, employees.department, act.employee_id, act.`name`, city, kota from
-      (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
-      WHERE id IN (
-      SELECT MIN(id)
-      FROM quiz_logs
-      GROUP BY employee_id, `name`, answer_date
-      )) as act
-      left join employees on employees.employee_id = act.employee_id
-      join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = act.employee_id AND all_groups.tanggal = act.answer_date
-      where act.city <> employees.kota and answer_date >= '2020-04-13'
-      and employees.department is not null and employees.department <> 'Management Information System'
-      ");
+   $location_detail = db::connection('mobile')->select("SELECT act.answer_date, employees.department, act.employee_id, act.`name`, city, kota from
+    (SELECT employee_id, `name`, answer_date, village, city, province FROM quiz_logs
+    WHERE id IN (
+    SELECT MIN(id)
+    FROM quiz_logs
+    GROUP BY employee_id, `name`, answer_date
+    )) as act
+    left join employees on employees.employee_id = act.employee_id
+    join (select employee_id, tanggal from groups where remark = 'OFF') all_groups on all_groups.employee_id = act.employee_id AND all_groups.tanggal = act.answer_date
+    where act.city <> employees.kota and answer_date >= '2020-04-13'
+    and employees.department is not null and employees.department <> 'Management Information System'
+    ");
 
-    $data = array(
-      'location' => $location_detail
-    );
+   $data = array(
+    'location' => $location_detail
+  );
 
-    ob_clean();
-    
-    Excel::create('List Lokasi Yang Tidak Sesuai', function($excel) use ($data){
-      $excel->sheet('Location', function($sheet) use ($data) {
-        return $sheet->loadView('mirai_mobile.location_excel', $data);
-      });
-    })->export('xlsx');
+   ob_clean();
 
-  }
+   Excel::create('List Lokasi Yang Tidak Sesuai', function($excel) use ($data){
+    $excel->sheet('Location', function($sheet) use ($data) {
+      return $sheet->loadView('mirai_mobile.location_excel', $data);
+    });
+  })->export('xlsx');
 
-  public function indication(){
-    $tglnow = date('Y-m-d');
-    $q = "Select distinct question from quiz_logs where question <> 'Suhu Tubuh'";
+ }
 
-    return view('mirai_mobile.report_indication',  
-      array(
-        'title' => 'Resume Gejala Penyakit Karyawan', 
-        'title_jp' => '',
-        'question' => DB::connection('mobile')->select($q)
-      )
-    )->with('page', 'Resume Gejala Penyakit Karyawan');
-  }
+ public function indication(){
+  $tglnow = date('Y-m-d');
+  $q = "Select distinct question from quiz_logs where question <> 'Suhu Tubuh'";
 
-  public function fetchIndicationData(Request $request)
-  {
+  return view('mirai_mobile.report_indication',  
+    array(
+      'title' => 'Resume Gejala Penyakit Karyawan', 
+      'title_jp' => '',
+      'question' => DB::connection('mobile')->select($q)
+    )
+  )->with('page', 'Resume Gejala Penyakit Karyawan');
+}
+
+public function fetchIndicationData(Request $request)
+{
     // $q =  "SELECT
     //   answer_date,
     //   question,
@@ -533,14 +568,14 @@ class MiraiMobileController extends Controller
     //   AND end_date IS NULL 
     //   AND answer_date >= '2020-04-11'";
 
-    $q = "select quiz_logs.employee_id, quiz_logs.`name`, quiz_logs.`department`, date(quiz_logs.created_at) as date, sum(IF(question = 'Demam' and answer = 'iya', 1, 0)) as Demam, sum(IF(question = 'Batuk' and answer = 'iya', 1, 0)) as Batuk, sum(IF(question = 'Pusing' and answer = 'iya', 1, 0)) as Pusing, sum(IF(question = 'Tenggorokan Sakit' and answer = 'iya', 1, 0)) as Tenggorokan, sum(IF(question = 'Sesak Nafas' and answer = 'iya', 1, 0)) as Sesak, sum(IF(question = 'Indera Perasa & Penciuman Terganggu' and answer = 'iya', 1, 0)) as Indera, sum(IF(question = 'Pernah Berinteraksi dengan Suspect / Positif COVID-19' and answer = 'iya', 1, 0)) as Kontak from quiz_logs LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id WHERE keterangan IS NULL AND end_date IS NULL AND answer_date >= '2020-04-11' group by employee_id, `name`, date(created_at),department having Demam = 1 or Batuk = 1 or Pusing = 1 or Tenggorokan = 1 or Sesak = 1 or Indera = 1 or Kontak = 1 order by date";
+  $q = "select quiz_logs.employee_id, quiz_logs.`name`, quiz_logs.`department`, date(quiz_logs.created_at) as date, sum(IF(question = 'Demam' and answer = 'iya', 1, 0)) as Demam, sum(IF(question = 'Batuk' and answer = 'iya', 1, 0)) as Batuk, sum(IF(question = 'Pusing' and answer = 'iya', 1, 0)) as Pusing, sum(IF(question = 'Tenggorokan Sakit' and answer = 'iya', 1, 0)) as Tenggorokan, sum(IF(question = 'Sesak Nafas' and answer = 'iya', 1, 0)) as Sesak, sum(IF(question = 'Indera Perasa & Penciuman Terganggu' and answer = 'iya', 1, 0)) as Indera, sum(IF(question = 'Pernah Berinteraksi dengan Suspect / Positif COVID-19' and answer = 'iya', 1, 0)) as Kontak from quiz_logs LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id WHERE keterangan IS NULL AND end_date IS NULL AND answer_date >= '2020-04-11' group by employee_id, `name`, date(created_at),department having Demam = 1 or Batuk = 1 or Pusing = 1 or Tenggorokan = 1 or Sesak = 1 or Indera = 1 or Kontak = 1 order by date";
 
-    $response = array(
-      'status' => true,
-      'lists' => DB::connection('mobile')->select($q),
-    );
-    return Response::json($response);
-  }
+  $response = array(
+    'status' => true,
+    'lists' => DB::connection('mobile')->select($q),
+  );
+  return Response::json($response);
+}
 
 
 }

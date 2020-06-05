@@ -23,6 +23,7 @@
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("/index/mirai_mobile/healthy_report") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Attendance & Health Report</a>
 			<a href="{{ url("/radar_covid") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Radar Covid19</a>
+			<a href="{{ url("index/corona_information") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Daily Corona Data</a>
 
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">

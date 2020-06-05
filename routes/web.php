@@ -2711,6 +2711,15 @@ Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexF
 Route::get('fetch/assembly/flute/fetchCheckTag', 'AssemblyProcessController@fetchCheckTag');
 
 
+Route::get('index/assembly/flute/label_outer/{id}/{gmc}/{remark}', 'AssemblyProcessController@fetchCheckTag');
+
+
+Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_besar_outer_fl');
+Route::get('index/fl_label_besar/{id}/{gmc}/{remark}', 'ProcessController@label_besar_fl');
+Route::get('index/fl_label_kecil/{id}/{remark}', 'ProcessController@label_kecil_fl');
+Route::get('index/fl_label_kecil2/{id}/{remark}', 'ProcessController@label_kecil2_fl');
+
+
 
 Route::get('index/board/{location}', 'AssemblyProcessController@indexAssemblyBoard');
 Route::get('fetch/assembly/board', 'AssemblyProcessController@fetchAssemblyBoard');
