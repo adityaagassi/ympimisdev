@@ -41,6 +41,7 @@
 			<a href='{{ url("index/kensa","qa-visual2") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">QA 2 Kensa Visual</b></a>
 			<a href="{{ url("index/middle/buffing_target/assy_fl") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Assembly Flute Target</a>
 			<a href='{{ url("index/assembly/flute/print_label") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Print Label Packing</b></a>
+			<a href='{{ url("index/assembly/flute/print_label_backup") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Print Label Packing Backup</b></a>
 		</div>
 
 		<div class="col-xs-4" style="text-align: center; color: red;">
@@ -67,6 +68,7 @@
 			<a href="{{ url("/stamp/log") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Log Process</a>
 			<a href="{{ url("/stamp/resumes") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Production Result</a>
 			<a href="{{ url("/index/displayWipFl") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Chart Inventory</a>
+			<a href="{{ url('/index/assembly/production_result') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Production Result New</a>
 		</div>
 	</div>
 </section>

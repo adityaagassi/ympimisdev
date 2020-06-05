@@ -43,12 +43,38 @@ class AssemblyProcessController extends Controller
 			'qa-visual1',
 			'qa-visual2',
 		];
+
+		$this->location_fl_display = [
+			'stamp',
+			'perakitan',
+			'kariawase',
+			'tanpoire',
+			'perakitanawal',
+			'tanpoawase',
+			'seasoning',
+			'kango',
+			'renraku',
+			'qa-fungsi',
+			'fukiage1',
+			'fukiage2',
+			'qa-visual1',
+			'qa-visual2'
+		];
 	}
 
 	public function indexFlutePrintLabel(){
 		$title = 'Flute Print Packing Labels';
 		$title_jp = '(Flute Print Packing Labels)';
 		return view('processes.assembly.flute.print_label', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Assembly FL')->with('head', 'Assembly Process');
+	}
+
+	public function indexFlutePrintLabelBackup(){
+		$title = 'Flute Print Packing Labels';
+		$title_jp = '(Flute Print Packing Labels)';
+		return view('processes.assembly.flute.print_label_backup', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 		))->with('page', 'Assembly FL')->with('head', 'Assembly Process');
@@ -103,6 +129,32 @@ class AssemblyProcessController extends Controller
 		))->with('page', 'Assembly FL')->with('head', 'Assembly Process')->with('location',$location);
 	}
 
+	public function fetchCheckTag(Request $request){
+		$tag = $request->get('tag');
+
+		$data = AssemblyInventory::where('tag', $tag)
+		->where('location', 'qa-visual2')
+		->first();
+
+		if($data){
+			$model = db::select("SELECT material_number, material_description, remark FROM materials
+			LEFT JOIN stamp_hierarchies ON materials.material_number = stamp_hierarchies.finished 
+			WHERE stamp_hierarchies.model IN (SELECT model FROM assembly_inventories WHERE tag = '".$tag."')");
+
+			$response = array(
+				'status' => true,
+				'data' => $data,
+				'model' => $model,
+			);
+			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function fetchAssemblyBoard(Request $request){
 		$loc = $request->get('loc');
 		$boards = array();
@@ -117,10 +169,10 @@ class AssemblyProcessController extends Controller
 			sedang_model,
 			TIME(sedang_time) as sedang_time,
 			DATE(sedang_time) as sedang_date
-		FROM
+			FROM
 			assemblies 
-		LEFT JOIN employee_syncs on employee_syncs.employee_id = assemblies.operator_id
-		WHERE
+			LEFT JOIN employee_syncs on employee_syncs.employee_id = assemblies.operator_id
+			WHERE
 			location = '".$loc."' 
 			AND origin_group_code = '041'");
 
@@ -297,15 +349,15 @@ class AssemblyProcessController extends Controller
 		$tag = $request->get('tag');
 
 		$ng_temp = db::select("SELECT
-				* 
+			* 
 			FROM
-				`assembly_ng_temps` 
+			`assembly_ng_temps` 
 			WHERE
-				model = '".$model."'
-				AND serial_number = '".$serial_number."'
-				AND employee_id = '".$employee_id."'
-				AND tag = '".$tag."'
-				AND deleted_at is null");
+			model = '".$model."'
+			AND serial_number = '".$serial_number."'
+			AND employee_id = '".$employee_id."'
+			AND tag = '".$tag."'
+			AND deleted_at is null");
 
 		if($ng_temp == null){
 			$response = array(
@@ -331,14 +383,14 @@ class AssemblyProcessController extends Controller
 		$location = $request->get('process_before');
 
 		$details = db::select("SELECT
-				* 
+			* 
 			FROM
-				`assembly_details` 
+			`assembly_details` 
 			WHERE
-				model = '".$model."' 
-				AND tag = '".$tag."' 
-				AND serial_number = '".$serial_number."' 
-				AND location = '".$location."'");
+			model = '".$model."' 
+			AND tag = '".$tag."' 
+			AND serial_number = '".$serial_number."' 
+			AND location = '".$location."'");
 
 		if($details == null){
 			$response = array(
@@ -728,42 +780,42 @@ class AssemblyProcessController extends Controller
 		}
 
 		$ng = db::select("SELECT DISTINCT
-				(
-					SUBSTRING_INDEX( a.ng_name, '-', 1 )) AS ng_name,(
-				SELECT
-					COUNT( ng_name ) 
-				FROM
-					assembly_ng_logs 
-				WHERE
-					DATE(created_at) = '".$now."' ".$addlocation."
-					AND
-					SUBSTRING_INDEX( ng_name, '-', 1 ) = SUBSTRING_INDEX( a.ng_name, '-', 1 )) AS jumlah,(
-				SELECT
-					COUNT( ng_name ) 
-				FROM
-					assembly_ng_logs 
-				WHERE
-				DATE(created_at) = '".$now."' ".$addlocation."
-				AND
-				SUBSTRING_INDEX( ng_name, '-', 1 ) = SUBSTRING_INDEX( a.ng_name, '-', 1 )) / ( SELECT count( DISTINCT ( model )) AS model FROM `assembly_details` WHERE DATE( created_at ) = '".$now."' ".$addlocation." ) * 100 AS rate 
+			(
+			SUBSTRING_INDEX( a.ng_name, '-', 1 )) AS ng_name,(
+			SELECT
+			COUNT( ng_name ) 
 			FROM
-				assembly_ng_logs AS a 
+			assembly_ng_logs 
 			WHERE
-				DATE( a.created_at ) = '".$now."' ".$addlocation." ORDER BY jumlah DESC");
+			DATE(created_at) = '".$now."' ".$addlocation."
+			AND
+			SUBSTRING_INDEX( ng_name, '-', 1 ) = SUBSTRING_INDEX( a.ng_name, '-', 1 )) AS jumlah,(
+			SELECT
+			COUNT( ng_name ) 
+			FROM
+			assembly_ng_logs 
+			WHERE
+			DATE(created_at) = '".$now."' ".$addlocation."
+			AND
+			SUBSTRING_INDEX( ng_name, '-', 1 ) = SUBSTRING_INDEX( a.ng_name, '-', 1 )) / ( SELECT count( DISTINCT ( model )) AS model FROM `assembly_details` WHERE DATE( created_at ) = '".$now."' ".$addlocation." ) * 100 AS rate 
+			FROM
+			assembly_ng_logs AS a 
+			WHERE
+			DATE( a.created_at ) = '".$now."' ".$addlocation." ORDER BY jumlah DESC");
 
 		$ngkey = db::select("
 			SELECT DISTINCT
-				( model ),
-				count( ng_name ) AS ng,
-				0 AS rate 
+			( model ),
+			count( ng_name ) AS ng,
+			0 AS rate 
 			FROM
-				assembly_ng_logs 
+			assembly_ng_logs 
 			WHERE
-				DATE( created_at ) = '".$now."' ".$addlocation."
+			DATE( created_at ) = '".$now."' ".$addlocation."
 			GROUP BY
-				model 
+			model 
 			ORDER BY
-				ng DESC"
+			ng DESC"
 		);
 
 
@@ -771,15 +823,15 @@ class AssemblyProcessController extends Controller
 
 
 		$datastat = db::select("SELECT
-				0 as total_check,
-				0 as total_ok,
-				0 as ng_rate,
-				count( id ) AS total_ng 
+			0 as total_check,
+			0 as total_ok,
+			0 as ng_rate,
+			count( id ) AS total_ng 
 			FROM
-				assembly_ng_logs 
+			assembly_ng_logs 
 			WHERE
-				DATE( assembly_ng_logs.created_at )= '".$now."' '".$addlocation."'
-				AND deleted_at IS NULL");
+			DATE( assembly_ng_logs.created_at )= '".$now."' '".$addlocation."'
+			AND deleted_at IS NULL");
 
 		$location = "";
 		if($request->get('location') != null) {
@@ -854,21 +906,21 @@ class AssemblyProcessController extends Controller
 			COALESCE ( ng.`check`, 0 ) AS `check`,
 			COALESCE ( ng.ng, 0 ) AS ng,
 			0 AS rate 
-		FROM
+			FROM
 			assembly_operators ao
 			LEFT JOIN employee_syncs e ON ao.employee_id = e.employee_id
 			LEFT JOIN (
 			SELECT
-				count( id ) AS ng,
-				count( id ) AS `check`,
-				operator_id 
+			count( id ) AS ng,
+			count( id ) AS `check`,
+			operator_id 
 			FROM
-				assembly_ng_logs 
+			assembly_ng_logs 
 			WHERE
-				DATE( created_at ) = '".$now."' '".$addlocation."'
+			DATE( created_at ) = '".$now."' '".$addlocation."'
 			GROUP BY
 			operator_id 
-			) ng ON ao.employee_id = ng.operator_id");
+		) ng ON ao.employee_id = ng.operator_id");
 
 		$target = db::select("select eg.`group`, eg.employee_id, e.name, ng.material_number, concat(m.model, ' ', m.`key`) as `key`, ng.ng_name, ng.quantity, ng.created_at from employee_groups eg left join 
 			(select * from welding_ng_logs where deleted_at is null ".$addlocation." and remark in 
@@ -911,6 +963,209 @@ class AssemblyProcessController extends Controller
 			'ng_target' => $ng_target->target,
 			'dateTitle' => $now,
 			'title' => $location
+		);
+		return Response::json($response);
+	}
+
+
+	public function indexProductionResult(Request $request){
+		$title = 'Production Result';
+		$title_jp = '??';
+		return view('processes.assembly.flute.display.production_result')
+		->with('page', 'Process Assy FL')
+		->with('head', 'Assembly Process')
+		->with('location_all', $this->location_fl_display)
+		->with('title', $title)
+		->with('title_jp', $title_jp);
+	}
+
+	public function fetchProductionResult(Request $request){
+		$first = date('Y-m-01');
+		$now = date('Y-m-d');
+
+		$location = $request->get('location');
+		if ($request->get('location') == 'stamp') {
+			$title_location = 'Stamp';
+			$next_location = 'perakitan';
+		}
+		if ($request->get('location') == 'perakitan') {
+			$title_location = 'Perakitan';
+			$next_location = 'kariawase';
+		}
+		if ($request->get('location') == 'kariawase') {
+			$title_location = 'Kariawase';
+			$next_location = 'tanpoire';
+		}
+		if ($request->get('location') == 'tanpoire') {
+			$title_location = 'Tanpoire';
+			$next_location = 'perakitanawal';
+		}
+		if ($request->get('location') == 'perakitanawal') {
+			$title_location = 'Perakitan Awal';
+			$next_location = 'tanpoawase';
+		}
+		if ($request->get('location') == 'tanpoawase') {
+			$title_location = 'Tanpo Awase';
+			$next_location = 'seasoning';
+		}
+		if ($request->get('location') == 'seasoning') {
+			$title_location = 'Seasoning';
+			$next_location = 'kango';
+		}
+		if ($request->get('location') == 'kango') {
+			$title_location = 'Kango';
+			$next_location = 'renraku';
+		}
+		if ($request->get('location') == 'renraku') {
+			$title_location = 'Renraku (Chousei)';
+			$next_location = 'qa-fungsi';
+		}
+		if ($request->get('location') == 'qa-fungsi') {
+			$title_location = 'QA Cek Fungsi';
+			$next_location = 'fukiage1';
+		}
+		if ($request->get('location') == 'fukiage1') {
+			$title_location = 'Fukiage Awal';
+			$next_location = 'qa-visual1';
+		}
+		if ($request->get('location') == 'qa-visual1') {
+			$title_location = 'QA Cek Visual 1';
+			$next_location = 'fukiage2';
+		}
+		if ($request->get('location') == 'fukiage2') {
+			$title_location = 'Fukiage Akhir';
+			$next_location = 'qa-visual2';
+		}
+		if ($request->get('location') == 'qa-visual2') {
+			$title_location = 'QA Cek Visual 2';
+			$next_location = 'packing';
+		}
+
+		if ($location != "") {
+			$query = "SELECT
+					model,
+					sum( plan ) AS plan,
+					sum( out_item ) AS out_item,
+					sum( in_item ) AS in_item 
+				FROM
+					(
+					SELECT
+						model,
+						quantity AS plan,
+						0 AS out_item,
+						0 AS in_item 
+					FROM
+						stamp_schedules 
+					WHERE
+						due_date = '".$now."' UNION ALL
+					SELECT
+						model,
+						0 AS plan,
+						COUNT(
+						DISTINCT ( serial_number )) AS out_item,
+						0 AS in_item 
+					FROM
+						assembly_details 
+					WHERE
+						location like '%".$next_location."%' 
+						AND date( created_at ) = '".$now."' 
+					GROUP BY
+						model UNION ALL
+					SELECT
+						model,
+						0 AS plan,
+						0 AS out_item,
+						COUNT(
+						DISTINCT ( serial_number )) AS in_item 
+					FROM
+						assembly_details 
+					WHERE
+						location like '%".$location."%' 
+						AND date( created_at ) = '".$now."' 
+					GROUP BY
+						model 
+					) AS plan 
+				GROUP BY
+					model 
+				HAVING
+			model LIKE 'YFL%'";
+
+			$chartData = DB::select($query);
+
+			if(date('D')=='Fri'){
+				if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+					$deduction = 600;
+				}
+				elseif(date('Y-m-d h:i:s') >= date('Y-m-d 13:10:00')){
+					$deduction = 4800;
+				}
+				elseif(date('Y-m-d h:i:s') >= date('Y-m-d 15:00:00')){
+					$deduction = 5400;
+				}
+				elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:30:00')){
+					$deduction = 5800;
+				}
+				elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+					$deduction = 7500;
+				}
+				else{
+					$deduction = 0;
+				}
+			}
+			else{
+				if(date('Y-m-d h:i:s') >= date('Y-m-d 09:30:00')){
+					$deduction = 600;
+				}
+				elseif(date('Y-m-d h:i:s') >= date('Y-m-d 12:40:00')){
+					$deduction = 3000;
+				}
+				elseif(date('Y-m-d h:i:s') >= date('Y-m-d 14:30:00')){
+					$deduction = 3600;
+				}
+				elseif(date('Y-m-d h:i:s') >= date('Y-m-d 17:00:00')){
+					$deduction = 4200;
+				}
+				elseif(date('Y-m-d h:i:s') >= date('Y-m-d 18:30:00')){
+					$deduction = 5700;
+				}
+				else{
+					$deduction = 0;
+				}
+			}
+
+			$query2 = "SELECT
+					total.*
+				FROM
+					(
+					SELECT
+						max( assembly_details.created_at ) AS last_input,
+						count( assembly_details.serial_number ) AS quantity,
+						count(
+						DISTINCT ( assembly_details.operator_id )) AS manpower,
+						ROUND(
+						standard_time * count( assembly_details.serial_number )) AS std_time,
+						SUM(
+						TIMESTAMPDIFF( SECOND, assembly_details.sedang_start_date, assembly_details.sedang_finish_date )) AS act_time 
+					FROM
+						assembly_details
+						LEFT JOIN assembly_std_times ON assembly_std_times.model = assembly_details.model 
+						AND assembly_std_times.location LIKE '%".$location."%' 
+					WHERE
+						assembly_details.location LIKE '%".$location."%' 
+						AND DATE( assembly_details.created_at ) = '".$now."' 
+					GROUP BY
+						DATE( assembly_details.created_at ),standard_time
+					) total";
+
+			$effData = DB::select($query2);
+
+			
+		}
+		$response = array(
+			'status' => true,
+			'chartData' => $chartData,
+			'effData' => $effData,
+			'title_location' => $title_location
 		);
 		return Response::json($response);
 	}

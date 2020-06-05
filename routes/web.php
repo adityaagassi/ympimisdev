@@ -1020,9 +1020,14 @@ Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 	Route::get('fetch/purchase_item', 'AccountingController@fetch_item');
 });
 
+//nomor
+Route::get('purchase_requisition/get_nomor_pr', 'AccountingController@get_nomor_pr');
+
 Route::get('purchase_requisition', 'AccountingController@purchase_requisition');
 Route::get('fetch/purchase_requisition', 'AccountingController@fetch_purchase_requisition');
 Route::post('create/purchase_requisition', 'AccountingController@create_purchase_requisition');
+Route::get('fetch/purchase_requisition/itemlist', 'AccountingController@fetchItemList');
+Route::get('purchase_requisition/get_detailitem', 'AccountingController@prgetitemdesc')->name('admin.prgetitemdesc');
 
 Route::get('investment', 'AccountingController@investment');
 Route::get('fetch/investment', 'AccountingController@fetch_investment');
@@ -2655,6 +2660,8 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 
 	Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
 
+	Route::get('verify/maintenance/spk/approve_urgent/{stat}/{order_no}', 'MaintenanceController@verifySPK');
+
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
 	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
@@ -2698,7 +2705,12 @@ Route::post('input/assembly/ng_temp', 'AssemblyProcessController@inputNgTemp');
 Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNgTemp');
 Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');
 Route::get('fetch/assembly/get_process_before', 'AssemblyProcessController@getProcessBefore');
+
+Route::get('index/assembly/flute/print_label_backup', 'AssemblyProcessController@indexFlutePrintLabelBackup');
 Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexFlutePrintLabel');
+Route::get('fetch/assembly/flute/fetchCheckTag', 'AssemblyProcessController@fetchCheckTag');
+
+
 
 Route::get('index/board/{location}', 'AssemblyProcessController@indexAssemblyBoard');
 Route::get('fetch/assembly/board', 'AssemblyProcessController@fetchAssemblyBoard');
@@ -2711,6 +2723,9 @@ Route::get('fetch/assembly/ng_rate', 'AssemblyProcessController@fetchNgRate');
 
 Route::get('index/assembly/op_ng', 'AssemblyProcessController@indexOpRate');
 Route::get('fetch/assembly/op_ng', 'AssemblyProcessController@fetchOpRate');
+
+Route::get('index/assembly/production_result', 'AssemblyProcessController@indexProductionResult');
+Route::get('fetch/assembly/production_result', 'AssemblyProcessController@fetchProductionResult');
 
 //ROOMS
 Route::get('/meetingroom1', function () {

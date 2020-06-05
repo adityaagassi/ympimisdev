@@ -382,7 +382,7 @@
 				$('#loc').html('<b style="color:white">'+ title +'</b>');
 
 				for(var i = 0; i < result.data.length; i++){
-					var Rate = result.data[i].ng_rate;
+					var Rate = parseFloat(result.data[i].ng_rate);
 
 					$('#total').append().empty();
 					$('#total').html(result.data[i].total_check+ '');
@@ -438,7 +438,7 @@
 						backgroundColor: "rgba(0,0,0,0)"
 					},
 					title: {
-						text: 'Total NG Rate',
+						text: 'Total NG',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -483,25 +483,26 @@
 						type: 'linear',
 						
 					}
-					, { // Secondary yAxis
-						title: {
-							text: 'NG Rate (%)',
-							style: {
-								color: '#eee',
-								fontSize: '20px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
-						},
-						labels:{
-							style:{
-								fontSize:"20px"
-							}
-						},
-						type: 'linear',
-						opposite: true
+					// , { // Secondary yAxis
+					// 	title: {
+					// 		text: 'NG Rate (%)',
+					// 		style: {
+					// 			color: '#eee',
+					// 			fontSize: '20px',
+					// 			fontWeight: 'bold',
+					// 			fill: '#6d869f'
+					// 		}
+					// 	},
+					// 	labels:{
+					// 		style:{
+					// 			fontSize:"20px"
+					// 		}
+					// 	},
+					// 	type: 'linear',
+					// 	opposite: true
 
-					}],
+					// }
+					],
 					tooltip: {
 						headerFormat: '<span>NG Name</span><br/>',
 						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y}</b><br/>',
@@ -551,24 +552,25 @@
 							cursor: 'pointer'
 						},
 					},
-					series: [{
-						type: 'column',
-						data: series2,
-						name: 'NG Rate',
-						yAxis:1,
-						colorByPoint: false,
-						color:'#ff9800',
-						animation: false,
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}%' ,
-							style:{
-								fontSize: '1vw',
-								textShadow: false
-							},
-						},
+					series: [
+					// {
+					// 	type: 'column',
+					// 	data: series2,
+					// 	name: 'NG Rate',
+					// 	yAxis:1,
+					// 	colorByPoint: false,
+					// 	color:'#ff9800',
+					// 	animation: false,
+					// 	dataLabels: {
+					// 		enabled: true,
+					// 		format: '{point.y}%' ,
+					// 		style:{
+					// 			fontSize: '1vw',
+					// 			textShadow: false
+					// 		},
+					// 	},
 						
-					},
+					// },
 					{
 						type: 'column',
 						data: series,
@@ -613,7 +615,7 @@
 						backgroundColor: "rgba(0,0,0,0)"
 					},
 					title: {
-						text: 'Total NG Rate By Model',
+						text: 'Total NG By Model',
 						style: {
 							fontSize: '30px',
 							fontWeight: 'bold'
@@ -658,25 +660,26 @@
 						type: 'linear',
 						
 					}
-					, { // Secondary yAxis
-						title: {
-							text: 'NG Rate (%)',
-							style: {
-								color: '#eee',
-								fontSize: '20px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
-						},
-						labels:{
-							style:{
-								fontSize:"20px"
-							}
-						},
-						type: 'linear',
-						opposite: true
+					// , { // Secondary yAxis
+					// 	title: {
+					// 		text: 'NG Rate (%)',
+					// 		style: {
+					// 			color: '#eee',
+					// 			fontSize: '20px',
+					// 			fontWeight: 'bold',
+					// 			fill: '#6d869f'
+					// 		}
+					// 	},
+					// 	labels:{
+					// 		style:{
+					// 			fontSize:"20px"
+					// 		}
+					// 	},
+					// 	type: 'linear',
+					// 	opposite: true
 
-					}],
+					// }
+					],
 					legend: {
 						layout: 'horizontal',
 						align: 'right',
@@ -727,23 +730,25 @@
 					credits: {
 						enabled: false
 					},
-					series :  [{
-						type: 'column',
-						data: series2,
-						name: 'NG Rate',
-						yAxis:1,
-						colorByPoint: false,
-						color:'#ff9800',
-						animation: false,
-						dataLabels: {
-							enabled: true,
-							format: '{point.y}%',
-							style:{
-								fontSize: '0.9vw',
-								textShadow : false
-							},
-						},
-					},{
+					series :  [
+					// {
+					// 	type: 'column',
+					// 	data: series2,
+					// 	name: 'NG Rate',
+					// 	yAxis:1,
+					// 	colorByPoint: false,
+					// 	color:'#ff9800',
+					// 	animation: false,
+					// 	dataLabels: {
+					// 		enabled: true,
+					// 		format: '{point.y}%',
+					// 		style:{
+					// 			fontSize: '0.9vw',
+					// 			textShadow : false
+					// 		},
+					// 	},
+					// },
+					{
 						type: 'column',
 						data: series,
 						name: 'Total NG',
