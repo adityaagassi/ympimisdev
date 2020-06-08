@@ -30,6 +30,7 @@
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Assemblies <i class="fa fa-angle-double-down"></i></span>
 			<a href='{{ url("index/kensa","kariawase-fungsi") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kariawase Kensa Fungsi</b></a>
 			<a href='{{ url("index/kensa","kariawase-visual") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kariawase Kensa Visual</b></a>
+			<a href="{{ url('/index/kensa','perakitanawal-kensa') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Perakitan Awal Kensa</a>
 			<a href='{{ url("index/kensa","tanpoawase-kensa") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpo Awase Kensa</b></a>
 			<a href='{{ url("index/kensa","tanpoawase-fungsi") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpo Awase Kensa Fungsi</b></a>
 			<a href='{{ url("index/kensa","kango-fungsi") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kango Kensa Fungsi</b></a>
@@ -69,6 +70,7 @@
 			<a href="{{ url("/stamp/resumes") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Production Result</a>
 			<a href="{{ url("/index/displayWipFl") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Chart Inventory</a>
 			<a href="{{ url('/index/assembly/production_result') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Production Result New</a>
+			<a href="{{ url('/index/assembly/stamp_record') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Stamp Record New</a>
 		</div>
 	</div>
 </section>

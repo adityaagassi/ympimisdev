@@ -36,6 +36,7 @@ class AssemblyProcessController extends Controller
 		$this->location_fl = [
 			'kariawase-fungsi',
 			'kariawase-visual',
+			'perakitanawal-kensa',
 			'tanpoawase-kensa',
 			'tanpoawase-fungsi',
 			'kango-fungsi',
@@ -141,7 +142,7 @@ class AssemblyProcessController extends Controller
 			and origin_group_code = '041')");
 
 		$des = DB::select("SELECT serial_number, model FROM assembly_logs 
-			WHERE	origin_group_code = '041' 
+			WHERE origin_group_code = '041' 
 			AND location = 'stamp-process' 
 			AND serial_number = '".$id."'");
 
@@ -161,7 +162,7 @@ class AssemblyProcessController extends Controller
 			and origin_group_code = '041')");
 
 		$des = DB::select("SELECT serial_number, model FROM assembly_logs 
-			WHERE	origin_group_code = '041' 
+			WHERE origin_group_code = '041' 
 			AND location = 'stamp-process' 
 			AND serial_number = '".$id."'");
 
@@ -174,10 +175,6 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function labelBesarFl($id,$gmc,$remark){
-		$barcode = db::select("select stamp_hierarchies.finished, materials.material_description as model, stamp_hierarchies.janean, stamp_hierarchies.upc, stamp_hierarchies.remark from stamp_hierarchies
-			left join materials on stamp_hierarchies.finished = materials.material_number
-			where stamp_hierarchies.finished = '".$gmc."'");
-
 		$details = AssemblyDetail::where('serial_number', $id)
 		->where('origin_group_code', '041')
 		->where('is_send_log', '0')
@@ -234,6 +231,17 @@ class AssemblyProcessController extends Controller
 		$detail = AssemblyDetail::where('serial_number', $id)
 		->where('origin_group_code', '041')
 		->delete();
+
+		$barcode = db::select("select flute.serial_number, material.finished, material.janean, material.upc, material.remark, material.model from
+			(select stamp_hierarchies.finished, materials.material_description as model, stamp_hierarchies.janean, stamp_hierarchies.upc, stamp_hierarchies.remark from stamp_hierarchies
+			left join materials on stamp_hierarchies.finished = materials.material_number
+			where stamp_hierarchies.finished = '".$gmc."') as material
+			left join
+			(SELECT serial_number, model FROM assembly_logs 
+			WHERE origin_group_code = '041' 
+			AND location = 'packing' 
+			AND serial_number = '".$id."') as flute
+			on flute.model = material.model;");
 
 		$date = db::select("SELECT week_date, date_code from weekly_calendars
 			WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from assembly_logs
@@ -402,6 +410,10 @@ class AssemblyProcessController extends Controller
 		}
 		if($location == 'kariawase-visual'){
 			$title = 'Kariawase Kensa Visual Flute';
+			$title_jp= '??';
+		}
+		if($location == 'perakitanawal-kensa'){
+			$title = 'Perakitan Awal Kensa Flute';
 			$title_jp= '??';
 		}
 		if($location == 'tanpoawase-kensa'){
