@@ -220,7 +220,7 @@
 								</div>
 
 								<div class="tab-pane" id="tab_jkt_2">
-									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
+									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
 										新規感染者数
 									</div>
 									<div id="jkt_new_infected" style="margin-bottom: 20px;"></div>
@@ -304,7 +304,7 @@
 								</div>
 
 								<div class="tab-pane" id="tab_bks_2">
-									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
+									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
 										新規感染者数
 									</div>
 									<div id="bks_new_infected" style="margin-bottom: 20px;"></div>
@@ -388,7 +388,7 @@
 								</div>
 
 								<div class="tab-pane" id="tab_sby_2">
-									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
+									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
 										新規感染者数
 									</div>
 									<div id="sby_new_infected" style="margin-bottom: 20px;"></div>
@@ -472,7 +472,7 @@
 								</div>
 
 								<div class="tab-pane" id="tab_psr_2">
-									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
+									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
 										新規感染者数
 									</div>
 									<div id="psr_new_infected" style="margin-bottom: 20px;"></div>
