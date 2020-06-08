@@ -482,15 +482,11 @@ class EmployeeController extends Controller
 
           $q_data = "select bagian.*, IFNULL(kz.count,0) as count  from 
           (select fr.employee_id, `name`, position, fr.department, struktur.section from
-          (select employees.employee_id, `name`, position, department, section from employees left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
-          left join mutation_logs on mutation_logs.employee_id = employees.employee_id
-          where end_date is null and promotion_logs.valid_to is null and mutation_logs.valid_to is null and position in ('foreman','chief')) as fr
+          (select employee_id, `name`, position, department, section from employee_syncs where end_date is null and position in ('foreman', 'chief')) as fr
           left join 
-          (select organization_structures.child_code, organization_structures.`status` as dep, os.parent_name, os.child_code as section from organization_structures 
-          join organization_structures as os on organization_structures.`status` = os.parent_name
-          where organization_structures.remark = 'department') as struktur on fr.department = struktur.child_code) as bagian
+          (select department, section from employee_syncs where department is not null and section is not null group by department, section) as struktur on fr.department = struktur.department) as bagian
           left join
-          (select count(id) as count, area from kaizen_forms where `status` = -1 group by area) as kz
+          (select count(id) as count, area from kaizen_forms where `status` = -1 and deleted_at is null group by area) as kz
           on bagian.section = kz.area
           ".$d."
           order by `name` desc";
