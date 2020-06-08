@@ -1023,12 +1023,18 @@ Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 //nomor
 Route::get('purchase_requisition/get_nomor_pr', 'AccountingController@get_nomor_pr');
 
+//purchase_requisition
 Route::get('purchase_requisition', 'AccountingController@purchase_requisition');
 Route::get('fetch/purchase_requisition', 'AccountingController@fetch_purchase_requisition');
 Route::post('create/purchase_requisition', 'AccountingController@create_purchase_requisition');
 Route::get('fetch/purchase_requisition/itemlist', 'AccountingController@fetchItemList');
 Route::get('purchase_requisition/get_detailitem', 'AccountingController@prgetitemdesc')->name('admin.prgetitemdesc');
 
+//approval purchase_requisition
+Route::get('purchase_requisition/verifikasi/{id}', 'AccountingController@verifikasi_purchase_requisition');
+Route::post('purchase_requisition/approval/{id}', 'AccountingController@approval_purchase_requisition');
+
+//investment
 Route::get('investment', 'AccountingController@investment');
 Route::get('fetch/investment', 'AccountingController@fetch_investment');
 Route::get('investment/create', 'AccountingController@create_investment');
@@ -1036,6 +1042,7 @@ Route::post('investment/create_post', 'AccountingController@create_investment_po
 Route::get('investment/detail/{id}', 'AccountingController@detail_investment');
 Route::post('investment/update_post', 'AccountingController@detail_investment_post');
 
+//investment item
 Route::post('investment/create_investment_item', 'AccountingController@create_investment_item');
 Route::get('investment/fetch_investment_item/{id}', 'AccountingController@fetch_investment_item');
 Route::post('investment/edit_investment_item', 'AccountingController@edit_investment_item');
@@ -2662,6 +2669,8 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 
 	Route::get('verify/maintenance/spk/approve_urgent/{stat}/{order_no}', 'MaintenanceController@verifySPK');
 
+	Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDangerNote');
+
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
 	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
@@ -2711,7 +2720,10 @@ Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexF
 Route::get('fetch/assembly/flute/fetchCheckTag', 'AssemblyProcessController@fetchCheckTag');
 
 
-Route::get('index/assembly/flute/label_outer/{id}/{gmc}/{remark}', 'AssemblyProcessController@fetchCheckTag');
+Route::get('index/assembly/flute/label_outer/{id}/{gmc}/{remark}', 'AssemblyProcessController@labelBesarOuterFl');
+Route::get('index/assembly/flute/label_besar/{id}/{gmc}/{remark}', 'AssemblyProcessController@labelBesarFl');
+Route::get('index/assembly/flute/label_kecil/{id}/{remark}', 'AssemblyProcessController@labelKecilFl');
+Route::get('index/assembly/flute/label_kecil2/{id}/{remark}', 'AssemblyProcessController@labelKecil2Fl');
 
 
 Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_besar_outer_fl');
@@ -2735,6 +2747,9 @@ Route::get('fetch/assembly/op_ng', 'AssemblyProcessController@fetchOpRate');
 
 Route::get('index/assembly/production_result', 'AssemblyProcessController@indexProductionResult');
 Route::get('fetch/assembly/production_result', 'AssemblyProcessController@fetchProductionResult');
+
+Route::get('index/assembly/stamp_record', 'AssemblyProcessController@indexStampRecord');
+Route::get('fetch/assembly/stamp_record', 'AssemblyProcessController@fetchStampRecord');
 
 //ROOMS
 Route::get('/meetingroom1', function () {

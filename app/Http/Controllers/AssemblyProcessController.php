@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\DB;
 use Response;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
-use App\AssemblyNgTemp;
-use App\AssemblyNgLog;
 use App\AssemblyDetail;
 use App\AssemblyInventory;
+use App\AssemblyLog;
+use App\AssemblyNgTemp;
+use App\AssemblyNgLog;
+use App\AssemblyTag;
 use App\AssemblyOnko;
+use App\Process;
 use DateTime;
 
 class AssemblyProcessController extends Controller
@@ -58,7 +61,8 @@ class AssemblyProcessController extends Controller
 			'fukiage1',
 			'fukiage2',
 			'qa-visual1',
-			'qa-visual2'
+			'qa-visual2',
+			'packing'
 		];
 	}
 
@@ -129,17 +133,196 @@ class AssemblyProcessController extends Controller
 		))->with('page', 'Assembly FL')->with('head', 'Assembly Process')->with('location',$location);
 	}
 
+	public function labelKecil2Fl($id,$remark){
+		$barcode = DB::select("SELECT week_date, date_code from weekly_calendars
+			WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from assembly_logs
+			WHERE serial_number = '".$id."'
+			and location = 'packing'
+			and origin_group_code = '041')");
+
+		$des = DB::select("SELECT serial_number, model FROM assembly_logs 
+			WHERE	origin_group_code = '041' 
+			AND location = 'stamp-process' 
+			AND serial_number = '".$id."'");
+
+		return view('processes.assembly.flute.label.label_kecil2',array(
+			'barcode' => $barcode,
+			'sn' => $id,
+			'remark' => $remark,
+			'des' => $des,
+		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+
+	public function labelKecilFl($id,$remark){
+		$barcode = DB::select("SELECT week_date, date_code from weekly_calendars
+			WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from assembly_logs
+			WHERE serial_number = '".$id."'
+			and location = 'packing'
+			and origin_group_code = '041')");
+
+		$des = DB::select("SELECT serial_number, model FROM assembly_logs 
+			WHERE	origin_group_code = '041' 
+			AND location = 'stamp-process' 
+			AND serial_number = '".$id."'");
+
+		return view('processes.assembly.flute.label.label_kecil',array(
+			'barcode' => $barcode,
+			'sn' => $id,
+			'remark' => $remark,
+			'des' => $des,
+		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+
+	public function labelBesarFl($id,$gmc,$remark){
+		$barcode = db::select("select stamp_hierarchies.finished, materials.material_description as model, stamp_hierarchies.janean, stamp_hierarchies.upc, stamp_hierarchies.remark from stamp_hierarchies
+			left join materials on stamp_hierarchies.finished = materials.material_number
+			where stamp_hierarchies.finished = '".$gmc."'");
+
+		$details = AssemblyDetail::where('serial_number', $id)
+		->where('origin_group_code', '041')
+		->where('is_send_log', '0')
+		->get();
+		$now = new DateTime();
+
+		if(count($details) > 0){
+			foreach ($details as $detail) {
+				$detail = new AssemblyLog([
+					'tag' => $detail->tag,
+					'serial_number' => $detail->serial_number,
+					'model' => $detail->model,
+					'location' => $detail->location,
+					'operator_id' => $detail->operator_id,
+					'sedang_start_date' => $detail->sedang_start_date,
+					'sedang_finish_date' => $detail->sedang_finish_date,
+					'origin_group_code' => $detail->origin_group_code,
+					'created_by' => $detail->created_by
+				]);
+				$detail->save();
+			}
+			$detail = new AssemblyLog([
+				'tag' => $details[0]->tag,
+				'serial_number' => $id,
+				'model' => $barcode[0]->model,
+				'location' => 'packing',
+				'operator_id' => Auth::user()->username,
+				'sedang_start_date' => $now,
+				'sedang_finish_date' => $now,
+				'origin_group_code' => '041',
+				'created_by' => Auth::user()->username
+			]);
+			$detail->save();
+
+			$details = AssemblyDetail::where('serial_number', $id)
+			->where('origin_group_code', '041')
+			->where('is_send_log', '0')
+			->update([
+				'is_send_log' => '1'
+			]);
+		}
+
+		$tag = AssemblyTag::where('serial_number', $id)
+		->where('origin_group_code', '041')
+		->update([
+			'serial_number' => null,
+			'model' => null,
+		]);
+
+		$inventory = AssemblyInventory::where('serial_number', $id)
+		->where('origin_group_code', '041')
+		->delete();
+
+		$detail = AssemblyDetail::where('serial_number', $id)
+		->where('origin_group_code', '041')
+		->delete();
+
+		$date = db::select("SELECT week_date, date_code from weekly_calendars
+			WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from assembly_logs
+			WHERE serial_number = '".$id."'
+			and location = 'packing'
+			and origin_group_code = '041')");
+
+		return view('processes.assembly.flute.label.label_besar',array(
+			'barcode' => $barcode,
+			'date' => $date,
+			'remark' => $remark,
+		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+
+	public function labelBesarOuterFl($id,$gmc,$remark){
+
+		$barcode = db::select("select stamp_hierarchies.finished, materials.material_description as model, stamp_hierarchies.janean, stamp_hierarchies.upc, stamp_hierarchies.remark from stamp_hierarchies
+			left join materials on stamp_hierarchies.finished = materials.material_number
+			where stamp_hierarchies.finished = '".$gmc."'");
+
+		
+		$details = AssemblyDetail::where('serial_number', $id)
+		->where('origin_group_code', '041')
+		->where('is_send_log', '0')
+		->get();
+		$now = new DateTime();
+
+		if(count($details) > 0){
+			foreach ($details as $detail) {
+				$detail = new AssemblyLog([
+					'tag' => $detail->tag,
+					'serial_number' => $detail->serial_number,
+					'model' => $detail->model,
+					'location' => $detail->location,
+					'operator_id' => $detail->operator_id,
+					'sedang_start_date' => $detail->sedang_start_date,
+					'sedang_finish_date' => $detail->sedang_finish_date,
+					'origin_group_code' => $detail->origin_group_code,
+					'created_by' => $detail->created_by
+				]);
+				$detail->save();
+			}
+			$detail = new AssemblyLog([
+				'tag' => $details[0]->tag,
+				'serial_number' => $id,
+				'model' => $barcode[0]->model,
+				'location' => 'packing',
+				'operator_id' => Auth::user()->username,
+				'sedang_start_date' => $now,
+				'sedang_finish_date' => $now,
+				'origin_group_code' => '041',
+				'created_by' => Auth::user()->username
+			]);
+			$detail->save();
+
+			$details = AssemblyDetail::where('serial_number', $id)
+			->where('origin_group_code', '041')
+			->where('is_send_log', '0')
+			->update([
+				'is_send_log' => '1'
+			]);
+		}
+
+		$date = db::select("SELECT week_date, date_code from weekly_calendars
+			WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from assembly_logs
+			WHERE serial_number = '".$id."'
+			and location = 'packing'
+			and origin_group_code = '041')");
+
+		return view('processes.assembly.flute.label.label_besar_outer',array(
+			'barcode' => $barcode,
+			'date' => $date,
+			'remark' => $remark,
+		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+
 	public function fetchCheckTag(Request $request){
 		$tag = $request->get('tag');
+		$origin_group_code = $request->get('origin_group');
 
 		$data = AssemblyInventory::where('tag', $tag)
 		->where('location', 'qa-visual2')
+		->where('origin_group_code', $origin_group_code)
 		->first();
 
 		if($data){
 			$model = db::select("SELECT material_number, material_description, remark FROM materials
-			LEFT JOIN stamp_hierarchies ON materials.material_number = stamp_hierarchies.finished 
-			WHERE stamp_hierarchies.model IN (SELECT model FROM assembly_inventories WHERE tag = '".$tag."')");
+				LEFT JOIN stamp_hierarchies ON materials.material_number = stamp_hierarchies.finished 
+				WHERE stamp_hierarchies.model IN (SELECT model FROM assembly_inventories WHERE tag = '".$tag."')");
 
 			$response = array(
 				'status' => true,
@@ -212,7 +395,7 @@ class AssemblyProcessController extends Controller
 		$loc_code = explode('-', $location);
 		$process = $loc_code[0];
 		$loc_spec = $loc_code[1];
-		
+
 		if($location == 'kariawase-fungsi'){
 			$title = 'Kariawase Kensa Fungsi Flute';
 			$title_jp= '??';
@@ -272,7 +455,7 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function scanAssemblyOperator(Request $request){
-		
+
 		$employee = db::table('assembly_operators')->join('employee_syncs','assembly_operators.employee_id','=','employee_syncs.employee_id')->where('tag', '=', $request->get('employee_id'))->first();
 
 		if($employee == null){
@@ -292,7 +475,7 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function scanAssemblyKensa(Request $request){
-		
+
 		$details = db::table('assembly_details')->join('employee_syncs','assembly_details.operator_id','=','employee_syncs.employee_id')->where('tag', '=', $request->get('tag'))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->first();
 
 		$details2 = db::table('assembly_details')->join('employee_syncs','assembly_details.operator_id','=','employee_syncs.employee_id')->where('tag', '=', $request->get('tag'))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->orderBy('assembly_details.id', 'asc')->get();
@@ -316,7 +499,7 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function showNgDetail(Request $request){
-		
+
 		$ng_detail = db::select("select * from assembly_ng_lists where ng_name = '".$request->get('ng_name')."' and location = '".$request->get('location')."' and process = '".$request->get('process')."' and origin_group_code = '041'");
 
 		if ($request->get('ng_name') == 'Renraku') {
@@ -846,7 +1029,7 @@ class AssemblyProcessController extends Controller
 			$location = "";
 		}
 		$location = strtoupper($location);
-		
+
 		$response = array(
 			'status' => true,
 			// 'checks' => $checks,
@@ -954,7 +1137,7 @@ class AssemblyProcessController extends Controller
 			$location = "";
 		}
 		$location = strtoupper($location);
-		
+
 		$response = array(
 			'status' => true,
 			'ng_rate' => $ng_rate,
@@ -1040,54 +1223,58 @@ class AssemblyProcessController extends Controller
 			$title_location = 'QA Cek Visual 2';
 			$next_location = 'packing';
 		}
+		if ($request->get('location') == 'packing') {
+			$title_location = 'Packing';
+			$next_location = 'warehouse';
+		}
 
 		if ($location != "") {
 			$query = "SELECT
-					model,
-					sum( plan ) AS plan,
-					sum( out_item ) AS out_item,
-					sum( in_item ) AS in_item 
-				FROM
-					(
-					SELECT
-						model,
-						quantity AS plan,
-						0 AS out_item,
-						0 AS in_item 
-					FROM
-						stamp_schedules 
-					WHERE
-						due_date = '".$now."' UNION ALL
-					SELECT
-						model,
-						0 AS plan,
-						COUNT(
-						DISTINCT ( serial_number )) AS out_item,
-						0 AS in_item 
-					FROM
-						assembly_details 
-					WHERE
-						location like '%".$next_location."%' 
-						AND date( created_at ) = '".$now."' 
-					GROUP BY
-						model UNION ALL
-					SELECT
-						model,
-						0 AS plan,
-						0 AS out_item,
-						COUNT(
-						DISTINCT ( serial_number )) AS in_item 
-					FROM
-						assembly_details 
-					WHERE
-						location like '%".$location."%' 
-						AND date( created_at ) = '".$now."' 
-					GROUP BY
-						model 
-					) AS plan 
-				GROUP BY
-					model 
-				HAVING
+			model,
+			sum( plan ) AS plan,
+			sum( out_item ) AS out_item,
+			sum( in_item ) AS in_item 
+			FROM
+			(
+			SELECT
+			model,
+			quantity AS plan,
+			0 AS out_item,
+			0 AS in_item 
+			FROM
+			stamp_schedules 
+			WHERE
+			due_date = '".$now."' UNION ALL
+			SELECT
+			model,
+			0 AS plan,
+			COUNT(
+			DISTINCT ( serial_number )) AS out_item,
+			0 AS in_item 
+			FROM
+			assembly_details 
+			WHERE
+			location like '%".$next_location."%' 
+			AND date( created_at ) = '".$now."' 
+			GROUP BY
+			model UNION ALL
+			SELECT
+			model,
+			0 AS plan,
+			0 AS out_item,
+			COUNT(
+			DISTINCT ( serial_number )) AS in_item 
+			FROM
+			assembly_details 
+			WHERE
+			location like '%".$location."%' 
+			AND date( created_at ) = '".$now."' 
+			GROUP BY
+			model 
+			) AS plan 
+			GROUP BY
+			model 
+			HAVING
 			model LIKE 'YFL%'";
 
 			$chartData = DB::select($query);
@@ -1134,40 +1321,100 @@ class AssemblyProcessController extends Controller
 			}
 
 			$query2 = "SELECT
-					total.*
-				FROM
-					(
-					SELECT
-						max( assembly_details.created_at ) AS last_input,
-						count( assembly_details.serial_number ) AS quantity,
-						count(
-						DISTINCT ( assembly_details.operator_id )) AS manpower,
-						ROUND(
-						standard_time * count( assembly_details.serial_number )) AS std_time,
-						SUM(
-						TIMESTAMPDIFF( SECOND, assembly_details.sedang_start_date, assembly_details.sedang_finish_date )) AS act_time 
-					FROM
-						assembly_details
-						LEFT JOIN assembly_std_times ON assembly_std_times.model = assembly_details.model 
-						AND assembly_std_times.location LIKE '%".$location."%' 
-					WHERE
-						assembly_details.location LIKE '%".$location."%' 
-						AND DATE( assembly_details.created_at ) = '".$now."' 
-					GROUP BY
-						DATE( assembly_details.created_at ),standard_time
-					) total";
+			total.*
+			FROM
+			(
+			SELECT
+			max( assembly_details.created_at ) AS last_input,
+			count( assembly_details.serial_number ) AS quantity,
+			count(
+			DISTINCT ( assembly_details.operator_id )) AS manpower,
+			ROUND(
+			standard_time * count( assembly_details.serial_number )) AS std_time,
+			SUM(
+			TIMESTAMPDIFF( SECOND, assembly_details.sedang_start_date, assembly_details.sedang_finish_date )) AS act_time 
+			FROM
+			assembly_details
+			LEFT JOIN assembly_std_times ON assembly_std_times.model = assembly_details.model 
+			AND assembly_std_times.location LIKE '%".$location."%' 
+			WHERE
+			assembly_details.location LIKE '%".$location."%' 
+			AND DATE( assembly_details.created_at ) = '".$now."' 
+			GROUP BY
+			DATE( assembly_details.created_at ),standard_time
+		) total";
 
-			$effData = DB::select($query2);
-
-			
-		}
-		$response = array(
-			'status' => true,
-			'chartData' => $chartData,
-			'effData' => $effData,
-			'title_location' => $title_location
-		);
-		return Response::json($response);
+		$effData = DB::select($query2);
 	}
+	$response = array(
+		'status' => true,
+		'chartData' => $chartData,
+		'effData' => $effData,
+		'title_location' => $title_location
+	);
+	return Response::json($response);
+}
+
+public function indexStampRecord(){
+
+	$code = Process::where('remark','=','041')->orderBy('id', 'asc')
+	->get();
+	return view('processes.assembly.flute.report.resumes',array(
+		'code' => $code,
+	))
+
+	->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function fetchStampRecord(Request $request){
+	$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+	$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+	$datenow = date('Y-m-d');
+	if (strlen($request->get('code')) > 0) {
+		$code = 'Where location like "%'.$request->get('code').'%"';
+
+		if($request->get('dateto') == null){
+			if($request->get('datefrom') == null){
+				$date = "";
+			}
+			elseif($request->get('datefrom') != null){
+				$date = "and date(created_at) BETWEEN '".$datefrom."' and '".$datenow."'";
+			}
+		}
+		elseif($request->get('dateto') != null){
+			if($request->get('datefrom') == null){
+				$date = "and date(created_at) <= '".$dateto."'";
+			}
+			elseif($request->get('datefrom') != null){
+				$date = "and date(created_at) BETWEEN '".$datefrom."' and '".$dateto."'";
+			}
+		}
+	}else{
+		$code = '';
+		if($request->get('dateto') == null){
+			if($request->get('datefrom') == null){
+				$date = "";
+			}
+			elseif($request->get('datefrom') != null){
+				$date = "where date(created_at) BETWEEN '".$datefrom."' and '".$datenow."'";
+			}
+		}
+		elseif($request->get('dateto') != null){
+			if($request->get('datefrom') == null){
+				$date = "where date(created_at) <= '".$dateto."'";
+			}
+			elseif($request->get('datefrom') != null){
+				$date = "where date(created_at) BETWEEN '".$datefrom."' and '".$dateto."'";
+			}
+		}
+	}
+
+	$stamp_detail = DB::SELECT('SELECT *,1 as quantity,created_at as st_date,location as process_name FROM `assembly_logs` '.$code.' '.$date);
+
+	$response = array(
+		'status' => true,
+		'stamp_detail' => $stamp_detail,
+	);
+	return Response::json($response);}
 }
 

@@ -4,6 +4,31 @@
 	thead>tr>th{
 		text-align:center;
 	}
+	.picker {
+		text-align: center;
+	}
+	.button {
+		position: absolute;
+		top: 50%;
+	}
+	.nav-tabs-custom > ul.nav.nav-tabs {
+		display: table;
+		width: 100%;
+		table-layout: fixed;
+	}
+	.nav-tabs-custom > ul.nav.nav-tabs > li {
+		float: none;
+		display: table-cell;
+	}
+	.nav-tabs-custom > ul.nav.nav-tabs > li > a {
+		text-align: center;
+	}
+	.vendor-tab{
+		width:100%;
+	}
+	.btn-active {
+		border: 5px solid rgb(255,77,77) !important;
+	}
 	#loading { display: none; }
 </style>
 @stop
@@ -87,18 +112,44 @@
 								</tr>
 							</thead>
 						</table>
-						<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+
+
+						<div class="nav-tabs-custom">
+							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+								<li class="vendor-tab active"><a href="#tab_id_1" data-toggle="tab" id="tab_header_id_1">
+									現在
+								</li>
+								<li class="vendor-tab"><a href="#tab_id_2" data-toggle="tab" id="tab_header_id_2">
+									新規
+								</li>
+								<li class="vendor-tab"><a href="#tab_id_3" data-toggle="tab" id="tab_header_id_3">
+									累計
+								</li>
+							</ul>
+
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_id_1">
+									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+									</div>
+									<div id="id_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_id_2">
+									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
+										新規感染者数
+									</div>
+									<div id="id_new_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_id_3">
+									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										過去1週間の10万人あたりの新規感染者数
+									</div>
+									<div id="id_series" style="margin-bottom: 20px;"></div>
+								</div>
+							</div>
 						</div>
-						<div id="id_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							新規感染者数
-						</div>
-						<div id="id_new_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							過去1週間の10万人あたりの新規感染者数
-						</div>
-						<div id="id_series" style="margin-bottom: 20px;"></div>
 					</div>
 				</div>
 			</div>
@@ -147,18 +198,42 @@
 								</tr>
 							</thead>
 						</table>
-						<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+
+						<div class="nav-tabs-custom">
+							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+								<li class="vendor-tab active"><a href="#tab_jkt_1" data-toggle="tab" id="tab_header_jkt_1">
+									現在
+								</li>
+								<li class="vendor-tab"><a href="#tab_jkt_2" data-toggle="tab" id="tab_header_jkt_2">
+									新規
+								</li>
+								<li class="vendor-tab"><a href="#tab_jkt_3" data-toggle="tab" id="tab_header_jkt_3">
+									累計
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_jkt_1">
+									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+									</div>
+									<div id="jkt_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_jkt_2">
+									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										新規感染者数
+									</div>
+									<div id="jkt_new_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_jkt_3">
+									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										過去1週間の10万人あたりの新規感染者数
+									</div>
+									<div id="jkt_series" style="margin-bottom: 20px;"></div>
+								</div>
+							</div>
 						</div>
-						<div id="jkt_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							新規感染者数
-						</div>
-						<div id="jkt_new_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							過去1週間の10万人あたりの新規感染者数
-						</div>
-						<div id="jkt_series" style="margin-bottom: 20px;"></div>
 					</div>
 				</div>
 			</div>
@@ -207,18 +282,42 @@
 								</tr>
 							</thead>
 						</table>
-						<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+
+						<div class="nav-tabs-custom">
+							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+								<li class="vendor-tab active"><a href="#tab_bks_1" data-toggle="tab" id="tab_header_bks_1">
+									現在
+								</li>
+								<li class="vendor-tab"><a href="#tab_bks_2" data-toggle="tab" id="tab_header_bks_2">
+									新規
+								</li>
+								<li class="vendor-tab"><a href="#tab_bks_3" data-toggle="tab" id="tab_header_bks_3">
+									累計
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_bks_1">
+									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+									</div>
+									<div id="bks_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_bks_2">
+									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										新規感染者数
+									</div>
+									<div id="bks_new_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_bks_3">
+									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										過去1週間の10万人あたりの新規感染者数
+									</div>
+									<div id="bks_series" style="margin-bottom: 20px;"></div>
+								</div>
+							</div>
 						</div>
-						<div id="bks_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							新規感染者数
-						</div>
-						<div id="bks_new_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							過去1週間の10万人あたりの新規感染者数
-						</div>
-						<div id="bks_series" style="margin-bottom: 20px;"></div>
 					</div>
 				</div>
 			</div>
@@ -267,18 +366,42 @@
 								</tr>
 							</thead>
 						</table>
-						<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+
+						<div class="nav-tabs-custom">
+							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+								<li class="vendor-tab active"><a href="#tab_sby_1" data-toggle="tab" id="tab_header_sby_1">
+									現在
+								</li>
+								<li class="vendor-tab"><a href="#tab_sby_2" data-toggle="tab" id="tab_header_sby_2">
+									新規
+								</li>
+								<li class="vendor-tab"><a href="#tab_sby_3" data-toggle="tab" id="tab_header_sby_3">
+									累計
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_sby_1">
+									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+									</div>
+									<div id="sby_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_sby_2">
+									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										新規感染者数
+									</div>
+									<div id="sby_new_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_sby_3">
+									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										過去1週間の10万人あたりの新規感染者数
+									</div>
+									<div id="sby_series" style="margin-bottom: 20px;"></div>
+								</div>
+							</div>
 						</div>
-						<div id="sby_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							新規感染者数
-						</div>
-						<div id="sby_new_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							過去1週間の10万人あたりの新規感染者数
-						</div>
-						<div id="sby_series" style="margin-bottom: 20px;"></div>
 					</div>
 				</div>
 			</div>
@@ -327,18 +450,42 @@
 								</tr>
 							</thead>
 						</table>
-						<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+
+						<div class="nav-tabs-custom">
+							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+								<li class="vendor-tab active"><a href="#tab_psr_1" data-toggle="tab" id="tab_header_psr_1">
+									現在
+								</li>
+								<li class="vendor-tab"><a href="#tab_psr_2" data-toggle="tab" id="tab_header_psr_2">
+									新規
+								</li>
+								<li class="vendor-tab"><a href="#tab_psr_3" data-toggle="tab" id="tab_header_psr_3">
+									累計
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_psr_1">
+									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+									</div>
+									<div id="psr_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_psr_2">
+									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										新規感染者数
+									</div>
+									<div id="psr_new_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_psr_3">
+									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+										過去1週間の10万人あたりの新規感染者数
+									</div>
+									<div id="psr_series" style="margin-bottom: 20px;"></div>
+								</div>
+							</div>
 						</div>
-						<div id="psr_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							新規感染者数
-						</div>
-						<div id="psr_new_infected" style="margin-bottom: 20px;"></div>
-						<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-							過去1週間の10万人あたりの新規感染者数
-						</div>
-						<div id="psr_series" style="margin-bottom: 20px;"></div>
 					</div>
 				</div>
 			</div>
