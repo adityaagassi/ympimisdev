@@ -174,9 +174,8 @@
 			</div>
 			<div>
 				<center>
-					<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 32%" onclick="canc()" class="btn btn-danger">CANCEL</button>
-					<button id="rework" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 32%" onclick="rework()" class="btn btn-warning">REWORK</button>
-					<button id="conf1" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 32%" onclick="conf()" class="btn btn-success">CONFIRM</button>
+					<button style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 49%" onclick="canc()" class="btn btn-danger">CANCEL</button>
+					<button id="conf1" style="width: 100%; margin-top: 10px; font-size: 2vw; padding:0; font-weight: bold; border-color: black; color: white; width: 49%" onclick="conf()" class="btn btn-success">CONFIRM</button>
 				</center>
 			</div>
 		</div>
@@ -1009,89 +1008,6 @@
 			btn.innerText = 'Posting...'
 			return false;
 		}
-	}
-
-	function disabledButtonRework() {
-		if($('#tag').val() != ""){
-			var btn = document.getElementById('rework');
-			btn.disabled = true;
-			btn.innerText = 'Posting...'	
-			return false;
-		}
-	}
-
-	function rework(){
-		if($('#tag').val() == ""){
-			openErrorGritter('Error!', 'Tag is empty');
-			audio_error.play();
-			$("#tag").val("");
-			$("#tag").focus();
-
-			return false;
-		}
-
-		var tag = $('#tag_material').val();
-		var loop = $('#loop').val();
-		// var total = 0;
-		var count_ng = 0;
-		var ng = [];
-		var count_text = [];
-		for (var i = 1; i <= loop; i++) {
-			if($('#count'+i).text() > 0){
-				ng.push([$('#ng'+i).text(), $('#count'+i).text()]);
-				count_text.push('#count'+i);
-				// total += parseInt($('#count'+i).text());
-				count_ng += 1;
-			}
-		}
-
-		var data = {
-			loc: $('#loc').val(),
-			tag: $('#material_tag').val(),
-			material_number: $('#material_number').val(),
-			quantity: $('#material_quantity').val(),
-			employee_id: $('#employee_id').val(),
-			started_at: $('#started_at').val(),
-			ng: ng,
-			count_text: count_text,
-			// total_ng: total,
-		}
-		disabledButtonRework();
-
-		$.post('{{ url("input/welding/rework") }}', data, function(result, status, xhr){
-			if(result.status){
-				var btn = document.getElementById('rework');
-				btn.disabled = false;
-				btn.innerText = 'REWORK';
-				openSuccessGritter('Success!', result.message);
-				for (var i = 1; i <= loop; i++) {
-					$('#count'+i).text(0);
-				}
-				$('#attention_point').html("");
-				$('#check_point').html("");
-				$('#model').text("");
-				$('#key').text("");
-				$('#material_tag').val("");
-				$('#material_number').val("");
-				$('#material_quantity').val("");
-				$('#opwelding').val("");
-				$('#tag').val("");
-				$('#tag').prop('disabled', false);
-				$('#tag').focus();	
-
-				fetchResult($('#op').text());
-
-			}
-			else{
-				var btn = document.getElementById('rework');
-				btn.disabled = false;
-				btn.innerText = 'REWORK';
-				audio_error.play();
-				openErrorGritter('Error!', result.message);
-				$("#tag").val("");
-				$("#tag").focus();
-			}
-		});
 	}
 
 	function conf(){
