@@ -45,7 +45,6 @@ class MiraiMobileController extends Controller
       $yesterday = date('Y-m-d', strtotime('-1 days', strtotime($request->get('date_now'))));
     }
 
-
     $detail_now = db::table('corona_informations')->orderBy('date', 'ASC')->where('date', '=', $now)->get();
     $detail_yesterday = db::table('corona_informations')->orderBy('date', 'ASC')->where('date', '=', $yesterday)->get();
 

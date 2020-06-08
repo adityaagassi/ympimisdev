@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Exception;
+use DataTables;
 use Response;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
@@ -17,6 +19,7 @@ use App\AssemblyNgLog;
 use App\AssemblyTag;
 use App\AssemblyOnko;
 use App\Process;
+use App\Material;
 use DateTime;
 
 class AssemblyProcessController extends Controller
@@ -143,7 +146,7 @@ class AssemblyProcessController extends Controller
 
 		$des = DB::select("SELECT serial_number, model FROM assembly_logs 
 			WHERE origin_group_code = '041' 
-			AND location = 'stamp-process' 
+			AND location = 'packing' 
 			AND serial_number = '".$id."'");
 
 		return view('processes.assembly.flute.label.label_kecil2',array(
@@ -163,7 +166,7 @@ class AssemblyProcessController extends Controller
 
 		$des = DB::select("SELECT serial_number, model FROM assembly_logs 
 			WHERE origin_group_code = '041' 
-			AND location = 'stamp-process' 
+			AND location = 'packing' 
 			AND serial_number = '".$id."'");
 
 		return view('processes.assembly.flute.label.label_kecil',array(
@@ -175,69 +178,74 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function labelBesarFl($id,$gmc,$remark){
-		$details = AssemblyDetail::where('serial_number', $id)
-		->where('origin_group_code', '041')
-		->where('is_send_log', '0')
-		->get();
-		$now = new DateTime();
 
-		if(count($details) > 0){
-			foreach ($details as $detail) {
-				$detail = new AssemblyLog([
-					'tag' => $detail->tag,
-					'serial_number' => $detail->serial_number,
-					'model' => $detail->model,
-					'location' => $detail->location,
-					'operator_id' => $detail->operator_id,
-					'sedang_start_date' => $detail->sedang_start_date,
-					'sedang_finish_date' => $detail->sedang_finish_date,
-					'origin_group_code' => $detail->origin_group_code,
-					'created_by' => $detail->created_by
-				]);
-				$detail->save();
-			}
-			$detail = new AssemblyLog([
-				'tag' => $details[0]->tag,
-				'serial_number' => $id,
-				'model' => $barcode[0]->model,
-				'location' => 'packing',
-				'operator_id' => Auth::user()->username,
-				'sedang_start_date' => $now,
-				'sedang_finish_date' => $now,
-				'origin_group_code' => '041',
-				'created_by' => Auth::user()->username
-			]);
-			$detail->save();
-
+		if($remark == 'P'){
 			$details = AssemblyDetail::where('serial_number', $id)
 			->where('origin_group_code', '041')
 			->where('is_send_log', '0')
+			->get();
+			$now = new DateTime();
+
+			if(count($details) > 0){
+				foreach ($details as $detail) {
+					$detail = new AssemblyLog([
+						'tag' => $detail->tag,
+						'serial_number' => $detail->serial_number,
+						'model' => $detail->model,
+						'location' => $detail->location,
+						'operator_id' => $detail->operator_id,
+						'sedang_start_date' => $detail->sedang_start_date,
+						'sedang_finish_date' => $detail->sedang_finish_date,
+						'origin_group_code' => $detail->origin_group_code,
+						'created_by' => $detail->created_by
+					]);
+					$detail->save();
+				}
+
+				$material = Material::where('material_number', $gmc)->first();
+				$detail = new AssemblyLog([
+					'tag' => $details[0]->tag,
+					'serial_number' => $id,
+					'model' => $material->material_description,
+					'location' => 'packing',
+					'operator_id' => Auth::user()->username,
+					'sedang_start_date' => $now,
+					'sedang_finish_date' => $now,
+					'origin_group_code' => '041',
+					'created_by' => Auth::user()->username
+				]);
+				$detail->save();
+
+				$details = AssemblyDetail::where('serial_number', $id)
+				->where('origin_group_code', '041')
+				->where('is_send_log', '0')
+				->update([
+					'is_send_log' => '1'
+				]);
+			}
+
+			$tag = AssemblyTag::where('serial_number', $id)
+			->where('origin_group_code', '041')
 			->update([
-				'is_send_log' => '1'
+				'serial_number' => null,
+				'model' => null,
 			]);
+
+			$inventory = AssemblyInventory::where('serial_number', $id)
+			->where('origin_group_code', '041')
+			->delete();
+
+			$detail = AssemblyDetail::where('serial_number', $id)
+			->where('origin_group_code', '041')
+			->delete();
 		}
-
-		$tag = AssemblyTag::where('serial_number', $id)
-		->where('origin_group_code', '041')
-		->update([
-			'serial_number' => null,
-			'model' => null,
-		]);
-
-		$inventory = AssemblyInventory::where('serial_number', $id)
-		->where('origin_group_code', '041')
-		->delete();
-
-		$detail = AssemblyDetail::where('serial_number', $id)
-		->where('origin_group_code', '041')
-		->delete();
 
 		$barcode = db::select("select flute.serial_number, material.finished, material.janean, material.upc, material.remark, material.model from
 			(select stamp_hierarchies.finished, materials.material_description as model, stamp_hierarchies.janean, stamp_hierarchies.upc, stamp_hierarchies.remark from stamp_hierarchies
 			left join materials on stamp_hierarchies.finished = materials.material_number
 			where stamp_hierarchies.finished = '".$gmc."') as material
 			left join
-			(SELECT serial_number, model FROM assembly_logs 
+			(SELECT serial_number, model FROM assembly_logs
 			WHERE origin_group_code = '041' 
 			AND location = 'packing' 
 			AND serial_number = '".$id."') as flute
@@ -258,53 +266,56 @@ class AssemblyProcessController extends Controller
 
 	public function labelBesarOuterFl($id,$gmc,$remark){
 
-		$barcode = db::select("select stamp_hierarchies.finished, materials.material_description as model, stamp_hierarchies.janean, stamp_hierarchies.upc, stamp_hierarchies.remark from stamp_hierarchies
-			left join materials on stamp_hierarchies.finished = materials.material_number
-			where stamp_hierarchies.finished = '".$gmc."'");
-
-		
-		$details = AssemblyDetail::where('serial_number', $id)
-		->where('origin_group_code', '041')
-		->where('is_send_log', '0')
-		->get();
-		$now = new DateTime();
-
-		if(count($details) > 0){
-			foreach ($details as $detail) {
-				$detail = new AssemblyLog([
-					'tag' => $detail->tag,
-					'serial_number' => $detail->serial_number,
-					'model' => $detail->model,
-					'location' => $detail->location,
-					'operator_id' => $detail->operator_id,
-					'sedang_start_date' => $detail->sedang_start_date,
-					'sedang_finish_date' => $detail->sedang_finish_date,
-					'origin_group_code' => $detail->origin_group_code,
-					'created_by' => $detail->created_by
-				]);
-				$detail->save();
-			}
-			$detail = new AssemblyLog([
-				'tag' => $details[0]->tag,
-				'serial_number' => $id,
-				'model' => $barcode[0]->model,
-				'location' => 'packing',
-				'operator_id' => Auth::user()->username,
-				'sedang_start_date' => $now,
-				'sedang_finish_date' => $now,
-				'origin_group_code' => '041',
-				'created_by' => Auth::user()->username
-			]);
-			$detail->save();
-
+		if($remark == 'P'){
 			$details = AssemblyDetail::where('serial_number', $id)
 			->where('origin_group_code', '041')
 			->where('is_send_log', '0')
-			->update([
-				'is_send_log' => '1'
-			]);
+			->get();
+			$now = new DateTime();
+
+			if(count($details) > 0){
+				foreach ($details as $detail) {
+					$detail = new AssemblyLog([
+						'tag' => $detail->tag,
+						'serial_number' => $detail->serial_number,
+						'model' => $detail->model,
+						'location' => $detail->location,
+						'operator_id' => $detail->operator_id,
+						'sedang_start_date' => $detail->sedang_start_date,
+						'sedang_finish_date' => $detail->sedang_finish_date,
+						'origin_group_code' => $detail->origin_group_code,
+						'created_by' => $detail->created_by
+					]);
+					$detail->save();
+				}
+
+				$material = Material::where('material_number', $gmc)->first();
+				$detail = new AssemblyLog([
+					'tag' => $details[0]->tag,
+					'serial_number' => $id,
+					'model' => $material->material_description,
+					'location' => 'packing',
+					'operator_id' => Auth::user()->username,
+					'sedang_start_date' => $now,
+					'sedang_finish_date' => $now,
+					'origin_group_code' => '041',
+					'created_by' => Auth::user()->username
+				]);
+				$detail->save();
+
+				$details = AssemblyDetail::where('serial_number', $id)
+				->where('origin_group_code', '041')
+				->where('is_send_log', '0')
+				->update([
+					'is_send_log' => '1'
+				]);
+			}
 		}
 
+		$barcode = db::select("select stamp_hierarchies.finished, materials.material_description as model, stamp_hierarchies.janean, stamp_hierarchies.upc, stamp_hierarchies.remark from stamp_hierarchies
+			left join materials on stamp_hierarchies.finished = materials.material_number
+			where stamp_hierarchies.finished = '".$gmc."'");
+		
 		$date = db::select("SELECT week_date, date_code from weekly_calendars
 			WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from assembly_logs
 			WHERE serial_number = '".$id."'
@@ -316,6 +327,45 @@ class AssemblyProcessController extends Controller
 			'date' => $date,
 			'remark' => $remark,
 		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+
+	public function fetchCheckReprint(Request $request){
+		$serial_number = $request->get('serial_number');
+		$origin_group_code = $request->get('origin_group');
+
+		$inventory = AssemblyInventory::where('serial_number', $serial_number)
+		->where('origin_group_code', $origin_group_code)
+		->first();
+
+		if($inventory){
+			$response = array(
+				'status' => false,
+				'message' => 'Reprint Invalid'
+			);
+			return Response::json($response);
+		}
+
+		$log = AssemblyLog::leftJoin('materials', 'materials.material_description', '=', 'assembly_logs.model')
+		->where('assembly_logs.serial_number', $serial_number)
+		->where('assembly_logs.origin_group_code', $origin_group_code)
+		->where('assembly_logs.location', 'packing')
+		->select('assembly_logs.serial_number', 'assembly_logs.model', 'materials.material_number', 'materials.material_description')
+		->first();
+
+		if($log){
+			$response = array(
+				'status' => true,
+				'log' => $log
+			);
+			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => false,
+				'message' => 'Serial Number Not Found'
+			);
+			return Response::json($response);
+		}
+
 	}
 
 	public function fetchCheckTag(Request $request){
@@ -345,6 +395,33 @@ class AssemblyProcessController extends Controller
 			return Response::json($response);
 		}
 	}
+
+	public function fillModelResult(){
+		$date = date('Y-m-d');
+
+		$data = db::select("SELECT model, COUNT(id) AS quantity FROM assembly_logs
+			WHERE location = 'packing'
+			AND DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'
+			GROUP BY model;");
+
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
+	}
+
+	public function fillResult(){
+		$date = date('Y-m-d');
+
+		$data = db::select("SELECT serial_number, model, created_at FROM assembly_logs
+			where location = 'packing'
+			and DATE_FORMAT(created_at,'%Y-%m-%d') = '".$date."'
+			ORDER BY created_at DESC");
+
+		return DataTables::of($data)->make(true);
+	}
+
 
 	public function fetchAssemblyBoard(Request $request){
 		$loc = $request->get('loc');
@@ -399,6 +476,74 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function kensa($location)
+	{
+		$loc_code = explode('-', $location);
+		$process = $loc_code[0];
+		$loc_spec = $loc_code[1];
+
+		if($location == 'kariawase-fungsi'){
+			$title = 'Kariawase Kensa Fungsi Flute';
+			$title_jp= '??';
+		}
+		if($location == 'kariawase-visual'){
+			$title = 'Kariawase Kensa Visual Flute';
+			$title_jp= '??';
+		}
+		if($location == 'perakitanawal-kensa'){
+			$title = 'Perakitan Awal Kensa Flute';
+			$title_jp= '??';
+		}
+		if($location == 'tanpoawase-kensa'){
+			$title = 'Tanpo Awase Kensa Flute';
+			$title_jp= '??';
+		}
+		if($location == 'tanpoawase-fungsi'){
+			$title = 'Tanpo Awase Kensa Fungsi Flute';
+			$title_jp= '??';
+		}
+		if($location == 'kango-fungsi'){
+			$title = 'Kango Kensa Fungsi (Gata,Seri) Flute';
+			$title_jp= '??';
+		}
+		if($location == 'kango-kensa'){
+			$title = 'Kango Kensa Flute';
+			$title_jp= '??';
+		}
+		if($location == 'renraku-fungsi'){
+			$title = 'Renraku Kensa Fungsi Flute';
+			$title_jp= '??';
+		}
+		if($location == 'qa-fungsi'){
+			$title = 'QA Kensa Fungsi Flute';
+			$title_jp= '??';
+		}
+		if($location == 'fukiage1-visual'){
+			$title = 'Fukiage 1 Kensa Visual Flute';
+			$title_jp= '??';
+		}
+		if($location == 'qa-visual1'){
+			$title = 'QA 1 Kensa Visual Flute';
+			$title_jp= '??';
+		}
+		if($location == 'qa-visual2'){
+			$title = 'QA 2 Kensa Visual Flute';
+			$title_jp= '??';
+		}
+
+		$ng_lists = DB::select("SELECT DISTINCT(ng_name) FROM assembly_ng_lists where origin_group_code = '041' and location = '".$loc_spec."' and process = '".$process."'");
+
+		return view('processes.assembly.flute.kensa', array(
+			'ng_lists' => $ng_lists,
+			'loc' => $location,
+			'loc2' => $location,
+			'process' => $process,
+			'loc_spec' => $loc_spec,
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Assembly FL')->with('head', 'Assembly Process')->with('location',$location);
+	}
+
+	public function kensa2($location)
 	{
 		$loc_code = explode('-', $location);
 		$process = $loc_code[0];

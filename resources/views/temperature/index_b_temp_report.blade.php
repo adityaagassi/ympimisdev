@@ -209,7 +209,6 @@
 				});
 				$('#example1Body').append(tableData);
 
-				
 				var table = $('#example1').DataTable({
 					'dom': 'Bfrtip',
 					'responsive':true,
@@ -270,12 +269,8 @@
 					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
 				});
 
-
-				
-
 				table.columns().every( function () {
 					var that = this;
-
 					$( 'input', this.footer() ).on( 'keyup change', function () {
 						if ( that.search() !== this.value ) {
 							that

@@ -30,13 +30,13 @@ Route::get('/index/emergency_response', 'TrialController@tes2');
 Route::get('/index/trials', 'TrialController@tes');
 Route::get('/index/unification_uniform', 'VoteController@indexUnificationUniform');
 Route::get('fetch/employee/data', 'TrialController@fetch_data');
-Route::get('happybirthday', 'TrialController@ultah');
+// Route::get('happybirthday', 'TrialController@ultah');
 
 
 Route::get('trialmail', 'TrialController@trialmail');
 
 Route::get('/trial', function () {
-	return view('meetings.report');
+	return view('processes.assembly.flute.stamp');
 });
 Route::get('/trial3', function () {
 	return view('trial');
@@ -1018,6 +1018,7 @@ Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_item', 'AccountingController@master_item');
 	Route::get('fetch/purchase_item', 'AccountingController@fetch_item');
+	Route::get('index/purchase_item/create', 'AccountingController@create_item');
 });
 
 //nomor
@@ -1029,6 +1030,9 @@ Route::get('fetch/purchase_requisition', 'AccountingController@fetch_purchase_re
 Route::post('create/purchase_requisition', 'AccountingController@create_purchase_requisition');
 Route::get('fetch/purchase_requisition/itemlist', 'AccountingController@fetchItemList');
 Route::get('purchase_requisition/get_detailitem', 'AccountingController@prgetitemdesc')->name('admin.prgetitemdesc');
+Route::get('fetch/purchase_requisition/budgetlist', 'AccountingController@fetchBudgetList');
+Route::get('purchase_requisition/get_detailbudget', 'AccountingController@prgetbudgetdesc')->name('admin.prgetbudgetdesc');
+Route::get('purchase_requisition/detail/{id}', 'AccountingController@detail_purchase_requisition');
 
 //approval purchase_requisition
 Route::get('purchase_requisition/verifikasi/{id}', 'AccountingController@verifikasi_purchase_requisition');
@@ -2663,11 +2667,9 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
 
 	Route::post('post/maintenance/member', 'MaintenanceController@postMemberSPK');
-	Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
-
-	Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
 
 	Route::get('verify/maintenance/spk/approve_urgent/{stat}/{order_no}', 'MaintenanceController@verifySPK');
+	Route::get('verify/maintenance/spk/danger_note/{order_no}', 'MaintenanceController@indexDangerNote');
 
 	Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDangerNote');
 
@@ -2701,6 +2703,9 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_check}', 'MaintenanceController@print_apar2');
 });
 
+Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
+Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
+
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
 Route::get('scan/assembly/operator', 'AssemblyProcessController@scanAssemblyOperator');
@@ -2717,20 +2722,19 @@ Route::get('fetch/assembly/get_process_before', 'AssemblyProcessController@getPr
 
 Route::get('index/assembly/flute/print_label_backup', 'AssemblyProcessController@indexFlutePrintLabelBackup');
 Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexFlutePrintLabel');
+Route::get('fetch/assembly/flute/fillModelResult', 'AssemblyProcessController@fillModelResult');
+Route::get('fetch/assembly/flute/fillResult', 'AssemblyProcessController@fillResult');
 Route::get('fetch/assembly/flute/fetchCheckTag', 'AssemblyProcessController@fetchCheckTag');
-
+Route::get('fetch/assembly/flute/fetchCheckReprint', 'AssemblyProcessController@fetchCheckReprint');
 
 Route::get('index/assembly/flute/label_outer/{id}/{gmc}/{remark}', 'AssemblyProcessController@labelBesarOuterFl');
 Route::get('index/assembly/flute/label_besar/{id}/{gmc}/{remark}', 'AssemblyProcessController@labelBesarFl');
 Route::get('index/assembly/flute/label_kecil/{id}/{remark}', 'AssemblyProcessController@labelKecilFl');
 Route::get('index/assembly/flute/label_kecil2/{id}/{remark}', 'AssemblyProcessController@labelKecil2Fl');
-
-
-Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_besar_outer_fl');
-Route::get('index/fl_label_besar/{id}/{gmc}/{remark}', 'ProcessController@label_besar_fl');
-Route::get('index/fl_label_kecil/{id}/{remark}', 'ProcessController@label_kecil_fl');
-Route::get('index/fl_label_kecil2/{id}/{remark}', 'ProcessController@label_kecil2_fl');
-
+// Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_besar_outer_fl');
+// Route::get('index/fl_label_besar/{id}/{gmc}/{remark}', 'ProcessController@label_besar_fl');
+// Route::get('index/fl_label_kecil/{id}/{remark}', 'ProcessController@label_kecil_fl');
+// Route::get('index/fl_label_kecil2/{id}/{remark}', 'ProcessController@label_kecil2_fl');
 
 
 Route::get('index/board/{location}', 'AssemblyProcessController@indexAssemblyBoard');
