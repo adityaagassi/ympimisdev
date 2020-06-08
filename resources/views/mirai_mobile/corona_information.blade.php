@@ -117,13 +117,13 @@
 						<div class="nav-tabs-custom">
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active"><a href="#tab_id_1" data-toggle="tab" id="tab_header_id_1">
-									現在
+									現在</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_id_2" data-toggle="tab" id="tab_header_id_2">
-									新規
+									新規</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_id_3" data-toggle="tab" id="tab_header_id_3">
-									累計
+									累計</a>
 								</li>
 							</ul>
 
@@ -202,13 +202,13 @@
 						<div class="nav-tabs-custom">
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active"><a href="#tab_jkt_1" data-toggle="tab" id="tab_header_jkt_1">
-									現在
+									現在</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_jkt_2" data-toggle="tab" id="tab_header_jkt_2">
-									新規
+									新規</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_jkt_3" data-toggle="tab" id="tab_header_jkt_3">
-									累計
+									累計</a>
 								</li>
 							</ul>
 							<div class="tab-content">
@@ -286,13 +286,13 @@
 						<div class="nav-tabs-custom">
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active"><a href="#tab_bks_1" data-toggle="tab" id="tab_header_bks_1">
-									現在
+									現在</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_bks_2" data-toggle="tab" id="tab_header_bks_2">
-									新規
+									新規</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_bks_3" data-toggle="tab" id="tab_header_bks_3">
-									累計
+									累計</a>
 								</li>
 							</ul>
 							<div class="tab-content">
@@ -370,13 +370,13 @@
 						<div class="nav-tabs-custom">
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active"><a href="#tab_sby_1" data-toggle="tab" id="tab_header_sby_1">
-									現在
+									現在</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_sby_2" data-toggle="tab" id="tab_header_sby_2">
-									新規
+									新規</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_sby_3" data-toggle="tab" id="tab_header_sby_3">
-									累計
+									累計</a>
 								</li>
 							</ul>
 							<div class="tab-content">
@@ -454,13 +454,13 @@
 						<div class="nav-tabs-custom">
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active"><a href="#tab_psr_1" data-toggle="tab" id="tab_header_psr_1">
-									現在
+									現在</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_psr_2" data-toggle="tab" id="tab_header_psr_2">
-									新規
+									新規</a>
 								</li>
 								<li class="vendor-tab"><a href="#tab_psr_3" data-toggle="tab" id="tab_header_psr_3">
-									累計
+									累計</a>
 								</li>
 							</ul>
 							<div class="tab-content">
