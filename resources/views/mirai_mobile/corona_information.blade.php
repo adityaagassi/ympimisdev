@@ -604,6 +604,7 @@
 		$.get('{{ url("fetch/corona_information") }}', data, function(result, status, xhr){
 			if(result.status){
 				var newIndonesiaSeries = [];
+				var newIndonesiaSeries2 = [];
 				var newJakartaSeries = [];
 				var newBekasiSeries = [];
 				var newSurabayaSeries = [];
