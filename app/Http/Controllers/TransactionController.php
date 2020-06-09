@@ -270,6 +270,72 @@ class TransactionController extends Controller
 		return Response::json($response);
 	}
 
+	public function returnSlipCopy($id, $material, $description, $issue, $receive, $quantity, $created_by){
+		$user = User::where('id', '=', $created_by)->first();
+
+		if(Auth::user()->role == 'MIS' || Auth::user()->role == 'S'){
+			$printer_name = 'MIS';
+		}
+		else{
+			if($receive == 'CL91'){
+				$printer_name = 'FLO Printer 102';
+			}
+			else if($receive == 'SX91'){
+				$printer_name = 'FLO Printer 103';
+			}
+			else if($receive == 'FL91'){
+				$printer_name = 'FLO Printer 101';			
+			}
+			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
+				$printer_name = 'Stockroom-Printer';			
+			}
+			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
+				$printer_name = 'Welding-Printer';			
+			}
+			else{
+				$printer_name = 'MIS';
+			}
+		}
+			// dd($printer_name);
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setReverseColors(true);
+		$printer->setTextSize(2, 2);
+		$printer->text(" SLIP RETURN COPY"."\n");
+		// $printer->feed(1);
+		$printer->qrCode('RE'.$id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		// $printer->feed(1);
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(4, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($material."\n");
+		$printer->text($receive." -> ".$issue."\n");
+		// $printer->feed(1);
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setTextSize(2, 1);
+		$printer->text($description."\n");
+		$printer->feed(1);
+		$printer->setReverseColors(true);
+		$printer->setTextSize(4, 4);
+		$printer->text(" ".$quantity." PC(s) \n");
+		$printer->feed(1);
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		// $printer->textRaw("\xda".str_repeat("\xc4", 46)."\xbf\n");
+		$printer->textRaw($user->name." (".date("d-M-Y H:i:s").")\n");
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 46)."\xd9\n");
+		$printer->feed(1);
+		$printer->cut();
+		$printer->close();
+	}
+
 	public function returnSlip($id, $material, $description, $issue, $receive, $quantity, $created_by){
 		$user = User::where('id', '=', $created_by)->first();
 
@@ -280,23 +346,23 @@ class TransactionController extends Controller
 			if($receive == 'CL91'){
 				$printer_name = 'FLO Printer 102';
 			}
-			if($receive == 'SX91'){
+			else if($receive == 'SX91'){
 				$printer_name = 'FLO Printer 103';
 			}
-			if($receive == 'FL91'){
+			else if($receive == 'FL91'){
 				$printer_name = 'FLO Printer 101';			
 			}
-			if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
+			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
 				$printer_name = 'Stockroom-Printer';			
 			}
-			if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
+			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
 				$printer_name = 'Welding-Printer';			
 			}
 			else{
 				$printer_name = 'MIS';
 			}
 		}
-
+			// dd($printer_name);
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
@@ -351,6 +417,10 @@ class TransactionController extends Controller
 			$return->save();
 
 			self::returnSlip($return->id, $return->material_number, $return->material_description, $return->issue_location, $return->receive_location, $return->quantity, $return->created_by);
+
+			if($return->receive_location == 'CL91' || $return->receive_location == 'SX91'){
+				self::returnSlipCopy($return->id, $return->material_number, $return->material_description, $return->issue_location, $return->receive_location, $return->quantity, $return->created_by);
+			}
 		}
 		catch(\Exception $e){
 			$response = array(
