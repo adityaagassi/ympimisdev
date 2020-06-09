@@ -2708,7 +2708,7 @@ Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
 Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
 Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
 
-Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}', 'MaintenanceController@print_apar2');
+Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
 
 Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
 Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');

@@ -404,8 +404,17 @@
 					openSuccessGritter('Success', 'Check Berhasil Ditambahkan');
 					console.log(hasil_check);
 
+					var check_date_2 = "-";
+					if(result.checked_apar.length > 1){
+						check_date_2 = result.checked_apar[1].check_date;
+					}
+
+					if (hasil_check == "") {
+						hasil_check = "-";
+					}
+
 					// window.open('{{ url("print/apar/qr/".'+result.checked_apar.utility_code+'."/".'+result.checked_apar.utility_name+'."/".'+result.checked_apark.exp_date+'."/".'+result.checked_apark.last_check+'."/".'+hasil_check+') }}', '_blank');
-					window.open('{{ url("print/apar/qr/") }}/'+result.checked_apar[0].utility_code+'/'+result.checked_apar[0].utility_name+'/'+result.checked_apar[0].exp_date+'/'+result.checked_apar[0].check_date+'/'+result.checked_apar[1].check_date+'/'+hasil_check+'/'+result.checked_apar[0].remark, '_blank');
+					window.open('{{ url("print/apar/qr/") }}/'+result.checked_apar[0].utility_code+'/'+result.checked_apar[0].utility_name+'/'+result.checked_apar[0].exp_date+'/'+result.checked_apar[0].check_date+'/'+check_date_2+'/'+hasil_check+'/'+result.checked_apar[0].remark, '_blank');
 				} else {
 					openErrorGritter("Error", "Cek Koneksi Wifi Anda");
 				}
