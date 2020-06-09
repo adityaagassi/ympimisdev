@@ -629,27 +629,28 @@
 
 					if(value.area == 'Indonesia'){
 						newIndonesiaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-						id_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newIndonesiaSeries2.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						id_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						id_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 					}
 					if(value.area == 'Jakarta'){
-						newJakartaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-						jkt_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newJakartaSeries.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						jkt_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						jkt_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 					}
 					if(value.area == 'Bekasi'){
-						newBekasiSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-						bks_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newBekasiSeries.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						bks_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						bks_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 					}
 					if(value.area == 'Surabaya'){
-						newSurabayaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-						sby_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newSurabayaSeries.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						sby_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						sby_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 					}
 					if(value.area == 'Pasuruan'){
-						newPasuruanSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-						psr_infected.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newPasuruanSeries.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						psr_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						psr_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 					}
 				});
@@ -936,7 +937,7 @@
 					enabled:false
 				},
 				title: {
-					text: 'インドネシア国全体」過去1週間の100,000人あたりの新規感染者数',
+					text: 'インドネシア感染者の累計',
 					style: {
 						fontSize: '24px'
 					}
@@ -973,7 +974,7 @@
 				},
 				series: [{
 					name: '"Indonesia"',
-					data: newIndonesiaSeries,
+					data: newIndonesiaSeries2,
 					lineWidth: 1,
 					marker: {
 						enabled: true,
@@ -1110,7 +1111,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「ジャカルタ特別州」過去1週間の100,000人あたりの新規感染者数',
+					text: '「ジャカルタ感染者の累計',
 					style: {
 						fontSize: '24px'
 					}
@@ -1284,7 +1285,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「ブカシ県＋ブカシ市」過去1週間の100,000人あたりの新規感染者数',
+					text: '「ブカシ県＋ブカシ市」感染者の累計',
 					style: {
 						fontSize: '24px'
 					}
@@ -1458,7 +1459,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「スラバヤ市」過去1週間の100,000人あたりの新規感染者数',
+					text: '「スラバヤ市」感染者の累計',
 					style: {
 						fontSize: '24px'
 					}
@@ -1632,7 +1633,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「パスルアン県＋パスルアン市」過去1週間の100,000人あたりの新規感染者数',
+					text: '「パスルアン県＋パスルアン市」感染者の累計',
 					style: {
 						fontSize: '24px'
 					}
