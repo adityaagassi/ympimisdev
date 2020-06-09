@@ -731,7 +731,7 @@ class MaintenanceController extends Controller
 			// GET DATA LAST CHECK
 			$last_check_tool = Utility::where('utilities.id', $request->get('utility_id'))
 			->leftJoin('utility_checks', 'utility_checks.utility_id', '=', 'utilities.id')
-			->select('utilities.utility_code', 'utility_name', 'exp_date', 'utilities.status', db::raw('DATE_FORMAT(utility_checks.check_date, "%d-%m-%Y") as check_date'))
+			->select('utilities.utility_code', 'utility_name', 'exp_date', 'utilities.status', db::raw('DATE_FORMAT(utility_checks.check_date, "%d-%m-%Y") as check_date'), 'utilities.remark')
 			->orderBy('utility_checks.id', 'asc')
 			->limit(2)
 			->get();
@@ -914,7 +914,7 @@ class MaintenanceController extends Controller
 	// 	$printer->close();
 	// }
 
-	public function print_apar2($apar_id, $apar_name, $exp_date, $last_check, $last_check2, $hasil_check)
+	public function print_apar2($apar_id, $apar_name, $exp_date, $last_check, $last_check2, $hasil_check, $remark)
 	{
 		$data = [
 			'apar_code' => $apar_id,
@@ -923,6 +923,7 @@ class MaintenanceController extends Controller
 			'last_check' => $last_check,
 			'last_check2' => $last_check2,
 			'status' => $hasil_check,
+			'remark' => $remark
 		];
 		
 		$pdf = \App::make('dompdf.wrapper');

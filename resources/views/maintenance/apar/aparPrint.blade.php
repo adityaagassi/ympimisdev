@@ -34,7 +34,7 @@
 <?php 
 include public_path(). "/qr_generator/qrlib.php"; 
 
-QRcode::png($data['apar_code'], public_path().'/apar-qr.png');
+QRcode::png($data['apar_code']."/".$data['remark'], public_path().'/apar-qr.png');
 ?>
 <body>
 
