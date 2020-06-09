@@ -1010,18 +1010,25 @@ Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/jig/data', 'WeldingProcessController@indexWeldingJigData');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 
+//Purchase Supplier
 Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 	Route::get('index/supplier', 'AccountingController@master_supplier');
 	Route::get('fetch/supplier', 'AccountingController@fetch_supplier');
 });
 
+//Purchase Item
 Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_item', 'AccountingController@master_item');
 	Route::get('fetch/purchase_item', 'AccountingController@fetch_item');
 	Route::get('index/purchase_item/create', 'AccountingController@create_item');
+	Route::post('index/purchase_item/create_post', 'AccountingController@create_item_post');
+	Route::get('index/purchase_item/update/{id}', 'AccountingController@update_item');
+	Route::post('index/purchase_item/edit_post', 'AccountingController@update_item_post');
+	Route::get('index/purchase_item/delete/{id}', 'AccountingController@delete_item');
+	Route::get('index/purchase_item/get_kode_item', 'AccountingController@get_kode_item');
 });
 
-//nomor
+//nomor PR
 Route::get('purchase_requisition/get_nomor_pr', 'AccountingController@get_nomor_pr');
 
 //purchase_requisition
@@ -2672,36 +2679,36 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('verify/maintenance/spk/danger_note/{order_no}', 'MaintenanceController@indexDangerNote');
 
 	Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDangerNote');
+});
 
-	// -----------  APAR -----------
-	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
-	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
-	Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
-	Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
-	Route::get('index/maintenance/apar/resume', 'MaintenanceController@indexAparResume');
-	Route::get('index/maintenance/apar/uses', 'MaintenanceController@indexAparUses');
+// -----------  APAR -----------
+Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
+Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
+Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
+Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
+Route::get('index/maintenance/apar/resume', 'MaintenanceController@indexAparResume');
+Route::get('index/maintenance/apar/uses', 'MaintenanceController@indexAparUses');
 
-	Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
-	Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
-	Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
-	Route::get('fetch/maintenance/apar/list/check', 'MaintenanceController@fetchAparCheck2');
-	Route::get('fetch/maintenance/apar/list/monitoring', 'MaintenanceController@fetch_apar_monitoring');
-	Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
-	Route::get('fetch/maintenance/apar/resume', 'MaintenanceController@fetch_apar_resume');
-	Route::get('fetch/maintenance/apar/resumeWeek', 'MaintenanceController@fetch_apar_resume_week');
-	Route::get('fetch/maintenance/apar/resume/detail/week', 'MaintenanceController@fetch_apar_resume_detail_week');
-	Route::get('fetch/maintenance/apar/resume/detail', 'MaintenanceController@fetch_apar_resume_detail');
-	Route::get('fetch/maintenance/apar/use/list', 'MaintenanceController@fetch_apar_use');
-	Route::get('fetch/maintenance/apar/use/check', 'MaintenanceController@check_apar_use');
+Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
+Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
+Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
+Route::get('fetch/maintenance/apar/list/check', 'MaintenanceController@fetchAparCheck2');
+Route::get('fetch/maintenance/apar/list/monitoring', 'MaintenanceController@fetch_apar_monitoring');
+Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
+Route::get('fetch/maintenance/apar/resume', 'MaintenanceController@fetch_apar_resume');
+Route::get('fetch/maintenance/apar/resumeWeek', 'MaintenanceController@fetch_apar_resume_week');
+Route::get('fetch/maintenance/apar/resume/detail/week', 'MaintenanceController@fetch_apar_resume_detail_week');
+Route::get('fetch/maintenance/apar/resume/detail', 'MaintenanceController@fetch_apar_resume_detail');
+Route::get('fetch/maintenance/apar/use/list', 'MaintenanceController@fetch_apar_use');
+Route::get('fetch/maintenance/apar/use/check', 'MaintenanceController@check_apar_use');
 	// Route::get('fetch/maintenance/apar/byCode', 'MaintenanceController@fetchAparbyCode');
 
-	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
-	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
-	Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
-	Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
+Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
+Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
+Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
+Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
 
-	Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{hasil_check}', 'MaintenanceController@print_apar2');
-});
+Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}', 'MaintenanceController@print_apar2');
 
 Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
 Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
@@ -2731,6 +2738,7 @@ Route::get('index/assembly/flute/label_outer/{id}/{gmc}/{remark}', 'AssemblyProc
 Route::get('index/assembly/flute/label_besar/{id}/{gmc}/{remark}', 'AssemblyProcessController@labelBesarFl');
 Route::get('index/assembly/flute/label_kecil/{id}/{remark}', 'AssemblyProcessController@labelKecilFl');
 Route::get('index/assembly/flute/label_kecil2/{id}/{remark}', 'AssemblyProcessController@labelKecil2Fl');
+Route::get('index/assembly/flute/label_deskripsi/{id}/{remark}', 'AssemblyProcessController@labelDeskripsi');
 // Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_besar_outer_fl');
 // Route::get('index/fl_label_besar/{id}/{gmc}/{remark}', 'ProcessController@label_besar_fl');
 // Route::get('index/fl_label_kecil/{id}/{remark}', 'ProcessController@label_kecil_fl');

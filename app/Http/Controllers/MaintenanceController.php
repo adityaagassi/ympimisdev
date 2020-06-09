@@ -18,6 +18,7 @@ use App\Mail\SendEmail;
 use App\EmployeeSync;
 use App\CodeGenerator;
 use App\MaintenanceJobOrder;
+use App\MaintenanceJobOrderLog;
 use App\MaintenanceJobProcess;
 use App\Utility;
 use App\UtilityCheck;
@@ -39,10 +40,10 @@ class MaintenanceController extends Controller
 		->get();
 
 		$this->apar_type = [
-			['type' => 'powder', 'valid' => 5],
-			['type' => 'liquid', 'valid' => 3],
-			['type' => 'CO2', 'valid' => 3],
-			['type' => 'foam', 'valid' => 2]
+			['type' => 'powder', 'valid' => 3],
+			['type' => 'liquid', 'valid' => 5],
+			['type' => 'CO2', 'valid' => 5],
+			['type' => 'foam', 'valid' => 3]
 		];
 	}
 
@@ -112,6 +113,37 @@ class MaintenanceController extends Controller
 			'employee_id' => Auth::user()->username,
 			'name' => $employee->name
 		))->with('page', 'SPK')->with('head', 'Maintenance');	
+	}
+
+	public function indexDangerNote($order_no)
+	{
+		$title = 'Verifying SPK';
+		$title_jp = '';
+
+		$spk = MaintenanceJobOrder::where('order_no', '=', $order_no)
+		->select('type', 'category', 'machine_condition', 'danger', 'description', 'remark')
+		->first();
+
+		if ($spk->remark == "2") {
+			$message = 'SPK dengan Order No. '.$order_no;
+			$message2 ='Sudah diverifikasi';
+			$stat = 0;
+		} else {
+			$message = 'Untuk melakukan verifikasi SPK ini,';
+			$message2 = 'Tambahkan catatan bahaya pada kolom dibawah ini :';
+			$stat = 1;
+		}
+
+
+		return view('maintenance.spk_danger_message', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'head' => $order_no,
+			'data' => $spk,
+			'message' => $message,
+			'message2' => $message2,
+			'status' => $stat
+		))->with('page', 'verifying SPK');
 	}
 
 	public function indexApar()
@@ -225,7 +257,7 @@ class MaintenanceController extends Controller
 		$emp = Auth::user()->username;
 
 		$datas = MaintenanceJobOrder::leftJoin(db::raw('(SELECT process_code ,process_name from processes where remark = "maintenance") as process'), 'process.process_code', '=', 'maintenance_job_orders.remark')
-		->select('id','order_no', db::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'),'priority', 'type','target_date','danger','description','process_name')
+		->select('id','order_no', db::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as date'),'priority', 'type','target_date','description','process_name', 'remark')
 		->where('created_by', '=', $emp);
 
 		if ($request->get('status') != 'all') {
@@ -275,7 +307,7 @@ class MaintenanceController extends Controller
 		$jenis_pekerjaan = $request->get('jenis_pekerjaan');
 		$kategori = $request->get('kategori');
 		$kondisi_mesin = $request->get('kondisi_mesin');
-		$bahaya = $request->get('bahaya');
+		$bahaya = implode(", ", $request->get('bahaya'));
 		$detail = $request->get('detail');
 
 		if ($prioritas == "Urgent") {
@@ -285,7 +317,6 @@ class MaintenanceController extends Controller
 		}
 
 		$safety = $request->get('safety');
-
 
 		$number = sprintf("%'.0" . $code_generator->length . "d", $code_generator->index+1);
 		$order_no = $code_generator->prefix . $number;
@@ -313,8 +344,18 @@ class MaintenanceController extends Controller
 			'created_by' => Auth::user()->username,
 		]);
 
+		$spk_log = new MaintenanceJobOrderLog([
+			'order_no' => $order_no,
+			'remark' => $remark,
+			'created_by' => Auth::user()->username,
+		]);
+
 		try {
-			$spk->save();
+
+			DB::transaction(function() use ($spk, $spk_log){
+				$spk->save();
+				$spk_log->save();
+			});	
 
 			if($prioritas == 'Urgent'){
 				$data = db::select("select spk.*, u.`name` from maintenance_job_orders spk
@@ -325,6 +366,12 @@ class MaintenanceController extends Controller
 				Mail::to('susilo.basri@music.yamaha.com')
 				->bcc(['aditya.agassi@music.yamaha.com', 'darma.bagus@music.yamaha.com'])
 				->send(new SendEmail($data, 'urgent_spk'));
+			}
+
+			if(strpos($bahaya, 'Bahan Kimia Beracun') !== false){
+				Mail::to(['rizal.yohandhi@music.yamaha.com', 'whica.parama@music.yamaha.com'])
+				->bcc(['aditya.agassi@music.yamaha.com'])
+				->send(new SendEmail($data, 'chemical_spk'));
 			}
 
 			$response = array(
@@ -417,7 +464,7 @@ class MaintenanceController extends Controller
 		$detail = MaintenanceJobOrder::where("order_no", "=", $request->get('order_no'))
 		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "maintenance_job_orders.created_by")
 		->leftJoin(db::raw("(select process_code, process_name from processes where remark = 'maintenance') AS process"), "maintenance_job_orders.remark", "=", "process.process_code")
-		->select("order_no", "name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "priority", "maintenance_job_orders.section", "type", "category", "machine_condition", "danger", "description", "safety_note","target_date")
+		->select("order_no", "name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "priority", "maintenance_job_orders.section", "type", "category", "machine_condition", "danger", "description", "safety_note", "target_date", "process_name")
 		->first();
 
 		$response = array(
@@ -455,11 +502,129 @@ class MaintenanceController extends Controller
 		return Response::json($response);
 	}
 
+	public function verifySPK($stat, $order_no)
+	{
+		$get_spk = MaintenanceJobOrder::where('order_no', '=', $order_no)->select('remark', 'target_date', 'danger', db::raw('DATE_FORMAT(created_at, "%Y-%m-%d") as tanggal'))->first();
+
+		if ($get_spk->remark != "2") {
+			if ($stat == "T") {
+				$target_date = $get_spk->target_date;
+				$priority = "Urgent";
+				$message2 ='Berhasil di approve sebagai SPK dengan prioritas urgent';
+			} else {
+				$target_date = date("Y-m-d", strtotime("+7 day", strtotime($get_spk->tanggal)));
+				$priority = "Normal";
+				$message2 = $order_no.' berubah sebagai WJO dengan prioritas normal';
+			}
+
+			if (strpos($get_spk->danger, 'Bahan Kimia Beracun') !== false) {
+				if ($get_spk->remark == '0') {
+					$remark = "1";
+				} else if($get_spk->remark == '1') {
+					$remark = "2";
+				}
+			} else {
+				$remark = "2";
+			}
+
+			try {
+				$spk = MaintenanceJobOrder::where('order_no', '=', $order_no)->first();
+				$spk->remark = $remark;
+				$spk->priority = $priority;
+				$spk->target_date = $target_date;
+
+				$manager = EmployeeSync::where('position', '=', 'Manager')
+				->where('department', '=', 'Maintenance')
+				->first();
+
+				$spk_log = new MaintenanceJobOrderLog([
+					'order_no' => $order_no,
+					'remark' => $remark,
+					'created_by' => $manager->employee_id,
+				]);
+
+				$spk->save();
+				$spk_log->save();
+
+				$message = 'SPK dengan Order No. '.$order_no;
+				return view('maintenance.spk_approval_message', array(
+					'head' => $order_no,
+					'message' => $message,
+					'message2' => $message2,
+				))->with('page', 'SPK Approval');
+			} catch (QueryException $e) {
+				return view('maintenance.spk_approval_message', array(
+					'head' => $order_no,
+					'message' => 'Update Error',
+					'message2' => $e->getMessage(),
+				))->with('page', 'SPK Approval');
+			}
+		} else {
+			$message = 'SPK dengan Order No. '.$order_no;
+			$message2 ='Sudah di approve/reject';
+			return view('maintenance.spk_approval_message', array(
+				'head' => $order_no,
+				'message' => $message,
+				'message2' => $message2,
+			))->with('page', 'SPK Approval');
+		}
+	}
+
+	public function addDangerNote(Request $request)
+	{
+		$get_spk = MaintenanceJobOrder::where('order_no', '=', $request->get('order_no'))->select('remark')->first();
+		if ($get_spk->remark != "2") {
+			if ($get_spk->remark == '0') {
+				$remark = "1";
+			} else if($get_spk->remark == '1') {
+				$remark = "2";
+			}
+
+			$spk = MaintenanceJobOrder::where('order_no', '=', $request->get('order_no'))->first();
+			$spk->remark = $remark;
+			$spk->safety_note = $request->get('danger_note');
+
+
+			$chemical = EmployeeSync::whereNull('group')
+			->where('section', '=', 'Chemical Process Control')
+			->first();
+
+			$spk_log = new MaintenanceJobOrderLog([
+				'order_no' => $request->get('order_no'),
+				'remark' => $remark,
+				'created_by' => $chemical->employee_id
+			]);
+
+			try {
+				$spk->save();
+				$spk_log->save();
+
+				$response = array(
+					'status' => true,
+					'message' => "Berhasil diverifikasi",
+				);
+				return Response::json($response);
+			} catch (QueryException $e) {
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		} else {
+			$response = array(
+				'status' => false,
+				'message' => "Sudah di approve/reject",
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function fetchAparList(Request $request)
 	{
 		DB::connection()->enableQueryLog();
 
-		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', db::raw("(MONTH(exp_date) - MONTH(now())) as age_left"), 'remark', 'last_check');
+		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', db::raw("TIMESTAMPDIFF(MONTH, exp_date, now()) as age_left"), 'remark', 'last_check');
 
 		if ($request->get('type')) {
 			$apars = $apars->where('remark', '=', $request->get('type'));
@@ -564,9 +729,12 @@ class MaintenanceController extends Controller
 			$utl_check->save();
 
 			// GET DATA LAST CHECK
-			$last_check_tool = Utility::where('id', $request->get('utility_id'))
-			->select('utility_code', 'utility_name', 'exp_date', 'status', db::raw('DATE_FORMAT(last_check, "%d-%m-%Y") last_check'))
-			->first();
+			$last_check_tool = Utility::where('utilities.id', $request->get('utility_id'))
+			->leftJoin('utility_checks', 'utility_checks.utility_id', '=', 'utilities.id')
+			->select('utilities.utility_code', 'utility_name', 'exp_date', 'utilities.status', db::raw('DATE_FORMAT(utility_checks.check_date, "%d-%m-%Y") as check_date'))
+			->orderBy('utility_checks.id', 'asc')
+			->limit(2)
+			->get();
 
 			// $this->printApar($last_check_tool);
 
@@ -746,19 +914,21 @@ class MaintenanceController extends Controller
 	// 	$printer->close();
 	// }
 
-	public function print_apar2($apar_id, $apar_name, $exp_date, $last_check, $hasil_check)
+	public function print_apar2($apar_id, $apar_name, $exp_date, $last_check, $last_check2, $hasil_check)
 	{
 		$data = [
 			'apar_code' => $apar_id,
 			'apar_name' => $apar_name,
 			'exp_date' => $exp_date,
 			'last_check' => $last_check,
+			'last_check2' => $last_check2,
 			'status' => $hasil_check,
 		];
 		
 		$pdf = \App::make('dompdf.wrapper');
 		$pdf->getDomPDF()->set_option("enable_php", true);
-		$pdf->setPaper([0, 0, 141.732, 184.252], 'landscape');
+		// $pdf->setPaper([0, 0, 141.732, 184.252], 'landscape');
+		$pdf->setPaper([0, 0, 161.57480315, 184.252], 'landscape');
 		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
 		$pdf->loadView('maintenance.apar.aparPrint', array(
@@ -775,9 +945,9 @@ class MaintenanceController extends Controller
 	public function fetch_apar_monitoring(Request $request)
 	{
 		if ($request->get('mon') % 2 === 0) {
-			$loc = "Factory I";
-		} else if ($request->get('mon') % 2 === 1){
 			$loc = "Factory II";
+		} else if ($request->get('mon') % 2 === 1){
+			$loc = "Factory I";
 		}
 
 		$check = Utility::where("location", "=", $loc)
@@ -799,9 +969,9 @@ class MaintenanceController extends Controller
 		DB::connection()->enableQueryLog();
 
 		if ($request->get('mon') % 2 === 0) {
-			$loc = "Factory I";
-		} else if ($request->get('mon') % 2 === 1){
 			$loc = "Factory II";
+		} else if ($request->get('mon') % 2 === 1){
+			$loc = "Factory I";
 		}
 
 		$check = Utility::where("location", "=", $loc)
@@ -823,7 +993,7 @@ class MaintenanceController extends Controller
 	{
 		$getCheckedData = DB::select('SELECT mon, jml_tot, IFNULL(jml,0) as jml FROM
 			(SELECT COUNT(entry) as jml_tot, mst.mo, mon from
-			(SELECT id, IF(location = "FACTORY I", 0, 1) as mo, DATE_FORMAT(entry_date,"%Y-%m-%d") as entry from utilities) utl
+			(SELECT id, IF(location = "FACTORY II", 0, 1) as mo, DATE_FORMAT(entry_date,"%Y-%m-%d") as entry from utilities) utl
 			left join
 			(select DATE_FORMAT(week_date,"%Y-%m") as mon, MOD(MONTH(week_date),2) as mo from weekly_calendars where week_date >= "2020-01-01" group by DATE_FORMAT(week_date,"%Y-%m"), mo) mst on mst.mo = utl.mo
 			where DATE_FORMAT(entry, "%Y-%m") <= mon
@@ -874,9 +1044,9 @@ class MaintenanceController extends Controller
 		$mon = intval($mon);
 
 		if ($mon % 2 === 0) {
-			$loc = "Factory I";
-		} else if ($mon % 2 === 1){
 			$loc = "Factory II";
+		} else if ($mon % 2 === 1){
+			$loc = "Factory I";
 		}
 
 		$cek_week = db::select('select "'.$ym.'" as mon, wek, sum(jml_cek) as uncek, sum(cek) as cek from
@@ -888,7 +1058,7 @@ class MaintenanceController extends Controller
 
 			union all
 			select mstr.wek, 0 as jml_cek, count(cek.wek) as cek from
-			(select utility_id, FLOOR((DayOfMonth(check_date)-1)/7)+1 as wek from utility_checks 
+			(select utility_id, IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) - 1 as wek from utility_checks 
 			left join utilities on utilities.id = utility_checks.utility_id
 			where location = "'.$loc.'" and utilities.remark = "APAR" and DATE_FORMAT(check_date,"%Y-%m") = "'.$ym.'"
 			group by utility_id, wek) cek
@@ -897,16 +1067,16 @@ class MaintenanceController extends Controller
 			group by mstr.wek) semua
 			group by wek');
 
-		$replace_week = db::select('select "'.$ym.'" as mon, mstr.wek, IFNULL(entry,0) entry, IFNULL(exp,0) exp from
-			(select 0 as entry, count(exp_date) as exp, FLOOR((DayOfMonth(exp_date)-1)/7)+1 as wek from utilities where remark = "APAR" and location = "'.$loc.'" and DATE_FORMAT(exp_date,"%Y-%m") = "'.$ym.'"
-			group by wek
-
-			union all
-
-			select count(entry_date) as entry, 0 as exp, FLOOR((DayOfMonth(exp_date)-1)/7)+1 as wek from utilities where remark = "APAR" and location = "'.$loc.'" and DATE_FORMAT(entry_date,"%Y-%m") = "'.$ym.'"
-			group by wek
-			) as replaced
-			right join (select FLOOR((DayOfMonth(week_date)-1)/7)+1 as wek from weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = "'.$ym.'" GROUP BY wek) mstr on mstr.wek = replaced.wek');
+		$replace_week = db::select('SELECT mstr.wek, IFNULL(entry_apar.entry,0) as entry, IFNULL(expired_apar.exp,0) as expire from
+			(select FLOOR((DayOfMonth(week_date)-1)/7)+1 as wek from weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = "'.$ym.'" GROUP BY wek) as mstr
+			left join
+			(select wek, count(utility_code) as entry from
+			(select utility_code, utility_name, location, DATE(entry_date) as entry, IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) - 1 as wek from utilities where remark = "APAR" and DATE_FORMAT(entry_date,"%Y-%m") = "'.$ym.'") as entry
+			group by wek ) as entry_apar on mstr.wek = entry_apar.wek
+			left join
+			(select wek, count(utility_code) as exp from
+			(select utility_code, utility_name, location, DATE(exp_date) as exp, IF(FLOOR((DayOfMonth(exp_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(exp_date)-1)/7)+1) - 1 as wek from utilities where remark = "APAR" and DATE_FORMAT(exp_date,"%Y-%m") = "'.$ym.'") as expired
+			group by wek) as expired_apar on mstr.wek = expired_apar.wek');
 		
 		$response = array(
 			'status' => true,
@@ -916,6 +1086,7 @@ class MaintenanceController extends Controller
 		return Response::json($response);
 	}
 
+	// ------------------------------
 	public function fetch_apar_resume_detail(Request $request)
 	{
 		$detailCheck = DB::select('SELECT utilities.utility_code, utilities.utility_name, utilities.location, utilities.`group`, 1 as cek from utility_checks
@@ -942,6 +1113,7 @@ class MaintenanceController extends Controller
 		);
 		return Response::json($response);
 	}
+	// ---------------------------------
 
 	public function fetch_apar_resume_detail_week(Request $request)
 	{
@@ -960,32 +1132,40 @@ class MaintenanceController extends Controller
 		$mon = intval($mon);
 
 		if ($mon % 2 === 0) {
-			$loc = "Factory I";
-		} else if ($mon % 2 === 1){
 			$loc = "Factory II";
+		} else if ($mon % 2 === 1){
+			$loc = "Factory I";
 		}
 
 
-		$detail_cek = db::select('select * from 
-			(SELECT utility_code, utility_name, location, `group`, IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) as wek, 0 as cek from utilities where remark = "APAR" and location = "'.$loc.'"
-			union all
-			select utility_code, utility_name, location, `group`, FLOOR((DayOfMonth(check_date)-1)/7)+1+1 as wek, 1 as cek from utility_checks 
+		$detail_cek = db::select('SELECT semua.utility_code, semua.utility_name, semua.location, semua.`group`, IFNULL(cek.cek, 0) as cek from
+			(SELECT id, wek, utility_code, utility_name, location, `group`, 0 as cek from
+			(SELECT IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) as weeks, utility_code, utility_name, location, `group`, id from utilities where remark = "APAR" and location = "'.$loc.'") un
+			right join
+			(select FLOOR((DayOfMonth(week_date)-1)/7)+1 as wek from weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = "'.$ym.'" GROUP BY wek) mstr on mstr.wek+1 = un.weeks
+			where wek = '.$request->get('week').' ) as semua 
+			left join
+			(SELECT utility_id as id, IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) - 1 as wek, utility_code, utility_name, location, `group`, 1 as cek from utility_checks 
 			left join utilities on utilities.id = utility_checks.utility_id
 			where location = "'.$loc.'" and utilities.remark = "APAR" and DATE_FORMAT(check_date,"%Y-%m") = "'.$ym.'"
-			group by utility_code, utility_name, location, `group`, wek) semua
-			where wek = '.$request->get('week').'+1');
+			group by utility_id, wek, utility_code, utility_name, location, `group`) as cek on semua.id = cek.id
+			order by cek.cek asc');
 
-		$detail_replace = db::select('select * from
-			(select utility_code, utility_name, location, `group`, FLOOR((DayOfMonth(exp_date)-1)/7)+1 as wek, exp_date as dt, 1 as exp from utilities where remark = "APAR" and location = "'.$loc.'" and DATE_FORMAT(exp_date,"%Y-%m") = "'.$ym.'"
+		$detail_expired = db::select('select wek, utility_code, utility_name, location, dt, exp from
+			(select utility_code, utility_name, location, DATE_FORMAT(exp_date, "%Y-%m-%d") as dt, IF(FLOOR((DayOfMonth(exp_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(exp_date)-1)/7)+1) - 1 as wek, 1 as exp from utilities where remark = "APAR" and DATE_FORMAT(exp_date,"%Y-%m") = "'.$ym.'") as expired
+			where wek = '.$request->get('week').'
 			union all
-			select utility_code, utility_name, location, `group`, FLOOR((DayOfMonth(exp_date)-1)/7)+1 as wek, DATE_FORMAT(entry_date,"%Y-%m-%d") as dt, 0 as exp from utilities where remark = "APAR" and location = "'.$loc.'" and DATE_FORMAT(entry_date,"%Y-%m") = "'.$ym.'") as semua
-			where wek = '.$request->get('week'));
+			select wek, utility_code, utility_name, location, dt, exp from
+			(select utility_code, utility_name, location, DATE_FORMAT(entry_date, "%Y-%m-%d") as dt, IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) - 1 as wek, 0 as exp from utilities where remark = "APAR" and DATE_FORMAT(entry_date,"%Y-%m") = "'.$ym.'") as entry
+			where wek ='.$request->get('week'));
+
+		// return dd($detail_expired);
 
 		$response = array(
 			'status' => true,
 			'check_detail_list' => $detail_cek,
-			'replace_list' => $detail_replace,
-			'query' => DB::getQueryLog()
+			'replace_list' => $detail_expired,
+			// 'query' => DB::getQueryLog()
 		);
 		return Response::json($response);
 	}

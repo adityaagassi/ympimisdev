@@ -49,7 +49,7 @@ QRcode::png($data['apar_code'], public_path().'/apar-qr.png');
 			<td style="width: 45%"><img src="{{ public_path() . '/apar-qr.png' }}" class="cropped"></td>
 			<td style="text-align: left">
 				Exp. {{$data['exp_date']}} <br>
-				Last Check : <br> {{$data['last_check']}} <br>({{$data['status']}})
+				Last Check : <br> {{$data['last_check']}} <br>  {{$data['last_check2']}}<br>({{$data['status']}})
 			</td>
 		</tr>
 	</table>
