@@ -38,7 +38,9 @@ class MiraiMobileController extends Controller
   public function fetchCoronaInformation(Request $request){
     $corona_informations = db::table('corona_informations')->orderBy('date', 'ASC')->get();
 
-    $now = date('Y-m-d');
+    $last_update = db::table('corona_informations')->orderBy('date', 'desc')->first();
+
+    $now = date('Y-m-d', strtotime($last_update->date));
     $yesterday = date('Y-m-d',strtotime("-1 days"));
     if(strlen($request->get('date_now')) > 0 ){
       $now = date('Y-m-d', strtotime($request->get('date_now')));
