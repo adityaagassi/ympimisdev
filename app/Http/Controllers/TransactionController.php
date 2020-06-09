@@ -13,6 +13,7 @@ use Response;
 use App\ReturnList;
 use App\User;
 use App\ReturnLog;
+use App\ReturnAdditional;
 
 class TransactionController extends Controller
 {
@@ -23,6 +24,18 @@ class TransactionController extends Controller
 
 		return view('return.index', array(
 			'title' => 'Return Material',
+			'title_jp' => '??',
+			'storage_locations' => $storage_locations
+		))->with('page', 'Return');
+	}
+
+	public function indexReturnData(){
+		$storage_locations = StorageLocation::select('location', 'storage_location')->distinct()
+		->orderBy('location', 'asc')
+		->get();
+
+		return view('return.list', array(
+			'title' => 'Data Return Material',
 			'title_jp' => '??',
 			'storage_locations' => $storage_locations
 		))->with('page', 'Return');
@@ -196,8 +209,8 @@ class TransactionController extends Controller
 		->distinct()
 		->get();
 
-		if($lists == null){
-			$lists = db::table('return_additionals')->select('material_number', 'description', 'issue_location', 'receive_location')
+		if(count($lists) == 0){
+			$lists = ReturnAdditional::select('material_number', 'description', 'issue_location', 'receive_location')
 			->where('receive_location', '=', $request->get('loc'))
 			->orderBy('issue_location', 'asc')
 			->orderBy('material_number', 'asc')
@@ -205,7 +218,7 @@ class TransactionController extends Controller
 			->get();
 		}
 
-		if($lists == null){
+		if(count($lists) == 0){
 			$response = array(
 				'status' => false,
 				'message' => 'Lokasi terpilih tidak memiliki list material'
@@ -274,7 +287,7 @@ class TransactionController extends Controller
 				$printer_name = 'FLO Printer 101';			
 			}
 			if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
-				$printer_name = 'Middle-Printer';			
+				$printer_name = 'Stockroom-Printer';			
 			}
 			if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
 				$printer_name = 'Welding-Printer';			
