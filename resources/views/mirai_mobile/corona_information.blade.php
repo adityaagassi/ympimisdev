@@ -72,11 +72,11 @@
 
 			<div class="col-xs-12" style="margin-bottom: 10px;">
 				<center>
-					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('id')" id="btn_id">INDONESIA</button>
-					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('jkt')" id="btn_jkt">JAKARTA</button>
-					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('bks')" id="btn_bks">BEKASI</button>
-					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('sby')" id="btn_sby">SURABAYA</button>
-					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('psr')" id="btn_psr">PASURUAN</button>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('id')" id="btn_id">INDONESIA<br>インドネシア</button>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('jkt')" id="btn_jkt">JAKARTA<br>ジャカルタ</button>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('bks')" id="btn_bks">BEKASI<br>ベカシ’</button>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('sby')" id="btn_sby">SURABAYA<br>スラバヤ</button>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('psr')" id="btn_psr">PASURUAN<br>パスルアン</button>
 				</center>
 			</div>
 
