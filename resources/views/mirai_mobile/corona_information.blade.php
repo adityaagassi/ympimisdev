@@ -70,7 +70,17 @@
 
 			{{-- INDONESIA --}}
 
-			<div class="col-xs-6" style="padding-left: 0">
+			<div class="col-xs-12" style="margin-bottom: 10px;">
+				<center>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('id')" id="btn_id">INDONESIA</button>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('jkt')" id="btn_jkt">JAKARTA</button>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('bks')" id="btn_bks">BEKASI</button>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('sby')" id="btn_sby">SURABAYA</button>
+					<button class="btn btn-lg" style="width: 15%; border-color: black; font-weight: bold; background-color: white;" onclick="info('psr')" id="btn_psr">PASURUAN</button>
+				</center>
+			</div>
+
+			<div class="col-xs-12" style="padding-left: 0" id="indonesia">
 				<div class="box">
 					<div class="box-header with-border">
 						<h4 class="box-title">
@@ -117,380 +127,380 @@
 						<div class="nav-tabs-custom">
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active"><a href="#tab_id_1" data-toggle="tab" id="tab_header_id_1">
-									現在</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_id_2" data-toggle="tab" id="tab_header_id_2">
-									新規</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_id_3" data-toggle="tab" id="tab_header_id_3">
-									累計</a>
-								</li>
-							</ul>
+								現在</a>
+							</li>
+							<li class="vendor-tab"><a href="#tab_id_2" data-toggle="tab" id="tab_header_id_2">
+							新規</a>
+						</li>
+						<li class="vendor-tab"><a href="#tab_id_3" data-toggle="tab" id="tab_header_id_3">
+						累計</a>
+					</li>
+				</ul>
 
-							<div class="tab-content">
-								<div class="tab-pane active" id="tab_id_1">
-									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
-									</div>
-									<div id="id_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_id_2">
-									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
-									</div>
-									<div id="id_new_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_id_3">
-									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
-									</div>
-									<div id="id_series" style="margin-bottom: 20px;"></div>
-								</div>
-							</div>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_id_1">
+						<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+							現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
 						</div>
+						<div id="id_infected" style="margin-bottom: 20px;"></div>
 					</div>
-				</div>
-			</div>
 
-			{{-- JAKARTA --}}
-
-			<div class="col-xs-6" style="padding-left: 0">
-				<div class="box">
-					<div class="box-header with-border">
-						<h4 class="box-title">
-							<i class="fa fa-square"></i><b>「ジャカルタ特別州」（YI・YMMI、駐在員居住地区）</b>
-						</h4>
-					</div>
-					<div class="box-body">
-						<table class="table table-bordered" style="margin-bottom: 10px;">
-							<thead>
-								<tr>
-									<th style="width:5%;">現在感染者数<br>(Genzai kansen-shasū)<br><br>Number Currently infected</th>
-									<th style="width:5%;">新規感染者数<br>(Shinki kansenshasū)<br><br>Number of new infections</th>
-									<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
-								</tr>
-								<tr>
-									<th id="jkt_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-									<th id="jkt_new">Not Updated</th>
-									<th id="jkt_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-								</tr>
-								<tr>
-									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
-									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
-									<th style="width:5%;"></th>
-								</tr>
-								<tr>
-									<th id="jkt_rasio_1">Not Updated</th>
-									<th id="jkt_rasio_2">Not Updated</th>
-									<th></th>
-								</tr>
-								<tr>
-									<th style="width:5%;">死亡者数<br>(Shibōshasū)<br><br>Number of deaths</th>
-									<th style="width:5%;"></th>
-									<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
-								</tr>
-								<tr>
-									<th id="jkt_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-									<th></th>
-									<th id="jkt_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
-								</tr>
-							</thead>
-						</table>
-
-						<div class="nav-tabs-custom">
-							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-								<li class="vendor-tab active"><a href="#tab_jkt_1" data-toggle="tab" id="tab_header_jkt_1">
-									現在</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_jkt_2" data-toggle="tab" id="tab_header_jkt_2">
-									新規</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_jkt_3" data-toggle="tab" id="tab_header_jkt_3">
-									累計</a>
-								</li>
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane active" id="tab_jkt_1">
-									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
-									</div>
-									<div id="jkt_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_jkt_2">
-									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
-									</div>
-									<div id="jkt_new_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_jkt_3">
-									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
-									</div>
-									<div id="jkt_series" style="margin-bottom: 20px;"></div>
-								</div>
-							</div>
+					<div class="tab-pane" id="tab_id_2">
+						<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
+							新規感染者数
 						</div>
+						<div id="id_new_infected" style="margin-bottom: 20px;"></div>
 					</div>
-				</div>
-			</div>
 
-			{{-- BEKASI --}}
-
-			<div class="col-xs-6" style="padding-left: 0">
-				<div class="box">
-					<div class="box-header with-border">
-						<h4 class="box-title">
-							<i class="fa fa-square"></i><b>「ブカシ県＋ブカシ市」（YMMA・YMPA地区）</b>
-						</h4>
-					</div>
-					<div class="box-body">
-						<table class="table table-bordered" style="margin-bottom: 10px;">
-							<thead>
-								<tr>
-									<th style="width:5%;">現在感染者数<br>(Genzai kansen-shasū)<br><br>Number Currently infected</th>
-									<th style="width:5%;">新規感染者数<br>(Shinki kansenshasū)<br><br>Number of new infections</th>
-									<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
-								</tr>
-								<tr>
-									<th id="bks_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-									<th id="bks_new">Not Updated</th>
-									<th id="bks_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-								</tr>
-								<tr>
-									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
-									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
-									<th style="width:5%;"></th>
-								</tr>
-								<tr>
-									<th id="bks_rasio_1">Not Updated</th>
-									<th id="bks_rasio_2">Not Updated</th>
-									<th></th>
-								</tr>
-								<tr>
-									<th style="width:5%;">死亡者数<br>(Shibōshasū)<br><br>Number of deaths</th>
-									<th style="width:5%;"></th>
-									<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
-								</tr>
-								<tr>
-									<th id="bks_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-									<th></th>
-									<th id="bks_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
-								</tr>
-							</thead>
-						</table>
-
-						<div class="nav-tabs-custom">
-							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-								<li class="vendor-tab active"><a href="#tab_bks_1" data-toggle="tab" id="tab_header_bks_1">
-									現在</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_bks_2" data-toggle="tab" id="tab_header_bks_2">
-									新規</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_bks_3" data-toggle="tab" id="tab_header_bks_3">
-									累計</a>
-								</li>
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane active" id="tab_bks_1">
-									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
-									</div>
-									<div id="bks_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_bks_2">
-									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
-									</div>
-									<div id="bks_new_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_bks_3">
-									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
-									</div>
-									<div id="bks_series" style="margin-bottom: 20px;"></div>
-								</div>
-							</div>
+					<div class="tab-pane" id="tab_id_3">
+						<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+							過去1週間の10万人あたりの新規感染者数
 						</div>
-					</div>
-				</div>
-			</div>
-
-			{{-- SURABAYA --}}
-
-			<div class="col-xs-6" style="padding-left: 0">
-				<div class="box">
-					<div class="box-header with-border">
-						<h4 class="box-title">
-							<i class="fa fa-square"></i><b>「スラバヤ市」（駐在員居住地区）</b>
-						</h4>
-					</div>
-					<div class="box-body">
-						<table class="table table-bordered" style="margin-bottom: 10px;">
-							<thead>
-								<tr>
-									<th style="width:5%;">現在感染者数<br>(Genzai kansen-shasū)<br><br>Number Currently infected</th>
-									<th style="width:5%;">新規感染者数<br>(Shinki kansenshasū)<br><br>Number of new infections</th>
-									<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
-								</tr>
-								<tr>
-									<th id="sby_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-									<th id="sby_new">Not Updated</th>
-									<th id="sby_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-								</tr>
-								<tr>
-									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
-									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
-									<th style="width:5%;"></th>
-								</tr>
-								<tr>
-									<th id="sby_rasio_1">Not Updated</th>
-									<th id="sby_rasio_2">Not Updated</th>
-									<th></th>
-								</tr>
-								<tr>
-									<th style="width:5%;">死亡者数<br>(Shibōshasū)<br><br>Number of deaths</th>
-									<th style="width:5%;"></th>
-									<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
-								</tr>
-								<tr>
-									<th id="sby_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-									<th></th>
-									<th id="sby_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
-								</tr>
-							</thead>
-						</table>
-
-						<div class="nav-tabs-custom">
-							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-								<li class="vendor-tab active"><a href="#tab_sby_1" data-toggle="tab" id="tab_header_sby_1">
-									現在</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_sby_2" data-toggle="tab" id="tab_header_sby_2">
-									新規</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_sby_3" data-toggle="tab" id="tab_header_sby_3">
-									累計</a>
-								</li>
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane active" id="tab_sby_1">
-									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
-									</div>
-									<div id="sby_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_sby_2">
-									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
-									</div>
-									<div id="sby_new_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_sby_3">
-									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
-									</div>
-									<div id="sby_series" style="margin-bottom: 20px;"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			{{-- PASURUAN --}}
-
-			<div class="col-xs-6" style="padding-left: 0">
-				<div class="box">
-					<div class="box-header with-border">
-						<h4 class="box-title">
-							<i class="fa fa-square"></i><b>「パスルアン県＋パスルアン市」（YMPI・YEMI地区）</b>
-						</h4>
-					</div>
-					<div class="box-body">
-						<table class="table table-bordered" style="margin-bottom: 10px;">
-							<thead>
-								<tr>
-									<th style="width:5%;">現在感染者数<br>(Genzai kansen-shasū)<br><br>Number Currently infected</th>
-									<th style="width:5%;">新規感染者数<br>(Shinki kansenshasū)<br><br>Number of new infections</th>
-									<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
-								</tr>
-								<tr>
-									<th id="psr_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-									<th id="psr_new">Not Updated</th>
-									<th id="psr_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-								</tr>
-								<tr>
-									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
-									<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
-									<th style="width:5%;"></th>
-								</tr>
-								<tr>
-									<th id="psr_rasio_1">Not Updated</th>
-									<th id="psr_rasio_2">Not Updated</th>
-									<th></th>
-								</tr>
-								<tr>
-									<th style="width:5%;">死亡者数<br>(Shibōshasū)<br><br>Number of deaths</th>
-									<th style="width:5%;"></th>
-									<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
-								</tr>
-								<tr>
-									<th id="psr_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
-									<th></th>
-									<th id="psr_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
-								</tr>
-							</thead>
-						</table>
-
-						<div class="nav-tabs-custom">
-							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-								<li class="vendor-tab active"><a href="#tab_psr_1" data-toggle="tab" id="tab_header_psr_1">
-									現在</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_psr_2" data-toggle="tab" id="tab_header_psr_2">
-									新規</a>
-								</li>
-								<li class="vendor-tab"><a href="#tab_psr_3" data-toggle="tab" id="tab_header_psr_3">
-									累計</a>
-								</li>
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane active" id="tab_psr_1">
-									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
-									</div>
-									<div id="psr_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_psr_2">
-									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
-									</div>
-									<div id="psr_new_infected" style="margin-bottom: 20px;"></div>
-								</div>
-
-								<div class="tab-pane" id="tab_psr_3">
-									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
-									</div>
-									<div id="psr_series" style="margin-bottom: 20px;"></div>
-								</div>
-							</div>
-						</div>
+						<div id="id_series" style="margin-bottom: 20px;"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
+
+{{-- JAKARTA --}}
+
+<div class="col-xs-12" style="padding-left: 0" id="jakarta">
+	<div class="box">
+		<div class="box-header with-border">
+			<h4 class="box-title">
+				<i class="fa fa-square"></i><b>「ジャカルタ特別州」（YI・YMMI、駐在員居住地区）</b>
+			</h4>
+		</div>
+		<div class="box-body">
+			<table class="table table-bordered" style="margin-bottom: 10px;">
+				<thead>
+					<tr>
+						<th style="width:5%;">現在感染者数<br>(Genzai kansen-shasū)<br><br>Number Currently infected</th>
+						<th style="width:5%;">新規感染者数<br>(Shinki kansenshasū)<br><br>Number of new infections</th>
+						<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
+					</tr>
+					<tr>
+						<th id="jkt_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+						<th id="jkt_new">Not Updated</th>
+						<th id="jkt_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+					</tr>
+					<tr>
+						<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
+						<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
+						<th style="width:5%;"></th>
+					</tr>
+					<tr>
+						<th id="jkt_rasio_1">Not Updated</th>
+						<th id="jkt_rasio_2">Not Updated</th>
+						<th></th>
+					</tr>
+					<tr>
+						<th style="width:5%;">死亡者数<br>(Shibōshasū)<br><br>Number of deaths</th>
+						<th style="width:5%;"></th>
+						<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
+					</tr>
+					<tr>
+						<th id="jkt_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+						<th></th>
+						<th id="jkt_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
+					</tr>
+				</thead>
+			</table>
+
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+					<li class="vendor-tab active"><a href="#tab_jkt_1" data-toggle="tab" id="tab_header_jkt_1">
+					現在</a>
+				</li>
+				<li class="vendor-tab"><a href="#tab_jkt_2" data-toggle="tab" id="tab_header_jkt_2">
+				新規</a>
+			</li>
+			<li class="vendor-tab"><a href="#tab_jkt_3" data-toggle="tab" id="tab_header_jkt_3">
+			累計</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab_jkt_1">
+			<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+				現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+			</div>
+			<div id="jkt_infected" style="margin-bottom: 20px;"></div>
+		</div>
+
+		<div class="tab-pane" id="tab_jkt_2">
+			<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
+				新規感染者数
+			</div>
+			<div id="jkt_new_infected" style="margin-bottom: 20px;"></div>
+		</div>
+
+		<div class="tab-pane" id="tab_jkt_3">
+			<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+				過去1週間の10万人あたりの新規感染者数
+			</div>
+			<div id="jkt_series" style="margin-bottom: 20px;"></div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+</div>
+
+{{-- BEKASI --}}
+
+<div class="col-xs-12" style="padding-left: 0" id="bekasi">
+	<div class="box">
+		<div class="box-header with-border">
+			<h4 class="box-title">
+				<i class="fa fa-square"></i><b>「ブカシ県＋ブカシ市」（YMMA・YMPA地区）</b>
+			</h4>
+		</div>
+		<div class="box-body">
+			<table class="table table-bordered" style="margin-bottom: 10px;">
+				<thead>
+					<tr>
+						<th style="width:5%;">現在感染者数<br>(Genzai kansen-shasū)<br><br>Number Currently infected</th>
+						<th style="width:5%;">新規感染者数<br>(Shinki kansenshasū)<br><br>Number of new infections</th>
+						<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
+					</tr>
+					<tr>
+						<th id="bks_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+						<th id="bks_new">Not Updated</th>
+						<th id="bks_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+					</tr>
+					<tr>
+						<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
+						<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
+						<th style="width:5%;"></th>
+					</tr>
+					<tr>
+						<th id="bks_rasio_1">Not Updated</th>
+						<th id="bks_rasio_2">Not Updated</th>
+						<th></th>
+					</tr>
+					<tr>
+						<th style="width:5%;">死亡者数<br>(Shibōshasū)<br><br>Number of deaths</th>
+						<th style="width:5%;"></th>
+						<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
+					</tr>
+					<tr>
+						<th id="bks_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+						<th></th>
+						<th id="bks_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
+					</tr>
+				</thead>
+			</table>
+
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+					<li class="vendor-tab active"><a href="#tab_bks_1" data-toggle="tab" id="tab_header_bks_1">
+					現在</a>
+				</li>
+				<li class="vendor-tab"><a href="#tab_bks_2" data-toggle="tab" id="tab_header_bks_2">
+				新規</a>
+			</li>
+			<li class="vendor-tab"><a href="#tab_bks_3" data-toggle="tab" id="tab_header_bks_3">
+			累計</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab_bks_1">
+			<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+				現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+			</div>
+			<div id="bks_infected" style="margin-bottom: 20px;"></div>
+		</div>
+
+		<div class="tab-pane" id="tab_bks_2">
+			<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
+				新規感染者数
+			</div>
+			<div id="bks_new_infected" style="margin-bottom: 20px;"></div>
+		</div>
+
+		<div class="tab-pane" id="tab_bks_3">
+			<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+				過去1週間の10万人あたりの新規感染者数
+			</div>
+			<div id="bks_series" style="margin-bottom: 20px;"></div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+</div>
+
+{{-- SURABAYA --}}
+
+<div class="col-xs-12" style="padding-left: 0" id="surabaya">
+	<div class="box">
+		<div class="box-header with-border">
+			<h4 class="box-title">
+				<i class="fa fa-square"></i><b>「スラバヤ市」（駐在員居住地区）</b>
+			</h4>
+		</div>
+		<div class="box-body">
+			<table class="table table-bordered" style="margin-bottom: 10px;">
+				<thead>
+					<tr>
+						<th style="width:5%;">現在感染者数<br>(Genzai kansen-shasū)<br><br>Number Currently infected</th>
+						<th style="width:5%;">新規感染者数<br>(Shinki kansenshasū)<br><br>Number of new infections</th>
+						<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
+					</tr>
+					<tr>
+						<th id="sby_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+						<th id="sby_new">Not Updated</th>
+						<th id="sby_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+					</tr>
+					<tr>
+						<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
+						<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
+						<th style="width:5%;"></th>
+					</tr>
+					<tr>
+						<th id="sby_rasio_1">Not Updated</th>
+						<th id="sby_rasio_2">Not Updated</th>
+						<th></th>
+					</tr>
+					<tr>
+						<th style="width:5%;">死亡者数<br>(Shibōshasū)<br><br>Number of deaths</th>
+						<th style="width:5%;"></th>
+						<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
+					</tr>
+					<tr>
+						<th id="sby_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+						<th></th>
+						<th id="sby_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
+					</tr>
+				</thead>
+			</table>
+
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+					<li class="vendor-tab active"><a href="#tab_sby_1" data-toggle="tab" id="tab_header_sby_1">
+					現在</a>
+				</li>
+				<li class="vendor-tab"><a href="#tab_sby_2" data-toggle="tab" id="tab_header_sby_2">
+				新規</a>
+			</li>
+			<li class="vendor-tab"><a href="#tab_sby_3" data-toggle="tab" id="tab_header_sby_3">
+			累計</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab_sby_1">
+			<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+				現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+			</div>
+			<div id="sby_infected" style="margin-bottom: 20px;"></div>
+		</div>
+
+		<div class="tab-pane" id="tab_sby_2">
+			<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
+				新規感染者数
+			</div>
+			<div id="sby_new_infected" style="margin-bottom: 20px;"></div>
+		</div>
+
+		<div class="tab-pane" id="tab_sby_3">
+			<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+				過去1週間の10万人あたりの新規感染者数
+			</div>
+			<div id="sby_series" style="margin-bottom: 20px;"></div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+</div>
+
+{{-- PASURUAN --}}
+
+<div class="col-xs-12" style="padding-left: 0" id="pasuruan">
+	<div class="box">
+		<div class="box-header with-border">
+			<h4 class="box-title">
+				<i class="fa fa-square"></i><b>「パスルアン県＋パスルアン市」（YMPI・YEMI地区）</b>
+			</h4>
+		</div>
+		<div class="box-body">
+			<table class="table table-bordered" style="margin-bottom: 10px;">
+				<thead>
+					<tr>
+						<th style="width:5%;">現在感染者数<br>(Genzai kansen-shasū)<br><br>Number Currently infected</th>
+						<th style="width:5%;">新規感染者数<br>(Shinki kansenshasū)<br><br>Number of new infections</th>
+						<th style="width:5%;">累計感染者数<br>(Ruikei kansenshasū)<br><br>Cumulative number of infected people</th>
+					</tr>
+					<tr>
+						<th id="psr_curr" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+						<th id="psr_new">Not Updated</th>
+						<th id="psr_cum" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+					</tr>
+					<tr>
+						<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
+						<th style="width:5%;">前日比-<br>(Zenjitsu-hi)<br><br>rasio hari sebelumnya</th>
+						<th style="width:5%;"></th>
+					</tr>
+					<tr>
+						<th id="psr_rasio_1">Not Updated</th>
+						<th id="psr_rasio_2">Not Updated</th>
+						<th></th>
+					</tr>
+					<tr>
+						<th style="width:5%;">死亡者数<br>(Shibōshasū)<br><br>Number of deaths</th>
+						<th style="width:5%;"></th>
+						<th style="width:5%;">退院者数<br>(Taiin shasū)<br><br>Number of discharge</th>
+					</tr>
+					<tr>
+						<th id="psr_death" style="background-color: rgb(255, 242, 204)">Not Updated</th>
+						<th></th>
+						<th id="psr_discharge" style="background-color: rgb(255, 217, 102)">Not Updated</th>
+					</tr>
+				</thead>
+			</table>
+
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+					<li class="vendor-tab active"><a href="#tab_psr_1" data-toggle="tab" id="tab_header_psr_1">
+					現在</a>
+				</li>
+				<li class="vendor-tab"><a href="#tab_psr_2" data-toggle="tab" id="tab_header_psr_2">
+				新規</a>
+			</li>
+			<li class="vendor-tab"><a href="#tab_psr_3" data-toggle="tab" id="tab_header_psr_3">
+			累計</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab_psr_1">
+			<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
+				現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+			</div>
+			<div id="psr_infected" style="margin-bottom: 20px;"></div>
+		</div>
+
+		<div class="tab-pane" id="tab_psr_2">
+			<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
+				新規感染者数
+			</div>
+			<div id="psr_new_infected" style="margin-bottom: 20px;"></div>
+		</div>
+
+		<div class="tab-pane" id="tab_psr_3">
+			<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
+				過去1週間の10万人あたりの新規感染者数
+			</div>
+			<div id="psr_series" style="margin-bottom: 20px;"></div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 </div>
 </section>
@@ -514,7 +524,76 @@
 			todayHighlight: true
 		});
 		fetchChart();
+
+		$('#btn_id').css("background-color", "orange");
+		$('#jakarta').hide();
+		$('#bekasi').hide();
+		$('#surabaya').hide();
+		$('#pasuruan').hide();
 	});
+
+	function info(id){
+		if(id == 'id'){
+			$('#btn_id').css("background-color", "orange");
+			$('#btn_jkt').css("background-color", "white");
+			$('#btn_bks').css("background-color", "white");
+			$('#btn_sby').css("background-color", "white");
+			$('#btn_psr').css("background-color", "white");
+			$('#indonesia').show();
+			$('#jakarta').hide();
+			$('#bekasi').hide();
+			$('#surabaya').hide();
+			$('#pasuruan').hide();
+		}
+		else if(id == 'jkt'){
+			$('#btn_id').css("background-color", "white");
+			$('#btn_jkt').css("background-color", "orange");
+			$('#btn_bks').css("background-color", "white");
+			$('#btn_sby').css("background-color", "white");
+			$('#btn_psr').css("background-color", "white");
+			$('#indonesia').hide();
+			$('#jakarta').show();
+			$('#bekasi').hide();
+			$('#surabaya').hide();
+			$('#pasuruan').hide();
+		}
+		else if(id == 'bks'){
+			$('#btn_id').css("background-color", "white");
+			$('#btn_jkt').css("background-color", "white");
+			$('#btn_bks').css("background-color", "orange");
+			$('#btn_sby').css("background-color", "white");
+			$('#btn_psr').css("background-color", "white");
+			$('#indonesia').hide();
+			$('#jakarta').hide();
+			$('#bekasi').show();
+			$('#surabaya').hide();
+			$('#pasuruan').hide();
+		}
+		else if(id == 'sby'){
+			$('#btn_id').css("background-color", "white");
+			$('#btn_jkt').css("background-color", "white");
+			$('#btn_bks').css("background-color", "white");
+			$('#btn_sby').css("background-color", "orange");
+			$('#btn_psr').css("background-color", "white");
+			$('#indonesia').hide();
+			$('#jakarta').hide();
+			$('#bekasi').hide();
+			$('#surabaya').show();
+			$('#pasuruan').hide();
+		}
+		else if(id == 'psr'){
+			$('#btn_id').css("background-color", "white");
+			$('#btn_jkt').css("background-color", "white");
+			$('#btn_bks').css("background-color", "white");
+			$('#btn_sby').css("background-color", "white");
+			$('#btn_psr').css("background-color", "orange");
+			$('#indonesia').hide();
+			$('#jakarta').hide();
+			$('#bekasi').hide();
+			$('#surabaya').hide();
+			$('#pasuruan').show();
+		}
+	}
 
 	function fetchChart(){
 		$('#loading').show();
