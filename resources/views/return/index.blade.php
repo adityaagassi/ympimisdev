@@ -476,12 +476,17 @@
 				tableData += '<td>'+ value.username +'</td>';
 				tableData += '<td>'+ value.created_at +'</td>';
 				tableData += '<td><center><button class="btn btn-primary" onclick="reprint('+value.id+')"><i class="fa fa-print"></i></button></center></td>';
+				tableData += '<td><center><button class="btn btn-primary" onclick="deleteReturn('+value.id+')"><i class="fa fa-print"></i></button></center></td>';
 				tableData += '</tr>';
 
 				count += 1;
 			});
 			$('#tableBodyResume').append(tableData);
 		});
+	}
+
+	function deleteReturn(id){
+
 	}
 
 	function fetchReturnList(loc){
@@ -498,10 +503,12 @@
 				var tableData = "";
 				var count = 1;
 				$.each(result.lists, function(key, value) {
-					tableData += '<tr onclick="fetchReturn(\''+value.material_number+'\''+','+'\''+value.description+'\''+','+'\''+value.issue_location+'\''+','+'\''+value.receive_location+'\')">';
+					var str = value.description;
+					var desc = str.replace("'", "");
+					tableData += '<tr onclick="fetchReturn(\''+value.material_number+'\''+','+'\''+desc+'\''+','+'\''+value.issue_location+'\''+','+'\''+value.receive_location+'\')">';
 					tableData += '<td>'+ count +'</td>';
 					tableData += '<td>'+ value.material_number +'</td>';
-					tableData += '<td>'+ value.description +'</td>';
+					tableData += '<td>'+ desc +'</td>';
 					tableData += '<td>'+ value.receive_location +'</td>';
 					tableData += '<td>'+ value.issue_location +'</td>';
 					tableData += '</tr>';
