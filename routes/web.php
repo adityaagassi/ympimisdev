@@ -835,6 +835,8 @@ Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 	Route::post('print/return', 'TransactionController@printReturn');
 	Route::get('reprint/return', 'TransactionController@reprintReturn');
 	Route::post('confirm/return', 'TransactionController@confirmReturn');
+	Route::post('delete/return', 'TransactionController@deleteReturn');
+
 });
 Route::get('index/return', 'TransactionController@indexReturn');
 Route::get('index/return/data', 'TransactionController@indexReturnData');
@@ -1014,10 +1016,16 @@ Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKens
 Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 	Route::get('index/supplier', 'AccountingController@master_supplier');
 	Route::get('fetch/supplier', 'AccountingController@fetch_supplier');
+	Route::get('index/supplier/create', 'AccountingController@create_supplier');
+	Route::post('index/supplier/create_post', 'AccountingController@create_supplier_post');
+	Route::get('index/supplier/update/{id}', 'AccountingController@update_supplier');
+	Route::post('index/supplier/update', 'AccountingController@update_supplier_post');
+	Route::get('index/supplier/delete/{id}', 'AccountingController@delete_supplier');
 });
 
 //Purchase Item
 Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
+	//Item
 	Route::get('index/purchase_item', 'AccountingController@master_item');
 	Route::get('fetch/purchase_item', 'AccountingController@fetch_item');
 	Route::get('index/purchase_item/create', 'AccountingController@create_item');
@@ -1026,6 +1034,10 @@ Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 	Route::post('index/purchase_item/edit_post', 'AccountingController@update_item_post');
 	Route::get('index/purchase_item/delete/{id}', 'AccountingController@delete_item');
 	Route::get('index/purchase_item/get_kode_item', 'AccountingController@get_kode_item');
+	
+	//Category
+	Route::get('index/purchase_item/create_category', 'AccountingController@create_item_category');
+	Route::post('index/purchase_item/create_category', 'AccountingController@create_item_category_post');
 });
 
 //nomor PR

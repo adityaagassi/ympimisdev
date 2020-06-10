@@ -146,6 +146,7 @@
 										<th style="width: 1%;">Qty</th>
 										<th style="width: 1%;">Creator</th>
 										<th style="width: 1%;">Created</th>
+										<th style="width: 1%;">Delete</th>
 										<th style="width: 1%;">Reprint</th>
 									</tr>
 								</thead>
@@ -475,8 +476,8 @@
 				tableData += '<td>'+ value.quantity +'</td>';
 				tableData += '<td>'+ value.username +'</td>';
 				tableData += '<td>'+ value.created_at +'</td>';
+				tableData += '<td><center><button class="btn btn-danger" onclick="deleteReturn('+value.id+')"><i class="fa fa-trash"></i></button></center></td>';
 				tableData += '<td><center><button class="btn btn-primary" onclick="reprint('+value.id+')"><i class="fa fa-print"></i></button></center></td>';
-				tableData += '<td><center><button class="btn btn-primary" onclick="deleteReturn('+value.id+')"><i class="fa fa-print"></i></button></center></td>';
 				tableData += '</tr>';
 
 				count += 1;
@@ -487,6 +488,24 @@
 
 	function deleteReturn(id){
 
+		if(confirm("Apa Anda yakin anda akan mendelete slip return?")){
+			var data = {
+				id:id
+			}
+			$.post('{{ url("delete/return") }}', data, function(result, status, xhr){
+				if(result.status){
+					fetchResume(result.receive);
+					openSuccessGritter('Success!', result.message);
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+				}
+
+			});
+		}
+		else{
+			return false;
+		}
 	}
 
 	function fetchReturnList(loc){

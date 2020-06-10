@@ -41,6 +41,41 @@ class TransactionController extends Controller
 		))->with('page', 'Return');
 	}
 
+	public function deleteReturn(Request $request){
+		$auth_id = Auth::id();
+		$return = ReturnList::where('id', '=', $request->get('id'))->first();
+		$receive = $return->receive_location;
+		try{
+			$return_log = new ReturnLog([
+				'return_id' => $return->id,
+				'material_number' => $return->material_number,
+				'material_description' => $return->material_description,
+				'issue_location' => $return->issue_location,
+				'receive_location' => $return->receive_location,
+				'quantity' => $return->quantity,
+				'returned_by' => $return->created_by,
+				'created_by' => $auth_id,
+				'slip_created' => $return->created_at,
+				'remark' => 'deleted'
+			]);
+			$return_log->save();
+			$return->forceDelete();
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+		$response = array(
+			'status' => true,
+			'receive' => $receive,
+			'message' => 'Slip return berhasil didelete',
+		);
+		return Response::json($response);
+	}
+
 	function confirmReturn(Request $request){
 		$id = explode('+', $request->get('id'));
 		$auth_id = Auth::id();
