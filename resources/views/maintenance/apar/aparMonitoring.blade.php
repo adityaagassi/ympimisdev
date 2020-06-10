@@ -145,7 +145,7 @@
             <th>APAR CODE</th>
             <th>APAR NAME</th>
             <th>LOCATION</th>
-            <th>MUST CHECK BEFORE</th>
+            <th>LAST CHECK</th>
             <th>EXP. DATE</th>
           </tr>
         </thead>
@@ -218,6 +218,11 @@
       function get_apar(dt_param) {
         mon = dt_param.getMonth()+1;
 
+        yr      = dt_param.getFullYear(),
+        month   = (dt_param.getMonth()+1) < 10 ? '0' + (dt_param.getMonth()+1) : (dt_param.getMonth()+1),
+        day     = dt_param.getDate()  < 10 ? '0' + dt_param.getDate()  : dt_param.getDate(),
+        newDate = yr + '-' + month + '-' + day;
+
         var checked = 0;
         var all_check = 0;
 
@@ -227,7 +232,8 @@
         var body = "";
 
         var data = {
-          mon: mon
+          mon: mon,
+          dt: newDate
         }
 
         $.get('{{ url("fetch/maintenance/apar/list/monitoring") }}', data, function(result, status, xhr){
@@ -239,22 +245,16 @@
             var nowdate = new Date();
             var entrydate = new Date(value.entry);
 
-            if (value.cek == 2) {
+            if (value.cek == 1) {
               bg = "style='background-color:#54f775'";
               checked++;
-            } else if(value.cek == 1) {
-              bg = "";
-            } else if(value.cek == 0){
-              bg = "class='alert'";
-            } else {
-              bg = "class='alert2'";
             }
 
             body += "<tr>";
             body += "<td "+bg+">"+value.utility_code+"</td>";
             body += "<td "+bg+">"+value.utility_name+"</td>";
             body += "<td "+bg+">"+value.location+"</td>";
-            body += "<td "+bg+">"+pad(entrydate.getDate(),2)+" "+months[nowdate.getMonth()]+" "+nowdate.getFullYear()+"</td>";
+            body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
             body += "<td "+bg+">"+value.exp_date2+"</td>";
             body += "</tr>";
           })

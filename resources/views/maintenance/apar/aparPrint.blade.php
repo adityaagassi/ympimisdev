@@ -45,7 +45,10 @@ QRcode::png($data['apar_code']."/".$data['remark'], public_path().'/apar-qr.png'
 				{{$data['apar_name']}}
 			</td>
 		</tr>
-		<tr>
+		<tr style="line-height: 15px">
+			<td colspan="2"><center>Pengecekan 2 bulanan</center></td>
+		</tr>
+		<tr style="line-height: 12px">
 			<td style="width: 45%"><img src="{{ public_path() . '/apar-qr.png' }}" class="cropped"></td>
 			<td style="text-align: left">
 				Exp. {{$data['exp_date']}} <br>

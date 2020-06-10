@@ -209,6 +209,7 @@
 		apar = [];
 		var vdo;
 		var apar_checks = [];
+		var ng_list = [];
 		hasil_check = "";
 
 		jQuery(document).ready(function() {
@@ -382,13 +383,19 @@
 
 		$("#btn-check").click(function() {
 			var check_list = [];
+			ng_list = [];
 			$(".check").each(function( i ) {
 				if ($(this).is(':checked')) {
 					check_list.push(1);
 				} else {
+					ng_list.push($(this).attr("name"));
 					check_list.push(0);
 				}
 			});
+
+			if (ng_list.length == 0) {
+				ng_list.push("BAIK");
+			}
 
 			var data = {
 				check : check_list,
@@ -402,7 +409,7 @@
 					$(".check").prop('checked', false).parent().removeClass('active');
 
 					openSuccessGritter('Success', 'Check Berhasil Ditambahkan');
-					console.log(hasil_check);
+					// console.log(hasil_check);
 
 					var check_date_2 = "-";
 					if(result.checked_apar.length > 1){
@@ -410,8 +417,10 @@
 					}
 
 					if (hasil_check == "") {
-						hasil_check = "-";
+						hasil_check = "BAIK";
 					}
+
+					var hasil_check = ng_list.toString();
 
 					// window.open('{{ url("print/apar/qr/".'+result.checked_apar.utility_code+'."/".'+result.checked_apar.utility_name+'."/".'+result.checked_apark.exp_date+'."/".'+result.checked_apark.last_check+'."/".'+hasil_check+') }}', '_blank');
 					window.open('{{ url("print/apar/qr/") }}/'+result.checked_apar[0].utility_code+'/'+result.checked_apar[0].utility_name+'/'+result.checked_apar[0].exp_date+'/'+result.checked_apar[0].check_date+'/'+check_date_2+'/'+hasil_check+'/'+result.checked_apar[0].remark, '_blank');
@@ -465,7 +474,7 @@
 						t_body += "<tr>";
 						t_body += "<td style='padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 90%;'>"+value.check_point+"</td>";
 						t_body += "<td style='padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;'><div class='checkbox'>";
-						t_body += "<label><input type='checkbox' class='check'>OK</label></div></td>";
+						t_body += "<label><input type='checkbox' class='check' name='"+value.synonim+"'>OK</label></div></td>";
 						t_body += "</tr>";
 					}
 				});

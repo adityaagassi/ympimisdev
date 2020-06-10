@@ -2739,22 +2739,17 @@ Route::get('delete/assembly/delete_ng_temp', 'AssemblyProcessController@deleteNg
 Route::post('input/assembly/ng_onko', 'AssemblyProcessController@inputNgOnko');
 Route::get('fetch/assembly/get_process_before', 'AssemblyProcessController@getProcessBefore');
 
-Route::get('index/assembly/flute/print_label_backup', 'AssemblyProcessController@indexFlutePrintLabelBackup');
+
 Route::get('index/assembly/flute/print_label', 'AssemblyProcessController@indexFlutePrintLabel');
 Route::get('fetch/assembly/flute/fillModelResult', 'AssemblyProcessController@fillModelResult');
 Route::get('fetch/assembly/flute/fillResult', 'AssemblyProcessController@fillResult');
 Route::get('fetch/assembly/flute/fetchCheckTag', 'AssemblyProcessController@fetchCheckTag');
 Route::get('fetch/assembly/flute/fetchCheckReprint', 'AssemblyProcessController@fetchCheckReprint');
-
 Route::get('index/assembly/flute/label_outer/{id}/{gmc}/{remark}', 'AssemblyProcessController@labelBesarOuterFl');
 Route::get('index/assembly/flute/label_besar/{id}/{gmc}/{remark}', 'AssemblyProcessController@labelBesarFl');
 Route::get('index/assembly/flute/label_kecil/{id}/{remark}', 'AssemblyProcessController@labelKecilFl');
 Route::get('index/assembly/flute/label_kecil2/{id}/{remark}', 'AssemblyProcessController@labelKecil2Fl');
 Route::get('index/assembly/flute/label_deskripsi/{id}/{remark}', 'AssemblyProcessController@labelDeskripsi');
-// Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_besar_outer_fl');
-// Route::get('index/fl_label_besar/{id}/{gmc}/{remark}', 'ProcessController@label_besar_fl');
-// Route::get('index/fl_label_kecil/{id}/{remark}', 'ProcessController@label_kecil_fl');
-// Route::get('index/fl_label_kecil2/{id}/{remark}', 'ProcessController@label_kecil2_fl');
 
 
 Route::get('index/board/{location}', 'AssemblyProcessController@indexAssemblyBoard');

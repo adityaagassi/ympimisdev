@@ -174,7 +174,7 @@ class MaintenanceController extends Controller
 		->first();
 
 		$check = db::table("utility_check_lists")
-		->select('check_point', 'remark')
+		->select('check_point', 'remark', 'synonim')
 		->get();
 		// $check = "";
 
@@ -929,7 +929,7 @@ class MaintenanceController extends Controller
 		$pdf = \App::make('dompdf.wrapper');
 		$pdf->getDomPDF()->set_option("enable_php", true);
 		// $pdf->setPaper([0, 0, 141.732, 184.252], 'landscape');
-		$pdf->setPaper([0, 0, 161.57480315, 184.252], 'landscape');
+		$pdf->setPaper([0, 0, 150.236, 184.252], 'landscape');
 		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
 		$pdf->loadView('maintenance.apar.aparPrint', array(
@@ -945,6 +945,8 @@ class MaintenanceController extends Controller
 
 	public function fetch_apar_monitoring(Request $request)
 	{
+
+		DB::connection()->enableQueryLog();
 		if ($request->get('mon') % 2 === 0) {
 			$loc = "Factory II";
 		} else if ($request->get('mon') % 2 === 1){
@@ -953,14 +955,15 @@ class MaintenanceController extends Controller
 
 		$check = Utility::where("location", "=", $loc)
 		->where("remark", "=", "APAR")
-		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', 'last_check', db::raw('DATE_FORMAT(entry_date, "%Y-%m-%d") entry'), db::raw("DAY(entry_date) as hari"), db::raw('IF(DAY(NOW()) >= DAY(entry_date), -1, IF(IFNULL(MONTH(last_check), 0) >= '.$request->get('mon').', 2, IF(DAY(NOW()) >= IF(DAY(entry_date)-7 < 0,1,DAY(entry_date)-7) AND DAY(NOW()) <= DAY(entry_date), 0, 1)))  as cek'), db::raw('IFNULL(FLOOR((DayOfMonth(last_check)-1)/7)+1, FLOOR((DayOfMonth(exp_date)-1)/7)+1) AS `week`'))
+		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', db::raw('DATE_FORMAT(last_check, "%d %M %Y") last_check'), db::raw('DATE_FORMAT(entry_date, "%Y-%m-%d") entry'), db::raw('IF(MONTH(last_check) = MONTH("'.$request->get('dt').'"), 1, 0) as cek'))
 		->orderBy("cek", "ASC")
-		->orderBy("hari", "ASC")
+		->orderBy("id", "ASC")
 		->get();
 
 		$response = array(
 			'status' => true,
 			'check_list' => $check,
+			'query' => DB::getQueryLog()
 		);
 		return Response::json($response);
 	}
