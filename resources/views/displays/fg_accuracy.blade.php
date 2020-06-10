@@ -438,8 +438,12 @@ fillChart();
 								text: 'Quantity (sets)'
 							},
 							tickPositioner: function () {
-
-								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								if(this.dataMax > 0){
+									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
+								}
+								else{
+									var maxDeviation = 100;
+								}
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -676,8 +680,12 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-
-								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								if(this.dataMax > 0){
+									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
+								}
+								else{
+									var maxDeviation = 100;
+								}
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -781,8 +789,12 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-
-								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								if(this.dataMax > 0){
+									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
+								}
+								else{
+									var maxDeviation = 100;
+								}
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -886,8 +898,12 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-
-								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								if(this.dataMax > 0){
+									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
+								}
+								else{
+									var maxDeviation = 100;
+								}
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -991,8 +1007,12 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-
-								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								if(this.dataMax > 0){
+									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
+								}
+								else{
+									var maxDeviation = 100;
+								}
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -1096,8 +1116,12 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-
-								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								if(this.dataMax > 0){
+									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
+								}
+								else{
+									var maxDeviation = 100;
+								}
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -1201,8 +1225,12 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-
-								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));
+								if(this.dataMax > 0){
+									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
+								}
+								else{
+									var maxDeviation = 100;
+								}
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
