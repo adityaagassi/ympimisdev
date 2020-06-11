@@ -322,6 +322,9 @@
   @if(isset($page) && $page == "Return")<li class="active">@else<li>@endif
     <a href="{{ secure_url("/index/return") }}"><i class="fa fa-backward"></i> <span>Return</span></a>
   </li>
+  @if(isset($page) && $page == "Return")<li class="active">@else<li>@endif
+    <a href="{{ url("/index/return_logs") }}"><i class="fa fa-list-alt"></i> <span>Return Logs</span></a>
+  </li>
   @endif
 
   @if(in_array('S38', $navs))

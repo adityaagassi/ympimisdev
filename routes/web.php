@@ -845,6 +845,10 @@ Route::get('fetch/return/list', 'TransactionController@fetchReturnList');
 Route::get('fetch/return', 'TransactionController@fetchReturn');
 Route::get('fetch/return/resume', 'TransactionController@fetchReturnResume');
 
+Route::get('index/return_logs', 'TransactionController@indexReturnLogs');
+Route::get('fetch/return_logs', 'TransactionController@fetchReturnLogs');
+
+
 Route::group(['nav' => 'S1', 'middleware' => 'permission'], function(){
 	Route::get('index/flo_view/bi', 'FloController@index_bi');
 });
@@ -1012,6 +1016,12 @@ Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/jig/data', 'WeldingProcessController@indexWeldingJigData');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 
+//Exchange Rate
+Route::get('index/exchange_rate', 'AccountingController@exchange_rate');
+Route::get('fetch/exchange_rate', 'AccountingController@fetch_exchange_rate');
+Route::post('create/exchange_rate', 'AccountingController@create_exchange_rate');
+Route::post('delete/exchange_rate', 'AccountingController@delete_exchange_rate');
+
 //Purchase Supplier
 Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 	Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -1056,6 +1066,7 @@ Route::get('purchase_requisition/detail/{id}', 'AccountingController@detail_purc
 //approval purchase_requisition
 Route::get('purchase_requisition/verifikasi/{id}', 'AccountingController@verifikasi_purchase_requisition');
 Route::post('purchase_requisition/approval/{id}', 'AccountingController@approval_purchase_requisition');
+Route::post('purchase_requisition/notapprove/{id}', 'AccountingController@reject_purchase_requisition');
 
 //investment
 Route::get('investment', 'AccountingController@investment');
@@ -1098,14 +1109,26 @@ Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_sx/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');	
+
+	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
+
 });
 
 Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_fl/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
+
+	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
+
 });
 
 Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_cl/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
+
+	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
+
 });
 
 Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){

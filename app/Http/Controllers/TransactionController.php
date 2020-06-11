@@ -20,20 +20,36 @@ use DataTables;
 class TransactionController extends Controller
 {
 
+	private $storage_location;
+	public function __construct()
+	{
+		$this->storage_location = [
+			'CL91',
+			'CLB9',
+			'FL91',
+			'SX91',
+			'CL51',
+			'FL51',
+			'SX51',
+			'VN51',
+			'CL21',
+			'FL21',
+			'SX21',
+			'VN21'
+		];
+	}
+
 	public function indexReturnLogs(){
 
 		$storage_locations = StorageLocation::select('location', 'storage_location')->distinct()
 		->orderBy('location', 'asc')
 		->get();
 
-		$materials = db::connection('mysql2')->table('transfers')
-		->leftJoin('materials', 'materials.id', '=', 'transfers.material_id')
-		->leftJoin('completions', 'completions.id', '=', 'transfers.completion_id')
-		->select('materials.material_number', 'materials.description', 'transfers.issue_location', 'transfers.receive_location')
-		->where('completions.active', '=', 0)
-		->orderBy('transfers.issue_location', 'asc')
-		->orderBy('materials.material_number', 'asc')
-		->distinct()
+		$materials = db::table('return_materials')
+		->whereNull('deleted_at')
+		->select('material_number', 'material_description as description', 'issue_location', 'receive_location')
+		->orderBy('issue_location', 'ASC')
+		->orderBy('material_number', 'ASC')
 		->get();
 
 
@@ -46,14 +62,14 @@ class TransactionController extends Controller
 	}
 
 	public function indexReturn(){
-		$storage_locations = StorageLocation::select('location', 'storage_location')->distinct()
-		->orderBy('location', 'asc')
-		->get();
+		// $storage_locations = StorageLocation::select('location', 'storage_location')->distinct()
+		// ->orderBy('location', 'asc')
+		// ->get();
 
 		return view('return.index', array(
 			'title' => 'Return Material',
 			'title_jp' => '??',
-			'storage_locations' => $storage_locations
+			'storage_locations' => $this->storage_location
 		))->with('page', 'Return');
 	}
 
@@ -261,6 +277,9 @@ class TransactionController extends Controller
 		if($request->get('material') != null){
 			$log = $log->whereIn('return_logs.material_number', $request->get('material'));
 		}
+		if($request->get('remark') != null){
+			$log = $log->whereIn('return_logs.remark', $request->get('remark'));
+		}
 
 		$log = $log->orderBy('return_logs.slip_created', 'asc')
 		->select(
@@ -313,25 +332,33 @@ class TransactionController extends Controller
 	}
 
 	public function fetchReturnList(Request $request){
-		$lists = db::connection('mysql2')->table('transfers')
-		->leftJoin('materials', 'materials.id', '=', 'transfers.material_id')
-		->leftJoin('completions', 'completions.id', '=', 'transfers.completion_id')
-		->select('materials.material_number', 'materials.description', 'transfers.issue_location', 'transfers.receive_location')
-		->where('transfers.receive_location', '=', $request->get('loc'))
+		// $lists = db::connection('mysql2')->table('transfers')
+		// ->leftJoin('materials', 'materials.id', '=', 'transfers.material_id')
+		// ->leftJoin('completions', 'completions.id', '=', 'transfers.completion_id')
+		// ->select('materials.material_number', 'materials.description', 'transfers.issue_location', 'transfers.receive_location')
+		// ->where('transfers.receive_location', '=', $request->get('loc'))
 		// ->where('completions.active', '=', 0)
-		->orderBy('transfers.issue_location', 'asc')
-		->orderBy('materials.material_number', 'asc')
-		->distinct()
+		// ->orderBy('transfers.issue_location', 'asc')
+		// ->orderBy('materials.material_number', 'asc')
+		// ->distinct()
+		// ->get();
+
+		$lists = db::table('return_materials')
+		->whereNull('deleted_at')
+		->select('material_number', 'material_description as description', 'issue_location', 'receive_location')
+		->where('receive_location', '=', $request->get('loc'))
+		->orderBy('issue_location', 'ASC')
+		->orderBy('material_number', 'ASC')
 		->get();
 
-		if(count($lists) == 0){
-			$lists = ReturnAdditional::select('material_number', 'description', 'issue_location', 'receive_location')
-			->where('receive_location', '=', $request->get('loc'))
-			->orderBy('issue_location', 'asc')
-			->orderBy('material_number', 'asc')
-			->distinct()
-			->get();
-		}
+		// if(count($lists) == 0){
+		// 	$lists = ReturnAdditional::select('material_number', 'description', 'issue_location', 'receive_location')
+		// 	->where('receive_location', '=', $request->get('loc'))
+		// 	->orderBy('issue_location', 'asc')
+		// 	->orderBy('material_number', 'asc')
+		// 	->distinct()
+		// 	->get();
+		// }
 
 		if(count($lists) == 0){
 			$response = array(
