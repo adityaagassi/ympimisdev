@@ -170,9 +170,9 @@
 					<div class="form-group">
 						<select class="form-control select2" onchange="fetchReturnList(value)" data-placeholder="Pilih Lokasi Anda..." style="width: 100%; font-size: 20px;">
 							<option></option>
-							<?php $__currentLoopData = $storage_locations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $storage_location): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-							<option value="<?php echo e($storage_location->storage_location); ?>"><?php echo e($storage_location->storage_location); ?> - <?php echo e($storage_location->location); ?></option>
-							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+							@foreach($storage_locations as $storage_location)
+							<option value="{{ $storage_location }}">{{ $storage_location }}</option>
+							@endforeach
 						</select>
 					</div>
 				</div>
