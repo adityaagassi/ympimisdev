@@ -14,9 +14,37 @@ use App\ReturnList;
 use App\User;
 use App\ReturnLog;
 use App\ReturnAdditional;
+use DataTables;
+
 
 class TransactionController extends Controller
 {
+
+	public function indexReturnLogs(){
+
+		$storage_locations = StorageLocation::select('location', 'storage_location')->distinct()
+		->orderBy('location', 'asc')
+		->get();
+
+		$materials = db::connection('mysql2')->table('transfers')
+		->leftJoin('materials', 'materials.id', '=', 'transfers.material_id')
+		->leftJoin('completions', 'completions.id', '=', 'transfers.completion_id')
+		->select('materials.material_number', 'materials.description', 'transfers.issue_location', 'transfers.receive_location')
+		->where('completions.active', '=', 0)
+		->orderBy('transfers.issue_location', 'asc')
+		->orderBy('materials.material_number', 'asc')
+		->distinct()
+		->get();
+
+
+		return view('return.return_logs', array(
+			'title' => 'Return Logs',
+			'title_jp' => '??',
+			'storage_locations' => $storage_locations,
+			'materials' => $materials
+		));
+	}
+
 	public function indexReturn(){
 		$storage_locations = StorageLocation::select('location', 'storage_location')->distinct()
 		->orderBy('location', 'asc')
@@ -212,6 +240,56 @@ class TransactionController extends Controller
 		}
 	}
 
+	public function fetchReturnLogs(Request $request){
+		$log = ReturnLog::leftJoin(db::raw('(select id, name from users) as returner'), 'returner.id', '=', 'return_logs.returned_by')
+		->leftJoin(db::raw('(select id, name from users) as creator'), 'creator.id', '=', 'return_logs.created_by');
+
+		if(strlen($request->get('datefrom')) > 0 ){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+			$log = $log->where(db::raw('date(return_logs.slip_created)'), '>=', $datefrom);
+		}
+		if(strlen($request->get('dateto')) > 0 ){
+			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+			$log = $log->where(db::raw('date(return_logs.slip_created)'), '<=', $dateto);
+		}
+		if($request->get('issue') != null){
+			$log = $log->whereIn('return_logs.issue_location', $request->get('issue'));
+		}
+		if($request->get('receive') != null){
+			$log = $log->whereIn('return_logs.receive_location', $request->get('receive'));
+		}
+		if($request->get('material') != null){
+			$log = $log->whereIn('return_logs.material_number', $request->get('material'));
+		}
+
+		$log = $log->orderBy('return_logs.slip_created', 'asc')
+		->select(
+			'return_logs.slip_created',
+			'return_logs.material_number',
+			'return_logs.material_description',
+			'return_logs.issue_location',
+			'return_logs.receive_location',
+			db::raw('concat( SPLIT_STRING ( returner.name, " ", 1 ), " ", SPLIT_STRING ( returner.name, " ", 2 ) ) AS returner'),
+			db::raw('concat( SPLIT_STRING ( creator.name, " ", 1 ), " ", SPLIT_STRING ( creator.name, " ", 2 ) ) AS creator'),
+			'return_logs.remark',
+			'return_logs.quantity',
+			db::raw('if(return_logs.remark = "received", return_logs.created_at, "-") as receive_at'),
+			db::raw('if(return_logs.remark = "rejected", return_logs.created_at, "-") as reject_at'),
+			db::raw('if(return_logs.remark = "deleted", return_logs.created_at, "-") as delete_at')
+		)
+		->get();
+
+		// $response = array(
+		// 	'status' => true,
+		// 	'log' => $log,
+		// );
+		// return Response::json($response);
+
+		return DataTables::of($log)->make(true);
+
+
+	}
+
 	function fetchReturn(Request $request){
 		$id = substr($request->get('id'), 2);
 		$return = ReturnList::where('return_lists.id', '=', $id)
@@ -240,7 +318,7 @@ class TransactionController extends Controller
 		->leftJoin('completions', 'completions.id', '=', 'transfers.completion_id')
 		->select('materials.material_number', 'materials.description', 'transfers.issue_location', 'transfers.receive_location')
 		->where('transfers.receive_location', '=', $request->get('loc'))
-		->where('completions.active', '=', 0)
+		// ->where('completions.active', '=', 0)
 		->orderBy('transfers.issue_location', 'asc')
 		->orderBy('materials.material_number', 'asc')
 		->distinct()
