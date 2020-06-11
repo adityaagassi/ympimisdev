@@ -237,8 +237,10 @@ class TransactionController extends Controller
 	public function fetchReturnList(Request $request){
 		$lists = db::connection('mysql2')->table('transfers')
 		->leftJoin('materials', 'materials.id', '=', 'transfers.material_id')
+		->leftJoin('completions', 'completions.id', '=', 'transfers.completion_id')
 		->select('materials.material_number', 'materials.description', 'transfers.issue_location', 'transfers.receive_location')
 		->where('transfers.receive_location', '=', $request->get('loc'))
+		->where('completions.active', '=', 0)
 		->orderBy('transfers.issue_location', 'asc')
 		->orderBy('materials.material_number', 'asc')
 		->distinct()
