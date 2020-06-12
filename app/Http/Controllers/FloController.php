@@ -932,13 +932,13 @@ class FloController extends Controller
 			$printer_name = 'FLO Printer LOG';
 		}
 		elseif(Auth::user()->role_code == "MIS"){
-			$printer_name = 'TESTPRINTER';
+			$printer_name = 'MIS';
 		}				
 		elseif(Auth::user()->role_code == "S"){
-			$printer_name = 'TESTPRINTER';
+			$printer_name = 'MIS';
 		}
 		else{
-			$printer_name = 'TESTPRINTER';
+			$printer_name = 'MIS';
 		}
 
 		$connector = new WindowsPrintConnector($printer_name);
@@ -950,7 +950,7 @@ class FloController extends Controller
 		$printer->setUnderline(false);
 		$printer->feed(1);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		$printer->barcode(intVal($flo_number), Printer::BARCODE_CODE39);
+		$printer->barcode($flo_number, Printer::BARCODE_CODE39);
 		$printer->setTextSize(3, 1);
 		$printer->text($flo_number."\n\n");
 		$printer->initialize();
