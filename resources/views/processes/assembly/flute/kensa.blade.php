@@ -433,6 +433,8 @@
 			$("#tag").focus();
 		}
 		else{
+			$('#operator_id_before').val("OPID");
+			$('#operator_id_before_tanpoawase').val("OPID");
 			if (ng_name === "Tanpo Awase") {
 				$('#modalNgTanpoAwase').modal('show');
 				var btn = document.getElementById('confNgOnkoTanpoAwase');
@@ -467,9 +469,13 @@
 							process_before : value.process_before,
 						}
 						$.get('{{ url("fetch/assembly/get_process_before") }}',data3, function(result, status, xhr){
-							$.each(result.details, function(key, value) {
-								$('#operator_id_before_tanpoawase').val(value.operator_id);
-							});
+							if (result.status) {
+								$.each(result.details, function(key, value) {
+									$('#operator_id_before_tanpoawase').val(value.operator_id);
+								});
+							}else{
+								$('#operator_id_before_tanpoawase').val(result.details);
+							}
 						});
 					});
 				});
@@ -826,9 +832,13 @@
 			process_before : process_before,
 		}
 		$.get('{{ url("fetch/assembly/get_process_before") }}',data, function(result, status, xhr){
-			$.each(result.details, function(key, value) {
-				$('#operator_id_before').val(value.operator_id);
-			});
+			if (result.status) {
+				$.each(result.details, function(key, value) {
+					$('#operator_id_before').val(value.operator_id);
+				});
+			}else{
+				$('#operator_id_before').val(result.details);
+			}
 		});
 		$('#ngDetail').hide();
 		$('#ngDetailFix').show();

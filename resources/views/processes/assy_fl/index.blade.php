@@ -30,7 +30,7 @@
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Assemblies <i class="fa fa-angle-double-down"></i></span>
 			<a href='{{ url("index/kensa","kariawase-fungsi") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kariawase Kensa Fungsi</b></a>
 			<a href='{{ url("index/kensa","kariawase-visual") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kariawase Kensa Visual</b></a>
-			<a href="{{ url('/index/kensa','perakitanawal-kensa') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Perakitan Awal Kensa</a>
+			<a href="{{ url('/index/kensa','perakitanawal-kensa') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Perakitan Awal</a>
 			<a href='{{ url("index/kensa","tanpoawase-kensa") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpo Awase Kensa</b></a>
 			<a href='{{ url("index/kensa","tanpoawase-fungsi") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpo Awase Kensa Fungsi</b></a>
 			<a href='{{ url("index/kensa","kango-fungsi") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kango Kensa Fungsi</b></a>
@@ -40,9 +40,9 @@
 			<a href='{{ url("index/kensa","fukiage1-visual") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Fukiage 1 Kensa Visual</b></a>
 			<a href='{{ url("index/kensa","qa-visual1") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">QA 1 Kensa Visual</b></a>
 			<a href='{{ url("index/kensa","qa-visual2") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">QA 2 Kensa Visual</b></a>
+			<a href='{{ url("index/kensa","qa-kensasp") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">QA Kensa SP</b></a>
 			<a href="{{ url("index/middle/buffing_target/assy_fl") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Assembly Flute Target</a>
 			<a href='{{ url("index/assembly/flute/print_label") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Print Label Packing</b></a>
-			<a href='{{ url("index/assembly/flute/print_label_backup") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Print Label Packing Backup</b></a>
 		</div>
 
 		<div class="col-xs-4" style="text-align: center; color: red;">
