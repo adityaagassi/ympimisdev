@@ -87,7 +87,6 @@
 						<th style="width: 10%">Jenis Pekerjaan</th>
 						<th>Uraian</th>
 						<th style="width: 5%">Target</th>
-						<th style="width: 5%">Potensi Bahaya</th>
 						<th style="width: 5%">Status</th>
 						<th style="width: 8%">Action</th>
 					</tr>
@@ -201,7 +200,7 @@
 									<span style="font-weight: bold; font-size: 16px;">Sumber bahaya yang harus diperhatikan:<span class="text-red">*</span></span>
 								</div>
 								<div class="col-xs-6">
-									<select class="form-control select3" id="bahaya" name="bahaya" data-placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
+									<select class="form-control select3" id="bahaya" name="bahaya[]" data-placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
 										<option></option>
 										<option>Bahan Kimia Beracun</option>
 										<option>Listrik</option>
@@ -257,6 +256,127 @@
 							</div>
 						</div>
 					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="detailModal" style="color: black;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="col-xs-12" style="background-color: #3c8dbc;">
+					<h1 style="text-align: center; margin:5px; font-weight: bold;">Detail SPK</h1>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Nomor SPK</label>
+							<div class="col-xs-7" align="left">
+								<input type="text" class="form-control" id="spk_detail" readonly>
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Nama Pengaju</label>
+							<div class="col-xs-7" align="left">
+								<input type="text" class="form-control" id="pengaju_detail" readonly>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-6">
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Tanggal Pengajuan</label>
+							<div class="col-xs-7" align="left">
+								<input type="text" class="form-control" id="tanggal_detail" readonly>
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Bagian Pengaju</label>
+							<div class="col-xs-7" align="left">
+								<input type="text" class="form-control" id="bagian_detail" readonly>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12"><hr style="margin-top: 10px; margin-bottom: 10px"></div>
+					<div class="col-xs-6">
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
+							<div class="col-xs-7" align="left">
+								<span style="font-size: 13px;" class="label" id="prioritas_detail"></span>
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Jenis Pekerjaan</label>
+							<div class="col-xs-7" align="left">
+								<input type="text" class="form-control" id="workType_detail" readonly>
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
+							<div class="col-xs-7" align="left">
+								<input type="text" class="form-control" id="kategori_detail" readonly>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-6">
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin</label>
+							<div class="col-xs-7" align="left">
+								<input type="text" class="form-control" id="mesin_detail" readonly>
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">Potensi Bahaya</label>
+							<div class="col-xs-7" align="left">
+								<input type="text" class="form-control" id="bahaya_detail" readonly>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-12">
+						<div class="form-group row" align="right">
+							<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan</label>
+							<div class="col-xs-10" align="left">
+								<textarea class="form-control" id="uraian_detail" readonly></textarea>
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-2" style="margin-top: 1%;">Catatan Keamanan</label>
+							<div class="col-xs-8" align="left">
+								<textarea class="form-control" id="keamanan_detail" rows="1" readonly></textarea>
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-2" style="margin-top: 1%;">Tanggal Target</label>
+							<div class="col-xs-3" align="left">
+								<div class="input-group date">
+									<div class="input-group-addon bg-default">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control" id="target_detail" readonly>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-xs-2" style="margin-top: 1%;">Status</label>
+							<div class="col-xs-3" align="left">
+								<input type="text" class="form-control" id="status_detail" readonly>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -327,15 +447,14 @@
 				tableData += '<td>'+ value.type +'</td>';
 				tableData += '<td>'+ value.description +'</td>';
 				tableData += '<td>'+ (value.target_date || '-') +'</td>';
-				tableData += '<td>'+ value.danger +'</td>';	
 				tableData += '<td>'+ value.process_name +'</td>';
 
-				if(value.remark == '0' || value.remark == '1'){
+				if(value.remark == '0' || value.remark == '2'){
 					tableData += '<td>';
 					tableData += '<a style="padding: 10%; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+value.id+'\')" class="btn btn-warning">Edit</a>';
 					tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+value.order_no+'\')" class="btn btn-primary">Detail</a>';
 
-					if (value.remark == '1' && value.priority == 'Normal') {
+					if (value.remark == '2') {
 						tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="cancelWjo(\''+value.order_no+'\')" class="btn btn-danger">Cancel</a>';
 					}
 					tableData += '</td>';
@@ -430,19 +549,50 @@
 					$("#jenis_pekerjaan").prop('selectedIndex', 0).change();
 					$("#bahaya").prop('selectedIndex', 0).change();
 
-					get_data();
+					get_data("all");
 				} else {
-					$("#create_btn").attr("disabled", false);
+					$("#create_btn").prop("disabled", false);
 					openErrorGritter("Error", result.message);
 				}
 			},
 			function (xhr, ajaxOptions, thrownError) {
-				$("#create_btn").attr("disabled", false);
+				$("#create_btn").prop("disabled", false);
 				openErrorGritter(xhr.status, thrownError);
 			}
 		})
 		
 	});
+
+	function showDetail(order_no) {
+		$("#detailModal").modal("show");
+
+		var data = {
+			order_no : order_no
+		}
+
+		$.get('{{ url("fetch/maintenance/detail") }}', data,  function(result, status, xhr){
+			$("#spk_detail").val(result.detail.order_no);
+			$("#pengaju_detail").val(result.detail.name);
+			$("#tanggal_detail").val(result.detail.date);
+			$("#bagian_detail").val(result.detail.section);
+
+			if (result.detail.priority == "Normal") {
+				$("#prioritas_detail").addClass("label-default");
+			} else {
+				$("#prioritas_detail").addClass("label-danger");
+			}
+			$("#prioritas_detail").text(result.detail.priority);
+
+			$("#workType_detail").val(result.detail.type);
+			$("#kategori_detail").val(result.detail.category);
+			$("#mesin_detail").val(result.detail.machine_condition);
+			$("#bahaya_detail").val(result.detail.danger);
+			$("#uraian_detail").val(result.detail.description);
+			$("#keamanan_detail").val(result.detail.safety_note);
+			$("#target_detail").val(result.detail.target_date);
+			$("#status_detail").val(result.detail.process_name);
+		})
+	}
 
 	function insert() {
 		$("#tanggal").val();

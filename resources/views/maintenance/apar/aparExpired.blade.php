@@ -297,7 +297,7 @@
 
           if (value.location == "Factory I") {
             remark = "";
-            user_fi += "<tr style='background-color: #fffcb7'>";
+            user_fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
             user_fi += "<td>"+value.utility_code+"</td>";
             user_fi += "<td>"+value.utility_name+"</td>";
             user_fi += "<td>"+value.group+"</td>";
@@ -319,7 +319,7 @@
             user_fi += "</tr>";
           } else {
             remark = "";
-            user_fii += "<tr style='background-color: #ffd8b7'>";
+            user_fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
             user_fii += "<td>"+value.utility_code+"</td>";
             user_fii += "<td>"+value.utility_name+"</td>";
             user_fii += "<td>"+value.group+"</td>";

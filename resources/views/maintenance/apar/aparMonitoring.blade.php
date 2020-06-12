@@ -69,26 +69,6 @@
     /*background-color: #3c3c3c;*/
   }
 
-  .alert {
-    /*width: 50px;
-    height: 50px;*/
-    -webkit-animation: alert 1s infinite;  /* Safari 4+ */
-    -moz-animation: alert 1s infinite;  /* Fx 5+ */
-    -o-animation: alert 1s infinite;  /* Opera 12+ */
-    animation: alert 1s infinite;  /* IE 10+, Fx 29+ */
-  }
-  
-  @-webkit-keyframes alert {
-    0%, 49% {
-      /*background: rgba(0, 0, 0, 0);*/
-      background: #fffcb7; 
-      /*opacity: 0;*/
-    }
-    50%, 100% {
-      background-color: #f55359;
-    }
-  }
-
   .alert2 {
     -webkit-animation: alerts 1s infinite;  /* Safari 4+ */
     -moz-animation: alerts 1s infinite;  /* Fx 5+ */

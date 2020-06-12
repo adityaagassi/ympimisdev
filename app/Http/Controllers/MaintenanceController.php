@@ -945,8 +945,6 @@ class MaintenanceController extends Controller
 
 	public function fetch_apar_monitoring(Request $request)
 	{
-
-		DB::connection()->enableQueryLog();
 		if ($request->get('mon') % 2 === 0) {
 			$loc = "Factory II";
 		} else if ($request->get('mon') % 2 === 1){
@@ -962,8 +960,7 @@ class MaintenanceController extends Controller
 
 		$response = array(
 			'status' => true,
-			'check_list' => $check,
-			'query' => DB::getQueryLog()
+			'check_list' => $check			
 		);
 		return Response::json($response);
 	}
@@ -1081,11 +1078,32 @@ class MaintenanceController extends Controller
 			(select wek, count(utility_code) as exp from
 			(select utility_code, utility_name, location, DATE(exp_date) as exp, IF(FLOOR((DayOfMonth(exp_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(exp_date)-1)/7)+1) - 1 as wek from utilities where remark = "APAR" and DATE_FORMAT(exp_date,"%Y-%m") = "'.$ym.'") as expired
 			group by wek) as expired_apar on mstr.wek = expired_apar.wek');
+
+		$apar_progres = db::select('SELECT cal.wek, IFNULL(datas.jml,0) as jml from
+			(select FLOOR((DayOfMonth(week_date)-1)/7)+1 as wek from weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = "'.$ym.'" GROUP BY wek) as cal
+			left join
+			(select wek, COUNT(utilities.id) as jml from utilities 
+			join (
+			SELECT FLOOR((DayOfMonth(utility_checks.check_date)-1)/7)+1 as wek, utility_id
+			FROM utility_checks 
+			WHERE id IN (
+			SELECT min(id) 
+			FROM utility_checks 
+			where DATE_FORMAT(utility_checks.check_date, "%Y-%m") = "'.$ym.'"
+			GROUP BY utility_id
+			)
+			) utility_checks on utilities.id = utility_checks.utility_id
+			where location = "'.$loc.'" and utilities.remark = "APAR"
+			group by wek) as datas on cal.wek = datas.wek');
+
+		$apar_total = db::select('select count(id) as total from utilities where location = "'.$loc.'" and remark = "APAR"');
 		
 		$response = array(
 			'status' => true,
 			'cek_week' => $cek_week,
 			'replace_week' => $replace_week,
+			'apar_progres' => $apar_progres,
+			'apar_total' => $apar_total, 
 		);
 		return Response::json($response);
 	}

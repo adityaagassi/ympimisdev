@@ -113,6 +113,8 @@
     <div class="col-xs-12">
       <!-- <div id="resume_chart"></div> -->
       <div id="resume_chart_weekly"></div>
+      <br>
+      <div id="resume_progress_weekly"></div>
     </div>
 
     <div class="modal fade" id="modal_detail">
@@ -229,12 +231,16 @@
     $.get('{{ url("fetch/maintenance/apar/resumeWeek") }}', data, function(result, status, xhr) {
 
       var ctg = [];
+      var ctg2 = [];
       var all_check = [];
       var checked = [];
       var exp = [];
       var replace = [];
       var mon = "";
       var mondate;
+
+      var progress = [];
+      var total = [];
 
       $.each(result.cek_week, function(index, value){
         mon = value.mon+"-01";
@@ -256,9 +262,24 @@
         replace.push(value.entry);
       })
 
+      var s_total = result.apar_total[0].total;
+      var val = 0;
+
+      $.each(result.apar_progres, function(index, value){
+        val += value.jml;
+        progress.push(value.jml);
+        ctg2.push("Week "+value.wek);
+        total.push(s_total - value.jml);
+      })
+
+      ctg2.push("Total");
+      progress.push(val);
+      total.push(s_total - val);
+
+      console.log(total);
+
 
       Highcharts.chart('resume_chart_weekly', {
-
         chart: {
           type: 'column'
         },
@@ -341,211 +362,178 @@
         }]
       });
 
-    })
-  }
-
-  function drawChart() {
-    $.get('{{ url("fetch/maintenance/apar/resume") }}', function(result, status, xhr) {
-
-      var ctg = [];
-      var all_check = [];
-      var checked = [];
-      var exp = [];
-      var replace = [];
-
-      $.each(result.check_list, function(index, value){
-        var nowdate = new Date('2020/'+value.mon.split('-')[1]+'/01');
-        
-        ctg.push(months[nowdate.getMonth()]+" "+nowdate.getFullYear());
-
-
-        all_check.push(value.jml_tot);
-        checked.push(value.jml);
-      })
-
-      $.each(result.replace_list, function(index, value){
-        exp.push(value.exp);
-        replace.push(value.new);
-      })
-
-      Highcharts.chart('resume_chart', {
-
+      //-------------- PROGRESS ---------------
+      Highcharts.chart('resume_progress_weekly', {
         chart: {
           type: 'column'
         },
-
         title: {
-          text: 'APAR Resume'
+          text: 'APAR RESUME PROGRESS'
         },
-
         xAxis: {
-          categories: ctg
-        },
-
-        yAxis: {
-          allowDecimals: false,
-          min: 0,
-          title: {
-            text: 'Number of Fire Extinguisher'
-          }
-        },
-
-        tooltip: {
-          formatter: function () {
-            return '<b>' + this.x + '</b><br/>' +
-            this.series.name + ': ' + this.y + '<br/>' +
-            'Total: ' + this.point.stackTotal;
-          }
-        },
-
-        credits: {
-          enabled: false
-        }
-        ,
-
-        plotOptions: {
-          column: {
-            stacking: 'normal',
-            point: {
-              events: {
-                click: function () {
-                  detail(this.category);
-                }
-              }
+          categories: ctg2,
+          labels: {
+            style: {
+              fontSize : '18px'
             }
           }
         },
-
+        yAxis: {
+          min: 0,
+          visible: false,
+          title: {
+            text: 'Total fruit consumption'
+          }
+        },
+        tooltip: {
+          enabled: false
+        },
+        plotOptions: {
+          column: {
+            stacking: 'percent',
+            dataLabels: {
+              enabled: true,
+              style : {
+                fontSize : '18px'
+              },
+              format : '{point.percentage:.0f}%<br/>'
+            }
+          }
+        },
+        credits: {
+          enabled: false
+        },
         series: [{
-          name: 'Total Check',
-          data: all_check,
-          stack: 'check'
+          name: '',
+          data: total,
+          showInLegend: false,
         }, {
-          name: 'Checked',
-          data: checked,
-          stack: 'check'
-        }, {
-          name: 'Replaced / New',
-          data: replace,
-          stack: 'exp'
-        }, {
-          name: 'Expired',
-          data: exp,
-          stack: 'exp'
+          name: 'Progress',
+          data: progress
         }]
       });
-
     })
-  }
+}
 
-  function detail(mon) {
-    $("#judul_modal").html("<b>"+mon+"</b>");
-    $("#modal_detail").modal('show');
 
-    dt = months.indexOf(mon.split(' ')[0])+1;
+function drawChart() {
+  $.get('{{ url("fetch/maintenance/apar/resume") }}', function(result, status, xhr) {
 
-    mon2 = mon.split(' ')[1]+"-"+('0' + dt).slice(-2);
+    var ctg = [];
+    var all_check = [];
+    var checked = [];
+    var exp = [];
+    var replace = [];
 
-    var data = {
-      mon: mon,
-      mon2: mon2
-    }
+    $.each(result.check_list, function(index, value){
+      var nowdate = new Date('2020/'+value.mon.split('-')[1]+'/01');
 
-    $.get('{{ url("fetch/maintenance/apar/resume/detail") }}', data, function(result, status, xhr) {
+      ctg.push(months[nowdate.getMonth()]+" "+nowdate.getFullYear());
 
-      $("#body_check").empty();
-      $("#body_expired").empty();
-      $("#body_replace").empty();
 
-      body_check_detail = "";
-      body_expired = "";
-      body_replace = "";
+      all_check.push(value.jml_tot);
+      checked.push(value.jml);
+    })
 
-      $.each(result.check_detail_list, function(index, value){
+    $.each(result.replace_list, function(index, value){
+      exp.push(value.exp);
+      replace.push(value.new);
+    })
 
-        if (value.cek == 1) {
-          bg = "style='background-color:#54f775'";
-        } else {
-          bg = "style='background-color:#f45b5b; color:white'";
+    Highcharts.chart('resume_chart', {
+
+      chart: {
+        type: 'column'
+      },
+
+      title: {
+        text: 'APAR Resume'
+      },
+
+      xAxis: {
+        categories: ctg
+      },
+
+      yAxis: {
+        allowDecimals: false,
+        min: 0,
+        title: {
+          text: 'Number of Fire Extinguisher'
         }
+      },
 
-        body_check_detail += "<tr>";
-        body_check_detail += "<td "+bg+">"+value.utility_code+"</td>";
-        body_check_detail += "<td "+bg+">"+value.utility_name+"</td>";
-        body_check_detail += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
-        body_check_detail += "</tr>";
-      })
+      tooltip: {
+        formatter: function () {
+          return '<b>' + this.x + '</b><br/>' +
+          this.series.name + ': ' + this.y + '<br/>' +
+          'Total: ' + this.point.stackTotal;
+        }
+      },
 
-      $("#body_check").append(body_check_detail);
-
-      $.each(result.replace_list, function(index, value){
-       if (value.stat == "Expired") {
-        bg = "style='background-color:#f45b5b; color:white'";
-
-        body_expired += "<tr>";
-        body_expired += "<td "+bg+">"+value.utility_code+"</td>";
-        body_expired += "<td "+bg+">"+value.utility_name+"</td>";
-        body_expired += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
-        body_expired += "<td "+bg+">"+value.dt+"</td>";
-        body_expired += "</tr>";
-      } else {
-        bg = "style='background-color:#54f775'";
-
-        body_replace += "<tr>";
-        body_replace += "<td "+bg+">"+value.utility_code+"</td>";
-        body_replace += "<td "+bg+">"+value.utility_name+"</td>";
-        body_replace += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
-        body_replace += "<td "+bg+">"+value.dt+"</td>";
-        body_replace += "</tr>";
+      credits: {
+        enabled: false
       }
-    })
+      ,
 
-      $("#body_expired").append(body_expired);
-      $("#body_replace").append(body_replace);
+      plotOptions: {
+        column: {
+          stacking: 'normal',
+          point: {
+            events: {
+              click: function () {
+                detail(this.category);
+              }
+            }
+          }
+        }
+      },
 
-    })
+      series: [{
+        name: 'Total Check',
+        data: all_check,
+        stack: 'check'
+      }, {
+        name: 'Checked',
+        data: checked,
+        stack: 'check'
+      }, {
+        name: 'Replaced / New',
+        data: replace,
+        stack: 'exp'
+      }, {
+        name: 'Expired',
+        data: exp,
+        stack: 'exp'
+      }]
+    });
 
+  })
+}
+
+function detail(mon) {
+  $("#judul_modal").html("<b>"+mon+"</b>");
+  $("#modal_detail").modal('show');
+
+  dt = months.indexOf(mon.split(' ')[0])+1;
+
+  mon2 = mon.split(' ')[1]+"-"+('0' + dt).slice(-2);
+
+  var data = {
+    mon: mon,
+    mon2: mon2
   }
 
-  function detail_week(week, title) {
+  $.get('{{ url("fetch/maintenance/apar/resume/detail") }}', data, function(result, status, xhr) {
 
-    var mon = $("#bulan").val();
-    var wek = week.split(' ')[1];
-    console.log(wek);
+    $("#body_check").empty();
+    $("#body_expired").empty();
+    $("#body_replace").empty();
 
-    $("#judul_modal").html("<b>"+title+"</b> "+week);
-    $("#modal_detail").modal('show');
+    body_check_detail = "";
+    body_expired = "";
+    body_replace = "";
 
-    var data = {
-      mon: mon,
-      week: wek
-    }
-
-    $.get('{{ url("fetch/maintenance/apar/resume/detail/week") }}', data, function(result, status, xhr) {
-     $("#body_check").empty();
-     $("#body_expired").empty();
-     $("#body_replace").empty();
-
-     body_check_detail = "";
-     body_expired = "";
-     body_replace = "";
-
-     num_cek = 1;
-     num_exp = 1;
-     num_new = 1;
-
-     var arr_cek_all = result.check_detail_list;
-
-     $.each(arr_cek_all, function(index, value){
-      $.each(result.check_detail_list, function(index2, value2){
-        if (value.utility_code == value2.utility_code && value2.cek == 1 && value.cek == 0) {
-          arr_cek_all[index] = "kosong";
-        }
-
-      })
-    })
-
-     $.each(result.check_detail_list, function(index, value){
+    $.each(result.check_detail_list, function(index, value){
 
       if (value.cek == 1) {
         bg = "style='background-color:#54f775'";
@@ -553,287 +541,371 @@
         bg = "style='background-color:#f45b5b; color:white'";
       }
 
-
       body_check_detail += "<tr>";
-      body_check_detail += "<td "+bg+">"+num_cek+"</td>";
       body_check_detail += "<td "+bg+">"+value.utility_code+"</td>";
       body_check_detail += "<td "+bg+">"+value.utility_name+"</td>";
       body_check_detail += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
       body_check_detail += "</tr>";
-
-      num_cek++;
     })
 
-     $("#body_check").append(body_check_detail);
+    $("#body_check").append(body_check_detail);
 
-     $.each(result.replace_list, function(index, value){
-      if (value.exp == 1) {
-        bg = "style='background-color:#f45b5b; color:white'";
+    $.each(result.replace_list, function(index, value){
+     if (value.stat == "Expired") {
+      bg = "style='background-color:#f45b5b; color:white'";
 
-        body_expired += "<tr>";
-        body_expired += "<td "+bg+">"+num_exp+"</td>";
-        body_expired += "<td "+bg+">"+value.utility_code+"</td>";
-        body_expired += "<td "+bg+">"+value.utility_name+"</td>";
-        body_expired += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
-        body_expired += "<td "+bg+">"+value.dt+"</td>";
-        body_expired += "</tr>";
+      body_expired += "<tr>";
+      body_expired += "<td "+bg+">"+value.utility_code+"</td>";
+      body_expired += "<td "+bg+">"+value.utility_name+"</td>";
+      body_expired += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+      body_expired += "<td "+bg+">"+value.dt+"</td>";
+      body_expired += "</tr>";
+    } else {
+      bg = "style='background-color:#54f775'";
 
-        num_exp++;
-      } else {
-        bg = "style='background-color:#54f775'";
+      body_replace += "<tr>";
+      body_replace += "<td "+bg+">"+value.utility_code+"</td>";
+      body_replace += "<td "+bg+">"+value.utility_name+"</td>";
+      body_replace += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+      body_replace += "<td "+bg+">"+value.dt+"</td>";
+      body_replace += "</tr>";
+    }
+  })
 
-        body_replace += "<tr>";
-        body_replace += "<td "+bg+">"+num_new+"</td>";
-        body_replace += "<td "+bg+">"+value.utility_code+"</td>";
-        body_replace += "<td "+bg+">"+value.utility_name+"</td>";
-        body_replace += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
-        body_replace += "<td "+bg+">"+value.dt+"</td>";
-        body_replace += "</tr>";
+    $("#body_expired").append(body_expired);
+    $("#body_replace").append(body_replace);
 
-        num_new++;
-      }
-    })
+  })
 
-     $("#body_expired").append(body_expired);
-     $("#body_replace").append(body_replace);
+}
 
-   })
+function detail_week(week, title) {
 
+  var mon = $("#bulan").val();
+  var wek = week.split(' ')[1];
+  console.log(wek);
+
+  $("#judul_modal").html("<b>"+title+"</b> "+week);
+  $("#modal_detail").modal('show');
+
+  var data = {
+    mon: mon,
+    week: wek
   }
 
-  $(".datepicker").datepicker( {
-    autoclose: true,
-    format: "yyyy-mm",
-    viewMode: "months", 
-    minViewMode: "months"
-  });
+  $.get('{{ url("fetch/maintenance/apar/resume/detail/week") }}', data, function(result, status, xhr) {
+   $("#body_check").empty();
+   $("#body_expired").empty();
+   $("#body_replace").empty();
 
-  Highcharts.createElement('link', {
-    href: '{{ url("fonts/UnicaOne.css")}}',
-    rel: 'stylesheet',
-    type: 'text/css'
-  }, null, document.getElementsByTagName('head')[0]);
+   body_check_detail = "";
+   body_expired = "";
+   body_replace = "";
 
-  Highcharts.theme = {
-    colors: ['#f45b5b', '#90ee7e', '#2b908f', '#7798BF', '#aaeeee', '#ff0066',
-    '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
-    chart: {
-      backgroundColor: {
-        linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
-        stops: [
-        [0, '#2a2a2b'],
-        [1, '#3e3e40']
-        ]
-      },
-      style: {
-        fontFamily: 'sans-serif'
-      },
-      plotBorderColor: '#606063'
-    },
-    title: {
-      style: {
-        color: '#E0E0E3',
-        textTransform: 'uppercase',
-        fontSize: '20px'
-      }
-    },
-    subtitle: {
-      style: {
-        color: '#E0E0E3',
-        textTransform: 'uppercase'
-      }
-    },
-    xAxis: {
-      gridLineColor: '#707073',
-      labels: {
-        style: {
-          color: '#E0E0E3'
-        }
-      },
-      lineColor: '#707073',
-      minorGridLineColor: '#505053',
-      tickColor: '#707073',
-      title: {
-        style: {
-          color: '#A0A0A3'
+   num_cek = 1;
+   num_exp = 1;
+   num_new = 1;
 
-        }
+   var arr_cek_all = result.check_detail_list;
+
+   $.each(arr_cek_all, function(index, value){
+    $.each(result.check_detail_list, function(index2, value2){
+      if (value.utility_code == value2.utility_code && value2.cek == 1 && value.cek == 0) {
+        arr_cek_all[index] = "kosong";
       }
+
+    })
+  })
+
+   $.each(result.check_detail_list, function(index, value){
+
+    if (value.cek == 1) {
+      bg = "style='background-color:#54f775'";
+    } else {
+      bg = "style='background-color:#f45b5b; color:white'";
+    }
+
+
+    body_check_detail += "<tr>";
+    body_check_detail += "<td "+bg+">"+num_cek+"</td>";
+    body_check_detail += "<td "+bg+">"+value.utility_code+"</td>";
+    body_check_detail += "<td "+bg+">"+value.utility_name+"</td>";
+    body_check_detail += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+    body_check_detail += "</tr>";
+
+    num_cek++;
+  })
+
+   $("#body_check").append(body_check_detail);
+
+   $.each(result.replace_list, function(index, value){
+    if (value.exp == 1) {
+      bg = "style='background-color:#f45b5b; color:white'";
+
+      body_expired += "<tr>";
+      body_expired += "<td "+bg+">"+num_exp+"</td>";
+      body_expired += "<td "+bg+">"+value.utility_code+"</td>";
+      body_expired += "<td "+bg+">"+value.utility_name+"</td>";
+      body_expired += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+      body_expired += "<td "+bg+">"+value.dt+"</td>";
+      body_expired += "</tr>";
+
+      num_exp++;
+    } else {
+      bg = "style='background-color:#54f775'";
+
+      body_replace += "<tr>";
+      body_replace += "<td "+bg+">"+num_new+"</td>";
+      body_replace += "<td "+bg+">"+value.utility_code+"</td>";
+      body_replace += "<td "+bg+">"+value.utility_name+"</td>";
+      body_replace += "<td "+bg+">"+value.location+" - "+value.group+"</td>";
+      body_replace += "<td "+bg+">"+value.dt+"</td>";
+      body_replace += "</tr>";
+
+      num_new++;
+    }
+  })
+
+   $("#body_expired").append(body_expired);
+   $("#body_replace").append(body_replace);
+
+ })
+
+}
+
+$(".datepicker").datepicker( {
+  autoclose: true,
+  format: "yyyy-mm",
+  viewMode: "months", 
+  minViewMode: "months"
+});
+
+Highcharts.createElement('link', {
+  href: '{{ url("fonts/UnicaOne.css")}}',
+  rel: 'stylesheet',
+  type: 'text/css'
+}, null, document.getElementsByTagName('head')[0]);
+
+Highcharts.theme = {
+  colors: ['#f45b5b', '#90ee7e', '#2b908f', '#7798BF', '#aaeeee', '#ff0066',
+  '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+  chart: {
+    backgroundColor: {
+      linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+      stops: [
+      [0, '#2a2a2b'],
+      [1, '#3e3e40']
+      ]
     },
-    yAxis: {
-      gridLineColor: '#707073',
-      labels: {
-        style: {
-          color: '#E0E0E3'
-        }
-      },
-      lineColor: '#707073',
-      minorGridLineColor: '#505053',
-      tickColor: '#707073',
-      tickWidth: 1,
-      title: {
-        style: {
-          color: '#A0A0A3'
-        }
-      }
+    style: {
+      fontFamily: 'sans-serif'
     },
-    tooltip: {
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
-      style: {
-        color: '#F0F0F0'
-      }
-    },
-    plotOptions: {
-      series: {
-        dataLabels: {
-          color: 'white'
-        },
-        marker: {
-          lineColor: '#333'
-        }
-      },
-      boxplot: {
-        fillColor: '#505053'
-      },
-      candlestick: {
-        lineColor: 'white'
-      },
-      errorbar: {
-        color: 'white'
-      }
-    },
-    legend: {
-      itemStyle: {
-        color: '#E0E0E3'
-      },
-      itemHoverStyle: {
-        color: '#FFF'
-      },
-      itemHiddenStyle: {
-        color: '#606063'
-      }
-    },
-    credits: {
-      style: {
-        color: '#666'
-      }
-    },
+    plotBorderColor: '#606063'
+  },
+  title: {
+    style: {
+      color: '#E0E0E3',
+      textTransform: 'uppercase',
+      fontSize: '20px'
+    }
+  },
+  subtitle: {
+    style: {
+      color: '#E0E0E3',
+      textTransform: 'uppercase'
+    }
+  },
+  xAxis: {
+    gridLineColor: '#707073',
     labels: {
       style: {
-        color: '#707073'
+        color: '#E0E0E3'
       }
     },
+    lineColor: '#707073',
+    minorGridLineColor: '#505053',
+    tickColor: '#707073',
+    title: {
+      style: {
+        color: '#A0A0A3'
 
-    drilldown: {
-      activeAxisLabelStyle: {
-        color: '#F0F0F3'
+      }
+    }
+  },
+  yAxis: {
+    gridLineColor: '#707073',
+    labels: {
+      style: {
+        color: '#E0E0E3'
+      }
+    },
+    lineColor: '#707073',
+    minorGridLineColor: '#505053',
+    tickColor: '#707073',
+    tickWidth: 1,
+    title: {
+      style: {
+        color: '#A0A0A3'
+      }
+    }
+  },
+  tooltip: {
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    style: {
+      color: '#F0F0F0'
+    }
+  },
+  plotOptions: {
+    series: {
+      dataLabels: {
+        color: 'white'
       },
-      activeDataLabelStyle: {
-        color: '#F0F0F3'
+      marker: {
+        lineColor: '#333'
       }
     },
-
-    navigation: {
-      buttonOptions: {
-        symbolStroke: '#DDDDDD',
-        theme: {
-          fill: '#505053'
-        }
-      }
+    boxplot: {
+      fillColor: '#505053'
     },
+    candlestick: {
+      lineColor: 'white'
+    },
+    errorbar: {
+      color: 'white'
+    }
+  },
+  legend: {
+    itemStyle: {
+      color: '#E0E0E3'
+    },
+    itemHoverStyle: {
+      color: '#FFF'
+    },
+    itemHiddenStyle: {
+      color: '#606063'
+    }
+  },
+  credits: {
+    style: {
+      color: '#666'
+    }
+  },
+  labels: {
+    style: {
+      color: '#707073'
+    }
+  },
 
-    rangeSelector: {
-      buttonTheme: {
-        fill: '#505053',
-        stroke: '#000000',
-        style: {
-          color: '#CCC'
+  drilldown: {
+    activeAxisLabelStyle: {
+      color: '#F0F0F3'
+    },
+    activeDataLabelStyle: {
+      color: '#F0F0F3'
+    }
+  },
+
+  navigation: {
+    buttonOptions: {
+      symbolStroke: '#DDDDDD',
+      theme: {
+        fill: '#505053'
+      }
+    }
+  },
+
+  rangeSelector: {
+    buttonTheme: {
+      fill: '#505053',
+      stroke: '#000000',
+      style: {
+        color: '#CCC'
+      },
+      states: {
+        hover: {
+          fill: '#707073',
+          stroke: '#000000',
+          style: {
+            color: 'white'
+          }
         },
-        states: {
-          hover: {
-            fill: '#707073',
-            stroke: '#000000',
-            style: {
-              color: 'white'
-            }
-          },
-          select: {
-            fill: '#000003',
-            stroke: '#000000',
-            style: {
-              color: 'white'
-            }
+        select: {
+          fill: '#000003',
+          stroke: '#000000',
+          style: {
+            color: 'white'
           }
         }
-      },
-      inputBoxBorderColor: '#505053',
-      inputStyle: {
-        backgroundColor: '#333',
-        color: 'silver'
-      },
-      labelStyle: {
-        color: 'silver'
       }
     },
-
-    navigator: {
-      handles: {
-        backgroundColor: '#666',
-        borderColor: '#AAA'
-      },
-      outlineColor: '#CCC',
-      maskFill: 'rgba(255,255,255,0.1)',
-      series: {
-        color: '#7798BF',
-        lineColor: '#A6C7ED'
-      },
-      xAxis: {
-        gridLineColor: '#505053'
-      }
+    inputBoxBorderColor: '#505053',
+    inputStyle: {
+      backgroundColor: '#333',
+      color: 'silver'
     },
+    labelStyle: {
+      color: 'silver'
+    }
+  },
 
-    scrollbar: {
-      barBackgroundColor: '#808083',
-      barBorderColor: '#808083',
-      buttonArrowColor: '#CCC',
-      buttonBackgroundColor: '#606063',
-      buttonBorderColor: '#606063',
-      rifleColor: '#FFF',
-      trackBackgroundColor: '#404043',
-      trackBorderColor: '#404043'
+  navigator: {
+    handles: {
+      backgroundColor: '#666',
+      borderColor: '#AAA'
     },
+    outlineColor: '#CCC',
+    maskFill: 'rgba(255,255,255,0.1)',
+    series: {
+      color: '#7798BF',
+      lineColor: '#A6C7ED'
+    },
+    xAxis: {
+      gridLineColor: '#505053'
+    }
+  },
 
-    legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
-    background2: '#505053',
-    dataLabelsColor: '#B0B0B3',
-    textColor: '#C0C0C0',
-    contrastTextColor: '#F0F0F3',
-    maskColor: 'rgba(255,255,255,0.3)'
-  };
-  Highcharts.setOptions(Highcharts.theme);
+  scrollbar: {
+    barBackgroundColor: '#808083',
+    barBorderColor: '#808083',
+    buttonArrowColor: '#CCC',
+    buttonBackgroundColor: '#606063',
+    buttonBorderColor: '#606063',
+    rifleColor: '#FFF',
+    trackBackgroundColor: '#404043',
+    trackBorderColor: '#404043'
+  },
 
-  var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+  legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+  background2: '#505053',
+  dataLabelsColor: '#B0B0B3',
+  textColor: '#C0C0C0',
+  contrastTextColor: '#F0F0F3',
+  maskColor: 'rgba(255,255,255,0.3)'
+};
+Highcharts.setOptions(Highcharts.theme);
 
-  function openSuccessGritter(title, message){
-    jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-success',
-      image: '{{ url("images/image-screen.png") }}',
-      sticky: false,
-      time: '3000'
-    });
-  }
+var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-  function openErrorGritter(title, message) {
-    jQuery.gritter.add({
-      title: title,
-      text: message,
-      class_name: 'growl-danger',
-      image: '{{ url("images/image-stop.png") }}',
-      sticky: false,
-      time: '3000'
-    });
-  }	
+function openSuccessGritter(title, message){
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-success',
+    image: '{{ url("images/image-screen.png") }}',
+    sticky: false,
+    time: '3000'
+  });
+}
+
+function openErrorGritter(title, message) {
+  jQuery.gritter.add({
+    title: title,
+    text: message,
+    class_name: 'growl-danger',
+    image: '{{ url("images/image-stop.png") }}',
+    sticky: false,
+    time: '3000'
+  });
+}	
 </script>
 @endsection

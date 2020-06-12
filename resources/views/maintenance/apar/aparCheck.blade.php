@@ -52,6 +52,26 @@
 		font-weight: bold;
 	}
 
+	.alert {
+    /*width: 50px;
+    height: 50px;*/
+    -webkit-animation: alert 1s infinite;  /* Safari 4+ */
+    -moz-animation: alert 1s infinite;  /* Fx 5+ */
+    -o-animation: alert 1s infinite;  /* Opera 12+ */
+    animation: alert 1s infinite;  /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes alert {
+	0%, 49% {
+		/*background: rgba(0, 0, 0, 0);*/
+		background: #ccffff; 
+		/*opacity: 0;*/
+	}
+	50%, 100% {
+		background-color: #f55359;
+	}
+}
+
 </style>
 @stop
 @section('header')
@@ -336,8 +356,9 @@
 			var bd = "";
 
 			$.get('{{ url("fetch/maintenance/apar/history") }}', data, function(result, status, xhr) {
-				$.each(result.check, function(index, value){
-					
+				if (result.check[0].utility_id) {
+					$.each(result.check, function(index, value){
+
 					// if (typeof value.check !== 'undefined') {
 					// 	return false;
 					// }
@@ -376,9 +397,10 @@
 
 					bd += "</tr>";
 				})
-
+				}
 				$("#history_body").append(bd);
 			})
+
 		}
 
 		$("#btn-check").click(function() {
@@ -458,9 +480,32 @@
 				$("#apar_capacity").text(arr_selected.kapasitas);
 
 				var exp_date = "-";
+				var bg = "";
 				if (arr_selected.item == "APAR") {
-					exp_date = arr_selected.age_left+" bulan lagi - "+arr_selected.exp_date;
+					var age = arr_selected.age_left;
+
+					if(age < 1){
+						var age = Math.abs(age);
+
+						if (parseInt(age) <= 2) {
+							$("#apar_expired").addClass("alert");
+						} else {
+							$("#apar_expired").removeClass("alert");
+						}
+
+						exp_date = age+" bulan lagi | "+arr_selected.exp_date;
+					} else {
+						if (age == 0) {
+							exp_date = age+" bulan | "+arr_selected.exp_date;
+						}else {
+							exp_date = "lebih "+age+" bulan | "+arr_selected.exp_date;
+						}
+
+						$("#apar_expired").addClass("alert");
+					}
+
 				}
+
 				$("#apar_expired").text(exp_date);
 
 				t_body = "";
