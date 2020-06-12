@@ -416,7 +416,7 @@
 					type: 'column'
 				},
 				title: {
-					text: 'Data Kaizen Teian '+result.date
+					text: 'Kaizen Teian Data Assessed in '+result.date
 				},
 				subtitle: {
 					text: 'Click the columns to view detail each Section'
