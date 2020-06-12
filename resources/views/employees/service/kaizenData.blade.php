@@ -192,15 +192,15 @@
 									<th>NIK</th>
 									<th>Emp Name</th>
 									<th>Bagian</th>
-									<th>Title</th>
+									<th width="15%">Title</th>
 									<th>Area</th>
 									<th>Status</th>
-									<th>FP1</th>
-									<th>FP2</th>
-									<th>FP3</th>
-									<th>MP1</th>
-									<th>MP2</th>
-									<th>MP3</th>
+									<th width="2%">FP1</th>
+									<th width="2%">FP2</th>
+									<th width="2%">FP3</th>
+									<th width="2%">MP1</th>
+									<th width="2%">MP2</th>
+									<th width="2%">MP3</th>
 									<th>Action</th>
 								</tr>
 							</thead>

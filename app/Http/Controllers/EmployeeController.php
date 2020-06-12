@@ -389,10 +389,9 @@ class EmployeeController extends Controller
      {
           $username = Auth::user()->username;
 
-          $emp = User::join('promotion_logs','promotion_logs.employee_id','=','users.username')
-          ->where('promotion_logs.employee_id','=', $username)
-          ->whereNull('valid_to')
-          ->whereRaw('(promotion_logs.position in ("Foreman","Manager","Chief") or role_code = "MIS")')
+          $emp = User::join('employee_syncs','employee_syncs.employee_id','=','users.username')
+          ->where('employee_syncs.employee_id','=', $username)
+          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief") or role_code = "MIS")')
           ->select('position')
           ->first();
 
@@ -3072,47 +3071,47 @@ public function fetchKaizenReport(Request $request)
           $dt2 = date('F',strtotime($request->get('tanggal')));
      }
 
-     $chart1 = "select count(kaizen_forms.employee_id) as kaizen , mutation_logs.department, mutation_logs.section from kaizen_forms 
-     left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id 
-     where valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '".$date."'
-     group by mutation_logs.department, mutation_logs.section";
+     $chart1 = "select count(kaizen_forms.employee_id) as kaizen , employee_syncs.department, employee_syncs.section from kaizen_forms 
+     left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
+     left join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
+     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."' and kaizen_forms.`status` = 1
+     group by employee_syncs.department, employee_syncs.section";
 
      $kz_total = db::select($chart1);
 
      $q_rank1 = "select kz.employee_id, employee_name, CONCAT(department,' - ', section,' - ', `group`) as bagian, mp1+mp2+mp3 as nilai from 
      (select employee_id, employee_name, SUM(manager_point_1 * 40) mp1, SUM(manager_point_2 * 30) mp2, SUM(manager_point_3 * 30) mp3 from kaizen_forms LEFT JOIN kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
-     where DATE_FORMAT(propose_date,'%Y-%m') = '".$date."' and status = 1
+     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."' and status = 1
      group by employee_id, employee_name
      ) as kz
-     left join mutation_logs on kz.employee_id = mutation_logs.employee_id
-     where valid_to is null
+     left join employee_syncs on kz.employee_id = employee_syncs.employee_id
      order by (mp1+mp2+mp3) desc
      limit 3";
 
      $kz_rank1 = db::select($q_rank1);
 
-     $q_rank2 = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ', mutation_logs.section,' - ', `group`) as bagian , COUNT(kaizen_forms.employee_id) as count from kaizen_forms left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
-     where `status` = 1 and valid_to is null and DATE_FORMAT(propose_date,'%Y-%m') = '".$date."'
-     group by kaizen_forms.employee_id, employee_name, department, mutation_logs.section, `group`
+     $q_rank2 = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ', employee_syncs.section,' - ', `group`) as bagian , COUNT(kaizen_forms.employee_id) as count from kaizen_forms 
+     left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
+     left join kaizen_scores on kaizen_scores.id_kaizen = kaizen_forms.id
+     where `status` = 1 and DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."'
+     group by kaizen_forms.employee_id, employee_name, department, employee_syncs.section, `group`
      order by count desc
      limit 10";
 
      $kz_rank2 = db::select($q_rank2);
 
-     $q_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',mutation_logs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as score, kaizen_forms.id from kaizen_forms 
+     $q_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',employee_syncs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as score, kaizen_forms.id from kaizen_forms 
      join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
-     left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
-     where DATE_FORMAT(propose_date,'%Y-%m') = '".$date."' and (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) > 450
-     and valid_to is null
+     left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
+     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."' and (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) > 450
      order by (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) desc";
 
      $kz_excellent = db::select($q_excellent);
 
-     $q_a_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',mutation_logs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as score, kaizen_forms.id from kaizen_forms 
+     $q_a_excellent = "select kaizen_forms.employee_id, employee_name, CONCAT(department,' - ',employee_syncs.section,' - ',`group`) as bagian, title, (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) as score, kaizen_forms.id from kaizen_forms 
      join kaizen_scores on kaizen_forms.id = kaizen_scores.id_kaizen
-     left join mutation_logs on kaizen_forms.employee_id = mutation_logs.employee_id
-     where DATE_FORMAT(propose_date,'%Y-%m') = '".$date."' and remark = 'excellent'
-     and valid_to is null
+     left join employee_syncs on kaizen_forms.employee_id = employee_syncs.employee_id
+     where DATE_FORMAT(kaizen_scores.created_at,'%Y-%m') = '".$date."' and remark = 'excellent'
      order by (manager_point_1 * 40 + manager_point_2 * 30 + manager_point_3 * 30) desc";
 
      $kz_after_excellent = db::select($q_a_excellent);
@@ -3197,7 +3196,7 @@ public function fetchKaizenResume(Request $request)
           // group by final.leader_id, employee_syncs.`name` order by total_belum desc";
 
           $q = "select kaizen_leaders.leader_id as leader, A.`name`, count(kz) as total_sudah, count(coalesce(kz, 1)) as total_operator, count(coalesce(kz, 1))-count(kz) total_belum from kaizen_leaders 
-          left join (select employee_id, count(id) as kz from kaizen_forms where propose_date in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
+          left join (select employee_id, count(id) as kz from kaizen_forms where propose_date in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') and `status` = '1' group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
           left join employee_syncs on employee_syncs.employee_id = kaizen_leaders.employee_id
           left join employee_syncs A on A.employee_id = kaizen_leaders.leader_id
           where employee_syncs.end_date is null and A.end_date is null and A.employee_id is not null

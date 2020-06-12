@@ -409,6 +409,8 @@
 
 	$(window).on('pageshow', function(){
 		<?php if (isset($filter)) $fil = $filter; else $fil = ""?>
+		console.log('<?php  echo $fil; ?>');
+
 		var user2 = <?php echo json_encode($user); ?>;
 
 		// console.log("{{ json_encode(Session::get('kz_filter')) }}");
@@ -423,7 +425,7 @@
 
 
 		if (temp[0] != "null") {
-			area = $("#section").val();
+			// area = $("#section").val();
 			$('#section').val(temp).trigger('change');
 		}
 
@@ -440,6 +442,9 @@
 		data = {
 			id:id
 		}
+
+		$("#note_foreman").text("");
+		$("#note_manager").text("");
 
 		$.get('{{ url("fetch/kaizen/detail") }}', data, function(result) {
 			$("#kz_title").text(result.datas[0].title);
@@ -500,8 +505,8 @@
 
 				$("#tabel_nilai").append(bd);
 
-				$("#note_foreman").html(result.datas[0].foreman_note);
-				$("#note_manager").html(result.datas[0].manager_note);
+				$("#note_foreman").text(result.datas[0].foreman_note);
+				$("#note_manager").text(result.datas[0].manager_note);
 			}
 			$("#modalDetail").modal('show');
 		})
