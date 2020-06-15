@@ -1080,6 +1080,8 @@ Route::get('purchase_order', 'AccountingController@purchase_order');
 Route::get('fetch/purchase_order', 'AccountingController@fetch_purchase_order');
 Route::get('purchase_order/create', 'AccountingController@create_purchase_order');
 Route::post('purchase_order/create_post', 'AccountingController@create_purchase_order_post');
+Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
+Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
 
 //investment
 Route::get('investment', 'AccountingController@investment');
@@ -2733,6 +2735,8 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('verify/maintenance/spk/danger_note/{order_no}', 'MaintenanceController@indexDangerNote');
 
 	Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDangerNote');
+
+	Route::get('work/maintenance/spk', 'MaintenanceController@startSPK');
 });
 
 // -----------  APAR -----------

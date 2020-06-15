@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AccSupplier extends Model
 {
     protected $fillable = [
-		'supplier_name', 'supplier_address', 'supplier_address2', 'supplier_city', 'supplier_phone', 'supplier_fax', 'contact_name','supplier_npwp','supplier_duration','position','supplier_status','created_by'
+		'supplier_name', 'supplier_address', 'supplier_city', 'supplier_phone', 'supplier_fax', 'contact_name','supplier_npwp','supplier_duration','position','supplier_status','created_by'
 	];
 
 	public function user()

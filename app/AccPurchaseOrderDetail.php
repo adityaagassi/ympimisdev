@@ -5,10 +5,10 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AccItem extends Model
+class AccPurchaseOrderDetail extends Model
 {
     protected $fillable = [
-		'kode_item','kategori','deskripsi','uom','spesifikasi','harga','lot','moq','leadtime','currency','created_by'
+		'no_po','no_pr','delivery_date','no_item','qty','goods','last_price','services','po_date','created_by'
 	];
 
 	public function user()

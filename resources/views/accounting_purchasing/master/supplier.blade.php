@@ -47,9 +47,12 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Supplier List YMPI <span class="text-purple">????</span>
+		Supplier List YMPI <span class="text-purple">{{ $title_jp }}</span>
 	</h1>
 	<ol class="breadcrumb">
+		<li>
+			<a href="{{ url("index/supplier/create")}}" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Create New Supplier</a>
+		</li>
 	</ol>
 </section>
 @stop
@@ -75,7 +78,7 @@
 			<span style="font-size: 40px">Uploading, please wait...<i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
-	<div class="row">
+	<div class="row" style="margin-top: 5px">
 		<div class="col-xs-12">
 			<div class="box no-border" style="margin-bottom: 5px;">
 				<div class="box-header">
@@ -132,8 +135,7 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width:5%;">Name</th>
-										<th style="width:5%;">Address 1</th>
-										<th style="width:5%;">Address 2</th>
+										<th style="width:5%;">Address</th>
 										<th style="width:5%;">City</th>
 										<th style="width:5%;">Phone</th>
 										<th style="width:5%;">Fax</th>
@@ -142,6 +144,7 @@
 										<th style="width:6%;">Duration</th>
 										<th style="width:6%;">Position</th>
 										<th style="width:6%;">Status</th>
+										<th style="width:6%;">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -285,7 +288,6 @@
 			"columns": [
 				{ "data": "supplier_name"},
 				{ "data": "supplier_address"},
-				{ "data": "supplier_address2"},
 				{ "data": "supplier_city"},
 				{ "data": "supplier_phone"},
 				{ "data": "supplier_fax"},
@@ -293,7 +295,8 @@
 				{ "data": "supplier_npwp"},
 				{ "data": "supplier_duration"},
 				{ "data": "position"},
-				{ "data": "supplier_status"}
+				{ "data": "supplier_status"},
+				{ "data": "action"}
 			]
 		});
 

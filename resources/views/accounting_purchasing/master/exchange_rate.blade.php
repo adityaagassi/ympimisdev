@@ -47,14 +47,11 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Purchasing Item List <span class="text-purple">{{ $title_jp }}</span>
+		Exchange Rate <span class="text-purple">{{ $title_jp }}</span>
 	</h1>
 	<ol class="breadcrumb">
 		<li>
-			<a href="{{ url("index/purchase_item/create_category")}}" class="btn btn-md bg-blue" style="color:white">
-				<i class="fa fa-plus"></i> Create New Item Category
-			</a>
-			<a href="{{ url("index/purchase_item/create")}}" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Create New Item</a>
+			<a data-toggle="modal" data-target="#createModal" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Create New Exchange Rate</a>
 		</li>
 	</ol>
 </section>
@@ -99,32 +96,8 @@
 						
 						<div class="col-md-3">
 							<div class="form-group">
-								<label>Keyword</label>
-								<input type="text" class="form-control" id="keyword2" placeholder="Masukkan Keyword">
-							</div>
-						</div>
-
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>Kategori</label>
-								<select class="form-control select2" id="category" data-placeholder='Kategori Item' style="width: 100%">
-					              <option value="">&nbsp;</option>
-					              @foreach($item_category as $cat)
-					              <option value="{{$cat->category_id}}">{{$cat->category_id}} - {{$cat->category_name}}</option>
-					              @endforeach
-					            </select>
-							</div>
-						</div>
-
-						<div class="col-md-2">
-							<div class="form-group">
-								<label>Status</label>
-								<select class="form-control select2" multiple="multiple" id="uom" data-placeholder="Select UOM" style="width: 100%;">
-									<option></option>
-									@foreach($uom as $um)
-									<option value="{{ $um }}">{{ $um }}</option>
-									@endforeach
-								</select>
+								<label>Tanggal</label>
+								<input type="text" class="form-control datepicker" id="tanggal" name="tanggal" placeholder="Masukkan tanggal">
 							</div>
 						</div>
 						
@@ -151,19 +124,12 @@
 							16%">Import</button>
 						</div> -->
 						<div class="box-body">
-							<table id="itemtable" class="table table-bordered table-striped table-hover">
+							<table id="rateTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width:5%;">Item Code</th>
-										<th style="width:5%;">Category</th>
-										<th style="width:5%;">Description</th>
-										<th style="width:5%;">Uom</th>
-										<th style="width:5%;">Specification</th>
-										<th style="width:7%;">Price</th>
-										<th style="width:6%;">Lot</th>
-										<th style="width:6%;">Moq</th>
-										<th style="width:6%;">Lead Time</th>
-										<th style="width:6%;">Currency</th>
+										<th style="width:5%;">Periode</th>
+										<th style="width:5%;">Currency</th>
+										<th style="width:5%;">Rate</th>
 										<th style="width:5%;">Action</th>
 									</tr>
 								</thead>
@@ -171,13 +137,6 @@
 								</tbody>
 								<tfoot>
 									<tr>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -191,7 +150,65 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="createModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-lg" style="width: 1100px">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	          <h4 class="modal-title" id="myModalLabel"><center>Create Exchange Rate<b></b></center></h4>
+	        </div>
+	        <div class="modal-body">
+	          <div class="box-body">
+	            <input type="hidden" value="{{csrf_token()}}" name="_token" />
+	            <div class="form-group row" align="left">
+	              <div class="col-sm-1"></div>
+	              <label class="col-sm-2">Periode<span class="text-red">*</span></label>
+	              <div class="col-sm-8">
+	              	<div class="input-group date">
+		              <div class="input-group-addon">
+		                <i class="fa fa-calendar"></i>
+		              </div>
+		              <input type="text" class="form-control datepicker" id="periode" placeholder="Masukkan Periode">
+		            </div>
+	             </div>
+	           </div>
+	           <div class="form-group row" align="left">
+		            <div class="col-sm-1"></div>
+		            <label class="col-sm-2">Currency<span class="text-red">*</span></label>
+		            <div class="col-sm-8">
+		              <select class="form-control select2" id="currency" name="currency" style="width: 100%;" data-placeholder="Pilih Currency" onchange="currency()" required>
+		                <option></option>
+		                <option value="USD">USD</option>
+		                <option value="JPN">JPN</option>
+		                <option value="ID">ID</option>
+		              </select>
+		            </div>
+		          </div>
+
+		         <div class="form-group row" align="left">
+		            <div class="col-sm-1"></div>
+		            <label class="col-sm-2">Rate<span class="text-red">*</span></label>
+		            <div class="col-sm-8">
+		            	<div class="input-group"> 
+			            	<span class="input-group-addon" id="ket_harga">?</span>
+			                <input type="text" class="form-control" id="rate">
+		            	</div>
+		            </div>
+		        </div>
+	        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+	        <button type="button" onclick="create()" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-plus"></i> Create</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 </section>
+
+
 
 @endsection
 
@@ -213,9 +230,16 @@
 
 	// var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
+	$('.datepicker').datepicker({
+		format: "yyyy-mm",
+        startView: "months", 
+        minViewMode: "months",
+		autoclose: true
+	});
+
 	jQuery(document).ready(function() {
 		$('.select2').select2();
-		// fetchTable();
+		fetchTable();
 	});
 
 	function clearSearch(){
@@ -227,24 +251,20 @@
 	}
 
 	function fetchTable(){
-		$('#itemtable').DataTable().destroy();
+		$('#rateTable').DataTable().destroy();
 
-		var keyword = $('#keyword2').val();
-		var category = $('#category').val();
-		var uom = $('#uom').val();
+		var tanggal = $('#tanggal').val();
 
 		var data = {
-			keyword:keyword,
-			category:category,
-			uom:uom
+			tanggal:tanggal,
 		}
 		
-		$('#itemtable tfoot th').each( function () {
+		$('#rateTable tfoot th').each( function () {
 			var title = $(this).text();
 			$(this).html( '<input id="search" style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
 		} );
 
-		var table = $('#itemtable').DataTable({
+		var table = $('#rateTable').DataTable({
 			'dom': 'Bfrtip',
 			'responsive': true,
 			'lengthMenu': [
@@ -305,20 +325,13 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/purchase_item") }}",
+				"url" : "{{ url("fetch/exchange_rate") }}",
 				"data" : data
 			},
 			"columns": [
-			{ "data": "kode_item"},
-			{ "data": "kategori"},
-			{ "data": "deskripsi"},
-			{ "data": "uom"},
-			{ "data": "spesifikasi"},
-			{ "data": "harga"},
-			{ "data": "lot"},
-			{ "data": "moq"},
-			{ "data": "leadtime"},
+			{ "data": "periode"},
 			{ "data": "currency"},
+			{ "data": "rate"},
 			{ "data": "action"}
 			]
 		});
@@ -335,8 +348,106 @@
 			} );
 		} );
 		
-		$('#itemtable tfoot tr').appendTo('#itemtable thead');
+		$('#rateTable tfoot tr').appendTo('#rateTable thead');
 	}
+
+	function currency(){
+
+	    var mata_uang = $('#currency').val();
+
+	    if (mata_uang == "USD") {
+	        $('#ket_harga').text("$");       
+	    }
+	    else if (mata_uang == "ID") {
+          	$('#ket_harga').text("Rp. ");
+	    }
+
+	    else if (mata_uang == "JPN") {
+	        $('#ket_harga').text("¥");
+	    }
+
+	    var harga = document.getElementById("rate");
+        
+        harga.addEventListener("keyup", function(e) {
+         	harga.value = formatUang(this.value, "");
+        });
+  	}
+
+  	/* Fungsi formatUang */
+    function formatUang(angka, prefix) {
+      var number_string = angka.replace(/[^,\d]/g, "").toString(),
+        split = number_string.split(","),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+      // tambahkan titik jika yang di input sudah menjadi angka ribuan
+      if (ribuan) {
+        separator = sisa ? "." : "";
+        rupiah += separator + ribuan.join(".");
+      }
+
+      rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+      return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
+    }
+
+  	function create() {
+
+      var data = {
+        periode: $("#periode").val(),
+        currency: $("#currency").val(),
+        rate: $("#rate").val().replace(/\D/g, ""),
+      };
+
+      // console.log(data);
+
+      $.post('{{ url("create/exchange_rate") }}', data, function(result, status, xhr){
+        if (result.status == true) {
+          $('#rateTable').DataTable().ajax.reload(null, false);
+          openSuccessGritter("Success","New Exchange Rate has been created.");
+        } else {
+          openErrorGritter("Error",result.datas);
+        }
+      })
+    }
+
+    function modalDelete(id) {
+      var data = {
+        id: id
+      };
+
+      if (!confirm("Apakah anda yakin ingin menghapus ini?")) {
+        return false;
+      }
+
+      $.post('{{ url("delete/exchange_rate") }}', data, function(result, status, xhr){
+        $('#rateTable').DataTable().ajax.reload(null, false);
+        openSuccessGritter("Success","Berhasil Hapus Exchange Rate");
+      })
+    }
+
+
+    function openSuccessGritter(title, message){
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-success',
+        image: '{{ url("images/image-screen.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
+
+    function openErrorGritter(title, message) {
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '2000'
+        });
+      }
 </script>
 @endsection
 

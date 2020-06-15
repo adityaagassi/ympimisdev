@@ -5,10 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AccItem extends Model
+class AccItemCategory extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-		'kode_item','kategori','deskripsi','uom','spesifikasi','harga','lot','moq','leadtime','currency','created_by'
+		'category_id','category_name','created_by'
 	];
 
 	public function user()

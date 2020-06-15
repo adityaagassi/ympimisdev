@@ -151,7 +151,7 @@ class SendEmail extends Mailable
         if($this->remark == 'rejectcpar_dept'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Form Ketidaksesuaian '.$this->data[0]->judul.' Telah Ditolak')->view('mails.rejectcpar_dept');
         }
-       
+        
         if($this->remark == 'std_audit'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Audit ISO Standarisasi')->view('mails.std_audit');
         }
@@ -170,6 +170,14 @@ class SendEmail extends Mailable
 
         if($this->remark == 'hrq'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Unanswered HR Question & Answer (HR Q&A)')->view('mails.hrq');
+        }
+
+        if($this->remark == 'purchase_requisition'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Purchase Requisition '.$this->data[0]->no_pr.'')->view('mails.purchase_requisition');
+        }
+
+        if($this->remark == 'chemical_spk'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Verify Maintenance Job Order')->view('mails.verify_spk');
         }
     }
 }
