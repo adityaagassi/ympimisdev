@@ -679,7 +679,8 @@ class MaintenanceController extends Controller
 		$checks = Utility::leftJoin('utility_checks', 'utilities.id', '=', 'utility_checks.utility_id')
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'utility_checks.created_by')
 		->where('utilities.id', '=', $request->get('utility_id'))
-		->select('utility_id', 'check', db::raw('DATE_FORMAT(check_date,"%d %M %Y") check_date2'), 'utility_checks.remark', 'utility_checks.created_by', 'employee_syncs.name', db::raw('utilities.remark as remark2'))
+		->whereNull('utility_checks.deleted_at')
+		->select('utility_id', 'check', db::raw('DATE_FORMAT(check_date,"%d %M %Y") check_date2'), 'utility_checks.remark', 'utility_checks.created_by', 'employee_syncs.name', db::raw('utilities.remark as remark2'), db::raw('utility_checks.id as id_check'), db::raw('IF(DATEDIFF(DATE_FORMAT(check_date,"%Y-%m-%d"), now()) = 0,1, 0) as action'))
 		->orderBy('check_date', 'desc')
 		->limit(5)
 		->get();
@@ -732,6 +733,7 @@ class MaintenanceController extends Controller
 			$last_check_tool = Utility::where('utilities.id', $request->get('utility_id'))
 			->leftJoin('utility_checks', 'utility_checks.utility_id', '=', 'utilities.id')
 			->select('utilities.utility_code', 'utility_name', 'exp_date', 'utilities.status', db::raw('DATE_FORMAT(utility_checks.check_date, "%d-%m-%Y") as check_date'), 'utilities.remark')
+			->whereNull('utility_checks.deleted_at')
 			->orderBy('utility_checks.id', 'asc')
 			->limit(2)
 			->get();
@@ -749,7 +751,7 @@ class MaintenanceController extends Controller
 				'status' => false,
 				'message' => $e->getMessage()
 			);
-			return Response::json($response);			
+			return Response::json($response);
 		}
 	}
 
@@ -765,6 +767,7 @@ class MaintenanceController extends Controller
 		$check_by_operator = Utility::leftJoin('utility_checks', 'utility_checks.utility_id', '=', 'utilities.id')
 		->where('status', '=', 'NG')
 		->whereNull('utility_checks.remark')
+		->whereNull('utility_checks.deleted_at')
 		->select('utilities.id', 'utility_code', 'utility_name', 'group', 'location', 'utilities.remark', 'last_check', 'check')
 		->orderBy('last_check')
 		->get();
@@ -1003,7 +1006,7 @@ class MaintenanceController extends Controller
 			SELECT count(utility_id) as jml, cek_date from 
 			(SELECT utility_checks.utility_id, DATE_FORMAT(check_date, "%Y-%m") as cek_date from utility_checks
 			left join utilities on utility_checks.utility_id = utilities.id
-			where utilities.remark = "APAR"
+			where utilities.remark = "APAR" and utility_checks.deleted_at is null
 			group by utility_id, DATE_FORMAT(check_date, "%Y-%m")
 			) checked_data
 			group by cek_date
@@ -1061,7 +1064,7 @@ class MaintenanceController extends Controller
 			select mstr.wek, 0 as jml_cek, count(cek.wek) as cek from
 			(select utility_id, IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) - 1 as wek from utility_checks 
 			left join utilities on utilities.id = utility_checks.utility_id
-			where location = "'.$loc.'" and utilities.remark = "APAR" and DATE_FORMAT(check_date,"%Y-%m") = "'.$ym.'"
+			where location = "'.$loc.'" and utilities.remark = "APAR" and DATE_FORMAT(check_date,"%Y-%m") = "'.$ym.'" and utility_checks.deleted_at is null
 			group by utility_id, wek) cek
 			right join
 			(select FLOOR((DayOfMonth(week_date)-1)/7)+1 as wek from weekly_calendars where DATE_FORMAT(week_date,"%Y-%m") = "'.$ym.'" GROUP BY wek) mstr on mstr.wek = cek.wek
@@ -1089,7 +1092,7 @@ class MaintenanceController extends Controller
 			WHERE id IN (
 			SELECT min(id) 
 			FROM utility_checks 
-			where DATE_FORMAT(utility_checks.check_date, "%Y-%m") = "'.$ym.'"
+			where DATE_FORMAT(utility_checks.check_date, "%Y-%m") = "'.$ym.'" and utility_checks.deleted_at is null
 			GROUP BY utility_id
 			)
 			) utility_checks on utilities.id = utility_checks.utility_id
@@ -1113,12 +1116,12 @@ class MaintenanceController extends Controller
 	{
 		$detailCheck = DB::select('SELECT utilities.utility_code, utilities.utility_name, utilities.location, utilities.`group`, 1 as cek from utility_checks
 			left join utilities on utility_checks.utility_id = utilities.id
-			where utilities.remark = "APAR" and DATE_FORMAT(check_date, "%M %Y") = "'.$request->get('mon').'"
+			where utilities.remark = "APAR" and DATE_FORMAT(check_date, "%M %Y") = "'.$request->get('mon').'" and utility_checks.deleted_at is null
 			group by utilities.utility_code, utilities.utility_name, utilities.location, utilities.`group`, DATE_FORMAT(check_date, "%Y-%m")
 			union all			
 			SELECT utility_code, utility_name, location, `group`, 0 as cek from utilities 
 			LEFT join utility_checks on utilities.id = utility_checks.utility_id
-			where utilities.remark = "APAR" AND location = "FACTORY I" AND DATE_FORMAT(entry_date, "%Y-%m") <= "'.$request->get('mon2').'" AND (DATE_FORMAT(check_date, "%Y-%m") <> "'.$request->get('mon2').'" OR check_date is null)
+			where utilities.remark = "APAR" AND location = "FACTORY I" AND DATE_FORMAT(entry_date, "%Y-%m") <= "'.$request->get('mon2').'" AND (DATE_FORMAT(check_date, "%Y-%m") <> "'.$request->get('mon2').'" OR check_date is null and utility_checks.deleted_at is null)
 			GROUP BY utility_code, utility_name, location, `group`
 			ORDER BY cek asc
 			');
@@ -1169,7 +1172,7 @@ class MaintenanceController extends Controller
 			left join
 			(SELECT utility_id as id, IF(FLOOR((DayOfMonth(entry_date)-1)/7)+1 = 1,2,FLOOR((DayOfMonth(entry_date)-1)/7)+1) - 1 as wek, utility_code, utility_name, location, `group`, 1 as cek from utility_checks 
 			left join utilities on utilities.id = utility_checks.utility_id
-			where location = "'.$loc.'" and utilities.remark = "APAR" and DATE_FORMAT(check_date,"%Y-%m") = "'.$ym.'"
+			where location = "'.$loc.'" and utilities.remark = "APAR" and DATE_FORMAT(check_date,"%Y-%m") = "'.$ym.'" and utility_checks.deleted_at is null
 			group by utility_id, wek, utility_code, utility_name, location, `group`) as cek on semua.id = cek.id
 			order by cek.cek asc');
 
@@ -1209,6 +1212,18 @@ class MaintenanceController extends Controller
 		$response = array(
 			'status' => true,
 			'use_list' => $apar_use
+		);
+		return Response::json($response);
+	}
+
+	public function delete_history(Request $request)
+	{
+		$ck = UtilityCheck::find($request->get('id_check'));
+
+		$ck->delete();
+
+		$response = array(
+			'status' => true
 		);
 		return Response::json($response);
 	}

@@ -918,6 +918,12 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::post('ngfgFL/stamp', 'ProcessController@ngFLStamp');
 	Route::post('scan/serial_number_ng_FL', 'ProcessController@scanSerialNumberngFL');
 	// end ng FL
+
+	// NEW STAMP RFID
+	Route::get('index/assembly/flute_stamp', 'AssemblyProcessController@indexFluteStamp');
+	Route::get('scan/assembly/tag_stamp', 'AssemblyProcessController@scanTagStamp');
+	Route::get('fetch/assembly/stamp_result', 'AssemblyProcessController@fetchStampResult');
+
 });
 
 //meeting
@@ -1022,7 +1028,7 @@ Route::get('fetch/exchange_rate', 'AccountingController@fetch_exchange_rate');
 Route::post('create/exchange_rate', 'AccountingController@create_exchange_rate');
 Route::post('delete/exchange_rate', 'AccountingController@delete_exchange_rate');
 
-//Purchase Supplier
+//Supplier
 Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 	Route::get('index/supplier', 'AccountingController@master_supplier');
 	Route::get('fetch/supplier', 'AccountingController@fetch_supplier');
@@ -1045,7 +1051,7 @@ Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 	Route::get('index/purchase_item/delete/{id}', 'AccountingController@delete_item');
 	Route::get('index/purchase_item/get_kode_item', 'AccountingController@get_kode_item');
 	
-	//Category
+	//Item Category
 	Route::get('index/purchase_item/create_category', 'AccountingController@create_item_category');
 	Route::post('index/purchase_item/create_category', 'AccountingController@create_item_category_post');
 });
@@ -1053,7 +1059,7 @@ Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
 //nomor PR
 Route::get('purchase_requisition/get_nomor_pr', 'AccountingController@get_nomor_pr');
 
-//purchase_requisition
+//Purchase Requisition
 Route::get('purchase_requisition', 'AccountingController@purchase_requisition');
 Route::get('fetch/purchase_requisition', 'AccountingController@fetch_purchase_requisition');
 Route::post('create/purchase_requisition', 'AccountingController@create_purchase_requisition');
@@ -1062,11 +1068,18 @@ Route::get('purchase_requisition/get_detailitem', 'AccountingController@prgetite
 Route::get('fetch/purchase_requisition/budgetlist', 'AccountingController@fetchBudgetList');
 Route::get('purchase_requisition/get_detailbudget', 'AccountingController@prgetbudgetdesc')->name('admin.prgetbudgetdesc');
 Route::get('purchase_requisition/detail/{id}', 'AccountingController@detail_purchase_requisition');
+Route::get('purchase_requisition/get_exchange_rate', 'AccountingController@get_exchange_rate');
 
-//approval purchase_requisition
+//Approval Purchase Requisition
 Route::get('purchase_requisition/verifikasi/{id}', 'AccountingController@verifikasi_purchase_requisition');
 Route::post('purchase_requisition/approval/{id}', 'AccountingController@approval_purchase_requisition');
 Route::post('purchase_requisition/notapprove/{id}', 'AccountingController@reject_purchase_requisition');
+
+//Purchase Order
+Route::get('purchase_order', 'AccountingController@purchase_order');
+Route::get('fetch/purchase_order', 'AccountingController@fetch_purchase_order');
+Route::get('purchase_order/create', 'AccountingController@create_purchase_order');
+Route::post('purchase_order/create_post', 'AccountingController@create_purchase_order_post');
 
 //investment
 Route::get('investment', 'AccountingController@investment');
@@ -1083,6 +1096,9 @@ Route::post('investment/edit_investment_item', 'AccountingController@edit_invest
 Route::get('investment/edit_investment_item', 'AccountingController@fetch_investment_item_edit');
 Route::post('investment/delete_investment_item', 'AccountingController@delete_investment_item');
 Route::get('investment/get_detailitem', 'AccountingController@getitemdesc')->name('admin.getitemdesc');
+
+
+
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -1112,6 +1128,7 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');	
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
 
 });
 
@@ -1120,6 +1137,7 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
 
 });
 
@@ -1128,6 +1146,7 @@ Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
 
 });
 
@@ -2734,6 +2753,7 @@ Route::get('fetch/maintenance/apar/resume', 'MaintenanceController@fetch_apar_re
 Route::get('fetch/maintenance/apar/resumeWeek', 'MaintenanceController@fetch_apar_resume_week');
 Route::get('fetch/maintenance/apar/resume/detail/week', 'MaintenanceController@fetch_apar_resume_detail_week');
 Route::get('fetch/maintenance/apar/resume/detail', 'MaintenanceController@fetch_apar_resume_detail');
+// Route::get('fetch/maintenance/apar/resume/progres', 'MaintenanceController@fetch_apar_resume_progress')
 Route::get('fetch/maintenance/apar/use/list', 'MaintenanceController@fetch_apar_use');
 Route::get('fetch/maintenance/apar/use/check', 'MaintenanceController@check_apar_use');
 	// Route::get('fetch/maintenance/apar/byCode', 'MaintenanceController@fetchAparbyCode');
@@ -2742,6 +2762,7 @@ Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
 Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
 Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
+Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_history');
 
 Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
 

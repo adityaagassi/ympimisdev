@@ -56,11 +56,48 @@
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box">
 				<div class="box-body">
 					<center><h1><i class="fa fa-angle-double-down"></i>&nbsp;Daftar WJO yang Selesai&nbsp;<i class="fa fa-angle-double-down"></i></h1></center>
+					
+					<div class="col-xs-12-4">
+						<div class="box box-primary box-solid">
+							<div class="box-body">
+								<div class="col-md-5">
+									<div class="form-group">
+										<label>Pemohon</label>
+										<div class="input-group" style="width: 100%;">
+											<input type="text" placeholder="Tulisakan Nama Pemohon" class="form-control pull-right" name="s_pemohon" id="s_pemohon">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-5">
+									<div class="form-group">
+										<label>Bagian</label>
+										<div class="input-group" style="width: 100%;">
+											<select class="form-control select2" data-placeholder="Pilih Bagan" name="s_bagian" id="s_bagian" style="width: 100% height: 35px; font-size: 15px;" required>
+												<option value=""></option>
+												@foreach($bagian as $bg)
+												<option value="{{$bg->section}}">{{$bg->section}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-2">
+									<label>&nbsp;</label>
+									<div class="input-group" style="width: 100%;">
+										<a href="javascript:void(0)" onClick="fillMasterTable()" class="btn btn-primary"><span class="fa fa-search"></span> Search</a>
+										<button onclick="clearSearch()" class="btn btn-danger"> Clear</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
 					<table id="masterTable" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: rgba(126,86,134,.7);">
 							<tr>
@@ -210,9 +247,19 @@
 			$('body').toggleClass("sidebar-collapse");
 			fillMasterTable();
 			fillSecondTable();
+
+			$('.select2').select2();
 		});
 
 		function fillMasterTable(){
+			var s_pemohon = $('#s_pemohon').val();
+			var s_bagian = $('#s_bagian').val();
+			
+			var data = {
+				pemohon:s_pemohon,
+				bagian:s_bagian
+			}
+
 			$('#masterTable').DataTable().destroy();
 			$('#masterTable tfoot th').each( function () {
 				var title = $(this).text();
@@ -272,6 +319,7 @@
 				"ajax": {
 					"type" : "get",
 					"url" : "{{ url("fetch/workshop/receipt") }}",
+					"data": data,
 				},
 				"columns": [
 				{ "data": "tgl_pengajuan"},
@@ -528,6 +576,11 @@
 		$('#modalComfirm').on('shown.bs.modal', function () {
 			$("#scan_tag").focus();
 		});
+
+		function clearSearch() {
+			$("#s_bagian").val('').trigger('change') ;
+			$("#s_pemohon").val("");
+		}
 
 
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

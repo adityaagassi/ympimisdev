@@ -174,13 +174,14 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;" colspan="4">History APAR / HYDRANT Check</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;" colspan="5">History APAR / HYDRANT Check</th>
 					</tr>
 					<tr>
 						<th width="12%" style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Check Date</th>
 						<th width="20%" style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">PIC</th>
 						<th width="10%" style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Check</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Note</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;" width="8%">Aksi</th>
 					</tr>
 				</thead>
 				<tbody id="history_body">
@@ -394,6 +395,11 @@
 					})
 
 					bd += "<td "+style+">"+remark.slice(0,-1)+"</td>";
+					if (value.action == 1) {
+						bd += "<td "+style+"><button class='btn btn-danger' onclick='delete_history("+value.id_check+","+value.utility_id+")'><i class='fa fa-close'></i> hapus</button></td>";
+					} else {
+						bd += "<td "+style+"> - </td>"
+					}
 
 					bd += "</tr>";
 				})
@@ -442,7 +448,8 @@
 						hasil_check = "BAIK";
 					}
 
-					var hasil_check = ng_list.toString();
+					// var hasil_check = ng_list.toString();
+					var hasil_check = ng_list.join(', ');
 
 					// window.open('{{ url("print/apar/qr/".'+result.checked_apar.utility_code+'."/".'+result.checked_apar.utility_name+'."/".'+result.checked_apark.exp_date+'."/".'+result.checked_apark.last_check+'."/".'+hasil_check+') }}', '_blank');
 					window.open('{{ url("print/apar/qr/") }}/'+result.checked_apar[0].utility_code+'/'+result.checked_apar[0].utility_name+'/'+result.checked_apar[0].exp_date+'/'+result.checked_apar[0].check_date+'/'+check_date_2+'/'+hasil_check+'/'+result.checked_apar[0].remark, '_blank');
@@ -533,6 +540,21 @@
 				audio_error.play();
 			}
 
+		}
+
+		function delete_history(id_check, apar_id) {
+			var data = {
+				id_check:id_check
+			}
+
+			if (confirm('Apakah anda yakin ingin menghapus history ini?')) {
+				$.post('{{ url("delete/maintenance/apar/history") }}', data, function(result, status, xhr) {
+					if (result.status) {
+						openSuccessGritter('Success', 'History Successfully Deleted');
+						get_history(apar_id);
+					}
+				})
+			}
 		}
 
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
