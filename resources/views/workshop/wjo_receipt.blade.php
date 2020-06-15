@@ -59,44 +59,48 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box">
+			<div class="box box-primary box-solid">
 				<div class="box-body">
-					<center><h1><i class="fa fa-angle-double-down"></i>&nbsp;Daftar WJO yang Selesai&nbsp;<i class="fa fa-angle-double-down"></i></h1></center>
-					
-					<div class="col-xs-12-4">
-						<div class="box box-primary box-solid">
-							<div class="box-body">
-								<div class="col-md-5">
-									<div class="form-group">
-										<label>Pemohon</label>
-										<div class="input-group" style="width: 100%;">
-											<input type="text" placeholder="Tulisakan Nama Pemohon" class="form-control pull-right" name="s_pemohon" id="s_pemohon">
-										</div>
-									</div>
-								</div>
-								<div class="col-md-5">
-									<div class="form-group">
-										<label>Bagian</label>
-										<div class="input-group" style="width: 100%;">
-											<select class="form-control select2" data-placeholder="Pilih Bagan" name="s_bagian" id="s_bagian" style="width: 100% height: 35px; font-size: 15px;" required>
-												<option value=""></option>
-												@foreach($bagian as $bg)
-												<option value="{{$bg->section}}">{{$bg->section}}</option>
-												@endforeach
-											</select>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-2">
-									<label>&nbsp;</label>
-									<div class="input-group" style="width: 100%;">
-										<a href="javascript:void(0)" onClick="fillMasterTable()" class="btn btn-primary"><span class="fa fa-search"></span> Search</a>
-										<button onclick="clearSearch()" class="btn btn-danger"> Clear</button>
-									</div>
+					<form>
+						<div class="col-md-5">
+							<div class="form-group">
+								<label>Pemohon</label>
+								<div class="input-group" style="width: 100%;">
+									<input type="text" placeholder="Tulisakan Nama Pemohon" class="form-control" name="s_pemohon" id="s_pemohon">
 								</div>
 							</div>
 						</div>
-					</div>
+						<div class="col-md-5">
+							<div class="form-group">
+								<label>Bagian</label>
+								<div class="input-group" style="width: 100%;">
+									<select class="form-control select2" data-placeholder="Pilih Bagan" name="s_bagian" id="s_bagian" style="width: 100% height: 35px; font-size: 15px;" required>
+										<option value=""></option>
+										@foreach($bagian as $bg)
+										<option value="{{$bg->section}}">{{$bg->section}}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<label>&nbsp;</label>
+							<div class="input-group" style="width: 100%;">
+								<a href="javascript:void(0)" onClick="fillMasterTable()" class="btn btn-primary"><span class="fa fa-search"></span> Search</a>
+								<button onclick="clearSearch()" class="btn btn-danger" type="button"> Clear</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box">
+				<div class="box-body">
+					<center><h1><i class="fa fa-angle-double-down"></i>&nbsp;Daftar WJO yang Selesai&nbsp;<i class="fa fa-angle-double-down"></i></h1></center>
 
 					<table id="masterTable" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: rgba(126,86,134,.7);">
@@ -263,7 +267,7 @@
 			$('#masterTable').DataTable().destroy();
 			$('#masterTable tfoot th').each( function () {
 				var title = $(this).text();
-				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" class="input" />' );
 			});
 			var table = $('#masterTable').DataTable({
 				'dom': 'Bfrtip',
@@ -339,7 +343,7 @@
 			table.columns().every( function () {
 				var that = this;
 
-				$( 'input', this.footer() ).on( 'keyup change', function () {
+				$( '.input', this.footer() ).on( 'keyup change', function () {
 					if ( that.search() !== this.value ) {
 						that
 						.search( this.value )
