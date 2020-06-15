@@ -62,9 +62,13 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="col-sx-12">
-				<span style="font-weight: bold; font-size: 2vw;"><i class="fa fa-arrow-down"></i>右下端の各地域のグラフを一つにまとめたもの</span>
+				<span style="font-weight: bold; font-size: 1.6vw;"><i class="fa fa-arrow-down"></i>右下端の各地域のグラフを一つにまとめたもの</span>
 				<div id="new_infected" style="margin-bottom: 20px;"></div>
-			</div>	
+			</div>
+			<div class="col-sx-12">
+				<span style="font-weight: bold; font-size: 1.6vw;"><i class="fa fa-arrow-down"></i>致死率＝その日までの累計死亡者数 ÷ その日までの累計感染者数　（右下端の各地域のグラフを一つにまとめたもの）</span>
+				<div id="new_dead" style="margin-bottom: 20px;"></div>
+			</div>
 			<input type="hidden" id="date_now">
 			<input type="hidden" id="date_yesterday">
 
@@ -128,27 +132,44 @@
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active">
 									<a href="#tab_id_1" data-toggle="tab" id="tab_header_id_1">
-										現在
+										現在<br>
+										Current
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_id_2" data-toggle="tab" id="tab_header_id_2">
-										新規
+										新規<br>
+										New
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_id_3" data-toggle="tab" id="tab_header_id_3">
-										累計
+										10万人あたりの新規感染者数<br>
+										New per 100K people
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_id_4" data-toggle="tab" id="tab_header_id_4">
-										死者
+										死者<br>
+										Dead
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_id_5" data-toggle="tab" id="tab_header_id_5">
-										死亡率
+										死亡率<br>
+										Dead Rate
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_id_6" data-toggle="tab" id="tab_header_id_6">
+										累計感染者数<br>
+										Cumulative Infected
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_id_7" data-toggle="tab" id="tab_header_id_7">
+										累計死亡者数<br>
+										Cumulative Dead
 									</a>
 								</li>
 							</ul>
@@ -156,31 +177,58 @@
 							<div class="tab-content">
 								<div class="tab-pane active" id="tab_id_1">
 									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）<br>
+										Current number of infected persons (cumulative number of infected persons-number of recovered persons-number of dead persons)
 									</div>
 									<div id="id_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_id_2">
 									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
+										新規感染者数<br>
+										Number of new infections
 									</div>
 									<div id="id_new_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_id_3">
 									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
+										過去1週間の10万人あたりの新規感染者数<br>
+										Number of new infected people per 100,000 people in the past week
 									</div>
 									<div id="id_series" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_id_4">
+									<div style="background-color: rgb(255,204,255); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										毎日の死亡者数<br>
+										Daily fatalities
+									</div>
 									<div id="id_fatality" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_id_5">
+									<div style="background-color: rgb(153,255,204); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										致死率　（その日までの累計死亡者数　÷　その日までの累計感染者数）<br>
+										Fatality rate (cumulative number of deaths / cumulative number of infections)
+									</div>
 									<div id="id_fatality_rate" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_id_6">
+									<div style="background-color: rgb(255,153,153); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計感染者数<br>
+										Cumulative Infected Person
+									</div>
+									<div id="id_cum_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_id_7">
+									<div style="background-color: rgb(255,0,0); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計死亡者数<br>
+										Cumulative Dead
+									</div>
+									<div id="id_cum_dead" style="margin-bottom: 20px;"></div>
 								</div>
 							</div>
 						</div>
@@ -237,58 +285,102 @@
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active">
 									<a href="#tab_jkt_1" data-toggle="tab" id="tab_header_jkt_1">
-										現在
+										現在<br>
+										Current
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_jkt_2" data-toggle="tab" id="tab_header_jkt_2">
-										新規
+										新規<br>
+										New
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_jkt_3" data-toggle="tab" id="tab_header_jkt_3">
-										累計
+										10万人あたりの新規感染者数<br>
+										New per 100K people
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_jkt_4" data-toggle="tab" id="tab_header_jkt_4">
-										死者
+										死者<br>
+										Dead
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_jkt_5" data-toggle="tab" id="tab_header_jkt_5">
-										死亡率
+										死亡率<br>
+										Dead Rate
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_jkt_6" data-toggle="tab" id="tab_header_jkt_6">
+										累計感染者数<br>
+										Cumulative Infected
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_jkt_7" data-toggle="tab" id="tab_header_jkt_7">
+										累計死亡者数<br>
+										Cumulative Dead
 									</a>
 								</li>
 							</ul>
 							<div class="tab-content">
 								<div class="tab-pane active" id="tab_jkt_1">
 									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）<br>
+										Current number of infected persons (cumulative number of infected persons-number of recovered persons-number of dead persons)
 									</div>
 									<div id="jkt_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_jkt_2">
 									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
+										新規感染者数<br>
+										Number of new infections
 									</div>
 									<div id="jkt_new_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_jkt_3">
 									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
+										過去1週間の10万人あたりの新規感染者数<br>
+										Number of new infected people per 100,000 people in the past week
 									</div>
 									<div id="jkt_series" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_jkt_4">
+									<div style="background-color: rgb(255,204,255); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										毎日の死亡者数<br>
+										Daily fatalities
+									</div>
 									<div id="jkt_fatality" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_jkt_5">
+									<div style="background-color: rgb(153,255,204); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										致死率　（その日までの累計死亡者数　÷　その日までの累計感染者数）<br>
+										Fatality rate (cumulative number of deaths / cumulative number of infections)
+									</div>
 									<div id="jkt_fatality_rate" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_jkt_6">
+									<div style="background-color: rgb(255,153,153); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計感染者数<br>
+										Cumulative Infected Person
+									</div>
+									<div id="jkt_cum_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_jkt_7">
+									<div style="background-color: rgb(255,0,0); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計死亡者数<br>
+										Cumulative Dead
+									</div>
+									<div id="jkt_cum_dead" style="margin-bottom: 20px;"></div>
 								</div>
 							</div>
 						</div>
@@ -345,58 +437,102 @@
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active">
 									<a href="#tab_bks_1" data-toggle="tab" id="tab_header_bks_1">
-										現在
+										現在<br>
+										Current
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_bks_2" data-toggle="tab" id="tab_header_bks_2">
-										新規
+										新規<br>
+										New
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_bks_3" data-toggle="tab" id="tab_header_bks_3">
-										累計
+										10万人あたりの新規感染者数<br>
+										New per 100K people
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_bks_4" data-toggle="tab" id="tab_header_bks_4">
-										死者
+										死者<br>
+										Dead
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_bks_5" data-toggle="tab" id="tab_header_bks_5">
-										死亡率
+										死亡率<br>
+										Dead Rate
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_bks_6" data-toggle="tab" id="tab_header_bks_6">
+										累計感染者数<br>
+										Cumulative Infected
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_bks_7" data-toggle="tab" id="tab_header_bks_7">
+										累計死亡者数<br>
+										Cumulative Dead
 									</a>
 								</li>
 							</ul>
 							<div class="tab-content">
 								<div class="tab-pane active" id="tab_bks_1">
 									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）<br>
+										Current number of infected persons (cumulative number of infected persons-number of recovered persons-number of dead persons)
 									</div>
 									<div id="bks_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_bks_2">
 									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
+										新規感染者数<br>
+										Number of new infections
 									</div>
 									<div id="bks_new_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_bks_3">
 									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
+										過去1週間の10万人あたりの新規感染者数<br>
+										Number of new infected people per 100,000 people in the past week
 									</div>
 									<div id="bks_series" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_bks_4">
+									<div style="background-color: rgb(255,204,255); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										毎日の死亡者数<br>
+										Daily fatalities
+									</div>
 									<div id="bks_fatality" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_bks_5">
+									<div style="background-color: rgb(153,255,204); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										致死率　（その日までの累計死亡者数　÷　その日までの累計感染者数）<br>
+										Fatality rate (cumulative number of deaths / cumulative number of infections)
+									</div>
 									<div id="bks_fatality_rate" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_bks_6">
+									<div style="background-color: rgb(255,153,153); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計感染者数<br>
+										Cumulative Infected Person
+									</div>
+									<div id="bks_cum_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_bks_7">
+									<div style="background-color: rgb(255,0,0); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計死亡者数<br>
+										Cumulative Dead
+									</div>
+									<div id="bks_cum_dead" style="margin-bottom: 20px;"></div>
 								</div>
 							</div>
 						</div>
@@ -453,58 +589,102 @@
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active">
 									<a href="#tab_sby_1" data-toggle="tab" id="tab_header_sby_1">
-										現在
+										現在<br>
+										Current
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_sby_2" data-toggle="tab" id="tab_header_sby_2">
-										新規
+										新規<br>
+										New
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_sby_3" data-toggle="tab" id="tab_header_sby_3">
-										累計
+										10万人あたりの新規感染者数<br>
+										New per 100K people
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_sby_4" data-toggle="tab" id="tab_header_sby_4">
-										死者
+										死者<br>
+										Dead
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_sby_5" data-toggle="tab" id="tab_header_sby_5">
-										死亡率
+										死亡率<br>
+										Dead Rate
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_sby_6" data-toggle="tab" id="tab_header_sby_6">
+										累計感染者数<br>
+										Cumulative Infected
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_sby_7" data-toggle="tab" id="tab_header_sby_7">
+										累計死亡者数<br>
+										Cumulative Dead
 									</a>
 								</li>
 							</ul>
 							<div class="tab-content">
 								<div class="tab-pane active" id="tab_sby_1">
 									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）<br>
+										Current number of infected persons (cumulative number of infected persons-number of recovered persons-number of dead persons)
 									</div>
 									<div id="sby_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_sby_2">
 									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
+										新規感染者数<br>
+										Number of new infections
 									</div>
 									<div id="sby_new_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_sby_3">
 									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
+										過去1週間の10万人あたりの新規感染者数<br>
+										Number of new infected people per 100,000 people in the past week
 									</div>
 									<div id="sby_series" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_sby_4">
+									<div style="background-color: rgb(255,204,255); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										毎日の死亡者数<br>
+										Daily fatalities
+									</div>
 									<div id="sby_fatality" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_sby_5">
+									<div style="background-color: rgb(153,255,204); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										致死率　（その日までの累計死亡者数　÷　その日までの累計感染者数）<br>
+										Fatality rate (cumulative number of deaths / cumulative number of infections)
+									</div>
 									<div id="sby_fatality_rate" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_sby_6">
+									<div style="background-color: rgb(255,153,153); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計感染者数<br>
+										Cumulative Infected Person
+									</div>
+									<div id="sby_cum_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_sby_7">
+									<div style="background-color: rgb(255,0,0); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計死亡者数<br>
+										Cumulative Dead
+									</div>
+									<div id="sby_cum_dead" style="margin-bottom: 20px;"></div>
 								</div>
 							</div>
 						</div>
@@ -561,58 +741,102 @@
 							<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 								<li class="vendor-tab active">
 									<a href="#tab_psr_1" data-toggle="tab" id="tab_header_psr_1">
-										現在
+										現在<br>
+										Current
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_psr_2" data-toggle="tab" id="tab_header_psr_2">
-										新規
+										新規<br>
+										New
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_psr_3" data-toggle="tab" id="tab_header_psr_3">
-										累計
+										10万人あたりの新規感染者数<br>
+										New per 100K people
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_psr_4" data-toggle="tab" id="tab_header_psr_4">
-										死者
+										死者<br>
+										Dead
 									</a>
 								</li>
 								<li class="vendor-tab">
 									<a href="#tab_psr_5" data-toggle="tab" id="tab_header_psr_5">
-										死亡率
+										死亡率<br>
+										Dead Rate
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_psr_6" data-toggle="tab" id="tab_header_psr_6">
+										累計感染者数<br>
+										Cumulative Infected
+									</a>
+								</li>
+								<li class="vendor-tab">
+									<a href="#tab_psr_7" data-toggle="tab" id="tab_header_psr_7">
+										累計死亡者数<br>
+										Cumulative Dead
 									</a>
 								</li>
 							</ul>
 							<div class="tab-content">
 								<div class="tab-pane active" id="tab_psr_1">
 									<div style="background-color: #ff7043; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）
+										現在の感染者数推移　（累計感染者数－回復者数－死亡者数）<br>
+										Current number of infected persons (cumulative number of infected persons-number of recovered persons-number of dead persons)
 									</div>
 									<div id="psr_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_psr_2">
 									<div style="background-color: #3f51b5; font-weight: bold; font-size: 1.5vw; text-align: center; color: white;">
-										新規感染者数
+										新規感染者数<br>
+										Number of new infections
 									</div>
 									<div id="psr_new_infected" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_psr_3">
 									<div style="background-color: #ffff00; font-weight: bold; font-size: 1.5vw; text-align: center;">
-										過去1週間の10万人あたりの新規感染者数
+										過去1週間の10万人あたりの新規感染者数<br>
+										Number of new infected people per 100,000 people in the past week
 									</div>
 									<div id="psr_series" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_psr_4">
+									<div style="background-color: rgb(255,204,255); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										毎日の死亡者数<br>
+										Daily fatalities
+									</div>
 									<div id="psr_fatality" style="margin-bottom: 20px;"></div>
 								</div>
 
 								<div class="tab-pane" id="tab_psr_5">
+									<div style="background-color: rgb(153,255,204); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										致死率　（その日までの累計死亡者数　÷　その日までの累計感染者数）<br>
+										Fatality rate (cumulative number of deaths / cumulative number of infections)
+									</div>
 									<div id="psr_fatality_rate" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_psr_6">
+									<div style="background-color: rgb(255,153,153); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計感染者数<br>
+										Cumulative Infected Person
+									</div>
+									<div id="psr_cum_infected" style="margin-bottom: 20px;"></div>
+								</div>
+
+								<div class="tab-pane" id="tab_psr_7">
+									<div style="background-color: rgb(255,0,0); font-weight: bold; font-size: 1.5vw; text-align: center;">
+										累計死亡者数<br>
+										Cumulative Dead
+									</div>
+									<div id="psr_cum_dead" style="margin-bottom: 20px;"></div>
 								</div>
 							</div>
 						</div>
@@ -733,65 +957,86 @@
 				var id_new = [];
 				var id_fatal = [];
 				var id_fatal_rate = [];
+				var id_dead_cum = [];
+				var id_infected_cum = [];
 
 				var jkt_infected = [];
 				var jkt_new = [];
 				var jkt_fatal = [];
 				var jkt_fatal_rate = [];
+				var jkt_dead_cum = [];
+				var jkt_infected_cum = [];
 
 				var bks_infected = [];
 				var bks_new = [];
 				var bks_fatal = [];
 				var bks_fatal_rate = [];
+				var bks_dead_cum = [];
+				var bks_infected_cum = [];
 
 				var sby_infected = [];
+				var id_dead_cum = [];
 				var sby_new = [];
 				var sby_fatal = [];
 				var sby_fatal_rate = [];
+				var sby_dead_cum = [];
+				var sby_infected_cum = [];
 
 				var psr_infected = [];
 				var psr_new = [];
 				var psr_fatal = [];
 				var psr_fatal_rate = [];
+				var psr_dead_cum = [];
+				var psr_infected_cum = [];
 
 				$.each(result.corona_informations, function(key, value) {
 					var num_infected = (value.past_week_infected*(100000/value.population)).toFixed(2);
 
 					if(value.area == 'Indonesia'){
 						newIndonesiaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
-						newIndonesiaSeries2.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newIndonesiaSeries2.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
 						id_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						id_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 						id_fatal.push([Date.parse(value.date), (parseFloat(value.fatality) || 0)]);
 						id_fatal_rate.push([Date.parse(value.date), (parseFloat(parseFloat(value.fatality_rate*100).toFixed(2)) || 0)]);
+						id_infected_cum.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						id_dead_cum.push([Date.parse(value.date), (parseFloat(value.acc_dead) || 0)]);
 					}
 					if(value.area == 'Jakarta'){
-						newJakartaSeries.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newJakartaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
 						jkt_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						jkt_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 						jkt_fatal.push([Date.parse(value.date), (parseFloat(value.fatality) || 0)]);
 						jkt_fatal_rate.push([Date.parse(value.date), (parseFloat(parseFloat(value.fatality_rate*100).toFixed(2)) || 0)]);
+						jkt_infected_cum.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						jkt_dead_cum.push([Date.parse(value.date), (parseFloat(value.acc_dead) || 0)]);
 					}
 					if(value.area == 'Bekasi'){
-						newBekasiSeries.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newBekasiSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
 						bks_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						bks_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 						bks_fatal.push([Date.parse(value.date), (parseFloat(value.fatality) || 0)]);
 						bks_fatal_rate.push([Date.parse(value.date), (parseFloat(parseFloat(value.fatality_rate*100).toFixed(2)) || 0)]);
+						bks_infected_cum.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						bks_dead_cum.push([Date.parse(value.date), (parseFloat(value.acc_dead) || 0)]);
 					}
 					if(value.area == 'Surabaya'){
-						newSurabayaSeries.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newSurabayaSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
 						sby_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						sby_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 						sby_fatal.push([Date.parse(value.date), (parseFloat(value.fatality) || 0)]);
 						sby_fatal_rate.push([Date.parse(value.date), (parseFloat(parseFloat(value.fatality_rate*100).toFixed(2)) || 0)]);
+						sby_infected_cum.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						sby_dead_cum.push([Date.parse(value.date), (parseFloat(value.acc_dead) || 0)]);
 					}
 					if(value.area == 'Pasuruan'){
-						newPasuruanSeries.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						newPasuruanSeries.push([Date.parse(value.date), (parseFloat(num_infected) || 0)]);
 						psr_infected.push([Date.parse(value.date), (parseFloat(value.curr_infected) || 0)]);
 						psr_new.push([Date.parse(value.date), (parseFloat(value.new_infected) || 0)]);
 						psr_fatal.push([Date.parse(value.date), (parseFloat(value.fatality) || 0)]);
 						psr_fatal_rate.push([Date.parse(value.date), (parseFloat(parseFloat(value.fatality_rate*100).toFixed(2)) || 0)]);
+						psr_infected_cum.push([Date.parse(value.date), (parseFloat(value.acc_infected) || 0)]);
+						psr_dead_cum.push([Date.parse(value.date), (parseFloat(value.acc_dead) || 0)]);
 					}
 				});
 
@@ -949,6 +1194,98 @@
 					}]
 				});
 
+				window.chart2 = Highcharts.stockChart('new_dead', {
+					rangeSelector: {
+						selected: 0
+					},
+					chart: {
+						type: 'line'
+					},
+					scrollbar:{
+						enabled:false
+					},
+					navigator:{
+						enabled:false
+					},
+					title: {
+						text: '致死率',
+						style: {
+							fontSize: '24px'
+						}
+					},
+					xAxis: {
+						type: 'datetime',
+						tickInterval: 24 * 3600 * 1000,
+						scrollbar: {
+							enabled: true
+						}
+					},
+					yAxis: {
+						min:0,
+						title: {
+							text: 'Percentage(%)'
+						}
+					},
+					plotOptions: {
+						line: {
+							dataLabels: {
+								enabled: false
+							},
+							enableMouseTracking: true
+						}
+					},
+					credits: {
+						enabled : false
+					},
+					legend: {
+						enabled: true,
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'middle'
+					},
+					series: [{
+						name: '"Indonesia"',
+						data: id_fatal_rate,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					},{
+						name: '"Special State of Jakarta" (YI / YMMI, resident residence district)',
+						data: jkt_fatal_rate,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					},{
+						name: '"Bekasi Prefecture + Bekasi City" (YMMA / YMPA area)',
+						data: bks_fatal_rate,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					},{
+						name: '"Surabaya City" (residential district)',
+						data: sby_fatal_rate,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					},{
+						name: '"Pasuruan + Pasuruan City" (YMPI / YEMI area)',
+						data: psr_fatal_rate,
+						lineWidth: 1,
+						marker: {
+							enabled: true,
+							radius: 3
+						}
+					}]
+				});
+
 			//INDONESIA
 
 			window.chart2_id = Highcharts.stockChart('id_infected', {
@@ -965,7 +1302,7 @@
 					enabled:false
 				},
 				title: {
-					text: 'インドネシア国全体」現在の感染者数推移',
+					text: '「インドネシア国全体」現在の感染者数推移<br>Current Number of Infected People "Indonesia"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1021,7 +1358,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「インドネシア国全体」新規感染者数',
+					text: '「インドネシア国全体」新規感染者数<br>New infections "Indonesia"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1077,7 +1414,7 @@
 					enabled:false
 				},
 				title: {
-					text: 'インドネシア感染者の累計',
+					text: 'インドネシア国全体」過去1週間の100,000人あたりの新規感染者数',
 					style: {
 						fontSize: '24px'
 					}
@@ -1137,7 +1474,7 @@
 					enabled:false
 				},
 				title: {
-					text: '毎日の死亡者数「インドネシア国全体」',
+					text: '毎日の死亡者数「インドネシア国全体」<br>Daily deaths "Indonesia"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1193,7 +1530,7 @@
 					enabled:false
 				},
 				title: {
-					text: '致死率「インドネシア国全体」',
+					text: '致死率「インドネシア国全体」<br>Lethality "Indonesia"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1240,9 +1577,7 @@
 				}]
 			});
 
-			// JAKARTA
-
-			window.chart2_jkt = Highcharts.stockChart('jkt_infected', {
+			window.chart7_id = Highcharts.stockChart('id_cum_infected', {
 				rangeSelector: {
 					selected: 0
 				},
@@ -1256,63 +1591,7 @@
 					enabled:false
 				},
 				title: {
-					text: 'ジャカルタ特別州」現在の感染者数推移',
-					style: {
-						fontSize: '24px'
-					}
-				},
-				xAxis: {
-					type: 'datetime',
-					tickInterval: 24 * 3600 * 1000,
-					scrollbar: {
-						enabled: true
-					}
-				},
-				yAxis: {
-					min:0,
-					title: {
-						text: null
-					}
-				},
-				plotOptions: {
-					series: {
-						dataLabels: {
-							enabled: true
-						},
-						enableMouseTracking: true,
-						color: '#ff7043'
-					}
-				},
-				credits: {
-					enabled : false
-				},
-				legend: {
-					enabled: false,
-					layout: 'vertical',
-					align: 'right',
-					verticalAlign: 'middle'
-				},
-				series: [{
-					name: '"Jakarta"',
-					data: jkt_infected	
-				}]
-			});
-
-			window.chart3_jkt = Highcharts.stockChart('jkt_new_infected', {
-				rangeSelector: {
-					selected: 0
-				},
-				chart: {
-					type: 'column'
-				},
-				scrollbar:{
-					enabled:false
-				},
-				navigator:{
-					enabled:false
-				},
-				title: {
-					text: '「ジャカルタ特別州」新規感染者数',
+					text: '累計感染者「インドネシア国全体」<br>Cumulative Infected Person "Indonesia"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1349,7 +1628,178 @@
 					verticalAlign: 'middle'
 				},
 				series: [{
-					name: '"Jakarta"',
+					name: '"Indonesia"',
+					data: id_infected_cum	
+				}]
+			});
+
+
+			window.chart8_id = Highcharts.stockChart('id_cum_dead', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '累計死亡者 「インドネシア国全体」<br>Cumulative Dead "Indonesia"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"Indonesia"',
+					data: id_dead_cum	
+				}]
+			});
+
+			// JAKARTA
+
+			window.chart2_jkt = Highcharts.stockChart('jkt_infected', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: 'ジャカルタ特別州」現在の感染者数推移<br>Current Number of Infected People "DKI Jakarta"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#ff7043'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"DKI Jakarta"',
+					data: jkt_infected	
+				}]
+			});
+
+			window.chart3_jkt = Highcharts.stockChart('jkt_new_infected', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '「ジャカルタ特別州」新規感染者数<br>New infections "DKI Jakarta"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"DKI Jakarta"',
 					data: jkt_new	
 				}]
 			});
@@ -1368,7 +1818,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「ジャカルタ感染者の累計',
+					text: '「ジャカルタ特別州」過去1週間の100,000人あたりの新規感染者',
 					style: {
 						fontSize: '24px'
 					}
@@ -1404,7 +1854,7 @@
 					verticalAlign: 'middle'
 				},
 				series: [{
-					name: '"Jakarta"',
+					name: '"DKI Jakarta"',
 					data: newJakartaSeries,
 					lineWidth: 1,
 					marker: {
@@ -1429,7 +1879,7 @@
 					enabled:false
 				},
 				title: {
-					text: '毎日の死亡者数「インドネシア国全体」',
+					text: '毎日の死亡者数「ジャカルタ特別州」<br>Daily deaths "DKI Jakarta"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1466,7 +1916,7 @@
 					verticalAlign: 'middle'
 				},
 				series: [{
-					name: '"Jakarta"',
+					name: '"DKI Jakarta"',
 					data: jkt_fatal	
 				}]
 			});
@@ -1485,7 +1935,7 @@
 					enabled:false
 				},
 				title: {
-					text: '致死率「インドネシア国全体」',
+					text: '致死率「ジャカルタ特別州」<br>Lethality "DKI Jakarta"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1522,13 +1972,126 @@
 					verticalAlign: 'middle'
 				},
 				series: [{
-					name: '"Jakarta"',
+					name: '"DKI Jakarta"',
 					data: jkt_fatal_rate,
 					lineWidth: 1,
 					marker: {
 						enabled: true,
 						radius: 3
 					}
+				}]
+			});
+
+			window.chart7_jkt = Highcharts.stockChart('jkt_cum_infected', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '累計感染者「ジャカルタ特別州」<br>Cumulative Infected Person "DKI Jakarta"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"DKI Jakarta"',
+					data: jkt_infected_cum	
+				}]
+			});
+
+
+			window.chart8_jkt = Highcharts.stockChart('jkt_cum_dead', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '累計死亡者 「ジャカルタ特別州」<br>Cumulative Dead "DKI Jakarta"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"DKI Jakarta"',
+					data: jkt_dead_cum	
 				}]
 			});
 
@@ -1548,7 +2111,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「ブカシ県＋ブカシ市」現在の感染者数推移',
+					text: '「ブカシ県＋ブカシ市」現在の感染者数推移<br>Current Number of Infected People "Bekasi"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1604,7 +2167,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「ブカシ県＋ブカシ市」新規感染者数',
+					text: '「ブカシ県＋ブカシ市」新規感染者数<br>New infections "Bekasi"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1660,7 +2223,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「ブカシ県＋ブカシ市」感染者の累計',
+					text: '「ブカシ県＋ブカシ市」過去1週間の100,000人あたりの新規感染者数',
 					style: {
 						fontSize: '24px'
 					}
@@ -1720,7 +2283,7 @@
 					enabled:false
 				},
 				title: {
-					text: '毎日の死亡者数「インドネシア国全体」',
+					text: '毎日の死亡者数「ブカシ県＋ブカシ市」<br>Daily deaths "Bekasi"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1776,7 +2339,7 @@
 					enabled:false
 				},
 				title: {
-					text: '致死率「インドネシア国全体」',
+					text: '致死率「ブカシ県＋ブカシ市」<br>Lethality "Bekasi"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1823,6 +2386,119 @@
 				}]
 			});
 
+			window.chart7_bks = Highcharts.stockChart('bks_cum_infected', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '累計感染者「ブカシ県＋ブカシ市」<br>Cumulative Infected Person "Bekasi"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"Bekasi"',
+					data: bks_infected_cum	
+				}]
+			});
+
+
+			window.chart8_bks = Highcharts.stockChart('bks_cum_dead', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '累計死亡者「ブカシ県＋ブカシ市」<br>Cumulative Dead "Bekasi"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"Bekasi"',
+					data: bks_dead_cum	
+				}]
+			});
+
 			// SURABAYA
 
 			window.chart2_sby = Highcharts.stockChart('sby_infected', {
@@ -1839,7 +2515,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「スラバヤ市」現在の感染者数推移',
+					text: '「スラバヤ市」現在の感染者数推移<br>Current Number of Infected People "Surabaya"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1895,7 +2571,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「スラバヤ市」新規感染者数',
+					text: '「スラバヤ市」新規感染者数<br>New infections "Surabaya"',
 					style: {
 						fontSize: '24px'
 					}
@@ -1951,7 +2627,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「スラバヤ市」感染者の累計',
+					text: '「スラバヤ市」過去1週間の100,000人あたりの新規感染者数',
 					style: {
 						fontSize: '24px'
 					}
@@ -2011,7 +2687,7 @@
 					enabled:false
 				},
 				title: {
-					text: '毎日の死亡者数「インドネシア国全体」',
+					text: '毎日の死亡者数 「スラバヤ市」<br>Daily deaths "Surabaya"',
 					style: {
 						fontSize: '24px'
 					}
@@ -2067,7 +2743,7 @@
 					enabled:false
 				},
 				title: {
-					text: '致死率「インドネシア国全体」',
+					text: '致死率 「スラバヤ市」<br>Lethality "Surabaya"',
 					style: {
 						fontSize: '24px'
 					}
@@ -2114,6 +2790,119 @@
 				}]
 			});
 
+			window.chart7_sby = Highcharts.stockChart('sby_cum_infected', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '累計感染者「スラバヤ市」<br>Cumulative Infected Person "Surabaya"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"Surabaya"',
+					data: sby_infected_cum	
+				}]
+			});
+
+
+			window.chart8_sby = Highcharts.stockChart('sby_cum_dead', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '累計死亡者「スラバヤ市」<br>Cumulative Dead "Surabaya"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"Surabaya"',
+					data: sby_dead_cum	
+				}]
+			});
+
 			// PASURUAN
 
 			window.chart2_psr = Highcharts.stockChart('psr_infected', {
@@ -2130,7 +2919,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「パスルアン県＋パスルアン市」現在の感染者数推移',
+					text: '「パスルアン県＋パスルアン市」現在の感染者数推移<br>Current Number of Infected People "Pasuruan"',
 					style: {
 						fontSize: '24px'
 					}
@@ -2186,7 +2975,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「パスルアン県＋パスルアン市」新規感染者数',
+					text: '「パスルアン県＋パスルアン市」新規感染者数<br>New infections "Pasuruan"',
 					style: {
 						fontSize: '24px'
 					}
@@ -2242,7 +3031,7 @@
 					enabled:false
 				},
 				title: {
-					text: '「パスルアン県＋パスルアン市」感染者の累計',
+					text: '「パスルアン県＋パスルアン市」過去1週間の100,000人あたりの新規感染者数',
 					style: {
 						fontSize: '24px'
 					}
@@ -2302,7 +3091,7 @@
 					enabled:false
 				},
 				title: {
-					text: '毎日の死亡者数「インドネシア国全体」',
+					text: '毎日の死亡者数 「パスルアン県＋パスルアン市」<br>Daily deaths "Pasuruan"',
 					style: {
 						fontSize: '24px'
 					}
@@ -2358,7 +3147,7 @@
 					enabled:false
 				},
 				title: {
-					text: '致死率「インドネシア国全体」',
+					text: '致死率 「パスルアン県＋パスルアン市」<br>Lethality "Pasuruan"',
 					style: {
 						fontSize: '24px'
 					}
@@ -2404,6 +3193,120 @@
 					}
 				}]
 			});
+
+			window.chart7_psr = Highcharts.stockChart('psr_cum_infected', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '累計感染者「パスルアン県＋パスルアン市」<br>Cumulative Infected Person "Pasuruan"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"Pasuruan"',
+					data: psr_infected_cum	
+				}]
+			});
+
+
+			window.chart8_psr = Highcharts.stockChart('psr_cum_dead', {
+				rangeSelector: {
+					selected: 0
+				},
+				chart: {
+					type: 'column'
+				},
+				scrollbar:{
+					enabled:false
+				},
+				navigator:{
+					enabled:false
+				},
+				title: {
+					text: '累計死亡者 「パスルアン県＋パスルアン市」<br>Cumulative Dead "Pasuruan"',
+					style: {
+						fontSize: '24px'
+					}
+				},
+				xAxis: {
+					type: 'datetime',
+					tickInterval: 24 * 3600 * 1000,
+					scrollbar: {
+						enabled: true
+					}
+				},
+				yAxis: {
+					min:0,
+					title: {
+						text: null
+					}
+				},
+				plotOptions: {
+					series: {
+						dataLabels: {
+							enabled: true
+						},
+						enableMouseTracking: true,
+						color: '#3f51b5'
+					}
+				},
+				credits: {
+					enabled : false
+				},
+				legend: {
+					enabled: false,
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle'
+				},
+				series: [{
+					name: '"Pasuruan"',
+					data: psr_dead_cum	
+				}]
+			});
+
 			$('#loading').hide();
 		}
 		else{
