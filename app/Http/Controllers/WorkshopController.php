@@ -203,9 +203,12 @@ class WorkshopController extends Controller{
 		$title = 'Workshop Receipt';
 		$title_jp = '?';
 
+		$bagian = EmployeeSync::select('section')->whereNotNull('section')->groupBy('section')->get();
+
 		return view('workshop.wjo_receipt', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
+			'bagian' => $bagian
 		))->with('page', 'WJO Receipt')->with('head', 'Workshop');	
 	}
 
@@ -1937,15 +1940,24 @@ class WorkshopController extends Controller{
 		return Response::json($response);
 	}
 
-	public function fetchFinishedWJO()
+	public function fetchFinishedWJO(Request $request)
 	{
 		$datas = WorkshopJobOrder::leftJoin("workshop_receipts", "workshop_job_orders.order_no","=","workshop_receipts.order_no")
 		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "workshop_job_orders.created_by")
 		->select(db::raw("DATE_FORMAT(workshop_job_orders.created_at, '%Y-%m-%d') as tgl_pengajuan"), "employee_syncs.name", db::raw("workshop_job_orders.sub_section as bagian"), "workshop_job_orders.order_no", "workshop_job_orders.priority" , "workshop_job_orders.type", "workshop_job_orders.item_name", "quantity", "target_date", "attachment")
 		->where("remark", "=", "4")
 		->where(db::raw("DATE_FORMAT(workshop_job_orders.created_at, '%Y-%m-%d')"), ">=", "2020-04-01")
-		->whereNull("workshop_receipts.order_no")
-		->orderBy("workshop_job_orders.created_at","desc")
+		->whereNull("workshop_receipts.order_no");
+
+		if(strlen($request->get('pemohon')) > 0 ){
+			$datas = $datas->where('employee_syncs.name', 'like', "%".$request->get('pemohon')."%");
+		}
+
+		if(strlen($request->get('bagian')) > 0 ){
+			$datas = $datas->where('workshop_job_orders.sub_section', '=', $request->get('bagian'));
+		}
+
+		$datas = $datas->orderBy("workshop_job_orders.created_at","desc")
 		->get();
 
 		return DataTables::of($datas)
