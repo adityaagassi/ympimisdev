@@ -28,6 +28,7 @@ class TransactionController extends Controller
 			'CLB9',
 			'FL91',
 			'SX91',
+			'VN91',
 			'CL51',
 			'FL51',
 			'SX51',
