@@ -382,7 +382,7 @@ class TransactionController extends Controller
 		->orderBy('issue_location', 'asc')
 		->orderBy('material_number', 'asc')
 		->leftJoin('users', 'users.id', '=', 'return_lists.created_by')
-		->select('return_lists.id', 'return_lists.material_number', 'return_lists.material_description', 'return_lists.issue_location', 'return_lists.receive_location', 'return_lists.quantity', 'users.username', 'return_lists.created_at', 'return_lists.created_by')
+		->select('return_lists.id', 'return_lists.material_number', 'return_lists.material_description', 'return_lists.issue_location', 'return_lists.receive_location', 'return_lists.quantity', 'users.name', 'return_lists.created_at', 'return_lists.created_by')
 		->orderBy('return_lists.created_at', 'asc')
 		->get();
 
@@ -419,7 +419,7 @@ class TransactionController extends Controller
 			$printer_name = 'MIS';
 		}
 		else{
-			if($receive == 'CL91'){
+			if($receive == 'CL91' || $receive == 'CLB9'){
 				$printer_name = 'FLO Printer 102';
 			}
 			else if($receive == 'SX91'){
@@ -428,7 +428,7 @@ class TransactionController extends Controller
 			else if($receive == 'FL91'){
 				$printer_name = 'FLO Printer 101';			
 			}
-			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
+			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51' || $receive == 'VN91'){
 				$printer_name = 'Stockroom-Printer';			
 			}
 			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
@@ -485,7 +485,7 @@ class TransactionController extends Controller
 			$printer_name = 'MIS';
 		}
 		else{
-			if($receive == 'CL91'){
+			if($receive == 'CL91' || $receive == 'CLB9'){
 				$printer_name = 'FLO Printer 102';
 			}
 			else if($receive == 'SX91'){
@@ -494,7 +494,7 @@ class TransactionController extends Controller
 			else if($receive == 'FL91'){
 				$printer_name = 'FLO Printer 101';			
 			}
-			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
+			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51' || $receive == 'VN91'){
 				$printer_name = 'Stockroom-Printer';			
 			}
 			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){

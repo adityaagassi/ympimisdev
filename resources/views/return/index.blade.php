@@ -229,6 +229,8 @@
 	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
+		
 		$('.select2').select2();
 		$('#modalLocation').modal({
 			backdrop: 'static',
@@ -474,7 +476,7 @@
 				tableData += '<td>'+ value.issue_location +'</td>';
 				tableData += '<td>'+ value.receive_location +'</td>';
 				tableData += '<td>'+ value.quantity +'</td>';
-				tableData += '<td>'+ value.username +'</td>';
+				tableData += '<td>'+ value.name +'</td>';
 				tableData += '<td>'+ value.created_at +'</td>';
 				tableData += '<td><center><button class="btn btn-danger" onclick="deleteReturn('+value.id+')"><i class="fa fa-trash"></i></button></center></td>';
 				tableData += '<td><center><button class="btn btn-primary" onclick="reprint('+value.id+')"><i class="fa fa-print"></i></button></center></td>';
