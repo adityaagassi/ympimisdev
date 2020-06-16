@@ -58,7 +58,7 @@ class TransactionController extends Controller
 			'title_jp' => '??',
 			'storage_locations' => $storage_locations,
 			'materials' => $materials
-		));
+		))->with('page', 'Return Logs');
 	}
 
 	public function indexReturn(){
