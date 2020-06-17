@@ -118,11 +118,17 @@
           @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
             <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i> <span>Purchase Item</span></a>
           </li>
-          @if(isset($page) && $page == "Material Usage")<li class="active">@else<li>@endif
+          @if(isset($page) && $page == "Supplier")<li class="active">@else<li>@endif
             <a href="{{ url("/index/supplier") }}"><i class="fa fa-bus"></i> <span>Supplier</span></a>
+          </li>
+          @if(isset($page) && $page == "Exchange Rate")<li class="active">@else<li>@endif
+            <a href="{{ url("/index/exchange_rate") }}"><i class="fa fa-money"></i> <span>Exchange Rate</span></a>
           </li>
           @if(isset($page) && $page == "Purchase Requisition")<li class="active">@else<li>@endif
             <a href="{{ url("purchase_requisition") }}"><i class="fa fa-info"></i>Purchase Requisition</a>
+          </li>
+          @if(isset($page) && $page == "Purchase Order")<li class="active">@else<li>@endif
+            <a href="{{ url("purchase_order") }}"><i class="fa fa-info"></i>Purchase Order</a>
           </li>
           @if(isset($page) && $page == "Investment")<li class="active">@else<li>@endif
             <a href="{{ url("investment") }}"><i class="fa fa-info"></i>Investment</a>
@@ -713,7 +719,11 @@
 </li>
 
 @if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
-  <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-shield"></i> <span>Quarantine Extinguisher Tools</span></a>
+  <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-ban"></i> <span>Expired Extinguisher Tools</span></a>
+</li>
+
+@if(isset($page) && $page == "APAR NG")<li class="active">@else<li>@endif
+  <a href="{{ secure_url("/index/maintenance/apar/ng_list") }}"><i class="fa  fa-exclamation-triangle"></i> <span>NG Extinguisher Tools</span></a>
 </li>
 
 @if(isset($page) && $page == "APAR Uses")<li class="active">@else<li>@endif

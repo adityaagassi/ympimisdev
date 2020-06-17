@@ -528,6 +528,10 @@
                                         <i class="fa fa-caret-right"></i> Tools Monitoring (??)
                                     </a>
                                     <br>
+                                    <a href="{{ secure_url("/index/maintenance/apar/expire") }}">
+                                        <i class="fa fa-caret-right"></i> Expired List (??)
+                                    </a>
+                                    <br>
                                     <a href="{{ url("index/maintenance/apar/resume") }}">
                                         <i class="fa fa-caret-right"></i> APAR Resume (??)
                                     </a>
