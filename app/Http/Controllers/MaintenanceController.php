@@ -189,7 +189,7 @@ class MaintenanceController extends Controller
 
 	public function indexAparExpire()
 	{
-		$title = 'Maintenance APAR Quarantine List';
+		$title = 'Maintenance APAR Expired List';
 		$subtitle = 'APAR That will be expire';
 		$title_jp = '??';
 
@@ -250,6 +250,22 @@ class MaintenanceController extends Controller
 		))->with('page', 'APAR Uses')->with('head', 'Maintenance');
 	}
 
+	public function indexAparNG()
+	{
+		$title = 'Fire Extinguiser NG List';
+		$title_jp = '??';
+
+		$check = db::table("utility_check_lists")
+		->select('check_point', 'remark')
+		->get();
+
+		return view('maintenance.apar.aparNGList', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'check_list' => $check
+		))->with('page', 'APAR NG')->with('head', 'Maintenance');
+	}
+
 	// -----------------------  END INDEX --------------------
 
 	public function fetchMaintenance(Request $request)
@@ -279,7 +295,7 @@ class MaintenanceController extends Controller
 		->where("operator_id", "=", Auth::user()->username)
 		->where("maintenance_job_orders.remark", "=", 3)
 		->where("maintenance_job_processes.remark", "=", "persiapan")
-		->select("maintenance_job_orders.order_no", "section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan")
+		->select("maintenance_job_orders.order_no", "section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual")
 		->get();
 
 		$response = array(
@@ -620,6 +636,13 @@ class MaintenanceController extends Controller
 		}
 	}
 
+	public function startSPK(Request $request)
+	{
+		MaintenanceJobProcess::where('order_no', $request->get('order_no'))
+		->where('operator_id', '=', Auth::user()->username)
+		->update(['start_actual' => date('Y-m-d H:i:s')]);
+	}
+
 	public function fetchAparList(Request $request)
 	{
 		DB::connection()->enableQueryLog();
@@ -764,17 +787,36 @@ class MaintenanceController extends Controller
 		->orderBy('exp_date')
 		->get();
 
-		$check_by_operator = Utility::leftJoin('utility_checks', 'utility_checks.utility_id', '=', 'utilities.id')
-		->where('status', '=', 'NG')
-		->whereNull('utility_checks.remark')
-		->whereNull('utility_checks.deleted_at')
-		->select('utilities.id', 'utility_code', 'utility_name', 'group', 'location', 'utilities.remark', 'last_check', 'check')
-		->orderBy('last_check')
-		->get();
+		$response = array(
+			'status' => true,
+			'expired_list' => $exp
+		);
+		return Response::json($response);
+	}
+
+	public function fetchAparNG(Request $request)
+	{
+		$mon = date('Y-m');
+		if ($request->get('mon') != "") {
+			$mon = $request->get('mon');
+		}
+
+		$check_by_operator = db::select("SELECT utilities.id, utility_code, utility_name, `group`, location, utilities.remark, last_check, `check` from utilities
+			left join 
+			(SELECT id, utility_id, `check`
+			FROM utility_checks
+			WHERE id IN (
+			SELECT MAX(id)
+			FROM utility_checks
+			WHERE DATE_FORMAT(created_at, '%Y-%m') = '".$mon."' and deleted_at is null and utility_checks.remark is null
+			GROUP BY utility_id
+			)) as utility_checks
+			on utility_checks.utility_id = utilities.id
+			where `status` = 'NG'
+			order by last_check");
 
 		$response = array(
 			'status' => true,
-			'expired_list' => $exp,
 			'operator_check' => $check_by_operator
 		);
 		return Response::json($response);

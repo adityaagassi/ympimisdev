@@ -99,45 +99,6 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-xs-12"><h3 style="color: white; text-align: center">Daftar APAR yang NG</h3></div>
-    <div class="col-xs-6" style="padding-top: 10px;">
-      <table class="table table-bordered" width="100%">
-        <thead>
-          <tr>
-            <th colspan="5">Factory I</th>
-          </tr>
-          <tr>
-            <th>APAR Code</th>
-            <th>APAR Name</th>
-            <th>Location</th>
-            <th>NG</th>
-          </tr>
-        </thead>
-        <tbody id="qu_f1">
-        </tbody>
-      </table>
-    </div>
-
-    <div class="col-xs-6" style="padding-top: 10px;">
-      <table class="table table-bordered" width="100%">
-        <thead>
-          <tr>
-            <th colspan="5">Factory II</th>
-          </tr>
-          <tr>
-            <th>APAR Code</th>
-            <th>APAR Name</th>
-            <th>Location</th>
-            <th>NG</th>
-          </tr>
-        </thead>
-        <tbody id="qu_f2">
-        </tbody>
-      </table>
-    </div>
-  </div>
-
   <div class="modal fade in" id="modaledit" >
     <div class="modal-dialog">
       <div class="modal-content">
@@ -160,7 +121,7 @@
                 </div>                  
               </div>
             </div>
-            
+
             <div class="col-xs-12" id="modalContent">
               <div class="row">
                 <div class="col-xs-12">
@@ -214,9 +175,7 @@
             <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
           </div>
         </div>
-
       </div>
-
     </div>
   </section>
   @endsection
@@ -283,66 +242,6 @@
 
         $("#exp_f1").append(fi);
         $("#exp_f2").append(fii);
-
-
-        var user_fi = "", user_fii = "";
-        $("#qu_f1").empty();
-        $("#qu_f2").empty();
-        $.each(result.operator_check, function(index, value){
-
-          color1 = 'style="background-color: #fffcb7"';
-
-          color2 = 'style="background-color: #ffd8b7"';
-
-
-          if (value.location == "Factory I") {
-            remark = "";
-            user_fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
-            user_fi += "<td>"+value.utility_code+"</td>";
-            user_fi += "<td>"+value.utility_name+"</td>";
-            user_fi += "<td>"+value.group+"</td>";
-
-            arrCek = value.check.split(',');
-
-            var i = 0;
-            $.each(check, function(index2, value2){
-              if (value.remark == value2.remark) {
-                if (arrCek[i] == '0') {
-                  remark += value2.check_point+",";
-                }
-                i++;
-              }
-            })
-
-            user_fi += "<td>"+remark.slice(0,-1)+"</td>";
-
-            user_fi += "</tr>";
-          } else {
-            remark = "";
-            user_fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
-            user_fii += "<td>"+value.utility_code+"</td>";
-            user_fii += "<td>"+value.utility_name+"</td>";
-            user_fii += "<td>"+value.group+"</td>";
-
-            arrCek = value.check.split(',');
-
-            var i = 0;
-            $.each(check, function(index2, value2){
-              if (value.remark == value2.remark) {
-                if (arrCek[i] == '0') {
-                  remark += value2.check_point+",";
-                }
-                i++;
-              }
-            })
-
-            user_fii += "<td>"+remark.slice(0,-1)+"</td>";
-            user_fii += "</tr>";
-          }
-        })
-
-        $("#qu_f1").append(user_fi);
-        $("#qu_f2").append(user_fii);
       })
     }
 
