@@ -920,11 +920,12 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	// end ng FL
 
 	// NEW STAMP RFID
-	Route::get('index/assembly/flute_stamp', 'AssemblyProcessController@indexFluteStamp');
 	Route::get('scan/assembly/tag_stamp', 'AssemblyProcessController@scanTagStamp');
-	Route::get('fetch/assembly/stamp_result', 'AssemblyProcessController@fetchStampResult');
-
+	Route::post('stamp/assembly/flute', 'AssemblyProcessController@stampFlute');
 });
+	Route::get('fetch/assembly/stamp_result', 'AssemblyProcessController@fetchStampResult');
+	Route::get('fetch/assembly/serial', 'AssemblyProcessController@fetchSerialNumber');
+	Route::get('index/assembly/flute_stamp', 'AssemblyProcessController@indexFluteStamp');
 
 //meeting
 Route::group(['nav' => 'S33', 'middleware' => 'permission'], function(){
@@ -1082,6 +1083,10 @@ Route::get('purchase_order/create', 'AccountingController@create_purchase_order'
 Route::post('purchase_order/create_post', 'AccountingController@create_purchase_order_post');
 Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
 Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
+
+Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
+Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
+Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
 
 //investment
 Route::get('investment', 'AccountingController@investment');
@@ -1663,6 +1668,9 @@ Route::get('fetch/getReportVisualDaily', 'Pianica@getReportVisualDaily');
 
 //end pianica
 
+
+
+
 //stock taking
 Route::group(['nav' => 'M23', 'middleware' => 'permission'], function(){
 	Route::get('index/bom_output', 'StockTakingController@bom_output');
@@ -1687,10 +1695,10 @@ Route::get('fetch/stocktaking/silver_report', 'StockTakingController@fetchSilver
 Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetchSilverReportModal');
 
 
-
 //Index Monthly
 Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktaking');
 
+Route::get('fetch/stocktaking/check_month', 'StockTakingController@fetchCheckMonth');
 Route::get('fetch/stocktaking/filled_list', 'StockTakingController@fetchfilledList');
 Route::get('fetch/stocktaking/filled_list_detail', 'StockTakingController@fetchfilledListDetail');
 Route::get('fetch/stocktaking/variance', 'StockTakingController@fetchVariance');
@@ -1698,6 +1706,18 @@ Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVari
 
 Route::get('export/stocktaking/inquiry', 'StockTakingController@exportInquiry');
 Route::get('export/stocktaking/variance', 'StockTakingController@exportVariance');
+Route::get('export/stocktaking/upload_sap', 'StockTakingController@exportUploadSAP');
+Route::get('export/stocktaking/log', 'StockTakingController@exportLog');
+
+//Manage Store
+Route::get('index/stocktaking/manage_store', 'StockTakingController@indexManageStore');
+Route::get('fetch/stocktaking/store', 'StockTakingController@fetchStore');
+Route::get('fetch/stocktaking/store_details', 'StockTakingController@fetchStoreDetail');
+Route::post('fetch/stocktaking/delete_store', 'StockTakingController@deleteStore');
+Route::post('fetch/stocktaking/delete_material', 'StockTakingController@deleteMaterial');
+Route::post('fetch/stocktaking/add_material', 'StockTakingController@addMaterial');
+Route::get('fetch/stocktaking/get_storage_location', 'StockTakingController@fetchGetStorageLocation');
+Route::get('fetch/stocktaking/get_store', 'StockTakingController@fetchGetStore');
 
 //Summary of Counting
 Route::get('index/stocktaking/summary_of_counting', 'StockTakingController@indexSummaryOfCounting');
@@ -1722,7 +1742,12 @@ Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@update
 Route::post('fetch/stocktaking/update_process/{id}', 'StockTakingController@updateProcessAudit');
 
 //Count PI
-Route::get('index/stocktaking/unmatch', 'StockTakingController@indexUnmatch');
+Route::get('index/stocktaking/unmatch/{month}', 'StockTakingController@indexUnmatch');
+Route::get('fetch/stocktaking/pi_vs_book', 'StockTakingController@fetchPiVsBook');
+Route::get('fetch/stocktaking/book_vs_pi', 'StockTakingController@fetchBookVsPi');
+Route::get('fetch/stocktaking/kitto_vs_pi', 'StockTakingController@fetchKittoVsPi');
+Route::get('fetch/stocktaking/kitto_vs_book', 'StockTakingController@fetchKittoVsBook');
+Route::get('fetch/stocktaking/pi_vs_lot', 'StockTakingController@fetchPiVsLot');
 
 //Unmatch
 Route::get('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
@@ -1731,7 +1756,6 @@ Route::get('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
 Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
 Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
 Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
-
 
 
 
@@ -2746,10 +2770,13 @@ Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck'
 Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
 Route::get('index/maintenance/apar/resume', 'MaintenanceController@indexAparResume');
 Route::get('index/maintenance/apar/uses', 'MaintenanceController@indexAparUses');
+Route::get('index/maintenance/apar/ng_list', 'MaintenanceController@indexAparNG');
 
 Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
 Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
 Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
+Route::get('fetch/maintenance/apar/nglist', 'MaintenanceController@fetchAparNG');
+
 Route::get('fetch/maintenance/apar/list/check', 'MaintenanceController@fetchAparCheck2');
 Route::get('fetch/maintenance/apar/list/monitoring', 'MaintenanceController@fetch_apar_monitoring');
 Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
