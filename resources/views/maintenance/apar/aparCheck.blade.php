@@ -83,7 +83,7 @@
 	<div class="row" style="margin-left: 1%; margin-right: 1%;">
 		<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 			<p style="position: absolute; color: White; top: 45%; left: 35%;">
-				<span style="font-size: 40px">Loading, please wait...<i class="fa fa-spin fa-refresh"></i></span>
+				<span style="font-size: 40px">Loading, mohon tunggu..<i class="fa fa-spin fa-refresh"></i></span>
 			</p>
 		</div>
 
@@ -424,6 +424,7 @@
 			if (ng_list.length == 0) {
 				ng_list.push("BAIK");
 			}
+			$("#loading").show();
 
 			var data = {
 				check : check_list,
@@ -432,6 +433,7 @@
 			}
 			$.post('{{ url("post/maintenance/apar/check") }}', data, function(result, status, xhr) {
 				if (result.status) {
+					$("#loading").hide();
 					get_history($("#apar_id").val());
 
 					$(".check").prop('checked', false).parent().removeClass('active');
@@ -454,6 +456,7 @@
 					// window.open('{{ url("print/apar/qr/".'+result.checked_apar.utility_code+'."/".'+result.checked_apar.utility_name+'."/".'+result.checked_apark.exp_date+'."/".'+result.checked_apark.last_check+'."/".'+hasil_check+') }}', '_blank');
 					window.open('{{ url("print/apar/qr/") }}/'+result.checked_apar[0].utility_code+'/'+result.checked_apar[0].utility_name+'/'+result.checked_apar[0].exp_date+'/'+result.checked_apar[0].check_date+'/'+check_date_2+'/'+hasil_check+'/'+result.checked_apar[0].remark, '_blank');
 				} else {
+					$("#loading").hide();
 					openErrorGritter("Error", "Cek Koneksi Wifi Anda");
 				}
 			})

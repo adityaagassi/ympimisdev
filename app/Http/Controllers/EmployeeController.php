@@ -468,7 +468,9 @@ class EmployeeController extends Controller
           $dd = str_replace("'","", $this->usr);
           $dd = explode(',', $dd);
 
-          $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
+          // $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
+
+          $get_department = EmployeeSync::select('department')->where("employee_id","=",Auth::user()->username)->first();
 
           for ($i=0; $i < count($dd); $i++) {
                if ($username == $dd[$i] || Auth::user()->role_code == 'S' || Auth::user()->role_code == 'MIS') {
@@ -476,6 +478,10 @@ class EmployeeController extends Controller
                     break;
                } else {
                     $d = "where department = '".$get_department->department."'";
+
+                    if ($get_department->department == 'Maintenance') {
+                         $d .= " or department = 'Production Engineering'";
+                    }
                }
           }
 

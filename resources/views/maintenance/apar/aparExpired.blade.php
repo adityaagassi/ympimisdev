@@ -59,6 +59,11 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
   <div class="row">
+    <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+      <p style="position: absolute; color: White; top: 45%; left: 35%;">
+        <span style="font-size: 40px">Loading, mohon tunggu..<i class="fa fa-spin fa-refresh"></i></span>
+      </p>
+    </div>
     <div class="col-xs-12"><h3 style="color: white; text-align: center">Daftar APAR yang akan Kadaluarsa</h3></div>
     <div class="col-xs-6" style="padding-top: 10px;">
       <table class="table table-bordered" width="100%">
@@ -222,7 +227,7 @@
 
 
           if (value.location == "Factory I") {
-            fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
+            fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\", \""+value.exp_date+"\")'>";
             fi += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
             fi += "<td>"+value.utility_name+"</td>";
             fi += "<td>"+value.group+"</td>";
@@ -230,7 +235,7 @@
             fi += "<td>"+value.exp+" Month Left</td>";
             fi += "</tr>";
           } else {
-            fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
+            fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\", \""+value.exp_date+"\")'>";
             fii += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
             fii += "<td>"+value.utility_name+"</td>";
             fii += "<td>"+value.group+"</td>";
@@ -246,7 +251,7 @@
     }
 
 
-    function openModal(kode, nama, lokasi, id, type) {
+    function openModal(kode, nama, lokasi, id, type, exp) {
       $("#modaledit").modal("show");
 
       $("#code").val(kode);
@@ -363,12 +368,32 @@
         type : $("#type").val()
       }
 
+      $("#loading").show();
+
       $.post('{{ url("post/maintenance/apar/replace") }}', data, function(result, status, xhr) {
+        var hasil_check = "BAIK";
+        $("#loading").hide();
+
+        var cek_date = [];
+
+        $.each(result.check, function(index, value){
+          cek_date.push(value.cek_date);
+        })
+
+        if (cek_date[1]) {
+          cek2 = cek_date[1];
+        } else {
+          cek2 = '-';
+        }
+
+        window.open('{{ url("print/apar/qr/") }}/'+$("#code").val()+'/'+$("#name").val()+'/'+result.new_exp+'/'+cek_date[0]+'/'+cek2+'/'+hasil_check+'/'+'APAR', '_blank');
+
         openSuccessGritter("Success", "APAR Was Successfully Replaced");
         $("#modaledit").modal("hide");
         get_expire_data();
       }).fail(function(result) {
         openErrorGritter( "Error", "" );
+        $("#loading").hide();
       })
     }
 

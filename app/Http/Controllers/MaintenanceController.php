@@ -801,7 +801,7 @@ class MaintenanceController extends Controller
 			$mon = $request->get('mon');
 		}
 
-		$check_by_operator = db::select("SELECT utilities.id, utility_code, utility_name, `group`, location, utilities.remark, last_check, `check` from utilities
+		$check_by_operator = db::select("SELECT utilities.id, utility_code, utility_name, `group`, location, utilities.remark, last_check, `check`, capacity from utilities
 			left join 
 			(SELECT id, utility_id, `check`
 			FROM utility_checks
@@ -863,10 +863,9 @@ class MaintenanceController extends Controller
 		->where('utility_code', '=', $request->get('code'))
 		->first();
 
-
 		foreach ($this->apar_type as $type) {
 			if ($utl->type == $type['type']) {
-				$exp_date = date("Y-m-d", strtotime('+5 years', strtotime($request->get('entry_date'))));
+				$exp_date = date("Y-m-d", strtotime('+'.$type['valid'].' years', strtotime($request->get('entry_date'))));
 			}
 		}
 
@@ -899,8 +898,12 @@ class MaintenanceController extends Controller
 
 		$utl_check->save();
 
+		$hasil_check = UtilityCheck::select(db::raw('DATE_FORMAT(check_date,"%d-%m-%Y") as cek_date'))->where('utility_id', $utl->id)->orderBy('check_date')->limit(2)->get();
+
 		$response = array(
-			'status' => true
+			'status' => true,
+			'check' => $hasil_check,
+			'new_exp' => $exp_date
 		);
 		return Response::json($response);
 	}
@@ -961,10 +964,16 @@ class MaintenanceController extends Controller
 
 	public function print_apar2($apar_id, $apar_name, $exp_date, $last_check, $last_check2, $hasil_check, $remark)
 	{
+		if ($exp_date == "null") {
+			$exp = "-";
+		} else {
+			$exp = $exp_date;
+		}
+
 		$data = [
 			'apar_code' => $apar_id,
 			'apar_name' => $apar_name,
-			'exp_date' => $exp_date,
+			'exp_date' => $exp,
 			'last_check' => $last_check,
 			'last_check2' => $last_check2,
 			'status' => $hasil_check,

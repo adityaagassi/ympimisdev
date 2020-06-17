@@ -141,6 +141,10 @@ class SendEmailKaizen extends Command
               if (!in_array($mngr['email'], $mail_tos)) {
                 array_push($mail_tos,$mngr['email']);
             }
+        } else if($mngr['department'] == "Maintenance" && $data_cf->department == "Production Engineering") {
+            if (!in_array($mngr['email'], $mail_tos)) {
+                array_push($mail_tos,$mngr['email']);
+            }
         }
     }
 }
@@ -158,7 +162,7 @@ Artisan::call('config:clear');
 Artisan::call('config:cache');
 
 if($kzn != null){
-    Mail::to($mail_tos)->send(new SendEmail($kaizens, 'kaizen'));
+    Mail::to($mail_tos)->cc('nasiqul.ibat@music@yamaha.com')->send(new SendEmail($kaizens, 'kaizen'));
 }
 }
 }

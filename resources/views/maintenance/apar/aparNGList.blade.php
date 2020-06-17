@@ -59,6 +59,11 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
   <div class="row">
+    <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+      <p style="position: absolute; color: White; top: 45%; left: 35%;">
+        <span style="font-size: 40px">Loading, mohon tunggu..<i class="fa fa-spin fa-refresh"></i></span>
+      </p>
+    </div>
     <div class="col-xs-12">
       <div class="col-xs-10">
         <h3 style="color: white; text-align: center">Daftar APAR yang NG</h3>
@@ -265,12 +270,16 @@
   var check = [];
   var ng_list = [0,0,0,0,0,0,0];
 
-  $(".datepicker").datepicker( {
+  $("#bulan").datepicker( {
     autoclose: true,
     format: "yyyy-mm",
     viewMode: "months", 
     minViewMode: "months"
   });
+
+  $(function () {
+    jQuery( "#pengisian" ).datepicker({autoclose: true, format: "yyyy-mm-dd" }).attr('readonly','readonly');
+  })
 
 
   jQuery(document).ready(function() {
@@ -323,7 +332,7 @@
         if (value.location == "Factory I") {
           remark = "";
           user_fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
-          user_fi += "<td>"+value.utility_code+"</td>";
+          user_fi += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
           user_fi += "<td>"+value.utility_name+"</td>";
           user_fi += "<td>"+value.group+"</td>";
 
@@ -345,7 +354,7 @@
         } else {
           remark = "";
           user_fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
-          user_fii += "<td>"+value.utility_code+"</td>";
+          user_fii += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
           user_fii += "<td>"+value.utility_name+"</td>";
           user_fii += "<td>"+value.group+"</td>";
 
@@ -497,12 +506,36 @@
         type : $("#type").val()
       }
 
+      $("#loading").show();
+
       $.post('{{ url("post/maintenance/apar/replace") }}', data, function(result, status, xhr) {
+        var hasil_check = "BAIK";
+
+        $("#loading").hide();
+
+        var cek_date = [];
+
+        $.each(result.check, function(index, value){
+          cek_date.push(value.cek_date);
+        })
+
+        if (cek_date[1]) {
+          cek2 = cek_date[1];
+        } else {
+          cek2 = '-';
+        }
+
+        window.open('{{ url("print/apar/qr/") }}/'+$("#code").val()+'/'+$("#name").val()+'/'+result.new_exp+'/'+cek_date[0]+'/'+cek2+'/'+hasil_check+'/'+'APAR', '_blank');
+
+
         openSuccessGritter("Success", "APAR Was Successfully Replaced");
         $("#modaledit").modal("hide");
+
         get_expire_data();
+
       }).fail(function(result) {
         openErrorGritter( "Error", "" );
+        $("#loading").hide();
       })
     }
 
