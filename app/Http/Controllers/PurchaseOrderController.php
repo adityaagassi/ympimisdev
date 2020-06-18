@@ -908,11 +908,11 @@ class PurchaseOrderController extends Controller
 							
 							$reply_date = null;
 							$create_date = null;
-							if(strlen($row[21]) > 0){
-								$reply_date = date('Y-m-d', strtotime($row[21]));
-							}
 							if(strlen($row[22]) > 0){
-								$create_date = date('Y-m-d', strtotime($row[22]));
+								$reply_date = date('Y-m-d', strtotime($row[22]));
+							}
+							if(strlen($row[23]) > 0){
+								$create_date = date('Y-m-d', strtotime($row[23]));
 							}
 
 							$po_list = PoList::updateOrCreate(
@@ -939,10 +939,10 @@ class PurchaseOrderController extends Controller
 									'base_unit_of_measure' => $row[18],
 									'price' => $price,
 									'curr' => $row[20],
-									'order_no' => $row[24],
+									'order_no' => $row[21],
 									'reply_date' => $reply_date,
 									'create_date' => $create_date,
-									'delay' => $row[23],
+									'delay' => $row[24],
 									'reply_qty' => str_replace('"','',str_replace(',','',$row[25])),
 									'comment' => $row[26],
 									'del' => $row[27],
@@ -1187,11 +1187,11 @@ class PurchaseOrderController extends Controller
 			$po_lists = $po_lists->whereIn('po_lists.vendor', $vendor);
 		}
 
-		$po_lists = $po_lists->groupBy('po_lists.porg','po_lists.pgr','po_lists.vendor','po_lists.NAME','po_lists.country','po_lists.material','po_lists.description','po_lists.plnt','po_lists.sloc','po_lists.sc_vendor','po_lists.cost_ctr','po_lists.purchdoc','po_lists.acctassigcat','po_lists.deliv_qty','po_lists.base_unit_of_measure','po_lists.price','po_lists.curr','po_lists.reply_date','po_lists.create_date','po_lists.delay','po_lists.reply_qty','po_lists.comment','po_lists.del','po_lists.incomplete','po_lists.compl','po_lists.ctr','po_lists.spt','po_lists.stock','po_lists.lt','po_lists.dsf','po_lists.die_end','purchase_orders.order_no','purchase_orders.deliv_date','purchase_orders.order_date');
+		$po_lists = $po_lists->groupBy('po_lists.porg','po_lists.pgr','po_lists.vendor','po_lists.NAME','po_lists.country','po_lists.material','po_lists.description','po_lists.plnt','po_lists.sloc','po_lists.sc_vendor','po_lists.cost_ctr','po_lists.purchdoc','po_lists.acctassigcat','po_lists.deliv_qty','po_lists.base_unit_of_measure','po_lists.price','po_lists.curr','purchase_orders.order_no','po_lists.reply_date','po_lists.create_date','po_lists.delay','po_lists.reply_qty','po_lists.comment','po_lists.del','po_lists.incomplete','po_lists.compl','po_lists.ctr','po_lists.spt','po_lists.stock','po_lists.lt','po_lists.dsf','po_lists.die_end','purchase_orders.deliv_date','purchase_orders.order_date');
 
 		$po_lists = $po_lists->distinct()->get()->toArray();
 
-		$po_array[] = array('porg', 'pgr','vendor','NAME','country','material','description','plnt','sloc','sc_vendor','cost_ctr','purchdoc','item','acctassigcat','order_date','deliv_date','order_qty','deliv_qty','base_unit_of_measure','price','curr','reply_date','create_date','delay','order_no','reply_qty','comment','del','incomplete','compl','ctr','spt','stock','lt','dsf','die_end','order_code');
+		$po_array[] = array('porg', 'pgr','vendor','NAME','country','material','description','plnt','sloc','sc_vendor','cost_ctr','purchdoc','item','acctassigcat','order_date','deliv_date','order_qty','deliv_qty','base_unit_of_measure','price','curr','order_no','reply_date','create_date','delay','reply_qty','comment','del','incomplete','compl','ctr','spt','stock','lt','dsf','die_end','order_code');
 
 		foreach ($po_lists as $key) {
 			$po_array[] = array(
