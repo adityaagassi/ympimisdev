@@ -587,6 +587,7 @@ table.table-bordered > tfoot > tr > th{
 			end_time:'{{date("Y-m-d H:i:s")}}',
 			punch_status:'Running',
 			die_status:'Running',
+			part:$('#inputpart').val()
 		}
 
 		$.post('{{ url("input/press/kanagata_lifetime") }}', data, function(result, status, xhr){

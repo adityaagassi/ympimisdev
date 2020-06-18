@@ -1089,26 +1089,94 @@ class PressController extends Controller
     	try {
     		$id_user = Auth::id();
 
-    		MpKanagataLog::create([
-                'date' => $request->get('date'),
-                'pic' => $request->get('pic'),
-                'product' => $request->get('product'),
-                'machine' => $request->get('machine'),
-                'shift' => $request->get('shift'),
-                'material_number' => $request->get('material_number'),
-                'process' => 'Forging',
-                'punch_number' => $request->get('punch_number'),
-                'die_number' => $request->get('die_number'),
-                'start_time' => $request->get('start_time'),
-                'end_time' => $request->get('end_time'),
-                'punch_value' => $request->get('punch_value'),
-                'die_value' => $request->get('die_value'),
-                'punch_total' => $request->get('punch_total'),
-                'die_total' => $request->get('die_total'),
-                'punch_status' => 'Running',
-                'die_status' => 'Running',
-                'created_by' => $id_user
-          ]);
+    		if ($request->get('part') == 'DIE') {
+    			MpKanagataLog::create([
+	                'date' => $request->get('date'),
+	                'pic' => $request->get('pic'),
+	                'product' => $request->get('product'),
+	                'machine' => $request->get('machine'),
+	                'shift' => $request->get('shift'),
+	                'material_number' => $request->get('material_number'),
+	                'process' => $request->get('process'),
+	                'punch_number' => $request->get('punch_number'),
+	                'die_number' => $request->get('die_number'),
+	                'start_time' => $request->get('start_time'),
+	                'end_time' => $request->get('end_time'),
+	                'punch_value' => $request->get('die_value'),
+	                'die_value' => $request->get('die_value'),
+	                'punch_total' => $request->get('punch_total')+$request->get('die_value'),
+	                'die_total' => $request->get('die_total'),
+	                'punch_status' => 'Running',
+	                'die_status' => 'Running',
+	                'created_by' => $id_user
+	          ]);
+
+    			MpRecordProd::create([
+                    'date' => $request->get('date'),
+                    'pic' => $request->get('pic'),
+                    'product' => $request->get('product'),
+                    'machine' => $request->get('machine'),
+                    'shift' => $request->get('shift'),
+                    'material_number' => $request->get('material_number'),
+                    'process' => $request->get('process'),
+                    'punch_number' => $request->get('punch_number'),
+                    'die_number' => $request->get('die_number'),
+                    'start_time' => $request->get('start_time'),
+                    'end_time' => $request->get('end_time'),
+                    'lepas_molding' => '00:00:00',
+                    'pasang_molding' => '00:00:00',
+                    'process_time' => '00:00:00',
+                    'kensa_time' => '00:00:00',
+                    'electric_supply_time' => '00:00:00',
+                    'data_ok' => $request->get('die_value'),
+                    'punch_value' => $request->get('die_value'),
+                    'die_value' => $request->get('die_value'),
+                    'created_by' => $id_user
+                ]);
+    		}else{
+    			MpKanagataLog::create([
+	                'date' => $request->get('date'),
+	                'pic' => $request->get('pic'),
+	                'product' => $request->get('product'),
+	                'machine' => $request->get('machine'),
+	                'shift' => $request->get('shift'),
+	                'material_number' => $request->get('material_number'),
+	                'process' => $request->get('process'),
+	                'punch_number' => $request->get('punch_number'),
+	                'die_number' => $request->get('die_number'),
+	                'start_time' => $request->get('start_time'),
+	                'end_time' => $request->get('end_time'),
+	                'punch_value' => $request->get('punch_value'),
+	                'die_value' => $request->get('punch_value'),
+	                'punch_total' => $request->get('punch_total'),
+	                'die_total' => $request->get('die_total')+$request->get('punch_value'),
+	                'punch_status' => 'Running',
+	                'die_status' => 'Running',
+	                'created_by' => $id_user
+	          ]);
+    			MpRecordProd::create([
+                    'date' => $request->get('date'),
+                    'pic' => $request->get('pic'),
+                    'product' => $request->get('product'),
+                    'machine' => $request->get('machine'),
+                    'shift' => $request->get('shift'),
+                    'material_number' => $request->get('material_number'),
+                    'process' => $request->get('process'),
+                    'punch_number' => $request->get('punch_number'),
+                    'die_number' => $request->get('die_number'),
+                    'start_time' => $request->get('start_time'),
+                    'end_time' => $request->get('end_time'),
+                    'lepas_molding' => '00:00:00',
+                    'pasang_molding' => '00:00:00',
+                    'process_time' => '00:00:00',
+                    'kensa_time' => '00:00:00',
+                    'electric_supply_time' => '00:00:00',
+                    'data_ok' => $request->get('punch_value'),
+                    'punch_value' => $request->get('punch_value'),
+                    'die_value' => $request->get('punch_value'),
+                    'created_by' => $id_user
+                ]);
+    		}
 
 		  $response = array(
             'status' => true,
