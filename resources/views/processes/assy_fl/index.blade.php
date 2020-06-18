@@ -31,7 +31,7 @@
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Assemblies <i class="fa fa-angle-double-down"></i></span>
 			<a href='{{ url("index/kensa","kariawase-fungsi") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kariawase Kensa Fungsi</b></a>
 			<a href='{{ url("index/kensa","kariawase-visual") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kariawase Kensa Visual</b></a>
-			<a href="{{ url('/index/kensa','perakitanawal-kensa') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Perakitan Awal</a>
+			<a href="{{ url('/index/kensa','perakitanawal-kensa') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Perakitan Ulang</a>
 			<a href='{{ url("index/kensa","tanpoawase-kensa") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpo Awase Kensa</b></a>
 			<a href='{{ url("index/kensa","tanpoawase-fungsi") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpo Awase Kensa Fungsi</b></a>
 			<a href='{{ url("index/kensa","kango-fungsi") }}' class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Kango Kensa Fungsi</b></a>
@@ -52,7 +52,6 @@
 			<a href="{{ url("index/ngFL") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Ng</a>
 
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url('/index/board','perakitan-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Perakitan Board</a>
 			<a href="{{ url('/index/board','perakitan-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Perakitan Board</a>
 			<a href="{{ url('/index/board','kariawase-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Kariawase Board</a>
 			<a href="{{ url('/index/board','tanpoire-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Tanpoire Board</a>

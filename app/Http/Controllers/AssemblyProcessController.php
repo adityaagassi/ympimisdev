@@ -152,7 +152,6 @@ class AssemblyProcessController extends Controller
 			'is_send_log' => 0
 		]);
 
-
 		$sp = '';
 		if(count($material) >= 0){
 			$sp = 'SP';
@@ -168,12 +167,17 @@ class AssemblyProcessController extends Controller
 
 		$tag->serial_number = $request->get('serial');
 		$tag->model = $request->get('model');
-		
+		$serial = db::table('code_generators')->where('note', '=', $request->get('origin_group_code'))->first();
+		$serial->index = $serial->index+1;
+		$counter->plc_counter = $datas[0];
+
 		try{
-			DB::transaction(function() use ($log, $inventory, $tag){
+			DB::transaction(function() use ($log, $inventory, $tag, $serial, $counter){
 				$inventory->save();
 				$log->save();
 				$tag->save();
+				$serial->save();
+				$counter->save();
 			});
 		}
 		catch(\Exception $e){
@@ -736,7 +740,7 @@ class AssemblyProcessController extends Controller
 			$title_jp= '??';
 		}
 		if($location == 'perakitanawal-kensa'){
-			$title = 'Perakitan Awal Kensa Flute';
+			$title = 'Perakitan Ulang Kensa Flute';
 			$title_jp= '??';
 		}
 		if($location == 'tanpoawase-kensa'){
@@ -752,7 +756,7 @@ class AssemblyProcessController extends Controller
 			$title_jp= '??';
 		}
 		if($location == 'kango-kensa'){
-			$title = 'Kango Kensa Flute';
+			$title = 'Kango Kensa Visual Flute';
 			$title_jp= '??';
 		}
 		if($location == 'renraku-fungsi'){
