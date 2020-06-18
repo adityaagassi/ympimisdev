@@ -908,11 +908,11 @@ class PurchaseOrderController extends Controller
 							
 							$reply_date = null;
 							$create_date = null;
-							if(strlen($row[22]) > 0){
-								$reply_date = date('Y-m-d', strtotime($row[22]));
+							if(strlen($row[21]) > 0){
+								$reply_date = date('Y-m-d', strtotime($row[21]));
 							}
-							if(strlen($row[23]) > 0){
-								$create_date = date('Y-m-d', strtotime($row[23]));
+							if(strlen($row[22]) > 0){
+								$create_date = date('Y-m-d', strtotime($row[22]));
 							}
 
 							$po_list = PoList::updateOrCreate(
@@ -939,10 +939,10 @@ class PurchaseOrderController extends Controller
 									'base_unit_of_measure' => $row[18],
 									'price' => $price,
 									'curr' => $row[20],
-									'order_no' => $row[21],
+									'order_no' => $row[24],
 									'reply_date' => $reply_date,
 									'create_date' => $create_date,
-									'delay' => $row[24],
+									'delay' => $row[23],
 									'reply_qty' => str_replace('"','',str_replace(',','',$row[25])),
 									'comment' => $row[26],
 									'del' => $row[27],
