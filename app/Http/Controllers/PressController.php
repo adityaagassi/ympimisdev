@@ -657,17 +657,22 @@ class PressController extends Controller
 
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
+		$first = date('Y-m-01');
+		$now = date('Y-m-d');
 
-		$prod_result = db::select("SELECT
-				*,
-				mp_record_prods.id AS prod_result_id 
-			FROM
-				mp_record_prods
-				JOIN employee_groups ON employee_groups.employee_id = mp_record_prods.pic
-				JOIN employees ON employee_groups.employee_id = employees.employee_id
-				JOIN mp_materials ON mp_record_prods.material_number = mp_materials.material_number 
-			ORDER BY
-				mp_record_prods.id DESC");
+		// $prod_result = db::select("SELECT
+		// 		*,
+		// 		mp_record_prods.id AS prod_result_id 
+		// 	FROM
+		// 		mp_record_prods
+		// 		JOIN employee_groups ON employee_groups.employee_id = mp_record_prods.pic
+		// 		JOIN employees ON employee_groups.employee_id = employees.employee_id
+		// 		JOIN mp_materials ON mp_record_prods.material_number = mp_materials.material_number 
+		// 	WHERE
+		// 		DATE( mp_record_prods.date ) BETWEEN '".$first."' 
+		// 		AND '".$now."' 
+		// 	ORDER BY
+		// 		mp_record_prods.id DESC");
 
 		$emp = DB::SELECT("SELECT
 				* 
@@ -679,7 +684,7 @@ class PressController extends Controller
 
 		$data = array(
                 	'process' => $process,
-                	'prod_result' => $prod_result,
+                	// 'prod_result' => $prod_result,
                 	'mesin' => $this->mesin,
                 	'emp' => $emp,
                 	'machine' => $machine);
@@ -714,11 +719,11 @@ class PressController extends Controller
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
 
-		$prod_result = db::select("select *,
+		$prod_result = db::select("
+			select *,
 				mp_record_prods.id AS prod_result_id 
 			from mp_record_prods
-			join employee_groups on employee_groups.employee_id = mp_record_prods.pic
-			join employees on employee_groups.employee_id = employees.employee_id
+			join employee_syncs on mp_record_prods.pic= employee_syncs.employee_id
 			join mp_materials on mp_record_prods.material_number= mp_materials.material_number
 			".$date."
 			ORDER BY mp_record_prods.id desc");
@@ -742,22 +747,40 @@ class PressController extends Controller
 
 	public function report_kanagata_lifetime(){
 
-		$process = DB::SELECT("SELECT DISTINCT(process_name) FROM `mp_processes` where remark = 'Press'");
+		$process = DB::SELECT("SELECT DISTINCT(process_desc) FROM `mp_processes` where remark = 'Press'");
 
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
+		$first = date('Y-m-01');
+		$now = date('Y-m-d');
 
-		$kanagata_lifetime = db::select("select *,mp_kanagata_logs.id as kanagata_lifetime_id
-			from mp_kanagata_logs
-			join employee_groups on employee_groups.employee_id = mp_kanagata_logs.pic
-			join employees on employee_groups.employee_id = employees.employee_id
-			join mp_materials on mp_kanagata_logs.material_number= mp_materials.material_number
-			ORDER BY mp_kanagata_logs.id desc");
+		$username = Auth::user()->username;
+
+		$kanagata = MpKanagata::where('process', '=', 'Forging')
+		->select('mp_kanagatas.material_number', 'mp_kanagatas.material_name', 'mp_kanagatas.material_description','mp_kanagatas.punch_die_number', 'mp_kanagatas.id', 'mp_kanagatas.part')
+		->distinct()
+		->get();
+
+		// $kanagata_lifetime = db::select("SELECT
+		// 	*,
+		// 	mp_kanagata_logs.id AS kanagata_lifetime_id 
+		// FROM
+		// 	mp_kanagata_logs
+		// 	JOIN employee_groups ON employee_groups.employee_id = mp_kanagata_logs.pic
+		// 	JOIN employees ON employee_groups.employee_id = employees.employee_id
+		// 	JOIN mp_materials ON mp_kanagata_logs.material_number = mp_materials.material_number 
+		// WHERE
+		// 	DATE( mp_kanagata_logs.date ) BETWEEN '".$first."' 
+		// 	AND '".$now."' 
+		// ORDER BY
+		// 	mp_kanagata_logs.id DESC");
 
 		$data = array(
                 	'process' => $process,
                 	'role_code' => Auth::user()->role_code,
-                	'kanagata_lifetime' => $kanagata_lifetime,
+                	// 'kanagata_lifetime' => $kanagata_lifetime,
+                	'kanagata' => $kanagata,
+                	'username' => $username,
                 	'machine' => $machine);
 		return view('press.report_kanagata_lifetime',$data)->with('page', 'Press Machine Kanagata Lifetime')->with('title_jp', "??");
 	}
@@ -785,15 +808,21 @@ class PressController extends Controller
 	        }
 	      }
 
-		$process = DB::SELECT("SELECT DISTINCT(process_name) FROM `mp_processes` where remark = 'Press'");
+	    $username = Auth::user()->username;
+
+	    $kanagata = MpKanagata::where('process', '=', 'Forging')
+		->select('mp_kanagatas.material_number', 'mp_kanagatas.material_name', 'mp_kanagatas.material_description','mp_kanagatas.punch_die_number', 'mp_kanagatas.id', 'mp_kanagatas.part')
+		->distinct()
+		->get();
+
+		$process = DB::SELECT("SELECT DISTINCT(process_desc) FROM `mp_processes` where remark = 'Press'");
 
 		$machine = DB::SELECT("SELECT * FROM `mp_machines` where remark = 'Press'");
 
 
 		$kanagata_lifetime = db::select("select *,mp_kanagata_logs.id as kanagata_lifetime_id
 			from mp_kanagata_logs
-			join employee_groups on employee_groups.employee_id = mp_kanagata_logs.pic
-			join employees on employee_groups.employee_id = employees.employee_id
+			join employee_syncs on mp_kanagata_logs.pic = employee_syncs.employee_id
 			join mp_materials on mp_kanagata_logs.material_number= mp_materials.material_number
 			".$date."
 			ORDER BY mp_kanagata_logs.id desc");
@@ -802,6 +831,8 @@ class PressController extends Controller
                 	'process' => $process,
                 	'role_code' => Auth::user()->role_code,
                 	'kanagata_lifetime' => $kanagata_lifetime,
+					'username' => $username,
+					'kanagata' => $kanagata,
                 	'machine' => $machine);
 		return view('press.report_kanagata_lifetime',$data)->with('page', 'Press Machine Kanagata Lifetime')->with('title_jp', "??");
 	}
@@ -1004,13 +1035,9 @@ class PressController extends Controller
                 $kanagata_lifetime->die_total = $request->get('die_total');
                 $kanagata_lifetime->save();
 
-            // return redirect('index/interview/details/'.$interview_id)
-            //   ->with('page', 'Interview Details')->with('status', 'Participant has been updated.');
                $response = array(
                 'status' => true,
               );
-              // return redirect('index/interview/details/'.$interview_id)
-              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
               return Response::json($response);
             }catch(\Exception $e){
               $response = array(
@@ -1044,14 +1071,9 @@ class PressController extends Controller
 	                $kanagata_lifetime2->save();
 	        	}
         	}
-
-            // return redirect('index/interview/details/'.$interview_id)
-            //   ->with('page', 'Interview Details')->with('status', 'Participant has been updated.');
                $response = array(
                 'status' => true,
               );
-              // return redirect('index/interview/details/'.$interview_id)
-              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
               return Response::json($response);
             }catch(\Exception $e){
               $response = array(
@@ -1060,5 +1082,44 @@ class PressController extends Controller
               );
               return Response::json($response);
             }
+    }
+
+    public function create_kanagata_lifetime(Request $request)
+    {
+    	try {
+    		$id_user = Auth::id();
+
+    		MpKanagataLog::create([
+                'date' => $request->get('date'),
+                'pic' => $request->get('pic'),
+                'product' => $request->get('product'),
+                'machine' => $request->get('machine'),
+                'shift' => $request->get('shift'),
+                'material_number' => $request->get('material_number'),
+                'process' => 'Forging',
+                'punch_number' => $request->get('punch_number'),
+                'die_number' => $request->get('die_number'),
+                'start_time' => $request->get('start_time'),
+                'end_time' => $request->get('end_time'),
+                'punch_value' => $request->get('punch_value'),
+                'die_value' => $request->get('die_value'),
+                'punch_total' => $request->get('punch_total'),
+                'die_total' => $request->get('die_total'),
+                'punch_status' => 'Running',
+                'die_status' => 'Running',
+                'created_by' => $id_user
+          ]);
+
+		  $response = array(
+            'status' => true,
+          );
+          return Response::json($response);
+    	} catch (QueryException $e) {
+    		$response = array(
+               'status' => false,
+               'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+    	}
     }
 }

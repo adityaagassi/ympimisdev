@@ -40,6 +40,11 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
 	<h1>
 		{{ $page }} <span class="text-purple">??</span>
+		@if($role_code == 'PROD' || $role_code == 'MIS')
+			<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+		        Create
+		    </button>
+		@endif
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -48,12 +53,24 @@ table.table-bordered > tfoot > tr > th{
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Processing, Please Wait! <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	@if (session('status'))
 		<div class="alert alert-success alert-dismissible">
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 			<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
 			{{ session('status') }}
 		</div>   
+	@endif
+	@if (session('error'))
+		<div class="alert alert-warning alert-dismissible">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<h4> Warning!</h4>
+			{{ session('error') }}
+		</div>
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
@@ -110,7 +127,7 @@ table.table-bordered > tfoot > tr > th{
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Kanagata</label>
-									<select class="form-control select2" name="kanagata" id="kanagata" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
+									<select class="form-control select3" name="kanagata" id="kanagata" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
 					                  <option value=""></option>
 					                  <option value="Punch">Punch</option>
 					                  <option value="Dies">Dies</option>
@@ -144,7 +161,7 @@ table.table-bordered > tfoot > tr > th{
 							<div class="col-md-6">
 								<div class="form-group">
 									<label>Kanagata</label>
-									<select class="form-control select2" name="kanagata_reset" id="kanagata_reset" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
+									<select class="form-control select3" name="kanagata_reset" id="kanagata_reset" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
 					                  <option value=""></option>
 					                  <option value="Punch">Punch</option>
 					                  <option value="Dies">Dies</option>
@@ -198,28 +215,30 @@ table.table-bordered > tfoot > tr > th{
 				            </thead>
 				            <tbody id="tableTroubleList">
 				            <?php $no = 1 ?>
-				              @foreach($kanagata_lifetime as $kanagata_lifetime)
-				              <tr>
-				              	<td>{{ $no }}</td>
-				                <td>{{$kanagata_lifetime->name}}</td>
-				                <td>{{$kanagata_lifetime->date}}</td>
-				                <td>{{$kanagata_lifetime->shift}}</td>
-				                <td>{{$kanagata_lifetime->product}}</td>
-				                <td>{{$kanagata_lifetime->material_number}}</td>
-				                <td>{{$kanagata_lifetime->material_name}}</td>
-				                <td>{{$kanagata_lifetime->process}}</td>
-				                <td>{{$kanagata_lifetime->machine}}</td>
-				                <td>{{$kanagata_lifetime->punch_number}}</td>
-				                <td>{{$kanagata_lifetime->die_number}}</td>
-				                <td>{{$kanagata_lifetime->punch_value}}</td>
-				                <td>{{$kanagata_lifetime->die_value}}</td>
-				                <td>{{$kanagata_lifetime->punch_total}}</td>
-				                <td>{{$kanagata_lifetime->die_total}}</td>
-				                <td>{{$kanagata_lifetime->punch_status}}</td>
-				                <td>{{$kanagata_lifetime->die_status}}</td>
-				              </tr>
-				              <?php $no++ ?>
-				              @endforeach
+				              <?php if (ISSET($kanagata_lifetime)): ?>
+				              	@foreach($kanagata_lifetime as $kanagata_lifetime)
+					              <tr>
+					              	<td>{{ $no }}</td>
+					                <td>{{$kanagata_lifetime->name}}</td>
+					                <td>{{$kanagata_lifetime->date}}</td>
+					                <td>{{$kanagata_lifetime->shift}}</td>
+					                <td>{{$kanagata_lifetime->product}}</td>
+					                <td>{{$kanagata_lifetime->material_number}}</td>
+					                <td>{{$kanagata_lifetime->material_name}}</td>
+					                <td>{{$kanagata_lifetime->process}}</td>
+					                <td>{{$kanagata_lifetime->machine}}</td>
+					                <td>{{$kanagata_lifetime->punch_number}}</td>
+					                <td>{{$kanagata_lifetime->die_number}}</td>
+					                <td>{{$kanagata_lifetime->punch_value}}</td>
+					                <td>{{$kanagata_lifetime->die_value}}</td>
+					                <td>{{$kanagata_lifetime->punch_total}}</td>
+					                <td>{{$kanagata_lifetime->die_total}}</td>
+					                <td>{{$kanagata_lifetime->punch_status}}</td>
+					                <td>{{$kanagata_lifetime->die_status}}</td>
+					              </tr>
+					              <?php $no++ ?>
+					              @endforeach
+				              <?php endif ?>
 				            </tbody>
 				            <tfoot>
 				              <tr>
@@ -250,6 +269,114 @@ table.table-bordered > tfoot > tr > th{
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="modal fade" id="create-modal">
+	  <div class="modal-dialog modal-lg" style="width: 1200px">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	        <h4 class="modal-title" align="center"><b>Create Kanagata Lifetime</b></h4>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="box-body">
+	        <div>
+	          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
+	            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+		            <div class="form-group">
+		              <label for="">Date</label>
+					  <input type="text" name="inputdate" id="inputdate" class="form-control" value="{{date('Y-m-d')}}" readonly required="required" title="">
+		            </div>
+		            <div class="form-group">
+		             <label>PIC<span class="text-red">*</span></label>
+		                <input type="text" name="inputpic" id="inputpic" class="form-control" value="{{$username}}" readonly required="required" title="">
+		            </div>
+		            <input type="hidden" name="inputshift" id="inputshift" class="form-control" value="Shift 1" readonly required="required" title="">
+		            <input type="hidden" name="inputstart_time" id="inputstart_time" class="form-control" value="{{date('Y-m-d H:i:s')}}" readonly required="required" title="">
+		            <div class="form-group">
+		             <label>Process<span class="text-red">*</span></label>
+		                <select class="form-control" name="inputprocess" id="inputprocess" style="width: 100%;" data-placeholder="Choose a Process..." required>
+		                	<option value="Choose a Process...">Choose a Process...</option>
+		                	@foreach($process as $process)
+		                		<option value="{{$process->process_desc}}">{{$process->process_desc}}</option>
+		                	@endforeach
+		                </select>
+		            </div>
+		            <div class="form-group">
+		             <label>Machine<span class="text-red">*</span></label>
+		                <select class="form-control" name="inputmachine" id="inputmachine" style="width: 100%;" data-placeholder="Choose a Machine..." required>
+		                	<option value="Choose a Machine...">Choose a Machine...</option>
+		                	<option value="Amada 1">#1</option>
+		                	<option value="Amada 2">#2</option>
+		                	<option value="Amada 3">#3</option>
+		                	<option value="Amada 4">#4</option>
+		                	<option value="Amada 5">#5</option>
+		                	<option value="Amada 6">#6</option>
+		                	<option value="Amada 7">#7</option>
+		                </select>
+		            </div>
+	            </div>
+	            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+	            	<div class="form-group">
+		             <label>Kanagata<span class="text-red">*</span></label>
+		                <select class="form-control select2" onchange="getkanagata(this.value)" name="inputkanagata" id="inputkanagata" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
+		                	<option value=""></option>
+		                	@foreach($kanagata as $kanagata)
+		                		<option value="{{$kanagata->id}}">{{$kanagata->part}} - {{$kanagata->material_number}} - {{$kanagata->material_name}} - {{$kanagata->material_description}} - {{$kanagata->punch_die_number}}</option>
+		                	@endforeach
+		                </select>
+		            </div>
+		            <div class="form-group">
+		             <label>Part Type<span class="text-red">*</span></label>
+		                <input type="text" name="inputpart" id="inputpart" class="form-control" readonly required="required" title="" placeholder="Part Type">
+		            </div>
+		            <div class="form-group">
+		             <label>Product<span class="text-red">*</span></label>
+		                <input type="text" name="inputproduct" id="inputproduct" class="form-control" readonly required="required" title="" placeholder="Product">
+		            </div>
+	            	<div class="form-group">
+		             <label>Material Number<span class="text-red">*</span></label>
+		                <input type="text" name="inputmaterial_number" id="inputmaterial_number" class="form-control" readonly required="required" title="" placeholder="Material Number">
+		            </div>
+		            <div class="form-group">
+		             <label>Material Description<span class="text-red">*</span></label>
+		                <input type="text" name="inputmaterial_description" id="inputmaterial_description" class="form-control" readonly required="required" title="" placeholder="Material Description">
+		            </div>
+		            <div class="form-group">
+		             <label>Kanagata Number<span class="text-red">*</span></label>
+		                <input type="text" name="inputpunch_die_number" id="inputpunch_die_number" class="form-control" readonly required="required" title="" placeholder="Kanagata Number">
+		            </div>
+	            </div>
+	            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+	            	<div class="form-group" id="punchvalue">
+		             <label>Punch Value<span class="text-red">*</span></label>
+		                <input type="text" name="inputpunch_value" onkeyup="inputpunch(this.value)" id="inputpunch_value" class="form-control" required="required" title="" placeholder="Punch Value">
+		            </div>
+		            <div class="form-group" id="punchtotal">
+		             <label>Punch Total<span class="text-red">*</span></label>
+		                <input type="text" name="inputpunch_total" id="inputpunch_total" class="form-control" readonly required="required" title="" placeholder="Punch Total">
+		            </div>
+	            	<div class="form-group" id="dievalue">
+		             <label>Dies Value<span class="text-red">*</span></label>
+		                <input type="text" name="inputdie_value" id="inputdie_value" onkeyup="inputdie(this.value)" class="form-control" required="required" title="" placeholder="Dies Value">
+		            </div>
+		            <div class="form-group" id="dietotal">
+		             <label>Dies Total<span class="text-red">*</span></label>
+		                <input type="text" name="inputdie_total" id="inputdie_total" class="form-control" readonly required="required" title="" placeholder="Dies Total">
+		            </div>
+	            </div>
+	          </div>
+	          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	          	<div class="modal-footer">
+	            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+	            <input type="submit" value="Submit" onclick="create()" class="btn btn-primary">
+	          </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
 	</div>
 	<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
@@ -424,13 +551,136 @@ table.table-bordered > tfoot > tr > th{
 			todayHighlight: true
 		});
 		$('.select2').select2({
+			dropdownParent: $('#create-modal'),
 			language : {
 				noResults : function(params) {
-					return "There is no date";
+					return "There is no Data";
+				}
+			}
+		});
+		$('.select3').select2({
+			language : {
+				noResults : function(params) {
+					return "There is no Data";
 				}
 			}
 		});
 	});
+
+	function create() {
+		$("#loading").show();
+		var data = {
+			date:$('#inputdate').val(),
+			pic:$('#inputpic').val(),
+			shift:$('#inputshift').val(),
+			product:$('#inputproduct').val(),
+			material_number:$('#inputmaterial_number').val(),
+			process:$('#inputprocess').val(),
+			machine:$('#inputmachine').val(),
+			punch_number:$('#inputpunch_die_number').val(),
+			die_number:$('#inputpunch_die_number').val(),
+			punch_value:$('#inputpunch_value').val(),
+			die_value:$('#inputdie_value').val(),
+			punch_total:$('#inputpunch_total').val(),
+			die_total:$('#inputdie_total').val(),
+			start_time:$('#inputstart_time').val(),
+			end_time:'{{date("Y-m-d H:i:s")}}',
+			punch_status:'Running',
+			die_status:'Running',
+		}
+
+		$.post('{{ url("input/press/kanagata_lifetime") }}', data, function(result, status, xhr){
+			if(result.status){
+				$("#loading").hide();
+				$("#create-modal").modal('hide');
+				$('#inputdate').val("{{date('Y-m-d')}}");
+				$('#inputpic').val("{{$username}}");
+				$('#inputpart').val("");
+				$('#inputmaterial_description').val("");
+				$('#inputshift').val("");
+				$('#inputproduct').val("");
+				$('#inputmaterial_number').val("");
+				$("#inputkanagata").prop('selectedIndex', 0).change();
+				$("#inputprocess").prop('selectedIndex', 0).change();
+				$("#inputmachine").prop('selectedIndex', 0).change();
+				$('#inputpunch_die_number').val("");
+				$('#inputpunch_die_number').val("");
+				$('#inputpunch_value').val("");
+				$('#inputdie_value').val("");
+				$('#inputpunch_total').val("");
+				$('#inputdie_total').val("");
+				$('#inputstart_time').val("");
+				openSuccessGritter('Success','Kanagata Lifetime has been created');
+				window.location.reload();
+			} else {
+				audio_error.play();
+				openErrorGritter('Error','Create Kanagata Lifetime Failed');
+			}
+		});
+	}
+
+	function getkanagata(id) {
+		var data = {
+			id:id
+		}
+		$.get('{{ url("fetch/press/get_kanagata") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#inputpart').val(result.lists.part);
+				$('#inputproduct').val(result.lists.product);
+				$('#inputmaterial_number').val(result.lists.material_number);
+				$('#inputmaterial_description').val(result.lists.material_description);
+				$('#inputpunch_die_number').val(result.lists.punch_die_number);
+				if (result.lists.part == 'PUNCH' || result.lists.part == 'PUNCH FLAT') {
+					$.ajax({
+		                url: "{{ route('kanagata_lifetime.getkanagatalifetime') }}?kanagata=" + result.lists.part +"&kanagata_number="+result.lists.punch_die_number,
+		                method: 'GET',
+		                success: function(data) {
+		                  var json = data;
+		                  var data = data.data;
+		                  // $('#punchvalue').show();
+		                  // $('#punchtotal').show();
+		                  // $('#dievalue').hide();
+		                  // $('#dietotal').hide();
+		                  $('#inputdie_value').attr('readonly', true).val(data.die_value);
+		                  $('#inputdie_total').val(data.die_total);
+		                  $('#inputpunch_value').attr('readonly', false).val("");
+		                  $('#inputpunch_total').val(0);
+		                }
+		            });
+				}else if(result.lists.part == 'DIE'){
+					$.ajax({
+		                url: "{{ route('kanagata_lifetime.getkanagatalifetime') }}?kanagata=" + result.lists.part +"&kanagata_number="+result.lists.punch_die_number,
+		                method: 'GET',
+		                success: function(data) {
+		                  var json = data;
+		                  var data = data.data;
+		                  // $('#punchvalue').hide();
+		                  // $('#punchtotal').hide();
+		                  // $('#dievalue').show();
+		                  // $('#dietotal').show();
+		                  $('#inputpunch_value').attr('readonly', true).val(data.punch_value);
+		                  $('#inputpunch_total').val(data.punch_total);
+		                  $('#inputdie_value').attr('readonly', false).val("");
+		                  $('#inputdie_total').val(0);
+		                }
+		            });
+				}
+			}
+			else{
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+				$('#operator').val('');
+			}
+		});
+	}
+
+	function inputpunch(value) {
+		$('#inputpunch_total').val(value);
+	}
+
+	function inputdie(value) {
+		$('#inputdie_total').val(value);
+	}
 
 	function edit_kanagata(url,kanagata,kanagata_number) {
 		if (kanagata_number === '' || kanagata === '') {
@@ -507,12 +757,14 @@ table.table-bordered > tfoot > tr > th{
 
     function reset(kanagata,kanagata_number) {
     	if (confirm('Apakah Anda ingin RESET Kanagata?')) {
+    		$("#loading").show();
 			var data = {
 				kanagata:kanagata,
 				kanagata_number:kanagata_number
 			}
 			$.post('{{ url("index/kanagata/reset") }}', data, function(result, status, xhr){
 				if(result.status){
+					$("#loading").hide();
 					openSuccessGritter('Success','Kanagata Lifetime has been reset');
 					window.location.reload();
 				} else {

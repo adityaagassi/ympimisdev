@@ -1079,8 +1079,7 @@ Route::post('purchase_requisition/notapprove/{id}', 'AccountingController@reject
 //Purchase Order
 Route::get('purchase_order', 'AccountingController@purchase_order');
 Route::get('fetch/purchase_order', 'AccountingController@fetch_purchase_order');
-Route::get('purchase_order/create', 'AccountingController@create_purchase_order');
-Route::post('purchase_order/create_post', 'AccountingController@create_purchase_order_post');
+Route::post('create/purchase_order', 'AccountingController@create_purchase_order');
 Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
 Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
 
@@ -2690,6 +2689,7 @@ Route::post('index/press/store_vn', 'PressController@store_vn');
 Route::post('index/press/store_kanagata', 'PressController@store_kanagata');
 Route::post('index/press/store_trouble', 'PressController@store_trouble');
 Route::post('index/press/finish_trouble', 'PressController@finish_trouble');
+Route::post('input/press/kanagata_lifetime', 'PressController@create_kanagata_lifetime');
 //Display Press
 Route::get('index/press/monitoring', 'PressController@monitoring');
 Route::get('fetch/press/monitoring', 'PressController@fetchMonitoring');

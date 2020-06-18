@@ -518,18 +518,14 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span style="font-weight: bold;">Fire Extinguisher (??)</span>
-                                    <br>
-                                    <a href="{{ secure_url("index/maintenance/aparCheck") }}">
-                                        <i class="fa fa-caret-right"></i> Check Tools (??)
-                                    </a>
+                                    <span style="font-weight: bold;">Utility (??)</span>
                                     <br>
                                     <a href="{{ url("index/maintenance/apar") }}">
-                                        <i class="fa fa-caret-right"></i> Tools Monitoring (??)
+                                        <i class="fa fa-caret-right"></i> Utility Monitoring (??)
                                     </a>
                                     <br>
                                     <a href="{{ secure_url("/index/maintenance/apar/expire") }}">
-                                        <i class="fa fa-caret-right"></i> Expired List (??)
+                                        <i class="fa fa-caret-right"></i> Expired Utility List (??)
                                     </a>
                                     <br>
                                     <a href="{{ url("index/maintenance/apar/resume") }}">

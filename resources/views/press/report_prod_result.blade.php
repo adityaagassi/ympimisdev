@@ -129,7 +129,8 @@
 										</thead>
 										<tbody id="tableTroubleList">
 											<?php $no = 1 ?>
-											@foreach($prod_result as $prod_result)
+											<?php if (ISSET($prod_result)): ?>
+												@foreach($prod_result as $prod_result)
 											<tr>
 												<td>{{ $no }}</td>
 												<td>{{$prod_result->name}}</td>
@@ -177,6 +178,7 @@
 					</tr>
 					<?php $no++ ?>
 					@endforeach
+											<?php endif ?>
 				</tbody>
 				<tfoot>
 					<tr>
