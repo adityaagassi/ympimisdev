@@ -71,7 +71,7 @@ class MaintenanceController extends Controller
 			'noPart' => $job_order->noPart,
 			'finished' => $job_order->finished,
 			'canceled' => $job_order->canceled,
-		))->with('page', 'Maintenance Form')->with('head', 'Maintenance');	
+		))->with('page', 'Maintenance Form')->with('head2', 'SPK')->with('head', 'Maintenance');	
 	}
 
 	public function indexMaintenanceList()
@@ -95,7 +95,7 @@ class MaintenanceController extends Controller
 			'statuses' => $statuses,
 			'employees' => $employees,
 			'mt_employees' => $this->mt_employee
-		))->with('page', 'Maintenance List')->with('head', 'Maintenance');	
+		))->with('page', 'Maintenance List')->with('head2', 'SPK')->with('head', 'Maintenance');	
 	}
 
 	public function indexSPK()
@@ -112,7 +112,7 @@ class MaintenanceController extends Controller
 			'title_jp' => $title_jp,
 			'employee_id' => Auth::user()->username,
 			'name' => $employee->name
-		))->with('page', 'SPK')->with('head', 'Maintenance');	
+		))->with('page', 'SPK')->with('head2', 'SPK')->with('head', 'Maintenance');	
 	}
 
 	public function indexDangerNote($order_no)
@@ -148,7 +148,7 @@ class MaintenanceController extends Controller
 
 	public function indexApar()
 	{
-		$title = 'Maintenance APAR Monitoring';
+		$title = 'Utility Monitoring';
 		$title_jp = '??';
 
 		$location = Utility::where('remark', '=', 'APAR')
@@ -161,12 +161,12 @@ class MaintenanceController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'location' => $location
-		))->with('page', 'APAR')->with('head', 'Maintenance');
+		))->with('page', 'APAR')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
 	public function indexAparCheck()
 	{
-		$title = 'Maintenance APAR Check';
+		$title = 'Utility Check';
 		$title_jp = '??';
 
 		$employee = EmployeeSync::where('employee_id', '=', Auth::user()->username)
@@ -184,12 +184,12 @@ class MaintenanceController extends Controller
 			'employee_id' => Auth::user()->username,
 			'name' => $employee->name,
 			'check_list' => $check
-		))->with('page', 'APAR Check')->with('head', 'Maintenance');
+		))->with('page', 'APAR Check')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
 	public function indexAparExpire()
 	{
-		$title = 'Maintenance APAR Expired List';
+		$title = 'Utility Expired List';
 		$subtitle = 'APAR That will be expire';
 		$title_jp = '??';
 
@@ -202,7 +202,7 @@ class MaintenanceController extends Controller
 			'title_jp' => $title_jp,
 			'subtitle' => $subtitle,
 			'check_list' => $check
-		))->with('page', 'APAR expired')->with('head', 'Maintenance');
+		))->with('page', 'APAR expired')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
 	public function indexAparTool()
@@ -219,7 +219,7 @@ class MaintenanceController extends Controller
 			'title_jp' => $title_jp,
 			'locations' => $locations,
 			'types' => $types
-		))->with('page', 'APAR')->with('head', 'Maintenance');
+		))->with('page', 'APAR')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
 	public function indexAparResume()
@@ -230,7 +230,7 @@ class MaintenanceController extends Controller
 		return view('maintenance.apar.aparResume', array(
 			'title' => $title,
 			'title_jp' => $title_jp
-		))->with('page', 'APAR')->with('head', 'Maintenance');
+		))->with('page', 'APAR')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
 	public function indexAparUses()
@@ -247,12 +247,12 @@ class MaintenanceController extends Controller
 			'title_jp' => $title_jp,
 			'employee_id' => Auth::user()->username,
 			'name' => $employee->name,
-		))->with('page', 'APAR Uses')->with('head', 'Maintenance');
+		))->with('page', 'APAR Uses')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
 	public function indexAparNG()
 	{
-		$title = 'Fire Extinguiser NG List';
+		$title = 'Not Good Utility Check';
 		$title_jp = '??';
 
 		$check = db::table("utility_check_lists")
@@ -263,7 +263,7 @@ class MaintenanceController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'check_list' => $check
-		))->with('page', 'APAR NG')->with('head', 'Maintenance');
+		))->with('page', 'APAR NG')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
 	// -----------------------  END INDEX --------------------
@@ -295,7 +295,7 @@ class MaintenanceController extends Controller
 		->where("operator_id", "=", Auth::user()->username)
 		->where("maintenance_job_orders.remark", "=", 3)
 		->where("maintenance_job_processes.remark", "=", "persiapan")
-		->select("maintenance_job_orders.order_no", "section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual")
+		->select("maintenance_job_orders.order_no", "section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"))
 		->get();
 
 		$response = array(
@@ -642,6 +642,20 @@ class MaintenanceController extends Controller
 		->where('operator_id', '=', Auth::user()->username)
 		->update(['start_actual' => date('Y-m-d H:i:s')]);
 	}
+
+	public function reportingSPK(Request $request)
+	{
+		$data = Input::all();
+		$png_url = "product-".time().".png";
+		$path = public_path().'img/designs/' . $png_url;
+
+		Image::make(file_get_contents($data->base64_image))->save($path);     
+		$response = array(
+			'status' => 'success',
+		);
+		return Response::json( $response  );
+	}
+	// --------------------------  APAR ----------------------
 
 	public function fetchAparList(Request $request)
 	{

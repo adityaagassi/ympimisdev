@@ -690,47 +690,65 @@
 @endif
 
 @if(in_array('S34', $navs))
-@if(isset($head) && $head == "Maintenance")<li class="treeview active">@else<li class="treeview">@endif
+@if(isset($head) && $head == "Maintenance")<li class="treeview active menu-open">@else<li class="treeview">@endif
   <a href="#">
    <i class="fa fa-wrench"></i> <span>Maintenance</span>
    <span class="pull-right-container">
     <i class="fa fa-angle-left pull-right"></i>
   </span>
 </a>
+
 <ul class="treeview-menu">
- @if(isset($page) && $page == "Maintenance Form")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/maintenance/list/user") }}"><i class="fa fa-edit"></i> <span>Create SPK</span></a>
-</li>
+  @if(isset($head2) && $head2 == "SPK")<li class="treeview active menu-open">@else<li class="treeview">@endif
+    <a href="#"><i class="fa fa-circle-o"></i> SPK
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Maintenance Form")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/list/user") }}"><i class="fa fa-edit"></i> <span>Create SPK</span></a>
+      </li>
 
-@if(isset($page) && $page == "Maintenance List")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/maintenance/list_spk") }}"><i class="fa fa-list"></i> <span>SPK List</span></a>
-</li>
+      @if(isset($page) && $page == "Maintenance List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/list_spk") }}"><i class="fa fa-list"></i> <span>SPK List</span></a>
+      </li>
 
-@if(isset($page) && $page == "SPK")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/maintenance/spk") }}"><i class="fa fa-gears"></i> <span>SPK</span></a>
-</li>
+      @if(isset($page) && $page == "SPK")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/spk") }}"><i class="fa fa-gears"></i> <span>SPK</span></a>
+      </li>
+    </ul>
+  </li>
 
-@if(isset($page) && $page == "APAR")<li class="active">@else<li>@endif
-  <a href="{{ url("/index/maintenance/aparTool ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Fire Extinguisher</span></a>
-</li>
+  @if(isset($head2) && $head2 == "Utility")<li class="treeview active menu-open">@else<li class="treeview">@endif
+    <a href="#"><i class="fa fa-cubes"></i> Utility
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "APAR Check")<li class="active">@else<li>@endif
+        <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Utility Check</span></a>
+      </li>
 
-@if(isset($page) && $page == "APAR Check")<li class="active">@else<li>@endif
-  <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Check Extinguisher Tools</span></a>
-</li>
+      @if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
+        <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-ban"></i> <span>Expired Utility List</span></a>
+      </li>
 
-@if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
-  <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-ban"></i> <span>Expired Extinguisher Tools</span></a>
-</li>
+      @if(isset($page) && $page == "APAR NG")<li class="active">@else<li>@endif
+        <a href="{{ secure_url("/index/maintenance/apar/ng_list") }}"><i class="fa  fa-exclamation-triangle"></i> <span>NG Utility Check</span></a>
+      </li>
 
-@if(isset($page) && $page == "APAR NG")<li class="active">@else<li>@endif
-  <a href="{{ secure_url("/index/maintenance/apar/ng_list") }}"><i class="fa  fa-exclamation-triangle"></i> <span>NG Extinguisher Tools</span></a>
-</li>
+      @if(isset($page) && $page == "APAR Uses")<li class="active">@else<li>@endif
+        <a href="{{ secure_url("/index/maintenance/apar/uses") }}"><i class="fa fa-hand-grab-o"></i> <span>Use Fire Extinguisher</span></a>
+      </li>
 
-@if(isset($page) && $page == "APAR Uses")<li class="active">@else<li>@endif
-  <a href="{{ secure_url("/index/maintenance/apar/uses") }}"><i class="fa fa-shield"></i> <span>Use Fire Extinguisher</span></a>
-</li>
-
-  </ul>
+      @if(isset($page) && $page == "APAR")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/aparTool ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Utilities</span></a>
+      </li>
+    </ul>
+  </li>
+</ul>
 </li>
 @endif
 

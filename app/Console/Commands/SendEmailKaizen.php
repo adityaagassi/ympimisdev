@@ -64,7 +64,7 @@ class SendEmailKaizen extends Command
         ->get();
 
         $mail_to2 = db::table('send_emails')
-        ->Where('remark', '=', 'superman')
+        ->Where('remark', '=', 'kaizen')
         ->WhereNull('deleted_at')
         ->select('email')
         ->get();
@@ -162,7 +162,7 @@ Artisan::call('config:clear');
 Artisan::call('config:cache');
 
 if($kzn != null){
-    Mail::to($mail_tos)->cc('nasiqul.ibat@music@yamaha.com')->send(new SendEmail($kaizens, 'kaizen'));
+    Mail::to($mail_tos)->send(new SendEmail($kaizens, 'kaizen'));
 }
 }
 }
