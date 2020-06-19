@@ -329,13 +329,14 @@ class RecorderProcessController extends Controller
         $array_head = $request->get('array_head');
         $array_block = $request->get('array_block');
         $remark = $request->get('remark');
+        $product_type = $request->get('product_type');
 
         $temp = [];
 
         // $ng_temp = PushBlockRecorderTemp::where('mesin',$mesin)->get();
         for($i = 0; $i < 8; $i++){
           for($j = 0; $j < 4; $j++){
-            $temptemp = PushBlockRecorderTemp::where('head',$array_head[$j])->where('block',$array_block[$i])->where('push_block_code',$remark)->get();
+            $temptemp = PushBlockRecorderTemp::where('head',$array_head[$j])->where('block',$array_block[$i])->where('push_block_code',$remark)->where('product_type',$product_type)->get();
             if (count($temptemp) > 0) {
               $temp[] = $temptemp;
             }

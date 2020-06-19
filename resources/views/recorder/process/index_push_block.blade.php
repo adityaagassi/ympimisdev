@@ -1508,7 +1508,8 @@
 		var data = {
 			array_head : array_head,
 			array_block : array_block,
-			remark : '{{$remark}}'
+			remark : '{{$remark}}',
+			product_type:$("#prod_type").text()
 		}
 
 		$.get('{{ url("index/push_block_recorder/get_temp") }}',data,  function(result, status, xhr){
