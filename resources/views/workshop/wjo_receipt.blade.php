@@ -118,23 +118,8 @@
 								<th style="width: 1%;">Action</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="body_selesai">
 						</tbody>
-						<tfoot>
-							<tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-							</tr>
-						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -160,23 +145,8 @@
 								<th style="width: 1%;">Action</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="body_diambil">
 						</tbody>
-						<tfoot>
-							<tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-							</tr>
-						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -263,101 +233,45 @@
 				pemohon:s_pemohon,
 				bagian:s_bagian
 			}
+			$.get('{{ url("fetch/workshop/receipt") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#masterTable').DataTable().clear();
+					$('#masterTable').DataTable().destroy();
+					$('#body_selesai').html("");
 
-			$('#masterTable').DataTable().destroy();
-			$('#masterTable tfoot th').each( function () {
-				var title = $(this).text();
-				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" class="input" />' );
-			});
-			var table = $('#masterTable').DataTable({
-				'dom': 'Bfrtip',
-				'responsive': true,
-				'lengthMenu': [
-				[ 10, 25, 50, -1 ],
-				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-				],
-				'buttons': {
-					buttons:[
-					{
-						extend: 'pageLength',
-						className: 'btn btn-default',
-					},
-					{
-						extend: 'copy',
-						className: 'btn btn-success',
-						text: '<i class="fa fa-copy"></i> Copy',
-						exportOptions: {
-							columns: ':not(.notexport)'
+					var body = "";
+
+					$.each(result.data, function(index, value){
+						body += "<tr onclick='openModal(\""+value.order_no+"\", \""+data.bagian+"\", \""+data.item_name+"\", \""+data.quantity+"\");'>";
+						body += "<td>"+value.tgl_pengajuan+"</td>";
+						body += "<td>"+value.name+"</td>";
+						body += "<td>"+value.bagian+"</td>";
+						body += "<td>"+value.order_no+"</td>";
+						body += "<td>"+value.priority+"</td>";
+						body += "<td>"+value.type+"</td>";
+						body += "<td>"+value.item_name+"</td>";
+						body += "<td>"+value.quantity+"</td>";
+						body += "<td>"+value.target_date+"</td>";
+
+						if(value.attachment != null){
+							tableData += '<td><a href="javascript:void(0)" onClick="downloadAtt(\''+value.attachment+'\')" class="fa fa-paperclip"></a></td>';
+						}else{
+							tableData += '<td>-</td>';							
 						}
-					},
-					{
-						extend: 'excel',
-						className: 'btn btn-info',
-						text: '<i class="fa fa-file-excel-o"></i> Excel',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'print',
-						className: 'btn btn-warning',
-						text: '<i class="fa fa-print"></i> Print',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					]
-				},
-				'paging'        : true,
-				'lengthChange'  : true,
-				'searching'     : true,
-				'ordering'      : true,
-				'info'        : true,
-				'order'       : [],
-				'autoWidth'   : true,
-				"sPaginationType": "full_numbers",
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"processing": true,
-				"serverSide": true,
-				"ajax": {
-					"type" : "get",
-					"url" : "{{ url("fetch/workshop/receipt") }}",
-					"data": data,
-				},
-				"columns": [
-				{ "data": "tgl_pengajuan"},
-				{ "data": "name"},
-				{ "data": "bagian"},
-				{ "data": "order_no"},
-				{ "data": "priority"},
-				{ "data": "type"},
-				{ "data": "item_name"},
-				{ "data": "quantity"},
-				{ "data": "target_date"},
-				{ "data": "att"},
-				{ "data": "action"}
-				]
-			});
 
-			table.columns().every( function () {
-				var that = this;
+						body += "<td><a href='javascript:void(0)' class='btn btn-xs btn-info' onClick='detailReport(\""+value.order_no+"\")'>Details</a></td>";
 
-				$( '.input', this.footer() ).on( 'keyup change', function () {
-					if ( that.search() !== this.value ) {
-						that
-						.search( this.value )
-						.draw();
-					}
-				} );
-			});
+						body += "</tr>";
+					})
 
-			$('#masterTable tfoot tr').appendTo('#masterTable thead');
+					$("#body_selesai").append(body);
+				}
+			})
 
-			$('#masterTable tbody').on('click', 'tr', function () {
-				var data = table.row( this ).data();
-				openModal(data.order_no, data.bagian, data.item_name, data.quantity);
-			} );
+
+
+			
+
 		}
 
 

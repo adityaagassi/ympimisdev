@@ -1960,20 +1960,11 @@ class WorkshopController extends Controller{
 		$datas = $datas->orderBy("workshop_job_orders.created_at","desc")
 		->get();
 
-		return DataTables::of($datas)
-		->addColumn('action', function($datas){
-			return '<a href="javascript:void(0)" class="btn btn-xs btn-info" onClick="detailReport(id)" id="' . $datas->order_no . '">Details</a>';
-		})
-		->addColumn('att', function($datas){
-			if($datas->attachment){
-				return '<a href="javascript:void(0)" id="' . $datas->attachment . '" onClick="downloadAtt(id)" class="fa fa-paperclip"></a>';
-			}
-			else{
-				return '-';
-			}
-		})
-		->rawColumns([ 'att' => 'att','action' => 'action'])
-		->make(true);
+		$response = array(
+			'status' => true,
+			'data' => $datas
+		);
+		return Response::json($response);
 	}
 
 	public function fetchReceivedWJO()
