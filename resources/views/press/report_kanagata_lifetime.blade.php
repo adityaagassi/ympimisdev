@@ -39,7 +39,7 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $page }} <span class="text-purple">??</span>
+		{{ $page }} <span class="text-purple">プレス機金型寿命</span>
 		@if($role_code == 'PROD' || $role_code == 'MIS')
 			<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
 		        Create

@@ -41,7 +41,7 @@ class PressController extends Controller
     public function indexMasterKanagata()
     {
     	$title = 'Master Kanagata';
-		$title_jp = '??';
+		$title_jp = '金型マスター';
 
 		$product = OriginGroup::get();
         $product2 = OriginGroup::get();
@@ -605,7 +605,7 @@ class PressController extends Controller
                 	'process' => $process,
                 	'report_trouble' => $report_trouble,
                 	'machine' => $machine);
-		return view('press.report_press_trouble',$data)->with('page', 'Press Machine Trouble Report')->with('title_jp', "??");
+		return view('press.report_press_trouble',$data)->with('page', 'Press Machine Trouble Report')->with('title_jp', "プレス機トラブルリポート");
 	}
 
 	public function filter_report_trouble(Request $request){

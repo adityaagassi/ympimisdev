@@ -8,8 +8,8 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Leader Task Report<span class="text-purple"> ???</span>
-		<small>{{$dept}} <span class="text-purple"> ??</span></small>
+		Leader Task Report<span class="text-purple"> リーダータスリポート</span>
+		<small>{{$dept}}</small>
 	</h1>
 	<ol class="breadcrumb">
     {{-- <li></li> --}}

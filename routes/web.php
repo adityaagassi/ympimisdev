@@ -1070,11 +1070,14 @@ Route::get('fetch/purchase_requisition/budgetlist', 'AccountingController@fetchB
 Route::get('purchase_requisition/get_detailbudget', 'AccountingController@prgetbudgetdesc')->name('admin.prgetbudgetdesc');
 Route::get('purchase_requisition/detail/{id}', 'AccountingController@detail_purchase_requisition');
 Route::get('purchase_requisition/get_exchange_rate', 'AccountingController@get_exchange_rate');
+Route::get('edit/purchase_requisition', 'AccountingController@edit_purchase_requisition');
 
 //Approval Purchase Requisition
 Route::get('purchase_requisition/verifikasi/{id}', 'AccountingController@verifikasi_purchase_requisition');
 Route::post('purchase_requisition/approval/{id}', 'AccountingController@approval_purchase_requisition');
 Route::post('purchase_requisition/notapprove/{id}', 'AccountingController@reject_purchase_requisition');
+
+
 
 //Purchase Order
 Route::get('purchase_order', 'AccountingController@purchase_order');
@@ -1083,9 +1086,16 @@ Route::post('create/purchase_order', 'AccountingController@create_purchase_order
 Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
 Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
 
+Route::get('edit/purchase_order', 'AccountingController@edit_purchase_order');
+Route::post('update/purchase_order', 'AccountingController@create_purchase_order');
+Route::post('delete/purchase_order_item', 'AccountingController@delete_item_po');
+
+Route::post('update/purchase_order', 'AccountingController@update_purchase_order');
+
 Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
 Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
 Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
+
 
 //investment
 Route::get('investment', 'AccountingController@investment');
@@ -1705,6 +1715,7 @@ Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVari
 
 Route::get('export/stocktaking/inquiry', 'StockTakingController@exportInquiry');
 Route::get('export/stocktaking/variance', 'StockTakingController@exportVariance');
+Route::get('export/stocktaking/official_variance', 'StockTakingController@exportOfficailVariance');
 Route::get('export/stocktaking/upload_sap', 'StockTakingController@exportUploadSAP');
 Route::get('export/stocktaking/log', 'StockTakingController@exportLog');
 
@@ -1717,6 +1728,7 @@ Route::post('fetch/stocktaking/delete_material', 'StockTakingController@deleteMa
 Route::post('fetch/stocktaking/add_material', 'StockTakingController@addMaterial');
 Route::get('fetch/stocktaking/get_storage_location', 'StockTakingController@fetchGetStorageLocation');
 Route::get('fetch/stocktaking/get_store', 'StockTakingController@fetchGetStore');
+Route::get('fetch/stocktaking/check_material', 'StockTakingController@fetchCheckMaterial');
 
 //Summary of Counting
 Route::get('index/stocktaking/summary_of_counting', 'StockTakingController@indexSummaryOfCounting');
@@ -2744,6 +2756,10 @@ Route::get('index/display/guest_room2', 'OfficeClockController@guest_room2');
 Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
 
 //MAINTENANCE
+
+Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
+Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
+
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
 	Route::get('fetch/maintenance/list_spk/user', 'MaintenanceController@fetchMaintenance');
@@ -2761,6 +2777,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDangerNote');
 
 	Route::get('work/maintenance/spk', 'MaintenanceController@startSPK');
+	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
 });
 
 // -----------  APAR -----------
@@ -2797,13 +2814,12 @@ Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_his
 
 Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
 
-Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
-Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
-
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
 Route::get('scan/assembly/operator', 'AssemblyProcessController@scanAssemblyOperator');
+Route::get('scan/assembly/operator_kensa', 'AssemblyProcessController@scanAssemblyOperatorKensa');
 Route::get('scan/assembly/kensa', 'AssemblyProcessController@scanAssemblyKensa');
+Route::get('destroy/assembly/kensa', 'AssemblyProcessController@deleteAssemblyKensa');
 Route::post('input/assembly/kensa', 'AssemblyProcessController@inputAssemblyKensa');
 Route::get('fetch/assembly/ng_detail', 'AssemblyProcessController@showNgDetail');
 Route::get('fetch/assembly/onko', 'AssemblyProcessController@fetchOnko');

@@ -22,8 +22,11 @@ use App\AssemblyFlow;
 use App\AssemblySerial;
 use App\Process;
 use App\Material;
+use App\Assembly;
 use DateTime;
 use App\Libraries\ActMLEasyIf;
+use App\CodeGenerator;
+use App\PlcCounter;
 
 class AssemblyProcessController extends Controller
 {
@@ -76,8 +79,6 @@ class AssemblyProcessController extends Controller
 
 	public function indexFluteStamp(){
 
-		// $models = DB::SELECT('SELECT DISTINCT(model) FROM `materials` where origin_group_code = "041" and category = "FG"');
-
 		$models = db::table('materials')->where('origin_group_code', '=', '041')
 		->where('category', '=', 'FG')
 		->orderBy('model', 'asc')
@@ -95,9 +96,9 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function stampFlute(Request $request){
-		$counter = db::table('plc_counters')
-		->where('origin_group_code', '=', $request->get('origin_group_code'))
+		$counter = PlcCounter::where('origin_group_code', '=', $request->get('origin_group_code'))
 		->first();
+		$auth_id = Auth::id();
 
 		$plc = new ActMLEasyIf(0);
 		$datas = $plc->read_data('D0', 5);
@@ -113,7 +114,8 @@ class AssemblyProcessController extends Controller
 		try{
 			$cek_serial = new AssemblySerial([
 				'serial_number' => $request->get('serial'),
-				'origin_group_code' => $request->get('origin_group_code')
+				'origin_group_code' => $request->get('origin_group_code'),
+				'created_by' => $auth_id
 			]);
 			$cek_serial->save();
 		}
@@ -139,7 +141,7 @@ class AssemblyProcessController extends Controller
 		$material = db::table('materials')->where('model', '=', $request->get('model'))
 		->where('xy', '=', 'SP')->first();
 
-		$log = new AssemblyLog([
+		$log = new AssemblyDetail([
 			'tag' => $tag->tag,
 			'serial_number' => $request->get('serial'),
 			'model' => $request->get('model'),
@@ -153,7 +155,7 @@ class AssemblyProcessController extends Controller
 		]);
 
 		$sp = '';
-		if(count($material) >= 0){
+		if(count($material) > 0){
 			$sp = 'SP';
 		}
 
@@ -167,18 +169,28 @@ class AssemblyProcessController extends Controller
 
 		$tag->serial_number = $request->get('serial');
 		$tag->model = $request->get('model');
-		$serial = db::table('code_generators')->where('note', '=', $request->get('origin_group_code'))->first();
+		$serial = CodeGenerator::where('note', '=', $request->get('origin_group_code'))->first();
 		$serial->index = $serial->index+1;
 		$counter->plc_counter = $datas[0];
 
 		try{
-			DB::transaction(function() use ($log, $inventory, $tag, $serial, $counter){
-				$inventory->save();
-				$log->save();
-				$tag->save();
-				$serial->save();
-				$counter->save();
-			});
+			if($request->get('location') != 'stampkd-process'){
+				DB::transaction(function() use ($log, $inventory, $tag, $serial, $counter){
+					$inventory->save();
+					$log->save();
+					$tag->save();
+					$serial->save();
+					$counter->save();
+				});
+			}
+			else{
+				DB::transaction(function() use ($log, $tag, $serial, $counter){
+					$log->save();
+					$tag->save();
+					$serial->save();
+					$counter->save();
+				});
+			}			
 		}
 		catch(\Exception $e){
 			$response = array(
@@ -187,6 +199,13 @@ class AssemblyProcessController extends Controller
 			);
 			return Response::json($response);
 		}
+
+		$response = array(
+			'status' => true,
+			'status_code' => 'stamp',
+			'message' => 'Stamp berhasil dilakukan',
+		);
+		return Response::json($response);
 	}
 
 	public function scanTagStamp(Request $request){
@@ -234,12 +253,13 @@ class AssemblyProcessController extends Controller
 	}
 
 	public function fetchStampResult(Request $request){
-		$date = date('Y-m-d');
-		$date = '2020-06-15';
+		$now = date('Y-m-d');
+		$first = date('Y-m-d', strtotime("-3 days"));
+		// $date = '2020-06-15';
 
 		$logs = AssemblyLog::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'assembly_logs.operator_id')
 		->where('assembly_logs.origin_group_code', '=', $request->get('origin_group_code'))
-		->where(db::raw('date(assembly_logs.created_at)'), '=', $date)
+		->where(db::raw('date(assembly_logs.created_at)'), '>=', $first)
 		->where('assembly_logs.location', '=', 'stamp-process')
 		->whereOr('assembly_logs.location', '=', 'stampkd-process')
 		->select('assembly_logs.serial_number', 'assembly_logs.model', db::raw('if(location = "stamp-process", "FG", "KD") as category'), 'employee_syncs.name', 'assembly_logs.created_at')
@@ -256,7 +276,7 @@ class AssemblyProcessController extends Controller
 
 	public function indexFlutePrintLabel(){
 		$title = 'Flute Print Packing Labels';
-		$title_jp = '(Flute Print Packing Labels)';
+		$title_jp = 'FLラベル印刷';
 		return view('processes.assembly.flute.print_label', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
@@ -280,35 +300,35 @@ class AssemblyProcessController extends Controller
 
 		if($location == 'perakitan-process'){
 			$title = 'Perakitan Process Flute';
-			$title_jp= '??';
+			$title_jp= 'FL組立';
 		}
 		if($location == 'kariawase-process'){
 			$title = 'Kariawase Process Flute';
-			$title_jp= '??';
+			$title_jp= 'FL仮合わせ';
 		}
 		if($location == 'tanpoawase-process'){
 			$title = 'Tanpo Awase Process Flute';
-			$title_jp= '??';
+			$title_jp= 'FLタンポ合わせ';
 		}
 		if($location == 'tanpoire-process'){
 			$title = 'Tanpoire Process Flute';
-			$title_jp= '??';
+			$title_jp= 'FLタンポ入れ';
 		}
 		if($location == 'kango-process'){
 			$title = 'Kango Process Flute';
-			$title_jp= '??';
+			$title_jp= 'FL嵌合プロセス';
 		}
 		if($location == 'renraku-process'){
 			$title = 'Renraku Process Flute';
-			$title_jp= '??';
+			$title_jp= 'FL連絡プロセス';
 		}
 		if($location == 'fukiage1-process'){
 			$title = 'Fukiage 1 Process Flute';
-			$title_jp= '??';
+			$title_jp= 'FL拭き上げプロセス（1）';
 		}
 		if($location == 'fukiage2-process'){
 			$title = 'Fukiage 2 Process Flute';
-			$title_jp= '??';
+			$title_jp= 'FL拭き上げプロセス（2）';
 		}
 
 		return view('processes.assembly.flute.display.board', array(
@@ -733,55 +753,55 @@ class AssemblyProcessController extends Controller
 
 		if($location == 'kariawase-fungsi'){
 			$title = 'Kariawase Kensa Fungsi Flute';
-			$title_jp= '??';
+			$title_jp= 'FL仮合わせ機能検査';
 		}
 		if($location == 'kariawase-visual'){
 			$title = 'Kariawase Kensa Visual Flute';
-			$title_jp= '??';
+			$title_jp= 'FL仮合わせ外観検査';
 		}
 		if($location == 'perakitanawal-kensa'){
 			$title = 'Perakitan Ulang Kensa Flute';
-			$title_jp= '??';
+			$title_jp= 'FL再組立検査';
 		}
 		if($location == 'tanpoawase-kensa'){
 			$title = 'Tanpo Awase Kensa Flute';
-			$title_jp= '??';
+			$title_jp= 'FLタンポ合わせ検査';
 		}
 		if($location == 'tanpoawase-fungsi'){
 			$title = 'Tanpo Awase Kensa Fungsi Flute';
-			$title_jp= '??';
+			$title_jp= 'FLタンポ合わせ検査（機能検査）';
 		}
 		if($location == 'kango-fungsi'){
 			$title = 'Kango Kensa Fungsi (Gata,Seri) Flute';
-			$title_jp= '??';
+			$title_jp= 'FL嵌合機能検査（ガタ、セリ';
 		}
 		if($location == 'kango-kensa'){
 			$title = 'Kango Kensa Visual Flute';
-			$title_jp= '??';
+			$title_jp= 'FL嵌合外観検査';
 		}
 		if($location == 'renraku-fungsi'){
 			$title = 'Renraku Kensa Fungsi Flute';
-			$title_jp= '??';
+			$title_jp= 'FL連絡機能検査';
 		}
 		if($location == 'qa-fungsi'){
 			$title = 'QA Kensa Fungsi Flute';
-			$title_jp= '??';
+			$title_jp= 'FL機能検査（QA';
 		}
 		if($location == 'fukiage1-visual'){
 			$title = 'Fukiage 1 Kensa Visual Flute';
-			$title_jp= '??';
+			$title_jp= 'FL拭き上げ外観検査';
 		}
 		if($location == 'qa-visual1'){
 			$title = 'QA 1 Kensa Visual Flute';
-			$title_jp= '??';
+			$title_jp= 'FL外観検査（QA1';
 		}
 		if($location == 'qa-visual2'){
 			$title = 'QA 2 Kensa Visual Flute';
-			$title_jp= '??';
+			$title_jp= 'FL外観検査（QA2）';
 		}
 		if($location == 'qa-kensasp'){
 			$title = 'QA Kensa SP';
-			$title_jp= '??';
+			$title_jp= '特注品QA検査';
 		}
 
 		$ng_lists = DB::select("SELECT DISTINCT(ng_name) FROM assembly_ng_lists where origin_group_code = '041' and location = '".$loc_spec."' and process = '".$process."' and deleted_at is null");
@@ -817,6 +837,36 @@ class AssemblyProcessController extends Controller
 		return Response::json($response);
 	}
 
+	public function scanAssemblyOperatorKensa(Request $request){
+
+		$employee = db::table('assembly_operators')->join('employee_syncs','assembly_operators.employee_id','=','employee_syncs.employee_id')->where('tag', '=', dechex($request->get('employee_id')))->first();
+
+		if($employee == null){
+			$response = array(
+				'status' => false,
+				'message' => 'Tag karyawan tidak ditemukan',
+			);
+			return Response::json($response);			
+		}
+		else{
+			$location = $employee->location;
+			$loc = explode("-", $location);
+			$number = $loc[2];
+			$locfix = $loc[0]."-".$loc[1];
+			$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+			$assemblies->online_time = date('Y-m-d H:i:s');
+			$assemblies->operator_id = $employee->employee_id;
+			$assemblies->save();
+			$response = array(
+				'status' => true,
+				'message' => 'Tag karyawan ditemukan',
+				'employee' => $employee,
+				'location' => $location
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function scanAssemblyKensa(Request $request)
 	{
 
@@ -824,22 +874,65 @@ class AssemblyProcessController extends Controller
 
 		$details2 = db::table('assembly_details')->join('employee_syncs','assembly_details.operator_id','=','employee_syncs.employee_id')->where('tag', '=', dechex($request->get('tag')))->where('origin_group_code', '=', '041')->where('assembly_details.deleted_at', '=', null)->orderBy('assembly_details.id', 'asc')->get();
 
+		$employee = db::table('assembly_operators')->join('employee_syncs','assembly_operators.employee_id','=','employee_syncs.employee_id')->where('tag', '=', dechex($request->get('employee_id')))->first();
+
 		if($details == null){
 			$response = array(
 				'status' => false,
 				'message' => 'Serial Number tidak ditemukan',
 			);
 			return Response::json($response);			
+		}else{
+			$location = $employee->location;
+			$loc = explode("-", $location);
+			$number = $loc[2];
+			$locfix = $loc[0]."-".$loc[1];
+			$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+			$assemblies->sedang_tag = strtoupper(dechex($request->get('tag')));
+			$assemblies->sedang_serial_number = $details->serial_number;
+			$assemblies->sedang_model = $details->model;
+			$assemblies->sedang_time = date('Y-m-d H:i:s');
+			$assemblies->save();
+			
+			$response = array(
+				'status' => true,
+				'message' => 'Serial Number ditemukan',
+				'details' => $details,
+				'details2' => $details2,
+				'started_at' => date('Y-m-d H:i:s'),
+			);
+			return Response::json($response);
 		}
+	}
 
-		$response = array(
-			'status' => true,
-			'message' => 'Serial Number ditemukan',
-			'details' => $details,
-			'details2' => $details2,
-			'started_at' => date('Y-m-d H:i:s'),
-		);
-		return Response::json($response);
+	public function deleteAssemblyKensa(Request $request)
+	{
+		$employee = db::table('assembly_operators')->join('employee_syncs','assembly_operators.employee_id','=','employee_syncs.employee_id')->where('tag', '=', dechex($request->get('employee_id')))->first();
+
+		if($employee == null){
+			$response = array(
+				'status' => false,
+				'message' => 'Gagal Hapus Assemblies',
+			);
+			return Response::json($response);			
+		}else{
+			$location = $employee->location;
+			$loc = explode("-", $location);
+			$number = $loc[2];
+			$locfix = $loc[0]."-".$loc[1];
+			$assemblies = Assembly::where('location','=',$locfix)->where('location_number','=',$number)->where('remark','=','OTHER')->first();
+			$assemblies->sedang_tag = null;
+			$assemblies->sedang_serial_number = null;
+			$assemblies->sedang_model = null;
+			$assemblies->sedang_time = null;
+			$assemblies->save();
+			
+			$response = array(
+				'status' => true,
+				'message' => 'Berhasil Hapus Assemblies'
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function showNgDetail(Request $request){
@@ -1062,6 +1155,7 @@ class AssemblyProcessController extends Controller
 			$finished_at = date('Y-m-d H:i:s');
 
 			$ng_temp = AssemblyNgTemp::where('serial_number',$serial_number)->where('employee_id',$employee_id)->where('tag',$tag)->where('origin_group_code','041')->get();
+			$jumlah_ng = 0;
 			foreach ($ng_temp as $ng) {
 				$assembly_ng_log = new AssemblyNgLog([
 					'employee_id' => $request->get('employee_id'),
@@ -1092,6 +1186,7 @@ class AssemblyProcessController extends Controller
 					);
 					return Response::json($response);
 				}
+				$jumlah_ng++;
 			}
 
 			$assembly_invent = AssemblyInventory::where('serial_number',$serial_number)->where('tag',$tag)->where('origin_group_code','041')->first();
@@ -1099,28 +1194,53 @@ class AssemblyProcessController extends Controller
 			$remark = $assembly_invent->remark;
 
 			if ($remark == 'SP') {
-				$assembly_details = AssemblyDetail::where('serial_number',$serial_number)->where('tag',$tag)->where('origin_group_code','041')->delete();
+				if ($jumlah_ng == 0) {
+					$assembly_details = AssemblyDetail::where('serial_number',$serial_number)->where('tag',$tag)->where('origin_group_code','041')->delete();
 
-				$detail = new AssemblyLog([
-					'tag' => strtoupper(dechex($request->get('tag'))),
-					'serial_number' => $request->get('serial_number'),
-					'model' => $request->get('model'),
-					'location' => $request->get('location'),
-					'operator_id' => $request->get('employee_id'),
-					'sedang_start_date' => $started_at,
-					'sedang_finish_date' => $finished_at,
-					'origin_group_code' => $request->get('origin_group_code'),
-					'created_by' => $request->get('employee_id')
-				]);
-				try{
-					$detail->save();
-				}
-				catch(\Exception $e){
-					$response = array(
-						'status' => false,
-						'message' => $e->getMessage(),
-					);
-					return Response::json($response);
+					$detail = new AssemblyLog([
+						'tag' => strtoupper(dechex($request->get('tag'))),
+						'serial_number' => $request->get('serial_number'),
+						'model' => $request->get('model'),
+						'location' => $request->get('location'),
+						'operator_id' => $request->get('employee_id'),
+						'sedang_start_date' => $request->get('started_at'),
+						'sedang_finish_date' => $finished_at,
+						'origin_group_code' => $request->get('origin_group_code'),
+						'created_by' => $request->get('employee_id')
+					]);
+					try{
+						$detail->save();
+					}
+					catch(\Exception $e){
+						$response = array(
+							'status' => false,
+							'message' => $e->getMessage(),
+						);
+						return Response::json($response);
+					}
+				}else{
+					$assembly_details = new AssemblyDetail([
+						'tag' => strtoupper(dechex($request->get('tag'))),
+						'serial_number' => $request->get('serial_number'),
+						'model' => $request->get('model'),
+						'location' => $request->get('location'),
+						'operator_id' => $request->get('employee_id'),
+						'sedang_start_date' => $request->get('started_at'),
+						'sedang_finish_date' => $finished_at,
+						'origin_group_code' => $request->get('origin_group_code'),
+						'created_by' => $request->get('employee_id')
+					]);
+
+					try{
+						$assembly_details->save();
+					}
+					catch(\Exception $e){
+						$response = array(
+							'status' => false,
+							'message' => $e->getMessage(),
+						);
+						return Response::json($response);
+					}
 				}
 
 			}else{
@@ -1130,7 +1250,7 @@ class AssemblyProcessController extends Controller
 					'model' => $request->get('model'),
 					'location' => $request->get('location'),
 					'operator_id' => $request->get('employee_id'),
-					'sedang_start_date' => $started_at,
+					'sedang_start_date' => $request->get('started_at'),
 					'sedang_finish_date' => $finished_at,
 					'origin_group_code' => $request->get('origin_group_code'),
 					'created_by' => $request->get('employee_id')
@@ -1157,11 +1277,13 @@ class AssemblyProcessController extends Controller
 				$location_next = $assembly_inventories->location_next;
 
 				if ($remark == 'SP') {
-					$assembly_inventories->delete();
-					$asstag = AssemblyTag::where('tag',strtoupper(dechex($request->get('tag'))))->first();
-					$asstag->serial_number = null;
-					$asstag->model = null;
-					$asstag->save();
+					if ($jumlah_ng == 0) {
+						$assembly_inventories->delete();
+						$asstag = AssemblyTag::where('tag',strtoupper(dechex($request->get('tag'))))->first();
+						$asstag->serial_number = null;
+						$asstag->model = null;
+						$asstag->save();
+					}
 				}else{
 					$assembly_flow = AssemblyFlow::where('process',$location_next)->where('origin_group_code','041')->first();
 					$id_flow_now = $assembly_flow->id;
@@ -1199,7 +1321,7 @@ class AssemblyProcessController extends Controller
 	{
 		return view('processes.assembly.flute.display.assembly_request', array( 
 			'title' => 'Assembly Request Material',
-			'title_jp' => '??',
+			'title_jp' => '組立依頼材料',
 			'origin_group_code' => $origin_group_code))
 		->with('page', 'Assembly Request Material');
 	}
@@ -1606,7 +1728,7 @@ class AssemblyProcessController extends Controller
 
 	public function indexProductionResult(Request $request){
 		$title = 'Production Result';
-		$title_jp = '??';
+		$title_jp = '生産結果';
 		return view('processes.assembly.flute.display.production_result')
 		->with('page', 'Process Assy FL')
 		->with('head', 'Assembly Process')

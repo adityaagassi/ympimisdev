@@ -8,8 +8,8 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Approval<span class="text-purple"> ??</span>
-		<small>Leader Task Monitoring <span class="text-purple"> ??</span></small>
+		Approval<span class="text-purple"> 承認</span>
+		<small>Leader Task Monitoring <span class="text-purple"> 職長業務管理</span></small>
 	</h1>
 	<ol class="breadcrumb">
     {{-- <li></li> --}}

@@ -224,7 +224,7 @@
 							<input type="hidden" id="onkoFix2" value="ONKO">
 						</div>
 					</div>
-					<input type="text" id="operator_id_before" value="OPID">
+					<input type="hidden" id="operator_id_before" value="OPID">
 
 					<div style="padding-top: 10px">
 						<button id="confNg" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgTemp()" class="btn btn-success">CONFIRM</button>
@@ -268,7 +268,7 @@
 							<input type="hidden" id="value15" value="0">
 							<input type="hidden" id="value16" value="0">
 						</div>
-						<input type="text" id="operator_id_before_tanpoawase" value="OPID">
+						<input type="hidden" id="operator_id_before_tanpoawase" value="OPID">
 						<button id="confNgOnkoTanpoAwase" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgOnkoTanpoAwase()" class="btn btn-success">CONFIRM</button>
 					</div>
 				</div>
@@ -295,15 +295,6 @@
 							<tbody id="ngOnkoBody">
 							</tbody>
 						</table>
-
-						<!-- <div class="col-xs-12" id="onkoBody">
-						</div>
-						<div class="col-xs-12" id="onkoBodyFix" style="display: none;padding-top: 5px">
-							<center><button class="btn btn-primary" style="width:100%;font-size: 20px" onclick="getOnkoChange()" id="onkoFix">ONKO
-							</button></center>
-							<input type="hidden" id="onkoFix2">
-							<input type="hidden" id="idOnko">
-						</div> -->
 						<button id="confNgOnko" style="width: 100%; margin-top: 10px; font-size: 3vw; padding:0; font-weight: bold; border-color: black; color: white;" onclick="confNgOnko()" class="btn btn-success">CONFIRM</button>
 					</div>
 				</div>
@@ -351,10 +342,9 @@
 					employee_id : $("#operator").val()
 				}
 
-				$.get('{{ url("scan/assembly/operator") }}', data, function(result, status, xhr){
+				$.get('{{ url("scan/assembly/operator_kensa") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', result.message);
-						// fetchResult(result.employee.employee_id)
 						$('#modalOperator').modal('hide');
 						$('#op').html(result.employee.employee_id);
 						$('#op2').html(result.employee.name);
@@ -375,7 +365,8 @@
 		var location = $('#loc').val();
 		var data = {
 			tag : tag,
-			location : location
+			location : location,
+			employee_id:$('#operator').val()
 		}
 
 		var tableData = "";
@@ -1057,6 +1048,7 @@
 				$('#tag').prop('disabled', false);
 				$('#tag').focus();
 				deleteNgTemp();
+				deleteAssemblies();
 			}
 			else{
 				var btn = document.getElementById('conf1');
@@ -1077,6 +1069,23 @@
 		$('#tag').prop('disabled', false);
 		$('#tag').focus();
 		deleteNgTemp();
+		deleteAssemblies();
+	}
+
+	function deleteAssemblies() {
+		var data = {
+			employee_id:$('#operator').val()
+		}
+
+		$.get('{{ url("destroy/assembly/kensa") }}', data, function(result, status, xhr){
+			if(result.status){
+				openSuccessGritter('Success', result.message);
+			}
+			else{
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+			}
+		});
 	}
 
 	function deleteNgTemp() {

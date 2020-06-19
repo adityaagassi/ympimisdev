@@ -39,7 +39,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $page }} <span class="text-purple">??</span>
+		{{ $page }} <span class="text-purple">プレス機生産上がり</span>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>

@@ -1595,7 +1595,7 @@ class RecorderProcessController extends Controller
       ->with('page', 'Machine Parameter')
       ->with('head', 'Machine Parameter')
       ->with('title', 'Machine Parameter')
-      ->with('title_jp', '???')
+      ->with('title_jp', '機械条件')
       ->with('mesin', $this->mesin)
       ->with('mesin2', $this->mesin)
       ->with('mesin3', $this->mesin)

@@ -491,7 +491,7 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <span style="font-weight: bold;">Machine Monitoring (??)</span>
+                                    <span style="font-weight: bold;">Machine Monitoring (マシン監視)</span>
                                     <br>
                                     <a href="http://172.17.129.10/zed/dashboard/awal">
                                         <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
@@ -504,7 +504,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span style="font-weight: bold;">SPK (??)</span>
+                                    <span style="font-weight: bold;">SPK (メンテナンス作業依頼書)</span>
                                     <br>
                                     <a href="{{ url("index/maintenance/list/user") }}">
                                         <i class="fa fa-caret-right"></i> Create SPK (作業依頼書を作成)
@@ -518,14 +518,14 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span style="font-weight: bold;">Utility (??)</span>
+                                    <span style="font-weight: bold;">Utility (ユーティリティー)</span>
                                     <br>
                                     <a href="{{ url("index/maintenance/apar") }}">
-                                        <i class="fa fa-caret-right"></i> Utility Monitoring (??)
+                                        <i class="fa fa-caret-right"></i> APAR Check Schedule (消火器・消火栓の点検日程)
                                     </a>
                                     <br>
                                     <a href="{{ secure_url("/index/maintenance/apar/expire") }}">
-                                        <i class="fa fa-caret-right"></i> Expired Utility List (??)
+                                        <i class="fa fa-caret-right"></i> APAR Expired List 消火器・消火栓の使用期限一覧)
                                     </a>
                                     <br>
                                     <a href="{{ url("index/maintenance/apar/resume") }}">
@@ -577,7 +577,7 @@
                                     </a>
                                     <br>
                                     <a href="{{ url("/index/production_report/index/12") }}">
-                                        <i class="fa fa-caret-right"></i> Parts Process (WI-PP) Report (???)
+                                        <i class="fa fa-caret-right"></i> Parts Process (WI-PP) Report (部品加工)
                                     </a>
                                     <br>
                                     <a href="{{ url("/index/press/monitoring") }}">
@@ -623,7 +623,7 @@
                                     </a>
                                     <br>
                                     <a href="{{ url("/index/welding_jig") }}">
-                                        <i class="fa fa-caret-right"></i> Digital Jig Handling ()
+                                        <i class="fa fa-caret-right"></i> Digital Jig Handling (冶具デジタル管理)
                                     </a>
                                     <br>
                                     <a href="{{ url("/index/display/sub_assy/welding_sax?date=&surface2=&key2=&model2=&hpl2=&order2=") }}">
@@ -635,7 +635,7 @@
                                     </a>
                                     <br>
                                     <a href="{{ url("/index/production_report/index/15") }}">
-                                        <i class="fa fa-caret-right"></i> Welding Process Report (???)
+                                        <i class="fa fa-caret-right"></i> Welding Process Report (溶接プロセスリポート)
                                     </a>
                                 </td>
                             </tr>
