@@ -242,7 +242,7 @@
 					var body = "";
 
 					$.each(result.data, function(index, value){
-						body += "<tr onclick='openModal(\""+value.order_no+"\", \""+data.bagian+"\", \""+data.item_name+"\", \""+data.quantity+"\");'>";
+						body += "<tr onclick='openModal(\""+value.order_no+"\", \""+value.bagian+"\", \""+value.item_name+"\", \""+value.quantity+"\");'>";
 						body += "<td>"+value.tgl_pengajuan+"</td>";
 						body += "<td>"+value.name+"</td>";
 						body += "<td>"+value.bagian+"</td>";
@@ -265,12 +265,56 @@
 					})
 
 					$("#body_selesai").append(body);
+
+					$('#masterTable tfoot th').each(function(){
+						var title = $(this).text();
+						$(this).html( '<input style="text-align: center;" class="input1" type="text" placeholder="Search '+title+'" size="8"/>' );
+					});
+
+
+					var table = $('#masterTable').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],
+						'buttons': {
+							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							},
+							]
+						},
+						'paging': true,
+						'lengthChange': true,
+						'searching': true,
+						'ordering': true,
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true,
+					});
+
+
+					table.columns().every( function () {
+						var that = this;
+
+						$( '.input1', this.footer() ).on( 'keyup change', function () {
+							if ( that.search() !== this.value ) {
+								that
+								.search( this.value )
+								.draw();
+							}
+						} );
+					} );
+
+					$('#masterTable tfoot tr').appendTo('#masterTable thead');
 				}
 			})
-
-
-
-			
 
 		}
 
@@ -279,7 +323,7 @@
 			$('#pickedTable').DataTable().destroy();
 			$('#pickedTable tfoot th').each( function () {
 				var title = $(this).text();
-				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+				$(this).html( '<input style="text-align: center;" class="input" type="text" placeholder="Search '+title+'" />' );
 			});
 			var table = $('#pickedTable').DataTable({
 				'dom': 'Bfrtip',
@@ -354,7 +398,7 @@
 			table.columns().every( function () {
 				var that = this;
 
-				$( 'input', this.footer() ).on( 'keyup change', function () {
+				$( '.input', this.footer() ).on( 'keyup change', function () {
 					if ( that.search() !== this.value ) {
 						that
 						.search( this.value )
