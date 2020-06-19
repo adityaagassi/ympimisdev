@@ -8,7 +8,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Press Material Process<span class="text-purple"> ??</span>
+		Press Material Process<span class="text-purple"> プレスマテリアルプロセス</span>
 		<small>WIP Control <span class="text-purple"> 仕掛品管理</span></small>
 	</h1>
 </section>

@@ -101,7 +101,7 @@
 	<section class="content-header">
 		<h1>
 			{{ $page }}
-			<span class="text-purple">プレスマテリアルプロセス</span>
+			<span class="text-purple">{{$title_jp}}</span>
 			<button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#trouble-modal" onclick="troubleMaker()">
 				<b>TROUBLE</b>
 			</button>
