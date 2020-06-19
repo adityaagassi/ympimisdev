@@ -254,9 +254,9 @@
 						body += "<td>"+value.target_date+"</td>";
 
 						if(value.attachment != null){
-							tableData += '<td><a href="javascript:void(0)" onClick="downloadAtt(\''+value.attachment+'\')" class="fa fa-paperclip"></a></td>';
+							body += '<td><a href="javascript:void(0)" onClick="downloadAtt(\''+value.attachment+'\')" class="fa fa-paperclip"></a></td>';
 						}else{
-							tableData += '<td>-</td>';							
+							body += '<td>-</td>';							
 						}
 
 						body += "<td><a href='javascript:void(0)' class='btn btn-xs btn-info' onClick='detailReport(\""+value.order_no+"\")'>Details</a></td>";
