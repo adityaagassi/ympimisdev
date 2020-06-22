@@ -1314,9 +1314,26 @@ class CparController extends Controller
       $datefrom = date("Y-m-d",  strtotime('-30 days'));
       $dateto = date("Y-m-d");
 
+      $last = CparDepartment::where('status', '<>', 'close')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(tanggal) as tanggal'))
+      ->first();
+
       if(strlen($request->get('datefrom')) > 0){
         $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+          }
+        }
       }
+
 
       if(strlen($request->get('dateto')) > 0){
         $dateto = date('Y-m-d', strtotime($request->get('dateto')));
@@ -1518,8 +1535,24 @@ class CparController extends Controller
       $datefrom = date("Y-m-d",  strtotime('-30 days'));
       $dateto = date("Y-m-d");
 
+      $last = CparDepartment::where('status', '<>', 'close')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(tanggal) as tanggal'))
+      ->first();
+
       if(strlen($request->get('datefrom')) > 0){
         $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+          }
+        }
       }
 
       if(strlen($request->get('dateto')) > 0){
