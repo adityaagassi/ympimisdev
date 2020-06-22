@@ -476,7 +476,7 @@
 						tableData += '<tr>';
 
 						if(result.logs[i].in_time == '0000-00-00 00:00:00'){
-							tableData += '<td>-</td>';
+							tableData += '<td>'+ result.logs[i].visited_at +'</td>';
 						}else{
 							tableData += '<td>'+ (result.logs[i].in_time || result.logs[i].visited_at) +'</td>';
 						}
