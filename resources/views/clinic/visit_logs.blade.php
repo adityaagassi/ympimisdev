@@ -474,8 +474,8 @@
 					for (var i = 0; i < result.logs.length; i++) {
 
 						tableData += '<tr>';
-						tableData += '<td>'+ result.logs[i].in_time || result.logs[i].visited_at +'</td>';
-						tableData += '<td>'+ result.logs[i].out_time || '-' +'</td>';
+						tableData += '<td>'+ (result.logs[i].in_time || result.logs[i].visited_at) +'</td>';
+						tableData += '<td>'+ (result.logs[i].out_time || '-') +'</td>';
 						tableData += '<td>'+ result.logs[i].employee_id +'</td>';
 						tableData += '<td>'+ (result.logs[i].name || 'Not Found') +'</td>';
 						tableData += '<td>'+ (result.logs[i].department || 'Not Found') +'</td>';
