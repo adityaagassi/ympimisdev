@@ -548,7 +548,7 @@
 				<div class="box">
 					<div class="box-header with-border">
 						<h4 class="box-title">
-							<i class="fa fa-square"></i><b>「ブカシ県＋ブカシ市」（YMMA・YMPA地区）</b>
+							<i class="fa fa-square"></i><b>「西ジャワ」</b>
 						</h4>
 					</div>
 					<div class="box-body">
@@ -700,7 +700,7 @@
 				<div class="box">
 					<div class="box-header with-border">
 						<h4 class="box-title">
-							<i class="fa fa-square"></i><b>「ブカシ県＋ブカシ市」（YMMA・YMPA地区）</b>
+							<i class="fa fa-square"></i><b>「東ジャワ州」（YMPI・YEMI地区　 駐在員・従業員居住地区）</b>
 						</h4>
 					</div>
 					<div class="box-body">
