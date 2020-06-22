@@ -68,7 +68,7 @@ class WeldingProcessController extends Controller
 
 	public function indexMasterOperator(){
 		$title = 'Master Operator Welding';
-		$title_jp = '??';
+		$title_jp = '溶接作業者マスター';
 
 		$list_op = DB::SELECT("SELECT
 			* 
@@ -99,7 +99,7 @@ class WeldingProcessController extends Controller
 
 		if ($loc == 'hpp-sx') {
 			$title = 'HPP Saxophone Kanban Master';
-			$title_jp = 'HPP ??';
+			$title_jp = 'サックス圧入かんばんマスター';
 			return view('processes.welding.master_kanban', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
@@ -111,7 +111,7 @@ class WeldingProcessController extends Controller
 			))->with('page', 'HPP');
 		}elseif($loc == 'phs-sx'){
 			$title = 'PHS Saxophone Kanban Master';
-			$title_jp = 'PHS ??';
+			$title_jp = 'サックスサーブロー付けかんばんマスター';
 			return view('processes.welding.master_kanban', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
@@ -123,7 +123,7 @@ class WeldingProcessController extends Controller
 			))->with('page', 'PHS');
 		}elseif($loc == 'hsa-sx'){
 			$title = 'HSA Saxophone Kanban Master';
-			$title_jp = 'HSA ??';
+			$title_jp = '集成ロー付けかんばんマスター';
 			return view('processes.welding.master_kanban', array(
 				'title' => $title,
 				'title_jp' => $title_jp,
@@ -138,7 +138,7 @@ class WeldingProcessController extends Controller
 
 	public function indexCurrentWelding(){
 		$title = 'Ongoing Welding';
-		$title_jp = '??';
+		$title_jp = '溶接中';
 
 		return view('processes.welding.display.current_welding', array(
 			'title' => $title,
@@ -152,7 +152,7 @@ class WeldingProcessController extends Controller
 
 	public function indexWeldingKensaJig(){
 		$title = 'Welding Kensa Jig';
-		$title_jp = '??';
+		$title_jp = '検査冶具溶接';
 
 		return view('processes.welding.jig.kensa', array(
 			'title' => $title,
@@ -162,7 +162,7 @@ class WeldingProcessController extends Controller
 
 	public function indexWeldingJigData(){
 		$title = "Wedling Jig Data";
-		$title_jp = "??";
+		$title_jp = "修理冶具溶接";
 
 		return view('processes.welding.jig.data', array(
 			'title' => $title,
@@ -172,7 +172,7 @@ class WeldingProcessController extends Controller
 
 	public function indexEffHandling(){
 		$title = 'Average Working Time';
-		$title_jp = '??';
+		$title_jp = '作業時間の平均';
 		$locations = $this->location_sx;
 
 		return view('processes.welding.display.eff_handling', array(
@@ -184,7 +184,7 @@ class WeldingProcessController extends Controller
 
 	public function indexWeldingAdjustment(){
 		$title = 'Saxophone Welding Adjustment';
-		$title_jp = '??';
+		$title_jp = 'サックス溶接かんばん調整';
 
 		$workstations = db::connection('welding')->select("select distinct ws.ws_name from m_hsa hsa
 			left join m_ws ws on ws.ws_id = hsa.ws_id
@@ -323,15 +323,15 @@ class WeldingProcessController extends Controller
 	public function indexWeldingResume($id){
 		if($id == 'phs-visual-sx'){
 			$title = 'PHS Saxophone NG Report';
-			$title_jp = '??';
+			$title_jp = 'サックスサーブロー付け不良率のリポート';
 		}
 		if($id == 'hsa-visual-sx'){
 			$title = 'HSA Saxophone NG Report';
-			$title_jp = '??';
+			$title_jp = 'サックス集成ロー付け不良率のリポート';
 		}
 		if($id == 'hsa-dimensi-sx'){
 			$title = 'Dimensi Saxophone NG Report';
-			$title_jp = '??';
+			$title_jp = 'サックス寸法不良のリポート';
 		}
 		$fys = $this->fy;
 

@@ -961,7 +961,7 @@ else if(frequency == 'Daily'){
         if(result.act_name[a].activity_name != null){
           head += '<th>'+result.act_name[a].activity_name+'</th>';
           bb += 1;
-          act_type.push(result.act_name[a].activity_type);
+          act_type.push(result.act_name[a].activity_name);
         }
       }
       // console.log(result.act_name);
@@ -972,37 +972,65 @@ else if(frequency == 'Daily'){
         body += '<tr>';
         body += '<td>'+no+'</td>';
         body += '<td>'+result.date[i].week_date+'</td>';
-        if (act_type[0] == 'Cek Area') {
+        if (act_type[0] == 'Cek Kondisi Safety Area Kerja') {
           if(parseInt(result.detail[i].jumlah_area_check) != 0){
             body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_area_check+'</td>';
           }else{
             body += '<td style="background-color: #f7ff59"></td>';
           }
         }
-        if (act_type[0] == 'Pengecekan Foto') {
+        if (act_type[0] == 'PENGECEKAN PACKING FINISH GOOD HARIAN' || act_type[0] == 'PENGECEKAN PACKING KD HARIAN') {
           if(parseInt(result.detail[i].jumlah_daily_check) != 0){
             body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_daily_check+'</td>';
           }else{
             body += '<td style="background-color: #f7ff59"></td>';
           }
         }
-        if (act_type[1] == 'Pengecekan Foto') {
+        if (act_type[0] == 'Cek Alat Pelindung Diri (APD)') {
+          if(parseInt(result.detail[i].jumlah_apd_check) != 0){
+            body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_apd_check+'</td>';
+          }else{
+            body += '<td style="background-color: #f7ff59"></td>';
+          }
+        }
+        if (act_type[0] == 'Cek Alat Pelindung Diri (APD) Cuci Asam') {
+          if(parseInt(result.detail[i].jumlah_apd_check_cuci_asam) != 0){
+            body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_apd_check_cuci_asam+'</td>';
+          }else{
+            body += '<td style="background-color: #f7ff59"></td>';
+          }
+        }
+        if (act_type[1] == 'PENGECEKAN PACKING FINISH GOOD HARIAN' || act_type[1] == 'PENGECEKAN PACKING KD HARIAN') {
           if(parseInt(result.detail[i].jumlah_daily_check) != 0){
             body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_daily_check+'</td>';
           }else{
             body += '<td style="background-color: #f7ff59"></td>';
           }
         }
-        if (act_type[1] == 'Cek Area') {
+        if (act_type[1] == 'Cek Kondisi Safety Area Kerja') {
           if(parseInt(result.detail[i].jumlah_area_check) != 0){
             body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_area_check+'</td>';
+          }else{
+            body += '<td style="background-color: #f7ff59"></td>';
+          }
+        }
+        if (act_type[1] == 'Cek Alat Pelindung Diri (APD)') {
+          if(parseInt(result.detail[i].jumlah_apd_check) != 0){
+            body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_apd_check+'</td>';
+          }else{
+            body += '<td style="background-color: #f7ff59"></td>';
+          }
+        }
+        if (act_type[1] == 'Cek Alat Pelindung Diri (APD) Cuci Asam') {
+          if(parseInt(result.detail[i].jumlah_apd_check_cuci_asam) != 0){
+            body += '<td style="background-color: #4aff77">'+result.detail[i].jumlah_apd_check_cuci_asam+'</td>';
           }else{
             body += '<td style="background-color: #f7ff59"></td>';
           }
         }
         body += '</tr>';
         total_plan += parseInt(result.detail[i].plan) * bb;
-        total_aktual += (parseInt(result.detail[i].jumlah_daily_check) + parseInt(result.detail[i].jumlah_area_check));
+        total_aktual += (parseInt(result.detail[i].jumlah_daily_check) + parseInt(result.detail[i].jumlah_area_check) + parseInt(result.detail[i].jumlah_apd_check) + parseInt(result.detail[i].jumlah_apd_check_cuci_asam));
         plan = result.detail[i].plan * bb;
         no++;
       }

@@ -141,7 +141,7 @@ class ClinicController extends Controller{
 
 	public function indexMaskLog(){
 		$title = "Surgical Mask Log";
-		$title_jp = '??';
+		$title_jp = '';
 
 		return view('clinic.mask_log', array(
 			'title' => $title,
@@ -181,7 +181,7 @@ class ClinicController extends Controller{
 
 	public function indexMedicines(){
 		$title = "Clinic Medicines Data";
-		$title_jp = '??';
+		$title_jp = 'クリニック薬品データ';
 
 		return view('clinic.medicines', array(
 			'title' => $title,
@@ -191,7 +191,7 @@ class ClinicController extends Controller{
 
 	public function indexDiagnose(){
 		$title = 'Patient Diagnosis';
-		$title_jp = '??';
+		$title_jp = '患者見立て';
 		$medicines = ClinicMedicine::select('medicine_name')->get();
 
 		return view('clinic.diagnose', array(
@@ -207,7 +207,7 @@ class ClinicController extends Controller{
 
 	public function indexVisitLog(){
 		$title = 'Clinic Visit Logs';
-		$title_jp = '??';
+		$title_jp = 'クリニック訪問記録';
 		$employees = EmployeeSync::select('employee_id', 'name')->get();
 		$medicines = ClinicMedicine::select('medicine_name')->get();
 		$departments = db::select("SELECT DISTINCT

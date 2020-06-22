@@ -58,7 +58,7 @@ class MiddleProcessController extends Controller
 
 	public function indexOpAnalysis(){
 		$title = 'Buffing Operator Analysis';
-		$title_jp = '??';
+		$title_jp = 'バフ作業者の分析';
 
 		return view('processes.middle.display.op_analysis', array(
 			'title' => $title,
@@ -68,7 +68,7 @@ class MiddleProcessController extends Controller
 
 	public function indexOpAssesment(){
 		$title = 'Operator Evaluation';
-		$title_jp = '??';
+		$title_jp = '作業者の評価';
 
 		return view('processes.middle.display.buffing_op_assesment', array(
 			'title' => $title,
@@ -78,7 +78,7 @@ class MiddleProcessController extends Controller
 
 	public function indexReportBuffingCancelled(){
 		$title = 'Buffing Cancelled Log';
-		$title_jp = '??';
+		$title_jp = 'バフキャンセル記録';
 
 		return view('processes.middle.report.buffing_canceled_log', array(
 			'title' => $title,
@@ -93,6 +93,9 @@ class MiddleProcessController extends Controller
 		if($loc == 'wld'){
 			return view('processes.welding.welding_target')->with('page', 'queue')->with('head', 'Welding target');
 		}
+		if($loc == 'assy_fl'){
+			return view('processes.assembly.flute.assy_fl_target')->with('page', 'queue')->with('head', 'Assembly Flute Target');
+		}
 	}
 
 	public function indexReportPltNg($id){
@@ -100,13 +103,13 @@ class MiddleProcessController extends Controller
 
 		if($id == 'sax'){
 			$title = 'NG Plating Saxophone Report';
-			$title_jp = '??';
+			$title_jp = 'サックスメッキ不良リポート';
 		}elseif ($id == 'fl') {
 			$title = 'NG Plating Flute Report';
-			$title_jp = '??';
+			$title_jp = 'フルートメッキ不良リポート';
 		}elseif ($id == 'cl') {
 			$title = 'NG Plating Clarinet Report';
-			$title_jp = '??';
+			$title_jp = 'クラリネットメッキ不良リポート';
 		}
 
 		return view('processes.middle.report.ng_plating', array(
@@ -119,7 +122,7 @@ class MiddleProcessController extends Controller
 
 	public function indexBuffingOpRanking(){
 		$title = 'Resume NG Rate & Productivity';
-		$title_jp = '??';
+		$title_jp = '生産性と不良率のまとめ';
 
 		return view('processes.middle.display.buffing_op_ranking', array(
 			'title' => $title,
@@ -133,7 +136,7 @@ class MiddleProcessController extends Controller
 	
 	public function indexReportOpTime(){
 		$title = 'Buffing Operator Time';
-		$title_jp = '??';
+		$title_jp = '';
 
 		return view('processes.middle.report.operator_time', array(
 			'title' => $title,
@@ -144,7 +147,7 @@ class MiddleProcessController extends Controller
 
 	public function indexBuffingAdjustment(){
 		$title = 'Saxophone Buffing Adjustment';
-		$title_jp = '??';
+		$title_jp = 'サックスバフかんばん調整';
 
 		$materials = Material::where('mrpc','=','s41')
 		->select('material_number', 'hpl', 'model', 'key', 'material_description')
@@ -162,7 +165,7 @@ class MiddleProcessController extends Controller
 
 	public function indexTrendBuffingOpEff(){
 		$title = 'Daily Buffing Efficiency & NG Rate';
-		$title_jp = '??';
+		$title_jp = 'バフ能率と不良率日報';
 
 		$emps = db::select("select eg.employee_id, e.`name` from employee_groups eg
 			left join employees e on eg.employee_id = e.employee_id
