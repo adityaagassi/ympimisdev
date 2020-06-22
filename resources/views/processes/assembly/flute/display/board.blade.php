@@ -90,25 +90,15 @@
 		<center><h1><b>{{ $page }}</b></h1></center>
 	</span> -->
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-7">
 			<table id="assemblyTable" class="table table-bordered">
 				<thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 16px;">
 					<tr>
 						<th style="width: 0.66%; padding: 0;">WS</th>
 						<th style="width: 0.66%; padding: 0;">Operator</th>
 						<th style="width: 0.66%; padding: 0; background-color:#4ff05a;">Sedang</th>
-						<!-- <th style="width: 0.66%; padding: 0; background-color:#ffd03a">Akan</th> -->
-						<!-- <th style="width: 0.66%; padding: 0;">#1</th>
-						<th style="width: 0.66%; padding: 0;">#2</th>
-						<th style="width: 0.66%; padding: 0;">#3</th>
-						<th style="width: 0.66%; padding: 0;">#4</th>
-						<th style="width: 0.66%; padding: 0;">#5</th>
-						<th style="width: 0.66%; padding: 0;">#6</th>
-						<th style="width: 0.66%; padding: 0;">#7</th>
-						<th style="width: 0.66%; padding: 0;">#8</th>
-						<th style="width: 0.66%; padding: 0;">#9</th>
-						<th style="width: 0.66%; padding: 0;">#10</th>
-						<th style="width: 0.66%; padding: 0;">Jumlah</th> -->
+						<th style="width: 0.66%; padding: 0; background-color:#4ff05a;">Perolehan</th>
+						<th style="width: 0.66%; padding: 0; background-color:#4ff05a;">NG</th>
 					</tr>
 				</thead>
 				<tbody id="assemblyTableBody">
@@ -116,6 +106,18 @@
 				<tfoot>
 				</tfoot>
 			</table>
+		</div>
+		<div class="col-xs-5">
+			<div id="container" style="width:100%; height:300px;"></div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="box box-widget">
+						<div class="box-footer">
+							<div class="row" id="resume"></div>
+						</div>
+					</div>
+				</div>
+			</div>					
 		</div>
 	</div>
 
@@ -155,6 +157,15 @@
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/highcharts.js")}}"></script>
+<script src="{{ url("js/exporting.js")}}"></script>
+<script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -165,6 +176,10 @@
 	jQuery(document).ready(function() {
 		fetchTable();
 		setInterval(fetchTable, 1000);
+		fillChartActual();
+		setInterval(function(){
+			fillChartActual();
+		}, 60000);
 	});
 
 	var akan_assy = [];
@@ -313,17 +328,47 @@
 
 						var colorJumlah = 'style="background-color: #f73939;font-size:30px"';
 
+						var timeada = setTimeSedang(index);
+						var timekosong = setTimeSedangKosong(index);
+
+						var ng = [];
+
+						if (timeada == '') {
+							var percent = (0 / value.std_time) * 100;
+						}else{
+							var percent = (hmsToSecondsOnly(timeada) / value.std_time) * 100;
+						}
+
 						if (value.employee_id == null) {
 							assemblyTableBody += '<tr '+color+'>';
 							assemblyTableBody += '<td height="5%">'+value.ws+'</td>';
 							assemblyTableBody += '<td>Not Found</td>';
-							assemblyTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+setTimeSedangKosong(index)+'</td>';
+							assemblyTableBody += '<td '+color3+'>'+sedang2+'<br>'+timeada+timekosong+'</td>';
 						}else{
 							assemblyTableBody += '<tr '+color+'>';
 							assemblyTableBody += '<td height="5%">'+value.ws+'</td>';
 							assemblyTableBody += '<td>'+value.employee_id+'<br>'+value.employee_name.split(' ').slice(0,2).join(' ')+'</td>';
-							assemblyTableBody += '<td '+color3+'>'+sedang2+'<p></p>'+setTimeSedang(index)+setTimeSedangKosong(index)+'</td>';
+							assemblyTableBody += '<td '+color3+'>'+sedang2+'<br>'+timeada+timekosong;
+							assemblyTableBody += '<div class="progress-group">';
+							assemblyTableBody += '<div class="progress" style="background-color: #212121; height: 20px; border: 1px solid; padding: 0px; margin: 0px;">';
+							assemblyTableBody += '<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_'+index+'" style="font-size: 12px; padding-top: 0.5%;width:'+parseFloat(percent)+'%"></div>';
+							assemblyTableBody += '</div>';
+							assemblyTableBody += '</div>';
+							assemblyTableBody += '</td>';
+							assemblyTableBody += '<td height="5%" style="font-size:30px">'+value.perolehan+'</td>';
+							assemblyTableBody += '<td height="5%">';
+							if (value.ng_name != null) {
+								var ngname = value.ng_name.split(",");
+								var ngqty = value.qty_ng.split(",");
+								for(var j = 0;j<ngname.length;j++){
+									assemblyTableBody += '<b>'+ngname[j]+'= '+ngqty[j]+'</b><br>'
+								}
+							}else{
+							}
+							assemblyTableBody += '</td>';
 						}
+						
+
 						// assemblyTableBody += '<td style="color:#fcff38">'+value.queue_1+'</td>';
 						// assemblyTableBody += '<td style="color:#fcff38">'+value.queue_2+'</td>';
 						// assemblyTableBody += '<td style="color:#fcff38">'+value.queue_3+'</td>';
@@ -353,72 +398,148 @@ else{
 });
 }
 
-function ShowModal(ws_name) {
-	$('#tableDetail').DataTable().clear();
-	$('#tableDetail').DataTable().destroy();
+function hmsToSecondsOnly(str) {
+    var p = str.split(':'),
+        s = 0, m = 1;
 
-	$("#myModal").modal("show");
+    while (p.length > 0) {
+        s += m * parseInt(p.pop(), 10);
+        m *= 60;
+    }
 
+    return s;
+}
+
+function fillChartActual() {
+	var locations = $('#loc').val().split("-");
 	var data = {
-		loc : '{{$loc}}',
-		ws_name : ws_name
+		location:locations[0]
 	}
-	$.get('{{ url("fetch/welding/fetch_detail") }}', data, function(result, status, xhr){
+	$.get('{{ url("fetch/assembly/production_result") }}', data, function(result, status, xhr){
+		console.log(status);
+		console.log(result);
+		console.log(xhr);
 		if(xhr.status == 200){
 			if(result.status){
-				akan_wld = [];
-				sedang = [];
-				selesai = [];
+				var title_location = result.title_location;
+				var data = result.chartData;
+				var xAxis = []
+				, planCount = []
+				, actualCount = []
 
-				$('#bodyTableDetail').html("");
-				var bodyTableDetail = "";
-				var i = 1;
-				$.each(result.list_antrian, function(index, value){
-					bodyTableDetail += '<tr>';
-					bodyTableDetail += '<td>'+i+'</td>';
-					bodyTableDetail += '<td>'+value.ws_name+'</td>';
-					bodyTableDetail += '<td>'+value.gmc+'</td>';
-					bodyTableDetail += '<td>'+value.gmcdesc+'</td>';
-					bodyTableDetail += '</tr>';
-					i++;
-				});
-				$('#bodyTableDetail').append(bodyTableDetail);
-				$('#tableDetail').DataTable({
-					'dom': 'Bfrtip',
-					'responsive':true,
-					'lengthMenu': [
-					[ 20, 50, 100, -1 ],
-					[ '20 rows', '50 rows', '100 rows', 'Show all' ]
-					],
-					'buttons': {
-						buttons:[
-						{
-							extend: 'pageLength',
-							className: 'btn btn-default',
-						},
+				for (i = 0; i < data.length; i++) {
+					xAxis.push(data[i].model);
+					planCount.push(data[i].plan);
+					actualCount.push(parseInt(data[i].out_item));
+				}
 
-						]
+				Highcharts.chart('container', {
+					colors: ['rgba(248,161,63,1)','rgba(126,86,134,.9)'],
+					chart: {
+						type: 'column',
+						backgroundColor: null
 					},
-					'paging': true,
-					'lengthChange': true,
-					'pageLength': 20,
-					'searching': true,
-					'ordering': true,
-					'order': [],
-					'info': true,
-					'autoWidth': true,
-					"sPaginationType": "full_numbers",
-					"bJQueryUI": true,
-					"bAutoWidth": false,
-					"processing": true
+					title: {
+						text: '<span style="color:white;">Daily Production Result - '+title_location+'</span><br><span style="color:white;">生産実績</span>'
+					},
+					exporting: { enabled: false },
+					xAxis: {
+						tickInterval:  1,
+						overflow: true,
+						categories: xAxis,
+						labels:{
+							rotation: -45,
+							style: {
+						        color: '#fff'
+						      }
+						},
+						min: 0					
+					},
+					yAxis: {
+						min: 1,
+						title: {
+							text: '<span style="color:white;">Set(s)</span>'
+						},
+						type:'logarithmic'
+					},
+					credits:{
+						enabled: false
+					},
+					legend: {
+						enabled: false
+					},
+					tooltip: {
+						shared: true,
+						style: {
+					      color: '#000'
+					    }
+					},
+					plotOptions: {
+						series:{
+							minPointLength: 10,
+							pointPadding: 0,
+							groupPadding: 0,
+							animation:{
+								duration:0
+							}
+						},
+						column: {
+							grouping: false,
+							shadow: false,
+							borderWidth: 0,
+						}
+					},
+					series: [{
+						name: 'Plan',
+						data: planCount,
+						pointPadding: 0.05
+					}, {
+						name: 'Actual',
+						data: actualCount,
+						pointPadding: 0.2
+					}]
 				});
+
+				var totalPlan = 0;
+				var totalIn = 0;
+				var totalOut = 0;
+				
+				$.each(result.chartData, function(key, value) {
+					totalPlan += value.plan;
+					totalIn = totalIn + parseInt(value.in_item);
+					totalOut = totalOut + parseInt(value.out_item);
+				});
+
+				$('#resume').html("");
+				var resumeData = '';
+				resumeData += '<div class="col-sm-4 col-xs-6">';
+				resumeData += '		<div class="description-block border-right">';
+				resumeData += '			<h5 class="description-header" style="font-size: 35px;"><span class="description-percentage text-blue">'+ totalPlan.toLocaleString() +'</span></h5>';
+				resumeData += '			<span class="description-text" style="font-size: 15px;color:black">Plan<br><span class="text-purple">計画の集計</span></span>';
+				resumeData += '		</div>';
+				resumeData += '	</div>';
+				resumeData += '	<div class="col-sm-4 col-xs-6">';
+				resumeData += '		<div class="description-block border-right">';
+				resumeData += '			<h5 class="description-header" style="font-size: 35px;"><span class="description-percentage text-orange">'+ totalIn.toLocaleString() +'</span></h5>';
+				resumeData += '			<span class="description-text" style="font-size: 15px;color:black">In<br><span class="text-orange">受入数</span></span>';
+				resumeData += '		</div>';
+				resumeData += '	</div>';
+				resumeData += '	<div class="col-sm-4 col-xs-6">';
+				resumeData += '		<div class="description-block border-right">';
+				resumeData += '			<h5 class="description-header" style="font-size: 35px;"><span class="description-percentage text-olive">'+ totalOut.toLocaleString() +'</span></h5>';
+				resumeData += '			<span class="description-text" style="font-size: 15px;color:black">Out<br><span class="text-olive">流し数</span></span>';
+				resumeData += '		</div>';
+				resumeData += '	</div>';
+				$('#resume').append(resumeData);
+			}
+			else{
+				alert('Attempt to retrieve data failed');
 			}
 		}
+		else{
+			alert('Disconnected from server');
+		}
 	});
-
-	$('#judul_table').append().empty();
-	$('#judul_table').append('<center>List Antrian di <b>'+ws_name+'</b></center>');
-
 }
 
 var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

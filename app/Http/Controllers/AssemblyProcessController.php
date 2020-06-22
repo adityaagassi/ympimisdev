@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
 use Yajra\DataTables\Exception;
 use DataTables;
 use Response;
@@ -190,12 +192,13 @@ class AssemblyProcessController extends Controller
 					$serial->save();
 					$counter->save();
 				});
-			}			
+			}
+			$this->printStamp($request->get('serial'), $request->get('model'), 'print', 'FL Subassy Printer');
 		}
 		catch(\Exception $e){
 			$response = array(
 				'status' => false,
-				'message' => $e->getMessage(),
+				'message' => $e->getMessage()
 			);
 			return Response::json($response);
 		}
@@ -274,6 +277,29 @@ class AssemblyProcessController extends Controller
 
 	}
 
+	public function printStamp($serial_number, $model, $category, $printer_name){
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		if($category == 'print'){
+			$printer->setJustification(Printer::JUSTIFY_CENTER);
+			$printer->setBarcodeWidth(2);
+			$printer->setBarcodeHeight(64);
+			$printer->barcode($serial_number, Printer::BARCODE_CODE39);
+			$printer->setTextSize(3, 1);
+			$printer->text($serial_number."\n");
+			$printer->feed(1);
+			$printer->text($model."\n");
+			$printer->setTextSize(1, 1);
+			$printer->text(date("d-M-Y H:i:s")."\n");
+			$printer->cut();
+			$printer->close();	
+		}
+		if($category == 'reprint'){
+
+		}
+	}
+
 	public function indexFlutePrintLabel(){
 		$title = 'Flute Print Packing Labels';
 		$title_jp = 'FLラベル印刷';
@@ -310,7 +336,7 @@ class AssemblyProcessController extends Controller
 			$title = 'Tanpo Awase Process Flute';
 			$title_jp= 'FLタンポ合わせ';
 		}
-		if($location == 'tanpoire-process'){
+		if($location == 'kariawase-fungsi,kariawase-visual,kariawase-repair,tanpoire-process'){
 			$title = 'Tanpoire Process Flute';
 			$title_jp= 'FLタンポ入れ';
 		}
@@ -697,22 +723,56 @@ class AssemblyProcessController extends Controller
 		$loc = $request->get('loc');
 		$boards = array();
 
+		$now = date('Y-m-d');
+
+		$locations = explode(",", $loc);
+		$location = "";
+
+		for($x = 0; $x < count($locations); $x++) {
+			$location = $location."'".$locations[$x]."'";
+			if($x != count($locations)-1){
+				$location = $location.",";
+			}
+		}
+		$addlocation = "assemblies.location in (".$location.") ";
+
 		$work_stations = DB::select("SELECT
-			location,
+			assemblies.location,
 			location_number,
 			online_time,
-			operator_id,
+			assemblies.operator_id,
 			name,
 			sedang_serial_number,
 			sedang_model,
-			TIME(sedang_time) as sedang_time,
-			DATE(sedang_time) as sedang_date
+			TIME( sedang_time ) AS sedang_time,
+			DATE( sedang_time ) AS sedang_date,
+			( SELECT standard_time FROM assembly_std_times WHERE location = assemblies.location ) AS std_time,
+			( SELECT count( DISTINCT ( serial_number )) FROM assembly_logs WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) + ( SELECT count( DISTINCT ( serial_number )) FROM assembly_details WHERE operator_id = assemblies.operator_id AND DATE( created_at ) = '".$now."' ) AS perolehan,
+			(
+			SELECT
+				GROUP_CONCAT(
+					DISTINCT (
+					SUBSTRING_INDEX( ng_name, '-', 1 ))) AS ng_name 
 			FROM
-			assemblies 
-			LEFT JOIN employee_syncs on employee_syncs.employee_id = assemblies.operator_id
+				assembly_ng_logs 
 			WHERE
-			location = '".$loc."' 
-			AND origin_group_code = '041'");
+				operator_id = assemblies.operator_id 
+				AND DATE( created_at ) = '".$now."' 
+			) AS ng_name,
+			(
+			SELECT
+				GROUP_CONCAT( qty_ng ) AS qty_ng 
+			FROM
+				( SELECT COUNT( ng_name ) AS qty_ng, operator_id FROM assembly_ng_logs WHERE DATE( created_at ) = '".$now."' GROUP BY ng_name,operator_id ) ss 
+			WHERE
+				operator_id = assemblies.operator_id 
+			) AS qty_ng 
+		FROM
+			assemblies
+			LEFT JOIN employee_syncs ON employee_syncs.employee_id = assemblies.operator_id 
+		WHERE
+			".$addlocation."
+			AND assemblies.origin_group_code = '041'");
 
 		foreach ($work_stations as $ws) {
 
@@ -733,7 +793,11 @@ class AssemblyProcessController extends Controller
 				'employee_id' => $ws->operator_id,
 				'employee_name' => strtoupper($ws->name),
 				'sedang' => $board_sedang,
-				'sedang_time' => $sedang_time->format('%H:%i:%s')
+				'sedang_time' => str_pad($sedang_time->format('%H'), 2, '0', STR_PAD_LEFT).":".str_pad($sedang_time->format('%i'), 2, '0', STR_PAD_LEFT).":".str_pad($sedang_time->format('%s'), 2, '0', STR_PAD_LEFT),
+				'std_time' => $ws->std_time,
+				'perolehan' => $ws->perolehan,
+				'ng_name' => $ws->ng_name,
+				'qty_ng' => $ws->qty_ng
 			]);
 		}
 
