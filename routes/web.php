@@ -1087,10 +1087,9 @@ Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
 Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
 
 Route::get('edit/purchase_order', 'AccountingController@edit_purchase_order');
-Route::post('update/purchase_order', 'AccountingController@create_purchase_order');
+Route::post('update/purchase_order', 'AccountingController@update_purchase_order');
 Route::post('delete/purchase_order_item', 'AccountingController@delete_item_po');
 
-Route::post('update/purchase_order', 'AccountingController@update_purchase_order');
 
 Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
 Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
