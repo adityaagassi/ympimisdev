@@ -11,18 +11,28 @@ use Yajra\DataTables\Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use App\EmployeeSync;
 use App\MaterialPlantDataList;
+use App\StorageLocation;
 use App\BomOutput;
+use App\StocktakingCalendar;
 use App\StocktakingList;
 use App\StocktakingOutput;
+use App\StocktakingInquiryLog;
+use App\StocktakingOutputLog;
 use App\StocktakingSilverList;
 use App\StocktakingSilverLog;
+use App\TransactionTransfer;
+use App\ErrorLog;
 use Carbon\Carbon;
 use DataTables;
 use Response;
 use Excel;
 use DateTime;
 use File;
+use FTP;
+use PDF;
+
 
 class StockTakingController extends Controller{
 
@@ -130,12 +140,48 @@ class StockTakingController extends Controller{
 
 	//Stock Taking Bulanan
 	public function indexMonthlyStocktaking(){
-		return view('stocktakings.monthly.index')->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
+		$title = 'Monthly Stocktaking';
+		$title_jp = '月次棚卸';
+
+		return view('stocktakings.monthly.index', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
 	}
 
+	public function indexManageStore(){
+		$title = 'Manage Store';
+		$title_jp = 'ストアー管理';
+
+		$groups = StorageLocation::select('area')
+		->whereNotNull('area')
+		->distinct()
+		->orderBy('area', 'ASC')
+		->get();
+
+		$stores = StocktakingList::leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_lists.location')
+		->select('storage_locations.area', 'stocktaking_lists.location', 'stocktaking_lists.store')
+		->distinct()
+		->orderBy('storage_locations.area', 'ASC')
+		->orderBy('stocktaking_lists.location', 'ASC')
+		->orderBy('stocktaking_lists.store', 'ASC')
+		->get();
+
+		$materials = MaterialPlantDataList::select('material_number', 'material_description')->get();
+
+		return view('stocktakings.monthly.manage_store', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'groups' => $groups,
+			'stores' => $stores,
+			'materials' => $materials
+		))->with('page', 'Manage Store')->with('head', 'Stocktaking');
+	}
+
+
 	public function indexRevise(){
-		$title = 'Revise';
-		$title_jp = '???';
+		$title = 'Revision';
+		$title_jp = '改定';
 
 		return view('stocktakings.monthly.revise', array(
 			'title' => $title,
@@ -143,9 +189,20 @@ class StockTakingController extends Controller{
 		))->with('page', 'Revise')->with('head', 'Stocktaking');
 	}
 
+	public function indexUnmatch($month){
+		$title = 'Unmatch';
+		$title_jp = 'チェック不適合';
+
+		return view('stocktakings.monthly.unmatch', array(
+			'month' => $month,
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Unmatch')->with('head', 'Stocktaking');
+	}
+
 	public function indexNoUse(){
 		$title = 'No Use';
-		$title_jp = '???';
+		$title_jp = '使用しない';
 
 		return view('stocktakings.monthly.no_use', array(
 			'title' => $title,
@@ -154,8 +211,8 @@ class StockTakingController extends Controller{
 	}
 
 	public function indexCount(){
-		$title = 'Monthly Stock Taking';
-		$title_jp = '???';
+		$title = 'Monthly Stocktaking';
+		$title_jp = '月次棚卸';
 
 		return view('stocktakings.monthly.count', array(
 			'title' => $title,
@@ -165,7 +222,7 @@ class StockTakingController extends Controller{
 
 	public function indexAudit($id){
 		$title = 'Audit '. $id;
-		$title_jp = '???';
+		$title_jp = '監査 '. $id;
 
 		if($id == 1){
 			return view('stocktakings.monthly.audit_1', array(
@@ -174,16 +231,24 @@ class StockTakingController extends Controller{
 			))->with('page', 'Monthly Stock Audit 1')->with('head', 'Stocktaking');
 
 		}else if($id == 2){
+			$auditors = EmployeeSync::orwhere('position', 'like', '%Staff%')
+			->orWhere('position', '=', 'Chief')
+			->orWhere('position', '=', 'Foreman')
+			->orWhere('position', '=', 'Coordinator')
+			->WhereNotNull('end_date')
+			->get();
+
 			return view('stocktakings.monthly.audit_2', array(
 				'title' => $title,
-				'title_jp' => $title_jp
+				'title_jp' => $title_jp,
+				'auditors' => $auditors
 			))->with('page', 'Monthly Stock Audit 2')->with('head', 'Stocktaking');
 		}	
 	}
 
 	public function indexSummaryOfCounting(){
 		$title = 'Summary of Counting';
-		$title_jp = '???';
+		$title_jp = '計算まとめ';
 
 		return view('stocktakings.monthly.summary_of_counting', array(
 			'title' => $title,
@@ -387,10 +452,83 @@ class StockTakingController extends Controller{
 			);
 			return Response::json($response);
 		}
-		
+
 	}
 
-	public function printSummary($list){
+	public function printSummary(){
+		$printer_name = 'MIS';
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		$id = '31';
+		$store = 'CLB6';
+		$category = '(ASSY)';
+		$material_number = 'WY75820';
+		$sloc = 'CLB9';
+		$description = 'CL255 LOWER JOINT ASSY N/S ASSY';
+		$key = '';
+		$model = '';
+		$surface = '';
+		$uom = 'PC';
+		$lot = '';
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setEmphasis(true);
+		$printer->setReverseColors(true);
+		$printer->setTextSize(2, 2);
+		$printer->text("  Summary of Counting  "."\n");
+		$printer->initialize();
+		$printer->setTextSize(3, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($store."\n");
+		$printer->setReverseColors(true);			
+		$printer->text($category."\n");
+		$printer->feed(1);
+		$printer->qrCode($id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->feed(1);
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(4, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($material_number."\n");
+
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(3, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->text($sloc."\n\n");
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(1, 1);
+		$printer->text($description."\n");
+		$printer->feed(1);
+		$printer->text($model."-".$key."-".$surface."\n");
+		$printer->initialize();
+		$printer->setEmphasis(true);
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+
+		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+
+		$printer->feed(1);
+		$printer->setTextSize(1, 1);
+		$printer->setJustification(Printer::JUSTIFY_RIGHT);
+		$printer->text(Carbon::now()."\n");
+		$printer->feed(1);
+		$printer->cut();
+		$printer->close();
+	}
+
+	public function printSummaryBackup($list){
 		$printer_name = 'MIS';
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
@@ -471,25 +609,134 @@ class StockTakingController extends Controller{
 		$printer->close();
 	}
 
-	public function exportInquiry(){
+	public function exportOfficailVariance(Request $request){
 
-		$title = 'Inquiry'.date('M').date('d').'_'.date('H.i');	
+		$month = $request->get('month_official_variance');
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
 
-		$inquiries = db::select("SELECT
-			stocktaking_lists.id,
-			stocktaking_lists.location,
-			storage_locations.area AS `group`,
-			stocktaking_lists.store,
-			stocktaking_lists.material_number,
-			material_plant_data_lists.material_description,
-			stocktaking_lists.category,
-			material_plant_data_lists.bun,
-			stocktaking_lists.final_count,
-			date_format( stocktaking_lists.updated_at, '%d-%M-%y' ) AS updated_at 
-			FROM
-			stocktaking_lists
-			LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_lists.material_number
-			LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_lists.location");
+		if($calendar->status == 'finished'){
+			$variances = db::select("SELECT plnt, `group`, location, sum(pi_amt) AS sumof_pi_amt, sum(book_amt) AS sumof_book_amt, sum(diff_amt) AS sumof_diff_amt, sum(var_amt_min) AS sumof_var_amt_min, sum(var_amt_plus) AS sumof_var_amt_plus, sum(var_amt_abs) AS sumof_var_amt_abs, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
+				(SELECT storage_locations.area AS `group`,
+				storage_locations.plnt,
+				pi_book.material_number,
+				pi_book.location,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(pi_book.pi - pi_book.book) AS diff_qty,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.pi) AS pi_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) AS diff_amt,
+				if((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) < 0, ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))), 0) AS var_amt_min,
+				if((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) > 0, (ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)), 0) AS var_amt_plus,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 AS book FROM stocktaking_output_logs
+				WHERE stocktaking_date = '".$calendar->date."'
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				WHERE storage_locations.area IS NOT NULL
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				) AS official_variance
+				GROUP BY plnt, `group`, location");
+		}else{
+			$variances = db::select("SELECT plnt, `group`, location, sum(pi_amt) AS sumof_pi_amt, sum(book_amt) AS sumof_book_amt, sum(diff_amt) AS sumof_diff_amt, sum(var_amt_min) AS sumof_var_amt_min, sum(var_amt_plus) AS sumof_var_amt_plus, sum(var_amt_abs) AS sumof_var_amt_abs, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
+				(SELECT storage_locations.area AS `group`,
+				storage_locations.plnt,
+				pi_book.material_number,
+				pi_book.location,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(pi_book.pi - pi_book.book) AS diff_qty,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.pi) AS pi_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) AS diff_amt,
+				if((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) < 0, ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))), 0) AS var_amt_min,
+				if((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) > 0, (ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)), 0) AS var_amt_plus,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				WHERE storage_locations.area IS NOT NULL
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				) AS official_variance
+				GROUP BY plnt, `group`, location");
+		}
+
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->getDomPDF()->set_option("enable_php", true);
+		$pdf->setPaper('A4', 'potrait');
+		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+		$pdf->loadView('stocktakings.monthly.report.official_variance_pdf', array(
+			'variances' => $variances
+		));
+
+		// $pdf = PDF::loadview('qc_report.print_cpar',['cpars'=>$cpars,'parts'=>$parts]);
+		return $pdf->stream("OFFICIAL_VARIANCE_STOCKTAKING " +$month+ ".pdf");
+
+		
+	}
+
+	public function exportInquiry(Request $request){
+
+		$month = $request->get('month_inquiry');
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if($calendar->status == 'finished'){
+			$inquiries = db::select("SELECT
+				stocktaking_inquiry_logs.id,
+				stocktaking_inquiry_logs.location,
+				storage_locations.area AS `group`,
+				stocktaking_inquiry_logs.store,
+				stocktaking_inquiry_logs.material_number,
+				material_plant_data_lists.material_description,
+				stocktaking_inquiry_logs.category,
+				material_plant_data_lists.bun,
+				stocktaking_inquiry_logs.quantity as final_count,
+				date_format( stocktaking_inquiry_logs.updated_at, '%d-%M-%y' ) AS updated_at 
+				FROM
+				stocktaking_inquiry_logs
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_inquiry_logs.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_inquiry_logs.location
+				WHERE stocktaking_inquiry_logs.stocktaking_date = '".$calendar->date."'
+				ORDER BY storage_locations.area, stocktaking_inquiry_logs.location, stocktaking_inquiry_logs.material_number ASC");
+		}else{
+			$inquiries = db::select("SELECT
+				stocktaking_lists.id,
+				stocktaking_lists.location,
+				storage_locations.area AS `group`,
+				stocktaking_lists.store,
+				stocktaking_lists.material_number,
+				material_plant_data_lists.material_description,
+				stocktaking_lists.category,
+				material_plant_data_lists.bun,
+				stocktaking_lists.final_count,
+				date_format( stocktaking_lists.updated_at, '%d-%M-%y' ) AS updated_at 
+				FROM
+				stocktaking_lists
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_lists.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_lists.location
+				ORDER BY storage_locations.area, stocktaking_lists.location, stocktaking_lists.material_number ASC");
+		}
+
+		$title = 'Inquiry'.str_replace('-', '' ,$month).'_('.date('ymd H.i').')';
 
 		$data = array(
 			'inquiries' => $inquiries
@@ -501,27 +748,98 @@ class StockTakingController extends Controller{
 				return $sheet->loadView('stocktakings.monthly.report.inquiry_excel', $data);
 			});
 		})->export('xlsx');
-		
+
 	}
 
-	public function exportVariance(){
-		$title = 'Variance_Report'.date('M').date('d').'_'.date('H.i');	
+	public function exportVariance(Request $request){
 
-		$variances = db::select("SELECT
-			storage_locations.area as `group`,
-			material_plant_data_lists.valcl,
-			stocktaking_lists.material_number,
-			material_plant_data_lists.material_description,
-			stocktaking_lists.location,
-			storage_locations.location AS location_name,
-			material_plant_data_lists.bun AS uom,
-			material_plant_data_lists.standard_price AS std,
-			stocktaking_lists.final_count AS pi
-			FROM
-			stocktaking_lists
-			LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_lists.material_number
-			LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_lists.location
-			ORDER BY `group`, location, material_number ASC");
+		$month = $request->get('month_variance');
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if($calendar->status == 'finished'){
+			$variances = db::select("SELECT
+				storage_locations.area AS `group`,
+				storage_locations.plnt,
+				material_plant_data_lists.valcl,
+				pi_book.material_number,
+				material_plant_data_lists.material_description,
+				pi_book.location,
+				storage_locations.location AS location_name,
+				material_plant_data_lists.bun AS uom,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(pi_book.pi - pi_book.book) AS diff_qty,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.pi) AS pi_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) AS diff_amt,
+				if((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) < 0, ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))), 0) AS var_amt_min,
+				if((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) > 0, (ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)), 0) AS var_amt_plus,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs,
+				stocktaking_material_notes.note
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 AS book FROM stocktaking_output_logs
+				WHERE stocktaking_date = '".$calendar->date."'
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
+				WHERE pi_book.location = 'CLB9'
+				ORDER BY
+				storage_locations.area,
+				pi_book.location,
+				pi_book.material_number ASC");
+
+		}else{
+			$variances = db::select("
+				SELECT
+				storage_locations.area AS `group`,
+				storage_locations.plnt,
+				material_plant_data_lists.valcl,
+				pi_book.material_number,
+				material_plant_data_lists.material_description,
+				pi_book.location,
+				storage_locations.location AS location_name,
+				material_plant_data_lists.bun AS uom,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(pi_book.pi - pi_book.book) AS diff_qty,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.pi) AS pi_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) AS diff_amt,
+				if((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) < 0, ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))), 0) AS var_amt_min,
+				if((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)) > 0, (ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book)), 0) AS var_amt_plus,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs,
+				stocktaking_material_notes.note
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
+				WHERE pi_book.location = 'CLB9'
+				ORDER BY
+				storage_locations.area,
+				pi_book.location,
+				pi_book.material_number ASC");
+
+		}
+
+
+		$title = 'VarianceReport'.str_replace('-', '' ,$month).'_('.date('ymd H.i').')';		
 
 		$data = array(
 			'variances' => $variances
@@ -529,26 +847,428 @@ class StockTakingController extends Controller{
 
 		ob_clean();
 		Excel::create($title, function($excel) use ($data){
-			$excel->sheet('Inquiry', function($sheet) use ($data) {
+			$excel->sheet('Variance', function($sheet) use ($data) {
 				return $sheet->loadView('stocktakings.monthly.report.variance_excel', $data);
 			});
 		})->export('xlsx');
 	}
 
-	public function fetchVariance(){
+	public function exportUploadSAP(Request $request){
+		$month = $request->get('month');
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
 
-		$date = date('Y-m-d');
+		if($calendar){
+			$filename = 'ympipi_upload_' . str_replace('-', '', $calendar->date) . '.txt';
+			$filepath = public_path() . "/uploads/sap/stocktaking/" . $filename;
+			// $filepath = public_path('files') . $filename;
+			$filedestination = "ma/ympipi/" . $filename;
+
+			$datas = db::select("SELECT pi.plnt, pi.location, pi.cost_center, pi.material_number, pi.pi, book.book, (COALESCE(pi.pi,0) - COALESCE(book.book,0)) AS div_qty, ABS((COALESCE(pi.pi,0) - COALESCE(book.book,0))) AS div_abs, pi.date, if((COALESCE(pi.pi,0) - COALESCE(book.book,0)) > 0, '9671003', '9681003') AS type FROM
+				(SELECT storage_locations.plnt, stocktaking_outputs.location, storage_locations.cost_center, stocktaking_outputs.material_number, date(stocktaking_outputs.created_at) AS date, sum( stocktaking_outputs.quantity ) AS pi
+				FROM stocktaking_outputs
+				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_outputs.location 
+				GROUP BY storage_locations.plnt, stocktaking_outputs.location, storage_locations.cost_center, stocktaking_outputs.material_number, date(stocktaking_outputs.created_at)) AS pi
+				LEFT JOIN
+				(SELECT storage_location, material_number, sum( unrestricted ) AS book FROM storage_location_stocks 
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS book
+				ON pi.location = book.storage_location and pi.material_number = book.material_number
+				HAVING div_abs > 0");
+
+
+			$upload_text = "";
+			foreach ($datas as $data){
+				$upload_text .= $this->writeString($data->plnt, 15, " ");
+				$upload_text .= $this->writeString($data->plnt, 4, " ");
+				$upload_text .= $this->writeString($data->material_number, 18, " ");
+				$upload_text .= $this->writeString($data->location, 4, " ");
+				$upload_text .= $this->writeString($data->plnt, 4, " ");
+				$upload_text .= $this->writeString($data->location, 4, " ");
+				$upload_text .= $this->writeDecimal($data->div_abs, 13, "0");
+				$upload_text .= $this->writeStringReserve($data->cost_center, 10, "0");
+				$upload_text .= $this->writeString('', 10, " ");
+				$upload_text .= $this->writeDate($data->date, "transfer");
+				$upload_text .= $this->writeString('MB1C', 20, " ");
+				$upload_text .= $this->writeString($data->type, 20, " ");
+				$upload_text .= "\r\n";
+			}
+
+			try{
+				File::put($filepath, $upload_text);
+				// $success = self::uploadFTP($filepath, $filedestination);
+				
+				$response = array(
+					'status' => true
+				);
+				return Response::json($response);
+			}
+			catch(\Exception $e){
+				// $transaction_error = TransactionTransfer::where('reference_file', '=', $filename)
+				// ->update(['reference_file', '=', $filename]);
+
+				$error_log = new ErrorLog([
+					'error_message' => $e->getMessage(),
+					'created_by' => '1'
+				]);
+				$error_log->save();
+				
+
+				$response = array(
+					'status' => false
+				);
+				return Response::json($response);
+			}
+		}
+
+	}
+
+	public function exportLog(Request $request){
+		$month = $request->get('month');
+
+		try {
+			$calendar = StocktakingCalendar::where(db::raw('date_format(date, "%Y-%m")'), $month)
+			->update([
+				'status' => 'finished'
+			]);
+
+			$lists = StocktakingList::get();
+			$outputs = StocktakingOutput::select('material_number', 'store', 'location', db::raw('sum(quantity) as quantity'))
+			->groupBy('material_number', 'store', 'location')
+			->get();
+
+			$calendar = StocktakingCalendar::where(db::raw('date_format(date, "%Y-%m")'), $month)->first();
+
+			$insert_list = array();
+			foreach ($lists as $list){
+				$row = array();
+
+				$row['store'] = $list['store'];
+				$row['category'] = $list['category'];
+				$row['material_number'] = $list['material_number'];
+				$row['location'] = $list['location'];
+				$row['quantity'] = $list['quantity'];
+				$row['stocktaking_date'] = $calendar->date;
+				$row['created_at'] = Carbon::now();
+				$row['updated_at'] = Carbon::now();
+
+				$insert_list[] = $row;
+			}
+			foreach ($insert_list as $t){			
+				$insert = StocktakingInquiryLog::updateOrCreate(
+					['store' => $t['store'], 'category' => $t['category'], 'material_number' => $t['material_number'], 'stocktaking_date' => $t['stocktaking_date']],
+					['location' => $t['location'], 'quantity' => $t['quantity'], 'updated_at' => Carbon::now()]
+				);
+			}
+
+
+			$insert_output = array();
+			foreach ($outputs as $output){
+				$row = array();
+
+				$row['material_number'] = $output['material_number'];
+				$row['store'] = $output['store'];	
+				$row['location'] = $output['location'];
+				$row['quantity'] = $output['quantity'];
+				$row['stocktaking_date'] = $calendar->date;
+				$row['created_at'] = Carbon::now();
+				$row['updated_at'] = Carbon::now();
+
+				$insert_output[] = $row;
+			}		
+			foreach ($insert_output as $t){
+				$insert = StocktakingOutputLog::updateOrCreate(
+					['store' => $t['store'], 'material_number' => $t['material_number'], 'stocktaking_date' => $t['stocktaking_date']],
+					['location' => $t['location'], 'quantity' => $t['quantity'], 'updated_at' => Carbon::now()]
+				);
+			}
+
+			$response = array(
+				'status' => true
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
+		}
+
+	}
+
+	public function fetchCheckMaterial(Request $request){
+		$material = MaterialPlantDataList::where('material_number', $request->get('material'))->first();
+
+		$response = array(
+			'status' => true,
+			'material' => $material
+		);
+		return Response::json($response);
+	}
+
+	public function fetchGetStorageLocation(Request $request){
+		$group = $request->get('group');
+
+		$getStorageLocation = StorageLocation::where('storage_locations.area', $group)
+		->select('storage_locations.area', 'storage_locations.storage_location')
+		->orderBy('storage_locations.area', 'ASC')
+		->orderBy('storage_locations.storage_location', 'ASC')
+		->get();
+
+		echo '<option value=""></option>';
+		for($i=0; $i < count($getStorageLocation); $i++) {
+			echo '<option value="'.$getStorageLocation[$i]['storage_location'].'">'.$getStorageLocation[$i]['area'].' - '.$getStorageLocation[$i]['storage_location'].'</option>';
+		}
+
+	}
+
+	public function fetchGetStore(Request $request){
+		$location = $request->get('location');
+
+		$getStore = StocktakingList::leftJoin('storage_locations', 'stocktaking_lists.location', '=', 'storage_locations.storage_location')
+		->where('stocktaking_lists.location', $location)
+		->distinct()
+		->select('storage_locations.area', 'stocktaking_lists.location', 'stocktaking_lists.store')
+		->orderBy('storage_locations.area', 'ASC')
+		->orderBy('stocktaking_lists.location', 'ASC')
+		->orderBy('stocktaking_lists.store', 'ASC')
+		->get();		
+
+
+		echo '<option value=""></option>';
+		for($i=0; $i < count($getStore); $i++) {
+			echo '<option value="'.$getStore[$i]['store'].'">'.$getStore[$i]['area'].' - '.$getStore[$i]['location'].' - '.$getStore[$i]['store'].'</option>';
+		}
+		echo '<option value="LAINNYA">LAINNYA</option>';
+
+	}
+
+	public function fetchCheckMonth(Request $request){
+
+		$month = $request->get('month');
+		$data = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if(!$data){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
 		
-		$variance = db::select("SELECT location, sum(variance) AS variance, sum(ok) AS ok from
-			(SELECT location, material_number, IF(sum(pi)-sum(book) <> 0, 1, 0) AS variance, IF(sum(pi)-sum(book) <> 0, 0, 1) AS ok FROM
-			(SELECT storage_location AS location, material_number, unrestricted AS book, 0 AS pi FROM storage_location_stocks
-			WHERE date(created_at) = '".$date."' 
-			AND storage_location = 'CLB9'
-			UNION ALL
-			SELECT location, material_number, 0 AS book, sum(quantity) AS pi FROM stocktaking_outputs 
-			GROUP BY location, material_number) AS variance 
-			GROUP BY location, material_number) AS variance_count 
-			GROUP BY location");
+	}
+
+	public function fetchStore(){
+		$data = db::select("SELECT storage_locations.area AS `group`, stocktaking_lists.location, stocktaking_lists.store, count( stocktaking_lists.id ) AS quantity FROM stocktaking_lists
+			LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_lists.location 
+			GROUP BY storage_locations.area, stocktaking_lists.location, stocktaking_lists.store
+			ORDER BY storage_locations.area, stocktaking_lists.location, stocktaking_lists.store ASC");
+
+		return DataTables::of($data)
+		->addColumn('delete', function($data){
+			return '<button style="width: 50%; height: 100%;" onclick="deleteStore(\''.$data->store.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-trash"></i></span></button>';
+		})
+		->rawColumns([ 'delete' => 'delete'])
+		->make(true);
+	}
+
+	public function fetchStoreDetail(){
+		$data = db::select("SELECT s.id, sl.area AS `group`, s.location, s.store, s.category, s.material_number, mpdl.material_description, mpdl.bun AS uom FROM stocktaking_lists s
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
+			ORDER BY sl.area, s.location, s.store, s.category, s.material_number ASC");
+
+		return DataTables::of($data)
+		->addColumn('delete', function($data){
+			return '<button style="width: 50%; height: 100%;" onclick="deleteMaterial(\''.$data->id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-trash"></i></span></button>';
+		})
+		->rawColumns([ 'delete' => 'delete'])
+		->make(true);
+	}
+
+	public function fetchPiVsBook(Request $request){
+		$month = $request->get('month');
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if($calendar){
+			$data = db::select("SELECT storage_locations.area AS `group`, pi_kitto.location, pi_kitto.material_number, material_plant_data_lists.material_description, pi_kitto.pi FROM
+				(SELECT pi.location, pi.material_number, pi.qty AS pi, book.qty AS book FROM
+				(SELECT location, material_number, sum( quantity ) AS qty FROM stocktaking_outputs
+				GROUP BY location, material_number) AS pi
+				LEFT JOIN
+				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS book
+				ON pi.location = book.location 	
+				AND pi.material_number = book.material_number) AS pi_kitto
+				LEFT JOIN material_plant_data_lists ON pi_kitto.material_number = material_plant_data_lists.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_kitto.location
+				WHERE pi_kitto.book is null
+				AND pi_kitto.pi > 0
+				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				ORDER BY storage_locations.area, pi_kitto.location, pi_kitto.material_number");
+
+			return DataTables::of($data)->make(true);
+		}
+		
+	}
+
+	public function fetchBookVsPi(Request $request){
+		$month = $request->get('month');
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if($calendar){
+			$data = db::select("SELECT storage_locations.area AS `group`, pi_kitto.location, pi_kitto.material_number, material_plant_data_lists.material_description, pi_kitto.book FROM
+				(SELECT book.location, book.material_number, pi.qty AS pi, book.qty AS book FROM	
+				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS book
+				LEFT JOIN
+				(SELECT location, material_number, sum( quantity ) AS qty FROM stocktaking_outputs
+				GROUP BY location, material_number) AS pi
+				ON pi.location = book.location 	
+				AND pi.material_number = book.material_number) AS pi_kitto
+				LEFT JOIN material_plant_data_lists ON pi_kitto.material_number = material_plant_data_lists.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_kitto.location
+				WHERE pi_kitto.pi is null
+				AND pi_kitto.book > 0
+				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				ORDER BY storage_locations.area, pi_kitto.location, pi_kitto.material_number");
+
+			return DataTables::of($data)->make(true);
+		}
+
+	}
+
+	public function fetchKittoVsPi(){
+		$data = db::select("SELECT storage_locations.area AS `group`, kitto_pi.location, kitto_pi.material_number, material_plant_data_lists.material_description, kitto_pi.kitto, kitto_pi.pi FROM
+			(SELECT	inventory.location, inventory.material_number, inventory.qty AS kitto,	COALESCE ( pi.qty, 0 ) AS pi FROM
+			(SELECT issue_location AS location, material_number, sum( lot ) AS qty FROM kitto.inventories
+			GROUP BY issue_location, material_number) AS inventory
+			LEFT JOIN
+			(SELECT location, material_number, sum( quantity ) AS qty FROM stocktaking_outputs
+			GROUP BY location, material_number) AS pi
+			ON inventory.location = pi.location 
+			AND inventory.material_number = pi.material_number) AS kitto_pi
+			LEFT JOIN material_plant_data_lists ON kitto_pi.material_number = material_plant_data_lists.material_number
+			LEFT JOIN storage_locations ON storage_locations.storage_location = kitto_pi.location
+			WHERE kitto_pi.kitto <> kitto_pi.pi
+			ORDER BY storage_locations.area, kitto_pi.location, kitto_pi.material_number");
+
+		return DataTables::of($data)->make(true);
+	}
+
+	public function fetchKittoVsBook(Request $request){
+		$month = $request->get('month');
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if($calendar){
+			$data = db::select("SELECT storage_locations.area AS `group`, kitto_book.location, kitto_book.material_number, material_plant_data_lists.material_description, kitto_book.kitto, kitto_book.book FROM
+				(SELECT inventory.location, inventory.material_number, inventory.qty AS kitto, COALESCE ( book.qty, 0 ) AS book FROM
+				(SELECT issue_location AS location, material_number, sum( lot ) AS qty FROM kitto.inventories
+				GROUP BY issue_location, material_number) AS inventory
+				LEFT JOIN
+				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS book
+				ON inventory.location = book.location 
+				AND inventory.material_number = book.material_number) AS kitto_book
+				LEFT JOIN material_plant_data_lists ON kitto_book.material_number = material_plant_data_lists.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = kitto_book.location
+				WHERE kitto_book.kitto <> kitto_book.book
+				ORDER BY storage_locations.area, kitto_book.location, kitto_book.material_number");
+
+			return DataTables::of($data)->make(true);
+		}
+
+	}
+
+	public function fetchPiVsLot(){
+		$data = db::select("SELECT storage_locations.area AS `group`, inventory.location, inventory.material_number, material_plant_data_lists.material_description, inventory.quantity, material_volumes.lot_completion FROM
+			(SELECT pi.location, lot.material_number, pi.quantity FROM
+			(SELECT location, material_number, sum(quantity) AS quantity FROM stocktaking_outputs
+			GROUP BY location, material_number) AS pi
+			JOIN
+			(SELECT issue_location AS location, material_number, sum( lot ) AS qty FROM kitto.inventories
+			GROUP BY issue_location, material_number) AS lot
+			ON pi.location = lot.location AND pi.material_number = lot.material_number) AS inventory
+			LEFT JOIN material_volumes ON inventory.material_number = material_volumes.material_number
+			LEFT JOIN material_plant_data_lists ON inventory.material_number = material_plant_data_lists.material_number
+			LEFT JOIN storage_locations ON inventory.location = storage_locations.storage_location
+			WHERE (inventory.quantity % material_volumes.lot_completion) <> 0");
+
+		return DataTables::of($data)->make(true);
+	}
+
+	public function fetchVariance(Request $request){
+		$month = $request->get('month');
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$variance = db::select("SELECT plnt, `group`, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
+				(SELECT storage_locations.area AS `group`,
+				storage_locations.plnt,
+				pi_book.material_number,
+				pi_book.location,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				WHERE storage_locations.area IS NOT NULL
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')) AS official_variance
+				GROUP BY plnt, `group`");
+		}else{
+			$variance = db::select("SELECT plnt, `group`, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
+				(SELECT storage_locations.area AS `group`,
+				storage_locations.plnt,
+				pi_book.material_number,
+				pi_book.location,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_output_logs
+				WHERE stocktaking_date = '".$calendar->date."'
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				WHERE stock_date = '".$calendar->date."'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				WHERE storage_locations.area IS NOT NULL
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')) AS official_variance
+				GROUP BY plnt, `group`");
+		}
 
 		$response = array(
 			'status' => true,
@@ -558,20 +1278,72 @@ class StockTakingController extends Controller{
 	}
 
 	public function fetchVarianceDetail(Request $request){
-		$date = date('Y-m-d');
-		
-		$variance_detail = db::select("SELECT variance.location, variance.material_number, mpdl.material_description, sum(variance.pi) AS pi, sum(variance.book) AS book, sum(variance.pi)-sum(variance.book) AS diff, 
-			abs(sum(pi)-sum(book)) AS diff_abs FROM
-			(SELECT storage_location AS location, material_number, unrestricted AS book, 0 AS pi FROM storage_location_stocks
-			WHERE date(created_at) = '".$date."' 
-			AND storage_location = '".$request->get('location')."'
-			UNION ALL
-			SELECT location, material_number, 0 AS book, sum(quantity) AS pi FROM	stocktaking_outputs
-			WHERE location = '".$request->get('location')."'
-			GROUP BY location, material_number) AS variance
-			LEFT JOIN material_plant_data_lists mpdl ON variance.material_number = mpdl.material_number
-			GROUP BY variance.location, variance.material_number, mpdl.material_description 
-			ORDER BY diff_abs DESC");
+		$month = $request->get('month');
+		$location = $request->get('location');
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$variance_detail = db::select("SELECT plnt, `group`, location, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
+				(SELECT storage_locations.area AS `group`,
+				storage_locations.plnt,
+				pi_book.material_number,
+				pi_book.location,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(pi_book.pi - pi_book.book) AS diff_qty,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.pi) AS pi_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				WHERE stock_date = '". $calendar->date ."'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				WHERE storage_locations.area = '". $location ."') AS official_variance
+				GROUP BY plnt, `group`, location");
+		}else{
+			$variance_detail = db::select("SELECT plnt, `group`, location, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
+				(SELECT storage_locations.area AS `group`,
+				storage_locations.plnt,
+				pi_book.material_number,
+				pi_book.location,
+				ROUND((material_plant_data_lists.standard_price/1000), 5) AS std,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(pi_book.pi - pi_book.book) AS diff_qty,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.pi) AS pi_amt,
+				(ROUND((material_plant_data_lists.standard_price/1000), 5) * pi_book.book) AS book_amt,
+				ABS((ROUND((material_plant_data_lists.standard_price/1000), 5) * (pi_book.pi - pi_book.book))) AS var_amt_abs
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_output_logs
+				WHERE stocktaking_date = '".$calendar->date."'
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				WHERE stock_date = '". $calendar->date ."'
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				WHERE storage_locations.area = '". $location ."') AS official_variance
+				GROUP BY plnt, `group`, location");
+		}		
 
 		$response = array(
 			'status' => true,
@@ -581,41 +1353,90 @@ class StockTakingController extends Controller{
 
 	}
 
-	public function fetchfilledList(){
-		$data = db::select("SELECT area, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
-			(SELECT sl.area, 0 AS qty, count(s.id) AS total FROM stocktaking_lists s
-			LEFT JOIN storage_locations sl on sl.storage_location = s.location
-			GROUP BY sl.area
-			UNION ALL
-			SELECT sl.area, count(s.id) AS qty, 0 AS total FROM stocktaking_lists s
-			LEFT JOIN storage_locations sl on sl.storage_location = s.location
-			WHERE s.quantity IS NOT NULL 
-			GROUP BY sl.area) AS list 
-			GROUP BY area");
+	public function fetchfilledList(Request $request){
+		$month = $request->get('month');
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$data = db::select("SELECT area, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
+				(SELECT sl.area, 0 AS qty, count(s.id) AS total FROM stocktaking_lists s
+				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				GROUP BY sl.area
+				UNION ALL
+				SELECT sl.area, count(s.id) AS qty, 0 AS total FROM stocktaking_lists s
+				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				WHERE s.quantity IS NOT NULL 
+				GROUP BY sl.area) AS list 
+				GROUP BY area");
+		}else{
+			$data = db::select("SELECT area, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
+				(SELECT sl.area, 0 AS qty, count(s.id) AS total FROM stocktaking_inquiry_logs s
+				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				WHERE s.stocktaking_date = '".$calendar->date."'
+				GROUP BY sl.area
+				UNION ALL
+				SELECT sl.area, count(s.id) AS qty, 0 AS total FROM stocktaking_inquiry_logs s
+				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				WHERE s.stocktaking_date = '".$calendar->date."'
+				AND s.quantity IS NOT NULL
+				GROUP BY sl.area) AS list 
+				GROUP BY area;");
+		}
+
 
 		$response = array(
 			'status' => true,
 			'data' => $data
 		);
 		return Response::json($response);
+
 	}
 
 	public function fetchfilledListDetail(Request $request){
 		$group = $request->get('group');
-
+		$month = $request->get('month');
 		$quantity = '';
 		if($request->get('series') == 'Empty'){
 			$quantity = 's.quantity IS NULL';
 		}else if ($request->get('series') == 'Filled') {
 			$quantity = 's.quantity IS NOT NULL';
 		}
-		
-		$input_detail = db::select("SELECT sl.area, s.location, s.store, s.material_number, mpdl.material_description, s.quantity, s.audit1, s.audit2, s.final_count FROM stocktaking_lists s
-			LEFT JOIN storage_locations sl on sl.storage_location = s.location
-			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
-			WHERE sl.area = '".$group."'
-			AND ".$quantity."
-			ORDER BY sl.area, s.location, s.store, s.material_number ASC");
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$input_detail = db::select("SELECT sl.area, s.location, s.store, s.material_number, mpdl.material_description, s.quantity, s.audit1, s.audit2, s.final_count FROM stocktaking_lists s
+				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+				WHERE sl.area = '".$group."'
+				AND ".$quantity."
+				ORDER BY sl.area, s.location, s.store, s.material_number ASC");
+		}else{
+			$input_detail = db::select("
+				SELECT sl.area, s.location, s.store, s.material_number, mpdl.material_description, NULL AS quantity, NULL AS audit1, NULL AS audit2, s.quantity AS final_count FROM stocktaking_inquiry_logs s
+				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+				WHERE sl.area = '".$group."'
+				AND ".$quantity."
+				AND s.stocktaking_date = '".$calendar->date."'
+				ORDER BY sl.area, s.location, s.store, s.material_number ASC;");
+		}
 
 		$response = array(
 			'status' => true,
@@ -744,8 +1565,6 @@ class StockTakingController extends Controller{
 			'material' => $material,
 		);
 		return Response::json($response);
-
-
 	}
 
 	public function fetchStoreList(Request $request){
@@ -870,7 +1689,7 @@ class StockTakingController extends Controller{
 	public function fetchAuditStoreList(Request $request){
 
 		$process = $request->get('process');
-		$current = StocktakingList::where('store', $request->get('store'))->first();
+		$current = StocktakingList::where('store', $request->get('store'))->orderBy('process', 'ASC')->first();
 
 		$null = StocktakingList::where('store', $request->get('store'))
 		->whereNull('quantity')
@@ -961,10 +1780,43 @@ class StockTakingController extends Controller{
 
 	public function fetch_bom_output(Request $request){
 		$bom_outputs = BomOutput::orderBy('bom_outputs.id', 'asc');
-		$bom_outputs = $bom_outputs->select('bom_outputs.material_parent', 'bom_outputs.material_child', 'bom_outputs.usage', 'bom_outputs.um')
+		$bom_outputs = $bom_outputs->select('bom_outputs.material_parent', 'bom_outputs.material_child', 'bom_outputs.usage', 'bom_outputs.uom')
 		->get();
 
 		return DataTables::of($bom_outputs)->make(true);
+	}
+
+	public function addMaterial(Request $request){
+		$store = $request->get('store');
+		$category = $request->get('category');
+		$material = $request->get('material');
+		$location = $request->get('location');
+
+		try {
+			$add = new StocktakingList([
+				'store' => $store,
+				'category' => $category,
+				'material_number' => $material,
+				'location' => $location,
+				'remark' => 'USE',
+				'process' => 0,
+				'created_by' => Auth::id()
+			]);
+			$add->save();
+
+
+			$response = array(
+				'status' => true,
+				'message' => 'Add New Material Successful'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function updateNoUse(Request $request){
@@ -973,12 +1825,14 @@ class StockTakingController extends Controller{
 			$update = StocktakingList::whereIn('id', $request->get('id'))
 			->update([
 				'remark' => 'NO USE',
-				'quantity' => 0
+				'process' => 1,
+				'quantity' => 0,
+				'inputed_by' => Auth::user()->username
 			]);
 
 			$response = array(
 				'status' => true,
-				'message' => 'Update No Use Successfully'
+				'message' => 'Update No Use Berhasil'
 			);
 			return Response::json($response);
 		} catch (Exception $e) {
@@ -1025,7 +1879,7 @@ class StockTakingController extends Controller{
 
 			$response = array(
 				'status' => true,
-				'message' => 'Audit Successfully'
+				'message' => 'Audit Berhasil'
 			);
 			return Response::json($response);
 		} catch (Exception $e) {
@@ -1040,17 +1894,30 @@ class StockTakingController extends Controller{
 	public function updateAudit(Request $request, $audit){
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
+		
+		$auditor = $request->get('auditor');
+		if($auditor == null){
+			$auditor = Auth::user()->username;
+		}
+
+		$field = '';
+		if($audit == 'audit1'){
+			$field = 'audit1_by';
+		}else if($audit == 'audit2'){
+			$field = 'audit2_by';
+		}
 
 		try {
 
 			$update = StocktakingList::where('id', $id)
 			->update([
-				$audit => $quantity
+				$audit => $quantity,
+				$field => $auditor
 			]);
 
 			$response = array(
 				'status' => true,
-				'message' => 'Update Successfully'
+				'message' => 'Update Berhasil'
 			);
 			return Response::json($response);
 		} catch (Exception $e) {
@@ -1083,7 +1950,7 @@ class StockTakingController extends Controller{
 
 			$response = array(
 				'status' => true,
-				'message' => 'Update Successfully'
+				'message' => 'Update Berhasil'
 			);
 			return Response::json($response);
 		} catch (Exception $e) {
@@ -1105,19 +1972,20 @@ class StockTakingController extends Controller{
 
 			$update = StocktakingList::where('id', $id)
 			->update([
-				'quantity' => $quantity
+				'process' => 1,
+				'quantity' => $quantity,
+				'inputed_by' => Auth::user()->username
 			]);
 
-			$store = StocktakingList::where('id', $id)->first();
-
-			$updateStore = StocktakingList::where('store', $store->store)
-			->update([
-				'process' => 1
-			]);
+			// $store = StocktakingList::where('id', $id)->first();
+			// $updateStore = StocktakingList::where('store', $store->store)
+			// ->update([
+			// 	'process' => 1
+			// ]);
 
 			$response = array(
 				'status' => true,
-				'message' => 'Save Count PI Successfully'
+				'message' => 'PI Berhasil Disimpan'
 			);
 			return Response::json($response);
 		} catch (Exception $e) {
@@ -1127,12 +1995,51 @@ class StockTakingController extends Controller{
 			);
 			return Response::json($response);
 		}
+	}
 
+	public function deleteStore(Request $request){
+		$store = $request->get('store');
+
+		try {
+			$delete = StocktakingList::where('store', $store)->forceDelete();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Delete Store Berhasil'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}	
+	}
+
+	public function deleteMaterial(Request $request){
+		$id = $request->get('id');
+
+		try {
+			$delete = StocktakingList::where('id', $id)->forceDelete();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Delete Material Berhasil'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function bom_output(){
 		$title = 'BOM Output';
-		$title_jp = '???';
+		$title_jp = '';
 
 		return view('stocktakings.bomoutput', array(
 			'title' => $title,
@@ -1143,7 +2050,7 @@ class StockTakingController extends Controller{
 
 	public function mpdl() {
 		$title = 'Material Plant Data List';
-		$title_jp = '???';
+		$title_jp = '';
 
 		return view('stocktakings.mpdl', array(
 			'title' => $title,
@@ -1151,6 +2058,97 @@ class StockTakingController extends Controller{
 			'storage_locations' => $this->storage_location,
 			'base_units' => $this->base_unit,
 		))->with('page', 'Material Plant Data List')->with('head', 'MPDL');
+	}
+
+	function uploadFTP($from, $to) {
+		$upload = FTP::connection()->uploadFile($from, $to);
+		return $upload;
+	}
+
+	function writeString($text, $maxLength, $char) {
+		if ($maxLength > 0) {
+			$textLength = 0;
+			if ($text != null) {
+				$textLength = strlen($text);
+			}
+			else {
+				$text = "";
+			}
+			for ($i = 0; $i < ($maxLength - $textLength); $i++) {
+				$text .= $char;
+			}
+		}
+		return strtoupper($text);
+	}
+
+	function writeStringReserve($text, $maxLength, $char) {
+
+		$output = '';
+
+		if ($maxLength > 0) {
+			$textLength = 0;
+			if ($text != null) {
+				$textLength = strlen($text);
+			}
+			else {
+				$output = "";
+			}
+
+			for ($i = 0; $i < ($maxLength - $textLength); $i++) {
+				$output .= $char;
+			}
+
+			if ($text != null) {
+				$output .= $text;
+			}
+		}
+		return strtoupper($output);
+	}
+
+	function writeDecimal($text, $maxLength, $char) {
+		if ($maxLength > 0) {
+			$textLength = 0;
+			if ($text != null) {
+				if(fmod($text,1) > 0){
+					$decimal = $this->decimal(fmod($text,1));
+					$decimalLength = strlen($decimal);
+
+					for ($j = 0; $j < (3- $decimalLength); $j++) {
+						$decimal = $decimal . $char;
+					}
+				}
+				else{
+					$decimal = $char . $char . $char;
+				}
+				$textLength = strlen(floor($text));
+				$text = floor($text);
+			}
+			else {
+				$text = "";
+			}
+			for ($i = 0; $i < (($maxLength - 4) - $textLength); $i++) {
+				$text = $char . $text;
+			}
+		}
+		$text .= "." . $decimal;
+		return $text;
+	}
+
+	function writeDate($created_at, $type) {
+		$datetime = strtotime($created_at);
+		if ($type == "completion") {
+			$text = date("dmY", $datetime);
+			return $text;
+		}
+		else {
+			$text = date("Ymd", $datetime);
+			return $text;
+		}
+	}
+
+	function decimal($number){
+		$num = explode('.', $number);
+		return $num[1];
 	}
 
 
@@ -1197,7 +2195,7 @@ class StockTakingController extends Controller{
 
 	public function indexSilverReport(){
 		$title = 'Silver Stocktaking Report';
-		$title_jp = '???';
+		$title_jp = '銀材棚卸報告';
 
 		return view('stocktakings.silver_report', array(
 			'title' => $title,

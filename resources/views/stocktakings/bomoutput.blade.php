@@ -48,7 +48,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		BOM Output <span class="text-purple">????</span>
+		{{ $title }} <span class="text-purple">{{ $title_jp }}</span>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -91,7 +91,7 @@
 										<th style="width:5%;">Material Parent</th>
 										<th style="width:5%;">Material Child</th>
 										<th style="width:5%;">Usage</th>
-										<th style="width:5%;">UM</th>
+										<th style="width:5%;">UOM</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -254,7 +254,7 @@
 			{ "data": "material_parent"},
 			{ "data": "material_child"},
 			{ "data": "usage"},
-			{ "data": "um"},
+			{ "data": "uom"},
 			]
 		});
 

@@ -69,40 +69,103 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 
+	<input type="hidden" id="month" value="{{ $month }}">
+
 	<div class="row">
-		<div class="col-xs-9 pull-left">
-			<table id="tableAdjust" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+		<div class="col-xs-12">
+			<h2>PI VS Book</h2>
+			<div class="col-xs-6" style="padding-left: 0px;">
+				<h3 style="margin: 0px;">PI</h3>
+				<table id="tablePi" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+					<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+						<tr>
+							<th width="10%">Group</th>
+							<th width="9%">Location</th>
+							<th width="10%">Material</th>
+							<th>Material Description</th>
+							<th width="1%">PI</th>
+						</tr>
+					</thead>
+					<tbody id="tablePiBody">
+					</tbody>
+				</table>		
+			</div>
+			<div class="col-xs-6" style="padding-right: 0px;">
+				<h3 style="margin: 0px;">Book</h3>
+				<table id="tableBook" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+					<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+						<tr>
+							<th width="10%">Group</th>
+							<th width="9%">Location</th>
+							<th width="10%">Material</th>
+							<th>Material Description</th>
+							<th width="1%">Book</th>
+						</tr>
+					</thead>
+					<tbody id="tableBookBody">
+					</tbody>
+				</table>	
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-8">
+			<h2>Kitto VS PI</h2>
+			<table id="tableKittoPi" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th width="1%">No</th>
-						<th width="10%">Idx</th>
-						<th width="9%">Rack</th>
+						<th width="10%">Group</th>
+						<th width="9%">Location</th>
 						<th width="10%">Material</th>
 						<th>Material Description</th>
-						<th width="1%">Quantity</th>
-						<th>Created at</th>
-						<th width="1%"> Check</th>				
+						<th width="10%">Kitto</th>
+						<th width="10%">PI</th>
 					</tr>
 				</thead>
-				<tbody id="tableAdjustBody">
+				<tbody id="tableKittoPiBody">
 				</tbody>
-				<tfoot>
-					<tr style="color: black">
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-						<th></th>
-					</tr>
-				</tfoot>
-			</table>	
+			</table>		
 		</div>
-		<div class="col-xs-3 pull-right">
-			
-			
+	</div>
+
+	<div class="row">
+		<div class="col-xs-8">
+			<h2>Kitto VS Book</h2>
+			<table id="tableKittoBook" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					<tr>
+						<th width="10%">Group</th>
+						<th width="9%">Location</th>
+						<th width="10%">Material</th>
+						<th>Material Description</th>
+						<th width="10%">Kitto</th>
+						<th width="10%">Book</th>
+					</tr>
+				</thead>
+				<tbody id="tableKittoBookBody">
+				</tbody>
+			</table>		
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-8">
+			<h2>PI VS Lot</h2>
+			<table id="tablePiLot" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					<tr>
+						<th width="10%">Group</th>
+						<th width="9%">Location</th>
+						<th width="10%">Material</th>
+						<th>Material Description</th>
+						<th width="10%">Lot</th>
+						<th width="10%">PI</th>
+					</tr>
+				</thead>
+				<tbody id="tablePiLotBody">
+				</tbody>
+			</table>		
 		</div>
 	</div>
 
@@ -137,21 +200,14 @@
 	});	
 	
 	function fillTable(){
-		$('#tableAdjust').DataTable().destroy();
-
-		var grup = $('#grup').val();
+		var month = $('#month').val();
 
 		var data = {
-			grup:grup,
+			month : month
 		}
 
-		$('#tableAdjust tfoot th').each(function(){
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
-		});
-
-
-		var table = $('#tableAdjust').DataTable({
+		$('#tablePi').DataTable().destroy();
+		var table = $('#tablePi').DataTable({
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
@@ -188,59 +244,319 @@
 						columns: ':not(.notexport)'
 					}
 				}
-				]},
-				"columnDefs": [ {
-					"searchable": false,
-					"orderable": false,
-					"targets": 0
-				} ],
-				'paging': true,
-				'lengthChange': true,
-				'searching': true,
-				'ordering': false,
-				'info': true,
-				'autoWidth': true,
-				"sPaginationType": "full_numbers",
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"processing": true,
-				"ajax": {
-					"type" : "get",
-					"url" : "{{ url("fetch/middle/buffing_adjustment") }}",
-					"data" : data
+				]
+			},
+			"columnDefs": [ {
+				"searchable": false,
+				"orderable": false,
+				"targets": 0
+			} ],
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': false,
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/stocktaking/pi_vs_book") }}",
+				"data" : data
+			},
+
+			"columns": [
+			{ "data": "group"},
+			{ "data": "location"},
+			{ "data": "material_number"},
+			{ "data": "material_description" },
+			{ "data": "pi"}]
+		});
+
+		$('#tableBook').DataTable().destroy();
+		var table = $('#tableBook').DataTable({
+			'dom': 'Brtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
 				},
-
-				"columns": [
-				{ "data": "idx"},
-				{ "data": "idx"},
-				{ "data": "rack"},
-				{ "data": "material_num"},
-				{ "data": "material_description" },
-				{ "data": "material_qty"},
-				{ "data": "created_at"},
-				{ "data": "check" }]
-			});
-
-		table.columns().every( function () {
-			var that = this;
-
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
 				}
-			} );
-		} );
+				]
+			},
+			"columnDefs": [ {
+				"searchable": false,
+				"orderable": false,
+				"targets": 0
+			} ],
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': false,
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/stocktaking/book_vs_pi") }}",
+				"data" : data
+			},
 
-		$('#tableAdjust tfoot tr').appendTo('#tableAdjust thead');
+			"columns": [
+			{ "data": "group"},
+			{ "data": "location"},
+			{ "data": "material_number"},
+			{ "data": "material_description" },
+			{ "data": "book"}]
+		});
+
+		$('#tableKittoPi').DataTable().destroy();
+		var table = $('#tableKittoPi').DataTable({
+			'dom': 'Brtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				}
+				]
+			},
+			"columnDefs": [ {
+				"searchable": false,
+				"orderable": false,
+				"targets": 0
+			} ],
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': false,
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/stocktaking/kitto_vs_pi") }}",
+				"data" : data
+			},
+
+			"columns": [
+			{ "data": "group"},
+			{ "data": "location"},
+			{ "data": "material_number"},
+			{ "data": "material_description" },
+			{ "data": "kitto"},
+			{ "data": "pi"}]
+		});
+
+		$('#tableKittoBook').DataTable().destroy();
+		var table = $('#tableKittoBook').DataTable({
+			'dom': 'Brtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				}
+				]
+			},
+			"columnDefs": [ {
+				"searchable": false,
+				"orderable": false,
+				"targets": 0
+			} ],
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': false,
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/stocktaking/kitto_vs_book") }}",
+				"data" : data
+			},
+
+			"columns": [
+			{ "data": "group"},
+			{ "data": "location"},
+			{ "data": "material_number"},
+			{ "data": "material_description" },
+			{ "data": "kitto"},
+			{ "data": "book"}]
+		});
 
 
-		table.on( 'order.dt search.dt', function () {
-			table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-				cell.innerHTML = i+1;
-			} );
-		} ).draw();
+
+		$('#tablePiLot').DataTable().destroy();
+		var table = $('#tablePiLot').DataTable({
+			'dom': 'Brtip',
+			'responsive': true,
+			'lengthMenu': [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			],
+			'buttons': {
+				buttons:[
+				{
+					extend: 'pageLength',
+					className: 'btn btn-default',
+				},
+				{
+					extend: 'copy',
+					className: 'btn btn-success',
+					text: '<i class="fa fa-copy"></i> Copy',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'excel',
+					className: 'btn btn-info',
+					text: '<i class="fa fa-file-excel-o"></i> Excel',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				},
+				{
+					extend: 'print',
+					className: 'btn btn-warning',
+					text: '<i class="fa fa-print"></i> Print',
+					exportOptions: {
+						columns: ':not(.notexport)'
+					}
+				}
+				]
+			},
+			"columnDefs": [ {
+				"searchable": false,
+				"orderable": false,
+				"targets": 0
+			} ],
+			'paging': true,
+			'lengthChange': true,
+			'searching': true,
+			'ordering': false,
+			'info': true,
+			'autoWidth': true,
+			"sPaginationType": "full_numbers",
+			"bJQueryUI": true,
+			"bAutoWidth": false,
+			"processing": true,
+			"ajax": {
+				"type" : "get",
+				"url" : "{{ url("fetch/stocktaking/pi_vs_lot") }}",
+				"data" : data
+			},
+
+			"columns": [
+			{ "data": "group"},
+			{ "data": "location"},
+			{ "data": "material_number"},
+			{ "data": "material_description" },
+			{ "data": "kitto"},
+			{ "data": "book"}]
+		});
+
+
 	}
 
 

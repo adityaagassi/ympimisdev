@@ -47,7 +47,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Material Plant Data List <span class="text-purple">????</span>
+		{{ $title }} <span class="text-purple">{{ $title_jp }}</span>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>

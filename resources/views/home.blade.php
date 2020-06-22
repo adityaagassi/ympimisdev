@@ -255,10 +255,10 @@
                 <tbody>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Monthly Stock Taking (??)</span>
+                            <span style="font-weight: bold;">Monthly Stock Taking (月次棚卸)</span>
                             <br>
                             <a href="{{ url("/index/stocktaking/menu") }}">
-                                <i class="fa fa-caret-right"></i> Monthly Stock Taking (??)
+                                <i class="fa fa-caret-right"></i> Monthly Stock Taking (月次棚卸)
                             </a>
                             <br>
                         </td>                     

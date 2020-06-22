@@ -59,15 +59,7 @@
 		text-align: center;
 		font-weight: bold;
 	}
-	#lot {
-		text-align: center;
-		font-weight: bold;
-	}
-	#z1 {
-		text-align: center;
-		font-weight: bold;
-	}
-	#total {
+	.input {
 		text-align: center;
 		font-weight: bold;
 	}
@@ -134,37 +126,127 @@
 			</div>
 		</div>
 
-		<div class="col-xs-5" style="margin-top: 5%;">
+		<div class="col-xs-5" style="margin-top: 2%;">
 			<div class="col-xs-12">
 				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">Lot</label>
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;" id="text_lot"></label>
-					<div class="col-xs-6" align="right">
-						<input type="text" style="font-size:25px; height: 45px;" onchange="changeVal()" class="form-control numpad" placeholder="INPUT LOT HERE" id="lot">
+					<div class="col-xs-1 col-xs-offset-11" align="right">
+						<button class="btn btn-success" onclick="addCount()"><i class="fa fa-plus"></i></button>
 					</div>
-				</div>	
+				</div>
 			</div>
+
+			<div id="count">
+				{{-- 1 --}}
+				<div class="col-xs-12" id="count_1">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_1">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_1" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_1" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 2 --}}
+				<div class="col-xs-12" id="count_2">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_2">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_2">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_2" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_2" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 3 --}}
+				<div class="col-xs-12" id="count_3">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_3">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_3">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_3" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_3" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 4 --}}
+				<div class="col-xs-12" id="count_4">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_4">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_4">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_4" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_4" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 5 --}}
+				<div class="col-xs-12" id="count_5">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_5">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_5">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_5" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_5" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div class="col-xs-12">	
-				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">Z1</label>
-					<div class="col-xs-6 col-xs-offset-3" align="right">
-						<input type="text" style="font-size:25px; height: 45px;" onchange="changeVal()" class="form-control numpad" placeholder="INPUT Z1 HERE" id="z1">
+				<div class="form-group row" align="right">					
+					<label class="col-xs-1 col-xs-offset-5" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">Total</label>
+					<div class="col-xs-3 col-xs-offset-2" align="right">
+						<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-12">		
-				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">Total</label>
-					<div class="col-xs-6 col-xs-offset-3" align="right">
-						<input type="text" style="font-size:30px; height: 45px;" class="form-control" id="total" readonly="">
-					</div>
-				</div>
-			</div>
-			<div class="col-xs-12" align="right">
+
+			<div class="col-xs-11" align="right">
 				<div class="input-group input-group-lg">
 					<button type="button" style="font-size:25px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
 
-					<button type="button" style="font-size:25px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
+					<button id="save_button" type="button" style="font-size:25px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
 				</div>
 			</div>
 		</div>
@@ -249,7 +331,108 @@
 
 			$('#qr_code').blur();
 
+			$('#save_button').prop('disabled', true);
+
+
+
 		});
+
+
+		var count = 5;
+		function addCount(){
+			++count;
+
+			$add = '';
+			$add += '<div class="col-xs-12" id="count_'+ count +'">';
+			$add += '<div class="form-group row" style="margin-bottom: 2%;">';
+			$add += '<div class="col-xs-3" align="right">';
+			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
+			$add += '</div>';
+			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
+			$add += '<div class="col-xs-3" align="right">';
+			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
+			$add += '</div>';
+			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
+			$add += '<div class="col-xs-3" align="right">';
+			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
+			$add += '</div>';
+			$add += '<div class="col-xs-1" align="right">';
+			$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
+			$add += '</div>';
+			$add += '</div>';
+			$add += '</div>';
+
+			$('#count').append($add);
+			$('#qty_'+count).addClass('numpad');
+			$('#koef_'+count).addClass('numpad');
+
+			$('.numpad').numpad({
+				hidePlusMinusButton : true,
+				decimalSeparator : '.'
+			});
+
+			console.log(count);
+		}
+
+		function removeCount(param){
+
+			var index = param.split('_');
+			var id = index[1];
+
+			$("#count_"+id).remove();
+
+			if(count != id){
+				var lop = parseInt(id) + 1;		
+				for (var i = lop; i <= count; i++) {
+					document.getElementById("count_"+ i).id = "count_"+ (i-1);
+					document.getElementById("qty_"+ i).id = "qty_"+ (i-1);
+					document.getElementById("koef_"+ i).id = "koef_"+ (i-1);
+					document.getElementById("total_"+ i).id = "total_"+ (i-1);
+					document.getElementById("remove_"+ i).id = "remove_"+ (i-1);
+				}		
+			}
+			count--;
+			changeVal();
+
+			console.log(count);
+		}
+
+		function resetCount() {
+			$('#count').append().empty();
+
+			count = 5;
+
+			for (var i = 1; i <= count; i++) {
+				$add = '';
+				$add += '<div class="col-xs-12" id="count_'+ i +'">';
+				$add += '<div class="form-group row" style="margin-bottom: 2%;">';
+				$add += '<div class="col-xs-3" align="right">';
+				$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ i +'">';
+				$add += '</div>';
+				$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
+				$add += '<div class="col-xs-3" align="right">';
+				$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ i +'">';
+				$add += '</div>';
+				$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
+				$add += '<div class="col-xs-3" align="right">';
+				$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ i +'" readonly="">';
+				$add += '</div>';
+				$add += '<div class="col-xs-1" align="right">';
+				$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
+				$add += '</div>';
+				$add += '</div>';
+				$add += '</div>';
+
+				$('#count').append($add);
+				$('#qty_'+i).addClass('numpad');
+				$('#koef_'+i).addClass('numpad');
+			}
+
+			$('.numpad').numpad({
+				hidePlusMinusButton : true,
+				decimalSeparator : '.'
+			});
+		}
 
 		function stopScan() {
 			$('#scanModal').modal('hide');
@@ -282,8 +465,16 @@
 
 						if (result.status) {
 							if(result.material[0].remark == 'USE'){
+								if(result.material[0].process <= 1){
+									$('#save_button').prop('disabled', false);
+									openSuccessGritter('Success', 'QR Code Successfully');
+								}else{
+									$('#save_button').prop('disabled', true);
+									openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
+								}
+
 								$('#qr_code').prop('disabled', true);
-								openSuccessGritter('Success', 'QR Code Successfully');
+								
 
 								$("#store").text(result.material[0].store);
 								$("#category").text(result.material[0].category);
@@ -396,6 +587,8 @@
 
 		}
 
+
+
 		function checkCode(video, code) {
 
 			var data = {
@@ -406,8 +599,15 @@
 
 				if (result.status) {
 					if(result.material[0].remark == 'USE'){
+						if(result.material[0].process <= 1){
+							$('#save_button').prop('disabled', false);
+							openSuccessGritter('Success', 'QR Code Successfully');
+						}else{
+							$('#save_button').prop('disabled', true);
+							openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
+						}
+
 						$('#qr_code').prop('disabled', true);
-						openSuccessGritter('Success', 'QR Code Successfully');
 
 						$("#store").text(result.material[0].store);
 						$("#category").text(result.material[0].category);
@@ -490,6 +690,8 @@
 		}
 
 		function canc(){
+			$('#save_button').prop('disabled', true);
+
 			$('#store').html("");
 			$('#category').html("");
 			$('#material_number').html("");
@@ -500,34 +702,38 @@
 			$('#text_lot').html("");
 			$('#lot').prop('disabled', false);
 
-			document.getElementById("lot").value = '';
-			document.getElementById("z1").value = '';
-			document.getElementById("total").value = '';
-
-			lot_uom = 0;			
-
 			$('#qr_code').val("");
 			$('#qr_code').prop('disabled', false);
 			$('#qr_code').focus();
 			$('#qr_code').blur();
+
+			resetCount();
+			document.getElementById("sum_total").value = '';
 		}
 
 		function changeVal(){
-			
-			var lot = $("#lot").val();
-			var z1 = $("#z1").val();
+			var sum_total = 0;
 
-			lot = (lot || 0);
-			lot_uom = (lot_uom || 0);
-			z1 = (z1 || 0);
+			for (var i = 1; i <= count; i++) {
+				var qty = $("#qty_"+i).val();
+				var koef = $("#koef_"+i).val();
 
-			var total = (parseFloat(lot) * parseFloat(lot_uom)) + parseFloat(z1);
-			document.getElementById("total").value = total;
+				if(qty == '' || koef == ''){
+					continue;
+				}
+
+				var total = parseFloat(qty) * parseFloat(koef);
+				document.getElementById("total_"+i).value = total;
+
+				sum_total += total;
+			}
+
+			document.getElementById("sum_total").value = sum_total;
 		}
 
 		function save(){
 			var id = $("#qr_code").val();
-			var quantity = $("#total").val();
+			var quantity = $("#sum_total").val();
 
 			var data = {
 				id : id,
@@ -541,6 +747,9 @@
 					
 					fillStore(store);
 					canc();
+
+					$('#input').hide();
+
 				}else{
 					openSuccessGritter('Error', result.message);
 				}
