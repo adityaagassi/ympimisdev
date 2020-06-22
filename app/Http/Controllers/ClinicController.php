@@ -322,7 +322,9 @@ class ClinicController extends Controller{
 	}
 
 	public function fetchVisitLog(Request $request){
-		$clinic_visit_logs = ClinicPatientDetail::leftJoin(db::raw('(select * from employee_syncs) as patient'), 'patient.employee_id', '=', 'clinic_patient_details.employee_id');
+		$clinic_visit_logs = ClinicPatientDetail::leftJoin(db::raw('(select * from employee_syncs) as patient'), 'patient.employee_id', '=', 'clinic_patient_details.employee_id')
+		->leftJoin('ympi_klinik.patient_logs as logs', 'logs.idx', '=', 'clinic_patient_details.patient_list_id');
+
 		if(strlen($request->get('visitFrom')) > 0 ){
 			$visitFrom = date('Y-m-d', strtotime($request->get('visitFrom')));
 			$clinic_visit_logs = $clinic_visit_logs->where(db::raw('date(clinic_patient_details.visited_at)'), '>=', $visitFrom);
@@ -347,6 +349,8 @@ class ClinicController extends Controller{
 			$clinic_visit_logs = $clinic_visit_logs->whereIn('clinic_patient_details.diagnose', $request->get('diagnose'));
 		}
 		$clinic_visit_logs = $clinic_visit_logs->groupBy('clinic_patient_details.visited_at',
+			'logs.in_time',
+			'logs.out_time',
 			'clinic_patient_details.patient_list_id',
 			'clinic_patient_details.employee_id',
 			'patient.name',
@@ -356,6 +360,8 @@ class ClinicController extends Controller{
 		$clinic_visit_logs = $clinic_visit_logs->orderBy('clinic_patient_details.visited_at', 'desc')
 		->select(
 			'clinic_patient_details.visited_at',
+			'logs.in_time',
+			'logs.out_time',
 			'clinic_patient_details.patient_list_id',
 			'clinic_patient_details.employee_id',
 			'patient.name',

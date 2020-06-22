@@ -210,6 +210,7 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width: 10%;">Visited At</th>
+										<th style="width: 10%;">Out</th>
 										<th style="width: 10%;">Employee ID</th>
 										<th style="width: 20%;">Name</th>
 										<th style="width: 20%;">Department</th>
@@ -222,6 +223,7 @@
 								</tbody>
 								<tfoot>
 									<tr style="color: black">
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -473,6 +475,7 @@
 
 						tableData += '<tr>';
 						tableData += '<td>'+ result.logs[i].visited_at +'</td>';
+						tableData += '<td>'+ result.logs[i].out_time +'</td>';
 						tableData += '<td>'+ result.logs[i].employee_id +'</td>';
 						tableData += '<td>'+ (result.logs[i].name || 'Not Found') +'</td>';
 						tableData += '<td>'+ (result.logs[i].department || 'Not Found') +'</td>';
