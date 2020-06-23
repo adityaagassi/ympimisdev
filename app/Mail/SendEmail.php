@@ -40,7 +40,7 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Overtime Information (情報管理システムの残業情報)')->view('mails.overtime');
         }
         if($this->remark == 'stuffing'){
-            return $this->from('ympimis@gmail.com')->subject('MIS Stuffing Information (情報管理システムの荷積み情報)')->view('mails.stuffing');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Stuffing Information (情報管理システムの荷積み情報)')->view('mails.stuffing');
         }
         if($this->remark == 'min_queue'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Kanban Queue Information (情報管理システムのかんばん待ちの情報)')->view('mails.min_queue');
@@ -49,7 +49,7 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Kanban WIP Information (情報管理システムのかんばん待ちの情報)')->view('mails.middle_kanban');
         }
         if($this->remark == 'duobleserialnumber'){
-            return $this->from('ympimis@gmail.com')->subject('MIS Double Serial Number Information (情報管理システムの二重製造番号の情報)')->view('mails.duobleserialnumber');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Double Serial Number Information (情報管理システムの二重製造番号の情報)')->view('mails.duobleserialnumber');
         }
         if($this->remark == 'confirmation_overtime'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Unconfirmed Overtime (情報管理システムの未確認残業)')->view('mails.confirmation_overtime');
@@ -70,49 +70,49 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Users Documents Reminder (ユーザ資料関連の催促メール)')->view('mails.user_document');
         }
         if($this->remark == 'audit'){
-            return $this->from('ympimis@gmail.com')->subject('Production Audit Report (生産監査報告)')->view('mails.audit');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Production Audit Report (生産監査報告)')->view('mails.audit');
         }
         if($this->remark == 'sampling_check'){
-            return $this->from('ympimis@gmail.com')->subject('Sampling Check Report (抜取検査報告)')->view('mails.sampling_check');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Sampling Check Report (抜取検査報告)')->view('mails.sampling_check');
         }
         if($this->remark == 'laporan_aktivitas'){
-            return $this->from('ympimis@gmail.com')->subject('Laporan Aktivitas Audit (監査報告)')->view('mails.laporan_aktivitas');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Laporan Aktivitas Audit (監査報告)')->view('mails.laporan_aktivitas');
         }
         if($this->remark == 'training'){
-            return $this->from('ympimis@gmail.com')->subject('Training Report (教育報告)')->view('mails.training');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Training Report (教育報告)')->view('mails.training');
         }
         if($this->remark == 'interview'){
-            return $this->from('ympimis@gmail.com')->subject('Interview Yubisashikosou Report (指差し呼称面談報告)')->view('mails.interview');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Interview Yubisashikosou Report (指差し呼称面談報告)')->view('mails.interview');
         }
         if($this->remark == 'daily_check'){
-            return $this->from('ympimis@gmail.com')->subject('Daily Check FG (日次完成品検査)')->view('mails.daily_check');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Daily Check FG (日次完成品検査)')->view('mails.daily_check');
         }
         if($this->remark == 'labeling'){
-            return $this->from('ympimis@gmail.com')->subject('Labeling Safety Sign (安全ラベル表示)')->view('mails.labeling');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Labeling Safety Sign (安全ラベル表示)')->view('mails.labeling');
         }
         if($this->remark == 'audit_process'){
-            return $this->from('ympimis@gmail.com')->subject('Audit Process (監査手順)')->view('mails.audit_process');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Audit Process (監査手順)')->view('mails.audit_process');
         }
         if($this->remark == 'first_product_audit'){
-            return $this->from('ympimis@gmail.com')->subject('Audit Cek Produk Pertama Monthly Evidence (初物検査の監査　月次証拠)')->view('mails.first_product_audit');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Audit Cek Produk Pertama Monthly Evidence (初物検査の監査　月次証拠)')->view('mails.first_product_audit');
         }
         if($this->remark == 'first_product_audit_daily'){
-            return $this->from('ympimis@gmail.com')->subject('Audit Cek Produk Pertama Daily Evidence (初物検査の監査　日次証拠)')->view('mails.first_product_audit_daily');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Audit Cek Produk Pertama Daily Evidence (初物検査の監査　日次証拠)')->view('mails.first_product_audit_daily');
         }
         if($this->remark == 'area_check'){
-            return $this->from('ympimis@gmail.com')->subject('Cek Kondisi Safety Area Kerja (職場安全状態確認)')->view('mails.area_check');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Cek Kondisi Safety Area Kerja (職場安全状態確認)')->view('mails.area_check');
         }
         if($this->remark == 'kaizen'){
-            return $this->from('ympimis@gmail.com')->subject('MIS Unverified Kaizen Teian')->view('mails.kaizen');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('MIS Unverified Kaizen Teian')->view('mails.kaizen');
         }
         if($this->remark == 'jishu_hozen'){
-            return $this->from('ympimis@gmail.com')->subject('Audit Implementasi Jishu Hozen (自主保全適用監査)')->view('mails.jishu_hozen');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Audit Implementasi Jishu Hozen (自主保全適用監査)')->view('mails.jishu_hozen');
         }
         if($this->remark == 'apd_check'){
-            return $this->from('ympimis@gmail.com')->subject('Cek Alat Pelindung Diri (APD) (保護具確認)')->view('mails.apd_check');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Cek Alat Pelindung Diri (APD) (保護具確認)')->view('mails.apd_check');
         }
         if($this->remark == 'weekly_report'){
-            return $this->from('ympimis@gmail.com')->subject('Weekly Activity Report (週次活動報告)')->view('mails.weekly_report');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Weekly Activity Report (週次活動報告)')->view('mails.weekly_report');
         }
         if($this->remark == 'push_pull_check'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('NG Report of Push Pull Check Recorder (リコーダーのプッシュプル検査の不良報告)')->view('mails.push_pull_check');
