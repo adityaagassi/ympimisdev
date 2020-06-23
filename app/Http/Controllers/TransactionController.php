@@ -86,6 +86,81 @@ class TransactionController extends Controller
 		))->with('page', 'Return');
 	}
 
+	public function cancelReturn(Request $request){
+
+		try {
+
+			$return = ReturnLog::where('id', '=', $request->get('id'))->first();
+
+			$material = db::connection('mysql2')->table('materials')
+			->where('material_number', '=', $return->material_number)
+			->first();
+
+			$return_log = new ReturnLog([
+				'return_id' => $return->return_id,
+				'material_number' => $return->material_number,
+				'material_description' => $return->material_description,
+				'issue_location' => $return->issue_location,
+				'receive_location' => $return->receive_location,
+				'quantity' => $return->quantity,
+				'returned_by' => $return->returned_by,
+				'created_by' => Auth::id(),
+				'slip_created' => $return->slip_created,
+				'remark' => 'canceled'
+			]);
+			$return_log->save();
+
+			$return_completion = db::connection('mysql2')->table('histories')->insert([
+				"category" => "completion_adjustment",
+				"completion_barcode_number" => "",
+				"completion_description" => "",
+				"completion_location" => $return->issue_location,
+				"completion_issue_plant" => "8190",
+				"completion_material_id" => $material->id,
+				"completion_reference_number" => "",
+				"lot" => $return->quantity*-1,
+				"synced" => 0,
+				'user_id' => "1",
+				'created_at' => date("Y-m-d H:i:s"),
+				'updated_at' => date("Y-m-d H:i:s")
+			]);
+
+			$return_transfer = db::connection('mysql2')->table('histories')->insert([
+				"category" => "transfer_adjustment",
+				"transfer_barcode_number" => "",
+				"transfer_document_number" => "8190",
+				"transfer_material_id" => $material->id,
+				"transfer_issue_location" => $return->issue_location,
+				"transfer_issue_plant" => "8190",
+				"transfer_receive_plant" => "8190",
+				"transfer_receive_location" => $return->receive_location,
+				"transfer_cost_center" => "",
+				"transfer_gl_account" => "",
+				"transfer_transaction_code" => "MB1B",
+				"transfer_movement_type" => "9I3",
+				"transfer_reason_code" => "",
+				"lot" => $return->quantity,
+				"synced" => 0,
+				'user_id' => "1",
+				'created_at' => date("Y-m-d H:i:s"),
+				'updated_at' => date("Y-m-d H:i:s")
+			]);
+
+
+			$response = array(
+				'status' => true,
+				'message' => 'Return berhasil dicancel',
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}	
+	}
+
 	public function deleteReturn(Request $request){
 		$auth_id = Auth::id();
 		$return = ReturnList::where('id', '=', $request->get('id'))->first();
@@ -258,56 +333,111 @@ class TransactionController extends Controller
 	}
 
 	public function fetchReturnLogs(Request $request){
-		$log = ReturnLog::leftJoin(db::raw('(select id, name from users) as returner'), 'returner.id', '=', 'return_logs.returned_by')
-		->leftJoin(db::raw('(select id, name from users) as creator'), 'creator.id', '=', 'return_logs.created_by');
 
-		if(strlen($request->get('datefrom')) > 0 ){
+		$date = '';
+		if(strlen($request->get('datefrom')) > 0){
 			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-			$log = $log->where(db::raw('date(return_logs.slip_created)'), '>=', $datefrom);
+			$date = "AND date(slip_created) >= '".$datefrom."' ";
+			if(strlen($request->get('dateto')) > 0){
+				$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+				$date = $date . "AND date(slip_created) <= '".$dateto."' ";
+			}
 		}
-		if(strlen($request->get('dateto')) > 0 ){
-			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
-			$log = $log->where(db::raw('date(return_logs.slip_created)'), '<=', $dateto);
-		}
+
+		$issue = '';
 		if($request->get('issue') != null){
-			$log = $log->whereIn('return_logs.issue_location', $request->get('issue'));
+			$issues =  $request->get('issue');
+			for ($i=0; $i < count($issues); $i++) {
+				$issue = $issue."'".$issues[$i]."'";
+				if($i != (count($issues)-1)){
+					$issue = $issue.',';
+				}
+			}
+			$issue = " AND issue_location IN (".$issue.") ";
 		}
+
+		$receive = '';
 		if($request->get('receive') != null){
-			$log = $log->whereIn('return_logs.receive_location', $request->get('receive'));
+			$receives =  $request->get('receive');
+			for ($i=0; $i < count($receives); $i++) {
+				$receive = $receive."'".$receives[$i]."'";
+				if($i != (count($receives)-1)){
+					$receive = $receive.',';
+				}
+			}
+			$receive = " AND receive_location IN (".$receive.") ";
 		}
+
+		$material = '';
 		if($request->get('material') != null){
-			$log = $log->whereIn('return_logs.material_number', $request->get('material'));
+			$materials =  $request->get('material');
+			for ($i=0; $i < count($materials); $i++) {
+				$material = $material."'".$materials[$i]."'";
+				if($i != (count($materials)-1)){
+					$material = $material.',';
+				}
+			}
+			$material = " AND material_number IN (".$material.") ";
 		}
+
+		$remark = '';
 		if($request->get('remark') != null){
-			$log = $log->whereIn('return_logs.remark', $request->get('remark'));
+			$remarks =  $request->get('remark');
+			for ($i=0; $i < count($remarks); $i++) {
+				$remark = $remark."'".$remarks[$i]."'";
+				if($i != (count($remarks)-1)){
+					$remark = $remark.',';
+				}
+			}
+			$remark = " AND remark IN (".$remark.") ";
 		}
 
-		$log = $log->orderBy('return_logs.slip_created', 'asc')
-		->select(
-			'return_logs.slip_created',
-			'return_logs.material_number',
-			'return_logs.material_description',
-			'return_logs.issue_location',
-			'return_logs.receive_location',
-			db::raw('concat( SPLIT_STRING ( returner.name, " ", 1 ), " ", SPLIT_STRING ( returner.name, " ", 2 ) ) AS returner'),
-			db::raw('concat( SPLIT_STRING ( creator.name, " ", 1 ), " ", SPLIT_STRING ( creator.name, " ", 2 ) ) AS creator'),
-			'return_logs.remark',
-			'return_logs.quantity',
-			db::raw('if(return_logs.remark = "received", return_logs.created_at, "-") as receive_at'),
-			db::raw('if(return_logs.remark = "rejected", return_logs.created_at, "-") as reject_at'),
-			db::raw('if(return_logs.remark = "deleted", return_logs.created_at, "-") as delete_at')
-		)
-		->get();
+		$condition = $date . $issue . $receive . $material . $remark;
 
-		// $response = array(
-		// 	'status' => true,
-		// 	'log' => $log,
-		// );
-		// return Response::json($response);
+		$log = db::select("SELECT
+			non.return_id,
+			non.material_number,
+			non.issue_location,
+			non.receive_location,
+			non.material_description,
+			non.quantity,
+			IF(cancel.remark is null, non.remark, cancel.remark) AS remark,
+			non.slip_created AS printed_at,
+			non.returned_by AS printed_by,
+			IF(non.remark = 'received', non.created_at, '-') AS received_at,
+			IF(non.remark = 'received', non_user.`name`, '-') AS received_by,
+			IF(non.remark = 'rejected', non.created_at, '-') AS rejected_at,
+			IF(non.remark = 'rejected', non_user.`name`, '-') AS rejected_by,
+			IF(non.remark = 'deleted', non.created_at, '-') AS deleted_at,
+			IF(non.remark = 'deleted', non_user.`name`, '-') AS deleted_by,
+			COALESCE(cancel.created_at, '-') AS canceled_at,
+			COALESCE(cancel_user.`name`, '-') AS canceled_by
+			FROM
+			(SELECT return_id, material_number, material_description, issue_location, receive_location, quantity, remark, slip_created, returned_by, created_at, created_by FROM `return_logs`
+			where remark <> 'canceled' ".$condition." ) AS non
+			LEFT JOIN
+			(SELECT return_id, remark, created_at, created_by FROM `return_logs`
+			where remark = 'canceled' ".$condition." ) AS cancel
+			ON non.return_id = cancel.return_id
+			LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS non_user ON non_user.id = non.created_by
+			LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS cancel_user ON cancel_user.id = cancel.created_by
+			ORDER BY non.slip_created");
 
-		return DataTables::of($log)->make(true);
-
-
+		
+		return DataTables::of($log)
+		->addColumn('cancel', function($data){
+			if($data->remark == 'received'){
+				if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PROD"){
+					return '<button style="width: 50%; height: 100%;" onclick="cancelReturn(\''.$data->return_id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button>';
+				}else{
+					return '-';
+				}
+			}else{
+				return '-';
+			}		
+		})
+		->rawColumns([ 'cancel' => 'cancel'])
+		->make(true);
 	}
 
 	function fetchReturn(Request $request){

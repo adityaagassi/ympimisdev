@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 	thead input {
 		width: 100%;
@@ -32,6 +33,8 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
+	#loading, #error { display: none; }
+	
 </style>
 @endsection
 
@@ -46,6 +49,12 @@
 
 @section('content')
 <section class="content">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
+
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-primary">
@@ -134,22 +143,27 @@
 					</div>
 
 					<div class="row">
-						<div class="col-md-12">
-							<table id="logTable" class="table table-bordered table-striped table-hover">
-								<thead style="background-color: rgba(126,86,134,.7);">
+						<div class="col-md-12" style="overflow-x: auto;">
+							<table id="logTable" class="table table-bordered table-striped table-hover" style="width: 100%;">
+								<thead style="background-color: rgba(126,86,134,.7);" >
 									<tr>
-										<th style="width: 1%">Printed at</th>
 										<th style="width: 1%">Material</th>
 										<th style="width: 5%">Material Desc.</th>
 										<th style="width: 2%">Issue Location</th>
 										<th style="width: 1%">Receive Location</th>
-										<th style="width: 1%">Return By</th>
-										<th style="width: 1%">Action By</th>
-										<th style="width: 1%">Status</th>
 										<th style="width: 1%">Qty</th>
+										<th style="width: 1%">Status</th>
+										<th style="width: 1%">Printed at</th>
+										<th style="width: 1%">Printed by</th>
 										<th style="width: 1%">Received at</th>
+										<th style="width: 1%">Received by</th>										
 										<th style="width: 1%">Rejected at</th>
+										<th style="width: 1%">Rejected by</th>
 										<th style="width: 1%">Deleted at</th>
+										<th style="width: 1%">Deleted by</th>
+										<th style="width: 1%">Canceled at</th>
+										<th style="width: 1%">Canceled by</th>
+										<th style="width: 1%">Cancel</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -165,6 +179,7 @@
 @endsection
 
 @section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
@@ -279,23 +294,74 @@
 				"data" : data
 			},
 			"columns": [
-			{ "data": "slip_created" },
 			{ "data": "material_number" },
 			{ "data": "material_description" },
 			{ "data": "issue_location" },
 			{ "data": "receive_location" },
-			{ "data": "returner" },
-			{ "data": "creator" },
+			{ "data": "quantity" },	
 			{ "data": "remark" },
-			{ "data": "quantity" },
-			{ "data": "receive_at" },
-			{ "data": "reject_at" },
-			{ "data": "delete_at" }
+			{ "data": "printed_at" },
+			{ "data": "printed_by" },
+			{ "data": "received_at" },
+			{ "data": "received_by" },
+			{ "data": "rejected_at" },
+			{ "data": "rejected_by" },
+			{ "data": "deleted_at" },
+			{ "data": "deleted_by" },
+			{ "data": "canceled_at" },
+			{ "data": "canceled_by" },
+			{ "data": "cancel" }
 			]
 		});
+	}
 
-
+	function cancelReturn(id) {
 		
+		$("#loading").show();
+
+		var data = {
+			id : id
+		}
+
+		if(confirm("Return akan di batalkan. Apakah anda yakin melanjutkan proses ini ?\nData yang telah disimpan tidak dapat dikembalikan.")){
+			$.post('{{ url("cancel/return") }}', data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success', result.message);
+					$("#loading").hide();
+
+					$('#logTable').DataTable().ajax.reload();
+				}else{
+					openErrorGritter('Error', result.message);
+				}
+			});
+		}else{
+			$("#loading").hide();
+		}
+
+	}
+
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '4000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '4000'
+		});
 	}
 
 </script>
