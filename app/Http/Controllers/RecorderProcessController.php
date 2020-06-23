@@ -664,18 +664,25 @@ class RecorderProcessController extends Controller
     {
         $push_block_check = PushBlockRecorderResume::where('remark',$remark)->orderBy('push_block_recorder_resumes.id','desc')->get();
 
+        $auth = Auth::user()->role_code;
+
         $data = array('push_block_check' => $push_block_check,
-                      'remark' => $remark);
+                      'remark' => $remark,
+                      'auth' => $auth,
+                      'mesin' => $this->mesin,
+                      'mesin2' => $this->mesin,
+                      'product_type' => $this->product_type);
       return view('recorder.report.resume_push_block', $data
         )->with('page', 'Resume Push Block Check')->with('remark', $remark);
     }
 
     public function filter_resume_push_block(Request $request,$remark)
     {
-      // $judgement = $request->get('judgement');
       $date_from = $request->get('date_from');
       $date_to = $request->get('date_to');
       $datenow = date('Y-m-d');
+
+      $auth = Auth::user()->role_code;
 
       if($request->get('date_to') == null){
         if($request->get('date_from') == null){
@@ -694,29 +701,84 @@ class RecorderProcessController extends Controller
         }
       }
 
-      // $judgement = '';
-      // if($request->get('judgement') != null){
-      //   $judgements =  explode(",", $request->get('judgement'));
-      //   for ($i=0; $i < count($judgements); $i++) {
-      //     $judgement = $judgement."'".$judgements[$i]."'";
-      //     if($i != (count($judgements)-1)){
-      //       $judgement = $judgement.',';
-      //     }
-      //   }
-      //   $judgementin = " and `judgement` in (".$judgement.") ";
-      //   $judgementin2 = " or `judgement2` in (".$judgement.") ";
-      // }
-      // else{
-      //   $judgementin = "";
-      //   $judgementin2 = "";
-      // }
-
       $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorder_resumes` where remark = '".$remark."' ".$date." ORDER BY push_block_recorder_resumes.id desc");
 
       $data = array('push_block_check' => $push_block_check,
-                      'remark' => $remark,);
+                      'remark' => $remark,
+                      'auth' => $auth,
+                      'mesin' => $this->mesin,
+                      'mesin2' => $this->mesin,
+                      'product_type' => $this->product_type);
       return view('recorder.report.resume_push_block', $data
         )->with('page', 'Resume Push Block Check')->with('remark', $remark);
+    }
+
+    public function get_resume(Request $request)
+    {
+      $id = $request->get('id');
+
+      $data = DB::SELECT("SELECT * FROM `push_block_recorder_resumes` where id = '".$id."'");
+
+      $response = array(
+        'status' => true,
+        'data' => $data,
+      );
+      return Response::json($response);
+    }
+
+    public function update_resume(Request $request,$id)
+    {
+
+      $resume_push_block = PushBlockRecorderResume::where('remark',$request->get('remark'))->where('id',$id)->first();
+      $resume_push_block->injection_date_head = $request->get('injection_date_head');
+      $resume_push_block->injection_date_block = $request->get('injection_date_block');
+      $resume_push_block->mesin_head = $request->get('mesin_head');
+      $resume_push_block->mesin_block = $request->get('mesin_block');
+      $resume_push_block->product_type = $request->get('product_type');
+      $pic_check = $resume_push_block->pic_check;
+
+      if ($request->get('remark') == 'After Injection') {
+        $front = 'AI';
+      }else{
+        $front = 'FSA';
+      }
+
+      $push_block_id_gen = $front."_".$request->get('check_date')."_".$request->get('product_type')."_".$pic_check;
+
+      $resume_push_block->push_block_id_gen = $push_block_id_gen;
+
+      $push_block_check = PushBlockRecorder::where('push_block_code',$request->get('remark'))->get();
+      foreach ($push_block_check as $key) {
+        $push_block = PushBlockRecorder::find($key->id);
+        $push_block->injection_date_head = $request->get('injection_date_head');
+        $push_block->injection_date_block = $request->get('injection_date_block');
+        $push_block->mesin_head = $request->get('mesin_head');
+        $push_block->mesin_block = $request->get('mesin_block');
+        $push_block->product_type = $request->get('product_type');
+        $push_block->push_block_id_gen = $push_block_id_gen;
+        try {
+          $push_block->save();
+        } catch (\Exception $e) {
+          $response = array(
+            'status' => false
+          );
+          return Response::json($response);
+        }
+      }
+
+      try {
+        $resume_push_block->save();
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false
+        );
+        return Response::json($response);
+      }
+
+      $response = array(
+        'status' => true,
+      );
+      return Response::json($response);
     }
 
     public function push_block_check_monitoring($remark){

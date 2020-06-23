@@ -102,18 +102,6 @@
 										</div>
 									</div>
 								</div>
-								<!-- <div class="col-md-12">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label for="">Judgement</label>
-											<select class="form-control select2" multiple="multiple" id='judgementSelect' onchange="changeJudgement()" data-placeholder="Select Judgement" style="width: 100%;">
-												<option value="OK">OK</option>
-												<option value="NG">NG</option>
-											</select>
-											<input type="text" name="judgement" id="judgement" hidden>			
-										</div>
-									</div>
-								</div> -->
 								<div class="col-md-12">
 									<div class="col-md-12">
 										<div class="form-group pull-right">
@@ -129,52 +117,11 @@
 								</div>
 							</form>
 						</div>
-						<div class="col-xs-6">
-							<!-- <div class="box-header">
-								<h3 class="box-title">Save PDF</h3>
-							</div>
-							<form role="form" method="post" action="{{url('index/recorder/print_report_push_block/'.$remark)}}">
-								<input type="hidden" value="{{csrf_token()}}" name="_token" />
-								<div class="col-md-12">
-									<div class="col-md-6">
-										<div class="form-group">
-											<label for="">Date From</label>
-											<div class="input-group date">
-												<div class="input-group-addon bg-white">
-													<i class="fa fa-calendar"></i>
-												</div>
-												<input type="text" class="form-control datepicker" id="date_from_print" name="date_from_print" placeholder="Select Date From" autocomplete="off" required>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group">
-											<label for="">Date To</label>
-											<div class="input-group date">
-												<div class="input-group-addon bg-white">
-													<i class="fa fa-calendar"></i>
-												</div>
-												<input type="text" class="form-control datepicker" id="date_to_print" name="date_to_print" placeholder="Select Date To" autocomplete="off" required>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-12">
-								</div>
-								<div class="col-md-12">
-									<div class="col-md-12">
-										<div class="form-group pull-right">
-											<button type="submit" class="btn btn-primary col-sm-14">Save PDF</button>
-										</div>
-									</div>
-								</div>
-							</form> -->
-						</div>
 					</div>
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="box">
-								<div class="box-body">
+								<div class="box-body" style="overflow-x: scroll;">
 									<table id="example1" class="table table-bordered table-striped table-hover">
 										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>
@@ -190,6 +137,9 @@
 												<th>Height Judgement</th>
 												<th>PIC</th>
 												<th>Notes</th>
+												@if($auth == 'F-SPL' || $auth == 'L-Molding' || $auth == 'MIS' || $auth == 'S')
+												<th>Action</th>
+												@endif
 											</tr>
 										</thead>
 										<tbody>
@@ -226,6 +176,15 @@
 												</td>
 												<td>{{ $push_block_check->pic_check }}</td>
 												<td>{{ $push_block_check->notes }}</td>
+												@if($auth == 'F-SPL' || $auth == 'L-Molding' || $auth == 'MIS' || $auth == 'S')
+												<td>
+													<center>
+														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_resume('{{ url("index/recorder/update_resume") }}','{{ $push_block_check->id }}','{{ $push_block_check->push_block_id_gen }}');">
+											               Edit
+											            </button>
+													</center>
+												</td>
+												@endif
 											</tr>
 											@endforeach
 										</tbody>
@@ -243,6 +202,9 @@
 												<th></th>
 												<th></th>
 												<th></th>
+												@if($auth == 'F-SPL' || $auth == 'L-Molding' || $auth == 'MIS' || $auth == 'S')
+												<th></th>
+												@endif
 											</tr>
 										</tfoot>
 									</table>
@@ -254,6 +216,71 @@
 			</div>
 		</div>
 	</div>
+
+<div class="modal fade" id="edit-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>Edit Resume Push Block Check - {{$remark}}</b></h4>
+      </div>
+      <div class="modal-body">
+      	<div class="box-body">
+        <div>
+          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            	<input type="hidden" name="url_edit" id="url_edit" class="form-control">
+            	<input type="hidden" name="push_block_id_gen" id="push_block_id_gen" class="form-control">
+	            <div class="form-group">
+	              <label for="">Check Date</label>
+				  <input type="text" name="check_date" id="check_date" class="form-control" value="" readonly required="required" title="" placeholder="Check Date">
+	            </div>
+	            <div class="form-group">
+	              <label for="">Injection Date Head</label>
+				  <input type="text" name="injection_date_head" id="injection_date_head" class="form-control datepicker" required="required" title="" placeholder="Injection Date Head">
+	            </div>
+	            <div class="form-group">
+	             <label>Mesin Head<span class="text-red">*</span></label>
+	                <select class="form-control" name="mesin_head" id="mesin_head" style="width: 100%;" data-placeholder="Choose a Mesin Head..." required>
+	                	@foreach($mesin as $mesin)
+	                		<option value="{{$mesin}}">{{$mesin}}</option>
+	                	@endforeach
+	                </select>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Injection Date Block</label>
+				  <input type="text" name="injection_date_block" id="injection_date_block" class="form-control datepicker" required="required" title="" placeholder="Injection Date Block">
+	            </div>
+	            <div class="form-group">
+	             <label>Mesin Block<span class="text-red">*</span></label>
+	                <select class="form-control" name="mesin_block" id="mesin_block" style="width: 100%;" data-placeholder="Choose a Mesin Block..." required>
+	                	@foreach($mesin2 as $mesin)
+	                		<option value="{{$mesin}}">{{$mesin}}</option>
+	                	@endforeach
+	                </select>
+	            </div>
+	            <div class="form-group">
+	             <label>Product<span class="text-red">*</span></label>
+	                <select class="form-control" name="product_type" id="product_type" style="width: 100%;" data-placeholder="Choose a Mesin Block..." required>
+	                	@foreach($product_type as $product_type)
+	                		<option value="{{$product_type}}">{{$product_type}}</option>
+	                	@endforeach
+	                </select>
+	            </div>
+            </div>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          	<div class="modal-footer">
+            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+            <input type="submit" value="Update" onclick="update()" class="btn btn-primary">
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </section>
 @endsection
 
@@ -379,5 +406,58 @@
 		$('#example1 tfoot tr').appendTo('#example1 thead');
 
 	});
+
+	function edit_resume(url,id,push_block_id_gen) {
+    	$.ajax({
+                url: "{{ url('index/recorder/get_resume') }}?id=" + id,
+                method: 'GET',
+                success: function(data) {
+                  var json = data;
+                  var datas = data.data;
+                  $("#url_edit").val(url+'/'+id);
+                  $("#push_block_id_gen").val(push_block_id_gen);
+                  $("#check_date").val(datas[0].check_date);
+                  $("#injection_date_head").val(datas[0].injection_date_head);
+                  $("#injection_date_block").val(datas[0].injection_date_block);
+                  $("#mesin_head").val(datas[0].mesin_head).trigger('change.select');
+                  $("#mesin_block").val(datas[0].mesin_block).trigger('change.select');
+                  $("#product_type").val(datas[0].product_type).trigger('change.select');
+                }
+            });
+    }
+
+    function update(){
+		var injection_date_head = $('#injection_date_head').val();
+		var injection_date_block = $('#injection_date_block').val();
+		var mesin_head = $('#mesin_head').val();
+		var mesin_block = $('#mesin_block').val();
+		var product_type = $('#product_type').val();
+		var url = $('#url_edit').val();
+		var push_block_id_gen = $('#push_block_id_gen').val();
+		var check_date = $('#check_date').val();
+		var remark = '{{$remark}}';
+
+		var data = {
+			injection_date_head:injection_date_head,
+			injection_date_block:injection_date_block,
+			mesin_head:mesin_head,
+			mesin_block:mesin_block,
+			product_type:product_type,
+			push_block_id_gen:push_block_id_gen,
+			remark:remark,
+			check_date:check_date
+		}
+		
+		$.post(url, data, function(result, status, xhr){
+			if(result.status){
+				$("#edit-modal").modal('hide');
+				openSuccessGritter('Success','Resume Push Block Check has been updated');
+				window.location.reload();
+			} else {
+				audio_error.play();
+				openErrorGritter('Error','Update Resume Push Block Check Failed');
+			}
+		});
+	}
 </script>
 @endsection

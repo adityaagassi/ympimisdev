@@ -836,7 +836,6 @@ Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 	Route::get('reprint/return', 'TransactionController@reprintReturn');
 	Route::post('confirm/return', 'TransactionController@confirmReturn');
 	Route::post('delete/return', 'TransactionController@deleteReturn');
-
 });
 Route::get('index/return', 'TransactionController@indexReturn');
 Route::get('index/return/data', 'TransactionController@indexReturnData');
@@ -847,6 +846,9 @@ Route::get('fetch/return/resume', 'TransactionController@fetchReturnResume');
 
 Route::get('index/return_logs', 'TransactionController@indexReturnLogs');
 Route::get('fetch/return_logs', 'TransactionController@fetchReturnLogs');
+
+Route::post('cancel/return', 'TransactionController@cancelReturn');
+
 
 
 Route::group(['nav' => 'S1', 'middleware' => 'permission'], function(){
@@ -923,9 +925,9 @@ Route::group(['nav' => 'S10', 'middleware' => 'permission'], function(){
 	Route::get('scan/assembly/tag_stamp', 'AssemblyProcessController@scanTagStamp');
 	Route::post('stamp/assembly/flute', 'AssemblyProcessController@stampFlute');
 });
-	Route::get('fetch/assembly/stamp_result', 'AssemblyProcessController@fetchStampResult');
-	Route::get('fetch/assembly/serial', 'AssemblyProcessController@fetchSerialNumber');
-	Route::get('index/assembly/flute_stamp', 'AssemblyProcessController@indexFluteStamp');
+Route::get('fetch/assembly/stamp_result', 'AssemblyProcessController@fetchStampResult');
+Route::get('fetch/assembly/serial', 'AssemblyProcessController@fetchSerialNumber');
+Route::get('index/assembly/flute_stamp', 'AssemblyProcessController@indexFluteStamp');
 
 //meeting
 Route::group(['nav' => 'S33', 'middleware' => 'permission'], function(){
@@ -1071,6 +1073,8 @@ Route::get('purchase_requisition/get_detailbudget', 'AccountingController@prgetb
 Route::get('purchase_requisition/detail/{id}', 'AccountingController@detail_purchase_requisition');
 Route::get('purchase_requisition/get_exchange_rate', 'AccountingController@get_exchange_rate');
 Route::get('edit/purchase_requisition', 'AccountingController@edit_purchase_requisition');
+Route::post('update/purchase_requisition', 'AccountingController@update_purchase_requisition');
+Route::post('delete/purchase_requisition_item', 'AccountingController@delete_item_pr');
 
 //Approval Purchase Requisition
 Route::get('purchase_requisition/verifikasi/{id}', 'AccountingController@verifikasi_purchase_requisition');
@@ -2431,6 +2435,8 @@ Route::get('index/recorder/detail_monitoring2', 'RecorderProcessController@detai
 Route::post('index/recorder/print_report_push_block/{remark}', 'RecorderProcessController@print_report_push_block');
 Route::get('index/recorder/get_push_pull','RecorderProcessController@get_push_pull')->name('recorder.get_push_pull');
 Route::post('index/recorder/update/{id}','RecorderProcessController@update');
+Route::get('index/recorder/get_resume','RecorderProcessController@get_resume');
+Route::post('index/recorder/update_resume/{id}','RecorderProcessController@update_resume');
 
 //MACHINE PARAMETER
 Route::get('index/machine_parameter','RecorderProcessController@indexMachineParameter');
@@ -2784,6 +2790,7 @@ Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
 Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
 Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
 Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
+Route::get('index/maintenance/apar/orderList', 'MaintenanceController@indexAparOrderList');
 Route::get('index/maintenance/apar/resume', 'MaintenanceController@indexAparResume');
 Route::get('index/maintenance/apar/uses', 'MaintenanceController@indexAparUses');
 Route::get('index/maintenance/apar/ng_list', 'MaintenanceController@indexAparNG');
@@ -2800,16 +2807,16 @@ Route::get('fetch/maintenance/apar/resume', 'MaintenanceController@fetch_apar_re
 Route::get('fetch/maintenance/apar/resumeWeek', 'MaintenanceController@fetch_apar_resume_week');
 Route::get('fetch/maintenance/apar/resume/detail/week', 'MaintenanceController@fetch_apar_resume_detail_week');
 Route::get('fetch/maintenance/apar/resume/detail', 'MaintenanceController@fetch_apar_resume_detail');
-// Route::get('fetch/maintenance/apar/resume/progres', 'MaintenanceController@fetch_apar_resume_progress')
+
 Route::get('fetch/maintenance/apar/use/list', 'MaintenanceController@fetch_apar_use');
 Route::get('fetch/maintenance/apar/use/check', 'MaintenanceController@check_apar_use');
-	// Route::get('fetch/maintenance/apar/byCode', 'MaintenanceController@fetchAparbyCode');
 
 Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
 Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
 Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
 Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_history');
+Route::post('post/maintenance/apar/order', 'MaintenanceController@apar_order');
 
 Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
 
