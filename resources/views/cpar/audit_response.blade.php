@@ -78,9 +78,9 @@
 
     @if($std->auditee_perbaikan != null && $std->auditee_pencegahan != null && $std->auditee_perbaikan != null)
 
-     @if($std->posisi == "auditee" && ($user == $std->auditee || Auth::user()->role_code == "MIS"))
+     @if($std->posisi == "auditee")
          <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemailpenanganan({{ $std->id }})" style="width:200px">Send Email</a>
-     @elseif($std->posisi != "auditee" && ($user == $std->auditee || Auth::user()->role_code == "MIS"))
+     @elseif($std->posisi != "auditee")
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
      @else
          

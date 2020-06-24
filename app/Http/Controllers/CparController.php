@@ -1810,7 +1810,7 @@ class CparController extends Controller
       ->select('employee_id', 'name', 'position', 'department')->first();
 
       $leader = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
-        where end_date is null and (position like 'Leader%' or position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+        where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
 
       return view('cpar.audit_create', array(
         'employee' => $emp,
