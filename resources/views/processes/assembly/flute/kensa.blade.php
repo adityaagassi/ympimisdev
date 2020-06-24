@@ -71,7 +71,7 @@
 	<input type="hidden" id="loc_spec" value="{{ $loc_spec }}">
 	<input type="hidden" id="process" value="{{ $process }}">
 	<input type="hidden" id="started_at">
-	<div class="row" style="margin-left: 1%; margin-right: 1%;">
+	<div class="row" style="padding-left: 10px;padding-right: 10px">
 		<div class="col-xs-7" style="padding-right: 0; padding-left: 0">
 			<div class="col-xs-12" style="padding-bottom: 5px;">
 				<div class="row">
@@ -145,6 +145,16 @@
 						</tbody>
 					</table>
 				</div>
+			</div>
+			<div style="padding-top: 5px;text-align: center;" id="timer">
+				<!-- <button class="btn btn-sm btn-success" id="startkensa" onClick="timerkensa.start(1000)">Start</button>  -->
+		        <!-- <button class="btn btn-sm btn-danger" id="stopkensa" onClick="timerkensa.stop()">Stop</button> -->
+				<div class="timerkensa" style="color:#000;font-size: 80px;background-color: #85ffa7">
+		            <span class="hourkensa">00</span>:<span class="minutekensa">00</span>:<span class="secondkensa">00</span>
+		        </div>
+		        <div class="timeout" style="color:red;font-size: 80px;display: none">
+		        </div>
+		        <!-- <input type="text" id="kkensa_time" class="timepicker" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" value="00:00:00" required> -->
 			</div>
 		</div>
 		<div class="col-xs-5" style="padding-right: 0;">
@@ -321,6 +331,11 @@
 		});
 		$('#operator').val('');
 		$('#tag').val('');
+		if ($('#loc').val() == 'qa-fungsi' || $('#loc').val() == 'qa-visual1' || $('#loc').val() == 'qa-visual2') {
+			$('#timer').show();
+		}else{
+			$('#timer').hide();
+		}
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -373,6 +388,9 @@
 
 		$.get('{{ url("scan/assembly/kensa") }}', data, function(result, status, xhr){
 			if(result.status){
+				if ($('#loc').val() == 'qa-fungsi' || $('#loc').val() == 'qa-visual1' || $('#loc').val() == 'qa-visual2') {
+					timerkensa.start(1000);
+				}
 				$("#model").text(result.details.model);
 				$("#serial_number").text(result.details.serial_number);
 				$("#model2").val(result.details.model);
@@ -1020,6 +1038,11 @@
 			return false;
 		}
 
+		timerkensa.stop();
+		timerkensa.reset();
+		$('div.timerkensa').show();
+		$('div.timeout').hide();
+
 		var btn = document.getElementById('conf1');
 		btn.disabled = true;
 		btn.innerText = 'Posting...';
@@ -1070,6 +1093,10 @@
 		$('#tag').focus();
 		deleteNgTemp();
 		deleteAssemblies();
+		timerkensa.stop();
+		timerkensa.reset();
+		$('div.timerkensa').show();
+		$('div.timeout').hide();
 	}
 
 	function deleteAssemblies() {
@@ -1177,5 +1204,149 @@
 
 		return date;
 	};
+
+	function _timerkensa(callback)
+	{
+	    var time = 0;     //  The default time of the timer
+	    var mode = 1;     //    Mode: count up or count down
+	    var status = 0;    //    Status: timer is running or stoped
+	    var timer_id;
+	    var hour;
+	    var minute;
+	    var second;    //    This is used by setInterval function
+	    
+	    // this will start the timer ex. start the timer with 1 second interval timer.start(1000) 
+	    this.start = function(interval)
+	    {
+	    	// $('#startpasmod').hide();
+			$('#stopkensa').show();
+	        interval = (typeof(interval) !== 'undefined') ? interval : 1000;
+	 
+	        if(status == 0)
+	        {
+	            status = 1;
+	            timer_id = setInterval(function()
+	            {
+	                switch(1)
+	                {
+	                    default:
+	                    if(time)
+	                    {
+	                        time--;
+	                        generateTime();
+	                        if(typeof(callback) === 'function') callback(time);
+	                    }
+	                    break;
+	                    
+	                    case 1:
+	                    if(time < 86400)
+	                    {
+	                        time++;
+	                        generateTime();
+	                        if(typeof(callback) === 'function') callback(time);
+	                    }
+	                    break;
+	                }
+	            }, interval);
+	        }
+	    }
+	    
+	    //  Same as the name, this will stop or pause the timer ex. timer.stop()
+	    this.stop =  function()
+	    {
+	        if(status == 1)
+	        {
+	            status = 0;
+		        // $('#stopkensa').hide();
+	            clearInterval(timer_id);
+	        }
+	    }
+	    
+	    // Reset the timer to zero or reset it to your own custom time ex. reset to zero second timer.reset(0)
+	    this.reset =  function(sec)
+	    {
+	        sec = (typeof(sec) !== 'undefined') ? sec : 0;
+	        time = sec;
+	        generateTime(time);
+	    }
+	    this.getTime = function()
+	    {
+	        return time;
+	    }
+	    this.getMode = function()
+	    {
+	        return mode;
+	    }
+	    this.getStatus
+	    {
+	        return status;
+	    }
+	    function generateTime()
+	    {
+	        second = time % 60;
+	        minute = Math.floor(time / 60) % 60;
+	        hour = Math.floor(time / 3600) % 60;
+	        
+	        second = (second < 10) ? '0'+second : second;
+	        minute = (minute < 10) ? '0'+minute : minute;
+	        hour = (hour < 10) ? '0'+hour : hour;
+	        
+	        $('div.timerkensa span.secondkensa').html(second);
+	        $('div.timerkensa span.minutekensa').html(minute);
+	        $('div.timerkensa span.hourkensa').html(hour);
+	        if ($('#loc').val() == 'qa-fungsi') {
+	        	if (minute == 6) {
+		        	timerkensa.stop();
+		        	$('div.timerkensa').hide();
+		        	$('div.timeout').show();
+		        	$('div.timeout').html('WAKTU HABIS');
+		        	$('div.timeout').css('backgroundColor','red');
+		        	$('div.timeout').css('color','white');
+		        	audio_error.play();
+		        }
+	        }else if($('#loc').val() == 'qa-visual1'){
+	        	if ($('#loc').val() == 'qa-fungsi') {
+	        	if (minute == 4) {
+		        	timerkensa.stop();
+		        	$('div.timerkensa').hide();
+		        	$('div.timeout').show();
+		        	$('div.timeout').html('WAKTU HABIS');
+		        	$('div.timeout').css('backgroundColor','red');
+		        	$('div.timeout').css('color','white');
+		        	audio_error.play();
+		        }
+	        }else if($('#loc').val() == 'qa-visual2'){
+	        	if ($('#loc').val() == 'qa-fungsi') {
+		        	if (minute == 3) {
+			        	timerkensa.stop();
+			        	$('div.timerkensa').hide();
+			        	$('div.timeout').show();
+			        	$('div.timeout').html('WAKTU HABIS');
+			        	$('div.timeout').css('backgroundColor','red');
+			        	$('div.timeout').css('color','white');
+			        	audio_error.play();
+			        }
+		        }
+	        }
+	        }
+	    }
+	}
+	 
+	var timerkensa;
+	$(document).ready(function(e) 
+	{
+	    timerkensa = new _timerkensa
+	    (
+	        function(time)
+	        {
+	            if(time == 0)
+	            {
+	                timerkensa.stop();
+	                alert('time out');
+	            }
+	        }
+	    );
+	    timerkensa.reset(0);
+	});
 </script>
 @endsection

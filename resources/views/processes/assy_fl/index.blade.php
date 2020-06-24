@@ -52,17 +52,39 @@
 			<a href="{{ url("index/ngFL") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Ng</a>
 
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
+
 			<a href="{{ url('/index/board','perakitan-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Perakitan Board</a>
+
 			<a href="{{ url('/index/board','kariawase-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Kariawase Board</a>
-			<a href="{{ url('/index/board','tanpoire-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Tanpoire Board</a>
-			<a href="{{ url('/index/board','tanpoawase-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Tanpo Awase Board</a>
+
+			<a href="{{ url('/index/board','kariawase-fungsi,kariawase-visual,kariawase-repair,tanpoire-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Tanpoire Board</a>
+
+			<a href="{{ url('/index/board','perakitanawal-kensa,tanpoawase-process') }}" class="btn btn-default btn-block" style="font-size: 1.5vw; border-color: red;">Perakitan Ulang & Tanpo Awase Board</a>
+
+			<a href="{{ url('/index/board','tanpoawase-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Tanpo Awase 2 Board</a>
+			
+			<a href="{{ url('/index/board','tanpoawase-kensa,tanpoawase-fungsi,repair-berat') }}" class="btn btn-default btn-block" style="font-size: 1.5vw; border-color: red;">Tanpoawase Kensa & Fungsi Board</a>
+			
+			<a href="{{ url('/index/board','seasoning-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Seasoning Board</a>
+			
 			<a href="{{ url('/index/board','kango-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Kango Board</a>
-			<a href="{{ url('/index/board','renraku-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Renraku Board</a>
-			<a href="{{ url('/index/board','fukiage1-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Fukiage 1 Board</a>
-			<a href="{{ url('/index/board','fukiage2-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Fukiage 2 Board</a>
+			
+			<a href="{{ url('/index/board','kango-fungsi,renraku-process') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Renraku Board</a>
+			
+			<a href="{{ url('/index/board','kango-kensa,renraku-fungsi') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Cek Fungsi Akhir Board</a>
+			
+			<a href="{{ url('/index/board','renraku-repair,qa-fungsi') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Cek Fungsi QA Board</a>
+			
+			<a href="{{ url('/index/board','fukiage1-process,repair-ringan') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Fukiage 1 Board</a>
+			
+			<a href="{{ url('/index/board','fukiage1-visual,qa-visual1,fukiage2-process,qa-visual2,pakcing') }}" class="btn btn-default btn-block" style="font-size: 1.5vw; border-color: red;">QA Visual, Fukiage 2, & Packing Board</a>
+			
 			<a href="{{ url('/index/assembly/request/display','041') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Assembly WIP</a>
+			
 			<a href="{{ url("index/assembly/ng_rate?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">NG Rate</a>
+			
 			<a href="{{ url("index/assembly/op_ng?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Operator NG Rate</a>
+			
 		</div>
 
 		<div class="col-xs-4" style="text-align: center; color: purple;">

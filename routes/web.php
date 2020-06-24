@@ -2783,11 +2783,14 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 
 	Route::get('work/maintenance/spk', 'MaintenanceController@startSPK');
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
+	
+	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
+	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
+	Route::post('post/maintenance/apar/update', 'MaintenanceController@updateTool');
 });
 
 // -----------  APAR -----------
 Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
-Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
 Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
 Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
 Route::get('index/maintenance/apar/orderList', 'MaintenanceController@indexAparOrderList');
@@ -2812,7 +2815,6 @@ Route::get('fetch/maintenance/apar/use/list', 'MaintenanceController@fetch_apar_
 Route::get('fetch/maintenance/apar/use/check', 'MaintenanceController@check_apar_use');
 
 Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
-Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
 Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
 Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
 Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_history');
