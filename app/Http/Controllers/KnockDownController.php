@@ -40,22 +40,30 @@ class KnockDownController extends Controller{
 		if($id == 'z-pro'){
 			$title = 'KD Z-PRO';
 			$title_jp = '??';
-		}else if($id == 'sub-assy-sx'){
-			$title = 'KD Sub Assy SX';
-			$title_jp = '??';
-		}else if($id == 'sub-assy-fl'){
-			$title = 'KD Sub Assy FL';
-			$title_jp = '??';
-		}else if($id == 'sub-assy-cl'){
-			$title = 'KD Sub Assy CL';
-			$title_jp = '??';
-		}
 
-		return view('kd.index_kd', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'location' => $id,
-		))->with('page', $title)->with('head', $title);
+			return view('kd.index_kd', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}else{
+			if($id == 'sub-assy-sx'){
+				$title = 'KD Sub Assy SX';
+				$title_jp = '??';
+			}else if($id == 'sub-assy-fl'){
+				$title = 'KD Sub Assy FL';
+				$title_jp = '??';
+			}else if($id == 'sub-assy-cl'){
+				$title = 'KD Sub Assy CL';
+				$title_jp = '??';
+			}
+
+			return view('kd.index_kd_subassy', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}
 	}
 
 	public function indexKdShipmentProgress(){
@@ -321,6 +329,42 @@ class KnockDownController extends Controller{
 		->first();
 
 		return view('kd.label.print_label_zpro', array(
+			'knock_down_detail' => $knock_down_detail,
+		));
+	}
+
+	public function indexPrintLabelSubassy($id){
+		$knock_down_detail = KnockDownDetail::leftJoin('materials','materials.material_number','=','knock_down_details.material_number')
+		->where('knock_down_details.id','=',$id)
+		->select('knock_down_details.kd_number',
+			'knock_down_details.material_number',
+			'materials.material_description',
+			'knock_down_details.quantity',
+			'materials.kd_name',
+			db::raw('if(materials.xy is not null, materials.xy, "-") as xy'),
+			db::raw('if(materials.mj is not null, materials.mj, "-") as mj')
+		)
+		->first();
+
+		return view('kd.label.print_label_subassy', array(
+			'knock_down_detail' => $knock_down_detail,
+		));
+	}
+
+	public function indexPrintLabelSubassyKecil($id){
+		$knock_down_detail = KnockDownDetail::leftJoin('materials','materials.material_number','=','knock_down_details.material_number')
+		->where('knock_down_details.id','=',$id)
+		->select('knock_down_details.kd_number',
+			'knock_down_details.material_number',
+			'materials.material_description',
+			'knock_down_details.quantity',
+			'materials.kd_name',
+			db::raw('if(materials.xy is not null, materials.xy, "-") as xy'),
+			db::raw('if(materials.mj is not null, materials.mj, "-") as mj')
+		)
+		->first();
+
+		return view('kd.label.print_label_subassy_kecil', array(
 			'knock_down_detail' => $knock_down_detail,
 		));
 	}
@@ -847,7 +891,7 @@ class KnockDownController extends Controller{
 			return '<a href="javascript:void(0)" class="btn btn-sm btn-primary" onClick="detailKDO(id)" id="' . $knock_downs->kd_number . '"><i class="fa fa-eye"></i></a>';
 		})
 		->addColumn('deleteKDO', function($knock_downs){
-			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteKDO(id)" id="' . $knock_downs->kd_number . '"><i class="glyphicon glyphicon-remove-sign"></i></a>';
+			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteKDO(id)" id="' . $knock_downs->kd_number . '"><i class="fa fa-trash"></i></a>';
 		})
 		->rawColumns([ 'detailKDO' => 'detailKDO', 'deleteKDO' => 'deleteKDO'])
 		->make(true);
@@ -856,14 +900,20 @@ class KnockDownController extends Controller{
 
 	public function fetchKDODetail(Request $request){
 		$status = $request->get('status');
+		$remark = $request->get('remark');
 
 		$knock_down_details = KnockDownDetail::leftJoin('knock_downs','knock_down_details.kd_number','=','knock_downs.kd_number')
 		->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
 		->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'knock_down_details.storage_location')
 		->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'knock_downs.container_id')
 		->leftJoin('master_checksheets', 'master_checksheets.id_checkSheet', '=', 'knock_downs.container_id')
-		->where('knock_downs.status', '=', $status)
-		->select('knock_down_details.id',
+		->where('knock_downs.status', '=', $status);
+
+		if(strlen($request->get('remark')) > 0 ){
+			$knock_down_details = $knock_down_details->where('knock_downs.remark', '=', $request->get('remark'));
+		}
+
+		$knock_down_details = $knock_down_details->select('knock_down_details.id',
 			'knock_down_details.kd_number',
 			'master_checksheets.Stuffing_date',
 			'container_schedules.shipment_date',
@@ -878,10 +928,13 @@ class KnockDownController extends Controller{
 		->get();
 
 		return DataTables::of($knock_down_details)
-		->addColumn('deleteKDO', function($knock_down_details){
-			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteKDODetail(id)" id="' . $knock_down_details->id . '"><i class="glyphicon glyphicon-remove-sign"></i></a>';
+		->addColumn('reprintKDO', function($knock_down_details){
+			return '<a href="javascript:void(0)" class="btn btn-sm btn-info" onClick="reprintKDODetail(id)" id="' . $knock_down_details->id . '"><i class="fa fa-print"></i></a>';
 		})
-		->rawColumns(['deleteKDO' => 'deleteKDO'])
+		->addColumn('deleteKDO', function($knock_down_details){
+			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteKDODetail(id)" id="' . $knock_down_details->id . '"><i class="fa fa-trash"></i></a>';
+		})
+		->rawColumns(['reprintKDO' => 'reprintKDO', 'deleteKDO' => 'deleteKDO'])
 		->make(true);
 	}
 
@@ -893,11 +946,11 @@ class KnockDownController extends Controller{
 		if($id == 'z-pro'){
 			$storage = 'ZPRO';
 		}else if($id == 'sub-assy-sx'){
-			$storage = 'SX91';
+			$storage = 'SUBASSY-SX';
 		}else if($id == 'sub-assy-fl'){
-			$storage = 'FL91';
+			$storage = 'SUBASSY-FL';
 		}else if($id == 'sub-assy-cl'){
-			$storage = 'CL91';
+			$storage = 'SUBASSY-CL';
 		}
 
 		$target = db::select("select target.material_number, target.material_description, sum(target.quantity ) as target from
@@ -1050,10 +1103,10 @@ class KnockDownController extends Controller{
 		$location = $request->get('location');
 		$max_count = 0;
 
-		if($location = 'z-pro'){
-			// $max_count = 10;
+		if($location == 'z-pro'){
 			$max_count = 99;
-
+		}else{
+			$max_count = 1;	
 		}
 
 		$storage_location = Material::where('material_number','=',$material_number)
@@ -1069,6 +1122,8 @@ class KnockDownController extends Controller{
 		->first();
 
 		if($shipment_schedule){
+
+			//KnockDown
 			$knock_down = KnockDown::where('remark','=',$location)
 			->where('status','=', 0)
 			->orderBy('kd_number', 'desc')
@@ -1113,6 +1168,8 @@ class KnockDownController extends Controller{
 
 			}
 
+
+			//KnockDown Log
 			$knock_down_log;
 			if(($knock_down->actual_count + 1) == $max_count){
 				$knock_down_log = KnockDownLog::updateOrCreate(
@@ -1126,6 +1183,7 @@ class KnockDownController extends Controller{
 				);
 			}
 
+			//KnockDown Detail
 			$knock_down_detail = new KnockDownDetail([
 				'kd_number' => $kd_number,
 				'material_number' => $material_number,
@@ -1135,6 +1193,8 @@ class KnockDownController extends Controller{
 				'created_by' => Auth::id(),
 			]);		
 
+
+			//Inventory
 			$inventory = Inventory::where('plant','=','8190')
 			->where('material_number','=',$material_number)
 			->where('storage_location','=',$storage_location)
@@ -1151,6 +1211,7 @@ class KnockDownController extends Controller{
 				]);
 			}
 
+			//Transaction Completion
 			$transaction_completion = new TransactionCompletion([
 				'serial_number' => $kd_number,
 				'material_number' => $material_number,
@@ -1190,7 +1251,7 @@ class KnockDownController extends Controller{
 
 					$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
 
-					$this->printKDO($kd_number, $knock_down_details[9]->st_date, $knock_down_details, $storage_location->location);
+					// $this->printKDO($kd_number, $knock_down_details[9]->st_date, $knock_down_details, $storage_location->location);
 				}
 
 				$knock_down = KnockDown::where('kd_number', '=', $kd_number)->first();
@@ -1229,7 +1290,7 @@ class KnockDownController extends Controller{
 			$printer_name = 'KDO ZPRO';
 		}
 		else{
-			$printer_name = 'TESTPRINTER';
+			$printer_name = 'MIS';
 		}
 
 		$connector = new WindowsPrintConnector($printer_name);
