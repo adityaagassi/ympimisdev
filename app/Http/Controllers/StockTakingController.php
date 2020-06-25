@@ -441,15 +441,12 @@ class StockTakingController extends Controller{
 			$store = '';
 			foreach ($lists as $list) {
 
-				dd($list->store);
-				
 				if($list->store == $store){
 					$number++;
 				}else{
 					$store = $list->store;
 					$number = 1;
 				}
-
 
 				$this->printSummary($list, $number);
 			}
