@@ -53,8 +53,9 @@
 	@endforeach
 
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
-		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		<p style="text-align: center; position: absolute; color: white; top: 45%; left: 40%;">
+			<span style="font-size: 50px;">Please wait ... </span><br>
+			<span style="font-size: 50px;"><i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
 
@@ -76,8 +77,7 @@
 			<a id="breakdown" href="javascript:void(0)" onClick="countPI()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Breakdown PI</a>
 			<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Unmatch</a>
 			<a id="revise" href="{{ url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
-			<a id="upload_sap" onclick="uploadSap()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Upload SAP</a>
-			<a id="export_log" onclick="exportLog()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Export to Log</a>
+			
 			@endif
 
 			<br>
@@ -98,12 +98,17 @@
 				<input type="text" name="month_official_variance" id="month_official_variance" placeholder="Select Month" hidden>
 				<button id="variance" type="submit" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple; margin-top: 5px;">Official Variance</button>
 			</form>
+
+			<br>
+
+			<span style="font-size: 30px; color: red;"><i class="fa fa-angle-double-down"></i> Final <i class="fa fa-angle-double-down"></i></span>
+			<a id="upload_sap" onclick="uploadSap()" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Upload SAP</a>
+			<a id="export_log" onclick="exportLog()" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Export to Log</a>
+
 			@endif
 
 		</div>
 		<div class="col-xs-9" style="text-align: center; color: red;">
-			<span style="font-size: 30px; "><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
-			<br>
 			<div class="pull-right" id="last_update" style="color: black; margin: 0px; padding-top: 0px; padding-right: 0px; font-size: 1vw;"></div>
 
 			<div class="col-xs-12">
@@ -231,7 +236,7 @@
 
 	});
 
-	
+
 	function uploadSap() {
 		$("#loading").show();
 
@@ -373,6 +378,7 @@
 		$.get('{{ url("index/stocktaking/count_pi") }}', function(result, status, xhr){
 			if(result.status){
 				$("#loading").hide();
+				variance();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();
@@ -401,7 +407,7 @@
 					var empty = [];
 
 					for (var i = 0; i < result.data.length; i++) {
-						area.push(result.data[i].area);
+						area.push(result.data[i].location);
 						fill.push(parseInt(result.data[i].qty));
 						empty.push(parseInt(result.data[i].empty));
 					}
@@ -418,7 +424,7 @@
 						title: {
 							text: 'Progress Input PI Stocktaking',
 							style: {
-								fontSize: '2vw',
+								fontSize: '1.5vw',
 								fontWeight: 'bold'
 							}
 						},	
@@ -532,7 +538,7 @@
 					body += '<td style="width: 1%">'+ result.input_detail[i].store +'</td>';
 					body += '<td style="width: 1%">'+ result.input_detail[i].material_number +'</td>';
 					body += '<td style="width: 10%">'+ (result.input_detail[i].material_description || '-') +'</td>';
-					
+
 					if(result.input_detail[i].quantity != null){
 						body += '<td style="width: 1%;">'+ result.input_detail[i].quantity.toLocaleString() +'</td>';
 					}else{
@@ -556,7 +562,7 @@
 					}else{
 						body += '<td style="width: 1%;"></td>';
 					}
-					
+
 
 					body += '</tr>';
 				}
@@ -603,7 +609,7 @@
 						title: {
 							text: 'Quick Count Variance',
 							style: {
-								fontSize: '2vw',
+								fontSize: '1.5vw',
 								fontWeight: 'bold'
 							}
 						},
@@ -728,7 +734,7 @@
 		}
 		return i;
 	}
-	
+
 	function getActualFullDate() {
 		var d = new Date();
 		var day = addZero(d.getDate());

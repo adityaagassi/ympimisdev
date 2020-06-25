@@ -61,7 +61,7 @@
 <section class="content-header">
 	<h1>
 		{{ $title }}
-		<span class="text-purple"> ??</span>
+		<span class="text-purple"> {{ $title_jp }}</span>
 	</h1>
 </section>
 @stop
@@ -552,8 +552,8 @@
 			{ "data": "location"},
 			{ "data": "material_number"},
 			{ "data": "material_description" },
-			{ "data": "kitto"},
-			{ "data": "book"}]
+			{ "data": "quantity"},
+			{ "data": "lot_completion"}]
 		});
 
 

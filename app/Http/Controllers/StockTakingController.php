@@ -415,7 +415,7 @@ class StockTakingController extends Controller{
 		try {
 			$lists = db::select("SELECT
 				s.id,
-				s.store,
+				s.store, 
 				s.category,
 				s.material_number,
 				mpdl.material_description,
@@ -434,11 +434,26 @@ class StockTakingController extends Controller{
 				LEFT JOIN materials m ON m.material_number = s.material_number
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 				LEFT JOIN material_volumes v ON v.material_number = s.material_number"
-				.$store);
+				.$store.
+				"ORDER BY s.store, s.id ASC");
 
+			$number = 0;
+			$store = '';
 			foreach ($lists as $list) {
-				$this->printSummary($list);
+
+				dd($list->store);
+				
+				if($list->store == $store){
+					$number++;
+				}else{
+					$store = $list->store;
+					$number = 1;
+				}
+
+
+				$this->printSummary($list, $number);
 			}
+
 
 			$response = array(
 				'status' => true,
@@ -455,22 +470,22 @@ class StockTakingController extends Controller{
 
 	}
 
-	public function printSummary(){
+	public function printSummary($list, $number){
 		$printer_name = 'MIS';
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
-		$id = '31';
-		$store = 'CLB6';
-		$category = '(ASSY)';
-		$material_number = 'WY75820';
-		$sloc = 'CLB9';
-		$description = 'CL255 LOWER JOINT ASSY N/S ASSY';
-		$key = '';
-		$model = '';
-		$surface = '';
-		$uom = 'PC';
-		$lot = '';
+		$id = $list->id;
+		$store = $list->store;
+		$category = '('.$list->category.')';
+		$material_number = $list->material_number;
+		$sloc = $list->location;
+		$description = $list->material_description;
+		$key = $list->key;
+		$model = $list->model;
+		$surface = $list->surface;
+		$uom = $list->bun;
+		$lot = $list->lot;
 
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->setEmphasis(true);
@@ -481,7 +496,10 @@ class StockTakingController extends Controller{
 		$printer->setTextSize(3, 2);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->text($store."\n");
-		$printer->setReverseColors(true);			
+		if($list->category == 'ASSY'){
+			$printer->setReverseColors(true);			
+		}
+		
 		$printer->text($category."\n");
 		$printer->feed(1);
 		$printer->qrCode($id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
@@ -522,7 +540,7 @@ class StockTakingController extends Controller{
 		$printer->feed(1);
 		$printer->setTextSize(1, 1);
 		$printer->setJustification(Printer::JUSTIFY_RIGHT);
-		$printer->text(Carbon::now()."\n");
+		$printer->text("(".$number.")".str_repeat(" ", 22).Carbon::now()."\n");
 		$printer->feed(1);
 		$printer->cut();
 		$printer->close();
@@ -982,6 +1000,23 @@ class StockTakingController extends Controller{
 				);
 			}
 
+
+			StocktakingOutput::truncate();
+
+			$list = StocktakingList::where('created_by', 1)
+			->update([
+				'process' => 0,
+				'quantity' => null,
+				'audit1' => null,
+				'audit2' => null,
+				'final_count' => null,
+				'inputed_by' => null,
+				'audit1_by' => null,
+				'audit2_by' => null,
+			]);
+
+
+
 			$response = array(
 				'status' => true
 			);
@@ -1367,29 +1402,31 @@ class StockTakingController extends Controller{
 		}
 
 		if($calendar->status != 'finished'){
-			$data = db::select("SELECT area, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
-				(SELECT sl.area, 0 AS qty, count(s.id) AS total FROM stocktaking_lists s
+			$data = db::select("SELECT area, location, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
+				(SELECT sl.area, s.location, 0 AS qty, count(s.id) AS total FROM stocktaking_lists s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
-				GROUP BY sl.area
+				GROUP BY sl.area, s.location
 				UNION ALL
-				SELECT sl.area, count(s.id) AS qty, 0 AS total FROM stocktaking_lists s
+				SELECT sl.area, s.location, count(s.id) AS qty, 0 AS total FROM stocktaking_lists s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
 				WHERE s.quantity IS NOT NULL 
-				GROUP BY sl.area) AS list 
-				GROUP BY area");
+				GROUP BY sl.area, s.location) AS list 
+				GROUP BY area, location
+				ORDER BY area");
 		}else{
-			$data = db::select("SELECT area, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
-				(SELECT sl.area, 0 AS qty, count(s.id) AS total FROM stocktaking_inquiry_logs s
+			$data = db::select("SELECT area, location, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
+				(SELECT sl.area, s.location, 0 AS qty, count(s.id) AS total FROM stocktaking_inquiry_logs s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
 				WHERE s.stocktaking_date = '".$calendar->date."'
-				GROUP BY sl.area
+				GROUP BY sl.area, s.location
 				UNION ALL
-				SELECT sl.area, count(s.id) AS qty, 0 AS total FROM stocktaking_inquiry_logs s
+				SELECT sl.area, s.location, count(s.id) AS qty, 0 AS total FROM stocktaking_inquiry_logs s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
 				WHERE s.stocktaking_date = '".$calendar->date."'
 				AND s.quantity IS NOT NULL
-				GROUP BY sl.area) AS list 
-				GROUP BY area;");
+				GROUP BY sl.area, s.location) AS list 
+				GROUP BY area, location
+				ORDER BY area");
 		}
 
 
@@ -1424,7 +1461,7 @@ class StockTakingController extends Controller{
 			$input_detail = db::select("SELECT sl.area, s.location, s.store, s.material_number, mpdl.material_description, s.quantity, s.audit1, s.audit2, s.final_count FROM stocktaking_lists s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
-				WHERE sl.area = '".$group."'
+				WHERE s.location = '".$group."'
 				AND ".$quantity."
 				ORDER BY sl.area, s.location, s.store, s.material_number ASC");
 		}else{
@@ -1432,7 +1469,7 @@ class StockTakingController extends Controller{
 				SELECT sl.area, s.location, s.store, s.material_number, mpdl.material_description, NULL AS quantity, NULL AS audit1, NULL AS audit2, s.quantity AS final_count FROM stocktaking_inquiry_logs s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
-				WHERE sl.area = '".$group."'
+				WHERE s.location = '".$group."'
 				AND ".$quantity."
 				AND s.stocktaking_date = '".$calendar->date."'
 				ORDER BY sl.area, s.location, s.store, s.material_number ASC;");
@@ -1598,9 +1635,12 @@ class StockTakingController extends Controller{
 			WHERE
 			s.store = '". $request->get('store'). "'
 			ORDER BY
-			s.remark DESC,
-			s.category ASC,
-			s.material_number ASC");
+			s.id ASC");
+
+			// ORDER BY
+			// s.remark DESC,
+			// s.category ASC,
+			// s.material_number ASC
 
 		$response = array(
 			'status' => true,
@@ -1750,9 +1790,11 @@ class StockTakingController extends Controller{
 			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
 			WHERE
 			s.store = '". $request->get('store'). "'
-			ORDER BY
-			s.category,
-			s.material_number");
+			ORDER BY s.id");
+
+		// ORDER BY
+		// s.category,
+		// s.material_number
 
 		$response = array(
 			'status' => true,
