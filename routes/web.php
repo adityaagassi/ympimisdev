@@ -1733,6 +1733,10 @@ Route::get('fetch/stocktaking/get_storage_location', 'StockTakingController@fetc
 Route::get('fetch/stocktaking/get_store', 'StockTakingController@fetchGetStore');
 Route::get('fetch/stocktaking/check_material', 'StockTakingController@fetchCheckMaterial');
 
+Route::get('reprint/stocktaking/summary_of_counting_id', 'StockTakingController@reprintIdSoc');
+Route::get('reprint/stocktaking/summary_of_counting_store', 'StockTakingController@reprintStoreSoc');
+
+
 //Summary of Counting
 Route::get('index/stocktaking/summary_of_counting', 'StockTakingController@indexSummaryOfCounting');
 Route::get('fetch/stocktaking/summary_of_counting', 'StockTakingController@fetchSummaryOfCounting');

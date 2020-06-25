@@ -467,6 +467,117 @@ class StockTakingController extends Controller{
 
 	}
 
+	public function reprintStoreSoc(Request $request){
+		$store = $request->get('store');
+
+		try {
+			$lists = db::select("SELECT
+				s.id,
+				s.store, 
+				s.category,
+				s.material_number,
+				mpdl.material_description,
+				m.`key`,
+				m.model,
+				m.surface,
+				mpdl.bun,
+				s.location,
+				mpdl.storage_location,
+				v.lot_completion,
+				v.lot_transfer,
+				IF
+				( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot 
+				FROM
+				stocktaking_lists s
+				LEFT JOIN materials m ON m.material_number = s.material_number
+				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+				LEFT JOIN material_volumes v ON v.material_number = s.material_number
+				WHERE s.store = '".$store."'
+				ORDER BY s.store, s.id ASC");
+
+			$number = 0;
+
+			foreach ($lists as $list) {
+				$number++;
+				$this->printSummary($list, $number);
+			}
+
+
+			$response = array(
+				'status' => true,
+				'message' => 'Print Successful'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+
+	}
+
+	public function reprintIdSoc(Request $request){
+		$id = $request->get('id');
+
+		try {
+			$lists = db::select("SELECT
+				s.id,
+				s.store, 
+				s.category,
+				s.material_number,
+				mpdl.material_description,
+				m.`key`,
+				m.model,
+				m.surface,
+				mpdl.bun,
+				s.location,
+				mpdl.storage_location,
+				v.lot_completion,
+				v.lot_transfer,
+				IF
+				( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot 
+				FROM
+				stocktaking_lists s
+				LEFT JOIN materials m ON m.material_number = s.material_number
+				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+				LEFT JOIN material_volumes v ON v.material_number = s.material_number
+				WHERE s.id = ".$id."
+				ORDER BY s.store, s.id ASC");
+
+			$stores = StocktakingList::where('store', $lists[0]->store)->get();
+
+			$number = 0;
+			foreach ($stores as $store) {
+				$number++;
+				if($store->id == $lists[0]->id){
+					break;
+				}
+			}
+
+
+			foreach ($lists as $list) {
+				$this->printSummary($list, $number);
+			}
+
+
+			$response = array(
+				'status' => true,
+				'message' => 'Print Successful'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+
+
+	}
+
 	public function printSummary($list, $number){
 		$printer_name = 'MIS';
 		$connector = new WindowsPrintConnector($printer_name);
@@ -1105,7 +1216,13 @@ class StockTakingController extends Controller{
 		->addColumn('delete', function($data){
 			return '<button style="width: 50%; height: 100%;" onclick="deleteStore(\''.$data->store.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-trash"></i></span></button>';
 		})
-		->rawColumns([ 'delete' => 'delete'])
+		->addColumn('reprint', function($data){
+			return '<button style="width: 50%; height: 100%;" onclick="reprintStore(\''.$data->store.'\')" class="btn btn-xs btn-primary form-control"><span><i class="fa fa-print"></i></span></button>';
+		})
+		->rawColumns([ 
+			'reprint' => 'reprint',
+			'delete' => 'delete'
+		])
 		->make(true);
 	}
 
@@ -1119,7 +1236,13 @@ class StockTakingController extends Controller{
 		->addColumn('delete', function($data){
 			return '<button style="width: 50%; height: 100%;" onclick="deleteMaterial(\''.$data->id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-trash"></i></span></button>';
 		})
-		->rawColumns([ 'delete' => 'delete'])
+		->addColumn('reprint', function($data){
+			return '<button style="width: 50%; height: 100%;" onclick="reprintID(\''.$data->id.'\')" class="btn btn-xs btn-primary form-control"><span><i class="fa fa-print"></i></span></button>';
+		})
+		->rawColumns([
+			'reprint' => 'reprint',
+			'delete' => 'delete'
+		])
 		->make(true);
 	}
 
@@ -1971,6 +2094,7 @@ class StockTakingController extends Controller{
 	public function updateRevise(Request $request){
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
+		$reason = $request->get('reason');
 
 		$remark = '';
 		if($quantity > 0){
@@ -1984,7 +2108,8 @@ class StockTakingController extends Controller{
 			$update = StocktakingList::where('id', $id)
 			->update([
 				'remark' => $remark,
-				'final_count' => $quantity
+				'final_count' => $quantity,
+				'reason' => $reason
 			]);
 
 			$response = array(

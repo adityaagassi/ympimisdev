@@ -85,13 +85,15 @@
 									<th style="width: 30%">Location</th>
 									<th style="width: 30%">Store</th>
 									<th style="width: 10%">Material Qty</th>
-									<th style="width: 10%">Delete</th>
+									<th style="width: 5%">Reprint</th>
+									<th style="width: 5%">Delete</th>
 								</tr>
 							</thead>
 							<tbody>
 							</tbody>
 							<tfoot>
 								<tr>
+									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -112,6 +114,7 @@
 									<th style="width: 10%">Material</th>
 									<th style="width: 30%">Material Description</th>
 									<th style="width: 5%">UOM</th>
+									<th style="width: 5%">Reprint</th>
 									<th style="width: 5%">Delete</th>
 								</tr>
 							</thead>
@@ -119,6 +122,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
+									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -429,6 +433,7 @@
 			{ "data": "location"},
 			{ "data": "store"},
 			{ "data": "quantity"},
+			{ "data": "reprint"},
 			{ "data": "delete"}
 			]
 		});
@@ -494,6 +499,7 @@
 			{ "data": "material_number"},
 			{ "data": "material_description"},
 			{ "data": "uom"},
+			{ "data": "reprint"},
 			{ "data": "delete"}
 			]
 		});
@@ -510,6 +516,49 @@
 			});
 		});
 		$('#store_detail tfoot tr').appendTo('#store_detail thead');
+
+	}
+
+	function reprintID(id){
+		var data = {
+			id:id
+		}
+
+		$("#loading").show();
+
+		$.get('{{ url("reprint/stocktaking/summary_of_counting_id") }}', data, function(result, status, xhr){
+			if(result.status){
+				$("#loading").hide();
+				openSuccessGritter('Success', result.message);
+
+			} else {
+				$("#loading").hide();
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+			}
+
+		});
+	}
+
+	function reprintStore(store){
+		var data = {
+			store:store
+		}
+
+		$("#loading").show();
+
+		$.get('{{ url("reprint/stocktaking/summary_of_counting_store") }}', data, function(result, status, xhr){
+			if(result.status){
+				$("#loading").hide();
+				openSuccessGritter('Success', result.message);
+
+			} else {
+				$("#loading").hide();
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+			}
+
+		});
 
 	}
 
