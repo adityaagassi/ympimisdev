@@ -395,6 +395,7 @@ class TransactionController extends Controller
 		$condition = $date . $issue . $receive . $material . $remark;
 
 		$log = db::select("SELECT
+			non.id,
 			non.return_id,
 			non.material_number,
 			non.issue_location,
@@ -403,7 +404,7 @@ class TransactionController extends Controller
 			non.quantity,
 			IF(cancel.remark is null, non.remark, cancel.remark) AS remark,
 			non.slip_created AS printed_at,
-			non.returned_by AS printed_by,
+			return_user.`name` AS printed_by,
 			IF(non.remark = 'received', non.created_at, '-') AS received_at,
 			IF(non.remark = 'received', non_user.`name`, '-') AS received_by,
 			IF(non.remark = 'rejected', non.created_at, '-') AS rejected_at,
@@ -413,12 +414,13 @@ class TransactionController extends Controller
 			COALESCE(cancel.created_at, '-') AS canceled_at,
 			COALESCE(cancel_user.`name`, '-') AS canceled_by
 			FROM
-			(SELECT return_id, material_number, material_description, issue_location, receive_location, quantity, remark, slip_created, returned_by, created_at, created_by FROM `return_logs`
+			(SELECT id, return_id, material_number, material_description, issue_location, receive_location, quantity, remark, slip_created, returned_by, created_at, created_by FROM `return_logs`
 			where remark <> 'canceled' ".$condition." ) AS non
 			LEFT JOIN
-			(SELECT return_id, remark, created_at, created_by FROM `return_logs`
+			(SELECT id, return_id, remark, created_at, created_by FROM `return_logs`
 			where remark = 'canceled' ".$condition." ) AS cancel
 			ON non.return_id = cancel.return_id
+			LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS return_user ON return_user.id = non.returned_by
 			LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS non_user ON non_user.id = non.created_by
 			LEFT JOIN (SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS cancel_user ON cancel_user.id = cancel.created_by
 			ORDER BY non.slip_created");
@@ -428,7 +430,7 @@ class TransactionController extends Controller
 		->addColumn('cancel', function($data){
 			if($data->remark == 'received'){
 				if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PROD"){
-					return '<button style="width: 50%; height: 100%;" onclick="cancelReturn(\''.$data->return_id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button>';
+					return '<button style="width: 50%; height: 100%;" onclick="cancelReturn(\''.$data->id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button>';
 				}else{
 					return '-';
 				}
