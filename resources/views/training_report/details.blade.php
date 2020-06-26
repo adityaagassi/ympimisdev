@@ -361,13 +361,12 @@ table.table-bordered > tfoot > tr > th{
 				              <tr>
 				              	@if($jml_null > 0)
 								<td id="approval2">
-									<!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ttd-modal" onclick="getValue('{{ $training_participant->id }}')">
-						               Kehadiran
-						            </button> -->
 									<input type="hidden" value="{{csrf_token()}}" name="_token" />
 									@if($training_participant->participant_absence == Null)
-									    {{-- <input type="checkbox" id="checklist_participant" name="approve[]" value="{{ $training_participant->id }}"> --}}
 									    <input type="checkbox" name="ips[]" onchange="getValue(this.value)" value="{{ $training_participant->participant_id }}">
+									    <!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ttd-modal" onclick="getValue('{{ $training_participant->id }}','{{ $training_participant->participant_name->name }}')">
+							               Kehadiran
+							            </button> -->
 									@endif
 								</td>
 								@endif
@@ -571,10 +570,10 @@ table.table-bordered > tfoot > tr > th{
           <div class="box-body">
             <div class="panel panel-default">
 	            <input type="hidden" value="{{csrf_token()}}" name="_token" />
-	            <div class="panel-heading">Digital Signature : </div>
+	            <div class="panel-heading" id="panel-heading">Digital Signature : </div>
 	            <div class="panel-body center-text"  style="padding: 0">
 	              <div id="signArea">
-	                <h2 class="tag-ingo">Put signature here,</h2>
+	                <!-- <h2 class="tag-ingo">Put signature here,</h2> -->
 	                <div class="sig sigWrapper" style="height:204px;">
 	                  <div class="typed"></div>
 	                  <canvas class="sign-pad" id="sign-pad" width="500" height="190"></canvas>
@@ -583,7 +582,7 @@ table.table-bordered > tfoot > tr > th{
 	              
 	              <input type="hidden" name="id_peserta" id="id_peserta">
 	              <input type="hidden" name="id_training" id="id_training" value="{{$id}}">
-	              <button class="btn btn-success" onclick="saveSign()">HADIR</button>
+	              <button class="btn btn-success pull-right" onclick="saveSign()">HADIR</button>
 	              <a href="{{ url('index/training_report/details/'.$id.'/view') }}" class="btn btn-danger">Clear</a>
 	              <!-- <button onclick="clearSign()" class="btn btn-danger">Clear</button> -->
 	              <!-- <button class="clearButton" href="#clear">Clear</button> -->
@@ -603,18 +602,21 @@ table.table-bordered > tfoot > tr > th{
 
 
 @section('scripts')
+<link rel="stylesheet" href="{{ url("css/jquery.signaturepad.css")}}">
+<script src="{{ url("js/numeric-1.2.6.min.js")}}"></script>
+<script src="{{ url("js/bezier.js")}}"></script>
+<script src="{{ url("js/jquery.signaturepad.js")}}"></script>
 <script>
-	function getValue(value){
-    	// alert(value);
+	function getValue(value,name){
     	var url = '{{ url("index/training_report/cek_employee") }}';
     	var conf = confirm('Are you sure you want to attend?');
     	if(conf){
     		window.location.href = url+'/'+value+'/{{ $id }}';
-    		// console.log(url+'/'+value+'/{{ $id }}');
     	}else{
 
     	}
-    	$("#id_peserta").val(value);
+    	// $("#id_peserta").val(value);
+    	// $("#panel-heading").html('Digital Signature of '+name);
 	}
 
 	function checkAll(isChecked){
@@ -649,9 +651,7 @@ table.table-bordered > tfoot > tr > th{
 			}
 		});
 
-		$('#signArea').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:190});
-
-		
+		$('#signArea').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:190});		
 	});
 
 	function saveSign() {
@@ -660,31 +660,40 @@ table.table-bordered > tfoot > tr > th{
 	        onrendered: function (canvas) {
 	          var canvas_img_data = canvas.toDataURL('image/png');
 	          img_data = canvas_img_data.replace(/^data:image\/(png|jpg);base64,/, "");
-	          // var cpar_no = $("#cpar_no").val();
-	        //ajax call to save image inside folder
-		        
-		      }
+	          var data = {
+				img_data:img_data,				
+			  }
+			  var id_peserta = $("#id_peserta").val();
+		        var url = '{{ url("index/training_report/cek_employee2") }}';
+
+		        $.ajax({
+		          url: url+'/'+id_peserta+'/'+'{{ $id }}',
+		          data: { 
+		            img_data:img_data,
+		          },
+		          type: 'post',
+		          dataType: 'json',
+		          success: function (response) {
+
+		          }
+		        });
+		        $("#ttd-modal").modal('hide');
+				openSuccessGritter('Success','Participant has been attend');
+	            window.location.reload();
+		  //       $.post(url+'/'+id_peserta+'/'+'{{ $id }}', data, function(result, status, xhr){
+				// 	if(result.status){
+				// 		// $('#example1').DataTable().ajax.reload();
+				// 		// $('#example2').DataTable().ajax.reload();
+				// 	} else {
+				// 		audio_error.play();
+				// 		openErrorGritter('Error','Attendance Failed');
+				// 	}
+				// });
+				// $("#ttd-modal").modal('hide');
+				// openSuccessGritter('Success','Participant has been attend');
+				// window.location.reload();
+	      	}
 	      });
-
-			var id_peserta = $("#id_peserta").val();
-	        var url = '{{ url("index/training_report/cek_employee2") }}';
-
-			var data = {
-				img_data:img_data,
-				
-			}
-	        $.post(url+'/'+id_peserta+'/'+'{{ $id }}', data, function(result, status, xhr){
-				if(result.status){
-					// $('#example1').DataTable().ajax.reload();
-					// $('#example2').DataTable().ajax.reload();
-				} else {
-					audio_error.play();
-					openErrorGritter('Error','Attendance Failed');
-				}
-			});
-			$("#ttd-modal").modal('hide');
-			openSuccessGritter('Success','Participant has been attend');
-			window.location.reload();
 
 		// $("#ttd-modal").modal('hide');
 		// openSuccessGritter('Success','Participant has been attend');
@@ -700,11 +709,6 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/vfs_fonts.js")}}"></script>
   <script src="{{ url("js/buttons.html5.min.js")}}"></script>
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
-
-<link rel="stylesheet" href="{{ url("css/jquery.signaturepad.css")}}">
-<script src="{{ url("js/numeric-1.2.6.min.js")}}"></script>
-<script src="{{ url("js/bezier.js")}}"></script>
-<script src="{{ url("js/jquery.signaturepad.js")}}"></script>
 
 <script src="{{ url("js/html2canvas.js")}}"></script>
   <script>
