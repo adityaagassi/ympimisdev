@@ -70,6 +70,65 @@
 
 	<div class="row">
 		<div class="col-xs-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<h3 class="box-title">Store Filters</h3>
+				</div>
+				<input type="hidden" value="{{csrf_token()}}" name="_token" />
+				<div class="box-body">
+					
+					<div class="row">
+						<div class="col-md-3 col-md-offset-1">
+							<div class="form-group">
+								<label>Group</label>
+								<select class="form-control select2" multiple="multiple" name="filter_area" id='filter_area' data-placeholder="Select Location" style="width: 100%;">
+									<option value=""></option>
+									@foreach($groups as $group) 
+									<option value="{{ $group->area }}">{{ $group->area }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Location</label>
+								<select class="form-control select2" multiple="multiple" name="filter_location" id='filter_location' data-placeholder="Select Location" style="width: 100%;">
+									<option value=""></option>
+									@foreach($locations as $location) 
+									<option value="{{ $location->location }}">{{ $location->location }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Store</label>
+								<select class="form-control select2" multiple="multiple" name="filter_store" id='filter_store' data-placeholder="Select Location" style="width: 100%;">
+									<option value=""></option>
+									@foreach($stores as $store) 
+									<option value="{{ $store->store }}">{{ $store->store }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>		
+					</div>
+
+					<div class="col-md-4 col-md-offset-6">
+						<div class="form-group pull-right">
+							<a href="javascript:void(0)" onClick="clearConfirmation()" class="btn btn-danger">Clear</a>
+							<button id="search" onClick="fetchTable()" class="btn btn-primary">Search</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+		<div class="col-xs-12">
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Store</a></li>
@@ -256,7 +315,7 @@
 		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2();
 
-		fetchTable();
+		// fetchTable();
 
 		$('#other').hide();
 	});
@@ -391,6 +450,17 @@
 	function fetchTable() {
 		//Store
 		$('#store_table').DataTable().destroy();
+
+		var area = $('#filter_area').val();
+		var location = $('#filter_location').val();
+		var store = $('#filter_store').val();
+
+		var data = {
+			area:area,
+			location:location,
+			store:store
+		}
+
 		
 		$('#store_table tfoot th').each( function () {
 			var title = $(this).text();
@@ -426,7 +496,8 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/stocktaking/store") }}"
+				"url" : "{{ url("fetch/stocktaking/store") }}",
+				"data" : data		
 			},
 			"columns": [
 			{ "data": "group"},
@@ -450,6 +521,7 @@
 			});
 		});
 		$('#store_table tfoot tr').appendTo('#store_table thead');
+		
 
 
 		//Detail
@@ -489,7 +561,8 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/stocktaking/store_details") }}"
+				"url" : "{{ url("fetch/stocktaking/store_details") }}",
+				"data" : data		
 			},
 			"columns": [
 			{ "data": "group"},

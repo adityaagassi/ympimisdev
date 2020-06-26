@@ -66,15 +66,30 @@
 		text-align: center;
 		font-weight: bold;
 	}
-	#total {
-		text-align: center;
-		font-weight: bold;
-	}
+
 	#progress-text {
 		text-align: center;
 		font-weight: bold;
 		font-size: 1.5vw;
 		color: #fff;
+	}
+
+	/* Chrome, Safari, Edge, Opera */
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	/* Firefox */
+	input[type=number] {
+		-moz-appearance: textfield;
+	}
+
+	.styled-select select {
+		-moz-appearance:none; /* Firefox */
+		-webkit-appearance:none; /* Safari and Chrome */
+		appearance:none;
 	}
 
 </style>
@@ -169,17 +184,30 @@
 		<div class="col-xs-5">
 			<div class="col-xs-12">		
 				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:2vw;">PI</label>
-					<div class="col-xs-6 col-xs-offset-3" align="right">
-						<input type="text" style="font-size:30px; height: 45px;" class="form-control numpad" placeholder="INPUT PI HERE" id="total">
+					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:1.5vw;">PI</label>
+					<div class="col-xs-6 col-xs-offset-3">
+						<input type="number" class="form-control" placeholder="Input here" id="total">
+					</div>
+				</div>
+				<div class="form-group row" align="right">
+					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:1.5vw;">Reason</label>
+					<div class="col-xs-6 col-xs-offset-3" align="left">
+						<select class="form-control select2" name="reason" id='reason' data-placeholder="Select Reason">
+							<option value=""></option>
+							<option value="Kesalahan input transaksi return/repair">Kesalahan input transaksi return/repair</option>
+							<option value="Salah hitung">Salah hitung</option>
+							<option value="Belum terhitung">Belum terhitung</option>
+							<option value="Salah identifikasi item single/assy">Salah identifikasi item single/assy</option>
+							<option value="Salah input transaksi loc transfer dari maekotei">Salah input transaksi loc transfer dari maekotei</option>
+						</select>
 					</div>
 				</div>
 			</div>
 			<div class="col-xs-12" align="right">
 				<div class="input-group input-group-lg">
-					<button type="button" style="font-size:25px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="cancInput()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
+					<button type="button" style="font-size:20px; height: 35px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="cancInput()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
 
-					<button type="button" style="font-size:25px; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
+					<button type="button" style="font-size:20px; height: 35px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
 				</div>
 			</div>
 		</div>
@@ -242,6 +270,8 @@
 			hidePlusMinusButton : true,
 			decimalSeparator : '.'
 		});
+
+		$('.select2').select2();
 
 		$('#qr_code').blur();
 
@@ -442,6 +472,7 @@
 
 	function showRevise(id) {
 		$('#input').show();		
+		$('#total').focus();		
 		$('#main').hide();		
 
 		var data = {
@@ -480,15 +511,20 @@
 	function save(){
 		var id = $("#id").val();
 		var quantity = $("#total").val();
+		var reason = $("#reason").val();
 
 		var data = {
 			id : id,
-			quantity : quantity
+			quantity : quantity,
+			reason : reason
 		}
 
 		$.post('{{ url("fetch/stocktaking/update_revise") }}', data, function(result, status, xhr){
 			if (result.status) {
 				openSuccessGritter('Success', result.message);
+
+				$("#total").val('');
+				$("#reason").prop('selectedIndex', 0).change();
 
 				var storeTitle = $("#store_title").text();
 				var split = storeTitle.split(" : ");

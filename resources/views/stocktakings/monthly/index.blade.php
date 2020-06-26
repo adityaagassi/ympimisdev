@@ -229,10 +229,10 @@
 		$('#month').val('');
 
 		filledList();
-		variance();
+		// variance();
 
 		setInterval(filledList, 100000);
-		setInterval(variance, 600000);
+		// setInterval(variance, 600000);
 
 	});
 

@@ -159,11 +159,13 @@ class StockTakingController extends Controller{
 		->orderBy('area', 'ASC')
 		->get();
 
-		$stores = StocktakingList::leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_lists.location')
-		->select('storage_locations.area', 'stocktaking_lists.location', 'stocktaking_lists.store')
+		$locations = StocktakingList::select('stocktaking_lists.location')
 		->distinct()
-		->orderBy('storage_locations.area', 'ASC')
 		->orderBy('stocktaking_lists.location', 'ASC')
+		->get();
+
+		$stores = StocktakingList::select('stocktaking_lists.store')
+		->distinct()
 		->orderBy('stocktaking_lists.store', 'ASC')
 		->get();
 
@@ -173,6 +175,7 @@ class StockTakingController extends Controller{
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'groups' => $groups,
+			'locations' => $locations,
 			'stores' => $stores,
 			'materials' => $materials
 		))->with('page', 'Manage Store')->with('head', 'Stocktaking');
@@ -555,7 +558,6 @@ class StockTakingController extends Controller{
 					break;
 				}
 			}
-
 
 			foreach ($lists as $list) {
 				$this->printSummary($list, $number);
@@ -1206,9 +1208,75 @@ class StockTakingController extends Controller{
 		
 	}
 
-	public function fetchStore(){
+	public function fetchStore(Request $request){
+
+		$area = '';
+		if($request->get('area') != null){
+			$areas =  $request->get('area');
+			for ($i=0; $i < count($areas); $i++) {
+				$area = $area."'".$areas[$i]."'";
+				if($i != (count($areas)-1)){
+					$area = $area.',';
+				}
+			}
+			$area = "storage_locations.area IN (".$area.") ";
+		}
+
+		$location = '';
+		if($request->get('location') != null){
+			$locations =  $request->get('location');
+			for ($i=0; $i < count($locations); $i++) {
+				$location = $location."'".$locations[$i]."'";
+				if($i != (count($locations)-1)){
+					$location = $location.',';
+				}
+			}
+			$location = "stocktaking_lists.location IN (".$location.") ";
+		}
+
+		$store = '';
+		if($request->get('store') != null){
+			$stores =  $request->get('store');
+			for ($i=0; $i < count($stores); $i++) {
+				$store = $store."'".$stores[$i]."'";
+				if($i != (count($stores)-1)){
+					$store = $store.',';
+				}
+			}
+			$store = "stocktaking_lists.store IN (".$store.") ";
+		}
+
+		$condition = '';
+		$and = false;
+		if($area != '' || $location != '' || $store != ''){
+			$condition = 'WHERE';
+		}
+
+		if($area != ''){
+			$and = true;
+			$condition = $condition. ' ' .$area;
+		}
+
+		if($location != ''){
+			if($and){
+				$condition =  $condition.' OR ';
+			}
+
+			$condition = $condition. ' ' .$location;
+		}
+
+		if($store != ''){
+			if($and){
+				$condition =  $condition.' OR ';
+			}
+
+			$condition = $condition. ' ' .$store;
+		}
+
+
 		$data = db::select("SELECT storage_locations.area AS `group`, stocktaking_lists.location, stocktaking_lists.store, count( stocktaking_lists.id ) AS quantity FROM stocktaking_lists
-			LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_lists.location 
+			LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_lists.location
+			".$condition."
 			GROUP BY storage_locations.area, stocktaking_lists.location, stocktaking_lists.store
 			ORDER BY storage_locations.area, stocktaking_lists.location, stocktaking_lists.store ASC");
 
@@ -1226,10 +1294,76 @@ class StockTakingController extends Controller{
 		->make(true);
 	}
 
-	public function fetchStoreDetail(){
+
+	public function fetchStoreDetail(Request $request){
+
+		$area = '';
+		if($request->get('area') != null){
+			$areas =  $request->get('area');
+			for ($i=0; $i < count($areas); $i++) {
+				$area = $area."'".$areas[$i]."'";
+				if($i != (count($areas)-1)){
+					$area = $area.',';
+				}
+			}
+			$area = "sl.area IN (".$area.") ";
+		}
+
+		$location = '';
+		if($request->get('location') != null){
+			$locations =  $request->get('location');
+			for ($i=0; $i < count($locations); $i++) {
+				$location = $location."'".$locations[$i]."'";
+				if($i != (count($locations)-1)){
+					$location = $location.',';
+				}
+			}
+			$location = "s.location IN (".$location.") ";
+		}
+
+		$store = '';
+		if($request->get('store') != null){
+			$stores =  $request->get('store');
+			for ($i=0; $i < count($stores); $i++) {
+				$store = $store."'".$stores[$i]."'";
+				if($i != (count($stores)-1)){
+					$store = $store.',';
+				}
+			}
+			$store = "s.store IN (".$store.") ";
+		}
+
+		$condition = '';
+		$and = false;
+		if($area != '' || $location != '' || $store != ''){
+			$condition = 'WHERE';
+		}
+
+		if($area != ''){
+			$and = true;
+			$condition = $condition. ' ' .$area;
+		}
+
+		if($location != ''){
+			if($and){
+				$condition =  $condition.' OR ';
+			}
+
+			$condition = $condition. ' ' .$location;
+		}
+
+		if($store != ''){
+			if($and){
+				$condition =  $condition.' OR ';
+			}
+
+			$condition = $condition. ' ' .$store;
+		}
+
 		$data = db::select("SELECT s.id, sl.area AS `group`, s.location, s.store, s.category, s.material_number, mpdl.material_description, mpdl.bun AS uom FROM stocktaking_lists s
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
-			LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
+			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
+			".$condition." 
 			ORDER BY sl.area, s.location, s.store, s.category, s.material_number ASC");
 
 		return DataTables::of($data)
