@@ -224,12 +224,14 @@
 										</div>
 										<div class="form-group">
 											<label>Supplier<span class="text-red">*</span></label>
-											<select class="form-control select4" id="supplier" name="supplier" data-placeholder='Supplier' style="width: 100%" onchange="getSupplier(this)">
+											<select class="form-control select4" id="supplier_code" name="supplier_code" data-placeholder='Supplier' style="width: 100%" onchange="getSupplier(this)">
 												<option value="">&nbsp;</option>
 												@foreach($vendor as $ven)
-												<option value="{{$ven->supplier_name}}">{{$ven->supplier_name}}</option>
+												<option value="{{$ven->vendor_code}}">{{$ven->vendor_code}} - {{$ven->supplier_name}}</option>
 												@endforeach
 											</select>
+
+											<input type="hidden" class="form-control" id="supplier_name" name="supplier_name" readonly="">
 										</div>
 										<div class="form-group">
 											<label>Due Payment (Vendor)<span class="text-red">*</span></label>
@@ -300,17 +302,18 @@
 										</div>
 										<div class="form-group">
 											<label>Authorized 2<span class="text-red">*</span></label>
-											<input type="text" class="form-control" id="authorized2name" name="authorized2name" readonly="" value="{{$authorized2->name}}">
+											<input type="text" class="form-control" id="authorized2_name" name="authorized2_name" readonly="" value="{{$authorized2->name}}">
 											<input type="hidden" class="form-control" id="authorized2" name="authorized2" readonly="" value="{{$authorized2->employee_id}}">
 										</div>
 										<div class="form-group">
 											<label>Authorized 3<span class="text-red">*</span></label>
-											<select class="form-control select4" id="authorized3" name="authorized3" data-placeholder='Pilih Authorized 3' style="width: 100%">
+											<select class="form-control select4" id="authorized3" name="authorized3" data-placeholder='Pilih Authorized 3' style="width: 100%" onchange="getAuthorized3(this);">
 												<option value="">&nbsp;</option>
 												@foreach($authorized3 as $author3)
 												<option value="{{$author3->employee_id}}">{{$author3->name}}</option>
 												@endforeach
 											</select>
+											<input type="hidden" class="form-control" id="authorized3_name" name="authorized3_name" readonly="">
 										</div>
 										<div class="form-group">
 											<label>Catatan / Keterangan</label>
@@ -329,7 +332,7 @@
 									<div class="col-xs-1" style="padding:5px;">
 										<b>NO PR</b>
 									</div>
-									<div class="col-xs-2" style="padding:5px;">
+									<div class="col-xs-1" style="padding:5px;">
 										<b>No Item</b>
 									</div>
 									<div class="col-xs-1" style="padding:5px;">
@@ -357,6 +360,9 @@
 										<b>Konversi</b>
 									</div>
 									<div class="col-xs-1" style="padding:5px;">
+										<b>GL Number</b>
+									</div>
+									<div class="col-xs-1" style="padding:5px;">
 										<b>Aksi</b>
 									</div>
 
@@ -367,7 +373,7 @@
 										</select>
 									</div>
 
-									<div class="col-xs-2" style="padding:5px;">
+									<div class="col-xs-1" style="padding:5px;">
 										<select class="form-control select2" data-placeholder="Item" name="no_item1" id="no_item1" style="width: 100% height: 35px;" onchange="pilihItem(this)">
 										</select>
 
@@ -413,6 +419,10 @@
 
 									<div class="col-xs-1" style="padding:5px;">
 										<input type="text" class="form-control" id="konversi_dollar1" name="konversi_dollar1" placeholder="Konversi Dollar" required="" readonly="">
+									</div>
+
+									<div class="col-xs-1" style="padding:5px;">
+										<input type="text" class="form-control" id="gl_number1" name="gl_number1" placeholder="GL Number" required="">
 									</div>
 
 
@@ -475,12 +485,14 @@
 										</div>
 										<div class="form-group">
 											<label>Supplier<span class="text-red">*</span></label>
-											<select class="form-control select5" id="supplier_edit" name="supplier_edit" data-placeholder='Supplier' style="width: 100%" onchange="getSupplierEdit(this)">
+											<select class="form-control select5" id="supplier_code_edit" name="supplier_code_edit" data-placeholder='Supplier' style="width: 100%" onchange="getSupplierEdit(this)">
 												<option value="">&nbsp;</option>
 												@foreach($vendor as $ven)
-												<option value="{{$ven->supplier_name}}">{{$ven->supplier_name}}</option>
+												<option value="{{$ven->vendor_code}}">{{$ven->vendor_code}} - {{$ven->supplier_name}}</option>
 												@endforeach
 											</select>
+
+											<input type="hidden" class="form-control" id="supplier_name_edit" name="supplier_name_edit" readonly="">
 										</div>
 										<div class="form-group">
 											<label>Due Payment (Vendor)<span class="text-red">*</span></label>
@@ -550,18 +562,19 @@
 										</div>
 										<div class="form-group">
 											<label>Authorized 2<span class="text-red">*</span></label>
-											<input type="text" class="form-control" id="authorized2name" name="authorized2name" readonly="" value="{{$authorized2->name}}">
+											<input type="text" class="form-control" id="authorized2_name" name="authorized2_name" readonly="" value="{{$authorized2->name}}">
 											<input type="hidden" class="form-control" id="authorized2" name="authorized2" readonly="" value="{{$authorized2->employee_id}}">
 											
 										</div>
 										<div class="form-group">
 											<label>Authorized 3<span class="text-red">*</span></label>
-											<select class="form-control select5" id="authorized3_edit" name="authorized3_edit" data-placeholder='Pilih Authorized 3' style="width: 100%">
+											<select class="form-control select5" id="authorized3_edit" name="authorized3_edit" data-placeholder='Pilih Authorized 3' style="width: 100%" onchange="getAuthorized3Edit(this)">
 												<option value="">&nbsp;</option>
 												@foreach($authorized3 as $author3)
 												<option value="{{$author3->employee_id}}">{{$author3->name}}</option>
 												@endforeach
 											</select>
+											<input type="text" class="form-control" id="authorized3_name_edit" name="authorized3_name_edit" readonly="">
 										</div>
 										<div class="form-group">
 											<label>Catatan / Keterangan</label>
@@ -695,7 +708,7 @@
 
 		$('.btnNext').click(function(){
 			var no_po2 = $('#no_po2').val();
-			var supplier = $('#supplier').val();
+			var supplier = $('#supplier_code').val();
 			var material = $('#material').val();
 			var price_vat = $('#price_vat').val();
 			var delivery_term = $('#delivery_term').val();
@@ -711,7 +724,7 @@
 		});
 
 		$('.btnNextEdit').click(function(){
-			var supplier = $('#supplier_edit').val();
+			var supplier = $('#supplier_code_edit').val();
 			var material = $('#material_edit').val();
 			var price_vat = $('#price_vat_edit').val();
 			var delivery_term = $('#delivery_term_edit').val();
@@ -835,7 +848,7 @@
 			"columns": [
 			{ "data": "no_po" },
 			{ "data": "tgl_po" },
-			{ "data": "supplier" },
+			{ "data": "supplier_name" },
 			{ "data": "material" },
 			{ "data": "vat" },
 			{ "data": "transportation" },
@@ -926,11 +939,12 @@
 	function getSupplier(elem){
 
 		$.ajax({
-			url: "{{ route('admin.pogetsupplier') }}?supplier_name="+elem.value,
+			url: "{{ route('admin.pogetsupplier') }}?supplier_code="+elem.value,
 			method: 'GET',
 			success: function(data) {
 				var json = data,
 				obj = JSON.parse(json);
+				$('#supplier_name').val(obj.name);
 				$('#supplier_due_payment').val(obj.duration);
 				$('#supplier_status').val(obj.status);
 			} 
@@ -940,13 +954,40 @@
 	function getSupplierEdit(elem){
 
 		$.ajax({
-			url: "{{ route('admin.pogetsupplier') }}?supplier_name="+elem.value,
+			url: "{{ route('admin.pogetsupplier') }}?supplier_code="+elem.value,
 			method: 'GET',
 			success: function(data) {
 				var json = data,
 				obj = JSON.parse(json);
+				$('#supplier_name_edit').val(obj.name);
 				$('#supplier_due_payment_edit').val(obj.duration);
 				$('#supplier_status_edit').val(obj.status);
+			} 
+		});
+	}
+
+	function getAuthorized3(elem){
+
+		$.ajax({
+			url: "{{ route('admin.pogetname') }}?authorized3="+elem.value,
+			method: 'GET',
+			success: function(data) {
+				var json = data,
+				obj = JSON.parse(json);
+				$('#authorized3_name').val(obj.name);
+			} 
+		});
+	}
+
+	function getAuthorized3Edit(elem){
+
+		$.ajax({
+			url: "{{ route('admin.pogetname') }}?authorized3="+elem.value,
+			method: 'GET',
+			success: function(data) {
+				var json = data,
+				obj = JSON.parse(json);
+				$('#authorized3_name_edit').val(obj.name);
 			} 
 		});
 	}
@@ -1067,7 +1108,7 @@
 			lop = "lop2";
 		}
 
-		var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='PR' name='no_pr"+no+"' id='no_pr"+no+"' style='width: 100% height: 35px;' onchange='pilihPR(this)'></select></div><div class='col-xs-2' style='padding:5px;'><select class='form-control select3' data-placeholder='Item' name='no_item"+no+"' id='no_item"+no+"' style='width: 100% height: 35px;' onchange='pilihItem(this)'></select><input type='hidden' class='form-control' id='nama_item"+no+"' name='nama_item"+no+"' placeholder='Nama Item' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+no+"' name='item_budget"+no+"' placeholder='Budget' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+no+"' name='delivery_date"+no+"' placeholder='Delivery Date' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' required='' readonly='' onkeyup='getkonversi(this)'></div> <div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"'>?</span><input type='text' class='form-control currency' id='goods_price"+no+"' name='goods_price"+no+"' placeholder='Goods Price' required='' readonly='' onkeyup='getkonversi(this)'></div></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+no+"' name='last_price"+no+"' placeholder='Last Price' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+no+"' name='service_price"+no+"' placeholder='Service' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+		var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='PR' name='no_pr"+no+"' id='no_pr"+no+"' style='width: 100% height: 35px;' onchange='pilihPR(this)'></select></div><div class='col-xs-2' style='padding:5px;'><select class='form-control select3' data-placeholder='Item' name='no_item"+no+"' id='no_item"+no+"' style='width: 100% height: 35px;' onchange='pilihItem(this)'></select><input type='hidden' class='form-control' id='nama_item"+no+"' name='nama_item"+no+"' placeholder='Nama Item' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+no+"' name='item_budget"+no+"' placeholder='Budget' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+no+"' name='delivery_date"+no+"' placeholder='Delivery Date' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' required='' readonly='' onkeyup='getkonversi(this)'></div> <div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"'>?</span><input type='text' class='form-control currency' id='goods_price"+no+"' name='goods_price"+no+"' placeholder='Goods Price' required='' readonly='' onkeyup='getkonversi(this)'></div></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+no+"' name='last_price"+no+"' placeholder='Last Price' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+no+"' name='service_price"+no+"' placeholder='Service' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='gl_number"+no+"' name='gl_number"+no+"' placeholder='GL Number' required=''></div><div class='col-xs-1' style='padding:5px;'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
 
 		$("#"+id).append(divdata);
 		$("#no_pr"+no).append(pr_list);
@@ -1104,6 +1145,7 @@
 		$("#price"+newid).attr("name","price"+oldid);
 		$("#currency"+newid).attr("name","currency"+oldid);
 		$("#konversi_dollar"+newid).attr("name","konversi_dollar"+oldid);
+		$("#gl_number"+newid).attr("name","gl_number"+oldid);
 
 		$("#no_pr"+newid).attr("id","no_pr"+oldid);
 		$("#no_item"+newid).attr("id","no_item"+oldid);
@@ -1114,6 +1156,7 @@
 		$("#price"+newid).attr("id","price"+oldid);
 		$("#currency"+newid).attr("id","currency"+oldid);
 		$("#konversi_dollar"+newid).attr("id","konversi_dollar"+oldid);
+		$("#gl_number"+newid).attr("id","gl_number"+oldid);
 
 		no-=1;
 		var a = no -1;
@@ -1131,7 +1174,7 @@
 			$("#price"+newid).attr("name","price"+oldid);
 			$("#currency"+newid).attr("name","currency"+oldid);
 			$("#konversi_dollar"+newid).attr("name","konversi_dollar"+oldid);
-
+			$("#gl_number"+newid).attr("name","gl_number"+oldid);
 
 			$("#no_pr"+newid).attr("id","no_pr"+oldid);
 			$("#no_item"+newid).attr("id","no_item"+oldid);
@@ -1142,6 +1185,7 @@
 			$("#price"+newid).attr("id","price"+oldid);
 			$("#currency"+newid).attr("id","currency"+oldid);
 			$("#konversi_dollar"+newid).attr("id","konversi_dollar"+oldid);
+			$("#gl_number"+newid).attr("id","gl_number"+oldid);
 
 		}
 		document.getElementById(lop).value = a;
@@ -1199,7 +1243,7 @@
     		$("#id_edit").val(id);
     		$("#no_po_edit").val(result.purchase_order.no_po);
     		$("#tgl_po_edit").val(result.purchase_order.tgl_po);
-    		$("#supplier_edit").val(result.purchase_order.supplier).trigger('change.select2');
+    		$("#supplier_code_edit").val(result.purchase_order.supplier_code).trigger('change.select2');
     		$("#material_edit").val(result.purchase_order.material).trigger('change.select2');
     		$("#price_vat_edit").val(result.purchase_order.vat).trigger('change.select2');
     		$("#transportation_edit").val(result.purchase_order.transportation).trigger('change.select2');
@@ -1224,17 +1268,20 @@
 
 		    	isi = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' class='form-control' name='id_edit' id='id_edit' value='"+value.id+"'><input type='text' class='form-control' name='no_pr"+value.id+"' id='no_pr"+value.id+"' value='"+ value.no_pr +"' readonly=''></div>";
-		    	isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' name='no_item"+value.id+"' id='no_item"+value.id+"' value='"+ value.no_item +"' readonly=''><input type='hidden' class='form-control' id='nama_item"+value.id+"' name='nama_item"+value.id+"' placeholder='Nama Item' readonly='' value='"+ value.nama_item +"'></div> ";
-		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+value.id+"' name='item_budget"+value.id+"' placeholder='Budget' required='' value="+value.budget_item+"></div>";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' name='no_item"+value.id+"' id='no_item"+value.id+"' value='"+ value.no_item +"' readonly=''><input type='hidden' class='form-control' id='nama_item"+value.id+"' name='nama_item"+value.id+"' placeholder='Nama Item' readonly='' value='"+ value.nama_item +"'></div> ";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+value.id+"' name='item_budget"+value.id+"' placeholder='Budget' required='' value="+value.budget_item+" readonly=''></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+value.id+"' name='delivery_date"+value.id+"' placeholder='Delivery Date' required='' value="+value.delivery_date+"></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+value.id+"' name='qty"+value.id+"' placeholder='Qty' required='' onkeyup='getkonversiEdit(this)' value="+value.qty+"></div>";
-		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='uomhide"+value.id+"' id='uomhide"+value.id+"' value='"+ value.uom +"'><select class='form-control select6' id='uom"+value.id+"' name='uom"+value.id+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div>";
-		    	isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+value.id+"'>?</span><input type='text' class='form-control currency' id='goods_price"+value.id+"' name='goods_price"+value.id+"' placeholder='Goods Price' required='' onkeyup='getkonversiEdit(this)' value="+value.goods_price+"></div></div>";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='uomhide"+value.id+"' id='uomhide"+value.id+"' value='"+ value.uom +"'><select class='form-control select6' id='uom_edit"+value.id+"' name='uom_edit"+value.id+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div>";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"'>?</span><input type='text' class='form-control currency' id='goods_price"+value.id+"' name='goods_price"+value.id+"' placeholder='Goods Price' required='' onkeyup='getkonversiEdit(this)' value="+value.goods_price+"></div></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+value.id+"' name='last_price"+value.id+"' placeholder='Last Price' readonly=''></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+value.id+"' name='service_price"+value.id+"' placeholder='Service' required='' value="+value.service_price+"></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+value.id+"' name='konversi_dollar"+value.id+"' placeholder='Konversi Dollar' required='' value="+value.konversi_dollar+"></div>";
-		    	isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.nama_item +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a> <button type='button' class='btn btn-success' onclick='tambah(\""+ tambah2 +"\",\""+ lop2 +"\");'><i class='fa fa-plus' ></i></button></div> "
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='gl_number"+value.id+"' name='gl_number"+value.id+"' placeholder='GL Number' required='' value="+value.gl_number+"></div>";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.nama_item +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a> <button type='button' class='btn btn-success' onclick='tambah(\""+ tambah2 +"\",\""+ lop2 +"\");'><i class='fa fa-plus' ></i></button> </div> "
 		    	isi += "</div>";
+
+		    	// 
 
 		    	ids.push(value.id);
 
@@ -1243,16 +1290,22 @@
 		    	$("#no_pr"+value.id).append(pr_list);
 
 		    	if (value.currency == "USD") {
-		    		$('#ket_harga'+value.id).text("$");
+		    		$('#ket_harga_edit'+value.id).text("$");
 		    	}else if (value.currency == "JPN") {
-		    		$('#ket_harga'+value.id).text("¥");
+		    		$('#ket_harga_edit'+value.id).text("¥");
 		    	}else if (value.currency == "ID"){
-		    		$('#ket_harga'+value.id).text("Rp.");
+		    		$('#ket_harga_edit'+value.id).text("Rp.");
 		    	}
 
 
+		    	$('.datepicker').datepicker({
+					autoclose: true,
+					format: 'yyyy-mm-dd'
+				});
+
+
 		    	var uom = $('#uomhide'+value.id).val();
-		    	$("#uom"+value.id).val(uom).trigger("change");
+		    	$("#uom_edit"+value.id).val(uom).trigger("change");
 
 
 		    	$(function () {

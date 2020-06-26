@@ -173,11 +173,26 @@ class SendEmail extends Mailable
         }
 
         if($this->remark == 'purchase_requisition'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Purchase Requisition '.$this->data[0]->no_pr.'')->view('mails.purchase_requisition');
+            if($this->data[0]->file_pdf != null){
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Purchase Requisition '.$this->data[0]->no_pr.'')
+                ->view('mails.purchase_requisition')
+                ->attach(public_path('purchase_requisition/'.$this->data[0]->file_pdf));
+            }else{
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Purchase Requisition '.$this->data[0]->no_pr.'')
+                ->view('mails.purchase_requisition');
+            }
         }
 
         if($this->remark == 'chemical_spk'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Verify Maintenance Job Order')->view('mails.verify_spk');
+        }
+
+        if($this->remark == 'apar'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Verify APAR Purchase Requisition')->view('mails.verify_spk');
         }
     }
 }

@@ -10,7 +10,7 @@ class AccPurchaseRequisition extends Model
 	use SoftDeletes;
 
     protected $fillable = [
-		'no_pr','emp_id','emp_name','department','group','submission_date','po_due_date','receive_date','file','note','posisi','status','no_budget','manager','dgm','gm','approvalm','dateapprovalm','approvaldgm','dateapprovaldgm','approvalgm','dateapprovalgm','alasan','datereject','created_by'
+		'no_pr','emp_id','emp_name','department','group','submission_date','po_due_date','receive_date','file','file_pdf','note','posisi','status','no_budget','manager','dgm','gm','approvalm','dateapprovalm','approvaldgm','dateapprovaldgm','approvalgm','dateapprovalgm','alasan','datereject','created_by'
 	];
 
 	public function user()

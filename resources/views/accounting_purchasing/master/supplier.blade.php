@@ -134,7 +134,8 @@
 							<table id="suppliertable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width:5%;">Name</th>
+										<th style="width:5%;">Code</th>
+										<th style="width:6%;">Name</th>
 										<th style="width:5%;">Address</th>
 										<th style="width:5%;">City</th>
 										<th style="width:5%;">Phone</th>
@@ -151,6 +152,7 @@
 								</tbody>
 								<tfoot>
 					              <tr>
+					                <th></th>
 					                <th></th>
 					                <th></th>
 					                <th></th>
@@ -287,6 +289,7 @@
 				"data" : data
 			},
 			"columns": [
+				{ "data": "vendor_code"},
 				{ "data": "supplier_name"},
 				{ "data": "supplier_address"},
 				{ "data": "supplier_city"},

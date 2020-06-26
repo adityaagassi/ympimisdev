@@ -29,6 +29,8 @@
 				<?php $alasan = $datas->alasan ?>
 			@endforeach
 
+			
+
 			@if($posisi == "manager" || $posisi == "dgm")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>

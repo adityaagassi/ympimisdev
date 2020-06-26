@@ -238,7 +238,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/audit_iso") }}">
-                                <i class="fa fa-caret-right"></i> Audit Internal ISO E-IRCA ()
+                                <i class="fa fa-caret-right"></i> Audit Internal ISO E-IRCA (ISO内部監査の是正処置報告書)
                             </a>
                         </td>
                     </tr>
@@ -590,6 +590,10 @@
                                     <br>
                                     <a href="{{ url("/index/initial/stock_trend", "mpro") }}">
                                         <i class="fa fa-caret-right"></i> M-PRO Stock Trend (部品加工の在庫トレンド)
+                                    </a>
+                                    <br>
+                                    <a href="http://172.17.129.10/tpro/" target="_blank">
+                                        <i class="fa fa-caret-right"></i> M-Pro Kanban Monitoring ()
                                     </a>
                                 </td>
                             </tr>

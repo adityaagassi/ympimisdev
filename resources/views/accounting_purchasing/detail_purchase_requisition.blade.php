@@ -151,9 +151,10 @@
               <td colspan="1" style="border-top: 1px solid black">Item Code</td>
               <td colspan="2" style="border-top: 1px solid black">Description</td>
               <td colspan="2" style="border-top: 1px solid black">Spesification</td>
+              <td colspan="1" style="border-top: 1px solid black">Stock</td>
               <td colspan="1" style="border-top: 1px solid black">QTY</td>
               <td colspan="1" style="border-top: 1px solid black">Unit Price</td>
-              <td colspan="2" style="border-top: 1px solid black">Total</td>
+              <td colspan="1" style="border-top: 1px solid black">Total</td>
             </tr>       
 
             @foreach($items as $item)
@@ -162,7 +163,8 @@
               <td colspan="1"><b>{{$item->item_code}}</b></td>
               <td colspan="2"><b>{{$item->item_desc}}</b></td>
               <td colspan="2"><b>{{$item->item_spec}}</b></td>
-              <td colspan="1"><b>{{$item->item_qty}} Pcs</b></td>
+              <td colspan="1"><b>{{$item->item_stock}} {{$item->item_uom}}</b></td>
+              <td colspan="1"><b>{{$item->item_qty}} {{$item->item_uom}}</b></td>
               <td colspan="1"><b>({{$item->item_currency}}) 
                 <?php 
                 if($item->item_currency == "USD") { echo "$"; } 
@@ -170,7 +172,7 @@
                 else if($item->item_currency == "ID") { echo "Rp."; } 
                 ?> 
                 <?= number_format($item->item_price,2,',','.') ?></b></td>
-              <td colspan="2"><b>({{$item->item_currency}}) 
+              <td colspan="1"><b>({{$item->item_currency}}) 
                 <?php 
                 if($item->item_currency == "USD") { echo "$"; } 
                 else if($item->item_currency == "JPN") { echo "¥"; } 

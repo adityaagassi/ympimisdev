@@ -129,7 +129,15 @@
     <form role="form">
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
+
         <div class="row">
+          <label class="col-sm-2 col-md-offset-1">Vendor Code<span class="text-red">*</span></label>
+          <div class="col-sm-6" align="left">
+            <input type="text" class="form-control" id="vendor_code" placeholder="Vendor Code" value="{{$supplier->vendor_code}}">
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px">
           <label class="col-sm-2 col-md-offset-1">Supplier Name<span class="text-red">*</span></label>
           <div class="col-sm-6" align="left">
             <input type="text" class="form-control" id="supplier_name" placeholder="Supplier Name" value="{{$supplier->supplier_name}}">
@@ -278,6 +286,13 @@
     $("#form_submit").click( function() {
       $("#loading").show();
 
+      if ($("#vendor_code").val() == "") {
+        $("#loading").hide();
+        alert("Kode Vendor Tidak Boleh Kosong");
+        $("html").scrollTop(0);
+        return false;
+      }
+
       if ($("#supplier_name").val() == "") {
         $("#loading").hide();
         alert("Kode Item Tidak Boleh Kosong");
@@ -323,6 +338,7 @@
 
       var data = {
         id: $("#id_edit").val(),
+        vendor_code: $("#vendor_code").val(),
         supplier_name: $("#supplier_name").val(),
         supplier_address: $("#supplier_address").val(),
         supplier_city: $("#supplier_city").val(),

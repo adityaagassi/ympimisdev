@@ -1064,6 +1064,7 @@ Route::get('purchase_requisition/get_nomor_pr', 'AccountingController@get_nomor_
 
 //Purchase Requisition
 Route::get('purchase_requisition', 'AccountingController@purchase_requisition');
+Route::get('purchase_requisition2', 'AccountingController@purchase_requisition');
 Route::get('fetch/purchase_requisition', 'AccountingController@fetch_purchase_requisition');
 Route::post('create/purchase_requisition', 'AccountingController@create_purchase_requisition');
 Route::get('fetch/purchase_requisition/itemlist', 'AccountingController@fetchItemList');
@@ -1075,6 +1076,7 @@ Route::get('purchase_requisition/get_exchange_rate', 'AccountingController@get_e
 Route::get('edit/purchase_requisition', 'AccountingController@edit_purchase_requisition');
 Route::post('update/purchase_requisition', 'AccountingController@update_purchase_requisition');
 Route::post('delete/purchase_requisition_item', 'AccountingController@delete_item_pr');
+Route::get('purchase_requisition/report/{id}', 'AccountingController@report_purchase_requisition');
 
 //Approval Purchase Requisition
 Route::get('purchase_requisition/verifikasi/{id}', 'AccountingController@verifikasi_purchase_requisition');
@@ -1089,6 +1091,9 @@ Route::get('fetch/purchase_order', 'AccountingController@fetch_purchase_order');
 Route::post('create/purchase_order', 'AccountingController@create_purchase_order');
 Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
 Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
+Route::get('purchase_order/get_detailname', 'AccountingController@pogetname')->name('admin.pogetname');
+Route::get('purchase_order/report/{id}', 'AccountingController@report_purchase_order');
+
 
 Route::get('edit/purchase_order', 'AccountingController@edit_purchase_order');
 Route::post('update/purchase_order', 'AccountingController@update_purchase_order');
