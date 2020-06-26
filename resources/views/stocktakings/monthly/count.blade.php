@@ -307,9 +307,9 @@
 					<div class="modal-header">
 						<div class="modal-body table-responsive no-padding">
 							<div class="form-group">
-								<label for="exampleInputEmail1">Auditor</label>
-								<select class="form-control select2" name="inputor" id='inputor' data-placeholder="Select Auditor" style="width: 100%;">
-									<option value="">Select Auditor</option>
+								<label for="exampleInputEmail1">Inputor</label>
+								<select class="form-control select2" name="inputor" id='inputor' data-placeholder="Select Inputor" style="width: 100%;">
+									<option value="">Select Inputor</option>
 									@foreach($employees as $employee)
 									<option value="{{ $employee->employee_id }} - {{ $employee->name }}">{{ $employee->employee_id }} - {{ $employee->name }}</option>
 									@endforeach
