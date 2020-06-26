@@ -217,9 +217,12 @@ class StockTakingController extends Controller{
 		$title = 'Monthly Stocktaking';
 		$title_jp = '月次棚卸';
 
+		$employees = EmployeeSync::get();
+
 		return view('stocktakings.monthly.count', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'employees' => $employees
 		))->with('page', 'Monthly Stock Taking Count')->with('head', 'Stocktaking');
 	}
 
@@ -1903,6 +1906,82 @@ class StockTakingController extends Controller{
 		return Response::json($response);
 	}
 
+	public function fetchReviseId(Request $request){
+
+		$process = $request->get('process');
+		$current = StocktakingList::where('id', $request->get('id'))->first();
+
+		//Cek Store
+		if($current == null){
+			$response = array(
+				'status' => false,
+				'message' => 'Data tidak ditemukan',
+			);
+			return Response::json($response);
+		}
+
+		$null = StocktakingList::where('store', $current->store)
+		->whereNull('final_count')
+		->get();
+
+		//Cek qty sudah terisi ?
+		if(count($null) > 0){
+			$response = array(
+				'status' => false,
+				'message' => 'Proses sebelumnya belum selesai',
+			);
+			return Response::json($response);
+		}
+
+		//Cek proses saat ini
+		if($process > $current->process){
+			$response = array(
+				'status' => false,
+				'message' => 'Proses sebelumnya belum selesai',
+			);
+			return Response::json($response);
+		}
+
+		$store = db::select("SELECT
+			s.id,
+			s.store,
+			s.category,
+			s.material_number,
+			mpdl.material_description,
+			m.`key`,
+			m.model,
+			m.surface,
+			mpdl.bun,
+			s.location,
+			mpdl.storage_location,
+			v.lot_completion,
+			v.lot_transfer,
+			IF
+			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
+			s.remark,
+			s.process,
+			s.quantity,
+			s.audit1,
+			s.audit2,
+			s.final_count
+			FROM
+			stocktaking_lists s
+			LEFT JOIN materials m ON m.material_number = s.material_number
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
+			WHERE
+			s.store = '". $current->store. "'
+			ORDER BY
+			s.id ASC");
+
+		$response = array(
+			'status' => true,
+			'store' => $store,
+			'store_name' => $current->store
+		);
+		return Response::json($response);
+	}
+
 	public function fetchRevise(Request $request){
 
 		$process = $request->get('process');
@@ -1969,8 +2048,7 @@ class StockTakingController extends Controller{
 			WHERE
 			s.store = '". $request->get('store'). "'
 			ORDER BY
-			s.category,
-			s.material_number");
+			s.id ASC");
 
 		$response = array(
 			'status' => true,
@@ -2140,6 +2218,28 @@ class StockTakingController extends Controller{
 		}
 	}
 
+	public function byPassAudit(){
+
+		$store = StocktakingList::get();
+
+		for ($i = 0; $i < count($store); $i++) {
+			$final = 0;
+			if($store[$i]->audit2 > 0){
+				$final = $store[$i]->audit2;
+			}else if($store[$i]->audit1 > 0){
+				$final = $store[$i]->audit1;
+			}else{
+				$final = $store[$i]->quantity;
+			}
+			$updateStore = StocktakingList::where('id', $store[$i]->id)
+			->update([
+				'process' => 3,
+				'final_count' => $final
+			]);
+		}
+
+	}
+
 	public function updateProcessAudit(Request $request, $audit){
 
 		if($audit == 'audit1'){
@@ -2265,6 +2365,7 @@ class StockTakingController extends Controller{
 
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
+		$inputor = $request->get('inputor');
 
 		try {
 
@@ -2272,7 +2373,7 @@ class StockTakingController extends Controller{
 			->update([
 				'process' => 1,
 				'quantity' => $quantity,
-				'inputed_by' => Auth::user()->username
+				'inputed_by' => $inputor
 			]);
 
 			// $store = StocktakingList::where('id', $id)->first();

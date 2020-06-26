@@ -1773,7 +1773,11 @@ Route::get('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
 //Revise
 Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
 Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
+Route::get('fetch/stocktaking/revise_by_id', 'StockTakingController@fetchReviseId');
 Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
+
+
+Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
 
 
 

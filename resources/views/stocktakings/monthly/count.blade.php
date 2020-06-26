@@ -74,6 +74,8 @@
 		
 		<div class="col-xs-7" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
+				<p id="inputor_name" style="font-size:18px; text-align: center; color: yellow; padding: 0px; margin: 0px; font-weight: bold; text-transform: uppercase;"></p>
+
 				<div class="input-group input-group-lg">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
 						<i class="fa fa-qrcode"></i>
@@ -298,63 +300,152 @@
 				</div>
 			</div>
 		</div>
-	</section>
 
-	@endsection
-	@section('scripts')
-	<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-	<script src="{{ url("js/jsQR.js")}}"></script>
-	<script src="{{ url("js/jquery.numpad.js")}}"></script>
-	<script>
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
+		<div class="modal fade" id="modalInputor">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="modal-body table-responsive no-padding">
+							<div class="form-group">
+								<label for="exampleInputEmail1">Auditor</label>
+								<select class="form-control select2" name="inputor" id='inputor' data-placeholder="Select Auditor" style="width: 100%;">
+									<option value="">Select Auditor</option>
+									@foreach($employees as $employee)
+									<option value="{{ $employee->employee_id }} - {{ $employee->name }}">{{ $employee->employee_id }} - {{ $employee->name }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+@endsection
+@section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ url("js/jsQR.js")}}"></script>
+<script src="{{ url("js/jquery.numpad.js")}}"></script>
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	$.fn.numpad.defaults.gridTpl = '<table class="table modal-content" style="width: 40%;"></table>';
+	$.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
+	$.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" style="font-size:2vw; height: 50px;"/>';
+	$.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default" style="font-size:2vw; width:100%;"></button>';
+	$.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="font-size:2vw; width: 100%;"></button>';
+	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
+
+	var vdo;
+	var lot_uom;
+
+	jQuery(document).ready(function() {
+
+		$('.numpad').numpad({
+			hidePlusMinusButton : true,
+			decimalSeparator : '.'
 		});
 
-		$.fn.numpad.defaults.gridTpl = '<table class="table modal-content" style="width: 40%;"></table>';
-		$.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
-		$.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" style="font-size:2vw; height: 50px;"/>';
-		$.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default" style="font-size:2vw; width:100%;"></button>';
-		$.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="font-size:2vw; width: 100%;"></button>';
-		$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
+		$('#qr_code').blur();
 
-		var vdo;
-		var lot_uom;
-		
-		jQuery(document).ready(function() {
+		$('#save_button').prop('disabled', true);	
 
-			$('.numpad').numpad({
-				hidePlusMinusButton : true,
-				decimalSeparator : '.'
-			});
+		$('.select2').select2();
 
-			$('#qr_code').blur();
-
-			$('#save_button').prop('disabled', true);
-
-
-
+		$('#modalInputor').modal({
+			backdrop: 'static',
+			keyboard: false
 		});
 
 
-		var count = 5;
-		function addCount(){
-			++count;
 
+	});
+
+
+	var count = 5;
+	function addCount(){
+		++count;
+
+		$add = '';
+		$add += '<div class="col-xs-12" id="count_'+ count +'">';
+		$add += '<div class="form-group row" style="margin-bottom: 2%;">';
+		$add += '<div class="col-xs-3" align="right">';
+		$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
+		$add += '</div>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
+		$add += '<div class="col-xs-3" align="right">';
+		$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
+		$add += '</div>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
+		$add += '<div class="col-xs-3" align="right">';
+		$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
+		$add += '</div>';
+		$add += '<div class="col-xs-1" align="right">';
+		$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
+		$add += '</div>';
+		$add += '</div>';
+		$add += '</div>';
+
+		$('#count').append($add);
+		$('#qty_'+count).addClass('numpad');
+		$('#koef_'+count).addClass('numpad');
+
+		$('.numpad').numpad({
+			hidePlusMinusButton : true,
+			decimalSeparator : '.'
+		});
+
+		console.log(count);
+	}
+
+	function removeCount(param){
+
+		var index = param.split('_');
+		var id = index[1];
+
+		$("#count_"+id).remove();
+
+		if(count != id){
+			var lop = parseInt(id) + 1;		
+			for (var i = lop; i <= count; i++) {
+				document.getElementById("count_"+ i).id = "count_"+ (i-1);
+				document.getElementById("qty_"+ i).id = "qty_"+ (i-1);
+				document.getElementById("koef_"+ i).id = "koef_"+ (i-1);
+				document.getElementById("total_"+ i).id = "total_"+ (i-1);
+				document.getElementById("remove_"+ i).id = "remove_"+ (i-1);
+			}		
+		}
+		count--;
+		changeVal();
+
+		console.log(count);
+	}
+
+	function resetCount() {
+		$('#count').append().empty();
+
+		count = 5;
+
+		for (var i = 1; i <= count; i++) {
 			$add = '';
-			$add += '<div class="col-xs-12" id="count_'+ count +'">';
+			$add += '<div class="col-xs-12" id="count_'+ i +'">';
 			$add += '<div class="form-group row" style="margin-bottom: 2%;">';
 			$add += '<div class="col-xs-3" align="right">';
-			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
+			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ i +'">';
 			$add += '</div>';
 			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
 			$add += '<div class="col-xs-3" align="right">';
-			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
+			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ i +'">';
 			$add += '</div>';
 			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
 			$add += '<div class="col-xs-3" align="right">';
-			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
+			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ i +'" readonly="">';
 			$add += '</div>';
 			$add += '<div class="col-xs-1" align="right">';
 			$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
@@ -363,439 +454,392 @@
 			$add += '</div>';
 
 			$('#count').append($add);
-			$('#qty_'+count).addClass('numpad');
-			$('#koef_'+count).addClass('numpad');
-
-			$('.numpad').numpad({
-				hidePlusMinusButton : true,
-				decimalSeparator : '.'
-			});
-
-			console.log(count);
+			$('#qty_'+i).addClass('numpad');
+			$('#koef_'+i).addClass('numpad');
 		}
 
-		function removeCount(param){
-
-			var index = param.split('_');
-			var id = index[1];
-
-			$("#count_"+id).remove();
-
-			if(count != id){
-				var lop = parseInt(id) + 1;		
-				for (var i = lop; i <= count; i++) {
-					document.getElementById("count_"+ i).id = "count_"+ (i-1);
-					document.getElementById("qty_"+ i).id = "qty_"+ (i-1);
-					document.getElementById("koef_"+ i).id = "koef_"+ (i-1);
-					document.getElementById("total_"+ i).id = "total_"+ (i-1);
-					document.getElementById("remove_"+ i).id = "remove_"+ (i-1);
-				}		
-			}
-			count--;
-			changeVal();
-
-			console.log(count);
-		}
-
-		function resetCount() {
-			$('#count').append().empty();
-
-			count = 5;
-
-			for (var i = 1; i <= count; i++) {
-				$add = '';
-				$add += '<div class="col-xs-12" id="count_'+ i +'">';
-				$add += '<div class="form-group row" style="margin-bottom: 2%;">';
-				$add += '<div class="col-xs-3" align="right">';
-				$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ i +'">';
-				$add += '</div>';
-				$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
-				$add += '<div class="col-xs-3" align="right">';
-				$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ i +'">';
-				$add += '</div>';
-				$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
-				$add += '<div class="col-xs-3" align="right">';
-				$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ i +'" readonly="">';
-				$add += '</div>';
-				$add += '<div class="col-xs-1" align="right">';
-				$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
-				$add += '</div>';
-				$add += '</div>';
-				$add += '</div>';
-
-				$('#count').append($add);
-				$('#qty_'+i).addClass('numpad');
-				$('#koef_'+i).addClass('numpad');
-			}
-
-			$('.numpad').numpad({
-				hidePlusMinusButton : true,
-				decimalSeparator : '.'
-			});
-		}
-
-		function stopScan() {
-			$('#scanModal').modal('hide');
-		}
-
-		function videoOff() {
-			vdo.pause();
-			vdo.src = "";
-			vdo.srcObject.getTracks()[0].stop();
-		}
-
-		$( "#scanModal" ).on('shown.bs.modal', function(){
-			showCheck('123');
+		$('.numpad').numpad({
+			hidePlusMinusButton : true,
+			decimalSeparator : '.'
 		});
+	}
 
-		$('#scanModal').on('hidden.bs.modal', function () {
-			videoOff();
-		});
+	function stopScan() {
+		$('#scanModal').modal('hide');
+	}
 
-		$('#qr_code').keydown(function(event) {
-			if (event.keyCode == 13 || event.keyCode == 9) {
-				var id = $("#qr_code").val();
+	function videoOff() {
+		vdo.pause();
+		vdo.src = "";
+		vdo.srcObject.getTracks()[0].stop();
+	}
 
-				if(numberValidation(id)){
-					var data = {
-						id : id
-					}
+	$( "#scanModal" ).on('shown.bs.modal', function(){
+		showCheck('123');
+	});
 
-					$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
+	$('#scanModal').on('hidden.bs.modal', function () {
+		videoOff();
+	});
 
-						if (result.status) {
-							if(result.material[0].remark == 'USE'){
-								if(result.material[0].process <= 1){
-									$('#save_button').prop('disabled', false);
-									openSuccessGritter('Success', 'QR Code Successfully');
-								}else{
-									$('#save_button').prop('disabled', true);
-									openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
-								}
+	$("#inputor").change(function(){
+		$('#modalInputor').modal('hide');
 
-								$('#qr_code').prop('disabled', true);
-								
+		var auditor = $('#inputor').val(); 
+		$('#inputor_name').text('');
+		$('#inputor_name').text('Inputor : ' + auditor);
 
-								$("#store").text(result.material[0].store);
-								$("#category").text(result.material[0].category);
-								$("#material_number").text(result.material[0].material_number);
-								$("#location").text(result.material[0].location);
-								$("#material_description").text(result.material[0].material_description);
-								$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
-								$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
-								lot_uom = (result.material[0].lot || 1);
+	});
 
-								if(result.material[0].lot > 0){
-									$("#text_lot").text(result.material[0].lot + ' x');
-								}else{
-									$("#text_lot").text('- x');
-									$('#lot').prop('disabled', true);
-								}
+	$('#qr_code').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			var id = $("#qr_code").val();
 
-								fillStore(result.material[0].store);
+			if(numberValidation(id)){
+				var data = {
+					id : id
+				}
+
+				$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
+
+					if (result.status) {
+						if(result.material[0].remark == 'USE'){
+							if(result.material[0].process <= 1){
+								$('#save_button').prop('disabled', false);
+								openSuccessGritter('Success', 'QR Code Successfully');
 							}else{
-								canc();
-								openErrorGritter('Error', 'QR Code No Use');
-							}					
+								$('#save_button').prop('disabled', true);
+								openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
+							}
 
-						} else {
-							openErrorGritter('Error', 'QR Code Not Registered');
-						}
-
-						$('#scanner').hide();
-						$('#scanModal').modal('hide');
-						$(".modal-backdrop").remove();
-					});
-				}else{
-					canc();
-					openErrorGritter('Error', 'QR Code Tidak Terdaftar');
-				}	
-			}
-		});
-
-		function numberValidation(id){
-			var number = /^[0-9]+$/;
-
-			if(!id.match(number)){
-				return false;
-			}else{
-				return true;
-			}
-		}
+							$('#qr_code').prop('disabled', true);
 
 
-		function showCheck(kode) {
-			$(".modal-backdrop").add();
-			$('#scanner').show();
+							$("#store").text(result.material[0].store);
+							$("#category").text(result.material[0].category);
+							$("#material_number").text(result.material[0].material_number);
+							$("#location").text(result.material[0].location);
+							$("#material_description").text(result.material[0].material_description);
+							$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
+							$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
+							lot_uom = (result.material[0].lot || 1);
 
-			var video = document.createElement("video");
-			vdo = video;
-			var canvasElement = document.getElementById("canvas");
-			var canvas = canvasElement.getContext("2d");
-			var loadingMessage = document.getElementById("loadingMessage");
+							if(result.material[0].lot > 0){
+								$("#text_lot").text(result.material[0].lot + ' x');
+							}else{
+								$("#text_lot").text('- x');
+								$('#lot').prop('disabled', true);
+							}
 
-			var outputContainer = document.getElementById("output");
-			var outputMessage = document.getElementById("outputMessage");
-
-			function drawLine(begin, end, color) {
-				canvas.beginPath();
-				canvas.moveTo(begin.x, begin.y);
-				canvas.lineTo(end.x, end.y);
-				canvas.lineWidth = 4;
-				canvas.strokeStyle = color;
-				canvas.stroke();
-			}
-
-			navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-				video.srcObject = stream;
-				video.setAttribute("playsinline", true);
-				video.play();
-				requestAnimationFrame(tick);
-			});
-
-			function tick() {
-				loadingMessage.innerText = "⌛ Loading video..."
-				if (video.readyState === video.HAVE_ENOUGH_DATA) {
-					loadingMessage.hidden = true;
-					canvasElement.hidden = false;
-
-					canvasElement.height = video.videoHeight;
-					canvasElement.width = video.videoWidth;
-					canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-					var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-					var code = jsQR(imageData.data, imageData.width, imageData.height, {
-						inversionAttempts: "dontInvert",
-					});
-
-					if (code) {
-						drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-						drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-						drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-						drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-						outputMessage.hidden = true;
-						videoOff();
-						document.getElementById("qr_code").value = code.data;
-
-						checkCode(video, code.data);
+							fillStore(result.material[0].store);
+						}else{
+							canc();
+							openErrorGritter('Error', 'QR Code No Use');
+						}					
 
 					} else {
-						outputMessage.hidden = false;
+						openErrorGritter('Error', 'QR Code Not Registered');
 					}
-				}
-				requestAnimationFrame(tick);
-			}
 
+					$('#scanner').hide();
+					$('#scanModal').modal('hide');
+					$(".modal-backdrop").remove();
+				});
+			}else{
+				canc();
+				openErrorGritter('Error', 'QR Code Tidak Terdaftar');
+			}	
+		}
+	});
+
+	function numberValidation(id){
+		var number = /^[0-9]+$/;
+
+		if(!id.match(number)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+
+	function showCheck(kode) {
+		$(".modal-backdrop").add();
+		$('#scanner').show();
+
+		var video = document.createElement("video");
+		vdo = video;
+		var canvasElement = document.getElementById("canvas");
+		var canvas = canvasElement.getContext("2d");
+		var loadingMessage = document.getElementById("loadingMessage");
+
+		var outputContainer = document.getElementById("output");
+		var outputMessage = document.getElementById("outputMessage");
+
+		function drawLine(begin, end, color) {
+			canvas.beginPath();
+			canvas.moveTo(begin.x, begin.y);
+			canvas.lineTo(end.x, end.y);
+			canvas.lineWidth = 4;
+			canvas.strokeStyle = color;
+			canvas.stroke();
 		}
 
+		navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+			video.srcObject = stream;
+			video.setAttribute("playsinline", true);
+			video.play();
+			requestAnimationFrame(tick);
+		});
 
+		function tick() {
+			loadingMessage.innerText = "⌛ Loading video..."
+			if (video.readyState === video.HAVE_ENOUGH_DATA) {
+				loadingMessage.hidden = true;
+				canvasElement.hidden = false;
 
-		function checkCode(video, code) {
+				canvasElement.height = video.videoHeight;
+				canvasElement.width = video.videoWidth;
+				canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+				var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+				var code = jsQR(imageData.data, imageData.width, imageData.height, {
+					inversionAttempts: "dontInvert",
+				});
 
-			var data = {
-				id : code
-			}
+				if (code) {
+					drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+					drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+					drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+					drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+					outputMessage.hidden = true;
+					videoOff();
+					document.getElementById("qr_code").value = code.data;
 
-			$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
-
-				if (result.status) {
-					if(result.material[0].remark == 'USE'){
-						if(result.material[0].process <= 1){
-							$('#save_button').prop('disabled', false);
-							openSuccessGritter('Success', 'QR Code Successfully');
-						}else{
-							$('#save_button').prop('disabled', true);
-							openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
-						}
-
-						$('#qr_code').prop('disabled', true);
-
-						$("#store").text(result.material[0].store);
-						$("#category").text(result.material[0].category);
-						$("#material_number").text(result.material[0].material_number);
-						$("#location").text(result.material[0].location);
-						$("#material_description").text(result.material[0].material_description);
-						$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
-						$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
-						lot_uom = (result.material[0].lot || 1);
-
-						if(result.material[0].lot > 0){
-							$("#text_lot").text(result.material[0].lot + ' x');
-						}else{
-							$("#text_lot").text('- x');
-							$('#lot').prop('disabled', true);
-						}
-
-						fillStore(result.material[0].store);
-					}else{
-						canc();
-						openErrorGritter('Error', 'QR Code No Use');
-					}					
+					checkCode(video, code.data);
 
 				} else {
-					openErrorGritter('Error', 'QR Code Tidak Terdaftar');
+					outputMessage.hidden = false;
 				}
-
-				$('#scanner').hide();
-				$('#scanModal').modal('hide');
-				$(".modal-backdrop").remove();
-			});
-
+			}
+			requestAnimationFrame(tick);
 		}
 
-		function fillStore(store){
-			var data = {
-				store : store
-			}
-
-			$.get('{{ url("fetch/stocktaking/store_list") }}', data, function(result, status, xhr){
-				if (result.status) {
-					$("#store_body").empty();
-					$("#store_title").text("");
-					$("#store_title").text("STORE : " + store);
+	}
 
 
-					var body = '';
-					var num = '';
-					for (var i = 0; i < result.store.length; i++) {
-						if(result.store[i].remark == 'USE'){
-							if(result.store[i].category == 'SINGLE'){
-								var css = 'style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
-							}else{
-								var css = 'style="padding: 0px; background-color: rgb(250,250,210); text-align: center; color: #000000; font-size: 15px;"';
-							}
-						}else{
-							var css = 'style="padding: 0px; text-align: center; color: #000000; font-size: 15px;"';
-						}						
 
-						num++;
+	function checkCode(video, code) {
 
-						body += '<tr>';
-						body += '<td '+css+'>'+num+'</td>';
-						body += '<td '+css+'>'+result.store[i].store+'</td>';
-						body += '<td '+css+'>'+result.store[i].category+'</td>';
-						body += '<td '+css+'>'+result.store[i].material_number+'</td>';
-						body += '<td '+css+'>'+result.store[i].material_description+'</td>';
-						body += '<td '+css+'>'+result.store[i].remark+'</td>';
-						if(result.store[i].quantity != null){
-							body += '<td '+css+'>'+result.store[i].quantity+'</td>';
-						}else{
-							body += '<td '+css+'>'+'-'+'</td>';							
-						}
-						body += '</tr>';
+		var data = {
+			id : code
+		}
 
+		$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
+
+			if (result.status) {
+				if(result.material[0].remark == 'USE'){
+					if(result.material[0].process <= 1){
+						$('#save_button').prop('disabled', false);
+						openSuccessGritter('Success', 'QR Code Successfully');
+					}else{
+						$('#save_button').prop('disabled', true);
+						openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
 					}
-					$("#store_body").append(body);
-				}
-			});
-		}
 
-		function canc(){
-			$('#save_button').prop('disabled', true);
+					$('#qr_code').prop('disabled', true);
 
-			$('#store').html("");
-			$('#category').html("");
-			$('#material_number').html("");
-			$('#location').html("");
-			$('#material_description').html("");
-			$('#model_key_surface').html("");
-			$('#lot_uom').html("");
-			$('#text_lot').html("");
-			$('#lot').prop('disabled', false);
+					$("#store").text(result.material[0].store);
+					$("#category").text(result.material[0].category);
+					$("#material_number").text(result.material[0].material_number);
+					$("#location").text(result.material[0].location);
+					$("#material_description").text(result.material[0].material_description);
+					$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
+					$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
+					lot_uom = (result.material[0].lot || 1);
 
-			$('#qr_code').val("");
-			$('#qr_code').prop('disabled', false);
-			$('#qr_code').focus();
-			$('#qr_code').blur();
+					if(result.material[0].lot > 0){
+						$("#text_lot").text(result.material[0].lot + ' x');
+					}else{
+						$("#text_lot").text('- x');
+						$('#lot').prop('disabled', true);
+					}
 
-			resetCount();
-			document.getElementById("sum_total").value = '';
-		}
-
-		function changeVal(){
-			var sum_total = 0;
-
-			for (var i = 1; i <= count; i++) {
-				var qty = $("#qty_"+i).val();
-				var koef = $("#koef_"+i).val();
-
-				if(qty == '' || koef == ''){
-					continue;
-				}
-
-				var total = parseFloat(qty) * parseFloat(koef);
-				document.getElementById("total_"+i).value = total;
-
-				sum_total += total;
-			}
-
-			document.getElementById("sum_total").value = sum_total;
-		}
-
-		function save(){
-			var id = $("#qr_code").val();
-			var quantity = $("#sum_total").val();
-
-			var data = {
-				id : id,
-				quantity : quantity
-			}
-
-			$.post('{{ url("fetch/stocktaking/update_count") }}', data, function(result, status, xhr){
-				if (result.status) {
-					openSuccessGritter('Success', result.message);
-					var store = $("#store").text();
-					
-					fillStore(store);
-					canc();
-
-					$('#input').hide();
-
+					fillStore(result.material[0].store);
 				}else{
-					openSuccessGritter('Error', result.message);
-				}
-			});
-		}
+					canc();
+					openErrorGritter('Error', 'QR Code No Use');
+				}					
 
-		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-
-		function openSuccessGritter(title, message){
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-success',
-				image: '{{ url("images/image-screen.png") }}',
-				sticky: false,
-				time: '4000'
-			});
-		}
-
-		function openErrorGritter(title, message) {
-			jQuery.gritter.add({
-				title: title,
-				text: message,
-				class_name: 'growl-danger',
-				image: '{{ url("images/image-stop.png") }}',
-				sticky: false,
-				time: '4000'
-			});
-		}
-
-		function addZero(i) {
-			if (i < 10) {
-				i = "0" + i;
+			} else {
+				openErrorGritter('Error', 'QR Code Tidak Terdaftar');
 			}
-			return i;
+
+			$('#scanner').hide();
+			$('#scanModal').modal('hide');
+			$(".modal-backdrop").remove();
+		});
+
+	}
+
+	function fillStore(store){
+		var data = {
+			store : store
 		}
 
-		function getActualFullDate() {
-			var d = new Date();
-			var day = addZero(d.getDate());
-			var month = addZero(d.getMonth()+1);
-			var year = addZero(d.getFullYear());
-			var h = addZero(d.getHours());
-			var m = addZero(d.getMinutes());
-			var s = addZero(d.getSeconds());
-			return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+		$.get('{{ url("fetch/stocktaking/store_list") }}', data, function(result, status, xhr){
+			if (result.status) {
+				$("#store_body").empty();
+				$("#store_title").text("");
+				$("#store_title").text("STORE : " + store);
+
+
+				var body = '';
+				var num = '';
+				for (var i = 0; i < result.store.length; i++) {
+					if(result.store[i].remark == 'USE'){
+						if(result.store[i].category == 'SINGLE'){
+							var css = 'style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
+						}else{
+							var css = 'style="padding: 0px; background-color: rgb(250,250,210); text-align: center; color: #000000; font-size: 15px;"';
+						}
+					}else{
+						var css = 'style="padding: 0px; text-align: center; color: #000000; font-size: 15px;"';
+					}						
+
+					num++;
+
+					body += '<tr>';
+					body += '<td '+css+'>'+num+'</td>';
+					body += '<td '+css+'>'+result.store[i].store+'</td>';
+					body += '<td '+css+'>'+result.store[i].category+'</td>';
+					body += '<td '+css+'>'+result.store[i].material_number+'</td>';
+					body += '<td '+css+'>'+result.store[i].material_description+'</td>';
+					body += '<td '+css+'>'+result.store[i].remark+'</td>';
+					if(result.store[i].quantity != null){
+						body += '<td '+css+'>'+result.store[i].quantity+'</td>';
+					}else{
+						body += '<td '+css+'>'+'-'+'</td>';							
+					}
+					body += '</tr>';
+
+				}
+				$("#store_body").append(body);
+			}
+		});
+	}
+
+	function canc(){
+		$('#save_button').prop('disabled', true);
+
+		$('#store').html("");
+		$('#category').html("");
+		$('#material_number').html("");
+		$('#location').html("");
+		$('#material_description').html("");
+		$('#model_key_surface').html("");
+		$('#lot_uom').html("");
+		$('#text_lot').html("");
+		$('#lot').prop('disabled', false);
+
+		$('#qr_code').val("");
+		$('#qr_code').prop('disabled', false);
+		$('#qr_code').focus();
+		$('#qr_code').blur();
+
+		resetCount();
+		document.getElementById("sum_total").value = '';
+	}
+
+	function changeVal(){
+		var sum_total = 0;
+
+		for (var i = 1; i <= count; i++) {
+			var qty = $("#qty_"+i).val();
+			var koef = $("#koef_"+i).val();
+
+			if(qty == '' || koef == ''){
+				continue;
+			}
+
+			var total = parseFloat(qty) * parseFloat(koef);
+			document.getElementById("total_"+i).value = total;
+
+			sum_total += total;
 		}
-	</script>
-	@endsection
+
+		document.getElementById("sum_total").value = sum_total;
+	}
+
+	function save(){
+		var id = $("#qr_code").val();
+		var quantity = $("#sum_total").val();
+
+		var inputor_name = $("#inputor").val();
+		var data = inputor_name.split(' - ');
+		var inputor = data[0];
+
+		var data = {
+			id : id,
+			quantity : quantity,
+			inputor : inputor
+		}
+
+		$.post('{{ url("fetch/stocktaking/update_count") }}', data, function(result, status, xhr){
+			if (result.status) {
+				openSuccessGritter('Success', result.message);
+				var store = $("#store").text();
+
+				fillStore(store);
+				canc();
+
+				$('#input').hide();
+
+			}else{
+				openSuccessGritter('Error', result.message);
+			}
+		});
+	}
+
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '4000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '4000'
+		});
+	}
+
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+	}
+</script>
+@endsection

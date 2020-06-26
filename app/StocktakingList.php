@@ -11,7 +11,7 @@ class StocktakingList extends Model{
 	use SoftDeletes;
 
 	protected $fillable = [
-		'store', 'category', 'material_number', 'location', 'remark', 'process', 'quantity', 'audit1', 'audit2', 'final_count', 'inputed_by', 'audit1_by', 'audit2_by', 'created_by' 
+		'store', 'category', 'material_number', 'location', 'remark', 'process', 'quantity', 'audit1', 'audit2', 'final_count', 'inputed_by', 'audit1_by', 'audit2_by', 'reason', 'created_by' 
 	];
 
 }
