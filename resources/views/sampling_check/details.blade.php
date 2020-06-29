@@ -390,7 +390,7 @@ table.table-bordered > tfoot > tr > th{
 
     });
     function deleteConfirmation(url, name, id, sampling_check_id) {
-      jQuery('#body-delete').text("Are you sure want to delete '" + name + "'?");
+      jQuery('#body-delete').html("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+sampling_check_id);
     }
   </script>

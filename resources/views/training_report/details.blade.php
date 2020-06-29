@@ -894,11 +894,11 @@ table.table-bordered > tfoot > tr > th{
 	});
 
     function deleteConfirmation(url, name, id, picture_id) {
-      jQuery('#body-delete').text("Are you sure want to delete '" + name + "'?");
+      jQuery('#body-delete').html("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+picture_id);
     }
     function deleteConfirmation2(url, name, id, participant_id) {
-      jQuery('#body-delete').text("Are you sure want to delete '" + name + "'?");
+      jQuery('#body-delete').html("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton2').attr("href", url+'/'+id+'/'+participant_id);
     }
     function editpicture(url,urlimage, name, id, picture_id) {
