@@ -44,7 +44,7 @@
 							<td>'.$data['productions'][$i]['employee_id'].'</td>
 							<td>'.$data['productions'][$i]['name'].'</td>
 							<td>'.$data['productions'][$i]['grade'].'</td>
-							<td style="text-align:right">'.$data['productions'][$i]['overtime'].'</td>
+							<td style="text-align:right">'.round($data['productions'][$i]['overtime'],2).'</td>
 							</tr>');
 					}
 					?>
@@ -76,7 +76,7 @@
 							<td>'.$data['offices'][$i]['employee_id'].'</td>
 							<td>'.$data['offices'][$i]['name'].'</td>
 							<td>'.$data['offices'][$i]['grade'].'</td>
-							<td style="text-align:right">'.$data['offices'][$i]['overtime'].'</td>
+							<td style="text-align:right">'.round($data['offices'][$i]['overtime'], 2).'</td>
 							</tr>');
 					}
 					?>
