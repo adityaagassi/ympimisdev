@@ -193,15 +193,15 @@
 				<div class="col-xs-12" id="count_1">
 					<div class="form-group row" style="margin-bottom: 2%;">
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_1">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_1">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_1" readonly="">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_1" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
 							<button class="btn btn-danger" id="remove_1" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
@@ -212,15 +212,15 @@
 				<div class="col-xs-12" id="count_2">
 					<div class="form-group row" style="margin-bottom: 2%;">
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_2">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_2">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_2">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_2">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_2" readonly="">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_2" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
 							<button class="btn btn-danger" id="remove_2" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
@@ -231,15 +231,15 @@
 				<div class="col-xs-12" id="count_3">
 					<div class="form-group row" style="margin-bottom: 2%;">
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_3">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_3">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_3">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_3">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_3" readonly="">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_3" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
 							<button class="btn btn-danger" id="remove_3" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
@@ -250,15 +250,15 @@
 				<div class="col-xs-12" id="count_4">
 					<div class="form-group row" style="margin-bottom: 2%;">
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_4">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_4">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_4">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_4">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_4" readonly="">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_4" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
 							<button class="btn btn-danger" id="remove_4" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
@@ -269,15 +269,15 @@
 				<div class="col-xs-12" id="count_5">
 					<div class="form-group row" style="margin-bottom: 2%;">
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_5">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_5">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_5">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_5">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
 						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_5" readonly="">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_5" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
 							<button class="btn btn-danger" id="remove_5" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
@@ -290,7 +290,7 @@
 				<div class="form-group row" align="right">					
 					<label class="col-xs-1 col-xs-offset-5" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">Total</label>
 					<div class="col-xs-3 col-xs-offset-2" align="right">
-						<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
+						<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
 					</div>
 				</div>
 			</div>
@@ -382,15 +382,15 @@
 		$add += '<div class="col-xs-12" id="count_'+ count +'">';
 		$add += '<div class="form-group row" style="margin-bottom: 2%;">';
 		$add += '<div class="col-xs-3" align="right">';
-		$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
+		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
 		$add += '</div>';
 		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
 		$add += '<div class="col-xs-3" align="right">';
-		$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
+		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
 		$add += '</div>';
 		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
 		$add += '<div class="col-xs-3" align="right">';
-		$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
+		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
 		$add += '</div>';
 		$add += '<div class="col-xs-1" align="right">';
 		$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
@@ -443,15 +443,15 @@
 			$add += '<div class="col-xs-12" id="count_'+ i +'">';
 			$add += '<div class="form-group row" style="margin-bottom: 2%;">';
 			$add += '<div class="col-xs-3" align="right">';
-			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ i +'">';
+			$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ i +'">';
 			$add += '</div>';
 			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
 			$add += '<div class="col-xs-3" align="right">';
-			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ i +'">';
+			$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ i +'">';
 			$add += '</div>';
 			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
 			$add += '<div class="col-xs-3" align="right">';
-			$add += '<input type="text" style="font-size:25px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ i +'" readonly="">';
+			$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ i +'" readonly="">';
 			$add += '</div>';
 			$add += '<div class="col-xs-1" align="right">';
 			$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
