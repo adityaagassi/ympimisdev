@@ -84,7 +84,11 @@
 					<td style="vertical-align: middle" class="head"><center><?php echo $ng_finding->material_description ?></center></td>
 					<td style="vertical-align: middle" class="head"><center><?php echo  $ng_finding->quantity ?></center></td>
 					<td style="vertical-align: middle" class="head"><center><?php echo  $ng_finding->finder ?></center></td>
-					<td style="vertical-align: middle" class="head"><center><img width="200px" src="{{ url('/data_file/ng_finding/'.$ng_finding->picture) }}"></center></td>
+					<?php if(strpos($ng_finding->picture, '<p>') !== false){ ?>
+						<td style="vertical-align: middle" class="head"><center><?php echo  $ng_finding->picture ?></center></td>
+					<?php }else{ ?>
+						<td style="vertical-align: middle" class="head"><center><img width="200px" src="{{ url('/data_file/ng_finding/'.$ng_finding->picture) }}"></center></td>
+					<?php } ?>
 					<td style="vertical-align: middle" class="head"><center><?php echo  $ng_finding->defect ?></center></td>
 					<td style="vertical-align: middle" class="head"><center><?php echo  $ng_finding->checked_qa ?></center></td>
 				</tr>
