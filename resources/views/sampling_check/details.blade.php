@@ -185,7 +185,7 @@ table.table-bordered > tfoot > tr > th{
 				                    <a type="button" class="btn btn-warning btn-xs" href="{{ url('index/sampling_check/editdetails/'.$sampling_id.'/'.$sampling_check_details->id) }}">
 						                  <i class="fa fa-edit"></i>
 						                </a>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}', '{{ $sampling_check_details->point_check }}','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}', '<?php echo $sampling_check_details->point_check ?>','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
 				                      <i class="fa fa-trash"></i>
 				                    </a>
 				                  </center>
@@ -220,7 +220,7 @@ table.table-bordered > tfoot > tr > th{
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id="body-delete">
           Are you sure delete?
         </div>
         <div class="modal-footer">
@@ -393,7 +393,7 @@ table.table-bordered > tfoot > tr > th{
 
     });
     function deleteConfirmation(url, name, id, sampling_check_id) {
-      jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
+      jQuery('#body-delete').text("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+sampling_check_id);
     }
   </script>

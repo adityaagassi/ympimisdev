@@ -650,6 +650,7 @@ table.table-bordered > tfoot > tr > th{
 				}
 			}
 		});
+		$('body').toggleClass("sidebar-collapse");
 
 		$('#signArea').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:190});		
 	});
