@@ -182,7 +182,7 @@ table.table-bordered > tfoot > tr > th{
 				                    <a type="button" class="btn btn-warning btn-xs" href="{{ url('index/sampling_check/editdetails/'.$sampling_id.'/'.$sampling_check_details->id) }}">
 						                  <i class="fa fa-edit"></i>
 						                </a>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}', '{{ $sampling_check_details->point_check }}','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
+				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/sampling_check/destroydetails") }}','{{ $sampling_id }}', '{{ $sampling_check_details->id }}');">
 				                      <i class="fa fa-trash"></i>
 				                    </a>
 				                  </center>
@@ -217,7 +217,7 @@ table.table-bordered > tfoot > tr > th{
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
         </div>
-        <div class="modal-body" id="body-delete">
+        <div class="modal-body" id="body_delete">
           Are you sure delete?
         </div>
         <div class="modal-footer">
@@ -227,66 +227,6 @@ table.table-bordered > tfoot > tr > th{
       </div>
     </div>
   </div>
- <div class="modal fade" id="edit-modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title" align="center"><b>Edit Picture</b></h4>
-      </div>
-      <div class="modal-body">
-        <form role="form" method="post" enctype="multipart/form-data" id="formedit" action="#">
-          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
-          <div class="box-body">
-            <div class="form-group">
-              <label for="exampleInputEmail1">Picture</label> 
-              <br>
-              <img width="100px" id="picture" src="" />
-              <input type="file" class="form-control" name="file" placeholder="File" onchange="readEdit(this)">
-              <br>
-			  <img width="100px" id="blah2" src="" style="display: none" alt="your image" />
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Update</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal fade" id="edit-modal2">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title" align="center"><b>Edit Participant</b></h4>
-      </div>
-      <div class="modal-body">
-        <form role="form" method="post" enctype="multipart/form-data" id="formedit2" action="#">
-          <input type="hidden" value="{{csrf_token()}}" name="_token" />
-          <div class="box-body">
-            <div class="form-group">
-              <label for="exampleInputEmail1">Participant Name</label>
-              <select class="form-control select2" name="participant_name" id="participant_name" style="width: 100%;" data-placeholder="Choose a Participant..." required>
-              	
-              </select>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Update</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 @endsection
 
 
@@ -389,8 +329,8 @@ table.table-bordered > tfoot > tr > th{
       $('#example1 tfoot tr').appendTo('#example1 thead');
 
     });
-    function deleteConfirmation(url, name, id, sampling_check_id) {
-      $('#body-delete').html("Are you sure want to delete '" + name + "'?");
+    function deleteConfirmation(url, id, sampling_check_id) {
+      // $('#body_delete').html("Are you sure want to delete '" + name + "'?");
       $('#modalDeleteButton').attr("href", url+'/'+id+'/'+sampling_check_id);
     }
   </script>
