@@ -421,7 +421,7 @@ table.table-bordered > tfoot > tr > th{
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id="body-delete">
           Are you sure delete?
         </div>
         <div class="modal-footer">
@@ -438,7 +438,7 @@ table.table-bordered > tfoot > tr > th{
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id="body-delete">
           Are you sure delete?
         </div>
         <div class="modal-footer">
@@ -894,11 +894,11 @@ table.table-bordered > tfoot > tr > th{
 	});
 
     function deleteConfirmation(url, name, id, picture_id) {
-      jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
+      jQuery('#body-delete').text("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+picture_id);
     }
     function deleteConfirmation2(url, name, id, participant_id) {
-      jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
+      jQuery('#body-delete').text("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton2').attr("href", url+'/'+id+'/'+participant_id);
     }
     function editpicture(url,urlimage, name, id, picture_id) {
