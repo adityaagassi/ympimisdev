@@ -397,7 +397,7 @@
 	                	@endforeach
 	                </select>
 	            </div>
-	            <div class="form-group" id="pictureedit">
+	            <div class="form-group" id="pictureedit" style="display: none">
 	              <label for="" id="problem">Picture</label>
 	              <input type="file" name="editfile" id="editfile" class="form-control" onchange="readURL2(this);">
 	              <img width="200px" id="blah2" src="" style="display: none" alt="your image" />
@@ -642,6 +642,10 @@
                   $("#editdefect").val(data.defect);
                   $("#editcheckedqa").html(CKEDITOR.instances.editcheckedqa.setData(data.checked_qa));
                   if (data.picture.search("<p>") == 0) {
+                  	$("#editpicture").html(CKEDITOR.instances.editpicture.setData(data.picture));
+                  	$("#pictureedit").hide();
+                  	$("#pictureeditkcfinder").show();
+                  }else if(data.picture == null){
                   	$("#editpicture").html(CKEDITOR.instances.editpicture.setData(data.picture));
                   	$("#pictureedit").hide();
                   	$("#pictureeditkcfinder").show();
