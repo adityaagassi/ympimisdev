@@ -45,7 +45,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{$page}} - First Shot Approval <small><span class="text-purple">?? ～ 初物検査</span></small>
+		{{$page}} - First Shot Approval <small><span class="text-purple">機械条件 ～ 初物検査</span></small>
 		<!-- <small> <span class="text-purple">??</span></small> -->
 		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
            <!-- <i class="fa fa-edit"></i> -->
