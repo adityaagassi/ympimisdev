@@ -189,10 +189,16 @@
 											<tr>
 												<td>{{$ng_finding->date}}</td>
 												<td><?php echo $ng_finding->material_number ?></td>
-												<td><?php echo $ng_finding->material_description ?></td>
+												<td><?php echo $ng_finding->material_description ?>
+												</td>
 												<td><?php echo $ng_finding->quantity ?></td>
-												<td><?php echo $ng_finding->finder ?></td>
-												<td><img width="200px" src="{{ url('/data_file/ng_finding/'.$ng_finding->picture) }}"></td>
+												<td><?php echo $ng_finding->finder ?>
+												</td>
+												<?php if(strpos($ng_finding->picture, '<p>') !== false){ ?>
+													<td><?php echo $ng_finding->picture ?></td>
+												<?php }else{ ?>
+													<td><img width="200px" src="{{ url('/data_file/ng_finding/'.$ng_finding->picture) }}"></td>
+												<?php } ?>
 												<td><?php echo $ng_finding->defect ?></td>
 												<td><?php echo $ng_finding->checked_qa ?></td>
 												<td>
@@ -311,8 +317,9 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="" id="problem">Picture</label>
-	              <input type="file" name="inputfile" id="inputfile" class="form-control" onchange="readURL(this);">
-	              <img width="200px" id="blah" src="" style="display: none" alt="your image" />
+	              <!-- <input type="file" name="inputfile" id="inputfile" class="form-control" onchange="readURL(this);">
+	              <img width="200px" id="blah" src="" style="display: none" alt="your image" /> -->
+	              <textarea name="inputpicture" id="inputpicture" class="form-control" rows="2" required="required"></textarea>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -390,10 +397,14 @@
 	                	@endforeach
 	                </select>
 	            </div>
-	            <div class="form-group">
+	            <div class="form-group" id="pictureedit">
 	              <label for="" id="problem">Picture</label>
 	              <input type="file" name="editfile" id="editfile" class="form-control" onchange="readURL2(this);">
 	              <img width="200px" id="blah2" src="" style="display: none" alt="your image" />
+	            </div>
+	            <div class="form-group" id="pictureeditkcfinder">
+	              <label for="" id="problem">Picture</label>
+	              <textarea name="editpicture" id="editpicture" class="form-control" rows="2" required="required"></textarea>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -453,6 +464,14 @@
 	    });
 
 	    CKEDITOR.replace('editcheckedqa' ,{
+	    	filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+	    });
+
+	    CKEDITOR.replace('inputpicture' ,{
+	    	filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+	    });
+
+	    CKEDITOR.replace('editpicture' ,{
 	    	filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
 	    });
 	});
@@ -622,8 +641,16 @@
                   $("#editfinder").val(data.finder).trigger('change.select2');
                   $("#editdefect").val(data.defect);
                   $("#editcheckedqa").html(CKEDITOR.instances.editcheckedqa.setData(data.checked_qa));
-                  $('#blah2').show();
-                  $('#blah2').attr('src', urlimage+'/'+data.picture);
+                  if (data.picture.search("<p>") == 0) {
+                  	$("#editpicture").html(CKEDITOR.instances.editpicture.setData(data.picture));
+                  	$("#pictureedit").hide();
+                  	$("#pictureeditkcfinder").show();
+                  }else{
+                  	$("#pictureedit").show();
+                  	$("#pictureeditkcfinder").hide();
+                  	$('#blah2').show();
+                  	$('#blah2').attr('src', urlimage+'/'+data.picture);
+                  }
                   // console.log(urlimage+'/'+data.picture);
                 }
             });

@@ -48,8 +48,8 @@ class NgFindingController extends Controller
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
-        $mpdl = MaterialPlantDataList::get();
-        $mpdl2 = MaterialPlantDataList::get();
+        // $mpdl = MaterialPlantDataList::get();
+        // $mpdl2 = MaterialPlantDataList::get();
 
     	$data = array('ng_finding' => $ng_finding,
     				  'departments' => $departments,
@@ -61,8 +61,8 @@ class NgFindingController extends Controller
                       'foreman' => $foreman,
                       'operator' => $operator,
                       'operator2' => $operator2,
-                      'mpdl' => $mpdl,
-                      'mpdl2' => $mpdl2,
+                      // 'mpdl' => $mpdl,
+                      // 'mpdl2' => $mpdl2,
                       'id_departments' => $id_departments);
     	return view('ng_finding.index', $data
     		)->with('page', 'Temuan NG');
@@ -145,14 +145,14 @@ class NgFindingController extends Controller
     function store(Request $request,$id)
     {
             $id_user = Auth::id();
-            $tujuan_upload = 'data_file/ng_finding';
-            $date = date('Y-m-d');
+            // $tujuan_upload = 'data_file/ng_finding';
+            // $date = date('Y-m-d');
 
-            $file = $request->file('inputfile');
-            $nama_file = $file->getClientOriginalName();
-            $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+            // $file = $request->file('inputfile');
+            // $nama_file = $file->getClientOriginalName();
+            // $filename = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
 
-            $file->move($tujuan_upload,$filename);
+            // $file->move($tujuan_upload,$filename);
 
             NgFinding::create([
                 'activity_list_id' => $id,
@@ -161,7 +161,7 @@ class NgFindingController extends Controller
                 'material_number' => $request->input('inputmaterialnumber'),
                 'quantity' => $request->input('inputquantity'),
                 'finder' => $request->input('inputfinder'),
-                'picture' => $filename,
+                'picture' => $request->input('inputpicture'),
                 'defect' => $request->input('inputdefect'),
                 'checked_qa' => $request->input('inputcheckedqa'),
                 'leader' => $request->input('leader'),
@@ -230,6 +230,7 @@ class NgFindingController extends Controller
                 $ng_finding->quantity = $request->get('editquantity');
                 $ng_finding->finder = $request->get('editfinder');
                 $ng_finding->defect = $request->get('editdefect');
+                $ng_finding->picture = $request->get('editpicture');
                 $ng_finding->checked_qa = $request->get('editcheckedqa');
                 $ng_finding->save();
             }else{
