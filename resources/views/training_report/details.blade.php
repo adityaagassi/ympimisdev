@@ -894,16 +894,16 @@ table.table-bordered > tfoot > tr > th{
 	});
 
     function deleteConfirmation(url, name, id, picture_id) {
-      jQuery('#body-delete').html("Are you sure want to delete '" + name + "'?");
-      jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+picture_id);
+      $('#body-delete').html("Are you sure want to delete '" + name + "'?");
+      $('#modalDeleteButton').attr("href", url+'/'+id+'/'+picture_id);
     }
     function deleteConfirmation2(url, name, id, participant_id) {
-      jQuery('#body-delete').html("Are you sure want to delete '" + name + "'?");
-      jQuery('#modalDeleteButton2').attr("href", url+'/'+id+'/'+participant_id);
+      $('#body-delete').html("Are you sure want to delete '" + name + "'?");
+      $('#modalDeleteButton2').attr("href", url+'/'+id+'/'+participant_id);
     }
     function editpicture(url,urlimage, name, id, picture_id) {
       $("#picture").attr("src",urlimage+'/'+name);
-      jQuery('#formedit').attr("action", url+'/'+id+'/'+picture_id);
+      $('#formedit').attr("action", url+'/'+id+'/'+picture_id);
       // console.log($('#formedit').attr("action"));
     }
     function editparticipant(url, name, id, participant_id) {
