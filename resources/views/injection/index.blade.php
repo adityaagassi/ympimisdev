@@ -38,7 +38,7 @@
 				Recorder Push Block Check
 			</button>
 
-			<a href="{{ url('index/machine_parameter') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Machine Parameter</a>
+			<a href="{{ url('index/machine_parameter','First Shot Approval') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Machine Parameter</a>
 
 			<!-- <a href="{{ url("index/injection/molding") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Molding Setup</a>
 
@@ -52,9 +52,13 @@
 
 			 <a href="{{ url("index/MonhtlyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Monhtly Target Injection</a>
 
+			 <!-- <a href="{{ url("index/dailyNG") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily NG Report Injection</a> -->
+
+			 <a href="{{ url("index/molding_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Molding Maintenance Monitoring</a>
+
 			 <a href="{{ url("/index/recorder/report_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Push Block Check</a> 
 			 <a href="{{ url("/index/recorder/resume_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Push Block Check</a>
-			 <a href="{{ url("index/recorder/push_block_check_monitoring","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Push Block Check Monitoring</a>		
+			 <a href="{{ url("index/recorder/push_block_check_monitoring","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Recorder Process Monitoring</a>		
 		</div>
 	</div>
 

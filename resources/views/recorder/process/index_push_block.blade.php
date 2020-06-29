@@ -1060,7 +1060,8 @@
 		$('#mesin_parameter_fix2').html(mesin_parameter);
 
 		data = {
-			mesin : mesin_parameter
+			mesin : mesin_parameter,
+			remark: '{{$remark}}'
 		}
 
 		$.get('{{ url("index/fetch_mesin_parameter") }}', data, function(result, status, xhr){
@@ -1504,6 +1505,8 @@
 		for(var j = 1; j <= 4; j++){
 			array_head.push($("#head_"+[j]).val());
 		}
+
+		var remark = '{{$remark}}';
 		
 		var data = {
 			array_head : array_head,
@@ -1542,7 +1545,9 @@
 					openSuccessGritter('Success!', result.message);
 				}else{
 					create_temp();
-					create_parameter();
+					if (remark == 'First Shot Approval') {
+						create_parameter();
+					}
 				}
 			}
 			else{

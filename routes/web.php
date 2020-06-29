@@ -1169,7 +1169,7 @@ Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_cl/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
 
-	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	Route::get('index/print_label_subassy/{location}/{id}', 'KnockDownController@indexPrintLabelSubassy');
 	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
 
 });
@@ -2452,7 +2452,7 @@ Route::get('index/recorder/get_resume','RecorderProcessController@get_resume');
 Route::post('index/recorder/update_resume/{id}','RecorderProcessController@update_resume');
 
 //MACHINE PARAMETER
-Route::get('index/machine_parameter','RecorderProcessController@indexMachineParameter');
+Route::get('index/machine_parameter/{remark}','RecorderProcessController@indexMachineParameter');
 Route::post('index/filter_machine_parameter','RecorderProcessController@filterMachineParameter');
 Route::get('index/fetch_mesin_parameter', 'RecorderProcessController@fetch_mesin_parameter');
 Route::post('index/push_block_recorder/create_parameter', 'RecorderProcessController@create_parameter');

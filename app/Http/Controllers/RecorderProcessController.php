@@ -199,8 +199,9 @@ class RecorderProcessController extends Controller
     {
           try{
             $mesin = $request->get("mesin");
+            $remark = $request->get("remark");
 
-            $detail = PushBlockParameter::where('mesin',$mesin)->orderBy('id','desc')->first();
+            $detail = PushBlockParameter::where('mesin',$mesin)->where('push_block_code',$remark)->orderBy('id','desc')->first();
 
             $response = array(
               'status' => true,
@@ -1649,9 +1650,9 @@ class RecorderProcessController extends Controller
       return view('recorder.process.index_torque')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Torque Check')->with('title', 'Recorder Torque Check')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('mesin', $this->mesin)->with('mesin2', $this->mesin)->with('batas_bawah_hm', '15')->with('batas_atas_hm', '73')->with('batas_bawah_mf', '15')->with('batas_atas_mf', '78')->with('remark', $remark);
     }
 
-    public function indexMachineParameter()
+    public function indexMachineParameter($remark)
     {
-      $parameters = PushBlockParameter::orderBy('push_block_parameters.id', 'desc')
+      $parameters = PushBlockParameter::where('push_block_code',$remark)->orderBy('push_block_parameters.id', 'desc')
         ->get();
 
       return view('recorder.process.index_machine_parameter')
