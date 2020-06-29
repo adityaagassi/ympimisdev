@@ -334,7 +334,7 @@
 		vdo.srcObject.getTracks()[0].stop();
 	}
 
-	$( "#scanModal" ).on('shown.bs.modal', function(){
+	$("#scanModal").on('shown.bs.modal', function(){
 		showCheck('123');
 	});
 
