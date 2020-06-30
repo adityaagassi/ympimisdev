@@ -994,7 +994,7 @@ class StockTakingController extends Controller{
 			// $filepath = public_path('files') . $filename;
 			$filedestination = "ma/ympipi/" . $filename;
 
-			$datas = db::select("SELECT pi.plnt, pi.location, pi.cost_center, pi.material_number, pi.pi, book.book, (COALESCE(pi.pi,0) - COALESCE(book.book,0)) AS div_qty, ABS((COALESCE(pi.pi,0) - COALESCE(book.book,0))) AS div_abs, pi.date, if((COALESCE(pi.pi,0) - COALESCE(book.book,0)) > 0, '9671003', '9681003') AS type FROM
+			$datas = db::select("SELECT pi.plnt, pi.location, pi.cost_center, pi.material_number, pi.pi, book.book, (COALESCE(pi.pi,0) - COALESCE(book.book,0)) AS div_qty, ROUND(ABS((COALESCE(pi.pi,0) - COALESCE(book.book,0))), 3) AS div_abs, pi.date, if((COALESCE(pi.pi,0) - COALESCE(book.book,0)) > 0, '9671003', '9681003') AS type FROM
 				(SELECT storage_locations.plnt, stocktaking_outputs.location, storage_locations.cost_center, stocktaking_outputs.material_number, date(stocktaking_outputs.created_at) AS date, sum( stocktaking_outputs.quantity ) AS pi
 				FROM stocktaking_outputs
 				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_outputs.location 
