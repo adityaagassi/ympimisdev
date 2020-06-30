@@ -921,6 +921,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
+				WHERE storage_locations.area = 'Assembly'
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
@@ -960,6 +961,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
+				WHERE storage_locations.area = 'Assembly'
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
