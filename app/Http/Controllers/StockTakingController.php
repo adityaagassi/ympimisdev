@@ -1715,7 +1715,7 @@ class StockTakingController extends Controller{
 		}
 
 		if($calendar->status != 'finished'){
-			$input_detail = db::select("SELECT sl.area, s.location, s.store, s.material_number, mpdl.material_description, s.quantity, s.audit1, s.audit2, s.final_count FROM stocktaking_lists s
+			$input_detail = db::select("SELECT sl.area, s.location, s.category, s.store, s.material_number, mpdl.material_description, s.quantity, s.audit1, s.audit2, s.final_count FROM stocktaking_lists s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 				WHERE s.location = '".$group."'
@@ -1723,7 +1723,7 @@ class StockTakingController extends Controller{
 				ORDER BY sl.area, s.location, s.store, s.material_number ASC");
 		}else{
 			$input_detail = db::select("
-				SELECT sl.area, s.location, s.store, s.material_number, mpdl.material_description, NULL AS quantity, NULL AS audit1, NULL AS audit2, s.quantity AS final_count FROM stocktaking_inquiry_logs s
+				SELECT sl.area, s.location, s.category, s.store, s.material_number, mpdl.material_description, NULL AS quantity, NULL AS audit1, NULL AS audit2, s.quantity AS final_count FROM stocktaking_inquiry_logs s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 				WHERE s.location = '".$group."'

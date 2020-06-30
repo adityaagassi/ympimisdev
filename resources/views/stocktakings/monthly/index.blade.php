@@ -155,6 +155,7 @@
 									<th>Group</th>
 									<th>Location</th>
 									<th>Store</th>
+									<th>Category</th>
 									<th>Material</th>
 									<th>Description</th>
 									<th>Qty</th>
@@ -536,6 +537,7 @@
 					body += '<td style="width: 1%">'+ result.input_detail[i].area +'</td>';
 					body += '<td style="width: 1%">'+ result.input_detail[i].location +'</td>';
 					body += '<td style="width: 1%">'+ result.input_detail[i].store +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].category +'</td>';
 					body += '<td style="width: 1%">'+ result.input_detail[i].material_number +'</td>';
 					body += '<td style="width: 10%">'+ (result.input_detail[i].material_description || '-') +'</td>';
 
