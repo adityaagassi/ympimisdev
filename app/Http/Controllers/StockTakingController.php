@@ -1015,7 +1015,7 @@ class StockTakingController extends Controller{
 				$upload_text .= $this->writeString($data->location, 4, " ");
 				$upload_text .= $this->writeString($data->plnt, 4, " ");
 				$upload_text .= $this->writeString($data->location, 4, " ");
-				$upload_text .= $this->writeDecimal(strval($data->div_abs), 13, "0");
+				$upload_text .= $this->writeDecimal(round($data->div_abs,3), 13, "0");
 				$upload_text .= $this->writeStringReserve($data->cost_center, 10, "0");
 				$upload_text .= $this->writeString('', 10, " ");
 				$upload_text .= $this->writeDate($data->date, "transfer");
