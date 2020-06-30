@@ -921,7 +921,6 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
-				WHERE pi_book.location = 'CLB9'
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
@@ -961,7 +960,6 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
-				WHERE pi_book.location = 'CLB9'
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
@@ -1403,6 +1401,7 @@ class StockTakingController extends Controller{
 				WHERE pi_kitto.book is null
 				AND pi_kitto.pi > 0
 				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND storage_locations.area = 'ASSEMBLY'
 				ORDER BY storage_locations.area, pi_kitto.location, pi_kitto.material_number");
 
 			return DataTables::of($data)->make(true);
@@ -1430,6 +1429,7 @@ class StockTakingController extends Controller{
 				WHERE pi_kitto.pi is null
 				AND pi_kitto.book > 0
 				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND storage_locations.area = 'ASSEMBLY'
 				ORDER BY storage_locations.area, pi_kitto.location, pi_kitto.material_number");
 
 			return DataTables::of($data)->make(true);
@@ -1450,6 +1450,7 @@ class StockTakingController extends Controller{
 			LEFT JOIN material_plant_data_lists ON kitto_pi.material_number = material_plant_data_lists.material_number
 			LEFT JOIN storage_locations ON storage_locations.storage_location = kitto_pi.location
 			WHERE kitto_pi.kitto <> kitto_pi.pi
+			AND storage_locations.area = 'ASSEMBLY'
 			ORDER BY storage_locations.area, kitto_pi.location, kitto_pi.material_number");
 
 		return DataTables::of($data)->make(true);
@@ -1473,6 +1474,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON kitto_book.material_number = material_plant_data_lists.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = kitto_book.location
 				WHERE kitto_book.kitto <> kitto_book.book
+				AND storage_locations.area = 'ASSEMBLY'
 				ORDER BY storage_locations.area, kitto_book.location, kitto_book.material_number");
 
 			return DataTables::of($data)->make(true);
@@ -1492,7 +1494,8 @@ class StockTakingController extends Controller{
 			LEFT JOIN material_volumes ON inventory.material_number = material_volumes.material_number
 			LEFT JOIN material_plant_data_lists ON inventory.material_number = material_plant_data_lists.material_number
 			LEFT JOIN storage_locations ON inventory.location = storage_locations.storage_location
-			WHERE (inventory.quantity % material_volumes.lot_completion) <> 0");
+			WHERE (inventory.quantity % material_volumes.lot_completion) <> 0
+			AND storage_locations.area = 'ASSEMBLY'");
 
 		return DataTables::of($data)->make(true);
 	}
