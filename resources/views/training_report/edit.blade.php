@@ -69,13 +69,25 @@
             <div class="col-sm-8" align="left">
               <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
                 <option value=""></option>
-                @foreach($product as $product)
-                @if($training_report->product == $product->origin_group_name)
-                  <option value="{{ $product->origin_group_name }}" selected>{{ $product->origin_group_name }}</option>
+                @if($training_report->product == 'Saxophone, Flute, Clarinet')
+                  <option value="Saxophone, Flute, Clarinet" selected>Saxophone, Flute, Clarinet</option>
+                  @foreach($product as $product)
+                  @if($training_report->product == $product->origin_group_name)
+                    <option value="{{ $product->origin_group_name }}" selected>{{ $product->origin_group_name }}</option>
+                  @else
+                    <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
+                  @endif
+                  @endforeach
                 @else
-                  <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
+                  <option value="Saxophone, Flute, Clarinet">Saxophone, Flute, Clarinet</option>
+                  @foreach($product as $product)
+                  @if($training_report->product == $product->origin_group_name)
+                    <option value="{{ $product->origin_group_name }}" selected>{{ $product->origin_group_name }}</option>
+                  @else
+                    <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
+                  @endif
+                  @endforeach
                 @endif
-                @endforeach
               </select>
             </div>
           </div>

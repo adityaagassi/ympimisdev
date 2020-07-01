@@ -42,7 +42,6 @@ class TrainingReportController extends Controller
             ->orderBy('training_reports.id','desc')->get();
 
         $queryProduct = "select * from origin_groups";
-        $product = DB::select($queryProduct);
         $product2 = DB::select($queryProduct);
 
     	$activity_name = $activityList->activity_name;
@@ -52,7 +51,6 @@ class TrainingReportController extends Controller
         $frequency = $activityList->frequency;
         // var_dump($productionAudit);
     	$data = array('training_report' => $trainingReport,
-                      'product' => $product,
                       'product2' => $product2,
     				  'departments' => $departments,
                       'frequency' => $frequency,
@@ -67,32 +65,15 @@ class TrainingReportController extends Controller
     function filter_training(Request $request,$id)
     {
         $queryProduct = "select * from origin_groups";
-        $product = DB::select($queryProduct);
         $product2 = DB::select($queryProduct);
 
         $activityList = ActivityList::find($id);
         // var_dump($request->get('product'));
         // var_dump($request->get('date'));
-        if($request->get('product') != null && strlen($request->get('date')) != null){
-            $origin_group = $request->get('product');
-            $date = date('Y-m-d', strtotime($request->get('date')));
-            $trainingReport = TrainingReport::where('activity_list_id',$id)
-                ->where('product',$origin_group)
-                ->where('date',$date)
-                ->orderBy('training_reports.id','desc')
-                ->get();
-        }
-        elseif (strlen($request->get('date')) > null && $request->get('product') == null) {
+        if(strlen($request->get('date')) != null){
             $date = date('Y-m-d', strtotime($request->get('date')));
             $trainingReport = TrainingReport::where('activity_list_id',$id)
                 ->where('date',$date)
-                ->orderBy('training_reports.id','desc')
-                ->get();
-        }
-        elseif($request->get('product') > null && strlen($request->get('date')) == null){
-            $origin_group = $request->get('product');
-            $trainingReport = TrainingReport::where('activity_list_id',$id)
-                ->where('product',$origin_group)
                 ->orderBy('training_reports.id','desc')
                 ->get();
         }
@@ -108,7 +89,7 @@ class TrainingReportController extends Controller
         $id_departments = $activityList->departments->id;
         $frequency = $activityList->frequency;
         // }
-        $data = array('product' => $product,
+        $data = array(
                       'product2' => $product2,
                       'training_report' => $trainingReport,
                       'departments' => $departments,

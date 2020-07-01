@@ -65,6 +65,7 @@
             <div class="col-sm-8" align="left">
               <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
                 <option value=""></option>
+                <option value="Saxophone, Flute, Clarinet">Saxophone, Flute, Clarinet</option>
                 @foreach($product as $product)
                   <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
                 @endforeach

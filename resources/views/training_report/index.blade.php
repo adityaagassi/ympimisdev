@@ -86,19 +86,6 @@ table.table-bordered > tfoot > tr > th{
 						</div>
 						<div class="col-md-12 col-md-offset-4">
 							<div class="col-md-3">
-								<div class="form-group">
-									<label>Origin Group</label>
-									<select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose an Origin Group...">
-							            <option value=""></option>
-							              @foreach($product as $product)
-							                <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
-							              @endforeach
-							        </select>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-12 col-md-offset-4">
-							<div class="col-md-3">
 								<div class="form-group pull-right">
 									<a href="{{ url('index/activity_list/filter/'.$id_departments.'/2/'.$frequency) }}" class="btn btn-warning">Back</a>
 									<a href="{{ url('index/training_report/index/'.$id) }}" class="btn btn-danger">Clear</a>
