@@ -105,7 +105,7 @@
 <section class="content" style="padding-top: 0;">
 
 	<div class="row" style="margin-left: 1%; margin-right: 1%;" id="main">
-		
+
 		<div class="col-xs-4" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
 				<div class="input-group input-group-lg">
@@ -114,7 +114,7 @@
 					</div>
 					<input type="text" class="form-control" placeholder="INPUT ID" id="id">
 					<span class="input-group-btn">
-						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>&nbsp;&nbsp;Scan</button>
+						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>Scan</button>
 					</span>
 				</div>
 			</div>
