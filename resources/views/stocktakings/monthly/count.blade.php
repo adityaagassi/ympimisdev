@@ -123,6 +123,10 @@
 							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Lot</td>
 							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="lot_uom"></td>
 						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Remark</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="remark"></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -503,39 +507,51 @@
 				$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
 
 					if (result.status) {
-						if(result.material[0].remark == 'USE'){
-							if(result.material[0].process <= 1){
-								$('#save_button').prop('disabled', false);
-								openSuccessGritter('Success', 'QR Code Successfully');
-							}else{
-								$('#save_button').prop('disabled', true);
-								openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
+
+						if(result.material[0].remark == 'NO USE'){
+							if(!confirm("Summaty of Counting ini teridentifikasi NO USE.\nApakah anda ingin mengubah menjadi USE ?")){
+								canc();
+								return false;
 							}
+						}
 
-							$('#qr_code').prop('disabled', true);
-
-
-							$("#store").text(result.material[0].store);
-							$("#category").text(result.material[0].category);
-							$("#material_number").text(result.material[0].material_number);
-							$("#location").text(result.material[0].location);
-							$("#material_description").text(result.material[0].material_description);
-							$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
-							$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
-							lot_uom = (result.material[0].lot || 1);
-
-							if(result.material[0].lot > 0){
-								$("#text_lot").text(result.material[0].lot + ' x');
-							}else{
-								$("#text_lot").text('- x');
-								$('#lot').prop('disabled', true);
+						if(result.material[0].quantity > 0){
+							if(!confirm("Summaty of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
+								canc();
+								return false;
 							}
+						}
 
-							fillStore(result.material[0].store);
+						if(result.material[0].process <= 1){
+							$('#save_button').prop('disabled', false);
+							openSuccessGritter('Success', 'QR Code Successfully');
 						}else{
-							canc();
-							openErrorGritter('Error', 'QR Code No Use');
-						}					
+							$('#save_button').prop('disabled', true);
+							openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
+						}
+
+						$('#qr_code').prop('disabled', true);
+
+
+						$("#store").text(result.material[0].store);
+						$("#category").text(result.material[0].category);
+						$("#material_number").text(result.material[0].material_number);
+						$("#location").text(result.material[0].location);
+						$("#material_description").text(result.material[0].material_description);
+						$("#remark").text(result.material[0].remark);
+						$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
+						$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
+						lot_uom = (result.material[0].lot || 1);
+
+						if(result.material[0].lot > 0){
+							$("#text_lot").text(result.material[0].lot + ' x');
+						}else{
+							$("#text_lot").text('- x');
+							$('#lot').prop('disabled', true);
+						}
+
+						fillStore(result.material[0].store);
+
 
 					} else {
 						openErrorGritter('Error', 'QR Code Not Registered');
@@ -637,38 +653,53 @@
 		$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
 
 			if (result.status) {
-				if(result.material[0].remark == 'USE'){
-					if(result.material[0].process <= 1){
-						$('#save_button').prop('disabled', false);
-						openSuccessGritter('Success', 'QR Code Successfully');
-					}else{
-						$('#save_button').prop('disabled', true);
-						openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
+
+
+				if(result.material[0].remark == 'NO USE'){
+					if(!confirm("Summaty of Counting ini teridentifikasi NO USE.\nApakah anda ingin mengubah menjadi USE ?")){
+						canc();
+						return false;
 					}
+				}
 
-					$('#qr_code').prop('disabled', true);
-
-					$("#store").text(result.material[0].store);
-					$("#category").text(result.material[0].category);
-					$("#material_number").text(result.material[0].material_number);
-					$("#location").text(result.material[0].location);
-					$("#material_description").text(result.material[0].material_description);
-					$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
-					$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
-					lot_uom = (result.material[0].lot || 1);
-
-					if(result.material[0].lot > 0){
-						$("#text_lot").text(result.material[0].lot + ' x');
-					}else{
-						$("#text_lot").text('- x');
-						$('#lot').prop('disabled', true);
+				if(result.material[0].quantity > 0){
+					if(!confirm("Summaty of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
+						canc();
+						return false;
 					}
+				}
 
-					fillStore(result.material[0].store);
+
+				if(result.material[0].process <= 1){
+					$('#save_button').prop('disabled', false);
+					openSuccessGritter('Success', 'QR Code Successfully');
 				}else{
-					canc();
-					openErrorGritter('Error', 'QR Code No Use');
-				}					
+					$('#save_button').prop('disabled', true);
+					openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
+				}
+
+				$('#qr_code').prop('disabled', true);
+
+				$("#store").text(result.material[0].store);
+				$("#category").text(result.material[0].category);
+				$("#material_number").text(result.material[0].material_number);
+				$("#location").text(result.material[0].location);
+				$("#material_description").text(result.material[0].material_description);
+				$("#remark").text(result.material[0].remark);
+				$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
+				$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
+				lot_uom = (result.material[0].lot || 1);
+
+				if(result.material[0].lot > 0){
+					$("#text_lot").text(result.material[0].lot + ' x');
+				}else{
+					$("#text_lot").text('- x');
+					$('#lot').prop('disabled', true);
+				}
+
+				fillStore(result.material[0].store);
+
+
 
 			} else {
 				openErrorGritter('Error', 'QR Code Tidak Terdaftar');
@@ -736,6 +767,7 @@
 		$('#material_number').html("");
 		$('#location').html("");
 		$('#material_description').html("");
+		$('#remark').html("");
 		$('#model_key_surface').html("");
 		$('#lot_uom').html("");
 		$('#text_lot').html("");

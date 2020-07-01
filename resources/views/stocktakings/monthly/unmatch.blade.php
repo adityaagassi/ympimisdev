@@ -68,16 +68,14 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-
 	<input type="hidden" id="month" value="{{ $month }}">
-
 	<div class="row">
 		<div class="col-xs-12">
 			<h2>PI VS Book</h2>
 			<div class="col-xs-6" style="padding-left: 0px;">
 				<h3 style="margin: 0px;">PI</h3>
 				<table id="tablePi" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
-					<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					<thead style="background-color: rgb(126,86,134); color: #212121;">
 						<tr>
 							<th width="10%">Group</th>
 							<th width="9%">Location</th>
@@ -88,12 +86,21 @@
 					</thead>
 					<tbody id="tablePiBody">
 					</tbody>
+					<tfoot>
+						<tr>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+						</tr>
+					</tfoot>
 				</table>		
 			</div>
 			<div class="col-xs-6" style="padding-right: 0px;">
 				<h3 style="margin: 0px;">Book</h3>
 				<table id="tableBook" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
-					<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					<thead style="background-color: rgb(126,86,134); color: #212121;">
 						<tr>
 							<th width="10%">Group</th>
 							<th width="9%">Location</th>
@@ -104,6 +111,15 @@
 					</thead>
 					<tbody id="tableBookBody">
 					</tbody>
+					<tfoot>
+						<tr>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+						</tr>
+					</tfoot>
 				</table>	
 			</div>
 		</div>
@@ -113,7 +129,7 @@
 		<div class="col-xs-8">
 			<h2>Kitto VS PI</h2>
 			<table id="tableKittoPi" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
-				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+				<thead style="background-color: rgb(126,86,134); color: #212121;">
 					<tr>
 						<th width="10%">Group</th>
 						<th width="9%">Location</th>
@@ -125,6 +141,16 @@
 				</thead>
 				<tbody id="tableKittoPiBody">
 				</tbody>
+				<tfoot>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</tfoot>
 			</table>		
 		</div>
 	</div>
@@ -133,7 +159,7 @@
 		<div class="col-xs-8">
 			<h2>Kitto VS Book</h2>
 			<table id="tableKittoBook" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
-				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+				<thead style="background-color: rgb(126,86,134); color: #212121;">
 					<tr>
 						<th width="10%">Group</th>
 						<th width="9%">Location</th>
@@ -145,6 +171,16 @@
 				</thead>
 				<tbody id="tableKittoBookBody">
 				</tbody>
+				<tfoot>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</tfoot>
 			</table>		
 		</div>
 	</div>
@@ -153,7 +189,7 @@
 		<div class="col-xs-8">
 			<h2>PI VS Lot</h2>
 			<table id="tablePiLot" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
-				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+				<thead style="background-color: rgb(126,86,134); color: #212121;">
 					<tr>
 						<th width="10%">Group</th>
 						<th width="9%">Location</th>
@@ -165,12 +201,19 @@
 				</thead>
 				<tbody id="tablePiLotBody">
 				</tbody>
+				<tfoot>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</tfoot>
 			</table>		
 		</div>
 	</div>
-
-
-
 </section>
 @endsection
 @section('scripts')
@@ -206,8 +249,14 @@
 			month : month
 		}
 
+
+
 		$('#tablePi').DataTable().destroy();
-		var table = $('#tablePi').DataTable({
+		$('#tablePi tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var tablePi = $('#tablePi').DataTable({
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
@@ -274,9 +323,29 @@
 			{ "data": "material_description" },
 			{ "data": "pi"}]
 		});
+		tablePi.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+		$('#tablePi tfoot tr').appendTo('#tablePi thead');
+
+
+
+
 
 		$('#tableBook').DataTable().destroy();
-		var table = $('#tableBook').DataTable({
+		$('#tableBook tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var tableBook = $('#tableBook').DataTable({
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
@@ -344,8 +413,29 @@
 			{ "data": "book"}]
 		});
 
+		tableBook.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+		$('#tableBook tfoot tr').appendTo('#tableBook thead');
+
+
+
+
+
 		$('#tableKittoPi').DataTable().destroy();
-		var table = $('#tableKittoPi').DataTable({
+		$('#tableKittoPi tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var tableKittoPi = $('#tableKittoPi').DataTable({
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
@@ -414,8 +504,29 @@
 			{ "data": "pi"}]
 		});
 
+		tableKittoPi.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+		$('#tableKittoPi tfoot tr').appendTo('#tableKittoPi thead');
+
+
+
+
+
 		$('#tableKittoBook').DataTable().destroy();
-		var table = $('#tableKittoBook').DataTable({
+		$('#tableKittoBook tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var tableKittoBook = $('#tableKittoBook').DataTable({
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
@@ -483,11 +594,29 @@
 			{ "data": "kitto"},
 			{ "data": "book"}]
 		});
+		tableKittoBook.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+		$('#tableKittoBook tfoot tr').appendTo('#tableKittoBook thead');
+
+
 
 
 
 		$('#tablePiLot').DataTable().destroy();
-		var table = $('#tablePiLot').DataTable({
+		$('#tablePiLot tfoot th').each( function () {
+			var title = $(this).text();
+			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		});
+		var tablePiLot = $('#tablePiLot').DataTable({
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
@@ -555,6 +684,21 @@
 			{ "data": "quantity"},
 			{ "data": "lot_completion"}]
 		});
+
+		tablePiLot.columns().every( function () {
+			var that = this;
+
+			$( 'input', this.footer() ).on( 'keyup change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			});
+		});
+		$('#tablePiLot tfoot tr').appendTo('#tablePiLot thead');
+
+
 
 
 	}

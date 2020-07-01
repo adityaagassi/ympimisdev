@@ -105,26 +105,8 @@
 <section class="content" style="padding-top: 0;">
 
 	<div class="row" style="margin-left: 1%; margin-right: 1%;" id="main">
-
-		<div class="col-xs-1 col-xs-offset-3" style="margin-top: 0.5%;" align="right">
-			<input style="font-weight: bold; font-size: 1vw;" id="toggle" data-toggle="toggle" data-on="ID" data-off="STORE" type="checkbox">
-		</div>
-
-		<div class="col-xs-4" style="padding-left: 0px;" id="store_field">
-			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				<div class="input-group input-group-lg">
-					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
-						<i class="fa fa-qrcode"></i>
-					</div>
-					<input type="text" class="form-control" placeholder="INPUT STORE" id="store">
-					<span class="input-group-btn">
-						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>&nbsp;&nbsp;Scan</button>
-					</span>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-xs-4" style="padding-left: 0px;" id="id_field">
+		
+		<div class="col-xs-4" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
 				<div class="input-group input-group-lg">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
@@ -312,15 +294,7 @@
 		$('#input').hide();
 
 		$('#id_field').hide();
-		$('#toggle').change(function(){        
-			if(this.checked){
-				$('#store_field').hide();
-				$('#id_field').show();
-			}else{
-				$('#store_field').show();
-				$('#id_field').hide();
-			}
-		});
+		
 
 	});
 
@@ -340,13 +314,6 @@
 
 	$('#scanModal').on('hidden.bs.modal', function () {
 		videoOff();
-	});
-
-	$('#store').keydown(function(event) {
-		if (event.keyCode == 13 || event.keyCode == 9) {
-			var store = $("#store").val();
-			fillStore(store);
-		}
 	});
 
 
@@ -407,17 +374,11 @@
 					drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
 					outputMessage.hidden = true;
 					videoOff();
-				
-
-					if($('#toggle').prop("checked")){
-						document.getElementById("id").value = code.data;
-						fillStoreId(code.data);
-					}else{
-						document.getElementById("store").value = code.data;
-						fillStore(code.data);
-					}
 
 
+					document.getElementById("id").value = code.data;
+					fillStoreId(code.data);
+					
 
 				} else {
 					outputMessage.hidden = false;
@@ -455,77 +416,6 @@
 				$("#store_title").text("");
 				$("#store_title").text("STORE : " + result.store_name.toUpperCase());
 				
-
-				var body = '';
-				var num = '';
-				for (var i = 0; i < result.store.length; i++) {
-					if(result.store[i].category == 'SINGLE'){
-						var css = 'style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
-					}else{
-						var css = 'style="padding: 0px; background-color: rgb(250,250,210); text-align: center; color: #000000; font-size: 15px;"';
-					}
-
-					num++;
-					body += '<tr>';
-					body += '<td '+css+'>'+num+'</td>';
-					body += '<td '+css+'>'+result.store[i].category+'</td>';
-					body += '<td '+css+'>'+result.store[i].material_number+'</td>';
-					body += '<td '+css+'>'+result.store[i].material_description+'</td>';
-					body += '<td '+css+'>'+result.store[i].remark+'</td>';
-					body += '<td '+css+'>'+result.store[i].bun+'</td>';
-					body += '<td '+css+'>'+result.store[i].final_count+'</td>';
-					body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showRevise(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-pencil"></i></span></button></td>';
-					
-					body += '</tr>';
-
-				}
-				$("#store_body").append(body);
-
-				canc();
-			}else {
-				$('#scanner').hide();
-				$('#scanModal').modal('hide');
-				$(".modal-backdrop").remove();
-				canc();
-
-				if(result.message){
-					openErrorGritter('Error', result.message);
-				}else{
-					openErrorGritter('Error', 'Store tidak ditemukan');					
-				}
-			}
-		});
-	}
-
-
-	function fillStore(store){
-		var data = {
-			store : store,
-			process : 3
-		}
-
-		$('#store_body').html("");
-		$("#store_title").text("");
-		$("#store_title").text("STORE");
-
-
-		$.get('{{ url("fetch/stocktaking/revise") }}', data, function(result, status, xhr){
-			if (result.status) {
-
-
-				if(result.store.length <= 0){
-					openErrorGritter('Error', 'Store Not Found');
-					return false;
-				}
-
-				$('#store').prop('disabled', true);
-				$('#scanner').hide();
-				$('#scanModal').modal('hide');
-				$(".modal-backdrop").remove();
-
-				$("#store_body").empty();
-				$("#store_title").text("");
-				$("#store_title").text("STORE : " + store.toUpperCase());			
 
 				var body = '';
 				var num = '';

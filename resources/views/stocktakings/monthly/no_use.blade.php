@@ -125,7 +125,7 @@
 		</div>
 
 		<div class="col-xs-12" style="padding: 0px;" id="confirm">
-			<div class="col-xs-3 col-xs-offset-5">
+			<div class="col-xs-3 pull-right" align="right" style="padding: 0px;">
 				<button type="button" style="font-size:20px; height: 40px; font-weight: bold; padding: 15%; padding-top: 0px; padding-bottom: 0px;" onclick="conf()" class="btn btn-success">SUBMIT</button>
 			</div>
 		</div>
@@ -318,7 +318,7 @@
 					for (var i = 0; i < list.length; i++) {
 						if(result.material[0].id == list[i][0]){
 							canc();
-							openErrorGritter('Error', 'Material sudah ada di List No Use');
+							openErrorGritter('Error', 'Material sudah di Scan<br>Cek Tabel No Use');
 							fillList = false;
 						}
 					}

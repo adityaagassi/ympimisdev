@@ -143,9 +143,13 @@ class StockTakingController extends Controller{
 		$title = 'Monthly Stocktaking';
 		$title_jp = '月次棚卸';
 
+		$employee = EmployeeSync::where('employee_id', Auth::user()->username)
+		->select('employee_id', 'name', 'position')->first();
+
 		return view('stocktakings.monthly.index', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'employee' => $employee
 		))->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
 	}
 
@@ -988,26 +992,43 @@ class StockTakingController extends Controller{
 		$month = $request->get('month');
 		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
 
+		$date = date('Ymd');
+
 		if($calendar){
-			$filename = 'ympipi_upload_' . str_replace('-', '', $calendar->date) . '.txt';
+			$filename = 'ympipi_upload_' . $date . '.txt';
 			$filepath = public_path() . "/uploads/sap/stocktaking/" . $filename;
 			// $filepath = public_path('files') . $filename;
 			$filedestination = "ma/ympipi/" . $filename;
 
-			$datas = db::select("SELECT pi.plnt, pi.location, pi.cost_center, pi.material_number, pi.pi, book.book, (COALESCE(pi.pi,0) - COALESCE(book.book,0)) AS div_qty, ROUND(ABS((COALESCE(pi.pi,0) - COALESCE(book.book,0))), 3) AS div_abs, pi.date, if((COALESCE(pi.pi,0) - COALESCE(book.book,0)) > 0, '9671003', '9681003') AS type FROM
-				(SELECT storage_locations.plnt, stocktaking_outputs.location, storage_locations.cost_center, stocktaking_outputs.material_number, date(stocktaking_outputs.created_at) AS date, sum( stocktaking_outputs.quantity ) AS pi
-				FROM stocktaking_outputs
-				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_outputs.location 
-				GROUP BY storage_locations.plnt, stocktaking_outputs.location, storage_locations.cost_center, stocktaking_outputs.material_number, date(stocktaking_outputs.created_at)) AS pi
-				LEFT JOIN
-				(SELECT storage_location, material_number, sum( unrestricted ) AS book FROM storage_location_stocks 
+			$datas = db::select("SELECT storage_locations.area AS `group`,
+				storage_locations.plnt,
+				pi_book.location,
+				storage_locations.cost_center,
+				pi_book.material_number,
+				pi_book.pi AS pi,
+				pi_book.book AS book,
+				(pi_book.pi - pi_book.book) AS diff_qty,
+				ROUND(ABS(pi_book.pi - pi_book.book),3) AS diff_abs,
+				if((pi_book.pi - pi_book.book) > 0, '9671003', '9681003') AS type 
+				FROM
+				(SELECT location, material_number, sum(pi) AS pi, sum(book) AS book FROM
+				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
+				GROUP BY location, material_number
+				UNION ALL
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
 				WHERE stock_date = '".$calendar->date."'
-				GROUP BY storage_location, material_number) AS book
-				ON pi.location = book.storage_location and pi.material_number = book.material_number
-				HAVING div_abs > 0");
+				GROUP BY storage_location, material_number) AS union_pi_book
+				GROUP BY location, material_number) AS pi_book
+				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
+				WHERE storage_locations.area IS NOT NULL
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND storage_locations.area = 'ASSEMBLY'
+				AND ABS(pi_book.pi - pi_book.book) > 0");
 
 
 			$upload_text = "";
+			$count = count($datas);
+			$actual = 1;
 			foreach ($datas as $data){
 				$upload_text .= $this->writeString($data->plnt, 15, " ");
 				$upload_text .= $this->writeString($data->plnt, 4, " ");
@@ -1015,13 +1036,17 @@ class StockTakingController extends Controller{
 				$upload_text .= $this->writeString($data->location, 4, " ");
 				$upload_text .= $this->writeString($data->plnt, 4, " ");
 				$upload_text .= $this->writeString($data->location, 4, " ");
-				$upload_text .= $this->writeDecimal(round($data->div_abs,3), 13, "0");
+				$upload_text .= $this->writeDecimal(round($data->diff_abs,3), 13, "0");
 				$upload_text .= $this->writeStringReserve($data->cost_center, 10, "0");
 				$upload_text .= $this->writeString('', 10, " ");
-				$upload_text .= $this->writeDate($data->date, "transfer");
+				$upload_text .= $this->writeDate($calendar->date, "transfer");
 				$upload_text .= $this->writeString('MB1C', 20, " ");
-				$upload_text .= $this->writeString($data->type, 20, " ");
-				$upload_text .= "\r\n";
+				$upload_text .= $data->type;
+
+				if($actual < $count){
+					$upload_text .= "\r\n";					
+				}
+				$actual++;
 			}
 
 			try{
@@ -2348,6 +2373,7 @@ class StockTakingController extends Controller{
 			->update([
 				'remark' => $remark,
 				'final_count' => $quantity,
+				'revised_by' => Auth::user()->username,
 				'reason' => $reason
 			]);
 
@@ -2376,6 +2402,7 @@ class StockTakingController extends Controller{
 
 			$update = StocktakingList::where('id', $id)
 			->update([
+				'remark' => 'USE',
 				'process' => 1,
 				'quantity' => $quantity,
 				'inputed_by' => $inputor
@@ -2510,13 +2537,13 @@ class StockTakingController extends Controller{
 	}
 
 	function writeDecimal($text, $maxLength, $char) {
+
 		if ($maxLength > 0) {
 			$textLength = 0;
 			if ($text != null) {
 				if(fmod($text,1) > 0){
-					$decimal = $this->decimal(fmod($text,1));
+					$decimal = $this->decimal(round(fmod($text,1),3));
 					$decimalLength = strlen($decimal);
-
 					for ($j = 0; $j < (3- $decimalLength); $j++) {
 						$decimal = $decimal . $char;
 					}

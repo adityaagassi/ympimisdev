@@ -73,12 +73,27 @@
 			<a id="audit1" href="{{ url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 1</a>
 
 			@if(in_array('S36', $navs))
-			<a id="audit2" href="{{ url("index/stocktaking/audit/"."2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 2</a>
+			{{-- <a id="audit2" href="{{ url("index/stocktaking/audit/"."2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 2</a> --}}
 			<a id="breakdown" href="javascript:void(0)" onClick="countPI()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Breakdown PI</a>
 			
 			@endif
+
+			@if(strpos(strtolower($employee->position), 'operator') !== false || strpos(strtolower($employee->position), 'sub') !== false)
+			@if(in_array('S36', $navs))
 			<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Unmatch</a>
 			<a id="revise" href="{{ url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
+			@endif			
+			@else
+			<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Unmatch</a>
+			<a id="revise" href="{{ url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
+			@endif
+
+
+
+
+
+
+
 
 
 			<br>
@@ -161,7 +176,7 @@
 									<th>Description</th>
 									<th>Qty</th>
 									<th>Audit 1</th>
-									<th>Audit 2</th>
+									{{-- <th>Audit 2</th> --}}
 									<th>PI</th>
 								</tr>
 							</thead>
@@ -554,11 +569,11 @@
 						body += '<td style="width: 1%;"></td>';
 					}
 
-					if(result.input_detail[i].audit2 != null){
-						body += '<td style="width: 1%;">'+ result.input_detail[i].audit2.toLocaleString() +'</td>';
-					}else{
-						body += '<td style="width: 1%;"></td>';
-					}
+					// if(result.input_detail[i].audit2 != null){
+					// 	body += '<td style="width: 1%;">'+ result.input_detail[i].audit2.toLocaleString() +'</td>';
+					// }else{
+					// 	body += '<td style="width: 1%;"></td>';
+					// }
 
 					if(result.input_detail[i].final_count != null){
 						body += '<td style="width: 1%; font-weight: bold;">'+ result.input_detail[i].final_count.toLocaleString() +'</td>';
