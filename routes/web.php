@@ -1024,6 +1024,9 @@ Route::group(['nav' => 'M27', 'middleware' => 'permission'], function(){
 Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/jig/data', 'WeldingProcessController@indexWeldingJigData');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
+Route::get('scan/welding/jig', 'WeldingProcessController@scanWeldingJig');
+Route::get('fetch/welding/schedule_jig', 'WeldingProcessController@scanWeldingJig');
+
 
 //Exchange Rate
 Route::get('index/exchange_rate', 'AccountingController@exchange_rate');
@@ -1077,13 +1080,19 @@ Route::get('edit/purchase_requisition', 'AccountingController@edit_purchase_requ
 Route::post('update/purchase_requisition', 'AccountingController@update_purchase_requisition');
 Route::post('delete/purchase_requisition_item', 'AccountingController@delete_item_pr');
 Route::get('purchase_requisition/report/{id}', 'AccountingController@report_purchase_requisition');
+Route::get('purchase_requisition/check/{id}', 'AccountingController@check_purchase_requisition');
+Route::post('purchase_requisition/checked/{id}', 'AccountingController@checked_purchase_requisition');
 
 //Approval Purchase Requisition
 Route::get('purchase_requisition/verifikasi/{id}', 'AccountingController@verifikasi_purchase_requisition');
 Route::post('purchase_requisition/approval/{id}', 'AccountingController@approval_purchase_requisition');
 Route::post('purchase_requisition/notapprove/{id}', 'AccountingController@reject_purchase_requisition');
 
-
+//New Approval Purchase Requisition
+Route::get('purchase_requisition/approvemanager/{id}', 'AccountingController@prapprovalmanager');
+Route::get('purchase_requisition/approvedgm/{id}', 'AccountingController@prapprovaldgm');
+Route::get('purchase_requisition/approvegm/{id}', 'AccountingController@prapprovalgm');
+Route::get('purchase_requisition/reject/{id}', 'AccountingController@prreject');
 
 //Purchase Order
 Route::get('purchase_order', 'AccountingController@purchase_order');
@@ -1093,6 +1102,8 @@ Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
 Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
 Route::get('purchase_order/get_detailname', 'AccountingController@pogetname')->name('admin.pogetname');
 Route::get('purchase_order/report/{id}', 'AccountingController@report_purchase_order');
+
+Route::get('purchase_order/sendemail', 'AccountingController@po_send_email');
 
 
 Route::get('edit/purchase_order', 'AccountingController@edit_purchase_order');
@@ -1121,6 +1132,11 @@ Route::get('investment/edit_investment_item', 'AccountingController@fetch_invest
 Route::post('investment/delete_investment_item', 'AccountingController@delete_investment_item');
 Route::get('investment/get_detailitem', 'AccountingController@getitemdesc')->name('admin.getitemdesc');
 
+
+//Budget
+Route::get('budget/info', 'AccountingController@budget_info');
+Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
+Route::get('budget/detail', 'AccountingController@budget_detail');
 
 
 

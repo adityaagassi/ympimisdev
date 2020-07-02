@@ -668,6 +668,8 @@
 @endsection
 
 @section('scripts')
+
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
 <script src="{{ url("js/buttons.flash.min.js")}}"></script>
 <script src="{{ url("js/jszip.min.js")}}"></script>
@@ -1108,7 +1110,7 @@
 			lop = "lop2";
 		}
 
-		var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='PR' name='no_pr"+no+"' id='no_pr"+no+"' style='width: 100% height: 35px;' onchange='pilihPR(this)'></select></div><div class='col-xs-2' style='padding:5px;'><select class='form-control select3' data-placeholder='Item' name='no_item"+no+"' id='no_item"+no+"' style='width: 100% height: 35px;' onchange='pilihItem(this)'></select><input type='hidden' class='form-control' id='nama_item"+no+"' name='nama_item"+no+"' placeholder='Nama Item' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+no+"' name='item_budget"+no+"' placeholder='Budget' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+no+"' name='delivery_date"+no+"' placeholder='Delivery Date' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' required='' readonly='' onkeyup='getkonversi(this)'></div> <div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"'>?</span><input type='text' class='form-control currency' id='goods_price"+no+"' name='goods_price"+no+"' placeholder='Goods Price' required='' readonly='' onkeyup='getkonversi(this)'></div></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+no+"' name='last_price"+no+"' placeholder='Last Price' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+no+"' name='service_price"+no+"' placeholder='Service' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='gl_number"+no+"' name='gl_number"+no+"' placeholder='GL Number' required=''></div><div class='col-xs-1' style='padding:5px;'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+		var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='PR' name='no_pr"+no+"' id='no_pr"+no+"' style='width: 100% height: 35px;' onchange='pilihPR(this)'></select></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Item' name='no_item"+no+"' id='no_item"+no+"' style='width: 100% height: 35px;' onchange='pilihItem(this)'></select><input type='hidden' class='form-control' id='nama_item"+no+"' name='nama_item"+no+"' placeholder='Nama Item' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+no+"' name='item_budget"+no+"' placeholder='Budget' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+no+"' name='delivery_date"+no+"' placeholder='Delivery Date' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' required='' readonly='' onkeyup='getkonversi(this)'></div> <div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"'>?</span><input type='text' class='form-control currency' id='goods_price"+no+"' name='goods_price"+no+"' placeholder='Goods Price' required='' readonly='' onkeyup='getkonversi(this)'></div></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+no+"' name='last_price"+no+"' placeholder='Last Price' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+no+"' name='service_price"+no+"' placeholder='Service' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='gl_number"+no+"' name='gl_number"+no+"' placeholder='GL Number' required=''></div><div class='col-xs-1' style='padding:5px;'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
 
 		$("#"+id).append(divdata);
 		$("#no_pr"+no).append(pr_list);
@@ -1319,27 +1321,66 @@
 		    	$("#looping").val(ids);
 				// no += 1;
 			});
-});
+		});
 
-}
-
-function deleteConfirmation(name, id) {
-	$('#modalDeleteBody').text("Are you sure want to delete ' " + name + " '");
-	$('[name=modalDeleteButton]').attr("id",id);
-}
-
-function delete_item(id) {
-	var data = {
-		id:id,
 	}
 
-	$.post('{{ url("delete/purchase_order_item") }}', data, function(result, status, xhr){
+	function deleteConfirmation(name, id) {
+		$('#modalDeleteBody').text("Are you sure want to delete ' " + name + " '");
+		$('[name=modalDeleteButton]').attr("id",id);
+	}
 
-	});
+	function delete_item(id) {
+		var data = {
+			id:id,
+		}
 
-	$('#modaldanger').modal('hide');
-	$('#'+id).css("display","none");
-}
+		$.post('{{ url("delete/purchase_order_item") }}', data, function(result, status, xhr){
+
+		});
+
+		$('#modaldanger').modal('hide');
+		$('#'+id).css("display","none");
+	}
+
+	function sendEmail(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim PO ini ke Manager?")) {
+        return false;
+      }
+
+      $.get('{{ url("purchase_order/sendemail") }}', data, function(result, status, xhr){
+        openSuccessGritter("Success","Email Has Been Sent");
+        // window.location.reload();
+      })
+    }
+
+    function openSuccessGritter(title, message){
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-success',
+        image: '{{ url("images/image-screen.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
+
+    function openErrorGritter(title, message) {
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-danger',
+        image: '{{ url("images/image-stop.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
+
+
 
 </script>
 

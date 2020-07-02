@@ -62,7 +62,7 @@
 
 				<tr>
 					<td colspan="2" style="font-size: 12px;width: 22%">Receive Date</td>
-					<td colspan="8" style="font-size: 12px;">: - </td>
+					<td colspan="8" style="font-size: 12px;">: <?= date('d F Y', strtotime($pr[0]->receive_date)) ?></td>
 				</tr>
 
 				<tr>
@@ -144,9 +144,21 @@
 								<?= $pr->emp_name ?>
 							@endif
 						</td>
-						<td colspan="1" style="height: 40px">&nbsp;</td>
-						<td colspan="1" style="height: 40px">&nbsp;</td>
-						<td colspan="1" style="height: 40px">&nbsp;</td>
+						<td colspan="1" style="height: 40px">
+							@if($pr->approvalm == "Approved")
+								<?= $pr->manager ?>
+							@endif
+						</td>
+						<td colspan="1" style="height: 40px">
+							@if($pr->approvaldgm == "Approved")
+								<?= $pr->dgm ?>
+							@endif
+						</td>
+						<td colspan="1" style="height: 40px">
+							@if($pr->approvalgm == "Approved")
+								<?= $pr->gm ?>
+							@endif
+						</td>
 					</tr>
 					<tr>
 						<td colspan="1">User</td>

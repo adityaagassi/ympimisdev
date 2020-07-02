@@ -1823,6 +1823,15 @@ class CparController extends Controller
       try {
         $id_user = Auth::id();
 
+
+        $syarat = null;
+        if ($request->get('auditor_persyaratan') == null || $request->get('auditor_persyaratan') == "") {
+            $syarat = "0";
+        }
+        else{
+            $syarat = $request->get('auditor_persyaratan');
+        }
+
         $audits = StandarisasiAudit::create([
            'auditor' => $request->get('auditor'),
            'auditor_name' => $request->get('auditor_name'),
@@ -1830,7 +1839,7 @@ class CparController extends Controller
            'auditor_jenis' => $request->get('auditor_jenis'),
            'auditor_lokasi' => $request->get('auditor_lokasi'),
            'auditor_kategori' => $request->get('auditor_kategori'),
-           'auditor_persyaratan' => $request->get('auditor_persyaratan'),
+           'auditor_persyaratan' => $syarat,
            'auditor_permasalahan' => $request->get('auditor_permasalahan'),
            'auditor_penyebab' => $request->get('auditor_penyebab'),
            'auditor_bukti' => $request->get('auditor_bukti'),

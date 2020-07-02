@@ -61,6 +61,7 @@
     <small>Detail Form PR</small>
   </h1>
   <ol class="breadcrumb">
+    <a class="btn btn-warning btn-sm pull-right" data-toggle="tooltip" title="Lihat Report" href="{{url('purchase_requisition/report', $pr['id'])}}" target="_blank" style="margin-right: 5px;width: 150px">Preview Report PDF PR</a>
  </ol>
 </section>
 @endsection
