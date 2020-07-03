@@ -1736,6 +1736,8 @@ Route::get('index/stocktaking/menu', 'StockTakingController@indexMonthlyStocktak
 Route::get('fetch/stocktaking/check_month', 'StockTakingController@fetchCheckMonth');
 Route::get('fetch/stocktaking/filled_list', 'StockTakingController@fetchfilledList');
 Route::get('fetch/stocktaking/filled_list_detail', 'StockTakingController@fetchfilledListDetail');
+Route::get('fetch/stocktaking/audited_list', 'StockTakingController@fetchAuditedList');
+Route::get('fetch/stocktaking/audited_list_detail', 'StockTakingController@fetchAuditedListDetail');
 Route::get('fetch/stocktaking/variance', 'StockTakingController@fetchVariance');
 Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVarianceDetail');
 
@@ -2480,6 +2482,11 @@ Route::get('index/push_block_recorder/delete_parameter/{id}', 'RecorderProcessCo
 
 //RECORDER TORQUE CHECK
 Route::get('index/recorder_process_torque/{remark}', 'RecorderProcessController@index_torque');
+Route::get('index/fetchResumeTorque', 'RecorderProcessController@fetchResumeTorque');
+Route::post('index/push_block_recorder/create_torque', 'RecorderProcessController@create_torque');
+Route::get('index/push_block_recorder/get_temp_torque', 'RecorderProcessController@get_temp_torque');
+Route::post('index/push_block_recorder/create_temp_torque', 'RecorderProcessController@create_temp_torque');
+Route::post('index/push_block_recorder/update_temp_torque', 'RecorderProcessController@update_temp_torque');
 
 //RECORDER PUSH PULL CHECK
 Route::get('index/recorder_push_pull_check', 'RecorderProcessController@index_push_pull');
@@ -2775,10 +2782,13 @@ Route::get('index/form_experience/print/{id}', 'FormExperienceController@print_f
 Route::get('index/form_experience/get_nama', 'FormExperienceController@get_nik');
 
 //IP
-Route::get('index/display/ip', 'PingController@indexIpMonitoring');
-Route::get('fetch/display/ip', 'PingController@fetch');
-Route::get('fetch/display/fetch_hit/{ip}', 'PingController@fetch_hit');
-Route::post('post/display/ip_log', 'PingController@ip_log');
+Route::group(['nav' => 'S40', 'middleware' => 'permission'], function(){
+	Route::get('index/display/ip', 'PingController@indexIpMonitoring');
+	Route::get('fetch/display/ip', 'PingController@fetch');
+	Route::get('fetch/display/fetch_hit/{ip}', 'PingController@fetch_hit');
+	Route::post('post/display/ip_log', 'PingController@ip_log');
+});
+
 
 //OFFICECLOCK
 Route::get('index/display/office_clock', 'OfficeClockController@index');
