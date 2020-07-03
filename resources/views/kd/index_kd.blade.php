@@ -179,6 +179,7 @@
 									<th style="width: 1%">Count Item</th>
 									<th style="width: 1%">Location</th>
 									<th style="width: 1%">Created At</th>
+									<th style="width: 1%">Reprint KDO</th>
 									<th style="width: 1%">Cancel</th>
 								</tr>
 							</thead>
@@ -186,6 +187,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
+									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -205,6 +207,7 @@
 									<th style="width: 1%">Location</th>
 									<th style="width: 1%">Quantity</th>
 									<th style="width: 1%">Created At</th>
+									<th style="width: 1%">Reprint Label</th>
 									<th style="width: 1%">Cancel</th>
 								</tr>
 							</thead>
@@ -212,6 +215,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
+									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -410,6 +414,7 @@
 			{ "data": "location" },
 			{ "data": "quantity" },
 			{ "data": "updated_at" },
+			{ "data": "reprintKDO" },
 			{ "data": "deleteKDO" }
 			]
 		});
@@ -499,6 +504,7 @@
 			{ "data": "actual_count" },
 			{ "data": "remark" },
 			{ "data": "updated_at" },
+			{ "data": "reprintKDO" },
 			{ "data": "deleteKDO" }
 			]
 		});
@@ -516,6 +522,45 @@
 		});
 
 		$('#kdo_table tfoot tr').appendTo('#kdo_table thead');
+	}
+
+	function reprintKDO(id) {
+
+		var data = {
+			kd_number : id
+		}
+
+		$("#loading").show();
+
+		if(confirm("Apakah anda ingin mencetak ulang KDO Number dari "+ id +" ?")){
+			$.get('{{ url("fetch/kd_reprint_kdo") }}', data,  function(result, status, xhr){
+				if(result.status){
+					$("#loading").hide();
+					openSuccessGritter('Success', result.message);
+				}else{
+					$("#loading").hide();
+					openErrorGritter('Error!', result.message);
+				}
+
+			});
+		}else{
+			$("#loading").hide();
+
+		}		
+	}
+
+
+	function reprintKDODetail(id){
+
+		var data = id.split('+');
+
+		var kd_detail = data[0];
+		var location = data[1];
+
+		if(location == 'ZPRO'){
+			window.open('{{ url("index/print_label_zpro") }}'+'/'+kd_detail, '_blank');
+		}
+
 	}
 
 	function forcePrint() {

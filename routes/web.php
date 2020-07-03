@@ -1215,6 +1215,8 @@ Route::get('fetch/kd_shipment_progress', 'KnockDownController@fetchKdShipmentPro
 Route::get('fetch/kd_shipment_progress_detail', 'KnockDownController@fetchKdShipmentProgressDetail');
 Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
 Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
+Route::get('fetch/kd_reprint_kdo', 'KnockDownController@reprintKDO');
+
 
 Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
 	Route::get('index/workshop/list_wjo', 'WorkshopController@indexListWJO');
