@@ -557,9 +557,9 @@
 		var kd_detail = data[0];
 		var location = data[1];
 
-		// if(location == 'ZPRO'){
-			window.open('{{ url("index/print_label_zpro") }}'+'/'+kd_detail, '_blank');
-		// }
+		window.open('{{ url("index/print_label_zpro") }}'+'/'+kd_detail, '_blank');
+		openSuccessGritter('Success!', "Reprint Success");
+
 
 	}
 

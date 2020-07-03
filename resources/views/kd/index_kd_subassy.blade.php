@@ -237,8 +237,14 @@
 	}
 
 	function reprintKDODetail(id){
-		window.open('{{ url("index/print_label_subassy") }}'+'/'+id, '_blank');
-		openSuccessGritter('Success', 'KDO berhasil di re-print');
+
+		var data = id.split('+');
+
+		var kd_detail = data[0];
+		var location = "{{ $location }}";
+
+		window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+kd_detail, '_blank');
+		openSuccessGritter('Success!', "Reprint Success");
 	}
 
 	function deleteKDODetail(id){
@@ -429,7 +435,8 @@
 		$.post('{{ url("fetch/kd_print_subassy") }}', data,  function(result, status, xhr){
 			if(result.status){
 				var id = result.knock_down_detail_id;
-				window.open('{{ url("index/print_label_subassy") }}'+'/'+id, '_blank');
+
+				window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+id, '_blank');
 
 				$('#material_number').val('');
 				$('#quantity').val('');
