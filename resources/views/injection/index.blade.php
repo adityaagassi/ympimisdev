@@ -40,6 +40,8 @@
 
 			<a href="{{ url('index/machine_parameter','First Shot Approval') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Machine Parameter</a>
 
+			<a href="{{ url("index/recorder_process_torque","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Torque Check</a>
+
 			<!-- <a href="{{ url("index/injection/molding") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Molding Setup</a>
 
 			<a href="{{ url("index/injection/molding_maintenance") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Molding Maintenance</a> -->

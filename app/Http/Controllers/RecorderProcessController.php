@@ -18,6 +18,8 @@ use App\User;
 use App\RcPushPullLog;
 use App\RcCameraKangoLog;
 use App\PlcCounter;
+use App\PushBlockTorqueTemp;
+use App\PushBlockTorque;
 use App\Libraries\ActMLEasyIf;
 use Response;
 use DataTables;
@@ -1645,11 +1647,6 @@ class RecorderProcessController extends Controller
 
     }
 
-    public function index_torque($remark){
-      $name = Auth::user()->name;
-      return view('recorder.process.index_torque')->with('page', 'Process Assy Recorder')->with('head', 'Recorder Torque Check')->with('title', 'Recorder Torque Check')->with('title_jp', '???')->with('name', $name)->with('product_type', $this->product_type)->with('mesin', $this->mesin)->with('mesin2', $this->mesin)->with('batas_bawah_hm', '15')->with('batas_atas_hm', '73')->with('batas_bawah_mf', '15')->with('batas_atas_mf', '78')->with('remark', $remark);
-    }
-
     public function indexMachineParameter($remark)
     {
       $parameters = PushBlockParameter::where('push_block_code',$remark)->orderBy('push_block_parameters.id', 'desc')
@@ -1906,6 +1903,264 @@ class RecorderProcessController extends Controller
       ->with('parameter', $parameters)
       ->with('product_type', $this->product_type)
       ->with('product_type2', $this->product_type);
+    }
+
+    public function index_torque($remark){
+      $name = Auth::user()->name;
+      return view('recorder.process.index_torque')
+      ->with('page', 'Process Assy Recorder')
+      ->with('head', 'Recorder Torque Check')
+      ->with('title', 'Recorder Torque Check')
+      ->with('title_jp', '???')
+      ->with('name', $name)
+      ->with('product_type', $this->product_type)
+      ->with('mesin', $this->mesin)
+      ->with('mesin2', $this->mesin)
+      ->with('batas_bawah_hm', '15')
+      ->with('batas_atas_hm', '73')
+      ->with('batas_bawah_mf', '15')
+      ->with('batas_atas_mf', '78')
+      ->with('remark', $remark);
+    }
+
+    function fetchResumeTorque(Request $request)
+    {
+          try{
+            $middle_id = $request->get("middle_id");
+
+            $detail_middle = PushBlockMaster::find($middle_id);
+
+            // var_dump($detail_middle->cavity_1);
+            $cav_middle = array(
+                      '1' => $detail_middle->cavity_1,
+                      '2' => $detail_middle->cavity_2,
+                      '3' => $detail_middle->cavity_3,
+                      '4' => $detail_middle->cavity_4 );
+
+            $head_foot_id = $request->get("head_foot_id");
+
+            $detail_head_foot = PushBlockMaster::find($head_foot_id);
+
+            if ($detail_head_foot->cavity_5 == null) {
+              $cav_head_foot = array(
+                      '1' => $detail_head_foot->cavity_1,
+                      '2' => $detail_head_foot->cavity_2,
+                      '3' => $detail_head_foot->cavity_3,
+                      '4' => $detail_head_foot->cavity_4 );
+            }else{
+              $cav_head_foot = array(
+                      '1' => $detail_head_foot->cavity_1,
+                      '2' => $detail_head_foot->cavity_2,
+                      '3' => $detail_head_foot->cavity_3,
+                      '4' => $detail_head_foot->cavity_4,
+                      '5' => $detail_head_foot->cavity_5,
+                      '6' => $detail_head_foot->cavity_6, );
+            }
+
+            $response = array(
+              'status' => true,
+              'detail_middle' => $detail_middle,
+              'detail_head_foot' => $detail_head_foot,
+              'cav_middle' => $cav_middle,
+              'cav_head_foot' => $cav_head_foot,
+            );
+            return Response::json($response);
+
+          }
+          catch (Exception $e){
+             $response = array(
+              'status' => false,
+              'datas' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    function create_torque(Request $request)
+    {
+          try{    
+              $id_user = Auth::id();
+              $torque_1 = $request->get('torque_1');
+              $torque_2 = $request->get('torque_2');
+              $torque_3 = $request->get('torque_3');
+              $average = $request->get('average');
+              $middle = $request->get('middle');
+              $head_foot = $request->get('head_foot');
+              $push_block_code = $request->get('push_block_code');
+
+              if ($push_block_code == 'After Injection') {
+                $front = 'AI';
+              }else{
+                $front = 'FSA';
+              }
+
+              $push_block_id_gen = $front."_".$request->get('check_date')."_".$request->get('product_type')."_".$request->get('pic_check');
+
+              for($i = 0; $i<count($middle);$i++){
+                PushBlockTorque::create([
+                  'push_block_code' => $request->get('push_block_code'),
+                  'push_block_id_gen' => $push_block_id_gen,
+                    'check_date' => $request->get('check_date'),
+                    'check_type' => $request->get('check_type'),
+                    'injection_date_middle' => $request->get('injection_date_middle'),
+                    'mesin_middle' => $request->get('mesin_middle'),
+                    'injection_date_head_foot' => $request->get('injection_date_head_foot'),
+                    'mesin_head_foot' => $request->get('mesin_head_foot'),
+                    'product_type' => $request->get('product_type'),
+                    'middle' => $middle[$i],
+                    'head_foot' => $head_foot[$i],
+                    'torque1' => $torque_1[$i],
+                    'torque2' => $torque_2[$i],
+                    'torque3' => $torque_3[$i],
+                    'torqueavg' => $average[$i],
+                    'pic_check' => $request->get('pic_check'),
+                    'notes' => $request->get('notes'),
+                    'created_by' => $id_user
+                ]);
+                $temptemp = PushBlockTorqueTemp::where('middle',$middle[$i])->where('head_foot',$head_foot[$i])->where('push_block_code',$push_block_code)->where('check_type',$request->get('check_type'))->delete();
+              }
+
+              $response = array(
+                'status' => true,
+              );
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    public function get_temp_torque(Request $request){
+        $array_middle = $request->get('array_middle');
+        $array_head_foot = $request->get('array_head_foot');
+        $remark = $request->get('remark');
+        $product_type = $request->get('product_type');
+        $check_type = $request->get('check_type');
+
+        $temp = [];
+
+        $indexHeadFoot = (int)$request->get('indexHeadFoot');
+
+        $index = $indexHeadFoot * 4;
+
+        for($i = 0; $i < $index; $i++){
+            $temptemp = PushBlockTorqueTemp::where('middle',$array_middle[$i])->where('head_foot',$array_head_foot[$i])->where('push_block_code',$remark)->where('product_type',$product_type)->where('check_type',$check_type)->first();
+            
+            if (count($temptemp) > 0) {
+              $temp[] = array('check_date' => $temptemp->check_date,
+              'check_type' => $temptemp->check_type,
+              'injection_date_middle' => $temptemp->injection_date_middle,
+              'injection_date_head_foot' => $temptemp->injection_date_head_foot,
+              'mesin_middle' => $temptemp->mesin_middle,
+              'mesin_head_foot' => $temptemp->mesin_head_foot,
+              'product_type' => $temptemp->product_type,
+              'middle' => $temptemp->middle,
+              'head_foot' => $temptemp->head_foot,
+              'torque1' => $temptemp->torque1,
+              'torque2' => $temptemp->torque2,
+              'torque3' => $temptemp->torque3,
+              'torqueavg' => $temptemp->torqueavg,
+              'pic_check' => $temptemp->pic_check,
+              'notes' => $temptemp->notes, );
+            }
+        }
+
+        $response = array(
+            'status' => true,            
+            'datas' => $temp,
+            'message' => 'Success get Temp'
+        );
+        return Response::json($response);
+    }
+
+    function create_temp_torque(Request $request)
+    {
+          try{    
+              $id_user = Auth::id();
+              $middle = $request->get('middle');
+              $head_foot = $request->get('head_foot');
+              $push_block_code = $request->get('push_block_code');
+
+              if ($push_block_code == 'After Injection') {
+                $front = 'AI';
+              }else{
+                $front = 'FSA';
+              }
+
+              $push_block_id_gen = $front."_".$request->get('check_date')."_".$request->get('product_type')."_".$request->get('pic_check');
+
+              for($i = 0; $i<count($middle);$i++){
+                PushBlockTorqueTemp::create([
+                  'push_block_code' => $request->get('push_block_code'),
+                  'push_block_id_gen' => $push_block_id_gen,
+                    'check_date' => $request->get('check_date'),
+                    'check_type' => $request->get('check_type'),
+                    'injection_date_middle' => $request->get('injection_date_middle'),
+                    'mesin_middle' => $request->get('mesin_middle'),
+                    'injection_date_head_foot' => $request->get('injection_date_head_foot'),
+                    'mesin_head_foot' => $request->get('mesin_head_foot'),
+                    'product_type' => $request->get('product_type'),
+                    'middle' => $middle[$i],
+                    'head_foot' => $head_foot[$i],
+                    'pic_check' => $request->get('pic_check'),
+                    'created_by' => $id_user
+                ]);
+              }
+
+              $response = array(
+                'status' => true,
+                'message' => 'Success Create Temp',
+                'push_block_id_gen' => $push_block_id_gen
+              );
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    function update_temp_torque(Request $request)
+    {
+          try{    
+              $id_user = Auth::id();
+              $torque_1 = $request->get('torque_1');
+              $torque_2 = $request->get('torque_2');
+              $torque_3 = $request->get('torque_3');
+              $average = $request->get('average');
+              $middle = $request->get('middle');
+              $head_foot = $request->get('head_foot');
+              $push_block_code = $request->get('push_block_code');
+              $notes = $request->get('notes');
+              for($i = 0; $i<count($middle);$i++){
+                $temptemp = PushBlockTorqueTemp::where('middle',$middle[$i])->where('head_foot',$head_foot[$i])->where('push_block_code',$push_block_code)->get();
+                foreach ($temptemp as $key) {
+                  $update = PushBlockTorqueTemp::find($key->id);
+                  $update->torque1 = $torque_1[$i];
+                  $update->torque2 = $torque_2[$i];
+                  $update->torque3 = $torque_3[$i];
+                  $update->torqueavg = $average[$i];
+                  $update->notes = $notes;
+                  $update->save();
+                }
+              }
+
+              $response = array(
+                'status' => true,
+              );
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
     }
 }
   
