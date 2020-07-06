@@ -1208,7 +1208,7 @@ class MaintenanceController extends Controller
 		->orderBy("id", "ASC")
 		->get();
 
-		$hasil_check = db::select("SELECT DATE_FORMAT(check_date,'%Y-%m-%d') as dt_cek, utility_code, utility_name, location, DATE_FORMAT(last_check,'%Y-%m-%d') as last_check FROM utility_checks
+		$hasil_check = db::select("SELECT DATE_FORMAT(check_date,'%d %m %Y') as dt_cek, utility_code, utility_name, location, DATE_FORMAT(last_check,'%Y-%m-%d') as last_check FROM utility_checks
 			LEFT JOIN utilities on utilities.id = utility_checks.utility_id
 			WHERE utility_checks.id IN (
 			SELECT MAX(id)

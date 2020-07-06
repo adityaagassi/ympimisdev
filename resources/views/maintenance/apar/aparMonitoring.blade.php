@@ -21,6 +21,9 @@
   tfoot>tr>th{
     text-align:center;
   }
+  tfoot>tr>td{
+    text-align:center;
+  }
   th:hover {
     overflow: visible;
   }
