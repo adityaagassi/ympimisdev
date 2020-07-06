@@ -419,7 +419,7 @@
 		}
 
 		var data = {
-			id : id	
+			id : id
 		}
 
 		if(confirm("Data akan simpan oleh sistem.\nData tidak dapat dikembalikan.")){

@@ -2,8 +2,6 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css/jquery.numpad.css") }}" rel="stylesheet">
-<link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
-
 <style type="text/css">
 	/*Start CSS Numpad*/
 	.nmpd-grid {border: none; padding: 20px;}
@@ -55,103 +53,42 @@
 	}
 	#loading, #error { display: none; }
 
-	#store {
+	#qr_code {
 		text-align: center;
 		font-weight: bold;
 	}
-	#id {
+	.input {
 		text-align: center;
 		font-weight: bold;
 	}
-	#lot {
-		text-align: center;
-		font-weight: bold;
-	}
-	#z1 {
-		text-align: center;
-		font-weight: bold;
-	}
-
-	#progress-text {
-		text-align: center;
-		font-weight: bold;
-		font-size: 1.5vw;
-		color: #fff;
-	}
-
-	/* Chrome, Safari, Edge, Opera */
-	input::-webkit-outer-spin-button,
-	input::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-
-	/* Firefox */
-	input[type=number] {
-		-moz-appearance: textfield;
-	}
-
-	.styled-select select {
-		-moz-appearance:none; /* Firefox */
-		-webkit-appearance:none; /* Safari and Chrome */
-		appearance:none;
-	}
-
 </style>
 @stop
 @section('header')
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0;">
-
-	<div class="row" style="margin-left: 1%; margin-right: 1%;" id="main">
-
-		<div class="col-xs-4" style="padding-left: 0px;">
+	<div class="row" style="margin-left: 1%; margin-right: 1%;">
+		
+		<div class="col-xs-7" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
+				<p id="inputor_name" style="font-size:18px; text-align: center; color: yellow; padding: 0px; margin: 0px; font-weight: bold; text-transform: uppercase;"></p>
+
 				<div class="input-group input-group-lg">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
 						<i class="fa fa-qrcode"></i>
 					</div>
-					<input type="text" class="form-control" placeholder="INPUT ID" id="id">
+					<input type="text" class="form-control" placeholder="SCAN QR CODE" id="qr_code">
 					<span class="input-group-btn">
-						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>Scan</button>
+						<button style="font-weight: bold;" href="javascript:void(0)" class="btn btn-success btn-flat" data-toggle="modal" data-target="#scanModal"><i class="fa fa-camera"></i>&nbsp;Scan QR</button>
 					</span>
 				</div>
 			</div>
-		</div>
 
-		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-top: 0%;">
-			<table class="table table-bordered" id="store_table">
-				<thead>
-					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='store_title'>STORE</th>
-					</tr>
-					<tr>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">CATEGORY</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL NUMBER</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL DESCRIPTION</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">REMARK</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">UOM</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">PI</th>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">ACTION</th>
-					</tr>
-				</thead>
-				<tbody id="store_body">
-				</tbody>
-			</table>
-		</div>
-	</div>
-
-	<div class="row" style="margin-left: 1%; margin-right: 1%; margin-top: 5%;" id="input">
-		<div class="col-xs-7" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				<input type="hidden" id="id">
-
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 0px">
 					<thead>
 						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 18px;" colspan="2">MATERIAL DETAILS</th>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;" colspan="2">REVISE PI</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -183,21 +120,38 @@
 							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Lot</td>
 							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="lot_uom"></td>
 						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Remark</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="remark"></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
+
+			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-top: 2%;">
+				<table class="table table-bordered" id="store_table">
+					<thead>
+						<tr>
+							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;" colspan="3">QUANTITY</th>
+						</tr>
+						<tr>
+							<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">INPUT PI</th>
+							<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">AUDIT 1</th>
+							<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">FINAL QTY</th>
+						</tr>
+					</thead>
+					<tbody id="store_body">
+					</tbody>
+				</table>
+			</div>
+
 		</div>
-		<div class="col-xs-5">
-			<div class="col-xs-12">		
-				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:1.5vw;">PI</label>
-					<div class="col-xs-6 col-xs-offset-3">
-						<input type="number" class="form-control" placeholder="Input here" id="total">
-					</div>
-				</div>
-				<div class="form-group row" align="right">
-					<label class="col-xs-3" style="padding: 0px; color: yellow; font-size:1.5vw;">Reason</label>
-					<div class="col-xs-6 col-xs-offset-3" align="left">
+
+		<div class="col-xs-5" style="margin-top: 2%;">
+			<div class="col-xs-12">
+				<div class="form-group">
+					<label class="col-xs-12" style="padding: 0px; color: yellow; font-size:1.5vw;">Reason</label>
+					<div class="col-xs-11" style="padding: 0px;">
 						<select class="form-control select2" name="reason" id='reason' data-placeholder="Select Reason">
 							<option value=""></option>
 							<option value="Kesalahan input transaksi return/repair">Kesalahan input transaksi return/repair</option>
@@ -209,44 +163,158 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-12" align="right">
-				<div class="input-group input-group-lg">
-					<button type="button" style="font-size:20px; height: 35px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="cancInput()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
-
-					<button type="button" style="font-size:20px; height: 35px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="modal modal-default fade" id="scanModal">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title text-center"><b>SCAN QR CODE HERE</b></h4>
-				</div>
-				<div class="modal-body">
-					<div id='scanner' class="col-xs-12">
-						<div class="col-xs-10 col-xs-offset-1">
-							<div id="loadingMessage">
-								🎥 Unable to access video stream
-								(please make sure you have a webcam enabled)
-							</div>
-							<canvas style="width: 100%; height: 300px;" id="canvas" hidden></canvas>
-							<div id="output" hidden>
-								<div id="outputMessage">No QR code detected.</div>
-							</div>
-						</div>									
+			<div class="col-xs-12">
+				<div class="form-group row" align="right">
+					<div class="col-xs-1 col-xs-offset-11" align="right">
+						<button class="btn btn-success" onclick="addCount()"><i class="fa fa-plus"></i></button>
 					</div>
+				</div>
+			</div>
 
-					<p style="visibility: hidden;">camera</p>
-					<input type="hidden" id="code">
+			<div id="count">
+				{{-- 1 --}}
+				<div class="col-xs-12" id="count_1">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_1">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_1" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_1" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 2 --}}
+				<div class="col-xs-12" id="count_2">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_2">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_2">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_2" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_2" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 3 --}}
+				<div class="col-xs-12" id="count_3">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_3">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_3">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_3" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_3" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 4 --}}
+				<div class="col-xs-12" id="count_4">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_4">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_4">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_4" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_4" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+				{{-- 5 --}}
+				<div class="col-xs-12" id="count_5">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_5">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_5">
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
+						<div class="col-xs-3" align="right">
+							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_5" readonly="">
+						</div>
+						<div class="col-xs-1" align="right">
+							<button class="btn btn-danger" id="remove_5" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-12">	
+				<div class="form-group row" align="right">					
+					<label class="col-xs-1 col-xs-offset-5" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">Total</label>
+					<div class="col-xs-3 col-xs-offset-2" align="right">
+						<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-11" align="right">
+				<div class="input-group input-group-lg">
+					<button type="button" style="font-size:1.5vw; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="canc()" class="btn btn-danger">&nbsp;Cancel&nbsp;</button>
+
+					<button id="save_button" type="button" style="font-size:1.5vw; height: 45px; font-weight: bold; padding-top: 0px; padding-bottom: 0px;" onclick="save()" class="btn btn-success">&nbsp;<i class="fa fa-save"></i> &nbsp;Save&nbsp;</button>
 				</div>
 			</div>
 		</div>
+		
+		<div class="modal modal-default fade" id="scanModal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title text-center"><b>SCAN QR CODE HERE</b></h4>
+					</div>
+					<div class="modal-body">
+						<div id='scanner' class="col-xs-12">
+							<div class="col-xs-10 col-xs-offset-1">
+								<div id="loadingMessage">
+									🎥 Unable to access video stream
+									(please make sure you have a webcam enabled)
+								</div>
+								<canvas style="width: 100%; height: 300px;" id="canvas" hidden></canvas>
+								<div id="output" hidden>
+									<div id="outputMessage">No QR code detected.</div>
+								</div>
+							</div>									
+						</div>
+
+						<p style="visibility: hidden;">camera</p>
+						<input type="hidden" id="code">
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
-
-
 </section>
 
 @endsection
@@ -254,14 +322,6 @@
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 <script src="{{ url("js/jsQR.js")}}"></script>
 <script src="{{ url("js/jquery.numpad.js")}}"></script>
-<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
-<script src="{{ url("js/buttons.flash.min.js")}}"></script>
-<script src="{{ url("js/jszip.min.js")}}"></script>
-<script src="{{ url("js/vfs_fonts.js")}}"></script>
-<script src="{{ url("js/buttons.html5.min.js")}}"></script>
-<script src="{{ url("js/buttons.print.min.js")}}"></script>
-<script src="{{ url("js/bootstrap-toggle.min.js") }}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -277,6 +337,7 @@
 	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
 
 	var vdo;
+	var lot_uom;
 
 	jQuery(document).ready(function() {
 
@@ -285,18 +346,110 @@
 			decimalSeparator : '.'
 		});
 
+		$('#qr_code').blur();
+
+		$('#save_button').prop('disabled', true);	
+
 		$('.select2').select2();
 
-		$('#store').blur();
-
-		$('#progress-confirm').hide();
-
-		$('#input').hide();
-
-		$('#id_field').hide();
-		
-
 	});
+
+
+	var count = 5;
+	function addCount(){
+		++count;
+
+		$add = '';
+		$add += '<div class="col-xs-12" id="count_'+ count +'">';
+		$add += '<div class="form-group row" style="margin-bottom: 2%;">';
+		$add += '<div class="col-xs-3" align="right">';
+		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
+		$add += '</div>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
+		$add += '<div class="col-xs-3" align="right">';
+		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
+		$add += '</div>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
+		$add += '<div class="col-xs-3" align="right">';
+		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
+		$add += '</div>';
+		$add += '<div class="col-xs-1" align="right">';
+		$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
+		$add += '</div>';
+		$add += '</div>';
+		$add += '</div>';
+
+		$('#count').append($add);
+		$('#qty_'+count).addClass('numpad');
+		$('#koef_'+count).addClass('numpad');
+
+		$('.numpad').numpad({
+			hidePlusMinusButton : true,
+			decimalSeparator : '.'
+		});
+
+		console.log(count);
+	}
+
+	function removeCount(param){
+
+		var index = param.split('_');
+		var id = index[1];
+
+		$("#count_"+id).remove();
+
+		if(count != id){
+			var lop = parseInt(id) + 1;		
+			for (var i = lop; i <= count; i++) {
+				document.getElementById("count_"+ i).id = "count_"+ (i-1);
+				document.getElementById("qty_"+ i).id = "qty_"+ (i-1);
+				document.getElementById("koef_"+ i).id = "koef_"+ (i-1);
+				document.getElementById("total_"+ i).id = "total_"+ (i-1);
+				document.getElementById("remove_"+ i).id = "remove_"+ (i-1);
+			}		
+		}
+		count--;
+		changeVal();
+
+		console.log(count);
+	}
+
+	function resetCount() {
+		$('#count').append().empty();
+
+		count = 5;
+
+		for (var i = 1; i <= count; i++) {
+			$add = '';
+			$add += '<div class="col-xs-12" id="count_'+ i +'">';
+			$add += '<div class="form-group row" style="margin-bottom: 2%;">';
+			$add += '<div class="col-xs-3" align="right">';
+			$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ i +'">';
+			$add += '</div>';
+			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
+			$add += '<div class="col-xs-3" align="right">';
+			$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ i +'">';
+			$add += '</div>';
+			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
+			$add += '<div class="col-xs-3" align="right">';
+			$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ i +'" readonly="">';
+			$add += '</div>';
+			$add += '<div class="col-xs-1" align="right">';
+			$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
+			$add += '</div>';
+			$add += '</div>';
+			$add += '</div>';
+
+			$('#count').append($add);
+			$('#qty_'+i).addClass('numpad');
+			$('#koef_'+i).addClass('numpad');
+		}
+
+		$('.numpad').numpad({
+			hidePlusMinusButton : true,
+			decimalSeparator : '.'
+		});
+	}
 
 	function stopScan() {
 		$('#scanModal').modal('hide');
@@ -308,7 +461,7 @@
 		vdo.srcObject.getTracks()[0].stop();
 	}
 
-	$("#scanModal").on('shown.bs.modal', function(){
+	$( "#scanModal" ).on('shown.bs.modal', function(){
 		showCheck('123');
 	});
 
@@ -316,13 +469,96 @@
 		videoOff();
 	});
 
-
-	$('#id').keydown(function(event) {
+	
+	$('#qr_code').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			var id = $("#id").val();
-			fillStoreId(id);
+			var id = $("#qr_code").val();
+
+			if(numberValidation(id)){
+				var data = {
+					id : id
+				}
+
+				$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
+
+					if (result.status) {
+
+						// if(result.material[0].process <= 1){
+						// 	$('#save_button').prop('disabled', true);
+						// 	openErrorGritter('Error', 'Proses sebelumnya belum selesai');
+						// 	canc();
+						// 	return false;
+						// }else{
+						// 	$('#save_button').prop('disabled', false);
+						// 	openSuccessGritter('Success', 'QR Code Successfully');
+						// }					
+						$('#save_button').prop('disabled', false);
+						openSuccessGritter('Success', 'QR Code Successfully');
+						
+						$('#qr_code').prop('disabled', true);
+
+						$("#store").text(result.material[0].store);
+						$("#category").text(result.material[0].category);
+						$("#material_number").text(result.material[0].material_number);
+						$("#location").text(result.material[0].location);
+						$("#material_description").text(result.material[0].material_description);
+						$("#remark").text(result.material[0].remark);
+						$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
+						$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
+						
+						
+						$("#store_body").empty();
+						var body = '';
+						var num = '';
+						for (var i = 0; i < result.material.length; i++) {
+							var css = 'style="padding: 0px; text-align: center; color: #000000; font-size: 25px; font-weight: bold;"';
+							body += '<tr>';
+							if(result.material[i].quantity != null){
+								body += '<td '+css+'>'+result.material[i].quantity+'</td>';
+							}else{
+								body += '<td '+css+'>'+'-'+'</td>';							
+							}
+
+							if(result.material[i].audit1 != null){
+								body += '<td '+css+'>'+result.material[i].audit1+'</td>';
+							}else{
+								body += '<td '+css+'>'+'-'+'</td>';							
+							}
+
+							if(result.material[i].final_count != null){
+								body += '<td '+css+'>'+result.material[i].final_count+'</td>';
+							}else{
+								body += '<td '+css+'>'+'-'+'</td>';							
+							}
+							body += '</tr>';
+						}
+						$("#store_body").append(body);
+
+					} else {
+						openErrorGritter('Error', 'QR Code Not Registered');
+					}
+
+					$('#scanner').hide();
+					$('#scanModal').modal('hide');
+					$(".modal-backdrop").remove();
+				});
+			}else{
+				canc();
+				openErrorGritter('Error', 'QR Code Tidak Terdaftar');
+			}	
 		}
 	});
+
+	function numberValidation(id){
+		var number = /^[0-9]+$/;
+
+		if(!id.match(number)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
 
 	function showCheck(kode) {
 		$(".modal-backdrop").add();
@@ -374,11 +610,9 @@
 					drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
 					outputMessage.hidden = true;
 					videoOff();
+					document.getElementById("qr_code").value = code.data;
 
-
-					document.getElementById("id").value = code.data;
-					fillStoreId(code.data);
-					
+					checkCode(video, code.data);
 
 				} else {
 					outputMessage.hidden = false;
@@ -386,116 +620,85 @@
 			}
 			requestAnimationFrame(tick);
 		}
+
 	}
 
-	function fillStoreId(id){
+
+
+	function checkCode(video, code) {
+
 		var data = {
-			id : id,
-			process : 3
+			id : code
 		}
-		$('#store_body').html("");
-		$("#store_title").text("");
-		$("#store_title").text("STORE");
 
+		$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
 
-		$.get('{{ url("fetch/stocktaking/revise_by_id") }}', data, function(result, status, xhr){
 			if (result.status) {
 
+				// if(result.material[0].process <= 1){					
+				// 	$('#save_button').prop('disabled', true);
+				// 	openErrorGritter('Error', 'Proses sebelumnya belum selesai');
+				// 	canc();
+				// 	return false;
+				// }else{
+				// 	$('#save_button').prop('disabled', false);
+				// 	openSuccessGritter('Success', 'QR Code Successfully');
+				// }						
 
-				if(result.store.length <= 0){
-					openErrorGritter('Error', 'Store Not Found');
-					return false;
-				}
+				$('#save_button').prop('disabled', false);
+				openSuccessGritter('Success', 'QR Code Successfully');
+				$('#qr_code').prop('disabled', true);
 
-				$('#id').prop('disabled', true);
-				$('#scanner').hide();
-				$('#scanModal').modal('hide');
-				$(".modal-backdrop").remove();
+				$("#store").text(result.material[0].store);
+				$("#category").text(result.material[0].category);
+				$("#material_number").text(result.material[0].material_number);
+				$("#location").text(result.material[0].location);
+				$("#material_description").text(result.material[0].material_description);
+				$("#remark").text(result.material[0].remark);
+				$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
+				$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
+
 
 				$("#store_body").empty();
-				$("#store_title").text("");
-				$("#store_title").text("STORE : " + result.store_name.toUpperCase());
-				
-
 				var body = '';
 				var num = '';
-				for (var i = 0; i < result.store.length; i++) {
-					if(result.store[i].category == 'SINGLE'){
-						var css = 'style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
+				for (var i = 0; i < result.material.length; i++) {
+					var css = 'style="padding: 0px; text-align: center; color: #000000; font-size: 25px; font-weight: bold;"';
+					body += '<tr>';
+					if(result.material[i].quantity != null){
+						body += '<td '+css+'>'+result.material[i].quantity+'</td>';
 					}else{
-						var css = 'style="padding: 0px; background-color: rgb(250,250,210); text-align: center; color: #000000; font-size: 15px;"';
+						body += '<td '+css+'>'+'-'+'</td>';							
 					}
 
-					num++;
-					body += '<tr>';
-					body += '<td '+css+'>'+num+'</td>';
-					body += '<td '+css+'>'+result.store[i].category+'</td>';
-					body += '<td '+css+'>'+result.store[i].material_number+'</td>';
-					body += '<td '+css+'>'+result.store[i].material_description+'</td>';
-					body += '<td '+css+'>'+result.store[i].remark+'</td>';
-					body += '<td '+css+'>'+result.store[i].bun+'</td>';
-					body += '<td '+css+'>'+result.store[i].final_count+'</td>';
-					body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showRevise(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-pencil"></i></span></button></td>';
-					
-					body += '</tr>';
+					if(result.material[i].audit1 != null){
+						body += '<td '+css+'>'+result.material[i].audit1+'</td>';
+					}else{
+						body += '<td '+css+'>'+'-'+'</td>';							
+					}
 
+					if(result.material[i].final_count != null){
+						body += '<td '+css+'>'+result.material[i].final_count+'</td>';
+					}else{
+						body += '<td '+css+'>'+'-'+'</td>';							
+					}
+
+					body += '</tr>';
 				}
 				$("#store_body").append(body);
 
-				canc();
-			}else {
-				$('#scanner').hide();
-				$('#scanModal').modal('hide');
-				$(".modal-backdrop").remove();
-				canc();
-
-				if(result.message){
-					openErrorGritter('Error', result.message);
-				}else{
-					openErrorGritter('Error', 'Store tidak ditemukan');					
-				}
+			} else {
+				openErrorGritter('Error', 'QR Code Not Registered');
 			}
+
+			$('#scanner').hide();
+			$('#scanModal').modal('hide');
+			$(".modal-backdrop").remove();
 		});
-	}
-
-	function canc(){
-		$('#store').val("");
-		$('#store').prop('disabled', false);
-		$('#store').focus();
-		$('#store').blur();
-
-
-		$('#id').val("");
-		$('#id').prop('disabled', false);
-		$('#id').focus();
-		$('#id').blur();
-
 
 	}
 
-	function cancInput() {
-		$('#input').hide();
-		$('#main').show();
-
-		$('#id').val("");
-		$('#store').html("");
-		$('#category').html("");
-		$('#material_number').html("");
-		$('#location').html("");
-		$('#material_description').html("");
-		$('#model_key_surface').html("");
-		$('#lot_uom').html("");
-		$('#text_lot').html("");
-		$('#lot').prop('disabled', false);
-
-		document.getElementById("total").value = '';
-	}
-
-	function showRevise(id) {
-		$('#input').show();		
-		$('#total').focus();		
-		$('#main').hide();		
-
+	function reloadQty(id){
 		var data = {
 			id : id
 		}
@@ -503,35 +706,87 @@
 		$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
 
 			if (result.status) {
+				$("#store_body").empty();
+				var body = '';
+				var num = '';
+				for (var i = 0; i < result.material.length; i++) {
+					var css = 'style="padding: 0px; text-align: center; color: #000000; font-size: 25px; font-weight: bold;"';
+					body += '<tr>';
+					if(result.material[i].quantity != null){
+						body += '<td '+css+'>'+result.material[i].quantity+'</td>';
+					}else{
+						body += '<td '+css+'>'+'-'+'</td>';							
+					}
 
-				$("#id").val(id);
-				$("#store").text(result.material[0].store);
-				$("#category").text(result.material[0].category);
-				$("#material_number").text(result.material[0].material_number);
-				$("#location").text(result.material[0].location);
-				$("#material_description").text(result.material[0].material_description);
-				$("#model_key_surface").text((result.material[0].model || '')+' '+(result.material[0].key || '')+' '+(result.material[0].surface || ''));
-				$("#lot_uom").text((result.material[0].lot || '-') + ' ' + result.material[0].bun);
-				lot_uom = (result.material[0].lot || 1);
+					if(result.material[i].audit1 != null){
+						body += '<td '+css+'>'+result.material[i].audit1+'</td>';
+					}else{
+						body += '<td '+css+'>'+'-'+'</td>';							
+					}
 
-				if(result.material[0].lot > 0){
-					$("#text_lot").text(result.material[0].lot + ' x');
-				}else{
-					$("#text_lot").text('- x');
-					$('#lot').prop('disabled', true);
+					if(result.material[i].final_count != null){
+						body += '<td '+css+'>'+result.material[i].final_count+'</td>';
+					}else{
+						body += '<td '+css+'>'+'-'+'</td>';							
+					}
+					body += '</tr>';
 				}
+				$("#store_body").append(body);
 
-			} else {
-				cancInput();
-				openErrorGritter('Error');
+			}
+		});
+	}
+
+	function canc(){
+		$("#store_body").empty();
+
+		$('#save_button').prop('disabled', true);
+
+		$('#store').html("");
+		$('#category').html("");
+		$('#material_number').html("");
+		$('#location').html("");
+		$('#material_description').html("");
+		$('#remark').html("");
+		$('#model_key_surface').html("");
+		$('#lot_uom').html("");
+		$('#text_lot').html("");
+		$('#lot').prop('disabled', false);
+
+		$('#qr_code').val("");
+		$('#qr_code').prop('disabled', false);
+		$('#qr_code').focus();
+		$('#qr_code').blur();
+
+		$("#reason").prop('selectedIndex', 0).change();
+
+		resetCount();
+		document.getElementById("sum_total").value = '';
+	}
+
+	function changeVal(){
+		var sum_total = 0;
+
+		for (var i = 1; i <= count; i++) {
+			var qty = $("#qty_"+i).val();
+			var koef = $("#koef_"+i).val();
+
+			if(qty == '' || koef == ''){
+				continue;
 			}
 
-		});	
+			var total = parseFloat(qty) * parseFloat(koef);
+			document.getElementById("total_"+i).value =  total;
+
+			sum_total += total;
+		}
+
+		document.getElementById("sum_total").value = sum_total;
 	}
 
 	function save(){
-		var id = $("#id").val();
-		var quantity = $("#total").val();
+		var id = $("#qr_code").val();
+		var quantity = $("#sum_total").val();
 		var reason = $("#reason").val();
 
 		var data = {
@@ -540,21 +795,19 @@
 			reason : reason
 		}
 
+		if(reason == '' || quantity == ''){
+			openErrorGritter('Error', 'Reason harus di isi');
+			return false;
+		}
+		
 		$.post('{{ url("fetch/stocktaking/update_revise") }}', data, function(result, status, xhr){
 			if (result.status) {
 				openSuccessGritter('Success', result.message);
 
-				$("#total").val('');
-				$("#reason").prop('selectedIndex', 0).change();
-
-				var storeTitle = $("#store_title").text();
-				var split = storeTitle.split(" : ");
-				var store = split[1];
-
-				fillStore(store);
-				cancInput();
+				canc();
+				// reloadQty(id);
 			}else{
-				openSuccessGritter('Error', result.message);
+				openErrorGritter('Error', result.message);
 			}
 		});
 	}
@@ -583,5 +836,22 @@
 		});
 	}
 
+	function addZero(i) {
+		if (i < 10) {
+			i = "0" + i;
+		}
+		return i;
+	}
+
+	function getActualFullDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return year + "-" + month + "-" + day + " " + h + ":" + m + ":" + s;
+	}
 </script>
 @endsection

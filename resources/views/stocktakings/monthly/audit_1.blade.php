@@ -84,6 +84,7 @@
 	<div class="row" style="margin-left: 1%; margin-right: 1%;" id="main">
 		<div class="col-xs-6 col-xs-offset-3" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
+				<p id="auditor_name" style="font-size:18px; text-align: center; color: yellow; padding: 0px; margin: 0px; font-weight: bold; text-transform: uppercase;"></p>
 				<div class="input-group input-group-lg">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
 						<i class="fa fa-qrcode"></i>
@@ -332,6 +333,26 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="modalAuditor">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-body table-responsive no-padding">
+						<div class="form-group">
+							<label for="exampleInputEmail1">Auditor</label>
+							<select class="form-control select2" name="auditor" id='auditor' data-placeholder="Select Auditor" style="width: 100%;">
+								<option value="">Select Auditor</option>
+								@foreach($auditors as $auditor)
+								<option value="{{ $auditor->employee_id }} - {{ $auditor->name }}">{{ $auditor->employee_id }} - {{ $auditor->name }}</option>
+								@endforeach
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 </section>
 
@@ -364,6 +385,13 @@
 			decimalSeparator : '.'
 		});
 
+		$('#modalAuditor').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+
+		$('.select2').select2();
+
 		$('#qr_code').blur();
 
 		$('#progress-confirm').hide();
@@ -372,7 +400,14 @@
 
 	});
 
+	$("#auditor").change(function(){
+		$('#modalAuditor').modal('hide');
 
+		var auditor = $('#auditor').val(); 
+		$('#auditor_name').text('');
+		$('#auditor_name').text('Auditor : ' + auditor);
+
+	});
 
 	var count = 5;
 	function addCount(){
@@ -680,7 +715,7 @@
 					var id = $("#qr_code").val();
 					fillStore(id);
 				}else{
-					openSuccessGritter('Error', result.message);
+					openErrorGritter('Error', result.message);
 				}
 			});
 		}else{
@@ -784,10 +819,14 @@
 	function save(){
 		var id = $("#id").val();
 		var quantity = $("#sum_total").val();
+		var auditor_name = $("#auditor").val();
+		var data = auditor_name.split(' - ');
+		var auditor = data[0];
 
 		var data = {
 			id : id,
-			quantity : quantity
+			quantity : quantity,
+			auditor : auditor
 		}
 
 		$.post('{{ url("fetch/stocktaking/update_audit/audit1") }}', data, function(result, status, xhr){
@@ -798,7 +837,7 @@
 				fillStore(store);
 				cancInput();
 			}else{
-				openSuccessGritter('Error', result.message);
+				openErrorGritter('Error', result.message);
 			}
 		});
 	}

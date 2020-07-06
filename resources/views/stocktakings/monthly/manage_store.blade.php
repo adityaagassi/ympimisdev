@@ -444,7 +444,7 @@
 				$("#loading").hide();
 
 			}else{
-				openSuccessGritter('Error', result.message);
+				openErrorGritter('Error', result.message);
 				$("#loading").hide();
 
 			}
@@ -498,7 +498,7 @@
 			"bJQueryUI": true,
 			"bAutoWidth": false,
 			"processing": true,
-			"serverSide": true,
+			// "serverSide": true,
 			"ajax": {
 				"type" : "get",
 				"url" : "{{ url("fetch/stocktaking/store") }}",
@@ -563,7 +563,7 @@
 			"bJQueryUI": true,
 			"bAutoWidth": false,
 			"processing": true,
-			"serverSide": true,
+			// "serverSide": true,
 			"ajax": {
 				"type" : "get",
 				"url" : "{{ url("fetch/stocktaking/store_details") }}",
@@ -658,7 +658,7 @@
 					$("#loading").hide();
 
 				}else{
-					openSuccessGritter('Error', result.message);
+					openErrorGritter('Error', result.message);
 					$("#loading").hide();
 
 				}
@@ -686,7 +686,7 @@
 					$("#loading").hide();
 
 				}else{
-					openSuccessGritter('Error', result.message);
+					openErrorGritter('Error', result.message);
 					$("#loading").hide();
 
 				}

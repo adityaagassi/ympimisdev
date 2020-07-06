@@ -515,19 +515,18 @@
 							}
 						}
 
-						if(result.material[0].quantity > 0){
-							if(!confirm("Summaty of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
-								canc();
-								return false;
-							}
-						}
-
 						if(result.material[0].process <= 1){
+							if(result.material[0].quantity > 0){
+								if(!confirm("Summaty of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
+									canc();
+									return false;
+								}
+							}
 							$('#save_button').prop('disabled', false);
 							openSuccessGritter('Success', 'QR Code Successfully');
 						}else{
 							$('#save_button').prop('disabled', true);
-							openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
+							openErrorGritter('Error', 'Input PI dinonaktifkan,<br>Material telah diaudit');
 						}
 
 						$('#qr_code').prop('disabled', true);
@@ -654,7 +653,6 @@
 
 			if (result.status) {
 
-
 				if(result.material[0].remark == 'NO USE'){
 					if(!confirm("Summaty of Counting ini teridentifikasi NO USE.\nApakah anda ingin mengubah menjadi USE ?")){
 						canc();
@@ -662,20 +660,18 @@
 					}
 				}
 
-				if(result.material[0].quantity > 0){
-					if(!confirm("Summaty of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
-						canc();
-						return false;
-					}
-				}
-
-
 				if(result.material[0].process <= 1){
+					if(result.material[0].quantity > 0){
+						if(!confirm("Summaty of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
+							canc();
+							return false;
+						}
+					}
 					$('#save_button').prop('disabled', false);
 					openSuccessGritter('Success', 'QR Code Successfully');
 				}else{
 					$('#save_button').prop('disabled', true);
-					openSuccessGritter('Success', 'Input PI dinonaktifkan,<br>Material telah diaudit');
+					openErrorGritter('Error', 'Input PI dinonaktifkan,<br>Material telah diaudit');
 				}
 
 				$('#qr_code').prop('disabled', true);
@@ -827,7 +823,7 @@
 				$('#input').hide();
 
 			}else{
-				openSuccessGritter('Error', result.message);
+				openErrorGritter('Error', result.message);
 			}
 		});
 	}

@@ -707,7 +707,7 @@
 					var id = $("#qr_code").val();
 					fillStore(id);
 				}else{
-					openSuccessGritter('Error', result.message);
+					openErrorGritter('Error', result.message);
 				}
 			});
 		}else{
@@ -830,7 +830,7 @@
 				fillStore(store);
 				cancInput();
 			}else{
-				openSuccessGritter('Error', result.message);
+				openErrorGritter('Error', result.message);
 			}
 		});
 	}

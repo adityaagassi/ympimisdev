@@ -301,7 +301,7 @@ class StockTakingController extends Controller{
 			});
 
 			$this->countPISingle();
-			$this->countPIAssyNew();
+			$this->countPIAssyNew2();
 
 			$response = array(
 				'status' => true,
@@ -412,7 +412,52 @@ class StockTakingController extends Controller{
 		$this->cek = $this->temp;
 	}
 
-	public function countPIAssyNew(){
+	public function countPIAssyNew2(){
+		$assy = StocktakingList::where('category', 'ASSY')
+		->where('final_count', '>', 0)
+		->get();
+
+		for ($i=0; $i < count($assy); $i++) {
+			$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
+				FROM bom_outputs b
+				LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
+				WHERE b.material_parent = '".$assy[$i]->material_number."'");
+
+			for ($j=0; $j < count($breakdown); $j++) {
+				if($breakdown[$j]->spt == 50){
+					$row = array();
+					$row['material_number'] = $breakdown[$j]->material_child;
+					$row['store'] = $assy[$i]->store;
+					$row['location'] = $assy[$i]->location;
+					$row['quantity'] = $assy[$i]->final_count * ($breakdown[$j]->usage / $breakdown[$j]->divider);
+					$row['created_at'] = Carbon::now();
+					$row['updated_at'] = Carbon::now();
+
+					$this->cek[] = $row;
+				}else{
+					$row = array();
+					$row['material_number'] = $breakdown[$j]->material_child;
+					$row['store'] = $assy[$i]->store;
+					$row['location'] = $assy[$i]->location;
+					$row['quantity'] = $assy[$i]->final_count * ($breakdown[$j]->usage / $breakdown[$j]->divider);
+					$row['created_at'] = Carbon::now();
+					$row['updated_at'] = Carbon::now();
+
+					$this->assy_output[] = $row;
+				}
+			}
+		}
+
+		while(count($this->cek) > 0) {
+			$this->breakdown();
+		}
+
+		foreach (array_chunk($this->assy_output,1000) as $t) {
+			$output = StocktakingOutput::insert($t);
+		}
+	}
+
+	public function countPIAssyNew3(){
 		$assy = StocktakingList::where('category', 'ASSY')
 		->where('final_count', '>', 0)
 		->get();
@@ -449,19 +494,20 @@ class StockTakingController extends Controller{
 			}
 		}
 
+		dd($this->cek);
 
-		while(count($this->cek) > 0) {
-			foreach (array_chunk($this->assy_output,1000) as $t) {
-				$output = StocktakingOutput::insert($t);
-			}
-			$this->assy_output = array();
 
-			$this->breakdownNew($bom);
-		}
-		
+		// while(count($this->cek) > 0) {
+		// 	foreach (array_chunk($this->assy_output,1000) as $t) {
+		// 		$output = StocktakingOutput::insert($t);
+		// 	}
+		// 	$this->assy_output = array();
+
+		// 	$this->breakdownNew3($bom);
+		// }
 	}
 
-	public function breakdownNew($bom){
+	public function breakdownNew3($bom){
 		
 		$this->temp = array();
 
@@ -494,8 +540,9 @@ class StockTakingController extends Controller{
 
 		$this->cek = array();
 		$this->cek = $this->temp;
-
 	}
+
+
 
 	public function printSummaryOfCounting(Request $request){
 

@@ -70,32 +70,23 @@
 
 			<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input No Use</a>
 			<a id="input_pi" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input PI</a>
-			<a id="audit1" href="{{ url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 1</a>
+			<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 1</a>
 
 			@if(in_array('S36', $navs))
 			
-			<a id="audit2" href="{{ url("index/stocktaking/audit/"."2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 2</a>
+			{{-- <a id="audit2" href="{{ url("index/stocktaking/audit/"."2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 2</a> --}}
 			<a id="breakdown" href="javascript:void(0)" onClick="countPI()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Breakdown PI</a>
+			<a id="revise" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
 			
 			@endif
 
-			@if(strpos(strtolower($employee->position), 'operator') !== false || strpos(strtolower($employee->position), 'sub') !== false)
+			@if(strpos(strtolower($employee->position), 'operator') !== false || strpos(strtolower($employee->position), 'leader') !== false)
 			@if(in_array('S36', $navs))
 			<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Unmatch</a>
-			<a id="revise" href="{{ url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
 			@endif			
 			@else
 			<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Unmatch</a>
-			<a id="revise" href="{{ url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
 			@endif
-
-
-
-
-
-
-
-
 
 			<br>
 
@@ -129,6 +120,10 @@
 			<div class="pull-right" id="last_update" style="color: black; margin: 0px; padding-top: 0px; padding-right: 0px; font-size: 1vw;"></div>
 
 			<div class="col-xs-12">
+				<div id="container"></div>
+			</div>
+
+			<div class="col-xs-12">
 				<div id="container1"></div>
 			</div>
 
@@ -153,6 +148,29 @@
 								</tr>
 							</thead>
 							<tbody id="bodyVariance">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="modalAudit">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+						<table class="table table-hover table-bordered table-striped" id="tableAudit">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th>Group</th>
+									<th>Location</th>
+									<th>Store</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody id="bodyAudit">
 							</tbody>
 						</table>
 					</div>
@@ -210,6 +228,23 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="modalBreakdown">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-body table-responsive no-padding">
+						<div class="form-group">
+							<label for="exampleInputEmail1">Select Group</label>
+							<div class="input-group">
+								<input style="text-align: center;" type="text" class="form-control datepicker" onchange="monthChange()" name="month" id="month" placeholder="Select Month" readonly>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 </section>
 @endsection
@@ -247,9 +282,11 @@
 		$('#month').val('');
 
 		filledList();
+		auditedList();
 		// variance();
 
-		setInterval(filledList, 100000);
+		setInterval(filledList, 60000);
+		setInterval(auditedList, 60000);
 		// setInterval(variance, 600000);
 
 	});
@@ -351,7 +388,8 @@
 				}
 
 				filledList();
-				variance();
+				auditedList();
+				// variance();
 
 				$('#month_text').text(bulanText(month));
 				$('#modalMonth').modal('hide');
@@ -420,17 +458,17 @@
 				if(result.status){
 					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
-					var area = [];
+					var location = [];
 					var fill = [];
 					var empty = [];
 
 					for (var i = 0; i < result.data.length; i++) {
-						area.push(result.data[i].location);
+						location.push(result.data[i].location);
 						fill.push(parseInt(result.data[i].qty));
 						empty.push(parseInt(result.data[i].empty));
 					}
 
-					Highcharts.chart('container1', {
+					Highcharts.chart('container', {
 						chart: {
 							height: 300,
 							type: 'column',
@@ -453,7 +491,7 @@
 							enabled:false
 						},
 						xAxis: {
-							categories: area,
+							categories: location,
 							type: 'category',
 							gridLineWidth: 5,
 							gridLineColor: 'RGB(204,255,255)',
@@ -474,8 +512,8 @@
 						tooltip: {
 							formatter: function () {
 								return '<b>' + this.x + '</b><br/>' +
-								'Total Item: ' + this.point.stackTotal + '<br/>' +
-								this.series.name + ': ' + Math.round(this.point.percentage) + '%';
+								this.series.name + ': ' + this.y + '<br/>' +
+								'Total Item: ' + this.point.stackTotal;
 							}
 						},
 						plotOptions: {
@@ -491,7 +529,9 @@
 								stacking: 'percent',
 								dataLabels: {
 									enabled: true,
-									format: '{point.percentage:.0f}%',
+									formatter: function() {
+										return this.y;
+									},
 									style: {
 										fontSize:'18px',
 										fontWeight: 'bold',
@@ -511,13 +551,11 @@
 							data: empty,
 							color: 'rgb(255,116,116)'
 						}, {
-							name: 'Filled',
+							name: 'Inputted',
 							data: fill,
 							color: 'rgb(144,238,126)'
 						}]
 					});
-				}else{
-					openErrorGritter('Error', result.message);
 				}
 			});
 		}
@@ -591,6 +629,163 @@
 				$('#tableInput').show();
 
 
+			}
+		});
+	}
+
+
+	function auditedList() {
+		var month = $('#month').val();
+
+		if(month != ''){
+			var data = {
+				month : month
+			}
+
+			$.get('{{ url("fetch/stocktaking/audited_list") }}', data, function(result, status, xhr){
+				if(result.status){
+
+					var location = [];
+					var audited = [];
+					var notyet = [];
+
+					for (var i = 0; i < result.data.length; i++) {
+						location.push(result.data[i].location);
+						audited.push(parseInt(result.data[i].audited));
+						notyet.push(parseInt(result.data[i].not_audited));
+					}
+
+					Highcharts.chart('container1', {
+						chart: {
+							height: 300,
+							type: 'column',
+							backgroundColor: {
+								linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+								stops: []
+							},
+						},
+						title: {
+							text: 'Progress Audit 1 Stocktaking',
+							style: {
+								fontSize: '1.5vw',
+								fontWeight: 'bold'
+							}
+						},	
+						legend:{
+							enabled: false
+						},
+						credits:{	
+							enabled:false
+						},
+						xAxis: {
+							categories: location,
+							type: 'category',
+							gridLineWidth: 5,
+							gridLineColor: 'RGB(204,255,255)',
+							labels: {
+								style: {
+									fontSize: '1vw'
+								}
+							},
+						},
+						yAxis: {
+							title: {
+								enabled:false,
+							},
+							labels: {
+								enabled:false
+							}
+						},
+						tooltip: {
+							formatter: function () {
+								return '<b>' + this.x + '</b><br/>' +
+								this.series.name + ': ' + this.y + '<br/>' +
+								'Total Store: ' + this.point.stackTotal;
+							}
+						},
+						plotOptions: {
+							column: {
+								stacking: 'percent',
+							},
+							series:{
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer',
+								stacking: 'percent',
+								dataLabels: {
+									enabled: true,
+									formatter: function() {
+										return this.y;
+									},
+									style: {
+										fontSize:'18px',
+										fontWeight: 'bold',
+									}
+								},
+								point: {
+									events: {
+										click: function () {
+											fillAuditModal(this.category, this.series.name);
+										}
+									}
+								}
+							}
+						},
+						series: [{
+							name: 'Not yet',
+							data: notyet,
+							color: 'rgb(255,116,116)'
+						}, {
+							name: 'Audited',
+							data: audited,
+							color: 'rgb(144,238,126)'
+						}]
+					});
+				}
+			});
+		}
+	}
+
+	function fillAuditModal(group, series){
+
+		$('#loading').show();
+		$('#tableAudit').hide();
+
+		var month = $('#month').val();
+
+		var data = {
+			group : group,
+			series : series,
+			month : month
+		}
+
+		$.get('{{ url("fetch/stocktaking/audited_list_detail") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#bodyAudit').html('');
+				$('#loading').hide();
+
+				var color = ''
+				if(series == "Not yet"){
+					color = 'style="background-color: rgb(255,116,116);"';
+				}else{
+					color = 'style="background-color: rgb(144,238,126);"'			
+				}
+
+				var body = '';
+				for (var i = 0; i < result.audit_detail.length; i++) {
+					body += '<tr '+ color +'">';
+					body += '<td style="width: 1%">'+ result.audit_detail[i].area +'</td>';
+					body += '<td style="width: 1%">'+ result.audit_detail[i].location +'</td>';
+					body += '<td style="width: 1%">'+ result.audit_detail[i].store +'</td>';
+					body += '<td style="width: 1%">'+ result.audit_detail[i].audit_status +'</td>';
+					body += '</tr>';
+				}
+
+				$('#bodyAudit').append(body);
+				$('#modalAudit').modal('show');
+				$('#tableAudit').show();
 			}
 		});
 	}
