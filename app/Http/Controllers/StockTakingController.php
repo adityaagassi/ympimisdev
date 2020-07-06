@@ -136,6 +136,9 @@ class StockTakingController extends Controller{
 			'BAG',
 			'PAA'
 		];
+
+		// $this->bom = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt, ( b.`usage` / b.divider ) AS koef FROM bom_outputs b
+		// 	LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child");
 	}
 
 	//Stock Taking Bulanan
@@ -235,9 +238,14 @@ class StockTakingController extends Controller{
 		$title_jp = '監査 '. $id;
 
 		if($id == 1){
+			$auditors = db::select("SELECT * FROM employee_syncs
+				where position like '%Leader%'
+				or position = 'Foreman'");
+
 			return view('stocktakings.monthly.audit_1', array(
 				'title' => $title,
-				'title_jp' => $title_jp
+				'title_jp' => $title_jp,
+				'auditors' => $auditors
 			))->with('page', 'Monthly Stock Audit 1')->with('head', 'Stocktaking');
 
 		}else if($id == 2){
@@ -277,7 +285,7 @@ class StockTakingController extends Controller{
 			);
 			return Response::json($response);
 		}else{
-			if($data[0]->process < 3){
+			if($data[0]->process < 2){
 				$response = array(
 					'status' => false,
 					'message' => 'Proses tidak sesuai urutan',
@@ -289,11 +297,11 @@ class StockTakingController extends Controller{
 		try{
 			DB::transaction(function() {
 				StocktakingOutput::truncate();
-				$update = StocktakingList::where('process', 3)->update(['process' => 4]);
+				$update = StocktakingList::where('process', 2)->update(['process' => 4]);
 			});
 
 			$this->countPISingle();
-			$this->countPIAssy();
+			$this->countPIAssyNew();
 
 			$response = array(
 				'status' => true,
@@ -310,7 +318,9 @@ class StockTakingController extends Controller{
 	}
 
 	public function countPISingle(){
-		$single = StocktakingList::where('category', 'SINGLE')->get();
+		$single = StocktakingList::where('category', 'SINGLE')
+		->where('final_count', '>', 0)
+		->get();
 
 		for ($i=0; $i < count($single); $i++) {
 
@@ -325,15 +335,12 @@ class StockTakingController extends Controller{
 	}
 
 	public function countPIAssy(){
-
 		$assy = db::select("SELECT s.material_number, s.store, s.location, s.final_count, b.material_child, b.`usage`, b.divider, m.spt, (s.final_count*(b.`usage`/b.divider)) as quantity FROM stocktaking_lists s
 			left join bom_outputs b on s.material_number = b.material_parent
 			left join material_plant_data_lists m on m.material_number = b.material_child 
 			where s.category = 'ASSY'");
 
-
 		for ($i=0; $i < count($assy); $i++) {
-
 			if($assy[$i]->spt == 50){
 				$row = array();
 				$row['material_number'] = $assy[$i]->material_child;
@@ -365,8 +372,6 @@ class StockTakingController extends Controller{
 		foreach (array_chunk($this->assy_output,1000) as $t) {
 			$output = StocktakingOutput::insert($t);
 		}
-
-
 	}
 
 	public function breakdown(){
@@ -400,6 +405,90 @@ class StockTakingController extends Controller{
 					$row['updated_at'] = Carbon::now();
 					$this->assy_output[] = $row;
 				}
+			}
+		}
+
+		$this->cek = array();
+		$this->cek = $this->temp;
+	}
+
+	public function countPIAssyNew(){
+		$assy = StocktakingList::where('category', 'ASSY')
+		->where('final_count', '>', 0)
+		->get();
+
+		$bom = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt, ( b.`usage` / b.divider ) AS koef FROM bom_outputs b
+			LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child");
+
+		for ($i=0; $i < count($assy); $i++) {
+			for ($j=0; $j < count($bom); $j++) {
+				if($assy[$i]->material_number == $bom[$j]->material_parent){
+					if($bom[$j]->spt == 50){
+						$row = array();
+						$row['material_number'] = $bom[$j]->material_child;
+						$row['store'] = $assy[$i]->store;
+						$row['location'] = $assy[$i]->location;
+						$row['quantity'] = $assy[$i]->final_count * $bom[$j]->koef;
+						$row['created_at'] = Carbon::now();
+						$row['updated_at'] = Carbon::now();
+
+						$this->cek[] = $row;
+					}else{
+						$row = array();
+						$row['material_number'] = $bom[$i]->material_child;
+						$row['store'] = $assy[$i]->store;
+						$row['location'] = $assy[$i]->location;
+						$row['quantity'] = $assy[$i]->final_count * $bom[$j]->koef;
+						$row['created_at'] = Carbon::now();
+						$row['updated_at'] = Carbon::now();
+
+						$this->assy_output[] = $row;
+
+					}
+				}
+			}
+		}
+
+
+		while(count($this->cek) > 0) {
+			foreach (array_chunk($this->assy_output,1000) as $t) {
+				$output = StocktakingOutput::insert($t);
+			}
+			$this->assy_output = array();
+
+			$this->breakdownNew($bom);
+		}
+		
+	}
+
+	public function breakdownNew($bom){
+		
+		$this->temp = array();
+
+		for ($i=0; $i < count($this->cek); $i++) {
+			for ($j=0; $j < count($bom); $j++) {
+				if($bom[$j]->material_parent == $this->cek[$i]['material_number']){
+
+					if($bom[$j]->spt == 50){
+						$row = array();
+						$row['material_number'] = $bom[$j]->material_child;
+						$row['store'] = $this->cek[$i]['store'];
+						$row['location'] = $this->cek[$i]['location'];
+						$row['quantity'] = $this->cek[$i]['quantity'] * $bom[$j]->koef;
+						$row['created_at'] = Carbon::now();
+						$row['updated_at'] = Carbon::now();
+						$this->temp[] = $row;
+					}else{
+						$row = array();
+						$row['material_number'] = $breakdown[$j]->material_child;
+						$row['store'] = $this->cek[$i]['store'];
+						$row['location'] = $this->cek[$i]['location'];
+						$row['quantity'] = $this->cek[$i]['quantity'] * $bom[$j]->koef;
+						$row['created_at'] = Carbon::now();
+						$row['updated_at'] = Carbon::now();
+						$this->assy_output[] = $row;
+					}
+				}				
 			}
 		}
 
@@ -610,34 +699,44 @@ class StockTakingController extends Controller{
 		$printer->setTextSize(2, 2);
 		$printer->text("  Summary of Counting  "."\n");
 		$printer->initialize();
-		$printer->setTextSize(3, 2);
+		$printer->setTextSize(2, 2);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->text($store."\n");
+		$printer->initialize();
+		$printer->setTextSize(3, 2);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		if($list->category == 'ASSY'){
-			$printer->setReverseColors(true);			
+			$printer->setReverseColors(true);
 		}
-		
+
 		$printer->text($category."\n");
-		$printer->feed(1);
 		$printer->qrCode($id, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
-		$printer->feed(1);
 		$printer->initialize();
 		$printer->setEmphasis(true);
-		$printer->setTextSize(4, 2);
+		$printer->setTextSize(1, 1);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		$printer->text($material_number."\n");
+		$printer->text($id."\n");
 
 		$printer->initialize();
 		$printer->setEmphasis(true);
 		$printer->setTextSize(3, 2);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
-		$printer->text($sloc."\n\n");
+		$printer->text($material_number. " (". $sloc. ")\n\n");
+
 		$printer->initialize();
 		$printer->setEmphasis(true);
 		$printer->setTextSize(1, 1);
 		$printer->text($description."\n");
-		$printer->feed(1);
-		$printer->text($model."-".$key."-".$surface."\n");
+		if($model != '' || $key != '' || $surface != ''){
+			$printer->text($model."-".$key."-".$surface."\n");
+		}
+		if(strlen($lot) == 0){
+			$printer->text("Uom: ".$uom."\n");
+		}
+		else{
+			$printer->text("Lot: ".$lot." ".$uom."\n");
+		}
+
 		$printer->initialize();
 		$printer->setEmphasis(true);
 		$printer->setTextSize(1, 1);
@@ -654,7 +753,6 @@ class StockTakingController extends Controller{
 		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
 		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
 
-		$printer->feed(1);
 		$printer->setTextSize(1, 1);
 		$printer->setJustification(Printer::JUSTIFY_RIGHT);
 		$printer->text("(".$number.")".str_repeat(" ", 22).Carbon::now()."\n");
@@ -826,7 +924,7 @@ class StockTakingController extends Controller{
 		// $pdf = PDF::loadview('qc_report.print_cpar',['cpars'=>$cpars,'parts'=>$parts]);
 		return $pdf->stream("OFFICIAL_VARIANCE_STOCKTAKING " +$month+ ".pdf");
 
-		
+
 	}
 
 	public function exportInquiry(Request $request){
@@ -1052,7 +1150,7 @@ class StockTakingController extends Controller{
 			try{
 				File::put($filepath, $upload_text);
 				// $success = self::uploadFTP($filepath, $filedestination);
-				
+
 				$response = array(
 					'status' => true
 				);
@@ -1067,7 +1165,7 @@ class StockTakingController extends Controller{
 					'created_by' => '1'
 				]);
 				$error_log->save();
-				
+
 
 				$response = array(
 					'status' => false
@@ -1189,7 +1287,7 @@ class StockTakingController extends Controller{
 
 		echo '<option value=""></option>';
 		for($i=0; $i < count($getStorageLocation); $i++) {
-			echo '<option value="'.$getStorageLocation[$i]['storage_location'].'">'.$getStorageLocation[$i]['area'].' - '.$getStorageLocation[$i]['storage_location'].'</option>';
+			echo '<option value="'.$getStorageLocation[$i]['storage_location'].'">'.$getStorageLocation[$i]['storage_location'].'</option>';
 		}
 
 	}
@@ -1209,7 +1307,7 @@ class StockTakingController extends Controller{
 
 		echo '<option value=""></option>';
 		for($i=0; $i < count($getStore); $i++) {
-			echo '<option value="'.$getStore[$i]['store'].'">'.$getStore[$i]['area'].' - '.$getStore[$i]['location'].' - '.$getStore[$i]['store'].'</option>';
+			echo '<option value="'.$getStore[$i]['store'].'">'.$getStore[$i]['store'].'</option>';
 		}
 		echo '<option value="LAINNYA">LAINNYA</option>';
 
@@ -1233,7 +1331,7 @@ class StockTakingController extends Controller{
 			'data' => $data
 		);
 		return Response::json($response);
-		
+
 	}
 
 	public function fetchStore(Request $request){
@@ -1433,7 +1531,7 @@ class StockTakingController extends Controller{
 
 			return DataTables::of($data)->make(true);
 		}
-		
+
 	}
 
 	public function fetchBookVsPi(Request $request){
@@ -1731,7 +1829,7 @@ class StockTakingController extends Controller{
 		$quantity = '';
 		if($request->get('series') == 'Empty'){
 			$quantity = 's.quantity IS NULL';
-		}else if ($request->get('series') == 'Filled') {
+		}else if ($request->get('series') == 'Inputted') {
 			$quantity = 's.quantity IS NOT NULL';
 		}
 
@@ -1765,6 +1863,70 @@ class StockTakingController extends Controller{
 		$response = array(
 			'status' => true,
 			'input_detail' => $input_detail
+		);
+		return Response::json($response);
+	}
+
+	public function fetchAuditedList(Request $request){
+		$month = $request->get('month');
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$data = db::select("SELECT storage_locations.area, audited.location, sum( audited ) AS audited, sum( not_audited ) AS not_audited FROM
+				(SELECT location, store, IF( total = audit, 1, 0 ) AS audited, IF( total <> audit, 1, 0 ) AS not_audited FROM
+				(SELECT stocktaking_lists.location, stocktaking_lists.store, count( stocktaking_lists.id ) AS total, SUM( IF ( stocktaking_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_lists 
+				GROUP BY stocktaking_lists.location, stocktaking_lists.store) audit) AS audited
+				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location 
+				GROUP BY storage_locations.area, audited.location");
+		}else{
+			$data;
+		}
+
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
+	}
+
+	public function fetchAuditedListDetail(Request $request){
+		$group = $request->get('group');
+		$month = $request->get('month');
+		$series = $request->get('series');
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$audit_detail = db::select("SELECT storage_locations.area, audited.location, audited.store, IF( audited.audited = 1, 'Audited', 'Not yet' ) AS audit_status FROM
+				(SELECT location, store, IF( total = audit, 1, 0 ) AS audited, IF( total <> audit, 1, 0 ) AS not_audited FROM
+				(SELECT stocktaking_lists.location, stocktaking_lists.store, count( stocktaking_lists.id ) AS total, SUM( IF ( stocktaking_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_lists
+				WHERE stocktaking_lists.location = '".$group."'
+				GROUP BY stocktaking_lists.location, stocktaking_lists.store) audit) AS audited
+				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location
+				HAVING audit_status = '".$series."'");
+		}else{
+			$audit_detail;
+		}
+
+		$response = array(
+			'status' => true,
+			'audit_detail' => $audit_detail
 		);
 		return Response::json($response);
 	}
@@ -1874,6 +2036,8 @@ class StockTakingController extends Controller{
 			IF
 			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
 			s.quantity,
+			s.audit1,
+			s.final_count,
 			s.remark
 			FROM
 			stocktaking_lists s
@@ -2196,6 +2360,20 @@ class StockTakingController extends Controller{
 		$material = $request->get('material');
 		$location = $request->get('location');
 
+		$cek = StocktakingList::where('store', $store)
+		->where('category', $category)
+		->where('material_number', $material)
+		->where('location', $location)
+		->get();
+
+		if($cek){
+			$response = array(
+				'status' => false,
+				'message' => 'Material Already Added'
+			);
+			return Response::json($response);
+		}
+
 		try {
 			$add = new StocktakingList([
 				'store' => $store,
@@ -2233,6 +2411,27 @@ class StockTakingController extends Controller{
 				'quantity' => 0,
 				'inputed_by' => Auth::user()->username
 			]);
+
+			$id = $request->get('id');
+			for ($i=0; $i < count($id); $i++) { 
+				$storeID = StocktakingList::where('id', $id)->first();
+
+				$stores = StocktakingList::where('store', $storeID->store)
+				->get();
+
+				$no_use = StocktakingList::where('store', $storeID->store)
+				->where('remark', 'NO USE')
+				->get();
+
+				if(count($stores) == count($no_use)){
+					$update = StocktakingList::where('store', $storeID->store)
+					->update([
+						'process' => 2,
+						'final_count' => 0
+					]);
+				}
+
+			}
 
 			$response = array(
 				'status' => true,
@@ -2284,7 +2483,8 @@ class StockTakingController extends Controller{
 				'process' => $process
 			]);
 
-			if($audit == 'audit2'){
+			//Audit 1 -> Update Final Count
+			if($audit == 'audit1'){
 				$store = StocktakingList::where('store', $request->get('store'))->get();
 
 				for ($i = 0; $i < count($store); $i++) {
@@ -2320,11 +2520,8 @@ class StockTakingController extends Controller{
 	public function updateAudit(Request $request, $audit){
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
-		
 		$auditor = $request->get('auditor');
-		if($auditor == null){
-			$auditor = Auth::user()->username;
-		}
+
 
 		$field = '';
 		if($audit == 'audit1'){
@@ -2357,14 +2554,30 @@ class StockTakingController extends Controller{
 
 	public function updateRevise(Request $request){
 		$id = $request->get('id');
-		$quantity = $request->get('quantity');
+		$final_count = $request->get('quantity');
 		$reason = $request->get('reason');
 
 		$remark = '';
-		if($quantity > 0){
+		if($final_count > 0){
 			$remark = 'USE';
 		}else{
 			$remark = 'NO USE';
+		}
+
+		$material = StocktakingList::where('id', $id)->first();
+
+		$process;
+		if($material->process == 0){
+			$process = 4;
+		}else{
+			$process = $material->process;
+		}
+
+		$quantity;
+		if($material->quantity == null){
+			$quantity = $final_count;
+		}else{
+			$quantity = $material->quantity;
 		}
 
 		try {
@@ -2372,7 +2585,9 @@ class StockTakingController extends Controller{
 			$update = StocktakingList::where('id', $id)
 			->update([
 				'remark' => $remark,
-				'final_count' => $quantity,
+				'process' => $process,
+				'quantity' => $quantity,
+				'final_count' => $final_count,
 				'revised_by' => Auth::user()->username,
 				'reason' => $reason
 			]);
