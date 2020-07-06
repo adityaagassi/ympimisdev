@@ -850,6 +850,14 @@
 							extend: 'pageLength',
 							className: 'btn btn-default',
 						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
 						]
 					},
 					'paging': true,
