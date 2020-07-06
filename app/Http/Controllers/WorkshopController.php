@@ -428,6 +428,7 @@ class WorkshopController extends Controller{
 			'workshop_job_orders.category',
 			'workshop_job_orders.item_name',
 			'workshop_job_orders.tag',
+			'workshop_job_orders.type',
 			'workshop_job_orders.quantity',
 			'workshop_job_orders.material',
 			'workshop_job_orders.problem_description',

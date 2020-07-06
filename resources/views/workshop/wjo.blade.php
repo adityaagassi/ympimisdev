@@ -124,6 +124,10 @@
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Kategori</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_category"></td>						
 					</tr>
+					<tr>
+						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">Tipe</td>
+						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_type"></td>						
+					</tr>
 					<!-- <tr>
 						<td style="padding: 0px; color: white; background-color: rgb(50, 50, 50); font-size:16px; width: 18%;">PIC</td>
 						<td style="padding-left: 2%; text-align: left; color: white; background-color: rgb(50, 50, 50); font-size: 16px; width: 30%;" id="text_pic"></td>
@@ -416,6 +420,7 @@
 							$('#text_order_no').html(result.wjo.order_no +' ('+result.wjo.tag_remark+')');
 							$('#text_item_name').html(result.wjo.item_name);
 							$('#text_category').html(result.wjo.category);
+							$('#text_type').html(result.wjo.type);
 							$('#text_quantity').html(result.wjo.quantity);						
 							$('#text_material').html(result.wjo.material);						
 							$('#text_problem_description').html(result.wjo.problem_description);

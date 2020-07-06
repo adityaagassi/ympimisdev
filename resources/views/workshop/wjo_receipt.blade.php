@@ -120,6 +120,21 @@
 						</thead>
 						<tbody id="body_selesai">
 						</tbody>
+						<tfoot>
+							<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
@@ -147,6 +162,21 @@
 						</thead>
 						<tbody id="body_diambil">
 						</tbody>
+						<tfoot>
+							<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
