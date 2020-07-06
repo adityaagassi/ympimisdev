@@ -1987,6 +1987,7 @@ class RecorderProcessController extends Controller
               $middle = $request->get('middle');
               $head_foot = $request->get('head_foot');
               $push_block_code = $request->get('push_block_code');
+              $judgement = $request->get('judgement');
 
               if ($push_block_code == 'After Injection') {
                 $front = 'AI';
@@ -2013,6 +2014,7 @@ class RecorderProcessController extends Controller
                     'torque2' => $torque_2[$i],
                     'torque3' => $torque_3[$i],
                     'torqueavg' => $average[$i],
+                    'judgement' => $judgement[$i],
                     'pic_check' => $request->get('pic_check'),
                     'notes' => $request->get('notes'),
                     'created_by' => $id_user
@@ -2063,6 +2065,7 @@ class RecorderProcessController extends Controller
               'torque2' => $temptemp->torque2,
               'torque3' => $temptemp->torque3,
               'torqueavg' => $temptemp->torqueavg,
+              'judgement' => $temptemp->judgement,
               'pic_check' => $temptemp->pic_check,
               'notes' => $temptemp->notes, );
             }
@@ -2136,6 +2139,7 @@ class RecorderProcessController extends Controller
               $middle = $request->get('middle');
               $head_foot = $request->get('head_foot');
               $push_block_code = $request->get('push_block_code');
+              $judgement = $request->get('judgement');
               $notes = $request->get('notes');
               for($i = 0; $i<count($middle);$i++){
                 $temptemp = PushBlockTorqueTemp::where('middle',$middle[$i])->where('head_foot',$head_foot[$i])->where('push_block_code',$push_block_code)->get();
@@ -2145,6 +2149,7 @@ class RecorderProcessController extends Controller
                   $update->torque2 = $torque_2[$i];
                   $update->torque3 = $torque_3[$i];
                   $update->torqueavg = $average[$i];
+                  $update->judgement = $judgement[$i];
                   $update->notes = $notes;
                   $update->save();
                 }

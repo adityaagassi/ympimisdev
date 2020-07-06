@@ -222,6 +222,7 @@
 									<th style="width: 3%;font-size: 12px;color:white;background-color:#605ca8"><center>Torque 2</center></th>
 									<th style="width: 3%;font-size: 12px;color:white;background-color:#605ca8"><center>Torque 3</center></th>
 									<th style="width: 3%;font-size: 12px;color:white;background-color:#605ca8"><center>Average</center></th>
+									<th style="width: 3%;font-size: 12px;color:white;background-color:#605ca8"><center>Judgement</center></th>
 								</tr>
 							</thead>
 							<tbody id="tableBodyResume">
@@ -1021,6 +1022,7 @@
 						$('#torque_2_'+index).val(value.torque2);
 						$('#torque_3_'+index).val(value.torque3);
 						$('#average_'+index).html(value.torqueavg);
+						$('#judgement_'+index).html(value.judgement);
 						$("#prod_type").html(value.product_type);
 						$("#check_date").html(value.check_date);
 						$("#check_type").html(value.check_type);
@@ -1056,6 +1058,7 @@
 		var torque_2 = [];
 		var torque_3 = [];
 		var average = [];
+		var judgement = [];
 
 		var status_false = 0;
 
@@ -1090,6 +1093,11 @@
 				}else{
 					torque_3.push(parseFloat($('#torque_3_'+index).val()));
 				}
+				if ($('#judgement_'+index).text() == "") {
+					judgement.push(null);
+				}else{
+					judgement.push($('#judgement_'+index).text());
+				}
 				index++;
 			}
 		}
@@ -1102,6 +1110,7 @@
 			torque_2 : torque_2,
 			torque_3 : torque_3,
 			average : average,
+			judgement : judgement,
 			notes:notes
 		}
 		$.post('{{ url("index/push_block_recorder/update_temp_torque") }}', data2, function(result, status, xhr){
@@ -1135,6 +1144,7 @@
 		var torque_2 = [];
 		var torque_3 = [];
 		var average = [];
+		var judgement = [];
 
 		var status_false = 0;
 
@@ -1157,7 +1167,12 @@
 				}else{
 					average.push(parseFloat($('#average_'+index).text()));
 				}
-				if ($('#torque_1_'+index).val() == "" || $('#torque_2_'+index).val() == "" || $('#torque_3_'+index).val() == "" || $('#average_'+index).text() == "") {
+				if ($('#judgement_'+index).text() == "") {
+					judgement.push(parseFloat(0));
+				}else{
+					judgement.push($('#judgement_'+index).text());
+				}
+				if ($('#torque_1_'+index).val() == "" || $('#torque_2_'+index).val() == "" || $('#torque_3_'+index).val() == "" || $('#average_'+index).text() == ""|| $('#judgement_'+index).text() == "") {
 					status_false++;
 				}
 				index++;
@@ -1185,6 +1200,7 @@
 				torque_2 : torque_2,
 				torque_3 : torque_3,
 				average : average,
+				judgement : judgement,
 				notes:notes
 			}
 			$.post('{{ url("index/push_block_recorder/create_torque") }}', data2, function(result, status, xhr){
@@ -1201,6 +1217,11 @@
 	}
 
 	function torque(id) {
+		var batas_bawah_hm = '{{$batas_bawah_hm}}';
+		var batas_atas_hm = '{{$batas_atas_hm}}';
+		var batas_bawah_mf = '{{$batas_bawah_mf}}';
+		var batas_atas_mf ='{{$batas_atas_mf}}';
+
 		if (id.length > 10) {
 			torques = id.substr(id.length - 2);
 		}else{
@@ -1224,10 +1245,24 @@
 		var avg = (parseFloat(tr1value)+parseFloat(tr2value)+parseFloat(tr3value))/3;
 		var avg_id = '#average_'+torques;
 		var avg_id2 = 'average_'+torques;
-		if (avg<0) {
-			document.getElementById(avg_id2).style.backgroundColor = "#ff4f4f";
+		var judgement_id = '#judgement_'+torques;
+		var judgement_id2 = 'judgement_'+torques;
+		if ($('#check_type_fix2').text() == 'HJ-MJ') {
+			if (parseFloat(avg) < parseFloat(batas_bawah_hm) || parseFloat(avg) > parseFloat(batas_atas_hm)) {
+				document.getElementById(judgement_id2).style.backgroundColor = "#ff4f4f"; //red
+				$(judgement_id).html('NG');
+			}else{
+				document.getElementById(judgement_id2).style.backgroundColor = "#7fff6e"; //green
+				$(judgement_id).html('OK');
+			}
 		}else{
-			document.getElementById(avg_id2).style.backgroundColor = "#7fff6e";
+			if (parseFloat(avg) < parseFloat(batas_bawah_mf) || parseFloat(avg) > parseFloat(batas_atas_mf)) {
+				document.getElementById(judgement_id2).style.backgroundColor = "#ff4f4f"; //red
+				$(judgement_id).html('NG');
+			}else{
+				document.getElementById(judgement_id2).style.backgroundColor = "#7fff6e"; //green
+				$(judgement_id).html('OK');
+			}
 		}
 		$(avg_id).html(avg);
 	}
@@ -1260,6 +1295,7 @@
 					tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_2_'+index+'"></td>';
 					tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_3_'+index+'"></td>';
 					tableData += '<td style="text-align:center;" id="average_'+index+'"></td>';
+					tableData += '<td style="text-align:center;" id="judgement_'+index+'"></td>';
 					tableData += '</tr>';
 					index++;
 				}

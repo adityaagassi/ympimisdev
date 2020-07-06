@@ -87,7 +87,7 @@
             <th>Location</th>
             <th>Exp. Date</th>
             <th>Exp. Remaining</th>
-            <th>Status</th>
+            <th>PR Status</th>
           </tr>
         </thead>
         <tbody id="exp_f1">
@@ -109,7 +109,7 @@
             <th>Location</th>
             <th>Exp. Date</th>
             <th>Exp. Remaining</th>
-            <th>Status</th>
+            <th>PR Status</th>
           </tr>
         </thead>
         <tbody id="exp_f2">
@@ -265,7 +265,7 @@
             fi += "<td>"+value.group+"</td>";
             fi += "<td>"+value.exp_date+"</td>";
             fi += "<td>"+value.exp+" Month Left</td>";
-            fi += "<td>"+(value.order_status || '-')+"</td>";
+            fi += "<td>"+(value.no_pr || '-')+"</td>";
             fi += "</tr>";
           } else {
             fii += "<tr style='background-color: "+color+"' "+klik+">";
@@ -276,7 +276,7 @@
             fii += "<td>"+value.group+"</td>";
             fii += "<td>"+value.exp_date+"</td>";
             fii += "<td>"+value.exp+" Month Left</td>";
-            fii += "<td>"+(value.order_status || '-')+"</td>";
+            fii += "<td>"+(value.no_pr || '-')+"</td>";
             fii += "</tr>";
           }
         })

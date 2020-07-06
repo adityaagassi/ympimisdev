@@ -732,12 +732,17 @@
       </li>
 
       @if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
-        <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-ban"></i> <span>Expired Utility List</span></a>
+        <a href="{{ secure_url("/index/maintenance/apar/expire") }}"><i class="fa fa-ban"></i> <span>APAR Expired List</span></a>
       </li>
 
       @if(isset($page) && $page == "APAR NG")<li class="active">@else<li>@endif
-        <a href="{{ secure_url("/index/maintenance/apar/ng_list") }}"><i class="fa  fa-exclamation-triangle"></i> <span>NG Utility Check</span></a>
+        <a href="{{ secure_url("/index/maintenance/apar/ng_list") }}"><i class="fa fa-exclamation-triangle"></i> <span>NG Utility Check</span></a>
       </li>
+
+      @if(isset($page) && $page == "APAR order")<li class="active">@else<li>@endif
+        <a href="{{ secure_url("/index/maintenance/apar/orderList") }}"><i class="fa fa-check-square-o"></i> <span>APAR Order List</span></a>
+      </li>
+
 
       @if(isset($page) && $page == "APAR Uses")<li class="active">@else<li>@endif
         <a href="{{ secure_url("/index/maintenance/apar/uses") }}"><i class="fa fa-hand-grab-o"></i> <span>Use Fire Extinguisher</span></a>
