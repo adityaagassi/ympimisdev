@@ -936,7 +936,7 @@ class MaintenanceController extends Controller
 		$exp = Utility::where('remark', '=', 'APAR')
 		->leftJoin('utility_orders', 'utilities.id', '=', 'utility_orders.utility_id')
 		->whereRaw('TIMESTAMPDIFF(MONTH, now(), exp_date) <= '.$request->get('mon'))
-		->select('utilities.id', 'utility_code', 'utility_name', 'exp_date', 'group', 'location', 'last_check', db::raw('TIMESTAMPDIFF(MONTH, now(), exp_date) as exp'), 'capacity', 'type', 'order_status', 'order_date', 'ready_date')
+		->select('utilities.id', 'utility_code', 'utility_name', 'exp_date', 'group', 'location', 'last_check', db::raw('TIMESTAMPDIFF(MONTH, now(), exp_date) as exp'), 'capacity', 'type', 'pr_date', 'no_pr')
 		->orderBy('exp_date')
 		->get();
 
@@ -1208,7 +1208,7 @@ class MaintenanceController extends Controller
 		->orderBy("id", "ASC")
 		->get();
 
-		$hasil_check = db::select("SELECT DATE_FORMAT(check_date,'%Y-%m-%d') as dt_cek, utility_code, utility_name, location, DATE_FORMAT(last_check,'%Y-%m-%d') as last_cek FROM utility_checks
+		$hasil_check = db::select("SELECT DATE_FORMAT(check_date,'%Y-%m-%d') as dt_cek, utility_code, utility_name, location, DATE_FORMAT(last_check,'%Y-%m-%d') as last_check FROM utility_checks
 			LEFT JOIN utilities on utilities.id = utility_checks.utility_id
 			WHERE utility_checks.id IN (
 			SELECT MAX(id)
