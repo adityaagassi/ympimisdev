@@ -114,8 +114,7 @@
       <div class="col-sm-10 col-xs-6 col-xs-offset-1">
         <div class="description-block border-right">
           <span class="description-text">
-            <span style="color: #54f775; font-weight: bold; font-size: 20pt" id="datas_check">CHECKED 0 </span>
-            <span style="color: #f55359; font-weight: bold; font-size: 20pt" id="datas"> / 0 MUST CHECKED</span>
+            <span style="color: #f55359; font-weight: bold; font-size: 20pt" id="datas"> 0 ITEM MUST CHECKED</span>
           </span>
         </div>
       </div>
@@ -126,11 +125,13 @@
             <th>APAR NAME</th>
             <th>LOCATION</th>
             <th>LAST CHECK</th>
-            <th>EXP. DATE</th>
+            <th>MUST CHECK BEFORE</th>
           </tr>
         </thead>
         <tbody id='body'>
         </tbody>
+        <tfoot id="hasil">
+        </tfoot>
       </table>
     </div>
   </div>
@@ -179,6 +180,8 @@
     </script>
 
     <script>
+
+      color_arr = ['#fc6042', '#fcb941', '#eee657', '#2cc990', '#2c82c9'];
       $.ajaxSetup({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -209,7 +212,9 @@
         $("#judul").text("APAR Check on "+ dt_param.toLocaleString('default', { month: 'long' }));
 
         $("#body").empty();
+        $('#hasil').empty();
         var body = "";
+        var hasil_body = "";
 
         var data = {
           mon: mon,
@@ -225,25 +230,55 @@
             var nowdate = new Date();
             var entrydate = new Date(value.entry);
 
-            if (value.cek == 1) {
-              bg = "style='background-color:#54f775'";
-              checked++;
-            }
+            // if (value.cek == 1) {
+            //   bg = "style='background-color:#54f775'";
+            //   checked++;
+            // }
 
             body += "<tr>";
-            body += "<td "+bg+">"+value.utility_code+"</td>";
-            body += "<td "+bg+">"+value.utility_name+"</td>";
-            body += "<td "+bg+">"+value.location+"</td>";
-            body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
-            body += "<td "+bg+">"+value.exp_date2+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+value.utility_code+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+value.utility_name+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+value.location+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+(value.last_check || '-')+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+value.cek_before+"</td>";
             body += "</tr>";
           })
 
+          // if (result.check_list.length == 0) {
+            body += "<tr>";
+            body += "<td style='background: transparent'>&nbsp;</td>";
+            body += "<td style='background: transparent'>&nbsp;</td>";
+            body += "<td style='background: transparent'>&nbsp;</td>";
+            body += "<td style='background: transparent'>&nbsp;</td>";
+            body += "<td style='background: transparent'>&nbsp;</td>";
+            body += "</tr>";
+          // }
 
-          $("#datas_check").text("CHECKED "+checked);
-          $("#datas").text(" / "+result.check_list.length+" MUST CHECKED");
+
+          hasil_body = '<tr>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '</tr>';
+
+          $.each(result.hasil_check, function(index, value){
+            bg = "style='background-color: #98f25c'";            
+
+            hasil_body += "<tr>";
+            hasil_body += "<td "+bg+">"+value.utility_code+"</td>";
+            hasil_body += "<td "+bg+">"+value.utility_name+"</td>";
+            hasil_body += "<td "+bg+">"+value.location+"</td>";
+            hasil_body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
+            hasil_body += "<td "+bg+">-</td>";
+            hasil_body += "</tr>";
+          })
+
+          $("#datas").text(result.check_list.length+" ITEM MUST CHECKED");
 
           $("#body").append(body);
+          $("#hasil").append(hasil_body);
         })
       }
 
@@ -318,8 +353,8 @@
         })
 
 
-        $("#datas_check").text("CHECKED "+checked);
-        $("#datas").text(" / "+result.check_list.length+" MUST CHECKED");
+        // $("#datas_check").text("CHECKED "+checked);
+        $("#datas").text(result.check_list.length+" ITEM MUST CHECKED");
 
         $("#body").append(body);
       })

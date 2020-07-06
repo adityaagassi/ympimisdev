@@ -4,15 +4,12 @@ namespace App\Http\Controllers;
 
 use Response;
 use Config;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
-
-use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
-use Mike42\Escpos\Printer;
-use Mike42\Escpos\EscposImage;
 
 use App\Mail\SendEmail;
 use App\EmployeeSync;
@@ -20,9 +17,13 @@ use App\CodeGenerator;
 use App\MaintenanceJobOrder;
 use App\MaintenanceJobOrderLog;
 use App\MaintenanceJobProcess;
+use App\MaintenanceJobReport;
 use App\Utility;
 use App\UtilityCheck;
 use App\UtilityUse;
+use App\UtilityOrder;
+// use Intervention\Image\ImageManagerStatic as Image;
+// use Intervention\Image\Facades\Image;
 
 use App\Http\Controllers\Controller;
 
@@ -52,7 +53,7 @@ class MaintenanceController extends Controller
 	public function indexMaintenanceForm()
 	{
 		$title = 'Maintenance Request List';
-		$title_jp = '??';
+		$title_jp = '作業依頼書リスト';
 
 		$emp = EmployeeSync::where('employee_id', Auth::user()->username)
 		->select('employee_id', 'name', 'position', 'department', 'section')->first();
@@ -77,7 +78,7 @@ class MaintenanceController extends Controller
 	public function indexMaintenanceList()
 	{
 		$title = 'Maintenance Request List';
-		$title_jp = '??';
+		$title_jp = '作業依頼書リスト';
 
 		$statuses = db::table('processes')->where('processes.remark', '=', 'maintenance')
 		->orderBy('process_code', 'asc')
@@ -100,8 +101,8 @@ class MaintenanceController extends Controller
 
 	public function indexSPK()
 	{
-		$title = 'Maintenance SPK';
-		$title_jp = '??';
+		$title = 'SPK Execution';
+		$title_jp = '作業依頼書の実行';
 
 		$employee = EmployeeSync::where('employee_id', '=', Auth::user()->username)
 		->select('employee_id', 'name', 'section', 'group')
@@ -146,10 +147,35 @@ class MaintenanceController extends Controller
 		))->with('page', 'verifying SPK');
 	}
 
+	public function indexMaintenanceMonitoring()
+	{
+		$title = 'Maintenance SPK Monitoring';
+		$title_jp = '';
+
+		$emp = EmployeeSync::where('employee_id', Auth::user()->username)
+		->select('employee_id', 'name', 'position', 'department', 'section')->first();
+
+		$job_order = MaintenanceJobOrder::where('created_by', '=', Auth::user()->username)
+		->select(db::raw('count(if(remark="0", 1, null)) as requested, count(if(remark="1", 1, null)) as verifying, count(if(remark="2", 1, null)) as received, count(if(remark="3", 1, null)) as inProgress, count(if(remark="4", 1, null)) as noPart, count(if(remark="5", 1, null)) as finished, count(if(remark="6", 1, null)) as canceled'))->first();
+
+		return view('maintenance.maintenance_monitoring', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'employee' => $emp,
+			'requested' => $job_order->requested,
+			'verifying' => $job_order->verifying,
+			'received' => $job_order->received,
+			'inProgress' => $job_order->inProgress,
+			'noPart' => $job_order->noPart,
+			'finished' => $job_order->finished,
+			'canceled' => $job_order->canceled,
+		))->with('page', 'Maintenance Monitoring')->with('head2', 'SPK')->with('head', 'Maintenance');	
+	}
+
 	public function indexApar()
 	{
-		$title = 'Utility Monitoring';
-		$title_jp = '??';
+		$title = 'APAR Check Schedule';
+		$title_jp = '消火器・消火栓の点検日程';
 
 		$location = Utility::where('remark', '=', 'APAR')
 		->select('group', db::raw('REPLACE(`group`, " ", "_") as group2'))
@@ -167,7 +193,7 @@ class MaintenanceController extends Controller
 	public function indexAparCheck()
 	{
 		$title = 'Utility Check';
-		$title_jp = '??';
+		$title_jp = 'ユーティリティーチェック';
 
 		$employee = EmployeeSync::where('employee_id', '=', Auth::user()->username)
 		->select('employee_id', 'name', 'section', 'group')
@@ -189,9 +215,9 @@ class MaintenanceController extends Controller
 
 	public function indexAparExpire()
 	{
-		$title = 'Utility Expired List';
+		$title = 'APAR Expired List';
 		$subtitle = 'APAR That will be expire';
-		$title_jp = '??';
+		$title_jp = '消火器・消火栓の使用期限一覧';
 
 		$check = db::table("utility_check_lists")
 		->select('check_point', 'remark')
@@ -205,10 +231,26 @@ class MaintenanceController extends Controller
 		))->with('page', 'APAR expired')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
+	public function indexAparOrderList()
+	{
+		$title = 'APAR Order List';
+		$title_jp = '??';
+
+		$check = db::table("utility_check_lists")
+		->select('check_point', 'remark')
+		->get();
+
+		return view('maintenance.apar.aparOrderList', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'check_list' => $check
+		))->with('page', 'APAR order')->with('head2', 'Utility')->with('head', 'Maintenance');
+	}
+
 	public function indexAparTool()
 	{
 		$title = 'Fire Extinguiser List';
-		$title_jp = '??';
+		$title_jp = 'ユーティリティー';
 
 		$locations = Utility::distinct()->select('group','location')->get();
 
@@ -252,7 +294,7 @@ class MaintenanceController extends Controller
 
 	public function indexAparNG()
 	{
-		$title = 'Not Good Utility Check';
+		$title = 'Not Good APAR Check';
 		$title_jp = '??';
 
 		$check = db::table("utility_check_lists")
@@ -292,10 +334,11 @@ class MaintenanceController extends Controller
 	public function fetchSPK()
 	{
 		$spk = MaintenanceJobProcess::leftJoin("maintenance_job_orders", "maintenance_job_orders.order_no", "=", "maintenance_job_processes.order_no")
+		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'maintenance_job_orders.created_by')
 		->where("operator_id", "=", Auth::user()->username)
 		->where("maintenance_job_orders.remark", "=", 3)
 		->where("maintenance_job_processes.remark", "=", "persiapan")
-		->select("maintenance_job_orders.order_no", "section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"))
+		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"), 'name')
 		->get();
 
 		$response = array(
@@ -404,6 +447,37 @@ class MaintenanceController extends Controller
 		}
 	}
 
+	public function fetchSPKProgress(Request $request)
+	{
+		$get_data = db::select('
+			SELECT DISTINCT maintenance_job_orders.order_no, priority, type, DATE_FORMAT(maintenance_job_orders.created_at,"%Y-%m-%d") as request_date, `name` as requester, date(listed.created_at) as listed, date(inprogress.created_at) as inprogress, date(error.created_at) as error, pic FROM `maintenance_job_orders` 
+			left join employee_syncs on maintenance_job_orders.created_by = employee_syncs.employee_id
+			left join (
+			select order_no, GROUP_CONCAT(`name`) as pic from maintenance_job_processes 
+			left join employee_syncs on employee_syncs.employee_id = maintenance_job_processes.operator_id
+			group by order_no
+			) as prcs on prcs.order_no = maintenance_job_orders.order_no
+			left join (select * from maintenance_job_order_logs where remark = 3 ) as listed on maintenance_job_orders.order_no = listed.order_no
+			left join (select * from maintenance_job_order_logs where remark = 4 ) as inprogress on maintenance_job_orders.order_no = inprogress.order_no
+			left join (select * from maintenance_job_order_logs where remark = 5 ) as error on maintenance_job_orders.order_no = error.order_no
+			where maintenance_job_orders.remark in (3,4,5)
+			');
+
+		$data_progress = db::select('
+			SELECT maintenance_job_processes.order_no, start_plan, finish_plan, start_actual, finish_actual, TIMESTAMPDIFF(SECOND, start_plan, finish_plan) as plan_time, TIMESTAMPDIFF(SECOND, start_plan, IF(finish_actual,finish_actual,now())) as act_time from maintenance_job_orders 
+			left join maintenance_job_processes on maintenance_job_processes.order_no = maintenance_job_processes.order_no
+			where maintenance_job_orders.remark in (4,5) and start_actual is not null
+			order by maintenance_job_processes.order_no asc , start_actual asc
+			');
+
+		$response = array(
+			'status' => true,
+			'datas' => $get_data,
+			'progress' => $data_progress
+		);
+		return Response::json($response);
+	}
+
 	public function fetchMaintenanceList(Request $request)
 	{
 		DB::connection()->enableQueryLog();
@@ -497,20 +571,26 @@ class MaintenanceController extends Controller
 		$datas = [];
 
 		foreach ($member as $mbr) {
-			array_push($datas, [
-				'order_no' => $order_no,
-				'operator_id' => $mbr['operator'],
-				'start_plan' => $mbr['start_date']." ".$mbr['start_time'],
-				'finish_plan' => $mbr['finish_date']." ".$mbr['finish_time'],
-				'remark' => 'persiapan',
-				'created_by' => Auth::user()->username
-			]);
+			$jp = new MaintenanceJobProcess;
+			$jp->order_no = $order_no;
+			$jp->operator_id = $mbr['operator'];
+			$jp->start_plan = $mbr['start_date']." ".$mbr['start_time'];
+			$jp->finish_plan = $mbr['finish_date']." ".$mbr['finish_time'];
+			$jp->remark = 'persiapan';
+			$jp->created_by = Auth::user()->username;
+			$jp->save();
 		};
 
-		MaintenanceJobProcess::insert($datas);
+		// MaintenanceJobProcess::insert($datas);
 
 		MaintenanceJobOrder::where('order_no', '=', $order_no)
 		->update(['remark' => 3]);
+
+		$log = new MaintenanceJobOrderLog;
+		$log->order_no = $order_no;
+		$log->remark = 3;
+		$log->created_by = Auth::user()->username;
+		$log->save();
 
 		$response = array(
 			'status' => true,
@@ -638,22 +718,81 @@ class MaintenanceController extends Controller
 
 	public function startSPK(Request $request)
 	{
-		MaintenanceJobProcess::where('order_no', $request->get('order_no'))
-		->where('operator_id', '=', Auth::user()->username)
-		->update(['start_actual' => date('Y-m-d H:i:s')]);
+		$spk_log = new MaintenanceJobOrderLog();
+		$spk_log->order_no = $request->get('order_no');
+		$spk_log->remark = 4;
+		$spk_log->created_by = Auth::user()->username;
+
+		$spk_log->save();
 	}
 
 	public function reportingSPK(Request $request)
 	{
-		$data = Input::all();
-		$png_url = "product-".time().".png";
-		$path = public_path().'img/designs/' . $png_url;
+		$data = $request->get('foto');
+		define('UPLOAD_DIR', 'images/');
+		$upload = [];
 
-		Image::make(file_get_contents($data->base64_image))->save($path);     
-		$response = array(
-			'status' => 'success',
-		);
-		return Response::json( $response  );
+		$operator_id = Auth::user()->username;
+
+		try {
+			foreach ($data as $key) {
+				$no = 1;
+				if ($key != "") {
+					$image_parts = explode(";base64,", $key);
+					$image_type_aux = explode("image/", $image_parts[0]);
+					$image_type = $image_type_aux[1];
+					$image_base64 = base64_decode($image_parts[1]);
+
+					$file = public_path().'\tes\\'.$request->get('order_no').$operator_id.$no.'.png';
+					$file2 = $request->get('order_no').$operator_id.$no.'.png';
+
+					file_put_contents($file, $image_base64);
+
+					array_push($upload, $file2);
+					$no++;
+				}
+			}
+
+			$rpt = new MaintenanceJobReport;
+			$rpt->order_no = $request->get('order_no');
+			$rpt->operator_id = $operator_id;
+			$rpt->cause = $request->get('penyebab');
+			$rpt->handling = $request->get('penanganan');
+			$rpt->spare_part = '';
+			$rpt->photo = implode(", ",$upload);;
+			$rpt->remark = 'OK';
+			$rpt->created_by = $operator_id;
+
+			$rpt->save();
+
+			$spk_log = new MaintenanceJobOrderLog();
+			$spk_log->order_no = $request->get('order_no');
+			$spk_log->remark = 6;
+			$spk_log->created_by = Auth::user()->username;
+
+			$spk_log->save();
+
+			MaintenanceJobOrder::where('order_no', '=', $request->get('order_no'))
+			->update(['remark' => 6]);
+
+			MaintenanceJobProcess::where('order_no', '=', $request->get('order_no'))
+			->where('operator_id', '=', Auth::user()->username)
+			->update(['finish_actual' => date('Y-m-d H:i:s')]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'OK'
+			);
+			return Response::json( $response  );
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json( $response  );
+		}
+
+		
 	}
 	// --------------------------  APAR ----------------------
 
@@ -792,12 +931,12 @@ class MaintenanceController extends Controller
 		}
 	}
 
-	public function fetchAparExpire()
+	public function fetchAparExpire(Request $request)
 	{
 		$exp = Utility::where('remark', '=', 'APAR')
-		->where(db::raw('(MONTH(exp_date) - MONTH(now()))'), '<=', '2')
-		->whereRaw('YEAR(exp_date) = YEAR(now())')
-		->select('id', 'utility_code', 'utility_name', 'exp_date', 'group', 'location', 'last_check', db::raw('(MONTH(exp_date) - MONTH(now())) as exp'), 'capacity')
+		->leftJoin('utility_orders', 'utilities.id', '=', 'utility_orders.utility_id')
+		->whereRaw('TIMESTAMPDIFF(MONTH, now(), exp_date) <= '.$request->get('mon'))
+		->select('utilities.id', 'utility_code', 'utility_name', 'exp_date', 'group', 'location', 'last_check', db::raw('TIMESTAMPDIFF(MONTH, now(), exp_date) as exp'), 'capacity', 'type', 'order_status', 'order_date', 'ready_date')
 		->orderBy('exp_date')
 		->get();
 
@@ -849,24 +988,61 @@ class MaintenanceController extends Controller
 			$exp = null;
 		}
 
-		$utl = new Utility;
-		$utl->utility_code = $request->get('extinguisher_id');
-		$utl->utility_name = $request->get('extinguisher_name');
-		$utl->type = $type;
-		$utl->group = $request->get('extinguisher_location2');
-		$utl->capacity = $request->get('extinguisher_capacity');
-		$utl->location = $request->get('extinguisher_location1');
-		$utl->remark = $request->get('extinguisher_category');
-		$utl->exp_date = $exp;
-		$utl->last_check = date('Y-m-d H:i:s');
-		$utl->created_by = Auth::user()->username;
+		try {
+			$utl = new Utility;
+			$utl->utility_code = $request->get('extinguisher_id');
+			$utl->utility_name = $request->get('extinguisher_name');
+			$utl->type = $type;
+			$utl->group = $request->get('extinguisher_location2');
+			$utl->capacity = $request->get('extinguisher_capacity');
+			$utl->location = $request->get('extinguisher_location1');
+			$utl->remark = $request->get('extinguisher_category');
+			$utl->exp_date = $exp;
+			$utl->last_check = date('Y-m-d H:i:s');
+			$utl->created_by = Auth::user()->username;
 
-		$utl->save();
+			$utl->save();
 
-		$response = array(
-			'status' => true
-		);
-		return Response::json($response);
+			$response = array(
+				'status' => true,
+				'message' => 'OK'
+			);
+			return Response::json($response);
+		} catch (QueryException $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateTool(Request $request)
+	{
+		try {
+			Utility::where('utility_code', '=', $request->get('edit_code'))
+			->where('remark', '=', 'APAR')
+			->update([
+				'utility_name' => $request->get('edit_name'),
+				'type' => $request->get('edit_type'),
+				'location' => $request->get('edit_location1'),
+				'group' => $request->get('edit_location2'),
+				'capacity' => $request->get('edit_capacity'),
+				'exp_date' => $request->get('edit_exp')
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'OK'
+			);
+			return Response::json($response);
+		} catch (QueryException $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function replaceTool(Request $request)
@@ -913,6 +1089,8 @@ class MaintenanceController extends Controller
 		$utl_check->save();
 
 		$hasil_check = UtilityCheck::select(db::raw('DATE_FORMAT(check_date,"%d-%m-%Y") as cek_date'))->where('utility_id', $utl->id)->orderBy('check_date')->limit(2)->get();
+
+		UtilityOrder::where('utility_id', $utl->id)->delete();
 
 		$response = array(
 			'status' => true,
@@ -1013,22 +1191,37 @@ class MaintenanceController extends Controller
 
 	public function fetch_apar_monitoring(Request $request)
 	{
+
 		if ($request->get('mon') % 2 === 0) {
 			$loc = "Factory II";
 		} else if ($request->get('mon') % 2 === 1){
 			$loc = "Factory I";
 		}
 
+		DB::connection()->enableQueryLog();
+
 		$check = Utility::where("location", "=", $loc)
 		->where("remark", "=", "APAR")
-		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', db::raw('DATE_FORMAT(last_check, "%d %M %Y") last_check'), db::raw('DATE_FORMAT(entry_date, "%Y-%m-%d") entry'), db::raw('IF(MONTH(last_check) = MONTH("'.$request->get('dt').'"), 1, 0) as cek'))
-		->orderBy("cek", "ASC")
+		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', 'remark', db::raw('DATE_FORMAT(last_check, "%d %M %Y") last_check'), db::raw('DATE_FORMAT(entry_date, "%Y-%m-%d") entry'), db::raw('DATE_FORMAT(DATE_ADD(last_check, INTERVAL 2 MONTH), "%d %M %Y") as cek_before'), db::raw("FLOOR((DayOfMonth(DATE_ADD(DATE(last_check), INTERVAL 2 MONTH)-1)/7)+1) as wek"))
+		->whereRaw('DATE_FORMAT(last_check,"%Y-%m") <> DATE_FORMAT("'.$request->get('dt').'", "%Y-%m")')
+		->orderBy("wek", "ASC")
 		->orderBy("id", "ASC")
 		->get();
 
+		$hasil_check = db::select("SELECT DATE_FORMAT(check_date,'%Y-%m-%d') as dt_cek, utility_code, utility_name, location, DATE_FORMAT(last_check,'%Y-%m-%d') as last_cek FROM utility_checks
+			LEFT JOIN utilities on utilities.id = utility_checks.utility_id
+			WHERE utility_checks.id IN (
+			SELECT MAX(id)
+			FROM utility_checks
+			where DATE_FORMAT(check_date,'%Y-%m') = DATE_FORMAT('".$request->get('dt')."', '%Y-%m')
+			GROUP BY utility_id
+		) AND utilities.remark = 'APAR'");
+
 		$response = array(
 			'status' => true,
-			'check_list' => $check			
+			'check_list' => $check,
+			'hasil_check' => $hasil_check,
+			'query' => DB::getQueryLog()
 		);
 		return Response::json($response);
 	}
@@ -1262,12 +1455,20 @@ class MaintenanceController extends Controller
 
 	public function check_apar_use(request $request)
 	{
+		
 		$use = new UtilityUse;
 
 		$use->utility_id = $request->get('utility_id');
 		$use->created_by = Auth::user()->username;
 
 		$use->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Berhasil'
+		);
+		return Response::json($response);
+
 	}
 
 	public function fetch_apar_use(Request $request)
@@ -1291,5 +1492,36 @@ class MaintenanceController extends Controller
 			'status' => true
 		);
 		return Response::json($response);
+	}
+
+	public function apar_order(Request $request)
+	{
+		try {
+
+			if ($request->get('param') == 'order') {
+				$order = new UtilityOrder;
+				$order->utility_id = $request->get('utility_id');
+				$order->order_status = 'Ordering';
+				$order->order_date = date('Y-m-d');
+				$order->created_by = Auth::user()->username;
+				$order->save();
+			} else {
+				UtilityOrder::where('utility_id', $request->get('utility_id'))
+				->where('order_date', $request->get('order_date'))
+				->update(['ready_date' => date('Y-m-d'), 'order_status' => 'Ready']);
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Berhasil'
+			);
+			return Response::json($response);
+		} catch (QueryException $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
 	}
 }

@@ -64,19 +64,30 @@
         <span style="font-size: 40px">Loading, mohon tunggu..<i class="fa fa-spin fa-refresh"></i></span>
       </p>
     </div>
-    <div class="col-xs-12"><h3 style="color: white; text-align: center">Daftar APAR yang akan Kadaluarsa</h3></div>
-    <div class="col-xs-6" style="padding-top: 10px;">
+    <div class="col-xs-12">
+      <h3 style="color: white; text-align: center">Daftar APAR Yang Akan Kadaluarsa <br>(使用期限が切れた消火器・消火栓の一覧)</h3><br>
+    </div>
+    <div class="col-xs-6">
+      <button class="btn btn-default btn-lg pull-right" style="border: 2px solid #7e5686; color: #7e5686; font-weight: bold;" id='f1' onclick="page(this.id)">Factory I</button>
+    </div>
+    <div class="col-xs-6">
+      <button class="btn btn-default btn-lg" style="border: 2px solid #7e5686; color: #7e5686; font-weight: bold;" id='f2' onclick="page(this.id)">Factory II</button>
+    </div>
+    <div class="col-xs-12" style="padding-top: 10px;" id="fact1">
       <table class="table table-bordered" width="100%">
         <thead>
           <tr>
-            <th colspan="5">Factory I</th>
+            <th colspan="8" style="font-size: 20pt">Factory I</th>
           </tr>
           <tr>
             <th>APAR Code</th>
             <th>APAR Name</th>
+            <th>Type</th>
+            <th>Capacity</th>
             <th>Location</th>
             <th>Exp. Date</th>
             <th>Exp. Remaining</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody id="exp_f1">
@@ -84,18 +95,21 @@
       </table>
     </div>
 
-    <div class="col-xs-6" style="padding-top: 10px;">
+    <div class="col-xs-12" style="padding-top: 10px; display: none" id="fact2">
       <table class="table table-bordered" width="100%">
         <thead>
           <tr>
-            <th colspan="5">Factory II</th>
+            <th colspan="8" style="font-size: 20pt">Factory II</th>
           </tr>
           <tr>
             <th>APAR Code</th>
             <th>APAR Name</th>
+            <th>Type</th>
+            <th>Capacity</th>
             <th>Location</th>
             <th>Exp. Date</th>
             <th>Exp. Remaining</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody id="exp_f2">
@@ -156,7 +170,7 @@
                     <label class="col-xs-2" style="margin-top: 1%;">Capacity</label>
                     <div class="col-xs-5">
                       <div class="input-group">
-                        <input type="number" class="form-control" id="capacity" placeholder="Kapasitas Pemadam">
+                        <input type="text" class="form-control" id="capacity" readonly>
                         <span class="input-group-addon bg-purple">Kg</span>
                       </div>
                     </div>
@@ -218,29 +232,51 @@
       $("#exp_f1").empty();
       $("#exp_f2").empty();
 
-      $.get('{{ url("fetch/maintenance/apar/expire") }}', function(result, status, xhr) {
+      var data = {
+        mon: '2'
+      }
+
+      $.get('{{ url("fetch/maintenance/apar/expire") }}', data, function(result, status, xhr) {
         $.each(result.expired_list, function(index, value){
 
-          color1 = 'style="background-color: #fffcb7"';
+          if (value.exp < 0) {
+            color = '#fa6161';
+          } else if(value.exp == 0) {
+            color = '#f79b5e';
+          } else if(value.exp == 1) {
+            color = '#fcdc65';
+          } else {
+            color = '#fffdd1';
+          }
 
-          color2 = 'style="background-color: #ffd8b7"';
+          // if (value.order_status == "Ready" && "{{Auth::user()->username}}".toUpperCase() == "PI2002021"){
 
+          //   klik = "onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\", \""+value.exp_date+"\")'";
+          // } else {
+            klik = "";
+          // }
 
           if (value.location == "Factory I") {
-            fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\", \""+value.exp_date+"\")'>";
+            fi += "<tr style='background-color: "+color+"' "+klik+">";
             fi += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
             fi += "<td>"+value.utility_name+"</td>";
+            fi += "<td>"+value.type+"</td>";
+            fi += "<td>"+value.capacity+" Kg</td>";
             fi += "<td>"+value.group+"</td>";
             fi += "<td>"+value.exp_date+"</td>";
             fi += "<td>"+value.exp+" Month Left</td>";
+            fi += "<td>"+(value.order_status || '-')+"</td>";
             fi += "</tr>";
           } else {
-            fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\", \""+value.exp_date+"\")'>";
+            fii += "<tr style='background-color: "+color+"' "+klik+">";
             fii += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
             fii += "<td>"+value.utility_name+"</td>";
+            fii += "<td>"+value.type+"</td>";
+            fii += "<td>"+value.capacity+" Kg</td>";
             fii += "<td>"+value.group+"</td>";
             fii += "<td>"+value.exp_date+"</td>";
             fii += "<td>"+value.exp+" Month Left</td>";
+            fii += "<td>"+(value.order_status || '-')+"</td>";
             fii += "</tr>";
           }
         })
@@ -395,6 +431,16 @@
         openErrorGritter( "Error", "" );
         $("#loading").hide();
       })
+    }
+
+    function page(id) {
+      if (id == "f1") {
+        $("#fact1").show();
+        $("#fact2").hide();
+      } else {
+        $("#fact2").show();
+        $("#fact1").hide();
+      }
     }
 
     var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
