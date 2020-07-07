@@ -1050,6 +1050,7 @@
 	function update_temp(){
 		var notes =  $("#notes").val();
 		var push_block_code = '{{ $remark }}';
+		var check_type = $("#check_type").text();
 
 		var array_middle = [];
 		var array_head_foot = [];
@@ -1106,6 +1107,7 @@
 			push_block_code : push_block_code,
 			middle : array_middle,
 			head_foot : array_head_foot,
+			check_type : check_type,
 			torque_1 : torque_1,
 			torque_2 : torque_2,
 			torque_3 : torque_3,

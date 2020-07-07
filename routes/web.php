@@ -849,6 +849,15 @@ Route::get('fetch/return_logs', 'TransactionController@fetchReturnLogs');
 
 Route::post('cancel/return', 'TransactionController@cancelReturn');
 
+//GA CONTROL
+
+
+Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
+
+});
+Route::get('index/ga_control/driver', 'GeneralAffairController@indexDriver');
+Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
+Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 
 
 Route::group(['nav' => 'S1', 'middleware' => 'permission'], function(){
@@ -2482,7 +2491,7 @@ Route::get('index/push_block_recorder/get_parameter','RecorderProcessController@
 Route::post('index/push_block_recorder/update_parameter/{id}', 'RecorderProcessController@update_parameter');
 Route::get('index/push_block_recorder/delete_parameter/{id}', 'RecorderProcessController@delete_parameter');
 
-//RECORDER TORQUE CHECK
+//RECORDER TORQUE CHECK FSA
 Route::get('index/recorder_process_torque/{remark}', 'RecorderProcessController@index_torque');
 Route::get('index/fetchResumeTorque', 'RecorderProcessController@fetchResumeTorque');
 Route::post('index/push_block_recorder/create_torque', 'RecorderProcessController@create_torque');
@@ -2491,6 +2500,11 @@ Route::post('index/push_block_recorder/create_temp_torque', 'RecorderProcessCont
 Route::post('index/push_block_recorder/update_temp_torque', 'RecorderProcessController@update_temp_torque');
 Route::get('index/recorder/report_torque_check/{remark}', 'RecorderProcessController@report_torque_check');
 Route::post('index/recorder/filter_report_torque_check/{remark}', 'RecorderProcessController@filter_report_torque_check');
+
+//RECORDER TORQUE CHECK AI
+Route::get('index/recorder_process_torque_ai/{remark}', 'RecorderProcessController@index_torque_ai');
+Route::get('index/fetchResumeTorqueAi', 'RecorderProcessController@fetchResumeTorqueAi');
+Route::post('index/push_block_recorder/create_torque_ai', 'RecorderProcessController@create_torque_ai');
 
 //RECORDER PUSH PULL CHECK
 Route::get('index/recorder_push_pull_check', 'RecorderProcessController@index_push_pull');
@@ -2823,6 +2837,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
 
 	Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKProgress');
+	Route::get('fetch/maintenance/spk/operator', 'MaintenanceController@fetchSPKOperator');
 
 	Route::post('post/maintenance/member', 'MaintenanceController@postMemberSPK');
 

@@ -22,7 +22,7 @@
 			<button type="button" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;" data-toggle="modal" data-target="#push-pull-check-modal">
 				Recorder Push Block Check
 			</button>
-			<a href="{{ url("index/recorder_process_torque","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Torque Check</a>
+			<a href="{{ url("index/recorder_process_torque_ai","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Torque Check</a>
 			<!-- <a href="{{ url("index/recorder_push_pull_check") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Assy Check</a> -->
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
@@ -34,6 +34,7 @@
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("/index/recorder/report_push_block","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Push Block Check</a>
 			<a href="{{ url("/index/recorder/resume_push_block","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Push Block Check</a>
+			<a href="{{ url("index/recorder/report_torque_check","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Torque Check</a>
 			<!-- <a href="{{ url("/index/recorder/resume_assy_rc") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Assembly Recorder</a> -->
 		</div>
 	</div>

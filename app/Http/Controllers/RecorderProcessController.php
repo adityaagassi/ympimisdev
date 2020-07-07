@@ -2173,12 +2173,13 @@ class RecorderProcessController extends Controller
               $torque_3 = $request->get('torque_3');
               $average = $request->get('average');
               $middle = $request->get('middle');
+              $check_type = $request->get('check_type');
               $head_foot = $request->get('head_foot');
               $push_block_code = $request->get('push_block_code');
               $judgement = $request->get('judgement');
               $notes = $request->get('notes');
               for($i = 0; $i<count($middle);$i++){
-                $temptemp = PushBlockTorqueTemp::where('middle',$middle[$i])->where('head_foot',$head_foot[$i])->where('push_block_code',$push_block_code)->get();
+                $temptemp = PushBlockTorqueTemp::where('middle',$middle[$i])->where('head_foot',$head_foot[$i])->where('push_block_code',$push_block_code)->where('check_type',$check_type)->get();
                 foreach ($temptemp as $key) {
                   $update = PushBlockTorqueTemp::find($key->id);
                   $update->torque1 = $torque_1[$i];
@@ -2288,6 +2289,78 @@ class RecorderProcessController extends Controller
                       'remark' => $remark,);
       return view('recorder.report.report_torque_check', $data
         )->with('page', 'Report Torque Check')->with('remark', $remark);
+    }
+
+    public function index_torque_ai($remark){
+      $name = Auth::user()->name;
+      return view('recorder.process.index_torque_ai')
+      ->with('page', 'Process Assy Recorder')
+      ->with('head', 'Recorder Torque Check')
+      ->with('title', 'Recorder Torque Check')
+      ->with('title_jp', '???')
+      ->with('name', $name)
+      ->with('product_type', $this->product_type)
+      ->with('mesin', $this->mesin)
+      ->with('mesin2', $this->mesin)
+      ->with('mesin3', $this->mesin)
+      ->with('batas_bawah_hm', '15')
+      ->with('batas_atas_hm', '73')
+      ->with('batas_bawah_mf', '15')
+      ->with('batas_atas_mf', '78')
+      ->with('remark', $remark);
+    }
+
+    function fetchResumeTorqueAi(Request $request)
+    {
+          try{
+            $middle_id = $request->get("middle_id");
+
+            $detail_middle = PushBlockMaster::find($middle_id);
+
+            // var_dump($detail_middle->cavity_1);
+            $cav_middle = array(
+                      '1' => $detail_middle->cavity_1,
+                      '2' => $detail_middle->cavity_2,
+                      '3' => $detail_middle->cavity_3,
+                      '4' => $detail_middle->cavity_4 );
+
+            $head_foot_id = $request->get("head_foot_id");
+
+            $detail_head_foot = PushBlockMaster::find($head_foot_id);
+
+            if ($detail_head_foot->cavity_5 == null) {
+              $cav_head_foot = array(
+                      '1' => $detail_head_foot->cavity_1,
+                      '2' => $detail_head_foot->cavity_2,
+                      '3' => $detail_head_foot->cavity_3,
+                      '4' => $detail_head_foot->cavity_4 );
+            }else{
+              $cav_head_foot = array(
+                      '1' => $detail_head_foot->cavity_1,
+                      '2' => $detail_head_foot->cavity_2,
+                      '3' => $detail_head_foot->cavity_3,
+                      '4' => $detail_head_foot->cavity_4,
+                      '5' => $detail_head_foot->cavity_5,
+                      '6' => $detail_head_foot->cavity_6, );
+            }
+
+            $response = array(
+              'status' => true,
+              'detail_middle' => $detail_middle,
+              'detail_head_foot' => $detail_head_foot,
+              'cav_middle' => $cav_middle,
+              'cav_head_foot' => $cav_head_foot,
+            );
+            return Response::json($response);
+
+          }
+          catch (Exception $e){
+             $response = array(
+              'status' => false,
+              'datas' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
     }
 }
   
