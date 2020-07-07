@@ -152,7 +152,7 @@
 										Check Date
 									</td>
 									<td class="label-success" id="check_date" style="font-weight: bold; text-align: center;font-size: 15px;">
-										{{ date('Y-m-d h:i:s') }}
+										{{ date('Y-m-d H:i:s') }}
 									</td>
 								</tr>
 								<tr>
