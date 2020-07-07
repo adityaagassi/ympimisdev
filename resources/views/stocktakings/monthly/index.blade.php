@@ -275,7 +275,7 @@
 
 		filledList();
 		auditedList();
-		// variance();
+		variance();
 
 		setInterval(filledList, 60000);
 		setInterval(auditedList, 60000);
@@ -381,7 +381,7 @@
 
 				filledList();
 				auditedList();
-				// variance();
+				variance();
 
 				$('#month_text').text(bulanText(month));
 				$('#modalMonth').modal('hide');
