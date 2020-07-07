@@ -1022,7 +1022,7 @@ Route::group(['nav' => 'M27', 'middleware' => 'permission'], function(){
 
 });
 Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
-Route::get('index/welding/jig/data', 'WeldingProcessController@indexWeldingJigData');
+Route::get('index/welding/jig_data', 'WeldingProcessController@indexWeldingJigData');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 Route::get('scan/welding/jig', 'WeldingProcessController@scanWeldingJig');
 Route::get('fetch/welding/schedule_jig', 'WeldingProcessController@scanWeldingJig');
@@ -1067,7 +1067,6 @@ Route::get('purchase_requisition/get_nomor_pr', 'AccountingController@get_nomor_
 
 //Purchase Requisition
 Route::get('purchase_requisition', 'AccountingController@purchase_requisition');
-Route::get('purchase_requisition2', 'AccountingController@purchase_requisition');
 Route::get('fetch/purchase_requisition', 'AccountingController@fetch_purchase_requisition');
 Route::post('create/purchase_requisition', 'AccountingController@create_purchase_requisition');
 Route::get('fetch/purchase_requisition/itemlist', 'AccountingController@fetchItemList');
@@ -1105,16 +1104,19 @@ Route::get('purchase_order/report/{id}', 'AccountingController@report_purchase_o
 
 Route::get('purchase_order/sendemail', 'AccountingController@po_send_email');
 
-
 Route::get('edit/purchase_order', 'AccountingController@edit_purchase_order');
 Route::post('update/purchase_order', 'AccountingController@update_purchase_order');
 Route::post('delete/purchase_order_item', 'AccountingController@delete_item_po');
 
-
 Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
 Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
 Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
+Route::get('export/purchase_order/list', 'AccountingController@exportPO');
 
+
+//New Approval Purchase Order
+Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
+Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
 
 //investment
 Route::get('investment', 'AccountingController@investment');
@@ -2487,6 +2489,8 @@ Route::post('index/push_block_recorder/create_torque', 'RecorderProcessControlle
 Route::get('index/push_block_recorder/get_temp_torque', 'RecorderProcessController@get_temp_torque');
 Route::post('index/push_block_recorder/create_temp_torque', 'RecorderProcessController@create_temp_torque');
 Route::post('index/push_block_recorder/update_temp_torque', 'RecorderProcessController@update_temp_torque');
+Route::get('index/recorder/report_torque_check/{remark}', 'RecorderProcessController@report_torque_check');
+Route::post('index/recorder/filter_report_torque_check/{remark}', 'RecorderProcessController@filter_report_torque_check');
 
 //RECORDER PUSH PULL CHECK
 Route::get('index/recorder_push_pull_check', 'RecorderProcessController@index_push_pull');
@@ -2811,9 +2815,14 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/list_spk/user', 'MaintenanceController@fetchMaintenance');
 	Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
 
+	Route::get('index/maintenance/spk/monitoring', 'MaintenanceController@indexMaintenanceMonitoring');
+	Route::get('index/maintenance/spk/operator', 'MaintenanceController@indexOperatorMonitoring');
+
 	Route::get('index/maintenance/list_spk', 'MaintenanceController@indexMaintenanceList');
 	Route::get('fetch/maintenance/list_spk', 'MaintenanceController@fetchMaintenanceList');
 	Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
+
+	Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKProgress');
 
 	Route::post('post/maintenance/member', 'MaintenanceController@postMemberSPK');
 
@@ -2824,6 +2833,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 
 	Route::get('work/maintenance/spk', 'MaintenanceController@startSPK');
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
+	Route::post('report/maintenance/spk/nopart', 'MaintenanceController@reportingSPKNoPart');
 	
 	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');

@@ -72,6 +72,8 @@
 			<div class="box box-primary">
 				<div class="box-body">
 					<div class="col-xs-12">
+						<div class="col-xs-3">
+						</div>
 						<div class="col-xs-6">
 							<div class="box-header">
 								<h3 class="box-title">Filter</h3>
@@ -81,7 +83,7 @@
 								<div class="col-md-12">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="">Date From</label>
+											<label for="">Check Date From</label>
 											<div class="input-group date">
 												<div class="input-group-addon bg-white">
 													<i class="fa fa-calendar"></i>
@@ -92,13 +94,37 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="">Date To</label>
+											<label for="">Check Date To</label>
 											<div class="input-group date">
 												<div class="input-group-addon bg-white">
 													<i class="fa fa-calendar"></i>
 												</div>
 												<input type="text" class="form-control datepicker" id="date_to" name="date_to" placeholder="Select Date To" autocomplete="off">
 											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="">Mesin Head</label>
+											<select class="form-control select2" id='mesin_head' name="mesin_head" data-placeholder="Select Mesin Head" style="width: 100%;">
+												<option value=""></option>
+												@foreach($mesin3 as $mesin3)
+							                		<option value="{{$mesin3}}">{{$mesin3}}</option>
+							                	@endforeach
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="">Mesin Block</label>
+											<select class="form-control select2" name="mesin_block" id='mesin_block'data-placeholder="Select Mesin Block" style="width: 100%;">
+												<option value=""></option>
+												@foreach($mesin4 as $mesin4)
+							                		<option value="{{$mesin4}}">{{$mesin4}}</option>
+							                	@endforeach
+											</select>
 										</div>
 									</div>
 								</div>
@@ -116,6 +142,8 @@
 									</div>
 								</div>
 							</form>
+						</div>
+						<div class="col-xs-3">
 						</div>
 					</div>
 					<div class="row">
@@ -303,6 +331,7 @@
 				}
 			}
 		});
+		$('body').toggleClass("sidebar-collapse");
 	});
 	$('.datepicker').datepicker({
 		autoclose: true,

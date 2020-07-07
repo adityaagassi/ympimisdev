@@ -39,7 +39,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{$page}} - {{ $remark }} <small><span class="text-purple">プッシュブロック検査のまとめ ～ @if($remark == 'After Injection')
+		{{$page}} - {{ $remark }} <small><span class="text-purple">?? ～ @if($remark == 'After Injection')
 			成形上がり
 		@else
 			初物検査
@@ -78,7 +78,7 @@
 							<div class="box-header">
 								<h3 class="box-title">Filter</h3>
 							</div>
-							<form role="form" method="post" action="{{url('index/recorder/filter_report_push_block/'.$remark)}}">
+							<form role="form" method="post" action="{{url('index/recorder/filter_report_torque_check/'.$remark)}}">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 								<div class="col-md-12">
 									<div class="col-md-6">
@@ -107,8 +107,8 @@
 								<div class="col-md-12">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="">Mesin Head</label>
-											<select class="form-control select2" id='mesin_head' name="mesin_head" data-placeholder="Select Mesin Head" style="width: 100%;">
+											<label for="">Mesin Middle</label>
+											<select class="form-control select2" id='mesin_middle' name="mesin_middle" data-placeholder="Select Mesin Middle" style="width: 100%;">
 												<option value=""></option>
 												@foreach($mesin as $mesin)
 							                		<option value="{{$mesin}}">{{$mesin}}</option>
@@ -118,8 +118,8 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="">Mesin Block</label>
-											<select class="form-control select2" name="mesin_block" id='mesin_block'data-placeholder="Select Mesin Block" style="width: 100%;">
+											<label for="">Mesin Head / Foot</label>
+											<select class="form-control select2" name="mesin_head_foot" id='mesin_head_foot'data-placeholder="Select Mesin Head / Foot" style="width: 100%;">
 												<option value=""></option>
 												@foreach($mesin2 as $mesin2)
 							                		<option value="{{$mesin2}}">{{$mesin2}}</option>
@@ -129,14 +129,24 @@
 									</div>
 								</div>
 								<div class="col-md-12">
-									<div class="col-md-12">
+									<div class="col-md-6">
 										<div class="form-group">
 											<label for="">Judgement</label>
 											<select class="form-control select2" multiple="multiple" id='judgementSelect' onchange="changeJudgement()" data-placeholder="Select Judgement" style="width: 100%;">
 												<option value="OK">OK</option>
 												<option value="NG">NG</option>
 											</select>
-											<input type="text" name="judgement" id="judgement" hidden>
+											<input type="text" name="judgement" id="judgement" hidden>			
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label for="">Check Type</label>
+											<select class="form-control select2" id='check_type' name='check_type' data-placeholder="Select Check Type" style="width: 100%;">
+												<option value=""></option>
+												<option value="HJ-MJ">HJ-MJ</option>
+												<option value="MJ-FJ">MJ-FJ</option>
+											</select>
 										</div>
 									</div>
 								</div>
@@ -148,7 +158,7 @@
 											@else
 											<a href="{{ url('index/injeksi') }}" class="btn btn-warning">Back</a>
 											@endif
-											<a href="{{ url('index/recorder/report_push_block/'.$remark) }}" class="btn btn-danger">Clear</a>
+											<a href="{{ url('index/recorder/report_torque_check/'.$remark) }}" class="btn btn-danger">Clear</a>
 											<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 										</div>
 									</div>
@@ -166,50 +176,47 @@
 										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>
 												<th>Check Date</th>
-												<th>Injection Date Head</th>
-												<th>Mesin Head</th>
-												<th>Injection Date Block</th>
-												<th>Mesin Block</th>
+												<th>Check Type</th>
+												<th>Injection Date Middle</th>
+												<th>Mesin Middle</th>
+												<th>Injection Date Head / Foot</th>
+												<th>Mesin Head / Foot</th>
 												<th>Product</th>
-												<th>Head</th>
-												<th>Block</th>
-												<th>Push Pull</th>
+												<th>Middle</th>
+												<th>Head / Foot</th>
+												<th>Torque 1</th>
+												<th>Torque 2</th>
+												<th>Torque 3</th>
+												<th>Average</th>
 												<th>Judgement</th>
-												<th>Ketinggian</th>
-												<th>Judgement Ketinggian</th>
-												<th>PIC</th>
-												<th>Action</th>
-											</tr>
+												<th>PIC</th>											</tr>
 										</thead>
 										<tbody>
-											<?php if (ISSET($push_block_check)): ?>
-												@foreach($push_block_check as $push_block_check)
+											<?php if (ISSET($torque_check)): ?>
+												@foreach($torque_check as $torque_check)
 												<tr>
-													<td>{{ $push_block_check->check_date }}</td>
-													<td>{{ $push_block_check->injection_date_head }}</td>
-													<td>{{ $push_block_check->mesin_head }}</td>
-													<td>{{ $push_block_check->injection_date_block }}</td>
-													<td>{{ $push_block_check->mesin_block }}</td>
-													<td>{{ $push_block_check->product_type }}</td>
-													<td>{{ $push_block_check->head }}</td>
-													<td>{{ $push_block_check->block }}</td>
-													<td>{{ $push_block_check->push_pull }}</td>
-													<td>{{ $push_block_check->judgement }}</td>
-													<td>{{ $push_block_check->ketinggian }}</td>
-													<td>{{ $push_block_check->judgement2 }}</td>
-													<td>{{ $push_block_check->pic_check }}</td>
-													<td><center>
-															<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_push_block('{{ url("index/recorder/update") }}','{{ $push_block_check->id }}');">
-												               <i class="fa fa-edit"></i>
-												            </button>
-														</center>
-													</td>
+													<td>{{ $torque_check->check_date }}</td>
+													<td>{{ $torque_check->check_type }}</td>
+													<td>{{ $torque_check->injection_date_middle }}</td>
+													<td>{{ $torque_check->mesin_middle }}</td>
+													<td>{{ $torque_check->injection_date_head_foot }}</td>
+													<td>{{ $torque_check->mesin_head_foot }}</td>
+													<td>{{ $torque_check->product_type }}</td>
+													<td>{{ $torque_check->middle }}</td>
+													<td>{{ $torque_check->head_foot }}</td>
+													<td>{{ $torque_check->torque1 }}</td>
+													<td>{{ $torque_check->torque2 }}</td>
+													<td>{{ $torque_check->torque3 }}</td>
+													<td>{{ $torque_check->torqueavg }}</td>
+													<td>{{ $torque_check->judgement }}</td>
+													<td>{{ $torque_check->pic_check }}</td>
 												</tr>
 												@endforeach
 											<?php endif ?>
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>

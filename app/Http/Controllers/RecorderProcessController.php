@@ -609,6 +609,8 @@ class RecorderProcessController extends Controller
 
         $data = array(
                       // 'push_block_check' => $push_block_check,
+          'mesin' => $this->mesin,
+                      'mesin2' => $this->mesin,
                       'remark' => $remark,);
       return view('recorder.report.report_push_block', $data
         )->with('page', 'Report Push Block Check')->with('remark', $remark);
@@ -655,9 +657,25 @@ class RecorderProcessController extends Controller
         $judgementin2 = "";
       }
 
-      $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorders` where push_block_code = '".$remark."' ".$date." ".$judgementin." ".$judgementin2." ORDER BY push_block_recorders.id desc");
+      if($request->get('mesin_head') != null){
+        $mesin_head = " and `mesin_head` =  '".$request->get('mesin_head')."'";
+      }
+      else{
+        $mesin_head = "";
+      }
+
+      if($request->get('mesin_block') != null){
+        $mesin_block = " and `mesin_block` =  '".$request->get('mesin_block')."'";
+      }
+      else{
+        $mesin_block = "";
+      }
+
+      $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorders` where push_block_code = '".$remark."' ".$date." ".$judgementin." ".$judgementin2." ".$mesin_head." ".$mesin_block." ORDER BY push_block_recorders.id desc");
 
       $data = array('push_block_check' => $push_block_check,
+        'mesin' => $this->mesin,
+                      'mesin2' => $this->mesin,
                       'remark' => $remark,);
       return view('recorder.report.report_push_block', $data
         )->with('page', 'Report Push Block Check')->with('remark', $remark);
@@ -674,6 +692,8 @@ class RecorderProcessController extends Controller
                       'auth' => $auth,
                       'mesin' => $this->mesin,
                       'mesin2' => $this->mesin,
+                      'mesin3' => $this->mesin,
+                      'mesin4' => $this->mesin,
                       'product_type' => $this->product_type);
       return view('recorder.report.resume_push_block', $data
         )->with('page', 'Resume Push Block Check')->with('remark', $remark);
@@ -704,13 +724,29 @@ class RecorderProcessController extends Controller
         }
       }
 
-      $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorder_resumes` where remark = '".$remark."' ".$date." ORDER BY push_block_recorder_resumes.id desc");
+      if($request->get('mesin_head') != null){
+        $mesin_head = " and `mesin_head` =  '".$request->get('mesin_head')."'";
+      }
+      else{
+        $mesin_head = "";
+      }
+
+      if($request->get('mesin_block') != null){
+        $mesin_block = " and `mesin_block` =  '".$request->get('mesin_block')."'";
+      }
+      else{
+        $mesin_block = "";
+      }
+
+      $push_block_check = DB::SELECT("SELECT * FROM `push_block_recorder_resumes` where remark = '".$remark."' ".$date." ".$mesin_head." ".$mesin_block." ORDER BY push_block_recorder_resumes.id desc");
 
       $data = array('push_block_check' => $push_block_check,
                       'remark' => $remark,
                       'auth' => $auth,
                       'mesin' => $this->mesin,
                       'mesin2' => $this->mesin,
+                      'mesin3' => $this->mesin,
+                      'mesin4' => $this->mesin,
                       'product_type' => $this->product_type);
       return view('recorder.report.resume_push_block', $data
         )->with('page', 'Resume Push Block Check')->with('remark', $remark);
@@ -2166,6 +2202,92 @@ class RecorderProcessController extends Controller
               );
               return Response::json($response);
             }
+    }
+
+    public function report_torque_check($remark)
+    {
+        // $from = date('Y-m').'-01';
+        // $to = date('Y-m-d');
+        // $push_block_check = PushBlockRecorder::where('push_block_code',$remark)->orderBy('push_block_recorders.id','desc')->whereBetween('check_date', [$from, $to])
+        //       ->get();
+
+        $data = array(
+                      // 'push_block_check' => $push_block_check,
+                      'mesin' => $this->mesin,
+                      'mesin2' => $this->mesin,
+                      'remark' => $remark,);
+      return view('recorder.report.report_torque_check', $data
+        )->with('page', 'Report Torque Check')->with('remark', $remark);
+    }
+
+    public function filter_report_torque_check(Request $request,$remark)
+    {
+      $judgement = $request->get('judgement');
+      $date_from = $request->get('date_from');
+      $date_to = $request->get('date_to');
+      $datenow = date('Y-m-d');
+
+      if($request->get('date_to') == null){
+        if($request->get('date_from') == null){
+          $date = "";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$datenow."'";
+        }
+      }
+      elseif($request->get('date_to') != null){
+        if($request->get('date_from') == null){
+          $date = "and date(check_date) <= '".$date_to."'";
+        }
+        elseif($request->get('date_from') != null){
+          $date = "and date(check_date) BETWEEN '".$date_from."' and '".$date_to."'";
+        }
+      }
+
+      $judgement = '';
+      if($request->get('judgement') != null){
+        $judgements =  explode(",", $request->get('judgement'));
+        for ($i=0; $i < count($judgements); $i++) {
+          $judgement = $judgement."'".$judgements[$i]."'";
+          if($i != (count($judgements)-1)){
+            $judgement = $judgement.',';
+          }
+        }
+        $judgementin = " and `judgement` in (".$judgement.") ";
+      }
+      else{
+        $judgementin = "";
+      }
+
+      if($request->get('check_type') != null){
+        $check_type = " and `check_type` =  '".$request->get('check_type')."'";
+      }
+      else{
+        $check_type = "";
+      }
+
+      if($request->get('mesin_middle') != null){
+        $mesin_middle = " and `mesin_middle` =  '".$request->get('mesin_middle')."'";
+      }
+      else{
+        $mesin_middle = "";
+      }
+
+      if($request->get('mesin_head_foot') != null){
+        $mesin_head_foot = " and `mesin_head_foot` =  '".$request->get('mesin_head_foot')."'";
+      }
+      else{
+        $mesin_head_foot = "";
+      }
+
+      $torque_check = DB::SELECT("SELECT * FROM `push_block_torques` where push_block_code = '".$remark."' ".$date." ".$judgementin." ".$check_type." ".$mesin_middle." ".$mesin_head_foot." ORDER BY push_block_torques.id desc");
+
+      $data = array('torque_check' => $torque_check,
+                      'mesin' => $this->mesin,
+                      'mesin2' => $this->mesin,
+                      'remark' => $remark,);
+      return view('recorder.report.report_torque_check', $data
+        )->with('page', 'Report Torque Check')->with('remark', $remark);
     }
 }
   

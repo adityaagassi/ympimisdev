@@ -60,7 +60,8 @@
 
 			 <a href="{{ url("/index/recorder/report_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Push Block Check</a> 
 			 <a href="{{ url("/index/recorder/resume_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Push Block Check</a>
-			 <a href="{{ url("index/recorder/push_block_check_monitoring","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Recorder Process Monitoring</a>		
+			 <a href="{{ url("index/recorder/push_block_check_monitoring","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Recorder Process Monitoring</a>
+			 <a href="{{ url("index/recorder/report_torque_check","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Torque Check</a>
 		</div>
 	</div>
 
