@@ -530,12 +530,39 @@ class PressController extends Controller
 
 	     $data = db::select("select machine_name, sum(data_ok) as actual_shoot, CURDATE() as tgl, sum(waktu) as waktu_mesin from (select machine_name, 0 as data_ok, CURDATE(), 0 as waktu from mp_machines UNION ALL select machine_name, data_ok, date, ROUND(TIME_TO_SEC(process_time) / 60,1) as waktu from mp_machines LEFT JOIN mp_record_prods on mp_machines.machine_name = mp_record_prods.machine where mp_record_prods.date = '".$date."' ) as aw GROUP BY machine_name");
 
-		$operator = db::select("select name, sum(data_ok) as actual_shot, CURDATE() as date, sum(waktu) as waktu_total from 
-			(
-			select employees.name, 0 as data_ok, CURDATE(), 0 as waktu from employee_groups join employees on employees.employee_id = employee_groups.employee_id where location='Press'
-			UNION ALL 
-			select employees.name, data_ok, mp_record_prods.date, ROUND(TIME_TO_SEC(process_time) / 60,1) as waktu from employee_groups LEFT JOIN mp_record_prods on employee_groups.employee_id = mp_record_prods.pic join employees on employees.employee_id = employee_groups.employee_id and location='Press' and mp_record_prods.date = '".$date."'
-			) as aw GROUP BY name");
+		$operator = db::select("SELECT name,
+				sum( data_ok ) AS actual_shot,
+				CURDATE() AS date,
+				sum( waktu ) AS waktu_total 
+			FROM
+				(
+				SELECT
+					employee_syncs.name,
+					0 AS data_ok,
+					CURDATE(),
+					0 AS waktu 
+				FROM
+					employee_groups
+					JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+				WHERE
+					location = 'Press'
+					and employee_groups.deleted_at is null
+					UNION ALL
+				SELECT
+					employee_syncs.name,
+					data_ok,
+					mp_record_prods.date,
+					ROUND( TIME_TO_SEC( process_time ) / 60, 1 ) AS waktu 
+				FROM
+					employee_groups
+					LEFT JOIN mp_record_prods ON employee_groups.employee_id = mp_record_prods.pic
+					JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+					AND location = 'Press' 
+					AND mp_record_prods.date = '".$date."'
+					and employee_groups.deleted_at is null
+				) AS aw 
+			GROUP BY
+			name");
 
 
 		$response = array(
