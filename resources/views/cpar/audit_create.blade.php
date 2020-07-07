@@ -97,7 +97,43 @@
           </div>
           <div class="col-xs-2 col-sm-2 col-md-2">
             <label for="auditor_lokasi">Lokasi</label>
-            <input type="text" class="form-control" id="auditor_lokasi" placeholder="Masukkan Lokasi">          
+            <!-- <input type="text" class="form-control" id="auditor_lokasi" placeholder="Masukkan Lokasi">-->
+            <select class="form-control select2" style="width: 100%;" id="auditor_lokasi" name="auditor_lokasi" data-placeholder="Pilih Lokasi" required>
+              <option value=''></option>
+              <option value='Handatsuke'>Handatsuke</option>
+              <option value='Plating'>Plating</option>
+              <option value='Quality Control'>Quality Control</option>
+              <option value='Material Process'>Material Process</option>
+              <option value='Standarisasi'>Standarisasi</option>
+              <option value='Reedplate'>Reedplate</option>
+              <option value='Molding Maintenance'>Molding Maintenance</option>
+              <option value='Lacquering'>Lacquering</option>
+              <option value='Workshop'>Workshop</option>
+              <option value='Purchasing'>Purchasing</option>
+              <option value='Sub Assy (Assy Sax)'>Sub Assy (Assy Sax)</option>
+              <option value='Sub Assy (Assy Flute)'>Sub Assy (Assy Flute)</option>
+              <option value='Sub Assy (Assy Clarinet)'>Sub Assy (Assy Clarinet)</option>
+              <option value='Buffing Barrel'>Buffing Barrel</option>
+              <option value='Case'>Case</option>
+              <option value='Chemical'>Chemical</option>
+              <option value='Soldering'>Soldering</option>
+              <option value='Body Process'>Body Process</option>
+              <option value='Accounting'>Accounting</option>
+              <option value='Production Engineering'>Production Engineering</option>
+              <option value='Recoder Assy'>Recoder Assy</option>
+              <option value='WWT'>WWT</option>
+              <option value='Exim'>Exim</option>
+              <option value='Warehouse'>Warehouse</option>
+              <option value='Recoder Injection, Venova, Mouthpiece'>Recoder Injection, Venova, Mouthpiece</option>
+              <option value='HRD'>HRD</option>
+              <option value='Clarinet Body'>Clarinet Body</option>
+              <option value='General Affairs'>General Affairs</option>
+              <option value='Tanpo'>Tanpo</option>
+              <option value='Pianica'>Pianica</option>
+              <option value='Maintenance'>Maintenance</option>
+              <option value='Production Control'>Production Control</option>
+              <option value='Other'>Other</option>
+            </select>
           </div>
         </div>
         <div class="row">
