@@ -140,15 +140,25 @@
   </tr>
 </tbody></table>
 </div>
-<div class="col-xs-6" style="padding-top: 10px;">
+
+<div class="col-xs-6">
+  <button class="btn btn-default btn-lg pull-right" style="border: 2px solid #7e5686; color: #7e5686; font-weight: bold;" id='f1' onclick="page(this.id)">Factory I</button>
+</div>
+<div class="col-xs-6">
+  <button class="btn btn-default btn-lg" style="border: 2px solid #7e5686; color: #7e5686; font-weight: bold;" id='f2' onclick="page(this.id)">Factory II</button>
+</div>
+
+<div class="col-xs-12" style="padding-top: 10px;" id="fact1">
   <table class="table table-bordered" width="100%">
     <thead>
       <tr>
-        <th colspan="5">Factory I</th>
+        <th colspan="6">Factory I</th>
       </tr>
       <tr>
         <th>APAR Code</th>
         <th>APAR Name</th>
+        <th>APAR Type</th>
+        <th>Capacity</th>
         <th>Location</th>
         <th>NG</th>
       </tr>
@@ -158,15 +168,17 @@
   </table>
 </div>
 
-<div class="col-xs-6" style="padding-top: 10px;">
+<div class="col-xs-12" style="padding-top: 10px;" id="fact2">
   <table class="table table-bordered" width="100%">
     <thead>
       <tr>
-        <th colspan="5">Factory II</th>
+        <th colspan="6">Factory II</th>
       </tr>
       <tr>
         <th>APAR Code</th>
         <th>APAR Name</th>
+        <th>APAR Type</th>
+        <th>Capacity</th>
         <th>Location</th>
         <th>NG</th>
       </tr>
@@ -288,6 +300,16 @@
 
     check = <?php echo json_encode($check_list); ?>;
 
+    var dt = new Date();
+
+    if ( (dt.getMonth()+1) % 2 == 0) {
+      // alert('genap');
+      $("#fact1").hide();
+    } else {
+      // alert('ganjil');
+      $("#fact2").hide();
+    }
+
     get_expire_data();
     $("#modalContent").hide();
     $("#btn_save").hide();
@@ -315,63 +337,69 @@
       $("#qu_f1").empty();
       $("#qu_f2").empty();
       $.each(result.operator_check, function(index, value){
+        if(value.check) {
 
-        var ck = value.check.split(',');
+          var ck = value.check.split(',');
 
-        for (var i = 0; i < ck.length; i++) {
-          if (ck[i] == 0) {
-            ng_list[i] = parseInt(ng_list[i]) + 1;
+          for (var i = 0; i < ck.length; i++) {
+            if (ck[i] == 0) {
+              ng_list[i] = parseInt(ng_list[i]) + 1;
+            }
           }
-        }
 
-        color1 = 'style="background-color: #fffcb7"';
+          color1 = 'style="background-color: #fffcb7"';
 
-        color2 = 'style="background-color: #ffd8b7"';
+          color2 = 'style="background-color: #ffd8b7"';
 
 
-        if (value.location == "Factory I") {
-          remark = "";
-          user_fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
-          user_fi += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
-          user_fi += "<td>"+value.utility_name+"</td>";
-          user_fi += "<td>"+value.group+"</td>";
+          if (value.location == "Factory I") {
+            remark = "";
+            user_fi += "<tr style='background-color: #fffcb7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
+            user_fi += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
+            user_fi += "<td>"+value.utility_name+"</td>";
+            user_fi += "<td>"+value.type+"</td>";
+            user_fi += "<td>"+value.capacity+" Kg</td>";
+            user_fi += "<td>"+value.group+"</td>";
 
-          arrCek = value.check.split(',');
+            arrCek = value.check.split(',');
 
-          var i = 0;
-          $.each(check, function(index2, value2){
-            if (value.remark == value2.remark) {
-              if (arrCek[i] == '0') {
-                remark += value2.check_point+",";
+            var i = 0;
+            $.each(check, function(index2, value2){
+              if (value.remark == value2.remark) {
+                if (arrCek[i] == '0') {
+                  remark += value2.check_point+",";
+                }
+                i++;
               }
-              i++;
-            }
-          })
+            })
 
-          user_fi += "<td>"+remark.slice(0,-1)+"</td>";
+            user_fi += "<td>"+remark.slice(0,-1)+"</td>";
 
-          user_fi += "</tr>";
-        } else {
-          remark = "";
-          user_fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
-          user_fii += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
-          user_fii += "<td>"+value.utility_name+"</td>";
-          user_fii += "<td>"+value.group+"</td>";
+            user_fi += "</tr>";
+          } else {
+            remark = "";
+            user_fii += "<tr style='background-color: #ffd8b7' onclick='openModal(\""+value.utility_code+"\",\""+value.utility_name+"\",\""+value.group+"\",\""+value.id+"\", \""+value.type+"\")'>";
+            user_fii += "<td>"+value.utility_code+"<input type='hidden' id='"+value.id+"' value='"+value.capacity+"'></td>";
+            user_fii += "<td>"+value.utility_name+"</td>"
+            user_fii += "<td>"+value.type+"</td>";
+            user_fii += "<td>"+value.capacity+" Kg</td>";
+            user_fii += "<td>"+value.group+"</td>";
 
-          arrCek = value.check.split(',');
+            arrCek = value.check.split(',');
 
-          var i = 0;
-          $.each(check, function(index2, value2){
-            if (value.remark == value2.remark) {
-              if (arrCek[i] == '0') {
-                remark += value2.check_point+",";
+            var i = 0;
+            $.each(check, function(index2, value2){
+              if (value.remark == value2.remark) {
+                if (arrCek[i] == '0') {
+                  remark += value2.check_point+",";
+                }
+                i++;
               }
-              i++;
-            }
-          })
+            })
 
-          user_fii += "<td>"+remark.slice(0,-1)+"</td>";
-          user_fii += "</tr>";
+            user_fii += "<td>"+remark.slice(0,-1)+"</td>";
+            user_fii += "</tr>";
+          }
         }
       })
 
@@ -537,6 +565,16 @@
         openErrorGritter( "Error", "" );
         $("#loading").hide();
       })
+    }
+
+    function page(id) {
+      if (id == "f1") {
+        $("#fact1").show();
+        $("#fact2").hide();
+      } else {
+        $("#fact2").show();
+        $("#fact1").hide();
+      }
     }
 
     var audio_error = new Audio('{{ url("sounds/error.mp3") }}');

@@ -234,7 +234,7 @@ class MaintenanceController extends Controller
 	public function indexAparOrderList()
 	{
 		$title = 'APAR Order List';
-		$title_jp = '??';
+		$title_jp = '消火器・消火栓の発注一覧';
 
 		$check = db::table("utility_check_lists")
 		->select('check_point', 'remark')
@@ -954,7 +954,7 @@ class MaintenanceController extends Controller
 			$mon = $request->get('mon');
 		}
 
-		$check_by_operator = db::select("SELECT utilities.id, utility_code, utility_name, `group`, location, utilities.remark, last_check, `check`, capacity from utilities
+		$check_by_operator = db::select("SELECT utilities.id, utility_code, utility_name, `group`, location, utilities.remark, last_check, `check`, capacity, type from utilities
 			left join 
 			(SELECT id, utility_id, `check`
 			FROM utility_checks
@@ -1208,12 +1208,12 @@ class MaintenanceController extends Controller
 		->orderBy("id", "ASC")
 		->get();
 
-		$hasil_check = db::select("SELECT DATE_FORMAT(check_date,'%Y-%m-%d') as dt_cek, utility_code, utility_name, location, DATE_FORMAT(last_check,'%d %m %Y') as last_check FROM utility_checks
+		$hasil_check = db::select("SELECT DATE_FORMAT(check_date,'%Y-%m-%d') as dt_cek, utility_code, utility_name, location, DATE_FORMAT(last_check,'%d %M %Y') as last_check FROM utility_checks
 			LEFT JOIN utilities on utilities.id = utility_checks.utility_id
 			WHERE utility_checks.id IN (
 			SELECT MAX(id)
 			FROM utility_checks
-			where DATE_FORMAT(check_date,'%Y-%m') = DATE_FORMAT('".$request->get('dt')."', '%Y-%m')
+			where DATE_FORMAT(check_date,'%Y-%m') = DATE_FORMAT('".$request->get('dt')."', '%Y-%m') and deleted_at is null
 			GROUP BY utility_id
 		) AND utilities.remark = 'APAR'");
 
