@@ -208,7 +208,11 @@
 													<td>{{ $torque_check->torque2 }}</td>
 													<td>{{ $torque_check->torque3 }}</td>
 													<td>{{ $torque_check->torqueavg }}</td>
-													<td>{{ $torque_check->judgement }}</td>
+													<td>@if($torque_check->judgement == 'OK')
+														<label class='label label-success'>{{ $torque_check->judgement }}</label>
+													@else
+														<label class='label label-danger'>{{ $torque_check->judgement }}</label>
+													@endif</td>
 													<td>{{ $torque_check->pic_check }}</td>
 												</tr>
 												@endforeach

@@ -194,9 +194,17 @@
 													<td>{{ $push_block_check->head }}</td>
 													<td>{{ $push_block_check->block }}</td>
 													<td>{{ $push_block_check->push_pull }}</td>
-													<td>{{ $push_block_check->judgement }}</td>
+													<td>@if($push_block_check->judgement == 'OK')
+														<label class='label label-success'>{{ $push_block_check->judgement }}</label>
+													@else
+														<label class='label label-danger'>{{ $push_block_check->judgement }}</label>
+													@endif</td>
 													<td>{{ $push_block_check->ketinggian }}</td>
-													<td>{{ $push_block_check->judgement2 }}</td>
+													<td>@if($push_block_check->judgement2 == 'OK')
+														<label class='label label-success'>{{ $push_block_check->judgement2 }}</label>
+													@else
+														<label class='label label-danger'>{{ $push_block_check->judgement2 }}</label>
+													@endif</td>
 													<td>{{ $push_block_check->pic_check }}</td>
 													<td><center>
 															<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_push_block('{{ url("index/recorder/update") }}','{{ $push_block_check->id }}');">
