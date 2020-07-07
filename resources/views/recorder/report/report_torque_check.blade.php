@@ -108,7 +108,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="">Mesin Middle</label>
-											<select class="form-control select2" id='mesin_middle' name="mesin_middle" data-placeholder="Select Mesin Middle" style="width: 100%;">
+											<select class="form-control select2" name="mesin_middle" data-placeholder="Select Mesin Middle" style="width: 100%;">
 												<option value=""></option>
 												@foreach($mesin as $mesin)
 							                		<option value="{{$mesin}}">{{$mesin}}</option>
@@ -119,7 +119,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="">Mesin Head / Foot</label>
-											<select class="form-control select2" name="mesin_head_foot" id='mesin_head_foot'data-placeholder="Select Mesin Head / Foot" style="width: 100%;">
+											<select class="form-control select2" name="mesin_head_foot" data-placeholder="Select Mesin Head / Foot" style="width: 100%;">
 												<option value=""></option>
 												@foreach($mesin2 as $mesin2)
 							                		<option value="{{$mesin2}}">{{$mesin2}}</option>
@@ -142,7 +142,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="">Check Type</label>
-											<select class="form-control select2" id='check_type' name='check_type' data-placeholder="Select Check Type" style="width: 100%;">
+											<select class="form-control select2" name='check_type' data-placeholder="Select Check Type" style="width: 100%;">
 												<option value=""></option>
 												<option value="HJ-MJ">HJ-MJ</option>
 												<option value="MJ-FJ">MJ-FJ</option>
@@ -189,7 +189,9 @@
 												<th>Torque 3</th>
 												<th>Average</th>
 												<th>Judgement</th>
-												<th>PIC</th>											</tr>
+												<th>PIC</th>									
+												<th>Action</th>
+											</tr>
 										</thead>
 										<tbody>
 											<?php if (ISSET($torque_check)): ?>
@@ -214,12 +216,19 @@
 														<label class='label label-danger'>{{ $torque_check->judgement }}</label>
 													@endif</td>
 													<td>{{ $torque_check->pic_check }}</td>
+													<td><center>
+															<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_torque('{{ url("index/recorder/update_torque") }}','{{ $torque_check->id }}');">
+												               <i class="fa fa-edit"></i>
+												            </button>
+														</center>
+													</td>
 												</tr>
 												@endforeach
 											<?php endif ?>
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
@@ -266,32 +275,32 @@
 				  <input type="text" name="check_date" id="check_date" class="form-control" readonly required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">
-	              <label for="">Injection Date Head</label>
-				  <input type="text" name="injection_date_head" id="injection_date_head" class="form-control" readonly required="required" title="" readonly>
+	              <label for="">Check Type</label>
+				  <input type="text" name="check_type" id="check_type" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Injection Date Middle</label>
+				  <input type="text" name="injection_date_middle" id="injection_date_middle" class="form-control" readonly required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">	              
-	              <label for="">Mesin Head</label>
-				  <input type="text" name="mesin_head" id="mesin_head" class="form-control" readonly required="required" title="" readonly>
+	              <label for="">Mesin Middle</label>
+				  <input type="text" name="mesin_middle" id="mesin_middle" class="form-control" readonly required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">	              
-	              <label for="">Injection Date Block</label>
-				  <input type="text" name="injection_date_block" id="injection_date_block" class="form-control" readonly required="required" title="" readonly>
+	              <label for="">Injection Date Head / Foot</label>
+				  <input type="text" name="injection_date_head_foot" id="injection_date_head_foot" class="form-control" readonly required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">	              
-	              <label for="">Mesin Block</label>
-				  <input type="text" name="mesin_block" id="mesin_block" class="form-control" readonly required="required" title="" readonly>
+	              <label for="">Mesin Head / Foot</label>
+				  <input type="text" name="mesin_head_foot" id="mesin_head_foot" class="form-control" readonly required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">	              
-	              <label for="">Product</label>
-				  <input type="text" name="product_type" id="product_type" class="form-control" readonly required="required" title="" readonly>
+	              <label for="">Middle</label>
+				  <input type="text" name="middle" id="middle" class="form-control" readonly required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">	              
-	              <label for="">Head</label>
-				  <input type="text" name="head" id="head" class="form-control" readonly required="required" title="" readonly>
-	            </div>
-	            <div class="form-group">	              
-	              <label for="">Block</label>
-				  <input type="text" name="block" id="block" class="form-control" readonly required="required" title="" readonly>
+	              <label for="">Head / Foot</label>
+				  <input type="text" name="head_foot" id="head_foot" class="form-control" readonly required="required" title="" readonly>
 	            </div>	            
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -300,20 +309,28 @@
 				  <input type="text" name="pic" id="pic" class="form-control" readonly required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">	              
-	              <label for="">Push Pull</label>
-				  <input type="text" name="push_pull" id="push_pull" class="form-control" required="required" title="" onkeyup="push_pull()">
+	              <label for="">Product</label>
+				  <input type="text" name="product_type" id="product_type" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Torque 1</label>
+				  <input type="text" name="torque1" id="torque1" class="form-control" required="required" title="" onkeyup="torque()">
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Torque 2</label>
+				  <input type="text" name="torque2" id="torque2" class="form-control" required="required" title="" onkeyup="torque()">
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Torque 3</label>
+				  <input type="text" name="torque3" id="torque3" class="form-control" required="required" title="" onkeyup="torque()">
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Average</label>
+				  <input type="text" name="torqueavg" id="torqueavg" class="form-control" required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">	              
 	              <label for="">Judgement</label>
-				  <input type="text" name="judgement_push_pull" id="judgement_push_pull" class="form-control" readonly required="required" title="" readonly>
-	            </div>
-	            <div class="form-group">	              
-	              <label for="">Ketinggian</label>
-				  <input type="text" name="ketinggian" id="ketinggian" class="form-control" required="required" title="" onkeyup="ketinggian()">
-	            </div>
-	            <div class="form-group">	              
-	              <label for="">Judgement Ketinggian</label>
-				  <input type="text" name="judgement2" id="judgement2" class="form-control" readonly required="required" title="" readonly>
+				  <input type="text" name="judgementedit" id="judgementedit" class="form-control" readonly required="required" title="">
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -454,42 +471,36 @@
 
 	});
 
-	function edit_push_block(url,id) {
+	function edit_torque(url,id) {
     	$.ajax({
-                url: "{{ route('recorder.get_push_pull') }}?id=" + id,
+                url: "{{ route('recorder.get_torque') }}?id=" + id,
                 method: 'GET',
                 success: function(data) {
                   var json = data;
                   var data = data.data;
                   $("#url_edit").val(url+'/'+id);
                   $("#check_date").val(data.check_date);
-                  $("#injection_date_head").val(data.injection_date_head);
-                  $("#mesin_head").val(data.mesin_head);
-                  $("#injection_date_block").val(data.injection_date_block);
-                  $("#mesin_block").val(data.mesin_block);
+                  $("#check_type").val(data.check_type);
+                  $("#injection_date_middle").val(data.injection_date_middle);
+                  $("#mesin_middle").val(data.mesin_middle);
+                  $("#injection_date_head_foot").val(data.injection_date_head_foot);
+                  $("#mesin_head_foot").val(data.mesin_head_foot);
                   $("#product_type").val(data.product_type);
-                  $("#head").val(data.head);
-                  $("#block").val(data.block);
-                  $("#push_pull").val(data.push_pull);
-                  $("#judgement_push_pull").val(data.judgement);
-                  $("#ketinggian").val(data.ketinggian);
-                  $("#judgement2").val(data.judgement2);
+                  $("#middle").val(data.middle);
+                  $("#head_foot").val(data.head_foot);
+                  $("#torque1").val(data.torque1);
+                  $("#torque2").val(data.torque2);
+                  $("#torque3").val(data.torque3);
+                  $("#torqueavg").val(data.torqueavg);
+                  $("#judgementedit").val(data.judgement);
                   $("#pic").val(data.pic_check);
                   if (data.judgement == 'NG') {
-                  	document.getElementById('judgement_push_pull').style.backgroundColor = "#ff4f4f";
-                  	document.getElementById('judgement_push_pull').style.color = "#fff";
+                  	document.getElementById('judgementedit').style.backgroundColor = "#ff4f4f";
+                  	document.getElementById('judgementedit').style.color = "#fff";
                   }
                   else{
-                  	document.getElementById('judgement_push_pull').style.backgroundColor = "#7fff6e";
-                  	document.getElementById('judgement_push_pull').style.color = "#000";
-                  }
-                  if (data.judgement2 == 'NG') {
-                  	document.getElementById('judgement2').style.backgroundColor = "#ff4f4f";
-                  	document.getElementById('judgement2').style.color = "#fff";
-                  }
-                  else{
-                  	document.getElementById('judgement2').style.backgroundColor = "#7fff6e";
-                  	document.getElementById('judgement2').style.color = "#000";
+                  	document.getElementById('judgementedit').style.backgroundColor = "#7fff6e";
+                  	document.getElementById('judgementedit').style.color = "#000";
                   }
                 }
             });
@@ -497,27 +508,41 @@
       // console.log($('#formedit2').attr("action"));
     }
 
-    function push_pull() {
-		var batas_bawah = '3';
-		var batas_atas = '17';
+    function torque() {
+		var batas_bawah_hm = 15;
+		var batas_atas_hm = 73;
+		var batas_bawah_mf = 15;
+		var batas_atas_mf = 78;
 
-		var x = document.getElementById('push_pull').value;
-		if(x == ''){
-			document.getElementById('push_pull').style.backgroundColor = "#ff4f4f";
+		var torque1 = document.getElementById('torque1').value;
+		var torque2 = document.getElementById('torque2').value;
+		var torque3 = document.getElementById('torque3').value;
+
+		if (torque1 == "") {
+			torque1 = 0;
 		}
-		else{
-			document.getElementById('push_pull').style.backgroundColor = "#7fff6e";
+		if (torque2 == "") {
+			torque2 = 0;
 		}
-		if(parseFloat(x) < parseFloat(batas_bawah) || parseFloat(x) > parseFloat(batas_atas)){
-			$('#judgement_push_pull').val('NG');
-			document.getElementById('judgement_push_pull').style.backgroundColor = "#ff4f4f";
-			document.getElementById('judgement_push_pull').style.color = "#fff";
+		if (torque3 == "") {
+			torque3 = 0;
 		}
-		else{
-			$('#judgement_push_pull').val('OK');
-			document.getElementById('judgement_push_pull').style.backgroundColor = "#7fff6e";
-			document.getElementById('judgement_push_pull').style.color = "#000";
+
+		var avg = (parseFloat(torque1)+parseFloat(torque2)+parseFloat(torque3))/3;
+
+		var avg_id = '#torqueavg';
+		var avg_id2 = 'torqueavg';
+		var judgement_id = '#judgementedit';
+		var judgement_id2 = 'judgementedit';
+
+		if (parseFloat(avg) < parseFloat(batas_bawah_hm) || parseFloat(avg) > parseFloat(batas_atas_hm)) {
+			document.getElementById(judgement_id2).style.backgroundColor = "#ff4f4f"; //red
+			$(judgement_id).val('NG');
+		}else{
+			document.getElementById(judgement_id2).style.backgroundColor = "#7fff6e"; //green
+			$(judgement_id).val('OK');
 		}
+		$(avg_id).val(avg.toFixed(2));
 	}
 
 	function ketinggian() {
@@ -543,17 +568,19 @@
 	}
 
 	function update(){
-		var push_pull = $('#push_pull').val();
-		var judgement = $('#judgement_push_pull').val();
-		var ketinggian = $('#ketinggian').val();
-		var judgement2 = $('#judgement2').val();
+		var torque1 = $('#torque1').val();
+		var torque2 = $('#torque2').val();
+		var torque3 = $('#torque3').val();
+		var average = $('#torqueavg').val();
+		var judgement = $('#judgement').val();
 		var url = $('#url_edit').val();
 
 		var data = {
-			push_pull:push_pull,
+			torque1:torque1,
+			torque2:torque2,
+			torque3:torque3,
+			average:average,
 			judgement:judgement,
-			ketinggian:ketinggian,
-			judgement2:judgement2
 		}
 		// console.table(data);
 		
@@ -562,11 +589,11 @@
 				$("#edit-modal").modal('hide');
 				// $('#example1').DataTable().ajax.reload();
 				// $('#example2').DataTable().ajax.reload();
-				openSuccessGritter('Success','Push Pull Recorder Check has been updated');
+				openSuccessGritter('Success','Torque Recorder Check has been updated');
 				window.location.reload();
 			} else {
 				audio_error.play();
-				openErrorGritter('Error','Update Push Pull Recorder Check Failed');
+				openErrorGritter('Error','Update Torque Recorder Check Failed');
 			}
 		});
 	}

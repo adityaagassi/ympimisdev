@@ -2362,5 +2362,66 @@ class RecorderProcessController extends Controller
             return Response::json($response);
         }
     }
+
+    function get_torque(Request $request)
+    {
+          try{
+            $detail = PushBlockTorque::find($request->get("id"));
+            $data = array('torque_id' => $detail->id,
+                          'check_date' => $detail->check_date,
+                          'check_type' => $detail->check_type,
+                          'injection_date_middle' => $detail->injection_date_middle,
+                          'mesin_middle' => $detail->mesin_middle,
+                          'injection_date_head_foot' => $detail->injection_date_head_foot,
+                          'mesin_head_foot' => $detail->mesin_head_foot,
+                          'product_type' => $detail->product_type,
+                          'middle' => $detail->middle,
+                          'head_foot' => $detail->head_foot,
+                          'torque1' => $detail->torque1,
+                          'torque2' => $detail->torque2,
+                          'torque3' => $detail->torque3,
+                          'torqueavg' => $detail->torqueavg,
+                          'judgement' => $detail->judgement,
+                          'pic_check' => $detail->pic_check);
+
+            $response = array(
+              'status' => true,
+              'data' => $data
+            );
+            return Response::json($response);
+
+          }
+          catch (Exception $e){
+             $response = array(
+              'status' => false,
+              'datas' => $e->getMessage(),
+            );
+            return Response::json($response);
+          }
+    }
+
+    function update_torque(Request $request,$id)
+    {
+        try{
+                $torque = PushBlockTorque::find($id);
+                $torque->torque1 = $request->get('torque1');
+                $torque->torque2 = $request->get('torque2');
+                $torque->torque3 = $request->get('torque3');
+                $torque->torqueavg = $request->get('average');
+                $torque->judgement = $request->get('judgement');
+                $torque->save();
+
+               $response = array(
+                'status' => true,
+              );
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
 }
   

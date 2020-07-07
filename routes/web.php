@@ -850,12 +850,12 @@ Route::get('fetch/return_logs', 'TransactionController@fetchReturnLogs');
 Route::post('cancel/return', 'TransactionController@cancelReturn');
 
 //GA CONTROL
-
-
 Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 
 });
 Route::get('index/ga_control/driver', 'GeneralAffairController@indexDriver');
+Route::get('fetch/ga_control/driver', 'GeneralAffairController@fetchDriver');
+Route::get('fetch/ga_control/driver_detail', 'GeneralAffairController@fetchDriverDetail');
 Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
 Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 
@@ -1804,7 +1804,7 @@ Route::get('fetch/stocktaking/kitto_vs_book', 'StockTakingController@fetchKittoV
 Route::get('fetch/stocktaking/pi_vs_lot', 'StockTakingController@fetchPiVsLot');
 
 //Unmatch
-Route::get('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
+Route::post('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
 
 //Revise
 Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
@@ -2500,6 +2500,8 @@ Route::post('index/push_block_recorder/create_temp_torque', 'RecorderProcessCont
 Route::post('index/push_block_recorder/update_temp_torque', 'RecorderProcessController@update_temp_torque');
 Route::get('index/recorder/report_torque_check/{remark}', 'RecorderProcessController@report_torque_check');
 Route::post('index/recorder/filter_report_torque_check/{remark}', 'RecorderProcessController@filter_report_torque_check');
+Route::get('index/recorder/get_torque','RecorderProcessController@get_torque')->name('recorder.get_torque');
+Route::post('index/recorder/update_torque/{id}','RecorderProcessController@update_torque');
 
 //RECORDER TORQUE CHECK AI
 Route::get('index/recorder_process_torque_ai/{remark}', 'RecorderProcessController@index_torque_ai');
