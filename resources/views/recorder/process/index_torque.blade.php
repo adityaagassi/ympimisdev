@@ -250,7 +250,7 @@
 	</div>
 
 	<div class="modal fade" id="modalMiddleHeadFoot">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-lg" style="width: 1200px">
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="modal-body table-responsive no-padding">
