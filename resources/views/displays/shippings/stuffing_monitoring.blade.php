@@ -67,7 +67,7 @@
 					<tr>
 						<th style="width: 1%">Start</th>
 						<th style="width: 1%">End</th>
-						<th style="width: 1%">Depart</th>
+						<th style="width: 1%">Departure</th>
 					</tr>
 				</thead>
 				<tbody id="stuffingTableBody" style="font-size: 26px">
