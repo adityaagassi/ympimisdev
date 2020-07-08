@@ -62,11 +62,12 @@
 						<th style="width: 3%;" rowspan="2">Shipping Qty<br>(出荷予定台数)</th>
 						<th style="width: 3%;" rowspan="2">Loading Qty<br>(積み込み台数)</th>
 						<th style="width: 10%;" rowspan="2">Loading Time (Target Max.60 Minutes)</th>
-						<th style="width: 2%;" colspan="2">Loading</th>
+						<th style="width: 2%;" colspan="3">Loading</th>
 					</tr>
 					<tr>
 						<th style="width: 1%">Start</th>
 						<th style="width: 1%">End</th>
+						<th style="width: 1%">Depart</th>
 					</tr>
 				</thead>
 				<tbody id="stuffingTableBody" style="font-size: 26px">
@@ -242,6 +243,7 @@
 					var status = "";
 					var start = "-";
 					var finish = "-";
+					var depart = "-";
 					var cls = "";
 					var cls2 = "";
 					var reason = "";
@@ -262,12 +264,14 @@
 						style = "style='background-color:rgb(6, 115, 82); color:white; font-size:"+size+"px'";
 						
 
+						var d3 = new Date(value.status);
 						var d2 = new Date(value.finish_stuffing);
 						var d1 = new Date(value.start_stuffing);
 						dif = diff_minutes(d1, d2);
 
 						start = d1.getHours() + ":" + ('0' + d1.getMinutes()).slice(-2);
 						finish = d2.getHours() + ":" + ('0' + d2.getMinutes()).slice(-2);
+						depart = d3.getHours() + ":" + ('0' + d3.getMinutes()).slice(-2);
 						rs_color = "#ffff00";
 					}
 					if(value.stats == "LOADING"){
@@ -341,8 +345,9 @@
 					stuffingTableBody += "<span style='line-height:"+(size-2)+"px; font-size:"+size+"px'>"+dif+"</span>";
 					stuffingTableBody += "</div></div><span  style='color:"+rs_color+"; font-size:15px; line-height: 80%; font-weight: normal; '>"+reason+"</span></td>";
 
-					stuffingTableBody += "<td "+garis+">"+start+"</td>";					
+					stuffingTableBody += "<td "+garis+">"+start+"</td>";		
 					stuffingTableBody += "<td "+garis+">"+finish+"</td>";
+					stuffingTableBody += "<td "+garis+">"+depart+"</td>";
 					stuffingTableBody += "</tr>";
 
 				});

@@ -34,6 +34,7 @@
 						<th style="width: 4%; border:1px solid black;">Diff</th>
 						<th style="width: 2%; border:1px solid black;">Start</th>
 						<th style="width: 2%; border:1px solid black;">Finish</th>
+						<th style="width: 2%; border:1px solid black;">Remark</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -68,6 +69,11 @@
 						<?php } ?>
 						<?php if($col->stats == 'DEPARTED' ){ ?>
 						<td style="border:1px solid black; text-align: right;{{$color}}">{{date('H:i:s', strtotime($col->finish_stuffing))}}</td>
+						<?php }else{ ?>
+						<td style="border:1px solid black; text-align: right;{{$color}}">-</td>
+						<?php } ?>
+						<?php if($col->reason != null ){ ?>
+						<td style="border:1px solid black; text-align: right;{{$color}}">{{$col->reason}}</td>
 						<?php }else{ ?>
 						<td style="border:1px solid black; text-align: right;{{$color}}">-</td>
 						<?php } ?>
