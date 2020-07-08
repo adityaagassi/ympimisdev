@@ -285,8 +285,10 @@ class DisplayController extends Controller
 
 		if ($request->get('date') == "") {
 			$now = date('Y-m-d');
+			$end = date('Y-m-d', strtotime($now. ' + 7 days'));
 		} else {
 			$now = $request->get('date');
+			$end = date('Y-m-d', strtotime($now. ' + 7 days'));
 		}
 
 		$query = "select if(master_checksheets.`status` is not null, 'DEPARTED', if(actual_stuffing.total_actual > 0, 'LOADING', '-')) as stats, master_checksheets.`status`, master_checksheets.id_checkSheet, master_checksheets.destination, shipment_conditions.shipment_condition_name, actual_stuffing.total_plan, actual_stuffing.total_actual, master_checksheets.reason, master_checksheets.status, master_checksheets.start_stuffing, master_checksheets.finish_stuffing,COALESCE( master_checksheets.deleted_at,'-') as deleted_at from master_checksheets left join shipment_conditions on shipment_conditions.shipment_condition_code = master_checksheets.carier
@@ -308,7 +310,7 @@ class DisplayController extends Controller
 		(
 		select id_checkSheet, sum(qty_qty) as total_plan from detail_checksheets where deleted_at is null group by id_checkSheet
 		) as stuffings 
-		on stuffings.id_checkSheet = master_checksheets.id_checkSheet where master_checksheets.deleted_at is null and master_checksheets.Stuffing_date > '".$now."' group by master_checksheets.Stuffing_date";
+		on stuffings.id_checkSheet = master_checksheets.id_checkSheet where master_checksheets.deleted_at is null and master_checksheets.Stuffing_date > '".$now."' and master_checksheets.Stuffing_date <= '".$end."' group by master_checksheets.Stuffing_date";
 
 		$stuffing_resume = db::select($query2);
 
