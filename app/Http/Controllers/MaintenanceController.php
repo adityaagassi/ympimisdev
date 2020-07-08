@@ -1488,8 +1488,26 @@ class MaintenanceController extends Controller
 
 		$ck->delete();
 
+		$cek_apar_ck = UtilityCheck::where('utility_id', '=', $ck->utility_id)->orderBy('id')->first();
+
+		if ($cek_apar_ck) {
+			if (strpos($cek_apar_ck->check, '0') !== false) {
+				$stat = 'NG';
+			} else {
+				$stat = null;
+			}
+
+			Utility::where('id', $ck->utility_id)
+			->update(['status' => $stat, 'last_check' => $cek_apar_ck->created_at]);
+
+		} else {
+			Utility::where('id', $ck->utility_id)
+			->update(['status' => null, 'last_check' => '1999-12-31 00:00:00']);
+		}
+
 		$response = array(
-			'status' => true
+			'status' => true,
+			'datas' => $cek_apar_ck
 		);
 		return Response::json($response);
 	}

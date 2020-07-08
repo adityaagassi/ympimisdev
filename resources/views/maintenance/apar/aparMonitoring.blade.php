@@ -277,6 +277,7 @@
             hasil_body += "<td "+bg+">-</td>";
             hasil_body += "</tr>";
           })
+          
 
           $("#datas").text(result.check_list.length+" ITEM MUST CHECKED");
 
@@ -333,33 +334,51 @@
           bg = "";
 
           var nowdate = new Date();
-
-          if (value.cek == 1) {
-            bg = "style='background-color:#54f775'";
-            checked++;
-          } else {
-            if (value.week <= Math.floor(nowdate.getDate() / 7)) {
-              bg = "class='alert'";
-            } else {
-              bg = "";
-            }
-          }
+          var entrydate = new Date(value.entry);
 
           body += "<tr>";
-          body += "<td "+bg+">"+value.utility_code+"</td>";
-          body += "<td "+bg+">"+value.utility_name+"</td>";
-          body += "<td "+bg+">"+value.location+"</td>";
-          body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
-          body += "<td "+bg+">"+(value.exp_date2 || '-')+"</td>";
+          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+value.utility_code+"</td>";
+          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+value.utility_name+"</td>";
+          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+value.location+"</td>";
+          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+(value.last_check || '-')+"</td>";
+          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+(value.exp_date2 || '-')+"</td>";
           body += "</tr>";
 
+        });
+
+        body += "<tr>";
+        body += "<td style='background: transparent'>&nbsp;</td>";
+        body += "<td style='background: transparent'>&nbsp;</td>";
+        body += "<td style='background: transparent'>&nbsp;</td>";
+        body += "<td style='background: transparent'>&nbsp;</td>";
+        body += "<td style='background: transparent'>&nbsp;</td>";
+        body += "</tr>";
+
+
+        hasil_body = '<tr>';
+        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+        hasil_body = '</tr>';
+
+        $.each(result.hasil_check, function(index, value){
+          bg = "style='background-color: #98f25c'";            
+
+          hasil_body += "<tr>";
+          hasil_body += "<td "+bg+">"+value.utility_code+"</td>";
+          hasil_body += "<td "+bg+">"+value.utility_name+"</td>";
+          hasil_body += "<td "+bg+">"+value.location+"</td>";
+          hasil_body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
+          hasil_body += "<td "+bg+">-</td>";
+          hasil_body += "</tr>";
         })
 
-
-        // $("#datas_check").text("CHECKED "+checked);
         $("#datas").text(result.check_list.length+" ITEM MUST CHECKED");
 
         $("#body").append(body);
+        $("#hasil").append(hasil_body);
       })
 
     }
