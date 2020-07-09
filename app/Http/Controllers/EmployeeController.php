@@ -350,7 +350,7 @@ class EmployeeController extends Controller
 
           $emp = User::join('employee_syncs','employee_syncs.employee_id','=','users.username')
           ->where('employee_syncs.employee_id','=', $username)
-          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief") or role_code = "MIS" or username in ('.$this->usr.'))')
+          ->whereRaw('(employee_syncs.position in ("Foreman","Manager","Chief", "Deputy Foreman") or role_code = "MIS" or username in ('.$this->usr.'))')
           ->select('position')
           ->first();
 
