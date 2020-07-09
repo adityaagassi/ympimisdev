@@ -213,7 +213,13 @@ table > thead > tr > th{
 							$('#visitor_info').show();
 							$('#jam').hide();
 							
-							document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name+' - '+result.visitors[i].department+')<br>AT SECURITY<br>';
+							if (result.visitors[i].department == null && result.visitors[i].name == 'Budhi Apriyanto') {
+								document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name.split(' ').slice(0,2).join(' ')+' - Production Engineering)<br>AT SECURITY<br>';
+							}else if (result.visitors[i].department == null && result.visitors[i].name == 'Arief Soekamto') {
+								document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name.split(' ').slice(0,2).join(' ')+' - Human Resources)<br>AT SECURITY<br>';
+							}else{
+								document.getElementById("visitor_info").innerHTML = result.visitors[i].company+'<br>('+result.visitors[i].name.split(' ').slice(0,2).join(' ')+' - '+result.visitors[i].department+')<br>AT SECURITY<br>';
+							}
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
 							$("#visitor_info").css("color",'#fff');
@@ -225,7 +231,13 @@ table > thead > tr > th{
 							$('#visitor_info').show();
 							$('#jam').hide();
 
-							document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name+' - '+result.visitors_lobby[i].department+')<br>AT LOBBY<br>';
+							if (result.visitors_lobby[i].department == null && result.visitors_lobby[i].name == 'Budhi Apriyanto') {
+								document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name.split(' ').slice(0,2).join(' ')+' - Production Engineering)<br>AT LOBBY<br>';
+							}else if (result.visitors_lobby[i].department == null && result.visitors_lobby[i].name == 'Arief Soekamto') {
+								document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name.split(' ').slice(0,2).join(' ')+' - Human Resources)<br>AT LOBBY<br>';
+							}else{
+								document.getElementById("visitor_info").innerHTML = result.visitors_lobby[i].company+'<br>('+result.visitors_lobby[i].name.split(' ').slice(0,2).join(' ')+' - '+result.visitors_lobby[i].department+')<br>AT LOBBY<br>';
+							}
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
 							// document.getElementsByClassName("content").style.backgroundColor = '#f07400';
