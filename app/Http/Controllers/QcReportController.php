@@ -17,6 +17,7 @@ use App\QcCparItem;
 use App\QcVerifikasi;
 use App\Department;
 use App\Employee;
+use App\EmployeeSync;
 use App\Material;
 use App\MaterialPlantDataList;
 use App\Status;
@@ -705,6 +706,21 @@ class QcReportController extends Controller
       }
 
       return json_encode($html);
+    }
+
+    public function getDepartemen(Request $request)
+    {
+        $html = array();
+        $manager = EmployeeSync::join('departments','employee_syncs.department','=','departments.department_name')->select('departments.id'   , 'departments.department_name')->where('employee_id',$request->manager)->get();
+        foreach ($manager as $mn)
+        {
+            $html = array(
+                'department' => $mn->department_name,
+                'id_department' => $mn->id,
+            );
+        }
+
+        return json_encode($html);
     }
 
     public function get_nomor_depan(Request $request)

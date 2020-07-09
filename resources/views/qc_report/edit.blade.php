@@ -134,7 +134,7 @@
           </div>
         </div>
         <div class="form-group row" align="left">
-          <label class="col-sm-1">Lokasi<span class="text-red">*</span></label>
+          <label class="col-sm-1">Lokasi NG / Masalah<span class="text-red">*</span></label>
           <div class="col-sm-5">
             <select class="form-control select2" style="width: 100%;" id="lokasi" name="lokasi" data-placeholder="Pilih Lokasi" required>
               <option value="{{$cpars->lokasi}}">{{ $cpars->lokasi }}</option>
@@ -157,7 +157,7 @@
               <option value='Other'>Other</option>
             </select>
           </div>
-          <label class="col-sm-1">Departemen<span class="text-red">*</span></label>
+          <label class="col-sm-1">Departemen Penerima<span class="text-red">*</span></label>
           <div class="col-sm-5">
             <select class="form-control select2" name="department_id" id="department_id" style="width: 100%;" data-placeholder="Pilih Departemen" onchange="selectdepartemen()" required>
               <optgroup label="Production">

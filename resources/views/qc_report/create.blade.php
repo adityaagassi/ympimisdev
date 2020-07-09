@@ -39,7 +39,7 @@
         <div class="form-group row" align="left">
           <label class="col-sm-1">Kepada<span class="text-red">*</span></label>
           <div class="col-sm-5" align="left">
-            <select class="form-control select2" name="employee_id" style="width: 100%;" data-placeholder="Pilih Manager" required>
+            <select class="form-control select2" name="employee_id" style="width: 100%;" data-placeholder="Pilih Manager" required onchange="getManagerDepartemen(this)">
               <option value=""></option>
               @foreach($managers as $manager)
               <option value="{{ $manager->employee_id }}">{{ $manager->name }} - {{ $manager->position }} {{ $manager->department }}</option>
@@ -55,7 +55,7 @@
         </div>
 
         <div class="form-group row" align="left">
-          <label class="col-sm-1">Lokasi<span class="text-red">*</span></label>
+          <label class="col-sm-1">Lokasi NG / Masalah<span class="text-red">*</span></label>
           <div class="col-sm-5">
             <select class="form-control select2" style="width: 100%;" id="lokasi" name="lokasi" data-placeholder="Pilih Lokasi" required>
               <option></option>
@@ -78,9 +78,12 @@
               <option value='Other'>Other</option>
             </select>
           </div>
-          <label class="col-sm-1">Departemen<span class="text-red">*</span></label>
+          <label class="col-sm-1">Departemen Penerima<span class="text-red">*</span></label>
           <div class="col-sm-5">
-            <select class="form-control select2" name="department_id" id="department_id" style="width: 100%;" data-placeholder="Pilih Departemen" onchange="selectdepartemen()" required>
+
+            <input type="text" class="form-control" id="department_name" name="department_name" required="" readonly="">
+            <input type="hidden" class="form-control" id="department_id" name="department_id" required="">
+            <!-- <select class="form-control select2" name="department_id" id="department_id" style="width: 100%;" data-placeholder="Pilih Departemen" onchange="selectdepartemen()" required>
               <option value=""></option>
               <optgroup label="Production">
                 @foreach($productions as $production)
@@ -97,7 +100,7 @@
                 <option value="{{ $other->id }}">{{ $other->department_name }}</option>
                 @endforeach
               </optgroup>
-            </select>
+            </select> -->
           </div>
         </div>
         <div class="form-group row" align="left">
@@ -276,7 +279,19 @@
       return i;
     }
 
-    function selectdepartemen(){
+    function getManagerDepartemen(elem){
+
+      $.ajax({
+        url: "{{ route('admin.getDepartemen') }}?manager="+elem.value,
+        method: 'GET',
+        success: function(data) {
+          var json = data,
+          obj = JSON.parse(json);
+          $('#department_id').val(obj.id_department);
+          $('#department_name').val(obj.department);
+          // console.log(obj.id_department)
+        } 
+      });
 
       $.ajax({
            url: "{{ url('index/qc_report/get_fiscal_year') }}", // your php file
@@ -288,6 +303,11 @@
               $('#lastthree').val(lastthree);
            }
         });
+    }
+
+    function selectdepartemen(){
+
+      
     }
 
     // function selectbulan(){
@@ -302,7 +322,7 @@
         var kategori_cpar = document.getElementById("kategori");
         var getbulan = document.getElementById("getbulan").value;
         var gettahun = document.getElementById("getyear").value;
-        var getdepartemen = departemen.options[departemen.selectedIndex].value;
+        var getdepartemen = document.getElementById("department_id").value;
         var getsumber = sumber.options[sumber.selectedIndex].value;
         var kategori;
 

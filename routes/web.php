@@ -161,6 +161,7 @@ Route::get('index/machine_operational', 'InjectionsController@indexMachineSchedu
 //in
 Route::get('index/in', 'InjectionsController@in');
 Route::post('scan/part_injeksi', 'InjectionsController@scanPartInjeksi');
+Route::get('scan/new_tag_injeksi', 'InjectionsController@scanNewTagInjeksi');
 Route::post('scan/part_molding', 'InjectionsController@scanPartMolding');
 Route::get('send/Part', 'InjectionsController@sendPart');
 Route::get('get/Inpart', 'InjectionsController@getDataIn');
@@ -244,7 +245,7 @@ Route::get('fetch/getDataMesinShoot', 'InjectionsController@getDataMesinShoot');
 
 
 // operator
-Route::get('index/opmesin', 'InjectionsController@opmesin');
+Route::get('index/injection_machine', 'InjectionsController@injection_machine');
 Route::get('input/statusmesin', 'InjectionsController@inputStatusMesin');
 Route::post('delete/statusmesin', 'InjectionsController@deleteStatusMesin');
 Route::get('get/statusmesin', 'InjectionsController@getStatusMesin');
@@ -1112,6 +1113,7 @@ Route::get('purchase_order/get_detailname', 'AccountingController@pogetname')->n
 Route::get('purchase_order/report/{id}', 'AccountingController@report_purchase_order');
 
 Route::get('purchase_order/sendemail', 'AccountingController@po_send_email');
+Route::post('purchase_order/edit_sap', 'AccountingController@edit_sap');
 
 Route::get('edit/purchase_order', 'AccountingController@edit_purchase_order');
 Route::post('update/purchase_order', 'AccountingController@update_purchase_order');
@@ -1134,6 +1136,10 @@ Route::get('investment/create', 'AccountingController@create_investment');
 Route::post('investment/create_post', 'AccountingController@create_investment_post');
 Route::get('investment/detail/{id}', 'AccountingController@detail_investment');
 Route::post('investment/update_post', 'AccountingController@detail_investment_post');
+
+//Nomor Investment
+Route::get('investment/get_nomor_investment', 'AccountingController@get_nomor_inv');
+Route::get('fetch/investment/invbudgetlist', 'AccountingController@fetchInvBudgetList');
 
 //investment item
 Route::post('investment/create_investment_item', 'AccountingController@create_investment_item');
@@ -1717,7 +1723,7 @@ Route::get('fetch/getReportVisualDaily', 'Pianica@getReportVisualDaily');
 
 
 
-//stock taking
+//START STOCKTAKING
 Route::group(['nav' => 'M23', 'middleware' => 'permission'], function(){
 	Route::get('index/bom_output', 'StockTakingController@bom_output');
 	Route::get('fetch/bom_output', 'StockTakingController@fetch_bom_output');
@@ -1814,8 +1820,19 @@ Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevi
 
 
 Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
+//END STOCKTAKING
 
 
+
+
+
+//INDIRECT REQUEST
+Route::get('index/indirect_material_request', 'IndirectMaterialController@indexRequest');
+Route::get('index/indirect_material_stock', 'IndirectMaterialController@indexStock');
+
+
+
+//END INDIRECT REQUEST
 
 
 
@@ -2556,6 +2573,9 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_report/verifikasicpar/{id}', 'QcReportController@verifikasicpar');
 	Route::post('index/qc_report/checked/{id}', 'QcReportController@checked');
 	Route::post('index/qc_report/unchecked/{id}', 'QcReportController@unchecked');
+
+
+	Route::get('index/qc_report/getdepartemen', 'QcReportController@getDepartemen')->name('admin.getDepartemen');
 	
 	//CAR
 	Route::get('index/qc_car', 'QcCarController@index');
