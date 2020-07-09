@@ -63,9 +63,9 @@
 					<td colspan="8" style="font-size: 12px;">: {{ $pr[0]->department }}</td>
 				</tr>
 				<tr>
-					<td colspan="2" style="font-size: 12px;width: 22%">Group</td>
-					@if($pr[0]->group != null)
-					<td colspan="8" style="font-size: 12px;">: {{ $pr[0]->group }}</td>
+					<td colspan="2" style="font-size: 12px;width: 22%">Section</td>
+					@if($pr[0]->section != null)
+					<td colspan="8" style="font-size: 12px;">: {{ $pr[0]->section }}</td>
 					@else
 					<td colspan="8" style="font-size: 12px;">: {{ $pr[0]->department }}</td>
 					@endif
@@ -81,21 +81,17 @@
 				</tr>
 
 				<tr>
-					<td colspan="2" style="font-size: 12px;width: 22%">Receive Date</td>
-					@if($pr[0]->receive_date != null)
-					<td colspan="8" style="font-size: 12px;">: <?= date('d F Y', strtotime($pr[0]->receive_date)) ?></td>
-					@else
-					<td colspan="8" style="font-size: 12px;">: - </td>
-					@endif
-				</tr>
-
-				<tr>
 					<td colspan="10"><br></td>
 				</tr>
 
 			</thead>
 		</table>
 	</header>
+
+	@if($pr[0]->receive_date != null)
+		<img width="120" src="{{ public_path() . '/files/ttd_pr_po/received.jpg' }}" alt="" style="padding: 0;position: absolute;top: 55px;left: 540px">
+		<span style="position: absolute;left: 11px;width: 75px;font-size: 14px;font-weight: bold;font-family: arial-narrow;top:88px;left: 564px;color:#c34354"><?= date('d F Y', strtotime($pr[0]->receive_date)) ?></span>
+	@endif
 	<main>
 		<table style="width: 100%; font-family: arial; border-collapse: collapse; " id="isi">
 			<thead>
@@ -175,13 +171,14 @@
 						</td>
 						<td colspan="1" style="height: 40px">
 							@if($pr->approvaldgm == "Approved")
-								<img width="70" src="{{ public_path() . '/files/stempel_budhi.jpg' }}" alt="" style="padding: 0">
+								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/stempel_pak_budhi.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 227px;width: 75px;font-size: 8px;color: red;top: 59px;font-family: arial-narrow"><?= date('d F Y', strtotime($pr->dateapprovaldgm)) ?></span>
 							@endif
 						</td>
 						<td colspan="1" style="height: 40px">
 							@if($pr->approvalgm == "Approved")
-								<?= $pr->gm ?>
+								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/stempel_pak_hayakawa.jpg' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 332px;width: 75px;font-size: 8px;color: red;top: 59px;font-family: arial-narrow"><?= date('d F Y', strtotime($pr->dateapprovalgm)) ?></span>
 							@endif
 						</td>
 					</tr>

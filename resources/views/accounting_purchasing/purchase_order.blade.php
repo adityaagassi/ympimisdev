@@ -640,6 +640,7 @@
 
 									<div class="col-md-12">
 										<br>
+										<input type="hidden" id="id_edit" name="id_edit">
 										<a class="btn btn-success pull-right" onclick="submitFormEdit()">Konfirmasi</a>
 										<span class="pull-right">&nbsp;</span>
 										<a class="btn btn-primary btnPreviousEdit pull-right">Kembali</a>
@@ -1305,7 +1306,7 @@
 		    	var	lop2 = "lop2";
 
 		    	isi = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
-		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' class='form-control' name='id_edit' id='id_edit' value='"+value.id+"'><input type='text' class='form-control' name='no_pr"+value.id+"' id='no_pr"+value.id+"' value='"+ value.no_pr +"' readonly=''></div>";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' name='no_pr"+value.id+"' id='no_pr"+value.id+"' value='"+ value.no_pr +"' readonly=''></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' name='no_item"+value.id+"' id='no_item"+value.id+"' value='"+ value.no_item +"' readonly=''><input type='hidden' class='form-control' id='nama_item"+value.id+"' name='nama_item"+value.id+"' placeholder='Nama Item' readonly='' value='"+ value.nama_item +"'></div> ";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+value.id+"' name='item_budget"+value.id+"' placeholder='Budget' required='' value="+value.budget_item+" readonly=''></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+value.id+"' name='delivery_date"+value.id+"' placeholder='Delivery Date' required='' value="+value.delivery_date+"></div>";

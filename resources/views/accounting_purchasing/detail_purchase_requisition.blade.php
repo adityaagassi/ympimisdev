@@ -109,9 +109,9 @@
               <td colspan="8" style="border:none"><b><?= $pr->department ?></b></td>
             </tr>
             <tr>
-              <td colspan="1" style="border:none">Sub Section</td>
+              <td colspan="1" style="border:none">Section</td>
               <td colspan="1" style="text-align: right;border:none">:</td> 
-              <td colspan="8" style="border:none"><b><?= $pr->group ?></b></td>
+              <td colspan="8" style="border:none"><b><?= $pr->section ?></b></td>
             </tr>
             <tr>
               <td colspan="1"style="border:none">Date Of Submission</td>

@@ -2068,14 +2068,18 @@ class AccountingController extends Controller
         $id = Auth::id();
 
         $lop2 = $request->get('lop2');
-
+        $po_data = AccPurchaseOrder::find($request->get('id_edit'));
         $lop = explode(',', $request->get('looping'));
 
         try
         {
-
             $data3 = AccPurchaseOrder::where('no_po', $request->get('no_po_edit'))
-            ->update(['supplier_code' => $request->get('supplier_code_edit') , 'supplier_name' => $request->get('supplier_name_edit') , 'supplier_due_payment' => $request->get('supplier_due_payment_edit') , 'supplier_status' => $request->get('supplier_status_edit') , 'material' => $request->get('material_edit') , 'vat' => $request->get('price_vat_edit') , 'transportation' => $request->get('transportation_edit') , 'delivery_term' => $request->get('delivery_term_edit') , 'holding_tax' => $request->get('holding_tax_edit') , 'currency' => $request->get('currency_edit') , 'authorized3' => $request->get('authorized3_edit') , 'authorized3_name' => $request->get('authorized3_name_edit') , 'note' => $request->get('note_edit') , ]);
+            ->update(['supplier_code' => $request->get('supplier_code_edit') , 'supplier_name' => $request->get('supplier_name_edit') , 'supplier_due_payment' => $request->get('supplier_due_payment_edit') , 'supplier_status' => $request->get('supplier_status_edit') , 'material' => $request->get('material_edit') , 'vat' => $request->get('price_vat_edit') , 'transportation' => $request->get('transportation_edit') , 'delivery_term' => $request->get('delivery_term_edit') , 'holding_tax' => $request->get('holding_tax_edit') , 'currency' => $request->get('currency_edit') , 'authorized3' => $request->get('authorized3_edit') , 'authorized3_name' => $request->get('authorized3_name_edit') , 'note' => $request->get('note_edit') ]);
+
+            if ($po_data->posisi == "pch") {
+                $data5 = AccPurchaseOrder::where('no_po', $request->get('no_po_edit'))
+                ->update(['revised' => 'true', 'revised_date' => date('Y-m-d')]);
+            }
 
             foreach ($lop as $lp)
             {

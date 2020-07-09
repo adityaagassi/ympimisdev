@@ -36,13 +36,18 @@
 		}
 
 		@page { }
-        .footer { position: fixed; left: 0px; bottom: -50px; right: 0px; height: 150px;text-align: center;}
+        .footer { position: fixed; left: 0px; bottom: -50px; right: 0px; height: 200px;text-align: center;}
         .footer .pagenum:before { content: counter(page); }
 	</style>
 </head>
 
 <body>
 	<header>
+
+		@if($po[0]->revised == "true")
+			<img width="150" src="{{ public_path() . '/files/ttd_pr_po/revised.jpg' }}" alt="" style="padding: 0;position: absolute;top: 150px;left: 250px">
+			<span style="position: absolute;left: 11px;width: 75px;font-size: 12px;font-weight: bold;font-family: arial-narrow;top:194px;left: 294px;color: #e797ab"><?= date('d F Y', strtotime($po[0]->revised_date)) ?></span>
+		@endif
 		<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse; text-align: left;" >
 			<thead>
 				<tr>
@@ -63,7 +68,7 @@
 					<td colspan="4" style="text-align: left;font-size: 11px">Fax : (0343) 740291</td>
 				</tr>
 				<tr>
-					<td colspan="8" style="text-align: left;font-size: 11px">Jawa TImur Indonesia</td>
+					<td colspan="8" style="text-align: left;font-size: 11px">Jawa Timur Indonesia</td>
 				</tr>
 
 				<tr>
@@ -72,7 +77,6 @@
 				<tr>
 					<td colspan="10" style="text-align:center;font-size: 20px;font-weight: bold;font-style: italic"><div class="line"><span>PURCHASE ORDER</span><div></td>
 				</tr>
-
 				<tr>
 					<td colspan="10" style="font-size: 12px;font-weight: bold;">Vendor</td>
 				</tr>
@@ -303,20 +307,27 @@
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
 				<thead>
 					<tr>
-						<td  colspan="9" style="font-size: 12px;font-weight: bold">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+						<td colspan="9" style="font-size: 12px;font-weight: bold">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 					</tr>
 					<tr>
-						<td colspan="3" style="height: 70px">
-							@if($po->posisi != "staff_pch")
+						<td colspan="3" style="height: 0px">
+							@if($po->buyer_id == "PI1908032")
+								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.png' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->tgl_po)) ?></span>
+							@elseif($po->buyer_id == "PI1810020")
+								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.png' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 31px;width: 75px;font-size: 10px;font-weight: bold;top: 103px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->tgl_po)) ?></span>
+							@else
 								<?= $po->buyer_name ?>
 							@endif
 						</td>
-						<td colspan="3" style="height: 70px">
+						<td colspan="3" style="height: 0px">
 							@if($po->approval_authorized2 == "Approved")
-								<?= $po->authorized2_name ?>
+								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 298px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->date_approval_authorized2)) ?></span>
 							@endif
 						</td>
-						<td colspan="3" style="height: 70px">
+						<td colspan="3" style="height: 0px">
 							@if($po->approval_authorized3 == "Approved")
 								<?= $po->authorized3_name ?>
 							@endif
@@ -338,7 +349,7 @@
 					</tr>
 				</tbody>
 			</table>
-	        Page <span class="pagenum"></span>
+	        <!-- Page <span class="pagenum"></span> -->
 	    </div>
 	</footer>
 </body>
