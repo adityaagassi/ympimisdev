@@ -89,42 +89,50 @@
 				</div>
 				<div class="row">
 					<input type="hidden" value="{{csrf_token()}}" name="_token" />
-					<div class="col-xs-12">
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>Date From</label>
-								<div class="input-group date">
-									<div class="input-group-addon">
-										<i class="fa fa-calendar"></i>
+					<form method="GET" action="{{ url("export/purchase_order/list") }}">
+						<div class="col-xs-12">
+							<div class="col-md-2">
+								<div class="form-group">
+									<label>Date From</label>
+									<div class="input-group date">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control pull-right" id="datefrom" name="datefrom">
 									</div>
-									<input type="text" class="form-control pull-right" id="datefrom">
 								</div>
 							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<label>Date To</label>
-								<div class="input-group date">
-									<div class="input-group-addon">
-										<i class="fa fa-calendar"></i>
+							<div class="col-md-2">
+								<div class="form-group">
+									<label>Date To</label>
+									<div class="input-group date">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control pull-right" id="dateto" name="dateto">
 									</div>
-									<input type="text" class="form-control pull-right" id="dateto">
 								</div>
 							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<div class="col-md-6" style="padding-right: 0;">
-									<label style="color: white;"> x</label>
-									<button class="btn btn-primary form-control" onclick="fillTable()">Search</button>
-								</div>
-								<div class="col-md-6" style="padding-right: 0;">
-									<label style="color: white;"> x</label>
-									<button class="btn btn-danger form-control" onclick="clearConfirmation()">Clear</button>
+							<div class="col-md-4">
+								<div class="form-group">
+									<div class="col-md-4" style="padding-right: 0;">
+										<label style="color: white;"> x</label>
+										<button type="button" class="btn btn-primary form-control" onclick="fillTable()">Search</button>
+									</div>
+									<div class="col-md-4" style="padding-right: 0;">
+										<label style="color: white;"> x</label>
+										<button type="button" class="btn btn-danger form-control" onclick="clearConfirmation()">Clear</button>
+									</div>
+									<div class="col-md-4" style="padding-right: 0;">
+										<label style="color: white;"> x</label>
+										<button type="submit" class="btn btn-success form-control"><i class="fa fa-download"></i> Export List PO</button>
+									</div>
 								</div>
 							</div>
+							
 						</div>
-					</div>
+					</form>
+
 				</div>
 			</div>
 			
@@ -142,11 +150,10 @@
 										<th style="width: 1%">Supplier</th>
 										<th style="width: 1%">Material</th>
 										<th style="width: 1%">VAT</th>
-										<th style="width: 1%">Transportation</th>
 										<th style="width: 1%">Delivery Term</th>
 										<th style="width: 1%">Holding Tax</th>
 										<th style="width: 1%">Currency</th>
-										<th style="width: 1%">Catatan</th>
+										<th style="width: 1%">No PO SAP</th>
 										<th style="width: 1%">Status</th>
 										<th style="width: 1%">Action</th>
 									</tr>
@@ -155,7 +162,6 @@
 								</tbody>
 								<tfoot>
 									<tr>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -288,8 +294,8 @@
 											<select class="form-control select4" id="currency" name="currency" data-placeholder='Currency' style="width: 100%">
 												<option value="">&nbsp;</option>
 												<option value="USD">USD</option>
-												<option value="ID">IDR</option>
-												<option value="JPN">JPN</option>
+												<option value="IDR">IDR</option>
+												<option value="JPY">JPY</option>
 											</select>
 										</div>
 									</div>
@@ -549,8 +555,8 @@
 											<select class="form-control select5" id="currency_edit" name="currency_edit" data-placeholder='Currency' style="width: 100%">
 												<option value="">&nbsp;</option>
 												<option value="USD">USD</option>
-												<option value="ID">IDR</option>
-												<option value="JPN">JPN</option>
+												<option value="IDR">IDR</option>
+												<option value="JPY">JPY</option>
 											</select>
 										</div>
 									</div>
@@ -574,7 +580,7 @@
 												<option value="{{$author3->employee_id}}">{{$author3->name}}</option>
 												@endforeach
 											</select>
-											<input type="text" class="form-control" id="authorized3_name_edit" name="authorized3_name_edit" readonly="">
+											<input type="hidden" class="form-control" id="authorized3_name_edit" name="authorized3_name_edit" readonly="">
 										</div>
 										<div class="form-group">
 											<label>Catatan / Keterangan</label>
@@ -593,7 +599,7 @@
 									<div class="col-xs-1" style="padding:5px;">
 										<b>NO PR</b>
 									</div>
-									<div class="col-xs-2" style="padding:5px;">
+									<div class="col-xs-1" style="padding:5px;">
 										<b>No Item</b>
 									</div>
 									<div class="col-xs-1" style="padding:5px;">
@@ -605,7 +611,7 @@
 									<div class="col-xs-1" style="padding:5px;">
 										<b>Qty</b>
 									</div>
-									<div class="col-xs-1" style="padding:5px;">
+									<div class="col-xs-1" style="paddinsg:5px;">
 										<b>UOM</b>
 									</div>
 									<div class="col-xs-1" style="padding:5px;">
@@ -619,6 +625,9 @@
 									</div>
 									<div class="col-xs-1" style="padding:5px;">
 										<b>Konversi</b>
+									</div>
+									<div class="col-xs-1" style="padding:5px;">
+										<b>GL Number</b>
 									</div>
 									<div class="col-xs-1" style="padding:5px;">
 										<b>Aksi</b>
@@ -644,6 +653,34 @@
 		</div>
 	</form>
 </div>
+
+<div class="modal fade" id="modalSAP" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  	<div class="modal-dialog modal-sm">
+    	<div class="modal-content">
+      		<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        	<h4 class="modal-title" id="myModalLabel">Edit Nomor SAP</h4>
+      		</div>
+	      	<div class="modal-body">
+		        <div class="box-body">
+		          <input type="hidden" value="{{csrf_token()}}" name="_token" />
+		          <div class="row">
+			          <div class="col-xs-12">
+			            <label for="po_sap">No PO SAP<span class="text-red">*</span></label>
+			            <input type="text" class="form-control" name="no_po_sap" id="no_po_sap">
+			           </div>
+		          	</div>
+		        </div>
+	     	</div>
+		    <div class="modal-footer">
+		      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+		      <input type="hidden" id="id_edit_sap">
+		      <button type="button" onclick="edit_sap()" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-pencil"></i> Edit</button>
+		    </div>
+	  	</div>
+	</div>
+</div>
+
 
 <div class="modal modal-danger fade in" id="modaldanger">
 	<div class="modal-dialog">
@@ -853,11 +890,10 @@
 			{ "data": "supplier_name" },
 			{ "data": "material" },
 			{ "data": "vat" },
-			{ "data": "transportation" },
 			{ "data": "delivery_term" },
 			{ "data": "holding_tax" },
 			{ "data": "currency" },
-			{ "data": "note" },
+			{ "data": "no_po_sap" },
 			{ "data": "status" },
 			{ "data": "action" },
 
@@ -1045,9 +1081,9 @@
 				$('#delivery_date'+no).attr('readonly', false).val(obj.item_request_date);
 				if (obj.item_currency == "USD") {
 					$('#ket_harga'+no).text("$");
-				}else if (obj.item_currency == "JPN") {
+				}else if (obj.item_currency == "JPY") {
 					$('#ket_harga'+no).text("¥");
-				}else if (obj.item_currency == "ID"){
+				}else if (obj.item_currency == "IDR"){
 					$('#ket_harga'+no).text("Rp.");
 				}
 				$('#goods_price'+no).attr('readonly', false).val(obj.item_price);
@@ -1293,9 +1329,9 @@
 
 		    	if (value.currency == "USD") {
 		    		$('#ket_harga_edit'+value.id).text("$");
-		    	}else if (value.currency == "JPN") {
+		    	}else if (value.currency == "JPY") {
 		    		$('#ket_harga_edit'+value.id).text("¥");
-		    	}else if (value.currency == "ID"){
+		    	}else if (value.currency == "IDR"){
 		    		$('#ket_harga_edit'+value.id).text("Rp.");
 		    	}
 
@@ -1325,6 +1361,28 @@
 
 	}
 
+	function editSAP(id){
+    	$('#modalSAP').modal("show");
+    	$("#id_edit_sap").val(id);
+    }
+
+    function edit_sap() {
+
+      var data = {
+        id: $("#id_edit_sap").val(),
+        no_po_sap : $("#no_po_sap").val()
+      };
+
+      $.post('{{ url("purchase_order/edit_sap") }}', data, function(result, status, xhr){
+        if (result.status == true) {
+          $('#poTable').DataTable().ajax.reload(null, false);
+          openSuccessGritter("Success","Nomor PO has been edited.");
+        } else {
+          openErrorGritter("Error","Failed to edit.");
+        }
+      })
+    }
+
 	function deleteConfirmation(name, id) {
 		$('#modalDeleteBody').text("Are you sure want to delete ' " + name + " '");
 		$('[name=modalDeleteButton]').attr("id",id);
@@ -1353,8 +1411,9 @@
       }
 
       $.get('{{ url("purchase_order/sendemail") }}', data, function(result, status, xhr){
+
         openSuccessGritter("Success","Email Has Been Sent");
-        // window.location.reload();
+        setTimeout(function(){  window.location.reload() }, 3000);
       })
     }
 

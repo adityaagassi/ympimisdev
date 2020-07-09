@@ -168,8 +168,8 @@
             <select class="form-control select2" id="item_currency" data-placeholder='Currency' style="width: 100%" onchange="currency()">
               <option value="">&nbsp;</option>
               <option value="USD">USD</option>
-              <option value="ID">ID</option>
-              <option value="JPN">JPN</option>
+              <option value="IDR">IDR</option>
+              <option value="JPY">JPY</option>
             </select>
           </div>
         </div>
@@ -284,7 +284,7 @@
             });
       }
 
-      else if (mata_uang == "ID") {
+      else if (mata_uang == "IDR") {
           $('#ket_harga').text("Rp. ");
 
           var harga = document.getElementById("item_price");
@@ -293,7 +293,7 @@
           });
       }
 
-      else if (mata_uang == "JPN") {
+      else if (mata_uang == "JPY") {
           $('#ket_harga').text("¥");
 
           var harga = document.getElementById("item_price");

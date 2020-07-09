@@ -2,7 +2,10 @@
 <html>
 <head>
 	<title>YMPI 情報システム</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> -->
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, user-scalable=yes, initial-scale=1.0" name="viewport">
 	<style type="text/css">
 		body{
 			font-size: 10px;
@@ -16,6 +19,19 @@
 			text-align: left;
 			padding-left: 5px;
 		}
+
+		/*@font-face {
+	      font-family: 'Firefly Sung';
+	      font-style: normal;
+	      font-weight: 400;
+	    }
+	    * {
+	      font-family: Firefly Sung, DejaVu Sans, sans-serif;
+	    }*/
+
+	    * {
+	      font-family: arial;
+	    }
 
 		@page { }
         .footer { position: fixed; left: 0px; bottom: -50px; right: 0px; height: 150px;text-align: center;}
@@ -48,7 +64,11 @@
 				</tr>
 				<tr>
 					<td colspan="2" style="font-size: 12px;width: 22%">Group</td>
-					<td>: {{ $pr[0]->group }}</td>
+					@if($pr[0]->group != null)
+					<td colspan="8" style="font-size: 12px;">: {{ $pr[0]->group }}</td>
+					@else
+					<td colspan="8" style="font-size: 12px;">: {{ $pr[0]->department }}</td>
+					@endif
 				</tr>
 				<tr>
 					<td colspan="2" style="font-size: 12px;width: 22%">Date Of Submission</td>
@@ -62,7 +82,11 @@
 
 				<tr>
 					<td colspan="2" style="font-size: 12px;width: 22%">Receive Date</td>
+					@if($pr[0]->receive_date != null)
 					<td colspan="8" style="font-size: 12px;">: <?= date('d F Y', strtotime($pr[0]->receive_date)) ?></td>
+					@else
+					<td colspan="8" style="font-size: 12px;">: - </td>
+					@endif
 				</tr>
 
 				<tr>
@@ -151,7 +175,8 @@
 						</td>
 						<td colspan="1" style="height: 40px">
 							@if($pr->approvaldgm == "Approved")
-								<?= $pr->dgm ?>
+								<img width="70" src="{{ public_path() . '/files/stempel_budhi.jpg' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 227px;width: 75px;font-size: 8px;color: red;top: 59px;font-family: arial-narrow"><?= date('d F Y', strtotime($pr->dateapprovaldgm)) ?></span>
 							@endif
 						</td>
 						<td colspan="1" style="height: 40px">

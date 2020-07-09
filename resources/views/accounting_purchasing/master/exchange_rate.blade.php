@@ -180,8 +180,8 @@
 		              <select class="form-control select2" id="currency" name="currency" style="width: 100%;" data-placeholder="Pilih Currency" onchange="currency()" required>
 		                <option></option>
 		                <option value="USD">USD</option>
-		                <option value="JPN">JPN</option>
-		                <option value="ID">ID</option>
+		                <option value="JPY">JPY</option>
+		                <option value="IDR">IDR</option>
 		              </select>
 		            </div>
 		          </div>
@@ -358,11 +358,11 @@
 	    if (mata_uang == "USD") {
 	        $('#ket_harga').text("$");       
 	    }
-	    else if (mata_uang == "ID") {
+	    else if (mata_uang == "IDR") {
           	$('#ket_harga').text("Rp. ");
 	    }
 
-	    else if (mata_uang == "JPN") {
+	    else if (mata_uang == "JPY") {
 	        $('#ket_harga').text("¥");
 	    }
 

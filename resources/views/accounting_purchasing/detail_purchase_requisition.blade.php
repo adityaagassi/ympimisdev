@@ -169,15 +169,15 @@
               <td colspan="1"><b>({{$item->item_currency}}) 
                 <?php 
                 if($item->item_currency == "USD") { echo "$"; } 
-                else if($item->item_currency == "JPN") { echo "¥"; } 
-                else if($item->item_currency == "ID") { echo "Rp."; } 
+                else if($item->item_currency == "JPY") { echo "¥"; } 
+                else if($item->item_currency == "IDR") { echo "Rp."; } 
                 ?> 
                 <?= number_format($item->item_price,2,',','.') ?></b></td>
               <td colspan="1"><b>({{$item->item_currency}}) 
                 <?php 
                 if($item->item_currency == "USD") { echo "$"; } 
-                else if($item->item_currency == "JPN") { echo "¥"; } 
-                else if($item->item_currency == "ID") { echo "Rp."; } 
+                else if($item->item_currency == "JPY") { echo "¥"; } 
+                else if($item->item_currency == "IDR") { echo "Rp."; } 
                 ?> 
                 <?= number_format($item->item_amount,2,',','.') ?></b></td>
             </tr>

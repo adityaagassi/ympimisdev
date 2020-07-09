@@ -173,12 +173,22 @@ class SendEmail extends Mailable
         }
 
         if($this->remark == 'purchase_requisition'){
-            if($this->data[0]->file_pdf != null){
+            if($this->data[0]->file_pdf != null && $this->data[0]->file != null){
+                $all_file = json_decode($this->data[0]->file);
+
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
                 ->subject('Purchase Requisition '.$this->data[0]->no_pr.'')
                 ->view('mails.purchase_requisition')
-                ->attach(public_path('purchase_requisition/'.$this->data[0]->file_pdf));
+                ->attach(public_path('files/pr/'.$all_file[0]))
+                ->attach(public_path('pr_list/'.$this->data[0]->file_pdf));
+            }
+            else if($this->data[0]->file_pdf != null){
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Purchase Requisition '.$this->data[0]->no_pr.'')
+                ->view('mails.purchase_requisition')
+                ->attach(public_path('pr_list/'.$this->data[0]->file_pdf));
             }else{
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
@@ -188,13 +198,13 @@ class SendEmail extends Mailable
         }
 
         if($this->remark == 'purchase_order'){
-            if($this->data[0]->file_pdf != null){
+            if($this->data[0]->file_pdf != null ){
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
                 ->subject('Purchase Order '.$this->data[0]->no_po.'')
                 ->view('mails.purchase_order')
-                ->attach(public_path('purchase_order/'.$this->data[0]->file_pdf));
-            }else{
+                ->attach(public_path('po_list/'.$this->data[0]->file_pdf));
+            } else{
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
                 ->subject('Purchase Order '.$this->data[0]->no_po.'')

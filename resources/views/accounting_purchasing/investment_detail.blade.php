@@ -128,13 +128,14 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-  @if ($errors->has('password'))
-  <div class="alert alert-danger alert-dismissible">
+  @if (session('status'))
+  <div class="alert alert-success alert-dismissible">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
-    {{ $errors->first() }}
+    <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+    {{ session('status') }}
   </div>   
   @endif
+
   @if (session('error'))
   <div class="alert alert-danger alert-dismissible">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -156,75 +157,76 @@
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="row">
-          <div class="col-xs-4 col-sm-4 col-md-4">
+          <div class="col-xs-4 col-sm-4 col-md-4 col-md-offset-1">
             <label for="form_identitas">Applicant</label>
-            <input type="text" id="form_identitas" class="form-control" value="{{$employee->employee_id}} - {{$employee->name}} - {{$employee->department}}" readonly>
-            <input type="hidden" id="applicant_id" class="form-control" value="{{$employee->employee_id}}" readonly>
-            <input type="hidden" id="applicant_name" class="form-control" value="{{$employee->name}}" readonly>
-            <input type="hidden" id="applicant_department" class="form-control" value="{{$employee->department}}" readonly>
+            <input type="text" id="form_identitas" class="form-control" value="{{$investment->applicant_id}} - {{$investment->applicant_name}} - {{$investment->applicant_department}}" readonly>
+            <input type="hidden" id="applicant_id" class="form-control" value="{{$investment->applicant_id}}" readonly>
+            <input type="hidden" id="applicant_name" class="form-control" value="{{$investment->applicant_name}}" readonly>
+            <input type="hidden" id="applicant_department" class="form-control" value="{{$investment->applicant_department}}" readonly>
           </div>
-          <div class="col-xs-4 col-sm-4 col-md-4">
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_bagian">Submission Date</label>
             <input type="text" id="date" class="form-control" value="{{ date('d F Y', strtotime($investment->submission_date)) }}" readonly>
             <input type="hidden" id="submission_date" class="form-control" value="{{ $investment->submission_date }}">
           </div>
-          <div class="col-xs-4 col-sm-4 col-md-4">
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_bagian">Reff Number</label>
-            <input type="text" class="form-control" id="reff_number" placeholder="Reff Number" value="{{ $investment->reff_number }}">
+            <input type="text" class="form-control" id="reff_number" placeholder="Reff Number" value="{{ $investment->reff_number }}" readonly="">
           </div>
         </div>
         <div class="row">
-          <div class="col-xs-3">
-            <label for="form_kategori">Kind Of Application</label>
-            <select class="form-control select2" id="category" data-placeholder='Choose Category' style="width: 100%">
-              <option value="investment" <?php if($investment->category == "investment") echo "selected"; ?>>Investment</option>
-              <option value="expense"<?php if($investment->category == "expense") echo "selected"; ?>>Expense</option>
-            </select>
-          </div>
-          <div class="col-xs-5">
+
+          <div class="col-xs-4 col-xs-offset-1">
             <label for="form_judul">Subject</label>
             <input type="text" id="subject" class="form-control" placeholder="Subject" value="{{ $investment->subject }}">
           </div>
-          <div class="col-xs-4">
-            <label for="form_kategori">Class Of Assets / Kind Of Expense</label>
-            <select class="form-control select2" id="type" data-placeholder='Choose Type' style="width: 100%">
-              <option value="">&nbsp;</option>
-              <option value="building" <?php if($investment->type == "building") echo "selected"; ?>>Building</option>
-              <option value="machine & equipment" <?php if($investment->type == "machine & equipment") echo "selected"; ?>>Machine & Equipment</option>
-              <option value="vehicle" <?php if($investment->type == "vehicle") echo "selected"; ?>>Vehicle</option>
-              <option value="tools, jigs & furniture" <?php if($investment->type == "tools, jigs & furniture") echo "selected"; ?>>Tools, Jigs & Furniture</option>
-              <option value="moulding" <?php if($investment->type == "moulding") echo "selected"; ?>>Moulding</option>
-              <option value="pc & printer" <?php if($investment->type == "pc & printer") echo "selected"; ?>>PC & Printer</option>
-
-              <option value="office supplies" <?php if($investment->type == "office supplies") echo "selected"; ?>>Office Supplies</option>
-              <option value="repair & maintenance" <?php if($investment->type == "repair & maintenance") echo "selected"; ?>>Repair & Maintenance</option>
-              <option value="constool" <?php if($investment->type == "constool") echo "selected"; ?>>Constool</option>
-              <option value="professional fee" <?php if($investment->type == "professional fee") echo "selected"; ?>>Proffesional Fee</option>
-              <option value="miscellaneous" <?php if($investment->type == "miscellaneous") echo "selected"; ?>>Miscellaneous</option>
-              <option value="others" <?php if($investment->type == "others") echo "selected"; ?>>Others</option>
+          <div class="col-xs-3">
+            <label for="form_kategori">Kind Of Application</label>
+            <select class="form-control select2" id="category" data-placeholder='Choose Category' style="width: 100%">
+              <option value="investment" <?php if($investment->category == "Investment") echo "selected"; ?>>Investment</option>
+              <option value="expense"<?php if($investment->category == "Expense") echo "selected"; ?>>Expense</option>
             </select>
           </div>
           <div class="col-xs-3">
+            <label for="form_kategori">Class Of Assets / Kind Of Expense</label>
+            <select class="form-control select2" id="type" data-placeholder='Choose Type' style="width: 100%">
+              <option value="">&nbsp;</option>
+              <option value="Building" <?php if($investment->type == "Building") echo "selected"; ?>>Building</option>
+              <option value="Machine & Equipment" <?php if($investment->type == "Machine & Equipment") echo "selected"; ?>>Machine & Equipment</option>
+              <option value="Vehicle" <?php if($investment->type == "Vehicle") echo "selected"; ?>>Vehicle</option>
+              <option value="Tools, Jigs & Furniture" <?php if($investment->type == "Tools, Jigs & Furniture") echo "selected"; ?>>Tools, Jigs & Furniture</option>
+              <option value="Moulding" <?php if($investment->type == "Moulding") echo "selected"; ?>>Moulding</option>
+              <option value="Pc & Printer" <?php if($investment->type == "Pc & Printer") echo "selected"; ?>>PC & Printer</option>
+
+              <option value="Office Supplies" <?php if($investment->type == "Office Supplies") echo "selected"; ?>>Office Supplies</option>
+              <option value="Repair & Maintenance" <?php if($investment->type == "Repair & Maintenance") echo "selected"; ?>>Repair & Maintenance</option>
+              <option value="Constool" <?php if($investment->type == "Constool") echo "selected"; ?>>Constool</option>
+              <option value="Professional Fee" <?php if($investment->type == "Professional Fee") echo "selected"; ?>>Proffesional Fee</option>
+              <option value="Miscellaneous" <?php if($investment->type == "Miscellaneous") echo "selected"; ?>>Miscellaneous</option>
+              <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
+            </select>
+          </div>
+          <div class="col-xs-4 col-xs-offset-1">
             <label for="form_grup">Main Objective</label>
             <select class="form-control select2" id="objective" data-placeholder='Choose objective' style="width: 100%">
               <option value="">&nbsp;</option>
-              <option value="safety" <?php if($investment->objective == "safety") echo "selected"; ?>>Safety & Prevention of Pollution & Disaster</option>
-              <option value="RD" <?php if($investment->objective == "RD") echo "selected"; ?>>R & D</option>
-              <option value="prod" <?php if($investment->objective == "prod") echo "selected"; ?>>Production of new model</option>
-              <option value="rationalization" <?php if($investment->objective == "rationalization") echo "selected"; ?>>Rationalization</option>
-              <option value="increase" <?php if($investment->objective == "increase") echo "selected"; ?>>Production Increase</option>
-              <option value="repair" <?php if($investment->objective == "repair") echo "selected"; ?>>Repair & Modification</option>
+              <option value="Safety & Prevention of Pollution & Disaster" <?php if($investment->objective == "Safety & Prevention of Pollution & Disaster") echo "selected"; ?>>Safety & Prevention of Pollution & Disaster</option>
+              <option value="R & D" <?php if($investment->objective == "R & D") echo "selected"; ?>>R & D</option>
+              <option value="Production of New Model" <?php if($investment->objective == "Production of New Model") echo "selected"; ?>>Production of new model</option>
+              <option value="Rationalization" <?php if($investment->objective == "Rationalization") echo "selected"; ?>>Rationalization</option>
+              <option value="Production Increase" <?php if($investment->objective == "Production Increase") echo "selected"; ?>>Production Increase</option>
+              <option value="Repair & Modification" <?php if($investment->objective == "Repair & Modification") echo "selected"; ?>>Repair & Modification</option>
             </select>
           </div>
-          <div class="col-xs-5">
+          <div class="col-xs-3">
             <label for="form_judul">Objective Explanation</label>
             <input type="text" id="objective_detail" class="form-control" placeholder="Objective Explanation" value="{{ $investment->objective_detail }}">
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-3">
             <label for="form">Vendor</label>
             <select class="form-control select2" id="vendor" data-placeholder='Choose Supplier' style="width: 100%">
               @foreach($vendor as $ven)
-              @if($ven->supplier_name == $investment->desc_supplier)
+              @if($ven->vendor_code == $investment->supplier_code)
               <option selected>{{ $ven->supplier_name }}</option>
               @else
               <option value="">&nbsp;</option>
@@ -234,21 +236,68 @@
             </select>
           </div>
         </div>
-
-
         <div class="row">
-          <div class="col-sm-4 col-sm-offset-5" style="padding-top: 10px">
-            <div class="btn-group">
-              <a class="btn btn-danger" href="{{ url('investment') }}">Cancel</a>
+          <div class="col-xs-4 col-xs-offset-1">
+            <label for="form">Payment Term</label>
+            <input type="text" id="payment_term" name="payment_term" class="form-control" placeholder="Payment Term" required="" value="{{$investment->payment_term}}">
+          </div>
+          <div class="col-xs-3">
+            <label for="form_grup">Date Order</label>
+            <div class="input-group date">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control pull-right datepicker" id="date_order" name="date_order" placeholder="Date of Order" required="" value="{{$investment->date_order}}">
             </div>
-            <div class="btn-group">
-              <button type="button" class="btn btn-success pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
+          </div>
+          <div class="col-xs-3">
+            <label for="form_judul">Date Delivery</label>
+            <div class="input-group date">
+              <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <input type="text" class="form-control pull-right datepicker" id="date_delivery" name="date_delivery" placeholder="Date of Delivery" value="{{$investment->delivery_order}}" required="">
             </div>
           </div>
         </div>
 
-        <div class="row" style="margin-top: 10px">
-          <div class="col-xs-12">
+        <?php if ($investment->file != null){ ?>
+
+        <br>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+            <div class="box box-warning box-solid">
+              <div class="box-header with-border">
+                <h3 class="box-title">File Terlampir</h3>
+
+                <div class="box-tools pull-right">
+                  <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.box-tools -->
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                <?php $data = json_decode($investment->file);
+                  for ($i = 0; $i < count($data); $i++) { ?>
+                      <div class="col-md-3">
+                        <div class="isi">
+                          <?= $data[$i] ?>
+                        </div>
+                      </div>
+                      <div  class="col-md-2">
+                          <a href="{{ url('/files/investment/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                      </div> 
+                <?php } ?>                       
+              </div>
+            </div>   
+          </div> 
+        </div>
+        <?php } ?>
+
+
+        <div class="row">
+          <div class="col-xs-10 col-xs-offset-1">
           <a data-toggle="modal" data-target="#createModal" class="btn btn-primary col-sm-3" style="color:white;font-weight: bold; font-size: 20px;margin-bottom: 20px">Tambahkan Item</a>
           <table id="item" class="table table-bordered table-striped table-hover">
               <thead style="background-color: rgba(126,86,134,.7);">
@@ -279,6 +328,41 @@
 
             </div>
         </div>
+
+        <div class="row">
+          <div class="col-xs-5 col-sm-5 col-md-5 col-md-offset-1">
+            <label for="form_budget">Budget</label>
+            <select class="form-control select2" data-placeholder="Pilih Nomor Budget" name="budget_no" id="budget_no" style="width: 100% height: 35px;" required> 
+              <option></option>
+            </select>
+          </div>
+          <div class="col-xs-5 col-sm-5 col-md-5">
+            <label for="form_bagian">Currency</label>
+             <select class="form-control select2" id="item_currency" data-placeholder='Currency' style="width: 100%" onchange="currency()">
+              <option value="">&nbsp;</option>
+              <option value="USD">USD</option>
+              <option value="IDR">IDR</option>
+              <option value="JPY">JPY</option>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-5" style="padding-top: 10px">
+            <div class="btn-group">
+              <a class="btn btn-danger" href="{{ url('investment') }}">Cancel</a>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-success pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+
         
       </div>
   </div>
@@ -438,6 +522,8 @@
   <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
   <script type="text/javascript">
 
+    budget_list = "";
+
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -448,6 +534,8 @@
       $("body").on("click",".btn-danger",function(){ 
           $(this).parents(".control-group").remove();
       });
+
+      getBudget();
 
       $('body').toggleClass("sidebar-collapse");
       $("#navbar-collapse").text('');
@@ -514,7 +602,7 @@
       },
       "columns": [
       { "data": "reff_number" },
-      { "data": "kode_item"},
+      { "data": "no_item"},
       { "data": "detail" },
       { "data": "qty" },
       { "data": "price" },
@@ -605,12 +693,26 @@
     }
 
     $('.datepicker').datepicker({
-      format: "yyyy-mm",
-      startView: "months", 
-      minViewMode: "months",
-      autoclose: true,
-      orientation: 'bottom auto',
-    });
+        autoclose: true,
+        todayHighlight: true,
+        format: "yyyy-mm-dd",
+        orientation: 'bottom auto',
+      });
+
+    function getBudget() {
+
+      data = {
+        category:"{{ $investment->category }}",
+        department:"{{ $investment->applicant_department }}"
+      }
+
+      $.get('{{ url("fetch/investment/invbudgetlist") }}', data, function(result, status, xhr) {
+        $.each(result.budget, function(index, value){
+          budget_list += "<option value="+value.budget_no+">"+value.budget_no+" - "+value.description+"</option> ";
+        });
+        $('#budget_no').append(budget_list);
+      })
+    }
 
 
     $("#form_submit").click( function() {
@@ -734,7 +836,7 @@
       
       $.get('{{ url("investment/edit_investment_item") }}', data, function(result, status, xhr){
         $("#id_edit").val(id);
-        $("#kode_item_edit").val(result.datas.kode_item).trigger('change.select2');
+        $("#kode_item_edit").val(result.datas.no_item).trigger('change.select2');
         $("#detail_item_edit").val(result.datas.detail);
         $("#jumlah_item_edit").val(result.datas.qty);
         $("#price_item_edit").val(result.datas.price);
@@ -771,9 +873,6 @@
         }
       })
     }
-
-
-   
 
     function modalDelete(id) {
       var data = {

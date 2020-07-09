@@ -162,7 +162,7 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a style="background-color: orange; width: 50px;" href="{{ url("purchase_requisition/reject/".$id) }}">&nbsp; Tidak &nbsp;</a><br>
 
-			@elseif($posisi == "acc")
+			@elseif($posisi == "pch")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Purchase Requisition <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>

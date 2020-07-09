@@ -61,7 +61,12 @@
     <small>Form PR</small>
   </h1>
   <ol class="breadcrumb">
+    @if($pr->posisi == "staff")
     <button class="btn btn-sm btn-warning pull-right" data-toggle="tooltip" title="Edit" onclick="editPR({{$pr->id}})">Update Purchase Requisition</button>
+
+    @elseif($pr->posisi == "pch")
+    <button class="btn btn-sm btn-warning pull-right" data-toggle="tooltip" title="Edit" onclick="editPR({{$pr->id}})">Update Purchase Requisition</button>
+    @endif
  </ol>
 </section>
 @endsection
@@ -110,7 +115,7 @@
           </div>
         </form>
 
-        @elseif($pr->posisi == "acc")
+        @elseif($pr->posisi == "pch")
 
         <form role="form" method="post" action="{{url('purchase_requisition/checked/'.$pr->id)}}">
 
@@ -236,6 +241,7 @@
             
           </div>
           <div class="modal-footer">
+            <input type="hidden" class="form-control" id="id_edit" name="id_edit" placeholder="ID">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-warning">Update</button>
           </div>
@@ -262,6 +268,8 @@
       $("body").on("click",".btn-danger",function(){ 
         $(this).parents(".control-group").remove();
       });
+
+      $('body').toggleClass("sidebar-collapse");
 
       var showAtt = "{{$pr->file_pdf}}";
       var path = "{{$file_path}}";
@@ -304,10 +312,10 @@
           $("#no_pr_edit").val(result.purchase_requisition.no_pr).attr('readonly', true);
           $("#no_budget_edit").val(result.purchase_requisition.no_budget).attr('readonly', true);
           $("#tgl_pengajuan_edit").val(result.purchase_requisition.submission_date).attr('readonly', true);
+          $("#id_edit").val(result.purchase_requisition.id).attr('readonly', true)
 
-
-              $('#modalDetailBodyEdit').html('');
-              var ids = [];
+          $('#modalDetailBodyEdit').html('');
+          var ids = [];
           $.each(result.purchase_requisition_item, function(key, value) {
             // console.log(result.purchase_requisition_item);
             var tambah2 = "tambah2";
@@ -325,7 +333,7 @@
             isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='uomhide"+value.id+"' id='uomhide"+value.id+"' value='"+value.item_uom+"'><select class='form-control select5' id='uom_edit"+value.id+"' name='uom_edit"+value.id+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div>";
             isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date_edit"+value.id+"' name='req_date_edit"+value.id+"' placeholder='Tanggal' required='' value='"+value.item_request_date+"''></div></div>";
             isi += "<div class='col-xs-1' style='padding: 5px'><input type='text' class='form-control' id='item_currency_edit"+value.id+"' name='item_currency_edit"+value.id+"' value='"+value.item_currency+"' readonly=''></div>";
-            isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"'>?</span><input type='text' class='form-control currency' id='item_price_edit"+value.id+"' name='item_price_edit"+value.id+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' value="+value.item_price+" readonly=''></div></div>";
+            isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price_edit"+value.id+"' name='item_price_edit"+value.id+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' value="+value.item_price+" readonly='' style='padding:6px 6px'></div></div>";
             isi += "<div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty_edit"+value.id+"' name='qty_edit"+value.id+"' placeholder='Qty' onkeyup='getTotal(this.id)' required='' value='"+value.item_qty+"' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount_edit"+value.id+"' name='amount_edit"+value.id+"' placeholder='Total' required='' value='"+value.item_amount+"' readonly=''></div>";
             isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.item_desc +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a></div>";
             isi += "</div>";

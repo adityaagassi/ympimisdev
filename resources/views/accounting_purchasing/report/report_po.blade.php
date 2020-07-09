@@ -226,6 +226,8 @@
 				</tr>
 				<?php $no++; ?>
 				@endforeach
+
+
 				<tr>
 					<td colspan="8"><br></td>
 				</tr>
@@ -295,6 +297,7 @@
 			</tbody>
 		</table>	
 	</main>
+
 	<footer>
 		<div class="footer">
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
@@ -303,9 +306,21 @@
 						<td  colspan="9" style="font-size: 12px;font-weight: bold">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 					</tr>
 					<tr>
-						<td colspan="3" style="height: 70px">&nbsp;</td>
-						<td colspan="3" style="height: 70px">&nbsp;</td>
-						<td colspan="3" style="height: 70px">&nbsp;</td>
+						<td colspan="3" style="height: 70px">
+							@if($po->posisi != "staff_pch")
+								<?= $po->buyer_name ?>
+							@endif
+						</td>
+						<td colspan="3" style="height: 70px">
+							@if($po->approval_authorized2 == "Approved")
+								<?= $po->authorized2_name ?>
+							@endif
+						</td>
+						<td colspan="3" style="height: 70px">
+							@if($po->approval_authorized3 == "Approved")
+								<?= $po->authorized3_name ?>
+							@endif
+						</td>
 					</tr>
 
 				</thead>

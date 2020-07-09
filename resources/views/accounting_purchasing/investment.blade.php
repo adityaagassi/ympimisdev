@@ -132,12 +132,14 @@
 										<th style="width: 1%">Vendor</th>
 										<th style="width: 1%">File</th>
 										<th style="width: 1%">Status</th>
+										<th style="width: 1%">Action</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
 								<tfoot>
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -269,9 +271,10 @@
 			{ "data": "category" },
 			{ "data": "subject" },
 			{ "data": "type" },
-			{ "data": "desc_supplier" },
+			{ "data": "supplier_code" },
 			{ "data": "file" },
-			{ "data": "status" }
+			{ "data": "status" },
+			{ "data": "action" }
 			],
 		});
 

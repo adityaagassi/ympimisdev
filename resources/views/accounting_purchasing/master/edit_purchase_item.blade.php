@@ -169,16 +169,16 @@
               <option value="">&nbsp;</option>
               @if($item->currency == "USD")
               <option value="USD" selected="">USD</option>
-              <option value="ID">ID</option>
-              <option value="JPN">JPN</option>
-              @elseif($item->currency == "ID")
+              <option value="IDR">IDR</option>
+              <option value="JPY">JPY</option>
+              @elseif($item->currency == "IDR")
               <option value="USD">USD</option>
-              <option value="ID" selected="">ID</option>
-              <option value="JPN">JPN</option>
-              @elseif($item->currency == "JPN")
+              <option value="IDR" selected="">IDR</option>
+              <option value="JPY">JPY</option>
+              @elseif($item->currency == "JPY")
               <option value="USD">USD</option>
-              <option value="ID">ID</option>
-              <option value="JPN" selected="">JPN</option>)
+              <option value="IDR">IDR</option>
+              <option value="JPY" selected="">JPY</option>)
               @endif
             </select>
           </div>
