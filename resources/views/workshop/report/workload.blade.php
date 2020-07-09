@@ -470,8 +470,6 @@
 					if(unfilled){
 						deal.push({
 							wjo : 0,
-							from : 0,
-							to : 0
 						});
 					}
 
