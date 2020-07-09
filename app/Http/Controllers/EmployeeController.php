@@ -2773,7 +2773,7 @@ public function fetchDataKaizen()
      return DataTables::of($kzn)
      ->addColumn('fr_stat', function($kzn){
           if ($kzn->status == -1) {
-               if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager' || Auth::id() == 53 || Auth::id() == 80) {
+               if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager' || $_GET['position'] == 'Deputy Foreman' || Auth::id() == 53 || Auth::id() == 80) {
                     return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">Unverified</a>';
                } else {
                     return '<span class="label bg-yellow">Unverified</span>';
