@@ -95,6 +95,8 @@
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
       <div class="box-body">
+
+        <?php $user = STRTOUPPER(Auth::user()->username)?>
         
         <?php foreach ($cars as $cars): ?>
 
@@ -111,7 +113,7 @@
         @if($cars->email_status == "SentChief" && $cars->checked_chief == "Checked")
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email Ke Manager</a>
 
-        @elseif(Auth::user()->username == $cars->verifikatorchief && $cars->email_status == "SentManager")
+        @elseif($user == $cars->verifikatorchief && $cars->email_status == "SentManager")
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
         @endif
 
@@ -120,7 +122,7 @@
         @if($cars->email_status == "SentForeman2" && $cars->checked_foreman == "Checked")
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email Ke Manager</a>
 
-        @elseif(Auth::user()->username == $cars->verifikatorforeman && $cars->email_status == "SentManager") <!-- Jika yang login Foreman dan status-->
+        @elseif($user == $cars->verifikatorforeman && $cars->email_status == "SentManager") <!-- Jika yang login Foreman dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
         @endif
 
@@ -129,7 +131,7 @@
         @if($cars->email_status == "SentCoordinator" && $cars->checked_coordinator == "Checked")
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke Manager" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email Ke Manager</a>
 
-        @elseif(Auth::user()->username == $cars->verifikatorcoordinator && $cars->email_status == "SentManager") <!-- Jika yang login Coordinator dan status-->
+        @elseif($user == $cars->verifikatorcoordinator && $cars->email_status == "SentManager") <!-- Jika yang login Coordinator dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
         @endif
 
@@ -138,7 +140,7 @@
         @if($cars->email_status == "SentManager" && $cars->checked_manager == "Checked") <!-- Manager -->
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke DGM" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email Ke DGM</a>
 
-        @elseif(Auth::user()->username == $cars->manager && $cars->email_status == "SentDGM") <!-- Jika yang login Manager dan status-->
+        @elseif($user == $cars->manager && $cars->email_status == "SentDGM") <!-- Jika yang login Manager dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
 
         @endif
@@ -148,7 +150,7 @@
         @if($cars->email_status == "SentDGM" && $cars->approved_dgm == "Checked") <!-- DGM -->
           <a class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" title="Send Email Ke GM" onclick="sendemail({{ $cars->id }})" style="margin-right: 5px">Send Email Ke GM</a>
 
-        @elseif(Auth::user()->username == $cars->dgm && $cars->email_status == "SentGM") <!-- Jika yang login DGM dan status-->
+        @elseif($user == $cars->dgm && $cars->email_status == "SentGM") <!-- Jika yang login DGM dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
 
         @endif
@@ -160,14 +162,14 @@
 
           <!-- <a href="{{url('index/qc_car/sendemail/'.$cars['id'].'/'.$cars['posisi'])}}" class="btn btn-sm ">Email </a> -->
 
-        @elseif(Auth::user()->username == $cars->gm && $cars->email_status == "SentQA") <!-- Jika yang login GM dan status-->
+        @elseif($user == $cars->gm && $cars->email_status == "SentQA") <!-- Jika yang login GM dan status-->
           <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim Ke QA</label>
 
         @endif
 
         <br/><br/>
 
-        @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator || Auth::user()->username == $cars->employee_id || Auth::user()->username == $cars->dgm || Auth::user()->username == $cars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL" || Auth::user()->username == $cars->car_cpar->staff || Auth::user()->username == $cars->car_cpar->leader) 
+        @if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator || $user == $cars->employee_id || $user == $cars->dgm || $user == $cars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL" || $user == $cars->car_cpar->staff || $user == $cars->car_cpar->leader) 
 
         <table class="table table-hover">
           <form role="form" method="post" action="{{url('index/qc_car/checked/'.$cars->id)}}">
@@ -187,7 +189,7 @@
                   <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center">Deskripsi</td>
                   <td colspan="4"><?= $cars->deskripsi ?></td>
                   <td colspan="1">
-                      @if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
+                      @if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -202,7 +204,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->employee_id && Auth::user()->username != "PI0109004")
+                      @elseif($user == $cars->employee_id && $user != "PI0109004")
                         @if ($cars->posisi == "manager")
                           @if($cars->checked_manager == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -217,7 +219,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->dgm)
+                      @elseif($user == $cars->dgm)
                         @if ($cars->posisi == "dgm")
                           @if($cars->approved_dgm == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -232,7 +234,7 @@
                           <span class="label label-danger">Sudah Diverifikasi</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->gm)
+                      @elseif($user == $cars->gm)
                         @if ($cars->posisi == "gm")
                           @if($cars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -253,7 +255,7 @@
                   <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center">Tindakan</td>
                   <td colspan="4"><?= $cars->tindakan ?></td>
                   <td colspan="1">
-                  	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
+                  	@if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -266,7 +268,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->employee_id && Auth::user()->username != "PI0109004")
+                      @elseif($user == $cars->employee_id && $user != "PI0109004")
                         @if ($cars->posisi == "manager")
                           @if($cars->checked_manager == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -281,7 +283,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->dgm)
+                      @elseif($user == $cars->dgm)
                         @if ($cars->posisi == "dgm")
                           @if($cars->approved_dgm == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -296,7 +298,7 @@
                           <span class="label label-danger">Sudah Diverifikasi</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->gm)
+                      @elseif($user == $cars->gm)
                         @if ($cars->posisi == "gm")
                           @if($cars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center" >
@@ -317,7 +319,7 @@
                   <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center">Penyebab</td>
                   <td colspan="4"><?= $cars->penyebab ?></td>
                   <td colspan="1">
-                  	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
+                  	@if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -332,7 +334,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->employee_id && Auth::user()->username != "PI0109004")
+                      @elseif($user == $cars->employee_id && $user != "PI0109004")
                         @if ($cars->posisi == "manager")
                           @if($cars->checked_manager == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -347,7 +349,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->dgm)
+                      @elseif($user == $cars->dgm)
                         @if ($cars->posisi == "dgm")
                           @if($cars->approved_dgm == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -362,7 +364,7 @@
                           <span class="label label-danger">Sudah Diverifikasi</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->gm)
+                      @elseif($user == $cars->gm)
                         @if ($cars->posisi == "gm")
                           @if($cars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -383,7 +385,7 @@
                   <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center;">Perbaikan</td>
                   <td colspan="4"><?= $cars->perbaikan ?></td>
                   <td colspan="1">
-                  	@if(Auth::user()->username == $cars->verifikatorchief || Auth::user()->username == $cars->verifikatorforeman || Auth::user()->username == $cars->verifikatorcoordinator)
+                  	@if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator)
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -398,7 +400,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke Manager</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->employee_id && Auth::user()->username != "PI0109004")
+                      @elseif($user == $cars->employee_id && $user != "PI0109004")
                         @if ($cars->posisi == "manager")
                           @if($cars->checked_manager == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -413,7 +415,7 @@
                           <span class="label label-danger">Sudah Dikirim Ke DGM</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->dgm)
+                      @elseif($user == $cars->dgm)
                         @if ($cars->posisi == "dgm")
                           @if($cars->approved_dgm == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -428,7 +430,7 @@
                           <span class="label label-danger">Sudah Diverifikasi</span>
                         @endif
 
-                      @elseif(Auth::user()->username == $cars->gm)
+                      @elseif($user == $cars->gm)
                         @if ($cars->posisi == "gm")
                           @if($cars->approved_gm == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">

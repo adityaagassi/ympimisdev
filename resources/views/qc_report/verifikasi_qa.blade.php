@@ -86,11 +86,14 @@ table.table-bordered > tfoot > tr > th{
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New CPAR</h3> --}}
     </div>
-    @if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader || Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman || Auth::user()->username == $cpars->manager || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL")
+
+    <?php $user = STRTOUPPER(Auth::user()->username)?>
+
+    @if(Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || $user == $cpars->staff || $user == $cpars->leader || $user == $cpars->chief || $user == $cpars->foreman || $user == $cpars->manager || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL")
     
-    @if(Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
+    @if($user == $cpars->staff || $user == $cpars->leader)
     <form role="form" method="post" enctype='multipart/form-data' action="{{url('index/qc_report/close1', $cpars->id)}}">
-    @elseif(Auth::user()->username == $cpars->manager)
+    @elseif($user == $cpars->manager)
     <form role="form" method="post" enctype='multipart/form-data' action="{{url('index/qc_report/close2', $cpars->id)}}">
     @endif 
 
@@ -103,7 +106,7 @@ table.table-bordered > tfoot > tr > th{
             <input type="text" class="form-control" name="cpar_no" placeholder="Nasukkan Nomor CPAR" value="{{ $cpars->cpar_no }}" readonly="">
           </div>
 
-          @if($cpars->posisi == "QA" && Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
+          @if($cpars->posisi == "QA" && $user == $cpars->staff || $user == $cpars->leader)
 
           <a href="{{url('index/qc_report/print_cpar', $cpars->id)}}" data-toggle="tooltip" class="btn btn-warning btn-md" title="Lihat Komplain" target="_blank">CPAR Report</a>
 
@@ -170,7 +173,7 @@ table.table-bordered > tfoot > tr > th{
             </div>
           </div>    
         <?php } ?>
-          @if($cpars->posisi == "QA" && Auth::user()->username == $cpars->staff || Auth::user()->username == $cpars->leader)
+          @if($cpars->posisi == "QA" && $user == $cpars->staff || $user == $cpars->leader || Auth::user()->role_code == "MIS")
  
             @if(count($verifikasi) == 0)
             <div class="form-group row" align="left">
@@ -325,7 +328,7 @@ table.table-bordered > tfoot > tr > th{
             <button type="submit" class="btn btn-success col-md-14" style="width: 100%">Simpan</button>
           @endif
 
-          @if($cpars->posisi == "QA2" && Auth::user()->username == $cpars->chief || Auth::user()->username == $cpars->foreman)
+          @if($cpars->posisi == "QA2" && $user == $cpars->chief || $user == $cpars->foreman)
 
           <table class="table table-striped">
             <tr>
@@ -357,7 +360,7 @@ table.table-bordered > tfoot > tr > th{
 
           @endif
 
-          @if($cpars->posisi == "QAmanager" && Auth::user()->username == $cpars->manager)
+          @if($cpars->posisi == "QAmanager" && $user == $cpars->manager)
           <table class="table table-striped">
             <tr>
               <td style="font-size: 20px">
