@@ -21,20 +21,20 @@
 			<p style="font-size: 18px;">Today Stuffing Progress (Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			<p style="font-weight: bold;">Stuffing Date: {{ date('l, d F Y') }}</p>
 			This is an automatic notification. Please do not reply to this address.
-			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
+			<table style="border:1px solid black; border-collapse: collapse;" width="90%">
 				<thead style="background-color: rgb(126,86,134);">
 					<tr>
 						<th style="width: 1%; border:1px solid black;">#</th>
-						<th style="width: 2%; border:1px solid black;">Progress</th>
-						<th style="width: 2%; border:1px solid black;">Remark</th>
-						<th style="width: 2%; border:1px solid black;">Cont. ID</th>
-						<th style="width: 4%; border:1px solid black;">Dest</th>
-						<th style="width: 4%; border:1px solid black;">Plan</th>
-						<th style="width: 4%; border:1px solid black;">Actual</th>
-						<th style="width: 4%; border:1px solid black;">Diff</th>
-						<th style="width: 2%; border:1px solid black;">Start</th>
-						<th style="width: 2%; border:1px solid black;">Finish</th>
-						<th style="width: 2%; border:1px solid black;">Remark</th>
+						<th style="width: 1%; border:1px solid black;">Progress</th>
+						<th style="width: 1%; border:1px solid black;">Remark</th>
+						<th style="width: 1%; border:1px solid black;">Cont. ID</th>
+						<th style="width: 1%; border:1px solid black;">Dest</th>
+						<th style="width: 1%; border:1px solid black;">Plan</th>
+						<th style="width: 1%; border:1px solid black;">Actual</th>
+						<th style="width: 1%; border:1px solid black;">Diff</th>
+						<th style="width: 1%; border:1px solid black;">Start</th>
+						<th style="width: 1%; border:1px solid black;">Finish</th>
+						<th style="width: 15%; border:1px solid black;">Remark</th>
 					</tr>
 				</thead>
 				<tbody>
