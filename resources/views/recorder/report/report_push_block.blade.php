@@ -67,6 +67,11 @@
 			{{ session('error') }}
 		</div>   
 	@endif
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Updating, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-primary">
@@ -540,6 +545,7 @@
 	}
 
 	function update(){
+		$('#loading').show();
 		var push_pull = $('#push_pull').val();
 		var judgement = $('#judgement_push_pull').val();
 		var ketinggian = $('#ketinggian').val();
@@ -557,6 +563,7 @@
 		$.post(url, data, function(result, status, xhr){
 			if(result.status){
 				$("#edit-modal").modal('hide');
+				$('#loading').hide();
 				// $('#example1').DataTable().ajax.reload();
 				// $('#example2').DataTable().ajax.reload();
 				openSuccessGritter('Success','Push Pull Recorder Check has been updated');

@@ -113,6 +113,7 @@
 		padding-top: 0px;
 	}
 
+	#loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -126,6 +127,11 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<input type="hidden" id="data" value="data">
 	<div class="row">
 		<div class="col-xs-6">
@@ -1185,6 +1191,7 @@
 			alert('Semua Data Harus Diisi');
 		}
 		else{
+			$('#loading').show();
 			$('#selesai_button').prop('disabled', true);
 			var data2 = {
 				push_block_code : push_block_code,
@@ -1207,6 +1214,7 @@
 			}
 			$.post('{{ url("index/push_block_recorder/create_torque") }}', data2, function(result, status, xhr){
 				if(result.status){
+					$('#loading').hide();
 					openSuccessGritter('Success', result.message);
 					alert('Pengisian Selesai.');
 					location.reload();

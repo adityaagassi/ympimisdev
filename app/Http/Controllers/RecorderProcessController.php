@@ -602,10 +602,6 @@ class RecorderProcessController extends Controller
 
     public function report_push_block($remark)
     {
-        // $from = date('Y-m').'-01';
-        // $to = date('Y-m-d');
-        // $push_block_check = PushBlockRecorder::where('push_block_code',$remark)->orderBy('push_block_recorders.id','desc')->whereBetween('check_date', [$from, $to])
-        //       ->get();
 
         $data = array(
                       // 'push_block_check' => $push_block_check,
@@ -2207,16 +2203,26 @@ class RecorderProcessController extends Controller
 
     public function report_torque_check($remark)
     {
-        // $from = date('Y-m').'-01';
-        // $to = date('Y-m-d');
-        // $push_block_check = PushBlockRecorder::where('push_block_code',$remark)->orderBy('push_block_recorders.id','desc')->whereBetween('check_date', [$from, $to])
-        //       ->get();
 
+        $role = Auth::user()->role_code;
+        $id_gen = DB::SELECT("SELECT DISTINCT
+            ( push_block_id_gen ) 
+          FROM
+            `push_block_torques` 
+          WHERE
+            push_block_code = '".$remark."' 
+          ORDER BY
+            check_date DESC");
         $data = array(
                       // 'push_block_check' => $push_block_check,
                       'mesin' => $this->mesin,
                       'mesin2' => $this->mesin,
-                      'remark' => $remark,);
+                      'remark' => $remark,
+                      'id_gen' => $id_gen,
+                      'role' => $role,
+                      'mesin3' => $this->mesin,
+                      'mesin4' => $this->mesin,
+                      'product_type' => $this->product_type);
       return view('recorder.report.report_torque_check', $data
         )->with('page', 'Report Torque Check')->with('remark', $remark);
     }
@@ -2227,6 +2233,17 @@ class RecorderProcessController extends Controller
       $date_from = $request->get('date_from');
       $date_to = $request->get('date_to');
       $datenow = date('Y-m-d');
+
+      $role = Auth::user()->role_code;
+
+      $id_gen = DB::SELECT("SELECT DISTINCT
+            ( push_block_id_gen ) 
+          FROM
+            `push_block_torques` 
+          WHERE
+            push_block_code = '".$remark."' 
+          ORDER BY
+            check_date DESC");
 
       if($request->get('date_to') == null){
         if($request->get('date_from') == null){
@@ -2286,7 +2303,12 @@ class RecorderProcessController extends Controller
       $data = array('torque_check' => $torque_check,
                       'mesin' => $this->mesin,
                       'mesin2' => $this->mesin,
-                      'remark' => $remark,);
+                      'role' => $role,
+                      'id_gen' => $id_gen,
+                      'remark' => $remark,
+                      'mesin3' => $this->mesin,
+                      'mesin4' => $this->mesin,
+                      'product_type' => $this->product_type);
       return view('recorder.report.report_torque_check', $data
         )->with('page', 'Report Torque Check')->with('remark', $remark);
     }
@@ -2410,6 +2432,78 @@ class RecorderProcessController extends Controller
                 $torque->torqueavg = $request->get('average');
                 $torque->judgement = $request->get('judgement');
                 $torque->save();
+
+               $response = array(
+                'status' => true,
+              );
+              return Response::json($response);
+            }catch(\Exception $e){
+              $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+            }
+    }
+
+    function get_torque_all(Request $request)
+    {
+          try{
+            $detail = PushBlockTorque::where('push_block_id_gen',$request->get("push_block_id_gen"))->first();
+            $data = array('torque_id' => $detail->id,
+                          'check_date' => $detail->check_date,
+                          'check_type' => $detail->check_type,
+                          'push_block_id_gen' => $detail->push_block_id_gen,
+                          'injection_date_middle' => $detail->injection_date_middle,
+                          'mesin_middle' => $detail->mesin_middle,
+                          'injection_date_head_foot' => $detail->injection_date_head_foot,
+                          'mesin_head_foot' => $detail->mesin_head_foot,
+                          'product_type' => $detail->product_type,
+                          'middle' => $detail->middle,
+                          'head_foot' => $detail->head_foot,
+                          'torque1' => $detail->torque1,
+                          'torque2' => $detail->torque2,
+                          'torque3' => $detail->torque3,
+                          'torqueavg' => $detail->torqueavg,
+                          'judgement' => $detail->judgement,
+                          'pic_check' => $detail->pic_check);
+
+            $response = array(
+              'status' => true,
+              'data' => $data
+            );
+            return Response::json($response);
+
+          }
+          catch (Exception $e){
+             $response = array(
+              'status' => false,
+              'datas' => $e->getMessage(),
+            );
+            return Response::json($response);
+          }
+    }
+
+    function update_torque_all(Request $request)
+    {
+        try{
+                $torque = PushBlockTorque::where('push_block_id_gen',$request->get("push_block_id_gen"))->get();
+                foreach($torque as $torque){
+                  $torques = PushBlockTorque::find($torque->id);
+                  if ($request->get('remark') == 'After Injection') {
+                    $front = 'AI';
+                  }else{
+                    $front = 'FSA';
+                  }
+                  $push_block_id_gen = $front."_".$torques->check_date."_".$request->get('product_type')."_".$torques->pic_check;
+                  $torques->injection_date_middle = $request->get('injection_date_middle');
+                  $torques->injection_date_head_foot = $request->get('injection_date_head_foot');
+                  $torques->mesin_middle = $request->get('mesin_middle');
+                  $torques->mesin_head_foot = $request->get('mesin_head_foot');
+                  $torques->product_type = $request->get('product_type');
+                  $torques->push_block_id_gen = $push_block_id_gen;
+                  $torques->save();
+                }
 
                $response = array(
                 'status' => true,

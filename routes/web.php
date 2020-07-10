@@ -1834,6 +1834,7 @@ Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
 //INDIRECT REQUEST
 Route::get('index/indirect_material_request', 'IndirectMaterialController@indexRequest');
 Route::get('index/indirect_material_stock', 'IndirectMaterialController@indexStock');
+Route::post('import/indirect_material_stock', 'IndirectMaterialController@importStock');
 Route::get('fetch/indirect_material_stock', 'IndirectMaterialController@fetchStock');
 
 
@@ -2526,6 +2527,7 @@ Route::post('index/recorder/filter_report_torque_check/{remark}', 'RecorderProce
 Route::get('index/recorder/get_torque','RecorderProcessController@get_torque')->name('recorder.get_torque');
 Route::post('index/recorder/update_torque/{id}','RecorderProcessController@update_torque');
 Route::get('index/recorder/get_torque_all','RecorderProcessController@get_torque_all');
+Route::post('index/recorder/update_torque_all','RecorderProcessController@update_torque_all');
 
 //RECORDER TORQUE CHECK AI
 Route::get('index/recorder_process_torque_ai/{remark}', 'RecorderProcessController@index_torque_ai');
@@ -2921,6 +2923,7 @@ Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_ch
 // ------------------ INVENORY / SPARE PART ------------------
 
 Route::get('index/maintenance/inven/list', 'MaintenanceController@indexInventory');
+Route::get('fetch/maintenance/inven/list', 'MaintenanceController@fetchInventory');
 
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');

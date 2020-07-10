@@ -67,6 +67,11 @@
 			{{ session('error') }}
 		</div>   
 	@endif
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Updating, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-primary">
@@ -165,8 +170,29 @@
 								</div>
 							</form>
 						</div>
+						@if($role == 'F-SPL' || $role == 'L-Molding' || $role == 'L-RC' || $role == 'MIS' || $role == 'S')
 						<div class="col-xs-3">
+							<div class="box-header">
+								<h3 class="box-title">Edit</h3>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="">Check Code</label>
+									<select class="form-control select2" name='check_code' id='check_code' data-placeholder="Select Check Code" style="width: 100%;">
+										<option value=""></option>
+										@foreach($id_gen as $id_gen)
+											<option value="{{$id_gen->push_block_id_gen}}">{{$id_gen->push_block_id_gen}}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<button class="btn btn-warning pull-right" onclick="edit_torque_all()">
+									Edit
+								</button>
+							</div>
 						</div>
+						@endif
 					</div>
 					<div class="row">
 						<div class="col-xs-12">
@@ -263,7 +289,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Edit Push Pull & Height Check Recorder</b></h4>
+        <h4 class="modal-title" align="center"><b>Edit Torque Check Recorder</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -280,7 +306,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Injection Date Middle</label>
-				  <input type="text" name="injection_date_middle" id="injection_date_middle" class="form-control" readonly required="required" title="" readonly>
+				  <input type="text" name="injection_date_middle" id="injection_date_middle" class="form-control" required="required" title="" readonly>
 	            </div>
 	            <div class="form-group">	              
 	              <label for="">Mesin Middle</label>
@@ -337,6 +363,82 @@
           	<div class="modal-footer">
 	            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
 	            <input type="submit" value="Update" onclick="update()" class="btn btn-primary">
+	          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-all-modal">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" align="center"><b>Edit Torque Recorder</b></h4>
+      </div>
+      <div class="modal-body">
+      	<div class="box-body">
+          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            	<div class="form-group">
+	              <label for="">Check Code</label>
+				  <input type="text" name="check_code_all" id="check_code_all" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">
+	              <input type="hidden" name="url_edit" id="url_edit" class="form-control">
+	              <label for="">Check Date</label>
+				  <input type="text" name="check_date_all" id="check_date_all" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">
+	              <label for="">Check Type</label>
+				  <input type="text" name="check_type_all" id="check_type_all" class="form-control" readonly required="required" title="" readonly>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Product</label>
+				  <select class="form-control select2" name='product_type_all' id='product_type_all' data-placeholder="Select Product" style="width: 100%;">
+					<option value=""></option>
+					@foreach($product_type as $product_type)
+						<option value="{{$product_type}}">{{$product_type}}</option>
+					@endforeach
+				  </select>
+	            </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            	<div class="form-group">
+	              <label for="">Injection Date Middle</label>
+				  <input type="text" name="injection_date_middle_all" id="injection_date_middle_all" class="form-control datepicker" required="required" title="" placeholder="Injection Date Middle">
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Mesin Middle</label>
+	              <select class="form-control select2" name='mesin_middle_all' id='mesin_middle_all' data-placeholder="Select Mesin Middle" style="width: 100%;">
+					<option value=""></option>
+					@foreach($mesin3 as $mesin3)
+						<option value="{{$mesin3}}">{{$mesin3}}</option>
+					@endforeach
+				  </select>
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Injection Date Head / Foot</label>
+				  <input type="text" name="injection_date_head_foot_all" id="injection_date_head_foot_all" class="form-control datepicker" required="required" title="" placeholder="Injection Date Head / Foot">
+	            </div>
+	            <div class="form-group">	              
+	              <label for="">Mesin Head / Foot</label>
+				  <select class="form-control select2" name='mesin_head_foot_all' id='mesin_head_foot_all' data-placeholder="Select Mesin Head / Foot" style="width: 100%;">
+					<option value=""></option>
+					@foreach($mesin4 as $mesin4)
+						<option value="{{$mesin4}}">{{$mesin4}}</option>
+					@endforeach
+				  </select>
+	            </div>
+            </div>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          	<div class="modal-footer">
+	            <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+	            <input type="submit" value="Update" onclick="update_all()" class="btn btn-primary">
 	          </div>
           </div>
         </div>
@@ -545,29 +647,8 @@
 		$(avg_id).val(avg.toFixed(2));
 	}
 
-	function ketinggian() {
-		var batas_tinggi = '0.2';
-
-		var x = document.getElementById('ketinggian').value;
-		if(x == ''){
-			document.getElementById('ketinggian').style.backgroundColor = "#ff4f4f";
-		}
-		else{
-			document.getElementById('ketinggian').style.backgroundColor = "#7fff6e";
-		}
-		if(parseFloat(x) > parseFloat(batas_tinggi)){
-			$('#judgement2').val('NG');
-			document.getElementById('judgement2').style.backgroundColor = "#ff4f4f";
-			document.getElementById('judgement2').style.color = "#fff";
-		}
-		else{
-			$('#judgement2').val('OK');
-			document.getElementById('judgement2').style.backgroundColor = "#7fff6e";
-			document.getElementById('judgement2').style.color = "#000";
-		}
-	}
-
 	function update(){
+		$('#loading').show();
 		var torque1 = $('#torque1').val();
 		var torque2 = $('#torque2').val();
 		var torque3 = $('#torque3').val();
@@ -587,6 +668,73 @@
 		$.post(url, data, function(result, status, xhr){
 			if(result.status){
 				$("#edit-modal").modal('hide');
+				$('#loading').hide();
+				// $('#example1').DataTable().ajax.reload();
+				// $('#example2').DataTable().ajax.reload();
+				openSuccessGritter('Success','Torque Recorder Check has been updated');
+				window.location.reload();
+			} else {
+				audio_error.play();
+				openErrorGritter('Error','Update Torque Recorder Check Failed');
+			}
+		});
+	}
+
+	function edit_torque_all() {
+		var id_gen = $('#check_code').val();
+		var push_block_code = '{{$remark}}';
+		if (id_gen == "") {
+			alert('Pilih Kode Pengecekan');
+		}else{
+			$('#edit-all-modal').modal('show');
+			var data = {
+				push_block_id_gen:id_gen,
+				push_block_code:push_block_code
+			}
+
+			$.get('{{ url("index/recorder/get_torque_all") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#check_code_all').val(result.data.push_block_id_gen);
+					$('#check_date_all').val(result.data.check_date);
+					$('#check_type_all').val(result.data.check_type);
+					$('#injection_date_middle_all').val(result.data.injection_date_middle);
+					$('#injection_date_head_foot_all').val(result.data.injection_date_head_foot);
+					$('#mesin_middle_all').val(result.data.mesin_middle).trigger('change.select2');
+					$('#mesin_head_foot_all').val(result.data.mesin_head_foot).trigger('change.select2');
+					$('#product_type_all').val(result.data.product_type).trigger('change.select2');
+				} else {
+					audio_error.play();
+					openErrorGritter('Error','Update Torque Recorder Check Failed');
+				}
+			});
+		}
+	}
+
+	function update_all(){
+		$('#loading').show();
+		var remark = "{{$remark}}";
+		var push_block_id_gen = $('#check_code_all').val();
+		var injection_date_middle = $('#injection_date_middle_all').val();
+		var injection_date_head_foot = $('#injection_date_head_foot_all').val();
+		var mesin_middle = $('#mesin_middle_all').val();
+		var mesin_head_foot = $('#mesin_head_foot_all').val();
+		var product_type = $('#product_type_all').val();
+
+		var data = {
+			remark:remark,
+			push_block_id_gen:push_block_id_gen,
+			injection_date_middle:injection_date_middle,
+			injection_date_head_foot:injection_date_head_foot,
+			mesin_middle:mesin_middle,
+			mesin_head_foot:mesin_head_foot,
+			product_type:product_type,
+		}
+		// console.table(data);
+		
+		$.post('{{ url("index/recorder/update_torque_all") }}', data, function(result, status, xhr){
+			if(result.status){
+				$("#edit-all-modal").modal('hide');
+				$('#loading').hide();
 				// $('#example1').DataTable().ajax.reload();
 				// $('#example2').DataTable().ajax.reload();
 				openSuccessGritter('Success','Torque Recorder Check has been updated');

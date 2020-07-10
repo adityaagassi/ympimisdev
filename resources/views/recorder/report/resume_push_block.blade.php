@@ -67,6 +67,11 @@
 			{{ session('error') }}
 		</div>   
 	@endif
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Updating, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box box-primary">
@@ -204,7 +209,7 @@
 												</td>
 												<td>{{ $push_block_check->pic_check }}</td>
 												<td>{{ $push_block_check->notes }}</td>
-												@if($auth == 'F-SPL' || $auth == 'L-Molding' || $auth == 'MIS' || $auth == 'S')
+												@if($auth == 'F-SPL' || $auth == 'L-Molding' || $auth == 'L-RC' || $auth == 'MIS' || $auth == 'S')
 												<td>
 													<center>
 														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_resume('{{ url("index/recorder/update_resume") }}','{{ $push_block_check->id }}','{{ $push_block_check->push_block_id_gen }}');">
@@ -456,6 +461,7 @@
     }
 
     function update(){
+    	$('#loading').show();
 		var injection_date_head = $('#injection_date_head').val();
 		var injection_date_block = $('#injection_date_block').val();
 		var mesin_head = $('#mesin_head').val();
@@ -480,6 +486,7 @@
 		$.post(url, data, function(result, status, xhr){
 			if(result.status){
 				$("#edit-modal").modal('hide');
+				$('#loading').hide();
 				openSuccessGritter('Success','Resume Push Block Check has been updated');
 				window.location.reload();
 			} else {
