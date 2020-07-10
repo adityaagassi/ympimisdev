@@ -357,13 +357,9 @@
 			var bd = "";
 
 			$.get('{{ url("fetch/maintenance/apar/history") }}', data, function(result, status, xhr) {
-				if (result.check[0].utility_id) {
+				if (result.check.length > 0) {
 					$.each(result.check, function(index, value){
-
-					// if (typeof value.check !== 'undefined') {
-					// 	return false;
-					// }
-
+						
 					style = 'style="background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 15px;"';
 
 					bd += "<tr>";

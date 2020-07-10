@@ -336,24 +336,6 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-xs-4" style="padding-top: 20px" id="tanggal_injeksi_middle">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Tanggal Injeksi Middle</span></center>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<input id="injection_date_middle" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Middle">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
 							<div class="col-xs-4" style="padding-top: 20px" id="tanggal_injeksi_head">
 								<div class="row">
 									<div class="col-xs-12">
@@ -367,6 +349,24 @@
 										<div class="row">
 											<div class="col-xs-12">
 												<input id="injection_date_head" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Head">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4" style="padding-top: 20px" id="tanggal_injeksi_middle">
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="row">
+											<div class="col-xs-12">
+												<center><span style="font-weight: bold; font-size: 18px;">Tanggal Injeksi Middle</span></center>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-12">
+										<div class="row">
+											<div class="col-xs-12">
+												<input id="injection_date_middle" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Middle">
 											</div>
 										</div>
 									</div>
@@ -387,42 +387,6 @@
 												<input id="injection_date_foot" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Foot">
 											</div>
 										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-4" id="mesin_middle_choice" style="padding-top: 20px">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Mesin Injeksi Middle</span></center>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-12">
-											@foreach($mesin as $mesin)
-											<div class="col-xs-2" style="padding-top: 5px">
-												<center><button class="btn btn-success" id="{{$mesin}}" style="width: 50px;font-size: 15px" onclick="getMesinMiddle(this.id)">
-													{{$mesin}}
-												</button></center>
-											</div>
-											@endforeach
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-4" id="mesin_middle_fix" style="padding-top: 20px">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Mesin Injeksi Middle</span></center>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-12">
-											<button class="btn btn-success" id="mesin_middle_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMesinMiddle()">
-												#0
-											</button>
 									</div>
 								</div>
 							</div>
@@ -457,6 +421,42 @@
 									</div>
 									<div class="col-xs-12">
 											<button class="btn btn-warning" id="mesin_head_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMesinHead()">
+												#0
+											</button>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4" id="mesin_middle_choice" style="padding-top: 20px">
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="row">
+											<div class="col-xs-12">
+												<center><span style="font-weight: bold; font-size: 18px;">Mesin Injeksi Middle</span></center>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-12">
+											@foreach($mesin as $mesin)
+											<div class="col-xs-2" style="padding-top: 5px">
+												<center><button class="btn btn-success" id="{{$mesin}}" style="width: 50px;font-size: 15px" onclick="getMesinMiddle(this.id)">
+													{{$mesin}}
+												</button></center>
+											</div>
+											@endforeach
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-4" id="mesin_middle_fix" style="padding-top: 20px">
+								<div class="row">
+									<div class="col-xs-12">
+										<div class="row">
+											<div class="col-xs-12">
+												<center><span style="font-weight: bold; font-size: 18px;">Mesin Injeksi Middle</span></center>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-12">
+											<button class="btn btn-success" id="mesin_middle_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMesinMiddle()">
 												#0
 											</button>
 									</div>
@@ -500,52 +500,6 @@
 							</div>
 						</div>
 						<div class="col-xs-12" style="padding-top: 20px">
-							<div class="col-xs-4" style="padding-top:10px" id="middle_choice">
-								<div class="col-xs-12">
-									<span style="font-size: 20px; font-weight: bold;"><center>MIDDLE</center></span>
-								</div>
-								<table class="table" id="tablemiddle">
-									<thead>
-										<tr>
-											<th style="width: 1%;"></th>
-										</tr>					
-									</thead>
-									<tbody>
-										<tr>
-											<td width="50%" onclick="getData(14)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														1-4
-													</button>
-												</center>
-											</td>
-											<td width="50%" onclick="getData(15)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														5-8
-													</button>
-												</center>
-											</td>
-										</tr>	
-										<tr>
-											<td width="50%" onclick="getData(16)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														9-12
-													</button>
-												</center>
-											</td>
-											<td width="50%" onclick="getData(17)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														13-16
-													</button>
-												</center>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
 							<div class="col-xs-4" style="padding-top:10px" id="head_choice">
 								<div class="col-xs-12">
 									<span style="font-size: 20px; font-weight: bold;"><center>HEAD</center></span>
@@ -594,6 +548,52 @@
 												<center>
 													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
 														17-20
+													</button>
+												</center>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-xs-4" style="padding-top:10px" id="middle_choice">
+								<div class="col-xs-12">
+									<span style="font-size: 20px; font-weight: bold;"><center>MIDDLE</center></span>
+								</div>
+								<table class="table" id="tablemiddle">
+									<thead>
+										<tr>
+											<th style="width: 1%;"></th>
+										</tr>					
+									</thead>
+									<tbody>
+										<tr>
+											<td width="50%" onclick="getData(14)">
+												<center>
+													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
+														1-4
+													</button>
+												</center>
+											</td>
+											<td width="50%" onclick="getData(15)">
+												<center>
+													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
+														5-8
+													</button>
+												</center>
+											</td>
+										</tr>	
+										<tr>
+											<td width="50%" onclick="getData(16)">
+												<center>
+													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
+														9-12
+													</button>
+												</center>
+											</td>
+											<td width="50%" onclick="getData(17)">
+												<center>
+													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
+														13-16
 													</button>
 												</center>
 											</td>
@@ -657,28 +657,6 @@
 								</table>
 							</div>
 						</div>
-						<div class="col-xs-4" style="padding-top: 0px" id="middle_fix">
-							<div class="col-xs-12">
-								<input type="hidden" id="middle_id" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
-								<input type="hidden" id="middle_value" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
-								<table class="table table-bordered">
-									<tr>
-										<td>
-											<input type="text" id="middle_fix_1" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" disabled>
-										</td>
-										<td>
-											<input type="text" id="middle_fix_2" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" disabled>
-										</td>
-										<td>
-											<input type="text" id="middle_fix_3" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" disabled>
-										</td>
-										<td>
-											<input type="text" id="middle_fix_4" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" disabled>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</div>
 						<div class="col-xs-4"  id="head_fix">
 							<div class="col-xs-12">
 								<input type="hidden" id="head_id" style="width: 11%; height: 30px; font-size: 20px; text-align: center;" disabled>
@@ -696,6 +674,28 @@
 										</td>
 										<td>
 											<input type="text" id="head_fix_4" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" disabled>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4" style="padding-top: 0px" id="middle_fix">
+							<div class="col-xs-12">
+								<input type="hidden" id="middle_id" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
+								<input type="hidden" id="middle_value" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
+								<table class="table table-bordered">
+									<tr>
+										<td>
+											<input type="text" id="middle_fix_1" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" disabled>
+										</td>
+										<td>
+											<input type="text" id="middle_fix_2" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" disabled>
+										</td>
+										<td>
+											<input type="text" id="middle_fix_3" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" disabled>
+										</td>
+										<td>
+											<input type="text" id="middle_fix_4" style="width: 100%; height: 30px; font-size: 20px; text-align: center;" disabled>
 										</td>
 									</tr>
 								</table>
