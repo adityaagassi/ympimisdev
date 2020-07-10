@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
+<link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 	thead input {
 		width: 100%;
@@ -1402,23 +1403,7 @@
 		$('#'+id).css("display","none");
 	}
 
-	function sendEmail(id) {
-      var data = {
-        id:id
-      };
-
-      if (!confirm("Apakah anda yakin ingin mengirim PO ini ke Manager?")) {
-        return false;
-      }
-
-      $.get('{{ url("purchase_order/sendemail") }}', data, function(result, status, xhr){
-
-        openSuccessGritter("Success","Email Has Been Sent");
-        setTimeout(function(){  window.location.reload() }, 3000);
-      })
-    }
-
-    function openSuccessGritter(title, message){
+	function openSuccessGritter(title, message){
       jQuery.gritter.add({
         title: title,
         text: message,
@@ -1430,15 +1415,33 @@
     }
 
     function openErrorGritter(title, message) {
-      jQuery.gritter.add({
-        title: title,
-        text: message,
-        class_name: 'growl-danger',
-        image: '{{ url("images/image-stop.png") }}',
-        sticky: false,
-        time: '3000'
-      });
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '2000'
+        });
     }
+
+	function sendEmail(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim PO ini ke Manager?")) {
+        return false;
+      }
+
+      $.get('{{ url("purchase_order/sendemail") }}', data, function(result, status, xhr){
+
+        openSuccessGritter("Success","Email Berhasil Terkirim");
+        setTimeout(function(){  window.location.reload() }, 3000);
+      })
+    }
+
+    
 
 
 

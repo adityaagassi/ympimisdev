@@ -2235,6 +2235,13 @@ class AccountingController extends Controller
                 $po_isi = db::select($isimail);
 
                 Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
+
+                $response = array(
+                  'status' => true,
+                  'datas' => "Berhasil"
+                );
+
+                return Response::json($response);
             }
             else{
 
@@ -2242,11 +2249,12 @@ class AccountingController extends Controller
 
 
         } catch (Exception $e) {
-            return view('accounting_purchasing.verifikasi.pr_message', array(
-                'head' => $po->no_po,
-                'message' => 'Error',
-                'message2' => $e->getMessage(),
-            ))->with('page', 'Approval');
+             $response = array(
+                  'status' => false,
+                  'datas' => "Gagal"
+                );
+
+            return Response::json($response);
         }
     }
 

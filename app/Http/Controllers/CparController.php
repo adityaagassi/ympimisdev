@@ -2113,6 +2113,43 @@ class CparController extends Controller
     }
   }
 
+  public function send_email_audit(Request $request){
+        $audit = StandarisasiAudit::find($request->get('id'));
+
+        try{
+            if ($audit->posisi == "auditor")
+            {
+
+            	$audit->posisi = "std";
+        		$audit->status = "cpar";
+        		$audit->save();
+		                
+		        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization'";
+		        $mailtoo = DB::select($mails);
+
+		        $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audit->id;
+		        $auditiso = db::select($isimail);
+
+		        Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($auditiso, 'std_audit'));
+
+		        $response = array(
+		          'status' => true,
+		          'datas' => "Berhasil"
+		        );
+
+		        return Response::json($response);
+            }
+
+        } catch (Exception $e) {
+            $response = array(
+		          'status' => false,
+		          'datas' => "Gagal"
+		        );
+
+		    return Response::json($response);
+        }
+    }
+
   public function sendemailpenanganan(Request $request,$id)
       {
           $id_user = Auth::id();

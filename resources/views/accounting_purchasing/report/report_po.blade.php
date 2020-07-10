@@ -310,24 +310,24 @@
 						<td colspan="9" style="font-size: 12px;font-weight: bold">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 					</tr>
 					<tr>
-						<td colspan="3" style="height: 0px">
+						<td colspan="3" style="width: 40%">
 							@if($po->buyer_id == "PI1908032")
 								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.png' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->tgl_po)) ?></span>
 							@elseif($po->buyer_id == "PI1810020")
-								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.png' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 31px;width: 75px;font-size: 10px;font-weight: bold;top: 103px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->tgl_po)) ?></span>
+								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.png' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 80px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->tgl_po)) ?></span>
 							@else
 								<?= $po->buyer_name ?>
 							@endif
 						</td>
-						<td colspan="3" style="height: 0px">
+						<td colspan="3" style="width: 30%">
 							@if($po->approval_authorized2 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
 								<span style="position: absolute;left: 298px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->date_approval_authorized2)) ?></span>
 							@endif
 						</td>
-						<td colspan="3" style="height: 0px">
+						<td colspan="3" style="width: 30%">
 							@if($po->approval_authorized3 == "Approved")
 								<?= $po->authorized3_name ?>
 							@endif

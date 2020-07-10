@@ -150,6 +150,10 @@ Route::get('fetch/temperature/room_temperature', 'TemperatureController@fetchRoo
 //----- Start mesin injeksi
 Route::get('scan/injeksi/operator', 'InjectionsController@scanInjectionOperator');
 Route::get('index/injeksi', 'InjectionsController@index');
+Route::get('index/injeksi/get_temp', 'InjectionsController@get_temp');
+Route::post('index/injeksi/create_temp', 'InjectionsController@create_temp');
+Route::post('index/injeksi/update_tag', 'InjectionsController@update_tag');
+Route::post('index/injeksi/update_temp', 'InjectionsController@update_temp');
 Route::post('index/injeksi/store_ng', 'InjectionsController@store_ng');
 Route::post('index/injeksi/store_ng_temp', 'InjectionsController@store_ng_temp');
 Route::post('index/injeksi/update_ng_temp', 'InjectionsController@update_ng_temp');
@@ -162,7 +166,7 @@ Route::get('index/machine_operational', 'InjectionsController@indexMachineSchedu
 Route::get('index/in', 'InjectionsController@in');
 Route::post('scan/part_injeksi', 'InjectionsController@scanPartInjeksi');
 Route::get('scan/new_tag_injeksi', 'InjectionsController@scanNewTagInjeksi');
-Route::post('scan/part_molding', 'InjectionsController@scanPartMolding');
+Route::get('scan/part_molding', 'InjectionsController@scanPartMolding');
 Route::get('send/Part', 'InjectionsController@sendPart');
 Route::get('get/Inpart', 'InjectionsController@getDataIn');
 //end in
@@ -856,6 +860,7 @@ Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 });
 Route::get('index/ga_control/driver', 'GeneralAffairController@indexDriver');
 Route::get('fetch/ga_control/driver', 'GeneralAffairController@fetchDriver');
+Route::post('create/ga_control/driver_request', 'GeneralAffairController@createDriverRequest');
 Route::get('fetch/ga_control/driver_detail', 'GeneralAffairController@fetchDriverDetail');
 Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
 Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
@@ -1829,6 +1834,7 @@ Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
 //INDIRECT REQUEST
 Route::get('index/indirect_material_request', 'IndirectMaterialController@indexRequest');
 Route::get('index/indirect_material_stock', 'IndirectMaterialController@indexStock');
+Route::get('fetch/indirect_material_stock', 'IndirectMaterialController@fetchStock');
 
 
 
@@ -2519,6 +2525,7 @@ Route::get('index/recorder/report_torque_check/{remark}', 'RecorderProcessContro
 Route::post('index/recorder/filter_report_torque_check/{remark}', 'RecorderProcessController@filter_report_torque_check');
 Route::get('index/recorder/get_torque','RecorderProcessController@get_torque')->name('recorder.get_torque');
 Route::post('index/recorder/update_torque/{id}','RecorderProcessController@update_torque');
+Route::get('index/recorder/get_torque_all','RecorderProcessController@get_torque_all');
 
 //RECORDER TORQUE CHECK AI
 Route::get('index/recorder_process_torque_ai/{remark}', 'RecorderProcessController@index_torque_ai');
@@ -2725,6 +2732,7 @@ Route::post('index/audit_iso/comment/{id}', 'CparController@std_comment');
 Route::post('index/audit_iso/reject/{id}', 'CparController@std_reject');
 Route::get('index/audit_iso/response/{id}', 'CparController@std_response');
 Route::post('index/audit_iso/update_response/{id}', 'CparController@update_response');
+Route::get('index/audit_iso/sendemail', 'CparController@send_email_audit');
 Route::get('index/audit_iso/sendemailpenanganan/{id}', 'CparController@sendemailpenanganan');
 Route::get('index/audit_iso/print/{id}', 'CparController@print_audit');
 
@@ -2909,6 +2917,10 @@ Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_his
 Route::post('post/maintenance/apar/order', 'MaintenanceController@apar_order');
 
 Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
+
+// ------------------ INVENORY / SPARE PART ------------------
+
+Route::get('index/maintenance/inven/list', 'MaintenanceController@indexInventory');
 
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');

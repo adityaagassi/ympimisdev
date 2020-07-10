@@ -172,13 +172,13 @@
 						<td colspan="1" style="height: 40px">
 							@if($pr->approvaldgm == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/stempel_pak_budhi.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 227px;width: 75px;font-size: 8px;color: red;top: 59px;font-family: arial-narrow"><?= date('d F Y', strtotime($pr->dateapprovaldgm)) ?></span>
+								<span style="position: absolute;left: 227px;width: 75px;font-size: 8px;color: #f84c32;top: 59px;font-family: arial-narrow"><?= date('d F Y', strtotime($pr->dateapprovaldgm)) ?></span>
 							@endif
 						</td>
 						<td colspan="1" style="height: 40px">
 							@if($pr->approvalgm == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/stempel_pak_hayakawa.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 332px;width: 75px;font-size: 8px;color: red;top: 59px;font-family: arial-narrow"><?= date('d F Y', strtotime($pr->dateapprovalgm)) ?></span>
+								<span style="position: absolute;left: 332px;width: 75px;font-size: 8px;color: #f84c32;top: 59px;font-family: arial-narrow"><?= date('d F Y', strtotime($pr->dateapprovalgm)) ?></span>
 							@endif
 						</td>
 					</tr>

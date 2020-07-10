@@ -35,6 +35,12 @@
   <h1>
     Edit {{ $page }}
     <small><b>E</b>lectronic-<b>I</b>nternal <b>R</b>equest <b>C</b>orrective <b>A</b>ction</small>
+
+    @if($audits->posisi == "auditor" && $audits->status == "commended")
+
+    <button class="btn btn-md btn-success pull-right" data-toggle="tooltip" title="Send Email" style="margin-right:5px;"  onclick="sendEmail({{$audits->id}})"><i class="fa fa-envelope"></i> Send Email</button>
+
+    @endif
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -462,6 +468,22 @@
       filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
       height: '200px'
     });
+
+    function sendEmail(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim Form Audit ke Standarisasi?")) {
+        return false;
+      }
+
+      $.get('{{ url("index/audit_iso/sendemail") }}', data, function(result, status, xhr){
+
+        openSuccessGritter("Success","Email Has Been Sent");
+        setTimeout(function(){  window.location.reload() }, 3000);
+      })
+    }
 
 
     function openSuccessGritter(title, message){

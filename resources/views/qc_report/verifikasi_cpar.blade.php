@@ -91,6 +91,8 @@
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
       <div class="box-body">
+
+        <?php $user = STRTOUPPER(Auth::user()->username)?>
         
         <?php foreach ($cparss as $cpars): ?>
 
