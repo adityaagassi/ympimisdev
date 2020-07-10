@@ -1109,17 +1109,10 @@ class MaintenanceController extends Controller
 		->where('utility_code', '=', $request->get('code'))
 		->update([
 			'capacity' => $request->get('capacity'), 
-			'exp_date' => $exp_date, 
-			'last_check' => date('Y-m-d H:i:s'),
+			'exp_date' => $exp_date,
 			'entry_date' => $request->get('entry_date'),
 			'status' => null
 		]);
-
-		$utl_check2 = new UtilityCheck;
-		$utl_check2::where('utility_id', $utl->id)->whereNull('remark')->update(array('remark' => 'OK'));
-
-		$utl_check = new UtilityCheck;
-		$utl_check->utility_id = $utl->id;
 
 		$cek = "";
 		foreach ($cat as $c) {
@@ -1127,16 +1120,13 @@ class MaintenanceController extends Controller
 		}
 		$cek = rtrim($cek, ",");
 
-		$utl_check->check = $cek;
-		$utl_check->check_date = date('Y-m-d H:i:s');
-		$utl_check->remark = "OK";
-		$utl_check->created_by = Auth::user()->username;
+		$utl_check2 = new UtilityCheck;
+		$utl_check2::where('utility_id', $utl->id)->whereNull('remark')->update(array('remark' => 'OK', 'check' => $cek));
 
-		$utl_check->save();
 
 		$hasil_check = UtilityCheck::select(db::raw('DATE_FORMAT(check_date,"%d-%m-%Y") as cek_date'))->where('utility_id', $utl->id)->orderBy('check_date')->limit(2)->get();
 
-		UtilityOrder::where('utility_id', $utl->id)->delete();
+		// UtilityOrder::where('utility_id', $utl->id)->delete();
 
 		$response = array(
 			'status' => true,
@@ -1548,7 +1538,7 @@ class MaintenanceController extends Controller
 
 		} else {
 			Utility::where('id', $ck->utility_id)
-			->update(['status' => null, 'last_check' => '1999-12-31 00:00:00']);
+			->update(['status' => null]);
 		}
 
 		$response = array(
