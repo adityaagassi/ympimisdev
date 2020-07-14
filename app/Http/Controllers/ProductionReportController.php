@@ -511,7 +511,7 @@ class ProductionReportController extends Controller
                 SELECT SUM(a.jumlah_training_report_weekly) FROM (
                 SELECT
                         count(
-                        weekly_calendars.week_name ) AS jumlah_training_report_weekly 
+                        DISTINCT(weekly_calendars.week_name) ) AS jumlah_training_report_weekly 
                     FROM
                         training_reports
                         JOIN activity_lists AS actlist ON actlist.id = activity_list_id
