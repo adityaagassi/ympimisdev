@@ -510,7 +510,7 @@ class ProductionReportController extends Controller
                 COALESCE ((
                     SELECT
                         count(
-                        DISTINCT ( weekly_calendars.week_name )) AS jumlah_weekly_report 
+                        weekly_calendars.week_name ) AS jumlah_weekly_report 
                     FROM
                         training_reports
                         JOIN activity_lists AS actlist ON actlist.id = activity_list_id
