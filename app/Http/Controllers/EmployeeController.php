@@ -2725,7 +2725,11 @@ public function fetchDataKaizen()
           }
      }
 
-     $dprt = db::select("select distinct section from employee_syncs where department = (select department from employee_syncs where employee_id = '".$username."') and section is not null");
+     if ($username == 'pi0703002') {
+          $dprt = db::select("select distinct section from employee_syncs where (department = (select department from employee_syncs where employee_id = '".$username."') or department = 'Production Engineering') and section is not null");
+     } else {
+          $dprt = db::select("select distinct section from employee_syncs where department = (select department from employee_syncs where employee_id = '".$username."') and section is not null");
+     }
 
      $kzn = KaizenForm::leftJoin('kaizen_scores','kaizen_forms.id','=','kaizen_scores.id_kaizen')
      ->select('kaizen_forms.id','employee_id','employee_name','title','area','section','propose_date','status','foreman_point_1','foreman_point_2', 'foreman_point_3', 'manager_point_1','manager_point_2', 'manager_point_3');
@@ -2773,7 +2777,7 @@ public function fetchDataKaizen()
      return DataTables::of($kzn)
      ->addColumn('fr_stat', function($kzn){
           if ($kzn->status == -1) {
-               if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager' || $_GET['position'] == 'Deputy Foreman' || Auth::id() == 53 || Auth::id() == 80) {
+               if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager' || $_GET['position'] == 'Deputy Foreman' || Auth::id() == 53 || Auth::id() == 80 || Auth::id() == 2580) {
                     return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">Unverified</a>';
                } else {
                     return '<span class="label bg-yellow">Unverified</span>';
@@ -3359,14 +3363,14 @@ public function getKaizenReward()
 
 public function fetchAbsenceEmployee(Request $request)
 {
- $username = Auth::user()->username;
+    $username = Auth::user()->username;
 
- $att_selected = "";
+    $att_selected = "";
 
- foreach ($this->attend as $att) {
-  if ($att['attend_type'] == $request->get('attend_code')) {
-     $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
-}
+    foreach ($this->attend as $att) {
+        if ($att['attend_type'] == $request->get('attend_code')) {
+          $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
+     }
 }
 
 $att_selected = substr($att_selected, 0, -2);
