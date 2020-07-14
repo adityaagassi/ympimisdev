@@ -808,40 +808,9 @@ function ShowModalChart(leader_name,frequency) {
                   }
                   dd += "<tr>";
                 }
-                // console.log(aktual);
-                // console.log(parseInt(aktual));
                 total_aktual = aktual;
-                // if(parseInt(aktual) < 4 ){
-                //   total_aktual = 0;
-                // }
-                // else if(parseInt(aktual) >= 4 && parseInt(aktual) < 8 ){
-                //   total_aktual = 1;
-                // }
-                // else if(parseInt(aktual) >= 8 && parseInt(aktual) < 12 ){
-                //   total_aktual = 2;
-                // }
-                // else if(parseInt(aktual) >= 12 && parseInt(aktual) < 16 ){
-                //   total_aktual = 3;
-                // }
-                // else if(parseInt(aktual) >= 16 && parseInt(aktual) < 20 ){
-                //   total_aktual = 4;
-                // }
-                // else if(parseInt(aktual) >= 20 && parseInt(aktual) < 24 ){
-                //   total_aktual = 5;
-                // }
-                // else if(parseInt(aktual) >= 24 && parseInt(aktual) < 28 ){
-                //   total_aktual = 6;
-                // }
-                // else if(parseInt(aktual) >= 28 && parseInt(aktual) < 32 ){
-                //   total_aktual = 7;
-                // }
-                
                 total_plan_item = total_plan * 4;
                 presentase = (total_aktual/total_plan_item)*100;
-                // console.log(presentase);
-
-                // console.log(dd);
-                // console.log(activity);
                 dd += '<tr>';
                 dd += '<td colspan="2"><b>Total Plan Activity</b></td>';
                 dd += '<td colspan="5"><center><b>'+total_plan+'</b></center></td>';

@@ -371,44 +371,24 @@ class ProductionReportController extends Controller
                 count( activity_type ) AS jumlah_activity_weekly,
                 leader_dept AS leader_name,
                 COALESCE ((
-                    SELECT
-                        count(
-                        DISTINCT ( sampling_checks.week_name )) AS jumlah_sampling 
-                    FROM
-                        sampling_checks
-                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
-                    WHERE
-                        DATE_FORMAT( sampling_checks.date, '%Y-%m' ) = '".$bulan."' 
-                        AND actlist.frequency = 'Weekly' 
-                        AND sampling_checks.leader = '".$dataleader."' 
-                        AND sampling_checks.deleted_at IS NULL 
-                        AND actlist.department_id = '".$id."' 
-                        AND actlist.activity_alias LIKE '%FG%' 
-                    GROUP BY
-                        sampling_checks.leader 
+                    SELECT COUNT(a.jumlah_sampling) FROM(
+                        SELECT
+                                sampling_checks.week_name AS jumlah_sampling 
+                        FROM
+                                sampling_checks
+                                JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                        WHERE
+                                DATE_FORMAT( sampling_checks.date, '%Y-%m' ) = '".$bulan."'
+                                AND actlist.frequency = 'Weekly' 
+                                AND sampling_checks.leader = '".$dataleader."'
+                                AND sampling_checks.deleted_at IS NULL 
+                                AND actlist.department_id = '".$id."' 
+                        GROUP BY
+                                actlist.activity_name,week_name) a
                         ),
                     0 
                 ) AS jumlah_sampling_fg,
-                COALESCE ((
-                    SELECT
-                        count(
-                        DISTINCT ( sampling_checks.week_name )) AS jumlah_sampling 
-                    FROM
-                        sampling_checks
-                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
-                    WHERE
-                        DATE_FORMAT( sampling_checks.date, '%Y-%m' ) = '".$bulan."' 
-                        AND actlist.frequency = 'Weekly' 
-                        AND sampling_checks.leader = '".$dataleader."' 
-                        AND sampling_checks.deleted_at IS NULL 
-                        AND actlist.department_id = '".$id."' 
-                        AND actlist.activity_alias LIKE '%KD%' 
-                    GROUP BY
-                        sampling_checks.leader 
-                        ),
-                    0 
-                ) AS jumlah_sampling_kd,
-                
+                0 AS jumlah_sampling_kd,
                 COALESCE ((
                     SELECT
                         count(
