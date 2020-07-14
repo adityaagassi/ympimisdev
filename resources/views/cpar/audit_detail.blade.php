@@ -36,11 +36,6 @@
     Edit {{ $page }}
     <small><b>E</b>lectronic-<b>I</b>nternal <b>R</b>equest <b>C</b>orrective <b>A</b>ction</small>
 
-    @if($audits->posisi == "auditor" && $audits->status == "commended")
-
-    <button class="btn btn-md btn-success pull-right" data-toggle="tooltip" title="Send Email" style="margin-right:5px;"  onclick="sendEmail({{$audits->id}})"><i class="fa fa-envelope"></i> Send Email</button>
-
-    @endif
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -236,14 +231,19 @@
 
         @if($audits->posisi != "auditor_final")
 
-        <div class="row">
-          <div class="col-sm-4 col-sm-offset-5" style="padding-top: 10px">
+        <div class="row" style="padding: 20px">
+          <div class="col-sm-4 col-sm-offset-5" style="padding-top: 5px">
             <div class="btn-group">
               <a class="btn btn-danger" href="{{ url('index/audit_iso') }}">Cancel</a>
             </div>
             <div class="btn-group">
               <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Save </button>
             </div>
+            @if($audits->posisi == "auditor" && $audits->status == "commended")
+              <div class="btn-group">
+                <button class="btn btn-md btn-success pull-right" data-toggle="tooltip" title="Send Email" style="margin-right:5px;"  onclick="sendEmail({{$audits->id}})"><i class="fa fa-envelope"></i> Kirim Email Ke Standarisasi</button>
+              </div>
+              @endif
           </div>
         </div>
 
@@ -273,6 +273,8 @@
               <div class="btn-group">
                 <button type="button" class="btn btn-primary pull-right" id="form_submit2"><i class="fa fa-edit"></i>&nbsp; Save </button>
               </div>
+
+              
             </div>
           </div>
 

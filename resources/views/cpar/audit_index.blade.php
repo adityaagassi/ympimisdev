@@ -255,7 +255,7 @@ td {
           tableData += '<td><span class="label label-danger"> Rejected </span></td>';          
         }
         else if (value.status == "commended") {
-          tableData += '<td><span class="label label-warning"> Revision </span></td>';          
+          tableData += '<td><span class="label label-warning"> Revised </span></td>';          
         }
         else if (value.status == "car") {
           tableData += '<td><span class="label label-warning"> Penanganan </span></td>';          
@@ -300,6 +300,30 @@ td {
           {
             extend: 'pageLength',
             className: 'btn btn-default',
+          },
+          {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+          },
+          {
+            extend: 'excel',
+            className: 'btn btn-info',
+            text: '<i class="fa fa-file-excel-o"></i> Excel',
+            exportOptions: {
+              columns: ':not(.notexport)'
+            }
+          },
+          {
+            extend: 'print',
+            className: 'btn btn-warning',
+            text: '<i class="fa fa-print"></i> Print',
+            exportOptions: {
+              columns: ':not(.notexport)'
+            }
           },
           ]
         },
