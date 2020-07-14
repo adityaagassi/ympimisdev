@@ -31,7 +31,13 @@ class ApdCheckController extends Controller
                         'Safety Shoes',
                         'Safety Glass',
                         'Safety Gloves',
-                        'Safety Google'];
+                        'Safety Google',
+                        'Safety Boots',
+                        'Celemek Appron',
+                        'Sarung Tangan Karet',
+                        'Uvex Glass',
+                        'Masker Koken',
+                        'Masker Full Face'];
     }
 
     function index($id)
