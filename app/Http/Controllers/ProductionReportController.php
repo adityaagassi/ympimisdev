@@ -214,8 +214,8 @@ class ProductionReportController extends Controller
                 0 
             ) AS persen_monthly,
             weekly.jumlah_activity_weekly * 4 AS jumlah_activity_weekly,
-            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report ) AS jumlah_all_weekly,
-            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report )/(
+            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report + weekly.jumlah_training_report_weekly ) AS jumlah_all_weekly,
+            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report + weekly.jumlah_training_report_weekly )/(
                 weekly.jumlah_activity_weekly * 4 
             )* 100 AS persen_weekly,
             (
@@ -480,7 +480,27 @@ class ProductionReportController extends Controller
                         weekly_activity_reports.leader 
                         ),
                     0 
-                ) AS jumlah_weekly_report 
+                ) AS jumlah_weekly_report,
+                COALESCE ((
+                    
+                    SELECT
+                        count(
+                        DISTINCT ( weekly_calendars.week_name )) AS jumlah_weekly_report 
+                    FROM
+                        training_reports
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id
+                        LEFT JOIN weekly_calendars ON weekly_calendars.week_date = training_reports.date
+                    WHERE
+                        DATE_FORMAT( training_reports.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Weekly' 
+                        AND training_reports.leader = '".$dataleader."' 
+                        AND training_reports.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                    GROUP BY
+                        training_reports.leader 
+                        ),
+                    0 
+                ) AS jumlah_training_report_weekly
             FROM
                 activity_lists 
             WHERE
@@ -707,7 +727,18 @@ class ProductionReportController extends Controller
                                 and actlist.id = id_activity
                                 and week_name = '".$date2->week_name."'
                                 and actlist.department_id = '".$id."'
-                    and actlist.frequency = '".$frequency."'),0)))))
+                    and actlist.frequency = '".$frequency."'),
+            IF(activity_type = 'Training',
+            (select count(weekly_calendars.week_name) as jumlah_training_report
+                from training_reports
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                                        left join weekly_calendars on weekly_calendars.week_date = training_reports.date
+                    where DATE_FORMAT(training_reports.date,'%Y-%m') = '".$week_date."'
+                                and training_reports.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and weekly_calendars.week_name = '".$date2->week_name."'
+                                and actlist.department_id = '".$id."'
+                    and actlist.frequency = '".$frequency."'),0))))))
             as jumlah_aktual
                 from activity_lists
                         where leader_dept = '".$leader_name."'
