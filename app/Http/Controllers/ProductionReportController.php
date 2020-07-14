@@ -214,8 +214,8 @@ class ProductionReportController extends Controller
                 0 
             ) AS persen_monthly,
             weekly.jumlah_activity_weekly * 4 AS jumlah_activity_weekly,
-            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report + weekly.jumlah_training_report_weekly ) AS jumlah_all_weekly,
-            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report + weekly.jumlah_training_report_weekly )/(
+            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report + weekly.jumlah_training_report_weekly + weekly.jumlah_sampling_all ) AS jumlah_all_weekly,
+            ( weekly.jumlah_sampling_kd + weekly.jumlah_sampling_fg + weekly.jumlah_audit + weekly.jumlah_audit_process + weekly.jumlah_apd_check + weekly.jumlah_weekly_report + weekly.jumlah_training_report_weekly + weekly.jumlah_sampling_all )/(
                 weekly.jumlah_activity_weekly * 4 
             )* 100 AS persen_weekly,
             (
@@ -411,6 +411,32 @@ class ProductionReportController extends Controller
                 COALESCE ((
                     SELECT
                         count(
+                        DISTINCT ( sampling_checks.week_name )) AS jumlah_sampling 
+                    FROM
+                        sampling_checks
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        (DATE_FORMAT( sampling_checks.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Weekly' 
+                        AND sampling_checks.leader = '".$dataleader."' 
+                        AND sampling_checks.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                        AND actlist.activity_alias NOT LIKE '%FG%' )
+                    OR
+                        (DATE_FORMAT( sampling_checks.date, '%Y-%m' ) = '".$bulan."' 
+                        AND actlist.frequency = 'Weekly' 
+                        AND sampling_checks.leader = '".$dataleader."' 
+                        AND sampling_checks.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."' 
+                        AND actlist.activity_alias NOT LIKE '%KD%' )
+                    GROUP BY
+                        sampling_checks.leader 
+                        ),
+                    0 
+                ) AS jumlah_sampling_all,
+                COALESCE ((
+                    SELECT
+                        count(
                         DISTINCT ( audit_processes.week_name )) AS jumlah_sampling 
                     FROM
                         audit_processes
@@ -482,7 +508,6 @@ class ProductionReportController extends Controller
                     0 
                 ) AS jumlah_weekly_report,
                 COALESCE ((
-                    
                     SELECT
                         count(
                         DISTINCT ( weekly_calendars.week_name )) AS jumlah_weekly_report 
