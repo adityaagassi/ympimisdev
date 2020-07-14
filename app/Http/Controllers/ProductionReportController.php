@@ -508,9 +508,10 @@ class ProductionReportController extends Controller
                     0 
                 ) AS jumlah_weekly_report,
                 COALESCE ((
-                    SELECT
+                SELECT SUM(a.jumlah_training_report_weekly) FROM (
+                SELECT
                         count(
-                        weekly_calendars.week_name ) AS jumlah_weekly_report 
+                        weekly_calendars.week_name ) AS jumlah_training_report_weekly 
                     FROM
                         training_reports
                         JOIN activity_lists AS actlist ON actlist.id = activity_list_id
@@ -522,7 +523,7 @@ class ProductionReportController extends Controller
                         AND training_reports.deleted_at IS NULL 
                         AND actlist.department_id = '".$id."' 
                     GROUP BY
-                        training_reports.leader 
+                        training_reports.leader,activity_list_id) a
                         ),
                     0 
                 ) AS jumlah_training_report_weekly
