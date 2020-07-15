@@ -117,6 +117,11 @@
         </tbody>
       </table>
     </div>
+
+    <div class="col-xs-12">
+      <label style="color: white" id='stat_order'></label>
+      <button class="btn btn-lg btn-success" style="width: 100%" onclick="orders()"><i class="fa fa-check"></i> ORDER</button>
+    </div>
   </div>
 
   <div class="modal fade in" id="modalDetail" >
@@ -130,42 +135,40 @@
           <div class="modal-body">
             <div class="row">
               <div class="col-xs-12">
-                <div class="row">
-                  <div class="col-xs-12">
-                    <div class="form-group row">
-                      <label class="col-xs-2" style="margin-top: 1%;">Code</label>
-                      <div class="col-xs-5">
-                        <input type="text" class="form-control" id="code" readonly>
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <label class="col-xs-2" style="margin-top: 1%;">Name</label>
-                      <div class="col-xs-5">
-                        <input type="text" class="form-control" id="name" readonly>
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <label class="col-xs-2" style="margin-top: 1%;">Location</label>
-                      <div class="col-xs-10">
-                        <input type="text" class="form-control" id="location" readonly>
-                        <input type="hidden" id="ids">
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <label class="col-xs-2" style="margin-top: 1%;">Capacity</label>
-                      <div class="col-xs-5">
-                        <div class="input-group">
-                          <input type="text" class="form-control" id="capacity" readonly>
-                          <span class="input-group-addon bg-purple">Kg</span>
-                        </div>
-                      </div>
-                    </div>
-
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>APAR Code</th>
+                      <th>APAR Name</th>
+                      <th>APAR Type</th>
+                      <th>Capacity</th>
+                      <th>Location</th>
+                      <th>Exp. Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="body_exp"></tbody>
+                </table>
+              </div>
+              <div class="col-xs-12">
+                <div class="form-group row">
+                  <label class="col-xs-2" style="margin-top: 1%;">Nomor PR</label>
+                  <div class="col-xs-5">
+                    <input type="text" class="form-control" id="pr_num" placeholder="Isikan nomor PR">
                   </div>
                 </div>
+
+                <div class="form-group row">
+                  <label class="col-xs-2" style="margin-top: 1%;">PR Date</label>
+                  <div class="col-xs-5">
+                    <div class="input-group date">
+                      <div class="input-group-addon bg-purple" style="border: none;">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" class="form-control" id="pr_date" placeholder="pilih tanggal PR">
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -254,17 +257,22 @@
         }
       });
 
-      var check = [];
+      var order_list = [];
+      var exp_list = [];
 
       jQuery(document).ready(function() {
         $('body').toggleClass("sidebar-collapse");
         $('#check').children().hide();
 
-        check = <?php echo json_encode($check_list); ?>;
-
         get_expire_data();
         $("#modalContent").hide();
 
+      });
+
+      $("#pr_date").datepicker( {
+        autoclose: true,
+        format: "yyyy-mm-dd",
+        todayHighlight: true
       });
 
       $(function () {
@@ -281,6 +289,7 @@
         }
 
         $.get('{{ url("fetch/maintenance/apar/expire") }}', data, function(result, status, xhr) {
+          exp_list = result.expired_list;
           $.each(result.expired_list, function(index, value){
 
            if (value.exp < 0) {
@@ -311,7 +320,7 @@
             fi += "<td>"+value.group+"</td>";
             fi += "<td>"+value.exp_date+"</td>";
             fi += "<td>"+value.exp+" Month Left</td>";
-            fi += "<td>"+(value.no_pr || '-')+"</td>";
+            fi += "<td>"+(value.no_pr || '<label><input type="checkbox" class="check" name="'+value.utility_code+'" > CEK</label>')+"</td>";
             fi += "</tr>";
           } else {
             fii += "<tr style='background-color: "+color+"'>";
@@ -322,7 +331,7 @@
             fii += "<td>"+value.group+"</td>";
             fii += "<td>"+value.exp_date+"</td>";
             fii += "<td>"+value.exp+" Month Left</td>";
-            fii += "<td>"+(value.no_pr || '-')+"</td>";
+            fii += "<td>"+(value.no_pr || '<label><input type="checkbox" class="check" name="'+value.utility_code+'" > CEK</label>')+"</td>";
             fii += "</tr>";
           }
         })
@@ -333,9 +342,16 @@
       }
 
       function ordering(stat) {
+        var id = [];
+
+        $('.id').each(function(index, value) {
+          id.push($(this).val());
+        });
+
         var data = {
-          utility_id : $("#ids").val(),
-          order_date : $("#ready_order").val(),
+          utility_id : id,
+          pr_date : $("#pr_date").val(),
+          pr_num : $("#pr_num").val(),
           param : stat
         }
 
@@ -352,16 +368,16 @@
         })
       }
 
-      function openOrderModal(id, code, name, type, capacity, location, exp) {
-        $("#modalDetail").modal("show");
+      // function openOrderModal(id, code, name, type, capacity, location, exp) {
+      //   $("#modalDetail").modal("show");
 
-        $("#code").val(code);
-        $("#name").val(name);
-        $("#location").val(location);
-        $("#type").val(type);
-        $("#capacity").val(capacity);
-        $("#ids").val(id);
-      }
+      //   $("#code").val(code);
+      //   $("#name").val(name);
+      //   $("#location").val(location);
+      //   $("#type").val(type);
+      //   $("#capacity").val(capacity);
+      //   $("#ids").val(id);
+      // }
 
       function openReadyModal(id, code, name, type, capacity, location, exp, order_date) {
         $("#modalReady").modal("show");
@@ -373,6 +389,43 @@
         $("#ready_capacity").val(capacity);
         $("#ids").val(id);
         $("#ready_order").val(order_date);
+      }
+
+      $(document).on('change', '.check', function() {
+        if(this.checked) {
+          order_list.push($(this).attr('name'));
+        } else {
+          // order_list.remove($(this).attr('name'));
+          order_list.splice($(this).attr('name'), 1);
+        }
+
+        $('#stat_order').text(order_list.join(", "));
+      });
+
+      function orders() {
+        console.log(order_list);
+
+        $("#modalDetail").modal("show");
+
+        exp = "";
+
+        $.each(order_list, function(index2, value2){
+          exp += "<tr>";
+          for (var i = 0; i < exp_list.length; i++) {
+            if (value2 == exp_list[i].utility_code) {
+              exp += "<td>"+exp_list[i].utility_code+"<input type='hidden' value='"+exp_list[i].id+"' class='id'></td>";
+              exp += "<td>"+exp_list[i].utility_name+"</td>";
+              exp += "<td>"+exp_list[i].type+"</td>";
+              exp += "<td>"+exp_list[i].capacity+"</td>";
+              exp += "<td>"+exp_list[i].group+"</td>";
+              exp += "<td>"+exp_list[i].exp_date+"</td>";
+              break;
+            }
+          }
+          exp += "</tr>";
+        })
+
+        $("#body_exp").append(exp);
       }
 
       function page(id) {

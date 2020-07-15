@@ -1551,14 +1551,18 @@ class MaintenanceController extends Controller
 	public function apar_order(Request $request)
 	{
 		try {
-
 			if ($request->get('param') == 'order') {
-				$order = new UtilityOrder;
-				$order->utility_id = $request->get('utility_id');
-				$order->order_status = 'Ordering';
-				$order->order_date = date('Y-m-d');
-				$order->created_by = Auth::user()->username;
-				$order->save();
+				$utl_id = $request->get('utility_id');
+
+				for ($i=0; $i < count($utl_id); $i++) { 
+					$order = new UtilityOrder;
+					$order->utility_id = $utl_id[$i];
+					$order->no_pr = $request->get('pr_num');
+					$order->pr_date = $request->get('pr_date');
+					$order->created_by = Auth::user()->username;
+					$order->save();
+				}
+
 			} else {
 				UtilityOrder::where('utility_id', $request->get('utility_id'))
 				->where('order_date', $request->get('order_date'))
