@@ -115,7 +115,7 @@
 		var material_description = $('#material_description').val();
 		var quantity = $('#quantity').val();
 		var url1 = "{{url('/app/barcode/')}}";
-		var url2 ="/barcode.php?f=svg&s=code-128&w=100&h=30&p=0&wq=0";
+		var url2 ="/barcode.php?f=svg&s=code-128&w=105&h=27&p=0&wq=0";
 		var code ="&d="+ material_number;
 		var janfix = url1.replace("/public","");
 		$("#128").attr("src",janfix+url2+code);
