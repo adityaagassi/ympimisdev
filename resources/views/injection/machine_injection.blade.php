@@ -124,7 +124,7 @@
 					
 				</tbody>
 			</table>
-			<div class="col-xs-6" style="padding: 0px;margin-bottom: 20px;">
+			<!-- <div class="col-xs-6" style="padding: 0px;margin-bottom: 20px;">
 				<div class="input-group" style="padding-top: 10px;">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
 						<i class="glyphicon glyphicon-qrcode"></i>
@@ -134,13 +134,13 @@
 						<i class="glyphicon glyphicon-qrcode"></i>
 					</div>
 				</div>
-			</div>
-			<div class="col-xs-6" style="padding: 0px">
+			</div> -->
+			<div class="col-xs-12" style="padding: 0px;padding-bottom: 15.6px">
 				<div class="input-group" style="padding-top: 10px;">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
 						<i class="glyphicon glyphicon-qrcode"></i>
 					</div>
-					<input type="text" style="text-align: center; border-color: black;" class="form-control" id="tag_product" name="tag_product" placeholder="Scan Tag Product ..." required disabled>
+					<input type="text" style="text-align: center; border-color: black;font-size: 20px" class="form-control" id="tag_product" name="tag_product" placeholder="Scan Tag Product ..." required disabled>
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
 						<i class="glyphicon glyphicon-qrcode"></i>
 					</div>
@@ -148,9 +148,9 @@
 			</div>
 			<table class="table table-bordered" style="padding-top: 20px;padding-bottom: 0px">
 				<tr>
-					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
+					<!-- <td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 						Molding
-					</td>
+					</td> -->
 					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 						Part Type
 					</td>
@@ -165,8 +165,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td id="molding" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
-					</td>
+					<!-- <td id="molding" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
+					</td> -->
 					<td id="part_type" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
 					</td>
 					<td id="part_name" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
@@ -196,20 +196,20 @@
 					MULAI PROSES
 				</button>
 			</div>
-			<div style="padding-top: 20px;" id="perolehan">
+			<div style="padding-top: 30px;" id="perolehan">
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 5px;border: 0">
 					<tbody>
 						<tr>
-							<td colspan="2" style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 20px;">
-								Perolehan
+							<td colspan="2" style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;font-weight: bold;">
+								PEROLEHAN
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="number" class="pull-right" name="total_shot" style="height: 4.5vw;font-size: 1.5vw;width: 100%;text-align: center;vertical-align: middle;" id="total_shot" placeholder="Total Shot" disabled>
+								<input type="number" class="pull-right" name="total_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="total_shot" placeholder="Total Shot" disabled>
 							</td>
 							<td>
-								<input type="number" class="pull-right" name="running_shot" style="height: 4.5vw;font-size: 1.5vw;width: 100%;text-align: center;vertical-align: middle;" id="running_shot" placeholder="Running Shot">
+								<input type="number" class="pull-right" name="running_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="running_shot" placeholder="Running Shot">
 							</td>
 						</tr>
 					</tbody>
@@ -259,7 +259,7 @@
 
 			<div class="col-xs-12" style="padding: 0px;padding-top: 10px">
 				<button class="btn btn-warning" id="btn_ganti" onclick="changeMesin()" style="font-size: 30px;font-weight: bold;width: 100%">
-					GANTI MESIN
+					PILIH MESIN
 				</button>
 			</div>
 		</div>
@@ -300,7 +300,7 @@
 									@foreach($mesin as $mesin)
 									<div class="col-xs-3" style="padding-top: 5px">
 										<center>
-											<button class="btn btn-primary" id="{{$mesin}}" style="width: 200px;font-size: 15px" onclick="getMesin(this.id)">{{$mesin}}</button>
+											<button class="btn btn-primary" id="{{$mesin}}" style="width: 200px;font-size: 15px;font-weight: bold;" onclick="getMesin(this.id)">{{$mesin}}</button>
 										</center>
 									</div>
 									@endforeach
@@ -461,9 +461,9 @@
 		});
 		$('#operator').val('');
 		$('#tag_product').val('');
-		$('#tag_molding').val('');
+		// $('#tag_molding').val('');
 		$('#tag_product').prop('disabled', true);
-		$('#tag_molding').prop('disabled', true);
+		// $('#tag_molding').prop('disabled', true);
 		$('#running_shot').val('');
 		$('#total_shot').val('');
 		var mesin = "{{substr($name,10)}}";
@@ -495,8 +495,10 @@
 						$('#op').html(result.employee.employee_id);
 						$('#op2').html(result.employee.name);
 						$('#employee_id').val(result.employee.employee_id);
-						$("#tag_molding").removeAttr('disabled');
-						$('#tag_molding').focus();
+						// $("#tag_molding").removeAttr('disabled');
+						// $('#tag_molding').focus();
+						// $("#tag_product").removeAttr('disabled');
+						// $('#tag_product').focus();
 					}
 					else{
 						audio_error.play();
@@ -518,7 +520,7 @@
 			if($("#tag_product").val().length >= 7){
 				var data = {
 					tag : $("#tag_product").val(),
-					part_type : $("#molding_part_type").val()
+					// part_type : $("#molding_part_type").val()
 				}
 				
 				$.get('{{ url("scan/new_tag_injeksi") }}', data, function(result, status, xhr){
@@ -528,8 +530,8 @@
 						var btn_product = "";
 						$('#product_btn').empty();
 						$.each(result.product, function(key, value) {
-							btn_product += '<div class="col-xs-3" style="padding-top: 5px">';
-							btn_product += '<center><button class="btn btn-primary" id="'+value.product+'" style="width: 200px;font-size: 15px" onclick="getProduct(this.id)">'+value.product+'';
+							btn_product += '<div class="col-xs-4" style="padding-top: 5px">';
+							btn_product += '<center><button class="btn btn-primary" id="'+value.product+'" style="width: 250px;font-size: 17px" onclick="getProduct(this.id)">'+value.product+'';
 							btn_product += '</button></center>';
 							btn_product += '</div>';
 						});
@@ -539,7 +541,7 @@
 						$('#cavity_btn').empty();
 						$.each(result.cavity, function(key, value) {
 							btn_cavity += '<div class="col-xs-3" style="padding-top: 5px">';
-							btn_cavity += '<center><button class="btn btn-info" id="'+value.no_cavity+'" style="width: 200px;font-size: 15px" onclick="getCavity(this.id)">'+value.no_cavity+'';
+							btn_cavity += '<center><button class="btn btn-info" id="'+value.no_cavity+'" style="width: 200px;font-size: 15px;font-weight:bold" onclick="getCavity(this.id)">'+value.type.toUpperCase()+'-'+value.no_cavity+'';
 							btn_cavity += '</button></center>';
 							btn_cavity += '</div>';
 						});
@@ -567,6 +569,7 @@
 			if($("#tag_molding").val().length >= 7){
 				var data = {
 					tag : $("#tag_molding").val(),
+					mesin : $("#mesin").text(),
 					// part : $("#part_type").text(),
 				}
 				
@@ -621,10 +624,11 @@
 	}
 
 	function changeMesin() {
+		changeMesin2();
 		$('#tag_product').val("");
-		$('#tag_molding').val("");
+		// $('#tag_molding').val("");
 		$('#tag_product').prop('disabled',true);
-		$('#tag_molding').prop('disabled',true);
+		// $('#tag_molding').prop('disabled',true);
 		$('#start_time').val("");
 		$('#molding').html("-");
 		$('#part_name').html("-");
@@ -687,7 +691,6 @@
 	function saveMesin() {
 		$('#modalMesin').modal('hide');
 		$('#mesin').html($('#mesin_fix2').text());
-		$('#tag_molding').focus();
 		get_temp();
 	}
 
@@ -706,7 +709,7 @@
 		$('#tag_product').val('');
 		$('#tag_product').removeAttr('disabled');
 		$('#tag_product').focus();
-		$('#tag_molding').prop('disabled',true);
+		// $('#tag_molding').prop('disabled',true);
 	}
 
 	function plus(id){
@@ -747,7 +750,7 @@
 		var start_time = $('#start_time').val();
 		var data = {
 			tag_product:$('#tag_product').val(),
-			tag_molding:$('#tag_molding').val(),
+			// tag_molding:$('#tag_molding').val(),
 			operator_id:$('#op').text(),
 			start_time:start_time,
 			mesin:$('#mesin').text(),
@@ -802,11 +805,11 @@
 				openSuccessGritter('Success!', result.message);
 				var start_time = result.datas.start_time;
 				$('#tag_product').val(result.datas.tag_product);
-				$('#tag_molding').val(result.datas.tag_molding);
+				// $('#tag_molding').val(result.datas.tag_molding);
 				$('#tag_product').prop('disabled',true);
-				$('#tag_molding').prop('disabled',true);
+				// $('#tag_molding').prop('disabled',true);
 				$('#start_time').val(start_time);
-				$('#molding').html(result.datas.molding);
+				// $('#molding').html(result.datas.molding);
 				$('#part_name').html(result.datas.part_name);
 				$('#part_type').html(result.datas.part_type);
 				$('#color').html(result.datas.color);
@@ -834,8 +837,10 @@
 				$('#btn_ganti').show();
 			}
 			else{
-				$('#tag_molding').removeAttr('disabled');
-				$('#tag_molding').focus();
+				// $('#tag_molding').removeAttr('disabled');
+				// $('#tag_molding').focus();
+				$('#tag_product').removeAttr('disabled');
+				$('#tag_product').focus();
 			}
 		});
 	}
@@ -857,7 +862,7 @@
 		}
 		var data = {
 			tag_product:$('#tag_product').val(),
-			tag_molding:$('#tag_molding').val(),
+			// tag_molding:$('#tag_molding').val(),
 			shot:shot,
 			ng_name:ng_name.join(),
 			ng_count:ng_count.join(),
@@ -891,7 +896,7 @@
 		}
 		var data = {
 			tag_product:$('#tag_product').val(),
-			tag_molding:$('#tag_molding').val(),
+			// tag_molding:$('#tag_molding').val(),
 			operator_id:$('#op').text(),
 			start_time:$('#start_time').val(),
 			mesin:$('#mesin').text(),

@@ -34,6 +34,8 @@ use App\InjectionProcessLog;
 use App\InjectionMoldingLog;
 use App\InjectionInventory;
 use App\InjectionTransaction;
+use App\InjectionHistoryMoldingTemp;
+use App\InjectionHistoryMoldingLog;
 use Response;
 use DataTables;
 use Carbon\Carbon;
@@ -125,26 +127,33 @@ public function scanPartInjeksi(Request $request){
 }
 
 public function scanNewTagInjeksi(Request $request){
-    $tag = InjectionTag::where('tag', '=', $request->get('tag'))->get();
+    $tag = InjectionTag::where('tag', '=', $request->get('tag'))->where('availability', '=', null)->get();
 
-    $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where part_code = '".$request->get('part_type')."'");
+    // $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where part_code = '".$request->get('part_type')."'");
 
-    if ($request->get('part_type') == 'HJ') {
-        $type = 'head';
-    }else if($request->get('part_type') == 'FJ'){
-        $type = 'foot';
-    }else if($request->get('part_type') == 'MJG' || $request->get('part_type') == 'MJB'){
-        $type = 'middle';
-    }else if($request->get('part_type') == 'BJ'){
-        $type = 'block';
-    }
+    $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts`");
+
+    // if ($request->get('part_type') == 'HJ') {
+    //     $type = 'head';
+    // }else if($request->get('part_type') == 'FJ'){
+    //     $type = 'foot';
+    // }else if($request->get('part_type') == 'MJG' || $request->get('part_type') == 'MJB'){
+    //     $type = 'middle';
+    // }else if($request->get('part_type') == 'BJ'){
+    //     $type = 'block';
+    // }
+
+    // $cavity = DB::SELECT("SELECT
+    //         * 
+    //     FROM
+    //         push_block_masters 
+    //     WHERE
+    //         type = '".$type."'");
 
     $cavity = DB::SELECT("SELECT
             * 
         FROM
-            push_block_masters 
-        WHERE
-            type = '".$type."'");
+            push_block_masters");
 
     if (count($tag) > 0) {
         $response = array(
@@ -166,7 +175,7 @@ public function scanNewTagInjeksi(Request $request){
 }
 
 public function scanPartMolding(Request $request){
-    $part = InjectionMoldingMaster::where('tag', '=', $request->get('tag'))->first();
+    $part = InjectionMoldingMaster::where('tag', '=', $request->get('tag'))->where('status_mesin', '=', $request->get('mesin'))->first();
 
     if (count($part) > 0) {
         $response = array(
@@ -1418,7 +1427,7 @@ public function create_temp(Request $request)
         $id_user = Auth::id();
         $injection = InjectionProcessTemp::create([
             'tag_product' => $request->get('tag_product'),
-            'tag_molding' => $request->get('tag_molding'),
+            // 'tag_molding' => $request->get('tag_molding'),
             'operator_id' => $request->get('operator_id'),
             'start_time' => $request->get('start_time'),
             'mesin' => $request->get('mesin'),
@@ -1501,7 +1510,9 @@ public function update_temp(Request $request)
     try {
         $id_user = Auth::id();
 
-        $temp = InjectionProcessTemp::where('tag_product',$request->get('tag_product'))->where('tag_molding',$request->get('tag_molding'))->first();
+        $temp = InjectionProcessTemp::where('tag_product',$request->get('tag_product'))
+        // ->where('tag_molding',$request->get('tag_molding'))
+        ->first();
         $shot = $temp->shot;
         $total = $request->get('shot')+$shot;
         $temp->shot = $total;
@@ -1530,7 +1541,7 @@ public function create_log(Request $request)
         $id_user = Auth::id();
         $injection = InjectionProcessLog::create([
             'tag_product' => $request->get('tag_product'),
-            'tag_molding' => $request->get('tag_molding'),
+            // 'tag_molding' => $request->get('tag_molding'),
             'operator_id' => $request->get('operator_id'),
             'start_time' => $request->get('start_time'),
             'end_time' => date('Y-m-d H:i:s'),
@@ -1554,42 +1565,45 @@ public function create_log(Request $request)
 
         $temp = InjectionProcessTemp::where('tag_product',$request->get('tag_product'))->where('tag_molding',$request->get('tag_molding'))->delete();
 
-        $molding_master = InjectionMoldingMaster::where('tag',$request->get('tag_molding'))->first();
+        // $molding_master = InjectionMoldingMaster::where('tag',$request->get('tag_molding'))->first();
         
-        $last = $molding_master->last_counter;
-        $new = $last + $request->get('shot');
-        $molding_master->last_counter = $new;
+        // $last = $molding_master->last_counter;
+        // $new = $last + $request->get('shot');
+        // $molding_master->last_counter = $new;
 
-        $last_ng = $molding_master->ng_count;
-        $new_ng = $last_ng + $request->get('ng_counting');
-        $molding_master->ng_count = $new_ng;
+        // $last_ng = $molding_master->ng_count;
+        // $new_ng = $last_ng + $request->get('ng_counting');
+        // $molding_master->ng_count = $new_ng;
         
-        $molding_master->save();
+        // $molding_master->save();
 
-        $molding_log = InjectionMoldingLog::where('tag_molding',$request->get('tag_molding'))->where('status','Running')->orderBy('id','desc')->first();
-        if (count($molding_log) > 0) {
-            $total_running_shot = $molding_log->total_running_shot;
-            $total = $total_running_shot + $request->get('shot');
-        }else{
-            $total = $request->get('shot');
-        }
+        // $molding_log = InjectionMoldingLog::where('tag_molding',$request->get('tag_molding'))->where('status','Running')->orderBy('id','desc')->first();
+        // if (count($molding_log) > 0) {
+        //     $total_running_shot = $molding_log->total_running_shot;
+        //     $total = $total_running_shot + $request->get('shot');
+        // }else{
+        //     $total = $request->get('shot');
+        // }
 
-        InjectionMoldingLog::create([
-            'tag_molding' => $request->get('tag_molding'),
-            'mesin' => $request->get('mesin'),
-            'part' => $request->get('molding'),
-            'color' => $request->get('color'),
-            'cavity' => $request->get('cavity'),
-            'start_time' => $request->get('start_time'),
-            'end_time' => date('Y-m-d H:i:s'),
-            'running_shot' => $request->get('shot'),
-            'total_running_shot' => $total,
-            'ng_name' => $request->get('ng_name'),
-            'ng_count' => $request->get('ng_count'),
-            'status' => 'Running',
-            'status_maintenance' => 'Running',
-            'created_by' => $id_user
-        ]);
+        // $molding_log->status = 'Close';
+        // $molding_log->save();
+
+        // InjectionMoldingLog::create([
+        //     'tag_molding' => $request->get('tag_molding'),
+        //     'mesin' => $request->get('mesin'),
+        //     'part' => $request->get('molding'),
+        //     'color' => $request->get('color'),
+        //     'cavity' => $request->get('cavity'),
+        //     'start_time' => $request->get('start_time'),
+        //     'end_time' => date('Y-m-d H:i:s'),
+        //     'running_shot' => $request->get('shot'),
+        //     'total_running_shot' => $total,
+        //     'ng_name' => $request->get('ng_name'),
+        //     'ng_count' => $request->get('ng_count'),
+        //     'status' => 'Running',
+        //     'status_maintenance' => 'Running',
+        //     'created_by' => $id_user
+        // ]);
 
         //send Inventories
         $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number'), 'storage_location' => 'RC11']);
@@ -4166,7 +4180,7 @@ public function get_molding(Request $request){
         // $tgl = $request->get('tgl');
         // $tag = $request->get('tag');
 
-    $molding = MoldingInjectionLog::where('status_maintenance','Running')->get();
+    $molding = InjectionMoldingLog::where('status_maintenance','Running')->where('status','Running')->get();
 
     $response = array(
         'status' => true,            
@@ -4181,10 +4195,11 @@ public function get_molding_pasang(Request $request){
     $mesin = substr($request->get('mesin'),6);
 
 
-    $molding = MoldingInjectionMaster::where('status','LEPAS')->
-    where('mesin','like','%'.$mesin.'%')->get();
+    $molding = InjectionMoldingMaster::where('status','LEPAS')->
+    where('mesin','like','%'.$mesin.'%')->
+    where('remark','=','RC')->get();
 
-    $molding2 = MoldingInjectionMaster::where('status','PASANG')->where('mesin','like','%'.$mesin.'%')->get();
+    $molding2 = InjectionMoldingMaster::where('status','PASANG')->where('mesin','like','%'.$mesin.'%')->get();
 
     $pesan = '';
     foreach ($molding2 as $key) {
@@ -4209,7 +4224,7 @@ public function fetch_molding(Request $request){
         // $tgl = $request->get('tgl');
     $id = $request->get('id');
 
-    $molding = MoldingInjectionLog::find($id);
+    $molding = InjectionMoldingLog::find($id);
 
     $response = array(
         'status' => true,            
@@ -4223,7 +4238,7 @@ public function fetch_molding_pasang(Request $request){
         // $tgl = $request->get('tgl');
     $id = $request->get('id');
 
-    $molding = MoldingInjectionMaster::find($id);
+    $molding = InjectionMoldingMaster::find($id);
 
     $response = array(
         'status' => true,            
@@ -4237,16 +4252,8 @@ function store_history_temp(Request $request)
 {
     try{    
       $id_user = Auth::id();
-              // $interview_id = $request->get('interview_id');
-              // $electric_supply_time = new DateTime($request->get('electric_supply_time'));
-              // $lepas_molding = new DateTime($request->get('lepas_molding'));
-              // $mins = $electric_supply_time->diff($lepas_molding);
-              // if($request->get('lepas_molding') == '0:00:00'){
-              // }else{
-              //    $lepas_molding_new = $mins->format('%H:%I:%S');
-              // }
 
-      HistoryMoldingInjectionTemp::create([
+      InjectionHistoryMoldingTemp::create([
         'type' => $request->get('type'),
         'pic' => $request->get('pic'),
         'mesin' => $request->get('mesin'),
@@ -4257,14 +4264,14 @@ function store_history_temp(Request $request)
         'created_by' => $id_user
     ]);
 
-      $molding = MoldingInjectionLog::where('mesin',$request->get('mesin'))->where('part',$request->get('part'))->where('color',$request->get('color'))->where('status_maintenance','Running')->get();
+      $molding = InjectionMoldingLog::where('mesin',$request->get('mesin'))->where('part',$request->get('part'))->where('color',$request->get('color'))->where('status_maintenance','Running')->get();
 
       if(count($molding) == 0){
 
       }else{
           foreach ($molding as $molding) {
            $id_molding = $molding->id;
-           $molding2 = MoldingInjectionLog::find($id_molding);
+           $molding2 = InjectionMoldingLog::find($id_molding);
            $molding2->status_maintenance = 'Maintenance';
            $molding2->save();
        }
@@ -4290,7 +4297,7 @@ public function get_history_temp(Request $request){
         // $tgl = $request->get('tgl');
     $pic = $request->get('pic');
 
-    $molding = HistoryMoldingInjectionTemp::where('pic',$pic)->get();
+    $molding = InjectionHistoryMoldingTemp::where('pic',$pic)->get();
 
     $response = array(
         'status' => true,            
@@ -4305,11 +4312,11 @@ public function update_history_temp(Request $request){
     $pic = $request->get('pic');
     $type = $request->get('type');
 
-    $history_temp = HistoryMoldingInjectionTemp::where('pic',$pic)->where('type',$type)->get();
+    $history_temp = InjectionHistoryMoldingTemp::where('pic',$pic)->where('type',$type)->get();
     foreach ($history_temp as $key) {
         $id_history_temp = $key->id;
     }
-    $history_temp2 = HistoryMoldingInjectionTemp::find($id_history_temp);
+    $history_temp2 = InjectionHistoryMoldingTemp::find($id_history_temp);
     $history_temp2->note = $request->get('note');
     $history_temp2->save();
 
@@ -4320,20 +4327,41 @@ public function update_history_temp(Request $request){
     return Response::json($response);
 }
 
+public function cancel_history_molding(Request $request)
+{
+    try {
+        InjectionHistoryMoldingTemp::where('pic',$request->get('pic'))->where('type',$request->get('type'))->delete();
+
+        if ($request->get('type') == 'LEPAS') {
+            $molding_master = InjectionMoldingLog::where('part',$request->get('part'))->where('status_maintenance',"Maintenance")->get();
+            foreach ($molding_master as $molding_master) {
+                 $id_molding_master = $molding_master->id;
+                 $molding3 = InjectionMoldingLog::find($id_molding_master);
+                 $molding3->status_maintenance = "Running";
+                 $molding3->save();
+            }
+        }
+
+        $response = array(
+            'status' => true
+        );
+        return Response::json($response);
+
+    }catch(\Exception $e){
+          $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+    }
+}
+
 function store_history_molding(Request $request)
 {
     try{    
       $id_user = Auth::id();
-              // $interview_id = $request->get('interview_id');
-              // $electric_supply_time = new DateTime($request->get('electric_supply_time'));
-              // $lepas_molding = new DateTime($request->get('lepas_molding'));
-              // $mins = $electric_supply_time->diff($lepas_molding);
-              // if($request->get('lepas_molding') == '0:00:00'){
-              // }else{
-              //    $lepas_molding_new = $mins->format('%H:%I:%S');
-              // }
 
-      HistoryMoldingInjection::create([
+      InjectionHistoryMoldingLog::create([
         'type' => $request->get('type'),
         'pic' => $request->get('pic'),
         'mesin' => $request->get('mesin'),
@@ -4347,26 +4375,26 @@ function store_history_molding(Request $request)
         'created_by' => $id_user
     ]);
 
-      HistoryMoldingInjectionTemp::where('pic',$request->get('pic'))->delete();
+      InjectionHistoryMoldingTemp::where('pic',$request->get('pic'))->delete();
 
       if ($request->get('type') == 'LEPAS') {
-        $molding = MoldingInjectionLog::where('mesin',$request->get('mesin'))->where('part',$request->get('part'))->where('color',$request->get('color'))->where('status','Running')->get();
+        $molding = InjectionMoldingLog::where('mesin',$request->get('mesin'))->where('part',$request->get('part'))->where('color',$request->get('color'))->where('status','Running')->get();
 
         if(count($molding) == 0){
 
         }else{
           foreach ($molding as $molding) {
            $id_molding = $molding->id;
-           $molding2 = MoldingInjectionLog::find($id_molding);
+           $molding2 = InjectionMoldingLog::find($id_molding);
            $molding2->status_maintenance = 'Close';
            $molding2->status = 'Close';
            $molding2->save();
        }
    }
-   $molding_master = MoldingInjectionMaster::where('part',$request->get('part'))->get();
+   $molding_master = InjectionMoldingMaster::where('part',$request->get('part'))->get();
    foreach ($molding_master as $molding_master) {
      $id_molding_master = $molding_master->id;
-     $molding3 = MoldingInjectionMaster::find($id_molding_master);
+     $molding3 = InjectionMoldingMaster::find($id_molding_master);
      $molding3->status = $request->get('reason');
      $molding3->status_mesin = null;
      $molding3->save();
@@ -4374,10 +4402,10 @@ function store_history_molding(Request $request)
 }
 
 if ($request->get('type') == 'PASANG') {
-    $molding_master = MoldingInjectionMaster::where('part',$request->get('part'))->get();
+    $molding_master = InjectionMoldingMaster::where('part',$request->get('part'))->get();
     foreach ($molding_master as $molding_master) {
      $id_molding_master = $molding_master->id;
-     $molding3 = MoldingInjectionMaster::find($id_molding_master);
+     $molding3 = InjectionMoldingMaster::find($id_molding_master);
      $molding3->status = 'PASANG';
      $molding3->status_mesin = $request->get('mesin');
      $molding3->save();
@@ -4387,8 +4415,6 @@ if ($request->get('type') == 'PASANG') {
 $response = array(
     'status' => true
 );
-              // return redirect('index/interview/details/'.$interview_id)
-              // ->with('page', 'Interview Details')->with('status', 'New Participant has been created.');
 return Response::json($response);
 }catch(\Exception $e){
   $response = array(
@@ -4417,7 +4443,7 @@ public function get_molding_master(Request $request){
         // $tgl = $request->get('tgl');
         // $tag = $request->get('tag');
 
-    $molding = MoldingInjectionMaster::where('status','!=','DIPERBAIKI')->get();
+    $molding = InjectionMoldingMaster::where('status','!=','DIPERBAIKI')->where('remark','=','RC')->get();
 
     $response = array(
         'status' => true,            
@@ -4431,7 +4457,7 @@ public function fetch_molding_master(Request $request){
         // $tgl = $request->get('tgl');
     $id = $request->get('id');
 
-    $molding = MoldingInjectionMaster::find($id);
+    $molding = InjectionMoldingMaster::find($id);
 
     $response = array(
         'status' => true,            
@@ -4457,11 +4483,11 @@ function store_maintenance_temp(Request $request)
         'created_by' => $id_user
     ]);
 
-      $molding = MoldingInjectionMaster::where('part',$request->get('part'))->where('product',$request->get('product'))->get();
+      $molding = InjectionMoldingMaster::where('part',$request->get('part'))->where('product',$request->get('product'))->get();
 
       foreach ($molding as $key) {
         $id_molding = $key->id;
-        $molding2 = MoldingInjectionMaster::find($id_molding);
+        $molding2 = InjectionMoldingMaster::find($id_molding);
         $molding2->status = 'DIPERBAIKI';
         $molding2->save();
     }

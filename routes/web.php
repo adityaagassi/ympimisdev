@@ -322,6 +322,7 @@ Route::post('index/injeksi/store_history_temp', 'InjectionsController@store_hist
 Route::get('index/injeksi/get_history_temp', 'InjectionsController@get_history_temp');
 Route::post('index/injeksi/update_history_temp', 'InjectionsController@update_history_temp');
 Route::post('index/injeksi/store_history_molding', 'InjectionsController@store_history_molding');
+Route::post('index/injeksi/cancel_history_molding', 'InjectionsController@cancel_history_molding');
 
 //end molding injection
 
@@ -863,10 +864,11 @@ Route::post('cancel/return', 'TransactionController@cancelReturn');
 //GA CONTROL
 Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 	Route::post('accept/ga_control/driver_request', 'GeneralAffairController@acceptDriverRequest');
-	Route::post('edit/ga_control/driver_edit', 'GeneralAffairController@fetchDriverEdit');
+	Route::post('edit/ga_control/driver_edit', 'GeneralAffairController@editDriverEdit');
 });
 Route::get('index/ga_control/driver', 'GeneralAffairController@indexDriver');
 Route::get('fetch/ga_control/driver', 'GeneralAffairController@fetchDriver');
+Route::get('fetch/ga_control/driver_duty', 'GeneralAffairController@fetchDriverDuty');
 Route::get('fetch/ga_control/driver_edit', 'GeneralAffairController@fetchDriverEdit');
 Route::get('fetch/ga_control/driver_request', 'GeneralAffairController@fetchDriverRequest');
 Route::post('create/ga_control/driver_request', 'GeneralAffairController@createDriverRequest');
@@ -1841,27 +1843,37 @@ Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
 
 
 
-//INDIRECT REQUEST
+//START INDIRECT REQUEST
+
+//Request
 Route::get('index/indirect_material_request', 'IndirectMaterialController@indexRequest');
 
-
-
-
+//Stock
 Route::get('index/indirect_material_stock', 'IndirectMaterialController@indexStock');
 Route::post('import/indirect_material_stock', 'IndirectMaterialController@importStock');
-Route::get('fetch/indirect_material_check', 'IndirectMaterialController@fetchCheck');
 Route::post('input/indirect_material_stock', 'IndirectMaterialController@inputStock');
 Route::get('fetch/indirect_material_stock', 'IndirectMaterialController@fetchStock');
 Route::get('fetch/indirect_material_out', 'IndirectMaterialController@fetchOut');
 
 
+//Log
 Route::get('index/indirect_material_log', 'IndirectMaterialController@indexIndirectMaterialLog');
 Route::get('fetch/indirect_material_log', 'IndirectMaterialController@fetchIndirectMaterialLog');
 Route::get('print/indirect_material_label/{qr_code}', 'IndirectMaterialController@printLabel');
 
-
-
 //END INDIRECT REQUEST
+
+
+
+//START CHEMICAL
+Route::get('index/chm_solution_control', 'IndirectMaterialController@indexSolutionControl');
+
+
+
+Route::get('index/chm_picking_schedule', 'IndirectMaterialController@indexPickingSchedule');
+
+
+//END CHEMICAL
 
 
 
@@ -2948,6 +2960,8 @@ Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_ch
 
 Route::get('index/maintenance/inven/list', 'MaintenanceController@indexInventory');
 Route::get('fetch/maintenance/inven/list', 'MaintenanceController@fetchInventory');
+
+Route::get('index/maintenance/inventory/{stat}', 'MaintenanceController@indexInventoryTransaction');
 
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
