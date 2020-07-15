@@ -72,11 +72,31 @@
     {{ session('error') }}
   </div>   
   @endif
+
+  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+    <p style="position: absolute; color: White; top: 45%; left: 45%;">
+      <span style="font-size: 5vw;"><i class="fa fa-spin fa-circle-o-notch"></i></span>
+    </p>
+  </div>
+
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
 
         <div class="box-body" style="overflow-x: scroll;">
+          <div class="col-xs-2">
+            <div class="row">
+              <div class="input-group date" style="padding-bottom: 10px;">
+                <div class="input-group-addon bg-green" style="border: none; background-color: #605ca8; color: white;">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" class="form-control datepicker" id="tanggal" name="tanggal" placeholder="Select Date">
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <button class="btn btn-success" onclick="fillTable()">Search</button>
+          </div>
           <table id="tableResult" class="table table-bordered table-striped table-hover" >
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
@@ -131,8 +151,12 @@
   });
 
   jQuery(document).ready(function() {
+     $('#tanggal').datepicker({
+      autoclose: true,
+      todayHighlight: true
+    });
+
     $('body').toggleClass("sidebar-collapse");
-    fillTable();
     $("#navbar-collapse").text('');
     $('.select2').select2({
       language : {
@@ -148,8 +172,9 @@
     location.reload(true);
   }
 
-  function fillTable(tanggal) {
-
+  function fillTable() {
+    $('#loading').show();
+    var tanggal = $('#tanggal').val();
     var data = {
       tanggal:tanggal
     }
@@ -301,8 +326,10 @@
         } );
 
         $('#tableResult tfoot tr').appendTo('#tableResult thead');
+        $('#loading').hide();
       }
       else{
+        $('#loading').hide();
         alert('Attempt to retrieve data failed');
       }
 
