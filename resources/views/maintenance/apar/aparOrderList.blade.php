@@ -1,4 +1,4 @@
-@extends('layouts.display')
+@extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
@@ -66,7 +66,7 @@
       </p>
     </div>
     <div class="col-xs-12">
-      <h3 style="color: white; text-align: center">Daftar APAR Yang Akan Kadaluarsa <br>(使用期限が切れた消火器・消火栓の一覧)</h3><br>
+      <h3 style="color: #7e56a1; text-align: center">Daftar APAR Yang Akan Kadaluarsa <br>(使用期限が切れた消火器・消火栓の一覧)</h3><br>
     </div>
     <div class="col-xs-6">
       <button class="btn btn-default btn-lg pull-right" style="border: 2px solid #7e5686; color: #7e5686; font-weight: bold;" id='f1' onclick="page(this.id)">Factory I</button>
@@ -119,7 +119,7 @@
     </div>
 
     <div class="col-xs-12">
-      <label style="color: white" id='stat_order'></label>
+      <label style="color: #7e56a1" id='stat_order'></label>
       <button class="btn btn-lg btn-success" style="width: 100%" onclick="orders()"><i class="fa fa-check"></i> ORDER</button>
     </div>
   </div>
@@ -130,7 +130,7 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="modalTitle">APAR Detail</h4>
+            <h4 class="modal-title" id="modalTitle">APAR Order Detail</h4>
           </div>
           <div class="modal-body">
             <div class="row">
@@ -342,6 +342,11 @@
       }
 
       function ordering(stat) {
+        if ($("#pr_date").val() == "" || $("#pr_num").val() == "") {
+          openErrorGritter("Gagal", "Please Fill All Fields");
+          return false;
+        }
+
         var id = [];
 
         $('.id').each(function(index, value) {
@@ -404,6 +409,7 @@
 
       function orders() {
         console.log(order_list);
+        $("#body_exp").empty();
 
         $("#modalDetail").modal("show");
 

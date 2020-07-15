@@ -235,15 +235,14 @@ class MaintenanceController extends Controller
 		$title = 'APAR Order List';
 		$title_jp = '消火器・消火栓の発注一覧';
 
-		$check = db::table("utility_check_lists")
-		->select('check_point', 'remark')
-		->get();
-
-		return view('maintenance.apar.aparOrderList', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'check_list' => $check
-		))->with('page', 'APAR order')->with('head2', 'Utility')->with('head', 'Maintenance');
+		if (Auth::user()->email == "priyo.jatmiko@music.yamaha.com" || Auth::user()->role_code == "MIS") {
+			return view('maintenance.apar.aparOrderList', array(
+				'title' => $title,
+				'title_jp' => $title_jp
+			))->with('page', 'APAR order')->with('head2', 'Utility')->with('head', 'Maintenance');
+		} else {
+			return back();
+		}	
 	}
 
 	public function indexAparTool()
