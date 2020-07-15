@@ -20,7 +20,8 @@
 		}
 		.crop {
 			position: fixed;
-			top: 15px;	
+			top: 16px;
+			/*left: px;*/
 		}
 		.kiri {
 			font-size: 10pt;
@@ -115,13 +116,23 @@
 		var material_description = $('#material_description').val();
 		var quantity = $('#quantity').val();
 		var url1 = "{{url('/app/barcode/')}}";
-		var url2 ="/barcode.php?f=svg&s=code-128&w=105&h=27&p=0&wq=0";
+		var url2 ="/barcode.php?f=svg&s=code-128&w=100&h=27&p=0&wq=0";
 		var code ="&d="+ material_number;
 		var janfix = url1.replace("/public","");
 		$("#128").attr("src",janfix+url2+code);
 
 		$('#print_material_number').text(material_number);
+
+
+		if(material_description.length > 35){
+			$('#print_material_description').css('font-size', '6pt');
+		}else{
+			$('#print_material_description').css('font-size', '7pt');
+		}
 		$('#print_material_description').text(material_description);
+		
+
+
 		$('#print_quantity').text("QTY: "+ quantity +"PC(s)");
 	}
 // default print settings
@@ -205,7 +216,7 @@ function printWindow(win, what) {
 		 console.log("before print: "+what, true);
 		});
   	win.addEventListener("afterprint", function(event) {
-   		
+
   		window.close();
   	});
   }
