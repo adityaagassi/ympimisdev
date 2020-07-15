@@ -22,17 +22,21 @@
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/in") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - In</a>
+			<!-- <a href="{{ url("index/in") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - In</a>
 
-			<a href="{{ url("index/out") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - Out</a>
+			<a href="{{ url("index/out") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - Out</a> -->
 
-			<a href="{{ url("index/Schedule") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule</a>
+			<!-- <a href="{{ url("index/Schedule") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule</a>
 
-			<a href="{{ url("index/indexPlanAll") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule 3 Days</a>
+			<a href="{{ url("index/indexPlanAll") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule 3 Days</a> -->
 
-			<a href="{{ url("index/opmesin") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Machine Operationing</a>
+			<a href="{{ url("index/injection_machine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Machine</a>
 
-			<a href="{{ url("index/machine_operational") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Like Asprova View</a>
+			<!-- <a href="{{ url("index/machine_operational") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Like Asprova View</a> -->
+
+			<a href="{{ url("index/injection/transaction","in") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Transaction IN</a>
+
+			<a href="{{ url("index/injection/transaction","out") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Transaction OUT</a>
 
 			<button type="button" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;" data-toggle="modal" data-target="#push-pull-check-modal">
 				Recorder Push Block Check

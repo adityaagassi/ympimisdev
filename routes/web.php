@@ -64,8 +64,6 @@ Route::get('/machinery_monitoring', function () {
 	));
 });
 
-
-
 Route::get('/information_board', function () {
 	return view('information_board')->with('title', 'INFORMATION BOARD')->with('title_jp', '情報板');
 });
@@ -154,6 +152,7 @@ Route::get('index/injeksi/get_temp', 'InjectionsController@get_temp');
 Route::post('index/injeksi/create_temp', 'InjectionsController@create_temp');
 Route::post('index/injeksi/update_tag', 'InjectionsController@update_tag');
 Route::post('index/injeksi/update_temp', 'InjectionsController@update_temp');
+Route::post('index/injeksi/create_log', 'InjectionsController@create_log');
 Route::post('index/injeksi/store_ng', 'InjectionsController@store_ng');
 Route::post('index/injeksi/store_ng_temp', 'InjectionsController@store_ng_temp');
 Route::post('index/injeksi/update_ng_temp', 'InjectionsController@update_ng_temp');
@@ -175,6 +174,13 @@ Route::get('get/Inpart', 'InjectionsController@getDataIn');
 Route::get('index/out', 'InjectionsController@out');
 Route::get('get/Outpart', 'InjectionsController@getDataOut');
 //end out
+
+//Transaction
+Route::get('index/injection/transaction/{status}', 'InjectionsController@transaction');
+Route::get('scan/tag_product', 'InjectionsController@scanProduct');
+Route::get('fetch/injection/transaction', 'InjectionsController@fetchTransaction');
+Route::post('index/injection/completion', 'InjectionsController@completion');
+//end
 
 // ---- dailyStock
 Route::get('index/dailyStock', 'InjectionsController@dailyStock');
@@ -856,10 +862,13 @@ Route::post('cancel/return', 'TransactionController@cancelReturn');
 
 //GA CONTROL
 Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
-
+	Route::post('accept/ga_control/driver_request', 'GeneralAffairController@acceptDriverRequest');
+	Route::post('edit/ga_control/driver_edit', 'GeneralAffairController@fetchDriverEdit');
 });
 Route::get('index/ga_control/driver', 'GeneralAffairController@indexDriver');
 Route::get('fetch/ga_control/driver', 'GeneralAffairController@fetchDriver');
+Route::get('fetch/ga_control/driver_edit', 'GeneralAffairController@fetchDriverEdit');
+Route::get('fetch/ga_control/driver_request', 'GeneralAffairController@fetchDriverRequest');
 Route::post('create/ga_control/driver_request', 'GeneralAffairController@createDriverRequest');
 Route::get('fetch/ga_control/driver_detail', 'GeneralAffairController@fetchDriverDetail');
 Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
@@ -1111,6 +1120,7 @@ Route::get('purchase_requisition/reject/{id}', 'AccountingController@prreject');
 //Purchase Order
 Route::get('purchase_order', 'AccountingController@purchase_order');
 Route::get('fetch/purchase_order', 'AccountingController@fetch_purchase_order');
+Route::get('fetch/purchase_order_pr', 'AccountingController@fetch_po_outstanding_pr');
 Route::post('create/purchase_order', 'AccountingController@create_purchase_order');
 Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
 Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
@@ -1153,7 +1163,7 @@ Route::post('investment/edit_investment_item', 'AccountingController@edit_invest
 Route::get('investment/edit_investment_item', 'AccountingController@fetch_investment_item_edit');
 Route::post('investment/delete_investment_item', 'AccountingController@delete_investment_item');
 Route::get('investment/get_detailitem', 'AccountingController@getitemdesc')->name('admin.getitemdesc');
-
+Route::get('investment/report/{id}', 'AccountingController@report_investment');
 
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
@@ -1833,9 +1843,21 @@ Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
 
 //INDIRECT REQUEST
 Route::get('index/indirect_material_request', 'IndirectMaterialController@indexRequest');
+
+
+
+
 Route::get('index/indirect_material_stock', 'IndirectMaterialController@indexStock');
 Route::post('import/indirect_material_stock', 'IndirectMaterialController@importStock');
+Route::get('fetch/indirect_material_check', 'IndirectMaterialController@fetchCheck');
+Route::post('input/indirect_material_stock', 'IndirectMaterialController@inputStock');
 Route::get('fetch/indirect_material_stock', 'IndirectMaterialController@fetchStock');
+Route::get('fetch/indirect_material_out', 'IndirectMaterialController@fetchOut');
+
+
+Route::get('index/indirect_material_log', 'IndirectMaterialController@indexIndirectMaterialLog');
+Route::get('fetch/indirect_material_log', 'IndirectMaterialController@fetchIndirectMaterialLog');
+Route::get('print/indirect_material_label/{qr_code}', 'IndirectMaterialController@printLabel');
 
 
 
@@ -2491,6 +2513,7 @@ Route::post('index/push_block_recorder/update_temp', 'RecorderProcessController@
 Route::get('index/push_block_recorder/get_temp', 'RecorderProcessController@get_temp');
 Route::post('index/push_block_recorder_resume/create_resume', 'RecorderProcessController@create_resume');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
+Route::get('index/import_push_block', 'RecorderProcessController@import_push_block');
 Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessController@report_push_block');
 Route::post('index/recorder/filter_report_push_block/{remark}', 'RecorderProcessController@filter_report_push_block');
 Route::get('index/recorder/resume_push_block/{remark}', 'RecorderProcessController@resume_push_block');
@@ -2885,13 +2908,15 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
 	Route::post('post/maintenance/apar/update', 'MaintenanceController@updateTool');
+	
+	Route::get('index/maintenance/apar/orderList', 'MaintenanceController@indexAparOrderList');
+	Route::post('post/maintenance/apar/order', 'MaintenanceController@apar_order');
 });
 
 // -----------  APAR -----------
 Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
 Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
 Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
-Route::get('index/maintenance/apar/orderList', 'MaintenanceController@indexAparOrderList');
 Route::get('index/maintenance/apar/resume', 'MaintenanceController@indexAparResume');
 Route::get('index/maintenance/apar/uses', 'MaintenanceController@indexAparUses');
 Route::get('index/maintenance/apar/ng_list', 'MaintenanceController@indexAparNG');
@@ -2916,7 +2941,6 @@ Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
 Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
 Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
 Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_history');
-Route::post('post/maintenance/apar/order', 'MaintenanceController@apar_order');
 
 Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
 
