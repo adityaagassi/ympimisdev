@@ -1125,7 +1125,11 @@ class MaintenanceController extends Controller
 
 		$hasil_check = UtilityCheck::select(db::raw('DATE_FORMAT(check_date,"%d-%m-%Y") as cek_date'))->where('utility_id', $utl->id)->orderBy('check_date')->limit(2)->get();
 
-		// UtilityOrder::where('utility_id', $utl->id)->delete();
+		$uo = UtilityOrder::where('Utility_id', '=', $utl->id)->get()->count();
+
+		if ($uo > 0) {
+			UtilityOrder::where('Utility_id', '=', $utl->id)->delete();
+		}
 
 		$response = array(
 			'status' => true,
