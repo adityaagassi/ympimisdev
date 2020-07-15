@@ -72,12 +72,12 @@ include(app_path() . '\barcode\barcode.php');
 		<td colspan="3" >&nbsp;<br></td>
 	</tr>	
 	<tr>
-		<td class="kiri" align="RIGHT">JAN/EAN</td>
+		<td class="kiri" id="JAN_text" align="RIGHT">JAN/EAN</td>
 		<td align="left"> <img id="JAN" src=""> </td>
 		<td ></td>
 	</tr>
 	<tr>
-		<td class="kiri" align="RIGHT">UPC</td>
+		<td class="kiri" id ="upc_text" align="RIGHT">UPC</td>
 		<td align="left"><img id ="upc" src=""></td>
 		<td ></td>
 	</tr>
@@ -163,6 +163,7 @@ include(app_path() . '\barcode\barcode.php');
 		}else{
 			$("#JAN").attr("src",janfix+url2+code);
 			$("#JAN").css({"visibility":"hidden"});
+			$("#JAN_text").css({"visibility":"hidden"});
 		}
 	}
 
@@ -177,6 +178,7 @@ include(app_path() . '\barcode\barcode.php');
 		}else{
 			$("#upc").attr("src",janfix+url2+code);
 			$("#upc").css({"visibility":"hidden"});
+			$("#upc_text").css({"visibility":"hidden"});
 		}
 	}
 
