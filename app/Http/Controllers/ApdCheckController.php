@@ -33,7 +33,8 @@ class ApdCheckController extends Controller
                         'Safety Gloves',
                         'Safety Google',
                         'Safety Boots, Celemek Apron, Sarung Tangan Karet, Uvex Glass, Masker Koken',
-                        'Masker Full Face'];
+                        'Masker Full Face',
+                        'Hand Cover'];
     }
 
     function index($id)
