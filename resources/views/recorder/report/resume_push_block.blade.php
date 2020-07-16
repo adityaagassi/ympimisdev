@@ -170,9 +170,7 @@
 												<th>Height Judgement</th>
 												<th>PIC</th>
 												<th>Notes</th>
-												@if($auth == 'F-SPL' || $auth == 'L-Molding' || $auth == 'MIS' || $auth == 'S')
-												<th>Action</th>
-												@endif
+												
 											</tr>
 										</thead>
 										<tbody>
@@ -209,15 +207,7 @@
 												</td>
 												<td>{{ $push_block_check->pic_check }}</td>
 												<td>{{ $push_block_check->notes }}</td>
-												@if($auth == 'F-SPL' || $auth == 'L-Molding' || $auth == 'L-RC' || $auth == 'MIS' || $auth == 'S')
-												<td>
-													<center>
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_resume('{{ url("index/recorder/update_resume") }}','{{ $push_block_check->id }}','{{ $push_block_check->push_block_id_gen }}');">
-											               Edit
-											            </button>
-													</center>
-												</td>
-												@endif
+												
 											</tr>
 											@endforeach
 										</tbody>
@@ -235,9 +225,7 @@
 												<th></th>
 												<th></th>
 												<th></th>
-												@if($auth == 'F-SPL' || $auth == 'L-Molding' || $auth == 'MIS' || $auth == 'S')
-												<th></th>
-												@endif
+												
 											</tr>
 										</tfoot>
 									</table>
