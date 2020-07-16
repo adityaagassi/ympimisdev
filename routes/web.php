@@ -867,7 +867,7 @@ Route::get('fetch/return_logs', 'TransactionController@fetchReturnLogs');
 Route::post('cancel/return', 'TransactionController@cancelReturn');
 
 //GA CONTROL
-Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
+Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::post('accept/ga_control/driver_request', 'GeneralAffairController@acceptDriverRequest');
 	Route::post('edit/ga_control/driver_edit', 'GeneralAffairController@editDriverEdit');
 	Route::post('import/ga_control/driver_duty', 'GeneralAffairController@importDriverDuty');
