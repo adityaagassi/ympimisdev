@@ -1611,7 +1611,7 @@ class WorkshopController extends Controller{
 	}
 
 	public function fetchWJOMonitoring(Request $request){
-		$datefrom = date("Y-m-d",  strtotime('-30 days'));
+		$datefrom = date("Y-m-d",  strtotime('-90 days'));
 		$dateto = date("Y-m-d");
 
 		$last = WorkshopJobOrder::where('remark', '<', 4)
@@ -1622,16 +1622,16 @@ class WorkshopController extends Controller{
 		if(strlen($request->get('datefrom')) > 0){
 			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
 		}else{
-			if($last){
-				$created_at = date_create($last->created_at);
-				$now = date_create(date('Y-m-d'));
-				$interval = $now->diff($created_at);
-				$diff = $interval->format('%a%');
+			// if($last){
+			// 	$created_at = date_create($last->created_at);
+			// 	$now = date_create(date('Y-m-d'));
+			// 	$interval = $now->diff($created_at);
+			// 	$diff = $interval->format('%a%');
 
-				if($diff > 30){
-					$datefrom = date('Y-m-d', strtotime($last->created_at));
-				}
-			}
+			// 	if($diff > 30){
+			// 		$datefrom = date('Y-m-d', strtotime($last->created_at));
+			// 	}
+			// }
 		}
 
 		if(strlen($request->get('dateto')) > 0){
