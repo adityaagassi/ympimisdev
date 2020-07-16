@@ -164,6 +164,23 @@
                             </tr>
                             <tr>
                                 <td>
+                                    <span style="font-weight: bold;">General Affair (??)</span>
+                                    <br>
+                                    <a href="{{ url("index/ga_control/driver") }}">
+                                        <i class="fa fa-caret-right"></i> Driver Monitoring System (??)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/ga_control/driver") }}">
+                                        <i class="fa fa-caret-right"></i> Live Cooking Order (??)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/ga_control/driver") }}">
+                                        <i class="fa fa-caret-right"></i> Japanese Food Order (??)
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <span style="font-weight: bold;">Quality Assurance (品保)</span>
                                     <br>
                                     <a href="{{ url("index/qc_report") }}">
@@ -278,7 +295,7 @@
 
         </div>
         <div class="col-md-3" style="padding-left: 3px; padding-right: 3px;">
-            <table class="table table-bordered">
+           {{--  <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                     <tr>
                         <th>Raw Material<br/>素材</th>
@@ -293,7 +310,7 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>
+            </table> --}}
 
             <table class="table table-bordered">
                 <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
@@ -510,8 +527,12 @@
                                         <i class="fa fa-caret-right"></i> Create SPK (作業依頼書を作成)
                                     </a>
                                     <br>
-                                    <a href="{{ url("index/maintenance/list/user") }}">
+                                    <a href="{{ url("index/maintenance/spk/monitoring") }}">
                                         <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
+                                    </a>
+                                    <br>
+                                    <a href="{{ url("index/maintenance/spk/operator") }}">
+                                        <i class="fa fa-caret-right"></i> Operator Monitoring (??)
                                     </a>
                                     <br>
                                 </td>

@@ -136,6 +136,12 @@ class SendEmail extends Mailable
             }
 
         }
+        if($this->remark == 'driver_request'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Driver Request Approval (??)')->view('mails.driver_request');
+        }
+        if($this->remark == 'driver_approval_notification'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Driver Request Approved (??)')->view('mails.driver_approval_notification');
+        }
         if($this->remark == 'visitor_confirmation'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Visitor Confirmation (来客の確認)')->view('mails.visitor_confirmation');
         }

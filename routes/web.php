@@ -25,6 +25,9 @@ Route::get('trial_print', 'StockTakingController@printSummary');
 Route::get('trial_loc', 'TrialController@trialLoc');
 Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
 
+Route::get('index/whatsapp_api', 'TrialController@indexWhatsappApi');
+Route::get('whatsapp_api', 'TrialController@whatsapp_api2');
+
 
 Route::get('/index/emergency_response', 'TrialController@tes2');
 Route::get('/index/trials', 'TrialController@tes');
@@ -241,6 +244,8 @@ Route::get('fetch/detailDailyNG', 'InjectionsController@detailDailyNG');
 Route::get('index/molding_monitoring', 'InjectionsController@index_molding_monitoring');
 Route::get('fetch/molding_monitoring', 'InjectionsController@molding_monitoring');
 Route::get('fetch/detail_molding_monitoring', 'InjectionsController@detail_molding_monitoring');
+
+Route::get('index/injection/machine_monitoring', 'InjectionsController@index_machine_monitoring');
 
 //end report
 
@@ -865,7 +870,12 @@ Route::post('cancel/return', 'TransactionController@cancelReturn');
 Route::group(['nav' => 'S37', 'middleware' => 'permission'], function(){
 	Route::post('accept/ga_control/driver_request', 'GeneralAffairController@acceptDriverRequest');
 	Route::post('edit/ga_control/driver_edit', 'GeneralAffairController@editDriverEdit');
+	Route::post('import/ga_control/driver_duty', 'GeneralAffairController@importDriverDuty');
+	Route::get('index/ga_control/driver_log', 'GeneralAffairController@indexDriverLog');
+	Route::get('fetch/ga_control/driver_log', 'GeneralAffairController@fetchDriverLog');
 });
+Route::get('approve/ga_control/driver/{id}', 'GeneralAffairController@approveRequest');
+Route::get('reject/ga_control/driver/{id}', 'GeneralAffairController@rejectRequest');
 Route::get('index/ga_control/driver', 'GeneralAffairController@indexDriver');
 Route::get('fetch/ga_control/driver', 'GeneralAffairController@fetchDriver');
 Route::get('fetch/ga_control/driver_duty', 'GeneralAffairController@fetchDriverDuty');
@@ -1867,6 +1877,8 @@ Route::get('print/indirect_material_label/{qr_code}', 'IndirectMaterialControlle
 
 //START CHEMICAL
 Route::get('index/chm_solution_control', 'IndirectMaterialController@indexSolutionControl');
+Route::get('fetch/chm_solution_control', 'IndirectMaterialController@fetchSolutionControl');
+Route::post('input/chm_production_result', 'IndirectMaterialController@inputProductionResult');
 
 
 
@@ -2525,7 +2537,7 @@ Route::post('index/push_block_recorder/update_temp', 'RecorderProcessController@
 Route::get('index/push_block_recorder/get_temp', 'RecorderProcessController@get_temp');
 Route::post('index/push_block_recorder_resume/create_resume', 'RecorderProcessController@create_resume');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
-Route::get('index/import_push_block', 'RecorderProcessController@import_push_block');
+Route::post('index/import_push_block', 'RecorderProcessController@import_push_block');
 Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessController@report_push_block');
 Route::post('index/recorder/filter_report_push_block/{remark}', 'RecorderProcessController@filter_report_push_block');
 Route::get('index/recorder/resume_push_block/{remark}', 'RecorderProcessController@resume_push_block');
@@ -2962,6 +2974,8 @@ Route::get('index/maintenance/inven/list', 'MaintenanceController@indexInventory
 Route::get('fetch/maintenance/inven/list', 'MaintenanceController@fetchInventory');
 
 Route::get('index/maintenance/inventory/{stat}', 'MaintenanceController@indexInventoryTransaction');
+Route::get('fetch/maintenance/inven/code', 'MaintenanceController@fetchPartbyCode');
+Route::post('post/maintenance/inven/code', 'MaintenanceController@postInventory');
 
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');

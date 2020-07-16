@@ -124,6 +124,9 @@
           @if(isset($page) && $page == "Exchange Rate")<li class="active">@else<li>@endif
             <a href="{{ url("/index/exchange_rate") }}"><i class="fa fa-money"></i> <span>Exchange Rate</span></a>
           </li>
+          @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
+            <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i> <span>Budget Info</span></a>
+          </li>   
           @if(isset($page) && $page == "Purchase Requisition")<li class="active">@else<li>@endif
             <a href="{{ url("purchase_requisition") }}"><i class="fa fa-info"></i>Purchase Requisition</a>
           </li>
@@ -322,6 +325,28 @@
 
   @if(in_array('S0', $navs))
   <li class="header">Service Menu</li>
+  @endif
+
+  @if(in_array('S39', $navs))
+  @if(isset($head) && $head == "GA Control")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-send-o"></i> <span>GA Control</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Driver Control")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/ga_control/driver") }}"><i class="fa fa-car"></i><span>Driver Control</span></a>
+      </li>
+      @if(isset($page) && $page == "Live Cooking")<li class="active">@else<li>@endif
+        <a href="{{ url('index/ga_control/live_cooking') }}"><i class="fa fa-coffee "></i>Live Cooking</a>
+      </li>
+      @if(isset($page) && $page == "Bento")<li class="active">@else<li>@endif
+        <a href="{{ url('index/ga_control/bento') }}"><i class="fa fa-calendar-plus-o"></i>Bento</a>
+      </li>
+    </ul>
+  </li>
   @endif
 
   @if(in_array('S37', $navs))
@@ -700,7 +725,7 @@
 
 <ul class="treeview-menu">
   @if(isset($head2) && $head2 == "SPK")<li class="treeview active menu-open">@else<li class="treeview">@endif
-    <a href="#"><i class="fa fa-circle-o"></i> SPK
+    <a href="#"><i class="fa fa-gears"></i> SPK
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -720,6 +745,27 @@
     </ul>
   </li>
 
+  @if(isset($head2) && $head2 == "PM")<li class="treeview active menu-open">@else<li class="treeview">@endif
+    <a href="#"><i class="fa fa-gears"></i> Planned Maintenance
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "PM List")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/list/user") }}"><i class="fa fa-edit"></i> <span>PM List</span></a>
+      </li>
+
+      @if(isset($page) && $page == "PM")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/list_spk") }}"><i class="fa fa-list"></i> <span>Do PM</span></a>
+      </li>
+
+      @if(isset($page) && $page == "SPK")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/spk") }}"><i class="fa fa-gears"></i> <span>SPK</span></a>
+      </li>
+    </ul>
+  </li>
+
   @if(isset($head2) && $head2 == "Utility")<li class="treeview active menu-open">@else<li class="treeview">@endif
     <a href="#"><i class="fa fa-cubes"></i> Utility
       <span class="pull-right-container">
@@ -728,7 +774,7 @@
     </a>
     <ul class="treeview-menu">
       @if(isset($page) && $page == "APAR Check")<li class="active">@else<li>@endif
-        <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Utility Check</span></a>
+        <a href="{{ secure_url("/index/maintenance/aparCheck ") }}"><i class="fa fa-fire-extinguisher"></i> <span>APAR Check</span></a>
       </li>
 
       @if(isset($page) && $page == "APAR Expired")<li class="active">@else<li>@endif
@@ -736,7 +782,7 @@
       </li>
 
       @if(isset($page) && $page == "APAR NG")<li class="active">@else<li>@endif
-        <a href="{{ secure_url("/index/maintenance/apar/ng_list") }}"><i class="fa fa-exclamation-triangle"></i> <span>NG Utility Check</span></a>
+        <a href="{{ secure_url("/index/maintenance/apar/ng_list") }}"><i class="fa fa-exclamation-triangle"></i> <span>APAR Check NG</span></a>
       </li>
 
       @if(isset($page) && $page == "APAR order")<li class="active">@else<li>@endif
@@ -745,13 +791,16 @@
 
 
       @if(isset($page) && $page == "APAR Uses")<li class="active">@else<li>@endif
-        <a href="{{ secure_url("/index/maintenance/apar/uses") }}"><i class="fa fa-hand-grab-o"></i> <span>Use Fire Extinguisher</span></a>
+        <a href="{{ secure_url("/index/maintenance/apar/uses") }}"><i class="fa fa-hand-grab-o"></i> <span>Use APAR</span></a>
       </li>
 
       @if(isset($page) && $page == "APAR")<li class="active">@else<li>@endif
         <a href="{{ url("/index/maintenance/aparTool ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Utilities</span></a>
       </li>
     </ul>
+    @if(isset($page) && $page == "Spare Part")<li class="active">@else<li>@endif
+      <a href="{{ url("/index/maintenance/inven/list") }}"><i class="fa fa-gavel"></i> <span>Spare Part</span></a>
+    </li>
   </li>
 </ul>
 </li>
@@ -799,6 +848,51 @@
 
   @if(isset($page) && $page == "APD")<li class="active">@else<li>@endif
     <a href="{{ url("index/apd") }}"><i class="fa fa-user-md"></i> <span>APD </span></a>
+  </li>
+
+</ul>
+</li>
+
+
+@if(isset($head) && $head == "Indirect Material")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-cube"></i> <span>Indirect Material</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+
+  @if(isset($page) && $page == "Stock")<li class="active">@else<li>@endif
+    <a href="{{ url("index/indirect_material_stock") }}"><i class="fa fa-cubes"></i> <span>Stock</span></a>
+  </li>
+
+  @if(isset($page) && $page == "Request")<li class="active">@else<li>@endif
+    <a href="{{ secure_url("index/indirect_material_request") }}"><i class="fa fa-forward"></i> <span>Request</span></a>
+  </li>
+
+   @if(isset($page) && $page == "Log")<li class="active">@else<li>@endif
+    <a href="{{ url("index/indirect_material_log") }}"><i class="fa fa-list"></i> <span>Logs</span></a>
+  </li>
+
+</ul>
+</li>
+
+@if(isset($head) && $head == "Chemical")<li class="treeview active">@else<li class="treeview">@endif
+  <a href="#">
+   <i class="fa fa-tint"></i> <span>Chemical</span>
+   <span class="pull-right-container">
+    <i class="fa fa-angle-left pull-right"></i>
+  </span>
+</a>
+<ul class="treeview-menu">
+
+  @if(isset($page) && $page == "Chemical Solution Control")<li class="active">@else<li>@endif
+    <a href="{{ url("index/chm_solution_control") }}"><i class="fa fa-line-chart"></i> <span>Solution Control</span></a>
+  </li>
+
+  @if(isset($page) && $page == "Chemical Picking Schedule")<li class="active">@else<li>@endif
+    <a href="{{ secure_url("index/chm_picking_schedule") }}"><i class="fa fa-calendar-check-o "></i> <span>Picking Schedule</span></a>
   </li>
 
 </ul>
