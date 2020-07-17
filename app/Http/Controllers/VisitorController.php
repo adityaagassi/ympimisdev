@@ -808,7 +808,8 @@ public function confirmation_manager()
 							position LIKE '%Director%',
 							TRUE,
 						IF
-						( position LIKE '%Foreman%', TRUE, FALSE ))) position_bolean,
+						( position LIKE '%Foreman%', TRUE, IF
+						( position LIKE '%Leader%', TRUE, FALSE ) ))) position_bolean,
 						IF(department = 'Logistic',true,false) as is_logistic,
 						IF(position = 'Foreman',true,false) as is_foreman
 				FROM
@@ -831,6 +832,8 @@ public function confirmation_manager()
 			if ($position_bolean == 1 && $is_foreman == 1 && $is_logistic == 1) {
 				return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager');
 			}elseif ($position_bolean == 1 && $is_logistic == 0 && $is_foreman == 0) {
+				return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager');
+			}elseif ($position_bolean == 1 && $is_logistic == 1 && $is_foreman == 0) {
 				return view('visitors.confirmation_manager')->with('page', 'Visitor Confirmation By Manager');
 			}else{
 				return redirect('home');

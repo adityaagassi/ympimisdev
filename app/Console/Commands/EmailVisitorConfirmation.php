@@ -41,7 +41,7 @@ class EmailVisitorConfirmation extends Command
      */
     public function handle()
     {
-        $mgr = DB::SELECT("SELECT * FROM `employee_syncs` where position like '%Manager%' or name = 'Dwi Misnanto'");
+        $mgr = DB::SELECT("SELECT * FROM `employee_syncs` where position like '%Manager%' or name = 'Dwi Misnanto' or name = 'Nurul Hidayat'");
         $mail_to = DB::SELECT("SELECT email FROM `send_emails` where remark = 'visitor_confirmation'");
         $namamanager = [];
 
@@ -120,6 +120,10 @@ class EmailVisitorConfirmation extends Command
             if (count($visitor) > 0) {
                 if ($key->name == 'Dwi Misnanto') {
                     $namamanager[] = [ 'manager_name' => $key->name.' (Foreman '.$key->department.')',
+                        'jumlah_visitor' => count($visitor)
+                    ];
+                }elseif ($key->name == 'Nurul Hidayat') {
+                    $namamanager[] = [ 'manager_name' => $key->name.' (Leader '.$key->department.')',
                         'jumlah_visitor' => count($visitor)
                     ];
                 }else{
