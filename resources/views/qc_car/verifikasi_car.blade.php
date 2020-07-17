@@ -169,7 +169,7 @@
 
         <br/><br/>
 
-        @if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator || $user == $cars->employee_id || $user == $cars->dgm || $user == $cars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL" || $user == $cars->car_cpar->staff || $user == $cars->car_cpar->leader) 
+        @if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator || $user == $cars->employee_id || $user == $cars->dgm || $user == $cars->gm || Auth::user()->role_code == "S" || Auth::user()->role_code == "MIS" || Auth::user()->role_code == "QA" || Auth::user()->role_code == "QA-SPL" || $user == $cars->car_cpar->staff || $user == $cars->car_cpar->leader || $user == "PI9707010") 
 
         <table class="table table-hover">
           <form role="form" method="post" action="{{url('index/qc_car/checked/'.$cars->id)}}">
