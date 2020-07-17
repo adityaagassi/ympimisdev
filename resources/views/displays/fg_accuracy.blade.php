@@ -1233,7 +1233,8 @@ fillChart();
 								}
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
-								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
+								// return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
+								return [-700, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
 							},
 							title: {
 								text: 'Venova Finished Goods'
@@ -1243,8 +1244,7 @@ fillChart();
 								width: 2,
 								value: 0,
 								dashStyles: 'longdashdot'
-							}],
-							min: -700
+							}]
 						},
 						legend: {
 							layout: 'vertical',
