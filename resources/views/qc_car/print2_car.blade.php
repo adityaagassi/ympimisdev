@@ -202,7 +202,8 @@
 					@if($car->checked_chief == "Checked")
 						{{$car->chiefname}}
 					@elseif($car->checked_foreman == "Checked")
-						{{$car->foremanname}}
+						<!-- {{$car->foremanname}} -->
+						{{$car->picname}}
 					@elseif($car->checked_coordinator == "Checked")
 						{{$car->coordinatorname}}
 					@else
