@@ -571,12 +571,14 @@ fillChart();
 						yAxis: {
 							tickPositioner: function () {
 
-								if(this.dataMax > 0){
-									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
-								}
-								else{
-									var maxDeviation = 100;
-								}
+								// if(this.dataMax > 0){
+								// 	var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));							
+								// }
+								// else{
+								// 	var maxDeviation = 100;
+								// }
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -680,12 +682,14 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-								if(this.dataMax > 0){
-									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
-								}
-								else{
-									var maxDeviation = 100;
-								}
+								// if(this.dataMax > 0){
+								// 	var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));							
+								// }
+								// else{
+								// 	var maxDeviation = 100;
+								// }
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -789,12 +793,14 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-								if(this.dataMax > 0){
-									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
-								}
-								else{
-									var maxDeviation = 100;
-								}
+								// if(this.dataMax > 0){
+								// 	var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));							
+								// }
+								// else{
+								// 	var maxDeviation = 100;
+								// }
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -898,12 +904,14 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-								if(this.dataMax > 0){
-									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
-								}
-								else{
-									var maxDeviation = 100;
-								}
+								// if(this.dataMax > 0){
+								// 	var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));							
+								// }
+								// else{
+								// 	var maxDeviation = 100;
+								// }
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -1007,12 +1015,14 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-								if(this.dataMax > 0){
-									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
-								}
-								else{
-									var maxDeviation = 100;
-								}
+							// if(this.dataMax > 0){
+								// 	var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));							
+								// }
+								// else{
+								// 	var maxDeviation = 100;
+								// }
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -1116,12 +1126,14 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-								if(this.dataMax > 0){
-									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
-								}
-								else{
-									var maxDeviation = 100;
-								}
+							// if(this.dataMax > 0){
+								// 	var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));							
+								// }
+								// else{
+								// 	var maxDeviation = 100;
+								// }
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -1225,16 +1237,17 @@ fillChart();
 						},
 						yAxis: {
 							tickPositioner: function () {
-								if(this.dataMax > 0){
-									var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));									
-								}
-								else{
-									var maxDeviation = 100;
-								}
+								// if(this.dataMax > 0){
+								// 	var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));							
+								// }
+								// else{
+								// 	var maxDeviation = 100;
+								// }
+
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
-								// return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
-								return [-750, -500, -250, 0, 250];
+								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
 							},
 							title: {
 								text: 'Venova Finished Goods'
