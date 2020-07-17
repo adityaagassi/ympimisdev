@@ -1234,7 +1234,7 @@ fillChart();
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								// return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
-								return [-700, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
+								return [-700, -halfMaxDeviation, 0, halfMaxDeviation, 500];
 							},
 							title: {
 								text: 'Venova Finished Goods'
