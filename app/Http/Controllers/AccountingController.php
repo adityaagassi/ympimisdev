@@ -35,7 +35,7 @@ class AccountingController extends Controller
     {
         $this->dept = ['Management Information System', 'Accounting', 'Assembly (WI-A)', 'Educational Instrument (EI)', 'General Affairs', 'Human Resources', 'Logistic', 'Maintenance', 'Parts Process (WI-PP)', 'Procurement', 'Production Control', 'Production Engineering', 'Purchasing', 'Quality Assurance', 'Welding-Surface Treatment (WI-WST)'];
 
-        $this->uom = ['bag', 'bar', 'batang', 'belt', 'botol', 'bottle', 'box', 'Btg', 'Btl', 'btng', 'buah', 'buku', 'Can', 'Case', 'container', 'cps', 'day', 'days', 'dos', 'doz', 'Drum', 'dus', 'dz', 'dzn', 'EA', 'G', 'galon', 'gr', 'hari', 'hour', 'job', 'JRG', 'kaleng', 'ken', 'Kg', 'kgm', 'klg', 'L', 'Lbr', 'lbs', 'lembar', 'License', 'lisence', 'lisensi', 'lmbr', 'lonjor', 'Lot', 'ls', 'ltr', 'lubang', 'lusin', 'm', 'm2', 'm²', 'm3', 'malam', 'meter', 'ml', 'month', 'Mtr', 'night', 'OH', 'Ons', 'orang', 'OT', 'Pac', 'Pack', 'package', 'pad', 'pail', 'pair', 'pairs', 'pak', 'Pasang', 'pc', 'Pca', 'Pce', 'Pck', 'pcs', 'Person', 'pick up', 'pil', 'ply', 'point', 'pot', 'prs', 'prsn', 'psc', 'PSG', 'psn', 'Rim', 'rol', 'roll', 'rolls', 'sak', 'sampel', 'sample', 'Set', 'Set', 'Sets', 'sheet', 'shoot', 'slop', 'sum', 'tank', 'tbg', 'time', 'titik', 'ton', 'tube', 'Um', 'Unit', 'user', 'VA', 'yard', 'zak'
+        $this->uom = ['bag', 'bar', 'batang', 'belt', 'botol', 'bottle', 'box', 'Btg', 'Btl', 'btng', 'buah', 'buku', 'Can', 'Case', 'container', 'cps', 'day', 'days', 'dos', 'doz', 'Drum', 'dus', 'dz', 'dzn', 'EA', 'G', 'galon', 'gr', 'hari', 'hour', 'job', 'JRG', 'kaleng', 'ken', 'Kg', 'kgm', 'klg', 'L', 'Lbr', 'lbs', 'lembar', 'License', 'lisence', 'lisensi', 'lmbr', 'lonjor', 'Lot', 'ls', 'ltr', 'lubang', 'lusin', 'm', 'm2', 'm²', 'm3', 'malam', 'meter', 'ml', 'month', 'Mtr', 'night', 'OH', 'Ons', 'orang', 'OT', 'Pac', 'Pack', 'package', 'pad', 'pail', 'pair', 'pairs', 'pak', 'Pasang', 'pc', 'Pca', 'Pce', 'Pck', 'pcs', 'Pcs', 'Person', 'pick up', 'pil', 'ply', 'point', 'pot', 'prs', 'prsn', 'psc', 'PSG', 'psn', 'Rim', 'rol', 'roll', 'rolls', 'sak', 'sampel', 'sample', 'Set', 'Set', 'Sets', 'sheet', 'shoot', 'slop', 'sum', 'tank', 'tbg', 'time', 'titik', 'ton', 'tube', 'Um', 'Unit', 'user', 'VA', 'yard', 'zak'
 
     ];
 
@@ -638,10 +638,11 @@ class AccountingController extends Controller
         {
             $id = $pr->id;
 
+            // <a href="purchase_requisition/detail/' . $id . '" class="btn btn-info btn-xs" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i></a>
+
             if($pr->status == "approval"){
                 return '
                 <a href="javascript:void(0)" class="btn btn-xs btn-warning" onClick="editPR(' . $id . ')" data-toggle="tooltip" title="Edit PR"><i class="fa fa-edit"></i></a>
-                <a href="purchase_requisition/detail/' . $id . '" class="btn btn-info btn-xs" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i></a>
                 <a href="purchase_requisition/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i></a>
                 ';
             }
@@ -987,12 +988,11 @@ class AccountingController extends Controller
             $submission_date = $request->get('submission_date');
             $po_date = date('Y-m-d', strtotime($submission_date . ' + 7 days'));
 
-            $data = new AccPurchaseRequisition(['no_pr' => $request->get('no_pr') , 'emp_id' => $request->get('emp_id') , 'emp_name' => $request->get('emp_name') , 'department' => $request->get('department') , 'section' => $request->get('section') , 'submission_date' => $submission_date, 'po_due_date' => $po_date, 'note' => $request->get('note') , 'file' => $file->filename, 'file_pdf' => 
-                'PR'.$request->get('no_pr').'.pdf', 'posisi' => $posisi, 'status' => 'approval', 'no_budget' => $request->get('budget_no'), 'staff' => $staff, 'manager' => $manager, 'dgm' => $this->dgm, 'gm' => $this->gm, 'created_by' => $id]);
+            $data = new AccPurchaseRequisition(['no_pr' => $request->get('no_pr') , 'emp_id' => $request->get('emp_id') , 'emp_name' => $request->get('emp_name') , 'department' => $request->get('department') , 'section' => $request->get('section') , 'submission_date' => $submission_date, 'po_due_date' => $po_date, 'note' => $request->get('note') , 'file' => $file->filename, 'file_pdf' => 'PR'.$request->get('no_pr').'.pdf', 'posisi' => $posisi, 'status' => 'approval', 'no_budget' => $request->get('budget_no'), 'staff' => $staff, 'manager' => $manager, 'dgm' => $this->dgm, 'gm' => $this->gm, 'created_by' => $id]);
 
             $data->save();
 
-            $mod_date = date('Y-m-d', strtotime($request->get('submission_date') . ' + 21 days'));
+            // $mod_date = date('Y-m-d', strtotime($request->get('submission_date') . ' + 21 days'));
 
             for ($i = 1;$i <= $lop;$i++)
             {
@@ -1000,6 +1000,7 @@ class AccountingController extends Controller
                 $item_desc = "item_desc" . $i;
                 $item_spec = "item_spec" . $i;
                 $item_stock = "item_stock" . $i;
+                $item_request_date = "req_date" . $i;
                 $item_currency = "item_currency" . $i;
                 $item_currency_text = "item_currency_text" . $i;
                 $item_price = "item_price" . $i;
@@ -1039,11 +1040,11 @@ class AccountingController extends Controller
 
                 $data2 = new AccPurchaseRequisitionItem([
                     'no_pr' => $request->get('no_pr') , 
-                    'item_code' => $request->get($item_code) , 
-                    'item_desc' => $request->get($item_desc) , 
+                    'item_code' => $request->get($item_code) ,
+                    'item_desc' => $request->get($item_desc) ,
                     'item_spec' => $request->get($item_spec) ,
                     'item_stock' => $request->get($item_stock) , 
-                    'item_request_date' => $mod_date, 
+                    'item_request_date' => $request->get($item_request_date), 
                     'item_currency' => $current, 'item_price' => $price_real, 'item_qty' => $request->get($item_qty) , 'item_uom' => $request->get($item_uom) , 'item_amount' => $amount, 'status' => $status, 'created_by' => $id]);
 
                 $data2->save();
@@ -1087,7 +1088,7 @@ class AccountingController extends Controller
             $isimail = "select * FROM acc_purchase_requisitions where acc_purchase_requisitions.id = " . $data->id;
             $purchaserequisition = db::select($isimail);
 
-            Mail::to($mailtoo)->send(new SendEmail($purchaserequisition, 'purchase_requisition'));
+            Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($purchaserequisition, 'purchase_requisition'));
 
             return redirect('/purchase_requisition')->with('status', 'PR Berhasil Dibuat')
             ->with('page', 'Purchase Requisition');
@@ -1257,14 +1258,14 @@ class AccountingController extends Controller
             'pr' => $detail_pr,
         ));
 
-        // $pdf->save(public_path() . "/meetings/" . $reports[0]->id . ".pdf");
+        // $pdf->save(public_path() . "/pr/" . $reports[0]->id . ".pdf");
 
         $path = "pr_list/" . $detail_pr[0]->no_pr . ".pdf";
         return $pdf->stream("PR ".$detail_pr[0]->no_pr. ".pdf");
 
         // return view('accounting_purchasing.report.report_pr', array(
         //  'pr' => $detail_pr,
-        // ))->with('page', 'Meeting')->with('head', 'Meeting List');
+        // ))->with('page', 'PR')->with('head', 'PR List');
     }
 
     //==================================//
@@ -1661,19 +1662,93 @@ class AccountingController extends Controller
                 $item_code = "item_code_edit" . $lp;
                 $item_desc = "item_desc_edit" . $lp;
                 $item_spec = "item_spec_edit" . $lp;
+                $item_stock = "item_stock_edit" . $lp;
                 $item_uom = "uom_edit" . $lp;
                 $item_req = "req_date_edit" . $lp;
+                $item_qty = "qty_edit" . $lp;
+                $item_price = "item_price_edit" . $lp;
+                $item_amount = "amount_edit" . $lp;
+
+                $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
 
                 $data2 = AccPurchaseRequisitionItem::where('id', $lp)->update([
                   'item_code' => $request->get($item_code), 
                   'item_desc' => $request->get($item_desc), 
-                  'item_spec' => $request->get($item_spec), 
+                  'item_spec' => $request->get($item_spec),
+                  'item_stock' => $request->get($item_stock), 
                   'item_uom' => $request->get($item_uom), 
                   'item_request_date' => $request->get($item_req), 
+                  'item_qty' => $request->get($item_qty),
+                  'item_price' => $request->get($item_price),
+                  'item_amount' => $amount,
                   'created_by' => $id
               ]);
-
             }
+
+            for ($i = 2;$i <= $lop2;$i++)
+            {
+
+                $item_code = "item_code" . $i;
+                $item_desc = "item_desc" . $i;
+                $item_spec = "item_spec" . $i;
+                $item_stock = "item_stock" . $i;
+                $item_req = "req_date" . $i;
+                $item_currency = "item_currency" . $i;
+                $item_currency_text = "item_currency_text" . $i;
+                $item_price = "item_price" . $i;
+                $item_qty = "qty" . $i;
+                $item_uom = "uom" . $i;
+                $item_amount = "amount" . $i;
+                $status = "";
+
+                //Jika ada value kosong
+                if ($request->get($item_code) == "kosong")
+                {
+                    $request->get($item_code) == "";
+                }
+
+                //Jika item kosong
+                if ($request->get($item_code) != null)
+                {
+                    $status = "fixed";
+                }
+                else
+                {
+                    $status = "sementara";
+                }
+
+                if ($request->get($item_currency) != "")
+                {
+                    $current = $request->get($item_currency);
+                }
+                else if ($request->get($item_currency_text) != "")
+                {
+                    $current = $request->get($item_currency_text);
+                }
+
+                //get only number
+                $price_real = preg_replace('/[^0-9]/', '', $request->get($item_price));
+                $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
+
+                $data2 = new AccPurchaseRequisitionItem([
+                    'no_pr' => $request->get('no_pr_edit') , 
+                    'item_code' => $request->get($item_code) , 
+                    'item_desc' => $request->get($item_desc) , 
+                    'item_spec' => $request->get($item_spec) ,
+                    'item_stock' => $request->get($item_stock) , 
+                    'item_request_date' => $request->get($item_req) , 
+                    'item_currency' => $current,
+                    'item_price' => $price_real,
+                    'item_qty' => $request->get($item_qty) , 
+                    'item_uom' => $request->get($item_uom) , 
+                    'item_amount' => $amount, 
+                    'status' => $status, 
+                    'created_by' => $id
+                ]);
+
+                $data2->save();
+            }
+
 
             $detail_pr = AccPurchaseRequisition::select('*')
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
@@ -1866,6 +1941,54 @@ class AccountingController extends Controller
             }
         })
         ->rawColumns(['status' => 'status', 'action' => 'action', 'no_po_sap' => 'no_po_sap'])
+        ->make(true);
+    }
+
+    public function fetch_po_outstanding_pr(Request $request)
+    {
+        $qry = "SELECT distinct acc_purchase_requisitions.id, acc_purchase_requisitions.no_pr,department,submission_date,emp_id,emp_name,no_budget,file,posisi,`status`,file_pdf FROM `acc_purchase_requisitions` join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where receive_date is not null and acc_purchase_requisition_items.sudah_po is null and acc_purchase_requisitions.deleted_at is null";
+        $pr = DB::select($qry);
+
+        return DataTables::of($pr)
+
+        ->editColumn('submission_date', function ($pr)
+        {
+            return date('d F Y', strtotime($pr->submission_date));
+        })
+
+        ->editColumn('file', function ($pr)
+        {
+            $data = json_decode($pr->file);
+
+            $fl = "";
+
+            if ($pr->file != null)
+            {
+                for ($i = 0;$i < count($data);$i++)
+                {
+                    $fl .= '<a href="files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+                }
+            }
+            else
+            {
+                $fl = '-';
+            }
+
+            return $fl;
+        })
+
+        ->addColumn('action', function ($pr)
+        {
+            $id = $pr->id;
+
+            return '
+            <a href="javascript:void(0)" class="btn btn-xs btn-warning" onClick="editPR(' . $id . ')" data-toggle="tooltip" title="Edit PR"><i class="fa fa-edit"></i> Edit</a>
+            <a href="purchase_requisition/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+            <a href="javascript:void(0)" class="btn btn-xs  btn-primary" onClick="detailPR(' . $id . ')" style="margin-right:5px;" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i> Detail Item</a>
+            ';
+        })
+
+        ->rawColumns(['file' => 'file', 'action' => 'action'])
         ->make(true);
     }
 
@@ -2169,427 +2292,429 @@ class AccountingController extends Controller
             $response = array(
               'status' => true,
               'datas' => "Berhasil",
-            );
+          );
             return Response::json($response);
-          }
-          catch (QueryException $e){
+        }
+        catch (QueryException $e){
             $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-             $response = array(
-              'status' => false,
-              'datas' => "NO PO Already Exist",
-            );
-             return Response::json($response);
+               $response = array(
+                  'status' => false,
+                  'datas' => "NO PO Already Exist",
+              );
+               return Response::json($response);
            }
            else{
-             $response = array(
-              'status' => false,
-              'datas' => "Update NO PO Error.",
-            );
-             return Response::json($response);
-            }
-        }
-    }
-
-    public function delete_item_po(Request $request)
-    {
-
-        try
-        {
-            $item = AccPurchaseOrderDetail::find($request->get('id'));
-
-            $data3 = AccPurchaseRequisitionItem::where('item_code', $item->no_item)
-            ->where('no_pr', $item->no_pr)
-            ->update(['sudah_po' => null, ]);
-
-            $master = AccPurchaseOrderDetail::where('id', '=', $request->get('id'))
-            ->delete();
-
-        }
-        catch(QueryException $e)
-        {
-            return redirect('/purchase_order')->with('error', $e->getMessage())
-            ->with('page', 'Purchase Order');
-        }
-
-    }
-
-    public function po_send_email(Request $request){
-        $po = AccPurchaseOrder::find($request->get('id'));
-
-        try{
-            if ($po->posisi == "staff_pch")
-            {
-                $po->posisi = "manager_pch";
-
-                $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized2 = users.username where acc_purchase_orders.id = '" . $request->get('id') . "'";
-                $mails = DB::select($mailto);
-
-                foreach ($mails as $mail)
-                {
-                    $mailtoo = $mail->email;
-                }
-                $po->save();
-
-                $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " . $request->get('id');
-                $po_isi = db::select($isimail);
-
-                Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
-
-                $response = array(
-                  'status' => true,
-                  'datas' => "Berhasil"
-                );
-
-                return Response::json($response);
-            }
-            else{
-
-            }
-
-
-        } catch (Exception $e) {
-             $response = array(
+               $response = array(
                   'status' => false,
-                  'datas' => "Gagal"
-                );
+                  'datas' => "Update NO PO Error.",
+              );
+               return Response::json($response);
+           }
+       }
+   }
+
+   public function delete_item_po(Request $request)
+   {
+
+    try
+    {
+        $item = AccPurchaseOrderDetail::find($request->get('id'));
+
+        $data3 = AccPurchaseRequisitionItem::where('item_code', $item->no_item)
+        ->where('no_pr', $item->no_pr)
+        ->update(['sudah_po' => null, ]);
+
+        $master = AccPurchaseOrderDetail::where('id', '=', $request->get('id'))
+        ->delete();
+
+    }
+    catch(QueryException $e)
+    {
+        return redirect('/purchase_order')->with('error', $e->getMessage())
+        ->with('page', 'Purchase Order');
+    }
+
+}
+
+public function po_send_email(Request $request){
+    $po = AccPurchaseOrder::find($request->get('id'));
+
+    try{
+        if ($po->posisi == "staff_pch")
+        {
+            $po->posisi = "manager_pch";
+
+            $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized2 = users.username where acc_purchase_orders.id = '" . $request->get('id') . "'";
+            $mails = DB::select($mailto);
+
+            foreach ($mails as $mail)
+            {
+                $mailtoo = $mail->email;
+            }
+            $po->save();
+
+            $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " . $request->get('id');
+            $po_isi = db::select($isimail);
+
+            Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($po_isi, 'purchase_order'));
+
+            $response = array(
+              'status' => true,
+              'datas' => "Berhasil"
+          );
 
             return Response::json($response);
         }
-    }
+        else{
 
-    public function poapprovalmanager($id){
-        $po = AccPurchaseOrder::find($id);
-        try{
-            if ($po->posisi == "manager_pch")
-            {
-                $po->posisi = "gm_pch";
-                $po->approval_authorized2 = "Approved";
-                $po->date_approval_authorized2 = date('Y-m-d H:i:s');
-
-                $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized3 = users.username where acc_purchase_orders.id = '" . $id . "'";
-                $mails = DB::select($mailto);
-
-                foreach ($mails as $mail)
-                {
-                    $mailtoo = $mail->email;
-                }
-
-                $po->save();
-
-                $detail_po = AccPurchaseOrder::select('*')
-                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-                ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
-                ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
-                ->where('acc_purchase_orders.id', '=', $id)
-                ->get();
-
-                $pr = AccPurchaseOrder::select('no_pr')
-                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-                ->where('acc_purchase_orders.id', '=', $id)
-                ->distinct()
-                ->get();
-
-                $pdf = \App::make('dompdf.wrapper');
-                $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
-
-                $pdf->loadView('accounting_purchasing.report.report_po', array(
-                    'po' => $detail_po,
-                    'pr' => $pr
-                ));
-
-                $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
-
-                $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " .$id;
-                $po_isi = db::select($isimail);
-
-                Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
-
-                $message = 'PO dengan Nomor '.$po->no_po;
-                $message2 ='Berhasil di approve';
-            }
-            else{
-                $message = 'PO dengan Nomor. '.$po->no_po;
-                $message2 ='Sudah di approve/reject';
-            }
-
-            return view('accounting_purchasing.verifikasi.pr_message', array(
-                'head' => $po->no_pr,
-                'message' => $message,
-                'message2' => $message2,
-            ))->with('page', 'Approval');
-
-        } catch (Exception $e) {
-            return view('accounting_purchasing.verifikasi.pr_message', array(
-                'head' => $po->no_pr,
-                'message' => 'Error',
-                'message2' => $e->getMessage(),
-            ))->with('page', 'Approval');
         }
-    }
 
-    public function poapprovalgm($id){
-        $po = AccPurchaseOrder::find($id);
-        try{
-            if ($po->posisi == "gm_pch")
+
+    } catch (Exception $e) {
+       $response = array(
+          'status' => false,
+          'datas' => "Gagal"
+      );
+
+       return Response::json($response);
+   }
+}
+
+public function poapprovalmanager($id){
+    $po = AccPurchaseOrder::find($id);
+    try{
+        if ($po->posisi == "manager_pch")
+        {
+            $po->posisi = "gm_pch";
+            $po->approval_authorized2 = "Approved";
+            $po->date_approval_authorized2 = date('Y-m-d H:i:s');
+
+            $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized3 = users.username where acc_purchase_orders.id = '" . $id . "'";
+            $mails = DB::select($mailto);
+
+            foreach ($mails as $mail)
             {
-                $po->posisi = 'pch';
-                $po->approval_authorized3 = "Approved";
-                $po->date_approval_authorized3 = date('Y-m-d H:i:s');
-                $po->status = "not_sap";
+                $mailtoo = $mail->email;
+            }
+
+            $po->save();
+
+            $detail_po = AccPurchaseOrder::select('*')
+            ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+            ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+            ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
+            ->where('acc_purchase_orders.id', '=', $id)
+            ->get();
+
+            $pr = AccPurchaseOrder::select('no_pr')
+            ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+            ->where('acc_purchase_orders.id', '=', $id)
+            ->distinct()
+            ->get();
+
+            $pdf = \App::make('dompdf.wrapper');
+            $pdf->getDomPDF()->set_option("enable_php", true);
+            $pdf->setPaper('A4', 'potrait');
+
+            $pdf->loadView('accounting_purchasing.report.report_po', array(
+                'po' => $detail_po,
+                'pr' => $pr
+            ));
+
+            $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
+
+            $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " .$id;
+            $po_isi = db::select($isimail);
+
+            Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
+
+            $message = 'PO dengan Nomor '.$po->no_po;
+            $message2 ='Berhasil di approve';
+        }
+        else{
+            $message = 'PO dengan Nomor. '.$po->no_po;
+            $message2 ='Sudah di approve/reject';
+        }
+
+        return view('accounting_purchasing.verifikasi.pr_message', array(
+            'head' => $po->no_pr,
+            'message' => $message,
+            'message2' => $message2,
+        ))->with('page', 'Approval');
+
+    } catch (Exception $e) {
+        return view('accounting_purchasing.verifikasi.pr_message', array(
+            'head' => $po->no_pr,
+            'message' => 'Error',
+            'message2' => $e->getMessage(),
+        ))->with('page', 'Approval');
+    }
+}
+
+public function poapprovalgm($id){
+    $po = AccPurchaseOrder::find($id);
+    try{
+        if ($po->posisi == "gm_pch")
+        {
+            $po->posisi = 'pch';
+            $po->approval_authorized3 = "Approved";
+            $po->date_approval_authorized3 = date('Y-m-d H:i:s');
+            $po->status = "not_sap";
 
                 //kirim email Staff PCH sebagai pemberitahuan
-                $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id = '" . $id . "'";
-                $mails = DB::select($mailto);
+            $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id = '" . $id . "'";
+            $mails = DB::select($mailto);
 
-                foreach ($mails as $mail)
-                {
-                    $mailtoo = $mail->email;
-                }
-
-                $po->save();
-
-                $detail_po = AccPurchaseOrder::select('*')
-                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-                ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
-                ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
-                ->where('acc_purchase_orders.id', '=', $id)
-                ->get();
-
-                $pr = AccPurchaseOrder::select('no_pr')
-                ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-                ->where('acc_purchase_orders.id', '=', $id)
-                ->distinct()
-                ->get();
-
-                $pdf = \App::make('dompdf.wrapper');
-                $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
-
-                $pdf->loadView('accounting_purchasing.report.report_po', array(
-                    'po' => $detail_po,
-                    'pr' => $pr
-                ));
-
-                $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
-
-                $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " .$id;
-                $po_isi = db::select($isimail);
-
-                Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
-
-                $message = 'PO dengan Nomor '.$po->no_po;
-                $message2 ='Berhasil di approve';
-            }
-            else{
-                $message = 'PO dengan Nomor. '.$po->no_po;
-                $message2 ='Sudah di approve/reject';
+            foreach ($mails as $mail)
+            {
+                $mailtoo = $mail->email;
             }
 
-            return view('accounting_purchasing.verifikasi.pr_message', array(
-                'head' => $po->no_po,
-                'message' => $message,
-                'message2' => $message2,
-            ))->with('page', 'Approval');
+            $po->save();
 
-        } catch (Exception $e) {
-            return view('accounting_purchasing.verifikasi.pr_message', array(
-                'head' => $po->no_po,
-                'message' => 'Error',
-                'message2' => $e->getMessage(),
-            ))->with('page', 'Approval');
+            $detail_po = AccPurchaseOrder::select('*')
+            ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+            ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+            ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
+            ->where('acc_purchase_orders.id', '=', $id)
+            ->get();
+
+            $pr = AccPurchaseOrder::select('no_pr')
+            ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+            ->where('acc_purchase_orders.id', '=', $id)
+            ->distinct()
+            ->get();
+
+            $pdf = \App::make('dompdf.wrapper');
+            $pdf->getDomPDF()->set_option("enable_php", true);
+            $pdf->setPaper('A4', 'potrait');
+
+            $pdf->loadView('accounting_purchasing.report.report_po', array(
+                'po' => $detail_po,
+                'pr' => $pr
+            ));
+
+            $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
+
+            $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " .$id;
+            $po_isi = db::select($isimail);
+
+            Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
+
+            $message = 'PO dengan Nomor '.$po->no_po;
+            $message2 ='Berhasil di approve';
         }
+        else{
+            $message = 'PO dengan Nomor. '.$po->no_po;
+            $message2 ='Sudah di approve/reject';
+        }
+
+        return view('accounting_purchasing.verifikasi.pr_message', array(
+            'head' => $po->no_po,
+            'message' => $message,
+            'message2' => $message2,
+        ))->with('page', 'Approval');
+
+    } catch (Exception $e) {
+        return view('accounting_purchasing.verifikasi.pr_message', array(
+            'head' => $po->no_po,
+            'message' => 'Error',
+            'message2' => $e->getMessage(),
+        ))->with('page', 'Approval');
     }
+}
 
     //==================================//
     //          Report PO               //
     //==================================//
-    public function report_purchase_order($id){
+public function report_purchase_order($id){
 
-        $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_purchase_requisitions.department')
-        ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-        ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
-        ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
-        ->where('acc_purchase_orders.id', '=', $id)
-        ->get();
+    $detail_po = AccPurchaseOrder::select('acc_purchase_orders.*','acc_suppliers.*','acc_purchase_order_details.*','acc_purchase_requisitions.department')
+    ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+    ->leftJoin('acc_suppliers', 'acc_purchase_orders.supplier_code', '=', 'acc_suppliers.vendor_code')
+    ->leftJoin('acc_purchase_requisitions', 'acc_purchase_order_details.no_pr', '=', 'acc_purchase_requisitions.no_pr')
+    ->where('acc_purchase_orders.id', '=', $id)
+    ->get();
 
-        $pr = AccPurchaseOrder::select('no_pr')
-        ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
-        ->where('acc_purchase_orders.id', '=', $id)
-        ->distinct()
-        ->get();
+    $pr = AccPurchaseOrder::select('no_pr')
+    ->leftJoin('acc_purchase_order_details', 'acc_purchase_orders.no_po', '=', 'acc_purchase_order_details.no_po')
+    ->where('acc_purchase_orders.id', '=', $id)
+    ->distinct()
+    ->get();
 
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->setPaper('A4', 'potrait');
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->getDomPDF()->set_option("enable_php", true);
+    $pdf->setPaper('A4', 'potrait');
 
-        $pdf->loadView('accounting_purchasing.report.report_po', array(
-            'po' => $detail_po,
-            'pr' => $pr
-        ));
+    $pdf->loadView('accounting_purchasing.report.report_po', array(
+        'po' => $detail_po,
+        'pr' => $pr
+    ));
 
-        // $pdf->save(public_path() . "/meetings/" . $reports[0]->id . ".pdf");
+        // $pdf->save(public_path() . "/pr/" . $reports[0]->id . ".pdf");
 
-        $path = "po_list/" . $detail_po[0]->no_po . ".pdf";
-        return $pdf->stream("PR ".$detail_po[0]->no_po. ".pdf");
+    $path = "po_list/" . $detail_po[0]->no_po . ".pdf";
+    return $pdf->stream("PR ".$detail_po[0]->no_po. ".pdf");
 
         // return view('accounting_purchasing.report.report_po', array(
         //  'po' => $detail_po,
         //  'pr' => $pr
-        // ))->with('page', 'Meeting')->with('head', 'Meeting List');
+        // ))->with('page', 'PO')->with('head', 'PO List');
+}
+
+public function exportPO(Request $request){
+
+    $time = date('d-m-Y H;i;s');
+
+    $tanggal = "";
+
+    if (strlen($request->get('datefrom')) > 0)
+    {
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+        $tanggal = "and tgl_po >= '" . $datefrom . " 00:00:00' ";
+        if (strlen($request->get('dateto')) > 0)
+        {
+            $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+            $tanggal = $tanggal . "and tgl_po  <= '" . $dateto . " 23:59:59' ";
+        }
     }
 
-    public function exportPO(Request $request){
-
-        $time = date('d-m-Y H;i;s');
-
-        $tanggal = "";
-
-        if (strlen($request->get('datefrom')) > 0)
-        {
-            $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-            $tanggal = "and tgl_po >= '" . $datefrom . " 00:00:00' ";
-            if (strlen($request->get('dateto')) > 0)
-            {
-                $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-                $tanggal = $tanggal . "and tgl_po  <= '" . $dateto . " 23:59:59' ";
-            }
-        }
-
-       $po_detail = db::select(
+    $po_detail = db::select(
         "Select acc_purchase_orders.no_po, acc_purchase_order_details.no_pr, acc_purchase_orders.tgl_po, acc_purchase_orders.supplier_code , acc_purchase_orders.supplier_name, acc_purchase_orders.currency, acc_purchase_order_details.no_item, acc_purchase_order_details.nama_item, acc_purchase_order_details.delivery_date, acc_purchase_order_details.qty, acc_purchase_order_details.uom, acc_purchase_order_details.goods_price, acc_purchase_order_details.budget_item, acc_purchase_orders.cost_center, acc_purchase_order_details.gl_number from acc_purchase_orders left join acc_purchase_order_details on acc_purchase_orders.no_po = acc_purchase_order_details.no_po WHERE acc_purchase_orders.deleted_at IS NULL and acc_purchase_orders.posisi = 'pch' and acc_purchase_orders.`status` = 'not_sap' and no_po_sap is null " . $tanggal . " order by acc_purchase_orders.id ASC
         ");
 
-       $data = array(
+    $data = array(
         'po_detail' => $po_detail
-      );
+    );
 
-       ob_clean();
+    ob_clean();
 
-       Excel::create('PO List '.$time, function($excel) use ($data){
+    Excel::create('PO List '.$time, function($excel) use ($data){
         $excel->sheet('Location', function($sheet) use ($data) {
           return $sheet->loadView('accounting_purchasing.purchase_order_excel', $data);
-        });
-      })->export('xlsx');
+      });
+    })->export('xlsx');
 
+}
+
+//==================================//
+//            Investment            //
+//==================================//
+
+
+public function Investment()
+{
+    $title = 'Investment';
+    $title_jp = '投資申請';
+
+    $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+    ->select('employee_id', 'name', 'position', 'department', 'section', 'group')
+    ->first();
+
+    $dept = $this->dept;
+
+    return view('accounting_purchasing.investment', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'employee' => $emp,
+        'dept' => $dept
+    ))->with('page', 'Investment')
+    ->with('head', 'inv');
+}
+
+public function fetch_investment(Request $request)
+{
+    $tanggal = "";
+    $adddepartment = "";
+
+    if (strlen($request->get('datefrom')) > 0)
+    {
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+        $tanggal = "and acc_investments.submission_date >= '" . $datefrom . " 00:00:00' ";
+        if (strlen($request->get('dateto')) > 0)
+        {
+            $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+            $tanggal = $tanggal . "and acc_investments.submission_date  <= '" . $dateto . " 23:59:59' ";
+        }
     }
 
-    //==================================//
-    //            Investment            //
-    //==================================//
-    
-
-    public function Investment()
+    if ($request->get('department') != null)
     {
-        $title = 'Investment';
-        $title_jp = '投資申請';
+        $departments = $request->get('department');
+        $deptlength = count($departments);
+        $department = "";
 
-        $emp = EmployeeSync::where('employee_id', Auth::user()->username)
-        ->select('employee_id', 'name', 'position', 'department', 'section', 'group')
-        ->first();
-
-        $dept = $this->dept;
-
-        return view('accounting_purchasing.investment', array(
-            'title' => $title,
-            'title_jp' => $title_jp,
-            'employee' => $emp,
-            'dept' => $dept
-        ))->with('page', 'Investment')
-        ->with('head', 'inv');
+        for ($x = 0;$x < $deptlength;$x++)
+        {
+            $department = $department . "'" . $departments[$x] . "'";
+            if ($x != $deptlength - 1)
+            {
+                $department = $department . ",";
+            }
+        }
+        $adddepartment = "and acc_investments.Department in (" . $department . ") ";
     }
 
-    public function fetch_investment(Request $request)
+    $qry = "SELECT  * FROM acc_investments
+    WHERE acc_investments.deleted_at IS NULL " . $tanggal . "" . $adddepartment . "
+    ORDER BY acc_investments.id DESC";
+
+    $invest = DB::select($qry);
+
+    return DataTables::of($invest)
+    ->editColumn('submission_date', function ($invest)
     {
-        $tanggal = "";
-        $adddepartment = "";
+        return date('d F Y', strtotime($invest->submission_date));
+    })
 
-        if (strlen($request->get('datefrom')) > 0)
+    ->editColumn('supplier_code', function ($invest)
+    {
+        return $invest->supplier_code.' - '.$invest->supplier_name;
+    })
+    ->editColumn('file', function ($invest)
+    {
+        $data = json_decode($invest->file);
+
+        $fl = "";
+
+        if ($invest->file != null)
         {
-            $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-            $tanggal = "and acc_investments.submission_date >= '" . $datefrom . " 00:00:00' ";
-            if (strlen($request->get('dateto')) > 0)
+            for ($i = 0;$i < count($data);$i++)
             {
-                $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-                $tanggal = $tanggal . "and acc_investments.submission_date  <= '" . $dateto . " 23:59:59' ";
+                $fl .= '<a href="files/investment/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
             }
         }
-
-        if ($request->get('department') != null)
+        else
         {
-            $departments = $request->get('department');
-            $deptlength = count($departments);
-            $department = "";
-
-            for ($x = 0;$x < $deptlength;$x++)
-            {
-                $department = $department . "'" . $departments[$x] . "'";
-                if ($x != $deptlength - 1)
-                {
-                    $department = $department . ",";
-                }
-            }
-            $adddepartment = "and acc_investments.Department in (" . $department . ") ";
+            $fl = '-';
         }
 
-        $qry = "SELECT  * FROM acc_investments
-        WHERE acc_investments.deleted_at IS NULL " . $tanggal . "" . $adddepartment . "
-        ORDER BY acc_investments.id DESC";
-
-        $invest = DB::select($qry);
-
-        return DataTables::of($invest)
-        ->editColumn('submission_date', function ($invest)
+        return $fl;
+    })
+    ->editColumn('status', function ($invest)
+    {
+        $id = $invest->id;
+        
+        if ($invest->posisi == "user")
         {
-            return date('d F Y', strtotime($invest->submission_date));
-        })
-
-        ->editColumn('supplier_code', function ($invest)
+            return '<label class="label label-danger">Not Sent</label>';
+        }
+    })
+    ->addColumn('action', function ($invest)
+    {
+        $id = $invest->id;
+        
+        if ($invest->status == "approval")
         {
-            return $invest->supplier_code.' - '.$invest->supplier_name;
-        })
-        ->editColumn('file', function ($invest)
-        {
-            $data = json_decode($invest->file);
+            return '<a href="investment/detail/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>
+            <a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i></a>
+            ';
+        }
+    })
 
-            $fl = "";
-
-            if ($invest->file != null)
-            {
-                for ($i = 0;$i < count($data);$i++)
-                {
-                    $fl .= '<a href="files/investment/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
-                }
-            }
-            else
-            {
-                $fl = '-';
-            }
-
-            return $fl;
-        })
-        ->editColumn('status', function ($invest)
-        {
-            $id = $invest->id;
-            
-            if ($invest->posisi == "user")
-            {
-                return '<label class="label label-danger">Not Sent</label>';
-            }
-        })
-        ->addColumn('action', function ($invest)
-        {
-            $id = $invest->id;
-            
-            if ($invest->status == "approval")
-            {
-                return '<a href="investment/detail/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></a>';
-            }
-        })
-
-        ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file', 'supplier_code' => 'supplier_code'])
-        ->make(true);
+    ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file', 'supplier_code' => 'supplier_code'])
+    ->make(true);
     }
 
     public function create_investment()
@@ -2619,7 +2744,7 @@ class AccountingController extends Controller
         {
             $id_user = Auth::id();
 
-             //Cek File
+                 //Cek File
             $files = array();
             $file = new AccInvestment();
             if ($request->file('attachment') != NULL)
@@ -2640,7 +2765,7 @@ class AccountingController extends Controller
                 $file->filename = NULL;
             }
 
-            $inv = AccInvestment::create(['applicant_id' => $request->get('applicant_id') , 'applicant_name' => $request->get('applicant_name') , 'applicant_department' => $request->get('applicant_department') , 'reff_number' => $request->get('reff_number') , 'submission_date' => $request->get('submission_date') , 'category' => $request->get('category') , 'subject' => $request->get('subject') , 'type' => $request->get('type') , 'objective' => $request->get('objective') , 'objective_detail' => $request->get('objective_detail') , 'supplier_code' => $request->get('vendor') , 'supplier_name' => $request->get('vendor_name') , 'date_order' => $request->get('date_order') , 'delivery_order' => $request->get('date_delivery') , 'payment_term' => $request->get('payment_term') , 'note' => $request->get('note'), 'file' => $file->filename , 'posisi' => 'user', 'status' => 'approval', 'created_by' => $id_user]);
+            $inv = AccInvestment::create(['applicant_id' => $request->get('applicant_id') , 'applicant_name' => $request->get('applicant_name') , 'applicant_department' => $request->get('applicant_department') , 'reff_number' => $request->get('reff_number') , 'submission_date' => $request->get('submission_date') , 'category' => $request->get('category') , 'subject' => $request->get('subject') , 'type' => $request->get('type') , 'objective' => $request->get('objective') , 'objective_detail' => $request->get('objective_detail') , 'supplier_code' => $request->get('vendor') , 'supplier_name' => $request->get('vendor_name') , 'date_order' => $request->get('date_order') , 'delivery_order' => $request->get('date_delivery') , 'payment_term' => $request->get('payment_term') , 'note' => $request->get('note') , 'quotation_supplier' => $request->get('quotation_supplier') , 'file' => $file->filename , 'posisi' => 'user', 'status' => 'approval', 'created_by' => $id_user]);
 
             $inv->save();
 
@@ -2736,7 +2861,7 @@ class AccountingController extends Controller
         ->distinct()
         ->get();
 
-        $items = db::select("select kode_item, kategori, deskripsi, spesifikasi from acc_items where deleted_at is null LIMIT 50");
+        $items = db::select("select kode_item, kategori, deskripsi, spesifikasi from acc_items where deleted_at is null");
 
         return view('accounting_purchasing.investment_detail', array(
             'title' => $title,
@@ -2754,8 +2879,26 @@ class AccountingController extends Controller
         {
             $id_user = Auth::id();
 
+            $judul = substr($request->get('reff_number'), 0, 7);
+
             $inv = AccInvestment::where('id', $request->get('id'))
-            ->update(['applicant_id' => $request->get('applicant_id') , 'applicant_name' => $request->get('applicant_name') , 'applicant_department' => $request->get('applicant_department') , 'reff_number' => $request->get('reff_number') , 'submission_date' => $request->get('submission_date') , 'category' => $request->get('category') , 'subject' => $request->get('subject') , 'type' => $request->get('type') , 'objective' => $request->get('objective') , 'objective_detail' => $request->get('objective_detail') , 'supplier' => $request->get('supplier') , 'created_by' => $id_user]);
+            ->update(['applicant_id' => $request->get('applicant_id') , 'applicant_name' => $request->get('applicant_name') , 'applicant_department' => $request->get('applicant_department') , 'reff_number' => $request->get('reff_number') , 'submission_date' => $request->get('submission_date') , 'category' => $request->get('category') , 'subject' => $request->get('subject') , 'subject_jpy' => $request->get('subject_jpy') , 'type' => $request->get('type') , 'objective' => $request->get('objective') , 'objective_detail' => $request->get('objective_detail') , 'objective_detail_jpy' => $request->get('objective_detail_jpy') , 'supplier_code' => $request->get('supplier') , 'supplier_name' => $request->get('supplier_name') , 'date_order' => $request->get('date_order') , 'delivery_order' => $request->get('date_delivery') , 'payment_term' => $request->get('payment_term') , 'note' => $request->get('note') , 'quotation_supplier' => $request->get('quotation_supplier') ,'budget_no' => $request->get('budget_no') ,'currency' => $request->get('currency') , 'pdf' => 'INV_'.$judul.'.pdf' ,'created_by' => $id_user]);
+
+            $detail_inv = AccInvestment::select('acc_investments.*','acc_investment_details.no_item', 'acc_investment_details.detail', 'acc_investment_details.qty', 'acc_investment_details.price', 'acc_investment_details.amount', 'acc_budgets.description')
+            ->leftJoin('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')
+            ->leftJoin('acc_budgets', 'acc_investments.budget_no', '=', 'acc_budgets.budget_no')
+            ->where('acc_investments.id', '=', $request->get('id'))
+            ->get();
+
+            $pdf = \App::make('dompdf.wrapper');
+            $pdf->getDomPDF()->set_option("enable_php", true);
+            $pdf->setPaper('A4', 'potrait');
+
+            $pdf->loadView('accounting_purchasing.report.report_investment', array(
+                'inv' => $detail_inv,
+            ));
+
+            $pdf->save(public_path() . "/investment_list/INV_".$judul.".pdf");
 
             $response = array(
                 'status' => true,
@@ -2774,7 +2917,7 @@ class AccountingController extends Controller
         }
     }
 
-    //Item Invesment
+        //Item Invesment
     public function fetch_investment_item($id)
     {
         $investment = AccInvestment::find($id);
@@ -2786,7 +2929,7 @@ class AccountingController extends Controller
         return DataTables::of($investment_item)
         ->editColumn('amount', function ($investment_item)
         {
-            return $investment_item->amount . ' ,00';
+            return $investment_item->amount;
         })
         ->addColumn('action', function ($investment_item)
         {
@@ -2918,6 +3061,71 @@ class AccountingController extends Controller
         return Response::json($response);
     }
 
+
+    //==================================//
+    //        Report Investment         //
+    //==================================//
+    public function report_investment($id){
+
+        $detail_inv = AccInvestment::select('acc_investments.*','acc_investment_details.no_item', 'acc_investment_details.detail', 'acc_investment_details.qty', 'acc_investment_details.price', 'acc_investment_details.amount', 'acc_budgets.description')
+        ->leftJoin('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')
+        ->leftJoin('acc_budgets', 'acc_investments.budget_no', '=', 'acc_budgets.budget_no')
+        ->where('acc_investments.id', '=', $id)
+        ->get();
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->setPaper('A4', 'potrait');
+
+        $pdf->loadView('accounting_purchasing.report.report_investment', array(
+            'inv' => $detail_inv,
+        ));
+
+        return $pdf->stream("PR ".$detail_inv[0]->reff_number. ".pdf");
+
+        // return view('accounting_purchasing.report.report_investment', array(
+        //  'inv' => $detail_inv,
+        // ))->with('page', 'Inv')->with('head', 'Inv List');
+    }
+
+    public function investment_send_email(Request $request){
+        $inv = AccInvestment::find($request->get('id'));
+
+        try{
+            if ($inv->posisi == "user")
+            {
+                $inv->posisi = "acc_budget";
+                $inv->save();
+
+                //Kirim Ke Bu Laila
+                        
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.employee_id = 'PI0902001'";
+                $mailtoo = DB::select($mails);
+
+                $isimail = "select * FROM acc_investments where acc_investments.id = ".$inv->id;
+                $invest = db::select($isimail);
+
+                Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($invest, 'investment'));
+
+                $response = array(
+                  'status' => true,
+                  'datas' => "Berhasil"
+                );
+
+                return Response::json($response);
+            }
+
+        } catch (Exception $e) {
+            $response = array(
+                  'status' => false,
+                  'datas' => "Gagal"
+                );
+
+            return Response::json($response);
+        }
+    }
+
+
     //==================================//
     //        Budget Information        //
     //==================================//
@@ -2985,6 +3193,6 @@ class AccountingController extends Controller
         
         return Response::json($response);
     }
-    
-}
+
+    }
 

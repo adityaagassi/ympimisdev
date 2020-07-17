@@ -25,8 +25,8 @@ Route::get('trial_print', 'StockTakingController@printSummary');
 Route::get('trial_loc', 'TrialController@trialLoc');
 Route::get('trial_loc2/{lat}/{long}', 'TrialController@getLocation');
 
-Route::get('index/whatsapp_api', 'TrialController@indexWhatsappApi');
-Route::get('whatsapp_api', 'TrialController@whatsapp_api2');
+Route::get('index/whatsapp_api', 'ChatBotController@index');
+Route::get('whatsapp_api', 'TrialController@whatsapp_api');
 
 
 Route::get('/index/emergency_response', 'TrialController@tes2');
@@ -245,7 +245,8 @@ Route::get('index/molding_monitoring', 'InjectionsController@index_molding_monit
 Route::get('fetch/molding_monitoring', 'InjectionsController@molding_monitoring');
 Route::get('fetch/detail_molding_monitoring', 'InjectionsController@detail_molding_monitoring');
 
-Route::get('index/injection/machine_monitoring', 'InjectionsController@index_machine_monitoring');
+Route::get('index/injection/machine_monitoring', 'InjectionsController@indexMachineMonitoring');
+Route::get('fetch/injection/machine_monitoring', 'InjectionsController@fetchMachineMonitoring');
 
 //end report
 
@@ -1163,6 +1164,7 @@ Route::get('investment/create', 'AccountingController@create_investment');
 Route::post('investment/create_post', 'AccountingController@create_investment_post');
 Route::get('investment/detail/{id}', 'AccountingController@detail_investment');
 Route::post('investment/update_post', 'AccountingController@detail_investment_post');
+Route::get('investment/sendemail', 'AccountingController@investment_send_email');
 
 //Nomor Investment
 Route::get('investment/get_nomor_investment', 'AccountingController@get_nomor_inv');
@@ -1855,8 +1857,6 @@ Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
 
 //START INDIRECT REQUEST
 
-//Request
-Route::get('index/indirect_material_request', 'IndirectMaterialController@indexRequest');
 
 //Stock
 Route::get('index/indirect_material_stock', 'IndirectMaterialController@indexStock');
@@ -1865,24 +1865,25 @@ Route::post('input/indirect_material_stock', 'IndirectMaterialController@inputSt
 Route::get('fetch/indirect_material_stock', 'IndirectMaterialController@fetchStock');
 Route::get('fetch/indirect_material_out', 'IndirectMaterialController@fetchOut');
 
-
 //Log
 Route::get('index/indirect_material_log', 'IndirectMaterialController@indexIndirectMaterialLog');
 Route::get('fetch/indirect_material_log', 'IndirectMaterialController@fetchIndirectMaterialLog');
 Route::get('print/indirect_material_label/{qr_code}', 'IndirectMaterialController@printLabel');
 
+
 //END INDIRECT REQUEST
-
-
 
 //START CHEMICAL
 Route::get('index/chm_solution_control', 'IndirectMaterialController@indexSolutionControl');
 Route::get('fetch/chm_solution_control', 'IndirectMaterialController@fetchSolutionControl');
 Route::post('input/chm_production_result', 'IndirectMaterialController@inputProductionResult');
 
+//Request
+Route::get('index/indirect_material_request/{id}', 'IndirectMaterialController@indexRequest');
 
-
+//Schedule
 Route::get('index/chm_picking_schedule', 'IndirectMaterialController@indexPickingSchedule');
+Route::get('fetch/chm_picking_schedule', 'IndirectMaterialController@fetchPickingSchedule');
 
 
 //END CHEMICAL
@@ -2935,6 +2936,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	
 	Route::get('index/maintenance/apar/orderList', 'MaintenanceController@indexAparOrderList');
 	Route::post('post/maintenance/apar/order', 'MaintenanceController@apar_order');
+	// Route::get('fetch/maintenance/spk/inv', 'MaintenanceController@fetchSPKPart');
 });
 
 // -----------  APAR -----------
@@ -2972,6 +2974,10 @@ Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_ch
 
 Route::get('index/maintenance/inven/list', 'MaintenanceController@indexInventory');
 Route::get('fetch/maintenance/inven/list', 'MaintenanceController@fetchInventory');
+Route::get('fetch/maintenance/inven/list/item', 'MaintenanceController@fetchInventoryPart');
+
+Route::post('post/maintenance/inven/list/save', 'MaintenanceController@inventory_save');
+Route::post('post/maintenance/inven/list/edit', 'MaintenanceController@inventory_edit');
 
 Route::get('index/maintenance/inventory/{stat}', 'MaintenanceController@indexInventoryTransaction');
 Route::get('fetch/maintenance/inven/code', 'MaintenanceController@fetchPartbyCode');

@@ -158,7 +158,7 @@
 
 				<tr>
 					<td colspan="6"></td>
-					<td colspan="4" style="font-size: 11px"><b>PT. Yamaha Musical Produtcs Indonesia</b></td>
+					<td colspan="4" style="font-size: 11px"><b>PT. Yamaha Musical Products Indonesia</b></td>
 				</tr>
 				<tr>
 					<td colspan="6"></td>
@@ -303,6 +303,10 @@
 	</main>
 
 	<footer>
+
+		@if($po->approval_authorized3 == "Approved")
+		<img width="120" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 850px;left: 575px;z-index: 200">
+		@endif
 		<div class="footer">
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
 				<thead>
@@ -329,7 +333,7 @@
 						</td>
 						<td colspan="3" style="width: 30%">
 							@if($po->approval_authorized3 == "Approved")
-								<?= $po->authorized3_name ?>
+								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
 							@endif
 						</td>
 					</tr>

@@ -46,69 +46,6 @@
   table.table-bordered > tfoot > tr > th{
     border:1px solid rgb(211,211,211);
   }
-
-  .radio {
-      display: inline-block;
-      position: relative;
-      padding-left: 35px;
-      margin-bottom: 12px;
-      cursor: pointer;
-      font-size: 16px;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    /* Hide the browser's default radio button */
-    .radio input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    /* Create a custom radio button */
-    .checkmark {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 25px;
-      width: 25px;
-      background-color: #ccc;
-      border-radius: 50%;
-    }
-
-    /* On mouse-over, add a grey background color */
-    .radio:hover input ~ .checkmark {
-      background-color: #ccc;
-    }
-
-    /* When the radio button is checked, add a blue background */
-    .radio input:checked ~ .checkmark {
-      background-color: #2196F3;
-    }
-
-    /* Create the indicator (the dot/circle - hidden when not checked) */
-    .checkmark:after {
-      content: "";
-      position: absolute;
-      display: none;
-    }
-
-    /* Show the indicator (dot/circle) when checked */
-    .radio input:checked ~ .checkmark:after {
-      display: block;
-    }
-
-    /* Style the indicator (dot/circle) */
-    .radio .checkmark:after {
-      top: 9px;
-      left: 9px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: white;
-    }
   
 </style>
 @endsection
@@ -182,9 +119,9 @@
           </div>
           <div class="col-xs-3">
             <label for="form_kategori">Kind Of Application</label>
-            <select class="form-control select2" id="category" data-placeholder='Choose Category' style="width: 100%">
-              <option value="investment" <?php if($investment->category == "Investment") echo "selected"; ?>>Investment</option>
-              <option value="expense"<?php if($investment->category == "Expense") echo "selected"; ?>>Expense</option>
+            <select class="form-control select2" id="category" data-placeholder='Choose Category' style="width: 100%" onchange="getNomor()">
+              <option value="Investment" <?php if($investment->category == "Investment") echo "selected"; ?>>Investment</option>
+              <option value="Expense"<?php if($investment->category == "Expense") echo "selected"; ?>>Expense</option>
             </select>
           </div>
           <div class="col-xs-3">
@@ -224,22 +161,24 @@
           </div>
           <div class="col-xs-3">
             <label for="form">Vendor</label>
-            <select class="form-control select2" id="vendor" data-placeholder='Choose Supplier' style="width: 100%">
+            <select class="form-control select2" id="vendor" data-placeholder='Choose Supplier' style="width: 100%"  onchange="getSupplierEdit(this)">
               @foreach($vendor as $ven)
               @if($ven->vendor_code == $investment->supplier_code)
-              <option selected>{{ $ven->supplier_name }}</option>
+              <option value="{{$ven->vendor_code}}" selected>{{ $ven->supplier_name }}</option>
               @else
               <option value="">&nbsp;</option>
-              <option>{{$ven->supplier_name}}</option>
+              <option value="{{$ven->vendor_code}}">{{$ven->supplier_name}}</option>
               @endif
               @endforeach
             </select>
+
+            <input type="hidden" class="form-control" id="vendor_name" name="vendor_name" readonly="" value="{{$investment->supplier_name}}">
           </div>
         </div>
         <div class="row">
           <div class="col-xs-4 col-xs-offset-1">
             <label for="form">Payment Term</label>
-            <input type="text" id="payment_term" name="payment_term" class="form-control" placeholder="Payment Term" required="" value="{{$investment->payment_term}}">
+            <input type="text" id="payment_term" name="payment_term" class="form-control" placeholder="Payment Term" required="" readonly="" value="{{$investment->payment_term}}">
           </div>
           <div class="col-xs-3">
             <label for="form_grup">Date Order</label>
@@ -258,6 +197,18 @@
               </div>
               <input type="text" class="form-control pull-right datepicker" id="date_delivery" name="date_delivery" placeholder="Date of Delivery" value="{{$investment->delivery_order}}" required="">
             </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-5 col-xs-offset-1">
+            <label for="form">Subject (Japanese Version)</label>
+            <input type="text" id="subject_jpy" name="subject_jpy" class="form-control" placeholder="Subject (Japan Version)" required="" value="{{$investment->subject_jpy}}">
+          </div>
+
+          <div class="col-xs-5">
+            <label for="form">Objective (Japanese Version)</label>
+            <input type="text" id="objective_detail_jpy" name="objective_detail_jpy" class="form-control" placeholder="Objective (Japan Version)" required="" value="{{$investment->objective_detail_jpy}}">
           </div>
         </div>
 
@@ -286,7 +237,7 @@
                         </div>
                       </div>
                       <div  class="col-md-2">
-                          <a href="{{ url('/files/investment/'.$data[$i]) }}" class="btn btn-primary">Download / Preview</a>
+                          <a href="{{ url('/files/investment/'.$data[$i]) }}" class="btn btn-primary" target="_blank">Download / Preview</a>
                       </div> 
                 <?php } ?>                       
               </div>
@@ -295,6 +246,18 @@
         </div>
         <?php } ?>
 
+        <div class="row">
+          <div class="col-xs-5 col-xs-offset-1">
+              <label>Note (Optional)</label>
+              <textarea class="form-control pull-right" id="note" name="note">{{$investment->note}}</textarea>
+          </div>
+          <div class="col-xs-5">
+              <label>Quotation (Optional)</label>
+              <textarea class="form-control pull-right" id="quotation_supplier" name="quotation_supplier">{{$investment->quotation_supplier}}</textarea>
+          </div>
+        </div>
+
+        <hr style="height:1px;border:none;color:#333;background-color:#eee;" >
 
         <div class="row">
           <div class="col-xs-10 col-xs-offset-1">
@@ -333,29 +296,66 @@
           <div class="col-xs-5 col-sm-5 col-md-5 col-md-offset-1">
             <label for="form_budget">Budget</label>
             <select class="form-control select2" data-placeholder="Pilih Nomor Budget" name="budget_no" id="budget_no" style="width: 100% height: 35px;" required> 
-              <option></option>
+              <option value="{{$investment->budget_no}}">{{$investment->budget_no}}</option>
             </select>
           </div>
           <div class="col-xs-5 col-sm-5 col-md-5">
             <label for="form_bagian">Currency</label>
-             <select class="form-control select2" id="item_currency" data-placeholder='Currency' style="width: 100%" onchange="currency()">
+             <select class="form-control select2" id="currency" data-placeholder='Currency' style="width: 100%" onchange="currency()">
               <option value="">&nbsp;</option>
-              <option value="USD">USD</option>
+              @if($investment->currency == "USD")
+              <option value="USD" selected="">USD</option>
               <option value="IDR">IDR</option>
               <option value="JPY">JPY</option>
+              @elseif($investment->currency == "IDR")
+              <option value="USD">USD</option>
+              <option value="IDR" selected="">IDR</option>
+              <option value="JPY">JPY</option>
+              @elseif($investment->currency == "JPY")
+              <option value="USD">USD</option>
+              <option value="IDR">IDR</option>
+              <option value="JPY" selected="">JPY</option>
+              @else
+              <option value="USD">USD</option>
+              <option value="IDR">IDR</option>
+              <option value="JPY">JPY</option>)
+              @endif
             </select>
           </div>
         </div>
 
 
         <div class="row">
-          <div class="col-sm-4 col-sm-offset-5" style="padding-top: 10px">
+          <div class="col-sm-12 text-center" style="padding-top: 10px">
+            
             <div class="btn-group">
-              <a class="btn btn-danger" href="{{ url('investment') }}">Cancel</a>
+              <a class="btn btn-danger" href="{{ url('investment') }}"><i class="fa fa-close"></i>&nbsp;Cancel</a>
             </div>
+
             <div class="btn-group">
-              <button type="button" class="btn btn-success pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
+              <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Save </button>
             </div>
+
+            <div class="btn-group">
+              <a href="{{ url('investment/report/'.$investment->id) }}" target="_blank" class="btn btn-warning" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Lihat Report Investment</a>
+            </div>
+
+            @if($investment->posisi == "user" && ($investment->budget_no == null || $investment->currency == null || $investment->subject_jpy == null || $investment->objective_detail_jpy == null))
+            <div class="btn-group">
+              <button type="button"class="btn btn-success" onclick="sendEmail({{$investment->id}})" data-toggle="tooltip" title="Send Email" disabled=""><i class="fa fa-envelope"></i> Kirim Email Ke Accounting</button>
+            </div>
+
+            @elseif($investment->posisi == "user" && ($investment->budget_no != null || $investment->currency != null || $investment->subject_jpy != null || $investment->objective_detail_jpy != null))
+
+            <div class="btn-group">
+              <button type="button"class="btn btn-success" onclick="sendEmail({{$investment->id}})" data-toggle="tooltip" title="Lengkapi Data Untuk Send Email"><i class="fa fa-envelope"></i> Kirim Email Ke Accounting</button>
+            </div>
+
+            @else
+            
+              <label class="label label-success"> Email Berhasil Dikirim Ke Accounting</label>
+            
+            @endif
           </div>
         </div>
 
@@ -387,7 +387,7 @@
            </div>
            <div class="form-group row" align="left">
             <div class="col-sm-1"></div>
-            <label class="col-sm-2">Nomor Item<span class="text-red">*</span></label>
+            <label class="col-sm-2">Deskripsi Item<span class="text-red">*</span></label>
             <div class="col-sm-8">
               <select class="form-control select3" id="kode_item" name="kode_item" style="width: 100%;" data-placeholder="Pilih Nomor Item" required>
                 <option value=""></option>
@@ -511,6 +511,7 @@
           <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
           <input type="hidden" id="id_edit">
           <button type="button" onclick="edit()" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-pencil"></i> Update</button>
+
         </div>
       </div>
     </div>
@@ -520,6 +521,7 @@
 
   @section('scripts')
   <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+  <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
   <script type="text/javascript">
 
     budget_list = "";
@@ -570,6 +572,16 @@
                   }
               });
           });
+
+      CKEDITOR.replace('note' ,{
+        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        height: '100px'
+      });
+
+      CKEDITOR.replace('quotation_supplier' ,{
+        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        height: '100px'
+      });
 
     $('#item tfoot th').each( function () {
       var title = $(this).text();
@@ -667,7 +679,10 @@
 
     $(function () {
       $('.select3').select2({
-        dropdownParent: $('#createModal')
+        dropdownParent: $('#createModal'),
+        dropdownAutoWidth : true,
+        allowClear:true,
+        minimumInputLength: 3
       });
       $('.select4').select2({
         dropdownParent: $('#EditModal')
@@ -683,6 +698,20 @@
       }
     }
 
+    function getSupplierEdit(elem){
+
+      $.ajax({
+        url: "{{ route('admin.pogetsupplier') }}?supplier_code="+elem.value,
+        method: 'GET',
+        success: function(data) {
+          var json = data,
+          obj = JSON.parse(json);
+          $('#vendor_name').val(obj.name);
+          $('#payment_term').val(obj.duration);
+        } 
+      });
+    }
+
     function getPersenEdit() {
       var qty = document.getElementById("jumlah_item_edit").value;
       var prc = document.getElementById("price_item_edit").value;
@@ -693,11 +722,72 @@
     }
 
     $('.datepicker').datepicker({
-        autoclose: true,
-        todayHighlight: true,
-        format: "yyyy-mm-dd",
-        orientation: 'bottom auto',
-      });
+      autoclose: true,
+      todayHighlight: true,
+      format: "yyyy-mm-dd",
+      orientation: 'bottom auto',
+    });
+
+    function getNomor() {
+      var kode = "";
+      var jenis = "";
+
+      var cat = document.getElementById("category");
+      var category = cat.options[cat.selectedIndex].value;
+
+      var jen = document.getElementById("type");
+      var jen2 = jen.options[jen.selectedIndex].value;
+
+      if (category == "Investment") {
+        kode = "F";
+      }
+      else if (category == "Expense"){
+        kode = "E";
+      }
+
+      if (jen2 == "Building") {
+        jenis = "B";
+      }
+      else if(jen2 == "Machine & Equipment"){
+        jenis = "M";
+      }
+      else if(jen2 == "Vehicle"){
+        jenis = "V";
+      }
+      else if(jen2 == "Tools, Jigs & Furniture"){
+        jenis = "T";
+      }
+      else if(jen2 == "Moulding"){
+        jenis = "MD";
+      }
+      else if(jen2 == "PC & Printer"){
+        jenis = "PC";
+      }
+
+      if (jen2 == "Office Supplies") {
+        jenis = "O";
+      }
+      else if(jen2 == "Repair & Maintenance"){
+        jenis = "R";
+      }
+      else if(jen2 == "Constool"){
+        jenis = "C";
+      }
+      else if(jen2 == "Professional Fee"){
+        jenis = "P";
+      }
+      else if(jen2 == "Miscellaneous"){
+        jenis = "etc";
+      }
+      else if(jen2 == "Others"){
+        jenis = "etc";
+      }
+
+      var reff_no = document.getElementById("reff_number");
+
+      reff_no.value = 'N'+kode+'-'+jenis;
+        
+    }
 
     function getBudget() {
 
@@ -728,13 +818,6 @@
       if ($("#applicant_department").val() == "") {
         $("#loading").hide();
         alert("Akun Anda Tidak Memiliki Departemen");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#reff_number").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Reff Number Harap diisi");
         $("html").scrollTop(0);
         return false;
       }
@@ -774,9 +857,50 @@
         return false;
       }
 
+      if ($("#date_order").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Order Date Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#date_delivery").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Delivery Date Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#payment_term").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Payment Term Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#reff_number").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Reff Number Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#budget_no").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Budget Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#currency").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Currency Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
       var data = {
         id: "{{ $investment->id }}",
-        investment_no: $("#investment_no").val(),
         applicant_id: $("#applicant_id").val(),
         applicant_name: $("#applicant_name").val(),
         applicant_department: $("#applicant_department").val(),
@@ -784,10 +908,20 @@
         reff_number: $("#reff_number").val(),
         category: $("#category").val(),
         subject: $("#subject").val(),
+        subject_jpy: $("#subject_jpy").val(),
         type: $("#type").val(),
         objective: $("#objective").val(),
         objective_detail: $("#objective_detail").val(),
-        desc_supplier : $("#vendor").val()
+        objective_detail_jpy: $("#objective_detail_jpy").val(),
+        supplier: $("#vendor").val(),
+        supplier_name: $("#vendor_name").val(),
+        date_order: $("#date_order").val(),
+        date_delivery: $("#date_delivery").val(),
+        payment_term: $("#payment_term").val(),
+        note: CKEDITOR.instances.note.getData(),
+        quotation_supplier: CKEDITOR.instances.quotation_supplier.getData(),
+        currency: $("#currency").val(),
+        budget_no: $("#budget_no").val(),
       };
 
       $.post('{{ url("investment/update_post") }}', data, function(result, status, xhr){
@@ -899,6 +1033,83 @@
         }
       })
     };
+
+    function selectClass(elem){
+        var isi = elem.value;
+
+        list = "";
+        list += "<option></option> ";
+        if (isi == "Investment") {
+          list += "<option value='Building'>Building</option>";
+          list += "<option value='Machine & Equipment'>Machine & Equipment</option>";
+          list += "<option value='Vehicle'>Vehicle</option>";          
+          list += "<option value='Tools, Jigs & Furniture'>Tools, Jigs & Furniture</option>";
+          list += "<option value='Moulding'>Moulding</option>";
+          list += "<option value='PC & Printer'>PC & Printer</option>";
+        }
+        else if (isi == "Expense"){
+          list += "<option value='Office Supplies'>Office Supplies</option>";
+          list += "<option value='Repair & Maintenance'>Repair & Maintenance</option>";
+          list += "<option value='Constool'>Constool</option>";
+          list += "<option value='Professional Fee'>Proffesional Fee</option>";
+          list += "<option value='Miscellaneous'>Miscellaneous</option>";
+          list += "<option value='Meal'>Meal</option>";
+          list += "<option value='Handling charge'>Handling charge</option>";
+          list += "<option value='Technical Assistant'>Technical Assistant</option>";
+          list += "<option value='Rent'>Rent</option>";
+          list += "<option value='Transport Expense'>Transport Expense</option>";
+          list += "<option value='Postage & Telecomunication'>Postage & Telecomunication</option>";
+          list += "<option value='Bussiness Trip'>Bussiness Trip</option>";
+          list += "<option value='Information System'>Information System</option>";
+          list += "<option value='Packaging Cost'>Packaging Cost</option>";
+          list += "<option value='Electricity, Water, & Gas'>Electricity, Water, & Gas</option>";
+          list += "<option value='Insurance'>Insurance</option>";
+          list += "<option value='Meeting&Guest'>Meeting & Guest</option>";
+          list += "<option value='Book&periodical'>Book & periodical</option>";
+          list += "<option value='Tax&Publicdues'>Tax & Publicdues</option>";
+          list += "<option value='Medical'>Medical</option>";
+          list += "<option value='Photocopy&printing'>Photocopy & printing</option>";
+          list += "<option value='Expatriate permittance'>Expatriate permittance</option>";
+          list += "<option value='Wellfare'>Wellfare</option>";
+          list += "<option value='Training&Development'>Training & Development</option>";
+          list += "<option value='Recruitment'>Recruitment</option>";
+          list += "<option value='Others'>Others</option>";
+        }
+
+        $('#type').html(list);
+
+    }
+
+    //menjadikan angka ke romawi
+    function romanize (num) {
+      if (!+num)
+        return false;
+      var digits = String(+num).split(""),
+        key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+               "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+               "","I","II","III","IV","V","VI","VII","VIII","IX"],
+        roman = "",
+        i = 3;
+      while (i--)
+        roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+      return Array(+digits.join("") + 1).join("M") + roman;
+    }
+
+    function sendEmail(id) {
+      var data = {
+        id:id
+      };
+
+      if (!confirm("Apakah anda yakin ingin mengirim Form Investmen Ke Bagian Accounting")) {
+        return false;
+      }
+
+      $.get('{{ url("investment/sendemail") }}', data, function(result, status, xhr){
+
+        openSuccessGritter("Success","Email Has Been Sent");
+        setTimeout(function(){  window.location.reload() }, 3000);
+      })
+    }
 
 
     function openSuccessGritter(title, message){

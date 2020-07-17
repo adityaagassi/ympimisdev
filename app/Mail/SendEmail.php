@@ -218,6 +218,31 @@ class SendEmail extends Mailable
             }
         }
 
+        if($this->remark == 'investment'){
+            if($this->data[0]->pdf != null && $this->data[0]->file != null){
+                $all_file = json_decode($this->data[0]->file);
+
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Investment '.$this->data[0]->reff_number.'')
+                ->view('mails.investment')
+                ->attach(public_path('files/investment/'.$all_file[0]))
+                ->attach(public_path('investment_list/'.$this->data[0]->pdf));
+            }
+            if($this->data[0]->pdf != null ){
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Investment '.$this->data[0]->reff_number.'')
+                ->view('mails.investment')
+                ->attach(public_path('investment_list/'.$this->data[0]->pdf));
+            } else{
+                return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                ->priority(1)
+                ->subject('Investment '.$this->reff_number.'')
+                ->view('mails.investment');
+            }
+        }
+
         if($this->remark == 'chemical_spk'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Verify Maintenance Job Order')->view('mails.verify_spk');
         }

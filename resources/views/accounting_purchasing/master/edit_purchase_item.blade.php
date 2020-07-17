@@ -178,7 +178,7 @@
               @elseif($item->currency == "JPY")
               <option value="USD">USD</option>
               <option value="IDR">IDR</option>
-              <option value="JPY" selected="">JPY</option>)
+              <option value="JPY" selected="">JPY</option>
               @endif
             </select>
           </div>

@@ -702,7 +702,7 @@
 								
 							</div>
 						</div>
-						<div >
+						<div>
 							<div class="col-md-12" style="margin-bottom : 5px">
 								<div class="col-xs-1" style="padding:5px;">
 									<b>Kode Item</b>
@@ -710,8 +710,11 @@
 								<div class="col-xs-2" style="padding:5px;">
 									<b>Deskripsi</b>
 								</div>
-								<div class="col-xs-2" style="padding:5px;">
+								<div class="col-xs-1" style="padding:5px;">
 									<b>Spesifikasi</b>
+								</div>
+								<div class="col-xs-1" style="padding:5px;">
+									<b>Stok WIP</b>
 								</div>
 								<div class="col-xs-1" style="padding:5px;">
 									<b>UOM</b>
@@ -1113,10 +1116,48 @@
 	    // alert(sel.value);
 	}
 
+	function pilihItemEdit(elem)
+	{
+		var no = elem.id.match(/\d/g);
+		no = no.join("");
+
+		$.ajax({
+			url: "{{ route('admin.prgetitemdesc') }}?kode_item="+elem.value,
+			method: 'GET',
+			success: function(data) {
+				var json = data,
+				obj = JSON.parse(json);
+				$('#item_desc_edit'+no).val(obj.deskripsi).attr('readonly', true);
+				$('#item_spec_edit'+no).val(obj.spesifikasi).attr('readonly', true);
+				$('#item_price_edit'+no).val(obj.price).attr('readonly', true);
+				$('#uom_edit'+no).val(obj.uom).change();
+				// $('#qty_edit'+no).val("0");
+				// $('#amount_edit'+no).val("0");
+				$('#item_currency_edit'+no).next(".select2-container").hide();
+				$('#item_currency_edit'+no).hide();
+				$('#item_currency_text_edit'+no).show();
+				$('#item_currency_text_edit'+no).val(obj.currency).show().attr('readonly', true);
+				if (obj.currency == "USD") {
+					$('#ket_harga_edit'+no).text("$");
+				}else if (obj.currency == "JPY") {
+					$('#ket_harga_edit'+no).text("¥");
+				}else if (obj.currency == "IDR"){
+					$('#ket_harga_edit'+no).text("Rp.");
+				}
+
+				var $datepicker = $('#req_date_edit'+no).attr('readonly', false);
+				$datepicker.datepicker();
+				$datepicker.datepicker('setDate', limitdate);
+
+			} 
+		});
+
+	    // alert(sel.value);
+	}
+
 	function getItemList() {
 		$.get('{{ url("fetch/purchase_requisition/itemlist") }}', function(result, status, xhr) {
 			item_list += "<option></option> ";
-			// item_list += "<option value='kosong'>kosong</option> ";
 			$.each(result.item, function(index, value){
 				// item.push({
 				// 	'kode_item' :  value.kode_item, 
@@ -1126,6 +1167,7 @@
 				item_list += "<option value="+value.kode_item+">"+value.kode_item+ " - " +value.deskripsi+"</option> ";
 			});
 			$('#item_code1').append(item_list);
+
 		})
 	}
 
@@ -1308,6 +1350,27 @@
 	    }
 	}
 
+	function getTotalEdit(id) {
+		// console.log(id);
+		var num = id.match(/\d/g);
+		num = num.join("");
+
+		var price = document.getElementById("item_price_edit"+num).value;
+	    var prc = price.replace(/\D/g, ""); //get angka saja
+
+	    var qty = document.getElementById("qty_edit"+num).value;
+      	var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
+
+      	if (!isNaN(hasil)) {
+
+    		var amount = document.getElementById('amount_edit'+num);
+    		amount.value = rubah(hasil);
+
+	    }
+	}
+
+
+
 	function konversi(from, to, amount){
 
 			var obj = exchange_rate;
@@ -1389,7 +1452,7 @@
     			dropdownAutoWidth : true,
     			dropdownParent: $("#"+id),
     			allowClear:true,
-
+    			minimumInputLength: 3
     		});
     	})
 
@@ -1544,14 +1607,14 @@
   	$('.select4').select2({
   		dropdownParent: $("#tab_3"),
   		allowClear:true,
-  		dropdownAutoWidth : true
+  		dropdownAutoWidth : true,
+  		minimumInputLength: 3
   	});
   })
 
 
 
   function editPR(id){
-
 		var isi = "";
 		$('#modalEdit').modal("show");
 	    
@@ -1571,32 +1634,38 @@
 	        $('#modalDetailBodyEdit').html('');
 	        var ids = [];
 			$.each(result.purchase_requisition_item, function(key, value) {
+
 				// console.log(result.purchase_requisition_item);
 				var tambah2 = "tambah2";
 		    	var	lop2 = "lop2";
 
 				isi = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
 				if (value.item_code != null) {
-					isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_code_edit"+value.id+"' name='item_code_edit"+value.id+"' value="+value.item_code+" readonly=''></div>";
+
+					isi += "<input type='hidden' class='form-control' id='item_code_edit_hide"+value.id+"' name='item_code_edit_hide"+value.id+"' value="+value.item_code+">";
+
+					isi += "<div class='col-xs-1' style='padding:5px;'><select class='form-control select5 item_code_edit' data-placeholder='Choose Item' name='item_code_edit"+value.id+"' id='item_code_edit"+value.id+"' style='width: 100% height: 35px;' onchange='pilihItemEdit(this)'><option></option></select></div>";
+
 				}else{
 					isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_code_edit"+value.id+"' name='item_code_edit"+value.id+"'></div>";
 				}
 				
 				isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
-				isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value='"+value.item_spec+"'></div>";
+				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value='"+value.item_spec+"'></div>";
+				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock' required='' value='"+value.item_stock+"'></div>";
 				isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='uomhide"+value.id+"' id='uomhide"+value.id+"' value='"+value.item_uom+"'><select class='form-control select5' id='uom_edit"+value.id+"' name='uom_edit"+value.id+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div>";
 				isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date_edit"+value.id+"' name='req_date_edit"+value.id+"' placeholder='Tanggal' required='' value='"+value.item_request_date+"''></div></div>";
-				isi += "<div class='col-xs-1' style='padding: 5px'><input type='text' class='form-control' id='item_currency_edit"+value.id+"' name='item_currency_edit"+value.id+"' value='"+value.item_currency+"' readonly=''></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price_edit"+value.id+"' name='item_price_edit"+value.id+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' value="+value.item_price+" readonly='' style='padding: 6px 6px'></div></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty_edit"+value.id+"' name='qty_edit"+value.id+"' placeholder='Qty' onkeyup='getTotal(this.id)' required='' value='"+value.item_qty+"' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount_edit"+value.id+"' name='amount_edit"+value.id+"' placeholder='Total' required='' value='"+value.item_amount+"' readonly=''></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.item_desc +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a></div>";
+				isi += "<div class='col-xs-1' style='padding: 5px'><input type='text' class='form-control' id='item_currency_edit"+value.id+"' name='item_currency_edit"+value.id+"' value='"+value.item_currency+"'><input type='text' class='form-control' id='item_currency_text_edit"+value.id+"' name='item_currency_text_edit"+value.id+"' style='display:none'></div>";
+				isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price_edit"+value.id+"' name='item_price_edit"+value.id+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' value="+value.item_price+" style='padding: 6px 6px'></div></div>";
+				isi += "<div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty_edit"+value.id+"' name='qty_edit"+value.id+"' placeholder='Qty' onkeyup='getTotalEdit(this.id)' required='' value='"+value.item_qty+"'></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount_edit"+value.id+"' name='amount_edit"+value.id+"' placeholder='Total' required='' value='"+value.item_amount+"' readonly=''></div>";
+				isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.item_desc +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a> <button type='button' class='btn btn-success' onclick='tambah(\""+ tambah2 +"\",\""+ lop2 +"\");'><i class='fa fa-plus' ></i></button></div>";
 				isi += "</div>";
 
 				ids.push(value.id);
 
 				$('#modalDetailBodyEdit').append(isi);
 
-		    	// console.log(value.id);
+		    	$('.item_code_edit').append(item_list);
 
 				if (value.item_currency == "USD") {
 		    		$('#ket_harga_edit'+value.id).text("$");
@@ -1609,6 +1678,20 @@
 				var uom = $('#uomhide'+value.id).val();
 		    	$("#uom_edit"+value.id).val(uom).trigger("change");
 
+		    	var item_code = $('#item_code_edit_hide'+value.id).val();
+		    	$("#item_code_edit"+value.id).val(item_code).trigger("change");
+
+		    	var price = document.getElementById("item_price_edit"+value.id).value;
+			    var prc = price.replace(/\D/g, ""); //get angka saja
+
+			    var qty = document.getElementById("qty_edit"+value.id).value;
+		      	var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
+
+		      	if (!isNaN(hasil)) {
+		    		var amount = document.getElementById('amount_edit'+value.id);
+		    		amount.value = rubah(hasil);
+			    }
+		    	
 		    	$('.datepicker').datepicker({
 					autoclose: true,
 					format: 'yyyy-mm-dd'
@@ -1618,7 +1701,8 @@
 					$('.select5').select2({
 						dropdownAutoWidth : true,
 						dropdownParent: $("#"+id),
-						allowClear: true
+						allowClear: true,
+						minimumInputLength: 3
 					});
 				})
 
@@ -1644,6 +1728,8 @@
 		$('#modaldanger').modal('hide');
 		$('#'+id).css("display","none");
 	}
+
+
 
 </script>
 

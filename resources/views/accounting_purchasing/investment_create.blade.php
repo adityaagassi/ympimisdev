@@ -15,68 +15,6 @@
     padding-top: 5px;
   }
 
-  .radio {
-      display: inline-block;
-      position: relative;
-      padding-left: 35px;
-      margin-bottom: 12px;
-      cursor: pointer;
-      font-size: 16px;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    /* Hide the browser's default radio button */
-    .radio input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    /* Create a custom radio button */
-    .checkmark {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 25px;
-      width: 25px;
-      background-color: #ccc;
-      border-radius: 50%;
-    }
-
-    /* On mouse-over, add a grey background color */
-    .radio:hover input ~ .checkmark {
-      background-color: #ccc;
-    }
-
-    /* When the radio button is checked, add a blue background */
-    .radio input:checked ~ .checkmark {
-      background-color: #2196F3;
-    }
-
-    /* Create the indicator (the dot/circle - hidden when not checked) */
-    .checkmark:after {
-      content: "";
-      position: absolute;
-      display: none;
-    }
-
-    /* Show the indicator (dot/circle) when checked */
-    .radio input:checked ~ .checkmark:after {
-      display: block;
-    }
-
-    /* Style the indicator (dot/circle) */
-    .radio .checkmark:after {
-      top: 9px;
-      left: 9px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: white;
-    }
   
 </style>
 @endsection
@@ -144,7 +82,8 @@
         <div class="row">
           <div class="col-xs-4 col-xs-offset-2">
             <label for="form_kategori">Kind Of Application<span class="text-red">*</span></label>
-            <select class="form-control select2" id="category" name="category" data-placeholder='Choose Category' style="width: 100%"  onchange="selectClass(this)" required="">
+            <select class="form-control select2" id="category" name="category" data-placeholder='Choose Category' style="width: 100%"  
+            onchange="selectClass(this); getNomor();" required="">
               <option value="">&nbsp;</option>
               <option value="Investment">Investment</option>
               <option value="Expense">Expense</option>
@@ -220,27 +159,32 @@
         <div class="row">
           <div class="col-xs-4 col-xs-offset-2">
             <label for="payment">Payment Term<span class="text-red">*</span></label>
-            <input type="text" id="payment_term" name="payment_term" class="form-control" placeholder="Payment Term" required="">
+            <input type="text" id="payment_term" name="payment_term" class="form-control" placeholder="Payment Term" required="" readonly="">
           </div>
           <div class="col-xs-4">
             <label for="file">File Quotation<span class="text-red">*</span></label>
-            <input type="file" id="attachment" name="attachment[]" multiple="">
+            <input type="file" id="attachment" name="attachment[]" multiple="" required="">
           </div>
         </div>
 
         <div class="row">
           <div class="col-xs-8 col-xs-offset-2">
-              <label>Note</label>
-              <textarea class="form-control pull-right" id="note" name="note"></textarea>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-8 col-xs-offset-2">
-            <label for="form_bagian">Reff Number</label>
+            <label for="form_bagian">Reff Number<span class="text-red">*</span></label>
             <input type="text" class="form-control" id="reff_number" name="reff_number" placeholder="Reff Number" required="" readonly="">
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-xs-4 col-xs-offset-2">
+              <label>Note (Optional)</label>
+              <textarea class="form-control pull-right" id="note" name="note"></textarea>
+          </div>
+          <div class="col-xs-4">
+              <label>Quotation (Optional)</label>
+              <textarea class="form-control pull-right" id="quotation_supplier" name="quotation_supplier"></textarea>
+          </div>
+        </div>
+
         
         <div class="row">
           <div class="col-sm-4 col-sm-offset-5" style="padding-top: 10px">
@@ -272,12 +216,24 @@
     jQuery(document).ready(function() {
       $('body').toggleClass("sidebar-collapse");
       $("#navbar-collapse").text('');
-        $('.select2').select2({
-          language : {
-            noResults : function(params) {
-            }
+      $('.select2').select2({
+        language : {
+          noResults : function(params) {
           }
-        });
+        }
+      });
+
+      CKEDITOR.replace('note' ,{
+        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        height: '100px'
+      });
+
+      CKEDITOR.replace('quotation_supplier' ,{
+        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        height: '100px'
+      });
+      
+
       });
 
       $(function () {
@@ -300,6 +256,7 @@
           var json = data,
           obj = JSON.parse(json);
           $('#vendor_name').val(obj.name);
+          $('#payment_term').val(obj.duration);
         } 
       });
     }
@@ -453,6 +410,13 @@
         return false;
       }
 
+      if ($("#attachment").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Attachment Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
       if ($("#reff_number").val() == "") {
         $("#loading").hide();
         alert("Kolom Reff Number Harap diisi");
@@ -561,11 +525,13 @@
         objective: $("#objective").val(),
         objective_detail: $("#objective_detail").val(),
         supplier: $("#vendor").val(),
-        date_order: $("date_order").val(),
-        date_delivery: $("date_delivery").val(),
-        payment_term: $("payment_term").val(),
-        note: $("note").val(),
-        attachment: $("attachment").val()
+        supplier_name: $("#vendor_name").val(),
+        date_order: $("#date_order").val(),
+        date_delivery: $("#date_delivery").val(),
+        payment_term: $("#payment_term").val(),
+        note: CKEDITOR.instances.note.getData(),
+        quotation_supplier: CKEDITOR.instances.quotation_supplier.getData(),
+        attachment: $("#attachment").val()
       };
 
       $.post('{{ url("investment/create_post") }}', data, function(result, status, xhr){
@@ -602,6 +568,26 @@
           list += "<option value='Constool'>Constool</option>";
           list += "<option value='Professional Fee'>Proffesional Fee</option>";
           list += "<option value='Miscellaneous'>Miscellaneous</option>";
+          list += "<option value='Meal'>Meal</option>";
+          list += "<option value='Handling charge'>Handling charge</option>";
+          list += "<option value='Technical Assistant'>Technical Assistant</option>";
+          list += "<option value='Rent'>Rent</option>";
+          list += "<option value='Transport Expense'>Transport Expense</option>";
+          list += "<option value='Postage & Telecomunication'>Postage & Telecomunication</option>";
+          list += "<option value='Bussiness Trip'>Bussiness Trip</option>";
+          list += "<option value='Information System'>Information System</option>";
+          list += "<option value='Packaging Cost'>Packaging Cost</option>";
+          list += "<option value='Electricity, Water, & Gas'>Electricity, Water, & Gas</option>";
+          list += "<option value='Insurance'>Insurance</option>";
+          list += "<option value='Meeting&Guest'>Meeting & Guest</option>";
+          list += "<option value='Book&periodical'>Book & periodical</option>";
+          list += "<option value='Tax&Publicdues'>Tax & Publicdues</option>";
+          list += "<option value='Medical'>Medical</option>";
+          list += "<option value='Photocopy&printing'>Photocopy & printing</option>";
+          list += "<option value='Expatriate permittance'>Expatriate permittance</option>";
+          list += "<option value='Wellfare'>Wellfare</option>";
+          list += "<option value='Training&Development'>Training & Development</option>";
+          list += "<option value='Recruitment'>Recruitment</option>";
           list += "<option value='Others'>Others</option>";
         }
 
