@@ -39,7 +39,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Summary of Counting <span class="text-purple">??</span>
+		{{ $title }} <span class="text-purple">{{ $title_jp }}</span>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -66,7 +66,7 @@
 					<div class="row">
 						<div class="col-xs-6 col-xs-offset-3">					
 							<div class="form-group">
-								<label class="control-label">Store Location</label>
+								<label class="control-label">Store</label>
 								<textarea id="receiveStoreArea" class="form-control" rows="3" placecholder="Paste location from excel here"></textarea>
 								<input id="receiveStoreTags" type="text" placeholder="Material Number" class="form-control tags" name="receiveStoreTags" />
 							</div>

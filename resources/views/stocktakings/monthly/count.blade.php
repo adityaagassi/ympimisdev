@@ -736,7 +736,7 @@
 					num++;
 
 					body += '<tr>';
-					body += '<td '+css+'>'+num+'</td>';
+					body += '<td '+css+'>'+result.store[i].id+'</td>';
 					body += '<td '+css+'>'+result.store[i].store+'</td>';
 					body += '<td '+css+'>'+result.store[i].category+'</td>';
 					body += '<td '+css+'>'+result.store[i].material_number+'</td>';

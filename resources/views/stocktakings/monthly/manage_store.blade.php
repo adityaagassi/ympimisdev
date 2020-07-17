@@ -3,6 +3,7 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css/jquery.tagsinput.css") }}" rel="stylesheet">
 <style type="text/css">
+	
 	thead input {
 		width: 100%;
 		padding: 3px;
@@ -40,19 +41,35 @@
 		border:1px solid rgb(211,211,211);
 		padding-top: 0;
 		padding-bottom: 0;
+		cursor: pointer;
 	}
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
+	.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+		background-color: #FFD700;
+	}
 	#loading, #error { display: none; }
+
+	.selected {
+		background: gold !important;
+	}
 </style>
 @stop
 
 @section('header')
 <section class="content-header">
+	@foreach(Auth::user()->role->permissions as $perm)
+	@php
+	$navs[] = $perm->navigation_code;
+	@endphp
+	@endforeach
+
+	@if(in_array('S36', $navs))	
 	<button class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#add_material" style="margin-right: 5px">
 		<i class="fa fa-plus"></i>&nbsp;&nbsp;Add New Material
 	</button>
+	@endif
 
 	<h1>
 		{{ $title }} <span class="text-purple">{{ $title_jp }}</span>
@@ -73,6 +90,7 @@
 			<div class="box box-primary">
 				<div class="box-header">
 					<h3 class="box-title">Store Filters</h3>
+					<h3 id="printer_name" class="box-title pull-right"></h3>
 				</div>
 				<input type="hidden" value="{{csrf_token()}}" name="_token" />
 				<div class="box-body">
@@ -131,12 +149,12 @@
 		<div class="col-xs-12">
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Store</a></li>
-					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Store Detail</a></li>
+					{{-- <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Store</a></li> --}}
+					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Store Detail</a></li>
 				</ul>
 
 				<div class="tab-content">
-					<div class="tab-pane active" id="tab_1">
+					{{-- <div class="tab-pane active" id="tab_1">
 						<table id="store_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
@@ -144,7 +162,7 @@
 									<th style="width: 30%">Location</th>
 									<th style="width: 30%">Store</th>
 									<th style="width: 10%">Material Qty</th>
-									<th style="width: 5%">Reprint</th>
+									<th style="width: 5%">Print</th>
 									<th style="width: 5%">Delete</th>
 								</tr>
 							</thead>
@@ -161,8 +179,8 @@
 								</tr>
 							</tfoot>
 						</table>
-					</div>
-					<div class="tab-pane" id="tab_2">
+					</div> --}}
+					<div class="tab-pane active" id="tab_1">
 						<table id="store_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
@@ -173,14 +191,16 @@
 									<th style="width: 10%">Material</th>
 									<th style="width: 30%">Material Description</th>
 									<th style="width: 5%">UOM</th>
-									<th style="width: 5%">Reprint</th>
-									<th style="width: 5%">Delete</th>
+									<th style="width: 10%">Print Status</th>
+									<th style="width: 10%">Delete</th>
+									<th style="width: 10%">Check</th>		
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="store_detail_body">
 							</tbody>
 							<tfoot>
 								<tr>
+									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -195,6 +215,14 @@
 						</table>
 					</div>
 				</div>
+
+				<center>
+					<span style="font-weight: bold; font-size: 20px;">Material Picked: </span>
+					<span id="picked" style="font-weight: bold; font-size: 24px; color: red;">0</span>
+					<span style="font-weight: bold; font-size: 16px; color: red;">of</span>
+					<span id="total" style="font-weight: bold; font-size: 16px; color: red;">0</span>
+				</center>
+				<button class="btn btn-primary" style="margin-left:1%; width: 98%; font-size: 22px; margin-bottom: 30px;" onclick="printJob(this)"><i class="fa fa-print"></i> PRINT</button>
 			</div>
 		</div>
 	</div>
@@ -288,8 +316,28 @@
 			</div>
 		</div>
 	</div>
-</section>
 
+	<div class="modal fade" id="modalPrinter">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-body table-responsive no-padding">
+						<div class="form-group">
+							<label for="exampleInputEmail1">Printer</label>
+							<select class="form-control select2" name="printer" id='printer' data-placeholder="Printer" style="width: 100%;">
+								<option value="">Select Printer</option>
+								@foreach($printer_names as $printer_name)
+								<option value="{{ $printer_name }}">{{ $printer_name }}</option>
+								@endforeach
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</section>
 @endsection
 
 
@@ -302,6 +350,7 @@
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script src="{{ url("js/jquery.tagsinput.min.js") }}"></script>
+<script src="{{ url("js/icheck.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -316,12 +365,26 @@
 		$('.select2').select2();
 
 		// fetchTable();
+		
+		$('#modalPrinter').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
 
 		$('#other').hide();
 	});
 
 	$("#add_material").on("hidden.bs.modal", function () {
 		$('#material_description').text('');
+	});
+
+	$("#printer").change(function(){
+		$('#modalPrinter').modal('hide');
+
+		var printer = $('#printer').val(); 
+		$('#printer_name').text('');
+		$('#printer_name').text('Printer : ' + printer);
+
 	});
 
 	$("#group").change(function(){
@@ -373,6 +436,9 @@
 
 	});
 
+	function clearConfirmation(){
+		location.reload(true);		
+	}
 
 	function checkMaterial() {
 		var material_number = $('#material_number').val();
@@ -437,7 +503,7 @@
 				var store = $('#filter_store').val();
 
 				if(area != '' || location != '' || store != ''){
-					$('#store_table').DataTable().ajax.reload();
+					// $('#store_table').DataTable().ajax.reload();
 					$('#store_detail').DataTable().ajax.reload();
 				}
 
@@ -452,9 +518,70 @@
 
 	}
 
+
+	var total;
+	var store_detail;
+
+	function countPicked(element){
+
+		var id = $(element).attr("id");
+		var checkId = id.slice(4);
+		var checkVal = $('#'+checkId).is(":checked");
+
+		if(checkVal) {
+			total--;
+			$('#'+ String(checkId)).prop('checked', false);
+			// $('#tr+'+ String(checkId)).css('background-color', '#000000');
+
+		}else{
+			total++;
+			$('#'+ String(checkId)).prop('checked', true);
+			// $('#tr+'+ String(checkId)).toggleClass('active');
+		}
+		
+		$("#picked").html(total);
+	}	
+
+	function printJob(element){
+		var tag = [];
+		$("input[type=checkbox]:checked").each(function() {
+			tag.push([this.id, this.name]);
+		});
+
+		if(tag.length < 1){
+			alert("Material Picked 0");
+			return false;
+		}
+
+		var printer = $("#printer").val();
+		var data = printer.split(' - ');
+		var printer_name = data[0];
+
+		var data = {
+			id : tag,
+			printer_name : printer_name
+		}
+
+		$(element).attr('disabled',true);
+		$("#loading").show();
+		$.get('{{ url("reprint/stocktaking/summary_of_counting_id") }}', data, function(result, status, xhr){
+			if(result.status){
+				$("#loading").hide();
+				openSuccessGritter('Success', result.message);
+				$(element).attr('disabled',false);
+				fetchTable()
+			} else {
+				$("#loading").hide();
+				audio_error.play();
+				openErrorGritter('Error', result.message);
+				$(element).attr('disabled',false);
+			}
+
+		});
+
+	}
+
 	function fetchTable() {
-		//Store
-		$('#store_table').DataTable().destroy();
 
 		var area = $('#filter_area').val();
 		var location = $('#filter_location').val();
@@ -466,138 +593,190 @@
 			store:store
 		}
 
-		
-		$('#store_table tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-		});
-		var store_table = $('#store_table').DataTable({
-			'dom': 'Bfrtip',
-			'responsive': true,
-			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			],
-			"pageLength": 25,
-			'buttons': {
-				buttons:[
-				{
-					extend: 'pageLength',
-					className: 'btn btn-default',
-				}
-				]
-			},
-			'paging': true,
-			'lengthChange': true,
-			'searching': true,
-			'ordering': true,
-			'order': [],
-			'info': true,
-			'autoWidth': true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true,
-			// "serverSide": true,
-			"ajax": {
-				"type" : "get",
-				"url" : "{{ url("fetch/stocktaking/store") }}",
-				"data" : data		
-			},
-			"columns": [
-			{ "data": "group"},
-			{ "data": "location"},
-			{ "data": "store"},
-			{ "data": "quantity"},
-			{ "data": "reprint"},
-			{ "data": "delete"}
-			]
-		});
-
-		store_table.columns().every( function () {
-			var that = this;
-
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
-				}
-			});
-		});
-		$('#store_table tfoot tr').appendTo('#store_table thead');
-		
-
-
 		//Detail
-		$('#store_detail').DataTable().destroy();
+		$.get('{{ url("fetch/stocktaking/store_details") }}', data, function(result, status, xhr){
+			if (result.status) {
 
-		$('#store_detail tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-		});
-		var store_detail = $('#store_detail').DataTable({
-			'dom': 'Bfrtip',
-			'responsive': true,
-			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			],
-			"pageLength": 25,
-			'buttons': {
-				buttons:[
-				{
-					extend: 'pageLength',
-					className: 'btn btn-default',
+
+				$('#store_detail').DataTable().clear();
+				$('#store_detail').DataTable().destroy();
+				$('#store_detail_body').html("");
+
+				$('#total').html(result.data.length);
+				$('#picked').html(0);
+				total = 0;
+
+
+				var body = '';
+				var css = 'style="background-color: #000000;"';
+
+				for (var i = 0; i < result.data.length; i++) {
+
+					body += '<tr id="tr+'+result.data[i].id+'">';
+					body += '<td onClick="countPicked(this)" id="td1+'+result.data[i].id+'">'+result.data[i].group+'</td>';
+					body += '<td onClick="countPicked(this)" id="td2+'+result.data[i].id+'">'+result.data[i].location+'</td>';
+					body += '<td onClick="countPicked(this)" id="td3+'+result.data[i].id+'">'+result.data[i].store+'</td>';
+					body += '<td onClick="countPicked(this)" id="td4+'+result.data[i].id+'">'+result.data[i].category+'</td>';
+					body += '<td onClick="countPicked(this)" id="td5+'+result.data[i].id+'">'+result.data[i].material_number+'</td>';
+					body += '<td onClick="countPicked(this)" id="td6+'+result.data[i].id+'">'+result.data[i].material_description+'</td>';
+					body += '<td onClick="countPicked(this)" id="td7+'+result.data[i].id+'">'+result.data[i].uom+'</td>';
+
+					if(result.data[i].print_status == 0){
+						body += '<td onClick="countPicked(this)" id="td8+'+result.data[i].id+'" style="font-size: 1vw;"><span class="label label-primary">PRINT</span></td>';
+					}else{
+						body += '<td onClick="countPicked(this)" id="td9+'+result.data[i].id+'" style="font-size: 1vw;"><span class="label label-info">REPRINT</span></td>';
+					}
+
+					body += '<td>';
+					body += '<button style="width: 50%; height: 100%; vertical_align: middle;" onclick="deleteMaterial(\''+result.data[i].id+'\')" class="btn btn-sm btn-danger form-control"><span><i class="fa fa-trash"></i></span></button>';
+					body += '</td>';
+
+					if(result.data[i].print_status == 0){
+						body += '<td><input type="checkbox" name="R" id="'+result.data[i].id+'"></td>';
+					}else{
+						body += '<td><input type="checkbox" name="RP" id="'+result.data[i].id+'"></td>';
+					}
+
+					body += '</tr>';
+
 				}
-				]
-			},
-			'paging': true,
-			'lengthChange': true,
-			'searching': true,
-			'ordering': true,
-			'order': [],
-			'info': true,
-			'autoWidth': true,
-			"sPaginationType": "full_numbers",
-			"bJQueryUI": true,
-			"bAutoWidth": false,
-			"processing": true,
-			// "serverSide": true,
-			"ajax": {
-				"type" : "get",
-				"url" : "{{ url("fetch/stocktaking/store_details") }}",
-				"data" : data		
-			},
-			"columns": [
-			{ "data": "group"},
-			{ "data": "location"},
-			{ "data": "store"},
-			{ "data": "category"},
-			{ "data": "material_number"},
-			{ "data": "material_description"},
-			{ "data": "uom"},
-			{ "data": "reprint"},
-			{ "data": "delete"}
-			]
+				$("#store_detail_body").append(body);
+
+				$('#store_detail tfoot th').each( function () {
+					var title = $(this).text();
+					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+				});
+				store_detail = $('#store_detail').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default'
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true,
+				});
+
+				store_detail.columns().every( function () {
+					var that = this;
+
+					$( 'input', this.footer() ).on( 'keyup change', function () {
+						if ( that.search() !== this.value ) {
+							that
+							.search( this.value )
+							.draw();
+						}
+					});
+				});
+				$('#store_detail tfoot tr').appendTo('#store_detail thead');
+
+			}
 		});
 
-		store_detail.columns().every( function () {
-			var that = this;
+		//Store
+		// $('#store_table').DataTable().destroy();
+		// $('#store_table tfoot th').each( function () {
+		// 	var title = $(this).text();
+		// 	$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		// });
+		// var store_table = $('#store_table').DataTable({
+		// 	'dom': 'Bfrtip',
+		// 	'responsive': true,
+		// 	'lengthMenu': [
+		// 	[ 10, 25, 50, -1 ],
+		// 	[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		// 	],
+		// 	"pageLength": 25,
+		// 	'buttons': {
+		// 		buttons:[
+		// 		{
+		// 			extend: 'pageLength',
+		// 			className: 'btn btn-default',
+		// 		}
+		// 		]
+		// 	},
+		// 	'paging': true,
+		// 	'lengthChange': true,
+		// 	'searching': true,
+		// 	'ordering': true,
+		// 	'order': [],
+		// 	'info': true,
+		// 	'autoWidth': true,
+		// 	"sPaginationType": "full_numbers",
+		// 	"bJQueryUI": true,
+		// 	"bAutoWidth": false,
+		// 	"processing": true,
+		// 	// "serverSide": true,
+		// 	"ajax": {
+		// 		"type" : "get",
+		// 		"url" : "{{ url("fetch/stocktaking/store") }}",
+		// 		"data" : data		
+		// 	},
+		// 	"columns": [
+		// 	{ "data": "group"},
+		// 	{ "data": "location"},
+		// 	{ "data": "store"},
+		// 	{ "data": "quantity"},
+		// 	{ "data": "reprint"},
+		// 	{ "data": "delete"}
+		// 	]
+		// });
+		// store_table.columns().every( function () {
+		// 	var that = this;
 
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
-				}
-			});
-		});
-		$('#store_detail tfoot tr').appendTo('#store_detail thead');
-
+		// 	$( 'input', this.footer() ).on( 'keyup change', function () {
+		// 		if ( that.search() !== this.value ) {
+		// 			that
+		// 			.search( this.value )
+		// 			.draw();
+		// 		}
+		// 	});
+		// });
+		// $('#store_table tfoot tr').appendTo('#store_table thead');
+		
 	}
 
-	function reprintID(id){
+	function printID(id){
 		var data = {
 			id:id
 		}
@@ -652,7 +831,7 @@
 				if(result.status){
 					openSuccessGritter('Success', result.message);
 
-					$('#store_table').DataTable().ajax.reload();
+					// $('#store_table').DataTable().ajax.reload();
 					$('#store_detail').DataTable().ajax.reload();
 
 					$("#loading").hide();
@@ -680,7 +859,7 @@
 				if(result.status){
 					openSuccessGritter('Success', result.message);
 
-					$('#store_table').DataTable().ajax.reload();
+					// $('#store_table').DataTable().ajax.reload();
 					$('#store_detail').DataTable().ajax.reload();
 
 					$("#loading").hide();

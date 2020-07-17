@@ -136,9 +136,23 @@ class StockTakingController extends Controller{
 			'BAG',
 			'PAA'
 		];
+		$this->printer_name = [
+			'Barcode Printer Sax',
+			'Barrel-Printer',
+			'FLO Printer 101',
+			'FLO Printer 102',
+			'FLO Printer 103',
+			'FLO Printer 104',
+			'FLO Printer 105',
+			'FLO Printer LOG',
+			'FLO Printer RC',
+			'FLO Printer VN',
+			'KDO ZPRO',
+			'MIS',
+			'Stockroom-Printer',
+			'Welding-Printer'
+		];
 
-		// $this->bom = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt, ( b.`usage` / b.divider ) AS koef FROM bom_outputs b
-		// 	LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child");
 	}
 
 	//Stock Taking Bulanan
@@ -159,6 +173,8 @@ class StockTakingController extends Controller{
 	public function indexManageStore(){
 		$title = 'Manage Store';
 		$title_jp = 'ストアー管理';
+
+		$printer_names = $this->printer_name;
 
 		$groups = StorageLocation::select('area')
 		->whereNotNull('area')
@@ -181,6 +197,7 @@ class StockTakingController extends Controller{
 		return view('stocktakings.monthly.manage_store', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
+			'printer_names' => $printer_names,
 			'groups' => $groups,
 			'locations' => $locations,
 			'stores' => $stores,
@@ -274,34 +291,54 @@ class StockTakingController extends Controller{
 		))->with('page', 'Summary Of Counting')->with('head', 'Stocktaking');
 	}
 
-	public function indexCountPI(){
+	public function indexCountPI(Request $request){
+		$group = $request->get('group');
 
-		$data = db::select("SELECT DISTINCT process FROM stocktaking_lists");
+		$locations = StorageLocation::whereIn('area', $group)
+		->select('storage_location')
+		->get();
 
-		if(count($data) > 1){
-			$response = array(
-				'status' => false,
-				'message' => 'Proses tidak sesuai urutan',
-			);
-			return Response::json($response);
-		}else{
-			if($data[0]->process < 2){
+		// $location = '';
+		// for ($i=0; $i < count($locations); $i++) { 
+		// 	$location = $location."'".$locations[$i]->storage_location."'";
+		// 	if($i != (count($locations)-1)){
+		// 		$location = $location.',';
+		// 	}
+		// }
+		// $data = db::select("SELECT DISTINCT process FROM stocktaking_lists WEHER location IN (".$location.")");
+
+
+		$location = array();
+		for ($i=0; $i < count($locations); $i++) {
+			array_push($location, $locations[$i]->storage_location); 
+		}
+
+		$data = StocktakingList::whereIn('location', $location)->get();
+
+		for ($i=0; $i < count($data); $i++) { 
+			if($data[$i]->process < 2){
 				$response = array(
 					'status' => false,
-					'message' => 'Proses tidak sesuai urutan',
+					'message' => 'Location '.$data[$i]->location.' tidak sesuai urutan',
 				);
 				return Response::json($response);
 			}
 		}
 
 		try{
-			DB::transaction(function() {
-				StocktakingOutput::truncate();
-				$update = StocktakingList::where('process', 2)->update(['process' => 4]);
+			DB::transaction(function() use ($location) {
+				$delete = StocktakingOutput::whereIn('location', $location)
+				->delete();
+
+				$update = StocktakingList::where('process', 2)
+				->whereIn('location', $location)
+				->update([
+					'process' => 4
+				]);
 			});
 
-			$this->countPISingle();
-			$this->countPIAssyNew2();
+			$this->countPISingle($location);
+			$this->countPIAssyNew2($location);
 
 			$response = array(
 				'status' => true,
@@ -317,8 +354,9 @@ class StockTakingController extends Controller{
 		}
 	}
 
-	public function countPISingle(){
-		$single = StocktakingList::where('category', 'SINGLE')
+	public function countPISingle($location){
+		$single = StocktakingList::whereIn('location', $location)
+		->where('category', 'SINGLE')
 		->where('final_count', '>', 0)
 		->get();
 
@@ -412,8 +450,9 @@ class StockTakingController extends Controller{
 		$this->cek = $this->temp;
 	}
 
-	public function countPIAssyNew2(){
-		$assy = StocktakingList::where('category', 'ASSY')
+	public function countPIAssyNew2($location){
+		$assy = StocktakingList::whereIn('location', $location)
+		->where('category', 'ASSY')
 		->where('final_count', '>', 0)
 		->get();
 
@@ -561,7 +600,8 @@ class StockTakingController extends Controller{
 		try {
 			$lists = db::select("SELECT
 				s.id,
-				s.store, 
+				s.print_status,
+				s.store,
 				s.category,
 				s.material_number,
 				mpdl.material_description,
@@ -594,7 +634,14 @@ class StockTakingController extends Controller{
 					$number = 1;
 				}
 
-				$this->printSummary($list, $number);
+				$print;
+				if($list->print_status == 1){
+					$print = 'RP';
+				}else{
+					$print = 'P';
+				}
+
+				$this->printSummary($list, $print, "MIS");
 			}
 
 
@@ -666,8 +713,22 @@ class StockTakingController extends Controller{
 
 	public function reprintIdSoc(Request $request){
 		$id = $request->get('id');
+		$printer_name = $request->get('printer_name');
 
 		try {
+
+			$whereID = '';
+			$list_id = array();
+			for ($i=0; $i < count($id); $i++) {
+				array_push($list_id, $id[$i][0]); 
+				$whereID = $whereID."'".$id[$i][0]."'";
+				if($i != (count($id)-1)){
+					$whereID = $whereID.',';
+				}
+			}
+
+
+
 			$lists = db::select("SELECT
 				s.id,
 				s.store, 
@@ -689,24 +750,27 @@ class StockTakingController extends Controller{
 				LEFT JOIN materials m ON m.material_number = s.material_number
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 				LEFT JOIN material_volumes v ON v.material_number = s.material_number
-				WHERE s.id = ".$id."
+				WHERE s.id in (".$whereID.")
 				ORDER BY s.store, s.id ASC");
 
-			$stores = StocktakingList::where('store', $lists[0]->store)->get();
+			$update = StocktakingList::whereIn('id', $list_id)->update(['print_status' => 1]);
 
-			$number = 0;
-			foreach ($stores as $store) {
-				$number++;
-				if($store->id == $lists[0]->id){
-					break;
-				}
-			}
+			// $stores = StocktakingList::where('store', $lists[0]->store)->get();
 
+			// $number = 0;
+			// foreach ($stores as $store) {
+			// 	$number++;
+			// 	if($store->id == $lists[0]->id){
+			// 		break;
+			// 	}
+			// }
+
+			$index = 0;
 			foreach ($lists as $list) {
-				$this->printSummary($list, $number);
+				$this->printSummary($list, $id[$index][1], $printer_name);
+				$index++;
 			}
-
-
+			
 			$response = array(
 				'status' => true,
 				'message' => 'Print Successful'
@@ -723,7 +787,7 @@ class StockTakingController extends Controller{
 
 	}
 
-	public function printSummary($list, $number){
+	public function printSummary($list, $print, $printer_name){
 		$printer_name = 'MIS';
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
@@ -802,7 +866,11 @@ class StockTakingController extends Controller{
 
 		$printer->setTextSize(1, 1);
 		$printer->setJustification(Printer::JUSTIFY_RIGHT);
-		$printer->text("(".$number.")".str_repeat(" ", 22).Carbon::now()."\n");
+		if($print == 'P'){
+			$printer->text("Print at " . Carbon::now());
+		}else{
+			$printer->text("Reprint at " . Carbon::now());
+		}
 		$printer->feed(1);
 		$printer->cut();
 		$printer->close();
@@ -1533,24 +1601,43 @@ class StockTakingController extends Controller{
 			$condition = $condition. ' ' .$store;
 		}
 
-		$data = db::select("SELECT s.id, sl.area AS `group`, s.location, s.store, s.category, s.material_number, mpdl.material_description, mpdl.bun AS uom FROM stocktaking_lists s
+		$data = db::select("SELECT s.id, sl.area AS `group`, s.print_status, s.location, s.store, s.category, s.material_number, mpdl.material_description, mpdl.bun AS uom FROM stocktaking_lists s
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
 			".$condition." 
 			ORDER BY sl.area, s.location, s.store, s.category, s.material_number ASC");
 
-		return DataTables::of($data)
-		->addColumn('delete', function($data){
-			return '<button style="width: 50%; height: 100%;" onclick="deleteMaterial(\''.$data->id.'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-trash"></i></span></button>';
-		})
-		->addColumn('reprint', function($data){
-			return '<button style="width: 50%; height: 100%;" onclick="reprintID(\''.$data->id.'\')" class="btn btn-xs btn-primary form-control"><span><i class="fa fa-print"></i></span></button>';
-		})
-		->rawColumns([
-			'reprint' => 'reprint',
-			'delete' => 'delete'
-		])
-		->make(true);
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
+
+
+		// return DataTables::of($data)
+		// ->addColumn('delete', function($data){
+		// 	return '<button style="width: 75%; height: 100%; vertical_align: middle;" onclick="deleteMaterial(\''.$data->id.'\')" class="btn btn-sm btn-danger form-control"><span><i class="fa fa-trash"></i> Delete</span></button>';
+		// })
+		// ->addColumn('print', function($data){
+		// 	if($data->print_status == 0){
+		// 		return '<span class="label label-sm label-primary">Print</span>';
+		// 	}else{
+		// 		return '<span class="label label-sm label-info">Rerint</span>';
+		// 	}
+		// })
+		// ->addColumn('check', function($data){
+		// 	if($data->print_status == 0){
+		// 		return '<input class="minimal" type="checkbox" id="'.$data->id.'+R'.'" onclick="showSelected(this)">';
+		// 	}else{
+		// 		return '<input class="minimal" type="checkbox" id="'.$data->id.'+RP'.'" onclick="showSelected(this)">';
+		// 	}
+		// })
+		// ->rawColumns([
+		// 	'check' => 'check',
+		// 	'print' => 'print',
+		// 	'delete' => 'delete'
+		// ])
+		// ->make(true);
 	}
 
 	public function fetchPiVsBook(Request $request){

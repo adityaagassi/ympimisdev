@@ -63,18 +63,20 @@
 		<div class="col-xs-3" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 
-			@if(in_array('S36', $navs))
 			<a id="manage_store" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Manage Store</a>
+
+			@if(in_array('S36', $navs))	
 			<a id="summary_of_counting" href="{{ url("index/stocktaking/summary_of_counting") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Summary of Counting</a>
 			@endif
+			
 
 			<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input No Use</a>
 			<a id="input_pi" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input PI</a>
 			<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 1</a>
 
-			@if(in_array('S36', $navs))			
+			@if(in_array('S36', $navs))	
 			{{-- <a id="audit2" href="{{ url("index/stocktaking/audit/"."2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 2</a> --}}
-			<a id="breakdown" href="javascript:void(0)" onClick="countPI()" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Breakdown PI</a>
+			<a id="breakdown" data-toggle="modal" data-target="#modalBreakdown" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Breakdown PI</a>
 			<a id="revise" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
 			
 			@endif
@@ -224,14 +226,27 @@
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
-					<div class="modal-body table-responsive no-padding">
+					<div class="col-xs-12" style="background-color: #00a65a;">
+						<h2 style="text-align: center; margin: 2%; font-weight: bold;">Breakdown PI</h2>
+					</div>
+
+					<div class="col-xs-12" style="margin-top: 3%;">
 						<div class="form-group">
-							<label for="exampleInputEmail1">Select Group</label>
-							<div class="input-group">
-								<input style="text-align: center;" type="text" class="form-control datepicker" onchange="monthChange()" name="month" id="month" placeholder="Select Month" readonly>
-							</div>
+							<label>Select Group</label><br>
+
+							<label><input type="checkbox" class="minimal" id="ASSEMBLY">&nbsp;&nbsp;Assembly</label><br>
+							<label><input type="checkbox" class="minimal" id="ST">&nbsp;&nbsp;Surface Treatment</label><br>
+							<label><input type="checkbox" class="minimal" id="WELDING">&nbsp;&nbsp;Welding</label><br>
+							<label><input type="checkbox" class="minimal" id="PP">&nbsp;&nbsp;Parts Process</label><br>
+							<label><input type="checkbox" class="minimal" id="EI">&nbsp;&nbsp;Educational Instrument</label><br>
+							<label><input type="checkbox" class="minimal" id="WAREHOUSE">&nbsp;&nbsp;Warehouse</label><br>
+							<label><input type="checkbox" class="minimal" id="FG">&nbsp;&nbsp;Finished Goods</label>
 						</div>
 					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success" onclick="countPI()"><i class="fa fa-play"></i> 	Start</button>
 				</div>
 			</div>
 		</div>
@@ -246,6 +261,7 @@
 <script src="{{ url("js/highcharts-3d.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="{{ url("js/icheck.min.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -256,6 +272,10 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+
+		$('input[type="checkbox"].minimal').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue'
+		});
 
 		$('.datepicker').datepicker({
 			<?php $tgl_max = date('Y-m') ?>
@@ -275,11 +295,9 @@
 
 		filledList();
 		auditedList();
-		variance();
 
 		setInterval(filledList, 60000);
 		setInterval(auditedList, 60000);
-		// setInterval(variance, 600000);
 
 	});
 
@@ -381,7 +399,7 @@
 
 				filledList();
 				auditedList();
-				variance();
+				// variance();
 
 				$('#month_text').text(bulanText(month));
 				$('#modalMonth').modal('hide');
@@ -419,21 +437,74 @@
 		return bulanText[bulan-1]+" "+tahun;
 	}
 
+	$("#modalBreakdown").on("hidden.bs.modal", function () {
+		$('#ASSEMBLY').iCheck('uncheck');
+		$('#ST').iCheck('uncheck');
+		$('#WELDING').iCheck('uncheck');
+		$('#PP').iCheck('uncheck');
+		$('#EI').iCheck('uncheck');
+		$('#WAREHOUSE').iCheck('uncheck');
+		$('#FG').iCheck('uncheck');
+	});
+
 
 	function countPI() {
 		$("#loading").show();
+		var group = [];
 
-		$.get('{{ url("index/stocktaking/count_pi") }}', function(result, status, xhr){
-			if(result.status){
-				$("#loading").hide();
-				variance();
-				openSuccessGritter('Success', result.message);
-			}else{
-				$("#loading").hide();
-				openErrorGritter('Error', result.message);
+		if($('#ASSEMBLY').is(":checked")){
+			group.push('ASSEMBLY');
+		}
+		if($('#ST').is(":checked")){
+			group.push('ST');
+		}
+		if($('#WELDING').is(":checked")){
+			group.push('WELDING');
+		}
+		if($('#PP').is(":checked")){
+			group.push('PP');
+		}
+		if($('#EI').is(":checked")){
+			group.push('EI');
+		}
+		if($('#WAREHOUSE').is(":checked")){
+			group.push('WAREHOUSE');
+		}
+		if($('#FG').is(":checked")){
+			group.push('FINISHED GOODS');
+		}
+
+
+		if(group.length > 0){
+			var data = {
+				group : group
 			}
 
-		});
+			$.post('{{ url("index/stocktaking/count_pi") }}', data, function(result, status, xhr){
+				if(result.status){
+					$("#loading").hide();
+					$("#modalBreakdown").modal('hide');
+
+					$('#ASSEMBLY').iCheck('uncheck');
+					$('#ST').iCheck('uncheck');
+					$('#WELDING').iCheck('uncheck');
+					$('#PP').iCheck('uncheck');
+					$('#EI').iCheck('uncheck');
+					$('#WAREHOUSE').iCheck('uncheck');
+					$('#FG').iCheck('uncheck');
+
+					// variance();
+					openSuccessGritter('Success', result.message);
+				}else{
+					$("#loading").hide();
+					openErrorGritter('Error', result.message);
+				}
+
+			});
+		}else{
+			$("#loading").hide();
+			openErrorGritter('Error', 'Select Group');
+		}		
 	}
 
 
@@ -462,7 +533,7 @@
 
 					Highcharts.chart('container', {
 						chart: {
-							height: 300,
+							height: 225,
 							type: 'column',
 							backgroundColor: {
 								linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
@@ -649,7 +720,7 @@
 
 					Highcharts.chart('container1', {
 						chart: {
-							height: 300,
+							height: 225,
 							type: 'column',
 							backgroundColor: {
 								linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
@@ -805,7 +876,7 @@
 
 					Highcharts.chart('container2', {
 						chart: {
-							height: 300,
+							height: 225,
 							type: 'column',
 							backgroundColor: {
 								linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
