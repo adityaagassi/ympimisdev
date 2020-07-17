@@ -155,7 +155,7 @@
 
 	<div class="row" style="padding-top:0px">
 		<div class="col-xs-12">
-			<div class="box">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-3" style="padding:0">
 						<div class="col-xs-12">
@@ -1908,8 +1908,8 @@
 		}
 		else{
 			if (parseFloat(x) < batas_bawah2 || parseFloat(x) > parseFloat(batas_atas2)) {
-				$(id2).html('NG');
-				document.getElementById(id3).style.backgroundColor = "#ff9494";
+				$(id2).html('OK');
+				document.getElementById(id3).style.backgroundColor = "#fcdf03";
 			}else{
 				$(id2).html('OK');
 				document.getElementById(id3).style.backgroundColor = "#7fff6e";
