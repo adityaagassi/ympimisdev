@@ -189,7 +189,7 @@
                   <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center">Deskripsi</td>
                   <td colspan="4"><?= $cars->deskripsi ?></td>
                   <td colspan="1">
-                      @if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator)
+                      @if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator || $user == "PI9707010")
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -255,7 +255,7 @@
                   <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center">Tindakan</td>
                   <td colspan="4"><?= $cars->tindakan ?></td>
                   <td colspan="1">
-                  	@if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator)
+                  	@if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator || $user == "PI9707010")
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -319,7 +319,7 @@
                   <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center">Penyebab</td>
                   <td colspan="4"><?= $cars->penyebab ?></td>
                   <td colspan="1">
-                  	@if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator)
+                  	@if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator || $user == "PI9707010")
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
@@ -385,7 +385,7 @@
                   <td colspan="1" style="font-size: 20px;font-weight: bold;text-align: center;">Perbaikan</td>
                   <td colspan="4"><?= $cars->perbaikan ?></td>
                   <td colspan="1">
-                  	@if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator)
+                  	@if($user == $cars->verifikatorchief || $user == $cars->verifikatorforeman || $user == $cars->verifikatorcoordinator || $user == "PI9707010")
                         @if($cars->posisi == "chief" || $cars->posisi == "foreman2" || $cars->posisi == "coordinator")
                           @if($cars->checked_chief == NULL || $cars->checked_coordinator == NULL || $cars->checked_foreman == NULL)
                             <div class="custom-control custom-checkbox" style="text-align: center">
