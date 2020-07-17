@@ -206,9 +206,9 @@ class ProductionReportController extends Controller
         $data[] = db::select("SELECT
             monthly.leader_name,
             monthly.jumlah_activity_monthly,
-            monthly.jumlah_training + monthly.jumlah_laporan_aktivitas + monthly.jumlah_labeling + monthly.jumlah_interview + monthly.jumlah_first_product_audit + monthly.jumlah_jishu_hozen AS jumlah_monthly,
+            monthly.jumlah_training + monthly.jumlah_laporan_aktivitas + monthly.jumlah_labeling + monthly.jumlah_interview + monthly.jumlah_first_product_audit + monthly.jumlah_jishu_hozen+ monthly.jumlah_cek_apd_bulanan AS jumlah_monthly,
             COALESCE (((
-                        monthly.jumlah_training + monthly.jumlah_laporan_aktivitas + monthly.jumlah_labeling + monthly.jumlah_interview + monthly.jumlah_first_product_audit + monthly.jumlah_jishu_hozen 
+                        monthly.jumlah_training + monthly.jumlah_laporan_aktivitas + monthly.jumlah_labeling + monthly.jumlah_interview + monthly.jumlah_first_product_audit + monthly.jumlah_jishu_hozen + monthly.jumlah_cek_apd_bulanan
                         )/ monthly.jumlah_activity_monthly 
                     )* 100,
                 0 
@@ -355,7 +355,25 @@ class ProductionReportController extends Controller
                         jishu_hozens.leader 
                         ),
                     0 
-                ) AS jumlah_jishu_hozen 
+                ) AS jumlah_jishu_hozen,
+                COALESCE ((
+                    SELECT
+                        count(
+                        DISTINCT ( leader )) AS jumlah_cek_apd_bulanan
+                    FROM
+                        apd_checks
+                        JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
+                    WHERE
+                        DATE_FORMAT(apd_checks.created_at,'%Y-%m') = '".$bulan."' 
+                        AND actlist.frequency = 'Monthly' 
+                        AND apd_checks.leader = '".$dataleader."'
+                        AND apd_checks.deleted_at IS NULL 
+                        AND actlist.department_id = '".$id."'  
+                    GROUP BY
+                        apd_checks.leader 
+                        ),
+                    0 
+                ) AS jumlah_cek_apd_bulanan
             FROM
                 activity_lists 
             WHERE
@@ -853,7 +871,16 @@ class ProductionReportController extends Controller
                                 and jishu_hozens.leader = '".$leader_name."'
                                 and actlist.id = id_activity
                                 and actlist.department_id = '".$id."'
-                    and actlist.frequency = '".$frequency."'),0))))))))))
+                    and actlist.frequency = '".$frequency."'),
+            IF(activity_type = 'Cek APD',
+            (select count(DISTINCT(apd_checks.leader)) as jumlah_apd_check
+                from apd_checks
+                    join activity_lists as actlist on actlist.id = activity_list_id
+                    where DATE_FORMAT(apd_checks.created_at,'%Y-%m') = '".$week_date."'
+                                and apd_checks.leader = '".$leader_name."'
+                                and actlist.id = id_activity
+                                and actlist.department_id = '".$id."'
+                    and actlist.frequency = '".$frequency."'),0)))))))))))
             jumlah_aktual
                 from activity_lists
                         where leader_dept = '".$leader_name."'
