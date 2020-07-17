@@ -106,7 +106,7 @@ class RecorderProcessController extends Controller
 
 	public function index_push_block($remark){
 		$name = Auth::user()->name;
-		return view('recorder.process.index_push_block')
+		return view('recorder.process.index_push_block2')
     ->with('page', 'Process Assy Recorder')
     ->with('head', 'Recorder Push Block Check')
     ->with('title', 'Recorder Push Block Check')
@@ -119,6 +119,8 @@ class RecorderProcessController extends Controller
     ->with('batas_bawah', '3')
     ->with('batas_atas', '17')
     ->with('batas_tinggi', '0.2')
+    ->with('batas_bawah2', '5.6')
+    ->with('batas_atas2', '15.8')
     ->with('remark', $remark);
 	}
 
@@ -2516,6 +2518,54 @@ class RecorderProcessController extends Controller
               );
               return Response::json($response);
             }
+    }
+
+    public function import_push_block(Request $request)
+    {
+        // if($request->hasFile('upload_file')) {
+          try{
+            $push_block_id_gen = $request->get('push_block_id_gen2');
+            $file = $request->file('file');
+            $file_name = md5(date("dmYhisA")).'.'.$file->getClientOriginalExtension();
+            $file->move('data_file/recorder/push_block_recorder', $file_name);
+
+            $excel = 'data_file/recorder/push_block_recorder/' . $file_name;
+            $rows = Excel::load($excel, function($reader) {
+              $reader->noHeading();
+              //Skip Header
+              $reader->skipRows(6);
+            })->get();
+            $rows = $rows->toArray();
+
+            $temp = PushBlockRecorderTemp::where('push_block_id_gen',$push_block_id_gen)->get();
+
+            $batas_atas = 17;
+            $batas_bawah = 3;
+
+            for ($i=0; $i < count($rows); $i++) {
+              $temptemp = PushBlockRecorderTemp::find($temp[$i]->id);
+              $temptemp->push_pull = $rows[$i][1];
+              if ($rows[$i][1] < $batas_bawah || $rows[$i][1] > $batas_atas) {
+                $temptemp->judgement = 'NG';
+              }else{
+                $temptemp->judgement = 'OK';
+              }
+              $temptemp->save();
+            }   
+
+            $response = array(
+              'status' => true,
+              'message' => 'Upload file success',
+            );
+            return Response::json($response);
+
+          }catch(\Exception $e){
+            $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+          }
     }
 }
   
