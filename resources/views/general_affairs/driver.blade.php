@@ -74,7 +74,7 @@
 			<table class="table table-hover table-bordered table-striped" id="tableRequest">
 				<thead style="background-color: rgba(126,86,134); color: white;">
 					<tr>
-						<th colspan="7">REQUEST LIST ()</th>
+						<th colspan="7">REQUEST LIST (ドライバー予約の一覧)</th>
 					</tr>
 					<tr>
 						<th style="width: 1%;">ID</th>
@@ -95,7 +95,7 @@
 			<table class="table table-hover table-bordered table-striped" id="tableDuty">
 				<thead style="background-color: #ff851b; color: white;">
 					<tr>
-						<th colspan="7">DRIVER ON DUTY ()</th>
+						<th colspan="7">DRIVER ON DUTY (使用中のドライバー)</th>
 					</tr>
 					<tr>
 						{{-- <th style="width: 1%;">ID</th> --}}
@@ -490,6 +490,8 @@
 			defaultTime: '00:00',
 			timeFormat: 'h:mm'
 		});
+		setInterval(fetchRequest, 30000);
+		setInterval(fetchDriverDuty, 30000);
 	});
 
 	var passenger = [];
@@ -672,11 +674,11 @@
 		if(purpose != '' && destination_city != '' && $('#createStart').val() != '' && $('#createEnd').val() != '' && passenger.length > 0 && destination.length > 0){
 			$.post('{{ url("create/ga_control/driver_request") }}', data, function(result, status, xhr){
 				if(result.status){
-					// $('#modalCreate').modal('hide');
+					$('#modalCreate').modal('hide');
 					openSuccessGritter('Success!', result.message);
 					fetchDriver();
 					fetchRequest();
-					// clearAll();
+					clearAll();
 					$('#loading').hide();
 				}
 				else{
@@ -1020,8 +1022,12 @@ function fetchDetail(id,cat){
 	if(cat == 'new'){
 		$('#saveButton').hide();
 		$('#closeButton').hide();
+		$('#acceptButton').show();
+		$('#rejectButton').show();
 	}
 	else{
+		$('#saveButton').show();
+		$('#closeButton').show();
 		$('#acceptButton').hide();
 		$('#rejectButton').hide();	
 	}

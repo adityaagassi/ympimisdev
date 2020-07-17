@@ -164,18 +164,18 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span style="font-weight: bold;">General Affair (??)</span>
+                                    <span style="font-weight: bold;">General Affair (総務課)</span>
                                     <br>
                                     <a href="{{ url("index/ga_control/driver") }}">
-                                        <i class="fa fa-caret-right"></i> Driver Monitoring System (??)
+                                        <i class="fa fa-caret-right"></i> Driver Monitoring System (ドライバー管理システム)
                                     </a>
                                     <br>
-                                    <a href="{{ url("index/ga_control/driver") }}">
-                                        <i class="fa fa-caret-right"></i> Live Cooking Order (??)
+                                    <a href="#">
+                                        <i class="fa fa-caret-right"></i> Live Cooking Order (ライブクッキングの予約)
                                     </a>
                                     <br>
-                                    <a href="{{ url("index/ga_control/driver") }}">
-                                        <i class="fa fa-caret-right"></i> Japanese Food Order (??)
+                                    <a href="#">
+                                        <i class="fa fa-caret-right"></i> Japanese Food Order (和食弁当の予約)
                                     </a>
                                 </td>
                             </tr>

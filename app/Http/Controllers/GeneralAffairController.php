@@ -39,7 +39,7 @@ class GeneralAffairController extends Controller
 
 	public function indexDriver(){
 		$title = "Driver Monitoring System";
-		$title_jp = "";
+		$title_jp = "ドライバー管理システム";
 
 		$employees = EmployeeSync::orderBy('name', 'asc')->get();
 
