@@ -245,7 +245,7 @@
 						tableData += '<td>'+ value.status +'</td>';
 						if (value.remark == null) {
 							tableData += '<td style="'+bg+'"></td>';
-							tableData += '<td><a href="javascript:void(0)" data-toggle="modal-default" class="btn btn-sm btn-success" onClick="inputag2(id)" id="'+ value.id + '">Sudah Ditemui</a></td>';
+							tableData += '<td><a href="javascript:void(0)" data-toggle="modal-default" class="btn btn-sm btn-success" onClick="inputag2(id)" id="'+ value.id + '">Sudah Ditemui</a><a href="javascript:void(0)" data-toggle="modal-default" class="btn btn-sm btn-danger" onClick="inputag3(id)" id="'+ value.id + '">Belum Ditemui</a></td>';
 						}
 						else{
 							tableData += '<td style="'+bg+'">'+ value.remark +'</td>';
@@ -416,6 +416,32 @@
 			
 				var id = id;
 				var remark = 'Sudah Ditemui';
+				var data = {
+					id:id,
+					remark:remark
+				}
+				$.post('{{ url("visitor_updateremarkall") }}', data, function(result, status, xhr){
+					if(xhr.status == 200){
+						if(result.status){
+							reloadtable();						
+							openSuccessGritter('Success!', result.message);
+												
+						}
+						else{
+							openErrorGritter('Error!', result.message);
+							
+						}
+					}
+					else{
+						alert("Disconnected from server");
+					}
+				});
+		}
+
+		function inputag3(id) {
+			
+				var id = id;
+				var remark = 'Belum Ditemui';
 				var data = {
 					id:id,
 					remark:remark
