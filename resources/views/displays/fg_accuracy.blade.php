@@ -1243,7 +1243,8 @@ fillChart();
 								width: 2,
 								value: 0,
 								dashStyles: 'longdashdot'
-							}]
+							}],
+							min: -700
 						},
 						legend: {
 							layout: 'vertical',
