@@ -5,11 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MaintenanceJobProcess extends Model
+class MaintenanceInventory extends Model
 {
 	Use SoftDeletes;
 
 	protected $fillable = [
-		'order_no', 'operator_id', 'start_actual', 'finish_actual', 'remark', 'created_by'
+		'part_number', 'part_name', 'location', 'stock', 'uom', 'created_by'
 	];
 }

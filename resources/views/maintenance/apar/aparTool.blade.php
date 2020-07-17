@@ -150,10 +150,9 @@
 									<th style="width: 2%;">ID</th>
 									<th style="width: 10%;">Nama</th>
 									<th style="width: 2%;">Jenis</th>
-									<th style="width: 1%;">Kapasitas</th>
+									<th style="width: 1%;">Kapasitas (Kg)</th>
 									<th style="width: 5%;">Location</th>
 									<th style="width: 1%;">Item</th>
-									<th style="width: 1%;">Terakhir Cek</th>
 									<th style="width: 1%;">Tanggal Kadaluarsa</th>
 									<th style="width: 3%;">Aksi</th>
 								</tr>
@@ -232,7 +231,7 @@
 							<div class="form-group row" align="right">
 								<label class="col-xs-4" style="margin-top: 1%;">Extinguisher Location</label>
 								<div class="col-xs-8" align="left">
-									<select class="form-control select2" data-placeholder="Pilih Lokasi" id="extinguisher_location1" onchange="location_change(this,'#extinguisher_location2')">
+									<select class="form-control select2" data-placeholder="Pilih Lokasi" id="extinguisher_location1" onchange="location_change(this,'#extinguisher_location2', null)">
 										<option></option>
 										<option value="Factory I">Factory I</option>
 										<option value="Factory II">Factory II</option>
@@ -296,28 +295,38 @@
 						<div class="form-group row" align="right">
 							<label class="col-xs-4" style="margin-top: 1%;">Type</label>
 							<div class="col-xs-4" align="left">
-								<input type="text" class="form-control" id="edit_type">
+								<select class="form-control select3" data-placeholder="Pilih Jenis Pemadam" id="edit_type">
+								</select>
 							</div>
 						</div>
 
 						<div class="form-group row" align="right">
 							<label class="col-xs-4" style="margin-top: 1%;">Capacity</label>
 							<div class="col-xs-4" align="left">
-								<input type="text" class="form-control" id="edit_capacity">
+								<div class="input-group">
+									<input type="text" class="form-control" id="edit_capacity">
+									<span class="input-group-addon">Kg</span>
+								</div>
 							</div>
 						</div>
 
 						<div class="form-group row" align="right" style="margin-bottom: 5px !important">
 							<label class="col-xs-4" style="margin-top: 1%;">Location</label>
 							<div class="col-xs-4" align="left">
-								<input type="text" class="form-control" id="edit_location1">
+								<select class="form-control select3" data-placeholder="Pilih Lokasi" id="edit_location1">
+									<option></option>
+									<option value="Factory I">Factory I</option>
+									<option value="Factory II">Factory II</option>
+								</select>
 							</div>
 						</div>
 
 						<div class="form-group row" align="right">
 							<label class="col-xs-4" style="margin-top: 1%;"> </label>
 							<div class="col-xs-4" align="left">
-								<input type="text" class="form-control" id="edit_location2">
+								<select class="form-control select3" data-placeholder="Pilih Lokasi" id="edit_location2">
+									<option></option>
+								</select>
 							</div>
 							
 						</div>
@@ -329,12 +338,25 @@
 							</div>
 						</div>
 
+						<div class="form-group row" align="right">
+							<label class="col-xs-4" style="margin-top: 1%;">APAR Type</label>
+							<div class="col-xs-8" align="left">
+								<div class="input-group">
+									<select class="form-control select3" id="edit_type_apar">
+										<option></option>
+										<option value="A">APAR</option>
+										<option value="T">Termathic</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
 					</div>
 				</div>
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success pull-left" onclick="saveExtinguisher()"><i class="fa fa-check"></i> Save</button>
+				<button type="button" class="btn btn-success pull-left" onclick="EditExtinguisher()"><i class="fa fa-check"></i> Edit</button>
 				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 			</div>
 		</div>
@@ -386,10 +408,9 @@
 		})
 		$("#location").append(lks);
 		$("#extinguisher_location2").append(lks);
-
 	});
 
-	function location_change(elem, target) {
+	function location_change(elem, target, selected) {
 		var area = $(elem).val();
 
 		$(target).empty();
@@ -397,7 +418,12 @@
 		$.each(lokasi, function(index, value){
 			if (area) {
 				if (value.location == area) {
-					lks += "<option value='"+value.group+"'>"+value.group+"</option>";
+					if (selected && selected == value.group) {
+						lks += "<option value='"+value.group+"' selected>"+value.group+"</option>";
+						console.log('tes');
+					} else {
+						lks += "<option value='"+value.group+"'>"+value.group+"</option>";
+					}
 				}
 			} else {
 				lks += "<option value='"+value.group+"'>"+value.group+"</option>";
@@ -428,7 +454,7 @@
 			tags: true
 		});
 
-		$('#extinguisher_exp').datepicker({
+		$('#extinguisher_exp, #edit_exp').datepicker({
 			autoclose: true,
 			todayHighlight: true,
 			format: 'yyyy-mm-dd',
@@ -440,7 +466,8 @@
 			width: '100%',
 		});
 
-		$('.select2').select2({
+		$('.select3').select2({
+			dropdownParent: $('#editModal'),
 			dropdownAutoWidth : true,
 			width: '100%',
 		});
@@ -466,9 +493,8 @@
 				body += "<td>"+value.capacity+"</td>";
 				body += "<td>"+value.location+" - "+value.group+"</td>";
 				body += "<td>"+value.remark+"</td>";
-				body += "<td>"+(value.last_check || "-")+"</td>";
 				body += "<td>"+value.exp_date2+"</td>";
-				body += "<td><button class='btn btn-xs btn-warning' onclick='edit(\""+value.utility_code+"\", this)'>Edit</button>&nbsp;<button class='btn btn-xs btn-danger'>Delete</button></td>";
+				body += "<td><button class='btn btn-xs btn-warning' onclick='edit(\""+value.utility_code+"\", this)'>Edit</button>&nbsp;<button class='btn btn-xs btn-danger' onclick='delete_item(\""+value.utility_code+"\")'>Delete</button><input type='hidden' id='"+value.utility_code+"' value='"+value.order+"'></td>";
 				body += "</tr>";
 			})
 
@@ -590,16 +616,55 @@
 			});
 
 			$("#editModal").modal('show');
-			console.log(elm);
-
+			
 			$("#edit_code").val(elm[0]);
 			$("#edit_name").val(elm[1]);
-			$("#edit_type").val(elm[2]);
+
+			var type_apar = $('#'+elm[0]).val();
+			$("#edit_type_apar").val(type_apar).trigger("change");
+
+			$("#edit_type").empty();
+			var tipe = '<option></option>';
+
+			var arr_tipe = <?php echo json_encode($types) ?>;
+
+			$.each(arr_tipe, function(index, value){
+				if (elm[2] == value.type) {
+					tipe += '<option value="'+value.type+'" selected>'+value.type+'</option>';
+				} else {
+					tipe += '<option value="'+value.type+'">'+value.type+'</option>';
+				}
+			})
+
+			$("#edit_type").append(tipe);
 			$("#edit_capacity").val(elm[3]);
-			$("#edit_location1").val(elm[4].split(" - ")[0]);
-			$("#edit_location2").val(elm[4].split(" - ")[1]);
-			$("#edit_exp").val(elm[7]);
+
+			$('#edit_location1 > option').each(function() {
+				if ($(this).val() == elm[4].split(" - ")[0]) {
+					$(this).attr("selected","selected");
+				}
+			});
+
+			$("#edit_location2").empty();
+
+			$("#edit_location1").on("change", function(event) { 
+				location_change(this,'#edit_location2', elm[4].split(" - ")[1]);
+			} );
+
+			$('#edit_location1').trigger("change");
+
+			
+			var dt = elm[6].split(" ");
+
+			exp_date = dt[2]+"-"+pad((parseInt(monthNames.indexOf(dt[1])) + 1), 2)+"-"+dt[0];
+
+			// $("#edit_exp").val(exp_date);
+
+			var datepicker = $('#edit_exp');
+			datepicker.datepicker();
+			datepicker.datepicker('setDate', exp_date);
 		}
+
 
 		function type_change(elem) {
 			var params = $(elem).val();
@@ -636,9 +701,73 @@
 			}
 
 			$.post('{{ url("post/maintenance/apar/insert") }}', data, function(result, status, xhr){
+				if (result.status) {
+					openSuccessGritter('Success', 'Inserted Successfully');
 
+					$("#modalCreate").modal('hide');
+					searching();
+				} else {
+					openErrorGritter('Error', result.message);
+				}
 			})
 		}
+
+		function EditExtinguisher() {
+			var data = {
+				edit_code : $("#edit_code").val(),
+				edit_name : $("#edit_name").val(),
+				edit_type : $("#edit_type").val(),
+				edit_capacity : $("#edit_capacity").val(),
+				edit_location1 : $("#edit_location1").val(),
+				edit_location2 : $("#edit_location2").val(),
+				edit_exp : $("#edit_exp").val(),
+			}
+
+			$.post('{{ url("post/maintenance/apar/update") }}', data, function(result, status, xhr){
+				if (result.status) {
+					openSuccessGritter('Success', 'Updated Successfully');
+
+					$("#editModal").modal('hide');
+
+					searching();
+				} else {
+					openErrorGritter('Error', result.message);
+				}
+			})
+		}
+
+		function delete_item(kode) {
+			if (confirm('Apakah Anda yakin ingin menghapus Item "'+kode+'" ?')) {
+				console.log("OK");
+			}
+		}
+
+		function pad (str, max) {
+			str = str.toString();
+			return str.length < max ? pad("0" + str, max) : str;
+		}
+
+		function openSuccessGritter(title, message){
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-success',
+				image: '{{ url("images/image-screen.png") }}',
+				sticky: false,
+				time: '3000'
+			});
+		}
+
+		function openErrorGritter(title, message) {
+			jQuery.gritter.add({
+				title: title,
+				text: message,
+				class_name: 'growl-danger',
+				image: '{{ url("images/image-stop.png") }}',
+				sticky: false,
+				time: '3000'
+			});
+		}	
 
 	</script>
 	@endsection

@@ -22,8 +22,8 @@ use App\Utility;
 use App\UtilityCheck;
 use App\UtilityUse;
 use App\UtilityOrder;
-// use Intervention\Image\ImageManagerStatic as Image;
-// use Intervention\Image\Facades\Image;
+use App\MaintenanceInventory;
+use App\MaintenanceInventoryLog;
 
 use App\Http\Controllers\Controller;
 
@@ -47,6 +47,19 @@ class MaintenanceController extends Controller
 			['type' => 'CO2', 'valid' => 5],
 			['type' => 'foam', 'valid' => 3]
 		];
+
+		$this->uom = ['Pcs'];
+
+
+		$this->inv_ctg = MaintenanceInventory::select("category")
+		->groupBy('category')
+		->orderBy('category', 'asc')
+		->get();
+
+		$this->inv_rack = MaintenanceInventory::select("location")
+		->groupBy('location')
+		->orderBy('location', 'asc')
+		->get();
 	}
 
 	// -----------------------  START INDEX --------------------
@@ -306,6 +319,31 @@ class MaintenanceController extends Controller
 		))->with('page', 'APAR NG')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
+	public function indexInventory()
+	{
+		$title = 'Maintenance Spare Part Inventories';
+		$title_jp = '??';
+
+		return view('maintenance.inventory', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'uom_list' => $this->uom,
+			'category_list' => $this->inv_ctg,
+			'rack_list' => $this->inv_rack
+		))->with('page', 'Spare Part')->with('head', 'Maintenance');
+	}
+
+	public function indexInventoryTransaction($stat)
+	{
+		$title = 'Maintenance Inventories Transaction';
+		$title_jp = '??';
+
+		return view('maintenance.inventory_transaction', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Spare Part Transaction')->with('head', 'Maintenance');
+	}
+
 	// -----------------------  END INDEX --------------------
 
 	public function fetchMaintenance(Request $request)
@@ -508,75 +546,75 @@ class MaintenanceController extends Controller
 		return Response::json($response);
 	}
 
-	// public function fetchMaintenanceList(Request $request)
-	// {
-	// 	DB::connection()->enableQueryLog();
-	// 	$maintenance_job_orders = MaintenanceJobOrder::leftJoin(db::raw("(select process_code, process_name from processes where remark = 'maintenance') AS process"), "maintenance_job_orders.remark", "=", "process.process_code")
-	// 	->leftJoin("maintenance_job_processes", "maintenance_job_processes.order_no", "=", "maintenance_job_orders.order_no")
-	// 	->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "maintenance_job_orders.created_by")
-	// 	->leftJoin(db::raw("employee_syncs AS es"), "es.employee_id", "=", "maintenance_job_orders.approved_by")
-	// 	->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "machine_condition", "danger", "target_date", db::raw("employee_syncs.`name` as requester"), db::raw("es.`name` as operator"), db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "process_name", "maintenance_job_orders.remark", "maintenance_job_orders.category", "start_actual", "finish_actual");
+	public function fetchMaintenanceList(Request $request)
+	{
+		DB::connection()->enableQueryLog();
+		$maintenance_job_orders = MaintenanceJobOrder::leftJoin(db::raw("(select process_code, process_name from processes where remark = 'maintenance') AS process"), "maintenance_job_orders.remark", "=", "process.process_code")
+		->leftJoin("maintenance_job_processes", "maintenance_job_processes.order_no", "=", "maintenance_job_orders.order_no")
+		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "maintenance_job_orders.created_by")
+		->leftJoin(db::raw("employee_syncs AS es"), "es.employee_id", "=", "maintenance_job_processes.operator_id")
+		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "machine_condition", "danger", "target_date", db::raw("employee_syncs.`name` as requester"), db::raw("es.`name` as operator"), db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "process_name", "maintenance_job_orders.remark", "maintenance_job_orders.category", "start_actual", "finish_actual");
 
-	// 	if(strlen($request->get('reqFrom')) > 0 ){
-	// 		$reqFrom = date('Y-m-d', strtotime($request->get('reqFrom')));
-	// 		$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '>=', $reqFrom);
-	// 	}
-	// 	if(strlen($request->get('reqTo')) > 0 ){
-	// 		$reqTo = date('Y-m-d', strtotime($request->get('reqTo')));
-	// 		$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '<=', $reqTo);
-	// 	}
-	// 	if(strlen($request->get('targetFrom')) > 0 ){
-	// 		$targetFrom = date('Y-m-d', strtotime($request->get('targetFrom')));
-	// 		$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '>=', $targetFrom);
-	// 	}
-	// 	if(strlen($request->get('targetTo')) > 0 ){
-	// 		$targetTo = date('Y-m-d', strtotime($request->get('targetTo')));
-	// 		$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '<=', $targetTo);
-	// 	}
-	// 	if(strlen($request->get('finFrom')) > 0 ){
-	// 		$finFrom = date('Y-m-d', strtotime($request->get('finFrom')));
-	// 		$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '>=', $finFrom);
-	// 	}
-	// 	if(strlen($request->get('finTo')) > 0 ){
-	// 		$finTo = date('Y-m-d', strtotime($request->get('finTo')));
-	// 		$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '<=', $finTo);
-	// 	}
-	// 	if(strlen($request->get('orderNo')) > 0 ){
-	// 		$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.order_no', '=', $request->get('orderNo'));
-	// 	}
-	// 	if(strlen($request->get('section')) > 0 ){
-	// 		$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.section', '=', $request->get('section'));
-	// 	}
-	// 	if(strlen($request->get('priority')) > 0 ){
-	// 		$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.priority', '=', $request->get('priority'));
-	// 	}
-	// 	if(strlen($request->get('workType')) > 0 ){
-	// 		$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.type', '=', $request->get('workType'));
-	// 	}
-	// 	if(strlen($request->get('remark')) > 0){
-	// 		if($request->get('remark') != 'all'){
-	// 			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.remark', '=', $request->get('remark'));
-	// 		}
-	// 	}else{
-	// 		$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.remark', '=', 2);
-	// 	}
-	// 	if(strlen($request->get('approvedBy')) > 0){
-	// 		$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.approved_by', '=', $request->get('approvedBy'));
-	// 	}
-	// 	if(strlen($request->get('username')) > 0){
-	// 		$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.created_by', '=', $request->get('username'));
-	// 	}
+		if(strlen($request->get('reqFrom')) > 0 ){
+			$reqFrom = date('Y-m-d', strtotime($request->get('reqFrom')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '>=', $reqFrom);
+		}
+		if(strlen($request->get('reqTo')) > 0 ){
+			$reqTo = date('Y-m-d', strtotime($request->get('reqTo')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '<=', $reqTo);
+		}
+		if(strlen($request->get('targetFrom')) > 0 ){
+			$targetFrom = date('Y-m-d', strtotime($request->get('targetFrom')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '>=', $targetFrom);
+		}
+		if(strlen($request->get('targetTo')) > 0 ){
+			$targetTo = date('Y-m-d', strtotime($request->get('targetTo')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '<=', $targetTo);
+		}
+		if(strlen($request->get('finFrom')) > 0 ){
+			$finFrom = date('Y-m-d', strtotime($request->get('finFrom')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '>=', $finFrom);
+		}
+		if(strlen($request->get('finTo')) > 0 ){
+			$finTo = date('Y-m-d', strtotime($request->get('finTo')));
+			$maintenance_job_orders = $maintenance_job_orders->where(db::raw('date(maintenance_job_orders.created_at)'), '<=', $finTo);
+		}
+		if(strlen($request->get('orderNo')) > 0 ){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.order_no', '=', $request->get('orderNo'));
+		}
+		if(strlen($request->get('section')) > 0 ){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.section', '=', $request->get('section'));
+		}
+		if(strlen($request->get('priority')) > 0 ){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.priority', '=', $request->get('priority'));
+		}
+		if(strlen($request->get('workType')) > 0 ){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.type', '=', $request->get('workType'));
+		}
+		if(strlen($request->get('remark')) > 0){
+			if($request->get('remark') != 'all'){
+				$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.remark', '=', $request->get('remark'));
+			}
+		}else{
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.remark', '=', 2);
+		}
+		if(strlen($request->get('approvedBy')) > 0){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.approved_by', '=', $request->get('approvedBy'));
+		}
+		if(strlen($request->get('username')) > 0){
+			$maintenance_job_orders = $maintenance_job_orders->where('maintenance_job_orders.created_by', '=', $request->get('username'));
+		}
 
-	// 	->orderBy('maintenance_job_orders.created_at', 'desc')
-	// 	->get();
+		$maintenance_job_orders = $maintenance_job_orders->orderBy('maintenance_job_orders.created_at', 'desc')
+		->get();
 
-	// 	$response = array(
-	// 		'status' => true,
-	// 		'tableData' => $maintenance_job_orders,
-	// 		'query' => DB::getQueryLog()
-	// 	);
-	// 	return Response::json($response);
-	// }
+		$response = array(
+			'status' => true,
+			'tableData' => $maintenance_job_orders,
+			'query' => DB::getQueryLog()
+		);
+		return Response::json($response);
+	}
 
 	public function fetchMaintenanceDetail(Request $request)
 	{
@@ -837,7 +875,7 @@ class MaintenanceController extends Controller
 			return Response::json( $response  );
 		}
 
-		
+
 	}
 	// --------------------------  APAR ----------------------
 
@@ -845,7 +883,7 @@ class MaintenanceController extends Controller
 	{
 		DB::connection()->enableQueryLog();
 
-		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', db::raw("TIMESTAMPDIFF(MONTH, exp_date, now()) as age_left"), 'remark', 'last_check');
+		$apars = Utility::select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', db::raw("TIMESTAMPDIFF(MONTH, exp_date, now()) as age_left"), 'remark', 'order');
 
 		if ($request->get('type')) {
 			$apars = $apars->where('remark', '=', $request->get('type'));
@@ -1210,7 +1248,7 @@ class MaintenanceController extends Controller
 			'status' => $hasil_check,
 			'remark' => $remark
 		];
-		
+
 		$pdf = \App::make('dompdf.wrapper');
 		$pdf->getDomPDF()->set_option("enable_php", true);
 		// $pdf->setPaper([0, 0, 141.732, 184.252], 'landscape');
@@ -1397,7 +1435,7 @@ class MaintenanceController extends Controller
 			group by wek) as datas on cal.wek = datas.wek');
 
 		$apar_total = db::select('select count(id) as total from utilities where location = "'.$loc.'" and remark = "APAR"');
-		
+
 		$response = array(
 			'status' => true,
 			'cek_week' => $cek_week,
@@ -1494,7 +1532,7 @@ class MaintenanceController extends Controller
 
 	public function check_apar_use(request $request)
 	{
-		
+
 		$use = new UtilityUse;
 
 		$use->utility_id = $request->get('utility_id');
@@ -1581,6 +1619,155 @@ class MaintenanceController extends Controller
 			$response = array(
 				'status' => false,
 				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchInventory(Request $request)
+	{
+		$inv = MaintenanceInventory::select('part_number', 'part_name', 'category', 'location', 'specification', 'maker', 'user', 'stock', 'uom', 'min_stock', 'max_stock', 'updated_at')->get();
+
+		$response = array(
+			'status' => true,
+			'inventory' => $inv
+		);
+		return Response::json($response);
+	}
+
+	public function fetchPartbyCode(Request $request)
+	{
+		try {
+			$inv_code = MaintenanceInventory::where('part_number', '=', $request->get('code'))->select('part_number', 'part_name', 'specification', 'stock', 'uom')->first();
+
+			$response = array(
+				'status' => true,
+				'datas' => $inv_code
+			);
+			return Response::json($response);
+		} catch (QueryException $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->gertMessage()
+			);
+			return Response::json($response);
+		}
+
+	}
+
+	public function postInventory(Request $request)
+	{
+		try {
+			$prt = $request->get('part');
+
+			if ($request->get('stat') == 'in') {
+				for ($i=0; $i < count($prt); $i++) { 
+					$inventory = MaintenanceInventory::where('part_number', $prt[$i][0])->first();
+
+					MaintenanceInventory::where('part_number', $prt[$i][0])
+					->update(['stock' => $inventory->stock + $prt[$i][1] ]);
+
+					$inv_log = new MaintenanceInventoryLog;
+					$inv_log->part_number = $prt[$i][0];
+					$inv_log->status = "in";
+					$inv_log->quantity = $prt[$i][1];
+					$inv_log->created_by = Auth::user()->username;
+					$inv_log->save();
+				}
+			} else {
+				for ($i=0; $i < count($prt); $i++) { 
+					$inventory = MaintenanceInventory::where('part_number', $prt[$i][0])->first();
+
+					MaintenanceInventory::where('part_number', $prt[$i][0])
+					->update(['stock' => $inventory->stock - $prt[$i][1] ]);
+
+					$inv_log = new MaintenanceInventoryLog;
+					$inv_log->part_number = $prt[$i][0];
+					$inv_log->status = "out";
+					$inv_log->quantity = $prt[$i][1];
+					$inv_log->created_by = Auth::user()->username;
+					$inv_log->save();
+				}
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Berhasil'
+			);
+			return Response::json($response);
+		} catch (QueryException $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inventory_save(Request $request)
+	{
+		$inv = new MaintenanceInventory;
+		$inv->part_number = $request->get('part_number');
+		$inv->item_number = $request->get('item_number');
+		$inv->part_name = $request->get('part_name');
+		$inv->category = $request->get('category');
+		$inv->specification = $request->get('specification');
+		$inv->maker = $request->get('maker');
+		$inv->location = $request->get('location');
+		$inv->stock = $request->get('stock');
+		$inv->min_stock = $request->get('min');
+		$inv->max_stock = $request->get('max');
+		$inv->uom = $request->get('uom');
+		$inv->user = $request->get('user');
+		$inv->created_by = Auth::user()->username;
+
+		$inv->save();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Berhasil'
+		);
+		return Response::json($response);
+	}
+
+	public function fetchInventoryPart(Request $request)
+	{
+		$inv_code = MaintenanceInventory::where('part_number', '=', $request->get('part_number'))->first();
+
+		$response = array(
+			'status' => true,
+			'message' => 'Berhasil',
+			'datas' => $inv_code
+		);
+		return Response::json($response);
+	}
+
+	public function inventory_edit(Request $request)
+	{
+		try {
+			MaintenanceInventory::where('part_number', $prt[$i][0])
+			->update([
+				'item_number' => $request->get('item_number'),
+				'part_name' => $request->get('part_name'),
+				'category' => $request->get('category'),
+				'specification' => $request->get('specification'),
+				'maker' => $request->get('maker'),
+				'location' => $request->get('location'),
+				'min_stock' => $request->get('min'),
+				'max_stock' => $request->get('max'),
+				'uom' => $request->get('uom'),
+				'user' => $request->get('user')
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Berhasil'
+			);
+			return Response::json($response);
+		} catch (QueryException $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
 			);
 			return Response::json($response);
 		}
