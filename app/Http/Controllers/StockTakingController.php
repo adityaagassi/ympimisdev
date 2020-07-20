@@ -1364,6 +1364,7 @@ class StockTakingController extends Controller{
 
 			$list = StocktakingList::where('created_by', 1)
 			->update([
+				'remark' => 'USE',
 				'print_status' => 0,
 				'process' => 0,
 				'quantity' => null,
