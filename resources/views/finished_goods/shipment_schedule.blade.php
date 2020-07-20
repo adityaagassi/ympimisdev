@@ -126,13 +126,14 @@
 										<th style="width: 1%;">By</th>
 										<th style="width: 5%;">Material</th>
 										<th style="width: 30%;">Desc</th>
+										<th style="width: 1%;">HPL</th>
 										<th style="width: 1%;">Plan</th>
 										<th style="width: 1%;">Act Prod.</th>
 										<th style="width: 1%;">Diff</th>
 										<th style="width: 1%;">Act Deliv.</th>
 										<th style="width: 1%;">Diff</th>
-										<th style="width: 15%;">Ship. Date</th>
-										<th style="width: 15%;">BL Date Plan</th>
+										<th style="width: 10%;">Ship. Date</th>
+										<th style="width: 10%;">BL Date Plan</th>
 										{{-- <th>BL Date Actual</th> --}}
 										{{-- <th style="width: 5%">Container ID</th> --}}
 									</tr>
@@ -141,6 +142,7 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -246,6 +248,7 @@
 						tableData += '<td>'+ value.shipment_condition_name +'</td>';
 						tableData += '<td>'+ value.material_number +'</td>';
 						tableData += '<td>'+ value.material_description +'</td>';
+						tableData += '<td>'+ value.hpl +'</td>';
 						tableData += '<td>'+ value.quantity +'</td>';
 						tableData += '<td>'+ value.quantity_production +'</td>';
 						tableData += '<td>'+ (value.quantity_production-value.quantity) +'</td>';
@@ -316,10 +319,6 @@
 								i : 0;
 							};
 							var api = this.api();
-							var totalPlan = api.column(7).data().reduce(function (a, b) {
-								return intVal(a)+intVal(b);
-							}, 0)
-							$(api.column(7).footer()).html(totalPlan.toLocaleString());
 							var totalPlan = api.column(8).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
@@ -336,9 +335,13 @@
 								return intVal(a)+intVal(b);
 							}, 0)
 							$(api.column(11).footer()).html(totalPlan.toLocaleString());
+							var totalPlan = api.column(12).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(12).footer()).html(totalPlan.toLocaleString());
 						},
 						"columnDefs": [ {
-							"targets": [9, 11],
+							"targets": [10, 12],
 							"createdCell": function (td, cellData, rowData, row, col) {
 								if ( cellData <  0 ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
