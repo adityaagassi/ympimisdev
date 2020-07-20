@@ -72,8 +72,8 @@ table.table-bordered > tfoot > tr > th{
                 <th>Leader</th>
                 <th>Foreman</th>
                 <th>Standard Time</th>
-                <th>Details</th>
                 <th>Action</th>
+                <!-- <th>Action</th> -->
               </tr>
             </thead>
             <tbody>
@@ -106,7 +106,7 @@ table.table-bordered > tfoot > tr > th{
                   <a class="btn btn-info btn-sm" href="{{url("index/jishu_hozen_point/index/".$activity_list->id)}}">Master Pengecekan</a>
                   @endif
                 </td>
-                <td>
+                <!-- <td>
                   <center>
                     <a class="btn btn-info btn-sm" href="{{url('index/activity_list/show', $activity_list->id)}}">View</a>
                     <a href="{{url('index/activity_list/edit_by_department/'.$activity_list->id.'/'.$activity_list->department_id.'/'.$no)}}" class="btn btn-warning btn-sm">Edit</a>
@@ -114,7 +114,7 @@ table.table-bordered > tfoot > tr > th{
                       Delete
                     </a>
                   </center>
-                </td>
+                </td> -->
               </tr>
               @endforeach
             </tbody>
@@ -129,7 +129,7 @@ table.table-bordered > tfoot > tr > th{
                 <th></th>
                 <th></th>
                 <th></th>
-                <th></th>
+                <!-- <th></th> -->
               </tr>
             </tfoot>
           </table>
