@@ -541,7 +541,7 @@ class MiraiMobileController extends Controller
 
  public function indication(){
   $tglnow = date('Y-m-d');
-  $q = "Select distinct question from quiz_logs where question <> 'Suhu Tubuh'";
+  $q = "Select distinct question from quiz_logs";
 
   return view('mirai_mobile.report_indication',  
     array(
@@ -556,7 +556,46 @@ public function fetchIndicationData(Request $request)
 {
   $tgl = date('Y-m-d', strtotime($request->get('tanggal')));
 
-  $q = "select quiz_logs.employee_id, quiz_logs.`name`, quiz_logs.`department`, date(quiz_logs.created_at) as date, sum(IF(question = 'Demam' and answer = 'iya', 1, 0)) as Demam, sum(IF(question = 'Batuk' and answer = 'iya', 1, 0)) as Batuk, sum(IF(question = 'Pusing' and answer = 'iya', 1, 0)) as Pusing, sum(IF(question = 'Tenggorokan Sakit' and answer = 'iya', 1, 0)) as Tenggorokan, sum(IF(question = 'Sesak Nafas' and answer = 'iya', 1, 0)) as Sesak, sum(IF(question = 'Indera Perasa & Penciuman Terganggu' and answer = 'iya', 1, 0)) as Indera, sum(IF(question = 'Pernah Berinteraksi dengan Suspect / Positif COVID-19' and answer = 'iya', 1, 0)) as Kontak from quiz_logs LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id WHERE keterangan IS NULL AND end_date IS NULL AND answer_date = '".$tgl."' group by employee_id, `name`, date(created_at),department order by date";
+  $q = "select
+  quiz_logs.employee_id,
+  quiz_logs.`name`,
+  quiz_logs.`department`,
+  date( quiz_logs.created_at ) AS date,
+  sum(
+  IF
+  ( question = 'Demam' AND answer = 'iya', 1, 0 )) AS Demam,
+  sum(
+  IF
+  ( question = 'Batuk' AND answer = 'iya', 1, 0 )) AS Batuk,
+  sum(
+  IF
+  ( question = 'Pusing' AND answer = 'iya', 1, 0 )) AS Pusing,
+  sum(
+  IF
+  ( question = 'Tenggorokan Sakit' AND answer = 'iya', 1, 0 )) AS Tenggorokan,
+  sum(
+  IF
+  ( question = 'Sesak Nafas' AND answer = 'iya', 1, 0 )) AS Sesak,
+  sum(
+  IF
+  ( question = 'Indera Perasa & Penciuman Terganggu' AND answer = 'iya', 1, 0 )) AS Indera,
+  sum(
+  IF
+  ( question = 'Pernah Berinteraksi dengan Suspect / Positif COVID-19' AND answer = 'iya', 1, 0 )) AS Kontak,
+  ROUND(REPLACE(REPLACE(GROUP_CONCAT(IF(question = 'Suhu Tubuh' AND answer IS NOT NULL, answer, 0 )), 0,''), ',', ''),1) AS Suhu 
+  FROM
+    quiz_logs
+    LEFT JOIN employees ON quiz_logs.employee_id = employees.employee_id 
+  WHERE
+    keterangan IS NULL 
+    AND end_date IS NULL 
+    AND answer_date = '".$tgl."'
+  GROUP BY
+    employee_id,
+    `name`,
+    date( created_at ),
+    department 
+  ORDER BY date";
 
    // having Demam = 1 or Batuk = 1 or Pusing = 1 or Tenggorokan = 1 or Sesak = 1 or Indera = 1 or Kontak = 1 
 

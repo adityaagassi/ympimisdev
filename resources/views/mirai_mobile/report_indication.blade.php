@@ -105,7 +105,7 @@
                 <th width="10%">Nama</th>
                 <th width="10%">Departemen</th>
                 @foreach($question as $qs)
-                <th width="10%">{{ $qs->question }}</th>
+                <th width="8%">{{ $qs->question }}</th>
                 @endforeach
                 <!-- <th width="10%">Gejala Sakit</th> -->
               </tr>
@@ -240,6 +240,18 @@
           }
           else{
             tableData += '<td>Tidak</td>';
+          }
+
+          if(value.Suhu != null) {
+            if (value.Suhu == 0) {
+              tableData += '<td>-</td>';
+            }
+            else{
+              tableData += '<td>'+value.Suhu+'</td>';    
+            }
+          }
+          else {
+            tableData += '<td>-</td>';
           }
 
           if (value.Kontak > 0) {
