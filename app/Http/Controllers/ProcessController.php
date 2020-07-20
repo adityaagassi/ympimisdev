@@ -545,9 +545,9 @@ class ProcessController extends Controller
 
 		if ($request->get('stamp_number_reprint') != null){
 			try {
-				$code_generator = CodeGenerator::where('note', '=', '041')->first();
-				$code_generator->index = $code_generator->index+1;
-				$code_generator->save();
+				// $code_generator = CodeGenerator::where('note', '=', '041')->first();
+				// $code_generator->index = $code_generator->index+1;
+				// $code_generator->save();
 
 				$printer_name = 'SUPERMAN';
 
