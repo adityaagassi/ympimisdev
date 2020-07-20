@@ -724,6 +724,7 @@
 					openSuccessGritter('Success!', result.message);
 					fetchDriver();
 					fetchRequest();
+					fetchDriverDuty();
 					clearAll();
 					$('#loading').hide();
 				}
