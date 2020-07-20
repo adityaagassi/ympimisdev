@@ -504,6 +504,7 @@
 		});
 		setInterval(fetchRequest, 30000);
 		setInterval(fetchDriverDuty, 30000);
+		setInterval(fetchDriver, 30000);
 	});
 
 	var passenger = [];
