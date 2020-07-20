@@ -257,9 +257,14 @@
 				</table>
 			</div>
 
-			<div class="col-xs-12" style="padding: 0px;padding-top: 10px">
+			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-right: 5px">
 				<button class="btn btn-warning" id="btn_ganti" onclick="changeMesin()" style="font-size: 30px;font-weight: bold;width: 100%">
 					PILIH MESIN
+				</button>
+			</div>
+			<div class="col-xs-6" style="padding: 0px;padding-top: 10px;padding-left: 5px">
+				<button class="btn btn-info" id="btn_ganti_op" onclick="location.reload()" style="font-size: 30px;font-weight: bold;width: 100%">
+					GANTI OPERATOR
 				</button>
 			</div>
 		</div>
