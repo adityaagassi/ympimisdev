@@ -313,7 +313,9 @@ class StockTakingController extends Controller{
 			array_push($location, $locations[$i]->storage_location); 
 		}
 
-		$data = StocktakingList::whereIn('location', $location)->get();
+		$data = StocktakingList::whereIn('location', $location)
+		->where('print_status', 1)
+		->get();
 
 		for ($i=0; $i < count($data); $i++) { 
 			if($data[$i]->process < 2){
@@ -1015,7 +1017,7 @@ class StockTakingController extends Controller{
 				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
 				GROUP BY location, material_number
 				UNION ALL
-				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM stocktaking_location_stocks
 				WHERE stock_date = '".$calendar->date."'
 				GROUP BY storage_location, material_number) AS union_pi_book
 				GROUP BY location, material_number) AS pi_book
@@ -1138,15 +1140,14 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
-				WHERE storage_locations.area = 'Assembly'
+				WHERE storage_locations.area in ('ASSEMBLY', 'PP', 'WELDING')
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
 				pi_book.material_number ASC");
 
 		}else{
-			$variances = db::select("
-				SELECT
+			$variances = db::select("SELECT
 				storage_locations.area AS `group`,
 				storage_locations.plnt,
 				material_plant_data_lists.valcl,
@@ -1171,14 +1172,14 @@ class StockTakingController extends Controller{
 				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
 				GROUP BY location, material_number
 				UNION ALL
-				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM stocktaking_location_stocks
 				WHERE stock_date = '".$calendar->date."'
 				GROUP BY storage_location, material_number) AS union_pi_book
 				GROUP BY location, material_number) AS pi_book
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
-				WHERE storage_locations.area = 'Assembly'
+				WHERE storage_locations.area in ('ASSEMBLY', 'PP', 'WELDING')
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
@@ -1186,6 +1187,12 @@ class StockTakingController extends Controller{
 
 		}
 
+		foreach ($variances as $variance) {
+			if($variance->std == 0){
+				return redirect('index/stocktaking/menu')->with('error', $month.'(ime)'.'Standart Price '.$variance->material_number.' is 0')->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
+			}
+			
+		}
 
 		$title = 'VarianceReport'.str_replace('-', '' ,$month).'_('.date('ymd H.i').')';		
 
@@ -1351,11 +1358,12 @@ class StockTakingController extends Controller{
 				);
 			}
 
-
 			StocktakingOutput::truncate();
+			StocktakingLocationStock::truncate();
 
 			$list = StocktakingList::where('created_by', 1)
 			->update([
+				'print_status' => 0,
 				'process' => 0,
 				'quantity' => null,
 				'audit1' => null,
@@ -1363,10 +1371,10 @@ class StockTakingController extends Controller{
 				'final_count' => null,
 				'inputed_by' => null,
 				'audit1_by' => null,
-				'audit2_by' => null,
+				'audit2_by' => NULL,
+				'revised_by' => NULL,
+				'reason' => NULL
 			]);
-
-
 
 			$response = array(
 				'status' => true
@@ -1650,7 +1658,7 @@ class StockTakingController extends Controller{
 				(SELECT location, material_number, sum( quantity ) AS qty FROM stocktaking_outputs
 				GROUP BY location, material_number) AS pi
 				LEFT JOIN
-				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM storage_location_stocks
+				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM stocktaking_location_stocks
 				WHERE stock_date = '".$calendar->date."'
 				GROUP BY storage_location, material_number) AS book
 				ON pi.location = book.location 	
@@ -1660,7 +1668,7 @@ class StockTakingController extends Controller{
 				WHERE pi_kitto.book is null
 				AND pi_kitto.pi > 0
 				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
-				AND storage_locations.area = 'ASSEMBLY'
+				AND storage_locations.area in ('ASSEMBLY', 'PP', 'WELDING')
 				ORDER BY storage_locations.area, pi_kitto.location, pi_kitto.material_number");
 
 			return DataTables::of($data)->make(true);
@@ -1675,7 +1683,7 @@ class StockTakingController extends Controller{
 		if($calendar){
 			$data = db::select("SELECT storage_locations.area AS `group`, pi_kitto.location, pi_kitto.material_number, material_plant_data_lists.material_description, pi_kitto.book FROM
 				(SELECT book.location, book.material_number, pi.qty AS pi, book.qty AS book FROM	
-				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM storage_location_stocks
+				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM stocktaking_location_stocks
 				WHERE stock_date = '".$calendar->date."'
 				GROUP BY storage_location, material_number) AS book
 				LEFT JOIN
@@ -1688,7 +1696,7 @@ class StockTakingController extends Controller{
 				WHERE pi_kitto.pi is null
 				AND pi_kitto.book > 0
 				AND pi_kitto.location not in ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
-				AND storage_locations.area = 'ASSEMBLY'
+				AND storage_locations.area in ('ASSEMBLY', 'PP', 'WELDING')
 				ORDER BY storage_locations.area, pi_kitto.location, pi_kitto.material_number");
 
 			return DataTables::of($data)->make(true);
@@ -1709,7 +1717,7 @@ class StockTakingController extends Controller{
 			LEFT JOIN material_plant_data_lists ON kitto_pi.material_number = material_plant_data_lists.material_number
 			LEFT JOIN storage_locations ON storage_locations.storage_location = kitto_pi.location
 			WHERE kitto_pi.kitto <> kitto_pi.pi
-			AND storage_locations.area = 'ASSEMBLY'
+			AND storage_locations.area in ('ASSEMBLY', 'PP', 'WELDING')
 			ORDER BY storage_locations.area, kitto_pi.location, kitto_pi.material_number");
 
 		return DataTables::of($data)->make(true);
@@ -1725,7 +1733,7 @@ class StockTakingController extends Controller{
 				(SELECT issue_location AS location, material_number, sum( lot ) AS qty FROM kitto.inventories
 				GROUP BY issue_location, material_number) AS inventory
 				LEFT JOIN
-				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM storage_location_stocks
+				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM stocktaking_location_stocks
 				WHERE stock_date = '".$calendar->date."'
 				GROUP BY storage_location, material_number) AS book
 				ON inventory.location = book.location 
@@ -1733,7 +1741,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON kitto_book.material_number = material_plant_data_lists.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = kitto_book.location
 				WHERE kitto_book.kitto <> kitto_book.book
-				AND storage_locations.area = 'ASSEMBLY'
+				AND storage_locations.area in ('ASSEMBLY', 'PP', 'WELDING')
 				ORDER BY storage_locations.area, kitto_book.location, kitto_book.material_number");
 
 			return DataTables::of($data)->make(true);
@@ -1754,7 +1762,7 @@ class StockTakingController extends Controller{
 			LEFT JOIN material_plant_data_lists ON inventory.material_number = material_plant_data_lists.material_number
 			LEFT JOIN storage_locations ON inventory.location = storage_locations.storage_location
 			WHERE (inventory.quantity % material_volumes.lot_completion) <> 0
-			AND storage_locations.area = 'ASSEMBLY'");
+			AND storage_locations.area in ('ASSEMBLY', 'PP', 'WELDING')");
 
 		return DataTables::of($data)->make(true);
 	}
@@ -1787,7 +1795,7 @@ class StockTakingController extends Controller{
 				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
 				GROUP BY location, material_number
 				UNION ALL
-				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM stocktaking_location_stocks
 				WHERE stock_date = '".$calendar->date."'
 				GROUP BY storage_location, material_number) AS union_pi_book
 				GROUP BY location, material_number) AS pi_book
@@ -1862,7 +1870,7 @@ class StockTakingController extends Controller{
 				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
 				GROUP BY location, material_number
 				UNION ALL
-				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM stocktaking_location_stocks
 				WHERE stock_date = '". $calendar->date ."'
 				GROUP BY storage_location, material_number) AS union_pi_book
 				GROUP BY location, material_number) AS pi_book
@@ -1924,11 +1932,13 @@ class StockTakingController extends Controller{
 			$data = db::select("SELECT area, location, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
 				(SELECT sl.area, s.location, 0 AS qty, count(s.id) AS total FROM stocktaking_lists s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				WHERE s.print_status = 1
 				GROUP BY sl.area, s.location
 				UNION ALL
 				SELECT sl.area, s.location, count(s.id) AS qty, 0 AS total FROM stocktaking_lists s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
-				WHERE s.quantity IS NOT NULL 
+				WHERE s.print_status = 1
+				AND s.quantity IS NOT NULL 
 				GROUP BY sl.area, s.location) AS list 
 				GROUP BY area, location
 				ORDER BY area");
@@ -1982,6 +1992,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 				WHERE s.location = '".$group."'
 				AND ".$quantity."
+				AND s.print_status = 1
 				ORDER BY sl.area, s.location, s.store, s.material_number ASC");
 		}else{
 			$input_detail = db::select("
@@ -2017,8 +2028,11 @@ class StockTakingController extends Controller{
 		if($calendar->status != 'finished'){
 			$data = db::select("SELECT storage_locations.area, audited.location, sum( audited ) AS audited, sum( not_audited ) AS not_audited FROM
 				(SELECT location, store, IF( total = audit, 1, 0 ) AS audited, IF( total <> audit, 1, 0 ) AS not_audited FROM
-				(SELECT stocktaking_lists.location, stocktaking_lists.store, count( stocktaking_lists.id ) AS total, SUM( IF ( stocktaking_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_lists 
-				GROUP BY stocktaking_lists.location, stocktaking_lists.store) audit) AS audited
+				(SELECT stocktaking_lists.location, stocktaking_lists.store, count( stocktaking_lists.id ) AS total, SUM( IF ( stocktaking_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_lists
+				WHERE print_status = 1
+				GROUP BY stocktaking_lists.location, stocktaking_lists.store
+				) audit
+				) AS audited
 				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location 
 				GROUP BY storage_locations.area, audited.location");
 		}else{
@@ -2051,6 +2065,7 @@ class StockTakingController extends Controller{
 				(SELECT location, store, IF( total = audit, 1, 0 ) AS audited, IF( total <> audit, 1, 0 ) AS not_audited FROM
 				(SELECT stocktaking_lists.location, stocktaking_lists.store, count( stocktaking_lists.id ) AS total, SUM( IF ( stocktaking_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_lists
 				WHERE stocktaking_lists.location = '".$group."'
+				AND stocktaking_lists.print_status = 1
 				GROUP BY stocktaking_lists.location, stocktaking_lists.store) audit) AS audited
 				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location
 				HAVING audit_status = '".$series."'");
@@ -2217,8 +2232,8 @@ class StockTakingController extends Controller{
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 			LEFT JOIN material_volumes v ON v.material_number = s.material_number
 			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
-			WHERE
-			s.store = '". $request->get('store'). "'
+			WHERE s.print_status = 1
+			AND s.store = '". $request->get('store'). "'
 			ORDER BY
 			s.id ASC");
 
@@ -2389,9 +2404,13 @@ class StockTakingController extends Controller{
 	public function fetchAuditStoreList(Request $request){
 
 		$process = $request->get('process');
-		$current = StocktakingList::where('store', $request->get('store'))->orderBy('process', 'ASC')->first();
+		$current = StocktakingList::where('store', $request->get('store'))
+		->where('print_status', 1)
+		->orderBy('process', 'ASC')
+		->first();
 
 		$null = StocktakingList::where('store', $request->get('store'))
+		->where('print_status', 1)
 		->whereNull('quantity')
 		->get();
 
@@ -2448,8 +2467,8 @@ class StockTakingController extends Controller{
 			LEFT JOIN materials m ON m.material_number = s.material_number
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
-			WHERE
-			s.store = '". $request->get('store'). "'
+			WHERE s.print_status = 1
+			AND s.store = '". $request->get('store'). "'
 			ORDER BY s.id");
 
 		// ORDER BY

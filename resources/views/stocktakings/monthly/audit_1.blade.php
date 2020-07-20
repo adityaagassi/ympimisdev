@@ -104,13 +104,13 @@
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='store_title'>STORE</th>
 					</tr>
 					<tr>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">CATEGORY</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL NUMBER</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL DESCRIPTION</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">UOM</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">COUNT PI</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">AUDIT 1</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#ID</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">ACTION</th>
 					</tr>
 				</thead>
@@ -632,7 +632,6 @@
 
 					num++;
 					body += '<tr>';
-					body += '<td '+css+'>'+result.store[i].id+'</td>';
 					body += '<td '+css+'>'+result.store[i].category+'</td>';
 					body += '<td '+css+'>'+result.store[i].material_number+'</td>';
 					body += '<td '+css+'>'+result.store[i].material_description+'</td>';
@@ -649,6 +648,8 @@
 						body += '<td '+css+'></td>';							
 					}
 					
+					body += '<td '+css+'>'+result.store[i].id+'</td>';
+
 					if(result.store[i].process == 1){
 						if(result.store[i].audit1){
 							body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="cancAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button></td>';

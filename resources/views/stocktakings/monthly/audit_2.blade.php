@@ -104,7 +104,6 @@
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="10" id='store_title'>STORE</th>
 					</tr>
 					<tr>
-						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">CATEGORY</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL NUMBER</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL DESCRIPTION</th>
@@ -112,6 +111,7 @@
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">COUNT PI</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">AUDIT 1</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">AUDIT 2</th>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">ACTION</th>
 
 					</tr>
@@ -631,7 +631,6 @@
 
 					num++;
 					body += '<tr>';
-					body += '<td '+css+'>'+result.store[i].id+'</td>';
 					body += '<td '+css+'>'+result.store[i].category+'</td>';
 					body += '<td '+css+'>'+result.store[i].material_number+'</td>';
 					body += '<td '+css+'>'+result.store[i].material_description+'</td>';
@@ -639,6 +638,8 @@
 					body += '<td '+css+'>'+result.store[i].quantity+'</td>';
 					body += '<td '+css+'>'+(result.store[i].audit1 || '')+'</td>';
 					body += '<td '+css+'>'+(result.store[i].audit2 || '')+'</td>';
+					body += '<td '+css+'>'+result.store[i].id+'</td>';
+					
 
 					if(result.store[i].process == 2){
 						if(result.store[i].audit2){

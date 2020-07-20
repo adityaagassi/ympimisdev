@@ -52,6 +52,10 @@
 	@endphp
 	@endforeach
 
+	@if (session('error'))
+	<input type="text" id="msg_error" value="{{ session('error') }}" hidden>
+	@endif
+
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 		<p style="text-align: center; position: absolute; color: white; top: 45%; left: 40%;">
 			<span style="font-size: 50px;">Please wait ... </span><br>
@@ -174,7 +178,7 @@
 	</div>
 
 	<div class="modal fade" id="modalInput">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-lg" style="width: 90%;">
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="modal-body table-responsive no-padding" style="min-height: 100px">
@@ -286,10 +290,26 @@
 			endDate: '<?php echo $tgl_max ?>'
 		});
 
-		$('#modalMonth').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
+		var error = $('#msg_error').val();
+		if(error){
+			var error_message = error.split('(ime)');
+			var month = error_message[0];
+			var message = error_message[1];
+			
+			openErrorGritter('Error', message);
+
+			$('#month').val(month);
+			filledList();
+			auditedList();
+			// variance();
+
+		}else{
+			$('#modalMonth').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+		}
+		
 		$('#month').blur();
 		$('#month').val('');
 
@@ -639,6 +659,8 @@
 
 		$.get('{{ url("fetch/stocktaking/filled_list_detail") }}', data, function(result, status, xhr){
 			if(result.status){
+				$('#tableInput').DataTable().clear();
+				$('#tableInput').DataTable().destroy();
 				$('#bodyInput').html('');
 				$('#loading').hide();
 
@@ -646,7 +668,7 @@
 				if(series == "Empty"){
 					color = 'style="background-color: rgb(255,116,116);"';
 				}else{
-					color = 'style="background-color: rgb(144,238,126);"'			
+					color = 'style="background-color: rgb(144,238,126);"';	
 				}
 
 				var body = '';
@@ -688,8 +710,38 @@
 				}
 
 				$('#bodyInput').append(body);
+
+				var table = $('#tableInput').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'info': true,
+					'autoWidth': true,
+					'sPaginationType': 'full_numbers',
+					'bJQueryUI': true,
+					'bAutoWidth': false,
+					'processing': true,
+					'bPaginate': false
+				});
+
 				$('#modalInput').modal('show');
 				$('#tableInput').show();
+
 
 
 			}
@@ -826,6 +878,8 @@
 
 		$.get('{{ url("fetch/stocktaking/audited_list_detail") }}', data, function(result, status, xhr){
 			if(result.status){
+				$('#tableAudit').DataTable().clear();
+				$('#tableAudit').DataTable().destroy();
 				$('#bodyAudit').html('');
 				$('#loading').hide();
 
@@ -847,6 +901,35 @@
 				}
 
 				$('#bodyAudit').append(body);
+
+				var table = $('#tableAudit').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'info': true,
+					'autoWidth': true,
+					'sPaginationType': 'full_numbers',
+					'bJQueryUI': true,
+					'bAutoWidth': false,
+					'processing': true,
+					'bPaginate': false
+				});
+				
 				$('#modalAudit').modal('show');
 				$('#tableAudit').show();
 			}

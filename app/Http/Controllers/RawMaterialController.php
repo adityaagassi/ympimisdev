@@ -11,17 +11,18 @@ use App\StorageLocationStock;
 use App\MaterialListByModel;
 use App\RawMaterialStock;
 use App\MaterialUsage;
+use App\StocktakingCalendar;
+use App\StocktakingLocationStock;
 use DataTables;
 use Response;
 use File;
 
-class RawMaterialController extends Controller
-{
+class RawMaterialController extends Controller{
 
 	private $storage_location;
 
-	public function __construct()
-	{
+	public function __construct(){
+
 		$this->middleware('auth');
 		$this->storage_location = [
 			'203',
@@ -230,6 +231,15 @@ class RawMaterialController extends Controller
 				$file = $request->file('storage_location_stock');
 				$data = file_get_contents($file);
 
+				$calendar = StocktakingCalendar::where('date', $stock_date)->first();
+				$insert_st_location_stock = false;
+				if($calendar){
+					if($calendar->status != 'finished'){
+						StocktakingLocationStock::truncate();
+						$insert_st_location_stock = true;
+					}
+				}
+
 				$rows = explode("\r\n", $data);
 				foreach ($rows as $row){
 					if(strlen($row) > 0){
@@ -255,7 +265,22 @@ class RawMaterialController extends Controller
 								'stock_date' => $stock_date,
 								'created_by' => $id,
 							]);
-							$storage_location_stock->save();	
+							$storage_location_stock->save();
+
+
+							if($insert_st_location_stock){
+								$st_location_stock = new StocktakingLocationStock([
+									'material_number' => $material_number,
+									'material_description' => $row[1],
+									'storage_location' => $row[2],
+									'unrestricted' => str_replace('"','',str_replace(',','',$row[3])),
+									'download_date' => date('Y-m-d', strtotime($row[4])),
+									'download_time' => date('H:i:s', strtotime(str_replace('/','-',$row[5]))),
+									'stock_date' => $stock_date,
+									'created_by' => $id,
+								]);
+								$st_location_stock->save(); 
+							}
 						}
 					}
 				}
