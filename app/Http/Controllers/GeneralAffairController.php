@@ -466,7 +466,6 @@ class GeneralAffairController extends Controller
 			->bcc(['aditya.agassi@music.yamaha.com'])
 			->send(new SendEmail($data, 'driver_request'));
 
-
 			$response = array(
 				'status' => true,
 				'message' => 'Request Driver Berhasil Diajukan',
@@ -506,7 +505,7 @@ class GeneralAffairController extends Controller
 				];
 
 				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com', 'dicky.kurniawan@music.yamaha.com'])
-				->bcc(['aditya.agassi@music.yamaha.com'])
+				->cc(['aditya.agassi@music.yamaha.com'])
 				->send(new SendEmail($data, 'driver_approval_notification'));
 
 				$message = 'Approval driver request berhasil';
@@ -529,7 +528,7 @@ class GeneralAffairController extends Controller
 				];
 
 				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com', 'dicky.kurniawan@music.yamaha.com'])
-				->bcc(['aditya.agassi@music.yamaha.com'])
+				->cc(['aditya.agassi@music.yamaha.com'])
 				->send(new SendEmail($data, 'driver_approval_notification'));
 
 				$message = 'Approval driver request berhasil';
