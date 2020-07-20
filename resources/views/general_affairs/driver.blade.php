@@ -112,13 +112,13 @@
 			</table>
 		</div>
 		<div class="col-xs-1" style="padding-left: 0;">
+			<button data-toggle="modal" class="btn btn-primary" style="width: 100%; margin-bottom: 5px;" onclick="modalCreate('ga');">Add Duty</button>
 			<button data-toggle="modal" data-target="#modalImport" class="btn btn-primary" style="width: 100%; margin-bottom: 5px;"><i class="fa fa-upload"></i> Upload Duty</button>
 			<a href="{{ url('index/ga_control/driver_log') }}" class="btn btn-info" style="width: 100%; margin-bottom: 5px;"><i class="fa fa-file-text-o"></i> Driver Log</a>
 			<button class="btn btn-success" onclick="fetchEditDriver('new')" style="width: 100%; margin-bottom: 5px;"><i class="fa fa-plus"></i> Driver Add</button>
 		</div>
 	</div>
 </section>
-
 
 <div class="modal fade" id="modalCreate">
 	<div class="modal-dialog modal-lg">
@@ -131,6 +131,17 @@
 				<div class="modal-body table-responsive no-padding" style="min-height: 100px; padding-bottom: 5px;">
 					<form class="form-horizontal">
 						<div class="col-xs-12" style="padding-bottom: 5px;">
+							<div class="form-group" id="createDv">
+								<label for="createDriver" class="col-sm-2 control-label">Pilih Driver<span class="text-red">*</span></label>
+								<div class="col-sm-10">
+									<select class="form-control select4" name="createDriver" id="createDriver" data-placeholder="Pilih Driver" style="width: 50%;">
+										<option></option>
+										@foreach($driver_lists as $driver_list)
+										<option value="{{ $driver_list->driver_id }}">{{ $driver_list->driver_id }} - {{ $driver_list->name }}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
 							<div class="form-group">
 								<label for="createPurpose" class="col-sm-2 control-label">Keperluan<span class="text-red">*</span></label>
 								<div class="col-sm-10">
@@ -225,7 +236,8 @@
 				</div>
 				<div class="box-footer">
 					<div class="col-xs-12">
-						<a class="btn btn-primary pull-right" onclick="createRequest()" style="font-size: 1.5vw; width: 100%; font-weight: bold;">CONFIRM</a>
+						<a class="btn btn-primary pull-right" onclick="createRequest()" style="font-size: 1.5vw; width: 100%; font-weight: bold;" id="btnRequest">CONFIRM</a>
+						<a class="btn btn-primary pull-right" onclick="createRequest('ga')" style="font-size: 1.5vw; width: 100%; font-weight: bold;" id="btnRequestGA">CONFIRM</a>
 					</div>
 				</div>
 			</div>
@@ -543,8 +555,18 @@
 		});
 	})
 
-	function modalCreate(){
+	function modalCreate(id){
 		clearAll();
+		if(id == 'ga'){
+			$('#createDv').show();
+			$('#btnRequest').hide();
+			$('#btnRequestGA').show();
+		}
+		else{
+			$('#createDv').hide();
+			$('#btnRequest').show();
+			$('#btnRequestGA').hide();			
+		}
 		$('#modalCreate').modal('show');
 	}
 
@@ -655,14 +677,16 @@
 		});
 	}
 
-	function createRequest(){
+	function createRequest(id){
 		$('#loading').show();
 		var purpose = $('#createPurpose').val();
 		var destination_city = $('#createDestination').val();
 		var start_time = $('#createStart').val()+' '+$('#createStartTime').val();
 		var end_time = $('#createEnd').val()+' '+$('#createEndTime').val();
+		var driver_id = $('#createDriver').val();
 
 		var data = {
+			driver_id:driver_id,
 			purpose:purpose,
 			destination_city:destination_city,
 			start_time:start_time,
@@ -671,8 +695,30 @@
 			destination:destination
 		}
 
-		if(purpose != '' && destination_city != '' && $('#createStart').val() != '' && $('#createEnd').val() != '' && passenger.length > 0 && destination.length > 0){
-			$.post('{{ url("create/ga_control/driver_request") }}', data, function(result, status, xhr){
+		if(id != 'ga'){
+			if(purpose != '' && destination_city != '' && $('#createStart').val() != '' && $('#createEnd').val() != '' && passenger.length > 0 && destination.length > 0){
+				$.post('{{ url("create/ga_control/driver_request") }}', data, function(result, status, xhr){
+					if(result.status){
+						$('#modalCreate').modal('hide');
+						openSuccessGritter('Success!', result.message);
+						fetchDriver();
+						fetchRequest();
+						clearAll();
+						$('#loading').hide();
+					}
+					else{
+						$('#loading').hide();
+						openErrorGritter('Error!', result.message);
+					}
+				});
+			}
+			else{
+				$('#loading').hide();
+				openErrorGritter('Error!', 'Semua point form harus diisi');
+			}			
+		}
+		else{
+			$.post('{{ url("create/ga_control/driver_duty") }}', data, function(result, status, xhr){
 				if(result.status){
 					$('#modalCreate').modal('hide');
 					openSuccessGritter('Success!', result.message);
@@ -686,10 +732,6 @@
 					openErrorGritter('Error!', result.message);
 				}
 			});
-		}
-		else{
-			$('#loading').hide();
-			openErrorGritter('Error!', 'Semua point form harus diisi');
 		}
 	}
 

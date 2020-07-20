@@ -42,11 +42,13 @@ class GeneralAffairController extends Controller
 		$title_jp = "ドライバー管理システム";
 
 		$employees = EmployeeSync::orderBy('name', 'asc')->get();
+		$driver_lists = DriverList::orderBy('name', 'asc')->get();
 
 		return view('general_affairs.driver', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
-			'employees' => $employees
+			'employees' => $employees,
+			'driver_lists' => $driver_lists
 		))->with('head', 'GA Control')->with('page', 'Driver Control');
 	}
 
@@ -359,6 +361,62 @@ class GeneralAffairController extends Controller
 		}
 	}
 
+	public function createDriverDuty(Request $request){
+		try{
+			$id = Auth::user()->username;
+			$driver_list = DriverList::where('driver_id', '=', $request->get('driver_id'))->first();
+			$driver = new Driver([
+				'purpose' => $request->get('purpose'),
+				'destination_city' => $request->get('destination_city'),
+				'date_from' => $request->get('start_time'),
+				'date_to' => $request->get('end_time'),
+				'driver_id' => $request->get('driver_id'),
+				'name' => $driver_list->name,
+				'approved_by' => $id,
+				'received_by' => $id,
+				'created_by' => $id,
+				'remark' => 'received'
+			]);
+			$driver->save();
+
+			$passengers = $request->get('passenger');
+			$destinations = $request->get('destination');
+
+			for ($i=0; $i < count($passengers); $i++) { 
+				$passenger_detail = new DriverDetail([
+					'driver_id' => $driver->id,
+					'remark' => $passengers[$i],
+					'category' => 'passenger'
+				]);
+				$passenger_detail->save();
+			}
+
+			for ($i=0; $i < count($destinations); $i++) { 
+				$destination_detail = new DriverDetail([
+					'driver_id' => $driver->id,
+					'remark' => $destinations[$i],
+					'category' => 'destination'		
+				]);
+				$destination_detail->save();
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Tugas driver berhasil ditambahkan'
+			);
+			return Response::json($response);
+
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
+	}
+
 	public function createDriverRequest(Request $request){
 		try{
 			$id = Auth::user()->username;
@@ -394,9 +452,9 @@ class GeneralAffairController extends Controller
 			}
 
 
-			$mail = EmployeeSync::leftJoin('users', 'users.username', '=', 'employee_syncs.nik_manager')
+			$mail = EmployeeSync::leftJoin('send_emails', 'send_emails.remark', '=', 'employee_syncs.department')
 			->where('employee_syncs.employee_id', '=', $id)
-			->select('users.email')
+			->select('send_emails.email')
 			->first();
 
 			$data = [
@@ -447,7 +505,7 @@ class GeneralAffairController extends Controller
 					'driver' => $driver
 				];
 
-				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com'])
+				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com', 'dicky.kurniawan@music.yamaha.com'])
 				->bcc(['aditya.agassi@music.yamaha.com'])
 				->send(new SendEmail($data, 'driver_approval_notification'));
 
@@ -470,7 +528,7 @@ class GeneralAffairController extends Controller
 					'driver' => $driver
 				];
 
-				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com'])
+				Mail::to(['rianita.widiastuti@music.yamaha.com', 'heriyanto@music.yamaha.com', 'dicky.kurniawan@music.yamaha.com'])
 				->bcc(['aditya.agassi@music.yamaha.com'])
 				->send(new SendEmail($data, 'driver_approval_notification'));
 

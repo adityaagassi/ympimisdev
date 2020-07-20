@@ -874,6 +874,7 @@ Route::group(['nav' => 'S39', 'middleware' => 'permission'], function(){
 	Route::post('import/ga_control/driver_duty', 'GeneralAffairController@importDriverDuty');
 	Route::get('index/ga_control/driver_log', 'GeneralAffairController@indexDriverLog');
 	Route::get('fetch/ga_control/driver_log', 'GeneralAffairController@fetchDriverLog');
+	Route::post('create/ga_control/driver_duty', 'GeneralAffairController@createDriverDuty');
 });
 Route::get('approve/ga_control/driver/{id}', 'GeneralAffairController@approveRequest');
 Route::get('reject/ga_control/driver/{id}', 'GeneralAffairController@rejectRequest');
@@ -1165,6 +1166,7 @@ Route::post('investment/create_post', 'AccountingController@create_investment_po
 Route::get('investment/detail/{id}', 'AccountingController@detail_investment');
 Route::post('investment/update_post', 'AccountingController@detail_investment_post');
 Route::get('investment/sendemail', 'AccountingController@investment_send_email');
+Route::get('investment/check/{id}', 'AccountingController@check_investment');
 
 //Nomor Investment
 Route::get('investment/get_nomor_investment', 'AccountingController@get_nomor_inv');
@@ -1831,15 +1833,15 @@ Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@update
 Route::post('fetch/stocktaking/update_process/{id}', 'StockTakingController@updateProcessAudit');
 
 //Count PI
+Route::post('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
+
+//Unmatch
 Route::get('index/stocktaking/unmatch/{month}', 'StockTakingController@indexUnmatch');
 Route::get('fetch/stocktaking/pi_vs_book', 'StockTakingController@fetchPiVsBook');
 Route::get('fetch/stocktaking/book_vs_pi', 'StockTakingController@fetchBookVsPi');
 Route::get('fetch/stocktaking/kitto_vs_pi', 'StockTakingController@fetchKittoVsPi');
 Route::get('fetch/stocktaking/kitto_vs_book', 'StockTakingController@fetchKittoVsBook');
 Route::get('fetch/stocktaking/pi_vs_lot', 'StockTakingController@fetchPiVsLot');
-
-//Unmatch
-Route::post('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
 
 //Revise
 Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
