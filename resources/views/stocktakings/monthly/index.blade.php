@@ -287,22 +287,28 @@
 			startView: "months", 
 			minViewMode: "months",
 			autoclose: true,
-			endDate: '<?php echo $tgl_max ?>'
+			endDate: '<?php echo $tgl_max ?>'	
 		});
 
 		var error = $('#msg_error').val();
+		console.log(error);
+
 		if(error){
 			var error_message = error.split('(ime)');
 			var month = error_message[0];
 			var message = error_message[1];
 			
-			openErrorGritter('Error', message);
 
 			$('#month').val(month);
+			monthChange();
 			filledList();
 			auditedList();
 			variance();
 
+			console.log(error_message);
+			console.log(month);
+
+			openErrorGritter('Error', message);
 		}else{
 			$('#modalMonth').modal({
 				backdrop: 'static',
@@ -929,7 +935,7 @@
 					'processing': true,
 					'bPaginate': false
 				});
-				
+
 				$('#modalAudit').modal('show');
 				$('#tableAudit').show();
 			}
