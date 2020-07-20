@@ -40,7 +40,7 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
 	<h1>
 		{{ $page }} <span class="text-purple">プレス機金型寿命</span>
-		@if($role_code == 'PROD' || $role_code == 'MIS')
+		@if($role_code == 'PROD' || $role_code == 'MIS' || $role_code == 'L-Press')
 			<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
 		        Create
 		    </button>
@@ -117,7 +117,7 @@ table.table-bordered > tfoot > tr > th{
 						</div>
 						</form>
 					</div>
-					@if($role_code == 'PROD' || $role_code == 'MIS')
+					@if($role_code == 'PROD' || $role_code == 'MIS' || $role_code == 'L-Press')
 					<div class="col-xs-4">
 						<div class="box-header">
 							<h3 class="box-title">Edit Kanagata Lifetime</h3>
