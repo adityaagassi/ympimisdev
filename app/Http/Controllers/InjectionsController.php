@@ -4849,6 +4849,54 @@ public function fetchMachineMonitoring(Request $request)
     }
 }
 
+public function indexStockMonitoring()
+{
+    $color = DB::SELECT('SELECT DISTINCT(color) FROM `injection_parts`');
+
+    return view('injection.stock_monitoring')
+    ->with('mesin', $this->mesin)
+    ->with('color', $color)
+    ->with('title', 'Injection Stock Monitoring')
+    ->with('title_jp', '??');
+}
+
+public function fetchStockMonitoring(Request $request)
+{
+    try {
+        $id_user = Auth::id();
+
+        if ($request->get('color') == "" || $request->get('color') == "All") {
+            $color = "";
+        }else{
+            $color = "where injection_parts.color = '".$request->get('color')."'";
+        }
+
+        $data = DB::SELECT("SELECT
+            gmc,
+            CONCAT( UPPER( part_code ), ' (', color, ')' ) AS part,
+            COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS stock,
+            COALESCE (( SELECT color FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS color 
+        FROM
+            injection_parts 
+        ".$color."
+        ORDER BY
+            injection_parts.color,
+            part_name DESC");
+
+        $response = array(
+            'status' => true,
+            'datas' => $data
+        );
+        return Response::json($response);
+    } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+    }
+}
+
 
 }
 
