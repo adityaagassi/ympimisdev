@@ -301,7 +301,7 @@
 			$('#month').val(month);
 			filledList();
 			auditedList();
-			// variance();
+			variance();
 
 		}else{
 			$('#modalMonth').modal({
@@ -419,7 +419,7 @@
 
 				filledList();
 				auditedList();
-				// variance();
+				variance();
 
 				$('#month_text').text(bulanText(month));
 				$('#modalMonth').modal('hide');
@@ -513,7 +513,7 @@
 					$('#WAREHOUSE').iCheck('uncheck');
 					$('#FG').iCheck('uncheck');
 
-					// variance();
+					variance();
 					openSuccessGritter('Success', result.message);
 				}else{
 					$("#loading").hide();
