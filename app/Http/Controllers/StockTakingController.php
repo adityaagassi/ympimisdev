@@ -18,6 +18,7 @@ use App\BomOutput;
 use App\StocktakingCalendar;
 use App\StocktakingList;
 use App\StocktakingOutput;
+use App\StocktakingLocationStock;
 use App\StocktakingInquiryLog;
 use App\StocktakingOutputLog;
 use App\StocktakingSilverList;
@@ -2036,7 +2037,10 @@ class StockTakingController extends Controller{
 				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location 
 				GROUP BY storage_locations.area, audited.location");
 		}else{
-			$data;
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
 		}
 
 		$response = array(
@@ -2070,7 +2074,10 @@ class StockTakingController extends Controller{
 				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location
 				HAVING audit_status = '".$series."'");
 		}else{
-			$audit_detail;
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
 		}
 
 		$response = array(
