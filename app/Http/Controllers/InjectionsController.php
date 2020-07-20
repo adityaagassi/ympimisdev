@@ -1563,7 +1563,7 @@ public function create_log(Request $request)
         $tag->location = 'RC11';
         $tag->save();
 
-        $temp = InjectionProcessTemp::where('tag_product',$request->get('tag_product'))->where('tag_molding',$request->get('tag_molding'))->delete();
+        $temp = InjectionProcessTemp::where('mesin',$request->get('mesin'))->delete();
 
         // $molding_master = InjectionMoldingMaster::where('tag',$request->get('tag_molding'))->first();
         
@@ -4713,6 +4713,7 @@ public function completion(Request $request)
                 'location' => 'RC11',
                 'quantity' => $request->get('qty'),
                 'status' => 'OUT',
+                'operator_id' => $request->get('operator_id'),
                 'created_by' => $id_user
             ]);
 
@@ -4721,6 +4722,7 @@ public function completion(Request $request)
                 'location' => 'RC91',
                 'quantity' => $request->get('qty'),
                 'status' => 'IN',
+                'operator_id' => $request->get('operator_id'),
                 'created_by' => $id_user
             ]);
 
@@ -4770,6 +4772,7 @@ public function completion(Request $request)
                 'location' => 'RC91',
                 'quantity' => $request->get('qty'),
                 'status' => 'OUT',
+                'operator_id' => $request->get('operator_id'),
                 'created_by' => $id_user
             ]);
         }
@@ -4784,7 +4787,66 @@ public function completion(Request $request)
             'message' => $e->getMessage(),
         );
         return Response::json($response);
-    }   
+    }
+}
+
+public function indexMachineMonitoring()
+{
+    return view('injection.machine_monitoring')
+    ->with('mesin', $this->mesin)
+    ->with('title', 'Injection Machine Monitoring')
+    ->with('title_jp', '??');
+}
+
+public function fetchMachineMonitoring(Request $request)
+{
+    try {
+        $id_user = Auth::id();
+
+        $data = DB::SELECT("SELECT
+            mesin,
+            COALESCE (( SELECT part_name FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), '' ) AS part,
+            COALESCE ((
+                SELECT
+                    CONCAT( '<br>(', part_type, ' - ', color, ')<br>', cavity ) 
+                FROM
+                    injection_process_temps 
+                WHERE
+                    mesin = injection_machine_masters.mesin 
+                    AND injection_process_temps.deleted_at IS NULL 
+                    ),
+                '' 
+            ) AS type,
+            COALESCE (( SELECT shot FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), 0 ) AS shot,
+            COALESCE (( SELECT ng_count FROM injection_process_temps WHERE mesin = injection_machine_masters.mesin AND injection_process_temps.deleted_at IS NULL ), '' ) AS ng_count,
+            COALESCE ((
+                SELECT
+                    CONCAT( operator_id, '<br>', employee_syncs.`name` ) 
+                FROM
+                    injection_process_temps
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_process_temps.operator_id 
+                WHERE
+                    mesin = injection_machine_masters.mesin 
+                    AND injection_process_temps.deleted_at IS NULL 
+                    ),
+                '' 
+            ) AS operator 
+        FROM
+            injection_machine_masters");
+
+
+        $response = array(
+            'status' => true,
+            'data' => $data
+        );
+        return Response::json($response);
+    } catch (\Exception $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+    }
 }
 
 

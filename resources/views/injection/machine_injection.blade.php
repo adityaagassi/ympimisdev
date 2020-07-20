@@ -736,14 +736,18 @@
 	}
 
 	function mulaiProses() {
-		$('#modalProduct').modal('show');
-		countUpFromTime(getActualFullDate());
-		$('#start_time').val(getActualFullDate());
-		// get_temp();
-		$('#btn_mulai').hide();
-		$('#btn_selesai').show();
-		$('#perolehan').show();
-		$('#btn_ganti').show();
+		if ($('#tag_product').val() == "") {
+			openErrorGritter('Error!', "Scan Tag Product.");
+		}else{
+			$('#modalProduct').modal('show');
+			countUpFromTime(getActualFullDate());
+			$('#start_time').val(getActualFullDate());
+			// get_temp();
+			$('#btn_mulai').hide();
+			$('#btn_selesai').show();
+			$('#perolehan').show();
+			$('#btn_ganti').show();
+		}
 	}
 
 	function create_temp() {

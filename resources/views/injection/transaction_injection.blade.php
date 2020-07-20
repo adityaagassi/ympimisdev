@@ -57,9 +57,19 @@ table.table-bordered > tfoot > tr > th{
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
 			</div>
+
+			<?php if ($status == 'OUT'): ?>
+				<div class="col-xs-9" style="padding-top: 20px;">
+					<input type="text" style="text-align: center; border-color: red; font-size: 1.5vw; height: 50px" class="form-control" id="operator_name" name="operator_name" placeholder="" readonly>
+				</div>
+				<div class="col-xs-3" style="padding-top: 20px;">
+					<button class="btn btn-danger" style="width: 100%;height: 50px" onclick="cancelTag()">CANCEL</button>
+				</div>
+			<?php endif ?>
 			<div class="col-md-12" style="padding-top: 20px;">
 				<span style="font-size: 24px;">Transaction:</span> 
 				<table id="resultScan" class="table table-bordered table-striped table-hover" style="width: 100%;">
+					<input type="hidden" id="operator_id">
 		            <thead style="background-color: rgba(126,86,134,.7);">
 		                <tr>
 		                  <th style="width: 5%;">Material Number</th>
@@ -105,6 +115,21 @@ table.table-bordered > tfoot > tr > th{
 		</div>
 		<input type="text" name="gmcPost" id="gmcPost" value="" hidden="">
 	</div>
+
+	<div class="modal fade" id="modalOperator">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-body table-responsive no-padding">
+						<div class="form-group">
+							<label for="exampleInputEmail1">Employee ID</label>
+							<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Scan ID Card" required>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 @endsection
 @section('scripts')
@@ -126,11 +151,56 @@ table.table-bordered > tfoot > tr > th{
 	var arrPart = [];
 
 	jQuery(document).ready(function() {
+		var status = '{{$status}}';
+		if (status == 'OUT') {
+			$('#modalOperator').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+		}
 		fillResult();
 
       $('body').toggleClass("sidebar-collapse");
 		$("#tag_product").val("");
 		$('#tag_product').focus();
+		$("#operator").val("");
+		$('#operator').focus();
+		$("#operator_id").val("");
+		$("#operator_name").val("-");
+	});
+
+	$('#modalOperator').on('shown.bs.modal', function () {
+		$('#operator').focus();
+	});
+
+	$('#operator').keydown(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#operator").val().length >= 8){
+				var data = {
+					employee_id : $("#operator").val()
+				}
+				
+				$.get('{{ url("scan/injeksi/operator") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', result.message);
+						$('#modalOperator').modal('hide');
+						$('#operator_name').val(result.employee.employee_id+' - '+result.employee.name);
+						$('#operator_id').val(result.employee.employee_id);
+						$('#tag_product').focus();
+					}
+					else{
+						audio_error.play();
+						openErrorGritter('Error', result.message);
+						$('#operator').val('');
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Employee ID Invalid.');
+				audio_error.play();
+				$("#operator").val("");
+			}			
+		}
 	});
 
 	$('#tag_product').keyup(function(event) {
@@ -161,6 +231,10 @@ table.table-bordered > tfoot > tr > th{
 						bodyScan += '<td colspan="6" style="padding:10px"><button class="btn btn-danger pull-left" onclick="cancel()">CANCEL</button><button class="btn btn-success pull-right" onclick="completion()">SUBMIT</button></td>';
 						bodyScan += '<tr>';
 
+						if (statustransaction == 'IN') {
+							$('#operator_id').val(result.data.operator_id);
+						}
+
 						$('#resultScanBody').append(bodyScan);
 					}
 					else{
@@ -190,6 +264,7 @@ table.table-bordered > tfoot > tr > th{
 			color:$('#color').text(),
 			qty:$('#qty').text(),
 			status:$('#status').text(),
+			operator_id:$('#operator_id').val()
 		}
 
 		$.post('{{ url("index/injection/completion") }}', data, function(result, status, xhr){
@@ -201,6 +276,7 @@ table.table-bordered > tfoot > tr > th{
 				$('#tag_product').removeAttr("disabled");
 				$("#tag_product").val("");
 				$("#tag_product").focus();
+				$('#operator_id').val("");
 			}
 			else{
 				openErrorGritter('Error!', 'Upload Failed.');
@@ -214,6 +290,11 @@ table.table-bordered > tfoot > tr > th{
 		$('#tag_product').removeAttr("disabled");
 		$('#tag_product').val("");
 		$('#tag_product').focus();
+		$('#operator_id').val("");
+	}
+
+	function cancelTag(){
+		location.reload();
 	}
 
 	function fillResult() {

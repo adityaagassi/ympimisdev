@@ -15,11 +15,11 @@
 @section('content')
 <section class="content">
 	<div class="row">
-		<div class="col-xs-4" style="text-align: center;">
+		<!-- <div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 3vw; color: red;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("index/masterMachine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Master Machine</a>
 			<a href="{{ url("index/masterCycleMachine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Cycle Time Machine</a>
-		</div>
+		</div> -->
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<!-- <a href="{{ url("index/in") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - In</a>
@@ -52,15 +52,19 @@
 
 			<!-- <a href="{{ url("index/recorder_process_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Push Block Check</a> -->
 		</div>
+		<div class="col-xs-4" style="text-align: center; color: red;">
+			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("/index/injection/machine_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Machine Monitoring</a>
+		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			 <a href="{{ url("index/dailyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily Stock After Injection</a>
+			 <!-- <a href="{{ url("index/dailyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily Stock After Injection</a>
 
-			 <a href="{{ url("index/MonhtlyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Monhtly Target Injection</a>
+			 <a href="{{ url("index/MonhtlyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Monhtly Target Injection</a> -->
 
 			 <!-- <a href="{{ url("index/dailyNG") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily NG Report Injection</a> -->
 
-			 <a href="{{ url("index/molding_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Molding Maintenance Monitoring</a>
+			 <!-- <a href="{{ url("index/molding_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Molding Maintenance Monitoring</a> -->
 
 			 <a href="{{ url("/index/recorder/report_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Push Block Check</a> 
 			 <a href="{{ url("/index/recorder/resume_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Push Block Check</a>
