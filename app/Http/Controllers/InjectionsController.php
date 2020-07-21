@@ -4877,20 +4877,92 @@ public function fetchStockMonitoring(Request $request)
         if ($request->get('color') == "" || $request->get('color') == "All") {
             $color = "";
         }else{
-            $color = "where injection_parts.color = '".$request->get('color')."'";
+            $color = "where TRIM( 
+            RIGHT(
+                    c.part, 
+                    (LENGTH(c.part) - LOCATE('(',c.part)) 
+            )) =  '".$request->get('color').")'";
         }
 
+        $j = 2;
+        $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
+        $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
+        foreach ($weekly_calendars as $key) {
+            if ($key->week_date == $nextdayplus1) {
+                if ($key->remark == 'H') {
+                    $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(++$j)));
+                }
+            }
+        }
+        if (date('D')=='Fri' || date('D')=='Sat') {
+            $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
+        }
+
+        $first = date('Y-m-01');
+        $now = date('Y-m-d');
+
         $data = DB::SELECT("SELECT
-            gmc,
-            CONCAT( UPPER( part_code ), ' (', color, ')' ) AS part,
-            COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS stock,
-            COALESCE (( SELECT color FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS color 
+            c.part,
+            TRIM( 
+                RIGHT(
+                        c.part, 
+                        (LENGTH(c.part) - LOCATE('(',c.part)) 
+                )
+            ) as color,
+            SUM( c.stock ) AS stock,
+            SUM( c.plan ) AS plan 
         FROM
-            injection_parts 
+            (
+            SELECT
+                CONCAT( UPPER( injection_parts.part_code ), ' (', injection_parts.color, ')' ) AS part,
+                COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS stock,
+                0 AS plan 
+            FROM
+                injection_parts
+            GROUP BY injection_parts.part_code,injection_parts.color,gmc,color  UNION ALL
+            SELECT
+                part,
+                0 AS stock,
+                sum( a.plan )- sum( a.stamp ) AS plan 
+            FROM
+                (
+                SELECT
+                    CONCAT( part_code, ' (', color, ')' ) AS part,
+                    SUM( quantity ) AS plan,
+                    0 AS stamp 
+                FROM
+                    production_schedules
+                    LEFT JOIN materials ON materials.material_number = production_schedules.material_number
+                    LEFT JOIN injection_part_details ON injection_part_details.model = materials.model 
+                WHERE
+                    materials.category = 'FG' 
+                    AND materials.origin_group_code = '072' 
+                    AND production_schedules.due_date BETWEEN '".$first."' 
+                    AND '".$nextdayplus1."' 
+                GROUP BY
+                    part_code,color UNION ALL
+                SELECT
+                    CONCAT( part_code, ' (', color, ')' ) AS part,
+                    0 AS plan,
+                    SUM( quantity ) AS stamp 
+                FROM
+                    flo_details
+                    LEFT JOIN materials ON materials.material_number = flo_details.material_number
+                    LEFT JOIN injection_part_details ON injection_part_details.model = materials.model 
+                WHERE
+                    materials.category = 'FG' 
+                    AND materials.origin_group_code = '072' 
+                    AND DATE( flo_details.created_at ) BETWEEN '".$first."' 
+                    AND '".$now."' 
+                GROUP BY
+                    part_code,color
+                ) a 
+            GROUP BY
+                a.part 
+            ) c 
         ".$color."
-        ORDER BY
-            injection_parts.color,
-            part_name DESC");
+        GROUP BY
+            c.part ORDER BY color");
 
         $response = array(
             'status' => true,

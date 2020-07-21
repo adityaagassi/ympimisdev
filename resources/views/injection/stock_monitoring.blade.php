@@ -370,29 +370,38 @@ table > thead > tr > th{
 					var part = [];
 					var jml = [];
 					var series = [];
+					var series2 = [];
 					var colors = [];
+					var plan = [];
 
 					for (var i = 0; i < result.datas.length; i++) {
 						part.push(result.datas[i].part);
 						jml.push(parseInt(result.datas[i].stock));
+						var color1 = result.datas[i].part.split(' ');
+						var color2 = color1.slice(-1);
+						// var color2 = color1[1].slice(0);
+						// var color3 = color2[1].split(')');
+						// var color4 = color3[0];
 						// console.log(result.datas[i].color);
-						if (result.datas[i].color == 'BLUE') {
+						if (result.datas[i].color == 'BLUE)') {
 							colors.push('#4287f5');
-						}else if(result.datas[i].color == 'PINK'){
+						}else if(result.datas[i].color == 'PINK)'){
 							colors.push('#f542dd');
-						}else if(result.datas[i].color == 'GREEN'){
+						}else if(result.datas[i].color == 'GREEN)'){
 							colors.push('#7bff63');
-						}else if(result.datas[i].color == 'RED'){
+						}else if(result.datas[i].color == 'RED)'){
 							colors.push('#ff4a4a');
-						}else if(result.datas[i].color == 'IVORY'){
+						}else if(result.datas[i].color == 'IVORY)'){
 							colors.push('#fff7ba');
-						}else if(result.datas[i].color == 'BROWN'){
+						}else if(result.datas[i].color == 'BROWN)'){
 							colors.push('#bd8a15');
 						}else{
 							colors.push('#000');
 						}
 						// series.push([part[i], jml[i], colors[i]]);
 						series.push({y: jml[i],name:part[i], color: colors[i]});
+						plan.push(result.datas[i].plan);
+						series2.push({y: plan[i],name:part[i]})
 					}
 
 					Highcharts.chart('container1', {
@@ -442,7 +451,7 @@ table > thead > tr > th{
 								}
 					        },
 							type: 'linear'
-						}
+						},
 					    ],
 						tooltip: {
 							headerFormat: '<span>Part</span><br/>',
@@ -495,7 +504,15 @@ table > thead > tr > th{
 							name: 'Stock',
 							colorByPoint: false,
 							// color: colors
-						}
+						},
+						{
+						    animation: false,
+					    	type: 'spline',
+					        name: 'Plan',
+					        data: series2,
+					        colorByPoint:false,
+					        color:'#ff0066',
+					    }
 						]
 					});
 
