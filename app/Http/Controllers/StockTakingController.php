@@ -242,7 +242,7 @@ class StockTakingController extends Controller{
 		$title = 'Monthly Stocktaking';
 		$title_jp = '月次棚卸';
 
-		$employees = EmployeeSync::get();
+		$employees = EmployeeSync::whereNull('end_date')->get();
 
 		return view('stocktakings.monthly.count', array(
 			'title' => $title,

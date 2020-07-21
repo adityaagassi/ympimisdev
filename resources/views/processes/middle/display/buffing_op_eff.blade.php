@@ -104,7 +104,7 @@
 							<select class="form-control select2" multiple="multiple" id='groupSelect' onchange="changeGroup()" data-placeholder="Select Group" style="width: 100%;">
 								<option value="A">GROUP A</option>
 								<option value="B">GROUP B</option>
-								<option value="C">GROUP C</option>
+								{{-- <option value="C">GROUP C</option> --}}
 							</select>
 							<input type="text" name="group" id="group" hidden>			
 						</div>
@@ -124,9 +124,9 @@
 				<div id="shiftb">
 					<div id="container1_shiftb" style="width: 100%;"></div>					
 				</div>
-				<div id="shiftc">
+				{{-- <div id="shiftc">
 					<div id="container1_shiftc" style="width: 100%;"></div>					
-				</div>
+				</div> --}}
 			</div>
 
 
@@ -138,9 +138,9 @@
 				<div id="shiftb4">
 					<div id="container4_shiftb" style="width: 100%;"></div>
 				</div>
-				<div id="shiftc4">
+				{{-- <div id="shiftc4">
 					<div id="container4_shiftc" style="width: 100%;"></div>
-				</div>
+				</div> --}}
 			</div>
 
 		</div>
@@ -916,7 +916,8 @@ function fillChart() {
 				$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-12");
 				$('#shift'+group[i].toLowerCase()+'4').show();
 			}
-		}else if(group.length == 2){
+		}
+		else if(group.length == 2){
 			for (var i = 0; i < group.length; i++) {
 				$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
 				$('#shift'+group[i].toLowerCase()).show();
@@ -924,24 +925,25 @@ function fillChart() {
 				$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-6");
 				$('#shift'+group[i].toLowerCase()+'4').show();
 			}
-		}else if(group.length == 3){
-			for (var i = 0; i < group.length; i++) {
-				$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
-				$('#shift'+group[i].toLowerCase()).show();
-
-				$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-4");
-				$('#shift'+group[i].toLowerCase()+'4').show();
-			}
 		}
+		// else if(group.length == 3){
+		// 	for (var i = 0; i < group.length; i++) {
+		// 		$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
+		// 		$('#shift'+group[i].toLowerCase()).show();
+
+		// 		$('#shift'+group[i].toLowerCase()+'4').addClass("col-xs-4");
+		// 		$('#shift'+group[i].toLowerCase()+'4').show();
+		// 	}
+		// }
 
 	}else{
-		$('#shifta').addClass("col-xs-4");
-		$('#shiftb').addClass("col-xs-4");
-		$('#shiftc').addClass("col-xs-4");
+		$('#shifta').addClass("col-xs-6");
+		$('#shiftb').addClass("col-xs-6");
+		$('#shiftc').addClass("col-xs-6");
 
-		$('#shifta4').addClass("col-xs-4");
-		$('#shiftb4').addClass("col-xs-4");
-		$('#shiftc4').addClass("col-xs-4");
+		$('#shifta4').addClass("col-xs-6");
+		$('#shiftb4').addClass("col-xs-6");
+		$('#shiftc4').addClass("col-xs-6");
 	}
 
 

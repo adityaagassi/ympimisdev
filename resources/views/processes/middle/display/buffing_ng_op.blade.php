@@ -130,7 +130,7 @@
 							<select class="form-control select2" multiple="multiple" id='groupSelect' onchange="changeGroup()" data-placeholder="Select Group" style="width: 100%;">
 								<option value="A">GROUP A</option>
 								<option value="B">GROUP B</option>
-								<option value="C">GROUP C</option>
+								{{-- <option value="C">GROUP C</option> --}}
 							</select>
 							<input type="text" name="group" id="group" hidden>			
 						</div>
@@ -148,9 +148,9 @@
 				<div id="shiftb">
 					<div id="container1_shiftb" style="width: 100%;"></div>					
 				</div>
-				<div id="shiftc">
+				{{-- <div id="shiftc">
 					<div id="container1_shiftc" style="width: 100%;"></div>					
-				</div>			
+				</div> --}}
 			</div>
 			<div class="col-xs-12" style="margin-top: 1%; padding: 0px;">
 				<div id="shifta2">
@@ -159,9 +159,9 @@
 				<div id="shiftb2">
 					<div id="container2_shiftb" style="width: 100%;"></div>					
 				</div>
-				<div id="shiftc2">
+				{{-- <div id="shiftc2">
 					<div id="container2_shiftc" style="width: 100%;"></div>					
-				</div>			
+				</div> --}}			
 			</div>
 
 		</div>
@@ -681,7 +681,8 @@
 					$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-12");
 					$('#shift'+group[i].toLowerCase()+'2').show();
 				}
-			}else if(group.length == 2){
+			}
+			else if(group.length == 2){
 				for (var i = 0; i < group.length; i++) {
 					$('#shift'+group[i].toLowerCase()).addClass("col-xs-6");
 					$('#shift'+group[i].toLowerCase()).show();
@@ -690,24 +691,25 @@
 					$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-6");
 					$('#shift'+group[i].toLowerCase()+'2').show();
 				}
-			}else if(group.length == 3){
-				for (var i = 0; i < group.length; i++) {
-					$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
-					$('#shift'+group[i].toLowerCase()).show();
-
-
-					$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-4");
-					$('#shift'+group[i].toLowerCase()+'2').show();
-				}
 			}
-		}else{
-			$('#shifta').addClass("col-xs-4");
-			$('#shiftb').addClass("col-xs-4");
-			$('#shiftc').addClass("col-xs-4");
+			// else if(group.length == 3){
+			// 	for (var i = 0; i < group.length; i++) {
+			// 		$('#shift'+group[i].toLowerCase()).addClass("col-xs-4");
+			// 		$('#shift'+group[i].toLowerCase()).show();
 
-			$('#shifta2').addClass("col-xs-4");
-			$('#shiftb2').addClass("col-xs-4");
-			$('#shiftc2').addClass("col-xs-4");
+
+			// 		$('#shift'+group[i].toLowerCase()+'2').addClass("col-xs-4");
+			// 		$('#shift'+group[i].toLowerCase()+'2').show();
+			// 	}
+			// }
+		}else{
+			$('#shifta').addClass("col-xs-6");
+			$('#shiftb').addClass("col-xs-6");
+			$('#shiftc').addClass("col-xs-6");
+
+			$('#shifta2').addClass("col-xs-6");
+			$('#shiftb2').addClass("col-xs-6");
+			$('#shiftc2').addClass("col-xs-6");
 		}
 
 		$.get('{{ url("fetch/middle/buffing_op_ng") }}', data, function(result, status, xhr){
