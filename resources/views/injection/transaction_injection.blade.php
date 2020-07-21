@@ -48,7 +48,17 @@ table.table-bordered > tfoot > tr > th{
 	</div>
 	<div class="row">
 		<div class="col-xs-6" style="text-align: center;">
-			<div class="input-group col-md-12">
+			<?php if ($status == 'OUT'): ?>
+				<div class="row">
+					<div class="col-xs-9">
+						<input type="text" style="text-align: center; border-color: red; font-size: 1.5vw; height: 50px" class="form-control" id="operator_name" name="operator_name" placeholder="" readonly>
+					</div>
+					<div class="col-xs-3">
+						<button class="btn btn-danger" style="width: 100%;height: 50px" onclick="cancelTag()">CANCEL</button>
+					</div>
+				</div>
+			<?php endif ?>
+			<div class="input-group col-md-12" style="padding-top: 20px;">
 				<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw; border-color: red;">
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
@@ -57,34 +67,44 @@ table.table-bordered > tfoot > tr > th{
 					<i class="glyphicon glyphicon-barcode"></i>
 				</div>
 			</div>
-
-			<?php if ($status == 'OUT'): ?>
-				<div class="col-xs-9" style="padding-top: 20px;">
-					<input type="text" style="text-align: center; border-color: red; font-size: 1.5vw; height: 50px" class="form-control" id="operator_name" name="operator_name" placeholder="" readonly>
+			<div class="row">
+				<div class="col-md-12" style="padding-top: 20px;">
+					<span style="font-size: 24px;">Transaction:</span> 
+					<table id="resultScan" class="table table-bordered table-striped table-hover" style="width: 100%;">
+						<input type="hidden" id="operator_id">
+			            <thead style="background-color: rgba(126,86,134,.7);">
+			                <tr>
+			                  <th style="width: 5%;">Material Number</th>
+			                  <th style="width: 17%;">Part Name</th>
+			                  <th style="width: 17%;">Part Type</th>
+			                  <th style="width: 17%;">Color</th>
+			                  <th style="width: 6%;">Cavity</th>
+			                  <th style="width: 6%;">Qty</th>
+			                  <th style="width: 6%;">Status</th>
+			                </tr>
+			            </thead >
+			            <tbody id="resultScanBody">
+						</tbody>
+		            </table>
 				</div>
-				<div class="col-xs-3" style="padding-top: 20px;">
-					<button class="btn btn-danger" style="width: 100%;height: 50px" onclick="cancelTag()">CANCEL</button>
+			</div>
+			<?php if ($status == "OUT"): ?>
+				<div class="row">
+					<div class="col-md-12">
+						<span style="font-size: 24px;">NG List:</span> 
+						<table id="resultNG" class="table table-bordered table-striped table-hover" style="width: 100%;">
+				            <thead style="background-color: rgba(126,86,134,.7);">
+				                <tr>
+				                  <th style="width: 5%;">NG</th>
+				                  <th style="width: 17%;">Quantity</th>
+				                </tr>
+				            </thead >
+				            <tbody id="resultNGBody">
+							</tbody>
+			            </table>
+					</div>
 				</div>
 			<?php endif ?>
-			<div class="col-md-12" style="padding-top: 20px;">
-				<span style="font-size: 24px;">Transaction:</span> 
-				<table id="resultScan" class="table table-bordered table-striped table-hover" style="width: 100%;">
-					<input type="hidden" id="operator_id">
-		            <thead style="background-color: rgba(126,86,134,.7);">
-		                <tr>
-		                  <th style="width: 5%;">Material Number</th>
-		                  <th style="width: 17%;">Part Name</th>
-		                  <th style="width: 17%;">Part Type</th>
-		                  <th style="width: 17%;">Color</th>
-		                  <th style="width: 6%;">Qty</th>
-		                  <th style="width: 6%;">Status</th>
-		                </tr>
-		            </thead >
-		              
-		            <tbody id="resultScanBody">
-					</tbody>
-	            </table>
-			</div>
 		</div>
 
 		<div class="col-xs-6" style="padding-left: 0px">
@@ -206,36 +226,57 @@ table.table-bordered > tfoot > tr > th{
 	$('#tag_product').keyup(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			if($("#tag_product").val().length >= 7){
+				var stts = '{{$status}}';
 				var data = {
 					tag : $("#tag_product").val(),
-					status : '{{$status}}',
+					status : stts,
 				}
 
 				var bodyScan = "";
 				$('#resultScanBody').html("");
+				var ngScan = "";
+				$('#resultNGBody').html("");
 				var statustransaction = '{{$status}}';
 
 				$.get('{{ url("scan/tag_product") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', 'Scan Tag Success');
 						$('#tag_product').prop('disabled',true);
-						bodyScan += '<tr>';
-						bodyScan += '<td id="material_number">'+result.data.material_number+'</td>';
-						bodyScan += '<td id="part_name">'+result.data.part_name+'</td>';
-						bodyScan += '<td id="part_type">'+result.data.part_type+'</td>';
-						bodyScan += '<td id="color">'+result.data.color+'</td>';
-						bodyScan += '<td id="qty">'+result.data.shot+'</td>';
-						bodyScan += '<td id="status">'+statustransaction+'</td>';
-						bodyScan += '<tr>';
-						bodyScan += '<tr>';
-						bodyScan += '<td colspan="6" style="padding:10px"><button class="btn btn-danger pull-left" onclick="cancel()">CANCEL</button><button class="btn btn-success pull-right" onclick="completion()">SUBMIT</button></td>';
-						bodyScan += '<tr>';
+						$.each(result.data, function(key, value) {
+							bodyScan += '<tr>';
+							bodyScan += '<td id="material_number">'+value.material_number+'</td>';
+							bodyScan += '<td id="part_name">'+value.part_name+'</td>';
+							bodyScan += '<td id="part_type">'+value.part_type+'</td>';
+							bodyScan += '<td id="color">'+value.color+'</td>';
+							bodyScan += '<td id="cavity">'+value.cavity+'</td>';
+							bodyScan += '<td id="qty">'+value.shot+'</td>';
+							bodyScan += '<td id="status">'+statustransaction+'</td>';
+							bodyScan += '</tr>';
+							bodyScan += '<tr>';
+							bodyScan += '<td colspan="7" style="padding:10px"><button class="btn btn-danger pull-left" onclick="cancel()">CANCEL</button><button class="btn btn-success pull-right" onclick="completion()">SUBMIT</button></td>';
+							bodyScan += '</tr>';
 
-						if (statustransaction == 'IN') {
-							$('#operator_id').val(result.data.operator_id);
-						}
+							if (stts == 'OUT') {
+								ng_arr = value.ng_name.split(',');
+								qty_arr = value.ng_count.split(',');
+
+								for(var i = 0; i < ng_arr.length; i++){
+									ngScan += '<tr>';
+									ngScan += '<td id="material_number">'+ng_arr[i]+'</td>';
+									ngScan += '<td id="part_name">'+qty_arr[i]+'</td>';
+									ngScan += '</tr>';
+								}
+							}
+
+							if (statustransaction == 'IN') {
+								$('#operator_id').val(value.operator_id);
+							}
+						})
 
 						$('#resultScanBody').append(bodyScan);
+						if (stts == 'OUT') {
+							$('#resultNGBody').append(ngScan);
+						}
 					}
 					else{
 						openErrorGritter('Error!', 'Tag Invalid');
@@ -262,6 +303,7 @@ table.table-bordered > tfoot > tr > th{
 			part_name:$('#part_name').text(),
 			part_type:$('#part_type').text(),
 			color:$('#color').text(),
+			cavity:$('#cavity').text(),
 			qty:$('#qty').text(),
 			status:$('#status').text(),
 			operator_id:$('#operator_id').val()
@@ -272,6 +314,7 @@ table.table-bordered > tfoot > tr > th{
 				openSuccessGritter('Success!', 'Transaction Success');
 				$('#loading').hide();
 				$('#resultScanBody').html("");
+				$('#resultNGBody').html("");
 				fillResult();
 				$('#tag_product').removeAttr("disabled");
 				$("#tag_product").val("");
@@ -287,6 +330,7 @@ table.table-bordered > tfoot > tr > th{
 
 	function cancel(){
 		$('#resultScanBody').html("");
+		$('#resultNGBody').html("");
 		$('#tag_product').removeAttr("disabled");
 		$('#tag_product').val("");
 		$('#tag_product').focus();

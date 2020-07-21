@@ -4618,9 +4618,9 @@ public function scanProduct(Request $request)
 {
     try {
         if ($request->get('status') == "IN") {
-            $tag = InjectionTag::where('tag',$request->get('tag'))->where('location','RC11')->first();
+            $tag = DB::SELECT("SELECT * FROM `injection_tags` where tag = '".$request->get('tag')."' and location = 'RC11'");
         }else{
-            $tag = InjectionTag::where('tag',$request->get('tag'))->where('location','RC91')->first();
+            $tag = DB::SELECT("SELECT * FROM `injection_tags` left join injection_process_logs on tag = tag_product and injection_tags.material_number = injection_process_logs.material_number and injection_tags.cavity = injection_process_logs.cavity where tag = '".$request->get('tag')."' and location = 'RC91' and injection_process_logs.remark is null");
         }
         if (count($tag) > 0) {
             $response = array(
@@ -4776,6 +4776,14 @@ public function completion(Request $request)
                 'operator_id' => $request->get('operator_id'),
                 'created_by' => $id_user
             ]);
+
+            $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC91']);
+            $injectionInventory->quantity = ($injectionInventory->quantity-$request->get('qty'));
+            $injectionInventory->save();
+
+            $process = InjectionProcessLog::where('tag_product',$request->get('tag'))->where('material_number',$request->get('material_number'))->where('cavity',$request->get('cavity'))->where('remark',null)->first();
+            $process->remark = 'Close';
+            $process->save();
         }
 
         $response = array(
