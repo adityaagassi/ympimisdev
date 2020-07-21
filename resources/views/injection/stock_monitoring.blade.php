@@ -105,50 +105,10 @@ table > thead > tr > th{
 			</div>
 			<div class="col-xs-12" style="margin-top: 5px;">
 				<div id="container1" style="width: 100%;height: 600px"></div>
-				<!-- <div id="container2" style="width: 100%;"></div> -->
 			</div>
 		</div>
 	</div>
 </section>
-
-<!-- <div class="modal fade" id="myModal">
-    <div class="modal-dialog" style="width:1250px;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 style="float: right;" id="modal-title"></h4>
-          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
-          <br><h4 class="modal-title" id="judul_table"></h4>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-12">
-              <table id="example2" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
-                <thead style="background-color: rgba(126,86,134,.7);">
-                  <tr>
-                    <th>Date</th>
-                    <th>PIC</th> 
-                    <th>Machine</th>    
-                    <th>Material Number</th>
-                    <th>Data OK</th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-                <tfoot style="background-color: RGB(252, 248, 227);">
-					<th>Total</th>
-					<th colspan="3"></th>
-					<th id="modalResultTotal"></th>
-				</tfoot>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-        </div>
-      </div>
-    </div>
-  </div> -->
 @endsection
 @section('scripts')
 <script src="{{ url("js/highstock.js")}}"></script>
@@ -456,7 +416,7 @@ table > thead > tr > th{
 						xAxis: {
 							categories: part,
 							type: 'category',
-							gridLineWidth: 1,
+							gridLineWidth: 0,
 							gridLineColor: 'RGB(204,255,255)',
 							lineWidth:2,
 							lineColor:'#9e9e9e',

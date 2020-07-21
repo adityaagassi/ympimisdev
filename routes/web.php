@@ -248,6 +248,9 @@ Route::get('fetch/detail_molding_monitoring', 'InjectionsController@detail_moldi
 Route::get('index/injection/machine_monitoring', 'InjectionsController@indexMachineMonitoring');
 Route::get('fetch/injection/machine_monitoring', 'InjectionsController@fetchMachineMonitoring');
 
+Route::get('index/injection/stock_monitoring', 'InjectionsController@indexStockMonitoring');
+Route::get('fetch/injection/stock_monitoring', 'InjectionsController@fetchStockMonitoring');
+
 //end report
 
 
@@ -1167,6 +1170,7 @@ Route::get('investment/detail/{id}', 'AccountingController@detail_investment');
 Route::post('investment/update_post', 'AccountingController@detail_investment_post');
 Route::get('investment/sendemail', 'AccountingController@investment_send_email');
 Route::get('investment/check/{id}', 'AccountingController@check_investment');
+Route::post('investment/check_budget/{id}', 'AccountingController@check_investment_budget');
 
 //Nomor Investment
 Route::get('investment/get_nomor_investment', 'AccountingController@get_nomor_inv');
@@ -1886,6 +1890,7 @@ Route::get('index/indirect_material_request/{id}', 'IndirectMaterialController@i
 //Schedule
 Route::get('index/chm_picking_schedule', 'IndirectMaterialController@indexPickingSchedule');
 Route::get('fetch/chm_picking_schedule', 'IndirectMaterialController@fetchPickingSchedule');
+Route::get('fetch/get_addition_chm', 'IndirectMaterialController@fetchAdditionChm');
 
 
 //END CHEMICAL
@@ -2534,6 +2539,8 @@ Route::post('index/ng_finding/approval/{id}/{month}','NgFindingController@approv
 Route::get('index/recorder_process', 'RecorderProcessController@index');
 Route::get('index/recorder_process_push_block/{remark}', 'RecorderProcessController@index_push_block');
 Route::get('index/fetch_push_block', 'RecorderProcessController@fetch_push_block');
+Route::get('fetch/fetch_cavity', 'RecorderProcessController@fetch_cavity');
+Route::get('scan/recorder', 'RecorderProcessController@scan_tag');
 Route::post('index/push_block_recorder/create', 'RecorderProcessController@create');
 Route::post('index/push_block_recorder/create_temp', 'RecorderProcessController@create_temp');
 Route::post('index/push_block_recorder/update_temp', 'RecorderProcessController@update_temp');
