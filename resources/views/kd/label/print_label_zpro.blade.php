@@ -126,6 +126,7 @@
 
 		if(material_description.length > 35){
 			$('#print_material_description').css('font-size', '6pt');
+			$('#print_material_description').css('font-weight', 'bold');
 		}else{
 			$('#print_material_description').css('font-size', '7pt');
 		}
