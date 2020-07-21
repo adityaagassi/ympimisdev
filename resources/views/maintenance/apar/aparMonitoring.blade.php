@@ -124,6 +124,7 @@
       <table class="table table-bordered" width="100%">
         <thead>
           <tr>
+            <th>No.</th>
             <th>APAR CODE</th>
             <th>APAR NAME</th>
             <th>LOCATION</th>
@@ -226,6 +227,7 @@
 
         $.get('{{ url("fetch/maintenance/apar/list/monitoring") }}', data, function(result, status, xhr){
           checked = 0;
+          var no_cek = 1, no_hasil = 1;
 
           $.each(result.check_list, function(index, value){
             bg = "";
@@ -239,16 +241,20 @@
             // }
 
             body += "<tr>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+no_cek+"</td>";
             body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+value.utility_code+"</td>";
             body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+value.utility_name+"</td>";
             body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+value.location+"</td>";
             body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+(value.last_check || '-')+"</td>";
             body += "<td style='background-color:"+color_arr[value.wek - 1]+"' >"+value.cek_before+"</td>";
             body += "</tr>";
+
+            no_cek++;
           })
 
           // if (result.check_list.length == 0) {
             body += "<tr>";
+            body += "<td style='background: transparent'>&nbsp;</td>";
             body += "<td style='background: transparent'>&nbsp;</td>";
             body += "<td style='background: transparent'>&nbsp;</td>";
             body += "<td style='background: transparent'>&nbsp;</td>";
@@ -264,18 +270,22 @@
           hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
           hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
           hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
           hasil_body = '</tr>';
 
           $.each(result.hasil_check, function(index, value){
             bg = "style='background-color: #98f25c'";            
 
             hasil_body += "<tr>";
+            hasil_body += "<td "+bg+">"+no_hasil+"</td>";
             hasil_body += "<td "+bg+">"+value.utility_code+"</td>";
             hasil_body += "<td "+bg+">"+value.utility_name+"</td>";
             hasil_body += "<td "+bg+">"+value.location+"</td>";
             hasil_body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
             hasil_body += "<td "+bg+">-</td>";
             hasil_body += "</tr>";
+
+            no_hasil++;
           })
           
 

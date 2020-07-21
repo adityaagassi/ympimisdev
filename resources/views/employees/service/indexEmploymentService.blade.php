@@ -397,7 +397,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<li>
 						<i class="fa fa-info-circle" style="background-color: red; color: white;"></i>
 						<div class="timeline-item">
-							<h3 class="timeline-header" style="color: red; font-weight: bold;">Informasi Terkait Pelanggaran Kode Etik Power Harassment (Pelecehan Keskuasaan)</h3>
+							<h3 class="timeline-header" style="color: red; font-weight: bold;">Informasi Terkait Pelanggaran Kode Etik Power Harassment (Pelecehan Kekuasaan)</h3>
 							<div class="timeline-body">
 								Surat informasi dapat didownload melalui link di bawah ini:
 								<br>
