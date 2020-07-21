@@ -503,7 +503,7 @@ class QcCarController extends Controller
                  }
 
                } else {
-                  if ($posisi == "chief") {
+                  if ($posisi == "chief" || $posisi == "coordinator") {
                     $to = "employee_id";
                   } 
                   else if ($posisi == "manager") {
@@ -607,24 +607,29 @@ class QcCarController extends Controller
             $number = $mail->phone;
           }
 
-          if (strpos($number, '/') !== false) {
-            $number2 = explode("/", $number);
-            $mailnumber = '62'.substr($number2[0],1);
-          }else{
-            $mailnumber = '62'.substr($number, 1);
-          }
-
           if($cars != null){
             if ($verif[0]->verifikatorchief != null || $verif[0]->verifikatorforeman != null || $verif[0]->verifikatorcoordinator != null) {
 
               if ($qc_cars->email_status == "SentStaff" && $qc_cars->posisi == "staff") {
-                if ($verif[0]->verifikatorcoordinator != null) {
-                    $qc_cars->email_status = "SentCoordinator";
-                    $qc_cars->posisi = "coordinator";  
-                }                
-                else if($verif[0]->verifikatorchief != null){
-                    $qc_cars->email_status = "SentChief";
-                    $qc_cars->posisi = "chief";
+
+                if($verif[0]->kategori == "Supplier"){
+                  if ($verif[0]->verifikatorcoordinator != null) {
+                      $qc_cars->email_status = "SentCoordinator";
+                      $qc_cars->posisi = "coordinator";  
+                  }                                  
+                }
+                else if($verif[0]->kategori == "Eksternal"){
+                  if($verif[0]->verifikatorchief != null){
+                      $qc_cars->email_status = "SentChief";
+                      $qc_cars->posisi = "chief";
+                  }
+                  else{
+                      $qc_cars->email_status = "SentManager";
+                      $qc_cars->posisi = "manager";
+                      $qc_cars->checked_chief = "Checked";
+                      $qc_cars->checked_foreman = "Checked";
+                      $qc_cars->checked_coordinator = "Checked";
+                  }
                 }
                 else{
                     $qc_cars->email_status = "SentManager";
@@ -635,14 +640,7 @@ class QcCarController extends Controller
                 }
                 
                 $qc_cars->email_send_date = date('Y-m-d');
-                
                 $qc_cars->save();
-
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
 
                 Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Chief berhasil terkirim')->with('page', 'CAR');  
@@ -654,11 +652,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "foreman2";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Foreman berhasil terkirim')->with('page', 'CAR');
@@ -670,11 +664,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');
@@ -686,11 +676,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');
@@ -702,11 +688,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');
@@ -718,11 +700,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "dgm";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CAR');
@@ -799,11 +777,7 @@ class QcCarController extends Controller
                     $qc_cars->posisi = "dgm";
                     $qc_cars->save();
 
-                    $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                    $fd = @implode('', file($url));
+                    
 
                     Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                     return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CAR');
@@ -814,11 +788,7 @@ class QcCarController extends Controller
                     $qc_cars->posisi = "manager";
                     $qc_cars->save();
 
-                    $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                    $fd = @implode('', file($url));
+                    
 
                     Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                     return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke Manager berhasil terkirim')->with('page', 'CAR');                     
@@ -831,12 +801,6 @@ class QcCarController extends Controller
                   $qc_cars->email_send_date = date('Y-m-d');
                   $qc_cars->posisi = "dgm";
                   $qc_cars->save();
-
-                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                  $fd = @implode('', file($url));
 
                   Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail ke DGM berhasil terkirim')->with('page', 'CAR');
@@ -885,12 +849,6 @@ class QcCarController extends Controller
                   $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain , employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
                   $cars2 = db::select($query2);
-
-                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber2);
-                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                  $fd = @implode('', file($url));
 
                   Mail::to($mailtoo2)->send(new SendEmail($cars2, 'car'));
                   return redirect('/index/qc_car/detail/'.$qc_cars->id)->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
@@ -1145,11 +1103,7 @@ class QcCarController extends Controller
                 
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1161,11 +1115,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "foreman2";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1177,11 +1127,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1193,11 +1139,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1209,11 +1151,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "manager";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1225,11 +1163,7 @@ class QcCarController extends Controller
                 $qc_cars->posisi = "dgm";
                 $qc_cars->save();
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
+                
 
                 Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1286,12 +1220,6 @@ class QcCarController extends Controller
 
                 $cars2 = db::select($query2);
 
-                $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber2);
-                $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                $fd = @implode('', file($url));
-
                 Mail::to($mailtoo2)->send(new SendEmail($cars2, 'car'));
                 return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
               }
@@ -1310,11 +1238,6 @@ class QcCarController extends Controller
                     $qc_cars->posisi = "dgm";
                     $qc_cars->save();
 
-                    $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                    $fd = @implode('', file($url));
 
                     Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                     return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1325,11 +1248,6 @@ class QcCarController extends Controller
                     $qc_cars->posisi = "manager";
                     $qc_cars->save();
 
-                    $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                    $fd = @implode('', file($url));
 
                     Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                     return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1343,11 +1261,6 @@ class QcCarController extends Controller
                   $qc_cars->posisi = "dgm";
                   $qc_cars->save();
 
-                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                    $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-                    $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                    $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                    $fd = @implode('', file($url));
 
                   Mail::to($mailtoo)->send(new SendEmail($cars, 'car'));
                   return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1396,11 +1309,6 @@ class QcCarController extends Controller
 
                   $cars2 = db::select($query2);
 
-                  $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-                  $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber2);
-                  $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$qc_cars->car_cpar->judul_komplain." Dengan Nomor ".$qc_cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-                  $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-                  $fd = @implode('', file($url));
 
                   Mail::to($mailtoo2)->send(new SendEmail($cars2, 'car'));
                   return redirect('/index/qc_car/verifikasicar/'.$qc_cars->id)->with('status', 'CAR Approved')->with('page', 'CAR');
@@ -1475,11 +1383,6 @@ class QcCarController extends Controller
             $mailnumber = '62'.substr($number, 1);
           }
 
-          $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-          $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-          $query_string .= "&message=".rawurlencode(stripslashes("CAR ".$cars->car_cpar->judul_komplain." Dengan Nomor ".$cars->cpar_no." Telah Ditolak. Mohon untuk segera diperbaiki")) . "&languagetype=1";        
-          $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-          $fd = @implode('', file($url));
 
           Mail::to($mailtoo)->send(new SendEmail($querycar, 'rejectcar'));
           return redirect('/index/qc_car/verifikasicar/'.$id)->with('success', 'CAR Rejected')->with('page', 'CAR');
@@ -1536,11 +1439,6 @@ class QcCarController extends Controller
             $mailmtoo = $mailm->email;        
           }
 
-          $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-          $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-          $query_string .= "&message=".rawurlencode(stripslashes("CAR ".$cars->car_cpar->judul_komplain." Dengan Nomor ".$cars->cpar_no." Telah Ditolak. Mohon untuk segera diperbaiki")) . "&languagetype=1";        
-          $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-          $fd = @implode('', file($url));
 
           Mail::to($mailtoo)->cc($mailmtoo)->send(new SendEmail($querycar, 'rejectcar'));
           return redirect('/index/qc_car/verifikasigm/'.$id)->with('success', 'CAR Rejected')->with('page', 'CAR');
@@ -1735,11 +1633,6 @@ class QcCarController extends Controller
 
             $cars2 = db::select($query2);
 
-            $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-            $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($mailnumber);
-            $query_string .= "&message=".rawurlencode(stripslashes("Telah Dibuat CAR ".$cars->car_cpar->judul_komplain." Dengan Nomor ".$cars->cpar_no.". Mohon untuk segera diverifikasi")) . "&languagetype=1";        
-            $url = "http://gateway.onewaysms.co.id:10002/".$query_string;       
-            $fd = @implode('', file($url));
 
             Mail::to($mailtoo)->send(new SendEmail($cars2, 'car'));
             // return redirect('/index/qc_car/verifikasigm/'.$request->get('id'))->with('status', 'E-mail has Been Sent To QA')->with('page', 'CAR');
