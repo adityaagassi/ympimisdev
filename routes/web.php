@@ -422,10 +422,10 @@ Route::get('fetch/recorder_repair/by_date', 'AdditionalController@fetchRecorderB
 
 //EMPLOYEE
 Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
-	Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
-	Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');
-	Route::get('fetch/report/manpower_detail', 'EmployeeController@fetchReportManpowerDetail');
 });
+Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
+Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');
+Route::get('fetch/report/manpower_detail', 'EmployeeController@fetchReportManpowerDetail');
 
 
 Route::get('index/report/employee_resume', 'EmployeeController@indexEmployeeResume');
@@ -1189,6 +1189,7 @@ Route::get('fetch/po_investment_outstanding', 'AccountingController@fetch_po_out
 Route::get('fetch/investment_item_detail', 'AccountingController@fetch_investment_detail');
 Route::get('fetch/purchase_order/pilih_investment', 'AccountingController@pilihInvestment');
 Route::get('fetch/purchase_order/invlist', 'AccountingController@fetchInvList');
+Route::get('purchase_order/investment_get_item', 'AccountingController@pogetiteminvest');
 
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');

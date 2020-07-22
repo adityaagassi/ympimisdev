@@ -56,9 +56,9 @@
 		<div class="col-xs-12" style="padding-top: 10px;">
 			<div id="chartDepartment" style="width: 100%;">By Department (部門別)</div>
 		</div>
-		<div class="col-xs-12" style="padding-top: 10px;">
+		{{-- <div class="col-xs-12" style="padding-top: 10px;">
 			<div id="chartGrade" style="width: 100%;">By Grade (等級別)</div>
-		</div>
+		</div> --}}
 		<div class="col-xs-12" style="padding-top: 10px;">
 			<div id="chartPosition" style="width: 100%;">By Position (役職別)</div>
 		</div>
@@ -66,7 +66,7 @@
 </section>
 
 <div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog" style="width: 80%;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<div class="row">
@@ -76,9 +76,13 @@
 								<tr>
 									<th style="width: 1%">#</th>
 									<th style="width: 1%">ID</th>
-									<th style="width: 10%">Name</th>
-									<th style="width: 10%">Dept</th>
+									<th style="width: 5%">Name</th>
+									<th style="width: 5%">Dept</th>
+									<th style="width: 5%">Sect</th>
+									<th style="width: 5%">Group</th>
+									<th style="width: 5%">Sub</th>
 									<th style="width: 1%">Join</th>
+									<th style="width: 1%">Pos</th>
 									<th style="width: 1%">Status</th>
 								</tr>
 							</thead>
@@ -342,64 +346,68 @@
 				tableData += "<td>"+value.Emp_no+"</td>";
 				tableData += "<td>"+value.Full_name+"</td>";
 				tableData += "<td>"+value.Department+"</td>";
+				tableData += "<td>"+value.Section+"</td>";
+				tableData += "<td>"+value.Groups+"</td>";
+				tableData += "<td>"+value.Sub_Groups+"</td>";
 				tableData += "<td>"+value.start_date+"</td>";
+				tableData += "<td>"+value.pos_name_en+"</td>";
 				tableData += "<td>"+value.employ_code+"</td>";
 				tableData += "</tr>";
 				count += 1;
 			});
 			$('#tableDetailBody').append(tableData);
-			// $('#tableDetail').DataTable({
-			// 	'dom': 'Bfrtip',
-			// 	'responsive':true,
-			// 	"pageLength": 30,
-			// 	'lengthMenu': [
-			// 	[ 10, 25, 50, -1 ],
-			// 	[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-			// 	],
-			// 	'buttons': {
-			// 		buttons:[
-			// 		// {
-			// 		// 	extend: 'pageLength',
-			// 		// 	className: 'btn btn-default',
-			// 		// },
-			// 		{
-			// 			extend: 'copy',
-			// 			className: 'btn btn-success',
-			// 			text: '<i class="fa fa-copy"></i> Copy',
-			// 			exportOptions: {
-			// 				columns: ':not(.notexport)'
-			// 			}
-			// 		},
-			// 		{
-			// 			extend: 'excel',
-			// 			className: 'btn btn-info',
-			// 			text: '<i class="fa fa-file-excel-o"></i> Excel',
-			// 			exportOptions: {
-			// 				columns: ':not(.notexport)'
-			// 			}
-			// 		},
-			// 		{
-			// 			extend: 'print',
-			// 			className: 'btn btn-warning',
-			// 			text: '<i class="fa fa-print"></i> Print',
-			// 			exportOptions: {
-			// 				columns: ':not(.notexport)'
-			// 			}
-			// 		},
-			// 		]
-			// 	},
-			// 	'paging': true,
-			// 	'lengthChange': true,
-			// 	'searching': true,
-			// 	'ordering': true,
-			// 	'order': [],
-			// 	'info': true,
-			// 	'autoWidth': true,
-			// 	"sPaginationType": "full_numbers",
-			// 	"bJQueryUI": true,
-			// 	"bAutoWidth": false,
-			// 	"processing": true
-			// });
+			$('#tableDetail').DataTable({
+				'dom': 'Bfrtip',
+				'responsive':true,
+				"pageLength": 30,
+				'lengthMenu': [
+				[ 10, 25, 50, -1 ],
+				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+				],
+				'buttons': {
+					buttons:[
+					// {
+					// 	extend: 'pageLength',
+					// 	className: 'btn btn-default',
+					// },
+					{
+						extend: 'copy',
+						className: 'btn btn-success',
+						text: '<i class="fa fa-copy"></i> Copy',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'excel',
+						className: 'btn btn-info',
+						text: '<i class="fa fa-file-excel-o"></i> Excel',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					{
+						extend: 'print',
+						className: 'btn btn-warning',
+						text: '<i class="fa fa-print"></i> Print',
+						exportOptions: {
+							columns: ':not(.notexport)'
+						}
+					},
+					]
+				},
+				'paging': true,
+				'lengthChange': true,
+				'searching': true,
+				'ordering': true,
+				'order': [],
+				'info': true,
+				'autoWidth': true,
+				"sPaginationType": "full_numbers",
+				"bJQueryUI": true,
+				"bAutoWidth": false,
+				"processing": true
+			});
 			$("#loading").hide();
 			$('#modalDetail').modal('show');
 		}
@@ -645,7 +653,7 @@
 							point: {
 								events: {
 									click: function () {
-										fetchModal('union', this.category);
+										fetchModal('Labour_Union', this.category);
 									}
 								}
 							}
@@ -781,65 +789,65 @@
 					}]
 				});
 
-				Highcharts.chart('chartGrade', {
-					title: {
-						text: 'By Grade (等級別)',
-						style: {
-							fontSize: '30px',
-							fontWeight: 'bold'
-						}
-					},
-					yAxis: {
-						title: {
-							text: null
-						}
-					},
-					xAxis: {
-						categories: xGrade,
-						type: 'category',
-						gridLineWidth: 1,
-						gridLineColor: 'RGB(204,255,255)',
-						labels: {
-							style: {
-								fontSize: '18px'
-							}
-						},
-					},
-					credits: {
-						enabled:false
-					},
-					plotOptions: {
-						series:{
-							dataLabels: {
-								enabled: true,
-								format: '{point.y}',
-								style:{
-									textOutline: false,
-									fontSize: '26px'
-								}
-							},
-							animation: false,
-							pointPadding: 0.93,
-							groupPadding: 0.93,
-							borderWidth: 0.93,
-							cursor: 'pointer',
-							point: {
-								events: {
-									click: function () {
-										fetchModal('grade_code', this.category);
-									}
-								}
-							}
-						}
-					},
-					series: [{
-						name:'Materials',
-						type: 'column',
-						colorByPoint: true,
-						data: seriesGrade,
-						showInLegend: false
-					}]
-				});
+				// Highcharts.chart('chartGrade', {
+				// 	title: {
+				// 		text: 'By Grade (等級別)',
+				// 		style: {
+				// 			fontSize: '30px',
+				// 			fontWeight: 'bold'
+				// 		}
+				// 	},
+				// 	yAxis: {
+				// 		title: {
+				// 			text: null
+				// 		}
+				// 	},
+				// 	xAxis: {
+				// 		categories: xGrade,
+				// 		type: 'category',
+				// 		gridLineWidth: 1,
+				// 		gridLineColor: 'RGB(204,255,255)',
+				// 		labels: {
+				// 			style: {
+				// 				fontSize: '18px'
+				// 			}
+				// 		},
+				// 	},
+				// 	credits: {
+				// 		enabled:false
+				// 	},
+				// 	plotOptions: {
+				// 		series:{
+				// 			dataLabels: {
+				// 				enabled: true,
+				// 				format: '{point.y}',
+				// 				style:{
+				// 					textOutline: false,
+				// 					fontSize: '26px'
+				// 				}
+				// 			},
+				// 			animation: false,
+				// 			pointPadding: 0.93,
+				// 			groupPadding: 0.93,
+				// 			borderWidth: 0.93,
+				// 			cursor: 'pointer',
+				// 			point: {
+				// 				events: {
+				// 					click: function () {
+				// 						fetchModal('grade_code', this.category);
+				// 					}
+				// 				}
+				// 			}
+				// 		}
+				// 	},
+				// 	series: [{
+				// 		name:'Materials',
+				// 		type: 'column',
+				// 		colorByPoint: true,
+				// 		data: seriesGrade,
+				// 		showInLegend: false
+				// 	}]
+				// });
 
 				Highcharts.chart('chartPosition', {
 					title: {
