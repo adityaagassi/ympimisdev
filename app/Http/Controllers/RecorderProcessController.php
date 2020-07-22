@@ -443,8 +443,10 @@ class RecorderProcessController extends Controller
                   'created_by' => $id_user
               ]);
 
-              // $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
-              // $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
+              // if ($remark == 'After Injection') {
+              //   // $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
+              //   // $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
+              // }
 
               $contactList = [];
               $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
@@ -464,14 +466,16 @@ class RecorderProcessController extends Controller
                   'push_pull_ng_value' => $request->get('push_pull_ng_value2'),
                   'pic_check' => $request->get('pic_check'),
                 );
-                // foreach($this->mail as $mail_to){
                     Mail::to($this->mail)->bcc($contactList,'Contact List')->send(new SendEmail($data_push_pull, 'push_pull_check'));
+                // if ($remark == 'After Injection') {
+                  // $tag_head->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
+                  // $tag_block->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
                 // }
-                // $tag_head->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
-                // $tag_block->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
               }else{
-                // $tag_head->push_pull_check = 'OK';
-                // $tag_block->push_pull_check = 'OK';
+                // if ($remark == 'After Injection') {
+                  // $tag_head->push_pull_check = 'OK';
+                  // $tag_block->push_pull_check = 'OK';
+                // }
               }
 
               if($height_ng_name != 'OK'){
@@ -489,19 +493,22 @@ class RecorderProcessController extends Controller
                   'height_ng_value' => $request->get('height_ng_value2'),
                   'pic_check' => $request->get('pic_check'),
                 );
-                // foreach($this->mail as $mail_to){
-                // $contactList[1] = 'aditya.agassi@music.yamaha.com';
                     Mail::to($this->mail)->bcc($contactList,'Contact List')->send(new SendEmail($data_height, 'height_check'));
+                // if ($remark == 'After Injection') {
+                  // $tag_block->height_check = $height_ng_name.'_'.$height_ng_value;
+                  // $tag_head->height_check = $height_ng_name.'_'.$height_ng_value;
                 // }
-                // $tag_block->height_check = $height_ng_name.'_'.$height_ng_value;
-                // $tag_head->height_check = $height_ng_name.'_'.$height_ng_value;
               }else{
-                // $tag_block->height_check = 'OK';
-                // $tag_head->height_check = 'OK';
+                // if ($remark == 'After Injection') {
+                  // $tag_block->height_check = 'OK';
+                  // $tag_head->height_check = 'OK';
+                // }
               }
 
-              // $tag_head->save();
-              // $tag_block->save();
+              // if ($remark == 'After Injection') {
+                // $tag_head->save();
+                // $tag_block->save();
+              // }
 
               $response = array(
                 'status' => true,
@@ -604,7 +611,7 @@ class RecorderProcessController extends Controller
         $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
         $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
         $tag_block->shot = $tag_block->shot-32;
-        $tag_head->shot = $tag_block->shot-32;        
+        $tag_head->shot = $tag_head->shot-32;        
         $tag_head->save();
         $tag_block->save();
 
@@ -2175,6 +2182,7 @@ class RecorderProcessController extends Controller
               $head_foot = $request->get('head_foot');
               $push_block_code = $request->get('push_block_code');
               $judgement = $request->get('judgement');
+              $check_type = $request->get('check_type');
 
               if ($push_block_code == 'After Injection') {
                 $front = 'AI';
@@ -2184,7 +2192,22 @@ class RecorderProcessController extends Controller
 
               $push_block_id_gen = $front."_".$request->get('check_date')."_".$request->get('product_type')."_".$request->get('pic_check');
 
+              $ng_head = [];
+              $ng_foot = [];
+
+              $avg_head = [];
+              $avg_foot = [];
+
               for($i = 0; $i<count($middle);$i++){
+                if ($judgement[$i] == 'NG') {
+                  if ($check_type == 'HJ-MJ') {
+                    $ng_head[] = $middle[$i].'-'.$head_foot[$i];
+                    $avg_head[] = $average[$i];
+                  }else{
+                    $ng_foot[] = $middle[$i].'-'.$head_foot[$i];
+                    $avg_foot[] = $average[$i];
+                  }
+                }
                 PushBlockTorque::create([
                   'push_block_code' => $request->get('push_block_code'),
                   'push_block_id_gen' => $push_block_id_gen,
@@ -2209,6 +2232,37 @@ class RecorderProcessController extends Controller
                 $temptemp = PushBlockTorqueTemp::where('middle',$middle[$i])->where('head_foot',$head_foot[$i])->where('push_block_code',$push_block_code)->where('check_type',$request->get('check_type'))->delete();
               }
 
+              $resume_head = 'HJ-MJ_'.join(',',$ng_head).'_'.join(',',$avg_head);
+              $resume_foot = 'MJ-FJ_'.join(',',$ng_foot).'_'.join(',',$avg_foot);
+
+              // if ($push_block_code == 'After Injection') {
+              //   $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
+              //   $tag_middle = InjectionTag::where('tag',$request->get('tag_middle'))->first();
+              //   $tag_foot = InjectionTag::where('tag',$request->get('tag_foot'))->first();
+
+              //   if ($check_type == 'HJ-MJ') {
+              //     if ($resume_head != 'HJ-MJ__') {
+              //       $tag_head->torque_check = $resume_head;
+              //       $tag_middle->torque_check = $resume_head;
+              //     }else{
+              //       $tag_head->torque_check = 'OK';
+              //       $tag_middle->torque_check = 'HJ-MJ_OK';
+              //     }
+              //   }else{
+              //     if ($resume_foot != 'MJ-FJ__') {
+              //       $tag_foot->torque_check = $resume_foot;
+              //       $tag_middle->torque_check = $tag_middle->torque_check.'&'.$resume_foot;
+              //     }else{
+              //       $tag_foot->torque_check = 'OK';
+              //       $tag_middle->torque_check = $tag_middle->torque_check.'&MJ-FJ_OK';
+              //     }
+              //   }
+
+              //   $tag_head->save();
+              //   $tag_middle->save();
+              //   $tag_foot->save();
+              // }
+
               $response = array(
                 'status' => true,
               );
@@ -2220,6 +2274,179 @@ class RecorderProcessController extends Controller
               );
               return Response::json($response);
             }
+    }
+
+    public function return_completion_torque(Request $request)
+    {
+      try {
+        //HEAD
+        $material_head = db::connection('mysql2')->table('materials')
+        ->where('material_number', '=', $request->get('material_number_head'))
+        ->first();
+
+        $return_completion_head = db::connection('mysql2')->table('histories')->insert([
+          "category" => "completion_return",
+          "completion_barcode_number" => "",
+          "completion_description" => "",
+          "completion_location" => 'RC91',
+          "completion_issue_plant" => "8190",
+          "completion_material_id" => $material_head->id,
+          "completion_reference_number" => "",
+          "lot" => 32*-1, //belum pasti
+          "synced" => 0,
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+        
+        $return_transfer_head = db::connection('mysql2')->table('histories')->insert([
+          "category" => "transfer_return",
+          "transfer_barcode_number" => "",
+          "transfer_document_number" => "8190",
+          "transfer_material_id" => $material_head->id,
+          "transfer_issue_location" => 'RC91',
+          "transfer_issue_plant" => "8190",
+          "transfer_receive_plant" => "8190",
+          "transfer_receive_location" => 'RC11',
+          "transfer_cost_center" => "",
+          "transfer_gl_account" => "",
+          "transfer_transaction_code" => "MB1B",
+          "transfer_movement_type" => "9I4",
+          "transfer_reason_code" => "",
+          "lot" => 32, //belum pasti
+          "synced" => 0,
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+
+        //MIDDLE
+        $material_middle = db::connection('mysql2')->table('materials')
+        ->where('material_number', '=', $request->get('material_number_middle'))
+        ->first();
+
+        $return_completion_middle = db::connection('mysql2')->table('histories')->insert([
+          "category" => "completion_return",
+          "completion_barcode_number" => "",
+          "completion_description" => "",
+          "completion_location" => 'RC91',
+          "completion_issue_plant" => "8190",
+          "completion_material_id" => $material_middle->id,
+          "completion_reference_number" => "",
+          "lot" => 32*-1, //belum pasti
+          "synced" => 0,
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+        
+        $return_transfer_middle = db::connection('mysql2')->table('histories')->insert([
+          "category" => "transfer_return",
+          "transfer_barcode_number" => "",
+          "transfer_document_number" => "8190",
+          "transfer_material_id" => $material_middle->id,
+          "transfer_issue_location" => 'RC91',
+          "transfer_issue_plant" => "8190",
+          "transfer_receive_plant" => "8190",
+          "transfer_receive_location" => 'RC11',
+          "transfer_cost_center" => "",
+          "transfer_gl_account" => "",
+          "transfer_transaction_code" => "MB1B",
+          "transfer_movement_type" => "9I4",
+          "transfer_reason_code" => "",
+          "lot" => 32, //belum pasti
+          "synced" => 0,
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+
+        //FOOT
+        $material_foot = db::connection('mysql2')->table('materials')
+        ->where('material_number', '=', $request->get('material_number_foot'))
+        ->first();
+
+        $return_completion_foot = db::connection('mysql2')->table('histories')->insert([
+          "category" => "completion_return",
+          "completion_barcode_number" => "",
+          "completion_description" => "",
+          "completion_location" => 'RC91',
+          "completion_issue_plant" => "8190",
+          "completion_material_id" => $material_foot->id,
+          "completion_reference_number" => "",
+          "lot" => 32*-1, //belum pasti
+          "synced" => 0,
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+        
+        $return_transfer_foot = db::connection('mysql2')->table('histories')->insert([
+          "category" => "transfer_return",
+          "transfer_barcode_number" => "",
+          "transfer_document_number" => "8190",
+          "transfer_material_id" => $material_foot->id,
+          "transfer_issue_location" => 'RC91',
+          "transfer_issue_plant" => "8190",
+          "transfer_receive_plant" => "8190",
+          "transfer_receive_location" => 'RC11',
+          "transfer_cost_center" => "",
+          "transfer_gl_account" => "",
+          "transfer_transaction_code" => "MB1B",
+          "transfer_movement_type" => "9I4",
+          "transfer_reason_code" => "",
+          "lot" => 32, //belum pasti
+          "synced" => 0, 
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+
+        $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
+        $tag_middle = InjectionTag::where('tag',$request->get('tag_middle'))->first();
+        $tag_foot = InjectionTag::where('tag',$request->get('tag_foot'))->first();
+        $tag_foot->shot = $tag_foot->shot-32;
+        $tag_head->shot = $tag_head->shot-32;
+        $tag_middle->shot = $tag_middle->shot-32;
+        $tag_head->save();
+        $tag_middle->save();
+        $tag_foot->save();
+
+        $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_head'), 'storage_location' => 'RC91']);
+            $inventory->quantity = ($inventory->quantity-32);
+            $inventory->save();
+
+        $inventory2 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_middle'), 'storage_location' => 'RC91']);
+            $inventory2->quantity = ($inventory2->quantity-32);
+            $inventory2->save();
+
+        $inventory3 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_foot'), 'storage_location' => 'RC91']);
+            $inventory3->quantity = ($inventory3->quantity-32);
+            $inventory3->save();
+
+        $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_head'), 'location' => 'RC91']);
+            $injectionInventory->quantity = ($injectionInventory->quantity-32);
+            $injectionInventory->save();
+
+        $injectionInventory2 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_middle'), 'location' => 'RC91']);
+            $injectionInventory2->quantity = ($injectionInventory2->quantity-32);
+            $injectionInventory2->save();
+
+        $injectionInventory3 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_foot'), 'location' => 'RC91']);
+            $injectionInventory3->quantity = ($injectionInventory3->quantity-32);
+            $injectionInventory3->save();
+
+        $response = array(
+          'status' => true,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
     }
 
     public function get_temp_torque(Request $request){

@@ -2558,6 +2558,7 @@ Route::post('index/push_block_recorder/update_temp', 'RecorderProcessController@
 Route::get('index/push_block_recorder/get_temp', 'RecorderProcessController@get_temp');
 Route::post('index/push_block_recorder_resume/create_resume', 'RecorderProcessController@create_resume');
 Route::post('index/push_block_recorder/return_completion_push_pull', 'RecorderProcessController@return_completion_push_pull');
+Route::post('index/push_block_recorder/return_completion_torque', 'RecorderProcessController@return_completion_torque');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
 Route::post('index/import_push_block', 'RecorderProcessController@import_push_block');
 Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessController@report_push_block');

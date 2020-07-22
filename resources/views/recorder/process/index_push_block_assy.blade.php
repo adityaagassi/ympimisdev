@@ -668,7 +668,8 @@
 			if($("#tag_head").val().length >= 7){
 				var data = {
 					tag : $("#tag_head").val(),
-					type : 'head'
+					type : 'head',
+					check : 'push_pull',
 				}
 
 				$.get('{{ url("scan/recorder") }}', data, function(result, status, xhr){
@@ -720,7 +721,8 @@
 			if($("#tag_block").val().length >= 7){
 				var data = {
 					tag : $("#tag_block").val(),
-					type : 'block'
+					type : 'block',
+					check : 'push_pull',
 				}
 
 				$.get('{{ url("scan/recorder") }}', data, function(result, status, xhr){
@@ -743,6 +745,10 @@
 						audio_error.play();
 						$("#tag_block").val("");
 						$("#tag_block").focus();
+						$('#injection_date_block').html("");
+						$('#mesin_block_fix2').html("");
+						$('#block_value').html("");
+						$('#product_fix3').html("");
 					}
 				});
 			}
@@ -751,6 +757,10 @@
 				audio_error.play();
 				$("#tag_block").val("");
 				$("#tag_block").focus();
+				$('#injection_date_block').html("");
+				$('#mesin_block_fix2').html("");
+				$('#block_value').html("");
+				$('#product_fix3').html("");
 			}			
 		}
 	});
