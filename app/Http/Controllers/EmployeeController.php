@@ -1973,7 +1973,25 @@ public function indexReportJabatan()
 }
 
 public function fetchReportManpower(){
-     $manpowers = db::connection("sunfish")->select("select Emp_no, Full_name, employ_code, Department, grade_code, pos_name_en, gender, case when [Labour_Union] is null then 'NONE' else [Labour_Union] end as [union] FROM [dbo].[VIEW_YMPI_Emp_OrgUnit] where end_date is null");
+     $manpowers = db::connection("sunfish")->select("SELECT
+          Emp_no,
+          Full_name,
+          employ_code,
+          Department,
+          grade_code,
+          pos_name_en,
+          gender,
+          CASE
+          WHEN [Labour_Union] IS NULL THEN
+          'NONE' 
+          WHEN [Labour_Union] = '' THEN
+          'NONE' 
+          ELSE [Labour_Union] 
+          END AS [union] 
+          FROM
+          [dbo].[VIEW_YMPI_Emp_OrgUnit] 
+          WHERE
+          end_date IS NULL");
 
      $response = array(
           'status' => true,
@@ -3363,14 +3381,14 @@ public function getKaizenReward()
 
 public function fetchAbsenceEmployee(Request $request)
 {
-    $username = Auth::user()->username;
+ $username = Auth::user()->username;
 
-    $att_selected = "";
+ $att_selected = "";
 
-    foreach ($this->attend as $att) {
-        if ($att['attend_type'] == $request->get('attend_code')) {
-          $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
-     }
+ foreach ($this->attend as $att) {
+  if ($att['attend_type'] == $request->get('attend_code')) {
+     $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
+}
 }
 
 $att_selected = substr($att_selected, 0, -2);
