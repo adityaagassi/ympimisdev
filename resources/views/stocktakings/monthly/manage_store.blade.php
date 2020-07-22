@@ -217,6 +217,10 @@
 				</div>
 
 				<center>
+					<span style="font-weight: bold; font-size: 20px;">
+						<input onClick="checkAll(this)" type="checkbox" id="checkAllBox" /> <b>Check All</b>
+					</span>
+					<br>
 					<span style="font-weight: bold; font-size: 20px;">Material Picked: </span>
 					<span id="picked" style="font-weight: bold; font-size: 24px; color: red;">0</span>
 					<span style="font-weight: bold; font-size: 16px; color: red;">of</span>
@@ -365,6 +369,7 @@
 		$('.select2').select2();
 
 		// fetchTable();
+		$("#printer").prop('selectedIndex', 0).change();
 		
 		$('#modalPrinter').modal({
 			backdrop: 'static',
@@ -457,8 +462,7 @@
 		}else{
 			$('#material_description').text('');
 		}
-	}	
-
+	}
 
 
 	function addMaterial(argument) {
@@ -521,6 +525,22 @@
 
 	var total;
 	var store_detail;
+
+	function checkAll(element){
+		var id = $(element).attr("id");
+		var checkVal = $('#'+id).is(":checked");
+
+		console.log(checkVal);
+
+		if(checkVal) {
+			total = $('#total').text();
+			$('input:checkbox').prop('checked', true);
+		}else{
+			total = 0;
+			$('input:checkbox').prop('checked', false);
+		}
+		$("#picked").html(total);
+	}
 
 	function countPicked(element){
 
@@ -602,6 +622,7 @@
 				$('#store_detail').DataTable().destroy();
 				$('#store_detail_body').html("");
 
+				$('input:checkbox').prop('checked', false);
 				$('#total').html(result.data.length);
 				$('#picked').html(0);
 				total = 0;
@@ -632,7 +653,7 @@
 					body += '</td>';
 
 					if(result.data[i].print_status == 0){
-						body += '<td><input type="checkbox" name="R" id="'+result.data[i].id+'"></td>';
+						body += '<td><input type="checkbox" name="P" id="'+result.data[i].id+'"></td>';
 					}else{
 						body += '<td><input type="checkbox" name="RP" id="'+result.data[i].id+'"></td>';
 					}
@@ -644,7 +665,7 @@
 
 				$('#store_detail tfoot th').each( function () {
 					var title = $(this).text();
-					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+					$(this).html( '<input style="text-align: center;" class="cari" type="text" placeholder="Search '+title+'" />' );
 				});
 				store_detail = $('#store_detail').DataTable({
 					'dom': 'Bfrtip',
@@ -688,7 +709,7 @@
 					'paging': true,
 					'lengthChange': true,
 					'searching': true,
-					'ordering': true,
+					'ordering': false,
 					'info': true,
 					'autoWidth': true,
 					"sPaginationType": "full_numbers",
@@ -700,7 +721,7 @@
 				store_detail.columns().every( function () {
 					var that = this;
 
-					$( 'input', this.footer() ).on( 'keyup change', function () {
+					$( '.cari', this.footer() ).on( 'keyup change', function () {
 						if ( that.search() !== this.value ) {
 							that
 							.search( this.value )

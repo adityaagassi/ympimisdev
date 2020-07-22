@@ -730,8 +730,6 @@ class StockTakingController extends Controller{
 				}
 			}
 
-
-
 			$lists = db::select("SELECT
 				s.id,
 				s.store, 
@@ -791,7 +789,7 @@ class StockTakingController extends Controller{
 	}
 
 	public function printSummary($list, $print, $printer_name){
-		$printer_name = 'MIS';
+		// $printer_name = 'MIS';
 		$connector = new WindowsPrintConnector($printer_name);
 		$printer = new Printer($connector);
 
@@ -807,9 +805,15 @@ class StockTakingController extends Controller{
 		$uom = $list->bun;
 		$lot = $list->lot;
 
+		$stocktaking = StocktakingCalendar::where('status', 'planned')->first();
+
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->setEmphasis(true);
 		$printer->setReverseColors(true);
+		if($stocktaking){
+			$printer->setTextSize(1, 1);
+			$printer->text("   ".$stocktaking->activity."   \n");
+		}
 		$printer->setTextSize(2, 2);
 		$printer->text("  Summary of Counting  "."\n");
 		$printer->initialize();
@@ -842,7 +846,7 @@ class StockTakingController extends Controller{
 		$printer->setTextSize(1, 1);
 		$printer->text($description."\n");
 		if($model != '' || $key != '' || $surface != ''){
-			$printer->text($model."-".$key."-".$surface."\n");
+			$printer->text($model." - ".$key." - ".$surface."\n");
 		}
 		if(strlen($lot) == 0){
 			$printer->text("Uom: ".$uom."\n");
@@ -1362,7 +1366,7 @@ class StockTakingController extends Controller{
 			StocktakingOutput::truncate();
 			StocktakingLocationStock::truncate();
 
-			$list = StocktakingList::where('created_by', 1)
+			$list = StocktakingList::whereNotNull('created_by')
 			->update([
 				'remark' => 'USE',
 				'print_status' => 0,
@@ -3030,7 +3034,7 @@ class StockTakingController extends Controller{
 
 		$query = "select stock_date as order_date, date_format(stock_date, '%d-%b-%Y') as stock_date, storage_location, sum(variance) as variance, sum(ok) as ok from
 		(
-		select material_number, material_description, storage_location, if(sum(pi)-sum(book) <> 0, 1, 0) as variance, if(sum(pi)-sum(book) <> 0, 0, 1) as ok, stock_date from
+		select material_number, material_description, storage_location, if(round(sum(pi),3)-sum(book) <> 0, 1, 0) as variance, if(round(sum(pi),3)-sum(book) <> 0, 0, 1) as ok, stock_date from
 		(
 		select storage_location_stocks.material_number, storage_location_stocks.material_description, storage_location_stocks.storage_location, storage_location_stocks.unrestricted as book, 0 as pi, storage_location_stocks.stock_date from storage_location_stocks where storage_location_stocks.storage_location in (select distinct storage_location from stocktaking_silver_lists) and storage_location_stocks.material_number in (select distinct material_number from stocktaking_silver_lists) and storage_location_stocks.stock_date >= '".$datefrom."' and storage_location_stocks.stock_date <= '".$dateto."'
 
@@ -3057,13 +3061,14 @@ class StockTakingController extends Controller{
 			$loc = "";
 		}
 
-		$query = "select material_number, material_description, storage_location, sum(pi) as pi, sum(book) as book, sum(pi)-sum(book) as diff_qty, ABS(sum(pi)-sum(book)) as diff_abs from
+		$query = "
+		select material_number, material_description, storage_location, round(sum(pi),3) as pi, sum(book) as book, round(round(sum(pi),3)-sum(book),3) as diff_qty, round(ABS(round(sum(pi),3)-sum(book)),3) as diff_abs from
 		(
 		select storage_location_stocks.material_number, storage_location_stocks.material_description, storage_location_stocks.storage_location, storage_location_stocks.unrestricted as book, 0 as pi, storage_location_stocks.stock_date from storage_location_stocks where storage_location_stocks.storage_location in (select distinct storage_location from stocktaking_silver_lists) and storage_location_stocks.material_number in (select distinct material_number from stocktaking_silver_lists) and storage_location_stocks.stock_date = '".$stock_date."'
 
 		union all
 
-		select stocktaking_silver_logs.material_number, stocktaking_silver_logs.material_description, stocktaking_silver_logs.storage_location, 0 as book, stocktaking_silver_logs.quantity as pi, date(created_at) as stock_date from stocktaking_silver_logs where date(stocktaking_silver_logs.created_at) = '".$stock_date."') as variance 
+		select stocktaking_silver_logs.material_number, stocktaking_silver_logs.material_description, stocktaking_silver_logs.storage_location, 0 as book, stocktaking_silver_logs.quantity as pi, date(created_at) as stock_date from stocktaking_silver_logs where date(stocktaking_silver_logs.created_at) = '".$stock_date."') as variance
 		group by material_number, material_description, storage_location
 		".$loc."
 		order by diff_abs desc, diff_qty asc";
