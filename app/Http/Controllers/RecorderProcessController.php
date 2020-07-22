@@ -443,8 +443,8 @@ class RecorderProcessController extends Controller
                   'created_by' => $id_user
               ]);
 
-              $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
-              $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
+              // $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
+              // $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
 
               $contactList = [];
               $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
@@ -467,11 +467,11 @@ class RecorderProcessController extends Controller
                 // foreach($this->mail as $mail_to){
                     Mail::to($this->mail)->bcc($contactList,'Contact List')->send(new SendEmail($data_push_pull, 'push_pull_check'));
                 // }
-                $tag_head->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
-                $tag_block->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
+                // $tag_head->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
+                // $tag_block->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
               }else{
-                $tag_head->push_pull_check = 'OK';
-                $tag_block->push_pull_check = 'OK';
+                // $tag_head->push_pull_check = 'OK';
+                // $tag_block->push_pull_check = 'OK';
               }
 
               if($height_ng_name != 'OK'){
@@ -493,15 +493,15 @@ class RecorderProcessController extends Controller
                 // $contactList[1] = 'aditya.agassi@music.yamaha.com';
                     Mail::to($this->mail)->bcc($contactList,'Contact List')->send(new SendEmail($data_height, 'height_check'));
                 // }
-                $tag_block->height_check = $height_ng_name.'_'.$height_ng_value;
-                $tag_head->height_check = $height_ng_name.'_'.$height_ng_value;
+                // $tag_block->height_check = $height_ng_name.'_'.$height_ng_value;
+                // $tag_head->height_check = $height_ng_name.'_'.$height_ng_value;
               }else{
-                $tag_block->height_check = 'OK';
-                $tag_head->height_check = 'OK';
+                // $tag_block->height_check = 'OK';
+                // $tag_head->height_check = 'OK';
               }
 
-              $tag_head->save();
-              $tag_block->save();
+              // $tag_head->save();
+              // $tag_block->save();
 
               $response = array(
                 'status' => true,
@@ -2471,7 +2471,7 @@ class RecorderProcessController extends Controller
     public function index_torque_ai($remark){
       $name = Auth::user()->name;
       $view = 'recorder.process.index_torque_ai'; //existing
-      // $view = 'recorder.process.index_torque_ai2';
+      // $view = 'recorder.process.index_torque_ai2'; //tag rfid
       return view($view)
       ->with('page', 'Process Assy Recorder')
       ->with('head', 'Recorder Torque Check')
@@ -2728,24 +2728,46 @@ class RecorderProcessController extends Controller
       try {
         $tag = $request->get('tag');
         $type = $request->get('type');
+        $check = $request->get('check');
 
-        $data = DB::SELECT("SELECT
-          tag,
-          injection_tags.material_number,
-          injection_tags.operator_id,
-          injection_tags.part_name,
-          injection_tags.color,
-          injection_tags.cavity,
-          injection_process_logs.mesin,
-          DATE( injection_tags.created_at ) AS injection_date 
-        FROM
-          `injection_tags`
-          left join injection_process_logs on injection_tags.tag = injection_process_logs.tag_product
-        WHERE
-          tag = '".$tag."' 
-          AND push_pull_check = 'Uncheck' 
-          ORDER BY injection_process_logs.id desc
-          LIMIT 1");
+        if ($check == 'push_pull') {
+          $data = DB::SELECT("SELECT
+            tag,
+            injection_tags.material_number,
+            injection_tags.operator_id,
+            injection_tags.part_name,
+            injection_tags.color,
+            injection_tags.cavity,
+            injection_process_logs.mesin,
+            DATE( injection_tags.created_at ) AS injection_date 
+          FROM
+            `injection_tags`
+            left join injection_process_logs on injection_tags.tag = injection_process_logs.tag_product
+          WHERE
+            tag = '".$tag."' 
+            AND push_pull_check = 'Uncheck' 
+            AND height_check = 'Uncheck' 
+            ORDER BY injection_process_logs.id desc
+            LIMIT 1");
+        }else{
+          $data = DB::SELECT("SELECT
+            tag,
+            injection_tags.material_number,
+            injection_tags.operator_id,
+            injection_tags.part_name,
+            injection_tags.color,
+            injection_tags.cavity,
+            injection_process_logs.mesin,
+            DATE( injection_tags.created_at ) AS injection_date 
+          FROM
+            `injection_tags`
+            left join injection_process_logs on injection_tags.tag = injection_process_logs.tag_product
+          WHERE
+            tag = '".$tag."' 
+            AND torque_check = 'Uncheck' 
+            ORDER BY injection_process_logs.id desc
+            LIMIT 1");
+        }
 
         if (count($data) > 0) {
           $response = array(
