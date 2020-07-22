@@ -164,7 +164,7 @@
 
 	<div class="row" style="padding-top:0px">
 		<div class="col-xs-12">
-			<div class="box">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-3" style="padding:0">
 						<div class="col-xs-12">
@@ -353,248 +353,108 @@
 					<div class="modal-body table-responsive no-padding">
 						<div class="col-xs-12">
 							<div class="col-xs-6">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Tanggal Injeksi Head</span></center>
-											</div>
+								<div class="col-xs-12">
+									<div class="row">
+										<div class="col-xs-12">
+											<center><span style="font-weight: bold; font-size: 18px;">Head</span></center>
 										</div>
 									</div>
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<input id="injection_date_head" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Head">
-											</div>
-										</div>
+								</div>
+								<div class="input-group col-md-12">
+									<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw;">
+										<i class="glyphicon glyphicon-barcode"></i>
 									</div>
+									<input type="text" style="text-align: center; font-size: 2vw; height: 50px" class="form-control" id="tag_head" name="tag_head" placeholder="Scan Tag Head Here ..." required>
+									<input type="hidden" id="material_number_head">
+									<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw;">
+										<i class="glyphicon glyphicon-barcode"></i>
+									</div>
+								</div>
+								<div class="col-xs-12" style="padding-top: 10px;padding-left: 0px;padding-right: 0px">
+									<table class="table table-bordered">
+										<tr>
+											<td style="width: 50%">
+												Injection Date Head
+											</td>
+											<td id="injection_date_head">
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Mesin Head
+											</td>
+											<td id="mesin_head_fix2">
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Cavity Head
+											</td>
+											<td id="head_value">
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Product
+											</td>
+											<td id="product_fix2">
+											</td>
+										</tr>
+									</table>
 								</div>
 							</div>
 							<div class="col-xs-6">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Tanggal Injeksi Block</span></center>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<input id="injection_date_block" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Block">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-6" id="mesin_head_choice" style="padding-top: 20px">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Mesin Injeksi Head</span></center>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-12">
-											@foreach($mesin as $mesin)
-											<div class="col-xs-2" style="padding-top: 5px">
-												<center><button class="btn btn-success" id="{{$mesin}}" style="width: 50px;font-size: 15px" onclick="getMesinHead(this.id)">
-													{{$mesin}}
-												</button></center>
-											</div>
-											@endforeach
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-6" id="mesin_head_fix" style="padding-top: 20px">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Mesin Injeksi Head</span></center>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-12">
-											<button class="btn btn-success" id="mesin_head_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMesinHead()">
-												#0
-											</button>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-6" id="mesin_block_choice" style="padding-top: 20px">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Mesin Injeksi Block</span></center>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-12">
-											@foreach($mesin2 as $mesin2)
-											<div class="col-xs-2" style="padding-top: 5px">
-												<center><button class="btn btn-warning" id="{{$mesin2}}" style="width: 50px;font-size: 15px" onclick="getMesinBlock(this.id)">
-													{{$mesin2}}
-												</button></center>
-											</div>
-											@endforeach
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-6" id="mesin_block_fix" style="padding-top: 20px">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Mesin Injeksi Block</span></center>
-											</div>
-										</div>
-									</div>
-									<div class="col-xs-12">
-											<button class="btn btn-warning" id="mesin_block_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeMesinBlock()">
-												#0
-											</button>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-12" id="product_choice" style="padding-top: 20px">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Type Produk</span></center>
-											</div>
-										</div>
-									</div>
+								<div class="col-xs-12">
 									<div class="row">
 										<div class="col-xs-12">
-											@foreach($product_type as $product_type)
-											<div class="col-xs-3" style="padding-top: 5px">
-												<center><button class="btn btn-primary" id="{{$product_type}}" style="width: 180px;font-size: 15px" onclick="getProduct(this.id)">
-													{{$product_type}}
-												</button></center>
-											</div>
-								            @endforeach
-										</div>
-								    </div>
-								</div>
-							</div>
-							<div class="col-xs-12" id="product_fix" style="padding-top: 20px">
-								<div class="row">
-									<div class="col-xs-12">
-										<div class="row">
-											<div class="col-xs-12">
-												<center><span style="font-weight: bold; font-size: 18px;">Type Produk</span></center>
-											</div>
+											<center><span style="font-weight: bold; font-size: 18px;">BLOCK</span></center>
 										</div>
 									</div>
-									<div class="col-xs-12" style="padding-top: 10px">
-										<button class="btn btn-primary" id="product_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="changeProduct()">
-											YRS
-										</button>
+								</div>
+								<div class="input-group col-md-12">
+									<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw;">
+										<i class="glyphicon glyphicon-barcode"></i>
+									</div>
+									<input type="text" style="text-align: center; font-size: 2vw; height: 50px" class="form-control" id="tag_block" name="tag_block" placeholder="Scan Tag Block Here ..." required disabled>
+									<input type="hidden" id="material_number_block">
+									<div class="input-group-addon" id="icon-serial" style="font-weight: bold; font-size: 2vw;">
+										<i class="glyphicon glyphicon-barcode"></i>
 									</div>
 								</div>
-							</div>
-							<div class="col-xs-6" style="padding-top:10px">
-								<div class="col-xs-12">
-									<span style="font-size: 20px; font-weight: bold;"><center>HEAD</center></span>
+								<div class="col-xs-12" style="padding-top: 10px;padding-left: 0px;padding-right: 0px">
+									<table class="table table-bordered">
+										<tr>
+											<td style="width: 50%">
+												Injection Date Block
+											</td>
+											<td id="injection_date_block" style="width: 50%">
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Mesin Block
+											</td>
+											<td id="mesin_block_fix2">
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Cavity Block
+											</td>
+											<td id="block_value">
+											</td>
+										</tr>
+										<tr>
+											<td>
+												Product
+											</td>
+											<td id="product_fix3">
+											</td>
+										</tr>
+									</table>
 								</div>
-								<table class="table" id="tablehead" style="padding-top: 0px">
-									<thead>
-										<tr>
-											<th style="width: 1%;"></th>
-										</tr>					
-									</thead>
-									<tbody>
-										<tr>
-											<td width="50%" onclick="getData(1)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														1-4
-													</button>
-												</center>
-											</td>
-											<td width="50%" onclick="getData(2)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														5-8
-													</button>
-												</center>
-											</td>
-										</tr>	
-										<tr>
-											<td width="50%" onclick="getData(3)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														9-12
-													</button>
-												</center>
-											</td>
-											<td width="50%" onclick="getData(4)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														13-16
-													</button>
-												</center>
-											</td>
-										</tr>
-										<tr>
-											<td width="50%" onclick="getData(5)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														17-20
-													</button>
-												</center>
-											</td>
-										</tr>
-									</tbody>
-								</table>
 							</div>
-							<div class="col-xs-6" style="padding-top:10px">
-								<div class="col-xs-12">
-									<span style="font-size: 20px; font-weight: bold;"><center>BLOCK</center></span>
-								</div>
-								<table class="table" id="tableblock">
-									<thead>
-										<tr>
-											<th style="width: 1%;"></th>
-										</tr>					
-									</thead>
-									<tbody>
-										<tr>
-											<td width="50%" onclick="getData2(6)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														1-8
-													</button>
-												</center>
-											</td>
-											<td width="50%" onclick="getData2(7)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														9-16
-													</button>
-												</center>
-											</td>
-										</tr>	
-										<tr>
-											<td width="50%" onclick="getData2(8)">
-												<center>
-													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-														17-24
-													</button>
-												</center>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<div class="col-xs-6" style="padding-top: 0px">
-							<div class="col-xs-12">
+							<div class="col-xs-6" style="padding-top: 0px">
 								<input type="hidden" id="head_id" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
 								<input type="hidden" id="head_value" style="width: 24%; height: 30px; font-size:20px; text-align: center;" disabled>
 								<table class="table table-bordered">
@@ -614,9 +474,7 @@
 									</tr>
 								</table>
 							</div>
-						</div>
-						<div class="col-xs-6">
-							<div class="col-xs-12">
+							<div class="col-xs-6">
 								<input type="hidden" id="block_id" style="width: 11%; height: 30px; font-size: 20px; text-align: center;" disabled>
 								<input type="hidden" id="block_value" style="width: 30%; height: 30px; font-size: 20px; text-align: center;" disabled>
 								<table class="table table-bordered">
@@ -648,277 +506,12 @@
 									</tr>
 								</table>
 							</div>
-						</div>
-						<div class="col-xs-12" style="padding-top:10px" id="reason">
-							<div class="col-xs-12">
-								<span style="font-size: 20px; font-weight: bold;"><center>REASON</center></span>
-							</div>
-							<table class="table" id="tablereason" style="padding-top: 0px">
-								<thead>
-									<tr>
-										<th style="width: 1%;"></th>
-									</tr>					
-								</thead>
-								<tbody>
-									<tr>
-										<td width="20%" onclick="getDataReason('MOLD CHANGE')">
-											<center>
-												<button class="btn btn-danger" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													MOLD CHANGE
-												</button>
-											</center>
-										</td>
-										<td width="20%" onclick="getDataReason('COLOR CHANGE')">
-											<center>
-												<button class="btn btn-danger" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													COLOR CHANGE
-												</button>
-											</center>
-										</td>
-										<td width="20%" onclick="getDataReason('TROUBLESHOOTING')">
-											<center>
-												<button class="btn btn-danger" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													TROUBLESHOOTING
-												</button>
-											</center>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div class="col-xs-12" style="padding-top:10px" id="reason_fix">
-							<div class="col-xs-12">
-								<span style="font-size: 20px; font-weight: bold;"><center>REASON</center></span>
-							</div>
-							<button class="btn btn-danger" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;" id="reason_fix2" onclick="getDataReason2()">
-								REASON
-							</button>
-						</div>
-						<div class="col-xs-12" style="padding-top:10px" id="molding">
-							<div class="col-xs-12">
-								<span style="font-size: 20px; font-weight: bold;"><center>MOLDING</center></span>
-							</div>
-							<table class="table" id="tablemolding" style="padding-top: 0px">
-								<tbody>
-									<tr>
-										<td width="20%" onclick="getDataMolding('HJ 01')">
-											<center>
-												<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													HJ 01
-												</button>
-											</center>
-										</td>
-										<td width="20%" onclick="getDataMolding('HJ 02')">
-											<center>
-												<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													HJ 02
-												</button>
-											</center>
-										</td>
-										<td width="20%" onclick="getDataMolding('HJ 03')">
-											<center>
-												<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													HJ 03
-												</button>
-											</center>
-										</td>
-										<td width="20%" onclick="getDataMolding('HJ 04')">
-											<center>
-												<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													HJ 04
-												</button>
-											</center>
-										</td>
-										<td width="20%" onclick="getDataMolding('HJ 05')">
-											<center>
-												<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													HJ 05
-												</button>
-											</center>
-										</td>
-									</tr>
-									<tr>
-										<td width="20%" onclick="getDataMolding('BL 01')">
-											<center>
-												<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													BL 01
-												</button>
-											</center>
-										</td>
-										<td width="20%" onclick="getDataMolding('BL 02')">
-											<center>
-												<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													BL 02
-												</button>
-											</center>
-										</td>
-										<td width="20%" onclick="getDataMolding('BL 03')">
-											<center>
-												<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													BL 03
-												</button>
-											</center>
-										</td>
-										<td width="20%" onclick="getDataMolding('BL 04')">
-											<center>
-												<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
-													BL 04
-												</button>
-											</center>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div class="col-xs-12" style="padding-top:10px" id="molding_fix">
-							<div class="col-xs-12">
-								<span style="font-size: 20px; font-weight: bold;"><center>MOLDING</center></span>
-							</div>
-							<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;" id="molding_fix2" onclick="getDataMolding2()">
-								HJ
-							</button>
-						</div>
-						<div class="col-xs-12" id="mesin_parameter" style="padding-top: 20px">
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="row">
-										<div class="col-xs-12">
-											<center><span style="font-weight: bold; font-size: 18px;">MESIN PARAMETER</span></center>
-										</div>
-									</div>
+							<div class="col-xs-12" style="padding-top: 20px;">
+								<div class="modal-footer">
+									<button onclick="mulaiProses()" class="btn btn-success" style="width: 100%;font-size: 40px;font-weight: bold;">
+										MULAI PROSES
+									</button>
 								</div>
-								<div class="col-xs-12">
-										@foreach($mesin3 as $mesin3)
-										<div class="col-xs-2" style="padding-top: 5px">
-											<center><button class="btn btn-primary" id="{{$mesin3}}" style="width: 120px;font-size: 15px" onclick="getMesinParameter(this.id)">
-												{{$mesin3}}
-											</button></center>
-										</div>
-										@endforeach
-								</div>
-							</div>
-						</div>
-						<div class="col-xs-12" id="mesin_parameter_fix" style="padding-top: 20px">
-							<div class="row">
-								<div class="col-xs-12">
-									<div class="row">
-										<div class="col-xs-12">
-											<center><span style="font-weight: bold; font-size: 18px;">MESIN PARAMETER</span></center>
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-12">
-										<button class="btn btn-primary" id="mesin_parameter_fix2" style="width: 100%;font-size: 20px;font-weight: bold;" onclick="getMesinParameter2()">
-											#0
-										</button>
-								</div>
-							</div>
-						</div>
-						<div class="col-xs-12" style="padding-top: 20px;overflow-x: scroll;" id="lastParameter">
-							<table class="table table-bordered">
-								<thead>
-									<tr>
-										<th rowspan="3" id="tabledesign">Note</th>
-										<th id="tabledesign">NH</th>
-										<th id="tabledesign">H1</th>
-										<th id="tabledesign">H2</th>
-										<th id="tabledesign">H3</th>
-										<th id="tabledesign">Dryer</th>
-										<th id="tabledesign" colspan="2">MTC</th>
-										<th id="tabledesign" colspan="2">Chiller</th>
-										<th id="tabledesign">Clamp</th>
-										<th id="tabledesign">PH4</th>
-										<th id="tabledesign">PH3</th>
-										<th id="tabledesign">PH2</th>
-										<th id="tabledesign">PH1</th>
-										<th id="tabledesign">TRH3</th>
-										<th id="tabledesign">TRH2</th>
-										<th id="tabledesign">TRH1</th>
-										<th id="tabledesign">VH</th>
-										<th id="tabledesign">PI</th>
-										<th id="tabledesign">LS10 BB</th>
-										<th id="tabledesign">VI5</th>
-										<th id="tabledesign">VI4</th>
-										<th id="tabledesign">VI3</th>
-										<th id="tabledesign">VI2</th>
-										<th id="tabledesign">VI1</th>
-										<th id="tabledesign">LS4</th>
-										<th id="tabledesign">LS4D</th>
-										<th id="tabledesign">LS4C</th>
-										<th id="tabledesign">LS4B</th>
-										<th id="tabledesign">LS4A</th>
-										<th id="tabledesign">LS5</th>
-										<th id="tabledesign">VE1</th>
-										<th id="tabledesign">VE2</th>
-										<th id="tabledesign">VR</th>
-										<th id="tabledesign">LS31A</th>
-										<th id="tabledesign">LS31</th>
-										<th id="tabledesign">SRN</th>
-										<th id="tabledesign">RPM</th>
-										<th id="tabledesign">BP</th>
-										<th id="tabledesign">TR1 INJ</th>
-										<th id="tabledesign">TR3 COOL</th>
-										<th id="tabledesign">TR4 INT</th>
-										<th id="tabledesign">Min. Cush</th>
-										<th id="tabledesign">FILL</th>
-										<th id="tabledesign">Circle Time</th>
-									</tr>
-									<tr>
-										<th id="tabledesign" colspan="4">Header / ??</th>
-										<th id="tabledesign">??</th>
-										<th id="tabledesign" colspan="2">??</th>
-										<th id="tabledesign" colspan="2">??</th>
-										<th id="tabledesign">??</th>
-										<th id="tabledesign" colspan="4">Pressure Hold / ??</th>
-										<th id="tabledesign" colspan="3">Pressure Hold Time / ??</th>
-										<th id="tabledesign">Velocity PH / ??</th>
-										<th id="tabledesign">??</th>
-										<th id="tabledesign">??</th>
-										<th id="tabledesign" colspan="5">Velocity Injection / ??</th>
-										<th id="tabledesign" colspan="6">Length of Stroke / ??</th>
-										<th id="tabledesign" colspan="3">??</th>
-										<th id="tabledesign" colspan="2">??</th>
-										<th id="tabledesign" colspan="2">Screw / ??</th>
-										<th id="tabledesign">??</th>
-										<th id="tabledesign" colspan="3">Timer / ??</th>
-										<th id="tabledesign">??</th>
-										<th id="tabledesign">??</th>
-										<th id="tabledesign">??</th>
-									</tr>
-									<tr>
-										<th id="tabledesign" colspan="4">°C</th>
-										<th id="tabledesign">°C</th>
-										<th id="tabledesign">°C</th>
-										<th id="tabledesign">MPa / bar</th>
-										<th id="tabledesign">°C</th>
-										<th id="tabledesign">MPa / bar</th>
-										<th id="tabledesign">kN</th>
-										<th id="tabledesign" colspan="4">% / MPa</th>
-										<th id="tabledesign" colspan="3">Sec</th>
-										<th id="tabledesign">mm/sec</th>
-										<th id="tabledesign">MPa</th>
-										<th id="tabledesign">mm</th>
-										<th id="tabledesign" colspan="5">% / mm / sec</th>
-										<th id="tabledesign" colspan="6">mm</th>
-										<th id="tabledesign" colspan="3">mm / sec</th>
-										<th id="tabledesign" colspan="2">mm</th>
-										<th id="tabledesign" colspan="2">% / min<sup>-1</sup></th>
-										<th id="tabledesign">MPa</th>
-										<th id="tabledesign" colspan="3">Sec</th>
-										<th id="tabledesign">mm</th>
-										<th id="tabledesign">Sec</th>
-										<th id="tabledesign">Sec</th>
-									</tr>
-								</thead>
-								<tbody id="bodyLastParameter">
-								</tbody>
-							</table>
-						</div>
-						<div class="col-xs-12" style="padding-top: 20px">
-							<div class="modal-footer">
-								<button onclick="confirm()" class="btn btn-success" style="width: 100%;font-size: 40px;font-weight: bold;">
-									MULAI PROSES
-								</button>
 							</div>
 						</div>
 					</div>
@@ -960,17 +553,18 @@
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
-	$('#injection_date_head').datepicker({
-      autoclose: true,
-      format: 'yyyy-mm-dd',
-      todayHighlight: true
-    });
+	// $('#injection_date_head').datepicker({
+ //      autoclose: true,
+ //      format: 'yyyy-mm-dd',
+ //      todayHighlight: true
+ //    });
 
-    $('#injection_date_block').datepicker({
-      autoclose: true,
-      format: 'yyyy-mm-dd',
-      todayHighlight: true
-    });
+ //    $('#injection_date_block').datepicker({
+ //      autoclose: true,
+ //      format: 'yyyy-mm-dd',
+ //      todayHighlight: true
+ //    });
+ 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	$.ajaxSetup({
 		headers: {
@@ -1007,6 +601,27 @@
 			$('#mesin_parameter').hide();
 			$('#lastParameter').hide();
 		}
+
+		$('#head_id').val("");
+		$('#head_1').val("");
+		$('#head_2').val("");
+		$('#head_3').val("");
+		$('#head_4').val("");
+		$('#block_id').val("");
+		$('#block_1').val("");
+		$('#block_2').val("");
+		$('#block_3').val("");
+		$('#block_4').val("");
+		$('#block_5').val("");
+		$('#block_6').val("");
+		$('#block_7').val("");
+		$('#block_8').val("");
+		$("#tag_block").val("");
+	});
+
+	$('#modalHeadBlock').on('shown.bs.modal', function () {
+		$("#tag_head").val("");
+		$('#tag_head').focus();
 	});
 
 	$("form#importForm").submit(function(e) {
@@ -1048,8 +663,96 @@
 		});
 	});
 
-	$('#modalHeadBlock').on('shown.bs.modal', function () {
-			$('#injection_date_head').focus();
+	$('#tag_head').keyup(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#tag_head").val().length >= 7){
+				var data = {
+					tag : $("#tag_head").val(),
+					type : 'head'
+				}
+
+				$.get('{{ url("scan/recorder") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', 'Scan Tag Success');
+						$('#tag_head').prop('disabled',true);
+
+						$.each(result.data, function(key, value) {
+							var mesin = value.mesin.split(' ');
+							$('#injection_date_head').html(value.injection_date);
+							$('#mesin_head_fix2').html('#'+mesin[1]);
+							$('#head_value').html(value.cavity);
+							$('#product_fix2').html(value.part_name);
+							$('#material_number_head').val(value.material_number);
+							getData3(value.cavity,'head');
+						})
+
+						$("#tag_block").val("");
+						$("#tag_block").focus();
+						$("#tag_block").removeAttr("disabled");
+					}
+					else{
+						openErrorGritter('Error!', 'Tag Invalid');
+						audio_error.play();
+						$("#tag_head").val("");
+						$("#tag_head").focus();
+						$('#injection_date_head').html("");
+						$('#mesin_head_fix2').html("");
+						$('#head_value').html("");
+						$('#product_fix2').html("");
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Tag Invalid');
+				audio_error.play();
+				$("#tag_head").val("");
+				$("#tag_head").focus();
+				$('#injection_date_head').html("");
+				$('#mesin_head_fix2').html("");
+				$('#head_value').html("");
+				$('#product_fix2').html("");
+			}			
+		}
+	});
+
+	$('#tag_block').keyup(function(event) {
+		if (event.keyCode == 13 || event.keyCode == 9) {
+			if($("#tag_block").val().length >= 7){
+				var data = {
+					tag : $("#tag_block").val(),
+					type : 'block'
+				}
+
+				$.get('{{ url("scan/recorder") }}', data, function(result, status, xhr){
+					if(result.status){
+						openSuccessGritter('Success!', 'Scan Tag Success');
+						$('#tag_block').prop('disabled',true);
+
+						$.each(result.data, function(key, value) {
+							var mesin = value.mesin.split(' ');
+							$('#injection_date_block').html(value.injection_date);
+							$('#mesin_block_fix2').html('#'+mesin[1]);
+							$('#block_value').html(value.cavity);
+							$('#product_fix3').html(value.part_name);
+							$('#material_number_block').val(value.material_number);
+							getData3(value.cavity,'block');
+						})
+					}
+					else{
+						openErrorGritter('Error!', 'Tag Invalid');
+						audio_error.play();
+						$("#tag_block").val("");
+						$("#tag_block").focus();
+					}
+				});
+			}
+			else{
+				openErrorGritter('Error!', 'Tag Invalid');
+				audio_error.play();
+				$("#tag_block").val("");
+				$("#tag_block").focus();
+			}			
+		}
 	});
 
 	function getProduct(product) {
@@ -1181,50 +884,6 @@
 
 					tableData += '<tr hidden>';
 					tableData += '<td><input type="hidden" id="nh" value="'+result.detail.nh+'">';
-					// tableData += '<input type="hidden" id="h1" value="'+result.detail.h1+'">';
-					// tableData += '<input type="hidden" id="h2" value="'+result.detail.h2+'">';
-					// tableData += '<input type="hidden" id="h3" value="'+result.detail.h3+'">';
-					// tableData += '<input type="hidden" id="dryer" value="'+result.detail.dryer+'">';
-					// tableData += '<input type="hidden" id="mtc_temp" value="'+result.detail.mtc_temp+'">';
-					// tableData += '<input type="hidden" id="mtc_press" value="'+result.detail.mtc_press+'">';
-					// tableData += '<input type="hidden" id="chiller_temp" value="'+result.detail.chiller_temp+'">';
-					// tableData += '<input type="hidden" id="chiller_press" value="'+result.detail.chiller_press+'">';
-					// tableData += '<input type="hidden" id="clamp" value="'+result.detail.clamp+'">';
-					// tableData += '<input type="hidden" id="ph4" value="'+result.detail.ph4+'">';
-					// tableData += '<input type="hidden" id="ph3" value="'+result.detail.ph3+'">';
-					// tableData += '<input type="hidden" id="ph2" value="'+result.detail.ph2+'">';
-					// tableData += '<input type="hidden" id="ph1" value="'+result.detail.ph1+'">';
-					// tableData += '<input type="hidden" id="trh3" value="'+result.detail.trh3+'">';
-					// tableData += '<input type="hidden" id="trh2" value="'+result.detail.trh2+'">';
-					// tableData += '<input type="hidden" id="trh1" value="'+result.detail.trh1+'">';
-					// tableData += '<input type="hidden" id="vh" value="'+result.detail.vh+'">';
-					// tableData += '<input type="hidden" id="pi" value="'+result.detail.pi+'">';
-					// tableData += '<input type="hidden" id="ls10" value="'+result.detail.ls10+'">';
-					// tableData += '<input type="hidden" id="vi5" value="'+result.detail.vi5+'">';
-					// tableData += '<input type="hidden" id="vi4" value="'+result.detail.vi4+'">';
-					// tableData += '<input type="hidden" id="vi3" value="'+result.detail.vi3+'">';
-					// tableData += '<input type="hidden" id="vi2" value="'+result.detail.vi2+'">';
-					// tableData += '<input type="hidden" id="vi1" value="'+result.detail.vi1+'">';
-					// tableData += '<input type="hidden" id="ls4" value="'+result.detail.ls4+'">';
-					// tableData += '<input type="hidden" id="ls4d" value="'+result.detail.ls4d+'">';
-					// tableData += '<input type="hidden" id="ls4c" value="'+result.detail.ls4c+'">';
-					// tableData += '<input type="hidden" id="ls4b" value="'+result.detail.ls4b+'">';
-					// tableData += '<input type="hidden" id="ls4a" value="'+result.detail.ls4a+'">';
-					// tableData += '<input type="hidden" id="ls5" value="'+result.detail.ls5+'">';
-					// tableData += '<input type="hidden" id="ve1" value="'+result.detail.ve1+'">';
-					// tableData += '<input type="hidden" id="ve2" value="'+result.detail.ve2+'">';
-					// tableData += '<input type="hidden" id="vr" value="'+result.detail.vr+'">';
-					// tableData += '<input type="hidden" id="ls31a" value="'+result.detail.ls31a+'">';
-					// tableData += '<input type="hidden" id="ls31" value="'+result.detail.ls31+'">';
-					// tableData += '<input type="hidden" id="srn" value="'+result.detail.srn+'">';
-					// tableData += '<input type="hidden" id="rpm" value="'+result.detail.rpm+'">';
-					// tableData += '<input type="hidden" id="bp" value="'+result.detail.bp+'">';
-					// tableData += '<input type="hidden" id="tr1inj" value="'+result.detail.tr1inj+'">';
-					// tableData += '<input type="hidden" id="tr3cool" value="'+result.detail.tr3cool+'">';
-					// tableData += '<input type="hidden" id="tr4int" value="'+result.detail.tr4int+'">';
-					// tableData += '<input type="hidden" id="mincush" value="'+result.detail.mincush+'">';
-					// tableData += '<input type="hidden" id="fill" value="'+result.detail.fill+'">';
-					// tableData += '<input type="hidden" id="circletime" value="'+result.detail.circletime+'">';
 					tableData += '</td>';
 					tableData += '</tr>';
 
@@ -1290,6 +949,56 @@
 		$('#mesin_parameter_fix').hide();
 		$('#mesin_parameter').show();
 		$('#mesin_parameter_fix2').html('#0');
+	}
+
+	function getData3(cavity,type){
+		var data = {
+			cavity : cavity,
+			type : type,
+		}
+
+		$.get('{{ url("fetch/fetch_cavity") }}', data, function(result, status, xhr){
+			if(result.status){
+				if (type === 'head') {
+					$('#head_id').val(result.id);
+					$('#head_1').val(result.cavity_1);
+					$('#head_2').val(result.cavity_2);
+					$('#head_3').val(result.cavity_3);
+					$('#head_4').val(result.cavity_4);
+				}else if(type === 'block'){
+					$('#block_id').val(result.id);
+					$('#block_1').val(result.cavity_1);
+					$('#block_2').val(result.cavity_2);
+					$('#block_3').val(result.cavity_3);
+					$('#block_4').val(result.cavity_4);
+					$('#block_5').val(result.cavity_5);
+					$('#block_6').val(result.cavity_6);
+					$('#block_7').val(result.cavity_7);
+					$('#block_8').val(result.cavity_8);
+				}
+			}
+			else{
+				openErrorGritter('Error!', 'Tag Invalid');
+				audio_error.play();
+				if (type === 'head') {
+					$("#tag_head").removeAttr('disabled');
+					$("#tag_head").val("");
+					$("#tag_head").focus();
+					$('#injection_date_head').html("");
+					$('#mesin_head_fix2').html("");
+					$('#head_value').html("");
+					$('#product_fix2').html("");
+				}else{
+					$("#tag_block").removeAttr('disabled');
+					$("#tag_block").val("");
+					$("#tag_block").focus();
+					$('#injection_date_block').html("");
+					$('#mesin_block_fix2').html("");
+					$('#block_value').html("");
+					$('#product_fix3').html("");
+				}
+			}
+		});
 	}
 
 	function getData(no_cavity){
@@ -1425,7 +1134,7 @@
 		});
 	}
 
-	function confirm() {
+	function mulaiProses() {
 		if ('{{$remark}}' == 'First Shot Approval') {
 			if($('#injection_date_head').val() == '' || $('#injection_date_block').val() == '' || $('#head_id').val() == '' || $('#block_id').val() == '' || $('#mesin_head_fix2').text().trim() == '#0' || $('#mesin_block_fix2').text().trim() == '#0' || $('#product_fix2').text().trim() == 'YRS' || $('#molding_fix2').text().trim() == 'HJ' || $('#reason_fix2').text().trim() == 'REASON' || $('#mesin_parameter_fix2').text().trim() == '#0' || $('#nh').val() == 'Tidak Ada Data'){
 				alert('Semua Data Harus Diisi.');
@@ -1445,15 +1154,15 @@
 				itemresume7($("#head_id").val(),$("#block_7").val());
 				itemresume8($("#head_id").val(),$("#block_8").val());
 				get_temp();
-				setInterval(update_temp,60000);
+				setInterval(update_temp,30000);
 			}
 		}else{
-			if($('#injection_date_head').val() == '' || $('#injection_date_block').val() == '' || $('#head_id').val() == '' || $('#block_id').val() == '' || $('#mesin_head_fix2').text() == '#0' || $('#mesin_block_fix2').text() == '#0' || $('#product_fix2').text() == 'YRS'){
+			if($('#tag_head').val() == '' || $('#tag_block').val() == ''){
 				alert('Semua Data Harus Diisi.');
 			}else{
 				$('#prod_type').html($('#product_fix2').text());
-				$('#injection_date_head_fix').html($('#injection_date_head').val());
-				$('#injection_date_block_fix').html($('#injection_date_block').val());
+				$('#injection_date_head_fix').html($('#injection_date_head').text());
+				$('#injection_date_block_fix').html($('#injection_date_block').text());
 				$('#mesin_head').html($('#mesin_head_fix2').text());
 				$('#mesin_block').html($('#mesin_block_fix2').text());
 				$('#modalHeadBlock').modal('hide');
@@ -1737,6 +1446,9 @@
 		var head_value =  $("#head_value").val();
 		var block_value =  $("#block_value").val();
 
+		var tag_head =  $("#tag_head").val();
+		var tag_block =  $("#tag_block").val();
+
 		var check_date = $("#check_date").text();
 		var injection_date_head = $("#injection_date_head_fix").text();
 		var injection_date_block = $("#injection_date_block_fix").text();
@@ -1872,7 +1584,9 @@
 				push_pull_ng_value2 : push_pull_ng_value,
 				height_ng_name2 : height_ng_name,
 				height_ng_value2 : height_ng_value,
-				notes : notes
+				notes : notes,
+				tag_head:tag_head,
+				tag_block:tag_block
 			}
 			// console.log(data3);
 
@@ -1902,7 +1616,9 @@
 				push_pull : push_pull,
 				judgement : judgement,
 				ketinggian : ketinggian,
-				judgementketinggian : judgementketinggian
+				judgementketinggian : judgementketinggian,
+				tag_head:tag_head,
+				tag_block:tag_block
 			}
 			// console.table(data);
 			$.post('{{ url("index/push_block_recorder/create") }}', data, function(result, status, xhr){
@@ -1928,27 +1644,62 @@
 				push_pull : push_pull2,
 				judgement : judgement2,
 				ketinggian : ketinggian2,
-				judgementketinggian : judgementketinggian2
+				judgementketinggian : judgementketinggian2,
+				tag_head:tag_head,
+				tag_block:tag_block
 			}
 			$.post('{{ url("index/push_block_recorder/create") }}', data2, function(result, status, xhr){
 				if(result.status){
 					openSuccessGritter('Success', result.message);
 					$('#loading').hide();
-					alert('Pengisian Selesai. Tekan OK untuk menutup.');
-					window.close();
+					if (confirm('Pengisian Selesai. Sisa Material Cek Kombinasi akan di Return ke RC11. Apakah Anda Setuju?.')) {
+						returnCompletion();
+					}else{
+						alert('Anda tidak setuju. Silahkan Return Material secara Manual.')
+						window.close();
+					}
+					// window.close();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
 				}
 			});
-			// $('#reset_button').show();
-			// $('#selesai_button').hide();
 		}
+	}
+
+	function returnCompletion() {
+		$('#loading').show();
+		var material_number_head = $('#material_number_head').val();
+		var material_number_block = $('#material_number_block').val();
+		var tag_head =  $("#tag_head").val();
+		var tag_block =  $("#tag_block").val();
+
+		var data = {
+			material_number_head:material_number_head,
+			material_number_block:material_number_block,
+			tag_head:tag_head,
+			tag_block:tag_block,
+		}
+		$.post('{{ url("index/push_block_recorder/return_completion_push_pull") }}', data, function(result, status, xhr){
+			if(result.status){
+				openSuccessGritter('Success', result.message);
+				$('#loading').hide();
+				alert('Return Material Selesai. Tutup halaman ini.')
+				window.close();
+			}
+			else{
+				openErrorGritter('Error!', result.message);
+			}
+		});
 	}
 
 	function push_pull(id) {
 		var batas_bawah = '{{ $batas_bawah }}';
 		var batas_atas = '{{ $batas_atas }}';
+
+		var batas_bawah2 = '{{ $batas_bawah2 }}';
+		var batas_atas2 = '{{ $batas_atas2 }}';
+
 		// console.log(id);
 		if(id.length == 13){
 			push_block = id.substr(id.length - 3);
@@ -1973,8 +1724,13 @@
 			document.getElementById(id3).style.backgroundColor = "#ff4f4f";
 		}
 		else{
-			$(id2).html('OK');
-			document.getElementById(id3).style.backgroundColor = "#7fff6e";
+			if (parseFloat(x) < batas_bawah2 || parseFloat(x) > parseFloat(batas_atas2)) {
+				$(id2).html('OK');
+				document.getElementById(id3).style.backgroundColor = "#fcdf03";
+			}else{
+				$(id2).html('OK');
+				document.getElementById(id3).style.backgroundColor = "#7fff6e";
+			}
 		}
 	}
 

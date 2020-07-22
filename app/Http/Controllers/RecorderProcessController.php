@@ -20,6 +20,7 @@ use App\RcCameraKangoLog;
 use App\PlcCounter;
 use App\PushBlockTorqueTemp;
 use App\PushBlockTorque;
+use App\InjectionTag;
 use App\Libraries\ActMLEasyIf;
 use Response;
 use DataTables;
@@ -29,6 +30,8 @@ use DateTime;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
+use App\InjectionInventory;
+use App\Inventory;
 
 class RecorderProcessController extends Controller
 {
@@ -106,7 +109,19 @@ class RecorderProcessController extends Controller
 
 	public function index_push_block($remark){
 		$name = Auth::user()->name;
-		return view('recorder.process.index_push_block2')
+    // if ($remark == 'After Injection') {
+    //   $view = 'recorder.process.index_push_block_assy'; //upload excel + tag
+    // }
+    // else if ($remark == 'First Shot Approval') {
+    //   $view = 'recorder.process.index_push_block'; //upload excel
+    // }
+    if ($remark == 'After Injection') {
+      $view = 'recorder.process.index_push_block2'; //existing
+    }
+    else if ($remark == 'First Shot Approval') {
+      $view = 'recorder.process.index_push_block2'; //existing
+    }
+		return view($view)
     ->with('page', 'Process Assy Recorder')
     ->with('head', 'Recorder Push Block Check')
     ->with('title', 'Recorder Push Block Check')
@@ -428,6 +443,12 @@ class RecorderProcessController extends Controller
                   'created_by' => $id_user
               ]);
 
+              $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
+              $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
+
+              $contactList = [];
+              $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
+
               if($push_pull_ng_name != 'OK'){
                 $data_push_pull = array(
                   'push_block_code' => $remark,
@@ -444,8 +465,13 @@ class RecorderProcessController extends Controller
                   'pic_check' => $request->get('pic_check'),
                 );
                 // foreach($this->mail as $mail_to){
-                    Mail::to($this->mail)->send(new SendEmail($data_push_pull, 'push_pull_check'));
+                    Mail::to($this->mail)->bcc($contactList,'Contact List')->send(new SendEmail($data_push_pull, 'push_pull_check'));
                 // }
+                $tag_head->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
+                $tag_block->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
+              }else{
+                $tag_head->push_pull_check = 'OK';
+                $tag_block->push_pull_check = 'OK';
               }
 
               if($height_ng_name != 'OK'){
@@ -464,12 +490,18 @@ class RecorderProcessController extends Controller
                   'pic_check' => $request->get('pic_check'),
                 );
                 // foreach($this->mail as $mail_to){
-                $contactList = [];
-                $contactList[0] = 'mokhamad.khamdan.khabibi@music.yamaha.com';
                 // $contactList[1] = 'aditya.agassi@music.yamaha.com';
                     Mail::to($this->mail)->bcc($contactList,'Contact List')->send(new SendEmail($data_height, 'height_check'));
                 // }
+                $tag_block->height_check = $height_ng_name.'_'.$height_ng_value;
+                $tag_head->height_check = $height_ng_name.'_'.$height_ng_value;
+              }else{
+                $tag_block->height_check = 'OK';
+                $tag_head->height_check = 'OK';
               }
+
+              $tag_head->save();
+              $tag_block->save();
 
               $response = array(
                 'status' => true,
@@ -482,6 +514,127 @@ class RecorderProcessController extends Controller
               );
               return Response::json($response);
             }
+    }
+
+    public function return_completion_push_pull(Request $request)
+    {
+      try {
+        //HEAD
+        $material_head = db::connection('mysql2')->table('materials')
+        ->where('material_number', '=', $request->get('material_number_head'))
+        ->first();
+
+        $return_completion_head = db::connection('mysql2')->table('histories')->insert([
+          "category" => "completion_return",
+          "completion_barcode_number" => "",
+          "completion_description" => "",
+          "completion_location" => 'RC91',
+          "completion_issue_plant" => "8190",
+          "completion_material_id" => $material_head->id,
+          "completion_reference_number" => "",
+          "lot" => 32*-1,
+          "synced" => 0,
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+        
+        $return_transfer_head = db::connection('mysql2')->table('histories')->insert([
+          "category" => "transfer_return",
+          "transfer_barcode_number" => "",
+          "transfer_document_number" => "8190",
+          "transfer_material_id" => $material_head->id,
+          "transfer_issue_location" => 'RC91',
+          "transfer_issue_plant" => "8190",
+          "transfer_receive_plant" => "8190",
+          "transfer_receive_location" => 'RC11',
+          "transfer_cost_center" => "",
+          "transfer_gl_account" => "",
+          "transfer_transaction_code" => "MB1B",
+          "transfer_movement_type" => "9I4",
+          "transfer_reason_code" => "",
+          "lot" => 32,
+          "synced" => 0,
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+
+        //BLOCK
+        $material_block = db::connection('mysql2')->table('materials')
+        ->where('material_number', '=', $request->get('material_number_block'))
+        ->first();
+
+        $return_completion_block = db::connection('mysql2')->table('histories')->insert([
+          "category" => "completion_return",
+          "completion_barcode_number" => "",
+          "completion_description" => "",
+          "completion_location" => 'RC91',
+          "completion_issue_plant" => "8190",
+          "completion_material_id" => $material_block->id,
+          "completion_reference_number" => "",
+          "lot" => 32*-1,
+          "synced" => 0,
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+        
+        $return_transfer_block = db::connection('mysql2')->table('histories')->insert([
+          "category" => "transfer_return",
+          "transfer_barcode_number" => "",
+          "transfer_document_number" => "8190",
+          "transfer_material_id" => $material_block->id,
+          "transfer_issue_location" => 'RC91',
+          "transfer_issue_plant" => "8190",
+          "transfer_receive_plant" => "8190",
+          "transfer_receive_location" => 'RC11',
+          "transfer_cost_center" => "",
+          "transfer_gl_account" => "",
+          "transfer_transaction_code" => "MB1B",
+          "transfer_movement_type" => "9I4",
+          "transfer_reason_code" => "",
+          "lot" => 32,
+          "synced" => 0,
+          'user_id' => "1",
+          'created_at' => date("Y-m-d H:i:s"),
+          'updated_at' => date("Y-m-d H:i:s")
+        ]);
+
+        $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
+        $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
+        $tag_block->shot = $tag_block->shot-32;
+        $tag_head->shot = $tag_block->shot-32;        
+        $tag_head->save();
+        $tag_block->save();
+
+        $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_head'), 'storage_location' => 'RC91']);
+            $inventory->quantity = ($inventory->quantity-32);
+            $inventory->save();
+
+        $inventory2 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_block'), 'storage_location' => 'RC91']);
+            $inventory2->quantity = ($inventory2->quantity-32);
+            $inventory2->save();
+
+        $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_head'), 'location' => 'RC91']);
+            $injectionInventory->quantity = ($injectionInventory->quantity-32);
+            $injectionInventory->save();
+
+        $injectionInventory2 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_block'), 'location' => 'RC91']);
+            $injectionInventory2->quantity = ($injectionInventory2->quantity-32);
+            $injectionInventory2->save();
+
+        $response = array(
+          'status' => true,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
     }
 
     function create_parameter(Request $request)
@@ -2317,7 +2470,9 @@ class RecorderProcessController extends Controller
 
     public function index_torque_ai($remark){
       $name = Auth::user()->name;
-      return view('recorder.process.index_torque_ai')
+      $view = 'recorder.process.index_torque_ai'; //existing
+      // $view = 'recorder.process.index_torque_ai2';
+      return view($view)
       ->with('page', 'Process Assy Recorder')
       ->with('head', 'Recorder Torque Check')
       ->with('title', 'Recorder Torque Check')
@@ -2566,6 +2721,100 @@ class RecorderProcessController extends Controller
             );
             return Response::json($response);
           }
+    }
+
+    public function scan_tag(Request $request)
+    {
+      try {
+        $tag = $request->get('tag');
+        $type = $request->get('type');
+
+        $data = DB::SELECT("SELECT
+          tag,
+          injection_tags.material_number,
+          injection_tags.operator_id,
+          injection_tags.part_name,
+          injection_tags.color,
+          injection_tags.cavity,
+          injection_process_logs.mesin,
+          DATE( injection_tags.created_at ) AS injection_date 
+        FROM
+          `injection_tags`
+          left join injection_process_logs on injection_tags.tag = injection_process_logs.tag_product
+        WHERE
+          tag = '".$tag."' 
+          AND push_pull_check = 'Uncheck' 
+          ORDER BY injection_process_logs.id desc
+          LIMIT 1");
+
+        if (count($data) > 0) {
+          $response = array(
+            'status' => true,
+            'data' => $data,
+            'message' => 'Scan Tag Success',
+          );
+          return Response::json($response);
+        }else{
+          $response = array(
+            'status' => false,
+            'message' => 'Data Not Found',
+          );
+          return Response::json($response);
+        }
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message' => $e->getMessage(),
+        );
+        return Response::json($response);
+      }
+    }
+
+    public function fetch_cavity(Request $request)
+    {
+      try{
+          $cavity = $request->get("cavity");
+          $type = $request->get("type");
+
+          $detail = PushBlockMaster::where('type',$type)->where('no_cavity',$cavity)->first();
+          $data = array('type' => $detail->type,
+                      'no_cavity' => $detail->no_cavity,
+                      'cavity_1' => $detail->cavity_1,
+                      'cavity_2' => $detail->cavity_2,
+                      'cavity_3' => $detail->cavity_3,
+                      'cavity_4' => $detail->cavity_4);
+
+            if (count($data) > 0) {
+              $response = array(
+                'status' => true,
+                'datas' => $data,
+                'id' => $detail->id,
+                'cavity_1' => $detail->cavity_1,
+                'cavity_2' => $detail->cavity_2,
+                'cavity_3' => $detail->cavity_3,
+                'cavity_4' => $detail->cavity_4,
+                'cavity_5' => $detail->cavity_5,
+                'cavity_6' => $detail->cavity_6,
+                'cavity_7' => $detail->cavity_7,
+                'cavity_8' => $detail->cavity_8,
+              );
+              return Response::json($response);
+            }else{
+             $response = array(
+                'status' => false,
+                'datas' => "Data Not Found",
+              );
+               return Response::json($response); 
+            }
+
+          }
+          catch (\Exception $e){
+             $response = array(
+              'status' => false,
+              'datas' => "Get Data Error.",
+            );
+             return Response::json($response);
+        }
     }
 }
   

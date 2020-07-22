@@ -1134,7 +1134,7 @@ Route::get('purchase_requisition/approvedgm/{id}', 'AccountingController@prappro
 Route::get('purchase_requisition/approvegm/{id}', 'AccountingController@prapprovalgm');
 Route::get('purchase_requisition/reject/{id}', 'AccountingController@prreject');
 
-//Purchase Order
+//Purchase Order Khusus PR
 Route::get('purchase_order', 'AccountingController@purchase_order');
 Route::get('fetch/purchase_order', 'AccountingController@fetch_purchase_order');
 Route::get('fetch/purchase_order_pr', 'AccountingController@fetch_po_outstanding_pr');
@@ -1143,23 +1143,20 @@ Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
 Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
 Route::get('purchase_order/get_detailname', 'AccountingController@pogetname')->name('admin.pogetname');
 Route::get('purchase_order/report/{id}', 'AccountingController@report_purchase_order');
-
 Route::get('purchase_order/sendemail', 'AccountingController@po_send_email');
 Route::post('purchase_order/edit_sap', 'AccountingController@edit_sap');
-
 Route::get('edit/purchase_order', 'AccountingController@edit_purchase_order');
 Route::post('update/purchase_order', 'AccountingController@update_purchase_order');
 Route::post('delete/purchase_order_item', 'AccountingController@delete_item_po');
-
 Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
 Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
 Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
 Route::get('export/purchase_order/list', 'AccountingController@exportPO');
-
-
 //New Approval Purchase Order
 Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
 Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
+
+Route::post('update/purchase_requisition/po', 'AccountingController@update_purchase_requisition_po');
 
 //investment
 Route::get('investment', 'AccountingController@investment');
@@ -1184,6 +1181,14 @@ Route::get('investment/edit_investment_item', 'AccountingController@fetch_invest
 Route::post('investment/delete_investment_item', 'AccountingController@delete_investment_item');
 Route::get('investment/get_detailitem', 'AccountingController@getitemdesc')->name('admin.getitemdesc');
 Route::get('investment/report/{id}', 'AccountingController@report_investment');
+
+//Purchase Order Khusus investment
+Route::get('purchase_order_investment', 'AccountingController@purchase_order_investment');
+Route::get('fetch/purchase_order_investment', 'AccountingController@fetch_purchase_order_investment');
+Route::get('fetch/po_investment_outstanding', 'AccountingController@fetch_po_outstanding_investment');
+Route::get('fetch/investment_item_detail', 'AccountingController@fetch_investment_detail');
+Route::get('fetch/purchase_order/pilih_investment', 'AccountingController@pilihInvestment');
+Route::get('fetch/purchase_order/invlist', 'AccountingController@fetchInvList');
 
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
@@ -1880,6 +1885,7 @@ Route::get('print/indirect_material_label/{qr_code}', 'IndirectMaterialControlle
 //END INDIRECT REQUEST
 
 //START CHEMICAL
+//Control Chart
 Route::get('index/chm_solution_control', 'IndirectMaterialController@indexSolutionControl');
 Route::get('fetch/chm_solution_control', 'IndirectMaterialController@fetchSolutionControl');
 Route::post('input/chm_production_result', 'IndirectMaterialController@inputProductionResult');
@@ -1890,7 +1896,11 @@ Route::get('index/indirect_material_request/{id}', 'IndirectMaterialController@i
 //Schedule
 Route::get('index/chm_picking_schedule', 'IndirectMaterialController@indexPickingSchedule');
 Route::get('fetch/chm_picking_schedule', 'IndirectMaterialController@fetchPickingSchedule');
+Route::get('fetch/chm_picking_schedule_detail', 'IndirectMaterialController@fetchPickingScheduleDetail');
 Route::get('fetch/get_addition_chm', 'IndirectMaterialController@fetchAdditionChm');
+Route::post('index/chm_input_addition', 'IndirectMaterialController@inputChmAddition');
+Route::post('index/chm_input_new', 'IndirectMaterialController@inputChmNew');
+
 
 
 //END CHEMICAL
@@ -2546,6 +2556,7 @@ Route::post('index/push_block_recorder/create_temp', 'RecorderProcessController@
 Route::post('index/push_block_recorder/update_temp', 'RecorderProcessController@update_temp');
 Route::get('index/push_block_recorder/get_temp', 'RecorderProcessController@get_temp');
 Route::post('index/push_block_recorder_resume/create_resume', 'RecorderProcessController@create_resume');
+Route::post('index/push_block_recorder/return_completion_push_pull', 'RecorderProcessController@return_completion_push_pull');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
 Route::post('index/import_push_block', 'RecorderProcessController@import_push_block');
 Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessController@report_push_block');
@@ -2912,6 +2923,7 @@ Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
 
 Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
 Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
+Route::get('fetch/maintenance/list_pm', 'MaintenanceController@fetchPM');
 
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
