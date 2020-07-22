@@ -660,7 +660,7 @@
 						}
 					},
 					series: [{
-						name:'Materials',
+						name:'Person(s)',
 						type: 'column',
 						colorByPoint: true,
 						data: seriesUnion,
@@ -781,7 +781,7 @@
 						}
 					},
 					series: [{
-						name:'Materials',
+						name:'Person(s)',
 						type: 'column',
 						colorByPoint: true,
 						data: seriesDepartment,
@@ -841,7 +841,7 @@
 				// 		}
 				// 	},
 				// 	series: [{
-				// 		name:'Materials',
+				// 		name:'Person(s)',
 				// 		type: 'column',
 				// 		colorByPoint: true,
 				// 		data: seriesGrade,
@@ -901,7 +901,7 @@
 						}
 					},
 					series: [{
-						name:'Materials',
+						name:'Person(s)',
 						type: 'column',
 						colorByPoint: true,
 						data: seriesPosition,
