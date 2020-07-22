@@ -93,12 +93,13 @@
 						<th style="width: 5%">WJO</th>
 						<th style="width: 5%">Prioritas</th>
 						<th style="width: 10%">Jenis Pekerjaan</th>
-						<th style="width: 15%">Nama Barang</th>
-						<th style="width: 5%">Jumlah</th>
+						<th>Nama Barang</th>
+						<th style="width: 3%">Jumlah</th>
 						<th style="width: 9%">Material</th>
 						<th style="width: 5%">Target</th>
 						<th style="width: 5%">Status</th>
-						<th style="width: 7%">Att</th>
+						<th style="width: 3%">Att</th>
+						<th style="width: 3%">Penerima</th>
 						<th style="width: 8%">Action</th>
 					</tr>
 				</thead>
@@ -217,14 +218,13 @@
 									<option value=""></option>
 									<option value="Pembuatan Baru">Pembuatan Baru</option>
 									<option value="Perbaikan Ketidaksesuaian">Perbaikan Ketidaksesuaian</option>
-									<option value="Lain-lain">Lain-lain</option>
 								</select>
 							</div>
 						</div>
 
 						<div class="col-xs-12" style="padding-bottom: 1%;">
 							<div class="col-xs-3" align="right" style="padding: 0px;">
-								<span style="font-weight: bold; font-size: 16px;">Kategori:<span class="text-red">*</span></span>
+								<span style="font-weight: bold; font-size: 16px;">Kategori Part:<span class="text-red">*</span></span>
 							</div>
 							<div class="col-xs-4">
 								<select class="form-control select3" data-placeholder="Pilih Kategori" name="category" id="category" style="width: 100% height: 35px; font-size: 15px;" required>
@@ -820,18 +820,21 @@
 						tableData += '<td>-</td>';							
 					}
 
+					tableData += "<td>"+(result.tableData[i].name || '-')+"</td>";
+
 					if(result.tableData[i].remark == '0' || result.tableData[i].remark == '1'){
 						tableData += '<td>';
-						tableData += '<a style="padding: 10%; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-warning">Edit</a>';
+						tableData += '<a style="padding: 10%; padding-top: 2%; padding-bottom: 2%; margin-right: 2%; margin: 2px;" href="javascript:void(0)" onClick="modalEdit(\''+result.tableData[i].id+'\')" class="btn btn-warning">Edit</a>';
 						tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+result.tableData[i].order_no+'\')" class="btn btn-primary">Detail</a>';
 
 						if (result.tableData[i].remark == '1' && result.tableData[i].priority == 'Normal') {
-							tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="cancelWjo(\''+result.tableData[i].order_no+'\')" class="btn btn-danger">Cancel</a>';
+							tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%; margin: 2px;" href="javascript:void(0)" onClick="cancelWjo(\''+result.tableData[i].order_no+'\')" class="btn btn-danger">Cancel</a>';
 						}
 						tableData += '</td>';
 					}else{
-						tableData += '<td><a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+result.tableData[i].order_no+'\')" class="btn btn-primary">Detail</a></td>';							
+						tableData += '<td><a style="padding: 5%; padding-top: 2%; padding-bottom: 2%; margin: 2px;" href="javascript:void(0)" onClick="showDetail(\''+result.tableData[i].order_no+'\')" class="btn btn-primary">Detail</a></td>';		
 					}
+
 
 					tableData += '</tr>';	
 				}

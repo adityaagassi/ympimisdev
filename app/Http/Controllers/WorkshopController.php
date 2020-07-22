@@ -1473,7 +1473,9 @@ class WorkshopController extends Controller{
 		$workshop_job_orders = WorkshopJobOrder::leftJoin(db::raw('(select employee_id, name from employee_syncs) as approver'), 'approver.employee_id', '=', 'workshop_job_orders.approved_by')
 		->leftJoin(db::raw('(select employee_id, name from employee_syncs) as requester'), 'requester.employee_id', '=', 'workshop_job_orders.created_by')
 		->leftJoin(db::raw('(SELECT process_code, process_name FROM processes where remark = "workshop") as processes'), 'processes.process_code', '=', 'workshop_job_orders.remark')
-		->leftJoin('workshop_tag_availabilities', 'workshop_tag_availabilities.tag', '=', 'workshop_job_orders.tag');
+		->leftJoin('workshop_tag_availabilities', 'workshop_tag_availabilities.tag', '=', 'workshop_job_orders.tag')
+		->leftJoin('workshop_receipts', 'workshop_receipts.order_no', '=', 'workshop_job_orders.order_no')
+		->leftJoin('employees', 'employees.tag', '=', 'workshop_receipts.receiver');
 		// ->leftJoin(db::raw('(SELECT order_no, operator FROM workshop_flow_processes WHERE id IN (SELECT min(id) FROM workshop_flow_processes GROUP BY order_no)) as operator'), 'operator.order_no', '=', 'workshop_job_orders.order_no')
 		// ->leftJoin(db::raw('(select employee_id, name from employee_syncs) as pic'), 'pic.employee_id', '=', 'operator.operator');
 
@@ -1569,7 +1571,8 @@ class WorkshopController extends Controller{
 			'processes.process_name',
 			'workshop_job_orders.attachment',
 			'workshop_job_orders.item_number',
-			'workshop_job_orders.remark');
+			'workshop_job_orders.remark',
+			'employees.name');
 
 		$workshop_job_orders = $workshop_job_orders->get();
 
