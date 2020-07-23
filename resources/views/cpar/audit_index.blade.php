@@ -282,12 +282,12 @@ td {
           tableData += '</td>';
         }
 
-        else if(username.toUpperCase() == value.auditor || username.toUpperCase() == value.auditee || "{{Auth::user()->role_code}}" == "MIS"){
+        else if(username.toUpperCase() == value.auditor || username.toUpperCase() == value.auditee || "{{Auth::user()->role_code}}" == "MIS" || username.toUpperCase() == "PI1211001"){
           tableData += '<td>';
 
           tableData += '<a href="{{ url("index/audit_iso/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Edit</a> <a href="{{ url("index/audit_iso/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a>';
 
-          if(value.status == "car" && (username.toUpperCase() == value.auditee || "{{Auth::user()->role_code}}" == "MIS")){
+          if(value.status == "car" && (username.toUpperCase() == value.auditee || "{{Auth::user()->role_code}}" == "MIS" || username.toUpperCase() == "PI1211001")){
             tableData += '<a href="{{ url("index/audit_iso/response") }}/'+value.id+'" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Penanganan</a>';
           }
 
