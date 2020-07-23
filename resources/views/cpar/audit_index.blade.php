@@ -252,17 +252,20 @@ td {
           tableData += '<td><span class="label label-success"> Open </span></td>';          
         }
         else if (value.status == "rejected") {
-          tableData += '<td><span class="label label-danger"> Rejected </span></td>';          
+          tableData += '<td><span class="label label-danger" style="font-size: 13px"> Rejected </span></td>';          
         }
         else if (value.status == "commended") {
-          tableData += '<td><span class="label label-warning"> Revised </span></td>';          
+          tableData += '<td><span class="label label-warning" style="font-size: 13px"> Revised </span></td>';          
         }
         else if (value.status == "car") {
-          tableData += '<td><span class="label label-warning"> Penanganan </span></td>';          
+          tableData += '<td><span class="label label-warning" style="font-size: 13px"> Penanganan </span></td>';          
+        }
+        else if (value.status == "verif") {
+          tableData += '<td><span class="label label-success" style="font-size: 13px"> Verifikasi Jawaban </span></td>';          
         }
 
-        else if (value.status == "verif") {
-          tableData += '<td><span class="label label-success"> Verifikasi Jawaban </span></td>';          
+        else if (value.status == "close") {
+          tableData += '<td><span class="label label-success" style="font-size: 13px"> Closed </span></td>';          
         }
 
         else{
@@ -271,8 +274,16 @@ td {
 
         var username = "{{Auth::user()->username}}";
 
-        if(username.toUpperCase() == value.auditor || username.toUpperCase() == value.auditee || "{{Auth::user()->role_code}}" == "MIS"){
+        if(value.status == "close"){
           tableData += '<td width="15%">';
+
+          tableData += '<a href="{{ url("index/audit_iso/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a>';
+
+          tableData += '</td>';
+        }
+
+        else if(username.toUpperCase() == value.auditor || username.toUpperCase() == value.auditee || "{{Auth::user()->role_code}}" == "MIS"){
+          tableData += '<td>';
 
           tableData += '<a href="{{ url("index/audit_iso/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Edit</a> <a href="{{ url("index/audit_iso/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a>';
 

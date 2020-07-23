@@ -2191,6 +2191,7 @@ class CparController extends Controller
               ->update([
                    'auditor_catatan' => $request->get('auditor_catatan'),
                    'auditor_manfaat' => $request->get('auditor_manfaat'),
+                   'status' => 'close',
                    'created_by' => $id_user
               ]);
 
