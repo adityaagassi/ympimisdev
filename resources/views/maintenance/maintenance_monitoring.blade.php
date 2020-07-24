@@ -50,11 +50,11 @@
 						<th rowspan='2' style="border-left: 3px solid #f44336; width: 5%">JOB TYPE</th>
 						<th rowspan='2' style="border-left: 3px solid #f44336; width: 5%">PIC</th>
 						<th colspan="3" style="border-left: 3px solid #f44336; width: 5%">STATUS</th>
-						<th rowspan='2' style="border-left: 3px solid #f44336; width: 15%">PROGRESS</Tth>
+						<th rowspan='2' style="border-left: 3px solid #f44336; width: 15%">ESTIMATED TIME</Tth>
 						</tr>
 						<tr>
 							<th style="border-left: 3px solid #f44336">REQUESTED</th>
-							<th>LISTED</th>
+							<th>TARGET</th>
 							<th>START</th>
 						</tr>
 					</thead>
@@ -114,7 +114,13 @@
 
 						tmp = (value2.act_time / value2.plan_time * 100).toFixed(0);
 
-						progress = tmp+"%";
+						if (tmp == 'Infinity') {
+							progress = "500%";
+							cls_prog = "progress-bar-danger";
+						} else {
+							progress = tmp+"%";
+							cls_prog = "progress-bar-success";
+						}
 					}
 				})
 
@@ -130,12 +136,7 @@
 				tableData += '<td style="border-left: 3px solid #f44336">'+ value.type +'</td>';
 				tableData += '<td style="border-left: 3px solid #f44336">'+ (value.pic || '-') +'</td>';
 				tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-success">'+ value.request_date +'</span></td>';
-
-				if (value.listed) {
-					tableData += '<td><span class="label label-success">'+ value.listed +'</span></td>';
-				} else {
-					tableData += '<td>-</td>';
-				}
+				tableData += '<td><span class="label label-success">'+ (value.target_date || '-') +'</span></td>';
 
 				if (value.inprogress) {
 					tableData += '<td><span class="label label-success">'+ value.inprogress +'</span></td>';
@@ -145,7 +146,7 @@
 
 				tableData += '<td style="border-left: 3px solid #f44336">';
 				tableData += '<div class="progress active" style="background-color: #212121; height: 25px; border: 1px solid; padding: 0px; margin: 0px;">';
-				tableData += '<div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar_'+index+'" style="font-size: 12px; padding-top: 0.5%; width: '+progress+'" aria-valuemin="0" aria-valuemax="100">'+progress+'</div>';
+				tableData += '<div class="progress-bar '+cls_prog+' progress-bar-striped" id="progress_bar_'+index+'" style="font-size: 12px; padding-top: 0.5%; width: '+progress+'" aria-valuemin="0" aria-valuemax="100">'+progress+'</div>';
 				tableData += '</td>';
 
 				tableData += '</tr>';	

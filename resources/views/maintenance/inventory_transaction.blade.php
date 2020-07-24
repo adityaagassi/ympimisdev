@@ -149,8 +149,8 @@
             </div>
           </div>
           <div class="col-xs-12" style="margin-top: 5px">
-            <button class="btn btn-danger" style="width: 100%" onclick="post('out')" id='btn_out'><i class="fa fa-arrow-up"></i>&nbsp;OUT</button>
-            <button class="btn btn-success"style="width: 100%" onclick="post('in')" id='btn_in'><i class="fa fa-arrow-down"></i>&nbsp;IN</button>
+            <button class="btn" style="width: 100%; background-color: #f75e4d; color: white" onclick="post('out')" id='btn_out'><i class="fa fa-arrow-up"></i>&nbsp;OUT</button>
+            <button class="btn" style="width: 100%; background-color: #1caf9a; color: white" onclick="post('in')" id='btn_in'><i class="fa fa-arrow-down"></i>&nbsp;IN</button>
           </div>
           <div class="col-xs-6">
           </div>

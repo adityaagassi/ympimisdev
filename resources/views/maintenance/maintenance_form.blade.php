@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('stylesheets')
+<link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 	thead>tr>th{
@@ -203,10 +204,23 @@
 									<select class="form-control select3" id="bahaya" name="bahaya[]" data-placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
 										<option></option>
 										<option>Bahan Kimia Beracun</option>
-										<option>Listrik</option>
+										<option>Tersengat Listrik</option>
 										<option>Terjepit</option>
 										<option>Putaran Mesin</option>
 									</select>
+								</div>
+							</div>
+							<div class="col-xs-12" style="padding-bottom: 1%;">
+								<div class="col-xs-4" style="padding: 0px;" align="right">
+									<span style="font-weight: bold; font-size: 16px;">Mesin:</span>
+								</div>
+								<div class="col-xs-4">
+									<select class="form-control select2" id="nama_mesin" name="nama_mesin" data-placeholder="pilih mesin (Bila berhubungan mesin)">
+										<option></option>
+									</select>
+								</div>
+								<div class="col-xs-2">
+									<input type="text" class="form-control" placeholder="nomor mesin" id="nomor_mesin" name="nomor_mesin">
 								</div>
 							</div>
 							<div class="col-xs-12" style="padding-bottom: 1%;">
@@ -228,6 +242,15 @@
 											<i class="fa fa-calendar"></i>
 										</div>
 										<input class="form-control datepicker" id="target" name="target" placeholder="Pilih Target Selesai">
+									</div>
+								</div>
+
+								<div class="col-xs-2">
+									<div class="input-group date">
+										<div class="input-group-addon bg-default">
+											<i class="fa fa-clock-o"></i>
+										</div>
+										<input class="form-control timepicker" id="jam_target" name="jam_target" placeholder="Pilih Jam Selesai" >
 									</div>
 								</div>
 							</div>
@@ -417,10 +440,20 @@
 		todayHighlight: true
 	});
 
+	$('.timepicker').timepicker({
+		use24hours: true,
+		showInputs: false,
+		showMeridian: false,
+		minuteStep: 5,
+		defaultTime: '00:00',
+		timeFormat: 'hh:mm'
+	})
+
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 		$("#target_div").hide();
 		get_data('all');
+		get_machine();
 	})
 
 	function get_data(param) {
@@ -526,6 +559,14 @@
 	});	
 
 	$("form#createForm").submit(function(e){
+
+		if ($("#nama_mesin").val() != "") {
+			if ($("#nomor_mesin").val() == "") {
+				openErrorGritter("Fail", "Harap Melengkapi Nomor Mesin");
+				return false;
+			}
+		}
+
 		$("#create_btn").attr("disabled", true);
 		e.preventDefault();
 		var formData = new FormData(this);
@@ -548,6 +589,7 @@
 					$("#kategori").prop('selectedIndex', 0).change();
 					$("#jenis_pekerjaan").prop('selectedIndex', 0).change();
 					$("#bahaya").prop('selectedIndex', 0).change();
+					$("#nama_mesin").prop('selectedIndex', 0).change();
 
 					get_data("all");
 				} else {
@@ -592,6 +634,22 @@
 			$("#target_detail").val(result.detail.target_date);
 			$("#status_detail").val(result.detail.process_name);
 		})
+	}
+
+	function get_machine() {
+		var options = "";
+		var data = {
+			ctg: "machine"
+		}
+
+		$.get('{{ url("fetch/maintenance/list_pm") }}', data,  function(result, status, xhr){
+			$.each(result.datas, function(index, value){
+				options += "<option>"+value.item_check+"</option>";
+			})
+
+			$("#nama_mesin").append(options);
+		})
+
 	}
 
 	function insert() {
