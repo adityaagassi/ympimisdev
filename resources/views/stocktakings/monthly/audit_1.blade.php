@@ -864,6 +864,7 @@
 
 					fillStore(store);
 				}else{
+					$("#loading").hide();
 					openErrorGritter('Error', result.message);
 				}
 			});
