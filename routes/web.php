@@ -91,6 +91,13 @@ Route::get('404', function() {
 	return view('404');
 });
 
+//GENERAL
+Route::get('index/general/attendance_check', 'GeneralController@indexGeneralAttendanceCheck');
+Route::get('fetch/general/attendance_check', 'GeneralController@fetchGeneralAttendanceCheck');
+Route::post('scan/general/attendance_check', 'GeneralController@scanGeneralAttendanceCheck');
+
+
+
 Route::get('/home', ['middleware' => 'permission', 'nav' => 'Dashboard', 'uses' => 'HomeController@index'])->name('home');
 
 Route::get('/about_mis', 'HomeController@indexAboutMIS');
@@ -890,6 +897,7 @@ Route::post('create/ga_control/driver_request', 'GeneralAffairController@createD
 Route::get('fetch/ga_control/driver_detail', 'GeneralAffairController@fetchDriverDetail');
 Route::get('index/ga_control/live_cooking', 'GeneralAffairController@indexLiveCooking');
 Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
+
 
 
 Route::group(['nav' => 'S1', 'middleware' => 'permission'], function(){
@@ -1875,6 +1883,7 @@ Route::get('index/indirect_material_stock', 'IndirectMaterialController@indexSto
 Route::post('import/indirect_material_stock', 'IndirectMaterialController@importStock');
 Route::post('input/indirect_material_stock', 'IndirectMaterialController@inputStock');
 Route::get('fetch/indirect_material_stock', 'IndirectMaterialController@fetchStock');
+Route::get('fetch/indirect_material_new', 'IndirectMaterialController@fetchNew');
 Route::get('fetch/indirect_material_out', 'IndirectMaterialController@fetchOut');
 
 //Log
@@ -1893,6 +1902,7 @@ Route::post('input/chm_production_result', 'IndirectMaterialController@inputProd
 
 //Request
 Route::get('index/indirect_material_request/{id}', 'IndirectMaterialController@indexRequest');
+Route::get('fetch/check_qr', 'IndirectMaterialController@fetchCheckQr');
 
 //Schedule
 Route::get('index/chm_picking_schedule', 'IndirectMaterialController@indexPickingSchedule');
@@ -1901,6 +1911,7 @@ Route::get('fetch/chm_picking_schedule_detail', 'IndirectMaterialController@fetc
 Route::get('fetch/get_addition_chm', 'IndirectMaterialController@fetchAdditionChm');
 Route::post('index/chm_input_addition', 'IndirectMaterialController@inputChmAddition');
 Route::post('index/chm_input_new', 'IndirectMaterialController@inputChmNew');
+Route::post('delete/chm_scheduel', 'IndirectMaterialController@deleteSchedule');
 
 
 
@@ -2557,8 +2568,7 @@ Route::post('index/push_block_recorder/create_temp', 'RecorderProcessController@
 Route::post('index/push_block_recorder/update_temp', 'RecorderProcessController@update_temp');
 Route::get('index/push_block_recorder/get_temp', 'RecorderProcessController@get_temp');
 Route::post('index/push_block_recorder_resume/create_resume', 'RecorderProcessController@create_resume');
-Route::post('index/push_block_recorder/return_completion_push_pull', 'RecorderProcessController@return_completion_push_pull');
-Route::post('index/push_block_recorder/return_completion_torque', 'RecorderProcessController@return_completion_torque');
+Route::post('index/push_block_recorder/return_completion', 'RecorderProcessController@return_completion');
 Route::get('index/fetchResume', 'RecorderProcessController@fetchResume');
 Route::post('index/import_push_block', 'RecorderProcessController@import_push_block');
 Route::get('index/recorder/report_push_block/{remark}', 'RecorderProcessController@report_push_block');
@@ -2617,6 +2627,15 @@ Route::get('index/recorder/resume_assy_rc', 'RecorderProcessController@index_res
 Route::post('recorder/filter_assy_rc', 'RecorderProcessController@filter_assy_rc');
 Route::get('index/recorder/rc_picking_result', 'RecorderProcessController@index_rc_picking_result');
 Route::get('fetch/recorder/rc_picking_result', 'RecorderProcessController@fetch_rc_picking_result');
+
+//RETURN MATERIAL RC
+Route::get('index/recorder/return', 'RecorderProcessController@indexReturn');
+Route::get('scan/recorder/tag_product', 'RecorderProcessController@scanProduct');
+// Route::get('index/return/data', 'TransactionController@indexReturnData');
+// Route::get('fetch/return/data', 'TransactionController@fetchReturnData');
+// Route::get('fetch/return/list', 'TransactionController@fetchReturnList');
+// Route::get('fetch/return', 'TransactionController@fetchReturn');
+// Route::get('fetch/return/resume', 'TransactionController@fetchReturnResume');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -2951,7 +2970,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 
 	Route::get('work/maintenance/spk', 'MaintenanceController@startSPK');
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
-	Route::post('report/maintenance/spk/nopart', 'MaintenanceController@reportingSPKNoPart');
+	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
 	
 	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
@@ -3052,6 +3071,13 @@ Route::get('fetch/assembly/production_result', 'AssemblyProcessController@fetchP
 
 Route::get('index/assembly/stamp_record', 'AssemblyProcessController@indexStampRecord');
 Route::get('fetch/assembly/stamp_record', 'AssemblyProcessController@fetchStampRecord');
+
+//SKILL MAP
+Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
+	Route::get('index/skill_map/{location}', 'SkillMapController@indexSkillMap');
+	Route::get('fetch/skill_map', 'SkillMapController@fetchSkillMap');
+	Route::get('fetch/skill_map_employee', 'SkillMapController@fetchSkillMapEmployee');
+});
 
 //ROOMS
 Route::get('/meetingroom1', function () {
