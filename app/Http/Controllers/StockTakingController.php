@@ -2531,7 +2531,7 @@ class StockTakingController extends Controller{
 		->where('location', $location)
 		->first();
 
-		if(!$cek){
+		if($cek){
 			$response = array(
 				'status' => false,
 				'message' => 'Material Already Added'
