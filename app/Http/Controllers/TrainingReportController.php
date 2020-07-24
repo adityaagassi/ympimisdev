@@ -142,19 +142,16 @@ class TrainingReportController extends Controller
         $leader_dept = $activityList->leader_dept;
         $foreman_dept = $activityList->foreman_dept;
 
-        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')";
-        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
-        $queryTrainer = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-                        join promotion_logs on employees.employee_id= promotion_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and promotion_logs.`position`='sub leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='leader')";
+        $queryLeaderForeman = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
+            from employee_syncs
+            where (department = '".$departments."' and position = 'leader')";
+        $queryForeman = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
+            from employee_syncs
+            where (department = '".$departments."' and position = 'foreman')";
+        $queryTrainer = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
+            from employee_syncs
+            where (department = '".$departments."' and position = 'leader')
+                        or (department = '".$departments."' and position = 'sub leader')";
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
         $trainer = DB::select($queryTrainer);
@@ -219,19 +216,17 @@ class TrainingReportController extends Controller
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
 
-        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group` = 'leader')";
-        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
-        $queryTrainer = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-                        join promotion_logs on employees.employee_id= promotion_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and promotion_logs.`position`='sub leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='leader')";
+        $queryLeaderForeman = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
+            from employee_syncs
+            where (department = '".$departments."' and position = 'leader')";
+        $queryForeman = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
+            from employee_syncs
+            where (department = '".$departments."' and position = 'foreman')";
+        $queryTrainer = "select DISTINCT(employee_syncs.name), employee_syncs.employee_id
+            from employee_syncs
+            where (department = '".$departments."' and position = 'leader')
+                        or (department = '".$departments."' and position = 'sub leader')";
+
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
         $trainer = DB::select($queryTrainer);
@@ -326,7 +321,7 @@ class TrainingReportController extends Controller
         $activity_alias = $trainingReport->activity_lists->activity_alias;
         $activity_id = $trainingReport->activity_lists->id;
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id,section,sub_section from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."' and end_date is null";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id,section,sub_group as sub_section from employee_syncs where department = '".$departments."' and end_date is null";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
         $operator3 = DB::select($queryOperator);
@@ -528,7 +523,7 @@ class TrainingReportController extends Controller
 
         $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
         $trainingPicture = DB::select($trainingPictureQuery);
-        $trainingParticipantQuery = "select participant_id, training_id,training_participants.id,employees.name,participant_absence from training_participants join employees on employees.employee_id = training_participants.participant_id where training_participants.training_id = '".$id."' and training_participants.deleted_at is null";
+        $trainingParticipantQuery = "select participant_id, training_id,training_participants.id,employee_syncs.name,participant_absence from training_participants join employee_syncs on employee_syncs.employee_id = training_participants.participant_id where training_participants.training_id = '".$id."' and training_participants.deleted_at is null";
         $trainingParticipant = DB::select($trainingParticipantQuery);
         if($training == null){
             return redirect('/index/training_report/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Training Report');
@@ -561,7 +556,7 @@ class TrainingReportController extends Controller
 
         $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
         $trainingPicture = DB::select($trainingPictureQuery);
-        $trainingParticipantQuery = "select participant_id, training_id,training_participants.id,employees.name,participant_absence from training_participants join employees on employees.employee_id = training_participants.participant_id where training_participants.training_id = '".$id."' and training_participants.deleted_at is null";
+        $trainingParticipantQuery = "select participant_id, training_id,training_participants.id,employee_syncs.name,participant_absence from training_participants join employee_syncs on employee_syncs.employee_id = training_participants.participant_id where training_participants.training_id = '".$id."' and training_participants.deleted_at is null";
         $trainingParticipant = DB::select($trainingParticipantQuery);
         if($training == null){
             return redirect('/index/training_report/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Training Report');
@@ -614,7 +609,7 @@ class TrainingReportController extends Controller
 
         $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
         $trainingPicture = DB::select($trainingPictureQuery);
-        $trainingParticipantQuery = "select participant_id, training_id,training_participants.id,employees.name,participant_absence from training_participants join employees on employees.employee_id = training_participants.participant_id where training_participants.training_id = '".$id."' and training_participants.deleted_at is null";
+        $trainingParticipantQuery = "select participant_id, training_id,training_participants.id,employee_syncs.name,participant_absence from training_participants join employee_syncs on employee_syncs.employee_id = training_participants.participant_id where training_participants.training_id = '".$id."' and training_participants.deleted_at is null";
         $trainingParticipant = DB::select($trainingParticipantQuery);
         if($training == null){
             return redirect('/index/training_report/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Training Report');
@@ -773,7 +768,7 @@ class TrainingReportController extends Controller
               $training2->save();
               // var_dump($id);
             }
-            $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+            $queryEmail = "select employee_syncs.employee_id,employee_syncs.name,email from users join employee_syncs on employee_syncs.employee_id = users.username where employee_syncs.name = '".$foreman."'";
             $email = DB::select($queryEmail);
             foreach($email as $email){
               $mail_to = $email->email;

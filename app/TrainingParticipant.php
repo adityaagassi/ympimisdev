@@ -12,7 +12,7 @@ class TrainingParticipant extends Model
     protected $table = 'training_participants';
 
 	protected $fillable = [
-        'training_id', 'participant_id','created_by'
+        'training_id', 'participant_id','file','created_by'
     ];
     
     public function training_reports()
@@ -22,7 +22,7 @@ class TrainingParticipant extends Model
 
     public function participant_name()
     {
-        return $this->belongsTo('App\Employee', 'participant_id', 'employee_id')->withTrashed();
+        return $this->belongsTo('App\EmployeeSync', 'participant_id', 'employee_id');
     }
 
     public function user()
