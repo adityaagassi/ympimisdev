@@ -2529,9 +2529,9 @@ class StockTakingController extends Controller{
 		->where('category', $category)
 		->where('material_number', $material)
 		->where('location', $location)
-		->get();
+		->first();
 
-		if($cek){
+		if(!$cek){
 			$response = array(
 				'status' => false,
 				'message' => 'Material Already Added'
