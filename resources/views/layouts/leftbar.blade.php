@@ -789,13 +789,16 @@
         <a href="{{ secure_url("/index/maintenance/apar/orderList") }}"><i class="fa fa-check-square-o"></i> <span>APAR Order List</span></a>
       </li>
 
+      @if(isset($page) && $page == "APAR MAP")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/apar/map") }}"><i class="fa fa-fire-extinguisher"></i> <span>APAR MAP</span></a>
+      </li>
 
       @if(isset($page) && $page == "APAR Uses")<li class="active">@else<li>@endif
         <a href="{{ secure_url("/index/maintenance/apar/uses") }}"><i class="fa fa-hand-grab-o"></i> <span>Use APAR</span></a>
       </li>
 
       @if(isset($page) && $page == "APAR")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/maintenance/aparTool ") }}"><i class="fa fa-fire-extinguisher"></i> <span>Utilities</span></a>
+        <a href="{{ url("/index/maintenance/aparTool") }}"><i class="fa fa-fire-extinguisher"></i> <span>Utilities</span></a>
       </li>
     </ul>
     @if(isset($page) && $page == "Spare Part")<li class="active">@else<li>@endif
