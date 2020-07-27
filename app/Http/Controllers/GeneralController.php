@@ -39,19 +39,11 @@ class GeneralController extends Controller
 			return Response::json($response);
 		}
 
-		if($employee->due_date <= date('Y-m-d')){
-			$response = array(
-				'status' => false,
-				'message' => 'Tanggal daftar hadir karyawan tidak sesuai.'
-			);
-			return Response::json($response);			
-		}
-
 		$attendance = GeneralAttendance::where('employee_id', '=', $employee->employee_id)
 		->where('purpose_code', '=', $request->get('purpose_code'))
 		->first();
 
-		if($attendance == ""){
+		if($attendance == "" || $attendance->due_date > date('Y-m-d')){
 			$response = array(
 				'status' => false,
 				'message' => 'Karyawan tidak ada pada schedule.'
@@ -60,7 +52,6 @@ class GeneralController extends Controller
 		}
 
 		try{
-
 			$attendance->attend_date = date('Y-m-d H:i:s');
 			$attendance->save();
 
