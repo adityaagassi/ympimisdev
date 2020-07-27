@@ -323,6 +323,17 @@ class MaintenanceController extends Controller
 		))->with('page', 'APAR NG')->with('head2', 'Utility')->with('head', 'Maintenance');
 	}
 
+	public function indexAparMap()
+	{
+		$title = 'APAR MAP';
+		$title_jp = '??';
+
+		return view('maintenance.apar.aparMap', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'APAR MAP')->with('head2', 'Utility')->with('head', 'Maintenance');
+	}
+
 	public function indexInventory()
 	{
 		$title = 'Maintenance Spare Part Inventories';

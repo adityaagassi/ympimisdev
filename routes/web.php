@@ -2988,6 +2988,7 @@ Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpi
 Route::get('index/maintenance/apar/resume', 'MaintenanceController@indexAparResume');
 Route::get('index/maintenance/apar/uses', 'MaintenanceController@indexAparUses');
 Route::get('index/maintenance/apar/ng_list', 'MaintenanceController@indexAparNG');
+Route::get('index/maintenance/apar/map', 'MaintenanceController@indexAparMap');
 
 Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
 Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
