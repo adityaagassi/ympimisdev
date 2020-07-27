@@ -241,7 +241,7 @@ td {
 
         tableData += '<tr>';
         tableData += '<td width="5%">'+ value.audit_no +'</td>';
-        tableData += '<td width="10%">'+ day +' '+month+' '+year +'</td>';
+        tableData += '<td width="10%">'+ value.auditor_date +'</td>';
         tableData += '<td>'+ value.auditor_name +'</td>';
         tableData += '<td>'+ value.auditor_kategori +'</td>';
         tableData += '<td>'+ value.auditor_lokasi +'</td>';

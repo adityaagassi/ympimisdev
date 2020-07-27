@@ -87,7 +87,7 @@
               <div class="input-group-addon">
                 <i class="fa fa-calendar"></i>
               </div>
-              <input type="text" class="form-control datepicker" id="auditor_tgl" placeholder="Masukkan Tanggal Kejadian" value="<?php echo date('d F Y'); ?>" readonly="">
+              <input type="text" class="form-control datepicker" id="auditor_tgl" placeholder="Masukkan Tanggal Kejadian" value="<?php echo date('d F Y'); ?>" disabled="">
               <input type="hidden" class="form-control" id="auditor_date" value="<?= date('Y-m-d') ?>" required>
             </div>
           </div>
