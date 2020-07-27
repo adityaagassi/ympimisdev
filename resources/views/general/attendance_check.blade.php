@@ -37,7 +37,13 @@
 		</div>
 	</div>
 	<div class="row">
+		<div class="col-xs-4">
 		<input id="tag" type="text" style="border:0; background-color: #3c3c3c; width: 100%; text-align: center; font-size: 1vw">
+	</div>
+	<div class="col-xs-5 pull-right" style="text-align: right;">
+		<span style="color: yellow; font-weight: bold; font-size: 2vw;" id="counter">999/999</span>
+	</div>
+
 		<div class="col-xs-12" id="container">
 			{{-- <button class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-plus"></i> </button> --}}
 		</div>
@@ -136,6 +142,8 @@
 		}
 		$.get('{{ url("fetch/general/attendance_check") }}', data, function(result, status, xhr){
 			if(result.status){
+				var count_ok = 0;
+				var count_all = 0;
 				setInterval(focusTag, 1000);
 				var attendance_data = "";
 				$('#container').html("");
@@ -156,6 +164,7 @@
 					if(value.attend_date == null){
 						attendance_data += '<td>-</td>';
 					}else{
+						count_ok += 1;
 						attendance_data += '<td>Hadir</td>';
 					}	
 					attendance_data += '<td>'+value.department+'</td>';
@@ -163,7 +172,11 @@
 					attendance_data += '</tbody>';
 					attendance_data += '</table>';
 					attendance_data += '</div>';
+
+					count_all += 1;
+
 				});
+				$('#counter').text(count_ok+' / '+count_all);
 				$('#container').append(attendance_data);
 			}
 			else{
