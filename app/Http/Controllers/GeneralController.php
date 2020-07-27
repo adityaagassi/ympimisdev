@@ -123,6 +123,7 @@ class GeneralController extends Controller
 			WHERE
 			DATE( general_attendances.attend_date ) = '".$now."' AND general_attendances.purpose_code = '".$request->get('purpose_code')."'
 			) AS attendances 
+			WHERE employee_id like 'PI%'
 			ORDER BY
 			attend_date DESC,
 			NAME ASC";
