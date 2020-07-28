@@ -119,6 +119,7 @@
 							<table id="shipmentScheduleTable" class="table table-bordered table-striped table-hover" style="width: 100%;">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
+										<th style="width: 1%;">ID</th>
 										<th style="width: 1%;">Period</th>
 										<th style="width: 1%;">Cat.</th>
 										<th style="width: 1%;">Sales Order</th>
@@ -142,6 +143,7 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -241,6 +243,7 @@
 					var tableData = '';
 					$.each(result.tableData, function(key, value) {
 						tableData += '<tr>';
+						tableData += '<td>'+ value.id +'</td>';
 						tableData += '<td>'+ value.st_month +'</td>';
 						tableData += '<td>'+ value.category +'</td>';
 						tableData += '<td>'+ value.sales_order +'</td>';

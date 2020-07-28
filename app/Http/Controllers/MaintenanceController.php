@@ -366,6 +366,17 @@ class MaintenanceController extends Controller
 		))->with('page', 'Spare Part Transaction')->with('head', 'Maintenance');
 	}
 
+	public function indexPlanned()
+	{
+		$title = 'Maintenance Planned Maintenance';
+		$title_jp = '??';
+
+		return view('maintenance.planned.maintenance_plan_monitoring', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Planned Maintenance')->with('head', 'Maintenance');
+	}
+
 	// -----------------------  END INDEX --------------------
 
 	public function fetchMaintenance(Request $request)
@@ -1861,9 +1872,15 @@ class MaintenanceController extends Controller
 
 	public function fetchPM(Request $request)
 	{
-		$pms = MaintenancePlan::select("*");
+		$pms = MaintenancePlan::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'maintenance_plans.pic')
+		->select("maintenance_plans.id", "item_check", "quantity", "category", "maintenance_plans.status", "schedule", "name", "fiscal", "april", "mei", "juni", "juli", "agustus", "september", "oktober", "november", "desember", "januari", "februari", "maret");
+
 		if ($request->get('ctg')) {
 			$pms = $pms->where('category', '=', $request->get('ctg'));
+		}
+
+		if ($request->get('fy')) {
+			$pms = $pms->where('fiscal', '=', $request->get('fy'));
 		}
 
 		$pms = $pms->get();
