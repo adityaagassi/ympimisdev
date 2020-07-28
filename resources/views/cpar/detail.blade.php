@@ -308,7 +308,7 @@
                 <div class="col-sm-12"> 
                   <br>
                   <center>
-                    <button type="submit" class="btn btn-success" style="width: 40%;font-size: 20px;font-weight: bold">Update Data</button>
+                    <button type="submit" class="btn btn-success" style="width: 40%;font-size: 20px;font-weight: bold">Save Data</button>
                   </center>
                 </div>
               </div>

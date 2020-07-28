@@ -177,7 +177,7 @@
                   <td colspan="2">{{ $cpars->name }}</td>
                   <td colspan="2">
                     <!-- Jika yang masuk adalah bu ratri dan posisi CPAR di chief -->
-                      @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                      @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -259,7 +259,7 @@
                   <td colspan="2">{{ $cpars->kategori }}</td>
                   <td colspan="2">
                     <!-- Jika yang masuk adalah bu ratri dan posisi CPAR di chief -->
-                      @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                      @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -371,7 +371,7 @@
 
                   <td colspan="2">
                     <!-- Jika yang masuk adalah bu ratri dan posisi CPAR di chief -->
-                      @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                      @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -452,7 +452,7 @@
                   <td colspan="2">Lokasi</td>
                   <td colspan="2">{{ $cpars->lokasi }}</td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -533,7 +533,7 @@
                   <td colspan="2">CPAR Issue Date</td>
                   <td colspan="2"><?php echo date('d F Y', strtotime($cpars->tgl_permintaan)); ?></td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -614,7 +614,7 @@
                   <td colspan="2">Request Due Date (CPAR Return to QA)</td>
                   <td colspan="2"><?php echo date('d F Y', strtotime($cpars->tgl_balas)); ?></td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -695,7 +695,7 @@
                   <td colspan="2">Departemen</td>
                   <td colspan="2"><?= ucwords($cpars->department_name)?></td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -776,7 +776,7 @@
                   <td colspan="2">Sumber Komplain</td>
                   <td colspan="2">{{ $cpars->sumber_komplain }}</td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -861,7 +861,7 @@
                   <td colspan="2">Part Item</td>
                   <td colspan="2">{{ $part->part_item }} - {{ $part->material_description }}</td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -942,7 +942,7 @@
                   <td colspan="2">No Invoice / No Lot</td>
                   <td colspan="2">{{ $part->no_invoice }}</td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -1023,7 +1023,7 @@
                   <td colspan="2">Lot Qty</td>
                   <td colspan="2">{{ $part->lot_qty }} Pcs</td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -1104,7 +1104,7 @@
                   <td colspan="2">Sample / Check Qty</td>
                   <td colspan="2">{{ $part->sample_qty }} Pcs</td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -1185,7 +1185,7 @@
                   <td colspan="2">Defect Qty</td>
                   <td colspan="2">{{ $part->defect_qty }} Pcs</td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
@@ -1266,7 +1266,7 @@
                   <td colspan="2">Detail Problem</td>
                   <td colspan="2"><?= $part->detail_problem ?></td>
                   <td colspan="2">
-                    @if(Auth::user()->username == $cpars->chief) <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
+                    @if(Auth::user()->username == $cpars->chief || Auth::user()->role_code == "MIS") <!-- {{$cpars->chief}} --> <!-- Jika yang masuk adalah bu ratri -->
                         @if ($cpars->posisi == "chief")
                           @if($cpars->checked_chief == NULL)
                             <div class="custom-control custom-checkbox">
