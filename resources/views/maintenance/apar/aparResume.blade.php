@@ -220,34 +220,199 @@
     // RESUME APAR PER BULAN
     // drawChart();
 
-    drawChartWeek();
+    // drawChartWeek();
+    drawChartAtas();
   });
 
-  function drawChartWeek() {
-    var data = {
-      mon : $("#bulan").val()
+
+  function drawChartAtas() {
+   var data = {
+    mon : $("#bulan").val()
+  }
+
+  $.get('{{ url("fetch/maintenance/apar/resumeWeek") }}', data, function(result, status, xhr) {
+    var ctg2 = [];
+    var progress = [];
+    var total = [];
+
+    var s_total = result.apar_total[0].total;
+    var val = 0;
+    var mondate;
+
+    if ($("#bulan").val() == "") {
+      mondate = new Date();
+    } else {
+      mon = $("#bulan").val()+"-01";
+      mon = mon.split('-');
+      mon = mon.join('/');
+
+      mondate = new Date(mon);
     }
 
-    $.get('{{ url("fetch/maintenance/apar/resumeWeek") }}', data, function(result, status, xhr) {
+    $.each(result.apar_progres, function(index, value){
+      val += value.jml;
+      progress.push(val);
+      ctg2.push("Week "+value.wek);
 
-      var ctg = [];
-      var ctg2 = [];
-      var all_check = [];
-      var checked = [];
-      var exp = [];
-      var replace = [];
-      var mon = "";
-      var mondate;
+      total.push(s_total - value.jml);
+    })
 
-      var progress = [];
-      var total = [];
+    // ctg2.push("Total");
+    // progress.push(val);
+    // total.push(s_total - val);
 
-      $.each(result.cek_week, function(index, value){
-        mon = value.mon+"-01";
-        mon = mon.split('-');
-        mon = mon.join('/');
+    console.log(total);
 
-        mondate = new Date(mon);
+    Highcharts.chart('resume_chart_weekly', {
+      chart: {
+        type: 'column'
+      },
+
+      title: {
+        text: 'APAR Resume Weekly <br />'+months[mondate.getMonth()]+" "+mondate.getFullYear(),
+        html: true
+      },
+
+      xAxis: {
+        categories: ctg2,
+        labels: {
+          style: {
+            fontSize : '18px'
+          }
+        }
+      },
+
+      yAxis: {
+        allowDecimals: false,
+        title: {
+          text: 'Number of Fire Extinguisher'
+        },
+        stackLabels: {
+          enabled: true,
+          align: 'center',
+          style : {
+            fontSize : '15px'
+          }
+        }
+      },
+
+      tooltip: {
+        formatter: function () {
+          return '<b>' + this.x + '</b><br/>' +
+          this.series.name + ': ' + this.y ;
+        }
+      },
+
+      credits: {
+        enabled: false
+      },
+
+      plotOptions: {
+        column: {
+          point: {
+            events: {
+              click: function () {
+                detail_week(this.category, months[mondate.getMonth()]+" "+mondate.getFullYear());
+              }
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            style : {
+              fontSize : '18px'
+            }
+          }
+        }
+      },
+
+      series: [{
+        name: 'Total Check',
+        data: progress
+      }]
+    });
+
+      //-------------- PROGRESS ---------------
+      Highcharts.chart('resume_progress_weekly', {
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: 'APAR RESUME PROGRESS'
+        },
+        xAxis: {
+          categories: ctg2,
+          labels: {
+            style: {
+              fontSize : '18px'
+            }
+          }
+        },
+        yAxis: {
+          min: 0,
+          visible: false,
+          title: {
+            text: ''
+          }
+        },
+        tooltip: {
+          enabled: false
+        },
+        plotOptions: {
+          column: {
+            stacking: 'percent',
+            dataLabels: {
+              enabled: true,
+              style : {
+                fontSize : '18px'
+              },
+              format : '{point.percentage:.0f}%<br/>'
+            }
+          }
+        },
+        credits: {
+          enabled: false
+        },
+        series: [{
+          name: '',
+          data: total,
+          showInLegend: false,
+          dataLabels: false,
+        }, {
+          name: 'Progress',
+          data: progress,
+          dataLabels: false
+        }]
+      });
+    })
+}
+
+// ----------------------------------------------------------------------------------------------------------------
+
+function drawChartWeek() {
+  var data = {
+    mon : $("#bulan").val()
+  }
+
+  $.get('{{ url("fetch/maintenance/apar/resumeWeek") }}', data, function(result, status, xhr) {
+
+    var ctg = [];
+    var ctg2 = [];
+    var all_check = [];
+    var checked = [];
+    var exp = [];
+    var replace = [];
+    var mon = "";
+    var mondate;
+
+    var progress = [];
+    var total = [];
+
+    $.each(result.cek_week, function(index, value){
+      mon = value.mon+"-01";
+      mon = mon.split('-');
+      mon = mon.join('/');
+
+      mondate = new Date(mon);
         // var nowdate = new Date('2020/'+value.mon.split('-')[1]+'/01');
         
         ctg.push("Week "+value.wek);
@@ -257,110 +422,110 @@
         checked.push(parseInt(value.cek));
       })
 
-      $.each(result.replace_week, function(index, value){
-        exp.push(value.exp);
-        replace.push(value.entry);
-      })
+    $.each(result.replace_week, function(index, value){
+      exp.push(value.exp);
+      replace.push(value.entry);
+    })
 
-      var s_total = result.apar_total[0].total;
-      var val = 0;
+    var s_total = result.apar_total[0].total;
+    var val = 0;
 
-      $.each(result.apar_progres, function(index, value){
-        val += value.jml;
-        progress.push(value.jml);
-        ctg2.push("Week "+value.wek);
-        total.push(s_total - value.jml);
-      })
+    $.each(result.apar_progres, function(index, value){
+      val += value.jml;
+      progress.push(value.jml);
+      ctg2.push("Week "+value.wek);
+      total.push(s_total - value.jml);
+    })
 
-      ctg2.push("Total");
-      progress.push(val);
-      total.push(s_total - val);
+    ctg2.push("Total");
+    progress.push(val);
+    total.push(s_total - val);
 
-      console.log(total);
+    console.log(total);
 
 
-      Highcharts.chart('resume_chart_weekly', {
-        chart: {
-          type: 'column'
-        },
+    Highcharts.chart('resume_chart_weekly', {
+      chart: {
+        type: 'column'
+      },
 
+      title: {
+        text: 'APAR Resume Weekly <br />'+months[mondate.getMonth()]+" "+mondate.getFullYear(),
+        html: true
+      },
+
+      xAxis: {
+        categories: ctg,
+        labels: {
+          style: {
+            fontSize : '18px'
+          }
+        }
+      },
+
+      yAxis: {
+        allowDecimals: false,
         title: {
-          text: 'APAR Resume Weekly <br />'+months[mondate.getMonth()]+" "+mondate.getFullYear(),
-          html: true
+          text: 'Number of Fire Extinguisher'
         },
+        stackLabels: {
+          enabled: true,
+          align: 'center',
+          style : {
+            fontSize : '15px'
+          }
+        }
+      },
 
-        xAxis: {
-          categories: ctg,
-          labels: {
-            style: {
+      tooltip: {
+        formatter: function () {
+          return '<b>' + this.x + '</b><br/>' +
+          this.series.name + ': ' + this.y + '<br/>' +
+          'Total: ' + this.point.stackTotal;
+        }
+      },
+
+      credits: {
+        enabled: false
+      },
+
+      plotOptions: {
+        column: {
+          stacking: 'normal',
+          point: {
+            events: {
+              click: function () {
+                detail_week(this.category, months[mondate.getMonth()]+" "+mondate.getFullYear());
+              }
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            style : {
               fontSize : '18px'
             }
           }
-        },
+        }
+      },
 
-        yAxis: {
-          allowDecimals: false,
-          title: {
-            text: 'Number of Fire Extinguisher'
-          },
-          stackLabels: {
-            enabled: true,
-            align: 'center',
-            style : {
-              fontSize : '15px'
-            }
-          }
-        },
-
-        tooltip: {
-          formatter: function () {
-            return '<b>' + this.x + '</b><br/>' +
-            this.series.name + ': ' + this.y + '<br/>' +
-            'Total: ' + this.point.stackTotal;
-          }
-        },
-
-        credits: {
-          enabled: false
-        },
-
-        plotOptions: {
-          column: {
-            stacking: 'normal',
-            point: {
-              events: {
-                click: function () {
-                  detail_week(this.category, months[mondate.getMonth()]+" "+mondate.getFullYear());
-                }
-              }
-            },
-            dataLabels: {
-              enabled: true,
-              style : {
-                fontSize : '18px'
-              }
-            }
-          }
-        },
-
-        series: [{
-          name: 'Total Check',
-          data: all_check,
-          stack: 'check'
-        }, {
-          name: 'Checked',
-          data: checked,
-          stack: 'check'
-        }, {
-          name: 'Replaced / New',
-          data: replace,
-          stack: 'exp'
-        }, {
-          name: 'Expired',
-          data: exp,
-          stack: 'exp'
-        }]
-      });
+      series: [{
+        name: 'Total Check',
+        data: all_check,
+        stack: 'check'
+      }, {
+        name: 'Checked',
+        data: checked,
+        stack: 'check'
+      }, {
+        name: 'Replaced / New',
+        data: replace,
+        stack: 'exp'
+      }, {
+        name: 'Expired',
+        data: exp,
+        stack: 'exp'
+      }]
+    });
 
       //-------------- PROGRESS ---------------
       Highcharts.chart('resume_progress_weekly', {

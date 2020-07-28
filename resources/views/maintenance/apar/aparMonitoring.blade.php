@@ -262,7 +262,7 @@
             body += "<td style='background: transparent'>&nbsp;</td>";
             body += "</tr>";
           // }
-
+          $("#hasil").empty();
 
           hasil_body = '<tr>';
           hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
@@ -297,157 +297,166 @@
       }
 
       function drawTable() {
+        mon = $("#bulan").val();
+        mon = mon.split("-");
+        var dt = new Date(mon[1], mon[0] - 1, '01');
+
         if (modes == "apar") {
-          mon = $("#bulan").val();
-          mon = mon.split("-");
-
-          var dt = new Date(mon[1], mon[0] - 1, '01');
-
           if(isValidDate(dt)) {
             get_apar(dt);
           } else {
             get_apar(new Date());
           }
         } else {
-          drawHydrant();
+          if(isValidDate(dt)) {
+            drawHydrant(dt);
+          } else {
+            drawHydrant(new Date());
+          }
         }
       }
 
 
-      function drawHydrant() {
-       mon = $("#bulan").val();
-       mon = mon.split("-");
+      function drawHydrant(dt_param) {
+        mon = dt_param.getMonth()+1;
 
-       var dt = new Date(mon[1], mon[0] - 1, '01');
+        yr      = dt_param.getFullYear(),
+        month   = (dt_param.getMonth()+1) < 10 ? '0' + (dt_param.getMonth()+1) : (dt_param.getMonth()+1),
+        day     = dt_param.getDate()  < 10 ? '0' + dt_param.getDate()  : dt_param.getDate(),
+        newDate = yr + '-' + month + '-' + day;
 
-       if(isValidDate(dt)) {
-       } else {
-        dt = new Date();
-      }
+        var checked = 0;
+        var all_check = 0;
 
-      mon = dt.getMonth()+1;
+        $("#judul").text("HYDRANT Check on "+ dt_param.toLocaleString('default', { month: 'long' }));
 
-      var checked = 0;
-      var all_check = 0;
+        $("#body").empty();
+        var body = "";
 
-      $("#judul").text("HYDRANT Check on "+ dt.toLocaleString('default', { month: 'long' }));
+        var data = {
+          mon: mon,
+          dt: newDate
+        }
 
-      $("#body").empty();
-      var body = "";
+        $.get('{{ url("fetch/maintenance/hydrant/list/monitoring") }}', data, function(result, status, xhr){
+          var no_cek = 1, no_hasil = 1;
 
-      var data = {
-        mon: mon
-      }
+          $.each(result.check_list, function(index, value){
+            bg = "";
 
-      $.get('{{ url("fetch/maintenance/hydrant/list/monitoring") }}', data, function(result, status, xhr){
-        $.each(result.check_list, function(index, value){
-          bg = "";
+            var nowdate = new Date();
+            var entrydate = new Date(value.entry);
 
-          var nowdate = new Date();
-          var entrydate = new Date(value.entry);
+            body += "<tr>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+no_cek+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+value.utility_code+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+value.utility_name+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+value.location+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+(value.last_check || '-')+"</td>";
+            body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+(value.exp_date2 || '-')+"</td>";
+            body += "</tr>";
+
+            no_cek++;
+          });
 
           body += "<tr>";
-          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+value.utility_code+"</td>";
-          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+value.utility_name+"</td>";
-          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+value.location+"</td>";
-          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+(value.last_check || '-')+"</td>";
-          body += "<td style='background-color:"+color_arr[value.wek - 1]+"'>"+(value.exp_date2 || '-')+"</td>";
+          body += "<td style='background: transparent'>&nbsp;</td>";
+          body += "<td style='background: transparent'>&nbsp;</td>";
+          body += "<td style='background: transparent'>&nbsp;</td>";
+          body += "<td style='background: transparent'>&nbsp;</td>";
+          body += "<td style='background: transparent'>&nbsp;</td>";
+          body += "<td style='background: transparent'>&nbsp;</td>";
           body += "</tr>";
 
-        });
+          $("#hasil").empty();
 
-        body += "<tr>";
-        body += "<td style='background: transparent'>&nbsp;</td>";
-        body += "<td style='background: transparent'>&nbsp;</td>";
-        body += "<td style='background: transparent'>&nbsp;</td>";
-        body += "<td style='background: transparent'>&nbsp;</td>";
-        body += "<td style='background: transparent'>&nbsp;</td>";
-        body += "</tr>";
+          hasil_body = '<tr>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '</tr>';
 
+          $.each(result.hasil_check, function(index, value){
+            bg = "style='background-color: #98f25c'";            
 
-        hasil_body = '<tr>';
-        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-        hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-        hasil_body = '</tr>';
+            hasil_body += "<tr>";
+            hasil_body += "<td "+bg+">"+no_hasil+"</td>";
+            hasil_body += "<td "+bg+">"+value.utility_code+"</td>";
+            hasil_body += "<td "+bg+">"+value.utility_name+"</td>";
+            hasil_body += "<td "+bg+">"+value.location+"</td>";
+            hasil_body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
+            hasil_body += "<td "+bg+">-</td>";
+            hasil_body += "</tr>";
 
-        $.each(result.hasil_check, function(index, value){
-          bg = "style='background-color: #98f25c'";            
+            no_hasil++;
+          })
 
-          hasil_body += "<tr>";
-          hasil_body += "<td "+bg+">"+value.utility_code+"</td>";
-          hasil_body += "<td "+bg+">"+value.utility_name+"</td>";
-          hasil_body += "<td "+bg+">"+value.location+"</td>";
-          hasil_body += "<td "+bg+">"+(value.last_check || '-')+"</td>";
-          hasil_body += "<td "+bg+">-</td>";
-          hasil_body += "</tr>";
+          $("#datas").text(result.check_list.length+" ITEM MUST CHECKED");
+
+          $("#body").append(body);
+          $("#hasil").append(hasil_body);
         })
 
-        $("#datas").text(result.check_list.length+" ITEM MUST CHECKED");
-
-        $("#body").append(body);
-        $("#hasil").append(hasil_body);
-      })
-
-    }
-
-    function change_mode(mode) {
-      modes = mode;
-      console.log(mode);
-      if (mode == "hydrant") {
-        $("#btn_hydrant").hide();
-        $("#btn_apar").show();
-
-        drawHydrant();
-      } else {
-        $("#btn_apar").hide();
-        $("#btn_hydrant").show();
-
-        drawTable();
       }
-    }
 
-    var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+      function change_mode(mode) {
+        modes = mode;
+        console.log(mode);
+        if (mode == "hydrant") {
+          $("#btn_hydrant").hide();
+          $("#btn_apar").show();
 
-    function isValidDate(d) {
-      return d instanceof Date && !isNaN(d);
-    }
+          drawTable();
+        } else {
+          $("#btn_apar").hide();
+          $("#btn_hydrant").show();
 
-    function pad(num, size) {
-      var s = num+"";
-      while (s.length < size) s = "0" + s;
-      return s;
-    }
+          drawTable();
+        }
+      }
 
-    $(".datepicker").datepicker( {
-      autoclose: true,
-      format: "mm-yyyy",
-      viewMode: "months", 
-      minViewMode: "months"
-    });
+      var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-    function openSuccessGritter(title, message){
-      jQuery.gritter.add({
-        title: title,
-        text: message,
-        class_name: 'growl-success',
-        image: '{{ url("images/image-screen.png") }}',
-        sticky: false,
-        time: '3000'
+      function isValidDate(d) {
+        return d instanceof Date && !isNaN(d);
+      }
+
+      function pad(num, size) {
+        var s = num+"";
+        while (s.length < size) s = "0" + s;
+        return s;
+      }
+
+      $(".datepicker").datepicker( {
+        autoclose: true,
+        format: "mm-yyyy",
+        viewMode: "months", 
+        minViewMode: "months"
       });
-    }
 
-    function openErrorGritter(title, message) {
-      jQuery.gritter.add({
-        title: title,
-        text: message,
-        class_name: 'growl-danger',
-        image: '{{ url("images/image-stop.png") }}',
-        sticky: false,
-        time: '3000'
-      });
-    }	
-  </script>
-  @endsection
+      function openSuccessGritter(title, message){
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-success',
+          image: '{{ url("images/image-screen.png") }}',
+          sticky: false,
+          time: '3000'
+        });
+      }
+
+      function openErrorGritter(title, message) {
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '3000'
+        });
+      }	
+    </script>
+    @endsection

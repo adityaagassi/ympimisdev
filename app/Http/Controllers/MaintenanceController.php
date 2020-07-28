@@ -339,7 +339,7 @@ class MaintenanceController extends Controller
 		$title = 'Maintenance Spare Part Inventories';
 		$title_jp = '??';
 
-		if (Auth::user()->role_code == "MIS") {
+		if (Auth::user()->role_code == "MIS" || strtoupper(Auth::user()->username) == "PI2003013") {
 			$permission = 1;
 		} else {
 			$permission = 0;
@@ -1393,9 +1393,19 @@ class MaintenanceController extends Controller
 		->orderBy("week", "ASC")
 		->get();
 
+		$hasil_check = db::select("SELECT DATE_FORMAT(check_date,'%Y-%m-%d') as dt_cek, utility_code, utility_name, location, DATE_FORMAT(last_check,'%d %M %Y') as last_check FROM utility_checks
+			LEFT JOIN utilities on utilities.id = utility_checks.utility_id
+			WHERE utility_checks.id IN (
+			SELECT MAX(id)
+			FROM utility_checks
+			where DATE_FORMAT(check_date,'%Y-%m') = DATE_FORMAT('".$request->get('dt')."', '%Y-%m') and deleted_at is null
+			GROUP BY utility_id
+		) AND utilities.remark = 'HYDRANT'");
+
 		$response = array(
 			'status' => true,
 			'check_list' => $check,
+			'hasil_check' => $hasil_check,
 			'query' => DB::getQueryLog()
 		);
 		return Response::json($response);
