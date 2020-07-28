@@ -1388,9 +1388,10 @@ class MaintenanceController extends Controller
 
 		$check = Utility::where("location", "=", $loc)
 		->where("remark", "=", "HYDRANT")
-		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', db::raw('DATE_FORMAT(exp_date, "%d %M %Y") as exp_date2'), 'exp_date', 'remark', 'last_check', db::raw('IF(IFNULL(MONTH(last_check), 0) >= '.$request->get('mon').', 1, 0) as cek'), db::raw('IFNULL(FLOOR((DayOfMonth(last_check)-1)/7)+1, FLOOR((DayOfMonth("2020-01-01")-1)/7)+1) AS `week`'))
-		->orderBy("cek", "ASC")
-		->orderBy("week", "ASC")
+		->select('id','utility_code','utility_name', 'type', 'group', 'capacity', 'location', 'remark', db::raw('DATE_FORMAT(last_check, "%d %M %Y") last_check'), db::raw('DATE_FORMAT(entry_date, "%Y-%m-%d") entry'), db::raw('DATE_FORMAT(DATE_ADD(last_check, INTERVAL 2 MONTH), "%d %M %Y") as cek_before'), db::raw("FLOOR((DayOfMonth(DATE_ADD(DATE(last_check), INTERVAL 2 MONTH)-1)/7)+1) as wek"))
+		->whereRaw('DATE_FORMAT(last_check,"%Y-%m") <> DATE_FORMAT("'.$request->get('dt').'", "%Y-%m")')
+		->orderBy("wek", "ASC")
+		->orderBy("id", "ASC")
 		->get();
 
 		$hasil_check = db::select("SELECT DATE_FORMAT(check_date,'%Y-%m-%d') as dt_cek, utility_code, utility_name, location, DATE_FORMAT(last_check,'%d %M %Y') as last_check FROM utility_checks
