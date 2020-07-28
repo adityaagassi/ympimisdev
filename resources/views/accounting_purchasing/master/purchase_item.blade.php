@@ -155,16 +155,16 @@
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
 										<th style="width:5%;">Item Code</th>
-										<th style="width:5%;">Category</th>
-										<th style="width:5%;">Description</th>
-										<th style="width:5%;">Uom</th>
-										<th style="width:5%;">Specification</th>
-										<th style="width:7%;">Price</th>
-										<th style="width:6%;">Lot</th>
-										<th style="width:6%;">Moq</th>
-										<th style="width:6%;">Lead Time</th>
-										<th style="width:6%;">Currency</th>
-										<th style="width:5%;">Action</th>
+										<th style="width:3%;">Category</th>
+										<th style="width:8%;">Description</th>
+										<th style="width:8%;">Specification</th>
+										<th style="width:2%;">Uom</th>
+										<th style="width:4%;">Price</th>
+										<th style="width:3%;">Currency</th>
+										<th style="width:3%;">Lot</th>
+										<th style="width:3%;">Moq</th>
+										<th style="width:3%;">Lead Time</th>
+										<th style="width:8%;">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -314,14 +314,14 @@
 			{ "data": "kode_item"},
 			{ "data": "kategori"},
 			{ "data": "deskripsi"},
-			{ "data": "uom"},
 			{ "data": "spesifikasi"},
+			{ "data": "uom"},
 			{ "data": "harga"},
+			{ "data": "currency"},
 			{ "data": "lot"},
 			{ "data": "moq"},
 			{ "data": "leadtime"},
-			{ "data": "currency"},
-			{ "data": "action"}
+			{ "data": "action"},
 			]
 		});
 

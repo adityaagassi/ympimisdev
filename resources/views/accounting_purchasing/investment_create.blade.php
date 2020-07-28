@@ -180,7 +180,7 @@
               <textarea class="form-control pull-right" id="note" name="note"></textarea>
           </div>
           <div class="col-xs-4">
-              <label>Quotation (Optional)</label>
+              <label>Other Quotation (Optional)</label>
               <textarea class="form-control pull-right" id="quotation_supplier" name="quotation_supplier"></textarea>
           </div>
         </div>
@@ -295,6 +295,9 @@
       }
       else if(jen2 == "PC & Printer"){
         jenis = "PC";
+      }
+      else if(jen2 == "Land Acquisition"){
+        jenis = "Ln";
       }
 
       if (jen2 == "Office Supplies") {
@@ -431,8 +434,7 @@
 
       }
     }
-
-
+    
     $("#form_submit").click( function() {
       $("#loading").show();
 
@@ -561,6 +563,7 @@
           list += "<option value='Tools, Jigs & Furniture'>Tools, Jigs & Furniture</option>";
           list += "<option value='Moulding'>Moulding</option>";
           list += "<option value='PC & Printer'>PC & Printer</option>";
+          list += "<option value='Land Acquisition'>Land Acquisition</option>";
         }
         else if (isi == "Expense"){
           list += "<option value='Office Supplies'>Office Supplies</option>";

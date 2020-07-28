@@ -106,7 +106,12 @@
 					<td colspan="4" style="font-size: 11px">NPWP &nbsp;: {{$po[0]->supplier_npwp}}</td>
 					<td colspan="2"></td>
 					<td colspan="1" style="font-size: 12px;">Dept/Sect</td>
-					<td colspan="3" style="font-size: 12px;">: {{$po[0]->department}}</td>
+					<?php if($po[0]->remark == "PR"){ ?>
+						<td colspan="3" style="font-size: 12px;">: {{$po[0]->department}}</td>
+					<?php } else if($po[0]->remark == "Investment") { ?>
+						<td colspan="3" style="font-size: 12px;">: {{$po[0]->applicant_department}}</td>
+					<?php } ?> 
+
 				</tr>
 
 				<tr>
@@ -119,7 +124,11 @@
 				<tr>
 					<td colspan="4" style="font-size: 11px">Fax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{$po[0]->supplier_fax}}</td>
 					<td colspan="2"></td>
-					<td colspan="1" style="font-size: 12px;">No PR </td> 
+					<?php if($po[0]->remark == "PR"){ ?>
+						<td colspan="1" style="font-size: 12px;">No PR</td>
+					<?php } else if($po[0]->remark == "Investment") { ?>
+						<td colspan="1" style="font-size: 12px;">No Investment</td>
+					<?php } ?>
 					<td colspan="3" style="font-size: 12px;">: 
 
 						<?php for ($i=0; $i < count($pr) ; $i++) { 

@@ -1176,10 +1176,15 @@ Route::post('investment/update_post', 'AccountingController@detail_investment_po
 Route::get('investment/sendemail', 'AccountingController@investment_send_email');
 Route::get('investment/check/{id}', 'AccountingController@check_investment');
 Route::post('investment/check_budget/{id}', 'AccountingController@check_investment_budget');
+Route::post('delete/investment_budget', 'AccountingController@delete_investment_budget');
+Route::get('investment/get_budget_name', 'AccountingController@get_budget_name')->name('admin.getbudget');
 
 //Nomor Investment
 Route::get('investment/get_nomor_investment', 'AccountingController@get_nomor_inv');
 Route::get('fetch/investment/invbudgetlist', 'AccountingController@fetchInvBudgetList');
+
+//Upload Adagio
+Route::post('investment/adagio', 'AccountingController@post_adagio');
 
 //investment item
 Route::post('investment/create_investment_item', 'AccountingController@create_investment_item');
@@ -1203,6 +1208,7 @@ Route::get('purchase_order/investment_get_item', 'AccountingController@pogetitem
 Route::get('budget/info', 'AccountingController@budget_info');
 Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
 Route::get('budget/detail', 'AccountingController@budget_detail');
+Route::post('import/budget', 'AccountingController@import_budget');
 
 
 
@@ -1824,6 +1830,7 @@ Route::get('fetch/stocktaking/get_storage_location', 'StockTakingController@fetc
 Route::get('fetch/stocktaking/get_store', 'StockTakingController@fetchGetStore');
 Route::get('fetch/stocktaking/check_material', 'StockTakingController@fetchCheckMaterial');
 
+Route::get('print/stocktaking/print_store/{id}', 'StockTakingController@printStore');
 Route::get('reprint/stocktaking/summary_of_counting_id', 'StockTakingController@reprintIdSoc');
 Route::get('reprint/stocktaking/summary_of_counting_store', 'StockTakingController@reprintStoreSoc');
 
@@ -1903,6 +1910,11 @@ Route::post('input/chm_production_result', 'IndirectMaterialController@inputProd
 //Request
 Route::get('index/indirect_material_request/{id}', 'IndirectMaterialController@indexRequest');
 Route::get('fetch/check_qr', 'IndirectMaterialController@fetchCheckQr');
+Route::get('fetch/check_out', 'IndirectMaterialController@fetchCheckOut');
+Route::get('fetch/chm_picked', 'IndirectMaterialController@fetchChmPicked');
+Route::post('delete/chm_picked', 'IndirectMaterialController@deleteChmPicked');
+Route::post('delete/chm_out', 'IndirectMaterialController@deleteChmOut');
+Route::post('input/chm_picked', 'IndirectMaterialController@inputChmPicked');
 
 //Schedule
 Route::get('index/chm_picking_schedule', 'IndirectMaterialController@indexPickingSchedule');
@@ -1911,7 +1923,11 @@ Route::get('fetch/chm_picking_schedule_detail', 'IndirectMaterialController@fetc
 Route::get('fetch/get_addition_chm', 'IndirectMaterialController@fetchAdditionChm');
 Route::post('index/chm_input_addition', 'IndirectMaterialController@inputChmAddition');
 Route::post('index/chm_input_new', 'IndirectMaterialController@inputChmNew');
-Route::post('delete/chm_scheduel', 'IndirectMaterialController@deleteSchedule');
+Route::post('delete/chm_schedule', 'IndirectMaterialController@deleteSchedule');
+
+//Larutan
+Route::get('index/chm_larutan', 'IndirectMaterialController@indexLarutan');
+Route::get('fetch/chm_larutan', 'IndirectMaterialController@fetchLarutan');
 
 
 
@@ -3026,6 +3042,12 @@ Route::get('index/maintenance/inventory/{stat}', 'MaintenanceController@indexInv
 Route::get('fetch/maintenance/inven/code', 'MaintenanceController@fetchPartbyCode');
 Route::post('post/maintenance/inven/code', 'MaintenanceController@postInventory');
 
+// -------------------------- PLANNED MAINTENANCE -----------------------
+
+Route::get('index/maintenance/planned', 'MaintenanceController@indexPlanned');
+Route::get('index/maintenance/planned/master', 'MaintenanceController@indexPlanMaster');
+// Route::get('fetch/maintenance/planned', 'MaintenanceController@fetchPlanned');
+
 //Assemblies
 Route::get('index/kensa/{location}', 'AssemblyProcessController@kensa');
 Route::get('scan/assembly/operator', 'AssemblyProcessController@scanAssemblyOperator');
@@ -3077,7 +3099,8 @@ Route::get('fetch/assembly/stamp_record', 'AssemblyProcessController@fetchStampR
 Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
 	Route::get('index/skill_map/{location}', 'SkillMapController@indexSkillMap');
 	Route::get('fetch/skill_map', 'SkillMapController@fetchSkillMap');
-	Route::get('fetch/skill_map_employee', 'SkillMapController@fetchSkillMapEmployee');
+	Route::get('fetch/skill_map_detail', 'SkillMapController@fetchSkillMapDetail');
+	Route::post('input/skill_adjustment', 'SkillMapController@inputSkillAdjustment');
 });
 
 //ROOMS

@@ -87,7 +87,7 @@
 		<div class="col-xs-12">
 			<div class="box no-border" style="margin-bottom: 5px;">
 				<div class="box-header" style="margin-top: 10px">
-					<h3 class="box-title">Outstanding PR yang Belum Di PO</span></h3>
+					<h3 class="box-title">Outstanding Investment yang Belum Di PO</span></h3>
 
 					<div class="row">
 						<div class="col-xs-12">
@@ -98,19 +98,25 @@
 									<table id="outstandingTable" class="table table-bordered table-striped table-hover">
 										<thead style="background-color: rgba(126,86,134,.7);">
 											<tr>
-												<th style="width: 1%">Nomor PR</th>
-												<th style="width: 2%">Departemen</th>
+												<th style="width: 2%">Nomor Investment</th>
 												<th style="width: 1%">Tanggal Pengajuan</th>
-												<th style="width: 1%">User</th>
-												<th style="width: 1%">Nomor Budget</th>
+												<th style="width: 2%">Departemen</th>
+												<th style="width: 1%">Applicant</th>
+												<th style="width: 1%">Kategori</th>
+												<th style="width: 1%">Judul</th>
+												<th style="width: 3%">Vendor</th>
+												<th style="width: 2%">Tipe</th>
 												<th style="width: 1%">Att</th>
-												<th style="width: 2%">Action</th>
+												<th style="width: 10%">Action</th>
 											</tr>
 										</thead>
 										<tbody>
 										</tbody>
 										<tfoot>
 											<tr>
+												<th></th>
+												<th></th>
+												<th></th>
 												<th></th>
 												<th></th>
 												<th></th>
@@ -236,7 +242,7 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h4 class="modal-title">Create Purchase Order</h4>
+					<h4 class="modal-title">Create Purchase Order Investment</h4>
 					<br>
 					<div class="nav-tabs-custom tab-danger">
 						<ul class="nav nav-tabs">
@@ -253,7 +259,7 @@
 											<div class="form-group">
 												<label>Nomor PO<span class="text-red">*</span></label>
 												<input type="text" class="form-control" id="no_po1" name="no_po1" readonly="">
-												<input type="hidden" class="form-control" id="remark" name="remark" value="PR">
+												<input type="hidden" class="form-control" id="remark" name="remark" value="Investment">
 											</div>
 										</div>
 										<div class="col-md-6" style="padding:0">
@@ -380,7 +386,7 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="col-xs-1" style="padding:5px;">
-										<b>NO PR</b>
+										<b>No Investment</b>
 									</div>
 									<div class="col-xs-1" style="padding:5px;">
 										<b>No Item</b>
@@ -419,7 +425,7 @@
 									<input type="text" name="lop" id="lop" value="1" hidden>
 
 									<div class="col-xs-1" style="padding:5px;">
-										<select class="form-control select2" data-placeholder="PR" name="no_pr1" id="no_pr1" style="width: 100% height: 35px;" onchange="pilihPR(this)">
+										<select class="form-control select2" data-placeholder="Reff Number" name="reff_number1" id="reff_number1" style="width: 100% height: 35px;" onchange="pilihInvestment(this)">
 										</select>
 									</div>
 
@@ -699,8 +705,7 @@
 	</form>
 </div>
 
-<div class="modal fade in" id="modalEditPR">
-    <form id ="importFormEdit" name="importFormEdit" method="post" action="{{ url('update/purchase_requisition/po') }}">
+  <div class="modal fade in" id="modalDetailInvestment">
       <input type="hidden" value="{{csrf_token()}}" name="_token" />
       <div class="modal-dialog modal-lg" style="width: 1300px">
         <div class="modal-content">
@@ -708,110 +713,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">Edit Purchase Requisition</h4>
-            <br>
-            <h4 class="modal-title" id="modalDetailTitle"></h4>
-            <div class="row">
-              <div class="col-md-12">
-
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Identitas</label>
-                    <input type="text" class="form-control" id="identitas_edit" name="identitas_edit" placeholder="Identitas">
-                  </div>
-                  <div class="form-group">
-                    <label>No PR</label>
-                    <input type="text" class="form-control" id="no_pr_edit" name="no_pr_edit" placeholder="PR Number">
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Departemen</label>
-                    <input type="text" class="form-control" id="departemen_edit" name="departemen_edit" placeholder="Departemen">
-                  </div>
-                  <div class="form-group">
-                    <label>No Budget</label>
-                    <input type="text" class="form-control" id="no_budget_edit" name="no_budget_edit" placeholder="No Budget">
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Tanggal Pengajuan</label>
-                    <input type="text" class="form-control" id="tgl_pengajuan_edit" name="tgl_pengajuan_edit" placeholder="Tanggal Pengajuan">
-                  </div>
-                </div>
-
-
-              </div>
-            </div>
-            <div>
-              <div class="col-md-12" style="margin-bottom : 5px">
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>Kode Item</b>
-                </div>
-                <div class="col-xs-2" style="padding:5px;">
-                  <b>Deskripsi</b>
-                </div>
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>Spesifikasi</b>
-                </div>
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>Stock</b>
-                </div>
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>UOM</b>
-                </div>
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>Request Date</b>
-                </div>
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>Mata Uang</b>
-                </div>
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>Harga</b>
-                </div>
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>Jumlah</b>
-                </div>
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>Total</b>
-                </div>
-                <div class="col-xs-1" style="padding:5px;">
-                  <b>Aksi</b>
-                </div>
-              </div>
-
-              <div  id="modalDetailBodyEditPR">
-              </div>
-            </div>
-            <br>
-
-            <div id="tambah3">
-              <input type="text" name="lop3" id="lop3" value="1" hidden="">
-              <input type="text" name="looping_pr" id="looping_pr" hidden="">
-            </div>
-            
-          </div>
-          <div class="modal-footer">
-            <input type="hidden" class="form-control" id="id_edit_pr" name="id_edit_pr" placeholder="ID">
-            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-warning">Update</button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <div class="modal fade in" id="modalDetailPR">
-      <input type="hidden" value="{{csrf_token()}}" name="_token" />
-      <div class="modal-dialog modal-lg" style="width: 1300px">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="modal-title">Detail Item Purchase Requisition</h4>
+            <h4 class="modal-title">Detail Item Investment</h4>
             <br>
             <h4 class="modal-title" id="modalDetailTitle"></h4>
 
@@ -821,15 +723,11 @@
 	              	<thead style="background-color: rgba(126,86,134,.7);">
 						<tr>
 							<th style="width: 1%;">No</th>
-							<th style="width: 2%;">Kode Item</th>
-							<th style="width: 5%;">Deskripsi</th>
-							<th style="width: 4%;">Spesifikasi</th>
-							<th style="width: 2%;">Stock</th>
-							<th style="width: 3%;">Request Date</th>
-							<th style="width: 3%;">Mata Uang</th>
-							<th style="width: 4%;">Harga</th>
-							<th style="width: 2%;">Jumlah</th>
-							<th style="width: 4%;">Total</th>
+							<th style="width: 2%;">No Item</th>
+							<th style="width: 5%;">Detail</th>
+							<th style="width: 4%;">Qty</th>
+							<th style="width: 2%;">Price</th>
+							<th style="width: 3%;">Amount</th>
 							<th style="width: 4%;">Action</th>
 						</tr>
 					</thead>
@@ -846,6 +744,7 @@
 
           </div>
           <div class="modal-footer">
+            <input type="hidden" class="form-control" id="id_edit" name="id_edit" placeholder="ID">
             <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -916,7 +815,7 @@
 <script>
 
 	no = 2;
-	pr_list = "";
+	inv_list = "";
 	exchange_rate = [];
 	item_list = "";
     limitdate = "";
@@ -930,8 +829,7 @@
 	jQuery(document).ready(function() {
 		fillTableOutstanding();
 		fillTable();
-		getPRList();
-		getItemList();
+		getInvList();
 
 	    limitdate = new Date();
 	    limitdate.setDate(limitdate.getDate());
@@ -1077,14 +975,17 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/purchase_order_pr") }}",
+				"url" : "{{ url("fetch/po_investment_outstanding") }}",
 			},
 			"columns": [
-			{ "data": "no_pr" },
-			{ "data": "department" },
+			{ "data": "reff_number" },
 			{ "data": "submission_date" },
-			{ "data": "emp_name" },
-			{ "data": "no_budget" },
+			{ "data": "applicant_department" },
+			{ "data": "applicant_name" },
+			{ "data": "category" },
+			{ "data": "subject" },
+			{ "data": "supplier_name" },
+			{ "data": "type" },
 			{ "data": "file" },
 			{ "data": "action" },
 
@@ -1188,7 +1089,6 @@
 			{ "data": "no_po_sap" },
 			{ "data": "status" },
 			{ "data": "action" },
-
 			],
 		});
 
@@ -1322,23 +1222,23 @@
 		});
 	}
 
-	function getPRList() {
-		$.get('{{ url("fetch/purchase_order/prlist") }}', function(result, status, xhr) {
-			pr_list += "<option></option> ";
-			$.each(result.pr, function(index, value){
-				pr_list += "<option value="+value.no_pr+">"+value.no_pr+"</option> ";
+	function getInvList() {
+		$.get('{{ url("fetch/purchase_order/invlist") }}', function(result, status, xhr) {
+			inv_list += "<option></option> ";
+			$.each(result.investment, function(index, value){
+				inv_list += "<option value="+value.reff_number+">"+value.reff_number+"</option> ";
 			});
-			$('#no_pr1').append(pr_list);
+			$('#reff_number1').append(inv_list);
 		})
 	}
 
-	function pilihPR(elem)
+	function pilihInvestment(elem)
 	{
 		var no = elem.id.match(/\d/g);
 		no = no.join("");
 
 		$.ajax({
-			url: "{{ url('fetch/purchase_order/pilih_pr') }}?no_pr="+elem.value,
+			url: "{{ url('fetch/purchase_order/pilih_investment') }}?reff_number="+elem.value,
 			method: 'GET',
 			success: function(data) {
 				var json = data,
@@ -1358,32 +1258,31 @@
 		var no = elem.id.match(/\d/g);
 		no = no.join("");
 
-		var no_pr = $("#no_pr"+no).val();
+		var reff_number = $("#reff_number"+no).val();
 
 		$.ajax({
-			url: "{{ url('purchase_order/get_item') }}?item_code="+elem.value+"&no_pr="+no_pr,
+			url: "{{ url('purchase_order/investment_get_item') }}?no_item="+elem.value+"&reff_number="+reff_number,
 			method: 'GET',
 			success: function(data) {
 				var json = data,
 				obj = JSON.parse(json);
-				$('#qty'+no).attr('readonly', false).val(obj.item_qty);
-				$('#nama_item'+no).attr('readonly', false).val(obj.item_desc);
-				$('#uom'+no).val(obj.item_uom).change();
-				$('#item_budget'+no).attr('readonly', false).val(obj.no_budget);
-				$('#delivery_date'+no).attr('readonly', false).val(obj.item_request_date);
-				if (obj.item_currency == "USD") {
+				$('#qty'+no).attr('readonly', false).val(obj.qty);
+				$('#nama_item'+no).attr('readonly', false).val(obj.deskripsi);
+				$('#uom'+no).val(obj.uom).change();
+				$('#item_budget'+no).attr('readonly', false).val(obj.budget_no);
+				$('#delivery_date'+no).attr('readonly', false);
+				if (obj.currency == "USD") {
 					$('#ket_harga'+no).text("$");
-				}else if (obj.item_currency == "JPY") {
+				}else if (obj.currency == "JPY") {
 					$('#ket_harga'+no).text("¥");
-				}else if (obj.item_currency == "IDR"){
+				}else if (obj.currency == "IDR"){
 					$('#ket_harga'+no).text("Rp.");
 				}
-				
-				$('#goods_price'+no).attr('readonly', false).val(obj.item_price);
+				$('#goods_price'+no).attr('readonly', false).val(obj.price);
 				$('#service_price'+no).attr('readonly', false).val(0);
 
-				var total = obj.item_qty * obj.item_price;
-				var conf = konversi(obj.item_currency,"USD",total);
+				var total = obj.qty * obj.price;
+				var conf = konversi(obj.currency,"USD",total);
 				$('#konversi_dollar'+no).attr('readonly', false).val(conf);
 
 			}
@@ -1426,7 +1325,7 @@
 	    $('#konversi_dollar'+num).val(harga_konversi);
 	}
 
-	//Fungsi Tambah PO
+	//Fungsi Tambah
 
 	function tambah(id,lop) {
 		var id = id;
@@ -1439,10 +1338,10 @@
 			lop = "lop2";
 		}
 
-		var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='PR' name='no_pr"+no+"' id='no_pr"+no+"' style='width: 100% height: 35px;' onchange='pilihPR(this)'></select></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Item' name='no_item"+no+"' id='no_item"+no+"' style='width: 100% height: 35px;' onchange='pilihItem(this)'></select><input type='hidden' class='form-control' id='nama_item"+no+"' name='nama_item"+no+"' placeholder='Nama Item' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+no+"' name='item_budget"+no+"' placeholder='Budget' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+no+"' name='delivery_date"+no+"' placeholder='Delivery Date' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' required='' readonly='' onkeyup='getkonversi(this)'></div> <div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"'>?</span><input type='text' class='form-control currency' id='goods_price"+no+"' name='goods_price"+no+"' placeholder='Goods Price' required='' readonly='' onkeyup='getkonversi(this)'></div></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+no+"' name='last_price"+no+"' placeholder='Last Price' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+no+"' name='service_price"+no+"' placeholder='Service' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='gl_number"+no+"' name='gl_number"+no+"' placeholder='GL Number' required=''></div><div class='col-xs-1' style='padding:5px;'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+		var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Reff Number' name='reff_number"+no+"' id='reff_number"+no+"' style='width: 100% height: 35px;' onchange='pilihInvestment(this)'></select></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Item' name='no_item"+no+"' id='no_item"+no+"' style='width: 100% height: 35px;' onchange='pilihItem(this)'></select><input type='hidden' class='form-control' id='nama_item"+no+"' name='nama_item"+no+"' placeholder='Nama Item' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+no+"' name='item_budget"+no+"' placeholder='Budget' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+no+"' name='delivery_date"+no+"' placeholder='Delivery Date' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' required='' readonly='' onkeyup='getkonversi(this)'></div> <div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"'>?</span><input type='text' class='form-control currency' id='goods_price"+no+"' name='goods_price"+no+"' placeholder='Goods Price' required='' readonly='' onkeyup='getkonversi(this)'></div></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+no+"' name='last_price"+no+"' placeholder='Last Price' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+no+"' name='service_price"+no+"' placeholder='Service' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Konversi Dollar' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='gl_number"+no+"' name='gl_number"+no+"' placeholder='GL Number' required=''></div><div class='col-xs-1' style='padding:5px;'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
 
 		$("#"+id).append(divdata);
-		$("#no_pr"+no).append(pr_list);
+		$("#reff_number"+no).append(inv_list);
 
 		$(function () {
 			$('.select3').select2({
@@ -1472,7 +1371,7 @@
 		var newid = parseInt(ids) + 1;
 
 		$("#"+newid).attr("id",oldid);
-		$("#no_pr"+newid).attr("name","no_pr"+oldid);
+		$("#reff_number"+newid).attr("name","reff_number"+oldid);
 		$("#no_item"+newid).attr("name","no_item"+oldid);
 		$("#item_budget"+newid).attr("name","item_budget"+oldid);
 		$("#delivery_date"+newid).attr("name","delivery_date"+oldid);
@@ -1483,7 +1382,7 @@
 		$("#konversi_dollar"+newid).attr("name","konversi_dollar"+oldid);
 		$("#gl_number"+newid).attr("name","gl_number"+oldid);
 
-		$("#no_pr"+newid).attr("id","no_pr"+oldid);
+		$("#reff_number"+newid).attr("id","reff_number"+oldid);
 		$("#no_item"+newid).attr("id","no_item"+oldid);
 		$("#item_budget"+newid).attr("id","item_budget"+oldid);
 		$("#delivery_date"+newid).attr("id","delivery_date"+oldid);
@@ -1501,7 +1400,7 @@
 			var newid = parseInt(i) + 1;
 			var oldid = newid - 1;
 			$("#"+newid).attr("id",oldid);
-			$("#no_pr"+newid).attr("name","no_pr"+oldid);
+			$("#reff_number"+newid).attr("name","reff_number"+oldid);
 			$("#no_item"+newid).attr("name","no_item"+oldid);
 			$("#item_budget"+newid).attr("name","item_budget"+oldid);
 			$("#delivery_date"+newid).attr("name","delivery_date"+oldid);
@@ -1512,7 +1411,7 @@
 			$("#konversi_dollar"+newid).attr("name","konversi_dollar"+oldid);
 			$("#gl_number"+newid).attr("name","gl_number"+oldid);
 
-			$("#no_pr"+newid).attr("id","no_pr"+oldid);
+			$("#reff_number"+newid).attr("id","reff_number"+oldid);
 			$("#no_item"+newid).attr("id","no_item"+oldid);
 			$("#item_budget"+newid).attr("id","item_budget"+oldid);
 			$("#delivery_date"+newid).attr("id","delivery_date"+oldid);
@@ -1603,7 +1502,7 @@
 		    	var	lop2 = "lop2";
 
 		    	isi = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
-		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' name='no_pr"+value.id+"' id='no_pr"+value.id+"' value='"+ value.no_pr +"' readonly=''></div>";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' name='reff_number"+value.id+"' id='reff_number"+value.id+"' value='"+ value.reff_number +"' readonly=''></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' name='no_item"+value.id+"' id='no_item"+value.id+"' value='"+ value.no_item +"' readonly=''><input type='hidden' class='form-control' id='nama_item"+value.id+"' name='nama_item"+value.id+"' placeholder='Nama Item' readonly='' value='"+ value.nama_item +"'></div> ";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+value.id+"' name='item_budget"+value.id+"' placeholder='Budget' required='' value="+value.budget_item+" readonly=''></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+value.id+"' name='delivery_date"+value.id+"' placeholder='Delivery Date' required='' value="+value.delivery_date+"></div>";
@@ -1623,7 +1522,7 @@
 
 
 		    	$('#modalDetailBodyEdit').append(isi);
-		    	$("#no_pr"+value.id).append(pr_list);
+		    	$("#reff_number"+value.id).append(inv_list);
 
 		    	if (value.currency == "USD") {
 		    		$('#ket_harga_edit'+value.id).text("$");
@@ -1738,323 +1637,31 @@
     }
 
     
-    //EditPR
-
-    function tambahPR(id,lop) {
-      var id = id;
-
-      var lop = "";
-
-      if (id == "tambah"){
-        lop = "lop";
-      }else{
-        lop = "lop2";
-      }
-
-      var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock"+no+"' name='item_stock"+no+"' placeholder='Stock' required=''></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambahPR(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
-
-      $("#"+id).append(divdata);
-      $("#item_code"+no).append(item_list);
 
 
-      $('.datepicker').datepicker({
-        autoclose: true,
-        format: 'yyyy-mm-dd',
-        startDate: limitdate
-      });
-
-      $(function () {
-        $('.select3').select2({
-          dropdownAutoWidth : true,
-          dropdownParent: $("#"+id),
-          allowClear:true,
-          minimumInputLength: 3
-        });
-      })
-
-    // $("#"+id).select2().trigger('change');
-    document.getElementById(lop).value = no;
-    no+=1;
-  }
-
-    function getItemList() {
-      $.get('{{ url("fetch/purchase_requisition/itemlist") }}', function(result, status, xhr) {
-        item_list += "<option></option> ";
-        $.each(result.item, function(index, value){
-          item_list += "<option value="+value.kode_item+">"+value.kode_item+ " - " +value.deskripsi+"</option> ";
-        });
-
-      })
-    }
-
-    function editPR(id){
-      var isi = "";
-      $('#modalEditPR').modal("show");
-        
-        var data = {
-          id:id
-      };
-          
-        $.get('{{ url("edit/purchase_requisition") }}', data, function(result, status, xhr){  
-
-        $("#identitas_edit").val(result.purchase_requisition.emp_id+' - '+result.purchase_requisition.emp_name).attr('readonly', true);
-        $("#departemen_edit").val(result.purchase_requisition.department).attr('readonly', true);
-        $("#no_pr_edit").val(result.purchase_requisition.no_pr).attr('readonly', true);
-        $("#no_budget_edit").val(result.purchase_requisition.no_budget).attr('readonly', true);
-        $("#tgl_pengajuan_edit").val(result.purchase_requisition.submission_date).attr('readonly', true);
-        $("#id_edit_pr").val(result.purchase_requisition.id).attr('readonly', true);
-
-        $('#modalDetailBodyEditPR').html('');
-            var ids = [];
-        $.each(result.purchase_requisition_item, function(key, value) {
-
-          // console.log(result.purchase_requisition_item);
-          var tambah3 = "tambah3";
-            var lop3 = "lop3";
-
-          isi = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
-          if (value.item_code != null) {
-
-            isi += "<input type='hidden' class='form-control' id='item_code_edit_hide"+value.id+"' name='item_code_edit_hide"+value.id+"' value="+value.item_code+">";
-
-            isi += "<div class='col-xs-1' style='padding:5px;'><select class='form-control select5 item_code_edit' data-placeholder='Choose Item' name='item_code_edit"+value.id+"' id='item_code_edit"+value.id+"' style='width: 100% height: 35px;' onchange='pilihItemEdit(this)'><option></option></select></div>";
-
-          }else{
-            isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_code_edit"+value.id+"' name='item_code_edit"+value.id+"'></div>";
-          }
-          
-          isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
-          isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value='"+value.item_spec+"'></div>";
-          isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock' required='' value='"+value.item_stock+"'></div>";
-          isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='uomhide"+value.id+"' id='uomhide"+value.id+"' value='"+value.item_uom+"'><select class='form-control select5' id='uom_edit"+value.id+"' name='uom_edit"+value.id+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div>";
-          isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date_edit"+value.id+"' name='req_date_edit"+value.id+"' placeholder='Tanggal' required='' value='"+value.item_request_date+"''></div></div>";
-          isi += "<div class='col-xs-1' style='padding: 5px'><input type='text' class='form-control' id='item_currency_edit"+value.id+"' name='item_currency_edit"+value.id+"' value='"+value.item_currency+"'><input type='text' class='form-control' id='item_currency_text_edit"+value.id+"' name='item_currency_text_edit"+value.id+"' style='display:none'></div>";
-          isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price_edit"+value.id+"' name='item_price_edit"+value.id+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' value="+value.item_price+" style='padding: 6px 6px'></div></div>";
-          isi += "<div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty_edit"+value.id+"' name='qty_edit"+value.id+"' placeholder='Qty' onkeyup='getTotalEdit(this.id)' required='' value='"+value.item_qty+"'></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount_edit"+value.id+"' name='amount_edit"+value.id+"' placeholder='Total' required='' value='"+value.item_amount+"' readonly=''></div>";
-          isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.item_desc +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a> <button type='button' class='btn btn-success' onclick='tambahPR(\""+ tambah3 +"\",\""+ lop3 +"\");'><i class='fa fa-plus' ></i></button></div>";
-          isi += "</div>";
-
-          ids.push(value.id);
-
-          $('#modalDetailBodyEditPR').append(isi);
-
-          $('.item_code_edit').append(item_list);
-
-
-          	if (value.item_currency == "USD") {
-              $('#ket_harga_edit'+value.id).text("$");
-            }else if (value.item_currency == "JPY") {
-              $('#ket_harga_edit'+value.id).text("¥");
-            }else if (value.item_currency == "IDR"){
-              $('#ket_harga_edit'+value.id).text("Rp.");
-            }
-
-          	var uom = $('#uomhide'+value.id).val();
-            $("#uom_edit"+value.id).val(uom).trigger("change");
-
-            var item_code = $('#item_code_edit_hide'+value.id).val();
-            $("#item_code_edit"+value.id).val(item_code).trigger("change");
-
-            var price = document.getElementById("item_price_edit"+value.id).value;
-            var prc = price.replace(/\D/g, ""); //get angka saja
-
-            var qty = document.getElementById("qty_edit"+value.id).value;
-            var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
-
-            if (!isNaN(hasil)) {
-              var amount = document.getElementById('amount_edit'+value.id);
-              amount.value = rubah(hasil);
-            }
-            
-            $('.datepicker').datepicker({
-	            autoclose: true,
-	            format: 'yyyy-mm-dd'
-	          });
-
-	        $(function () {
-	            $('.select5').select2({
-	              dropdownAutoWidth : true,
-	              dropdownParent: $("#"+value.id),
-	              allowClear: true,
-	              minimumInputLength: 3
-	            });
-	        })
-
-          	$("#looping_pr").val(ids);
-        	});
-      	});
-    }
-
-   function pilihItemPR(elem)
-   {
-    var no = elem.id.match(/\d/g);
-    no = no.join("");
-
-    if (elem.value == "kosong") {
-      $('#item_code'+no).val("");
-      $('#item_desc'+no).val("").attr('readonly', false);
-      $('#item_spec'+no).val("").attr('readonly', false);
-      $('#item_stock'+no).val("").attr('readonly', false);
-      $('#item_price'+no).val("").attr('readonly', false);
-      $('#uom'+no).val("").attr('readonly', false);
-      $('#item_currency'+no).val("");
-      $('#item_currency'+no).next(".select2-container").show();
-      $('#item_currency'+no).next(".select3-container").show();
-      $('#item_currency'+no).show();
-      $('#item_currency_text'+no).val("");
-      $('#item_currency_text'+no).hide();
-      $('#ket_harga'+no).text("?");
-    }
-
-    else{
-
-      $.ajax({
-        url: "{{ route('admin.prgetitemdesc') }}?kode_item="+elem.value,
-        method: 'GET',
-        success: function(data) {
-          var json = data,
-          obj = JSON.parse(json);
-          $('#item_desc'+no).val(obj.deskripsi).attr('readonly', true);
-          $('#item_spec'+no).val(obj.spesifikasi).attr('readonly', true);
-          $('#item_price'+no).val(obj.price).attr('readonly', true);
-          $('#uom'+no).val(obj.uom).change();
-          // $('#qty'+no).val("0");
-          $('#amount'+no).val("0");
-          $('#item_currency'+no).next(".select2-container").hide();
-          $('#item_currency'+no).hide();
-          $('#item_currency_text'+no).show();
-          $('#item_currency_text'+no).val(obj.currency).show().attr('readonly', true);
-          if (obj.currency == "USD") {
-            $('#ket_harga'+no).text("$");
-          }else if (obj.currency == "JPY") {
-            $('#ket_harga'+no).text("¥");
-          }else if (obj.currency == "IDR"){
-            $('#ket_harga'+no).text("Rp.");
-          }
-
-          var $datepicker = $('#req_date'+no).attr('readonly', false);
-          $datepicker.datepicker();
-          $datepicker.datepicker('setDate', limitdate);
-
-        } 
-      });
-
-    }
-      // alert(sel.value);
-  }
-
-    function pilihItemEdit(elem)
-    {
-      var no = elem.id.match(/\d/g);
-      no = no.join("");
-
-      $.ajax({
-        url: "{{ route('admin.prgetitemdesc') }}?kode_item="+elem.value,
-        method: 'GET',
-        success: function(data) {
-          var json = data,
-          obj = JSON.parse(json);
-          $('#item_desc_edit'+no).val(obj.deskripsi).attr('readonly', true);
-          $('#item_spec_edit'+no).val(obj.spesifikasi).attr('readonly', true);
-          $('#item_price_edit'+no).val(obj.price).attr('readonly', true);
-          $('#uom_edit'+no).val(obj.uom).change();
-          // $('#qty_edit'+no).val("0");
-          // $('#amount_edit'+no).val("0");
-          $('#item_currency_edit'+no).next(".select2-container").hide();
-          $('#item_currency_edit'+no).hide();
-          $('#item_currency_text_edit'+no).show();
-          $('#item_currency_text_edit'+no).val(obj.currency).show().attr('readonly', true);
-          if (obj.currency == "USD") {
-            $('#ket_harga_edit'+no).text("$");
-          }else if (obj.currency == "JPY") {
-            $('#ket_harga_edit'+no).text("¥");
-          }else if (obj.currency == "IDR"){
-            $('#ket_harga_edit'+no).text("Rp.");
-          }
-
-          var $datepicker = $('#req_date_edit'+no).attr('readonly', false);
-          $datepicker.datepicker();
-          $datepicker.datepicker('setDate', limitdate);
-
-        } 
-      });
-
-        // alert(sel.value);
-    }
-
-    function getTotal(id) {
-      // console.log(id);
-      var num = id.match(/\d/g);
-      num = num.join("");
-
-      var price = document.getElementById("item_price"+num).value;
-        var prc = price.replace(/\D/g, ""); //get angka saja
-
-        var qty = document.getElementById("qty"+num).value;
-          var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
-
-          if (!isNaN(hasil)) {
-
-          var amount = document.getElementById('amount'+num);
-          amount.value = rubah(hasil);
-
-        }
-    }
-
-    function getTotalEdit(id) {
-      var num = id.match(/\d/g);
-      num = num.join("");
-
-      var price = document.getElementById("item_price_edit"+num).value;
-        var prc = price.replace(/\D/g, ""); //get angka saja
-
-        var qty = document.getElementById("qty_edit"+num).value;
-          var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
-
-          if (!isNaN(hasil)) {
-
-          var amount = document.getElementById('amount_edit'+num);
-          amount.value = rubah(hasil);
-
-        }
-    }
-
-    function rubah(angka){
-      var reverse = angka.toString().split('').reverse().join(''),
-      ribuan = reverse.match(/\d{1,3}/g);
-      ribuan = ribuan.join('.').split('').reverse().join('');
-      return ribuan;
-    }
-
-
-
-    function detailPR(id){
+    function detailInvestment(id){
 	    var isi = "";
-	    $('#modalDetailPR').modal("show");
+	    $('#modalDetailInvestment').modal("show");
 	        
 	    var data = {
 	        id:id
 	    };
           
-        $.get('{{ url("edit/purchase_requisition") }}', data, function(result, status, xhr){  
+        $.get('{{ url("fetch/investment_item_detail") }}', data, function(result, status, xhr){  
 
 
         var tableData = "";
 		var count = 1;
 		$('#tableDetailBody').html("");
 
-		$.each(result.purchase_requisition_item, function(key, value) {
+		$.each(result.investment_item, function(key, value) {
 			tableData += "<tr id='row"+value.id+"''>";
 			tableData += "<td>"+count+"</td>";
-			tableData += "<td>"+value.item_code+"</td>";
-			tableData += "<td>"+value.item_desc+"</td>";
-			tableData += "<td>"+value.item_spec+"</td>";
-			tableData += "<td>"+value.item_stock+"</td>";
-			tableData += "<td>"+value.item_request_date+"</td>";
-			tableData += "<td>"+value.item_currency+"</td>";
-			tableData += "<td>"+value.item_price+"</td>";
-			tableData += "<td>"+value.item_qty+" "+value.item_uom+"</td>";
-			tableData += "<td>"+value.item_amount+"</td>";
+			tableData += "<td>"+value.no_item+"</td>";
+			tableData += "<td>"+value.detail+"</td>";
+			tableData += "<td>"+value.qty+"</td>";
+			tableData += "<td>"+value.price+"</td>";
+			tableData += "<td>"+value.amount+"</td>";
 
 			if(value.sudah_po == null || value.sudah_po == ""){
 				tableData += "<td style='background-color: RGB(255,204,255);'>Belum PO</td>";

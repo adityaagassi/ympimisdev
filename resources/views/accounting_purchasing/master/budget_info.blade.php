@@ -104,16 +104,21 @@
 								</select>
 							</div>
 						</div>
-
-						<div class="col-md-3">
+						<div class="col-md-4">
 							<div class="form-group">
-								<div class="col-md-6" style="padding-right: 0;">
+								<div class="col-md-4" style="padding-right: 0;">
 									<label style="color: white;"> x</label>
-									<button class="btn btn-primary form-control" onclick="fetchTable()">Search</button>
+									<button class="btn btn-primary form-control" onclick="fetchTable()"><i class="fa fa-search"></i> Search</button>
 								</div>
-								<div class="col-md-6" style="padding-right: 0;">
+								<div class="col-md-4" style="padding-right: 0;">
 									<label style="color: white;"> x</label>
-									<button class="btn btn-danger form-control" onclick="clearSearch()">Clear</button>
+									<button class="btn btn-danger form-control" onclick="clearSearch()"><i class="fa fa-close"></i> Clear</button>
+								</div>
+								<div class="col-md-4">
+									<label style="color: white;"> x</label><br>
+									<button class="btn btn-success " data-toggle="modal"  data-target="#upload_budget" style="margin-right: 5px">
+										<i class="fa fa-upload"></i>&nbsp;&nbsp;Upload Budget
+									</button>
 								</div>
 							</div>
 						</div>
@@ -330,6 +335,30 @@
   </div>
 </div>
 
+<div class="modal modal-default fade" id="upload_budget">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<form id="importForm" method="post" enctype="multipart/form-data" autocomplete="off">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">Upload Confirmation</h4>
+						Format: <i class="fa fa-arrow-down"></i> Seperti yang Tertera Pada Attachment Dibawah ini <i class="fa fa-arrow-down"></i><br>
+						Sample: <a href="{{ url('uploads/budget/sample/budget(200728_09.58).xlsx') }}">budget(200728_09.58).xlsx</a>
+					</div>
+					<div class="modal-body">
+						Upload Excel file here:<span class="text-red">*</span>
+						<input type="file" name="upload_file" id="upload_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button id="modalImportButton" type="submit" class="btn btn-success">Upload</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 @endsection
 
 @section('scripts')
@@ -520,6 +549,68 @@
 	    	$("#budget_sisa3").text('$'+result.datas.mar_sisa_budget);
 	    })
 	  }
+
+	  $("form#importForm").submit(function(e) {
+		if ($('#upload_file').val() == '') {
+			openErrorGritter('Error!', 'You need to select file');
+			return false;
+		}
+
+		$("#loading").show();
+
+		e.preventDefault();    
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: '{{ url("import/budget") }}',
+			type: 'POST',
+			data: formData,
+			success: function (result, status, xhr) {
+				if(result.status){
+					$("#loading").hide();
+					$('#budgetTable').DataTable().ajax.reload();
+					$("#upload_file").val('');
+					$('#upload_budget').modal('hide');
+					openSuccessGritter('Success', result.message);
+
+				}else{
+					$("#loading").hide();
+
+					openErrorGritter('Error!', result.message);
+				}
+			},
+			error: function(result, status, xhr){
+				$("#loading").hide();
+				
+				openErrorGritter('Error!', result.message);
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+	});
+
+	function openSuccessGritter(title, message){
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-success',
+        image: '{{ url("images/image-screen.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
+
+    function openErrorGritter(title, message) {
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '2000'
+        });
+    }
 </script>
 @endsection
 

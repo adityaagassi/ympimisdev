@@ -143,16 +143,14 @@
 										<th style="width:7%;">Contact</th>
 										<th style="width:6%;">NPWP</th>
 										<th style="width:6%;">Duration</th>
-										<th style="width:6%;">Position</th>
 										<th style="width:6%;">Status</th>
-										<th style="width:6%;">Action</th>
+										<th style="width:9%;">Action</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
 								<tfoot>
 					              <tr>
-					                <th></th>
 					                <th></th>
 					                <th></th>
 					                <th></th>
@@ -298,7 +296,6 @@
 				{ "data": "contact_name"},
 				{ "data": "supplier_npwp"},
 				{ "data": "supplier_duration"},
-				{ "data": "position"},
 				{ "data": "supplier_status"},
 				{ "data": "action"}
 			]

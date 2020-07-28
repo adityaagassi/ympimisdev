@@ -115,18 +115,21 @@
 
           <div class="col-xs-4 col-xs-offset-1">
             <label for="form_judul">Subject</label>
-            <input type="text" id="subject" class="form-control" placeholder="Subject" value="{{ $investment->subject }}">
+            <input type="text" id="subject" class="form-control" placeholder="Subject" value="{{ $investment->subject }}" readonly="">
           </div>
           <div class="col-xs-3">
             <label for="form_kategori">Kind Of Application</label>
-            <select class="form-control select2" id="category" data-placeholder='Choose Category' style="width: 100%" onchange="getNomor()">
+            <input type="text" id="category" class="form-control" placeholder="Category" value="{{ $investment->category }}" readonly="">
+
+            <!-- <select class="form-control select2" id="category" data-placeholder='Choose Category' style="width: 100%" onchange="getNomor()" readonly="">
               <option value="Investment" <?php if($investment->category == "Investment") echo "selected"; ?>>Investment</option>
               <option value="Expense"<?php if($investment->category == "Expense") echo "selected"; ?>>Expense</option>
-            </select>
+            </select> -->
           </div>
           <div class="col-xs-3">
             <label for="form_kategori">Class Of Assets / Kind Of Expense</label>
-            <select class="form-control select2" id="type" data-placeholder='Choose Type' style="width: 100%">
+            <input type="text" id="type" class="form-control" placeholder="Type" value="{{ $investment->type }}" readonly="">
+            <!--  <select class="form-control select2" id="type" data-placeholder='Choose Type' style="width: 100%" readonly="">
               <option value="">&nbsp;</option>
               <option value="Building" <?php if($investment->type == "Building") echo "selected"; ?>>Building</option>
               <option value="Machine & Equipment" <?php if($investment->type == "Machine & Equipment") echo "selected"; ?>>Machine & Equipment</option>
@@ -141,7 +144,7 @@
               <option value="Professional Fee" <?php if($investment->type == "Professional Fee") echo "selected"; ?>>Proffesional Fee</option>
               <option value="Miscellaneous" <?php if($investment->type == "Miscellaneous") echo "selected"; ?>>Miscellaneous</option>
               <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
-            </select>
+            </select> -->
           </div>
           <div class="col-xs-4 col-xs-offset-1">
             <label for="form_grup">Main Objective</label>
@@ -200,18 +203,6 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-xs-5 col-xs-offset-1">
-            <label for="form">Subject (Japanese Version)</label>
-            <input type="text" id="subject_jpy" name="subject_jpy" class="form-control" placeholder="Subject (Japan Version)" required="" value="{{$investment->subject_jpy}}">
-          </div>
-
-          <div class="col-xs-5">
-            <label for="form">Objective (Japanese Version)</label>
-            <input type="text" id="objective_detail_jpy" name="objective_detail_jpy" class="form-control" placeholder="Objective (Japan Version)" required="" value="{{$investment->objective_detail_jpy}}">
-          </div>
-        </div>
-
         <?php if ($investment->file != null){ ?>
 
         <br>
@@ -252,7 +243,7 @@
               <textarea class="form-control pull-right" id="note" name="note">{{$investment->note}}</textarea>
           </div>
           <div class="col-xs-5">
-              <label>Quotation (Optional)</label>
+              <label>Other Quotation (Optional)</label>
               <textarea class="form-control pull-right" id="quotation_supplier" name="quotation_supplier">{{$investment->quotation_supplier}}</textarea>
           </div>
         </div>
@@ -293,13 +284,16 @@
         </div>
 
         <div class="row">
-          <div class="col-xs-5 col-sm-5 col-md-5 col-md-offset-1">
-            <label for="form_budget">Budget</label>
-            <select class="form-control select2" data-placeholder="Pilih Nomor Budget" name="budget_no" id="budget_no" style="width: 100% height: 35px;" required> 
-              <option value="{{$investment->budget_no}}">{{$investment->budget_no}}</option>
-            </select>
+          <div class="col-xs-3 col-xs-offset-1">
+            <label for="form">Subject (Japanese Version)</label>
+            <input type="text" id="subject_jpy" name="subject_jpy" class="form-control" placeholder="Subject (Japan Version)" required="" value="{{$investment->subject_jpy}}">
           </div>
-          <div class="col-xs-5 col-sm-5 col-md-5">
+
+          <div class="col-xs-3">
+            <label for="form">Objective Explanation (Japanese Version)</label>
+            <input type="text" id="objective_detail_jpy" name="objective_detail_jpy" class="form-control" placeholder="Objective Explanation (Japan Version)" required="" value="{{$investment->objective_detail_jpy}}">
+          </div>
+          <div class="col-xs-4">
             <label for="form_bagian">Currency</label>
              <select class="form-control select2" id="currency" data-placeholder='Currency' style="width: 100%" onchange="currency()">
               <option value="">&nbsp;</option>
@@ -318,44 +312,154 @@
               @else
               <option value="USD">USD</option>
               <option value="IDR">IDR</option>
-              <option value="JPY">JPY</option>)
+              <option value="JPY">JPY</option>
               @endif
             </select>
           </div>
         </div>
 
+        @if(count($investment_budget) == 0)
+        <div class="row">
+          <div class="col-xs-2 col-sm-2 col-md-2 col-xs-offset-1">
+            <label for="form_budget_category">Budget Category</label>
+            <select class="form-control select2" data-placeholder="Pilih Category Budget" name="budget_category1" id="budget_category1" onchange="selectbudget(this)" style="width: 100% height: 35px;" required> 
+              <option value="">&nbsp;</option>
+              <option value="On Budget">On Budget</option>
+              <option value="Shifting">Shifting</option>
+              <option value="Out Of Budget">Out Of Budget</option>
+            </select>
+          </div>
+
+          <div class="col-xs-3 col-sm-3 col-md-3" id="budget_dana1">
+            <label for="form_budget">Budget</label>
+            <select class="form-control select2" data-placeholder="Pilih Nomor Budget" name="budget_no1" id="budget_no1" style="width: 100% height: 35px;" onchange="getBudgetName(this)" required> 
+            </select>
+            <input type="hidden" name="budget_name1" id="budget_name1">
+          </div>
+          <div class="col-xs-2 col-sm-2 col-md-2" id="budget_sisa1">
+            <label for="form_budget">Sisa Budget</label>
+            <input type="text" class="form-control" id="sisa_budget1" name="sisa_budget1" placeholder="Sisa Budget">
+          </div>
+          <div class="col-xs-2 col-sm-2 col-md-2" id="budget_total1">
+            <label for="form_budget">Amount</label>
+            <input type="text" class="form-control" id="amount_budget1" name="amount_budget1" placeholder="Total Pembelian">
+          </div>
+          <div class="col-xs-1 col-sm-1 col-md-1">
+            <label for="form_budget">Aksi</label>
+            <input type="text" name="lop" id="lop" value="1" hidden>
+            <button type="button" class="btn btn-success" onclick='tambah("tambah","lop");' style="width: 100%"><i class='fa fa-plus' ></i></button>
+          </div>
+
+        </div>
+
+
+        <div id="tambah"></div>
+        @else
+          <?php $nomor = 1; ?>
+          @foreach($investment_budget as $inv_budget)
+            <div id="<?= $inv_budget->id ?>" class="row">
+
+              <input type="hidden" class="form-control" id="id_budget" name="id_budget" value="{{$inv_budget->id}}">
+
+              <div class="col-xs-2 col-sm-2 col-md-2 col-xs-offset-1">
+                @if($nomor == 1)
+                <label for="form_budget_category">Budget Category</label>
+                @endif
+                <input type="text" class="form-control"  name="budget_category<?= $nomor ?>" id="budget_category<?= $nomor ?>" value="{{$inv_budget->category_budget}}" readonly="">
+                <!-- <select class="form-control select2" data-placeholder="Pilih Category Budget" name="budget_category<?= $nomor ?>" id="budget_category<?= $nomor ?>" onchange="selectbudget(this)" style="width: 100% height: 35px;" required> 
+                  <option value="">&nbsp;</option>
+                  @if($inv_budget->category_budget == "On Budget")
+                  <option value="On Budget" selected="">On Budget</option>
+                  <option value="Shifting">Shifting</option>
+                  <option value="Out Of Budget">Out Of Budget</option>
+                  @elseif($inv_budget->category_budget == "Shifting")
+                  <option value="Shifting" selected="">Shifting</option>
+                  <option value="Out Of Budget">Out Of Budget</option>
+                  @elseif($inv_budget->category_budget == "Out Of Budget")
+                  <option value="On Budget">On Budget</option>
+                  <option value="Shifting">Shifting</option>
+                  <option value="Out Of Budget" selected="">Out Of Budget</option>
+                  @else
+                  <option value="On Budget">On Budget</option>
+                  <option value="Shifting">Shifting</option>
+                  <option value="Out Of Budget">Out Of Budget</option>
+                  @endif
+                </select> -->
+              </div>
+              @if($inv_budget->category_budget != "Out Of Budget")
+              <div class="col-xs-3 col-sm-3 col-md-3" id="budget_dana<?= $nomor ?>">
+                @if($nomor == 1)
+                <label for="form_budget">Budget</label>
+                @endif
+                <!-- <select class="form-control select2" data-placeholder="Pilih Nomor Budget" name="budget_no<?= $nomor ?>" id="budget_no<?= $nomor ?>" style="width: 100% height: 35px;"  onchange="getBudgetName(this)" required> 
+                  <option value="{{$inv_budget->budget_no}}" selected="">{{$inv_budget->budget_no}} - {{$inv_budget->budget_name}}</option>
+                </select> -->
+                <input type="text" class="form-control"  name="budget_no_name<?= $nomor ?>" id="budget_no_name<?= $nomor ?>" value="{{$inv_budget->budget_no}} - {{$inv_budget->budget_name}}" readonly="">
+                <input type="hidden" class="form-control"  name="budget_no<?= $nomor ?>" id="budget_no<?= $nomor ?>" value="{{$inv_budget->budget_no}}" readonly="">
+                <input type="hidden" name="budget_name<?= $nomor ?>" id="budget_name<?= $nomor ?>" value="{{$inv_budget->budget_name}}">
+              </div>
+              <div class="col-xs-2 col-sm-2 col-md-2" id="budget_sisa<?= $nomor ?>">
+                @if($nomor == 1)
+                <label for="form_budget">Sisa Budget</label>
+                @endif
+                <input type="text" class="form-control" id="sisa_budget<?= $nomor ?>" name="sisa_budget<?= $nomor ?>" placeholder="Sisa Budget" value="{{$inv_budget->sisa}}">
+              </div>
+              @endif
+              <div class="col-xs-2 col-sm-2 col-md-2" id="budget_total<?= $nomor ?>">
+                @if($nomor == 1)
+                <label for="form_budget">Amount</label>
+                @endif
+                <input type="text" class="form-control" id="amount_budget<?= $nomor ?>" name="amount_budget<?= $nomor ?>" placeholder="Total Pembelian" value="{{$inv_budget->total}}">
+              </div>
+              <div class="col-xs-1 col-sm-1 col-md-1">
+                @if($nomor == 1)
+                <label for="form_budget">Aksi</label><br>
+                @endif
+                <a href="javascript:void(0);" id="b" onclick='deleteConfirmation("<?= $inv_budget->category_budget ?>","<?= $inv_budget->id ?>");' class="btn btn-danger" data-toggle="modal" data-target='#modaldanger'><i class='fa fa-close'></i> </a> 
+                <button type="button" class="btn btn-success" onclick='tambahDetail("tambah","lop",<?= $nomor ?>);'><i class='fa fa-plus'></i></button>
+              </div>
+
+            </div>
+            <?php $nomor++; ?>
+          @endforeach
+
+          <input type="hidden" name="lop" id="lop" value="<?= $nomor-1 ?>">
+          <div id="tambah"></div>
+        @endif
+
 
         <div class="row">
-          <div class="col-sm-12 text-center" style="padding-top: 10px">
-            
-            <div class="btn-group">
-              <a class="btn btn-danger" href="{{ url('investment') }}"><i class="fa fa-close"></i>&nbsp;Cancel</a>
-            </div>
-
-            <div class="btn-group">
-              <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Save </button>
-            </div>
-
-            <div class="btn-group">
-              <a href="{{ url('investment/report/'.$investment->id) }}" target="_blank" class="btn btn-warning" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Lihat Report Investment</a>
-            </div>
-
-            @if($investment->posisi == "user" && ($investment->budget_no == null || $investment->currency == null || $investment->subject_jpy == null || $investment->objective_detail_jpy == null))
-            <div class="btn-group">
+          <div class="col-sm-11" style="padding-top: 30px">
+            @if($investment->posisi == "user" && ($investment->currency == null || $investment->subject_jpy == null || $investment->objective_detail_jpy == null || count($investment_budget) == 0))
+            <div class="btn-group pull-right">
               <button type="button"class="btn btn-success" onclick="sendEmail({{$investment->id}})" data-toggle="tooltip" title="Send Email" disabled=""><i class="fa fa-envelope"></i> Kirim Email Ke Accounting</button>
             </div>
 
-            @elseif($investment->posisi == "user" && ($investment->budget_no != null || $investment->currency != null || $investment->subject_jpy != null || $investment->objective_detail_jpy != null))
+            @elseif($investment->posisi == "user" && ($investment->currency != null || $investment->subject_jpy != null || $investment->objective_detail_jpy != null || count($investment_budget) > 0))
 
-            <div class="btn-group">
+            <div class="btn-group pull-right">
               <button type="button"class="btn btn-success" onclick="sendEmail({{$investment->id}})" data-toggle="tooltip" title="Lengkapi Data Untuk Send Email"><i class="fa fa-envelope"></i> Kirim Email Ke Accounting</button>
             </div>
 
             @else
-            
-              <label class="label label-success"> Email Berhasil Dikirim Ke Accounting</label>
-            
+            <div class="btn-group pull-right">
+              <label class="label label-success pull-right"> Email Berhasil Dikirim Ke Accounting</label>
+            </div>
             @endif
+
+            <div class="btn-group pull-right">
+              <a href="{{ url('investment/report/'.$investment->id) }}" target="_blank" class="btn btn-warning" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Check Report Investment</a>
+            </div>
+
+            <div class="btn-group pull-right">
+              <button type="button" class="btn btn-primary pull-right" id="form_submit" style="margin-right:5px;"><i class="fa fa-edit"></i>&nbsp; Save </button>
+            </div>
+
+            <div class="btn-group pull-right">
+              <a class="btn btn-danger" href="{{ url('investment') }}" style="margin-right:5px;"><i class="fa fa-close"></i>&nbsp;Cancel</a>
+            </div>
+
+            
           </div>
         </div>
 
@@ -517,6 +621,27 @@
     </div>
   </div>
 
+
+  <div class="modal modal-danger fade in" id="modaldanger">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+          <h4 class="modal-title">Hapus Budget</h4>
+        </div>
+        <div class="modal-body" id="modalDeleteBody">
+          <p>Are You Sure Want to Delete?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+          <a id="a" name="modalDeleteButton" href="#" type="button" onclick="delete_budget(this.id)" class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   @endsection
 
   @section('scripts')
@@ -524,7 +649,8 @@
   <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
   <script type="text/javascript">
 
-    budget_list = "";
+    var no = 2;
+
 
     $.ajaxSetup({
       headers: {
@@ -537,7 +663,12 @@
           $(this).parents(".control-group").remove();
       });
 
-      getBudget();
+      if($("#budget_category1").val() == "Out Of Budget"){
+        $("#budget_dana1").hide();
+        $("#budget_sisa1").hide();
+        $("#budget_total1").hide();
+      }
+
 
       $('body').toggleClass("sidebar-collapse");
       $("#navbar-collapse").text('');
@@ -712,6 +843,7 @@
       });
     }
 
+
     function getPersenEdit() {
       var qty = document.getElementById("jumlah_item_edit").value;
       var prc = document.getElementById("price_item_edit").value;
@@ -789,18 +921,24 @@
         
     }
 
-    function getBudget() {
+    function getBudget(budget,no) {
 
       data = {
+        budget:budget,
         category:"{{ $investment->category }}",
-        department:"{{ $investment->applicant_department }}"
+        department:"{{ $investment->applicant_department }}",
+        type:"{{ $investment->type }}"
       }
-
-      $.get('{{ url("fetch/investment/invbudgetlist") }}', data, function(result, status, xhr) {
+      
+      budget_list = "";
+      $('#budget_no'+no).empty();
+      
+      budget_list += "<option></option> ";
+      $.get('{{ url("fetch/investment/invbudgetlist") }}', data, function(result, status, xhr) {  
         $.each(result.budget, function(index, value){
           budget_list += "<option value="+value.budget_no+">"+value.budget_no+" - "+value.description+"</option> ";
         });
-        $('#budget_no').append(budget_list);
+        $('#budget_no'+no).append(budget_list);
       })
     }
 
@@ -885,7 +1023,7 @@
         return false;
       }
 
-      if ($("#budget_no").val() == "") {
+      if ($("#budget_category1").val() == "") {
         $("#loading").hide();
         alert("Kolom Budget Harap diisi");
         $("html").scrollTop(0);
@@ -897,6 +1035,35 @@
         alert("Kolom Currency Harap diisi");
         $("html").scrollTop(0);
         return false;
+      }
+
+      var jml = $("#lop").val();
+      var budget_cat = [];
+      var budget = [];
+      var budget_name = [];
+      var sisa = [];
+      var amount = [];
+
+      for(var i = 1;i <= jml; i++){
+        if ($("#budget_category"+i).val() == null) {
+          $("#loading").hide();
+          openErrorGritter("Error!", "Semua Kolom Harus Diisi.");
+          $("html").scrollTop(0);
+          return false;
+        }
+
+        if ($("#amount_budget"+i).val() == null) {
+          $("#loading").hide();
+          openErrorGritter("Error!", "Semua Kolom Harus Diisi.");
+          $("html").scrollTop(0);
+          return false;
+        }
+
+        budget_cat.push($("#budget_category"+i).val());
+        budget.push($("#budget_no"+i).val());
+        budget_name.push($("#budget_name"+i).val());
+        sisa.push($("#sisa_budget"+i).val());
+        amount.push($("#amount_budget"+i).val());
       }
 
       var data = {
@@ -921,7 +1088,14 @@
         note: CKEDITOR.instances.note.getData(),
         quotation_supplier: CKEDITOR.instances.quotation_supplier.getData(),
         currency: $("#currency").val(),
-        budget_no: $("#budget_no").val(),
+        jumlah: jml,
+        budget_cat: budget_cat,
+        budget: budget,
+        budget_name: budget_name,
+        sisa: sisa,
+        amount: amount,
+        // budget_category: $("#budget_category").val(),
+        // budget_no: $("#budget_no").val(),
       };
 
       $.post('{{ url("investment/update_post") }}', data, function(result, status, xhr){
@@ -929,6 +1103,7 @@
           $("#loading").hide();
           openSuccessGritter("Success","Data Berhasil Diubah");
           location.reload(); 
+          // console.log(data);
         }
         else {
           $("#loading").hide();
@@ -1019,7 +1194,7 @@
 
       $.post('{{ url("investment/delete_investment_item") }}', data, function(result, status, xhr){
         $('#item').DataTable().ajax.reload(null, false);
-        openSuccessGritter("Success","BErhasil Hapus Item");
+        openSuccessGritter("Success","Berhasil Hapus Item");
       })
     }
 
@@ -1046,6 +1221,7 @@
           list += "<option value='Tools, Jigs & Furniture'>Tools, Jigs & Furniture</option>";
           list += "<option value='Moulding'>Moulding</option>";
           list += "<option value='PC & Printer'>PC & Printer</option>";
+          list += "<option value='Land Acquisition'>Land Acquisition</option>";
         }
         else if (isi == "Expense"){
           list += "<option value='Office Supplies'>Office Supplies</option>";
@@ -1100,39 +1276,192 @@
         id:id
       };
 
-      if (!confirm("Apakah anda yakin ingin mengirim Form Investmen Ke Bagian Accounting")) {
+      if (!confirm("Apakah anda yakin ingin mengirim Form Investment Ke Bagian Accounting?")) {
         return false;
       }
 
       $.get('{{ url("investment/sendemail") }}', data, function(result, status, xhr){
 
         openSuccessGritter("Success","Email Has Been Sent");
-        setTimeout(function(){  window.location.reload() }, 3000);
+        setTimeout(function(){  window.location.href = '{{url("investment")}}'; }, 2000);
       })
     }
 
+    function selectbudget(elem) {
 
-    function openSuccessGritter(title, message){
+        var no = elem.id.match(/\d/g);
+        no = no.join("");
+
+        var budget_category = document.getElementById("budget_category"+no);
+        var bdg = budget_category.options[budget_category.selectedIndex].value;
+
+        if (bdg == "On Budget" || bdg == "Shifting") {
+          $("#budget_dana"+no).show();
+          $("#budget_sisa"+no).show();
+          $("#budget_total"+no).show();
+          getBudget(bdg,no);
+
+        } else if (bdg == "Out Of Budget"){
+          $("#budget_dana"+no).hide();
+          $("#budget_sisa"+no).hide();
+          // $("#budget_total"+no).hide();
+          $("#budget_no"+no).val("").trigger('change.select2');
+        }
+      }
+
+
+
+    function tambah(id,lop) {
+      var id = id;
+
+      var lop = "";
+
+      if (id == "tambah"){
+        lop = "lop";
+      }else{
+        lop = "lop2";
+      }
+
+      var divdata = $("<div id='"+no+"' class='row'><div class='col-xs-2 col-sm-2 col-md-2 col-xs-offset-1'><select class='form-control select3' data-placeholder='Pilih Category Budget' name='budget_category"+no+"' id='budget_category"+no+"' onchange='selectbudget(this)' style='width: 100% height: 35px;' required> <option value=''>&nbsp;</option><option value='Shifting'>Shifting</option><option value='Out Of Budget'>Out of Budget </option></select></div><div class='col-xs-3 col-sm-3 col-md-3' id='budget_dana"+no+"'><select class='form-control select3' data-placeholder='Pilih Nomor Budget' name='budget_no"+no+"' id='budget_no"+no+"' onchange='getBudgetName(this)' style='width: 100% height: 35px;' onchange='' required> <option value='{{$investment->budget_no}}'>{{$investment->budget_no}}</option></select><input type='hidden' name='budget_name"+no+"' id='budget_name"+no+"'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_sisa"+no+"'><input type='text' class='form-control' id='sisa_budget"+no+"' name='sisa_budget"+no+"' placeholder='Sisa Budget'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_total"+no+"'><input type='text' class='form-control' id='amount_budget"+no+"' name='amount_budget"+no+"' placeholder='Total Pembelian'></div><div class='col-xs-1 col-sm-1 col-md-1'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' class='btn btn-success' onclick='tambah(\""+id+"\",\""+lop+"\"); '><i class='fa fa-plus' ></i></button></div> </div>")
+
+      $("#"+id).append(divdata);
+
+      $(function () {
+        $('.select3').select2({
+          dropdownAutoWidth : true,
+          dropdownParent: $("#"+id),
+          allowClear:true,
+        });
+      })
+
+    document.getElementById(lop).value = no;
+    no+=1;
+  }
+
+  function tambahDetail(id,lop,nomor) {
+
+      var num = nomor+1;
+      var id = id;
+      var lop = "";
+
+      if (id == "tambah"){
+        lop = "lop";
+      }else{
+        lop = "lop2";
+      }
+
+      var divdata = $("<div id='"+num+"' class='row'><div class='col-xs-2 col-sm-2 col-md-2 col-xs-offset-1'><select class='form-control select3' data-placeholder='Pilih Category Budget' name='budget_category"+num+"' id='budget_category"+num+"' onchange='selectbudget(this)' style='width: 100% height: 35px;' required> <option value=''>&nbsp;</option><option value='Shifting'>Shifting</option><option value='Out Of Budget'>Out of Budget </option></select></div><div class='col-xs-3 col-sm-3 col-md-3' id='budget_dana"+num+"'><select class='form-control select3' data-placeholder='Pilih nomor Budget' name='budget_no"+num+"' id='budget_no"+num+"' onchange='getBudgetName(this)' style='width: 100% height: 35px;' required> <option value='{{$investment->budget_no}}'>{{$investment->budget_no}}</option></select><input type='hidden' name='budget_name"+num+"' id='budget_name"+num+"'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_sisa"+num+"'><input type='text' class='form-control' id='sisa_budget"+num+"' name='sisa_budget"+num+"' placeholder='Sisa Budget'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_total"+num+"'><input type='text' class='form-control' id='amount_budget"+num+"' name='amount_budget"+num+"' placeholder='Total Pembelian'></div><div class='col-xs-1 col-sm-1 col-md-1'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' class='btn btn-success' onclick='tambahDetail(\""+id+"\",\""+lop+"\", "+num+"); '><i class='fa fa-plus' ></i></button></div> </div>")
+
+      $("#"+id).append(divdata);
+
+      $(function () {
+        $('.select3').select2({
+          dropdownAutoWidth : true,
+          dropdownParent: $("#"+id),
+          allowClear:true,
+        });
+      })
+
+    document.getElementById(lop).value = num;
+  }
+
+  function kurang(elem,lop) {
+
+    var lop = lop;
+    var ids = $(elem).parent('div').parent('div').attr('id');
+    var oldid = ids;
+    $(elem).parent('div').parent('div').remove();
+    var newid = parseInt(ids) + 1;
+
+    $("#"+newid).attr("id",oldid);
+    $("#budget_category"+newid).attr("name","budget_category"+oldid);
+    $("#budget_no"+newid).attr("name","budget_no"+oldid);
+    $("#sisa_budget"+newid).attr("name","sisa_budget"+oldid);
+    $("#budget_total"+newid).attr("name","budget_total"+oldid);
+
+    $("#budget_category"+newid).attr("id","budget_category"+oldid);
+    $("#budget_no"+newid).attr("id","budget_no"+oldid);
+    $("#sisa_budget"+newid).attr("id","sisa_budget"+oldid);
+    $("#budget_total"+newid).attr("id","budget_total"+oldid);
+
+    no-=1;
+    var a = no -1;
+
+    for (var i =  ids; i <= a; i++) { 
+      var newid = parseInt(i) + 1;
+      var oldid = newid - 1;
+
+      $("#"+newid).attr("id",oldid);
+      $("#budget_category"+newid).attr("name","budget_category"+oldid);
+      $("#budget_no"+newid).attr("name","budget_no"+oldid);
+      $("#sisa_budget"+newid).attr("name","sisa_budget"+oldid);
+      $("#budget_total"+newid).attr("name","budget_total"+oldid);
+
+      $("#budget_category"+newid).attr("id","budget_category"+oldid);
+      $("#budget_no"+newid).attr("id","budget_no"+oldid);
+      $("#sisa_budget"+newid).attr("id","sisa_budget"+oldid);
+      $("#budget_total"+newid).attr("id","budget_total"+oldid);
+    }
+    document.getElementById(lop).value = a;
+  }
+
+  function deleteConfirmation(name, id) {
+      $('#modalDeleteBody').text("Are you sure want to delete ' " + name + " '");
+      $('[name=modalDeleteButton]').attr("id",id);
+  }
+
+  function delete_budget(id) {
+      var data = {
+        id:id,
+      }
+
+      $.post('{{ url("delete/investment_budget") }}', data, function(result, status, xhr){
+
+      });
+
+      $('#modaldanger').modal('hide');
+      $('#'+id).css("display","none");
+
+  }
+
+
+  function getBudgetName(elem){
+
+    var no = elem.id.match(/\d/g);
+    no = no.join("");
+
+    $.ajax({
+      url: "{{ route('admin.getbudget') }}?budget="+elem.value,
+      method: 'GET',
+      success: function(data) {
+        var json = data,
+        obj = JSON.parse(json);
+        $('#budget_name'+no).val(obj.budget_desc);
+      } 
+    });
+  }
+
+  function openSuccessGritter(title, message){
+    jQuery.gritter.add({
+      title: title,
+      text: message,
+      class_name: 'growl-success',
+      image: '{{ url("images/image-screen.png") }}',
+      sticky: false,
+      time: '3000'
+    });
+  }
+
+  function openErrorGritter(title, message) {
       jQuery.gritter.add({
         title: title,
         text: message,
-        class_name: 'growl-success',
-        image: '{{ url("images/image-screen.png") }}',
+        class_name: 'growl-danger',
+        image: '{{ url("images/image-stop.png") }}',
         sticky: false,
-        time: '3000'
+        time: '2000'
       });
     }
-
-    function openErrorGritter(title, message) {
-        jQuery.gritter.add({
-          title: title,
-          text: message,
-          class_name: 'growl-danger',
-          image: '{{ url("images/image-stop.png") }}',
-          sticky: false,
-          time: '2000'
-        });
-      }
 
   </script>
 @stop

@@ -81,7 +81,8 @@
 
 @section('content')
 
-<section class="content"  style="padding:5px">
+
+	<section class="content" style="padding:5px">
 	@if (session('status'))
 	<div class="alert alert-success alert-dismissible">
 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -97,8 +98,6 @@
 		{{ session('error') }}
 	</div>   
 	@endif
-
-	<section class="content" style="padding:5px">
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="box no-border" style="margin-bottom: 5px;">
@@ -147,7 +146,7 @@
 								<div class="form-group">
 									<div class="col-md-6" style="padding-right: 0;">
 										<label style="color: white;"> x</label>
-										<button class="btn btn-primary form-control" onclick="fillTable()">Cari</button>
+										<button class="btn btn-primary form-control" onclick="fillTable()"><i class="fa fa-search"></i> Cari</button>
 									</div>
 									<div class="col-md-6" style="padding-right: 0;">
 										<label style="color: white;"> x</label>
@@ -176,7 +175,7 @@
 											<th style="width: 2%">Nomor Budget</th>
 											<th style="width: 1%">Att</th>
 											<th style="width: 1%">Status</th>
-											<th style="width: 1%">Action</th>
+											<th style="width: 2%">Action</th>
 										</tr>
 									</thead>
 									<tbody>

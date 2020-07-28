@@ -55,7 +55,28 @@
 @endsection
 
 @section('content')
+	
 <section class="content">
+	@if (session('status'))
+  <div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
+    {{ session('status') }}
+  </div>   
+  @endif
+
+  @if (session('error'))
+  <div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <h4><i class="icon fa fa-ban"></i> Error!</h4>
+    {{ session('error') }}
+  </div>   
+  @endif
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box no-border" style="margin-bottom: 5px;">
@@ -87,6 +108,8 @@
 								</div>
 							</div>
 						</div>
+
+						<?php if(Auth::user()->role_code == "MIS" || $employee->department == "Accounting") { ?>
 						<div class="col-md-3">
 							<div class="form-group">
 								<label>Department</label>
@@ -98,6 +121,8 @@
 								</select>
 							</div>
 						</div>	
+						<?php } ?>
+
 						<div class="col-md-3">
 							<div class="form-group">
 								<div class="col-md-6" style="padding-right: 0;">
@@ -129,16 +154,18 @@
 										<th style="width: 1%">Category</th>
 										<th style="width: 1%">Subject</th>
 										<th style="width: 1%">Type</th>
-										<th style="width: 1%">Vendor</th>
+										<th style="width: 3%">Vendor</th>
 										<th style="width: 1%">File</th>
-										<th style="width: 1%">Status</th>
-										<th style="width: 1%">Action</th>
+										<th style="width: 2%">Status</th>
+										<th style="width: 3%">Action</th>
+										<th style="width: 2%">Bukti Adagio</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
 								<tfoot>
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -159,6 +186,30 @@
 		</div>
 	</div>
 </section>
+
+<div class="modal modal-default fade" id="upload_adagio">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<form id="importForm" method="post" enctype="multipart/form-data" autocomplete="off" action="{{ url('investment/adagio') }}">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">Upload Confirmation</h4>
+						Informasi: <br><b>Upload Bukti Approval Adagio yang telah Di disetujui Sebagai Bukti Investment Telah Disetujui Semua.</b>
+					</div>
+					<div class="modal-body">
+						Upload PDF file here:<span class="text-red">*</span>
+						<input type="file" name="file" id="file">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<input type="hidden" id="id_edit" name="id_edit">
+						<button type="submit" class="btn btn-success"><i class="fa fa-upload"></i> Upload File</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 @endsection
 
 @section('scripts')
@@ -178,6 +229,7 @@
 	});
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		fillTable();
 		$('#datefrom').datepicker({
 			autoclose: true,
@@ -274,7 +326,8 @@
 			{ "data": "supplier_code" },
 			{ "data": "file" },
 			{ "data": "status" },
-			{ "data": "action" }
+			{ "data": "action" },
+			{ "data": "bukti_adagio" },
 			],
 		});
 
@@ -296,7 +349,10 @@
 		$('#invTable tfoot tr').appendTo('#invTable thead');
 	}
 
-
+	function uploadBukti(id){
+    	$("#id_edit").val(id);
+    	$('#upload_adagio').modal("show");
+    }
 
 	$('.select2').select2();
 

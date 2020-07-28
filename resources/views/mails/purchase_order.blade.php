@@ -29,6 +29,7 @@
 				<?php $currency = $datas->currency ?>
 				<?php $transportation = $datas->transportation ?>
 				<?php $buyer_name = $datas->buyer_name ?>
+				<?php $remark = $datas->remark ?>
 			@endforeach
 
 			@if($posisi == "manager_pch")
@@ -72,8 +73,8 @@
 						<td style="border:1px solid black; text-align: center;"><?= $transportation ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Currency</td>
-						<td style="border:1px solid black; text-align: center;"><?= $currency ?></td>
+						<td style="width: 2%; border:1px solid black;">Remark</td>
+						<td style="border:1px solid black; text-align: center;"><?= $remark ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -126,8 +127,8 @@
 						<td style="border:1px solid black; text-align: center;"><?= $transportation ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Currency</td>
-						<td style="border:1px solid black; text-align: center;"><?= $currency ?></td>
+						<td style="width: 2%; border:1px solid black;">Remark</td>
+						<td style="border:1px solid black; text-align: center;"><?= $remark ?></td>
 					</tr>
 				</tbody>
 			</table>

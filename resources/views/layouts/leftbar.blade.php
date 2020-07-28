@@ -131,7 +131,10 @@
             <a href="{{ url("purchase_requisition") }}"><i class="fa fa-info"></i>Purchase Requisition</a>
           </li>
           @if(isset($page) && $page == "Purchase Order")<li class="active">@else<li>@endif
-            <a href="{{ url("purchase_order") }}"><i class="fa fa-info"></i>Purchase Order</a>
+            <a href="{{ url("purchase_order") }}"><i class="fa fa-info"></i>Purchase Order PR</a>
+          </li>
+          @if(isset($page) && $page == "Purchase Order Investment")<li class="active">@else<li>@endif
+            <a href="{{ url("purchase_order_investment") }}"><i class="fa fa-info"></i>Purchase Order Investment</a>
           </li>
           @if(isset($page) && $page == "Investment")<li class="active">@else<li>@endif
             <a href="{{ url("investment") }}"><i class="fa fa-info"></i>Investment</a>
@@ -140,17 +143,6 @@
       </li>
       @endif
 
-      @if(in_array('M28', $navs))
-      @if(isset($page) && $page == "Supplier")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/supplier") }}"><i class="fa fa-bus"></i> <span>Supplier</span></a>
-      </li>
-      @endif
-
-      @if(in_array('M29', $navs))
-      @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i> <span>Purchase Item</span></a>
-      </li>
-      @endif
 
       @if(in_array('M13', $navs))
       @if(isset($page) && $page == "Bill Of Material")<li class="active">@else<li>@endif
@@ -752,8 +744,12 @@
       </span>
     </a>
     <ul class="treeview-menu">
-      @if(isset($page) && $page == "PM List")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/maintenance/list/user") }}"><i class="fa fa-edit"></i> <span>PM List</span></a>
+      @if(isset($page) && $page == "Planned Maintenance Data")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/planned/master") }}"><i class="fa fa-edit"></i> <span>PM Data</span></a>
+      </li>
+
+      @if(isset($page) && $page == "Planned Maintenance")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/planned") }}"><i class="fa fa-edit"></i> <span>PM Monitoring</span></a>
       </li>
 
       @if(isset($page) && $page == "PM")<li class="active">@else<li>@endif
@@ -870,11 +866,7 @@
     <a href="{{ url("index/indirect_material_stock") }}"><i class="fa fa-cubes"></i> <span>Stock</span></a>
   </li>
 
-  @if(isset($page) && $page == "Request")<li class="active">@else<li>@endif
-    <a href="{{ secure_url("index/indirect_material_request") }}"><i class="fa fa-forward"></i> <span>Request</span></a>
-  </li>
-
-   @if(isset($page) && $page == "Log")<li class="active">@else<li>@endif
+  @if(isset($page) && $page == "Log")<li class="active">@else<li>@endif
     <a href="{{ url("index/indirect_material_log") }}"><i class="fa fa-list"></i> <span>Logs</span></a>
   </li>
 
@@ -890,12 +882,20 @@
 </a>
 <ul class="treeview-menu">
 
-  @if(isset($page) && $page == "Chemical Solution Control")<li class="active">@else<li>@endif
-    <a href="{{ url("index/chm_solution_control") }}"><i class="fa fa-line-chart"></i> <span>Solution Control</span></a>
+  @if(isset($page) && $page == "Request")<li class="active">@else<li>@endif
+    <a href="{{ secure_url("index/indirect_material_request/chm") }}"><i class="fa fa-forward"></i> <span>Request</span></a>
+  </li>
+  
+  @if(isset($page) && $page == "Chemical Picking Schedule")<li class="active">@else<li>@endif
+    <a href="{{ url("index/chm_picking_schedule") }}"><i class="fa fa-calendar-check-o "></i> <span>Picking Schedule</span></a>
   </li>
 
-  @if(isset($page) && $page == "Chemical Picking Schedule")<li class="active">@else<li>@endif
-    <a href="{{ secure_url("index/chm_picking_schedule") }}"><i class="fa fa-calendar-check-o "></i> <span>Picking Schedule</span></a>
+  @if(isset($page) && $page == "Chemical Solution Control")<li class="active">@else<li>@endif
+    <a href="{{ url("index/chm_solution_control") }}"><i class="fa fa-line-chart"></i> <span>Controlling Chart</span></a>
+  </li>
+
+  @if(isset($page) && $page == "Larutan")<li class="active">@else<li>@endif
+    <a href="{{ url("index/chm_larutan") }}"><i class="fa fa-tint"></i> <span>Larutan</span></a>
   </li>
 
 </ul>
