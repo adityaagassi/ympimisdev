@@ -1339,8 +1339,9 @@ class KnockDownController extends Controller{
 
 		if(Auth::user()->role_code == 'op-zpro'){
 			$printer_name = 'KDO ZPRO';
-		}
-		else{
+		}else if (Auth::user()->role_code == 'op-zpro') {
+			$printer_name = 'FLO Printer LOG';
+		}else{
 			$printer_name = 'MIS';
 		}
 

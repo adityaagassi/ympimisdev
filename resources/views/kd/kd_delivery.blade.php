@@ -87,6 +87,7 @@
                 <th style="width: 10%">Count Item</th>
                 <th style="width: 10%">Location</th>
                 <th style="width: 10%">Received At</th>
+                <th style="width: 8%">Reprint</th>
                 <th style="width: 8%">Cancel Delivery</th>
               </tr>
             </thead>
@@ -358,6 +359,7 @@
       { "data": "actual_count" },
       { "data": "remark" },
       { "data": "updated_at" },
+      { "data": "reprintKDO" },
       { "data": "deleteKDO" }
       ]
     });
@@ -375,6 +377,32 @@
     });
 
     $('#kdo_table tfoot tr').appendTo('#kdo_table thead');
+  }
+
+  function reprintKDO(id) {
+
+    var data = {
+      kd_number : id,
+      printer : 'FLO Printer LOG'
+    }
+
+    $("#loading").show();
+
+    if(confirm("Apakah anda ingin mencetak ulang KDO Number dari "+ id +" ?")){
+      $.get('{{ url("fetch/kd_reprint_kdo") }}', data,  function(result, status, xhr){
+        if(result.status){
+          $("#loading").hide();
+          openSuccessGritter('Success', result.message);
+        }else{
+          $("#loading").hide();
+          openErrorGritter('Error!', result.message);
+        }
+
+      });
+    }else{
+      $("#loading").hide();
+
+    }   
   }
 
   function detailKDO(id){
