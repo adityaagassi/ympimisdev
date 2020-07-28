@@ -322,10 +322,6 @@
 								i : 0;
 							};
 							var api = this.api();
-							var totalPlan = api.column(8).data().reduce(function (a, b) {
-								return intVal(a)+intVal(b);
-							}, 0)
-							$(api.column(8).footer()).html(totalPlan.toLocaleString());
 							var totalPlan = api.column(9).data().reduce(function (a, b) {
 								return intVal(a)+intVal(b);
 							}, 0)
@@ -342,9 +338,13 @@
 								return intVal(a)+intVal(b);
 							}, 0)
 							$(api.column(12).footer()).html(totalPlan.toLocaleString());
+							var totalPlan = api.column(13).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(13).footer()).html(totalPlan.toLocaleString());
 						},
 						"columnDefs": [ {
-							"targets": [10, 12],
+							"targets": [11, 13],
 							"createdCell": function (td, cellData, rowData, row, col) {
 								if ( cellData <  0 ) {
 									$(td).css('background-color', 'RGB(255,204,255)')
