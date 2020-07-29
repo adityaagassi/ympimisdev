@@ -678,10 +678,15 @@ class StockTakingController extends Controller{
 		}
 
 
-		$data = db::select("SELECT if(l.area = 'ST', 'SURFACE TREATMENT', l.area) as area, s.store from
-			(select distinct location, store from stocktaking_lists) s
-			LEFT JOIN storage_locations l on s.location = l.storage_location ".$store."
-			order by l.area desc, s.store asc");
+		$data = db::select("SELECT IF (l.area = 'ST', 'SURFACE TREATMENT', l.area) AS area, s.location, s.store FROM
+			(SELECT DISTINCT location, store FROM stocktaking_lists) s
+			LEFT JOIN storage_locations l
+			ON s.location = l.storage_location
+			".$store."
+			ORDER BY
+			l.area DESC,
+			s.location ASC,
+			s.store ASC");
 
 
 		$pdf = \App::make('dompdf.wrapper');
