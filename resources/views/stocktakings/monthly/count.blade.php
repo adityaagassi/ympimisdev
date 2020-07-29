@@ -509,7 +509,7 @@
 					if (result.status) {
 
 						if(result.material[0].remark == 'NO USE'){
-							if(!confirm("Summaty of Counting ini teridentifikasi NO USE.\nApakah anda ingin mengubah menjadi USE ?")){
+							if(!confirm("Summary of Counting ini teridentifikasi NO USE.\nApakah anda ingin mengubah menjadi USE ?")){
 								canc();
 								return false;
 							}
@@ -517,7 +517,7 @@
 
 						if(result.material[0].process <= 1){
 							if(result.material[0].quantity > 0){
-								if(!confirm("Summaty of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
+								if(!confirm("Summary of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
 									canc();
 									return false;
 								}
@@ -654,7 +654,7 @@
 			if (result.status) {
 
 				if(result.material[0].remark == 'NO USE'){
-					if(!confirm("Summaty of Counting ini teridentifikasi NO USE.\nApakah anda ingin mengubah menjadi USE ?")){
+					if(!confirm("Summary of Counting ini teridentifikasi NO USE.\nApakah anda ingin mengubah menjadi USE ?")){
 						canc();
 						return false;
 					}
@@ -662,7 +662,7 @@
 
 				if(result.material[0].process <= 1){
 					if(result.material[0].quantity > 0){
-						if(!confirm("Summaty of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
+						if(!confirm("Summary of Counting ini sudah terinput.\nApakah anda ingin mengubah nilai input ?")){
 							canc();
 							return false;
 						}

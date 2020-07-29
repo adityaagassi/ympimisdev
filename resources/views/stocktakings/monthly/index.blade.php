@@ -24,6 +24,14 @@
 		overflow:hidden;
 		text-overflow: ellipsis;
 	}
+	.dataTables_filter {
+		float: left !important;
+	}
+
+	.button-right{
+		float: right; !important;
+	}
+
 	#loading, #error { display: none; }
 	.disabled {
 		pointer-events: none;
@@ -136,6 +144,8 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+						<button type="button" class="btn btn-danger button-right" data-dismiss="modal">Close&nbsp;&nbsp;<i class="fa fa-close"></i></button>
+
 						<table class="table table-hover table-bordered table-striped" id="tableVariance">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
@@ -159,6 +169,8 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+						<button type="button" class="btn btn-danger button-right" data-dismiss="modal">Close&nbsp;&nbsp;<i class="fa fa-close"></i></button>
+
 						<table class="table table-hover table-bordered table-striped" id="tableAudit">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
@@ -182,6 +194,8 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+						<button type="button" class="btn btn-danger button-right" data-dismiss="modal">Close&nbsp;&nbsp;<i class="fa fa-close"></i></button>
+
 						<table class="table table-hover table-bordered table-striped" id="tableInput">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
@@ -322,8 +336,8 @@
 		filledList();
 		auditedList();
 
-		setInterval(filledList, 10000);
-		setInterval(auditedList, 10000);
+		setInterval(filledList, 20000);
+		setInterval(auditedList, 20000);
 
 	});
 
