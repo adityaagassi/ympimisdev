@@ -322,8 +322,8 @@
 		filledList();
 		auditedList();
 
-		setInterval(filledList, 60000);
-		setInterval(auditedList, 60000);
+		setInterval(filledList, 10000);
+		setInterval(auditedList, 10000);
 
 	});
 

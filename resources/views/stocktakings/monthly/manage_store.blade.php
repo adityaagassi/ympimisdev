@@ -71,6 +71,10 @@
 	</button>
 	@endif
 
+	<button class="btn btn-primary btn-sm pull-right" data-toggle="modal"  data-target="#print_store" style="margin-right: 5px">
+		<i class="fa fa-print"></i>&nbsp;&nbsp;Print Store
+	</button>
+
 	<h1>
 		{{ $title }} <span class="text-purple">{{ $title_jp }}</span>
 	</h1>
@@ -321,6 +325,42 @@
 		</div>
 	</div>
 
+	<div class="modal modal-default fade" id="print_store">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							&times;
+						</span>
+					</button>
+					<h4 class="modal-title">
+						Print Store
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="box-body">
+								<div class="col-xs-12">					
+									<div class="form-group">
+										<label class="control-label">Store</label>
+										<textarea id="receiveStoreArea" class="form-control" rows="4" placecholder="Paste location from excel here"></textarea>
+										<input id="receiveStoreTags" type="text" placeholder="Material Number" class="form-control tags" name="receiveStoreTags" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button onClick="printStoreName()" target='_blank' class="btn btn-success">Print</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="modal fade" id="modalPrinter">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
@@ -377,7 +417,62 @@
 		});
 
 		$('#other').hide();
+
+		jQuery('.tags').tagsInput({ width: 'auto' });
+
+		$('#issueStoreTags').hide();
+		$('#issueStoreTags_tagsinput').hide();
+		$('#issueStoreTags').hide();
+		$('#receiveStoreTags_tagsinput').hide();
+		initKeyDown();
+
 	});
+
+	function initKeyDown() {
+		
+		$('#receiveStoreArea').keydown(function(event) {
+			if (event.keyCode == 13) {
+				convertReceiveStoreToTags();
+				return false;
+			}
+		});
+	}
+
+	function convertReceiveStoreToTags() {
+		var data = $('#receiveStoreArea').val();
+		if (data.length > 0) {
+			var rows = data.split('\n');
+			if (rows.length > 0) {
+				for (var i = 0; i < rows.length; i++) {
+					var barcode = rows[i].trim();
+					if (barcode.length > 0) {
+						$('#receiveStoreTags').addTag(barcode);
+					}
+				}
+				$('#receiveStoreTags').hide();
+				$('#receiveStoreTags_tagsinput').show();
+				$('#receiveStoreArea').hide();
+			}
+		}		
+	}
+
+	// $("#print_store").on("hidden.bs.modal", function () {
+	// 	$("#receiveStoreArea").val('');
+	// 	$("#receiveStoreTags").val('');
+	// });
+
+	function printStoreName() {
+		var store = $("#receiveStoreTags").val();
+
+
+		// $.get('{{ url("print/stocktaking/print_store") }}', data, function(result, status, xhr){
+			
+		// });
+
+		window.open('{{ url("print/stocktaking/print_store") }}'+'/'+store, '_blank');
+		
+
+	}
 
 	$("#add_material").on("hidden.bs.modal", function () {
 		$('#material_description').text('');
@@ -647,10 +742,16 @@
 					}else{
 						body += '<td onClick="countPicked(this)" id="td9+'+result.data[i].id+'" style="font-size: 1vw;"><span class="label label-info">REPRINT</span></td>';
 					}
+					
 
-					body += '<td>';
-					body += '<button style="width: 50%; height: 100%; vertical_align: middle;" onclick="deleteMaterial(\''+result.data[i].id+'\')" class="btn btn-sm btn-danger form-control"><span><i class="fa fa-trash"></i></span></button>';
-					body += '</td>';
+					if(result.role == 'PC' || result.role == 'MIS'){
+						body += '<td>';
+						body += '<button style="width: 50%; height: 100%; vertical_align: middle;" onclick="deleteMaterial(\''+result.data[i].id+'\')" class="btn btn-sm btn-danger form-control"><span><i class="fa fa-trash"></i></span></button>';
+						body += '</td>';
+					}else{
+						body += '<td>-</td>';
+					}
+
 
 					if(result.data[i].print_status == 0){
 						body += '<td><input type="checkbox" name="P" id="'+result.data[i].id+'"></td>';

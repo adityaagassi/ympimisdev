@@ -663,6 +663,39 @@ class StockTakingController extends Controller{
 
 	}
 
+	public function printStore($get_store){
+
+		$store = '';
+		if(strlen($get_store) > 0){
+			$stores = explode(',', $get_store);
+			for ($i=0; $i < count($stores); $i++) {
+				$store = $store."'".$stores[$i]."'";
+				if($i != (count($stores)-1)){
+					$store = $store.',';
+				}
+			}
+			$store = " WHERE s.store in (".$store.") ";
+		}
+
+
+		$data = db::select("SELECT if(l.area = 'ST', 'SURFACE TREATMENT', l.area) as area, s.store from
+			(select distinct location, store from stocktaking_lists) s
+			LEFT JOIN storage_locations l on s.location = l.storage_location ".$store."
+			order by l.area desc, s.store asc");
+
+
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->getDomPDF()->set_option("enable_php", true);
+		$pdf->setPaper('A4', 'landscape');
+		$pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+		$pdf->loadView('stocktakings.monthly.store_label', array(
+			'data' => $data
+		));
+		return $pdf->stream("store.pdf");
+
+	}
+
 	public function reprintStoreSoc(Request $request){
 		$store = $request->get('store');
 
@@ -752,7 +785,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 				LEFT JOIN material_volumes v ON v.material_number = s.material_number
 				WHERE s.id in (".$whereID.")
-				ORDER BY s.store, s.id ASC");
+				ORDER BY s.location, s.store, s.category, s.material_number ASC");
 
 			$update = StocktakingList::whereIn('id', $list_id)->update(['print_status' => 1]);
 
@@ -1623,7 +1656,8 @@ class StockTakingController extends Controller{
 
 		$response = array(
 			'status' => true,
-			'data' => $data
+			'data' => $data,
+			'role' => Auth::user()->role_code
 		);
 		return Response::json($response);
 
