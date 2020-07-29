@@ -82,7 +82,7 @@ class ProductionReportController extends Controller
         $activity->save();
 
         $role_code = Auth::user()->role_code;
-        $queryActivity = "SELECT DISTINCT(activity_type),frequency,no FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null ORDER BY no";
+        $queryActivity = "SELECT DISTINCT(activity_type),frequency,no FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null ORDER BY frequency";
     	$activityList = DB::select($queryActivity);
         $data = array('activity_list' => $activityList,
                       'role_code' => $role_code,

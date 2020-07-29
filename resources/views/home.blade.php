@@ -633,6 +633,10 @@
                                     <a href="{{ url("/index/initial", "bpro_sx") }}">
                                         <i class="fa fa-caret-right"></i> Saxophone (サックス)
                                     </a>
+                                    <br>
+                                    <a href="{{ url("/index/production_report/index/12") }}">
+                                        <i class="fa fa-caret-right"></i> Parts Process (WI-PP) Report (部品加工)
+                                    </a>
                                 </td>
                             </tr>
                             <tr>
