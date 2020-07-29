@@ -251,7 +251,7 @@ class ProductionReportController extends Controller
                 COALESCE ((
                     SELECT
                         count(
-                        DISTINCT ( leader )) AS jumlah_training 
+                        DISTINCT ( actlist.id )) AS jumlah_training 
                     FROM
                         training_reports
                         JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
