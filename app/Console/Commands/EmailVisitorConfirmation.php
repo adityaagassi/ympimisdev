@@ -94,6 +94,33 @@ class EmailVisitorConfirmation extends Command
                         OR (
                         visitors.remark IS NULL 
                         AND employee_syncs.department = 'Maintenance')");
+            }elseif ($key->name == 'Prawoto') {
+                $visitor = DB::SELECT("SELECT
+                        visitors.id,
+                        name,
+                        department,
+                        company,
+                        DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+                        visitors.created_at,
+                        visitor_details.full_name,
+                        visitor_details.id_number AS total1,
+                        purpose,
+                        visitors.status,
+                        visitor_details.in_time,
+                        visitor_details.out_time,
+                        visitors.remark 
+                    FROM
+                        visitors
+                        LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+                        LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+                    WHERE
+                        ( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources' ) 
+                        OR (
+                        visitors.remark IS NULL 
+                        AND employee_syncs.department = 'General Affairs')
+                        OR (
+                        visitors.remark IS NULL 
+                        AND employee_syncs.name = 'Arief Soekamto')");
             }elseif($key->name != 'Takashi Ohkubo'){
                 $visitor = DB::SELECT("SELECT
                         visitors.id,
