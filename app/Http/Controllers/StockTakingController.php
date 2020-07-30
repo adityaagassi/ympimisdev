@@ -1278,7 +1278,7 @@ class StockTakingController extends Controller{
 				(SELECT location, material_number, sum(quantity) AS pi, 0 as book FROM stocktaking_outputs
 				GROUP BY location, material_number
 				UNION ALL
-				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM storage_location_stocks
+				SELECT storage_location AS location, material_number, 0 as pi, sum(unrestricted) AS book FROM stocktaking_location_stocks
 				WHERE stock_date = '".$calendar->date."'
 				GROUP BY storage_location, material_number) AS union_pi_book
 				GROUP BY location, material_number) AS pi_book
