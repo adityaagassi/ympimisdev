@@ -2144,11 +2144,13 @@ class StockTakingController extends Controller{
 			( SELECT count( id ) AS total FROM stocktaking_lists
 			WHERE remark = 'USE'
 			AND store = '".$request->get('store')."'
+			AND print_status = 1
 			AND ".$audit." IS NOT NULL )
 			/
 			( SELECT count( id ) AS total
 			FROM stocktaking_lists
 			WHERE remark = 'USE'
+			AND print_status = 1
 			AND store = '".$request->get('store')."' )
 			* 100
 			AS percentage");
