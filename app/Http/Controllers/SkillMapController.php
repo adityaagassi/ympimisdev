@@ -35,7 +35,7 @@ class SkillMapController extends Controller
 
     public function indexSkillMap($location)
     {
-    	$employee_skill = SkillEmployee::where('location',$location)orderBy('process','desc')->get();
+    	$employee_skill = SkillEmployee::where('location',$location)->orderBy('process','desc')->get();
     	$employees = EmployeeSync::orderBy('name', 'asc')->get();
     	$process = DB::SELECT("SELECT DISTINCT(process) FROM `skills` where location = '".$location."' and skills.deleted_at is null order by process ");
 
