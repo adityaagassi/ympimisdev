@@ -35,9 +35,9 @@ class SkillMapController extends Controller
 
     public function indexSkillMap($location)
     {
-    	$employee_skill = SkillEmployee::orderBy('process','desc')->get();
+    	$employee_skill = SkillEmployee::where('location',$location)orderBy('process','desc')->get();
     	$employees = EmployeeSync::orderBy('name', 'asc')->get();
-    	$process = DB::SELECT("SELECT DISTINCT(process) from skill_employees order by process");
+    	$process = DB::SELECT("SELECT DISTINCT(process) FROM `skills` where location = '".$location."' and skills.deleted_at is null order by process ");
 
     	if ($location == 'pn-assy') {
     		$dept = 'Educational Instrument (EI)';
@@ -62,7 +62,7 @@ class SkillMapController extends Controller
     {
     	try {
     		$location = $request->get('location');
-    		$process = DB::SELECT("SELECT DISTINCT(process) FROM `skills` where location = '".$location."' order by process ");
+    		$process = DB::SELECT("SELECT DISTINCT(process) FROM `skills` where location = '".$location."' and skills.deleted_at is null order by process ");
 
     		$emp = [];
     		$skill_map = [];
