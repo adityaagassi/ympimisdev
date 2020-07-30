@@ -1285,7 +1285,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
 				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
-				AND storage_locations.storage_location in ('CL91', 'CLB9', 'CS91', 'FL91', 'FLT9', 'CL51', 'FL51', 'VN51', 'CL21','FL21', 'VN21')
+				AND storage_locations.area in ('ASSEMBLY','ST', 'WELDING')
 				AND ABS(pi_book.pi - pi_book.book) > 0");
 
 
