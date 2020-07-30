@@ -1230,12 +1230,12 @@ class StockTakingController extends Controller{
 
 		}
 
-		foreach ($variances as $variance) {
-			if($variance->std == 0){
-				return redirect('index/stocktaking/menu')->with('error', $month.'(ime)'.'Standart Price '.$variance->material_number.' is 0')->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
-			}
+		// foreach ($variances as $variance) {
+		// 	if($variance->std == 0){
+		// 		return redirect('index/stocktaking/menu')->with('error', $month.'(ime)'.'Standart Price '.$variance->material_number.' is 0')->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
+		// 	}
 			
-		}
+		// }
 
 		$title = 'VarianceReport'.str_replace('-', '' ,$month).'_('.date('ymd H.i').')';		
 
