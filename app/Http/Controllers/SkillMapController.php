@@ -83,7 +83,8 @@ class SkillMapController extends Controller
 						WHERE
 							employee_id = '".$emp[$i][$j]->employee_id."'
 							AND skills.location = '".$emp[$i][$j]->location."'
-							and skill_maps.deleted_at is null");
+							and skill_maps.deleted_at is null
+							and skills.deleted_at is null");
     				}
     			}
     		}
