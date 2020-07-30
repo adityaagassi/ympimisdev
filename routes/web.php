@@ -1928,6 +1928,8 @@ Route::post('delete/chm_schedule', 'IndirectMaterialController@deleteSchedule');
 //Larutan
 Route::get('index/chm_larutan', 'IndirectMaterialController@indexLarutan');
 Route::get('fetch/chm_larutan', 'IndirectMaterialController@fetchLarutan');
+Route::get('fetch/chm_larutan_detail', 'IndirectMaterialController@fetchLarutanDetail');
+Route::post('update/chm_larutan', 'IndirectMaterialController@updateLarutan');
 
 
 
@@ -2843,6 +2845,11 @@ Route::get('index/audit_iso/sendemail', 'CparController@send_email_audit');
 Route::get('index/audit_iso/sendemailpenanganan/{id}', 'CparController@sendemailpenanganan');
 Route::get('index/audit_iso/print/{id}', 'CparController@print_audit');
 
+Route::get('index/audit_iso/monitoring', 'CparController@monitoring_audit');
+Route::get('fetch/audit_iso/monitoring', 'CparController@fetchMonitoring_audit');
+Route::get('index/audit_iso/detail', 'CparController@detailMonitoring_audit');
+Route::get('index/audit_iso/table', 'CparController@fetchTable_audit');
+
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
 Route::get('mqtt/publish/{topic}', 'TrialController@SubscribetoTopic');
@@ -2987,6 +2994,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('work/maintenance/spk', 'MaintenanceController@startSPK');
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
 	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
+	Route::post('post/maintenance/spk/open', 'MaintenanceController@openSPKPending');
 	
 	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
@@ -3046,6 +3054,7 @@ Route::post('post/maintenance/inven/code', 'MaintenanceController@postInventory'
 
 Route::get('index/maintenance/planned', 'MaintenanceController@indexPlanned');
 Route::get('index/maintenance/planned/master', 'MaintenanceController@indexPlanMaster');
+Route::post('import/maintenance/planned', 'MaintenanceController@importPM');
 // Route::get('fetch/maintenance/planned', 'MaintenanceController@fetchPlanned');
 
 //Assemblies
@@ -3101,6 +3110,11 @@ Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
 	Route::get('fetch/skill_map', 'SkillMapController@fetchSkillMap');
 	Route::get('fetch/skill_map_detail', 'SkillMapController@fetchSkillMapDetail');
 	Route::post('input/skill_adjustment', 'SkillMapController@inputSkillAdjustment');
+	Route::post('destroy/skill_maps', 'SkillMapController@destroySkillMaps');
+	Route::get('fetch/skill_master', 'SkillMapController@fetchSkillMaster');
+	Route::post('input/skill_master', 'SkillMapController@inputSkillMaster');
+	Route::post('destroy/skill_master', 'SkillMapController@destroySkillMaster');
+	Route::get('get/skill_master', 'SkillMapController@getSkillMaster');
 });
 
 //ROOMS

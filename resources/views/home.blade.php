@@ -234,7 +234,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Incompatible Report Form (不適合報告フォーム)</span>
+                            <span style="font-weight: bold;">Report Form Ketidaksesuaian (不適合報告フォーム)</span>
                             <br>
                             <a href="{{ url("/index/form_ketidaksesuaian") }}">
                                 <i class="fa fa-caret-right"></i> Create Form Ketidaksesuaian (不適合報告フォームを作成)
@@ -248,14 +248,23 @@
                     </tr>
                     <tr>
                         <td>
+                            <span style="font-weight: bold;">Audit Internal ISO E-IRCA (ISO内部監査のCPAR)</span>
+                            <br>
+                            <a href="{{ url("/index/audit_iso") }}">
+                                <i class="fa fa-caret-right"></i> Create Audit Internal ISO (ISO内部監査のCPARを作成)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/audit_iso/monitoring") }}">
+                                <i class="fa fa-caret-right"></i> Report Audit Internal ISO (ISO内部監査のCPARを報告)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <span style="font-weight: bold;">Others (他の情報)</span>
                             <br>
                             <a href="{{ url("/index/form_experience") }}">
                                 <i class="fa fa-caret-right"></i> Form Failures Report (問題・失敗のフォーム)
-                            </a>
-                            <br>
-                            <a href="{{ url("/index/audit_iso") }}">
-                                <i class="fa fa-caret-right"></i> Audit Internal ISO E-IRCA (ISO内部監査の是正処置報告書)
                             </a>
                         </td>
                     </tr>
