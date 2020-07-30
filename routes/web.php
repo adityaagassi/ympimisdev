@@ -3111,10 +3111,16 @@ Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
 	Route::get('fetch/skill_map_detail', 'SkillMapController@fetchSkillMapDetail');
 	Route::post('input/skill_adjustment', 'SkillMapController@inputSkillAdjustment');
 	Route::post('destroy/skill_maps', 'SkillMapController@destroySkillMaps');
+
 	Route::get('fetch/skill_master', 'SkillMapController@fetchSkillMaster');
 	Route::post('input/skill_master', 'SkillMapController@inputSkillMaster');
 	Route::post('destroy/skill_master', 'SkillMapController@destroySkillMaster');
 	Route::get('get/skill_master', 'SkillMapController@getSkillMaster');
+
+	Route::get('fetch/skill_employee', 'SkillMapController@fetchSkillEmployee');
+	Route::post('input/skill_employee', 'SkillMapController@inputSkillEmployee');
+	Route::post('destroy/skill_employee', 'SkillMapController@destroySkillEmployee');
+	Route::get('get/skill_employee', 'SkillMapController@getSkillEmployee');
 });
 
 //ROOMS
