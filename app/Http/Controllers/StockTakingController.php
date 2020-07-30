@@ -1222,7 +1222,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
-				WHERE storage_locations.storage_location in ('CL91', 'CLB9', 'CS91', 'FL91', 'FLT9', 'CL51', 'FL51', 'VN51', 'CL21','FL21', 'VN21')
+				WHERE storage_locations.storage_location in ('SX91', 'CL91', 'CLB9', 'CS91', 'FL91', 'FLT9', 'CL51', 'FL51', 'VN51', 'CL21','FL21', 'VN21')
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
