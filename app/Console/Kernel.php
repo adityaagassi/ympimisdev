@@ -85,7 +85,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('log:room_temperature')->everyThirtyMinutes();
         // $schedule->command('notif:machine')->dailyAt('07:00');
         // $schedule->command('email:kaizen')->everyMinute();
-        // $schedule->command('employee:history')->monthlyOn(date('t'), '20:01');
+        $schedule->command('employee:history')->monthlyOn(date('t'), '20:01');
 
         // $schedule->command('email:user_document')->weekdays()->dailyAt('07:00');
         
