@@ -1234,7 +1234,7 @@ class StockTakingController extends Controller{
 		// 	if($variance->std == 0){
 		// 		return redirect('index/stocktaking/menu')->with('error', $month.'(ime)'.'Standart Price '.$variance->material_number.' is 0')->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
 		// 	}
-			
+
 		// }
 
 		$title = 'VarianceReport'.str_replace('-', '' ,$month).'_('.date('ymd H.i').')';		
@@ -1848,7 +1848,9 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
-				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')) AS official_variance
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				AND storage_locations.storage_location in ('CL91', 'CLB9', 'CS91', 'FL91', 'FLT9', 'CL51', 'FL51', 'VN51', 'CL21','FL21', 'VN21')
+				) AS official_variance
 				GROUP BY plnt, `group`");
 		}else{
 			$variance = db::select("SELECT plnt, `group`, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
@@ -1874,7 +1876,8 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
-				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')) AS official_variance
+				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','PSTK','203','208','214','216','217','MMJR')
+				) AS official_variance
 				GROUP BY plnt, `group`");
 		}
 
@@ -1922,7 +1925,9 @@ class StockTakingController extends Controller{
 				GROUP BY location, material_number) AS pi_book
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
-				WHERE storage_locations.area = '". $location ."') AS official_variance
+				WHERE storage_locations.area = '". $location ."'
+				WHERE storage_locations.storage_location not in ('SX91', 'SX51', 'SX21')
+				) AS official_variance
 				GROUP BY plnt, `group`, location");
 		}else{
 			$variance_detail = db::select("SELECT plnt, `group`, location, sum(var_amt_abs)/sum(book_amt)*100 AS percentage FROM
