@@ -43,7 +43,7 @@ class SkillMapController extends Controller
     		$dept = 'Educational Instrument (EI)';
     		$section = 'Pianica';
     		$title = 'Skill Map - Pianica Assembly';
-    		$title_jp = '??';
+    		$title_jp = 'のスキルマップ ~ ピアニカ集成';
     	}
 
     	return view('skill_map.index', array(

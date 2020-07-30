@@ -1296,7 +1296,7 @@ public function getChartPlan(Request $request){
 public function injection_machine()
 {
     $title = 'Injection Machine';
-    $title_jp = '???';
+    $title_jp = '成形機';
     $ng_lists = DB::table('ng_lists')->where('location', '=', 'Recorder')->get();
 
     return view('injection.machine_injection', array(
@@ -4604,7 +4604,11 @@ function store_maintenance_molding(Request $request)
 public function transaction($status)
 {
     $title = 'Injection Transaction';
-    $title_jp = '???';
+    if ($status == 'IN') {
+        $title_jp = '成形品の受け渡し（IN）';
+    }else{
+        $title_jp = '成形品の受け渡し（OUT）';
+    }
 
     return view('injection.transaction_injection', array(
         'title' => $title,
@@ -4804,7 +4808,7 @@ public function indexMachineMonitoring()
     return view('injection.machine_monitoring')
     ->with('mesin', $this->mesin)
     ->with('title', 'Injection Machine Monitoring')
-    ->with('title_jp', '??');
+    ->with('title_jp', '成形機の監視');
 }
 
 public function fetchMachineMonitoring(Request $request)
@@ -4866,7 +4870,7 @@ public function indexStockMonitoring()
     ->with('mesin', $this->mesin)
     ->with('color', $color)
     ->with('title', 'Injection Stock Monitoring')
-    ->with('title_jp', '??');
+    ->with('title_jp', '成形品在庫の監視');
 }
 
 public function fetchStockMonitoring(Request $request)

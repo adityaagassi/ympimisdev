@@ -39,7 +39,7 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $page }} <span class="text-purple">??</span>
+		{{ $page }} <span class="text-purple">プレス機トラブルリポート</span>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>

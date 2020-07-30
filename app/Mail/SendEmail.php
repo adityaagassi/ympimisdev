@@ -146,7 +146,7 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Visitor Confirmation (来客の確認)')->view('mails.visitor_confirmation');
         }
         if($this->remark == 'incoming_visitor'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Incoming Visitor (??)')->view('mails.incoming_visitor');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Incoming Visitor (ご来社のお客様)')->view('mails.incoming_visitor');
         }
         if($this->remark == 'ng_finding'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Temuan NG (??)')->view('mails.ng_finding');
