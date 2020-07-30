@@ -1926,7 +1926,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area = '". $location ."'
-				WHERE storage_locations.storage_location not in ('SX91', 'SX51', 'SX21')
+				AND storage_locations.storage_location not in ('SX91', 'SX51', 'SX21')
 				) AS official_variance
 				GROUP BY plnt, `group`, location");
 		}else{
