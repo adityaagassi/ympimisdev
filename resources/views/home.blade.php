@@ -870,10 +870,10 @@
                                         <a href="{{ url("/index/ch_daily_production_result") }}">
                                             <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
                                         </a>
-                                        <br>
+                                        {{-- <br>
                                         <a href="{{ url("/index/production_achievement") }}">
                                             <i class="fa fa-caret-right"></i> Production Achievement ()
-                                        </a>
+                                        </a> --}}
                                     </td>
                                 </tr>
                                 {{-- <tr>
