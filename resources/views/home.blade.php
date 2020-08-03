@@ -443,7 +443,7 @@
                                     </a>
                                     <br>
                                     <a href="{{ url("index/kaizen2/value") }}">
-                                        <i class="fa fa-caret-right"></i> Report Kaizen Reward (??)
+                                        <i class="fa fa-caret-right"></i> Report Kaizen Reward (改善リポートのリワード)
                                     </a>
                                     <br>
                                 </td>
@@ -501,7 +501,7 @@
                                     </a>
                                     <br>
                                     <a href="{{ url("index/workshop/operatorload") }}">
-                                        <i class="fa fa-caret-right"></i> Workshop Operator Work Schedule (??)
+                                        <i class="fa fa-caret-right"></i> Workshop Operator Work Schedule (ワークショップ作業者の作業予定)
                                     </a>
                                     <br>
                                 </td>                        
@@ -559,7 +559,7 @@
                                     </a>
                                     <br>
                                     <a href="{{ url("index/maintenance/apar/resume") }}">
-                                        <i class="fa fa-caret-right"></i> APAR Resume (??)
+                                        <i class="fa fa-caret-right"></i> APAR Resume (消火栓・消火器の点検進捗のまとめ)
                                     </a>
                                     <br>
                                 </td>
