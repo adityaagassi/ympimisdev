@@ -152,10 +152,10 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Temuan NG (??)')->view('mails.ng_finding');
         }
         if($this->remark == 'cpar_dept'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Form Ketidaksesuaian '.$this->data[0]->judul.' ')->view('mails.cpar_dept');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Form Laporan Ketidaksesuaian ')->view('mails.cpar_dept');
         }
         if($this->remark == 'rejectcpar_dept'){
-            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Form Ketidaksesuaian '.$this->data[0]->judul.' Telah Ditolak')->view('mails.rejectcpar_dept');
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Form Laporan Ketidaksesuaian Tidak Disetujui')->view('mails.rejectcpar_dept');
         }
         
         if($this->remark == 'std_audit'){
