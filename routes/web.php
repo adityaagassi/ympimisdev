@@ -3117,10 +3117,22 @@ Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
 	Route::post('destroy/skill_master', 'SkillMapController@destroySkillMaster');
 	Route::get('get/skill_master', 'SkillMapController@getSkillMaster');
 
+	Route::get('fetch/skill_value', 'SkillMapController@fetchSkillValue');
+	Route::post('input/skill_value', 'SkillMapController@inputSkillValue');
+	Route::post('destroy/skill_value', 'SkillMapController@destroySkillValue');
+	Route::get('get/skill_value', 'SkillMapController@getSkillValue');
+
 	Route::get('fetch/skill_employee', 'SkillMapController@fetchSkillEmployee');
 	Route::post('input/skill_employee', 'SkillMapController@inputSkillEmployee');
 	Route::post('destroy/skill_employee', 'SkillMapController@destroySkillEmployee');
 	Route::get('get/skill_employee', 'SkillMapController@getSkillEmployee');
+
+	Route::get('fetch/skill_resume', 'SkillMapController@fetchSkillResume');
+});
+
+//NG Jelas Report
+Route::group(['nav' => 'M31', 'middleware' => 'permission'], function(){
+	Route::get('index/audit_ng_jelas_monitoring', 'ProductionReportController@indexNgJelasReport');
 });
 
 //ROOMS
