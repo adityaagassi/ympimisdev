@@ -121,69 +121,114 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<center style="background-color: #ffac26;color: white">
-					<span style="font-weight: bold; font-size: 3vw;">Skill Master</span><br>
-				</center>
-				<hr>
 				<div class="modal-body">
 					<div class="box-body">
-						<div class="col-xs-12">
-							<div class="row">
-								<input type="hidden" id="condition" value="INPUT">
-								<input type="hidden" id="id_skill">
-								<div class="form-group">
-									<label for="" class="col-sm-2 control-label">Skill Code<span class="text-red">*</span></label>
-									<div class="col-sm-10">
-										<input type="text"  class="form-control" name="skill_code" id="skill_code" placeholder="Masukkan Kode Skill">
+						<div class="col-xs-6">
+							<div class="col-xs-12">
+								<center style="background-color: #ffac26;color: white">
+									<span style="font-weight: bold; font-size: 3vw;">Skill Master</span><br>
+								</center>
+								<hr>
+								<div class="row">
+									<input type="hidden" id="condition" value="INPUT">
+									<input type="hidden" id="id_skill">
+									<div class="form-group">
+										<label for="" class="col-sm-2 control-label">Skill Code<span class="text-red">*</span></label>
+										<div class="col-sm-10">
+											<input type="text"  class="form-control" name="skill_code" id="skill_code" placeholder="Masukkan Kode Skill">
+										</div>
+									</div>
+									<div class="form-group" style="padding-top: 30px">
+										<label for="" class="col-sm-2 control-label">Skill Name<span class="text-red">*</span></label>
+										<div class="col-sm-10">
+											<input type="text"  class="form-control" name="skill" id="skill" placeholder="Masukkan Nama Skill">
+										</div>
+									</div>
+									<div class="form-group" style="padding-top: 30px">
+										<label for="" class="col-sm-2 control-label">Process<span class="text-red">*</span></label>
+										<div class="col-sm-10">
+											<select class="form-control select2" data-placeholder="Select Process" name="process_choice" id="process_choice" style="width: 100%" onchange="processChoice(this.value)">
+												<option value=""></option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group" style="padding-top: 30px" id="process_new">
+										<label for="" class="col-sm-2 control-label">New Process<span class="text-red">*</span></label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" name="process" id="process" placeholder="Masukkan Proses Baru">
+										</div>
+									</div>
+									<div class="form-group" style="padding-top: 30px">
+										<label for="" class="col-sm-2 control-label">Required Value<span class="text-red">*</span></label>
+										<div class="col-sm-10">
+											<input type="number" class="form-control" name="value" id="value" placeholder="Masukkan Required Value">
+										</div>
 									</div>
 								</div>
-								<div class="form-group" style="padding-top: 30px">
-									<label for="" class="col-sm-2 control-label">Skill Name<span class="text-red">*</span></label>
-									<div class="col-sm-10">
-										<input type="text"  class="form-control" name="skill" id="skill" placeholder="Masukkan Nama Skill">
-									</div>
-								</div>
-								<div class="form-group" style="padding-top: 30px">
-									<label for="" class="col-sm-2 control-label">Process<span class="text-red">*</span></label>
-									<div class="col-sm-10">
-										<select class="form-control select2" data-placeholder="Select Process" name="process_choice" id="process_choice" style="width: 100%" onchange="processChoice(this.value)">
-											<option value=""></option>
-										</select>
-									</div>
-								</div>
-								<div class="form-group" style="padding-top: 30px" id="process_new">
-									<label for="" class="col-sm-2 control-label">New Process<span class="text-red">*</span></label>
-									<div class="col-sm-10">
-										<input type="text" class="form-control" name="process" id="process" placeholder="Masukkan Proses Baru">
-									</div>
-								</div>
-								<div class="form-group" style="padding-top: 30px">
-									<label for="" class="col-sm-2 control-label">Required Value<span class="text-red">*</span></label>
-									<div class="col-sm-10">
-										<input type="number" class="form-control" name="value" id="value" placeholder="Masukkan Required Value">
-									</div>
+								<div class="form-group" style="padding-top: 20px">
+									<button class="btn btn-danger pull-right" style="margin-left: 5px" onclick="clearMaster()"><b>CLEAR</b></button>
+									<button class="btn btn-success pull-right" onclick="saveMaster()"><b>SAVE</b></button>
 								</div>
 							</div>
-							<div class="form-group" style="padding-top: 20px">
-								<button class="btn btn-danger pull-left" onclick="clearMaster()"><b>CLEAR</b></button>
-								<button class="btn btn-success pull-right" onclick="saveMaster()"><b>SAVE</b></button>
+							<div class="col-xs-12" style="padding-top: 30px">
+								<div class="row">
+									<table id="tableMaster" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+										<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+											<tr>
+												<th>Skill Code</th>
+												<th>Skill Name</th>
+												<th>Process</th>
+												<th>Value</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody id="bodyTableMaster">
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
-						<div class="col-xs-12" style="padding-top: 30px">
-							<div class="row">
-								<table id="tableMaster" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
-									<thead style="background-color: rgb(126,86,134); color: #FFD700;">
-										<tr>
-											<th>Skill Code</th>
-											<th>Skill Name</th>
-											<th>Process</th>
-											<th>Value</th>
-											<th>Action</th>
-										</tr>
-									</thead>
-									<tbody id="bodyTableMaster">
-									</tbody>
-								</table>
+						<div class="col-xs-6">
+							<div class="col-xs-12">
+								<center style="background-color: #ffac26;color: white">
+									<span style="font-weight: bold; font-size: 3vw;">Value Description</span><br>
+								</center>
+								<hr>
+								<div class="row">
+									<input type="hidden" id="condition_value" value="INPUT">
+									<input type="hidden" id="id_value">
+									<div class="form-group">
+										<label for="" class="col-sm-2 control-label">Skill Value<span class="text-red">*</span></label>
+										<div class="col-sm-10">
+											<input type="number"  class="form-control" name="skill_value" id="skill_value" placeholder="Masukkan Skill Value">
+										</div>
+									</div>
+									<div class="form-group" style="padding-top: 30px">
+										<label for="" class="col-sm-2 control-label">Desc.<span class="text-red">*</span></label>
+										<div class="col-sm-10">
+											<input type="text"  class="form-control" name="description" id="description" placeholder="Masukkan Deskripsi Value">
+										</div>
+									</div>
+								</div>
+								<div class="form-group" style="padding-top: 20px">
+									<button class="btn btn-danger pull-right" style="margin-left: 5px" onclick="clearValue()"><b>CLEAR</b></button>
+									<button class="btn btn-success pull-right" onclick="saveValue()"><b>SAVE</b></button>
+								</div>
+							</div>
+							<div class="col-xs-12" style="padding-top: 30px">
+								<div class="row">
+									<table id="tableValue" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+										<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+											<tr>
+												<th>Skill Value</th>
+												<th>Description</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody id="bodyTableValue">
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -281,6 +326,7 @@
 	jQuery(document).ready(function() {
 		fetchSkillMap();
 		clearMaster();
+		clearValue();
 		clearEmployee();
 		$('#process_new').hide();
 		$('.select2').select2({
@@ -509,16 +555,14 @@ function skillAdjusment(employee_id,name,proces) {
 					nilaitetap.push(parseInt(result.skill_map[j].nilai_tetap));
 					if (result.skill_map[j].nilai < result.skill_map[j].nilai_tetap) {
 						var color = '#ffccff';
-						var resultValue = 'Belum Terpenuhi';
 					}else{
 						var color = '#ccffff';
-						var resultValue = 'Terpenuhi';
 					}
 					tableDetail += '<tr style="background-color:'+color+'">';
 					tableDetail += '<td style="padding:0px">'+result.skill_map[j].skill+'</td>';
 					tableDetail += '<td style="padding:0px">'+result.skill_map[j].nilai+'</td>';
 					tableDetail += '<td style="padding:0px">'+result.skill_map[j].nilai_tetap+'</td>';
-					tableDetail += '<td style="padding:0px">'+resultValue+'</td>';
+					tableDetail += '<td style="padding:0px">'+result.skill_map[j].description+'</td>';
 					tableDetail += '</tr>';
 				}
 				tableDetail += '</table>';
@@ -729,6 +773,7 @@ function skillAdjusment(employee_id,name,proces) {
 function showModalSkillMaster() {
 	$('#modalSkillMaster').modal('show');
 	fillTableMaster();
+	fillTableValue();
 }
 
 function saveSkill(employee_id,name,proces) {
@@ -929,6 +974,13 @@ function fillTableMaster() {
 		$('#value').val("");
 		$('#process_choice').val("").trigger('change.select2');
 		$('#process_new').hide();
+	}
+
+	function clearValue() {
+		$('#skill_value').val("");
+		$('#description').val("");
+		$('#condition_value').val("INPUT");
+		$('#id_value').val("");
 	}
 
 	function saveMaster() {
@@ -1182,6 +1234,156 @@ function fillTableMaster() {
 				$('#condition_adjustment').val("UPDATE");
 				$('#id_employee').val(id);
 				$('#employee_choice').focus();
+			}
+			else{
+				audio_error.play();
+				openErrorGritter('Error!', result.message);
+			}
+		})
+	}
+
+	function fillTableValue() {
+		fetchSkillMap();
+		clearValue();
+		var data = {
+			location:'{{$location}}'
+		}
+		$.get('{{ url("fetch/skill_value") }}',data, function(result, status, xhr){
+			if(result.status){
+				$('#tableValue').DataTable().clear();
+				$('#tableValue').DataTable().destroy();
+				$('#bodyTableValue').html("");
+				var tableData = "";
+				$('#process_choice').html("");
+				var process_choice = "";
+				$.each(result.skill_value, function(key, value) {
+					tableData += '<tr>';
+					tableData += '<td>'+ value.value +'</td>';
+					tableData += '<td>'+ value.description +'</td>';
+					tableData += '<td><button class="btn btn-warning btn-sm" onclick="editValue('+value.id+')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>  <button class="btn btn-danger btn-sm" onclick="deleteValue('+value.id+')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+					tableData += '</tr>';
+				});
+				$('#bodyTableValue').append(tableData);
+
+				var table = $('#tableValue').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+			}
+			else{
+				alert('Attempt to retrieve data failed');
+			}
+		});
+	}
+
+	function saveValue() {
+		if ($('#skill_value').val() == "" || $('#description').val() == "") {
+			alert('Semua data harus diisi.');
+		}else{
+			var data = {
+				location:'{{$location}}',
+				value:$('#skill_value').val(),
+				description:$('#description').val(),
+				condition_value:$('#condition_value').val(),
+				id_value:$('#id_value').val(),
+			}
+
+			$.post('{{ url("input/skill_value") }}',data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					fillTableValue();
+					clearValue();
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error!', result.message);
+				}
+			})
+		}
+	}
+
+	function deleteValue(id) {
+		var data = {
+			location:'{{$location}}',
+			id:id,
+		}
+
+		if (confirm('Apakah Anda yakin akan menghapus data ini?')) {
+			$.post('{{ url("destroy/skill_value") }}',data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					fillTableValue();
+					clearValue();
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error!', result.message);
+				}
+			})
+		}
+	}
+
+	function editValue(id) {
+		var data = {
+			location:'{{$location}}',
+			id:id,
+		}
+		$.get('{{ url("get/skill_value") }}',data, function(result, status, xhr){
+			if(result.status){
+				openSuccessGritter('Success!', result.message);
+				$('#condition_value').val("UPDATE");
+				$('#id_value').val(id);
+				$('#skill_value').val(result.skill.value);
+				$('#description').val(result.skill.description);
+				$('#skill_value').focus();
 			}
 			else{
 				audio_error.play();

@@ -16,6 +16,7 @@ use App\Mail\SendEmail;
 use App\SkillEmployee;
 use App\Skill;
 use App\SkillMap;
+use App\SkillValue;
 use App\EmployeeSync;
 
 class SkillMapController extends Controller
@@ -119,7 +120,8 @@ class SkillMapController extends Controller
 				skills.skill,
 				skill_maps.value AS nilai,
 				skills.value AS nilai_tetap,
-				skill_maps.process
+				skill_maps.process,
+                (select description from skill_values where location = skill_maps.location and skill_maps.value = skill_values.value) as description
 			FROM
 				skill_maps
 				LEFT JOIN skills ON skills.skill_code = skill_maps.skill_code
@@ -539,5 +541,100 @@ class SkillMapController extends Controller
 			);
 			return Response::json($response);
     	}
+    }
+
+    public function fetchSkillValue(Request $request)
+    {
+        try {
+            $skill_value = SkillValue::where('location',$request->get('location'))->get();
+
+            $response = array(
+                'status' => true,
+                'skill_value' => $skill_value,
+                'message' => 'Get Skill Value Success.',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function inputSkillValue(Request $request)
+    {
+        try {
+            $id_user = Auth::id();
+            if ($request->get('condition_value') == 'INPUT') {
+                SkillValue::create([
+                    'value' => $request->get('value'),
+                    'description' => $request->get('description'),
+                    'location' => $request->get('location'),
+                    'created_by' => $id_user
+                ]);
+            }else{
+                $skill = SkillValue::find($request->get('id_value'));
+                $skill->value = $request->get('value');
+                $skill->description = $request->get('description');
+                $skill->location = $request->get('location');
+                $skill->save();
+            }
+
+            $response = array(
+                'status' => true,
+                'message' => 'Save Skill Value Success.',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function destroySkillValue(Request $request)
+    {
+        try {
+            $id_user = Auth::id();
+
+            $skill = SkillValue::find($request->get('id'));
+            $skill->delete();
+
+            $response = array(
+                'status' => true,
+                'message' => 'Delete Skill Value Success',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function getSkillValue(Request $request)
+    {
+        try {
+            $skill = SkillValue::find($request->get('id'));
+
+            $response = array(
+                'status' => true,
+                'skill' => $skill,
+                'message' => 'Get Skill Value Success.',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
     }
 }
