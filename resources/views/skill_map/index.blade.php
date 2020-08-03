@@ -70,6 +70,7 @@
 		<div class="col-xs-12">
 			<button class="btn btn-warning" style="padding-left: 10px;font-weight: bold;" onclick="showModalSkillMaster();">Skill Master</button>
 			<button class="btn btn-primary" onclick="showModalEmployeeAdjustment();" style="font-weight: bold;">Employee Adjustment</button>
+			<button class="btn btn-success" onclick="showModalResume();" style="font-weight: bold;">Resume</button>
 		</div>
 		<div class="col-xs-12" style="padding-top: 10px">
 			<div id="tableSkillMap" style="overflow-x:auto">
@@ -301,6 +302,47 @@
 				<div class="modal-footer">
 					<div class="col-xs-12">
 						<div class="row" id="skillFooter">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalResume">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<center style="background-color: #ffac26;color: white">
+					<span style="font-weight: bold; font-size: 3vw;">Skill Resume</span><br>
+				</center>
+				<hr>
+				<div class="modal-body" style="min-height: 100px; padding-bottom: 5px;">
+					<div class="col-xs-12">
+						<div class="row">
+							<table id="tableResume" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+									<tr>
+										<th>Skill</th>
+										<th>Jumlah Nilai Skill ≥ 3</th>
+										<th>Jumlah orang dengan nilai skill 1</th>
+										<th>Jumlah orang dengan nilai skill 2</th>
+										<th>Jumlah orang dengan nilai skill 3</th>
+										<th>Jumlah orang dengan nilai skill 4</th>
+										<th>Prosentase kekuatan proses dengan skill 3</th>
+										<th>Prosentase kekuatan proses dengan skill 1-4</th>
+									</tr>
+								</thead>
+								<tbody id="bodyTableResume">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="col-xs-12">
+						<div class="row" id="footer_resume">
 						</div>
 					</div>
 				</div>
@@ -1388,6 +1430,95 @@ function fillTableMaster() {
 			else{
 				audio_error.play();
 				openErrorGritter('Error!', result.message);
+			}
+		})
+	}
+
+	function showModalResume() {
+		$('#modalResume').modal('show');
+		fillResume();
+	}
+
+	function fillResume() {
+		var data = {
+			location:'{{$location}}'
+		}
+		$.get('{{ url("fetch/skill_resume") }}',data, function(result, status, xhr){
+			if (result.status) {
+				$('#tableResume').DataTable().clear();
+				$('#tableResume').DataTable().destroy();
+				$('#bodyTableResume').html("");
+				var tableData = "";
+				$.each(result.resume, function(key, value) {
+					var jumlah_all = ((value.jumlah_satu + value.jumlah_dua + value.jumlah_tiga +value.jumlah_empat)/value.jumlah_orang) * 100;
+					tableData += '<tr>';
+					tableData += '<td>'+ value.skill +'</td>';
+					tableData += '<td>'+ value.jumlah_lebih_tiga +'</td>';
+					tableData += '<td>'+ value.jumlah_satu +'</td>';
+					tableData += '<td>'+ value.jumlah_dua +'</td>';
+					tableData += '<td>'+ value.jumlah_tiga +'</td>';
+					tableData += '<td>'+ value.jumlah_empat +'</td>';
+					tableData += '<td>'+ Math.round(value.persen_lebih_tiga) +' %</td>';
+					tableData += '<td>'+ Math.round(jumlah_all) +' %</td>';
+					tableData += '</tr>';
+				});
+				$('#bodyTableResume').append(tableData);
+
+				var table = $('#tableResume').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+			}else{
+				audio_error.play();
+				alert('Attempt to retrieve data failed');
 			}
 		})
 	}

@@ -121,7 +121,7 @@ class SkillMapController extends Controller
 				skill_maps.value AS nilai,
 				skills.value AS nilai_tetap,
 				skill_maps.process,
-                (select description from skill_values where location = skill_maps.location and skill_maps.value = skill_values.value) as description
+                (select description from skill_values where location = skill_maps.location and skill_maps.value = skill_values.value and skill_values.deleted_at is null) as description
 			FROM
 				skill_maps
 				LEFT JOIN skills ON skills.skill_code = skill_maps.skill_code
@@ -627,6 +627,34 @@ class SkillMapController extends Controller
                 'status' => true,
                 'skill' => $skill,
                 'message' => 'Get Skill Value Success.',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function fetchSkillResume(Request $request)
+    {
+        try {
+            $resume = DB::SELECT("SELECT DISTINCT(skill),
+                (select count(employee_id) from skill_maps where skill_maps.value >= 3 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_lebih_tiga,
+                (select count(employee_id) from skill_maps where skill_maps.value = 1 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_satu,
+                (select count(employee_id) from skill_maps where skill_maps.value >= 2 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_dua,
+                (select count(employee_id) from skill_maps where skill_maps.value >= 3 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_tiga,
+                (select count(employee_id) from skill_maps where skill_maps.value >= 4 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_empat,
+                COALESCE(((select count(employee_id) from skill_maps where skill_maps.value >= 3 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."')/(select count(DISTINCT(employee_id)) from skill_maps where skill_maps.location = '".$request->get('location')."')*100),0) as persen_lebih_tiga,
+                (select count(DISTINCT(employee_id)) from skill_maps where skill_maps.location = '".$request->get('location')."') as jumlah_orang
+                FROM skills");
+
+            $response = array(
+                'status' => true,
+                'resume' => $resume,
+                'message' => 'Get Skill Success.',
             );
             return Response::json($response);
         } catch (\Exception $e) {
