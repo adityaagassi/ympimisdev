@@ -229,7 +229,7 @@
           $('#kdo_number_settlement').keydown(function(event) {
                if (event.keyCode == 13 || event.keyCode == 9) {
                     if($("#invoice_number").val().length == 6 && $("#container_id").val() != ""){
-                         if($("#kdo_number_settlement").val().length == 10){
+                         if($("#kdo_number_settlement").val().length >= 10){
                               scanKdoNumber();
                               return false;
                          }
