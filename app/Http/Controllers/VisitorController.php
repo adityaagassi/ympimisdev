@@ -435,47 +435,55 @@ public function inputtag(Request $request){
 			$id_visitor = $visitorDetail->id_visitor;
 
 			$visitor = Visitor::find($id_visitor);
-			$visitor->location = 'Lobby';
-			$visitor->save();
+			if ($visitor->location == 'Lobby') {
+				$visitor2 = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->where('visitors.id',$id_visitor)->first();
+			}else if ($visitor->location == 'Security' && $visitor->destination != 'Office') {
+				$visitor2 = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->where('visitors.id',$id_visitor)->first();
+			}else if($visitor->location == 'Security' && $visitor->destination == 'Office'){
+				$visitor->location = 'Lobby';
+				$visitor->save();
 
-			$visitor2 = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->where('visitors.id',$id_visitor)->first();
+				$visitor2 = Visitor::join('employee_syncs','employee_syncs.employee_id','=','visitors.employee')->where('visitors.id',$id_visitor)->first();
 
-			$plc = PlcCounter::where('origin_group_code','visitor_lobby')->first();
-	    	$counter = $plc->plc_counter;
-	    	$id_plc = $plc->id;
+				$plc = PlcCounter::where('origin_group_code','visitor_lobby')->first();
+		    	$counter = $plc->plc_counter;
+		    	$id_plc = $plc->id;
 
-			$plccounter = PlcCounter::find($id_plc);
-			$plccounter->plc_counter = 0;
-			$plccounter->save();
+				$plccounter = PlcCounter::find($id_plc);
+				$plccounter->plc_counter = 0;
+				$plccounter->save();
 
-			$plc2 = PlcCounter::where('origin_group_code','visitor_lobby2')->first();
-	    	$counter2 = $plc2->plc_counter;
-	    	$id_plc2 = $plc2->id;
+				$plc2 = PlcCounter::where('origin_group_code','visitor_lobby2')->first();
+		    	$counter2 = $plc2->plc_counter;
+		    	$id_plc2 = $plc2->id;
 
-			$plccounter2 = PlcCounter::find($id_plc2);
-			$plccounter2->plc_counter = 0;
-			$plccounter2->save();
+				$plccounter2 = PlcCounter::find($id_plc2);
+				$plccounter2->plc_counter = 0;
+				$plccounter2->save();
 
-			$plc_sec = PlcCounter::where('origin_group_code','visitor')->first();
-	    	$counter_sec = $plc_sec->plc_counter;
-	    	$id_plc_sec = $plc_sec->id;
+				$plc_sec = PlcCounter::where('origin_group_code','visitor')->first();
+		    	$counter_sec = $plc_sec->plc_counter;
+		    	$id_plc_sec = $plc_sec->id;
 
-			$plccounter_sec = PlcCounter::find($id_plc_sec);
-			$plccounter_sec->plc_counter = $counter_sec - 1;
-			$plccounter_sec->save();
+				$plccounter_sec = PlcCounter::find($id_plc_sec);
+				$plccounter_sec->plc_counter = $counter_sec - 1;
+				$plccounter_sec->save();
 
-			$plc_sec2 = PlcCounter::where('origin_group_code','visitor2')->first();
-	    	$counter_sec2 = $plc_sec2->plc_counter;
-	    	$id_plc_sec2 = $plc_sec2->id;
+				$plc_sec2 = PlcCounter::where('origin_group_code','visitor2')->first();
+		    	$counter_sec2 = $plc_sec2->plc_counter;
+		    	$id_plc_sec2 = $plc_sec2->id;
 
-			$plccounter_sec2 = PlcCounter::find($id_plc_sec2);
-			$plccounter_sec2->plc_counter = $counter_sec2 - 1;
-			$plccounter_sec2->save();
+				$plccounter_sec2 = PlcCounter::find($id_plc_sec2);
+				$plccounter_sec2->plc_counter = $counter_sec2 - 1;
+				$plccounter_sec2->save();
+			}
 
 			$response = array(
 				'status' => true,
 				'message' => 'Scan Success',
-				'visitor' => $visitor2
+				'visitor' => $visitor2,
+				'location' => $visitor->location,
+				'destination' => $visitor->destination
 			);
 			return Response::json($response);
 		}

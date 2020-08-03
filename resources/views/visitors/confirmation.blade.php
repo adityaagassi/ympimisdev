@@ -402,7 +402,13 @@
 						if(result.status){
 							$('#tag_visitor').val('');
 							$('#modal_tamu').modal('show');
-							$('#tamu').html('<center><b>Tunggu Sebentar, '+result.visitor.name+' Akan menemui Anda.</b></center>');
+							if (result.location == 'Security' && result.destination == 'Office') {
+								$('#tamu').html('<center><b>Tunggu Sebentar, '+result.visitor.name+' Akan menemui Anda.</b></center>');
+							}else if(result.location == 'Lobby' && result.destination == 'Office'){
+								$('#tamu').html('<center><b>Tunggu Sebentar, '+result.visitor.name+' Akan menemui Anda.</b></center>');
+							}else if(result.location == 'Security' && result.destination != 'Office'){
+								$('#tamu').html('<center><b>Mohon Maaf, tujuan Anda adalah '+result.destination+'. Silahkan menghubungi '+result.visitor.name+' untuk informasi lebih lanjut.</b></center>');
+							}
 							openSuccessGritter('Success!', result.message);
 						}
 						else{
