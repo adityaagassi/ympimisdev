@@ -346,7 +346,7 @@ class ProductionReportController extends Controller
                         jishu_hozens
                         JOIN activity_lists AS actlist ON actlist.id = activity_list_id 
                     WHERE
-                        MONTH = '".$bulan."' 
+                        jishu_hozens.month = '".$bulan."' 
                         AND actlist.frequency = 'Monthly' 
                         AND jishu_hozens.leader = '".$dataleader."' 
                         AND jishu_hozens.deleted_at IS NULL 
@@ -2812,6 +2812,20 @@ class ProductionReportController extends Controller
           );
 
       return Response::json($response);
+    }
+    
+    public function indexNgJelasReport()
+    {
+        $department = DB::SELECT("SELECT DISTINCT(department_id),UPPER(department_name) as department_name from activity_lists left join departments on departments.id = activity_lists.department_id");
+
+        $title = 'Audit NG Jelas Report';
+        $title_jp = '??';
+
+        return view('production_report.audit_ng_jelas', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'department' => $department
+        ))->with('page', 'Audit NG Jelas Report');
     }
 }
 
