@@ -1296,8 +1296,6 @@ function fillTableMaster() {
 				$('#tableValue').DataTable().destroy();
 				$('#bodyTableValue').html("");
 				var tableData = "";
-				$('#process_choice').html("");
-				var process_choice = "";
 				$.each(result.skill_value, function(key, value) {
 					tableData += '<tr>';
 					tableData += '<td>'+ value.value +'</td>';
