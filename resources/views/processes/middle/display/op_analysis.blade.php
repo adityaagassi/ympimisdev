@@ -248,8 +248,8 @@
 			autoclose: true,
 			todayHighlight: true
 		});
-		fetchChart();
-		setInterval(fetchChart, 20000);
+		// fetchChart();
+		// setInterval(fetchChart, 20000);
 	});
 
 	Highcharts.createElement('link', {
