@@ -483,7 +483,11 @@
 		            opall.push(value.op);
 		            act_time.push(parseFloat(value.act_time));
 		            loss_time.push(value.loss_time);
-		            loss_time2.push(value.loss_time_std);
+		            var loss_time_std = 0;
+		            if(value.loss_time_std > 0){
+		            	loss_time_std = value.loss_time_std
+		            }
+		            loss_time2.push(loss_time_std);
 		            op = op + value.op;
 		            wt = wt + parseFloat(value.all_time);
 		            lt = lt + value.loss_time;
