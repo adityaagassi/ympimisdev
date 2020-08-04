@@ -42,7 +42,12 @@
 </style>
 @stop
 @section('header')
-@endsection
+<section class="content-header">
+	<h1>
+		{{ $title }} <span class="text-purple">{{ $title_jp }}</span>
+	</h1>
+</section>
+@stop
 @section('content')
 <section class="content" style="padding-top: 0;">
 	@if (session('status'))
@@ -541,6 +546,7 @@
 				})
 			}
 			else{
+				$('#loading').hide();
 				alert('Attempt to retrieve data failed.');
 			}
 		});
