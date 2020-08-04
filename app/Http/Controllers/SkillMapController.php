@@ -63,7 +63,20 @@ class SkillMapController extends Controller
     {
     	try {
     		$location = $request->get('location');
-    		$process = DB::SELECT("SELECT DISTINCT(process) FROM `skills` where location = '".$location."' and skills.deleted_at is null order by process ");
+            $addProcess = "";
+            if($request->get('process') != null) {
+                $processs = explode(",", $request->get('process'));
+                $process = "";
+
+                for($x = 0; $x < count($processs); $x++) {
+                    $process = $process."'".$processs[$x]."'";
+                    if($x != count($processs)-1){
+                        $process = $process.",";
+                    }
+                }
+                $addProcess = "and process in (".$process.") ";
+            }
+    		$process = DB::SELECT("SELECT DISTINCT(process) FROM `skills` where location = '".$location."' ".$addProcess." and skills.deleted_at is null order by process ");
 
     		$emp = [];
     		$skill_map = [];

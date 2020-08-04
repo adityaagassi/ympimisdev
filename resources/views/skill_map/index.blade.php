@@ -71,9 +71,20 @@
 			<button class="btn btn-warning" style="padding-left: 10px;font-weight: bold;" onclick="showModalSkillMaster();">Skill Master</button>
 			<button class="btn btn-primary" onclick="showModalEmployeeAdjustment();" style="font-weight: bold;">Employee Adjustment</button>
 			<button class="btn btn-success" onclick="showModalResume();" style="font-weight: bold;">Resume</button>
+			<div class="pull-right">
+				<div class="input-group">
+					<select class="form-control select4" multiple="multiple" id="processSelect" data-placeholder="Select Process" onchange="changeProcess()">
+						@foreach($process as $process)
+						<option value="{{ $process->process }}">{{ $process->process }}</option>
+						@endforeach
+					</select>
+					<input type="text" name="processFix" id="processFix" hidden>
+					<button class="btn btn-success" onclick="fetchSkillMap()">Search</button>
+				</div>
+			</div>
 		</div>
-		<div class="col-xs-12" style="padding-top: 10px">
-			<div id="tableSkillMap" style="overflow-x:auto">
+		<div class="col-xs-12" style="padding-top: 20px">
+			<div id="tableSkillMap"  style="overflow-x: scroll;">
 			</div>
 		</div>
 	</div>
@@ -377,27 +388,13 @@
 		$('.select3').select2({
 			dropdownParent: $('#modalEmployeeAdjustment')
 		});
-		// clearAll();
-		// fetchDriver();
-		// fetchRequest();
-		// fetchDriverDuty();
-		// $('#dateFrom').datepicker({
-		// 	autoclose: true,
-		// 	todayHighlight: true
-		// });
-		// $('#dateTo').datepicker({
-		// 	autoclose: true,
-		// 	todayHighlight: true
-		// });
-		// $('.datepicker').datepicker({
-		// 	autoclose: true,
-		// 	format: "yyyy-mm-dd",
-		// 	todayHighlight: true	
-		// });
-		// setInterval(fetchRequest, 30000);
-		// setInterval(fetchDriverDuty, 30000);
-		// setInterval(fetchDriver, 30000);
+		$('.select4').select2({
+		});
 	});
+
+	function changeProcess() {
+		$("#processFix").val($("#processSelect").val());
+	}
 	
 	$('.timepicker').timepicker({
 		use24hours: true,
@@ -411,7 +408,8 @@
 
 	function fetchSkillMap(){
 		var data = {
-			location:'{{$location}}'
+			location:'{{$location}}',
+			process:$('#processFix').val()
 		}
 		$.get('{{ url("fetch/skill_map") }}',data, function(result, status, xhr){
 			if(result.status){
@@ -819,6 +817,7 @@ function showModalSkillMaster() {
 }
 
 function saveSkill(employee_id,name,proces) {
+	$('#loading').show();
 	var skill = [];
 	var count = [];
 
@@ -853,11 +852,13 @@ function saveSkill(employee_id,name,proces) {
 
 	$.post('{{ url("input/skill_adjustment") }}',data, function(result, status, xhr){
 		if(result.status){
+			$('#loading').hide();
 			openSuccessGritter('Success!', result.message);
 			fetchSkillMap();
 			skillAdjusment(employee_id,name,proces);
 		}
 		else{
+			$('#loading').hide();
 			audio_error.play();
 			openErrorGritter('Error!', result.message);
 		}
@@ -1029,6 +1030,7 @@ function fillTableMaster() {
 		if ($('#skill_code').val() == "" || $('#skill').val() == "" || $('#value').val() == "") {
 			alert('Semua data harus diisi.');
 		}else{
+			$('#loading').show();
 			if ($('#process_choice').val() == 'Lain-lain') {
 				var proces = $('#process').val();
 			}else{
@@ -1052,8 +1054,10 @@ function fillTableMaster() {
 						openSuccessGritter('Success!', result.message);
 						fillTableMaster();
 						clearMaster();
+						$('#loading').hide();
 					}
 					else{
+						$('#loading').hide();
 						audio_error.play();
 						openErrorGritter('Error!', result.message);
 					}
@@ -1220,6 +1224,7 @@ function fillTableMaster() {
 		if ($('#employee_choice').val() == "" || $('#process_adjustment').val() == "") {
 			alert('Semua data harus diisi.');
 		}else{
+			$('#loading').show();
 			var data = {
 				location:'{{$location}}',
 				process:$('#process_adjustment').val(),
@@ -1235,6 +1240,7 @@ function fillTableMaster() {
 					clearEmployee();
 				}
 				else{
+					$('#loading').hide();
 					audio_error.play();
 					openErrorGritter('Error!', result.message);
 				}
@@ -1368,6 +1374,7 @@ function fillTableMaster() {
 		if ($('#skill_value').val() == "" || $('#description').val() == "") {
 			alert('Semua data harus diisi.');
 		}else{
+			$('#loading').show();
 			var data = {
 				location:'{{$location}}',
 				value:$('#skill_value').val(),
@@ -1383,6 +1390,7 @@ function fillTableMaster() {
 					clearValue();
 				}
 				else{
+					$('#loading').hide();
 					audio_error.play();
 					openErrorGritter('Error!', result.message);
 				}
@@ -1755,5 +1763,9 @@ function openErrorGritter(title, message) {
 		time: '3000'
 	});
 }
+
+
 </script>
+
+
 @endsection
