@@ -227,8 +227,8 @@
 			endDate: now
 		});
 		$('.select2').select2();
-		fetchChart();
-		setInterval(fetchChart, 300000);
+		// fetchChart();
+		// setInterval(fetchChart, 300000);
 	});
 
 	Highcharts.createElement('link', {
