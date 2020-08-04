@@ -1,4 +1,4 @@
-@extends('layouts.display')
+@extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
@@ -67,7 +67,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-12">
+		<div class="col-xs-12" style="margin-top: 20px">
 			<button class="btn btn-warning" style="padding-left: 10px;font-weight: bold;" onclick="showModalSkillMaster();">Skill Master</button>
 			<button class="btn btn-primary" onclick="showModalEmployeeAdjustment();" style="font-weight: bold;">Employee Adjustment</button>
 			<button class="btn btn-success" onclick="showModalResume();" style="font-weight: bold;">Resume</button>
@@ -377,6 +377,7 @@
 	});
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		fetchSkillMap();
 		clearMaster();
 		clearValue();
@@ -419,14 +420,14 @@
 				$('#tableSkillMap').empty();
 				var indexindex = 0;
 				var index2 = 0;
-				tableSkill += '<table class="table table-bordered" style="width:100%">';
+				tableSkill += '<table class="table table-bordered" style="width:100%;border:2px solid black;">';
 				$.each(result.process, function(key, value) {
 					var index3 = 0;
 					var modal = '#modalSkillAdjusment';
 					tableSkill += '<tr>';
-					tableSkill += '<td style="color:white;width:50px;font-size:15px"><b>'+value.process+'</b></td>';
+					tableSkill += '<td style="color:black;width:50px;font-size:15px;border:2px solid black"><b>'+value.process+'</b></td>';
 					for(var i = 0;i < result.emp[key].length; i++){
-						tableSkill += '<td onclick="showModalSkillAdjusment(\''+modal+'\',this.id,\''+result.emp[key][i].name+'\',\''+value.process+'\')" class="nama_operator" id="'+result.emp[key][i].employee_id+'" style="color:white;"><span style="font-weight:bold">'+result.emp[key][i].employee_id+'</span><br><span style="">'+result.emp[key][i].name.split(' ').slice(0,2).join(' ')+'</span><br><div id="container_'+indexindex+'" style="width:300px"></div></td>';
+						tableSkill += '<td onclick="showModalSkillAdjusment(\''+modal+'\',this.id,\''+result.emp[key][i].name+'\',\''+value.process+'\')" class="nama_operator" id="'+result.emp[key][i].employee_id+'" style="color:black;border:2px solid black;"><div style="width:100%;background-color:#a4eb34;padding-bottom:0px"><span style="font-weight:bold;">'+result.emp[key][i].employee_id+'</span><br><span style="">'+result.emp[key][i].name.split(' ').slice(0,2).join(' ')+'</span></div><div id="container_'+indexindex+'" style="width:300px;padding-top:0px"></div></td>';
 							indexindex++;
 						index3++;
 					}
@@ -1238,6 +1239,7 @@ function fillTableMaster() {
 					openSuccessGritter('Success!', result.message);
 					fillTableEmployee();
 					clearEmployee();
+					$('#loading').hide();
 				}
 				else{
 					$('#loading').hide();
@@ -1388,6 +1390,7 @@ function fillTableMaster() {
 					openSuccessGritter('Success!', result.message);
 					fillTableValue();
 					clearValue();
+					$('#loading').hide();
 				}
 				else{
 					$('#loading').hide();
