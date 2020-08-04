@@ -15,6 +15,7 @@ use App\AccExchangeRate;
 use App\AccItem;
 use App\AccItemCategory;
 use App\AccBudget;
+use App\AccBudgetHistory;
 use App\AccSupplier;
 use App\AccPurchaseRequisition;
 use App\AccPurchaseRequisitionItem;
@@ -166,7 +167,8 @@ class AccountingController extends Controller
             $id_user = Auth::id();
 
             $inv = AccSupplier::where('id', $request->get('id'))
-            ->update(['vendor_code' => $request->get('vendor_code') , 'supplier_name' => $request->get('supplier_name') , 'supplier_address' => $request->get('supplier_address') , 'supplier_city' => $request->get('supplier_city') , 'supplier_phone' => $request->get('supplier_phone') , 'supplier_fax' => $request->get('supplier_fax') , 'contact_name' => $request->get('contact_name') , 'supplier_npwp' => $request->get('supplier_npwp') , 'supplier_duration' => $request->get('supplier_duration') , 'position' => $request->get('position') , 'supplier_status' => $request->get('supplier_status') , 'created_by' => $id_user]);
+            ->update(['vendor_code' => $request->get('vendor_code') , 'supplier_name' => $request->get('supplier_name') , 'supplier_address' => $request->get('supplier_address') , 'supplier_city' => $request->get('supplier_city') , 'supplier_phone' => $request->get('supplier_phone') , 'supplier_fax' => $request->get('supplier_fax') , 'contact_name' => $request->get('contact_name') , 'supplier_npwp' => $request->get('supplier_npwp') , 'supplier_duration' => $request->get('supplier_duration') , 'position' => $request->get('position') , 'supplier_status' => $request->get('supplier_status') , 'created_by' => $id_user
+            ]);
 
             $response = array(
                 'status' => true,
@@ -817,9 +819,6 @@ class AccountingController extends Controller
 
         if ($nomorurut != null)
         {
-            // foreach ($nomordepan as $nomors) {
-            //   $nomor = $nomors->id+1;
-            // }
             $nomor = substr($nomorurut[0]->no_pr, -3);
             $nomor = $nomor + 1;
             $nomor = sprintf('%03d', $nomor);
@@ -919,7 +918,6 @@ class AccountingController extends Controller
             $manager = null;
             $posisi = null;
 
-
             //jika PE maka Pak Alok
 
             if ($request->get('department') == "Production Engineering")
@@ -959,7 +957,6 @@ class AccountingController extends Controller
 
 
             // Jika gaada manager di departemen itu
-
             else
             {
                 $posisi = "dgm";
@@ -1046,9 +1043,65 @@ class AccountingController extends Controller
                     'item_spec' => $request->get($item_spec) ,
                     'item_stock' => $request->get($item_stock) , 
                     'item_request_date' => $request->get($item_request_date), 
-                    'item_currency' => $current, 'item_price' => $price_real, 'item_qty' => $request->get($item_qty) , 'item_uom' => $request->get($item_uom) , 'item_amount' => $amount, 'status' => $status, 'created_by' => $id]);
+                    'item_currency' => $current, 
+                    'item_price' => $price_real, 
+                    'item_qty' => $request->get($item_qty),
+                    'item_uom' => $request->get($item_uom),
+                    'item_amount' => $amount,
+                    'status' => $status,
+                    'created_by' => $id
+                ]);
 
                 $data2->save();
+
+                $dollar = "konversi_dollar" . $i;
+                $month = strtolower(date("M",strtotime($request->get($item_request_date))));
+
+                $data3 = new AccBudgetHistory([
+                    'budget' => $request->get('budget_no'),
+                    'budget_month' => $month,
+                    'budget_date' => $request->get($item_request_date),
+                    'category' => 'PR',
+                    'category_number' => $request->get('no_pr'),
+                    'no_item' => $request->get($item_code),
+                    'amount' => $request->get($dollar),
+                    'created_by' => $id
+                ]);
+
+                $data3->save();
+            }
+
+            for($j=1;$j<=12;$j++) {
+                
+                $totalPembelian = $request->get('TotalPembelian'.$j);
+                
+                if ($totalPembelian != null) {
+                    //Convert To Date
+                    $datePembelian = date('Y')."-".$j."-01";
+                    
+                    //FY
+                    $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
+
+                    foreach ($fy as $fys) {
+                        $fiscal = $fys->fiscal_year;
+                    }
+
+                    //get Month From Date
+                    $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
+
+                    //sisa budget bulan berapa
+                    $sisa_bulan = $bulan.'_sisa_budget';                    
+
+                    //get Data Budget Based On Periode Dan Nomor
+                    $budget = AccBudget::where('budget_no','=',$request->get('budget_no'))->where('periode','=', $fiscal)->first();
+
+                    //perhitungan 
+                    $total = $budget->$sisa_bulan - $totalPembelian;
+
+                    $dataupdate = AccBudget::where('budget_no',$request->get('budget_no'))->where('periode', $fiscal)->update([
+                        $sisa_bulan => $total
+                    ]);
+                }
             }
 
             $detail_pr = AccPurchaseRequisition::select('*')
@@ -1638,8 +1691,12 @@ class AccountingController extends Controller
     public function edit_purchase_requisition(Request $request)
     {
         $purchase_requistion = AccPurchaseRequisition::find($request->get('id'));
-        $purchase_requistion_item = AccPurchaseRequisition::join('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')->where('acc_purchase_requisitions.id', '=', $request->get('id'))
-        ->get();
+        $purchase_requistion_item = AccPurchaseRequisition::join('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')->join('acc_budget_histories', function($join) {
+                             $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                             $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_code');
+                         })->where('acc_purchase_requisitions.id', '=', $request->get('id'))->get();
+
+
 
         $response = array(
             'status' => true,
@@ -1658,7 +1715,6 @@ class AccountingController extends Controller
         {
             foreach ($lop as $lp)
             {
-
                 $item_code = "item_code_edit" . $lp;
                 $item_desc = "item_desc_edit" . $lp;
                 $item_spec = "item_spec_edit" . $lp;
@@ -1747,8 +1803,22 @@ class AccountingController extends Controller
                 ]);
 
                 $data2->save();
-            }
 
+                $dollar = "konversi_dollar" . $i;
+                $month = strtolower(date("M",strtotime($request->get($item_req))));
+
+                $data3 = new AccBudgetHistory([
+                    'budget' => $request->get('no_budget_edit'),
+                    'budget_month' => $month,
+                    'category' => 'PR',
+                    'category_number' => $request->get('no_pr_edit'),
+                    'no_item' => $request->get($item_code),
+                    'amount' => $request->get($dollar),
+                    'created_by' => $id
+                ]);
+
+                $data3->save();
+            }
 
             $detail_pr = AccPurchaseRequisition::select('*')
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
@@ -1829,11 +1899,37 @@ class AccountingController extends Controller
 
     public function delete_item_pr(Request $request)
     {
-
         try
         {
-            $master = AccPurchaseRequisitionItem::where('id', '=', $request->get('id'))
+            $master_item = AccPurchaseRequisitionItem::find($request->get('id'));
+
+            $budget_log = AccBudgetHistory::where('no_item', '=', $master_item->item_code)
+            ->where('category_number', '=', $master_item->no_pr)
+            ->first();
+
+            $date = date('Y-m-d');
+            //FY
+            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+            foreach ($fy as $fys) {
+                $fiscal = $fys->fiscal_year;
+            }
+
+            $sisa_bulan = $budget_log->budget_month.'_sisa_budget';
+
+            $budget = AccBudget::where('budget_no', $budget_log->budget)->where('periode', $fiscal)->first();
+
+            $total = $budget->$sisa_bulan + $budget_log->amount; //add total
+
+            $dataupdate = AccBudget::where('budget_no', $budget_log->budget)->where('periode', $fiscal)->update([
+                $sisa_bulan => $total
+            ]);
+
+            $delete_budget_log = AccBudgetHistory::where('no_item', '=', $master_item->item_code)
+            ->where('category_number', '=', $master_item->no_pr)
             ->delete();
+
+            $delete_item = AccPurchaseRequisitionItem::where('id', '=', $request->get('id'))->delete();
+
         }
         catch(QueryException $e)
         {

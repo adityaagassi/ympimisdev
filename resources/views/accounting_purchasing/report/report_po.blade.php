@@ -75,7 +75,9 @@
 					<td colspan="10"><br></td>
 				</tr>
 				<tr>
-					<td colspan="10" style="text-align:center;font-size: 20px;font-weight: bold;font-style: italic"><div class="line"><span>PURCHASE ORDER</span><div></td>
+					<td colspan="10" style="text-align:center;font-size: 20px;font-weight: bold;font-style: italic">
+						<div class="line"><span>@if($po[0]->goods_price != "0") PURCHASE @elseif($po[0]->service_price != "0") JOB @endif ORDER</span><div>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="10" style="font-size: 12px;font-weight: bold;">Vendor</td>
@@ -186,13 +188,13 @@
 				</tr>
 
 				<tr>
-					<td colspan="3" style="font-size: 11px"><b>W/H Tax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {{$po[0]->holding_tax}}</td>
-					<td colspan="3" style="font-size: 11px"><b>Buyer &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {{$po[0]->buyer_name}}</td>
+					<td colspan="3" style="font-size: 11px"><b>Payment &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {{$po[0]->supplier_due_payment}}</td>
+					<td colspan="3" style="font-size: 11px"><b>W/H Tax &nbsp;:</b> {{$po[0]->holding_tax}} %</td>
 					<td colspan="4">Kab. Pasuruan Jawa Timur 67152</td>
 				</tr>
 
 				<tr>
-					<td colspan="3" style="font-size: 11px"><b>Payment &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {{$po[0]->supplier_due_payment}}</td>
+					<td colspan="3" style="font-size: 11px"><b>Buyer &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {{$po[0]->buyer_name}}</td>
 					<td colspan="3" style="font-size: 11px"><b>Currency :</b> {{$po[0]->currency}}</td>
 					<td colspan="4">NPWP : 01.824.283.4-052.000</td>
 				</tr>
@@ -215,7 +217,11 @@
 					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Delivery Date</td>
 					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Qty</td>
 					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">UM</td>
+					@if($po[0]->goods_price != "0") 
 					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Unit Price</td>
+					@elseif($po[0]->service_price != "0") 
+					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Service Price</td>
+					@endif
 					<td colspan="1" style="width:4%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Amount</td>
 				</tr>
 			</thead>
@@ -230,11 +236,22 @@
 					<td colspan="1" style="border: 1px solid black;text-align: center;"><?= date('d F Y', strtotime($po->delivery_date)) ?></td>
 					<td colspan="1" style="border: 1px solid black;text-align: center;">{{ $po->qty }}</td>
 					<td colspan="1" style="border: 1px solid black;text-align: center;">{{ $po->uom }}</td>
+					@if($po->goods_price != "0") 
 					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($po->goods_price,2,",",".");?></td>
 					<?php
 						$price = $po->goods_price * $po->qty;
 						$total = $total + $price;
 					?>
+
+					@elseif($po->service_price != "0")
+					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($po->service_price,2,",",".");?></td>
+					<?php
+						$price = $po->service_price * $po->qty;
+						$total = $total + $price;
+					?>
+
+					@endif
+
 					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($price,2,",","."); ?></td>
 				</tr>
 				<?php $no++; ?>
@@ -248,7 +265,11 @@
 
 				<tr>
 					<td colspan="5">
+					@if($po->goods_price != "0") 	
 					<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">Sub Total Goods</td>
+					@elseif($po->service_price != "0") 
+					<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">Sub Total Service</td>
+					@endif
 					<td colspan="1" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px"><?= number_format($total,2,",","."); ?></td>
 				</tr>
 
@@ -267,18 +288,48 @@
 					<td colspan="1" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">
 					
 					<?php 
-						if ($po->supplier_status == "PKP") {
+						//Jika ini barang
+						if ($po->goods_price != "0") {
+							if ($po->supplier_status == "PKP") {
+								$pajak = ($total*10)/100;
+							}
+							else if ($po->supplier_status == "Non PKP"){
+								$pajak = 0;
+							}
+						}
+						else if($po->service_price != "0"){
 							$pajak = ($total*10)/100;
 						}
-						else if ($po->supplier_status == "Non PKP"){
-							$pajak = 0;
-						}
+
 					?> 
 
 					<?= number_format($pajak,2,",","."); ?>
 
 					</td>
 				</tr>
+
+				<?php 
+					$wh = 0;
+					if ($po->holding_tax != 0) {
+				?>
+
+				<tr>
+					<td colspan="5">
+					<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">W/H Tax <?= $po->holding_tax ?> %</td>
+					<td colspan="1" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">
+					
+					<?php 
+						if ($po->holding_tax != 0) {
+							$wh = (($total+$pajak) * $po->holding_tax)/100;
+						}
+					?> 
+
+					<?= number_format($wh,2,",","."); ?>
+
+					</td>
+				</tr>
+
+				<?php } ?>
 
 				<tr>
 					<td colspan="5">
@@ -287,21 +338,24 @@
 
 						<?php 
 							$net = 0;
-							if($po->supplier_status == "PKP") {
-								if ($po->material == "Dipungut PPNBM") {
-									$vat = $pajak;
+							if ($po->goods_price != "0") {
+								if($po->supplier_status == "PKP") {
+									if ($po->material == "Dipungut PPNBM") {
+										$vat = $pajak;
+									}
+									else if ($po->material == "Tidak Dipungut PPNB"){
+										$vat = 0;
+									}
+									
 								}
-								else if ($po->material == "Tidak Dipungut PPNB"){
+								else if($po->supplier_status == "Non PKP"){
 									$vat = 0;
 								}
-								
 							}
-							else if($po->supplier_status == "Non PKP"){
-								$vat = 0;
+							else if($po->service_price != "0"){
+								$vat = $pajak;
 							}
-
-							$net = $vat + $total;
-
+							$net = ($vat + $total) - $wh;
 						?>
 
 						<?= number_format($net,2,",",".");  ?>

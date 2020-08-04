@@ -1299,9 +1299,15 @@
 		$('#ket_harga'+num).text(currency);
 
 		var harga_goods = document.getElementById("goods_price"+num).value;
+		var harga_service = document.getElementById("service_price"+num).value;
+
 		var qty = document.getElementById("qty"+num).value;
-		var hasil = parseInt(qty) * parseInt(harga_goods);
-	    // var prc = price.replace(/\D/g, ""); //get angka saja
+		if (harga_goods != 0) {
+			var hasil = parseInt(qty) * parseFloat(harga_goods);			
+		}
+		else if (harga_service != 0){
+			var hasil = parseInt(qty) * parseFloat(harga_service);
+		}
 
 	    var harga_konversi = parseFloat(konversi(currency,"USD", hasil));
 	    $('#konversi_dollar'+num).val(harga_konversi);
@@ -1317,9 +1323,15 @@
 		$('#ket_harga'+num).text(currency);
 
 		var harga_goods = document.getElementById("goods_price"+num).value;
+		var harga_service = document.getElementById("service_price"+num).value;
 		var qty = document.getElementById("qty"+num).value;
-		var hasil = parseInt(qty) * parseInt(harga_goods);
-	    // var prc = price.replace(/\D/g, ""); //get angka saja
+		
+		if (harga_goods != 0) {
+			var hasil = parseInt(qty) * parseFloat(harga_goods);			
+		}
+		else if (harga_service != 0){
+			var hasil = parseInt(qty) * parseFloat(harga_service);
+		}
 
 	    var harga_konversi = parseFloat(konversi(currency,"USD", hasil));
 	    $('#konversi_dollar'+num).val(harga_konversi);
@@ -1502,7 +1514,7 @@
 		    	var	lop2 = "lop2";
 
 		    	isi = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
-		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' name='reff_number"+value.id+"' id='reff_number"+value.id+"' value='"+ value.reff_number +"' readonly=''></div>";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' name='reff_number"+value.id+"' id='reff_number"+value.id+"' value='"+ value.no_pr +"' readonly=''></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' name='no_item"+value.id+"' id='no_item"+value.id+"' value='"+ value.no_item +"' readonly=''><input type='hidden' class='form-control' id='nama_item"+value.id+"' name='nama_item"+value.id+"' placeholder='Nama Item' readonly='' value='"+ value.nama_item +"'></div> ";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_budget"+value.id+"' name='item_budget"+value.id+"' placeholder='Budget' required='' value="+value.budget_item+" readonly=''></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control datepicker' id='delivery_date"+value.id+"' name='delivery_date"+value.id+"' placeholder='Delivery Date' required='' value="+value.delivery_date+"></div>";

@@ -340,14 +340,6 @@
 														<td style="border:none;text-align: left;padding-left: 0;width: 2%">:</td>
 														<td style="border:none;text-align: left;padding-left: 0;width: 90%"><label id="budget_amount" name="budget_amount"></label></td>
 													</tr>
-													<tr>
-														<td style="border:none;text-align: left;padding-left: 0;width: 8%">Sisa Budget (Total)</td>
-														<td style="border:none;text-align: left;padding-left: 0;width: 2%">:</td>
-														<td style="border:none;text-align: left;padding-left: 0;width: 90%">
-															<!-- <label id="sisa_budget" name="sisa_budget"></label> -->
-															<!-- Dalam Pengembangan  -->
-														</td>
-													</tr>
 												</table>
 
 											</div>
@@ -453,13 +445,13 @@
 						          		</div>
 						          		<!-- input type="text" class="form-control" id="item_price1" name="item_price1" placeholder="Price" required="" onkeyup='getTotal(this.id)'> -->
 						          	</div>
-
 						          	<div class="col-xs-1" style="padding:5px;">
 						          		<input type="number" class="form-control" id="qty1" name="qty1" placeholder="Qty" required="" onkeyup='getTotal(this.id)'>
 						          	</div>
 						          	<div class="col-xs-1" style="padding:5px;">
 						          		<input type="text" class="form-control" id="amount1" name="amount1" placeholder="Total" required="" readonly="">
-						          	</div>
+						          		<input type="hidden" class="form-control" id="konversi_dollar1" name="konversi_dollar1" placeholder="Total" required="" readonly="">
+						          	</div>						          		
 						          	<div class="col-xs-1" style="padding:5px;">
 						          		<a type="button" class="btn btn-success" onclick='tambah("tambah","lop");'><i class='fa fa-plus' ></i></a>
 						          	</div>	
@@ -559,40 +551,52 @@
 						          				Total Pembelian
 						          			</th>
 						          			<td>
-						          				<label id="TotalPembelian4" name="TotalPembelian4"></label>
+						          				<label id="TotalPembelianLabel4" name="TotalPembelianLabel4"></label>
+						          				<input type="hidden" id="TotalPembelian4" name="TotalPembelian4">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian5" name="TotalPembelian5"></label>
+						          				<label id="TotalPembelianLabel5" name="TotalPembelianLabel5"></label>
+						          				<input type="hidden" id="TotalPembelian5" name="TotalPembelian5">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian6" name="TotalPembelian6"></label>
+						          				<label id="TotalPembelianLabel6" name="TotalPembelianLabel6"></label>
+						          				<input type="hidden" id="TotalPembelian6" name="TotalPembelian6">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian7" name="TotalPembelian7"></label>
+						          				<label id="TotalPembelianLabel7" name="TotalPembelianLabel7"></label>
+						          				<input type="hidden" id="TotalPembelian7" name="TotalPembelian7">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian8" name="TotalPembelian8"></label>
+						          				<label id="TotalPembelianLabel8" name="TotalPembelianLabel8"></label>
+						          				<input type="hidden" id="TotalPembelian8" name="TotalPembelian8">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian9" name="TotalPembelian9"></label>
+						          				<label id="TotalPembelianLabel9" name="TotalPembelianLabel9"></label>
+						          				<input type="hidden" id="TotalPembelian9" name="TotalPembelian9">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian10" name="TotalPembelian10"></label>
+						          				<label id="TotalPembelianLabel10" name="TotalPembelianLabel10"></label>
+						          				<input type="hidden" id="TotalPembelian10" name="TotalPembelian10">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian11" name="TotalPembelian11"></label>
+						          				<label id="TotalPembelianLabel11" name="TotalPembelianLabel11"></label>
+						          				<input type="hidden" id="TotalPembelian11" name="TotalPembelian11">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian12" name="TotalPembelian12"></label>
+						          				<label id="TotalPembelianLabel12" name="TotalPembelianLabel12"></label>
+						          				<input type="hidden" id="TotalPembelian12" name="TotalPembelian12">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian1" name="TotalPembelian1"></label>
+						          				<label id="TotalPembelianLabel1" name="TotalPembelianLabel1"></label>
+						          				<input type="hidden" id="TotalPembelian1" name="TotalPembelian1">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian2" name="TotalPembelian2"></label>
+						          				<label id="TotalPembelianLabel2" name="TotalPembelianLabel2"></label>
+						          				<input type="hidden" id="TotalPembelian2" name="TotalPembelian2">
 						          			</td>
 						          			<td>
-						          				<label id="TotalPembelian3" name="TotalPembelian3"></label>
+						          				<label id="TotalPembelianLabel3" name="TotalPembelianLabel3"></label>
+						          				<input type="hidden" id="TotalPembelian3" name="TotalPembelian3">
 						          			</td>
 						          		</tr>
 						          		<tr>
@@ -740,9 +744,123 @@
 
 							<div  id="modalDetailBodyEdit">
 							</div>
+
+					<div class="col-md-11" style="margin-top: 20px">
+				          	<p><b>Informasi Budget</b></p>
+				          	<table class="table table-striped text-center">
+				          		<tr>
+				          			<th colspan="2">Keterangan</th>
+				          			<th>April</th>
+				          			<th>Mei</th>
+				          			<th>Juni</th>
+				          			<th>Juli</th>
+				          			<th>Agustus</th>
+				          			<th>September</th>
+				          			<th>Oktober</th>
+				          			<th>November</th>
+				          			<th>Desember</th>
+				          			<th>Januari</th>
+				          			<th>Februari</th>
+				          			<th>Maret</th>
+				          		</tr>
+				          		<tr>
+				          			<th colspan="2">
+				          				Total Pembelian
+				          			</th>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel4" name="TotalPembelianEditLabel4"></label>
+				          				<input type="hidden" id="TotalPembelianEdit4" name="TotalPembelianEdit4">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel5" name="TotalPembelianEditLabel5"></label>
+				          				<input type="hidden" id="TotalPembelianEdit5" name="TotalPembelianEdit5">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel6" name="TotalPembelianEditLabel6"></label>
+				          				<input type="hidden" id="TotalPembelianEdit6" name="TotalPembelianEdit6">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel7" name="TotalPembelianEditLabel7"></label>
+				          				<input type="hidden" id="TotalPembelianEdit7" name="TotalPembelianEdit7">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel8" name="TotalPembelianEditLabel8"></label>
+				          				<input type="hidden" id="TotalPembelianEdit8" name="TotalPembelianEdit8">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel9" name="TotalPembelianEditLabel9"></label>
+				          				<input type="hidden" id="TotalPembelianEdit9" name="TotalPembelianEdit9">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel10" name="TotalPembelianEditLabel10"></label>
+				          				<input type="hidden" id="TotalPembelianEdit10" name="TotalPembelianEdit10">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel11" name="TotalPembelianEditLabel11"></label>
+				          				<input type="hidden" id="TotalPembelianEdit11" name="TotalPembelianEdit11">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel12" name="TotalPembelianEditLabel12"></label>
+				          				<input type="hidden" id="TotalPembelianEdit12" name="TotalPembelianEdit12">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel1" name="TotalPembelianEditLabel1"></label>
+				          				<input type="hidden" id="TotalPembelianEdit1" name="TotalPembelianEdit1">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel2" name="TotalPembelianEditLabel2"></label>
+				          				<input type="hidden" id="TotalPembelianEdit2" name="TotalPembelianEdit2">
+				          			</td>
+				          			<td>
+				          				<label id="TotalPembelianEditLabel3" name="TotalPembelianEditLabel3"></label>
+				          				<input type="hidden" id="TotalPembelianEdit3" name="TotalPembelianEdit3">
+				          			</td>
+				          		</tr>
+				          		<tr>
+				          			<th colspan="2">
+				          				Sisa Budget
+				          			</th>
+				          			<td>
+				          				<label id="SisaBudgetEdit4" name="SisaBudgetEdit4"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit5" name="SisaBudgetEdit5"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit6" name="SisaBudgetEdit6"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit7" name="SisaBudgetEdit7"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit8" name="SisaBudgetEdit8"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit9" name="SisaBudgetEdit9"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit10" name="SisaBudgetEdit10"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit11" name="SisaBudgetEdit11"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit12" name="SisaBudgetEdit12"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit1" name="SisaBudgetEdit1"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit2" name="SisaBudgetEdit2"></label>
+				          			</td>
+				          			<td>
+				          				<label id="SisaBudgetEdit3" name="SisaBudgetEdit3"></label>
+				          			</td>
+				          		</tr>
+				          	</table>
+				          </div>
 						</div>
 						<br>
-
 						<div id="tambah2">
 							<input type="text" name="lop2" id="lop2" value="1" hidden="">
 							<input type="text" name="looping" id="looping" hidden="">
@@ -750,7 +868,7 @@
 						
 					</div>
 					<div class="modal-footer">
-						<input type="hidden" class="form-control" id="id_edit" name="id_edit" placeholder="ID">
+						<input type="hidden" class="form-control" id="id_edit_pr" name="id_edit_pr" placeholder="ID">
 						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 						<button type="submit" class="btn btn-warning">Update</button>
 					</div>
@@ -826,7 +944,27 @@
 		$("#importForm").submit(function(){
 			if (!confirm("Apakah Anda Yakin Ingin Membuat PR Ini??")) {
 		        return false;
-		    } 
+		    } else {
+		    	var status = 0;
+		    	for (var i = 1; i <= 12; i++) {  		
+			        var len = $('#SisaBudget'+i).text();
+			        if (len != "") {
+				        var sisa = parseFloat(len.substr(1));
+				        if (sisa > 0) {
+				           
+				        } else {
+				        	status++;
+				        }			        	
+			        }
+		    	}
+
+		    	if (status > 0) {
+		    		alert('Tidak Boleh Melebihi Budget');
+				    return false;
+		    	}else{
+		    		this.submit();
+		    	}
+		    }
 		});
 
 		// data table
@@ -834,6 +972,8 @@
 
         //Get Detail Item Berdasarkan code_item
         getItemList();
+
+        getExchangeRate();
 
         CKEDITOR.replace('note' ,{
 	      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
@@ -882,7 +1022,7 @@
         	var catatan = CKEDITOR.instances.note.getData();
 
         	if(emp_id == '' || no_pr == '' || catatan == '' || staff == ''){
-        		alert('All field must be filled');	
+        		alert('Semua Kolom Harus Diisi');	
         	}
         	else{
         		$('.nav-tabs > .active').next('li').find('a').trigger('click');
@@ -1031,23 +1171,6 @@
 			}
 		});
 
-		$.ajax({
-			url: "{{ url('purchase_requisition/get_exchange_rate') }}", 
-			type : 'GET', 
-			success : function(data){
-				var obj = jQuery.parseJSON(data);
-				for (var i = 0; i < obj.length; i++) {
-            		var currency = obj[i].currency; // currency
-	            	var rate = obj[i].rate; //nilai tukar
-
-	            	exchange_rate.push({
-	            		'currency' :  obj[i].currency, 
-	            		'rate' :  obj[i].rate,
-	            	});
-	            }
-	        }
-	    });
-
 		getBudget();
 	}
 
@@ -1170,6 +1293,27 @@
 		})
 	}
 
+	function getExchangeRate(){
+		$.ajax({
+			url: "{{ url('purchase_requisition/get_exchange_rate') }}", 
+			type : 'GET', 
+			success : function(data){
+				var obj = jQuery.parseJSON(data);
+				for (var i = 0; i < obj.length; i++) {
+            		var currency = obj[i].currency; // currency
+	            	var rate = obj[i].rate; //nilai tukar
+
+	            	exchange_rate.push({
+	            		'currency' :  obj[i].currency, 
+	            		'rate' :  obj[i].rate,
+	            	});
+	            }
+	        }
+	    });
+	}
+
+
+
 	//get Budget + Pilih budget
 
 	function getBudget() {
@@ -1240,6 +1384,8 @@
 
     		//isi amount + amount dirubah
     		var amount = document.getElementById('amount'+num);
+
+	    	var dollar = document.getElementById('konversi_dollar'+num);
     		amount.value = rubah(hasil);
 
     		total_usd = 0;
@@ -1261,6 +1407,7 @@
         		req_bulan = date_js.getMonth()+1;
 
 
+
         		var mata_uang = $('#item_currency'+i).val();
         		var mata_uang_text = $('#item_currency_text'+i).val();
 
@@ -1268,18 +1415,25 @@
         			total_beli_usd = document.getElementById('amount'+i).value;
         			usd = total_beli_usd.replace(/\D/g, "");
         			total_usd += parseInt(usd);
+
+        			dollar.value = konversi("USD","USD",hasil);
         		}
         		else if (mata_uang == "JPY" || mata_uang_text == "JPY"){
         			total_beli_yen = document.getElementById('amount'+i).value;
         			yen = total_beli_yen.replace(/\D/g, "");
         			total_yen += parseInt(yen);
+
+	    			dollar.value = konversi("JPY","USD",hasil);
         		}
 
         		else if (mata_uang == "IDR" || mata_uang_text == "IDR"){
         			total_beli_id = document.getElementById('amount'+i).value;
         			idn = total_beli_id.replace(/\D/g, "");
         			total_id += parseInt(idn);
+
+        			dollar.value = konversi("IDR","USD",hasil);
         		}
+
 
 	        	// console.log(total_yen);
 	        	document.getElementById('total_usd').value = rubah(total_usd);
@@ -1318,9 +1472,10 @@
 	    	    	budget = $('#budget'+parseInt(j+1)).text();
 	    	    	
 	    	    	if (total_beli[j] > 0) {
-		    	    	$('#TotalPembelian'+parseInt(j+1)).text("$"+total_beli[j]);
+		    	    	$('#TotalPembelianLabel'+parseInt(j+1)).text("$"+total_beli[j]);
+		    	    	$('#TotalPembelian'+parseInt(j+1)).val(total_beli[j])
 		    	    }else{
-		    	    	$('#TotalPembelian'+parseInt(j+1)).text("");
+		    	    	$('#TotalPembelianLabel'+parseInt(j+1)).text("");
 		    	    }
 
 	    	    	var sisa = parseFloat(budget.substr(1)) - parseFloat(total_beli[j]);
@@ -1342,8 +1497,6 @@
 	    		}
 
 	    		// console.table(total_beli);
-
-
     	    	document.getElementById('total_keseluruhan').value = konversiToUSD(curr,'USD');
 	        }
 	    }
@@ -1434,7 +1587,7 @@
     		lop = "lop2";
     	}
 
-    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock"+no+"' name='item_stock"+no+"' placeholder='Stock' required=''></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock"+no+"' name='item_stock"+no+"' placeholder='Stock'></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly><input type='hidden' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Total' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
 
     	$("#"+id).append(divdata);
     	$("#item_code"+no).append(item_list);
@@ -1628,10 +1781,11 @@
 			$("#no_pr_edit").val(result.purchase_requisition.no_pr).attr('readonly', true);
 			$("#no_budget_edit").val(result.purchase_requisition.no_budget).attr('readonly', true);
 			$("#tgl_pengajuan_edit").val(result.purchase_requisition.submission_date).attr('readonly', true);
-			$("#id_edit").val(result.purchase_requisition.id).attr('readonly', true);
+			$("#id_edit_pr").val(result.purchase_requisition.id).attr('readonly', true);
 
 	        $('#modalDetailBodyEdit').html('');
 	        var ids = [];
+
 			$.each(result.purchase_requisition_item, function(key, value) {
 
 				// console.log(result.purchase_requisition_item);
@@ -1645,13 +1799,19 @@
 
 					isi += "<div class='col-xs-1' style='padding:5px;'><select class='form-control select5 item_code_edit' data-placeholder='Choose Item' name='item_code_edit"+value.id+"' id='item_code_edit"+value.id+"' style='width: 100% height: 35px;' onchange='pilihItemEdit(this)'><option></option></select></div>";
 
-				}else{
+				} else{
 					isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_code_edit"+value.id+"' name='item_code_edit"+value.id+"'></div>";
 				}
 				
 				isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
 				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value='"+value.item_spec+"'></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock' required='' value='"+value.item_stock+"'></div>";
+
+				if (value.item_stock != null) {
+					isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
+				}else{
+					isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock'></div>";
+				}
+
 				isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='uomhide"+value.id+"' id='uomhide"+value.id+"' value='"+value.item_uom+"'><select class='form-control select5' id='uom_edit"+value.id+"' name='uom_edit"+value.id+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div>";
 				isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date_edit"+value.id+"' name='req_date_edit"+value.id+"' placeholder='Tanggal' required='' value='"+value.item_request_date+"''></div></div>";
 				isi += "<div class='col-xs-1' style='padding: 5px'><input type='text' class='form-control' id='item_currency_edit"+value.id+"' name='item_currency_edit"+value.id+"' value='"+value.item_currency+"'><input type='text' class='form-control' id='item_currency_text_edit"+value.id+"' name='item_currency_text_edit"+value.id+"' style='display:none'></div>";
@@ -1706,7 +1866,19 @@
 				})
 
 				$("#looping").val(ids);
+
+				for (var i = 1; i <= 12; i++) {
+					value.budget_date = new Date();
+					if(i == value.budget_date.getMonth() + 1){
+						$("#TotalPembelianEdit"+i).val(value.amount).attr('readonly', true);
+						$("#TotalPembelianEditLabel"+i).text("$"+value.amount).attr('readonly', true);
+						
+					}
+				}
 			});
+			
+			
+
 	    });
 	}
 
@@ -1727,6 +1899,9 @@
 		$('#modaldanger').modal('hide');
 		$('#'+id).css("display","none");
 	}
+
+	
+
 
 
 
