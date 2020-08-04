@@ -409,7 +409,7 @@ class SkillMapController extends Controller
     	try {
     		$skill_employee = SkillEmployee::join('employee_syncs','skill_employees.employee_id','employee_syncs.employee_id')->where('location',$request->get('location'))->get();
     		$process = Skill::select('process')->distinct()->where('location',$request->get('location'))->get();
-    		$employees = EmployeeSync::where('department','like','%'.$request->get('dept').'%')->where('end_date','=',null)->get();
+    		$employees = EmployeeSync::where('end_date','=',null)->get();
 
     		$response = array(
 				'status' => true,
