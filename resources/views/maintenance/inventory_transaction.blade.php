@@ -102,7 +102,7 @@
             <center><h4 class="box-title">Sparepart <b style="color: #FFD700" class="stat">IN</b></h4></center>
           </div>
           <div class="box-body" style="background-color: #3c3c3c; border: 1px solid #ffd700; border-top: none">
-            <input type="text" class="form-control input-lg" placeholder="QrCode Here. . ." id="txt_code">
+            <input type="text" class="form-control input-lg" placeholder="Barcode Here. . ." id="txt_code">
           </div>
         </div>
 
@@ -291,10 +291,10 @@
       if (status == 0) 
         return false;
 
-      if (ket2 == null) {
-        openErrorGritter("Fail", "All Field Must Be Filled");
-        return false;
-      }
+      // if (ket2 == null) {
+      //   openErrorGritter("Fail", "All Field Must Be Filled");
+      //   return false;
+      // }
 
       if ($('input[name=category]:checked').val() != "SPK") {
         if ($("#no_mesin").val() == "") {
