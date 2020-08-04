@@ -125,9 +125,10 @@ class CparController extends Controller
 
     public function create()
     {
-      $secfrom = db::select("select DISTINCT department, section, `group` from employee_syncs
-        where employee_id = '".Auth::user()->username."'
-        ");
+      // $secfrom = db::select("select DISTINCT department, section, `group` from employee_syncs
+      //   where employee_id = '".Auth::user()->username."'");
+
+      $secfrom = db::select("select DISTINCT department, section,`group` from employee_syncs where section = (SELECT section FROM employee_syncs where employee_id = '".Auth::user()->username."')");
 
       $sections = db::select("select DISTINCT department, section, `group` from employee_syncs
         where department is not null

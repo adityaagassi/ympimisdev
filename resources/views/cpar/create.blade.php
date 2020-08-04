@@ -189,6 +189,7 @@
           <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="section_from">Section From<span class="text-red">*</span></label>
             <select class="form-control select2" style="width: 100%;" id="cpar_secfrom" name="cpar_secfrom" data-placeholder="Pilih Section Pelapor" required readonly="">
+                <option></option>
                 @foreach($secfrom as $sec)
                 @if($sec->group == null)
                 <option value="{{ $sec->department }}_{{ $sec->section }}">{{ $sec->department }} - {{ $sec->section }}</option>
