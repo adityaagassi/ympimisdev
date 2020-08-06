@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
 use App\InjectionInventory;
 use App\Inventory;
+use App\PushBlockNotProcess;
 
 class RecorderProcessController extends Controller
 {
@@ -109,9 +110,9 @@ class RecorderProcessController extends Controller
 
 	public function index_push_block($remark){
 		$name = Auth::user()->name;
-    // if ($remark == 'After Injection') {
-    //   $view = 'recorder.process.index_push_block_assy'; //upload excel + tag
-    // }
+  //   if ($remark == 'After Injection') {
+  //     $view = 'recorder.process.index_push_block_assy'; //upload excel + tag
+  //   }
     // else if ($remark == 'First Shot Approval') {
     //   $view = 'recorder.process.index_push_block'; //upload excel
     // }
@@ -260,28 +261,54 @@ class RecorderProcessController extends Controller
               $head = $request->get('head');
               $block = $request->get('block');
               $push_block_code = $request->get('push_block_code');
-              for($i = 0; $i<16;$i++){
-                $check_date = $request->get('check_date');
-                $product_type = $request->get('product_type');
-                PushBlockRecorder::create([
-                  'push_block_code' => $request->get('push_block_code'),
-                  'push_block_id_gen' => $request->get('push_block_id_gen'),
-                    'check_date' => $request->get('check_date'),
-                    'injection_date_head' => $request->get('injection_date_head'),
-                    'mesin_head' => $request->get('mesin_head'),
-                    'injection_date_block' => $request->get('injection_date_block'),
-                    'mesin_block' => $request->get('mesin_block'),
-                    'product_type' => $request->get('product_type'),
-                    'head' => $head[$i],
-                    'block' => $block[$i],
-                    'push_pull' => $push_pull[$i],
-                    'judgement' => $judgement[$i],
-                    'ketinggian' => $ketinggian[$i],
-                    'judgement2' => $judgementketinggian[$i],
-                    'pic_check' => $request->get('pic_check'),
-                    'created_by' => $id_user
-                ]);
-                $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->delete();
+              if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)") {
+                for($i = 0; $i<8;$i++){
+                  $check_date = $request->get('check_date');
+                  $product_type = $request->get('product_type');
+                  PushBlockRecorder::create([
+                    'push_block_code' => $request->get('push_block_code'),
+                    'push_block_id_gen' => $request->get('push_block_id_gen'),
+                      'check_date' => $request->get('check_date'),
+                      'injection_date_head' => $request->get('injection_date_head'),
+                      'mesin_head' => $request->get('mesin_head'),
+                      'injection_date_block' => $request->get('injection_date_block'),
+                      'mesin_block' => $request->get('mesin_block'),
+                      'product_type' => $request->get('product_type'),
+                      'head' => $head[$i],
+                      'block' => $block[$i],
+                      'push_pull' => $push_pull[$i],
+                      'judgement' => $judgement[$i],
+                      'ketinggian' => $ketinggian[$i],
+                      'judgement2' => $judgementketinggian[$i],
+                      'pic_check' => $request->get('pic_check'),
+                      'created_by' => $id_user
+                  ]);
+                  $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->delete();
+                }
+              }else{
+                for($i = 0; $i<16;$i++){
+                  $check_date = $request->get('check_date');
+                  $product_type = $request->get('product_type');
+                  PushBlockRecorder::create([
+                    'push_block_code' => $request->get('push_block_code'),
+                    'push_block_id_gen' => $request->get('push_block_id_gen'),
+                      'check_date' => $request->get('check_date'),
+                      'injection_date_head' => $request->get('injection_date_head'),
+                      'mesin_head' => $request->get('mesin_head'),
+                      'injection_date_block' => $request->get('injection_date_block'),
+                      'mesin_block' => $request->get('mesin_block'),
+                      'product_type' => $request->get('product_type'),
+                      'head' => $head[$i],
+                      'block' => $block[$i],
+                      'push_pull' => $push_pull[$i],
+                      'judgement' => $judgement[$i],
+                      'ketinggian' => $ketinggian[$i],
+                      'judgement2' => $judgementketinggian[$i],
+                      'pic_check' => $request->get('pic_check'),
+                      'created_by' => $id_user
+                  ]);
+                  $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->delete();
+                }
               }
 
               $response = array(
@@ -311,23 +338,44 @@ class RecorderProcessController extends Controller
               }
 
               $push_block_id_gen = $front."_".$request->get('check_date')."_".$request->get('product_type')."_".$request->get('pic_check');
-              for($i = 0; $i<16;$i++){
-                $check_date = $request->get('check_date');
-                $product_type = $request->get('product_type');
-                PushBlockRecorderTemp::create([
-                  'push_block_code' => $request->get('push_block_code'),
-                  'push_block_id_gen' => $push_block_id_gen,
-                    'check_date' => $request->get('check_date'),
-                    'injection_date_head' => $request->get('injection_date_head'),
-                    'mesin_head' => $request->get('mesin_head'),
-                    'injection_date_block' => $request->get('injection_date_block'),
-                    'mesin_block' => $request->get('mesin_block'),
-                    'product_type' => $request->get('product_type'),
-                    'head' => $head[$i],
-                    'block' => $block[$i],
-                    'pic_check' => $request->get('pic_check'),
-                    'created_by' => $id_user
-                ]);
+              if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)") {
+                for($i = 0; $i<8;$i++){
+                  $check_date = $request->get('check_date');
+                  $product_type = $request->get('product_type');
+                  PushBlockRecorderTemp::create([
+                    'push_block_code' => $request->get('push_block_code'),
+                    'push_block_id_gen' => $push_block_id_gen,
+                      'check_date' => $request->get('check_date'),
+                      'injection_date_head' => $request->get('injection_date_head'),
+                      'mesin_head' => $request->get('mesin_head'),
+                      'injection_date_block' => $request->get('injection_date_block'),
+                      'mesin_block' => $request->get('mesin_block'),
+                      'product_type' => $request->get('product_type'),
+                      'head' => $head[$i],
+                      'block' => $block[$i],
+                      'pic_check' => $request->get('pic_check'),
+                      'created_by' => $id_user
+                  ]);
+                }
+              }else{
+                for($i = 0; $i<16;$i++){
+                  $check_date = $request->get('check_date');
+                  $product_type = $request->get('product_type');
+                  PushBlockRecorderTemp::create([
+                    'push_block_code' => $request->get('push_block_code'),
+                    'push_block_id_gen' => $push_block_id_gen,
+                      'check_date' => $request->get('check_date'),
+                      'injection_date_head' => $request->get('injection_date_head'),
+                      'mesin_head' => $request->get('mesin_head'),
+                      'injection_date_block' => $request->get('injection_date_block'),
+                      'mesin_block' => $request->get('mesin_block'),
+                      'product_type' => $request->get('product_type'),
+                      'head' => $head[$i],
+                      'block' => $block[$i],
+                      'pic_check' => $request->get('pic_check'),
+                      'created_by' => $id_user
+                  ]);
+                }
               }
 
               $response = array(
@@ -354,11 +402,22 @@ class RecorderProcessController extends Controller
         $temp = [];
 
         // $ng_temp = PushBlockRecorderTemp::where('mesin',$mesin)->get();
-        for($i = 0; $i < 8; $i++){
-          for($j = 0; $j < 4; $j++){
-            $temptemp = PushBlockRecorderTemp::where('head',$array_head[$j])->where('block',$array_block[$i])->where('push_block_code',$remark)->where('product_type',$product_type)->get();
-            if (count($temptemp) > 0) {
-              $temp[] = $temptemp;
+        if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)") {
+          for($i = 0; $i < 8; $i++){
+            for($j = 0; $j < 2; $j++){
+              $temptemp = PushBlockRecorderTemp::where('head',$array_head[$j])->where('block',$array_block[$i])->where('push_block_code',$remark)->where('product_type',$product_type)->get();
+              if (count($temptemp) > 0) {
+                $temp[] = $temptemp;
+              }
+            }
+          }
+        }else{
+          for($i = 0; $i < 8; $i++){
+            for($j = 0; $j < 4; $j++){
+              $temptemp = PushBlockRecorderTemp::where('head',$array_head[$j])->where('block',$array_block[$i])->where('push_block_code',$remark)->where('product_type',$product_type)->get();
+              if (count($temptemp) > 0) {
+                $temp[] = $temptemp;
+              }
             }
           }
         }
@@ -383,16 +442,31 @@ class RecorderProcessController extends Controller
               $block = $request->get('block');
               $push_block_code = $request->get('push_block_code');
               $notes = $request->get('notes');
-              for($i = 0; $i<16;$i++){
-                $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->get();
-                foreach ($temptemp as $key) {
-                  $update = PushBlockRecorderTemp::find($key->id);
-                  $update->push_pull = $push_pull[$i];
-                  $update->judgement = $judgement[$i];
-                  $update->ketinggian = $ketinggian[$i];
-                  $update->judgement2 = $judgementketinggian[$i];
-                  $update->notes = $notes;
-                  $update->save();
+              if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)") {
+                for($i = 0; $i<8;$i++){
+                  $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->get();
+                  foreach ($temptemp as $key) {
+                    $update = PushBlockRecorderTemp::find($key->id);
+                    $update->push_pull = $push_pull[$i];
+                    $update->judgement = $judgement[$i];
+                    $update->ketinggian = $ketinggian[$i];
+                    $update->judgement2 = $judgementketinggian[$i];
+                    $update->notes = $notes;
+                    $update->save();
+                  }
+                }
+              }else{
+                for($i = 0; $i<16;$i++){
+                  $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->get();
+                  foreach ($temptemp as $key) {
+                    $update = PushBlockRecorderTemp::find($key->id);
+                    $update->push_pull = $push_pull[$i];
+                    $update->judgement = $judgement[$i];
+                    $update->ketinggian = $ketinggian[$i];
+                    $update->judgement2 = $judgementketinggian[$i];
+                    $update->notes = $notes;
+                    $update->save();
+                  }
                 }
               }
 
@@ -444,8 +518,8 @@ class RecorderProcessController extends Controller
               ]);
 
               // if ($remark == 'After Injection') {
-              //   // $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
-              //   // $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
+              //   $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
+              //   $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
               // }
 
               $contactList = [];
@@ -468,13 +542,13 @@ class RecorderProcessController extends Controller
                 );
                     Mail::to($this->mail)->bcc($contactList,'Contact List')->send(new SendEmail($data_push_pull, 'push_pull_check'));
                 // if ($remark == 'After Injection') {
-                  // $tag_head->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
-                  // $tag_block->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
+                //   $tag_head->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
+                //   $tag_block->push_pull_check = $push_pull_ng_name.'_'.$push_pull_ng_value;
                 // }
               }else{
                 // if ($remark == 'After Injection') {
-                  // $tag_head->push_pull_check = 'OK';
-                  // $tag_block->push_pull_check = 'OK';
+                //   $tag_head->push_pull_check = 'OK';
+                //   $tag_block->push_pull_check = 'OK';
                 // }
               }
 
@@ -495,19 +569,19 @@ class RecorderProcessController extends Controller
                 );
                     Mail::to($this->mail)->bcc($contactList,'Contact List')->send(new SendEmail($data_height, 'height_check'));
                 // if ($remark == 'After Injection') {
-                  // $tag_block->height_check = $height_ng_name.'_'.$height_ng_value;
-                  // $tag_head->height_check = $height_ng_name.'_'.$height_ng_value;
+                //   $tag_block->height_check = $height_ng_name.'_'.$height_ng_value;
+                //   $tag_head->height_check = $height_ng_name.'_'.$height_ng_value;
                 // }
               }else{
                 // if ($remark == 'After Injection') {
-                  // $tag_block->height_check = 'OK';
-                  // $tag_head->height_check = 'OK';
+                //   $tag_block->height_check = 'OK';
+                //   $tag_head->height_check = 'OK';
                 // }
               }
 
               // if ($remark == 'After Injection') {
-                // $tag_head->save();
-                // $tag_block->save();
+              //   $tag_head->save();
+              //   $tag_block->save();
               // }
 
               $response = array(
@@ -523,116 +597,24 @@ class RecorderProcessController extends Controller
             }
     }
 
-    public function return_completion_push_pull(Request $request)
+    public function return_completion(Request $request)
     {
-      try {
-        //HEAD
-        $material_head = db::connection('mysql2')->table('materials')
-        ->where('material_number', '=', $request->get('material_number_head'))
-        ->first();
+      try {        
+        $tag = InjectionTag::where('tag',$request->get('tag'))->first();
+        $tag->shot = $tag->shot-$request->get('quantity');
+        $tag->save();
 
-        $return_completion_head = db::connection('mysql2')->table('histories')->insert([
-          "category" => "completion_return",
-          "completion_barcode_number" => "",
-          "completion_description" => "",
-          "completion_location" => 'RC91',
-          "completion_issue_plant" => "8190",
-          "completion_material_id" => $material_head->id,
-          "completion_reference_number" => "",
-          "lot" => 32*-1,
-          "synced" => 0,
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-        
-        $return_transfer_head = db::connection('mysql2')->table('histories')->insert([
-          "category" => "transfer_return",
-          "transfer_barcode_number" => "",
-          "transfer_document_number" => "8190",
-          "transfer_material_id" => $material_head->id,
-          "transfer_issue_location" => 'RC91',
-          "transfer_issue_plant" => "8190",
-          "transfer_receive_plant" => "8190",
-          "transfer_receive_location" => 'RC11',
-          "transfer_cost_center" => "",
-          "transfer_gl_account" => "",
-          "transfer_transaction_code" => "MB1B",
-          "transfer_movement_type" => "9I4",
-          "transfer_reason_code" => "",
-          "lot" => 32,
-          "synced" => 0,
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-
-        //BLOCK
-        $material_block = db::connection('mysql2')->table('materials')
-        ->where('material_number', '=', $request->get('material_number_block'))
-        ->first();
-
-        $return_completion_block = db::connection('mysql2')->table('histories')->insert([
-          "category" => "completion_return",
-          "completion_barcode_number" => "",
-          "completion_description" => "",
-          "completion_location" => 'RC91',
-          "completion_issue_plant" => "8190",
-          "completion_material_id" => $material_block->id,
-          "completion_reference_number" => "",
-          "lot" => 32*-1,
-          "synced" => 0,
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-        
-        $return_transfer_block = db::connection('mysql2')->table('histories')->insert([
-          "category" => "transfer_return",
-          "transfer_barcode_number" => "",
-          "transfer_document_number" => "8190",
-          "transfer_material_id" => $material_block->id,
-          "transfer_issue_location" => 'RC91',
-          "transfer_issue_plant" => "8190",
-          "transfer_receive_plant" => "8190",
-          "transfer_receive_location" => 'RC11',
-          "transfer_cost_center" => "",
-          "transfer_gl_account" => "",
-          "transfer_transaction_code" => "MB1B",
-          "transfer_movement_type" => "9I4",
-          "transfer_reason_code" => "",
-          "lot" => 32,
-          "synced" => 0,
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-
-        $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
-        $tag_block = InjectionTag::where('tag',$request->get('tag_block'))->first();
-        $tag_block->shot = $tag_block->shot-32;
-        $tag_head->shot = $tag_head->shot-32;        
-        $tag_head->save();
-        $tag_block->save();
-
-        $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_head'), 'storage_location' => 'RC91']);
-            $inventory->quantity = ($inventory->quantity-32);
+        $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material'), 'storage_location' => 'RC91']);
+            $inventory->quantity = ($inventory->quantity-$request->get('quantity'));
             $inventory->save();
 
-        $inventory2 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_block'), 'storage_location' => 'RC91']);
-            $inventory2->quantity = ($inventory2->quantity-32);
-            $inventory2->save();
-
-        $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_head'), 'location' => 'RC91']);
-            $injectionInventory->quantity = ($injectionInventory->quantity-32);
+        $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material'), 'location' => 'RC91']);
+            $injectionInventory->quantity = ($injectionInventory->quantity-$request->get('quantity'));
             $injectionInventory->save();
-
-        $injectionInventory2 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_block'), 'location' => 'RC91']);
-            $injectionInventory2->quantity = ($injectionInventory2->quantity-32);
-            $injectionInventory2->save();
 
         $response = array(
           'status' => true,
+          'message' => 'Return Success',
         );
         return Response::json($response);
       } catch (\Exception $e) {
@@ -2276,179 +2258,6 @@ class RecorderProcessController extends Controller
             }
     }
 
-    public function return_completion_torque(Request $request)
-    {
-      try {
-        //HEAD
-        $material_head = db::connection('mysql2')->table('materials')
-        ->where('material_number', '=', $request->get('material_number_head'))
-        ->first();
-
-        $return_completion_head = db::connection('mysql2')->table('histories')->insert([
-          "category" => "completion_return",
-          "completion_barcode_number" => "",
-          "completion_description" => "",
-          "completion_location" => 'RC91',
-          "completion_issue_plant" => "8190",
-          "completion_material_id" => $material_head->id,
-          "completion_reference_number" => "",
-          "lot" => 32*-1, //belum pasti
-          "synced" => 0,
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-        
-        $return_transfer_head = db::connection('mysql2')->table('histories')->insert([
-          "category" => "transfer_return",
-          "transfer_barcode_number" => "",
-          "transfer_document_number" => "8190",
-          "transfer_material_id" => $material_head->id,
-          "transfer_issue_location" => 'RC91',
-          "transfer_issue_plant" => "8190",
-          "transfer_receive_plant" => "8190",
-          "transfer_receive_location" => 'RC11',
-          "transfer_cost_center" => "",
-          "transfer_gl_account" => "",
-          "transfer_transaction_code" => "MB1B",
-          "transfer_movement_type" => "9I4",
-          "transfer_reason_code" => "",
-          "lot" => 32, //belum pasti
-          "synced" => 0,
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-
-        //MIDDLE
-        $material_middle = db::connection('mysql2')->table('materials')
-        ->where('material_number', '=', $request->get('material_number_middle'))
-        ->first();
-
-        $return_completion_middle = db::connection('mysql2')->table('histories')->insert([
-          "category" => "completion_return",
-          "completion_barcode_number" => "",
-          "completion_description" => "",
-          "completion_location" => 'RC91',
-          "completion_issue_plant" => "8190",
-          "completion_material_id" => $material_middle->id,
-          "completion_reference_number" => "",
-          "lot" => 32*-1, //belum pasti
-          "synced" => 0,
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-        
-        $return_transfer_middle = db::connection('mysql2')->table('histories')->insert([
-          "category" => "transfer_return",
-          "transfer_barcode_number" => "",
-          "transfer_document_number" => "8190",
-          "transfer_material_id" => $material_middle->id,
-          "transfer_issue_location" => 'RC91',
-          "transfer_issue_plant" => "8190",
-          "transfer_receive_plant" => "8190",
-          "transfer_receive_location" => 'RC11',
-          "transfer_cost_center" => "",
-          "transfer_gl_account" => "",
-          "transfer_transaction_code" => "MB1B",
-          "transfer_movement_type" => "9I4",
-          "transfer_reason_code" => "",
-          "lot" => 32, //belum pasti
-          "synced" => 0,
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-
-        //FOOT
-        $material_foot = db::connection('mysql2')->table('materials')
-        ->where('material_number', '=', $request->get('material_number_foot'))
-        ->first();
-
-        $return_completion_foot = db::connection('mysql2')->table('histories')->insert([
-          "category" => "completion_return",
-          "completion_barcode_number" => "",
-          "completion_description" => "",
-          "completion_location" => 'RC91',
-          "completion_issue_plant" => "8190",
-          "completion_material_id" => $material_foot->id,
-          "completion_reference_number" => "",
-          "lot" => 32*-1, //belum pasti
-          "synced" => 0,
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-        
-        $return_transfer_foot = db::connection('mysql2')->table('histories')->insert([
-          "category" => "transfer_return",
-          "transfer_barcode_number" => "",
-          "transfer_document_number" => "8190",
-          "transfer_material_id" => $material_foot->id,
-          "transfer_issue_location" => 'RC91',
-          "transfer_issue_plant" => "8190",
-          "transfer_receive_plant" => "8190",
-          "transfer_receive_location" => 'RC11',
-          "transfer_cost_center" => "",
-          "transfer_gl_account" => "",
-          "transfer_transaction_code" => "MB1B",
-          "transfer_movement_type" => "9I4",
-          "transfer_reason_code" => "",
-          "lot" => 32, //belum pasti
-          "synced" => 0, 
-          'user_id' => "1",
-          'created_at' => date("Y-m-d H:i:s"),
-          'updated_at' => date("Y-m-d H:i:s")
-        ]);
-
-        $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
-        $tag_middle = InjectionTag::where('tag',$request->get('tag_middle'))->first();
-        $tag_foot = InjectionTag::where('tag',$request->get('tag_foot'))->first();
-        $tag_foot->shot = $tag_foot->shot-32;
-        $tag_head->shot = $tag_head->shot-32;
-        $tag_middle->shot = $tag_middle->shot-32;
-        $tag_head->save();
-        $tag_middle->save();
-        $tag_foot->save();
-
-        $inventory = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_head'), 'storage_location' => 'RC91']);
-            $inventory->quantity = ($inventory->quantity-32);
-            $inventory->save();
-
-        $inventory2 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_middle'), 'storage_location' => 'RC91']);
-            $inventory2->quantity = ($inventory2->quantity-32);
-            $inventory2->save();
-
-        $inventory3 = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $request->get('material_number_foot'), 'storage_location' => 'RC91']);
-            $inventory3->quantity = ($inventory3->quantity-32);
-            $inventory3->save();
-
-        $injectionInventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_head'), 'location' => 'RC91']);
-            $injectionInventory->quantity = ($injectionInventory->quantity-32);
-            $injectionInventory->save();
-
-        $injectionInventory2 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_middle'), 'location' => 'RC91']);
-            $injectionInventory2->quantity = ($injectionInventory2->quantity-32);
-            $injectionInventory2->save();
-
-        $injectionInventory3 = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number_foot'), 'location' => 'RC91']);
-            $injectionInventory3->quantity = ($injectionInventory3->quantity-32);
-            $injectionInventory3->save();
-
-        $response = array(
-          'status' => true,
-        );
-        return Response::json($response);
-      } catch (\Exception $e) {
-        $response = array(
-          'status' => false,
-          'message' => $e->getMessage(),
-        );
-        return Response::json($response);
-      }
-    }
-
     public function get_temp_torque(Request $request){
         $array_middle = $request->get('array_middle');
         $array_head_foot = $request->get('array_head_foot');
@@ -2460,7 +2269,7 @@ class RecorderProcessController extends Controller
 
         $indexHeadFoot = (int)$request->get('indexHeadFoot');
 
-        if ($product_type == 'YRF-21K//ID' || $product_type == 'YRF-21//ID') {
+        if ($product_type == 'YRF-21K//ID' || $product_type == 'YRF-21//ID' || $product_type == "YRF-21 (FSA)") {
           $index = 4;
         }else{
           $index = $indexHeadFoot * 4;
@@ -3067,6 +2876,40 @@ class RecorderProcessController extends Controller
               'datas' => "Get Data Error.",
             );
              return Response::json($response);
+        }
+    }
+
+    public function indexReturn()
+    {
+      return view('recorder.process.return', array(
+        'title' => 'Return Material Recorder',
+        'title_jp' => '??'
+      ))->with('page', 'Return Material Recorder');
+    }
+
+    public function scanProduct(Request $request)
+    {
+        try {
+            $tag = DB::SELECT("SELECT * FROM `injection_tags`  left join return_materials on injection_tags.material_number = return_materials.material_number where tag = '".$request->get('tag')."' and location = 'RC91'");
+
+            if (count($tag) > 0) {
+                $response = array(
+                    'status' => true,
+                    'data' => $tag
+                );
+                return Response::json($response);
+            }else{
+                $response = array(
+                    'status' => false,
+                );
+                return Response::json($response);
+            }
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
         }
     }
 }

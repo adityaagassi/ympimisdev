@@ -944,7 +944,7 @@
 		var pic_check = $("#pic_check").text();
 		var push_block_code = '{{ $remark }}';
 
-		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 			var array_middle = [];
 			var array_head_foot = [];
 			var array_middle2 = [];
@@ -1046,7 +1046,7 @@
 	}
 
 	function get_temp() {
-		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 			var array_middle = [];
 			var array_head_foot = [];
 			var array_middle2 = [];
@@ -1191,7 +1191,7 @@
 		var push_block_code = '{{ $remark }}';
 		var check_type = $("#check_type").text();
 
-		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 			var array_middle = [];
 			var array_head_foot = [];
 
@@ -1347,7 +1347,7 @@
 		var pic_check = $("#pic_check").text();
 		var push_block_code = '{{ $remark }}';
 
-		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 			var array_middle = [];
 			var array_head_foot = [];
 
@@ -1566,7 +1566,7 @@
 			$('#tableResume').DataTable().destroy();
 			$('#tableBodyResume').html("");
 			var tableData = "";
-			if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+			if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 				if(result.detail_head_foot.cavity_3 == null){
 					indexHeadFoot = 2;
 				}else if (result.detail_head_foot.cavity_5 == null) {

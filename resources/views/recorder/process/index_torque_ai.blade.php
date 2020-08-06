@@ -988,7 +988,7 @@
 	}
 
 	function confirm() {
-		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() ==  "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 			if($('#injection_date_middle').val() == '' || $('#injection_date_head').val() == '' || $('#middle_id').val() == '' || $('#head_id').val() == '' || $('#mesin_middle_fix2').text() == '#0' || $('#mesin_head_fix2').text() == '#0' || $('#product_fix2').text() == 'YRS'){
 				alert('Semua Data Harus Diisi.');
 			}else{
@@ -1039,7 +1039,7 @@
 		var pic_check = $("#pic_check").text();
 		var push_block_code = '{{ $remark }}';
 
-		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 
 			var array_middlehm = [];
 			var array_head = [];
@@ -1206,7 +1206,7 @@
 	}
 
 	function get_temp() {
-		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 			var array_middlehm = [];
 			var array_head = [];
 			var array_middlehm2 = [];
@@ -1443,7 +1443,7 @@
 		var check_type_head =  $("#check_type_head").val();
 		var check_type_foot =  $("#check_type_foot").val();
 
-		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 			var array_middlehm = [];
 			var array_head = [];
 
@@ -1669,7 +1669,7 @@
 		var pic_check = $("#pic_check").text();
 		var push_block_code = '{{ $remark }}';
 
-		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID" || $('#product_fix2').text() == "YRF-21 (FSA)") {
 			var array_middlehm = [];
 			var array_middlemf = [];
 			var array_head = [];
