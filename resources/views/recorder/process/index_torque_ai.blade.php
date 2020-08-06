@@ -1965,7 +1965,7 @@
 			var array_middle = Object.values(result.cav_middle);
 			var array_head_foot = Object.values(result.cav_head_foot);
 			var index = 1;
-			if ($('#product_fix2').text() == 'YRF-21K//ID' || $('#product_fix2').text() == 'YRF-21//ID') {
+			if ($('#product_fix2').text() == 'YRF-21K//ID' || $('#product_fix2').text() == 'YRF-21//ID' || $('#product_fix2').text() == "YRF-21 (FSA)") {
 				for(var i=0;i<2;i++){
 					for(var j=0;j<indexHeadFoot;j++){
 						tableData += '<tr>';
