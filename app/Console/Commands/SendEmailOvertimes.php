@@ -65,9 +65,9 @@ public function handle()
         sum(
         CASE
         WHEN VIEW_YMPI_Emp_OvertimePlan.total_ot > 0 THEN
-        CAST(ROUND(VIEW_YMPI_Emp_OvertimePlan.total_ot / 60, 2) AS FLOAT)
+        floor((VIEW_YMPI_Emp_OvertimePlan.total_ot / 60.0) * 2  + 0.5) / 2
         ELSE
-        CAST(ROUND(VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60, 2) AS FLOAT)
+        floor((VIEW_YMPI_Emp_OvertimePlan.TOTAL_OVT_PLAN / 60.0) * 2  + 0.5) / 2
         END) as jam
         from VIEW_YMPI_Emp_OvertimePlan
         where VIEW_YMPI_Emp_OvertimePlan.emp_no <> 'SUNFISH' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom >= '".$first." 00:00:00' and VIEW_YMPI_Emp_OvertimePlan.ovtplanfrom <= '".$now." 23:59:59'
