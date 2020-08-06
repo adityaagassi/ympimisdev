@@ -493,6 +493,15 @@
 												</center>
 											</td>
 										</tr>
+										<tr>
+											<td width="50%" onclick="getData(19)">
+												<center>
+													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
+														21-22
+													</button>
+												</center>
+											</td>
+										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -544,6 +553,13 @@
 												<center>
 													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
 														17-20
+													</button>
+												</center>
+											</td>
+											<td width="50%" onclick="getData2(18)">
+												<center>
+													<button class="btn btn-info" style="width: 100%;height: 40px;font-size: 1.5vw;font-weight: bold;">
+														21-22
 													</button>
 												</center>
 											</td>
@@ -928,129 +944,246 @@
 		var pic_check = $("#pic_check").text();
 		var push_block_code = '{{ $remark }}';
 
-		var array_middle = [];
-		var array_head_foot = [];
-		var array_middle2 = [];
-		var array_head_foot2 = [];
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+			var array_middle = [];
+			var array_head_foot = [];
+			var array_middle2 = [];
+			var array_head_foot2 = [];
 
-		var status_false = 0;
+			var status_false = 0;
 
-		if ($('#head_foot_id').val() == 9 || $('#head_foot_id').val() == 10) {
-			indexHeadFoot = 6;
+			indexHeadFoot = 2;
+
+			for(var i = 1; i <= 2; i++){
+				array_middle.push($("#middle_fix_"+[i]).val());
+			}
+			for(var j = 1; j <= indexHeadFoot; j++){
+				array_head_foot.push($("#head_foot_fix_"+[j]).val());
+			}
+
+			var index = 1;
+			for(var i=0;i<2;i++){
+				for(var j=0;j<indexHeadFoot;j++){
+					array_middle2.push(array_middle[i]);
+					array_head_foot2.push(array_head_foot[j]);
+					index++;
+				}
+			}
+
+			var data2 = {
+				push_block_code : push_block_code,
+				check_date : check_date,
+				check_type : check_type,
+				injection_date_middle : injection_date_middle,
+				injection_date_head_foot : injection_date_head_foot,
+				mesin_middle : mesin_middle,
+				mesin_head_foot : mesin_head_foot,
+				pic_check : pic_check,
+				product_type : product_type,
+				middle : array_middle2,
+				head_foot : array_head_foot2
+			}
+			$.post('{{ url("index/push_block_recorder/create_temp_torque") }}', data2, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success', result.message);
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+				}
+			});
 		}else{
-			indexHeadFoot = 4;
-		}
+			var array_middle = [];
+			var array_head_foot = [];
+			var array_middle2 = [];
+			var array_head_foot2 = [];
 
-		for(var i = 1; i <= 4; i++){
-			array_middle.push($("#middle_fix_"+[i]).val());
-		}
-		for(var j = 1; j <= indexHeadFoot; j++){
-			array_head_foot.push($("#head_foot_fix_"+[j]).val());
-		}
+			var status_false = 0;
 
-		var index = 1;
-		for(var i=0;i<4;i++){
-			for(var j=0;j<indexHeadFoot;j++){
-				array_middle2.push(array_middle[i]);
-				array_head_foot2.push(array_head_foot[j]);
-				index++;
+			if ($('#head_foot_id').val() == 9 || $('#head_foot_id').val() == 10) {
+				indexHeadFoot = 6;
+			}else{
+				indexHeadFoot = 4;
 			}
-		}
 
-		var data2 = {
-			push_block_code : push_block_code,
-			check_date : check_date,
-			check_type : check_type,
-			injection_date_middle : injection_date_middle,
-			injection_date_head_foot : injection_date_head_foot,
-			mesin_middle : mesin_middle,
-			mesin_head_foot : mesin_head_foot,
-			pic_check : pic_check,
-			product_type : product_type,
-			middle : array_middle2,
-			head_foot : array_head_foot2
+			for(var i = 1; i <= 4; i++){
+				array_middle.push($("#middle_fix_"+[i]).val());
+			}
+			for(var j = 1; j <= indexHeadFoot; j++){
+				array_head_foot.push($("#head_foot_fix_"+[j]).val());
+			}
+
+			var index = 1;
+			for(var i=0;i<4;i++){
+				for(var j=0;j<indexHeadFoot;j++){
+					array_middle2.push(array_middle[i]);
+					array_head_foot2.push(array_head_foot[j]);
+					index++;
+				}
+			}
+
+			var data2 = {
+				push_block_code : push_block_code,
+				check_date : check_date,
+				check_type : check_type,
+				injection_date_middle : injection_date_middle,
+				injection_date_head_foot : injection_date_head_foot,
+				mesin_middle : mesin_middle,
+				mesin_head_foot : mesin_head_foot,
+				pic_check : pic_check,
+				product_type : product_type,
+				middle : array_middle2,
+				head_foot : array_head_foot2
+			}
+			$.post('{{ url("index/push_block_recorder/create_temp_torque") }}', data2, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success', result.message);
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+				}
+			});
 		}
-		$.post('{{ url("index/push_block_recorder/create_temp_torque") }}', data2, function(result, status, xhr){
-			if(result.status){
-				openSuccessGritter('Success', result.message);
-			}
-			else{
-				openErrorGritter('Error!', result.message);
-			}
-		});
 	}
 
 	function get_temp() {
-		var array_middle = [];
-		var array_head_foot = [];
-		var array_middle2 = [];
-		var array_head_foot2 = [];
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+			var array_middle = [];
+			var array_head_foot = [];
+			var array_middle2 = [];
+			var array_head_foot2 = [];
 
-		var check_type = $("#check_type").text();
+			var check_type = $("#check_type").text();
+			indexHeadFoot = 2;
 
-		if ($('#head_foot_id').val() == 9 || $('#head_foot_id').val() == 10) {
-			indexHeadFoot = 6;
-		}else{
-			indexHeadFoot = 4;
-		}
-
-		for(var i = 1; i <= 4; i++){
-			array_middle.push($("#middle_fix_"+[i]).val());
-		}
-		for(var j = 1; j <= indexHeadFoot; j++){
-			array_head_foot.push($("#head_foot_fix_"+[j]).val());
-		}
-		
-		var index = 1;
-		for(var i=0;i<4;i++){
-			for(var j=0;j<indexHeadFoot;j++){
-				array_middle2.push(array_middle[i]);
-				array_head_foot2.push(array_head_foot[j]);
-				index++;
+			for(var i = 1; i <= 2; i++){
+				array_middle.push($("#middle_fix_"+[i]).val());
 			}
-		}
-
-		var data = {
-			array_middle : array_middle2,
-			array_head_foot : array_head_foot2,
-			remark : '{{$remark}}',
-			product_type : $("#prod_type").text(),
-			indexHeadFoot:indexHeadFoot,
-			check_type:check_type
-		}
-
-		$.get('{{ url("index/push_block_recorder/get_temp_torque") }}',data,  function(result, status, xhr){
-			if(result.status){
-				if(result.datas.length != 0){
-					index = 1;
-					$.each(result.datas, function(key, value) {
-						$('#torque_1_'+index).val(value.torque1);
-						$('#torque_2_'+index).val(value.torque2);
-						$('#torque_3_'+index).val(value.torque3);
-						$('#average_'+index).html(value.torqueavg);
-						$('#judgement_'+index).html(value.judgement);
-						$("#prod_type").html(value.product_type);
-						$("#check_date").html(value.check_date);
-						$("#check_type").html(value.check_type);
-						$('#injection_date_middle_fix').html(value.injection_date_middle);
-						$('#injection_date_head_foot_fix').html(value.injection_date_head_foot);
-						$('#mesin_middle').html(value.mesin_middle);
-						$('#mesin_head_foot').html(value.mesin_head_foot);
-						$("#notes").val(value.notes);
-						index++;
-						// console.table(index);
-					});
-					openSuccessGritter('Success!', result.message);
-				}else{
-					create_temp();
+			for(var j = 1; j <= indexHeadFoot; j++){
+				array_head_foot.push($("#head_foot_fix_"+[j]).val());
+			}
+			
+			var index = 1;
+			for(var i=0;i<2;i++){
+				for(var j=0;j<indexHeadFoot;j++){
+					array_middle2.push(array_middle[i]);
+					array_head_foot2.push(array_head_foot[j]);
+					index++;
 				}
 			}
-			else{
-				openErrorGritter('Error!', result.message);
-				audio_error.play();
-				
+
+			var data = {
+				array_middle : array_middle2,
+				array_head_foot : array_head_foot2,
+				remark : '{{$remark}}',
+				product_type : $("#prod_type").text(),
+				indexHeadFoot:indexHeadFoot,
+				check_type:check_type
 			}
-		});
+
+			$.get('{{ url("index/push_block_recorder/get_temp_torque") }}',data,  function(result, status, xhr){
+				if(result.status){
+					if(result.datas.length != 0){
+						index = 1;
+						$.each(result.datas, function(key, value) {
+							$('#torque_1_'+index).val(value.torque1);
+							$('#torque_2_'+index).val(value.torque2);
+							$('#torque_3_'+index).val(value.torque3);
+							$('#average_'+index).html(value.torqueavg);
+							$('#judgement_'+index).html(value.judgement);
+							$("#prod_type").html(value.product_type);
+							$("#check_date").html(value.check_date);
+							$("#check_type").html(value.check_type);
+							$('#injection_date_middle_fix').html(value.injection_date_middle);
+							$('#injection_date_head_foot_fix').html(value.injection_date_head_foot);
+							$('#mesin_middle').html(value.mesin_middle);
+							$('#mesin_head_foot').html(value.mesin_head_foot);
+							$("#notes").val(value.notes);
+							index++;
+							// console.table(index);
+						});
+						openSuccessGritter('Success!', result.message);
+					}else{
+						create_temp();
+					}
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+					audio_error.play();
+					
+				}
+			});
+		}else{
+			var array_middle = [];
+			var array_head_foot = [];
+			var array_middle2 = [];
+			var array_head_foot2 = [];
+
+			var check_type = $("#check_type").text();
+
+			if ($('#head_foot_id').val() == 9 || $('#head_foot_id').val() == 10) {
+				indexHeadFoot = 6;
+			}else{
+				indexHeadFoot = 4;
+			}
+
+			for(var i = 1; i <= 4; i++){
+				array_middle.push($("#middle_fix_"+[i]).val());
+			}
+			for(var j = 1; j <= indexHeadFoot; j++){
+				array_head_foot.push($("#head_foot_fix_"+[j]).val());
+			}
+			
+			var index = 1;
+			for(var i=0;i<4;i++){
+				for(var j=0;j<indexHeadFoot;j++){
+					array_middle2.push(array_middle[i]);
+					array_head_foot2.push(array_head_foot[j]);
+					index++;
+				}
+			}
+
+			var data = {
+				array_middle : array_middle2,
+				array_head_foot : array_head_foot2,
+				remark : '{{$remark}}',
+				product_type : $("#prod_type").text(),
+				indexHeadFoot:indexHeadFoot,
+				check_type:check_type
+			}
+
+			$.get('{{ url("index/push_block_recorder/get_temp_torque") }}',data,  function(result, status, xhr){
+				if(result.status){
+					if(result.datas.length != 0){
+						index = 1;
+						$.each(result.datas, function(key, value) {
+							$('#torque_1_'+index).val(value.torque1);
+							$('#torque_2_'+index).val(value.torque2);
+							$('#torque_3_'+index).val(value.torque3);
+							$('#average_'+index).html(value.torqueavg);
+							$('#judgement_'+index).html(value.judgement);
+							$("#prod_type").html(value.product_type);
+							$("#check_date").html(value.check_date);
+							$("#check_type").html(value.check_type);
+							$('#injection_date_middle_fix').html(value.injection_date_middle);
+							$('#injection_date_head_foot_fix').html(value.injection_date_head_foot);
+							$('#mesin_middle').html(value.mesin_middle);
+							$('#mesin_head_foot').html(value.mesin_head_foot);
+							$("#notes").val(value.notes);
+							index++;
+							// console.table(index);
+						});
+						openSuccessGritter('Success!', result.message);
+					}else{
+						create_temp();
+					}
+				}
+				else{
+					openErrorGritter('Error!', result.message);
+					audio_error.play();
+					
+				}
+			});
+		}
 	}
 
 	function update_temp(){
@@ -1058,77 +1191,146 @@
 		var push_block_code = '{{ $remark }}';
 		var check_type = $("#check_type").text();
 
-		var array_middle = [];
-		var array_head_foot = [];
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+			var array_middle = [];
+			var array_head_foot = [];
 
-		var torque_1 = [];
-		var torque_2 = [];
-		var torque_3 = [];
-		var average = [];
-		var judgement = [];
+			var torque_1 = [];
+			var torque_2 = [];
+			var torque_3 = [];
+			var average = [];
+			var judgement = [];
 
-		var status_false = 0;
+			var status_false = 0;
+			indexHeadFoot = 2;			
 
-		if ($('#head_foot_id').val() == 9 || $('#head_foot_id').val() == 10) {
-			indexHeadFoot = 6;
+			var index = 1;
+			for(var i=0;i<2;i++){
+				for(var j=0;j<indexHeadFoot;j++){
+					array_middle.push($('#middle_'+index).text());
+					array_head_foot.push($('#head_foot_'+index).text());
+					if ($('#average_'+index).text() == "") {
+						average.push(null);
+					}else{
+						average.push(parseFloat($('#average_'+index).text()));
+					}
+					if ($('#torque_1_'+index).val() == "") {
+						torque_1.push(null);
+					}else{
+						torque_1.push(parseFloat($('#torque_1_'+index).val()));
+					}
+					if ($('#torque_2_'+index).val() == "") {
+						torque_2.push(null);
+					}else{
+						torque_2.push(parseFloat($('#torque_2_'+index).val()));
+					}
+					if ($('#torque_3_'+index).val() == "") {
+						torque_3.push(null);
+					}else{
+						torque_3.push(parseFloat($('#torque_3_'+index).val()));
+					}
+					if ($('#judgement_'+index).text() == "") {
+						judgement.push(null);
+					}else{
+						judgement.push($('#judgement_'+index).text());
+					}
+					index++;
+				}
+			}
+
+			var data2 = {
+				push_block_code : push_block_code,
+				middle : array_middle,
+				head_foot : array_head_foot,
+				check_type : check_type,
+				torque_1 : torque_1,
+				torque_2 : torque_2,
+				torque_3 : torque_3,
+				average : average,
+				judgement : judgement,
+				notes:notes
+			}
+			$.post('{{ url("index/push_block_recorder/update_temp_torque") }}', data2, function(result, status, xhr){
+				if(result.status){
+					// openSuccessGritter('Success', result.message);
+				}
+				else{
+					// openErrorGritter('Error!', result.message);
+				}
+			});
 		}else{
-			indexHeadFoot = 4;
-		}
+			var array_middle = [];
+			var array_head_foot = [];
 
-		var index = 1;
-		for(var i=0;i<4;i++){
-			for(var j=0;j<indexHeadFoot;j++){
-				array_middle.push($('#middle_'+index).text());
-				array_head_foot.push($('#head_foot_'+index).text());
-				if ($('#average_'+index).text() == "") {
-					average.push(null);
-				}else{
-					average.push(parseFloat($('#average_'+index).text()));
-				}
-				if ($('#torque_1_'+index).val() == "") {
-					torque_1.push(null);
-				}else{
-					torque_1.push(parseFloat($('#torque_1_'+index).val()));
-				}
-				if ($('#torque_2_'+index).val() == "") {
-					torque_2.push(null);
-				}else{
-					torque_2.push(parseFloat($('#torque_2_'+index).val()));
-				}
-				if ($('#torque_3_'+index).val() == "") {
-					torque_3.push(null);
-				}else{
-					torque_3.push(parseFloat($('#torque_3_'+index).val()));
-				}
-				if ($('#judgement_'+index).text() == "") {
-					judgement.push(null);
-				}else{
-					judgement.push($('#judgement_'+index).text());
-				}
-				index++;
-			}
-		}
+			var torque_1 = [];
+			var torque_2 = [];
+			var torque_3 = [];
+			var average = [];
+			var judgement = [];
 
-		var data2 = {
-			push_block_code : push_block_code,
-			middle : array_middle,
-			head_foot : array_head_foot,
-			check_type : check_type,
-			torque_1 : torque_1,
-			torque_2 : torque_2,
-			torque_3 : torque_3,
-			average : average,
-			judgement : judgement,
-			notes:notes
+			var status_false = 0;
+
+			if ($('#head_foot_id').val() == 9 || $('#head_foot_id').val() == 10) {
+				indexHeadFoot = 6;
+			}else{
+				indexHeadFoot = 4;
+			}
+
+			var index = 1;
+			for(var i=0;i<4;i++){
+				for(var j=0;j<indexHeadFoot;j++){
+					array_middle.push($('#middle_'+index).text());
+					array_head_foot.push($('#head_foot_'+index).text());
+					if ($('#average_'+index).text() == "") {
+						average.push(null);
+					}else{
+						average.push(parseFloat($('#average_'+index).text()));
+					}
+					if ($('#torque_1_'+index).val() == "") {
+						torque_1.push(null);
+					}else{
+						torque_1.push(parseFloat($('#torque_1_'+index).val()));
+					}
+					if ($('#torque_2_'+index).val() == "") {
+						torque_2.push(null);
+					}else{
+						torque_2.push(parseFloat($('#torque_2_'+index).val()));
+					}
+					if ($('#torque_3_'+index).val() == "") {
+						torque_3.push(null);
+					}else{
+						torque_3.push(parseFloat($('#torque_3_'+index).val()));
+					}
+					if ($('#judgement_'+index).text() == "") {
+						judgement.push(null);
+					}else{
+						judgement.push($('#judgement_'+index).text());
+					}
+					index++;
+				}
+			}
+
+			var data2 = {
+				push_block_code : push_block_code,
+				middle : array_middle,
+				head_foot : array_head_foot,
+				check_type : check_type,
+				torque_1 : torque_1,
+				torque_2 : torque_2,
+				torque_3 : torque_3,
+				average : average,
+				judgement : judgement,
+				notes:notes
+			}
+			$.post('{{ url("index/push_block_recorder/update_temp_torque") }}', data2, function(result, status, xhr){
+				if(result.status){
+					// openSuccessGritter('Success', result.message);
+				}
+				else{
+					// openErrorGritter('Error!', result.message);
+				}
+			});
 		}
-		$.post('{{ url("index/push_block_recorder/update_temp_torque") }}', data2, function(result, status, xhr){
-			if(result.status){
-				// openSuccessGritter('Success', result.message);
-			}
-			else{
-				// openErrorGritter('Error!', result.message);
-			}
-		});
 	}
 
 	function konfirmasi(){
@@ -1145,84 +1347,161 @@
 		var pic_check = $("#pic_check").text();
 		var push_block_code = '{{ $remark }}';
 
-		var array_middle = [];
-		var array_head_foot = [];
+		if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+			var array_middle = [];
+			var array_head_foot = [];
 
-		var torque_1 = [];
-		var torque_2 = [];
-		var torque_3 = [];
-		var average = [];
-		var judgement = [];
+			var torque_1 = [];
+			var torque_2 = [];
+			var torque_3 = [];
+			var average = [];
+			var judgement = [];
 
-		var status_false = 0;
+			var status_false = 0;
+			indexHeadFoot = 2;
 
-		if ($('#head_foot_id').val() == 9 || $('#head_foot_id').val() == 10) {
-			indexHeadFoot = 6;
+			var index = 1;
+			for(var i=0;i<2;i++){
+				for(var j=0;j<indexHeadFoot;j++){
+					array_middle.push($('#middle_'+index).text());
+					array_head_foot.push($('#head_foot_'+index).text());
+					torque_1.push(parseFloat($('#torque_1_'+index).val()));
+					torque_2.push(parseFloat($('#torque_2_'+index).val()));
+					torque_3.push(parseFloat($('#torque_3_'+index).val()));
+					if ($('#average_'+index).text() == "") {
+						average.push(parseFloat(0));
+					}else{
+						average.push(parseFloat($('#average_'+index).text()));
+					}
+					if ($('#judgement_'+index).text() == "") {
+						judgement.push(parseFloat(0));
+					}else{
+						judgement.push($('#judgement_'+index).text());
+					}
+					if ($('#torque_1_'+index).val() == "" || $('#torque_2_'+index).val() == "" || $('#torque_3_'+index).val() == "" || $('#average_'+index).text() == ""|| $('#judgement_'+index).text() == "") {
+						status_false++;
+					}
+					index++;
+				}
+			}
+
+			if(status_false > 0){
+				alert('Semua Data Harus Diisi');
+			}
+			else{
+				$('#loading').show();
+				$('#selesai_button').prop('disabled', true);
+				var data2 = {
+					push_block_code : push_block_code,
+					check_date : check_date,
+					check_type : check_type,
+					injection_date_middle : injection_date_middle,
+					injection_date_head_foot : injection_date_head_foot,
+					mesin_middle : mesin_middle,
+					mesin_head_foot : mesin_head_foot,
+					pic_check : pic_check,
+					product_type : product_type,
+					middle : array_middle,
+					head_foot : array_head_foot,
+					torque_1 : torque_1,
+					torque_2 : torque_2,
+					torque_3 : torque_3,
+					average : average,
+					judgement : judgement,
+					notes:notes
+				}
+				$.post('{{ url("index/push_block_recorder/create_torque") }}', data2, function(result, status, xhr){
+					if(result.status){
+						$('#loading').hide();
+						openSuccessGritter('Success', result.message);
+						alert('Pengisian Selesai.');
+						location.reload();
+					}
+					else{
+						openErrorGritter('Error!', result.message);
+					}
+				});
+			}
 		}else{
-			indexHeadFoot = 4;
-		}
+			var array_middle = [];
+			var array_head_foot = [];
 
-		var index = 1;
-		for(var i=0;i<4;i++){
-			for(var j=0;j<indexHeadFoot;j++){
-				array_middle.push($('#middle_'+index).text());
-				array_head_foot.push($('#head_foot_'+index).text());
-				torque_1.push(parseFloat($('#torque_1_'+index).val()));
-				torque_2.push(parseFloat($('#torque_2_'+index).val()));
-				torque_3.push(parseFloat($('#torque_3_'+index).val()));
-				if ($('#average_'+index).text() == "") {
-					average.push(parseFloat(0));
-				}else{
-					average.push(parseFloat($('#average_'+index).text()));
-				}
-				if ($('#judgement_'+index).text() == "") {
-					judgement.push(parseFloat(0));
-				}else{
-					judgement.push($('#judgement_'+index).text());
-				}
-				if ($('#torque_1_'+index).val() == "" || $('#torque_2_'+index).val() == "" || $('#torque_3_'+index).val() == "" || $('#average_'+index).text() == ""|| $('#judgement_'+index).text() == "") {
-					status_false++;
-				}
-				index++;
-			}
-		}
+			var torque_1 = [];
+			var torque_2 = [];
+			var torque_3 = [];
+			var average = [];
+			var judgement = [];
 
-		if(status_false > 0){
-			alert('Semua Data Harus Diisi');
-		}
-		else{
-			$('#loading').show();
-			$('#selesai_button').prop('disabled', true);
-			var data2 = {
-				push_block_code : push_block_code,
-				check_date : check_date,
-				check_type : check_type,
-				injection_date_middle : injection_date_middle,
-				injection_date_head_foot : injection_date_head_foot,
-				mesin_middle : mesin_middle,
-				mesin_head_foot : mesin_head_foot,
-				pic_check : pic_check,
-				product_type : product_type,
-				middle : array_middle,
-				head_foot : array_head_foot,
-				torque_1 : torque_1,
-				torque_2 : torque_2,
-				torque_3 : torque_3,
-				average : average,
-				judgement : judgement,
-				notes:notes
+			var status_false = 0;
+
+			if ($('#head_foot_id').val() == 9 || $('#head_foot_id').val() == 10) {
+				indexHeadFoot = 6;
+			}else{
+				indexHeadFoot = 4;
 			}
-			$.post('{{ url("index/push_block_recorder/create_torque") }}', data2, function(result, status, xhr){
-				if(result.status){
-					$('#loading').hide();
-					openSuccessGritter('Success', result.message);
-					alert('Pengisian Selesai.');
-					location.reload();
+
+			var index = 1;
+			for(var i=0;i<4;i++){
+				for(var j=0;j<indexHeadFoot;j++){
+					array_middle.push($('#middle_'+index).text());
+					array_head_foot.push($('#head_foot_'+index).text());
+					torque_1.push(parseFloat($('#torque_1_'+index).val()));
+					torque_2.push(parseFloat($('#torque_2_'+index).val()));
+					torque_3.push(parseFloat($('#torque_3_'+index).val()));
+					if ($('#average_'+index).text() == "") {
+						average.push(parseFloat(0));
+					}else{
+						average.push(parseFloat($('#average_'+index).text()));
+					}
+					if ($('#judgement_'+index).text() == "") {
+						judgement.push(parseFloat(0));
+					}else{
+						judgement.push($('#judgement_'+index).text());
+					}
+					if ($('#torque_1_'+index).val() == "" || $('#torque_2_'+index).val() == "" || $('#torque_3_'+index).val() == "" || $('#average_'+index).text() == ""|| $('#judgement_'+index).text() == "") {
+						status_false++;
+					}
+					index++;
 				}
-				else{
-					openErrorGritter('Error!', result.message);
+			}
+
+			if(status_false > 0){
+				alert('Semua Data Harus Diisi');
+			}
+			else{
+				$('#loading').show();
+				$('#selesai_button').prop('disabled', true);
+				var data2 = {
+					push_block_code : push_block_code,
+					check_date : check_date,
+					check_type : check_type,
+					injection_date_middle : injection_date_middle,
+					injection_date_head_foot : injection_date_head_foot,
+					mesin_middle : mesin_middle,
+					mesin_head_foot : mesin_head_foot,
+					pic_check : pic_check,
+					product_type : product_type,
+					middle : array_middle,
+					head_foot : array_head_foot,
+					torque_1 : torque_1,
+					torque_2 : torque_2,
+					torque_3 : torque_3,
+					average : average,
+					judgement : judgement,
+					notes:notes
 				}
-			});
+				$.post('{{ url("index/push_block_recorder/create_torque") }}', data2, function(result, status, xhr){
+					if(result.status){
+						$('#loading').hide();
+						openSuccessGritter('Success', result.message);
+						alert('Pengisian Selesai.');
+						location.reload();
+					}
+					else{
+						openErrorGritter('Error!', result.message);
+					}
+				});
+			}
 		}
 	}
 
@@ -1287,27 +1566,55 @@
 			$('#tableResume').DataTable().destroy();
 			$('#tableBodyResume').html("");
 			var tableData = "";
-			if (result.detail_head_foot.cavity_5 == null) {
-				indexHeadFoot = 4;
+			if ($('#product_fix2').text() == "YRF-21K//ID" || $('#product_fix2').text() == "YRF-21//ID") {
+				if(result.detail_head_foot.cavity_3 == null){
+					indexHeadFoot = 2;
+				}else if (result.detail_head_foot.cavity_5 == null) {
+					indexHeadFoot = 4;
+				}else{
+					indexHeadFoot = 6;
+				}
+				var array_middle = Object.values(result.cav_middle);
+				var array_head_foot = Object.values(result.cav_head_foot);
+				var index = 1;
+				for(var i=0;i<2;i++){
+					for(var j=0;j<indexHeadFoot;j++){
+						tableData += '<tr>';
+						tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>'+index+'</b></td>';	
+						tableData += '<td style="text-align:center;" id="middle_'+index+'">'+ array_middle[i] +'</td>';
+						tableData += '<td style="text-align:center;" id="head_foot_'+index+'">'+ array_head_foot[j] +'</td>';
+						tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_1_'+index+'"></td>';
+						tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_2_'+index+'"></td>';
+						tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_3_'+index+'"></td>';
+						tableData += '<td style="text-align:center;" id="average_'+index+'"></td>';
+						tableData += '<td style="text-align:center;" id="judgement_'+index+'"></td>';
+						tableData += '</tr>';
+						index++;
+					}
+				}
 			}else{
-				indexHeadFoot = 6;
-			}
-			var array_middle = Object.values(result.cav_middle);
-			var array_head_foot = Object.values(result.cav_head_foot);
-			var index = 1;
-			for(var i=0;i<4;i++){
-				for(var j=0;j<indexHeadFoot;j++){
-					tableData += '<tr>';
-					tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>'+index+'</b></td>';	
-					tableData += '<td style="text-align:center;" id="middle_'+index+'">'+ array_middle[i] +'</td>';
-					tableData += '<td style="text-align:center;" id="head_foot_'+index+'">'+ array_head_foot[j] +'</td>';
-					tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_1_'+index+'"></td>';
-					tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_2_'+index+'"></td>';
-					tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_3_'+index+'"></td>';
-					tableData += '<td style="text-align:center;" id="average_'+index+'"></td>';
-					tableData += '<td style="text-align:center;" id="judgement_'+index+'"></td>';
-					tableData += '</tr>';
-					index++;
+				if (result.detail_head_foot.cavity_5 == null) {
+					indexHeadFoot = 4;
+				}else{
+					indexHeadFoot = 6;
+				}
+				var array_middle = Object.values(result.cav_middle);
+				var array_head_foot = Object.values(result.cav_head_foot);
+				var index = 1;
+				for(var i=0;i<4;i++){
+					for(var j=0;j<indexHeadFoot;j++){
+						tableData += '<tr>';
+						tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>'+index+'</b></td>';	
+						tableData += '<td style="text-align:center;" id="middle_'+index+'">'+ array_middle[i] +'</td>';
+						tableData += '<td style="text-align:center;" id="head_foot_'+index+'">'+ array_head_foot[j] +'</td>';
+						tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_1_'+index+'"></td>';
+						tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_2_'+index+'"></td>';
+						tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torque(this.id)" class="form-control" id="torque_3_'+index+'"></td>';
+						tableData += '<td style="text-align:center;" id="average_'+index+'"></td>';
+						tableData += '<td style="text-align:center;" id="judgement_'+index+'"></td>';
+						tableData += '</tr>';
+						index++;
+					}
 				}
 			}
 			$('#tableBodyResume').append(tableData);

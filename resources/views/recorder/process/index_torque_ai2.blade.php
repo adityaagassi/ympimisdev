@@ -1959,48 +1959,14 @@
 				if(result.status){
 					openSuccessGritter('Success', result.message);
 					$('#loading').hide();
-					if (confirm('Pengisian Selesai. Sisa Material Cek Kombinasi akan di Return ke RC11. Apakah Anda Setuju?.')) {
-						returnCompletion();
-					}else{
-						alert('Anda tidak setuju. Silahkan Return Material secara Manual.')
-						location.reload();
-					}
+					alert('Pengisian Selesai.')
+					location.reload();
 				}
 				else{
 					openErrorGritter('Error!', result.message);
 				}
 			});
 		}
-	}
-
-	function returnCompletion() {
-		$('#loading').show();
-		var material_number_head = $('#material_number_head').val();
-		var material_number_middle = $('#material_number_middle').val();
-		var material_number_foot = $('#material_number_foot').val();
-		var tag_head =  $("#tag_head").val();
-		var tag_middle =  $("#tag_middle").val();
-		var tag_foot =  $("#tag_foot").val();
-
-		var data = {
-			material_number_head:material_number_head,
-			material_number_middle:material_number_middle,
-			material_number_foot:material_number_foot,
-			tag_head:tag_head,
-			tag_middle:tag_middle,
-			tag_foot:tag_foot,
-		}
-		$.post('{{ url("index/push_block_recorder/return_completion_torque") }}', data, function(result, status, xhr){
-			if(result.status){
-				openSuccessGritter('Success', result.message);
-				$('#loading').hide();
-				alert('Return Material Selesai.')
-				location.reload();
-			}
-			else{
-				openErrorGritter('Error!', result.message);
-			}
-		});
 	}
 
 	function torquehm(id) {

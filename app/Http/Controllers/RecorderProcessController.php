@@ -2460,7 +2460,11 @@ class RecorderProcessController extends Controller
 
         $indexHeadFoot = (int)$request->get('indexHeadFoot');
 
-        $index = $indexHeadFoot * 4;
+        if ($product_type == 'YRF-21K//ID' || $product_type == 'YRF-21//ID') {
+          $index = 4;
+        }else{
+          $index = $indexHeadFoot * 4;
+        }
 
         for($i = 0; $i < $index; $i++){
             $temptemp = PushBlockTorqueTemp::where('middle',$array_middle[$i])->where('head_foot',$array_head_foot[$i])->where('push_block_code',$remark)->where('product_type',$product_type)->where('check_type',$check_type)->first();
