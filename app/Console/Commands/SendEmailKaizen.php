@@ -60,6 +60,7 @@ class SendEmailKaizen extends Command
         ->leftJoin('users','users.username','=','employee_syncs.employee_id')
         ->whereRaw("position in ('foreman','chief','manager')")
         ->whereNotNull('email')
+        ->where("id", "<>", "2254")
         ->select('employee_syncs.employee_id','employee_syncs.name','position', 'department','email')
         ->get();
 
