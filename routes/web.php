@@ -18,6 +18,8 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 
 Route::get('trial2', 'TrialController@trial2');
 
+Route::get('testmail', 'TrialController@testmail');
+
 
 Route::get('fetch_trial2', 'StockTakingController@printSummary');
 Route::get('trial_print', 'StockTakingController@printSummary');
@@ -1209,6 +1211,13 @@ Route::get('budget/info', 'AccountingController@budget_info');
 Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
 Route::get('budget/detail', 'AccountingController@budget_detail');
 Route::post('import/budget', 'AccountingController@import_budget');
+
+//Receive
+Route::get('receive_goods', 'AccountingController@receive_goods');
+Route::get('fetch/receive', 'AccountingController@fetch_receive');
+Route::get('receive/detail', 'AccountingController@receive_detail');
+Route::post('import/receive', 'AccountingController@import_budget');
+
 
 
 
@@ -3052,9 +3061,13 @@ Route::post('post/maintenance/inven/code', 'MaintenanceController@postInventory'
 
 // -------------------------- PLANNED MAINTENANCE -----------------------
 
-Route::get('index/maintenance/planned', 'MaintenanceController@indexPlanned');
+Route::get('index/maintenance/planned/form', 'MaintenanceController@indexPlannedForm');
+Route::get('index/maintenance/planned_monitor/{tgl}', 'MaintenanceController@indexPlanned');
 Route::get('index/maintenance/planned/master', 'MaintenanceController@indexPlanMaster');
 Route::post('import/maintenance/planned', 'MaintenanceController@importPM');
+Route::get('fetch/maintenance/plan/checkList', 'MaintenanceController@fetchItemCheckList');
+
+Route::post('post/maintenance/pm/daily', 'MaintenanceController@postPlannedDaily');
 // Route::get('fetch/maintenance/planned', 'MaintenanceController@fetchPlanned');
 
 //Assemblies
@@ -3159,6 +3172,9 @@ Route::get('/welcome_trial', function () {
 
 // MIRAI MOBILE
 Route::get('index/mirai_mobile/index', 'MiraiMobileController@index');
+
+//CORONA MAP
+Route::get('index/mirai_mobile/corona_map', 'MiraiMobileController@indexCoronaMap');
 
 // CORONA
 Route::get('index/corona_information', 'MiraiMobileController@indexCoronaInformation');
