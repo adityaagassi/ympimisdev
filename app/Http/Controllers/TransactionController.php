@@ -36,7 +36,9 @@ class TransactionController extends Controller
 			'CL21',
 			'FL21',
 			'SX21',
-			'VN21'
+			'VN21',
+			'RC91',
+			'RC11',
 		];
 	}
 
@@ -152,6 +154,8 @@ class TransactionController extends Controller
 				'message' => 'Return berhasil dicancel',
 			);
 			return Response::json($response);
+
+			
 		} catch (Exception $e) {
 			$response = array(
 				'status' => false,
@@ -567,6 +571,9 @@ class TransactionController extends Controller
 			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
 				$printer_name = 'Welding-Printer';			
 			}
+			if($receive == 'RC91'){
+				$printer_name = 'FLO Printer RC';			
+			}
 			else{
 				$printer_name = 'MIS';
 			}
@@ -632,6 +639,9 @@ class TransactionController extends Controller
 			}
 			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
 				$printer_name = 'Welding-Printer';			
+			}
+			if($receive == 'RC91'){
+				$printer_name = 'FLO Printer RC';			
 			}
 			else{
 				$printer_name = 'MIS';

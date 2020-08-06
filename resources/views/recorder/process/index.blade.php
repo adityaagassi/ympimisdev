@@ -22,7 +22,8 @@
 			<button type="button" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;" data-toggle="modal" data-target="#push-pull-check-modal">
 				Recorder Push Block Check
 			</button>
-			<a href="{{ url("index/recorder_process_torque_ai","After Injection") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Torque Check</a>
+			<a href="{{ url('index/recorder_process_torque_ai','After Injection') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Torque Check</a>
+			<a href="{{ url('index/recorder/return') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Return Material</a>
 			<!-- <a href="{{ url("index/recorder_push_pull_check") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Assy Check</a> -->
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">

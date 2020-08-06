@@ -1959,7 +1959,7 @@
 				if(result.status){
 					openSuccessGritter('Success', result.message);
 					$('#loading').hide();
-					alert('Pengisian Selesai.')
+					alert('Pengisian Selesai. Tutup halaman ini. Jika akan melakukan Return Material, silahkan ke menu Return Material.');
 					location.reload();
 				}
 				else{
@@ -2034,11 +2034,11 @@
 					tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>'+index+'</b></td>';	
 					tableData += '<td style="text-align:center;" id="middlehm_'+index+'">'+ array_middle[i] +'</td>';
 					tableData += '<td style="text-align:center;" id="head_'+index+'">'+ array_head_foot[j] +'</td>';
-					tableData += '<td style="padding:0;text-align:right"><input value="20" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquehm(this.id)" class="form-control" id="torquehm_1_'+index+'"></td>';
-					tableData += '<td style="padding:0;text-align:right"><input value="20" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquehm(this.id)" class="form-control" id="torquehm_2_'+index+'"></td>';
-					tableData += '<td style="padding:0;text-align:right"><input value="20" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquehm(this.id)" class="form-control" id="torquehm_3_'+index+'"></td>';
-					tableData += '<td style="text-align:center;" id="averagehm_'+index+'">20</td>';
-					tableData += '<td style="text-align:center;" id="judgementhm_'+index+'">OK</td>';
+					tableData += '<td style="padding:0;text-align:right"><input value="" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquehm(this.id)" class="form-control" id="torquehm_1_'+index+'"></td>';
+					tableData += '<td style="padding:0;text-align:right"><input value="" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquehm(this.id)" class="form-control" id="torquehm_2_'+index+'"></td>';
+					tableData += '<td style="padding:0;text-align:right"><input value="" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquehm(this.id)" class="form-control" id="torquehm_3_'+index+'"></td>';
+					tableData += '<td style="text-align:center;" id="averagehm_'+index+'"></td>';
+					tableData += '<td style="text-align:center;" id="judgementhm_'+index+'"></td>';
 					tableData += '</tr>';
 					index++;
 				}
@@ -2112,11 +2112,11 @@
 					tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>'+index+'</b></td>';	
 					tableData += '<td style="text-align:center;" id="middlemf_'+index+'">'+ array_middle[i] +'</td>';
 					tableData += '<td style="text-align:center;" id="foot_'+index+'">'+ array_head_foot[j] +'</td>';
-					tableData += '<td style="padding:0;text-align:right"><input value="20" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquemf(this.id)" class="form-control" id="torquemf_1_'+index+'"></td>';
-					tableData += '<td style="padding:0;text-align:right"><input value="20" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquemf(this.id)" class="form-control" id="torquemf_2_'+index+'"></td>';
-					tableData += '<td style="padding:0;text-align:right"><input value="20" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquemf(this.id)" class="form-control" id="torquemf_3_'+index+'"></td>';
-					tableData += '<td style="text-align:center;" id="averagemf_'+index+'">20</td>';
-					tableData += '<td style="text-align:center;" id="judgementmf_'+index+'">OK</td>';
+					tableData += '<td style="padding:0;text-align:right"><input value="" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquemf(this.id)" class="form-control" id="torquemf_1_'+index+'"></td>';
+					tableData += '<td style="padding:0;text-align:right"><input value="" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquemf(this.id)" class="form-control" id="torquemf_2_'+index+'"></td>';
+					tableData += '<td style="padding:0;text-align:right"><input value="" type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="torquemf(this.id)" class="form-control" id="torquemf_3_'+index+'"></td>';
+					tableData += '<td style="text-align:center;" id="averagemf_'+index+'"></td>';
+					tableData += '<td style="text-align:center;" id="judgementmf_'+index+'"></td>';
 					tableData += '</tr>';
 					index++;
 				}

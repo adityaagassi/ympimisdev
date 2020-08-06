@@ -131,7 +131,7 @@ public function scanNewTagInjeksi(Request $request){
 
     // $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where part_code = '".$request->get('part_type')."'");
 
-    $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts`");
+    $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` ORDER BY part_name desc");
 
     // if ($request->get('part_type') == 'HJ') {
     //     $type = 'head';
@@ -1627,24 +1627,24 @@ public function create_log(Request $request)
 
         //COMPLETION KITTO
 
-        // $material = db::connection('mysql2')->table('materials')
-        //     ->where('material_number', '=', $request->get('material_number'))
-        //     ->first();
+        $material = db::connection('mysql2')->table('materials')
+            ->where('material_number', '=', $request->get('material_number'))
+            ->first();
 
-        // $completion = db::connection('mysql2')->table('histories')->insert([
-        //         "category" => "completion",
-        //         "completion_barcode_number" => "",
-        //         "completion_description" => "",
-        //         "completion_location" => 'RC11',
-        //         "completion_issue_plant" => "8190",
-        //         "completion_material_id" => $material->id,
-        //         "completion_reference_number" => "",
-        //         "lot" => $request->get('shot'),
-        //         "synced" => 0,
-        //         'user_id' => "1",
-        //         'created_at' => date("Y-m-d H:i:s"),
-        //         'updated_at' => date("Y-m-d H:i:s")
-        //     ]);
+        $completion = db::connection('mysql2')->table('histories')->insert([
+                "category" => "completion",
+                "completion_barcode_number" => "",
+                "completion_description" => "",
+                "completion_location" => 'RC11',
+                "completion_issue_plant" => "8190",
+                "completion_material_id" => $material->id,
+                "completion_reference_number" => "",
+                "lot" => $request->get('shot'),
+                "synced" => 0,
+                'user_id' => "1",
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ]);
 
         $response = array(
             'status' => true,
@@ -4604,7 +4604,7 @@ function store_maintenance_molding(Request $request)
 public function transaction($status)
 {
     $title = 'Injection Transaction';
-    if ($status == 'IN') {
+    if (strtoupper($status) == 'IN') {
         $title_jp = '成形品の受け渡し（IN）';
     }else{
         $title_jp = '成形品の受け渡し（OUT）';
@@ -4731,30 +4731,30 @@ public function completion(Request $request)
                 'created_by' => $id_user
             ]);
 
-            // $material = db::connection('mysql2')->table('materials')
-            // ->where('material_number', '=', $request->get('material_number'))
-            // ->first();
+            $material = db::connection('mysql2')->table('materials')
+            ->where('material_number', '=', $request->get('material_number'))
+            ->first();
 
-            // $transfer = db::connection('mysql2')->table('histories')->insert([
-            //     "category" => "transfer",
-            //     "transfer_barcode_number" => "",
-            //     "transfer_document_number" => "8190",
-            //     "transfer_material_id" => $material->id,
-            //     "transfer_issue_location" => 'RC11',
-            //     "transfer_issue_plant" => "8190",
-            //     "transfer_receive_plant" => "8190",
-            //     "transfer_receive_location" => 'RC91',
-            //     "transfer_cost_center" => "",
-            //     "transfer_gl_account" => "",
-            //     "transfer_transaction_code" => "MB1B",
-            //     "transfer_movement_type" => "9I3",
-            //     "transfer_reason_code" => "",
-            //     "lot" => $request->get('qty'),
-            //     "synced" => 0,
-            //     'user_id' => "1",
-            //     'created_at' => date("Y-m-d H:i:s"),
-            //     'updated_at' => date("Y-m-d H:i:s")
-            // ]);
+            $transfer = db::connection('mysql2')->table('histories')->insert([
+                "category" => "transfer",
+                "transfer_barcode_number" => "",
+                "transfer_document_number" => "8190",
+                "transfer_material_id" => $material->id,
+                "transfer_issue_location" => 'RC11',
+                "transfer_issue_plant" => "8190",
+                "transfer_receive_plant" => "8190",
+                "transfer_receive_location" => 'RC91',
+                "transfer_cost_center" => "",
+                "transfer_gl_account" => "",
+                "transfer_transaction_code" => "MB1B",
+                "transfer_movement_type" => "9I3",
+                "transfer_reason_code" => "",
+                "lot" => $request->get('qty'),
+                "synced" => 0,
+                'user_id' => "1",
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ]);
         }else{
             $transaction = InjectionTag::where('tag',$request->get('tag'))->first();
             $transaction->operator_id = null;
