@@ -468,14 +468,29 @@ class SkillMapController extends Controller
     			$employee->location = $request->get('location');
     			$employee->save();
 
+                $skill_current = [];
+
     			$skills = SkillMap::where('employee_id',$request->get('employee_id'))->where('location',$request->get('location'))->get();
     			if (count($skills) > 0) {
     				foreach ($skills as $key) {
     					$skill2 = SkillMap::find($key->id);
     					$skill2->process = $request->get('process');
+                        $skill_current[] = $skill2->skill_code;
     					$skill2->save();
     				}
     			}
+
+                $count_failed = 0;
+
+                $skill = Skill::where('location',$request->get('location'))->where('process',$request->get('process'))->get();
+
+                foreach ($skill as $key) {
+                    if (in_array($key->skill_code, $skill_current)) {
+                        
+                    }else{
+                        $count_failed++;
+                    }
+                }
 
     			$status = true;
     			$message = 'Update Employee Success';
@@ -484,6 +499,7 @@ class SkillMapController extends Controller
     		$response = array(
 				'status' => $status,
 				'message' => $message,
+                'count_failed' => $count_failed,
 			);
 			return Response::json($response);
     	} catch (\Exception $e) {
