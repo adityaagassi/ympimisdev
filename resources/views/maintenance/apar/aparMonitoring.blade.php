@@ -254,23 +254,16 @@
 
           // if (result.check_list.length == 0) {
             body += "<tr>";
-            body += "<td style='background: transparent'>&nbsp;</td>";
-            body += "<td style='background: transparent'>&nbsp;</td>";
-            body += "<td style='background: transparent'>&nbsp;</td>";
-            body += "<td style='background: transparent'>&nbsp;</td>";
-            body += "<td style='background: transparent'>&nbsp;</td>";
-            body += "<td style='background: transparent'>&nbsp;</td>";
+            body += "<td style='background: transparent' colspan='6'>&nbsp;</td>";
+            body += "</tr>";
+            body += "<tr>";
+            body += "<td style='background: transparent; color: white; font-weight:bold; font-size:16pt' colspan='6'>CHECKED APAR</td>";
             body += "</tr>";
           // }
           $("#hasil").empty();
 
           hasil_body = '<tr>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important" colspan="6">&nbsp;</td>';
           hasil_body = '</tr>';
 
           $.each(result.hasil_check, function(index, value){
@@ -359,24 +352,17 @@
             no_cek++;
           });
 
-          body += "<tr>";
-          body += "<td style='background: transparent'>&nbsp;</td>";
-          body += "<td style='background: transparent'>&nbsp;</td>";
-          body += "<td style='background: transparent'>&nbsp;</td>";
-          body += "<td style='background: transparent'>&nbsp;</td>";
-          body += "<td style='background: transparent'>&nbsp;</td>";
-          body += "<td style='background: transparent'>&nbsp;</td>";
-          body += "</tr>";
-
+           body += "<tr>";
+            body += "<td style='background: transparent' colspan='6'>&nbsp;</td>";
+            body += "</tr>";
+            body += "<tr>";
+            body += "<td style='background: transparent; color: white; font-weight:bold; font-size:16pt' colspan='6'>CHECKED HYDRANT</td>";
+            body += "</tr>";
+          // }
           $("#hasil").empty();
 
           hasil_body = '<tr>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
-          hasil_body = '<td style="border: 0px !important">&nbsp;</td>';
+          hasil_body = '<td style="border: 0px !important" colspan="6">&nbsp;</td>';
           hasil_body = '</tr>';
 
           $.each(result.hasil_check, function(index, value){
