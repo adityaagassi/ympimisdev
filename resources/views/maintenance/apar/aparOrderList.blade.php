@@ -353,6 +353,8 @@
           id.push($(this).val());
         });
 
+        $("#btn_save").attr('disabled', 'true');
+
         var data = {
           utility_id : id,
           pr_date : $("#pr_date").val(),
@@ -365,7 +367,8 @@
             openSuccessGritter("Success", "APAR Successfully Ordered");
             $("#modalDetail").modal("hide");
             $("#modalReady").modal("hide");
-
+            
+            location.reload();
           } else {
             openErrorGritter("Error", result.message);
           }

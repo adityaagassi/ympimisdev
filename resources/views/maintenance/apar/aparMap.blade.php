@@ -67,20 +67,20 @@
 				<h3 style="margin-top: 3px; text-align: center;" id="judul">RCD-INJ-PRESS</h3>
 			</div>
 			<div class="box-body">
-				<img src='{{ asset("/apar_map/1. RCD+INJ+PRESS.jpg") }}' type='image/jpg' width='100%' height='100%' id="RCD-INJ-PRESS" class="img"></img>
-				<img src='{{ asset("/apar_map/2. WKS+MTC.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="WKS-MTC" class="img"></img>
-				<img src='{{ asset("/apar_map/3. T-PRO Lt 1.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="T-PRO-1" class="img"></img>
-				<img src='{{ asset("/apar_map/4. T-PRO Lt 2.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="T-PRO-2" class="img"></img>
-				<img src='{{ asset("/apar_map/5. WH Lt 1.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="WH-1" class="img"></img>
-				<img src='{{ asset("/apar_map/6. WH Lt 2.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="WH-2" class="img"></img>
-				<img src='{{ asset("/apar_map/7. KNT+OFC.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="KNT-OFC" class="img"></img>
-				<img src='{{ asset("/apar_map/8. WWT.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="WWT" class="img"></img>
-				<img src='{{ asset("/apar_map/9. PLT+PNT.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="PLT-PNT" class="img"></img>
-				<img src='{{ asset("/apar_map/10. BUFF+TUMB.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="BUFF-TUMB" class="img"></img>
-				<img src='{{ asset("/apar_map/11. ASSY.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="ASSY" class="img"></img>
-				<img src='{{ asset("/apar_map/12. SLD.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="SLD" class="img"></img>
-				<img src='{{ asset("/apar_map/13. C-PRO.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="C-PRO" class="img"></img>
-				<img src='{{ asset("/apar_map/14. RPL+PNC.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="RPL-PNC" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/1. RCD+INJ+PRESS.jpg") }}' type='image/jpg' width='100%' height='100%' id="RCD-INJ-PRESS" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/2. WKS+MTC.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="WKS-MTC" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/3. T-PRO Lt 1.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="T-PRO-1" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/4. T-PRO Lt 2.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="T-PRO-2" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/5. WH Lt 1.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="WH-1" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/6. WH Lt 2.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="WH-2" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/7. KNT+OFC.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="KNT-OFC" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/8. WWT.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="WWT" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/9. PLT+PNT.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="PLT-PNT" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/10. BUFF+TUMB.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="BUFF-TUMB" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/11. ASSY.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="ASSY" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/12. SLD.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="SLD" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/13. C-PRO.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="C-PRO" class="img"></img>
+				<img src='{{ asset("/maintenance/apar_map/14. RPL+PNC.jpg") }}' type='image/jpg' width='100%' height='100%' style="display: none" id="RPL-PNC" class="img"></img>
 			</div>
 		</div>
 	</div>
