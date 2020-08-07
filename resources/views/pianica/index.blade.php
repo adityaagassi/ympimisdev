@@ -35,7 +35,8 @@
 			<a href="{{ url("index/display_pn_ng_rate?tanggal=&location=") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">NG by Operator</a>
 			<a href="{{ url("index/display_pn_ng_trends?location=") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Daily NG by Operator</a>
 			<a href="{{ url("index/display_daily_pn_ng?location=") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Daily NG</a>
-			<a href="{{ url('index/skill_map','pn-assy') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Skill Map</a>
+			<a href="{{ url('index/skill_map','pn-assy-initial') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Skill Map Initial</a>
+			<a href="{{ url('index/skill_map','pn-assy-final') }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Skill Map Final</a>
 			
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">

@@ -18,6 +18,8 @@ use App\Skill;
 use App\SkillMap;
 use App\SkillValue;
 use App\EmployeeSync;
+use App\SkillMutationLog;
+use App\SkillUnfulfilledLog;
 
 class SkillMapController extends Controller
 {
@@ -40,15 +42,23 @@ class SkillMapController extends Controller
     	$employees = EmployeeSync::orderBy('name', 'asc')->get();
     	$process = DB::SELECT("SELECT DISTINCT(process) FROM `skills` where location = '".$location."' and skills.deleted_at is null order by process ");
 
-    	if ($location == 'pn-assy') {
+    	if ($location == 'pn-assy-initial') {
     		$dept = 'Educational Instrument (EI)';
     		$section = 'Pianica';
-    		$title = 'Skill Map - Pianica Assembly';
+    		$title = 'Skill Map - Pianica Assembly Initial';
+            $subtitle = 'Pianica Assembly Initial';
     		$title_jp = 'のスキルマップ ~ ピアニカ集成';
-    	}
+    	}else if ($location == 'pn-assy-final') {
+            $dept = 'Educational Instrument (EI)';
+            $section = 'Pianica';
+            $title = 'Skill Map Final - Pianica Assembly Final';
+            $subtitle = 'Pianica Assembly Initial';
+            $title_jp = 'のスキルマップ ~ ピアニカ集成';
+        }
 
     	return view('skill_map.index', array(
 			'title' => $title,
+            'subtitle' => $subtitle,
 			'title_jp' => $title_jp,
 			'location' => $location,
 			'process' => $process,
@@ -80,6 +90,7 @@ class SkillMapController extends Controller
 
     		$emp = [];
     		$skill_map = [];
+            $skill_required = [];
     		foreach ($process as $key) {
     			$emp[] = DB::SELECT("SELECT skill_employees.employee_id,name,skill_employees.process,skill_employees.location from skill_employees left join employee_syncs on skill_employees.employee_id = employee_syncs.employee_id where process = '".$key->process."' and location = '".$location."' and skill_employees.deleted_at is null");
 
@@ -99,6 +110,8 @@ class SkillMapController extends Controller
 							AND skills.location = '".$emp[$i][$j]->location."'
 							and skill_maps.deleted_at is null
 							and skills.deleted_at is null");
+
+                        $skill_required[$i][$j] = DB::SELECT("select skill_code,skill,process,location,value as nilai,(select skill from skill_maps where skill_code = skills.skill_code and employee_id = '".$emp[$i][$j]->employee_id."' and skill_maps.deleted_at is null) as skill_now,(select value from skill_maps where skill_code = skills.skill_code and employee_id = '".$emp[$i][$j]->employee_id."' and skill_maps.deleted_at is null) as nilai_now,(select id from skill_maps where skill_code = skills.skill_code and employee_id = '".$emp[$i][$j]->employee_id."' and skill_maps.deleted_at is null) as id_skill_now from skills where skills.location = '".$location."' and skills.process = '".$emp[$i][$j]->process."' and skills.deleted_at is null");
     				}
     			}
     		}
@@ -108,6 +121,7 @@ class SkillMapController extends Controller
 				'process' => $process,
 				'emp' => $emp,
 				'skill_map' => $skill_map,
+                'skill_required' => $skill_required,
 				'message' => 'Get Data Success.',
 			);
 			return Response::json($response);
@@ -462,8 +476,10 @@ class SkillMapController extends Controller
 			        $status = true;
     				$message = 'Add Employee Success';
     			}
+                $count_failed = 0;
     		}else{
     			$employee = SkillEmployee::find($request->get('id_employee'));
+                $process_from = $employee->process;
     			$employee->process = $request->get('process');
     			$employee->location = $request->get('location');
     			$employee->save();
@@ -491,6 +507,21 @@ class SkillMapController extends Controller
                         $count_failed++;
                     }
                 }
+
+                if ($count_failed > 0) {
+                    $remark = 'Belum Memenuhi';
+                }else{
+                    $remark = 'Sudah Memenuhi';
+                }
+
+                SkillMutationLog::create([
+                    'employee_id' => $request->get('employee_id'),
+                    'process_from' => $process_from,
+                    'process_to' => $request->get('process'),
+                    'location' => $request->get('location'),
+                    'remark' => $remark,
+                    'created_by' => $id_user
+                ]);
 
     			$status = true;
     			$message = 'Update Employee Success';
@@ -670,19 +701,36 @@ class SkillMapController extends Controller
     public function fetchSkillResume(Request $request)
     {
         try {
-            $resume = DB::SELECT("SELECT DISTINCT(skill),
+            $resume = DB::SELECT("SELECT DISTINCT(skill),skill_code,
                 (select count(employee_id) from skill_maps where skill_maps.value >= 3 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_lebih_tiga,
                 (select count(employee_id) from skill_maps where skill_maps.value = 1 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_satu,
                 (select count(employee_id) from skill_maps where skill_maps.value >= 2 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_dua,
                 (select count(employee_id) from skill_maps where skill_maps.value >= 3 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_tiga,
                 (select count(employee_id) from skill_maps where skill_maps.value >= 4 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as jumlah_empat,
                 COALESCE(((select count(employee_id) from skill_maps where skill_maps.value >= 3 and skill_code = skills.skill_code and skills.location = '".$request->get('location')."')/(select count(DISTINCT(employee_id)) from skill_maps where skill_maps.location = '".$request->get('location')."')*100),0) as persen_lebih_tiga,
-                (select count(DISTINCT(employee_id)) from skill_maps where skill_maps.location = '".$request->get('location')."') as jumlah_orang
-                FROM skills");
+                (select count(DISTINCT(employee_id)) from skill_maps where skill_maps.location = '".$request->get('location')."') as jumlah_orang,
+                (select ROUND(AVG(value),1) from skill_maps where skill_code = skills.skill_code and skills.location = '".$request->get('location')."') as average
+                FROM skills where location = '".$request->get('location')."'");
+
+            $unfulfilled = DB::SELECT("SELECT
+                skill_unfulfilled_logs.employee_id,employee_syncs.name,skill_unfulfilled_logs.process,skill_unfulfilled_logs.skill_code,skills.skill,skill_unfulfilled_logs.value,skill_unfulfilled_logs.required,skill_unfulfilled_logs.remark as unfulfilled_remark
+            FROM
+                skill_unfulfilled_logs
+                LEFT JOIN employee_syncs ON employee_syncs.employee_id = skill_unfulfilled_logs.employee_id
+                LEFT JOIN skills ON skills.skill_code = skill_unfulfilled_logs.skill_code 
+            WHERE
+                skill_unfulfilled_logs.location = '".$request->get('location')."' 
+                AND date( skill_unfulfilled_logs.created_at ) = DATE(
+                NOW()) 
+                AND skill_unfulfilled_logs.deleted_at IS NULL");
+
+            $mutation = DB::SELECT("SELECT *,skill_mutation_logs.remark as mutation_remark ,skill_mutation_logs.created_at as mutation_created_at,employee_syncs.name as name,users.name as adjusted_by FROM skill_mutation_logs left join employee_syncs on employee_syncs.employee_id = skill_mutation_logs.employee_id left join users on users.id = skill_mutation_logs.id where location = '".$request->get('location')."'");
 
             $response = array(
                 'status' => true,
                 'resume' => $resume,
+                'unfulfilled' => $unfulfilled,
+                'mutation' => $mutation,
                 'message' => 'Get Skill Success.',
             );
             return Response::json($response);

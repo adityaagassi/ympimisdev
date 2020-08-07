@@ -93,6 +93,10 @@ Route::get('404', function() {
 	return view('404');
 });
 
+//POINTING CALL
+Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPointingCall');
+Route::get('fetch/general/pointing_call', 'GeneralController@fetchGeneralPointingCall');
+
 //GENERAL
 Route::get('index/general/attendance_check', 'GeneralController@indexGeneralAttendanceCheck');
 Route::get('fetch/general/attendance_check', 'GeneralController@fetchGeneralAttendanceCheck');
@@ -1079,39 +1083,44 @@ Route::get('scan/welding/jig', 'WeldingProcessController@scanWeldingJig');
 Route::get('fetch/welding/schedule_jig', 'WeldingProcessController@scanWeldingJig');
 
 
-//Exchange Rate
-Route::get('index/exchange_rate', 'AccountingController@exchange_rate');
-Route::get('fetch/exchange_rate', 'AccountingController@fetch_exchange_rate');
-Route::post('create/exchange_rate', 'AccountingController@create_exchange_rate');
-Route::post('delete/exchange_rate', 'AccountingController@delete_exchange_rate');
 
 //Supplier
-Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
-	Route::get('index/supplier', 'AccountingController@master_supplier');
-	Route::get('fetch/supplier', 'AccountingController@fetch_supplier');
+Route::get('index/supplier', 'AccountingController@master_supplier');
+Route::get('fetch/supplier', 'AccountingController@fetch_supplier');
+
+//Purchase Item
+Route::get('index/purchase_item', 'AccountingController@master_item');
+Route::get('fetch/purchase_item', 'AccountingController@fetch_item');
+
+//Item Category
+Route::get('index/purchase_item/create_category', 'AccountingController@create_item_category');
+Route::post('index/purchase_item/create_category', 'AccountingController@create_item_category_post');
+
+Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('index/supplier/create', 'AccountingController@create_supplier');
 	Route::post('index/supplier/create_post', 'AccountingController@create_supplier_post');
 	Route::get('index/supplier/update/{id}', 'AccountingController@update_supplier');
 	Route::post('index/supplier/update', 'AccountingController@update_supplier_post');
 	Route::get('index/supplier/delete/{id}', 'AccountingController@delete_supplier');
-});
 
-//Purchase Item
-Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
-	//Item
-	Route::get('index/purchase_item', 'AccountingController@master_item');
-	Route::get('fetch/purchase_item', 'AccountingController@fetch_item');
 	Route::get('index/purchase_item/create', 'AccountingController@create_item');
 	Route::post('index/purchase_item/create_post', 'AccountingController@create_item_post');
 	Route::get('index/purchase_item/update/{id}', 'AccountingController@update_item');
 	Route::post('index/purchase_item/edit_post', 'AccountingController@update_item_post');
 	Route::get('index/purchase_item/delete/{id}', 'AccountingController@delete_item');
 	Route::get('index/purchase_item/get_kode_item', 'AccountingController@get_kode_item');
-	
-	//Item Category
-	Route::get('index/purchase_item/create_category', 'AccountingController@create_item_category');
-	Route::post('index/purchase_item/create_category', 'AccountingController@create_item_category_post');
 });
+
+
+//Exchange Rate
+
+Route::group(['nav' => 'S44', 'middleware' => 'permission'], function(){
+	Route::get('index/exchange_rate', 'AccountingController@exchange_rate');
+	Route::get('fetch/exchange_rate', 'AccountingController@fetch_exchange_rate');
+	Route::post('create/exchange_rate', 'AccountingController@create_exchange_rate');
+	Route::post('delete/exchange_rate', 'AccountingController@delete_exchange_rate');
+});
+
 
 //nomor PR
 Route::get('purchase_requisition/get_nomor_pr', 'AccountingController@get_nomor_pr');
@@ -1145,28 +1154,44 @@ Route::get('purchase_requisition/approvegm/{id}', 'AccountingController@prapprov
 Route::get('purchase_requisition/reject/{id}', 'AccountingController@prreject');
 
 //Purchase Order Khusus PR
-Route::get('purchase_order', 'AccountingController@purchase_order');
-Route::get('fetch/purchase_order', 'AccountingController@fetch_purchase_order');
-Route::get('fetch/purchase_order_pr', 'AccountingController@fetch_po_outstanding_pr');
-Route::post('create/purchase_order', 'AccountingController@create_purchase_order');
-Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
-Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
-Route::get('purchase_order/get_detailname', 'AccountingController@pogetname')->name('admin.pogetname');
-Route::get('purchase_order/report/{id}', 'AccountingController@report_purchase_order');
-Route::get('purchase_order/sendemail', 'AccountingController@po_send_email');
-Route::post('purchase_order/edit_sap', 'AccountingController@edit_sap');
-Route::get('edit/purchase_order', 'AccountingController@edit_purchase_order');
-Route::post('update/purchase_order', 'AccountingController@update_purchase_order');
-Route::post('delete/purchase_order_item', 'AccountingController@delete_item_po');
-Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
-Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
-Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
-Route::get('export/purchase_order/list', 'AccountingController@exportPO');
-//New Approval Purchase Order
-Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
-Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
+Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
+	Route::get('purchase_order', 'AccountingController@purchase_order');
+	Route::get('fetch/purchase_order', 'AccountingController@fetch_purchase_order');
+	Route::get('fetch/purchase_order_pr', 'AccountingController@fetch_po_outstanding_pr');
+	Route::post('create/purchase_order', 'AccountingController@create_purchase_order');
+	Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
+	Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
+	Route::get('purchase_order/get_detailname', 'AccountingController@pogetname')->name('admin.pogetname');
+	Route::get('purchase_order/report/{id}', 'AccountingController@report_purchase_order');
+	Route::get('purchase_order/sendemail', 'AccountingController@po_send_email');
+	Route::post('purchase_order/edit_sap', 'AccountingController@edit_sap');
+	Route::get('edit/purchase_order', 'AccountingController@edit_purchase_order');
+	Route::post('update/purchase_order', 'AccountingController@update_purchase_order');
+	Route::post('delete/purchase_order_item', 'AccountingController@delete_item_po');
+	Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
+	Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
+	Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
+	Route::get('export/purchase_order/list', 'AccountingController@exportPO');
+	//New Approval Purchase Order
+	Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
+	Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
+	Route::post('update/purchase_requisition/po', 'AccountingController@update_purchase_requisition_po');
 
-Route::post('update/purchase_requisition/po', 'AccountingController@update_purchase_requisition_po');
+	//Purchase Order Khusus investment
+	Route::get('purchase_order_investment', 'AccountingController@purchase_order_investment');
+	Route::get('fetch/purchase_order_investment', 'AccountingController@fetch_purchase_order_investment');
+	Route::get('fetch/po_investment_outstanding', 'AccountingController@fetch_po_outstanding_investment');
+	Route::get('fetch/investment_item_detail', 'AccountingController@fetch_investment_detail');
+	Route::get('fetch/purchase_order/pilih_investment', 'AccountingController@pilihInvestment');
+	Route::get('fetch/purchase_order/invlist', 'AccountingController@fetchInvList');
+	Route::get('purchase_order/investment_get_item', 'AccountingController@pogetiteminvest');
+
+	//Receive
+	Route::get('receive_goods', 'AccountingController@receive_goods');
+	Route::get('fetch/receive', 'AccountingController@fetch_receive');
+	Route::get('receive/detail', 'AccountingController@receive_detail');
+	Route::post('import/receive', 'AccountingController@import_receive');
+});
 
 //investment
 Route::get('investment', 'AccountingController@investment');
@@ -1197,27 +1222,11 @@ Route::post('investment/delete_investment_item', 'AccountingController@delete_in
 Route::get('investment/get_detailitem', 'AccountingController@getitemdesc')->name('admin.getitemdesc');
 Route::get('investment/report/{id}', 'AccountingController@report_investment');
 
-//Purchase Order Khusus investment
-Route::get('purchase_order_investment', 'AccountingController@purchase_order_investment');
-Route::get('fetch/purchase_order_investment', 'AccountingController@fetch_purchase_order_investment');
-Route::get('fetch/po_investment_outstanding', 'AccountingController@fetch_po_outstanding_investment');
-Route::get('fetch/investment_item_detail', 'AccountingController@fetch_investment_detail');
-Route::get('fetch/purchase_order/pilih_investment', 'AccountingController@pilihInvestment');
-Route::get('fetch/purchase_order/invlist', 'AccountingController@fetchInvList');
-Route::get('purchase_order/investment_get_item', 'AccountingController@pogetiteminvest');
-
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
 Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
 Route::get('budget/detail', 'AccountingController@budget_detail');
 Route::post('import/budget', 'AccountingController@import_budget');
-
-//Receive
-Route::get('receive_goods', 'AccountingController@receive_goods');
-Route::get('fetch/receive', 'AccountingController@fetch_receive');
-Route::get('receive/detail', 'AccountingController@receive_detail');
-Route::post('import/receive', 'AccountingController@import_budget');
-
 
 
 
@@ -3118,7 +3127,7 @@ Route::get('index/assembly/stamp_record', 'AssemblyProcessController@indexStampR
 Route::get('fetch/assembly/stamp_record', 'AssemblyProcessController@fetchStampRecord');
 
 //SKILL MAP
-Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
+Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 	Route::get('index/skill_map/{location}', 'SkillMapController@indexSkillMap');
 	Route::get('fetch/skill_map', 'SkillMapController@fetchSkillMap');
 	Route::get('fetch/skill_map_detail', 'SkillMapController@fetchSkillMapDetail');
@@ -3207,6 +3216,9 @@ Route::get('export/mirai_mobile/report_location', 'MiraiMobileController@exportL
 //report shift
 Route::get('index/mirai_mobile/report_indication', 'MiraiMobileController@indication');
 Route::get('fetch/mirai_mobile/report_indication', 'MiraiMobileController@fetchIndicationData');
+
+//audit MIS
+Route::get('index/audit_mis', 'DailyReportController@indexAuditMIS');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');

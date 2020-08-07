@@ -336,7 +336,10 @@
 				<hr>
 				<div class="modal-body" style="min-height: 100px; padding-bottom: 5px;">
 					<div class="col-xs-12">
-						<div class="row">
+						<div class="row" style="padding-top: 0px">
+							<div id="container_resume"></div>
+						</div>
+						<div class="row" style="padding-top: 20px">
 							<table id="tableResume" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 									<tr>
@@ -351,6 +354,51 @@
 									</tr>
 								</thead>
 								<tbody id="bodyTableResume">
+								</tbody>
+							</table>
+						</div>
+						<div class="row" style="padding-top: 20px">
+							<div style="padding-bottom: 20px;">
+								<center style="background-color: #ffac26;color: white">
+									<span style="font-weight: bold; font-size: 2vw;">Skill yang Belum Terpenuhi</span>
+								</center>
+							</div>
+							<table id="tableUnfulfilled" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+									<tr>
+										<th>Employee ID</th>
+										<th>Name</th>
+										<th>Process</th>
+										<th>Skill Code</th>
+										<th>Skill</th>
+										<th>Current</th>
+										<th>Required</th>
+										<th>Remark</th>
+									</tr>
+								</thead>
+								<tbody id="bodyTableUnfulfilled">
+								</tbody>
+							</table>
+						</div>
+						<div class="row" style="padding-top: 20px">
+							<div style="padding-bottom: 20px;">
+								<center style="background-color: #ffac26;color: white">
+									<span style="font-weight: bold; font-size: 2vw;">Adjustment Employee History</span>
+								</center>
+							</div>
+							<table id="tableMutationLog" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+									<tr>
+										<th>Employee ID</th>
+										<th>Name</th>
+										<th>Process From</th>
+										<th>Process To</th>
+										<th>Remark</th>
+										<th>Adjusted By</th>
+										<th>Adjusted At</th>
+									</tr>
+								</thead>
+								<tbody id="bodyTableMutationLog">
 								</tbody>
 							</table>
 						</div>
@@ -374,6 +422,14 @@
 <script src="{{ url("js/moment.min.js")}}"></script>
 <script src="{{ url("js/bootstrap-datetimepicker.min.js")}}"></script>
 <script src="{{ url("plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
+<script src="{{ url("js/dataTables.buttons.min.js")}}"></script>
+<script src="{{ url("js/buttons.flash.min.js")}}"></script>
+<script src="{{ url("js/jszip.min.js")}}"></script>
+<script src="{{ url("js/vfs_fonts.js")}}"></script>
+<script src="{{ url("js/buttons.html5.min.js")}}"></script>
+<script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ url("js/exporting-new.js")}}"></script>
+<script src="{{ url("js/export-data-new.js")}}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -425,28 +481,32 @@
 				$('#tableSkillMap').empty();
 				var indexindex = 0;
 				var index2 = 0;
+				var index1 = 0;
+				var index5 = 0;
 				tableSkill += '<table class="table table-bordered" style="width:100%;border:2px solid black;">';
 				$.each(result.process, function(key, value) {
 					var index3 = 0;
 					var modal = '#modalSkillAdjusment';
 					tableSkill += '<tr>';
-					tableSkill += '<td style="color:black;width:50px;font-size:15px;border:2px solid black"><b>'+value.process+'</b></td>';
+					tableSkill += '<td style="color:black;width:50px;font-size:15px;border:2px solid black" id="process_display_'+index1+'"></td>';
 					for(var i = 0;i < result.emp[key].length; i++){
 						tableSkill += '<td onclick="showModalSkillAdjusment(\''+modal+'\',this.id,\''+result.emp[key][i].name+'\',\''+value.process+'\')" class="nama_operator" id="'+result.emp[key][i].employee_id+'" style="color:black;border:2px solid black;"><div style="width:100%;background-color:#a4eb34;padding-bottom:0px"><span style="font-weight:bold;">'+result.emp[key][i].employee_id+'</span><br><span style="">'+result.emp[key][i].name.split(' ').slice(0,2).join(' ')+'</span></div><div id="container_'+indexindex+'" style="width:300px;padding-top:0px"></div></td>';
 							indexindex++;
-						index3++;
+							index3++;
 					}
+					index1++;
 					tableSkill += '</tr>';
 				})
 				tableSkill += '</table>';
 				$('#tableSkillMap').append(tableSkill);
 
 				$.each(result.process, function(key, value) {
-					// console.log(result.emp[key]);
+					var index4 = 0;
 					for(var i = 0;i < result.emp[key].length; i++){
 						var skills = [];
 						var nilais = [];
 						var nilaitetap = [];
+						var status = 0;
 
 						if (result.skill_map[key][i].length > 0) {
 							for(var j = 0; j < result.skill_map[key][i].length;j++){
@@ -455,7 +515,15 @@
 								nilaitetap.push(parseInt(result.skill_map[key][i][j].nilai_tetap));
 							}
 						}
-
+						for(var k = 0; k < result.skill_required[key][i].length;k++){
+							if (result.skill_required[key][i][k].skill_now == null || result.skill_required[key][i][k].nilai_now < result.skill_required[key][i][k].nilai) {
+								status++;
+							}
+						}
+						if (status > 0) {
+							document.getElementById(result.emp[key][i].employee_id).style.backgroundColor = '#ff6161';
+						}
+						index4++;
 						
 						if (skills.length > 0) {
 							Highcharts.chart('container_'+index2, {
@@ -543,6 +611,8 @@
 						}
 						index2++;
 					}
+					$('#process_display_'+index5).html('<b>'+value.process+'<br>('+index4+')</b>');
+					index5++;
 				})
 			}
 			else{
@@ -585,15 +655,14 @@ function skillAdjusment(employee_id,name,proces) {
 			$('#table_other').empty();
 			var footer = "";
 			$('#skillFooter').empty();
-
 			if (result.skill_map.length > 0) {
-				tableDetail += '<table style="padding:0px" class="table table-bordered">';
+				tableDetail += '<table style="padding:0px" id="tableDetail" class="table table-bordered">';
 				tableDetail += '<thead>';
 				tableDetail += '<tr>';
-				tableDetail += '<th style="padding:0px"><center>Skill</center></th>';
-				tableDetail += '<th style="padding:0px"><center>Value</center></th>';
-				tableDetail += '<th style="padding:0px"><center>Required</center></th>';
-				tableDetail += '<th style="padding:0px"><center>Result</center></th>';
+				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Skill</center></th>';
+				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Value</center></th>';
+				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Required</center></th>';
+				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Result</center></th>';
 				tableDetail += '</tr>';
 				tableDetail += '</thead>';
 				for(var j = 0; j < result.skill_map.length;j++){
@@ -614,6 +683,58 @@ function skillAdjusment(employee_id,name,proces) {
 				}
 				tableDetail += '</table>';
 				$('#table_detail').append(tableDetail);
+				var table = $('#tableDetail').DataTable({
+					'dom': 'Bfrtip',
+						'responsive':true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],
+						'buttons': {
+							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							},
+							{
+								extend: 'copy',
+								className: 'btn btn-success',
+								text: '<i class="fa fa-copy"></i> Copy',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'excel',
+								className: 'btn btn-info',
+								text: '<i class="fa fa-file-excel-o"></i> Excel',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							},
+							{
+								extend: 'print',
+								className: 'btn btn-warning',
+								text: '<i class="fa fa-print"></i> Print',
+								exportOptions: {
+									columns: ':not(.notexport)'
+								}
+							}
+							]
+						},
+						'paging': true,
+						'lengthChange': true,
+						'pageLength': 5,
+						'searching': true	,
+						'ordering': true,
+						'order': [],
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true
+				});
 			}
 
 			if (result.skill_required.length > 0) {
@@ -643,7 +764,6 @@ function skillAdjusment(employee_id,name,proces) {
 						tableRequired += '<td id="skill'+k+'" style="font-size: 15px;padding-top:5px;padding-bottom:5px">'+result.skill_required[i].skill_now+'</td>';
 					}else{
 						tableRequired += '<td id="skill'+k+'" style="font-size: 15px;padding-top:5px;padding-bottom:5px">'+result.skill_required[i].skill+'</td>';
-						$('#warning_details').html("<br>Karyawan ini <b>tidak memiliki Skill yang sesuai</b> dengan posisinya. Lakukan <b>Upgrade Skill</b> segera.");
 					}
 					tableRequired += '<td id="minus" onclick="minus('+k+')" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 30px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
 					if (result.skill_required[i].nilai_now != null) {
@@ -656,6 +776,9 @@ function skillAdjusment(employee_id,name,proces) {
 						tableRequired += '<td id="delete_other" style="background-color: rgb(255,99,99); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable"></td>';
 					}else{
 						tableRequired += '<td id="delete_other" onclick="delete_skill('+result.skill_required[i].id_skill_now+',\''+employee_id+'\',\''+name+'\',\''+proces+'\')" style="background-color: rgb(255,99,99); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;color:white" class="unselectable"><i class="fa fa-trash" aria-hidden="true"></i></td>';
+					}
+					if (result.skill_required[i].nilai_now == null || result.skill_required[i].nilai_now < result.skill_required[i].nilai) {
+						$('#warning_details').html("<br>Karyawan ini <b>tidak memiliki nilai Skill yang sesuai</b> dengan posisinya. Lakukan <b>Upgrade Skill</b> segera.");
 					}
 					tableRequired += '</tr>';
 				}
@@ -916,7 +1039,6 @@ function delete_skill(id_skill,employee_id,name,proces){
 }
 
 function fillTableMaster() {
-	fetchSkillMap();
 	clearMaster();
 	var data = {
 		location:'{{$location}}'
@@ -950,55 +1072,55 @@ function fillTableMaster() {
 
 			var table = $('#tableMaster').DataTable({
 				'dom': 'Bfrtip',
-				'responsive':true,
-				'lengthMenu': [
-				[ 10, 25, 50, -1 ],
-				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-				],
-				'buttons': {
-					buttons:[
-					{
-						extend: 'pageLength',
-						className: 'btn btn-default',
-					},
-					{
-						extend: 'copy',
-						className: 'btn btn-success',
-						text: '<i class="fa fa-copy"></i> Copy',
-						exportOptions: {
-							columns: ':not(.notexport)'
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
 						}
+						]
 					},
-					{
-						extend: 'excel',
-						className: 'btn btn-info',
-						text: '<i class="fa fa-file-excel-o"></i> Excel',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'print',
-						className: 'btn btn-warning',
-						text: '<i class="fa fa-print"></i> Print',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					}
-					]
-				},
-				'paging': true,
-				'lengthChange': true,
-				'pageLength': 10,
-				'searching': true	,
-				'ordering': true,
-				'order': [],
-				'info': true,
-				'autoWidth': true,
-				"sPaginationType": "full_numbers",
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"processing": true
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
 			});
 		}
 		else{
@@ -1129,7 +1251,6 @@ function fillTableMaster() {
 	}
 
 	function fillTableEmployee() {
-		fetchSkillMap();
 		clearEmployee();
 		var data = {
 			location:'{{$location}}',
@@ -1269,6 +1390,7 @@ function fillTableMaster() {
 			$.post('{{ url("destroy/skill_employee") }}',data, function(result, status, xhr){
 				if(result.status){
 					openSuccessGritter('Success!', result.message);
+					fetchSkillMap();
 					fillTableEmployee();
 					clearEmployee();
 				}
@@ -1302,7 +1424,6 @@ function fillTableMaster() {
 	}
 
 	function fillTableValue() {
-		fetchSkillMap();
 		clearValue();
 		var data = {
 			location:'{{$location}}'
@@ -1399,6 +1520,7 @@ function fillTableMaster() {
 					openSuccessGritter('Success!', result.message);
 					fillTableValue();
 					clearValue();
+					fetchSkillMap();
 					$('#loading').hide();
 				}
 				else{
@@ -1422,6 +1544,7 @@ function fillTableMaster() {
 					openSuccessGritter('Success!', result.message);
 					fillTableValue();
 					clearValue();
+					fetchSkillMap();
 				}
 				else{
 					audio_error.play();
@@ -1467,9 +1590,13 @@ function fillTableMaster() {
 				$('#tableResume').DataTable().destroy();
 				$('#bodyTableResume').html("");
 				var tableData = "";
+
+				var skills = [];
+				var nilais = [];
+
 				$.each(result.resume, function(key, value) {
 					var jumlah_all = ((value.jumlah_satu + value.jumlah_dua + value.jumlah_tiga +value.jumlah_empat)/value.jumlah_orang) * 100;
-					tableData += '<tr>';
+					tableData += '<tr style="font-size:15px;">';
 					tableData += '<td>'+ value.skill +'</td>';
 					tableData += '<td>'+ value.jumlah_lebih_tiga +'</td>';
 					tableData += '<td>'+ value.jumlah_satu +'</td>';
@@ -1479,6 +1606,9 @@ function fillTableMaster() {
 					tableData += '<td>'+ Math.round(value.persen_lebih_tiga) +' %</td>';
 					tableData += '<td>'+ Math.round(jumlah_all) +' %</td>';
 					tableData += '</tr>';
+
+					skills.push(value.skill_code);
+					nilais.push({y: parseInt(value.average), name: value.skill});
 				});
 				$('#bodyTableResume').append(tableData);
 
@@ -1533,6 +1663,233 @@ function fillTableMaster() {
 					"bJQueryUI": true,
 					"bAutoWidth": false,
 					"processing": true
+				});
+
+				$('#tableUnfulfilled').DataTable().clear();
+				$('#tableUnfulfilled').DataTable().destroy();
+				$('#bodyTableUnfulfilled').html("");
+				var tableDataUnfulfilled = "";
+
+				$.each(result.unfulfilled, function(key, value) {
+					if (value.unfulfilled_remark == 'Nilai Skill Kurang') {
+						var color = '#fffa70';
+					}else{
+						var color = '#ffccff';
+					}
+					tableDataUnfulfilled += '<tr style="background-color:'+color+';font-size:15px;">';
+					tableDataUnfulfilled += '<td>'+ value.employee_id +'</td>';
+					tableDataUnfulfilled += '<td>'+ value.name +'</td>';
+					tableDataUnfulfilled += '<td>'+ value.process +'</td>';
+					tableDataUnfulfilled += '<td>'+ value.skill_code +'</td>';
+					tableDataUnfulfilled += '<td>'+ value.skill +'</td>';
+					tableDataUnfulfilled += '<td>'+ value.value +'</td>';
+					tableDataUnfulfilled += '<td>'+ value.required +'</td>';
+					tableDataUnfulfilled += '<td>'+ value.unfulfilled_remark +'</td>';
+					tableDataUnfulfilled += '</tr>';
+				});
+
+				$('#bodyTableUnfulfilled').append(tableDataUnfulfilled);
+
+				var table = $('#tableUnfulfilled').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+
+				$('#tableMutationLog').DataTable().clear();
+				$('#tableMutationLog').DataTable().destroy();
+				$('#bodyTableMutationLog').html("");
+				var tableMutationLog = "";
+
+				$.each(result.mutation, function(key, value) {
+					tableMutationLog += '<tr style="font-size:15px;">';
+					tableMutationLog += '<td>'+ value.employee_id +'</td>';
+					tableMutationLog += '<td>'+ value.name +'</td>';
+					tableMutationLog += '<td>'+ value.process_from +'</td>';
+					tableMutationLog += '<td>'+ value.process_to +'</td>';
+					tableMutationLog += '<td>'+ value.mutation_remark +'</td>';
+					tableMutationLog += '<td>'+ value.adjusted_by +'</td>';
+					tableMutationLog += '<td>'+ value.mutation_created_at +'</td>';
+					tableMutationLog += '</tr>';
+				});
+
+				$('#bodyTableMutationLog').append(tableMutationLog);
+
+				var table = $('#tableMutationLog').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+				});
+
+				var title = '{{$subtitle}}';
+
+				Highcharts.chart('container_resume', {
+				    chart: {
+				        polar: true,
+				        type: 'line',
+				        height:'500px',
+				    },
+
+				    pane: {
+				        size: '80%'
+				    },
+				    title: {
+						text: 'Skill Map Resume - '+title
+					},
+
+				    xAxis: {
+				        categories: skills,
+				        tickmarkPlacement: 'on',
+				        lineWidth: 0,
+				        labels: {
+				            style: {
+				                color: 'white',
+				                fontSize:'20px'
+				            }
+				        }
+				    },
+
+				    yAxis: {
+				        gridLineInterpolation: 'polygon',
+				        lineWidth: 0,
+				        min: 0
+				    },
+				    tooltip: {
+				        shared: true,
+				        pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><span><br/>'
+				    },
+
+				    legend: {
+				        enabled:false
+				    },
+
+				    series: [{
+				        name: 'Value',
+				        data: nilais,
+				        pointPlacement: 'on',
+				        color: '#64ff61',
+				        lineWidth: 2,
+				        marker: {
+		                    enabled: true,
+		                    radius: 3
+		                }
+				    }],
+
+				    responsive: {
+				        rules: [{
+				            condition: {
+				                maxWidth: 200
+				            },
+				            chartOptions: {
+				                legend: {
+				                    align: 'center',
+				                    verticalAlign: 'bottom',
+				                    layout: 'horizontal'
+				                },
+				                pane: {
+				                    size: '100%'
+				                }
+				            }
+				        }]
+				    },
+					credits: {
+					    enabled: false
+					},
+
 				});
 			}else{
 				audio_error.play();

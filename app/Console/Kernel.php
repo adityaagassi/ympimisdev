@@ -91,6 +91,7 @@ class Kernel extends ConsoleKernel
         
         $schedule->command('update:address')->dailyAt('08:00');
         $schedule->command('update:address')->dailyAt('18:00');
+        $schedule->command('skill:unfulfilled_log')->dailyAt('06:00');
     }
 
     /**
