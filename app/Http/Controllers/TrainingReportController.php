@@ -315,6 +315,8 @@ class TrainingReportController extends Controller
         $queryProduct = "select * from origin_groups";
         $product = DB::select($queryProduct);
 
+        $username = Auth::user()->username;
+
         $activity_name = $trainingReport->activity_lists->activity_name;
         $departments = $trainingReport->activity_lists->departments->department_name;
         $id_departments = $trainingReport->activity_lists->departments->id;
@@ -377,6 +379,7 @@ class TrainingReportController extends Controller
             TrainingParticipant::create([
                 'training_id' => $id,
                 'participant_id' => $request->input('participant_id'),
+                'participant_absence' => 'Hadir',
                 'created_by' => $id_user
             ]);
         
@@ -824,6 +827,7 @@ class TrainingReportController extends Controller
                     TrainingParticipant::create([
                         'training_id' => $id,
                         'participant_id' => $key,
+                        'participant_absence' => 'Hadir',
                         'created_by' => $id_user
                     ]);
                 }

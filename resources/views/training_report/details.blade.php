@@ -935,7 +935,6 @@ table.table-bordered > tfoot > tr > th{
      //            }
      //        });
       jQuery('#formimport').attr("action", url+'/'+id);
-      console.log($('#formimport').attr("action"));
     }
   </script>
   <script language="JavaScript">

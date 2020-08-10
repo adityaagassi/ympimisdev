@@ -1748,6 +1748,7 @@
 					}
 					else{
 						openErrorGritter('Error!', result.message);
+						$('#loading').hide();
 					}
 				});
 			}
@@ -1866,6 +1867,7 @@
 					}
 					else{
 						openErrorGritter('Error!', result.message);
+						$('#loading').hide();
 					}
 				});
 
@@ -1898,6 +1900,7 @@
 					}
 					else{
 						openErrorGritter('Error!', result.message);
+						$('#loading').hide();
 					}
 				});
 			}

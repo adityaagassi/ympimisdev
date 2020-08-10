@@ -2180,6 +2180,8 @@ class RecorderProcessController extends Controller
               $avg_head = [];
               $avg_foot = [];
 
+              $status_input = 0;
+
               for($i = 0; $i<count($middle);$i++){
                 if ($judgement[$i] == 'NG') {
                   if ($check_type == 'HJ-MJ') {
@@ -2190,7 +2192,7 @@ class RecorderProcessController extends Controller
                     $avg_foot[] = $average[$i];
                   }
                 }
-                PushBlockTorque::create([
+                $create_log_torque = PushBlockTorque::create([
                   'push_block_code' => $request->get('push_block_code'),
                   'push_block_id_gen' => $push_block_id_gen,
                     'check_date' => $request->get('check_date'),
@@ -2211,7 +2213,16 @@ class RecorderProcessController extends Controller
                     'notes' => $request->get('notes'),
                     'created_by' => $id_user
                 ]);
-                $temptemp = PushBlockTorqueTemp::where('middle',$middle[$i])->where('head_foot',$head_foot[$i])->where('push_block_code',$push_block_code)->where('check_type',$request->get('check_type'))->delete();
+
+                if ($create_log_torque) {
+                  $status_input++;
+                }
+              }
+
+              if ($status_input > 0) {
+                for($j = 0; $j<count($middle);$j++){
+                  $temptemp = PushBlockTorqueTemp::where('middle',$middle[$j])->where('head_foot',$head_foot[$j])->where('push_block_code',$push_block_code)->where('check_type',$request->get('check_type'))->delete();
+                }
               }
 
               $resume_head = 'HJ-MJ_'.join(',',$ng_head).'_'.join(',',$avg_head);
