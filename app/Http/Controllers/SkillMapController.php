@@ -730,7 +730,7 @@ class SkillMapController extends Controller
                 NOW()) 
                 AND skill_unfulfilled_logs.deleted_at IS NULL");
 
-            $mutation = DB::SELECT("SELECT *,skill_mutation_logs.remark as mutation_remark ,skill_mutation_logs.created_at as mutation_created_at,employee_syncs.name as name,users.name as adjusted_by FROM skill_mutation_logs left join employee_syncs on employee_syncs.employee_id = skill_mutation_logs.employee_id left join users on users.id = skill_mutation_logs.id where location = '".$request->get('location')."'");
+            $mutation = DB::SELECT("SELECT *,skill_mutation_logs.remark as mutation_remark ,skill_mutation_logs.created_at as mutation_created_at,employee_syncs.name as name,users.name as adjusted_by FROM skill_mutation_logs left join employee_syncs on employee_syncs.employee_id = skill_mutation_logs.employee_id left join users on users.id = skill_mutation_logs.created_by where location = '".$request->get('location')."'");
 
             $response = array(
                 'status' => true,
