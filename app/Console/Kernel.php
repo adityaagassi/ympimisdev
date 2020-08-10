@@ -102,7 +102,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('scheduling:chemical')->dailyAt('21:20');
 
         // $schedule->command('update:pointing_calls')->dailyAt('01:00');
-        $schedule->command('skill:unfulfilled_log')->dailyAt('09:00');
+        $schedule->command('skill:unfulfilled_log')->dailyAt('01:00');
     }
 
     /**
