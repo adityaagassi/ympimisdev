@@ -293,12 +293,15 @@
 				  <input type="text" name="inputproses" id="inputproses" class="form-control" required="required" title="" placeholder="Enter Proses">
 	            </div>
 	            <div class="form-group">
-	              <label>Jenis APD<span class="text-red">*</span></label>
-	                <select class="form-control" name="inputjenisapd" id="inputjenisapd" style="width: 100%;" data-placeholder="Choose a Jenis APD..." required>
+	              <label>Jenis APD<span class="text-red">*</span></label><br>
+	                <!-- <select class="form-control" name="inputjenisapd" id="inputjenisapd" style="width: 100%;" data-placeholder="Choose a Jenis APD..." required> -->
 	                  @foreach($apd as $apd)
-	                    <option value="{{ $apd }}">{{ $apd }}</option>
+	                    <!-- <option value="{{ $apd }}">{{ $apd }}</option> -->
+	                    <label class="checkbox-inline">
+			              <input type="checkbox" class="tinjauanCheckbox" name="inputjenisapd" value="{{ $apd }}" id="inputjenisapd">{{ $apd }}
+			            </label><br>
 	                  @endforeach
-	                </select>
+	                <!-- </select> -->
 	            </div>
 	            <div class="form-group">
 	              <label for="">Kondisi</label>
@@ -607,6 +610,13 @@
 		var jenis_apd = $('#inputjenisapd').val();
 		var foto_aktual = CKEDITOR.instances.inputfoto_aktual.getData();
 
+		var jenis_apd = [];
+		$("input[name='inputjenisapd']:checked").each(function (i) {
+            jenis_apd[i] = $(this).val();
+        });
+
+        var jenisapd = jenis_apd.join();
+
 		var data = {
 			department:department,
 			subsection:subsection,
@@ -619,20 +629,23 @@
 			leader:leader,
 			foreman:foreman
 		}
-		console.table(data);
 		
-		$.post('{{ url("index/apd_check/store/".$id) }}', data, function(result, status, xhr){
-			if(result.status){
-				$("#create-modal").modal('hide');
-				// $('#example1').DataTable().ajax.reload();
-				// $('#example2').DataTable().ajax.reload();
-				openSuccessGritter('Success','New APD Check has been created');
-				window.location.reload();
-			} else {
-				audio_error.play();
-				openErrorGritter('Error','Create APD Check Failed');
-			}
-		});
+		if (jenisapd == "") {
+			alert("APD Harus Dipilih");
+		}else{
+			$.post('{{ url("index/apd_check/store/".$id) }}', data, function(result, status, xhr){
+				if(result.status){
+					$("#create-modal").modal('hide');
+					// $('#example1').DataTable().ajax.reload();
+					// $('#example2').DataTable().ajax.reload();
+					openSuccessGritter('Success','New APD Check has been created');
+					window.location.reload();
+				} else {
+					audio_error.play();
+					openErrorGritter('Error','Create APD Check Failed');
+				}
+			});
+		}
 	}
 
 	function edit_apd_check(url,id) {

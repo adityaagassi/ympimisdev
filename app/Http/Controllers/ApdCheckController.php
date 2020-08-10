@@ -176,7 +176,9 @@ class ApdCheckController extends Controller
               foreach($week as $week){
                   $week_name = $week->week_name;
               }
+              $jenis_apd = $request->get('jenis_apd');
 
+              for ($i=0; $i < count($jenis_apd); $i++) { 
                 ApdCheck::create([
                     'activity_list_id' => $id,
                     'department' => $request->get('department'),
@@ -185,13 +187,14 @@ class ApdCheckController extends Controller
                     'week_name' => $week_name,
                     'pic' => $request->get('pic'),
                     'proses' => $request->get('proses'),
-                    'jenis_apd' => $request->get('jenis_apd'),
+                    'jenis_apd' => $jenis_apd[$i],
                     'kondisi' => $request->get('kondisi'),
                     'foto_aktual' => $request->get('foto_aktual'),
                     'leader' => $request->get('leader'),
                     'foreman' => $request->get('foreman'),
                     'created_by' => $id_user
                 ]);
+              }
 
               $response = array(
                 'status' => true,
