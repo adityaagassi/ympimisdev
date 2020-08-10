@@ -478,21 +478,13 @@ class SkillMapController extends Controller
     			}
                 $count_failed = 0;
     		}else{
-    			$employee = SkillEmployee::find($request->get('id_employee'));
-                $process_from = $employee->process;
-    			$employee->process = $request->get('process');
-    			$employee->location = $request->get('location');
-    			$employee->save();
-
                 $skill_current = [];
 
     			$skills = SkillMap::where('employee_id',$request->get('employee_id'))->where('location',$request->get('location'))->get();
     			if (count($skills) > 0) {
     				foreach ($skills as $key) {
-    					$skill2 = SkillMap::find($key->id);
-    					$skill2->process = $request->get('process');
+                        $skill2 = SkillMap::find($key->id);
                         $skill_current[] = $skill2->skill_code;
-    					$skill2->save();
     				}
     			}
 
@@ -508,29 +500,43 @@ class SkillMapController extends Controller
                     }
                 }
 
-                if ($count_failed > 0) {
-                    $remark = 'Belum Memenuhi';
-                }else{
+                if ($count_failed == 0) {
+                    $employee = SkillEmployee::find($request->get('id_employee'));
+                    $process_from = $employee->process;
+                    $employee->process = $request->get('process');
+                    $employee->location = $request->get('location');
+                    $employee->save();
+
+                    if (count($skills) > 0) {
+                        foreach ($skills as $key) {
+                            $skill3 = SkillMap::find($key->id);
+                            $skill3->process = $request->get('process');
+                            $skill3->save();
+                        }
+                    }
+
                     $remark = 'Sudah Memenuhi';
+
+                    SkillMutationLog::create([
+                        'employee_id' => $request->get('employee_id'),
+                        'process_from' => $process_from,
+                        'process_to' => $request->get('process'),
+                        'location' => $request->get('location'),
+                        'remark' => $remark,
+                        'created_by' => $id_user
+                    ]);
+
+                    $status = true;
+                    $message = 'Update Employee Success';
+                }else{
+                    $status = false;
+                    $message = 'Karyawan ini tidak memiliki Skill yang sesuai dengan posisinya. Lakukan Upgrade Skill segera.';
                 }
-
-                SkillMutationLog::create([
-                    'employee_id' => $request->get('employee_id'),
-                    'process_from' => $process_from,
-                    'process_to' => $request->get('process'),
-                    'location' => $request->get('location'),
-                    'remark' => $remark,
-                    'created_by' => $id_user
-                ]);
-
-    			$status = true;
-    			$message = 'Update Employee Success';
     		}
 
     		$response = array(
 				'status' => $status,
 				'message' => $message,
-                'count_failed' => $count_failed,
 			);
 			return Response::json($response);
     	} catch (\Exception $e) {

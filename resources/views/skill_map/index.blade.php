@@ -1365,9 +1365,6 @@ function fillTableMaster() {
 				if(result.status){
 					openSuccessGritter('Success!', result.message);
 					$('#loading').hide();
-					if (result.count_failed > 0) {
-						alert('Karyawan ini tidak memiliki Skill yang sesuai dengan posisinya. Lakukan Upgrade Skill segera.');
-					}
 					fillTableEmployee();
 					clearEmployee();
 				}
