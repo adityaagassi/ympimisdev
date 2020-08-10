@@ -37,6 +37,10 @@ class Kernel extends ConsoleKernel
         Commands\EmailHrq::class,
         Commands\RoomTemperatureLog::class,
         Commands\UpdateAddress::class,
+        // Commands\APARAutoPR::class,
+        // Commands\SchedulingChemical::class,
+        // Commands\UpdatePointingCall::class,
+        Commands\SkillUnfulfilledLogCommand::class,
     ];
 
     /**
@@ -91,7 +95,14 @@ class Kernel extends ConsoleKernel
         
         $schedule->command('update:address')->dailyAt('08:00');
         $schedule->command('update:address')->dailyAt('18:00');
-        $schedule->command('skill:unfulfilled_log')->dailyAt('06:00');
+        
+        // $schedule->command('scheduling:chemical')->dailyAt('07:20');
+        // $schedule->command('scheduling:chemical')->dailyAt('13:20');
+        // $schedule->command('scheduling:chemical')->dailyAt('16:20');
+        // $schedule->command('scheduling:chemical')->dailyAt('21:20');
+
+        // $schedule->command('update:pointing_calls')->dailyAt('01:00');
+        $schedule->command('skill:unfulfilled_log')->dailyAt('09:00');
     }
 
     /**
