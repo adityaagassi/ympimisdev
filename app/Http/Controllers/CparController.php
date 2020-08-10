@@ -800,7 +800,7 @@ class CparController extends Controller
           $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$cpar->id;
           $cpar_dept = db::select($isimail);
 
-          Mail::to($mailtoo)->send(new SendEmail($cpar_dept, 'cpar_dept'));
+          Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpar_dept, 'cpar_dept'));
           $cpar->save();      
     }
 
@@ -830,7 +830,7 @@ class CparController extends Controller
           $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$cpar->id;
           $cpar_dept = db::select($isimail);
 
-          Mail::to($cfh)->send(new SendEmail($cpar_dept, 'cpar_dept'));
+          Mail::to($cfh)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpar_dept, 'cpar_dept'));
           
     }
 
