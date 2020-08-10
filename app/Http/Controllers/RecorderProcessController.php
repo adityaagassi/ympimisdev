@@ -113,12 +113,12 @@ class RecorderProcessController extends Controller
   //   if ($remark == 'After Injection') {
   //     $view = 'recorder.process.index_push_block_assy'; //upload excel + tag
   //   }
-    if ($remark == 'After Injection') {
-      $view = 'recorder.process.index_push_block'; //upload excel
-    }
-    // if ($remark == 'After Injection') {
-    //   $view = 'recorder.process.index_push_block2'; //existing
+    // else if ($remark == 'First Shot Approval') {
+    //   $view = 'recorder.process.index_push_block'; //upload excel
     // }
+    if ($remark == 'After Injection') {
+      $view = 'recorder.process.index_push_block2'; //existing
+    }
     else if ($remark == 'First Shot Approval') {
       $view = 'recorder.process.index_push_block2'; //existing
     }
