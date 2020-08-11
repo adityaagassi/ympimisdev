@@ -107,7 +107,7 @@ class EmployeeController extends Controller
                'Absensi', 'Lembur', 'BPJS Kes', 'BPJS TK', 'Cuti', "PKB", "Penggajian"
           ];
 
-          $this->usr = "'PI1110001'";
+          $this->usr = "'PI1110001','PI0904007'";
 
           $this->wst = ['PI1808032', 'PI1809036', 'PI1505002'];
 
@@ -363,11 +363,6 @@ class EmployeeController extends Controller
           }
 
           array_push($dd, 'PI0904007');
-
-// $dd = implode("','", $emp_usr);
-
-// $dd = str_replace("'","", $this->usr);
-// $dd = "'".$dd."'";
 
           $sections = "select section from employee_syncs where section is not null and position in ('Leader', 'Chief') group by section";
 
@@ -2795,7 +2790,7 @@ public function fetchDataKaizen()
      return DataTables::of($kzn)
      ->addColumn('fr_stat', function($kzn){
           if ($kzn->status == -1) {
-               if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager' || $_GET['position'] == 'Deputy Foreman' || Auth::id() == 53 || Auth::id() == 80 || Auth::id() == 2580) {
+               if ($_GET['position'] == 'Foreman' || $_GET['position'] == 'Manager' || $_GET['position'] == 'Chief'  || $_GET['position'] == 'Deputy General Manager' || $_GET['position'] == 'Deputy Foreman' || Auth::id() == 53 || Auth::id() == 80 || Auth::id() == 2580 || Auth::id() == 81) {
                     return '<a class="label bg-yellow btn" href="'.url("index/kaizen/detail/".$kzn->id."/foreman").'">Unverified</a>';
                } else {
                     return '<span class="label bg-yellow">Unverified</span>';
@@ -3364,7 +3359,7 @@ public function getKaizenReward()
 {
      $db = db::select("select DATE_FORMAT(CONCAT(mon,'-01'),'%M %Y') as  mons, doit, count(doit) as tot from 
           (select DATE_FORMAT(propose_date,'%Y-%m') as mon, IF(total < 300,2000,IF(total >= 300 AND total <= 350,5000,IF(total > 350 AND total <= 400,10000,IF(total > 400 AND total <= 450,25000,50000)))) as doit from
-          (select propose_date,manager_point_1 * 40 m1, manager_point_2 * 30 m2, manager_point_3 * 30 m3, id_kaizen, (manager_point_1 * 40+ manager_point_2 * 30+ manager_point_3 * 30) as total from kaizen_scores 
+          (select propose_date, manager_point_1 * 40 m1, manager_point_2 * 30 m2, manager_point_3 * 30 m3, id_kaizen, (manager_point_1 * 40+ manager_point_2 * 30+ manager_point_3 * 30) as total from kaizen_scores 
           join kaizen_forms on kaizen_scores.id_kaizen = kaizen_forms.id
           where propose_date >= '2019-12-01'
           order by id_kaizen asc) as total
