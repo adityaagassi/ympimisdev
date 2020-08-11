@@ -102,8 +102,6 @@ Route::get('index/general/attendance_check', 'GeneralController@indexGeneralAtte
 Route::get('fetch/general/attendance_check', 'GeneralController@fetchGeneralAttendanceCheck');
 Route::post('scan/general/attendance_check', 'GeneralController@scanGeneralAttendanceCheck');
 
-
-
 Route::get('/home', ['middleware' => 'permission', 'nav' => 'Dashboard', 'uses' => 'HomeController@index'])->name('home');
 
 Route::get('/about_mis', 'HomeController@indexAboutMIS');
@@ -1174,7 +1172,10 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('export/purchase_order/list', 'AccountingController@exportPO');
 	//New Approval Purchase Order
 	Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
+	Route::get('purchase_order/approvedgm/{id}', 'AccountingController@poapprovaldgm');
 	Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
+	Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
+	Route::get('purchase_order/reject/{id}', 'AccountingController@poreject');
 	Route::post('update/purchase_requisition/po', 'AccountingController@update_purchase_requisition_po');
 
 	//Purchase Order Khusus investment
@@ -1186,11 +1187,6 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('fetch/purchase_order/invlist', 'AccountingController@fetchInvList');
 	Route::get('purchase_order/investment_get_item', 'AccountingController@pogetiteminvest');
 
-	//Receive
-	Route::get('receive_goods', 'AccountingController@receive_goods');
-	Route::get('fetch/receive', 'AccountingController@fetch_receive');
-	Route::get('receive/detail', 'AccountingController@receive_detail');
-	Route::post('import/receive', 'AccountingController@import_receive');
 });
 
 //investment
@@ -1228,7 +1224,11 @@ Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
 Route::get('budget/detail', 'AccountingController@budget_detail');
 Route::post('import/budget', 'AccountingController@import_budget');
 
-
+//Receive
+Route::get('receive_goods', 'AccountingController@receive_goods');
+Route::get('fetch/receive', 'AccountingController@fetch_receive');
+Route::get('receive/detail', 'AccountingController@receive_detail');
+Route::post('import/receive', 'AccountingController@import_receive');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
@@ -2198,12 +2198,10 @@ Route::get('index/display/shipment_report', 'DisplayController@indexShipmentRepo
 Route::get('fetch/display/shipment_report', 'DisplayController@fetchShipmentReport');
 Route::get('fetch/display/shipment_report_detail', 'DisplayController@fetchShipmentReportDetail');
 
-
 //DISPLAY EXPORT PROGRESS
 Route::get('fetch/display/shipment_progress', 'DisplayController@fetchShipmentProgress');
 Route::get('fetch/display/modal_shipment_progress', 'DisplayController@fetchModalShipmentProgress');
 Route::get('index/display/shipment_progress', 'DisplayController@indexShipmentProgress');
-
 
 //DISPLAY STUFFING PROGRESS
 Route::get('index/display/stuffing_progress', 'DisplayController@indexStuffingProgress');
@@ -2212,6 +2210,9 @@ Route::get('fetch/display/stuffing_detail', 'DisplayController@fetchStuffingDeta
 Route::get('index/display/all_stock', 'DisplayController@indexAllStock');
 Route::get('fetch/display/all_stock', 'DisplayController@fetchAllStock');
 
+//DISPLAY EFFICIENCY & SCRAP
+Route::get('index/display/eff_scrap', 'DisplayController@indexEffScrap');
+Route::get('fetch/display/eff_scrap', 'DisplayController@fetchEffScrap');
 
 //DISPLAY STUFFING TIME
 Route::get('index/display/stuffing_time', 'DisplayController@indexStuffingTime');
@@ -3126,6 +3127,14 @@ Route::get('fetch/assembly/production_result', 'AssemblyProcessController@fetchP
 Route::get('index/assembly/stamp_record', 'AssemblyProcessController@indexStampRecord');
 Route::get('fetch/assembly/stamp_record', 'AssemblyProcessController@fetchStampRecord');
 
+
+Route::group(['nav' => 'M29', 'middleware' => 'permission'], function(){
+	Route::get('index/sap_data', 'TransactionController@indexUploadSapData');
+	Route::post('import/sap/completion', 'TransactionController@importCompletion');
+	Route::post('delete/sap/completion', 'TransactionController@importCompletion');
+	Route::post('import/sap/scrap', 'TransactionController@importScrap');
+	Route::post('import/sap/std_time', 'TransactionController@importStdTime');
+});
 //SKILL MAP
 Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 	Route::get('index/skill_map/{location}', 'SkillMapController@indexSkillMap');
@@ -3219,6 +3228,8 @@ Route::get('fetch/mirai_mobile/report_indication', 'MiraiMobileController@fetchI
 
 //audit MIS
 Route::get('index/audit_mis', 'DailyReportController@indexAuditMIS');
+Route::get('fetch/audit_mis/check', 'DailyReportController@fetchAuditCheckList');
+Route::post('post/audit_mis/check', 'DailyReportController@postCheckAudit');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');

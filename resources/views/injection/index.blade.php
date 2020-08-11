@@ -46,16 +46,15 @@
 
 			<a href="{{ url("index/recorder_process_torque","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Torque Check</a>
 
-			<!-- <a href="{{ url("index/injection/molding") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Molding Setup</a>
+			<a href="{{ url("index/injection/molding") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Molding Setup</a>
 
-			<a href="{{ url("index/injection/molding_maintenance") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Molding Maintenance</a> -->
-
-			<!-- <a href="{{ url("index/recorder_process_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Recorder Push Block Check</a> -->
+			<a href="{{ url("index/injection/molding_maintenance") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Molding Maintenance</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
 			<a href="{{ url("/index/injection/machine_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Machine Monitoring</a>
 			<a href="{{ url("/index/injection/stock_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Stock Monitoring</a>
+			<a href="{{ url("index/molding_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Maintenance Molding Monitoring</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
@@ -64,8 +63,6 @@
 			 <a href="{{ url("index/MonhtlyStock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Monhtly Target Injection</a> -->
 
 			 <!-- <a href="{{ url("index/dailyNG") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily NG Report Injection</a> -->
-
-			 <!-- <a href="{{ url("index/molding_monitoring") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Molding Maintenance Monitoring</a> -->
 
 			 <a href="{{ url("/index/recorder/report_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Report Push Block Check</a> 
 			 <a href="{{ url("/index/recorder/resume_push_block","First Shot Approval") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Resume Push Block Check</a>

@@ -1,6 +1,7 @@
 @extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link href="<?php echo e(url("css/jquery.numpad.css")); ?>" rel="stylesheet">
 <style type="text/css">
 	thead>tr>th{
 		text-align:center;
@@ -124,18 +125,18 @@
 					
 				</tbody>
 			</table>
-			<!-- <div class="col-xs-6" style="padding: 0px;margin-bottom: 20px;">
+			<div class="col-xs-6" style="padding: 0px;margin-bottom: 20px;">
 				<div class="input-group" style="padding-top: 10px;">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
 						<i class="glyphicon glyphicon-qrcode"></i>
 					</div>
-					<input type="text" style="text-align: center; border-color: black;" class="form-control" id="tag_molding" name="tag_molding" placeholder="Scan Tag Molding" required disabled>
+					<input type="text" style="text-align: center; border-color: black;font-size: 20px" class="form-control" id="tag_molding" name="tag_molding" placeholder="Scan Tag Molding" required disabled>
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
 						<i class="glyphicon glyphicon-qrcode"></i>
 					</div>
 				</div>
-			</div> -->
-			<div class="col-xs-12" style="padding: 0px;padding-bottom: 15.6px">
+			</div>
+			<div class="col-xs-6" style="padding: 0px;padding-bottom: 15.6px">
 				<div class="input-group" style="padding-top: 10px;">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: black;">
 						<i class="glyphicon glyphicon-qrcode"></i>
@@ -148,9 +149,9 @@
 			</div>
 			<table class="table table-bordered" style="padding-top: 20px;padding-bottom: 0px">
 				<tr>
-					<!-- <td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
+					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 						Molding
-					</td> -->
+					</td>
 					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 						Part Type
 					</td>
@@ -165,8 +166,8 @@
 					</td>
 				</tr>
 				<tr>
-					<!-- <td id="molding" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
-					</td> -->
+					<td id="molding" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
+					</td>
 					<td id="part_type" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
 					</td>
 					<td id="part_name" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
@@ -206,10 +207,10 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="number" class="pull-right" name="total_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="total_shot" placeholder="Total Shot" disabled>
+								<input type="number" class="pull-right numpad2" name="total_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="total_shot" placeholder="Total Shot">
 							</td>
 							<td>
-								<input type="number" class="pull-right" name="running_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="running_shot" placeholder="Running Shot">
+								<input type="number" class="pull-right numpad" name="running_shot" style="height: 4.5vw;font-size: 2vw;width: 100%;text-align: center;vertical-align: middle;" id="running_shot" placeholder="Running Shot">
 							</td>
 						</tr>
 					</tbody>
@@ -447,6 +448,7 @@
 <script src="{{ url("js/highcharts-more.js")}}"></script>
 <script src="{{ url("js/exporting.js")}}"></script>
 <script src="{{ url("js/export-data.js")}}"></script>
+<script src="<?php echo e(url("js/jquery.numpad.js")); ?>"></script>
 
 <script>
 	$.ajaxSetup({
@@ -459,6 +461,14 @@
     var second;
     var intervalTime;
     var intervalUpdate;
+
+    $.fn.numpad.defaults.gridTpl = '<table class="table modal-content" style="width: 40%;"></table>';
+	$.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
+	$.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" style="font-size:2vw; height: 50px;"/>';
+	$.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default" style="font-size:2vw; width:100%;"></button>';
+	$.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="font-size:2vw; width: 100%;"></button>';
+	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
+
 	jQuery(document).ready(function() {
 		$('#modalOperator').modal({
 			backdrop: 'static',
@@ -466,9 +476,9 @@
 		});
 		$('#operator').val('');
 		$('#tag_product').val('');
-		// $('#tag_molding').val('');
+		$('#tag_molding').val('');
 		$('#tag_product').prop('disabled', true);
-		// $('#tag_molding').prop('disabled', true);
+		$('#tag_molding').prop('disabled', true);
 		$('#running_shot').val('');
 		$('#total_shot').val('');
 		var mesin = "{{substr($name,10)}}";
@@ -477,6 +487,15 @@
 		$('#mesin_fix').hide();
 		$('#perolehan').hide();
 		$('#btn_selesai').hide();
+		$('.numpad').numpad({
+			hidePlusMinusButton : true,
+			decimalSeparator : '.'
+		});
+
+		$('.numpad2').numpad({
+			hidePlusMinusButton : true,
+			decimalSeparator : '.'
+		});
 	});
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -631,9 +650,9 @@
 	function changeMesin() {
 		changeMesin2();
 		$('#tag_product').val("");
-		// $('#tag_molding').val("");
+		$('#tag_molding').val("");
 		$('#tag_product').prop('disabled',true);
-		// $('#tag_molding').prop('disabled',true);
+		$('#tag_molding').prop('disabled',true);
 		$('#start_time').val("");
 		$('#molding').html("-");
 		$('#part_name').html("-");
@@ -714,7 +733,7 @@
 		$('#tag_product').val('');
 		$('#tag_product').removeAttr('disabled');
 		$('#tag_product').focus();
-		// $('#tag_molding').prop('disabled',true);
+		$('#tag_molding').prop('disabled',true);
 	}
 
 	function plus(id){
@@ -759,7 +778,7 @@
 		var start_time = $('#start_time').val();
 		var data = {
 			tag_product:$('#tag_product').val(),
-			// tag_molding:$('#tag_molding').val(),
+			tag_molding:$('#tag_molding').val(),
 			operator_id:$('#op').text(),
 			start_time:start_time,
 			mesin:$('#mesin').text(),
@@ -814,11 +833,11 @@
 				openSuccessGritter('Success!', result.message);
 				var start_time = result.datas.start_time;
 				$('#tag_product').val(result.datas.tag_product);
-				// $('#tag_molding').val(result.datas.tag_molding);
+				$('#tag_molding').val(result.datas.tag_molding);
 				$('#tag_product').prop('disabled',true);
-				// $('#tag_molding').prop('disabled',true);
+				$('#tag_molding').prop('disabled',true);
 				$('#start_time').val(start_time);
-				// $('#molding').html(result.datas.molding);
+				$('#molding').html(result.datas.molding);
 				$('#part_name').html(result.datas.part_name);
 				$('#part_type').html(result.datas.part_type);
 				$('#color').html(result.datas.color);
@@ -846,17 +865,17 @@
 				$('#btn_ganti').show();
 			}
 			else{
-				// $('#tag_molding').removeAttr('disabled');
-				// $('#tag_molding').focus();
-				$('#tag_product').removeAttr('disabled');
-				$('#tag_product').focus();
+				$('#tag_molding').removeAttr('disabled');
+				$('#tag_molding').focus();
+				// $('#tag_product').removeAttr('disabled');
+				// $('#tag_product').focus();
 			}
 		});
 	}
 
 	function update_temp() {
 		if ($('#running_shot').val() == "") {
-			var shot =0;
+			var shot = parseInt($('#total_shot').val());
 		}else{
 			var shot = parseInt($('#running_shot').val());
 		}
@@ -871,8 +890,9 @@
 		}
 		var data = {
 			tag_product:$('#tag_product').val(),
-			// tag_molding:$('#tag_molding').val(),
+			tag_molding:$('#tag_molding').val(),
 			shot:shot,
+			running_shot:$('#running_shot').val(),
 			ng_name:ng_name.join(),
 			ng_count:ng_count.join(),
 		}
@@ -905,7 +925,7 @@
 		}
 		var data = {
 			tag_product:$('#tag_product').val(),
-			// tag_molding:$('#tag_molding').val(),
+			tag_molding:$('#tag_molding').val(),
 			operator_id:$('#op').text(),
 			start_time:$('#start_time').val(),
 			mesin:$('#mesin').text(),
