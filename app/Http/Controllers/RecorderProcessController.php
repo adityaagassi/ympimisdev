@@ -113,14 +113,17 @@ class RecorderProcessController extends Controller
   //   if ($remark == 'After Injection') {
   //     $view = 'recorder.process.index_push_block_assy'; //upload excel + tag
   //   }
-    // else if ($remark == 'First Shot Approval') {
-    //   $view = 'recorder.process.index_push_block'; //upload excel
-    // }
     if ($remark == 'After Injection') {
-      $view = 'recorder.process.index_push_block2'; //existing
+      $view = 'recorder.process.index_push_block'; //upload excel
     }
-    else if ($remark == 'First Shot Approval') {
-      $view = 'recorder.process.index_push_block2'; //existing
+    // if ($remark == 'After Injection') {
+    //   $view = 'recorder.process.index_push_block2'; //existing
+    // }
+    // else if ($remark == 'First Shot Approval') {
+    //   $view = 'recorder.process.index_push_block2'; //existing
+    // }
+    if ($remark == 'First Shot Approval') {
+      $view = 'recorder.process.index_push_block'; //upload excel
     }
 		return view($view)
     ->with('page', 'Process Assy Recorder')
