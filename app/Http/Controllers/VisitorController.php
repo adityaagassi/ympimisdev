@@ -1012,6 +1012,30 @@ public function fetchVisitorByManager()
 					OR ( visitors.remark IS NULL AND employee_syncs.name = 'Arief Soekamto' )
 				ORDER BY
 					id DESC");
+			}elseif ($name == 'Imron Faizal') {
+				$lists = DB::SELECT("SELECT
+					visitors.id,
+					name,
+					department,
+					company,
+					DATE_FORMAT( visitors.created_at, '%Y-%m-%d' ) created_at2,
+					visitors.created_at,
+					visitor_details.full_name,
+					visitors.jumlah AS total1,
+					purpose,
+					visitors.status,
+					visitor_details.in_time,
+					visitor_details.out_time,
+					visitors.remark 
+				FROM
+					visitors
+					LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+					LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+				WHERE
+					( visitors.remark IS NULL AND employee_syncs.department = 'Procurement' ) 
+					OR ( visitors.remark IS NULL AND employee_syncs.department = 'Purchasing Control' )
+				ORDER BY
+					id DESC");
 			}else{
 				$lists = DB::SELECT("SELECT
 					visitors.id,
