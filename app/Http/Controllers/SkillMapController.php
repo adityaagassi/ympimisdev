@@ -489,6 +489,9 @@ class SkillMapController extends Controller
     			}
 
                 $count_failed = 0;
+                $skill_failed = [];
+                $count_failed2 = 0;
+                $skill_failed2 = [];
 
                 $skill = Skill::where('location',$request->get('location'))->where('process',$request->get('process'))->get();
 
@@ -497,40 +500,56 @@ class SkillMapController extends Controller
                         
                     }else{
                         $count_failed++;
+                        $skill_failed[] = $key->skill;
                     }
                 }
 
                 if ($count_failed == 0) {
-                    $employee = SkillEmployee::find($request->get('id_employee'));
-                    $process_from = $employee->process;
-                    $employee->process = $request->get('process');
-                    $employee->location = $request->get('location');
-                    $employee->save();
 
-                    if (count($skills) > 0) {
-                        foreach ($skills as $key) {
-                            $skill3 = SkillMap::find($key->id);
-                            $skill3->process = $request->get('process');
-                            $skill3->save();
+                    $skills_now = DB::SELECT("select *,skills.value as required,skill_maps.value as current from skill_maps join skills on skills.skill_code = skill_maps.skill_code where employee_id = '".$request->get('employee_id')."' and skill_maps.location  = '".$request->get('location')."' and skills.process = '".$request->get('process')."' and skill_maps.deleted_at is null and skills.deleted_at is null");
+
+                    foreach ($skills_now as $val) {
+                        if ($val->current < $val->required) {
+                            $count_failed2++;
+                            $skill_failed2[] = $val->skill;
                         }
                     }
 
-                    $remark = 'Sudah Memenuhi';
+                    if ($count_failed2 > 0) {
+                        $status = false;
+                        $message = 'Karyawan ini memiliki nilai skill yang kurang dari nilai standar.<br>Skill yang belum sesuai adalah <br><br>'.join(", ",$skill_failed2).'. <br><br>Lakukan Upgrade Skill segera.';
+                    }else{
+                        $employee = SkillEmployee::find($request->get('id_employee'));
+                        $process_from = $employee->process;
+                        $employee->process = $request->get('process');
+                        $employee->location = $request->get('location');
+                        $employee->save();
 
-                    SkillMutationLog::create([
-                        'employee_id' => $request->get('employee_id'),
-                        'process_from' => $process_from,
-                        'process_to' => $request->get('process'),
-                        'location' => $request->get('location'),
-                        'remark' => $remark,
-                        'created_by' => $id_user
-                    ]);
+                        if (count($skills) > 0) {
+                            foreach ($skills as $key) {
+                                $skill3 = SkillMap::find($key->id);
+                                $skill3->process = $request->get('process');
+                                $skill3->save();
+                            }
+                        }
 
-                    $status = true;
-                    $message = 'Update Employee Success';
+                        $remark = 'Sudah Memenuhi';
+
+                        SkillMutationLog::create([
+                            'employee_id' => $request->get('employee_id'),
+                            'process_from' => $process_from,
+                            'process_to' => $request->get('process'),
+                            'location' => $request->get('location'),
+                            'remark' => $remark,
+                            'created_by' => $id_user
+                        ]);
+
+                        $status = true;
+                        $message = 'Update Employee Success';
+                    }
                 }else{
                     $status = false;
-                    $message = 'Karyawan ini tidak memiliki Skill yang sesuai dengan posisinya. Lakukan Upgrade Skill segera.';
+                    $message = 'Karyawan tidak memiliki skill yang sesuai dengan posisi yang dituju.<br>Skill yang belum sesuai adalah <br><br>'.join(", ",$skill_failed).'. <br><br>Lakukan Upgrade Skill segera.';
                 }
     		}
 
