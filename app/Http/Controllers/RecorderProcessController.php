@@ -2753,8 +2753,9 @@ class RecorderProcessController extends Controller
 
             for ($i=0; $i < count($rows); $i++) {
               $temptemp = PushBlockRecorderTemp::find($temp[$i]->id);
-              $temptemp->push_pull = $rows[$i][1];
-              if ($rows[$i][1] < $batas_bawah || $rows[$i][1] > $batas_atas) {
+              $push =  $rows[$i][1]/10;
+              $temptemp->push_pull =$push;
+              if ($push < $batas_bawah || $push > $batas_atas) {
                 $temptemp->judgement = 'NG';
               }else{
                 $temptemp->judgement = 'OK';
