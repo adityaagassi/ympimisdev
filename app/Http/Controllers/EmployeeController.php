@@ -2740,6 +2740,8 @@ public function fetchDataKaizen()
 
      if (Auth::user()->email == 'susilo.basri@music.yamaha.com' ) {
           $dprt = db::select("select distinct section from employee_syncs where (department = (select department from employee_syncs where employee_id = '".$username."') or department = 'Production Engineering') and section is not null");
+     } else if (Auth::id() == 81) {
+          $dprt = db::select("select distinct section from employee_syncs where section is not null");
      } else {
           $dprt = db::select("select distinct section from employee_syncs where department = (select department from employee_syncs where employee_id = '".$username."') and section is not null");
      }
