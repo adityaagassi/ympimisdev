@@ -7,6 +7,9 @@
 		position: absolute;
 		z-index: 10;
 	}
+	.content-wrapper {
+		background-color: white !important;
+	}
 	#loading { display: none; }
 </style>
 @stop
@@ -52,10 +55,10 @@
 				pic_data += '<center>';
 				$.each(result.pics, function(key, value){
 					if(value.remark == 1){
-						pic_data += '<button class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: orange; padding: 2px 5px 2px 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
+						pic_data += '<button class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: orange; padding: 2px 5px 2px 5px; margin-left: 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
 					}
 					else{
-						pic_data += '<button class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: white; padding: 2px 5px 2px 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
+						pic_data += '<button class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: white; padding: 2px 5px 2px 5px; margin-left: 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
 					}
 				});
 				pic_data += '</center>';
