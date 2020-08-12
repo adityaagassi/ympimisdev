@@ -509,7 +509,7 @@ class SkillMapController extends Controller
                     $skills_now = DB::SELECT("select *,skills.value as required,skill_maps.value as current from skill_maps join skills on skills.skill_code = skill_maps.skill_code where employee_id = '".$request->get('employee_id')."' and skill_maps.location  = '".$request->get('location')."' and skills.process = '".$request->get('process')."' and skill_maps.deleted_at is null and skills.deleted_at is null");
 
                     foreach ($skills_now as $val) {
-                        if ($val->current < $val->required) {
+                        if ($val->current < 3) {
                             $count_failed2++;
                             $skill_failed2[] = $val->skill;
                         }

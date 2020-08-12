@@ -516,7 +516,7 @@
 							}
 						}
 						for(var k = 0; k < result.skill_required[key][i].length;k++){
-							if (result.skill_required[key][i][k].skill_now == null || result.skill_required[key][i][k].nilai_now < result.skill_required[key][i][k].nilai) {
+							if (result.skill_required[key][i][k].skill_now == null || result.skill_required[key][i][k].nilai_now < 3) {
 								status++;
 							}
 						}
@@ -669,7 +669,7 @@ function skillAdjusment(employee_id,name,proces) {
 					skills.push(result.skill_map[j].skill_code);
 					nilais.push({y: parseInt(result.skill_map[j].nilai), name: result.skill_map[j].skill});
 					nilaitetap.push(parseInt(result.skill_map[j].nilai_tetap));
-					if (result.skill_map[j].nilai < result.skill_map[j].nilai_tetap) {
+					if (result.skill_map[j].nilai < 3) {
 						var color = '#ffccff';
 					}else{
 						var color = '#ccffff';
