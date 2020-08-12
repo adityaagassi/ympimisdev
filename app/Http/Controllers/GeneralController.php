@@ -12,6 +12,43 @@ use Response;
 
 class GeneralController extends Controller
 {
+
+	public function indexGeneralPointingCall($id){
+		if($id == 'japanese'){
+			$title = 'Japanese Pointing Calls';
+			$title_jp = '??';
+
+			return view('general.pointing_call.japanese', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'default_language' => 'jp',
+				'location' => $id
+			))->with('head', 'Pointing Calls');
+		}
+	}
+
+	public function fetchGeneralPointingCall(Request $request){
+		$pics = db::table('pointing_calls')
+		->where('location', '=', $request->get('location'))
+		->where('point_title', '=', 'pic')
+		->whereNull('deleted_at')
+		->get();
+
+		$pointing_calls = db::table('pointing_calls')
+		->where('location', '=', $request->get('location'))
+		->where('point_title', '<>', 'pic')
+		->where('remark', '1')
+		->whereNull('deleted_at')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'pointing_calls' => $pointing_calls,
+			'pics' => $pics
+		);
+		return Response::json($response);
+	}
+
 	public function indexGeneralAttendanceCheck(){
 		$title = "Attendance Check";
 		$title_jp = "";
