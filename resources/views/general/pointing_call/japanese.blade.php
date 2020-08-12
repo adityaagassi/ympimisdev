@@ -539,6 +539,10 @@
 							div.style.left = x + 'px';
 							div.style.top = y + 'px';
 						}
+
+						for (var i = 2; i <= count; i++) {
+							$("[name='"+i+"']").hide();	
+						}
 					});
 }
 
@@ -550,12 +554,18 @@ $(function() {
 
 			var c = curr+1;
 
-			if (c == 1){
-				$(window).scrollTop($(".main-header").offset().top);
+			for (var i = 1; i <= count; i++) {
+				$("[name='"+i+"']").hide();	
 			}
-			else{
-				$(window).scrollTop($("[name='"+c+"']").offset().top);				
-			}
+
+			$("[name='"+c+"']").show();	
+
+			// if (c == 1){
+			// 	$(window).scrollTop($(".main-header").offset().top);
+			// }
+			// else{
+			// 	$(window).scrollTop($("[name='"+c+"']").offset().top);				
+			// }
 
 			curr += 1;
 
@@ -573,5 +583,6 @@ else{
 }
 });
 }
+
 </script>
 @endsection
