@@ -89,6 +89,14 @@ class GeneralController extends Controller
 			return Response::json($response);
 		}
 
+		if($attendance->attend_date != null){
+			$response = array(
+				'status' => false,
+				'message' => 'Karyawan sudah menghadiri schedule.'
+			);
+			return Response::json($response);
+		}
+
 		try{
 			$attendance->attend_date = date('Y-m-d H:i:s');
 			$attendance->save();

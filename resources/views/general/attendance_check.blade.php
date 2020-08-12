@@ -43,7 +43,6 @@
 		<div class="col-xs-5 pull-right" style="text-align: right;">
 			<input id="tag" type="text" style="border:0; background-color: #3c3c3c; width: 50px; text-align: center; font-size: 1vw">
 		</div>
-
 		<div class="col-xs-12" id="container">
 			{{-- <button class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-plus"></i> </button> --}}
 		</div>
