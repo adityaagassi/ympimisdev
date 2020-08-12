@@ -360,9 +360,16 @@ class MaintenanceController extends Controller
 		$title = 'Maintenance Inventories Transaction';
 		$title_jp = '??';
 
+		if (Auth::user()->role_code == "MIS" || strtoupper(Auth::user()->username) == "PI2003013") {
+			$permission = 1;
+		} else {
+			$permission = 0;
+		}
+
 		return view('maintenance.inventory_transaction', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'permission' => $permission
 		))->with('page', 'Spare Part Transaction')->with('head', 'Maintenance');
 	}
 

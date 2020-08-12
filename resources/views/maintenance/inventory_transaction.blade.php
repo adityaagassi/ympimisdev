@@ -87,145 +87,148 @@
       if (Request::segment(4) == 'in')
         echo '<a class="btn btn-xs btn-danger" href="'.url("index/maintenance/inventory/out").'">Go to OUT</a>';
       else
-        echo '<a class="btn btn-xs btn-success" href="'.url("index/maintenance/inventory/in").'">Go to IN</a>';
-      ?>
+        if ($permission == 1) 
+          echo '<a class="btn btn-xs btn-success" href="'.url("index/maintenance/inventory/in").'">Go to IN</a>';
+        else 
+          echo '';
+        ?>
 
-      <center>
-        <h2 style="color: white; font-weight: bold; margin-bottom: 0"><b style="color: #FFD700;">[</b> Maintenance <b style="color: #FFD700;">]</b></h2>
-        <span style="color: #FFD700; font-size: 12pt;">Sparepart Transaction</span><br>
-      </center>
-    </div>
-    <div class="row" style="padding: 0 20px 0 20px">
-      <div class="col-xs-4" id="left">
-        <div class="box box-solid" style="margin-top: 10px">
-          <div class="box-header with-border" style="background-color: #1caf9a; color: white" id="head">
-            <center><h4 class="box-title">Sparepart <b style="color: #FFD700" class="stat">IN</b></h4></center>
-          </div>
-          <div class="box-body" style="background-color: #3c3c3c; border: 1px solid #ffd700; border-top: none">
-            <input type="text" class="form-control input-lg" placeholder="Barcode Here. . ." id="txt_code">
-          </div>
-        </div>
-
+        <center>
+          <h2 style="color: white; font-weight: bold; margin-bottom: 0"><b style="color: #FFD700;">[</b> Maintenance <b style="color: #FFD700;">]</b></h2>
+          <span style="color: #FFD700; font-size: 12pt;">Sparepart Transaction</span><br>
+        </center>
       </div>
-      <div class="col-xs-8" id="tengh">
-        <div class="box box-solid" style="margin-top: 10px">
-          <div class="box-header with-border" style="background-color: #FFD700; border: 1px solid #FFD700;">
-            <center><h4 class="box-title" style="font-size: 15px; color:  #3c3c3c"><b style="color:white" class="stat">IN</b> Sparepart List</h4></center>
-          </div>
-          <div class="box-body" style="padding: 0px;">
-            <table class="table" style="width: 100%">
-              <thead>
-                <tr>
-                  <th width="10%">Sparepart Number</th>
-                  <th>Sparepart Name</th>
-                  <th width="3%">Stock</th>
-                  <th width="5%">Qty</th>
-                  <th width="5%"></th>
-                </tr>
-              </thead>
-              <tbody id="body_transaction">
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="col-xs-6 pull-right">
-          <br><br>
-          <div class="col-xs-12" @if(Request::segment(4) == 'in') style="display: none" @endif>
-            <center style="color: #FFD700">
-              <label class="radio-list"><input type="radio" name="category" style="margin-right: 5px" value="SPK" checked>SPK</label>
-              <label class="radio-list" style="margin-left: 50px"><input type="radio" name="category" style="margin-right: 5px" value="Planned Maintenance">Planned Maintenance</label>
-            </center>
-          </div>
-          <div class="col-xs-12" @if(Request::segment(4) == 'in') style="display: none" @endif style="margin-top: 5px">
-            <div class="row">
-              <div class="col-xs-9">
-                <select class="form-control select2" id="spk" data-placeholder="Select Option">
-                  <option></option>
-                </select>
-              </div>
-              <div class="col-xs-3">
-                <input type="text" class="form-control" placeholder="nomor mesin" id="no_mesin" style="display: none">
-              </div>
+      <div class="row" style="padding: 0 20px 0 20px">
+        <div class="col-xs-4" id="left">
+          <div class="box box-solid" style="margin-top: 10px">
+            <div class="box-header with-border" style="background-color: #1caf9a; color: white" id="head">
+              <center><h4 class="box-title">Sparepart <b style="color: #FFD700" class="stat">IN</b></h4></center>
+            </div>
+            <div class="box-body" style="background-color: #3c3c3c; border: 1px solid #ffd700; border-top: none">
+              <input type="text" class="form-control input-lg" placeholder="Barcode Here. . ." id="txt_code">
             </div>
           </div>
-          <div class="col-xs-12" style="margin-top: 5px">
-            <button class="btn" style="width: 100%; background-color: #f75e4d; color: white" onclick="post('out')" id='btn_out'><i class="fa fa-arrow-up"></i>&nbsp;OUT</button>
-            <button class="btn" style="width: 100%; background-color: #1caf9a; color: white" onclick="post('in')" id='btn_in'><i class="fa fa-arrow-down"></i>&nbsp;IN</button>
+
+        </div>
+        <div class="col-xs-8" id="tengh">
+          <div class="box box-solid" style="margin-top: 10px">
+            <div class="box-header with-border" style="background-color: #FFD700; border: 1px solid #FFD700;">
+              <center><h4 class="box-title" style="font-size: 15px; color:  #3c3c3c"><b style="color:white" class="stat">IN</b> Sparepart List</h4></center>
+            </div>
+            <div class="box-body" style="padding: 0px;">
+              <table class="table" style="width: 100%">
+                <thead>
+                  <tr>
+                    <th width="10%">Sparepart Number</th>
+                    <th>Sparepart Name</th>
+                    <th width="3%">Stock</th>
+                    <th width="5%">Qty</th>
+                    <th width="5%"></th>
+                  </tr>
+                </thead>
+                <tbody id="body_transaction">
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="col-xs-6">
+          <div class="col-xs-6 pull-right">
+            <br><br>
+            <div class="col-xs-12" @if(Request::segment(4) == 'in') style="display: none" @endif>
+              <center style="color: #FFD700">
+                <label class="radio-list"><input type="radio" name="category" style="margin-right: 5px" value="SPK" checked>SPK</label>
+                <label class="radio-list" style="margin-left: 50px"><input type="radio" name="category" style="margin-right: 5px" value="Planned Maintenance">Planned Maintenance</label>
+              </center>
+            </div>
+            <div class="col-xs-12" @if(Request::segment(4) == 'in') style="display: none" @endif style="margin-top: 5px">
+              <div class="row">
+                <div class="col-xs-9">
+                  <select class="form-control select2" id="spk" data-placeholder="Select Option">
+                    <option></option>
+                  </select>
+                </div>
+                <div class="col-xs-3">
+                  <input type="text" class="form-control" placeholder="nomor mesin" id="no_mesin" style="display: none">
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12" style="margin-top: 5px">
+              <button class="btn" style="width: 100%; background-color: #f75e4d; color: white" onclick="post('out')" id='btn_out'><i class="fa fa-arrow-up"></i>&nbsp;OUT</button>
+              <button class="btn" style="width: 100%; background-color: #1caf9a; color: white" onclick="post('in')" id='btn_in'><i class="fa fa-arrow-down"></i>&nbsp;IN</button>
+            </div>
+            <div class="col-xs-6">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-  </section>
-  @endsection
-  @section('scripts')
-  <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-  <script src="{{ url("js/jsQR.js")}}"></script>
-  <script>
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-
-    scan_arr = [];
-
-    jQuery(document).ready(function() {
-      $('body').toggleClass("sidebar-collapse");
-
-      $(".select2").select2({
-        tags: true,
-        allowClear: true
-      });
-
-      if ("{{ Request::segment(4) }}" == 'in') {
-        $("#head").css('background-color', '#1caf9a');
-        $(".stat").text('IN');
-        $("#btn_in").css('display','block');
-        $("#btn_out").css('display','none');
-      } else {
-        $("#head").css('background-color', '#f75e4d');
-        $(".stat").text('OUT');
-        $("#btn_out").css('display','block');
-        $("#btn_in").css('display','none');
-      }
-
-      $("#txt_code").focus();
-
-      $("input[type=radio][name=category]").prop( "checked", false );
-
-      $('input[type=radio][name=category]').change(function() {
-        if (this.value == 'SPK') {
-          getSPK();
-          $("#no_mesin").val("");
-          $("#no_mesin").hide();
-        }
-        else if (this.value == 'Planned Maintenance') {
-          getMachine();
-          $("#no_mesin").val("");
-          $("#no_mesin").show();
+    </section>
+    @endsection
+    @section('scripts')
+    <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+    <script src="{{ url("js/jsQR.js")}}"></script>
+    <script>
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
       });
 
-    });
+      scan_arr = [];
 
-    $('#txt_code').keyup(function(e){
-      if(e.keyCode == 13)
-      {
-        scan();
-      }
-    });
+      jQuery(document).ready(function() {
+        $('body').toggleClass("sidebar-collapse");
 
-    function scan() {
-      body = "";
+        $(".select2").select2({
+          tags: true,
+          allowClear: true
+        });
 
-      if ($("#txt_code").val() == "") {
-        return false;
-      }
+        if ("{{ Request::segment(4) }}" == 'in') {
+          $("#head").css('background-color', '#1caf9a');
+          $(".stat").text('IN');
+          $("#btn_in").css('display','block');
+          $("#btn_out").css('display','none');
+        } else {
+          $("#head").css('background-color', '#f75e4d');
+          $(".stat").text('OUT');
+          $("#btn_out").css('display','block');
+          $("#btn_in").css('display','none');
+        }
 
-      if (jQuery.inArray( $("#txt_code").val(), scan_arr ) != -1) {
+        $("#txt_code").focus();
+
+        $("input[type=radio][name=category]").prop( "checked", false );
+
+        $('input[type=radio][name=category]').change(function() {
+          if (this.value == 'SPK') {
+            getSPK();
+            $("#no_mesin").val("");
+            $("#no_mesin").hide();
+          }
+          else if (this.value == 'Planned Maintenance') {
+            getMachine();
+            $("#no_mesin").val("");
+            $("#no_mesin").show();
+          }
+        });
+
+      });
+
+      $('#txt_code').keyup(function(e){
+        if(e.keyCode == 13)
+        {
+          scan();
+        }
+      });
+
+      function scan() {
+        body = "";
+
+        if ($("#txt_code").val() == "") {
+          return false;
+        }
+
+        if (jQuery.inArray( $("#txt_code").val(), scan_arr ) != -1) {
         // console.log('Sudah Ada Dalam Array');
         openErrorGritter("Fail", "Parts Already Exist");
         return false
@@ -296,12 +299,12 @@
       //   return false;
       // }
 
-      if ($('input[name=category]:checked').val() != "SPK") {
-        if ($("#no_mesin").val() == "") {
-          openErrorGritter("Fail", "All Field Must Be Filled");
-          return false;
-        }
-      }
+      // if ($('input[name=category]:checked').val() != "SPK") {
+      //   if ($("#no_mesin").val() == "") {
+      //     openErrorGritter("Fail", "All Field Must Be Filled");
+      //     return false;
+      //   }
+      // }
 
       var data = {
         stat : stat,

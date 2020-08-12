@@ -55,13 +55,13 @@
     <small><span class="text-purple"> {{ $title_jp }}</span></small>
   </h1>
 
-  @if($permission == 1)
   <ol class="breadcrumb">
+    @if($permission == 1)
     <button class="btn bg-purple" onclick="modalNew()"><b><i class="fa fa-plus"></i>&nbsp;New Spare Part</b></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="{{ url("/index/maintenance/inventory/in") }}" target="_blank" class="btn btn-success"><b><i class="fa fa-arrow-down"></i>&nbsp;IN</b></a>
+    @endif
     <a href="{{ url("/index/maintenance/inventory/out") }}" target="_blank" class="btn btn-danger"><b><i class="fa fa-arrow-up"></i>&nbsp;OUT</b></a>
   </ol>
-  @endif
 </section>
 @stop
 @section('content')
