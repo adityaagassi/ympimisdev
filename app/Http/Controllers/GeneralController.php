@@ -78,6 +78,7 @@ class GeneralController extends Controller
 
 		$attendance = GeneralAttendance::where('employee_id', '=', $employee->employee_id)
 		->where('purpose_code', '=', $request->get('purpose_code'))
+		->where('due_date', '=', date('Y-m-d'))
 		->first();
 
 		if($attendance == "" || $attendance->due_date > date('Y-m-d')){
@@ -129,6 +130,7 @@ class GeneralController extends Controller
 			$now = date('Y-m-d');
 
 			$query = "SELECT DISTINCT
+			purpose_code,
 			employee_id,
 			due_date,
 			NAME,
@@ -137,6 +139,7 @@ class GeneralController extends Controller
 			FROM
 			(
 			SELECT
+			general_attendances.purpose_code,
 			general_attendances.employee_id,
 			general_attendances.due_date,
 			employee_syncs.`name`,
@@ -148,6 +151,7 @@ class GeneralController extends Controller
 			WHERE
 			general_attendances.due_date = '".$now."' AND general_attendances.purpose_code = '".$request->get('purpose_code')."' UNION ALL
 			SELECT
+			general_attendances.purpose_code,
 			general_attendances.employee_id,
 			general_attendances.due_date,
 			employee_syncs.`name`,

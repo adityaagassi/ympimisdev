@@ -37,12 +37,12 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-4">
-		<input id="tag" type="text" style="border:0; background-color: #3c3c3c; width: 100%; text-align: center; font-size: 1vw">
-	</div>
-	<div class="col-xs-5 pull-right" style="text-align: right;">
-		<span style="color: yellow; font-weight: bold; font-size: 2vw;" id="counter">999/999</span>
-	</div>
+		<div class="col-xs-7">
+			<span id="purpose_code" style="color:yellow; font-weight: bold; font-size: 2vw;"></span><span style="color: yellow; font-weight: bold; font-size: 2vw;" id="counter">999/999</span>
+		</div>
+		<div class="col-xs-5 pull-right" style="text-align: right;">
+			<input id="tag" type="text" style="border:0; background-color: #3c3c3c; width: 50px; text-align: center; font-size: 1vw">
+		</div>
 
 		<div class="col-xs-12" id="container">
 			{{-- <button class="btn btn-success pull-right" style="margin-left: 5px;"><i class="fa fa-plus"></i> </button> --}}
@@ -152,22 +152,18 @@
 					if(value.attend_date == null){
 						attendance_data += '<table class="table table-bordered" style="background-color: #ffccff; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
 					}else{
-						attendance_data += '<table class="table table-bordered" style="background-color: #ccffff; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
-					}	
-					attendance_data += '<tbody>';
-					attendance_data += '<tr style="height:20px;">';
-					attendance_data += '<td style="width:20px;">'+value.employee_id+'</td>';
-					attendance_data += '<td>'+value.NAME+'</td>';
-
-					attendance_data += '</tr>';
-					attendance_data += '<tr style="height:60px;">';
-					if(value.attend_date == null){
-						attendance_data += '<td>-</td>';
-					}else{
 						count_ok += 1;
-						attendance_data += '<td>Hadir</td>';
-					}	
-					attendance_data += '<td>'+value.department+'</td>';
+						attendance_data += '<table class="table table-bordered" style="background-color: #ccffff; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
+					}
+					attendance_data += '<tbody>';
+					attendance_data += '<tr>';
+					attendance_data += '<td style="padding: 0;">'+value.employee_id+'</td>';
+					attendance_data += '</tr>';
+					attendance_data += '<tr>';
+					attendance_data += '<td style="padding: 0;">'+value.NAME+'</td>';
+					attendance_data += '</tr>';
+					attendance_data += '<tr>';
+					attendance_data += '<td style="padding: 0;">'+value.department+'</td>';
 					attendance_data += '</tr>';
 					attendance_data += '</tbody>';
 					attendance_data += '</table>';
@@ -176,7 +172,10 @@
 					count_all += 1;
 
 				});
-				$('#counter').text(count_ok+' / '+count_all);
+				$('#purpose_code').text(result.attendance_lists[0].purpose_code);
+
+				console.log(result.attendance_lists[0].purpose_code);
+				$('#counter').text(' ('+count_ok+' of '+count_all+')');
 				$('#container').append(attendance_data);
 			}
 			else{
