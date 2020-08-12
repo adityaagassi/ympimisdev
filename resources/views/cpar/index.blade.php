@@ -54,7 +54,7 @@ td {
     <!-- <small>Validate Your CPAR</small> -->
   </h1>
   <ol class="breadcrumb">
-      <li><a href="{{ url("index/form_ketidaksesuaian/create")}}" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Create {{ $page }}</a></li>
+      <li><a href="{{ url("index/form_ketidaksesuaian/create")}}" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Buat {{ $page }}</a></li>
   </ol>
 </section>
 @endsection

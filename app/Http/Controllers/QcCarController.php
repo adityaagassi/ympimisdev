@@ -604,7 +604,6 @@ class QcCarController extends Controller
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
-            $number = $mail->phone;
           }
 
           if($cars != null){
@@ -745,15 +744,8 @@ class QcCarController extends Controller
 
                 foreach($mails as $mail){
                   $mailtoo2 = $mail->email;
-                  $number2 = $mail->phone;
                 }
 
-                if (strpos($number2, '/') !== false) {
-                  $number3 = explode("/", $number2);
-                  $mailnumber2 = '62'.substr($number3[0],1);
-                }else{
-                  $mailnumber2 = '62'.substr($number2, 1);
-                }
 
                 $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
@@ -836,15 +828,8 @@ class QcCarController extends Controller
 
                   foreach($mails as $mail){
                     $mailtoo2 = $mail->email;
-                    $number2 = $mail->phone;
                   }
 
-                  if (strpos($number2, '/') !== false) {
-                    $number3 = explode("/", $number2);
-                    $mailnumber2 = '62'.substr($number3[0],1);
-                  }else{
-                    $mailnumber2 = '62'.substr($number2, 1);
-                  }
 
                   $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain , employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
@@ -1069,14 +1054,6 @@ class QcCarController extends Controller
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
-            $number = $mail->phone;
-          }
-
-          if (strpos($number, '/') !== false) {
-            $number2 = explode("/", $number);
-            $mailnumber = '62'.substr($number2[0],1);
-          }else{
-            $mailnumber = '62'.substr($number, 1);
           }
 
           if($cars != null){
@@ -1206,15 +1183,8 @@ class QcCarController extends Controller
 
                 foreach($mails as $mail){
                   $mailtoo2 = $mail->email;
-                  $number2 = $mail->phone;
                 }
 
-                if (strpos($number2, '/') !== false) {
-                  $number3 = explode("/", $number2);
-                  $mailnumber2 = '62'.substr($number3[0],1);
-                } else{
-                  $mailnumber2 = '62'.substr($number2, 1);
-                }
 
                 $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain, employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
@@ -1295,15 +1265,8 @@ class QcCarController extends Controller
 
                   foreach($mails as $mail){
                     $mailtoo2 = $mail->email;
-                    $number2 = $mail->phone;
                   }
 
-                  if (strpos($number2, '/') !== false) {
-                    $number3 = explode("/", $number2);
-                    $mailnumber2 = '62'.substr($number3[0],1);
-                  }else{
-                    $mailnumber2 = '62'.substr($number2, 1);
-                  }
 
                   $query2 = "select qc_cars.*, qc_cpars.lokasi, qc_cpars.kategori, qc_cpars.sumber_komplain, qc_cpars.judul_komplain , employees.name as pic_name, qc_cpars.id as id_cpar from qc_cars join qc_cpars on qc_cars.cpar_no = qc_cpars.cpar_no join employees on qc_cars.pic = employees.employee_id where qc_cars.id='".$id."'";
 
@@ -1373,16 +1336,7 @@ class QcCarController extends Controller
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
-            $number = $mail->phone;
           }
-
-          if (strpos($number, '/') !== false) {
-            $number2 = explode("/", $number);
-            $mailnumber = '62'.substr($number2[0],1);
-          }else{
-            $mailnumber = '62'.substr($number, 1);
-          }
-
 
           Mail::to($mailtoo)->send(new SendEmail($querycar, 'rejectcar'));
           return redirect('/index/qc_car/verifikasicar/'.$id)->with('success', 'CAR Rejected')->with('page', 'CAR');
@@ -1425,15 +1379,8 @@ class QcCarController extends Controller
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
-            $number = $mail->phone;
           }
 
-          if (strpos($number, '/') !== false) {
-            $number2 = explode("/", $number);
-            $mailnumber = '62'.substr($number2[0],1);
-          }else{
-            $mailnumber = '62'.substr($number, 1);
-          }
 
           foreach ($mailmanagers as $mailm) {
             $mailmtoo = $mailm->email;        
@@ -1617,14 +1564,6 @@ class QcCarController extends Controller
 
             foreach($mails as $mail){
               $mailtoo = $mail->email;
-              $number = $mail->phone;
-            }
-            
-            if (strpos($number, '/') !== false) {
-              $number2 = explode("/", $number);
-              $mailnumber = '62'.substr($number2[0],1);
-            }else{
-              $mailnumber = '62'.substr($number, 1);
             }
 
             $cars->save();

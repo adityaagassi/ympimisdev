@@ -175,7 +175,7 @@
           <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="subject">Kategori Komplain<span class="text-red">*</span></label>
              <select class="form-control select2" style="width: 100%;" id="cpar_kategori" name="cpar_kategori" data-placeholder="Pilih Kategori" onchange="selectkomplain()" required>
-                <option value="Service">Service</option>
+                <option value="Service">Pelayanan</option>
                 <option value="Kualitas">Kualitas</option>
             </select>
           </div>
