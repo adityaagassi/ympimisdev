@@ -158,8 +158,8 @@
 					}
 					attendance_data += '<tbody>';
 					attendance_data += '<tr>';
-					attendance_data += '<td style="padding: 0;">'+value.employee_id+'</td>';
-					attendance_data += '<td style="padding: 0;">'+value.department+'</td>';
+					attendance_data += '<td style="padding: 0; width:70%;">'+value.employee_id+'</td>';
+					attendance_data += '<td style="padding: 0; width:30%;">'+value.department+'</td>';
 					attendance_data += '</tr>';
 					attendance_data += '<tr>';
 					attendance_data += '<td colspan="2" style="padding: 0;">'+name.substring(0,30)+'</td>';
