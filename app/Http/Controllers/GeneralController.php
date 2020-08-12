@@ -134,7 +134,7 @@ class GeneralController extends Controller
 			employee_id,
 			due_date,
 			NAME,
-			department,
+			departments.department_shortname AS department,
 			attend_date 
 			FROM
 			(
@@ -163,6 +163,8 @@ class GeneralController extends Controller
 			WHERE
 			DATE( general_attendances.attend_date ) = '".$now."' AND general_attendances.purpose_code = '".$request->get('purpose_code')."'
 			) AS attendances 
+			LEFT JOIN
+			departments on departments.department_name = attendances.department
 			WHERE employee_id like 'PI%'
 			ORDER BY
 			attend_date DESC,

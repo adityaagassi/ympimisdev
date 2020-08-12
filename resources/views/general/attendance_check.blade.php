@@ -148,6 +148,7 @@
 				var attendance_data = "";
 				$('#container').html("");
 				$.each(result.attendance_lists, function(key, value){
+					var name = value.NAME;
 					attendance_data += '<div class="col-xs-2" style="padding:2px;padding-top:0px">';
 					if(value.attend_date == null){
 						attendance_data += '<table class="table table-bordered" style="background-color: #ffccff; width: 100%;padding-bottom:0px;margin-bottom:2px;">';
@@ -158,12 +159,10 @@
 					attendance_data += '<tbody>';
 					attendance_data += '<tr>';
 					attendance_data += '<td style="padding: 0;">'+value.employee_id+'</td>';
-					attendance_data += '</tr>';
-					attendance_data += '<tr>';
-					attendance_data += '<td style="padding: 0;">'+value.NAME+'</td>';
-					attendance_data += '</tr>';
-					attendance_data += '<tr>';
 					attendance_data += '<td style="padding: 0;">'+value.department+'</td>';
+					attendance_data += '</tr>';
+					attendance_data += '<tr>';
+					attendance_data += '<td colspan="2" style="padding: 0;">'+name.substring(0,30)+'</td>';
 					attendance_data += '</tr>';
 					attendance_data += '</tbody>';
 					attendance_data += '</table>';
