@@ -655,11 +655,8 @@ class TrialController extends Controller{
 	public function testmail()
 	{
 		$mail = ['mokhamad.khamdan.khabibi@music.yamaha.com',
-                    'aditya.agassi@music.yamaha.com',
-                	'anton.budi.santoso@music.yamaha.com',
-                	'nasiqul.ibat@music.yamaha.com',
                 	'rio.irvansyah@music.yamaha.com'];
-       $bodyHtml2 = "<html><h2>NG Report of Push Pull Check Recorder リコーダープッシュプールチェック</h2><p>Model : </p><p>Check Date : </p><p>Value : </p><p>Judgement : </p></html>";
+       $bodyHtml2 = "Test Mail";
 
       	Mail::raw([], function($message) use($bodyHtml2,$mail) {
           $message->from('ympimis2@gmail.com', 'PT. Yamaha Musical Products Indonesia');
