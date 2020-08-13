@@ -1310,9 +1310,7 @@
     }
 
     function sendemail(id) {
-      
-      $("#loading").show();
-
+    
       var data = {
         id:id
       };
@@ -1320,6 +1318,8 @@
       if (!confirm("Apakah anda yakin ingin mengirim CPAR ini?")) {
         return false;
       }
+
+      $("#loading").show();
 
       $.get('{{ url("index/qc_report/sendemail/$cpars->id/$cpars->posisi") }}', data, function(result, status, xhr){
         $("#loading").hide();

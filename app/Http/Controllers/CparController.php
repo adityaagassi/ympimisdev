@@ -648,83 +648,112 @@ class CparController extends Controller
         }
       }
 
-      else if ($cpar->posisi == "m") {
+      else if ($cpar->posisi == "m" ) {
 
         $cpar->approvalm = "Approved";
         $cpar->datem = date('Y-m-d H:i:s');
-        $cpar->status = "car";
 
-        $sec = explode("_", $cpar->section_to);
-        $secfrom = explode("_", $cpar->section_from);
-        //get departemen
-        $dept = EmployeeSync::where('section','=', $sec[1])
-        ->select('department')->first();
+        if ($cpar->kategori == "Kualitas_Spec" || $cpar->kategori == "Kualitas_Part" || $cpar->kategori == "Kualitas_Fungsi" || $cpar->kategori == "Kualitas_Luka" || $cpar->kategori == "Kualitas_Recheck") {
+          
+          $cpar->posisi = "qa";
+          
+          $cpar->save();
 
-        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = '".$dept->department."' and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%') and (section is null or section != '".$secfrom[1]."')";
+          $getchief = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where section = 'QA Process Control' and position = 'Chief'";
 
-        $mailtoo = DB::select($mails);
+          // $getchief = "SELECT employee_id, email FROM `employee_syncs` join users on employee_syncs.employee_id = users.username where employee_id='PI1108002'";
 
-        $cpar->tanggal_car = date('Y-m-d H:i:s');
+          $chief = DB::select($getchief);
+          
+          if ($chief != null) {
+            foreach ($chief as $cf) {
+              $mailtoo = $cf->email;
+            }             
+          }
 
-        //get chief foreman manager from departemen TUJUAN
+          $isimail = "select * FROM cpar_departments where cpar_departments.id = ".$cpar->id;
+          $cpar_dept = db::select($isimail);
 
-        $cfm2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position in ('chief','foreman','manager')");
+          // Mail::to($cfh)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpar_dept, 'cpar_dept'));
+        }
+        else{
 
 
-        $chief2 = null;
-        $foreman2 = null;
-        $manager2 = null;
-        $chiefcount2 = 0;
-        $foremancount2 = 0;
+            $cpar->status = "car";
 
-        if ($cfm2 != null) {
-          foreach ($cfm2 as $position) {
+            $sec = explode("_", $cpar->section_to);
+            $secfrom = explode("_", $cpar->section_from);
+            //get departemen
+            $dept = EmployeeSync::where('section','=', $sec[1])
+            ->select('department')->first();
 
-            $pos = $position->position;
+            $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = '".$dept->department."' and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like '%Manager%') and (section is null or section != '".$secfrom[1]."')";
 
-            // Manager 
-            if ($pos == "Manager") {
-              $manager2 = $position->employee_id;
-              $cpar->manager_car = $manager2;
+            $mailtoo = DB::select($mails);
+
+            $cpar->tanggal_car = date('Y-m-d H:i:s');
+
+            //get chief foreman manager from departemen TUJUAN
+
+            $cfm2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position in ('chief','foreman','manager')");
+
+
+            $chief2 = null;
+            $foreman2 = null;
+            $manager2 = null;
+            $chiefcount2 = 0;
+            $foremancount2 = 0;
+
+            if ($cfm2 != null) {
+              foreach ($cfm2 as $position) {
+
+                $pos = $position->position;
+
+                // Manager 
+                if ($pos == "Manager") {
+                  $manager2 = $position->employee_id;
+                  $cpar->manager_car = $manager2;
+                }
+
+                // Chief
+                if ($pos == "Chief") {
+                  if ($chiefcount2 == 0) {
+                    $chief2 = $position->employee_id;
+                    $chiefcount2 = 1;
+
+                    $cpar->chief_car = $chief2;
+                  }
+                  else{
+                    $cf2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Chief' and section='".$sec[1]."'");
+
+                    $chief2 = $cf2[0]->employee_id;
+
+                    $cpar->chief_car = $chief2;
+                  }
+                }
+
+                // Foreman
+                if ($pos == "Foreman") {
+                  if ($foremancount2 == 0) {
+                    $foreman2 = $position->employee_id;
+                    $foremancount2 = 1;
+
+                    $cpar->foreman_car = $foreman2;
+                  } else {
+                    $f2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Foreman' and section='".$sec[1]."'");
+
+                    $foreman2 = $f2[0]->employee_id;
+                    $cpar->foreman_car = $foreman2;
+                  }
+
+                }
+
+              }
             }
 
-            // Chief
-            if ($pos == "Chief") {
-              if ($chiefcount2 == 0) {
-                $chief2 = $position->employee_id;
-                $chiefcount2 = 1;
-
-                $cpar->chief_car = $chief2;
-              }
-              else{
-                $cf2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Chief' and section='".$sec[1]."'");
-
-                $chief2 = $cf2[0]->employee_id;
-
-                $cpar->chief_car = $chief2;
-              }
-            }
-
-            // Foreman
-            if ($pos == "Foreman") {
-              if ($foremancount2 == 0) {
-                $foreman2 = $position->employee_id;
-                $foremancount2 = 1;
-
-                $cpar->foreman_car = $foreman2;
-              } else {
-                $f2 = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$dept->department."' and position = 'Foreman' and section='".$sec[1]."'");
-
-                $foreman2 = $f2[0]->employee_id;
-                $cpar->foreman_car = $foreman2;
-              }
-
-            }
+            $cpar->posisi = 'dept';
 
           }
-        }
-
-        $cpar->posisi = 'dept';
 
       }
 
@@ -732,10 +761,9 @@ class CparController extends Controller
 
       $cpar_dept = db::select($isimail);
 
-      Mail::to($mailtoo)->send(new SendEmail($cpar_dept, 'cpar_dept'));
+      Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($cpar_dept, 'cpar_dept'));
 
       $cpar->save();
-
       return redirect('/index/form_ketidaksesuaian/verifikasicpar/'.$id)->with('status', 'CPAR Approved')->with('page', 'Form Ketidaksesuian');
     }
     else{

@@ -76,11 +76,9 @@
 
    <?php $user = STRTOUPPER(Auth::user()->username)?>
 
-   @if($cpar->posisi == "sl" && ($cpar->kategori == "Service" || $cpar->kategori == "Kualitas") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
+   @if($cpar->posisi == "sl" && ($cpar->kategori == "Service" || $cpar->kategori == "Kualitas" || $cpar->kategori == "Kualitas_Spec" || $cpar->kategori == "Kualitas_Part" || $cpar->kategori == "Kualitas_Fungsi" || $cpar->kategori == "Kualitas_Luka" || $cpar->kategori == "Kualitas_Recheck") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
    <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemail({{ $cpar->id }})" style="width:200px">Send Email</a>
 
-   @elseif($cpar->posisi == "sl" && ($cpar->kategori == "Kualitas_Spec" || $cpar->kategori == "Kualitas_Part" || $cpar->kategori == "Kualitas_Fungsi" || $cpar->kategori == "Kualitas_Luka" || $cpar->kategori == "Kualitas_Recheck") && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
-   <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemailqa({{ $cpar->id }})" style="width:200px">Send Email ke QA</a>
 
    @elseif($cpar->posisi != "sl" && ($user == $cpar->pelapor || Auth::user()->role_code == "MIS"))
    <label class="label label-success pull-right" style="margin-right: 5px; margin-top: 8px">Email Sudah Terkirim</label>
@@ -119,6 +117,12 @@
     {{ session('error') }}
   </div>   
   @endif
+
+  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+    <p style="position: absolute; color: White; top: 45%; left: 35%;">
+      <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+    </p>
+  </div>
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary" style="background-color:#eeeeee">
 
@@ -643,6 +647,7 @@
     })
 
     function sendemail(id) {
+
       var data = {
         id:id
       };
@@ -651,7 +656,10 @@
         return false;
       }
 
+      $("#loading").show();
+
       $.get('{{ url("index/form_ketidaksesuaian/sendemail/$cpar->id") }}', data, function(result, status, xhr){
+        $("#loading").hide();
         openSuccessGritter("Success","Email Has Been Sent");
         window.location.reload();
       })
