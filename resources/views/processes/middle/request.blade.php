@@ -110,9 +110,9 @@
 
 		$.get('{{ url("scan/middle/request") }}', data, function(result, status, xhr){
 			if(result.status){
+				drawTable();
 				$("#loading").hide();
 				openSuccessGritter('Success!', result.message);
-				drawTable();
 				$("#tag").val("");
 				$('#tag').focus();
 			}

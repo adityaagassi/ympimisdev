@@ -5707,11 +5707,16 @@ class MiddleProcessController extends Controller
 				$helper = MiddleRequestHelper::where("material_tag","=",$request->get('tag'))->first();
 
 				if($helper){
-					$last = new DateTime($helper->updated_at);
-					$now = new DateTime();
-					$interval = $last->diff($now);
+					// $last = new DateTime($helper->updated_at);
+					// $now = new DateTime();
 
-					if ($interval->format('%I') < 10) {
+					$time = new DateTime($helper->updated_at);
+					$diff = $time->diff(new DateTime());
+					$interval = ($diff->days * 24 * 60) + ($diff->h * 60) + $diff->i;
+
+					// echo $minutes;
+
+					if ($interval < 10) {
 						$response = array(
 							'status' => false,
 							'message' => "Interval scan terlalu cepat",
