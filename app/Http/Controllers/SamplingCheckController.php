@@ -340,15 +340,25 @@ class SamplingCheckController extends Controller
         $id_departments = $samplingCheck->activity_lists->departments->id;
         $activity_alias = $samplingCheck->activity_lists->activity_alias;
 
-        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-                        join promotion_logs on employees.employee_id= promotion_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and promotion_logs.`position` = 'leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='foreman')";
-        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
+        $queryLeaderForeman = "SELECT DISTINCT
+            ( employee_syncs.name ),
+            employee_syncs.employee_id 
+        FROM
+            employee_syncs
+        WHERE
+            ( employee_syncs.department = '".$departments."' AND employee_syncs.position = 'Leader' ) 
+            OR (
+            employee_syncs.department = '".$departments."' 
+            AND employee_syncs.position = 'Foreman')";
+        $queryForeman = "SELECT DISTINCT
+            ( employee_syncs.name ),
+            employee_syncs.employee_id 
+        FROM
+            employee_syncs
+        WHERE
+            (
+            employee_syncs.department = '".$departments."' 
+            AND employee_syncs.position = 'Foreman')";
 
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
@@ -359,7 +369,7 @@ class SamplingCheckController extends Controller
         $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
         $subsection = DB::select($querySubSection);
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
 
         $data = array(
@@ -414,15 +424,25 @@ class SamplingCheckController extends Controller
         $id_departments = $sampling_check->activity_lists->departments->id;
         $activity_alias = $sampling_check->activity_lists->activity_alias;
 
-        $queryLeaderForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-                        join promotion_logs on employees.employee_id= promotion_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and promotion_logs.`position` = 'leader') or (mutation_logs.department = '".$departments."' and promotion_logs.`position`='foreman')";
-        $queryForeman = "select DISTINCT(employees.name), employees.employee_id
-            from employees
-            join mutation_logs on employees.employee_id= mutation_logs.employee_id
-            where (mutation_logs.department = '".$departments."' and mutation_logs.`group`='foreman')";
+        $queryLeaderForeman = "SELECT DISTINCT
+            ( employee_syncs.name ),
+            employee_syncs.employee_id 
+        FROM
+            employee_syncs
+        WHERE
+            ( employee_syncs.department = '".$departments."' AND employee_syncs.position = 'Leader' ) 
+            OR (
+            employee_syncs.department = '".$departments."' 
+            AND employee_syncs.position = 'Foreman')";
+        $queryForeman = "SELECT DISTINCT
+            ( employee_syncs.name ),
+            employee_syncs.employee_id 
+        FROM
+            employee_syncs
+        WHERE
+            (
+            employee_syncs.department = '".$departments."' 
+            AND employee_syncs.position = 'Foreman')";
 
         $leaderForeman = DB::select($queryLeaderForeman);
         $foreman = DB::select($queryForeman);
@@ -433,7 +453,7 @@ class SamplingCheckController extends Controller
         $querySubSection = "select sub_section_name from sub_sections join sections on sections.id = sub_sections.id_section where sections.id_department = '".$id_departments."'";
         $subsection = DB::select($querySubSection);
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
 
         $samplingCheckDetails = SamplingCheckDetail::find($sampling_check_details_id);
@@ -785,7 +805,7 @@ class SamplingCheckController extends Controller
                     $scheck->save();
               }
 
-              $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+              $queryEmail = "select employee_syncs.employee_id,employee_syncs.name,email from users join employee_syncs on employee_syncs.employee_id = users.username where employee_syncs.name = '".$foreman."'";
               $email = DB::select($queryEmail);
               foreach($email as $email){
                 $mail_to = $email->email;            

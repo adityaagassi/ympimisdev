@@ -80,7 +80,7 @@ class JishuHozenController extends Controller
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-        $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $pic = DB::select($querypic);
         $pic2 = DB::select($querypic);
 
@@ -137,7 +137,7 @@ class JishuHozenController extends Controller
         $subsection2 = DB::select($querySubSection);
         $subsection3 = DB::select($querySubSection);
 
-        $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $pic = DB::select($querypic);
         $pic2 = DB::select($querypic);
 
@@ -524,7 +524,7 @@ class JishuHozenController extends Controller
               $jishu_hozen2->save();
               // var_dump($id);
             }
-            $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+            $queryEmail = "select employee_syncs.employee_id,employee_syncs.name,email from users join employee_syncs on employee_syncs.employee_id = users.username where employee_syncs.name = '".$foreman."'";
             $email = DB::select($queryEmail);
             foreach($email as $email){
               $mail_to = $email->email;

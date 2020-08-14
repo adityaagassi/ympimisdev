@@ -153,10 +153,19 @@ class AuditProcessController extends Controller
         	$fy = $fyHasil->fiscal_year;
         }
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
 
-        $queryAuditor = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where (mutation_logs.department = '".$departments."' and promotion_logs.position = 'Leader') or (mutation_logs.department = '".$departments."' and promotion_logs.position = 'Sub Leader')";
+        $queryAuditor = "SELECT DISTINCT
+            ( employee_syncs.name ),
+            employee_syncs.employee_id 
+          FROM
+            employee_syncs
+          WHERE
+            ( employee_syncs.department = '".$departments."' AND employee_syncs.position = 'Leader' ) 
+            OR (
+            employee_syncs.department = '".$departments."' 
+            AND employee_syncs.position = 'Sub Leader')";
         $auditor = DB::select($queryAuditor);
 
         $data = array(
@@ -227,10 +236,19 @@ class AuditProcessController extends Controller
           $fy = $fyHasil->fiscal_year;
         }
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
 
-        $queryAuditor = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id join promotion_logs on employees.employee_id = promotion_logs.employee_id where (mutation_logs.department = '".$departments."' and promotion_logs.position = 'Leader') or (mutation_logs.department = '".$departments."' and promotion_logs.position = 'Sub Leader')";
+        $queryAuditor = "SELECT DISTINCT
+            ( employee_syncs.name ),
+            employee_syncs.employee_id 
+          FROM
+            employee_syncs
+          WHERE
+            ( employee_syncs.department = '".$departments."' AND employee_syncs.position = 'Leader' ) 
+            OR (
+            employee_syncs.department = '".$departments."' 
+            AND employee_syncs.position = 'Sub Leader')";
         $auditor = DB::select($queryAuditor);
 
         $audit_process = AuditProcess::find($audit_process_id);
@@ -444,7 +462,7 @@ class AuditProcessController extends Controller
                     $auditprocess->save();
               }
 
-              $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+              $queryEmail = "select employee_syncs.employee_id,employee_syncs.name,email from users join employee_syncs on employee_syncs.employee_id = users.username where employee_syncs.name = '".$foreman."'";
               $email = DB::select($queryEmail);
               foreach($email as $email){
                 $mail_to = $email->email;            

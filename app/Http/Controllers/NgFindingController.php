@@ -44,7 +44,7 @@ class NgFindingController extends Controller
         $foreman = $activityList->foreman_dept;
         $frequency = $activityList->frequency;
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
@@ -112,7 +112,7 @@ class NgFindingController extends Controller
                 ->get();
         }
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 

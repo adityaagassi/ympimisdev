@@ -313,7 +313,7 @@ class InterviewController extends Controller
         $activity_alias = $interview->activity_lists->activity_alias;
         $activity_id = $interview->activity_lists->id;
 
-        $queryOperator = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
 
@@ -483,7 +483,7 @@ class InterviewController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-        $interviewDetailQuery = "select * from interview_details join employees on interview_details.nik = employees.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
+        $interviewDetailQuery = "select * from interview_details join employee_syncs on interview_details.nik = employee_syncs.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
         $interviewDetail = DB::select($interviewDetailQuery);
 
         $interviewPicture = InterviewPicture::where('interview_id',$interview_id)->get();
@@ -517,7 +517,7 @@ class InterviewController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-        $interviewDetailQuery = "select * from interview_details join employees on interview_details.nik = employees.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
+        $interviewDetailQuery = "select * from interview_details join employee_syncs on interview_details.nik = employee_syncs.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
         $interviewDetail = DB::select($interviewDetailQuery);
 
         $interviewPicture = InterviewPicture::where('interview_id',$interview_id)->get();
@@ -572,7 +572,7 @@ class InterviewController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-        $interviewDetailQuery = "select * from interview_details join employees on interview_details.nik = employees.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
+        $interviewDetailQuery = "select * from interview_details join employee_syncs on interview_details.nik = employee_syncs.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
         $interviewDetail = DB::select($interviewDetailQuery);
         $interviewPicture = InterviewPicture::where('interview_id',$interview_id)->get();
 
@@ -616,7 +616,7 @@ class InterviewController extends Controller
               $interview2->save();
               // var_dump($id);
             }
-            $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+            $queryEmail = "select employee_syncs.employee_id,employee_syncs.name,email from users join employee_syncs on employee_syncs.employee_id = users.username where employee_syncs.name = '".$foreman."'";
             $email = DB::select($queryEmail);
             foreach($email as $email){
               $mail_to = $email->email;
@@ -643,7 +643,7 @@ class InterviewController extends Controller
     public function approval(Request $request,$interview_id)
     {
         $approve = $request->get('approve');
-        $interviewDetailQuery = "select * from interview_details join employees on interview_details.nik = employees.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
+        $interviewDetailQuery = "select * from interview_details join employee_syncs on interview_details.nik = employee_syncs.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
         $interviewDetail = DB::select($interviewDetailQuery);
         $jumlahDetail = count($interviewDetail);
         $approvecount = count($approve);

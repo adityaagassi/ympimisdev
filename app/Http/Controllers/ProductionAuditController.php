@@ -210,7 +210,7 @@ class ProductionAuditController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
 
-        $queryLeader = "select employee_id from employees where name = '".$leader."'";
+        $queryLeader = "select employee_id from employee_syncs where name = '".$leader."'";
         $lead = DB::select($queryLeader);
         foreach($lead as $lead){
           $empid_leader = $lead->employee_id;
@@ -221,7 +221,7 @@ class ProductionAuditController extends Controller
         // $queryProduct = "select * from origin_groups";
         // $product = DB::select($queryProduct);
 
-        $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $pic = DB::select($querypic);
 
         // $queryProses = "select DISTINCT(point_check_audits.proses),point_check_audits.product from point_check_audits where point_check_audits.activity_list_id = '".$id."'";
@@ -249,13 +249,13 @@ class ProductionAuditController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
 
-        $queryLeader = "select employee_id from employees where name = '".$leader."'";
+        $queryLeader = "select employee_id from employee_syncs where name = '".$leader."'";
         $lead = DB::select($queryLeader);
         foreach($lead as $lead){
           $empid_leader = $lead->employee_id;
         }
 
-        $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $pic = DB::select($querypic);
 
         $pointCheckAudit = PointCheckAudit::find($point_check_id);
@@ -318,7 +318,7 @@ class ProductionAuditController extends Controller
         $activity_alias = $activityList->activity_alias;
         $leader = $activityList->leader_dept;
 
-        $queryLeader = "select employee_id from employees where name = '".$leader."'";
+        $queryLeader = "select employee_id from employee_syncs where name = '".$leader."'";
         $lead = DB::select($queryLeader);
         foreach($lead as $lead){
           $empid_leader = $lead->employee_id;
@@ -326,7 +326,7 @@ class ProductionAuditController extends Controller
 
         $productionAudit = ProductionAudit::find($audit_id);
 
-        $querypic = "select DISTINCT(employees.name),employees.employee_id from mutation_logs join employees on employees.employee_id = mutation_logs.employee_id where mutation_logs.department = '".$departments."'";
+        $querypic = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $pic = DB::select($querypic);
 
         $queryPointCheck = "SELECT * FROM `point_check_audits` where product = '".$productionAudit->point_check_audit->product."' and proses = '".$productionAudit->point_check_audit->proses."'";
@@ -430,8 +430,8 @@ class ProductionAuditController extends Controller
                     join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
                     join activity_lists on activity_lists.id =  production_audits.activity_list_id
                     join departments on departments.id =  activity_lists.department_id
-                    join employees as employees1 on employees1.employee_id = production_audits.pic
-                    join employees as employees2 on employees2.employee_id = production_audits.auditor
+                    join employee_syncs as employees1 on employees1.employee_id = production_audits.pic
+                    join employee_syncs as employees2 on employees2.employee_id = production_audits.auditor
                     where DATE_FORMAT(production_audits.date,'%Y-%m')='".$date."' 
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
@@ -493,8 +493,8 @@ class ProductionAuditController extends Controller
                     join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
                     join activity_lists on activity_lists.id =  production_audits.activity_list_id
                     join departments on departments.id =  activity_lists.department_id
-                    join employees as employees1 on employees1.employee_id = production_audits.pic
-                    join employees as employees2 on employees2.employee_id = production_audits.auditor
+                    join employee_syncs as employees1 on employees1.employee_id = production_audits.pic
+                    join employee_syncs as employees2 on employees2.employee_id = production_audits.auditor
                     where DATE_FORMAT(production_audits.date,'%Y-%m')='".$date."' 
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
@@ -558,8 +558,8 @@ class ProductionAuditController extends Controller
                     join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
                     join activity_lists on activity_lists.id =  production_audits.activity_list_id
                     join departments on departments.id =  activity_lists.department_id
-                    join employees as employees1 on employees1.employee_id = production_audits.pic
-                    join employees as employees2 on employees2.employee_id = production_audits.auditor
+                    join employee_syncs as employees1 on employees1.employee_id = production_audits.pic
+                    join employee_syncs as employees2 on employees2.employee_id = production_audits.auditor
                     where DATE_FORMAT(production_audits.date,'%Y-%m')='".$date."'
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
@@ -660,10 +660,10 @@ class ProductionAuditController extends Controller
       $dateformat = date( 'format', strtotime($week_date) );
       $kondisi = $request->get("kondisi");
       if(strlen($week_date) == 10){
-        $query = "select *,CONCAT(activity_lists.id, '/', production_audits.date, '/', point_check_audits.product,'/',point_check_audits.proses) AS urllink, activity_lists.id as id_activity_list, employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where date = '".$week_date."' and production_audits.kondisi = '".$kondisi."' and production_audits.deleted_at is null";
+        $query = "select *,CONCAT(activity_lists.id, '/', production_audits.date, '/', point_check_audits.product,'/',point_check_audits.proses) AS urllink, activity_lists.id as id_activity_list, employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employee_syncs as employees1 on employees1.employee_id = production_audits.pic join employee_syncs as employees2 on employees2.employee_id = production_audits.auditor where date = '".$week_date."' and production_audits.kondisi = '".$kondisi."' and production_audits.deleted_at is null";
       }
       else{
-        $query = "select *,CONCAT(activity_lists.id, '/', production_audits.date, '/', point_check_audits.product,'/',point_check_audits.proses) AS urllink, activity_lists.id as id_activity_list, employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employees as employees1 on employees1.employee_id = production_audits.pic join employees as employees2 on employees2.employee_id = production_audits.auditor where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."' and production_audits.kondisi = '".$kondisi."' and production_audits.deleted_at is null";
+        $query = "select *,CONCAT(activity_lists.id, '/', production_audits.date, '/', point_check_audits.product,'/',point_check_audits.proses) AS urllink, activity_lists.id as id_activity_list, employees1.name as pic_name,employees2.name as auditor_name from production_audits join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id join activity_lists on activity_lists.id = production_audits.activity_list_id join employee_syncs as employees1 on employees1.employee_id = production_audits.pic join employee_syncs as employees2 on employees2.employee_id = production_audits.auditor where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."' and production_audits.kondisi = '".$kondisi."' and production_audits.deleted_at is null";
       }
 
       $detail = db::select($query);
@@ -709,8 +709,8 @@ class ProductionAuditController extends Controller
                     join point_check_audits on point_check_audits.id = production_audits.point_check_audit_id 
                     join activity_lists on activity_lists.id =  production_audits.activity_list_id
                     join departments on departments.id =  activity_lists.department_id
-                    join employees as employees1 on employees1.employee_id = production_audits.pic
-                    join employees as employees2 on employees2.employee_id = production_audits.auditor
+                    join employee_syncs as employees1 on employees1.employee_id = production_audits.pic
+                    join employee_syncs as employees2 on employees2.employee_id = production_audits.auditor
                     where DATE_FORMAT(production_audits.date,'%Y-%m')='".$date."'
                     and point_check_audits.product = '".$origin_group."' 
                     and point_check_audits.proses = '".$proses."' and production_audits.deleted_at is null";
@@ -728,7 +728,7 @@ class ProductionAuditController extends Controller
               $production_audit->save();
               // var_dump($id);
             }
-            $queryEmail = "select employees.employee_id,employees.name,email from users join employees on employees.employee_id = users.username where employees.name = '".$foreman."'";
+            $queryEmail = "select employee_syncs.employee_id,employee_syncs.name,email from users join employee_syncs on employee_syncs.employee_id = users.username where employee_syncs.name = '".$foreman."'";
             $email = DB::select($queryEmail);
             foreach($email as $email){
               $mail_to = $email->email;
