@@ -250,6 +250,10 @@
                         <td>
                             <span style="font-weight: bold;">Audit Internal ISO E-IRCA (ISO内部監査のCPAR)</span>
                             <br>
+                            <a href="{{ url("/index/audit_iso/check") }}">
+                                <i class="fa fa-caret-right"></i> Audit Internal ISO (ISO内部監査のCPARを作成)
+                            </a>
+                            <br>
                             <a href="{{ url("/index/audit_iso") }}">
                                 <i class="fa fa-caret-right"></i> Create Audit Internal ISO (ISO内部監査のCPARを作成)
                             </a>
@@ -745,10 +749,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span style="font-weight: bold;">Stock Taking (棚卸し)</span>
+                                    <span style="font-weight: bold;">NG Jelas (??)</span>
                                     <br>
-                                    <a href="{{ url("/index/stocktaking/silver_report") }}">
-                                        <i class="fa fa-caret-right"></i> Silver Stock Taking Report (銀材棚卸し報告)
+                                    <a href="{{ url("/index/audit_ng_jelas_monitoring") }}">
+                                        <i class="fa fa-caret-right"></i> Audit NG Jelas Monitoring (??)
                                     </a>
                                 </td>
                             </tr>
@@ -869,6 +873,10 @@
                                         <br>
                                         <a href="{{ url("/index/ch_daily_production_result") }}">
                                             <i class="fa fa-caret-right"></i> Production Summary (生産まとめ)
+                                        </a>
+                                        <br>
+                                        <a href="{{ url("/index/display/eff_scrap") }}">
+                                            <i class="fa fa-caret-right"></i> Scrap & Efficiency Monitoring (スクラップと効率の監視)
                                         </a>
                                         {{-- <br>
                                         <a href="{{ url("/index/production_achievement") }}">
