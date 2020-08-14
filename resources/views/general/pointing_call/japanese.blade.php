@@ -51,7 +51,7 @@
 				$('.content').html('');
 
 				var pic_data = '';
-				pic_data += '<div class="col-xs-12" style="padding-bottom: 10px;">';
+				pic_data += '<div class="col-xs-12" style="padding-bottom: 10px;" id="pic_cok">';
 				pic_data += '<center>';
 				$.each(result.pics, function(key, value){
 					if(value.remark == 1){
@@ -64,6 +64,8 @@
 				pic_data += '</center>';
 				pic_data += '</div>';
 				$('.content').append(pic_data);
+
+				var h = $('#pic_cok').height()+$('.navbar-header').height();
 
 				var count = 1;
 				if($('#default_language').val() == 'jp'){
@@ -164,53 +166,53 @@
 							$('#10_komitmen').append(point_data);
 
 							if(value.point_no == 1){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 1.5;
+								var x = 50;
+								var y = 330;
 							}
 
 							if(value.point_no == 2){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 4;
+								var x = 50;
+								var y = 392;
 							}
 
 							if(value.point_no == 3){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 4.7;
+								var x = 50;
+								var y = 455;
 							}
 
 							if(value.point_no == 4){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 5.5;
+								var x = 50;
+								var y = 518;
 							}
 
 							if(value.point_no == 5){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 6.2;
+								var x = 50;
+								var y = 578;
 							}
 
 							if(value.point_no == 6){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 7.2;
+								var x = 50;
+								var y = 665;
 							}
 
 							if(value.point_no == 7){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 8.2;
+								var x = 50;
+								var y = 745;
 							}
 
 							if(value.point_no == 8){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 9.1;
+								var x = 50;
+								var y = 825;
 							}
 
 							if(value.point_no == 9){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 10.4;
+								var x = 50;
+								var y = 925;
 							}
 
 							if(value.point_no == 10){
-								var x = $('#diamond').width() / 18.5;
-								var y = $('#diamond').height() * 11.3;
+								var x = 50;
+								var y = 1010;
 							}
 
 							var div = document.getElementById('dot_10_komitmen');
@@ -225,63 +227,63 @@
 							$('#k3').append(point_data);
 
 							if(value.point_no == 1){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 10.5;
+								var x = 50;
+								var y = 270;
 							}
 
 							if(value.point_no == 2){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 15.5;
+								var x = 50;
+								var y = 360;
 							}
 
 							if(value.point_no == 3){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 21.5;
+								var x = 50;
+								var y = 485;
 							}
 
 							if(value.point_no == 4){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 26;
+								var x = 50;
+								var y = 575;
 							}
 
 							if(value.point_no == 5){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 31;
+								var x = 50;
+								var y = 665;
 							}
 
 							if(value.point_no == 6){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 37;
+								var x = 50;
+								var y = 785;
 							}
 
 							if(value.point_no == 7){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 41.2;
+								var x = 50;
+								var y = 875;
 							}
 
 							if(value.point_no == 8){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 45.8;
+								var x = 50;
+								var y = 965;
 							}
 
 							if(value.point_no == 9){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 51;
+								var x = 50;
+								var y = 1055;
 							}
 
 							if(value.point_no == 10){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 55.5;
+								var x = 50;
+								var y = 1145;
 							}
 
 							if(value.point_no == 11){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 60;
+								var x = 50;
+								var y = 1235;
 							}
 
 							if(value.point_no == 12){
-								var x = $('#k3').width() / 18.5;
-								var y = $('#k3').height() * 64.6;
+								var x = 50;
+								var y = 1325;
 							}
 
 							var div = document.getElementById('dot_k3');
@@ -296,33 +298,33 @@
 							$('#6_pasal').append(point_data);
 
 							if(value.point_no == 1){
-								var x = $('#6_pasal').width() / 12;
-								var y = $('#6_pasal').height() * 14;
+								var x = 90;
+								var y = 330;
 							}
 
-							if(value.point_no == 2){
-								var x = $('#6_pasal').width() / 12;
-								var y = $('#6_pasal').height() * 20.5;
+							if(value.point_no == 1){
+								var x = 90;
+								var y = 455;
 							}
 
-							if(value.point_no == 3){
-								var x = $('#6_pasal').width() / 12;
-								var y = $('#6_pasal').height() * 29;
+							if(value.point_no == 1){
+								var x = 90;
+								var y = 620;
 							}
 
-							if(value.point_no == 4){
-								var x = $('#6_pasal').width() / 12;
-								var y = $('#6_pasal').height() * 37;
+							if(value.point_no == 1){
+								var x = 90;
+								var y = 790;
 							}
 
-							if(value.point_no == 5){
-								var x = $('#6_pasal').width() / 12;
-								var y = $('#6_pasal').height() * 46;
+							if(value.point_no == 1){
+								var x = 90;
+								var y = 955;
 							}
 
-							if(value.point_no == 6){
-								var x = $('#6_pasal').width() / 12;
-								var y = $('#6_pasal').height() * 55;
+							if(value.point_no == 1){
+								var x = 90;
+								var y = 1120;
 							}
 
 							var div = document.getElementById('dot_6_pasal');
@@ -337,53 +339,53 @@
 							$('#komitmen').append(point_data);
 
 							if(value.point_no == 1){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 25;
+								var x = 0;
+								var y = 560;
 							}
 
 							if(value.point_no == 2){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 30;
+								var x = 0;
+								var y = 655;
 							}
 
 							if(value.point_no == 3){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 35;
+								var x = 0;
+								var y = 750;
 							}
 
 							if(value.point_no == 4){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 40;
+								var x = 0;
+								var y = 855;
 							}
 
 							if(value.point_no == 5){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 45;
+								var x = 0;
+								var y = 950;
 							}
 
 							if(value.point_no == 6){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 50;
+								var x = 0;
+								var y = 1050;
 							}
 
 							if(value.point_no == 7){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 55;
+								var x = 0;
+								var y = 1150;
 							}
 
 							if(value.point_no == 8){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 60;
+								var x = 0;
+								var y = 1245;
 							}
 
 							if(value.point_no == 9){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 65;
+								var x = 0;
+								var y = 1345;
 							}
 
 							if(value.point_no == 10){
-								var x = $('#komitmen').width() / 100;
-								var y = $('#komitmen').height() * 70;
+								var x = 0;
+								var y = 1445;
 							}
 
 							var div = document.getElementById('dot_komitmen');
@@ -399,62 +401,62 @@
 
 							if(value.point_no == 1){
 								var x = -5;
-								var y = $('#janji').height() * 19;
+								var y = 440;
 							}
 
 							if(value.point_no == 2){
 								var x = -5;
-								var y = $('#janji').height() * 23;
+								var y = 535;
 							}
 
 							if(value.point_no == 3){
 								var x = -5;
-								var y = $('#janji').height() * 28;
+								var y = 630;
 							}
 
 							if(value.point_no == 4){
 								var x = -5;
-								var y = $('#janji').height() * 33;
+								var y = 720;
 							}
 
 							if(value.point_no == 5){
 								var x = -5;
-								var y = $('#janji').height() * 37.5;
+								var y = 810;
 							}
 
 							if(value.point_no == 6){
 								var x = -5;
-								var y = $('#janji').height() * 42;
+								var y = 900;
 							}
 
 							if(value.point_no == 7){
 								var x = -5;
-								var y = $('#janji').height() * 46.5;
+								var y = 990;
 							}
 
 							if(value.point_no == 8){
 								var x = -5;
-								var y = $('#janji').height() * 51;
+								var y = 1080;
 							}
 
 							if(value.point_no == 9){
 								var x = -5;
-								var y = $('#janji').height() * 55.5;
+								var y = 1170;
 							}
 
 							if(value.point_no == 10){
 								var x = -5;
-								var y = $('#janji').height() * 60;
+								var y = 1260;
 							}
 
 							if(value.point_no == 11){
 								var x = -5;
-								var y = $('#janji').height() * 65;
+								var y = 1350;
 							}
 
 							if(value.point_no == 12){
 								var x = -5;
-								var y = $('#janji').height() * 70;
+								var y = 1440;
 							}
 
 							var div = document.getElementById('dot_janji');
@@ -470,72 +472,72 @@
 
 							if(value.point_no == 1){
 								var x = -5;
-								var y = $('#budaya').height() * 3;
+								var y = 125;
 							}
 
 							if(value.point_no == 2){
 								var x = -5;
-								var y = $('#budaya').height() * 5;
+								var y = 165;
 							}
 
 							if(value.point_no == 3){
 								var x = -5;
-								var y = $('#budaya').height() * 7.5;
+								var y = 205;
 							}
 
 							if(value.point_no == 4){
 								var x = -5;
-								var y = $('#budaya').height() * 9.5;
+								var y = 250;
 							}
 
 							if(value.point_no == 5){
 								var x = -5;
-								var y = $('#budaya').height() * 11.8;
+								var y = 295;
 							}
 
 							if(value.point_no == 6){
 								var x = -5;
-								var y = $('#budaya').height() * 14;
+								var y = 340;
 							}
 
 							if(value.point_no == 7){
 								var x = -5;
-								var y = $('#budaya').height() * 18;
+								var y = 410;
 							}
 
 							if(value.point_no == 8){
 								var x = -5;
-								var y = $('#budaya').height() * 20;
+								var y = 455;
 							}
 
 							if(value.point_no == 9){
 								var x = -5;
-								var y = $('#budaya').height() * 22;
+								var y = 500;
 							}
 
 							if(value.point_no == 10){
 								var x = -5;
-								var y = $('#budaya').height() * 24.5;
+								var y = 540;
 							}
 
 							if(value.point_no == 11){
 								var x = -5;
-								var y = $('#budaya').height() * 29;
+								var y = 620;
 							}
 
 							if(value.point_no == 12){
 								var x = -5;
-								var y = $('#budaya').height() * 32;
+								var y = 695;
 							}
 
 							if(value.point_no == 13){
 								var x = -5;
-								var y = $('#budaya').height() * 34.5;
+								var y = 740;
 							}
 
 							if(value.point_no == 14){
 								var x = -5;
-								var y = $('#budaya').height() * 38;
+								var y = 810;
 							}
 
 							var div = document.getElementById('dot_budaya');
