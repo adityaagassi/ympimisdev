@@ -32,6 +32,131 @@ class DisplayController extends Controller
 		return view('displays.shippings.all_stock')->with('page', 'All Stock')->with('head', 'All Stock');		
 	}
 
+	public function indexEffScrap(){
+		$title = 'Production Monitoring';
+		$title_jp = '生産 監視';
+
+		return view('displays.eff_scrap', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Display Weekly Shipment')->with('head', 'Display');
+	}
+
+	public function fetchEffScrap(Request $request){
+
+		$first = date('Y-m-01');
+		$last = date('Y-m-t');
+
+		if(strlen($request->get('period')) > 0){
+			$first = date('Y-m-01', strtotime($request->get('period')));
+			$last = date('Y-m-t', strtotime($request->get('period')));
+		}
+
+		$targets = db::select("SELECT
+			* 
+			FROM
+			scrap_targets 
+			WHERE
+			due_date >= '".$first."'
+			AND due_date <= '".$last."'");
+
+		$actuals = db::select("SELECT
+			w.week_date AS posting_date,
+			scrap.movement_type,
+			scrap.material_number,
+			scrap.material_description,
+			scrap.quantity,
+			scrap.std_price,
+			COALESCE ( scrap.amount, 0 ) AS amount,
+			scrap.storage_location,
+			IF
+			( scrap.receive_location IS NULL OR scrap.receive_location = '', 'no_scrap', scrap.receive_location ) AS receive_location,
+			SPLIT_STRING ( scrap.reference, '/', 2 ) AS reason 
+			FROM
+			( SELECT week_date FROM weekly_calendars WHERE week_date >= '".$first."' AND week_date <= '".$last."' ) AS w
+			LEFT JOIN (
+			SELECT
+			s.posting_date,
+			s.movement_type,
+			s.material_number,
+			m.material_description,
+			s.quantity,
+			m.standard_price / 1000 AS std_price,
+			IF
+			(
+			s.movement_type = '9S2' 
+			OR s.movement_type = '102',
+			- 1 * s.quantity *(
+			m.standard_price / 1000 
+			),
+			s.quantity *(
+			m.standard_price / 1000 
+			)) AS amount,
+			IF
+			( s.receive_location = '' OR s.receive_location IS NULL, m.storage_location, s.storage_location ) AS storage_location,
+			IF
+			( s.receive_location = '' OR s.receive_location IS NULL, s.storage_location, s.receive_location ) AS receive_location,
+			s.reference 
+			FROM
+			sap_transactions AS s
+			LEFT JOIN material_plant_data_lists AS m ON m.material_number = s.material_number 
+			WHERE
+			(
+			s.receive_location IN ( 'MSCR', 'WSCR' ) 
+			OR s.storage_location IN ( 'MSCR', 'WSCR' )) 
+			AND s.posting_date >= '".$first."' 
+			AND s.posting_date <= '".$last."' 
+			AND s.reference NOT LIKE '%TRI%' 
+			AND s.reference NOT LIKE '%WAST%' 
+			) AS scrap ON scrap.posting_date = w.week_date 
+			ORDER BY
+			posting_date ASC");
+
+		$actual_mscr = array();
+		$actual_wscr = array();
+
+		foreach ($actuals as $actual) {
+			if($actual->receive_location == 'MSCR' || $actual->receive_location == 'no_scrap'){
+				array_push($actual_mscr, [
+					'posting_date' => $actual->posting_date,
+					'movement_type' => $actual->movement_type,
+					'material_number' => $actual->material_number,
+					'material_description' => $actual->material_description,
+					'quantity' => $actual->quantity,
+					'std_price' => $actual->std_price,
+					'amount' => $actual->amount,
+					'storage_location' => $actual->storage_location,
+					'reason' => $actual->reason,
+					'receive_location' => 'MSCR'
+				]);
+			}	
+			if($actual->receive_location == 'WSCR' || $actual->receive_location == 'no_scrap'){
+				array_push($actual_wscr, [
+					'posting_date' => $actual->posting_date,
+					'movement_type' => $actual->movement_type,
+					'material_number' => $actual->material_number,
+					'material_description' => $actual->material_description,
+					'quantity' => $actual->quantity,
+					'std_price' => $actual->std_price,
+					'amount' => $actual->amount,
+					'storage_location' => $actual->storage_location,
+					'reason' => $actual->reason,
+					'receive_location' => 'WSCR'
+				]);
+			}
+		}
+
+		$response = array(
+			'status' => true,
+			'targets' => $targets,
+			'actual_mscr' => $actual_mscr,
+			'actual_wscr' => $actual_wscr,
+			'first' => date('d', strtotime($first)),
+			'last' => date('d F Y', strtotime($last))
+		);
+		return Response::json($response);
+	}
+
 	public function indexShipmentReport(){
 		$title = 'FG Weekly Shipment';
 		$title_jp = 'FG週次出荷';
