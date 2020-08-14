@@ -778,6 +778,21 @@ public function getNotifVisitor()
 								OR (
 								visitors.remark IS NULL 
 								AND employee_syncs.department = 'Production Engineering')");
+				}elseif ($name == 'Prawoto') {
+					$lists = DB::SELECT("SELECT
+								count( visitors.id ) AS notif 
+							FROM
+								visitors
+								LEFT JOIN visitor_details ON visitors.id = visitor_details.id_visitor
+								LEFT JOIN employee_syncs ON visitors.employee = employee_syncs.employee_id 
+							WHERE
+								( visitors.remark IS NULL AND employee_syncs.department = 'Human Resources' ) 
+		                        OR (
+		                        visitors.remark IS NULL 
+		                        AND employee_syncs.department = 'General Affairs')
+		                        OR (
+		                        visitors.remark IS NULL 
+		                        AND employee_syncs.name = 'Arief Soekamto')");
 				}else{
 					$lists = DB::SELECT("SELECT
 							count( visitors.id ) AS notif 
