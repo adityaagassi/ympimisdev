@@ -302,27 +302,27 @@
 								var y = 330;
 							}
 
-							if(value.point_no == 1){
+							if(value.point_no == 2){
 								var x = 90;
 								var y = 455;
 							}
 
-							if(value.point_no == 1){
+							if(value.point_no == 3){
 								var x = 90;
 								var y = 620;
 							}
 
-							if(value.point_no == 1){
+							if(value.point_no == 4){
 								var x = 90;
 								var y = 790;
 							}
 
-							if(value.point_no == 1){
+							if(value.point_no == 5){
 								var x = 90;
 								var y = 955;
 							}
 
-							if(value.point_no == 1){
+							if(value.point_no == 6){
 								var x = 90;
 								var y = 1120;
 							}
