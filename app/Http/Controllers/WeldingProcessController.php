@@ -2190,7 +2190,7 @@ class WeldingProcessController extends Controller
 			(select g.employee_id, e.`name`, g.`group` from ympimis.employee_groups g
 			left join ympimis.employee_syncs e
 			on g.employee_id = e.employee_id
-			where location = 'soldering') op
+			where location = 'soldering' and g.deleted_at is null) op
 			left join
 			(select solder.operator_nik, sum(solder.actual) as actual, sum(solder.std) as std, sum(solder.std)/sum(solder.actual) as eff from
 			(select time.operator_nik, sum(time.actual) actual, sum(time.std) std from
