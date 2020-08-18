@@ -475,9 +475,9 @@
 				var color ="";
 				$.each(result.datas, function(key, value) {
 					if (no % 2 === 0 ) {
-							color = 'style="background-color: #fffcb7;font-size: 20px;"';
+							color = 'style="background-color: #fffcb7;font-size: 25px;"';
 						} else {
-							color = 'style="background-color: #ffd8b7;font-size: 20px;"';
+							color = 'style="background-color: #ffd8b7;font-size: 25px;"';
 						}
 					moldingLogPasang += '<tr onclick="fetchCountPasang(\''+value.id+'\')">';
 					moldingLogPasang += '<td '+color+'>'+value.product+'</td>';

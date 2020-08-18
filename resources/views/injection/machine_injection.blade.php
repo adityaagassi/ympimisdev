@@ -164,6 +164,15 @@
 					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
 						Cavity
 					</td>
+					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
+						Dryer
+					</td>
+					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
+						Lot Number
+					</td>
+					<td style="background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 15px;">
+						Dryer Color
+					</td>
 				</tr>
 				<tr>
 					<td id="molding" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
@@ -175,6 +184,12 @@
 					<td id="color" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
 					</td>
 					<td id="cavity" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
+					</td>
+					<td id="dryer" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
+					</td>
+					<td id="dryer_lot_number" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
+					</td>
+					<td id="dryer_color" style="background-color: #6e81ff; text-align: center; color: #fff; font-size: 1.5vw;">-
 					</td>
 				</tr>
 			</table>
@@ -544,7 +559,7 @@
 			if($("#tag_product").val().length >= 7){
 				var data = {
 					tag : $("#tag_product").val(),
-					// part_type : $("#molding_part_type").val()
+					color : $("#dryer_color").text()
 				}
 				
 				$.get('{{ url("scan/new_tag_injeksi") }}', data, function(result, status, xhr){
@@ -593,7 +608,7 @@
 			if($("#tag_molding").val().length >= 7){
 				var data = {
 					tag : $("#tag_molding").val(),
-					mesin : $("#mesin").text(),
+					mesin : $("#mesin_fix2").text(),
 					// part : $("#part_type").text(),
 				}
 				
@@ -659,6 +674,9 @@
 		$('#part_type').html("-");
 		$('#color').html("-");
 		$('#cavity').html("-");
+		$('#dryer').html("-");
+		$('#dryer_lot_number').html("-");
+		$('#dryer_color').html("-");
 		$('#total_shot').val("");
 		$('#material_number').val("");
 		$('#btn_mulai').show();
@@ -713,8 +731,6 @@
 	}
 
 	function saveMesin() {
-		$('#modalMesin').modal('hide');
-		$('#mesin').html($('#mesin_fix2').text());
 		get_temp();
 	}
 
@@ -787,7 +803,10 @@
 			color:$('#color').text(),
 			molding:$('#molding').text(),
 			cavity:$('#cavity').text(),
-			material_number:$('#material_number').val()
+			material_number:$('#material_number').val(),
+			dryer:$('#dryer').text(),
+			dryer_lot_number:$('#dryer_lot_number').text(),
+			dryer_color:$('#dryer_color').text(),
 		}
 		$.post('{{ url("index/injeksi/create_temp") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -826,7 +845,7 @@
 		var data = {
 			// tag_product:$('#tag_product').val(),
 			// tag_molding:$('#tag_molding').val(),
-			mesin:$('#mesin').html()
+			mesin:$('#mesin_fix2').text()
 		}
 		$.get('{{ url("index/injeksi/get_temp") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -844,6 +863,9 @@
 				$('#cavity').html(result.datas.cavity);
 				$('#total_shot').val(result.datas.shot);
 				$('#material_number').val(result.datas.material_number);
+				$('#dryer').val(result.datas.dryer);
+				$('#dryer_lot_number').val(result.datas.dryer_lot_number);
+				$('#dryer_color').val(result.datas.dryer_color);
 				countUpFromTime(new Date(start_time));
 				$('#btn_mulai').hide();
 				$('#btn_selesai').show();
@@ -863,10 +885,25 @@
 				}
 				intervalUpdate = setInterval(update_temp,10000);
 				$('#btn_ganti').show();
+				$('#modalMesin').modal('hide');
 			}
 			else{
-				$('#tag_molding').removeAttr('disabled');
-				$('#tag_molding').focus();
+				var data2 = {
+					machine:$('#mesin_fix2').text()
+				}
+				$.get('{{ url("index/injection/fetch_dryer") }}', data2, function(result, status, xhr){
+					if(result.status){
+						$('#tag_molding').removeAttr('disabled');
+						$('#tag_molding').focus();
+						$('#modalMesin').modal('hide');
+						$('#mesin').html($('#mesin_fix2').text());
+						$('#dryer').html(result.dryer.dryer);
+						$('#dryer_lot_number').html(result.dryer.lot_number);
+						$('#dryer_color').html(result.dryer.color);
+					}else{
+						openErrorGritter('Error!','Mesin Belum Terset Dryer. Silahkan hubungi Leader Injeksi sebelum memulai proses');
+					}
+				})
 				// $('#tag_product').removeAttr('disabled');
 				// $('#tag_product').focus();
 			}
@@ -875,7 +912,11 @@
 
 	function update_temp() {
 		if ($('#running_shot').val() == "") {
-			var shot = parseInt($('#total_shot').val());
+			if ($('#total_shot').val() == "") {
+				var shot = 0;
+			}else{
+				var shot = parseInt($('#total_shot').val());
+			}
 		}else{
 			var shot = parseInt($('#running_shot').val());
 		}
@@ -938,7 +979,10 @@
 			material_number:$('#material_number').val(),
 			ng_name:ng_name.join(),
 			ng_count:ng_count.join(),
-			ng_counting:ng_counting
+			ng_counting:ng_counting,
+			dryer:$('#dryer').text(),
+			dryer_lot_number:$('#dryer_lot_number').text(),
+			dryer_color:$('#dryer_color').text(),
 		}
 		$.post('{{ url("index/injeksi/create_log") }}', data, function(result, status, xhr){
 			if(result.status){

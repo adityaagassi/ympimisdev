@@ -359,6 +359,17 @@ Route::post('index/injeksi/store_maintenance_molding', 'InjectionsController@sto
 
 //end maintenance molding injection
 
+//dryer injeksi
+
+Route::get('index/injection/dryer_resin', 'InjectionsController@indexDryerResin');
+Route::get('index/injection/fetch_resin', 'InjectionsController@fetchListResin');
+Route::get('index/injection/fetch_resume_resin', 'InjectionsController@fetchResumeResin');
+Route::post('input/injection/resin', 'InjectionsController@inputResin');
+Route::get('index/injection/fetch_dryer', 'InjectionsController@fetchDryer');
+Route::post('index/injection/update_dryer', 'InjectionsController@updateDryer');
+
+//end dryer injeksi
+
 // end mesin injeksi
 
 Route::group(['nav' => 'R5', 'middleware' => 'permission'], function(){
@@ -1134,6 +1145,7 @@ Route::get('purchase_requisition/get_detailbudget', 'AccountingController@prgetb
 Route::get('purchase_requisition/detail/{id}', 'AccountingController@detail_purchase_requisition');
 Route::get('purchase_requisition/get_exchange_rate', 'AccountingController@get_exchange_rate');
 Route::get('edit/purchase_requisition', 'AccountingController@edit_purchase_requisition');
+Route::get('detail/purchase_requisition/po', 'AccountingController@detail_pr_po');
 Route::post('update/purchase_requisition', 'AccountingController@update_purchase_requisition');
 Route::post('delete/purchase_requisition_item', 'AccountingController@delete_item_pr');
 Route::get('purchase_requisition/report/{id}', 'AccountingController@report_purchase_requisition');
@@ -1217,6 +1229,18 @@ Route::get('investment/edit_investment_item', 'AccountingController@fetch_invest
 Route::post('investment/delete_investment_item', 'AccountingController@delete_investment_item');
 Route::get('investment/get_detailitem', 'AccountingController@getitemdesc')->name('admin.getitemdesc');
 Route::get('investment/report/{id}', 'AccountingController@report_investment');
+
+
+//New Investment
+Route::get('investment/approvemanager/{id}', 'AccountingController@investment_approvalmanager');
+Route::get('investment/approvedgm/{id}', 'AccountingController@investment_approvaldgm');
+Route::get('investment/approvegm/{id}', 'AccountingController@investment_approvalgm');
+
+Route::get('investment/approvemanagerpch/{id}', 'AccountingController@investment_approvalmanagerpch');
+Route::get('investment/approvedirpch/{id}', 'AccountingController@investment_approvaldirpch');
+Route::get('investment/approvepresdir/{id}', 'AccountingController@investment_approvalpresdir');
+
+Route::get('investment/reject/{id}', 'AccountingController@prreject');
 
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
@@ -2868,6 +2892,10 @@ Route::get('index/audit_iso/monitoring', 'CparController@monitoring_audit');
 Route::get('fetch/audit_iso/monitoring', 'CparController@fetchMonitoring_audit');
 Route::get('index/audit_iso/detail', 'CparController@detailMonitoring_audit');
 Route::get('index/audit_iso/table', 'CparController@fetchTable_audit');
+
+//checklist
+Route::get('index/audit_iso/check', 'CparController@check_audit');
+
 
 //CUBEACON WAREHOUSE
 Route::get('mqtt/publish/{topic}/{message}', 'TrialController@SendMsgViaMqtt');
