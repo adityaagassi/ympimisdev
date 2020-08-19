@@ -2112,6 +2112,23 @@
 			$(id2).html('NG');
 			document.getElementById(id3).style.backgroundColor = "#ff4f4f";
 		}
+
+		var id_new = push_block.split('_');
+
+		if (id_new[0] == $('#head_4').val()) {
+			var head = $('#head_1').val();
+			var block = parseInt(id_new[1]) + 1;
+		}else{
+			var head = parseInt(id_new[0]) + 1;
+			var block = parseInt(id_new[1]);
+		}
+
+		console.log('#'+head+'_'+block);
+		console.log(x.length);
+
+		if (x.length >= 5) {
+			$('#ketinggian_'+head+'_'+block).focus();
+		}
 	}
 
 	function itemresume1(head_id,block){
