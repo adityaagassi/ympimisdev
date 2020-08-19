@@ -2,7 +2,9 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
-
+<style>
+	#loading, #error { display: none; }
+</style>
 @endsection
 
 
@@ -31,13 +33,18 @@
 	{{ session('error') }}
 </div>   
 @endif
+<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+	<p style="position: absolute; color: White; top: 45%; left: 35%;">
+		<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
+	</p>
+</div>
 <div class="row">
 	<div class="col-xs-offset-1 col-xs-10">
 		<div class="box">
 			<div class="box-header with-border">
 				<h3 class="box-title">Registration Form</h3>
 			</div>
-			<form class="form-horizontal" method="get" action="{{ url('simpan') }}">				
+			<form class="form-horizontal" name="regisForm" id="regisForm" method="get" action="{{ url('simpan') }}">				
 				<div class="box-body">
 					<div class="form-group">
 						<label for="inputEmail3" class="col-sm-2 control-label">Asal Perusahaan</label>
@@ -169,7 +176,7 @@
 				</div>
 				<div class="box-footer">
 					<button type="submit" class="btn btn-default" onclick="window.history.go(-1)">Cancel</button>
-					<button type="submit" class="btn btn-info pull-right"  href="javascript:void(0)">Register</button>
+					<button type="submit" class="btn btn-info pull-right" id="register">Register</button>
 				</div>
 			</form>
 		</div>
@@ -218,6 +225,13 @@
 			time: '3000'
 		});
 	}
+
+	$("#regisForm").submit(function(){
+		$('#loading').show();
+		$('#register').prop('disabled',true);
+		$('#register').hide();
+		this.submit();
+	});
 
 
 
