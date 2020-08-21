@@ -2614,7 +2614,7 @@ class CparController extends Controller
         $lokasi = $request->get("location");
         $kategori = $request->get("category");
 
-        $query = 'SELECT * FROM standarisasi_audit_checklists where point_question is not null and deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" order by klausul asc';
+        $query = 'SELECT * FROM standarisasi_audit_checklists where point_question is not null and deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" order by id asc';
         $detail = db::select($query);
 
         $response = array(

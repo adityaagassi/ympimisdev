@@ -10,7 +10,7 @@
 		color: black;
 	}
 	table.table-bordered > tbody > tr > td{
-	  	color: black;
+		color: black;
 	}
 
 	#loading { display: none; }
@@ -96,45 +96,45 @@
 		Audit Internal ISO
 	</h1>
 	<ol class="breadcrumb">
-     <?php $user = STRTOUPPER(Auth::user()->username) ?>
+		<?php $user = STRTOUPPER(Auth::user()->username) ?>
 
-     @if(Auth::user()->role_code == "MIS" || $user == "PI1211001" || $user == "PI0904007")
-     <a class="btn btn-primary btn-sm" style="margin-right: 5px" href="{{ url("/index/audit_iso/check") }}">
-       <i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Audit
-     </a>
-     @endif
+		@if(Auth::user()->role_code == "MIS" || $user == "PI1211001" || $user == "PI0904007")
+		<a class="btn btn-primary btn-sm" style="margin-right: 5px" href="{{ url("/index/audit_iso/check") }}">
+			<i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Audit
+		</a>
+		@endif
 
-     <button class="btn btn-success btn-sm" style="margin-right: 5px" onclick="location.reload()">
-       <i class="fa fa-edit"></i>&nbsp;&nbsp;Ganti Lokasi
-     </button>
+		<button class="btn btn-success btn-sm" style="margin-right: 5px" onclick="location.reload()">
+			<i class="fa fa-edit"></i>&nbsp;&nbsp;Ganti Lokasi
+		</button>
 
-    </ol>
+	</ol>
 </section>
 @stop
 @section('content')
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-  @if ($errors->has('password'))
-  <div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
-    {{ $errors->first() }}
-  </div>   
-  @endif
-  @if (session('error'))
-  <div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Error!</h4>
-    {{ session('error') }}
-  </div>	
-  @endif
+	@if ($errors->has('password'))
+	<div class="alert alert-danger alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-ban"></i> Alert!</h4>
+		{{ $errors->first() }}
+	</div>   
+	@endif
+	@if (session('error'))
+	<div class="alert alert-danger alert-dismissible">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<h4><i class="icon fa fa-ban"></i> Error!</h4>
+		{{ session('error') }}
+	</div>	
+	@endif
 
-<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
-    <p style="position: absolute; color: White; top: 45%; left: 35%;">
-      <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
-    </p>
-  </div>
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+		<p style="position: absolute; color: White; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+		</p>
+	</div>
 
 	<div class="row">
 		<div class="col-xs-12">
@@ -174,7 +174,7 @@
 							<th>Klausul</th>
 							<th>Subject</th>
 							<th>Question</th>
-							<th>OK</th>
+							<th>Condition</th>
 							<th>Note</th>
 							<th>Evidence</th>
 						</tr>
@@ -233,7 +233,7 @@
 				
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-danger" onclick="location.reload()">Reload</button>
 				<a id="modalDeleteButton" href="#" type="button" class="btn btn-success">Buat Laporan Audit ISO</a>
 			</div>
 		</div>
@@ -279,15 +279,15 @@
 
 		if(kategori == ""){
 			$("#loading").hide();
-            alert("Kolom Kategori Harap diisi");
-            $("html").scrollTop(0);
+			alert("Kolom Kategori Harap diisi");
+			$("html").scrollTop(0);
 			return false;
 		}
 
 		if(lokasi == ""){
 			$("#loading").hide();
-            alert("Kolom Lokasi Harap diisi");
-            $("html").scrollTop(0);
+			alert("Kolom Lokasi Harap diisi");
+			$("html").scrollTop(0);
 			return false;
 		}
 
@@ -316,10 +316,10 @@
 			openSuccessGritter("Success","Data Has Been Load");
 			var body = "";
 			$('#tableResult').DataTable().clear();
-		    $('#tableResult').DataTable().destroy();
-		    $('#body_cek').html("");
+			$('#tableResult').DataTable().destroy();
+			$('#body_cek').html("");
 
-		    count = 1;
+			count = 1;
 
 			$.each(result.lists, function(index, value){
 				body += "<tr>";
@@ -327,7 +327,7 @@
 				body += "<td width='5%' id='klausul_"+count+"'>"+value.klausul+"<input type='hidden' id='id_point_"+count+"' value='"+value.id+"'><input type='hidden' id='jumlah_point_"+count+"' value='"+result.lists.length+"'></td>";
 				body += "<td width='10%' id='point_judul_"+count+"'>"+value.point_judul+"</td>";
 				body += "<td width='20%' id='point_question_"+count+"'>"+value.point_question+"</td>";
-				body += "<td><label class='radio' style='margin-top: 5px;margin-left: 5px'>Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px'>Not Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Not Good'><span class='checkmark'></span></label></td>";
+				body += "<td><label class='radio' style='margin-top: 5px;margin-left: 5px'>Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>Not Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Not Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>None<input type='radio' id='status_"+count+"' name='status_"+count+"' value='None'><span class='checkmark'></span></label></td>";
 				body += "<td width='20%'><textarea id='note_"+count+"' height='50%'></textarea></td>";
 				var idid = '#file_'+count;
 				body += '<td width="20%"><input type="file" style="display:none" onchange="readURL(this,\''+count+'\');" id="file_'+count+'"><button class="btn btn-primary btn-lg" id="btnImage_'+count+'" value="Photo" onclick="buttonImage(\''+idid+'\')">Photo</button><img width="150px" id="blah_'+count+'" src="" style="display: none" alt="your image" /></td>';
@@ -351,18 +351,18 @@
 	}
 
 	function readURL(input,idfile) {
-	      if (input.files && input.files[0]) {
-	          var reader = new FileReader();
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
 
-	          reader.onload = function (e) {
-	            $('#blah_'+idfile).show();
-	              $('#blah_'+idfile)
-	                  .attr('src', e.target.result);
-	          };
+			reader.onload = function (e) {
+				$('#blah_'+idfile).show();
+				$('#blah_'+idfile)
+				.attr('src', e.target.result);
+			};
 
-	          reader.readAsDataURL(input.files[0]);
-	      }
-	      $('#btnImage_'+idfile).hide();
+			reader.readAsDataURL(input.files[0]);
+		}
+		$('#btnImage_'+idfile).hide();
 	}
 
 	function cek() {
@@ -371,7 +371,16 @@
 			var audit = [];
 			var countpoint = parseInt($('#jumlah_point_1').val());
 
-			var count = 0;
+			var stat = 0;
+
+
+			for (var z = 1; z <= countpoint; z++) {
+				if($('input[id="status_'+z+'"]:checked').val() == undefined){
+					$('#loading').hide();
+					alert('Mohon Isi Semua Kolom Kondisi');
+					return false;
+				}
+			}
 
 			for(var i = 0; i < countpoint; i++){
 				var a = i+1;
@@ -410,28 +419,27 @@
 
 
 				$.ajax({
-				   url:"{{ url('input/audit_iso/create_audit') }}",
-				   method:"POST",
-				   data:formData,
-				   dataType:'JSON',
-				   contentType: false,
-				   cache: false,
-				   processData: false,
-				   success:function(data)
-				   {
+					url:"{{ url('input/audit_iso/create_audit') }}",
+					method:"POST",
+					data:formData,
+					dataType:'JSON',
+					contentType: false,
+					cache: false,
+					processData: false,
+					success:function(data)
+					{
+						stat += 1;
 					// openSuccessGritter('Success','Input Data Audit Berhasil');
-				   }
-				})
-
-				count++;
+					if (stat == countpoint) {
+						$('#loading').hide();
+						$('#myModal').modal('show');
+						$('.modal-body').html("Terima Kasih telah mengisi Audit ISO.<br>Jika Anda akan membuat Laporan Audit ISO, silahkan klik tombol di bawah ini.");
+						$('#modalDeleteButton').attr("href", '{{ url("/index/audit_iso/create") }}');
+					}
+				}
+			})
 			}
 			
-			if (count == countpoint) {
-				$('#loading').hide();
-				$('#myModal').modal('show');
-				$('.modal-body').html("Terima Kasih telah mengisi Audit ISO.<br>Jika Anda akan membuat Laporan Audit ISO, silahkan klik tombol di bawah ini.");
-				$('#modalDeleteButton').attr("href", '{{ url("/index/audit_iso/create") }}');
-			}
 
 		}
 	}
