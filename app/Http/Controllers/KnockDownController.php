@@ -449,7 +449,7 @@ class KnockDownController extends Controller{
 			return Response::json($response);
 		}
 
-		$knock_down->status = '0';
+		$knock_down->status = '1';
 
 		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
 
@@ -1339,7 +1339,7 @@ class KnockDownController extends Controller{
 
 		if(Auth::user()->role_code == 'op-zpro'){
 			$printer_name = 'KDO ZPRO';
-		}else if (Auth::user()->role_code == 'op-zpro') {
+		}else if (Auth::user()->role_code == 'OP-WH-Exim') {
 			$printer_name = 'FLO Printer LOG';
 		}else{
 			$printer_name = 'MIS';
