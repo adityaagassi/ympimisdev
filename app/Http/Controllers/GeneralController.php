@@ -13,6 +13,26 @@ use Response;
 class GeneralController extends Controller
 {
 
+	public function indexOmiVisitor(){
+		$title = 'Koyami Visitor';
+		$title_jp = '??';
+
+		return view('general.omi_visitor', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('head', 'Koyami Visitor');
+	}
+
+	public function fetchOmiVisitor(){
+		$visitors = db::connection('rfid')->table('omi_lists')->get();
+
+		$response = array(
+			'status' => true,
+			'visitors' => $visitors,
+		);
+		return Response::json($response);
+	}
+
 	public function indexGeneralPointingCall($id){
 		if($id == 'japanese'){
 			$title = 'Japanese Pointing Calls';
