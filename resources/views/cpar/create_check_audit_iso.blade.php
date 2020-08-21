@@ -79,6 +79,14 @@
 		background: white;
 	}
 
+	#tableResult > thead > tr > th {
+		border: 1px solid black;
+	}
+
+	#tableResult > tbody > tr > td {
+		border: 1px solid #b0bec5;
+	}
+
 </style>
 @stop
 @section('header')
@@ -88,10 +96,11 @@
 		Audit Internal ISO
 	</h1>
 	<ol class="breadcrumb">
-     
-     @if(Auth::user()->role_code == "MIS" || Auth::user()->username == "PI1211001" || Auth::user()->username == "PI0904007")
+     <?php $user = STRTOUPPER(Auth::user()->username) ?>
+
+     @if(Auth::user()->role_code == "MIS" || $user == "PI1211001" || $user == "PI0904007")
      <a class="btn btn-primary btn-sm" style="margin-right: 5px" href="{{ url("/index/audit_iso/check") }}">
-       <i class="fa fa-plus"></i>&nbsp;&nbsp;Point & Hasil Check Audit
+       <i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Audit
      </a>
      @endif
 
@@ -118,7 +127,7 @@
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa fa-ban"></i> Error!</h4>
     {{ session('error') }}
-  </div>   
+  </div>	
   @endif
 
 <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
@@ -133,25 +142,25 @@
 				<table class="table table-bordered" style="width: 100%; margin-bottom: 0px">
 					<thead>
 						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 18px;" colspan="3">General Information</th>
+							<th style="width:15%; background-color: #673ab7; text-align: center; color: white; padding:0;font-size: 18px;border: 0" colspan="3">General Information</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td style="padding: 0px; background-color: #4a148c; text-align: center; color: white; font-size:20px; width: 30%;">Audit Date</td>
-							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;"><?= date("d-m-Y") ?></td>
+							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Audit Date</td>
+							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black"><?= date("d-m-Y") ?></td>
 						</tr>
 						<tr>
-							<td style="padding: 0px; background-color: #4a148c; text-align: center; color: white; font-size:20px; width: 30%;">Auditor</td>
-							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="employee_id">{{ $employee->employee_id }} - {{ $employee->name }}</td>
+							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditor</td>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="employee_id">{{ $employee->employee_id }} - {{ $employee->name }}</td>
 						</tr>
 						<tr>
-							<td style="padding: 0px; background-color: #4a148c; text-align: center; color: white; font-size:20px; width: 30%;">Category</td>
-							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="category"></td>
+							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
+							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="category"></td>
 						</tr>
 						<tr>
-							<td style="padding: 0px; background-color: #4a148c; text-align: center; color: white; font-size:20px; width: 30%;">Location</td>
-							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;" id="location"></td>
+							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Location</td>
+							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="location"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -159,7 +168,7 @@
 
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0;">
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
-					<thead style="font-weight: bold; color: black; background-color: #ddd;">
+					<thead style="font-weight: bold; color: black; background-color: #cddc39;">
 						<tr>
 							<th>No.</th>
 							<th>Klausul</th>
@@ -318,10 +327,10 @@
 				body += "<td width='5%' id='klausul_"+count+"'>"+value.klausul+"<input type='hidden' id='id_point_"+count+"' value='"+value.id+"'><input type='hidden' id='jumlah_point_"+count+"' value='"+result.lists.length+"'></td>";
 				body += "<td width='10%' id='point_judul_"+count+"'>"+value.point_judul+"</td>";
 				body += "<td width='20%' id='point_question_"+count+"'>"+value.point_question+"</td>";
-				body += "<td><label class='radio' style='margin-top: 5px;margin-left: 5px'>Good<input type='radio' checked='checked' id='status_"+count+"' name='status_"+count+"' value='Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px'>Not Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Not Good'><span class='checkmark'></span></label></td>";
+				body += "<td><label class='radio' style='margin-top: 5px;margin-left: 5px'>Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px'>Not Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Not Good'><span class='checkmark'></span></label></td>";
 				body += "<td width='20%'><textarea id='note_"+count+"' height='50%'></textarea></td>";
 				var idid = '#file_'+count;
-				body += '<td width="20%"><input type="file" style="display:none" onchange="readURL(this,\''+count+'\');" id="file_'+count+'"><button class="btn btn-primary" id="btnImage_'+count+'" value="Upload Image" onclick="buttonImage(\''+idid+'\')">Upload Image</button><img width="150px" id="blah_'+count+'" src="" style="display: none" alt="your image" /></td>';
+				body += '<td width="20%"><input type="file" style="display:none" onchange="readURL(this,\''+count+'\');" id="file_'+count+'"><button class="btn btn-primary btn-lg" id="btnImage_'+count+'" value="Photo" onclick="buttonImage(\''+idid+'\')">Photo</button><img width="150px" id="blah_'+count+'" src="" style="display: none" alt="your image" /></td>';
 				body += "</tr>";
 				count++;
 			})
@@ -410,8 +419,7 @@
 				   processData: false,
 				   success:function(data)
 				   {
-				   	$('#loading').hide();
-					openSuccessGritter('Success','Input Data Audit Berhasil');
+					// openSuccessGritter('Success','Input Data Audit Berhasil');
 				   }
 				})
 
@@ -419,7 +427,7 @@
 			}
 			
 			if (count == countpoint) {
-
+				$('#loading').hide();
 				$('#myModal').modal('show');
 				$('.modal-body').html("Terima Kasih telah mengisi Audit ISO.<br>Jika Anda akan membuat Laporan Audit ISO, silahkan klik tombol di bawah ini.");
 				$('#modalDeleteButton').attr("href", '{{ url("/index/audit_iso/create") }}');

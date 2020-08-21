@@ -7,11 +7,14 @@
 	#loading, #error { display: none; }
 
 	table.table-bordered > thead > tr > th{
-		color: black;
+		color: white;
 		text-align: center;
+		vertical-align : middle;
+		border: 1px solid black !important;
 	}
 	table.table-bordered > tbody > tr > td{
 	  	color: black;
+	  	border: 1px solid black !important;
 	}
 
 	#loading { display: none; }
@@ -65,27 +68,16 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
-				<table class="table table-bordered" style="width: 100%; margin-bottom: 0px">
-					<thead>
-						<tr>
-							<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 18px;" colspan="3">Report Form</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<input type="hidden" name="kategori" id="kategori">
-							<input type="hidden" name="lokasi" id="lokasi">
-							<input type="hidden" name="auditor" id="auditor">
-							<input type="hidden" name="date" id="date">
-						</tr>
-					</tbody>
-				</table>
-			</div>
 
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0;">
+
+				<input type="hidden" name="kategori" id="kategori">
+				<input type="hidden" name="lokasi" id="lokasi">
+				<input type="hidden" name="auditor" id="auditor">
+				<input type="hidden" name="date" id="date">
+							
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
-					<thead style="font-weight: bold; color: black; background-color: #ddd;">
+					<thead style="font-weight: bold; color: white; background-color: #607d8b;">
 						<tr>
 							<th colspan="2">PT. Yamaha Musical Products Indonesia</th>
 							<th rowspan="2">Tanggal<br> 21 Maret 2019</th>
@@ -93,7 +85,7 @@
 							<th rowspan="2" colspan="2">ISO 45001:2018</th>
 						</tr>
 						<tr>
-							<th colspan="2">
+							<th colspan="2" style="border-right: 1px solid black">
 							Checklist
 							(Internal Audit ISO)
 							</th>
@@ -103,12 +95,12 @@
 							<th rowspan="2">Ref</th>
 							<th rowspan="2">Requirement & Question</th>
 							<th colspan="2">Status</th>
-							<th rowspan="2">Note</th>
+							<th rowspan="2" style="border-left: 1px solid black">Note</th>
 							<th rowspan="2">Evidence</th>
 						</tr>
 						<tr>
 							<th>Good</th>
-							<th>No Good</th>
+							<th style="border-right: 1px solid black">No Good</th>
 						</tr>
 
 					</thead>
@@ -305,7 +297,7 @@
 					body += "<td width='20%'>-</td>";
 				}
 				if (value.foto != null) {
-					body += "<td width='20%'><img src={{url('files/audit_iso/')}}/"+value.foto+" width='300'></td>";					
+					body += "<td width='20%'><img src={{url('files/audit_iso/')}}/"+value.foto+" width='200'></td>";					
 				}
 				else{
 					body += "<td width='20%'>Tidak Ada Foto</td>";

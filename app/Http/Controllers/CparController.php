@@ -2614,7 +2614,7 @@ class CparController extends Controller
         $lokasi = $request->get("location");
         $kategori = $request->get("category");
 
-        $query = 'SELECT * FROM standarisasi_audit_checklists where point_question is not null and deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" order by id desc';
+        $query = 'SELECT * FROM standarisasi_audit_checklists where point_question is not null and deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" order by klausul asc';
         $detail = db::select($query);
 
         $response = array(
@@ -2673,7 +2673,7 @@ class CparController extends Controller
         $auditor = $request->get("auditor");
         $tanggal = $request->get("date");
 
-        $query = 'SELECT * FROM standarisasi_audit_isos where deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" and auditor_name = "'.$auditor.'" and tanggal = "'.$tanggal.'"  order by id desc';
+        $query = 'SELECT * FROM standarisasi_audit_isos where deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" and auditor_name = "'.$auditor.'" and tanggal = "'.$tanggal.'" order by klausul asc';
         $detail = db::select($query);
 
         $response = array(
