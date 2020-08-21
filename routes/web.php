@@ -98,6 +98,9 @@ Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPo
 Route::get('fetch/general/pointing_call', 'GeneralController@fetchGeneralPointingCall');
 
 //GENERAL
+Route::get('index/general/omi_visitor', 'GeneralController@indexOmiVisitor');
+Route::get('fetch/general/omi_visitor', 'GeneralController@fetchOmiVisitor');
+
 Route::get('index/general/attendance_check', 'GeneralController@indexGeneralAttendanceCheck');
 Route::get('fetch/general/attendance_check', 'GeneralController@fetchGeneralAttendanceCheck');
 Route::post('scan/general/attendance_check', 'GeneralController@scanGeneralAttendanceCheck');
@@ -369,6 +372,8 @@ Route::get('index/injection/fetch_dryer', 'InjectionsController@fetchDryer');
 Route::post('index/injection/update_dryer', 'InjectionsController@updateDryer');
 
 //end dryer injeksi
+
+
 
 // end mesin injeksi
 
@@ -1236,11 +1241,12 @@ Route::get('investment/approvemanager/{id}', 'AccountingController@investment_ap
 Route::get('investment/approvedgm/{id}', 'AccountingController@investment_approvaldgm');
 Route::get('investment/approvegm/{id}', 'AccountingController@investment_approvalgm');
 
-Route::get('investment/approvemanagerpch/{id}', 'AccountingController@investment_approvalmanagerpch');
-Route::get('investment/approvedirpch/{id}', 'AccountingController@investment_approvaldirpch');
+Route::get('investment/approvemanageracc/{id}', 'AccountingController@investment_approvalmanageracc');
+Route::get('investment/approvediracc/{id}', 'AccountingController@investment_approvaldiracc');
 Route::get('investment/approvepresdir/{id}', 'AccountingController@investment_approvalpresdir');
 
-Route::get('investment/reject/{id}', 'AccountingController@prreject');
+Route::post('investment/comment/{id}', 'AccountingController@investment_comment');
+Route::get('investment/reject/{id}', 'AccountingController@investment_reject');
 
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
@@ -2692,11 +2698,12 @@ Route::get('fetch/recorder/rc_picking_result', 'RecorderProcessController@fetch_
 //RETURN MATERIAL RC
 Route::get('index/recorder/return', 'RecorderProcessController@indexReturn');
 Route::get('scan/recorder/tag_product', 'RecorderProcessController@scanProduct');
-// Route::get('index/return/data', 'TransactionController@indexReturnData');
-// Route::get('fetch/return/data', 'TransactionController@fetchReturnData');
-// Route::get('fetch/return/list', 'TransactionController@fetchReturnList');
-// Route::get('fetch/return', 'TransactionController@fetchReturn');
-// Route::get('fetch/return/resume', 'TransactionController@fetchReturnResume');
+
+//RECORDER CDM
+Route::get('index/recorder/cdm', 'RecorderProcessController@indexCdm');
+Route::get('fetch/recorder/product', 'RecorderProcessController@fetchProduct');
+Route::get('fetch/cavity', 'RecorderProcessController@fetchCavity');
+Route::get('input/recorder/cdm', 'RecorderProcessController@inputCdm');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -2895,6 +2902,22 @@ Route::get('index/audit_iso/table', 'CparController@fetchTable_audit');
 
 //checklist
 Route::get('index/audit_iso/check', 'CparController@check_audit');
+Route::get('index/audit_iso/point_check/{kategori}/{lokasi}', 'CparController@indexPointCheck');
+Route::get('index/audit_iso/fetch_kategori_lokasi', 'CparController@fetchKategoriLokasi');
+Route::get('index/audit_iso/fetch_hasil_audit', 'CparController@fetchHasilAudit');
+Route::get('index/audit_iso/destroy_point_check/{id}/{kategori}/{lokasi}', 'CparController@destroyPointCheck');
+Route::get('index/audit_iso/create_audit', 'CparController@check_audit_create');
+Route::get('fetch/audit_iso/create_audit', 'CparController@fetch_audit_create');
+Route::post('input/audit_iso/point_check', 'CparController@inputPointCheck');
+Route::get('fetch/audit_iso/get_point_check', 'CparController@getPointCheck');
+Route::post('update/audit_iso/point_check', 'CparController@updatePointCheck');
+Route::post('input/audit_iso/create_audit', 'CparController@inputAuditIso');
+
+Route::get('index/audit_iso/fetch_point_audit', 'CparController@fetchPointAudit');
+Route::get('index/audit_iso/report_point_audit', 'CparController@ReportHasilAudit');
+
+Route::get('index/audit_iso/cek_report', 'CparController@check_audit_report');
+Route::get('fetch/audit_iso/cek_report', 'CparController@fetch_audit_report');
 
 
 //CUBEACON WAREHOUSE
@@ -3084,7 +3107,7 @@ Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_his
 
 Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
 
-// ------------------ INVENORY / SPARE PART ------------------
+// ------------------ INVENTORY / SPARE PART ------------------
 
 Route::get('index/maintenance/inven/list', 'MaintenanceController@indexInventory');
 Route::get('fetch/maintenance/inven/list', 'MaintenanceController@fetchInventory');
@@ -3096,6 +3119,8 @@ Route::post('post/maintenance/inven/list/edit', 'MaintenanceController@inventory
 Route::get('index/maintenance/inventory/{stat}', 'MaintenanceController@indexInventoryTransaction');
 Route::get('fetch/maintenance/inven/code', 'MaintenanceController@fetchPartbyCode');
 Route::post('post/maintenance/inven/code', 'MaintenanceController@postInventory');
+
+Route::post('post/maintenance/inven/transaction', 'MaintenanceController@postInventoryStock');
 
 // -------------------------- PLANNED MAINTENANCE -----------------------
 

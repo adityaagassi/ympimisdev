@@ -17,6 +17,8 @@ use App\EmployeeSync;
 use App\MaterialPlantDataList;
 use App\CparItem;
 use App\StandarisasiAudit;
+use App\StandarisasiAuditChecklist;
+use App\StandarisasiAuditIso;
 
 class CparController extends Controller
 {
@@ -2510,4 +2512,356 @@ class CparController extends Controller
       return Response::json($response); 
     }
 
+
+    public function check_audit() {
+     
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+      $employee = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position')->first();
+
+      return view('cpar.check_audit_iso', array(
+       'emp' => $emp_id,
+       'employee' => $employee
+      ))->with('page', 'Audit ISO');
+    }
+
+    public function indexPointCheck($kategori,$lokasi)
+    {
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+      return view('cpar.point_check_audit_iso', array(
+        'kategori' => $kategori,
+        'lokasi' => $lokasi
+      ))->with('page', 'Point Question Audit ISO');
+    }
+
+    public function fetchKategoriLokasi(Request $request)
+    {
+      try {
+        $audit = DB::SELECT('SELECT DISTINCT(kategori),lokasi FROM `standarisasi_audit_checklists` where standarisasi_audit_checklists.deleted_at is null');
+
+        $response = array(
+          'status' => true,
+          'lists' => $audit
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function fetchHasilAudit(Request $request)
+    {
+      try {
+        $audit = DB::SELECT('SELECT DISTINCT tanggal,kategori,lokasi,auditor_name FROM `standarisasi_audit_isos` where standarisasi_audit_isos.deleted_at is null');
+
+        $response = array(
+          'status' => true,
+          'lists' => $audit
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function check_audit_create()
+    {
+      $title = "Audit Create";
+      $title_jp = "";
+
+      $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position', 'department')->first();
+
+      $location = StandarisasiAuditChecklist::orderBy('lokasi', 'asc')
+      ->select('lokasi')
+      ->distinct()
+      ->get();
+
+      $category = StandarisasiAuditChecklist::orderBy('kategori', 'asc')
+      ->select('kategori')
+      ->distinct()
+      ->get();
+
+      return view('cpar.create_check_audit_iso', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'employee' => $emp,
+        'location' => $location,
+        'category' => $category
+      ))->with('page', 'Audit ISO');
+    }
+
+    public function fetch_audit_create(Request $request)
+    {
+      try {
+      
+        $lokasi = $request->get("location");
+        $kategori = $request->get("category");
+
+        $query = 'SELECT * FROM standarisasi_audit_checklists where point_question is not null and deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" order by id desc';
+        $detail = db::select($query);
+
+        $response = array(
+          'status' => true,
+          'lists' => $detail
+        );
+        
+        return Response::json($response);
+
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function check_audit_report()
+    {
+      $title = "Audit Report";
+      $title_jp = "";
+
+      $location = StandarisasiAuditChecklist::orderBy('lokasi', 'asc')
+      ->select('lokasi')
+      ->distinct()
+      ->get();
+
+      $category = StandarisasiAuditChecklist::orderBy('kategori', 'asc')
+      ->select('kategori')
+      ->distinct()
+      ->get();
+
+      $auditor = StandarisasiAuditIso::orderBy('auditor_name', 'asc')
+      ->select('auditor_name')
+      ->distinct()
+      ->get();
+
+      return view('cpar.report_check_audit_iso', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'location' => $location,
+        'category' => $category,
+        'auditor' => $auditor
+
+      ))->with('page', 'Audit ISO');
+    }
+
+    public function fetch_audit_report(Request $request)
+    {
+      try {
+      
+        $lokasi = $request->get("location");
+        $kategori = $request->get("category");
+        $auditor = $request->get("auditor");
+        $tanggal = $request->get("date");
+
+        $query = 'SELECT * FROM standarisasi_audit_isos where deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" and auditor_name = "'.$auditor.'" and tanggal = "'.$tanggal.'"  order by id desc';
+        $detail = db::select($query);
+
+        $response = array(
+          'status' => true,
+          'lists' => $detail
+        );
+        
+        return Response::json($response);
+
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function fetchPointAudit(Request $request)
+    {
+      try {
+        $audit = DB::SELECT('SELECT * FROM `standarisasi_audit_checklists` where kategori = "'.$request->get('kategori').'" and lokasi = "'.$request->get('lokasi').'" and standarisasi_audit_checklists.deleted_at is null');
+
+        $response = array(
+          'status' => true,
+          'lists' => $audit
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function destroyPointCheck($id,$kategori,$lokasi)
+    {
+        $audit = StandarisasiAuditChecklist::find($id);
+        $audit->delete();
+
+        if ($audit) {
+          return redirect('/index/audit_iso/point_check/'.$kategori.'/'.$lokasi)
+          ->with('status', 'Point Question has been deleted.')
+          ->with('page', 'Point Question Audit ISO');
+        }else{
+          return redirect('/index/audit_iso/point_check/'.$kategori.'/'.$lokasi)
+          ->with('error', 'Point Question failed to delete.')
+          ->with('page', 'Point Question Audit ISO');
+        }
+    }
+
+    public function inputPointCheck(Request $request)
+    {
+      try {
+
+        $id_user = Auth::id();
+
+        $point_check = StandarisasiAuditChecklist::create([
+          'kategori' => $request->get('kategori'),
+          'lokasi' => $request->get('lokasi'),
+          'klausul' => $request->get('klausul'),
+          'point_judul' => $request->get('point_judul'),
+          'point_question' => $request->get('point_question'),
+          'created_by' => $id_user
+        ]);
+
+        $response = array(
+          'status' => true,
+          'message'=> 'Success Input Data'
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function getPointCheck(Request $request)
+    {
+      try {
+
+        $point_check = StandarisasiAuditChecklist::find($request->get('id'));
+
+        $response = array(
+          'status' => true,
+          'lists' => $point_check
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function updatePointCheck(Request $request)
+    {
+      try {
+
+        $id_user = Auth::id();
+
+        $point_check = StandarisasiAuditChecklist::find($request->get('id'));
+        $point_check->klausul = $request->get('klausul');
+        $point_check->point_judul = $request->get('point_judul');
+        $point_check->point_question = $request->get('point_question');
+        $point_check->save();
+
+        $response = array(
+          'status' => true,
+          'message'=> 'Success Update Data'
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function inputAuditIso(Request $request)
+    {
+      try {
+        $id_user = Auth::id();
+            $tujuan_upload = 'files/audit_iso';
+            if (count($request->file('fileData')) > 0) {
+              $file = $request->file('fileData');
+              $filename = md5($request->input('id_point').$request->input('auditor_id').date('YmdHisa')).'.'.$request->input('extension');
+              $file->move($tujuan_upload,$filename);
+
+              StandarisasiAuditIso::create([
+                  'tanggal' => $request->input('tanggal'),
+                  'kategori' => $request->input('kategori'),
+                  'auditor_id' => $request->input('auditor_id'),
+                  'auditor_name' => $request->input('auditor_name'),
+                  'lokasi' => $request->input('lokasi'),
+                  'klausul' => $request->input('klausul'),
+                  'point_judul' => $request->input('point_judul'),
+                  'point_question' => $request->input('point_question'),
+                  'status' => $request->input('status'),
+                  'note' => $request->input('note'),
+                  'foto' => $filename,
+                  'created_by' => $id_user
+              ]);
+            }else{
+
+              StandarisasiAuditIso::create([
+                  'tanggal' => $request->input('tanggal'),
+                  'kategori' => $request->input('kategori'),
+                  'auditor_id' => $request->input('auditor_id'),
+                  'auditor_name' => $request->input('auditor_name'),
+                  'lokasi' => $request->input('lokasi'),
+                  'klausul' => $request->input('klausul'),
+                  'point_judul' => $request->input('point_judul'),
+                  'point_question' => $request->input('point_question'),
+                  'status' => $request->input('status'),
+                  'note' => $request->input('note'),
+                  'created_by' => $id_user
+              ]);
+            }
+
+            $response = array(
+                'status' => true
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
 }

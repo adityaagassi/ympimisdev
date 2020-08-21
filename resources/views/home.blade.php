@@ -250,7 +250,7 @@
                         <td>
                             <span style="font-weight: bold;">Audit Internal ISO E-IRCA (ISO内部監査のCPAR)</span>
                             <br>
-                            <a href="{{ url("/index/audit_iso/check") }}">
+                            <a href="{{ url("/index/audit_iso/create_audit") }}">
                                 <i class="fa fa-caret-right"></i> Audit Internal ISO (ISO内部監査のCPARを作成)
                             </a>
                             <br>
