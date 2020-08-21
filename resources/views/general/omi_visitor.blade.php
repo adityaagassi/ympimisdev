@@ -102,9 +102,9 @@
 					police_image = '<center><img style="height: 700px;" src="{{ url('images/omi/police01_b_09.png') }}"></center>';
 				}
 				else{
-					visitor_count = '<span style="background-color: #ccff90;">&nbsp;'+count+'&nbsp;</span>';
-					count_detail = '<span style="color:#ccff90;"><i class="fa fa-arrow-down"></i> Jumlah Pengunjung Dibawah Ketentuan <i class="fa fa-arrow-down"></i></span>';
-					visitor_appeal = '<span style="color: #ccff90;">BOLEH MASUK</span>';
+					visitor_count = '<span style="background-color: #7cb342;">&nbsp;'+count+'&nbsp;</span>';
+					count_detail = '<span style="color:#7cb342;"><i class="fa fa-arrow-down"></i> Jumlah Pengunjung Dibawah Ketentuan <i class="fa fa-arrow-down"></i></span>';
+					visitor_appeal = '<span style="color: #7cb342;">BOLEH MASUK</span>';
 					police_image = '<center><img style="height: 700px;" src="{{ url('images/omi/police01_b_10.png') }}"></center>';
 				}
 
