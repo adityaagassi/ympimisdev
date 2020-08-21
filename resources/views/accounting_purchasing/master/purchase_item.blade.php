@@ -50,12 +50,15 @@
 		Purchasing Item List <span class="text-purple">{{ $title_jp }}</span>
 	</h1>
 	<ol class="breadcrumb">
+		<?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PCH" || Auth::user()->role_code == "PCH-SPL") { ?>
 		<li>
 			<a href="{{ url("index/purchase_item/create_category")}}" class="btn btn-md bg-blue" style="color:white">
 				<i class="fa fa-plus"></i> Create New Item Category
 			</a>
 			<a href="{{ url("index/purchase_item/create")}}" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Create New Item</a>
 		</li>
+
+		<?php } ?>
 	</ol>
 </section>
 @stop

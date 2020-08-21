@@ -113,7 +113,6 @@
 					<?php } else if($po[0]->remark == "Investment") { ?>
 						<td colspan="3" style="font-size: 12px;">: {{$po[0]->applicant_department}}</td>
 					<?php } ?> 
-
 				</tr>
 
 				<tr>
@@ -293,7 +292,7 @@
 							if ($po->supplier_status == "PKP") {
 								$pajak = ($total*10)/100;
 							}
-							else if ($po->supplier_status == "Non PKP"){
+							else if ($po->supplier_status == "Non PKP" || $po->supplier_status == "Import"){
 								$pajak = 0;
 							}
 						}
@@ -348,7 +347,7 @@
 									}
 									
 								}
-								else if($po->supplier_status == "Non PKP"){
+								else if($po->supplier_status == "Non PKP" || $po->supplier_status == "Import"){
 									$vat = 0;
 								}
 							}
@@ -367,14 +366,14 @@
 
 	<footer>
 
-		@if($po->approval_authorized3 == "Approved")
-		<img width="120" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 850px;left: 575px;z-index: 200">
+		@if($po->approval_authorized4 == "Approved")
+		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 850px;left: 600px;z-index: 200">
 		@endif
 		<div class="footer">
 			<table style="width: 100%; font-family: TimesNewRoman; border-collapse: collapse;">
 				<thead>
 					<tr>
-						<td colspan="9" style="font-size: 12px;font-weight: bold">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+						<td colspan="12" style="font-size: 12px;font-weight: bold">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 					</tr>
 					<tr>
 						<td colspan="3" style="width: 40%">
@@ -391,12 +390,20 @@
 						<td colspan="3" style="width: 30%">
 							@if($po->approval_authorized2 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 298px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->date_approval_authorized2)) ?></span>
+								<span style="position: absolute;left: 220px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->date_approval_authorized2)) ?></span>
 							@endif
 						</td>
 						<td colspan="3" style="width: 30%">
 							@if($po->approval_authorized3 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 380px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->date_approval_authorized3)) ?></span>
+							@endif
+						</td>
+
+						<td colspan="3" style="width: 30%">
+							@if($po->approval_authorized4 == "Approved")
+								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
+								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->date_approval_authorized4)) ?></span>
 							@endif
 						</td>
 					</tr>
@@ -408,10 +415,12 @@
 						<td colspan="3" style="height: 26px;padding: 0">{{ $po->buyer_name }}</td>
 						<td colspan="3" style="">{{ $po->authorized2_name }}</td>
 						<td colspan="3" style="">{{ $po->authorized3_name }}</td>
+						<td colspan="3" style="">{{ $po->authorized4_name }}</td>
 					</tr>
 					<tr>
 						<td colspan="3">Procurement Staff</td>
 						<td colspan="3">Procurement Manager</td>
+						<td colspan="3">DGM Production</td>
 						<td colspan="3">GM Production</td>
 					</tr>
 				</tbody>

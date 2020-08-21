@@ -1,6 +1,7 @@
 @extends('layouts.master')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <style type="text/css">
   thead input {
     width: 100%;
@@ -141,7 +142,8 @@
                 </div>
 
                 <div class="col-sm-6" style="margin-top: 20px">
-                    <button type="button" class="btn btn-danger col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Reject</button>
+                  <a data-toggle="modal" data-target="#notapproved{{$invest->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px">Reject</a>
+                    <!-- <button type="button" class="btn btn-danger col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Reject</button> -->
                 </div>
 
               </td>
@@ -256,8 +258,11 @@
                 </div>
 
                 <div class="col-sm-6" style="margin-top: 20px"> 
-                    <button type="button" class="btn btn-danger col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Reject</button>
+                    <a data-toggle="modal" data-target="#notapproved{{$invest->id}}" class="btn btn-danger col-sm-12" href="" style="width: 100%; font-weight: bold; font-size: 20px">Reject</a>
+                    <!-- <button type="button" class="btn btn-danger col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Reject</button> -->
                 </div>
+
+
 
               </td>
 
@@ -278,6 +283,31 @@
 
       </div>
     </form>
+  </div>
+
+  <div class="modal modal-danger fade" id="notapproved{{$invest->id}}" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form role="form" method="post" action="{{url('investment/comment/'.$invest->id)}}">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Not Approved</h4>
+          </div>
+          <div class="modal-body">
+            <div class="box-body">
+                <input type="hidden" value="{{csrf_token()}}" name="_token" />
+                <h4>Berikan alasan tidak menyetujui Investment ini</h4>
+                <textarea class="form-control" required="" name="alasan" style="height: 250px;"></textarea> 
+                *Investment Akan Dikirim kembali lagi ke Applicant
+            </div>    
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-outline">Not Approved</a>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
 
@@ -328,7 +358,9 @@
       }
     });
 
-
+    CKEDITOR.replace('alasan' ,{
+      filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'
+    });
 
     function openSuccessGritter(title, message){
       jQuery.gritter.add({

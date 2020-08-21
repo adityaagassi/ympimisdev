@@ -88,15 +88,159 @@
 					<td colspan="10" style="text-align: center;font-size: 16px;font-weight: bold">INVESTMENT-EXPENSE APPLICATION<br><span class="droid">資産・経費申請書</span></td>
 				</tr>
 				<tr>
+					<td colspan="10"><br></td>
+				</tr>
+				<tr>
 					<td colspan="1" style="font-size: 13px;width: 22%">Date Of Submission <span class="droid">申請日</span></td>
-					<td colspan="9" style="font-size: 13px;color: blue;font-weight: bold">: <?= date('d-M-Y', strtotime($inv[0]->submission_date)) ?></td>
+					<td colspan="3" style="font-size: 13px;color: blue;font-weight: bold">: <?= date('d-M-Y', strtotime($inv[0]->submission_date)) ?></td>
+					
+					<td colspan="1" style="font-size: 13px;"></td>
+					<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">President</td>
+					<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">Dir Finance</td>
+					<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">GM Division</td>
+					<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">DGM</td>
+					<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">Applicant</td>
 				</tr>
 
 				<tr>
 					<td colspan="1" style="font-size: 13px;width: 22%">Reff. Number <span class="droid">関連番号</span></td>
-					<td colspan="9" style="font-size: 13px;color: blue;font-weight: bold">: {{ $inv[0]->reff_number }}</td>
-				</tr>
+					<td colspan="3" style="font-size: 13px;color: blue;font-weight: bold">: {{ $inv[0]->reff_number }}</td>
+					<td colspan="1" style="font-size: 13px;"></td>
+					<td colspan="1" rowspan="2" style="font-size: 11px;border: 1px solid black;text-align: center;">
+						<?php 
 
+						$limit = explode("/", $inv[0]->approval_presdir);
+
+						if(count($limit) > 2 ) {
+							echo $limit[1];
+						} 
+
+						?>
+					</td>
+					<td colspan="1" rowspan="2" style="font-size: 11px;border: 1px solid black;text-align: center;">
+						<?php 
+
+						$limit = explode("/", $inv[0]->approval_dir_acc);
+
+						if(count($limit) > 2 ) {
+							echo $limit[1];
+						} 
+
+						?>
+					</td>
+					<td colspan="1" rowspan="2" style="font-size: 11px;border: 1px solid black;text-align: center;">
+						<?php 
+
+						$limit = explode("/", $inv[0]->approval_gm);
+
+						if(count($limit) > 2 ) {
+							echo $limit[1];
+						} 
+
+						?>
+					</td>
+					<td colspan="1" rowspan="2" style="font-size: 11px;border: 1px solid black;text-align: center;">
+						<?php 
+
+						$limit = explode("/", $inv[0]->approval_dgm);
+
+						if(count($limit) > 2 ) {
+							echo $limit[1];
+						} 
+
+						?>
+					</td>
+					<td colspan="1" rowspan="2" style="font-size: 11px;border: 1px solid black;text-align: center;">
+						<?php 
+
+						$limit = explode("/", $inv[0]->approval_manager);
+
+						if(count($limit) > 2 ) {
+							echo $limit[1];
+						} 
+
+						?>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="10"><br></td>
+					
+				</tr>
+				<tr>
+					<td colspan="4">
+						<td colspan="1" style="font-size: 13px;"></td>
+						<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">
+							<?php 
+
+							$limit = explode("/", $inv[0]->approval_presdir);
+
+							if(count($limit) > 2 ) {
+								echo date('d-m-Y', strtotime($limit[3]));
+							}
+							else{
+								echo "<br>";
+							}
+
+							?>
+						</td>
+						<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">
+							<?php 
+
+							$limit = explode("/", $inv[0]->approval_dir_acc);
+
+							if(count($limit) > 2 ) {
+								echo date('d-m-Y', strtotime($limit[3]));
+							} 
+							else{
+								echo "<br>";
+							}
+
+							?>
+						</td>
+						<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">
+							<?php 
+
+							$limit = explode("/", $inv[0]->approval_gm);
+
+							if(count($limit) > 2 ) {
+								echo date('d-m-Y', strtotime($limit[3]));
+							}
+							else{
+								echo "<br>";
+							} 
+
+							?>
+						</td>
+						<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">
+							<?php 
+
+							$limit = explode("/", $inv[0]->approval_dgm);
+
+							if(count($limit) > 2 ) {
+								echo date('d-m-Y', strtotime($limit[3]));
+							}
+							else{
+								echo "<br>";
+							} 
+
+							?>
+						</td>
+						<td colspan="1" style="font-size: 11px;border: 1px solid black;text-align: center;">
+							<?php 
+
+							$limit = explode("/", $inv[0]->approval_manager);
+
+							if(count($limit) > 2 ) {
+								echo date('d-m-Y', strtotime($limit[3]));
+							}
+							else{
+								echo "<br>";
+							} 
+
+							?>
+						</td>
+					</td>
+				</tr>
 				<tr>
 					<td colspan="10"><br></td>
 				</tr>
@@ -118,7 +262,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">Subject <span class="droid">件名</span></td>
-					<td colspan="8" style="border: 1px solid black;font-weight: bold;text-transform: uppercase;">{{ $inv[0]->subject }} <br> <span class="droid">{{ $inv[0]->subject_jpy }}</span></td>
+					<td colspan="8" style="border: 1px solid black;text-transform: uppercase;color: blue;font-weight: bold">{{ $inv[0]->subject }} <br> <span class="droid">{{ $inv[0]->subject_jpy }}</span></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">Class Of Assets / Kind Of Expense (Account) <span class="droid">資産・経費種類</span></td>
@@ -170,7 +314,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">Objective Explanation <span class="droid">目的説明</span></td>
-					<td colspan="8" style="border: 1px solid black;font-weight: bold"><?= ucfirst($inv[0]->objective_detail) ?> <br> <span class="droid">{{ $inv[0]->objective_detail_jpy }}</span></td>
+					<td colspan="8" style="border: 1px solid black;font-weight: bold;color: blue"><?= ucfirst($inv[0]->objective_detail) ?> <br> <span class="droid">{{ $inv[0]->objective_detail_jpy }}</span></td>
 				</tr>
 				<?php
 					$jumlahitem = count($inv);
@@ -200,7 +344,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" style="">Company Name <span class="droid">会社名</span></td>
-					<td colspan="6" style="border-right: 1px solid black;">: <b> <?= $inv[0]->supplier_code ?> - <?= $inv[0]->supplier_name ?> </b></td>
+					<td colspan="6" style="border-right: 1px solid black;color: blue;font-weight: bold">: <b> <?= $inv[0]->supplier_code ?> - <?= $inv[0]->supplier_name ?> </b></td>
 				</tr>
 				<tr>
 					<td colspan="2">PKP Status <span class="droid">課税事業者</span></td>
@@ -250,10 +394,10 @@
 				?>
 				@foreach($inv as $item)
 				<tr>
-					<td colspan="4" style="border: 1px solid black;">{{$item->detail}}</td>
-					<td colspan="1" style="border: 1px solid black;">{{$item->qty}}</td>
-					<td colspan="1" style="border: 1px solid black;"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
-					<td colspan="2" style="border: 1px solid black;"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
+					<td colspan="4" style="border: 1px solid black;color: blue;font-weight: bold">{{$item->detail}}</td>
+					<td colspan="1" style="border: 1px solid black;color: blue;font-weight: bold">{{$item->qty}}</td>
+					<td colspan="1" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
 
 					<?php 
 					if($item->vat_status == "Yes"){
@@ -279,34 +423,34 @@
 				<?php } ?>
 				<tr>
 					<td colspan="1" rowspan="3" style="border: 1px solid black;">Currency<br><span class="droid">通貨</span></td>
-					<td colspan="3" rowspan="3" style="border: 1px solid black;">{{ $inv[0]->currency }}</td>
+					<td colspan="3" rowspan="3" style="border: 1px solid black;color: blue;font-weight: bold">{{ $inv[0]->currency }}</td>
 					<td colspan="2" style="border: 1px solid black;">Sub Total <span class="droid">小計</span></td>
-					<td colspan="2" style="border: 1px solid black;"><?= $ket_harga ?> <?= number_format($total,2,",",".");?></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($total,2,",",".");?></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">VAT <span class="droid">付加価値税</span></td>
-					<td colspan="2" style="border: 1px solid black;"><?= $ket_harga ?> <?= number_format($vat,2,",",".");?></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($vat,2,",",".");?></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">Total <span class="droid">合計</span></td>
 					<?php $total_all = $total - $vat; ?>
-					<td colspan="2" style="border: 1px solid black;"><?= $ket_harga ?> <?= number_format($total_all,2,",",".");?></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($total_all,2,",",".");?></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">Delivery <span class="droid">納期</span></td>
-					<td colspan="4" style="border: 1px solid black;">Delivery Order <span class="droid">送付日付</span><br>&nbsp;&nbsp;<?= date('d-M-Y', strtotime($inv[0]->delivery_order))?></td>
-					<td colspan="4" style="border: 1px solid black;">Date Order <span class="droid">発注日</span><br>&nbsp;&nbsp;<?= date('d-M-Y', strtotime($inv[0]->date_order)) ?></td>
+					<td colspan="4" style="border: 1px solid black;">Delivery Order <span class="droid">送付日付</span><br>&nbsp;&nbsp;<span style="color: blue;font-weight: bold"><?= date('d-M-Y', strtotime($inv[0]->delivery_order)) ?> </span></td>
+					<td colspan="4" style="border: 1px solid black;">Date Order <span class="droid">発注日</span><br>&nbsp;&nbsp;<span style="color: blue;font-weight: bold"><?= date('d-M-Y', strtotime($inv[0]->date_order)) ?> </span></td>
 				</tr>
 				<tr>	
 					<td colspan="2" style="border: 1px solid black;">Payment Term <span class="droid">支払い条件</span></td>
-					<td colspan="4" style="border: 1px solid black;">{{ $inv[0]->payment_term }}</td>
+					<td colspan="4" style="border: 1px solid black;color: blue;font-weight: bold">{{ $inv[0]->payment_term }}</td>
 					<td colspan="2" style="border: 1px solid black;">Fill By Acc Dept W/H Tax (%) <span class="droid">経理課が記入W/H税（％)</span></td>
-					<td colspan="1" style="border: 1px solid black;">Total <br><span class="droid">合計</span><br> @if($inv[0]->total != null) <?= $inv[0]->total.'%' ?> @endif</td>
-					<td colspan="1" style="border: 1px solid black;">Service <span class="droid">サービス</span><br> @if($inv[0]->service != null) <?= $inv[0]->service.'%' ?> @endif</td>
+					<td colspan="1" style="border: 1px solid black;">Total <br><span class="droid">合計</span><br> <span style="color: blue;font-weight: bold"> @if($inv[0]->total != null) <?= $inv[0]->total.'%' ?> @endif </span></td>
+					<td colspan="1" style="border: 1px solid black;">Service <span class="droid">サービス</span><br> <span style="color: blue;font-weight: bold"> @if($inv[0]->service != null) <?= $inv[0]->service.'%' ?> @endif </span></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border: 1px solid black;">Quotation <span class="droid">見積書</span> <br><b>*Other Quotation Must Be Attached</b><span class="droid">他の見積書も添付すること</span></td>
-					<td colspan="8" style="border: 1px solid black;"><?= $inv[0]->quotation_supplier ?></td>
+					<td colspan="8" style="border: 1px solid black;color: blue;font-weight: bold"><?= $inv[0]->quotation_supplier ?></td>
 				</tr>
 
 				<?php 
@@ -319,16 +463,16 @@
 					<td colspan="2" style="border: 1px solid black;">Budget No, Name & Balance<br><span class="droid">予算番号、名前、残高</span></td>
 					@if($bud->category_budget == "On Budget")
 					<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span>
-					<td colspan="2" style="border: 1px solid black;">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
-					<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> $ {{ $bud->sisa }}</td>
-					<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> $ {{ $bud->total }}</td>
-					<td colspan="2" style="border: 1px solid black;">End Bal (US$) <br><span class="droid">最終残高</span> <br> $ <?= $bud->sisa - $bud->total ?></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
+					<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold">$ {{ $bud->sisa }}</span></td>
+					<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> <span style="color: blue;font-weight: bold"> $ {{ $bud->total }}</span></td>
+					<td colspan="2" style="border: 1px solid black;">End Bal (US$) <br><span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold">$ <?= $bud->sisa - $bud->total ?></span></td>
 					@elseif($bud->category_budget == "Shifting")
 					<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span>
-					<td colspan="2" style="border: 1px solid black;">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
-					<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> $ {{ $bud->sisa }}</td>
-					<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> $ {{ $bud->total }}</td>
-					<td colspan="2" style="border: 1px solid black;">End Bal (US$) <br><span class="droid">最終残高</span> <br> $ <?= $bud->sisa - $bud->total ?></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
+					<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"> $ {{ $bud->sisa }}</span></td>
+					<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span> <br> <span style="color: blue;font-weight: bold">$ {{ $bud->total }}</span></td>
+					<td colspan="2" style="border: 1px solid black;">End Bal (US$) <span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold">$ <?= $bud->sisa - $bud->total ?></span></td>
 					@elseif($bud->category_budget == "Out Of Budget")
 					<td colspan="8" style="border: 1px solid black;">Out Of Budget <span class="droid">予算不足</span> ($)</td>
 					
@@ -350,7 +494,9 @@
 			<table style="table-layout: fixed;width: 100%; font-family: arial; border-collapse: collapse; text-align: center;font-size: 12px;" border="1">
 				<thead>
 					<tr>
-						<td colspan="6" rowspan="3" style="text-align: left;margin-left: 10px">Note <span class="droid">備考</span>: <?= $inv[0]->note ?> </td>
+						<td colspan="4" rowspan="3" style="text-align: left;margin-left: 10px">Note <span class="droid">備考</span>: <span style="color:blue;font-weight: bold"><?= $inv[0]->note ?> </span>
+						</td>
+						<td colspan="2" rowspan="2">Approval By Acc Manager </td>
 						<td colspan="4">Checked By Acc Staff <span class="droid">経理担当が確認</span></td>
 					</tr>
 				</thead>
@@ -360,6 +506,20 @@
 						<td colspan="2">Budget Balance <span class="droid">予算残高</span></td>
 					</tr>
 					<tr>
+						<td colspan="2" style="height: 40px">
+							<?php 
+
+							$limit = explode("/", $inv[0]->approval_manager_acc);
+
+							if(count($limit) > 2 ) {
+								echo $limit[1]."<br>".date('d-m-Y', strtotime($limit[3]));
+							}
+							else{
+								echo "<br>";
+							} 
+
+							?>
+						</td>
 						<td colspan="2" style="height: 40px">
 							@if($inv[0]->posisi != "acc_pajak" && $inv[0]->posisi != "acc_budget" && $inv[0]->posisi != "user")
 								Yeny Arisanty

@@ -47,14 +47,12 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Supplier List YMPI <span class="text-purple">{{ $title_jp }}</span>
+		Receive Goods Information <span class="text-purple">{{ $title_jp }}</span>
 	</h1>
 	<ol class="breadcrumb">
-		<?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PCH" || Auth::user()->role_code == "PCH-SPL") { ?>
 		<li>
-			<a href="{{ url("index/supplier/create")}}" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Create New Supplier</a>
+			<!-- <a href="{{ url("index/budget/create")}}" class="btn btn-md bg-purple" style="color:white"><i class="fa fa-plus"></i> Create New budget</a> -->
 		</li>
-		<?php } ?>
 	</ol>
 </section>
 @stop
@@ -90,35 +88,28 @@
 					<div class="col-xs-12">
 						<div class="col-md-2">
 							<div class="form-group">
-								<label>Status</label>
-								<select class="form-control select2" multiple="multiple" id='status' data-placeholder="Select Status" style="width: 100%;">
-									<option></option>
-									@foreach($status as $sta)
-									<option value="{{ $sta->supplier_status }}">{{ $sta->supplier_status }}</option>
-									@endforeach
+								<label>Category</label>
+								<select class="form-control select2" multiple="multiple" id='category' data-placeholder="Select Category" style="width: 100%;">
+									<option value="Expenses">Expenses</option>
+									<option value="Fixed Asset">Fixed Asset</option>
 								</select>
 							</div>
 						</div>
-						<div class="col-md-2">
+						<div class="col-md-4">
 							<div class="form-group">
-								<label>City</label>
-								<select class="form-control select2" multiple="multiple" id='city' data-placeholder="Select City" style="width: 100%;">
-									<option></option>
-									@foreach($city as $ct)
-									<option value="{{ $ct->supplier_city }}">{{ $ct->supplier_city }}</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="form-group">
-								<div class="col-md-6" style="padding-right: 0;">
+								<div class="col-md-4" style="padding-right: 0;">
 									<label style="color: white;"> x</label>
-									<button class="btn btn-primary form-control" onclick="fetchTable()">Search</button>
+									<button class="btn btn-primary form-control" onclick="fetchTable()"><i class="fa fa-search"></i> Search</button>
 								</div>
-								<div class="col-md-6" style="padding-right: 0;">
+								<div class="col-md-4" style="padding-right: 0;">
 									<label style="color: white;"> x</label>
-									<button class="btn btn-danger form-control" onclick="clearSearch()">Clear</button>
+									<button class="btn btn-danger form-control" onclick="clearSearch()"><i class="fa fa-close"></i> Clear</button>
+								</div>
+								<div class="col-md-4">
+									<label style="color: white;"> x</label><br>
+									<button class="btn btn-success " data-toggle="modal"  data-target="#upload_receive" style="margin-right: 5px">
+										<i class="fa fa-upload"></i>&nbsp;&nbsp;Upload Receive
+									</button>
 								</div>
 							</div>
 						</div>
@@ -128,33 +119,25 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="box no-border">
-						<!-- <div class="box-header">
-							<button class="btn btn-success" data-toggle="modal" data-target="#importModal" style="width: 
-							16%">Import</button>
-						</div> -->
 						<div class="box-body" style="padding-top: 0;">
-							<table id="suppliertable" class="table table-bordered table-striped table-hover">
+							<table id="ReceiveTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width:5%;">Code</th>
-										<th style="width:6%;">Name</th>
-										<th style="width:5%;">Address</th>
-										<th style="width:5%;">City</th>
-										<th style="width:5%;">Phone</th>
-										<th style="width:5%;">Fax</th>
-										<th style="width:7%;">Contact</th>
-										<th style="width:6%;">NPWP</th>
-										<th style="width:6%;">Duration</th>
-										<th style="width:6%;">Status</th>
-										<th style="width:9%;">Action</th>
+										<th style="width:5%;">Receive Date</th>
+										<th style="width:6%;">No Document</th>
+										<th style="width:5%;">Vendor</th>
+										<th style="width:5%;">No PO SAP</th>
+										<th style="width:5%;">Category</th>
+										<th style="width:5%;">Description</th>
+										<th style="width:7%;">GL Number</th>	
+										<th style="width:6%;">Cost Center</th>
+										<th style="width:6%;">Action</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
 								<tfoot>
 					              <tr>
-					                <th></th>
-					                <th></th>
 					                <th></th>
 					                <th></th>
 					                <th></th>
@@ -174,6 +157,30 @@
 		</div>
 	</div>
 </section>
+
+<div class="modal modal-default fade" id="upload_receive">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<form id="importForm" method="post" enctype="multipart/form-data" autocomplete="off">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">Upload Confirmation</h4>
+						Format: <i class="fa fa-arrow-down"></i> Seperti yang Tertera Pada Attachment Dibawah ini <i class="fa fa-arrow-down"></i><br>
+						Sample: <a href="{{ url('uploads/receive/sample/receive_sample.xlsx') }}">receive_sample.xlsx</a>
+					</div>
+					<div class="modal-body">
+						Upload Excel file here:<span class="text-red">*</span>
+						<input type="file" name="upload_file" id="upload_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button id="modalImportButton" type="submit" class="btn btn-success">Upload</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 @endsection
 
@@ -210,21 +217,19 @@
 	}
 
 	function fetchTable(){
-		$('#suppliertable').DataTable().destroy();
+		$('#ReceiveTable').DataTable().destroy();
 		
-		var status = $('#status').val();
-		var city = $('#city').val();
+		var category = $('#category').val();
 		var data = {
-			status:status,
-			city:city
+			category:category
 		}
 		
-		$('#suppliertable tfoot th').each( function () {
+		$('#ReceiveTable tfoot th').each( function () {
 	      var title = $(this).text();
 	      $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
 	    } );
 
-		var table = $('#suppliertable').DataTable({
+		var table = $('#ReceiveTable').DataTable({
 			'dom': 'Bfrtip',
 			'responsive': true,
 			'lengthMenu': [
@@ -285,20 +290,18 @@
 			"serverSide": true,
 			"ajax": {
 				"type" : "get",
-				"url" : "{{ url("fetch/supplier") }}",
+				"url" : "{{ url("fetch/receive") }}",
 				"data" : data
 			},
 			"columns": [
-				{ "data": "vendor_code"},
-				{ "data": "supplier_name"},
-				{ "data": "supplier_address"},
-				{ "data": "supplier_city"},
-				{ "data": "supplier_phone"},
-				{ "data": "supplier_fax"},
-				{ "data": "contact_name"},
-				{ "data": "supplier_npwp"},
-				{ "data": "supplier_duration"},
-				{ "data": "supplier_status"},
+				{ "data": "receive_date", "width":"8%"},
+				{ "data": "document_no", "width":"8%"},
+				{ "data": "vendor_code", "width":"20%"},
+				{ "data": "no_po_sap"},
+				{ "data": "category"},
+				{ "data": "item_description"},
+				{ "data": "gl_number"},
+				{ "data": "cost_center"},
 				{ "data": "action"}
 			]
 		});
@@ -315,8 +318,70 @@
 	        } );
 	      } );
 		
-      	$('#suppliertable tfoot tr').appendTo('#suppliertable thead');
+      	$('#ReceiveTable tfoot tr').appendTo('#ReceiveTable thead');
 	}
+
+	$("form#importForm").submit(function(e) {
+		if ($('#upload_file').val() == '') {
+			openErrorGritter('Error!', 'You need to select file');
+			return false;
+		}
+
+		$("#loading").show();
+
+		e.preventDefault();    
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: '{{ url("import/receive") }}',
+			type: 'POST',
+			data: formData,
+			success: function (result, status, xhr) {
+				if(result.status){
+					$("#loading").hide();
+					$('#ReceiveTable').DataTable().ajax.reload();
+					$("#upload_file").val('');
+					$('#upload_receive').modal('hide');
+					openSuccessGritter('Success', result.message);
+
+				}else{
+					$("#loading").hide();
+
+					openErrorGritter('Error!', result.message);
+				}
+			},
+			error: function(result, status, xhr){
+				$("#loading").hide();
+				
+				openErrorGritter('Error!', result.message);
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+	});
+
+	function openSuccessGritter(title, message){
+      jQuery.gritter.add({
+        title: title,
+        text: message,
+        class_name: 'growl-success',
+        image: '{{ url("images/image-screen.png") }}',
+        sticky: false,
+        time: '3000'
+      });
+    }
+
+    function openErrorGritter(title, message) {
+        jQuery.gritter.add({
+          title: title,
+          text: message,
+          class_name: 'growl-danger',
+          image: '{{ url("images/image-stop.png") }}',
+          sticky: false,
+          time: '2000'
+        });
+    }
 </script>
 @endsection
 

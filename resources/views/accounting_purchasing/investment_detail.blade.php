@@ -50,7 +50,7 @@
 </style>
 @endsection
 @section('header')
-<section class="content-header">
+<section class="content-header" style="margin-left: 10%">
   <h1>
     Detail {{ $page }}
     <small>{{ $title_jp }}</small>
@@ -66,7 +66,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
   @if (session('status'))
-  <div class="alert alert-success alert-dismissible">
+  <div class="alert alert-success alert-dismissible" style="margin-left: 10%;width: 80%;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
     {{ session('status') }}
@@ -74,7 +74,7 @@
   @endif
 
   @if (session('error'))
-  <div class="alert alert-danger alert-dismissible">
+  <div class="alert alert-danger alert-dismissible" style="margin-left: 10%;width: 80%;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa fa-ban"></i> Error!</h4>
     {{ session('error') }}
@@ -87,7 +87,7 @@
     </p>
   </div>
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
+  <div class="box box-primary" style="margin-left: 10%;width: 80%">
     <div class="box-header" style="margin-top: 10px;text-align: center">
       <h2 class="box-title"><b>Investment-Expense Apllication</b></h2>
     </div>  
@@ -346,8 +346,9 @@
           </div>
           <div class="col-xs-1 col-sm-1 col-md-1">
             <label for="form_budget">Aksi</label>
+            <br>
             <input type="text" name="lop" id="lop" value="1" hidden>
-            <button type="button" class="btn btn-success" onclick='tambah("tambah","lop");' style="width: 100%"><i class='fa fa-plus' ></i></button>
+            <button type="button" class="btn btn-success" onclick='tambah("tambah","lop");' style="padding: 6px 8px"><i class='fa fa-plus'></i></button>
           </div>
 
         </div>
@@ -415,8 +416,8 @@
                 @if($nomor == 1)
                 <label for="form_budget">Aksi</label><br>
                 @endif
-                <a href="javascript:void(0);" id="b" onclick='deleteConfirmation("<?= $inv_budget->category_budget ?>","<?= $inv_budget->id ?>");' class="btn btn-danger" data-toggle="modal" data-target='#modaldanger'><i class='fa fa-close'></i> </a> 
-                <button type="button" class="btn btn-success" onclick='tambahDetail("tambah","lop",<?= $nomor ?>);'><i class='fa fa-plus'></i></button>
+                <a href="javascript:void(0);" id="b" onclick='deleteConfirmation("<?= $inv_budget->category_budget ?>","<?= $inv_budget->id ?>");' class="btn btn-danger" data-toggle="modal" data-target='#modaldanger' style="padding: 6px"><i class='fa fa-close'></i> </a> 
+                <button type="button" class="btn btn-success" onclick='tambahDetail("tambah","lop",<?= $nomor ?>);' style="padding: 6px"><i class='fa fa-plus'></i></button>
               </div>
 
             </div>
@@ -430,15 +431,15 @@
 
         <div class="row">
           <div class="col-sm-11" style="padding-top: 30px">
-            @if($investment->posisi == "user" && ($investment->currency == null || $investment->subject_jpy == null || $investment->objective_detail_jpy == null || count($investment_budget) == 0))
+            @if($investment->posisi == "user" && ($investment->currency == null || $investment->subject_jpy == null || $investment->objective_detail_jpy == null || count($investment_budget) == 0 || count($investment_item) == 0))
             <div class="btn-group pull-right">
               <button type="button"class="btn btn-success" onclick="sendEmail({{$investment->id}})" data-toggle="tooltip" title="Send Email" disabled=""><i class="fa fa-envelope"></i> Kirim Email Ke Accounting</button>
             </div>
 
-            @elseif($investment->posisi == "user" && ($investment->currency != null || $investment->subject_jpy != null || $investment->objective_detail_jpy != null || count($investment_budget) > 0))
+            @elseif($investment->posisi == "user" && ($investment->currency != null || $investment->subject_jpy != null || $investment->objective_detail_jpy != null || count($investment_budget) > 0  || count($investment_item) > 0))
 
             <div class="btn-group pull-right">
-              <button type="button"class="btn btn-success" onclick="sendEmail({{$investment->id}})" data-toggle="tooltip" title="Lengkapi Data Untuk Send Email"><i class="fa fa-envelope"></i> Kirim Email Ke Accounting</button>
+              <button type="button"class="btn btn-success" onclick="sendEmail({{$investment->id}})" data-toggle="tooltip" title="Lengkapi Data Untuk Send Email"><i class="fa fa-envelope"></i> Kirim Email Ke Accounting </button>
             </div>
 
             @else
@@ -663,22 +664,34 @@
           $(this).parents(".control-group").remove();
       });
 
+      $('body').toggleClass("sidebar-collapse");
+      $("#navbar-collapse").text('');
+
+      $(function () {
+        $('.select2').select2({
+            dropdownAutoWidth : true,
+            allowClear:true,
+          });
+      });
+
+      $(function () {
+        $('.select3').select2({
+          dropdownParent: $('#createModal'),
+          dropdownAutoWidth : true,
+          allowClear:true,
+          minimumInputLength: 3
+        });
+        $('.select4').select2({
+          dropdownParent: $('#EditModal')
+        });
+      })
+
       if($("#budget_category1").val() == "Out Of Budget"){
         $("#budget_dana1").hide();
         $("#budget_sisa1").hide();
         $("#budget_total1").hide();
       }
 
-
-      $('body').toggleClass("sidebar-collapse");
-      $("#navbar-collapse").text('');
-        $('.select2').select2({
-          language : {
-            noResults : function(params) {
-              // return "There is no cpar with status 'close'";
-            }
-          }
-        });
 
         $("#kode_item").change(function(){
               $.ajax({
@@ -800,25 +813,6 @@
       $('#item tfoot tr').appendTo('#item thead');
 
     });
-
-</script>
-  <script>
-
-    $(function () {
-      $('.select2').select2()
-    });
-
-    $(function () {
-      $('.select3').select2({
-        dropdownParent: $('#createModal'),
-        dropdownAutoWidth : true,
-        allowClear:true,
-        minimumInputLength: 3
-      });
-      $('.select4').select2({
-        dropdownParent: $('#EditModal')
-      });
-    })
 
     function getPersen() {
       var qty = document.getElementById("jumlah_item").value;
@@ -1280,8 +1274,10 @@
         return false;
       }
 
-      $.get('{{ url("investment/sendemail") }}', data, function(result, status, xhr){
+      $("#loading").show();
 
+      $.get('{{ url("investment/sendemail") }}', data, function(result, status, xhr){
+        $("#loading").hide();
         openSuccessGritter("Success","Email Has Been Sent");
         setTimeout(function(){  window.location.href = '{{url("investment")}}'; }, 2000);
       })
@@ -1322,7 +1318,7 @@
         lop = "lop2";
       }
 
-      var divdata = $("<div id='"+no+"' class='row'><div class='col-xs-2 col-sm-2 col-md-2 col-xs-offset-1'><select class='form-control select3' data-placeholder='Pilih Category Budget' name='budget_category"+no+"' id='budget_category"+no+"' onchange='selectbudget(this)' style='width: 100% height: 35px;' required> <option value=''>&nbsp;</option><option value='Shifting'>Shifting</option><option value='Out Of Budget'>Out of Budget </option></select></div><div class='col-xs-3 col-sm-3 col-md-3' id='budget_dana"+no+"'><select class='form-control select3' data-placeholder='Pilih Nomor Budget' name='budget_no"+no+"' id='budget_no"+no+"' onchange='getBudgetName(this)' style='width: 100% height: 35px;' onchange='' required> <option value='{{$investment->budget_no}}'>{{$investment->budget_no}}</option></select><input type='hidden' name='budget_name"+no+"' id='budget_name"+no+"'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_sisa"+no+"'><input type='text' class='form-control' id='sisa_budget"+no+"' name='sisa_budget"+no+"' placeholder='Sisa Budget'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_total"+no+"'><input type='text' class='form-control' id='amount_budget"+no+"' name='amount_budget"+no+"' placeholder='Total Pembelian'></div><div class='col-xs-1 col-sm-1 col-md-1'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' class='btn btn-success' onclick='tambah(\""+id+"\",\""+lop+"\"); '><i class='fa fa-plus' ></i></button></div> </div>")
+      var divdata = $("<div id='"+no+"' class='row'><div class='col-xs-2 col-sm-2 col-md-2 col-xs-offset-1'><select class='form-control select3' data-placeholder='Pilih Category Budget' name='budget_category"+no+"' id='budget_category"+no+"' onchange='selectbudget(this)' style='width: 100% height: 35px;' required> <option value=''>&nbsp;</option><option value='Shifting'>Shifting</option><option value='Out Of Budget'>Out of Budget </option></select></div><div class='col-xs-3 col-sm-3 col-md-3' id='budget_dana"+no+"'><select class='form-control select3' data-placeholder='Pilih Nomor Budget' name='budget_no"+no+"' id='budget_no"+no+"' onchange='getBudgetName(this)' style='width: 100% height: 35px;' onchange='' required> <option value='{{$investment->budget_no}}'>{{$investment->budget_no}}</option></select><input type='hidden' name='budget_name"+no+"' id='budget_name"+no+"'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_sisa"+no+"'><input type='text' class='form-control' id='sisa_budget"+no+"' name='sisa_budget"+no+"' placeholder='Sisa Budget'></div><div class='col-xs-2 col-sm-2 col-md-2' id='budget_total"+no+"'><input type='text' class='form-control' id='amount_budget"+no+"' name='amount_budget"+no+"' placeholder='Total Pembelian'></div><div class='col-xs-1 col-sm-1 col-md-1'><button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger' style='padding:6px 8px'><i class='fa fa-close'></i> </button> <button type='button' class='btn btn-success' style='padding:6px 8px' onclick='tambah(\""+id+"\",\""+lop+"\"); '><i class='fa fa-plus' ></i></button></div> </div>")
 
       $("#"+id).append(divdata);
 

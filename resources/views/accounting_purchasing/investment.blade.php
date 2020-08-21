@@ -158,14 +158,12 @@
 										<th style="width: 1%">File</th>
 										<th style="width: 2%">Status</th>
 										<th style="width: 3%">Action</th>
-										<th style="width: 2%">Bukti Adagio</th>
 									</tr>
 								</thead>
 								<tbody>
 								</tbody>
 								<tfoot>
 									<tr>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -327,7 +325,6 @@
 			{ "data": "file" },
 			{ "data": "status" },
 			{ "data": "action" },
-			{ "data": "bukti_adagio" },
 			],
 		});
 

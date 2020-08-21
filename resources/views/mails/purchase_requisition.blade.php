@@ -35,7 +35,7 @@
 			<p style="font-size: 18px;">Purchase Requisition <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Telah Dibuat Purchase Requisition (PR) Nomor {{$no_pr}}</h2>
+			<h2>Purchase Requisition (PR) Nomor {{$no_pr}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -74,7 +74,7 @@
 			<p style="font-size: 18px;">Purchase Requisition <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Telah Dibuat Purchase Requisition (PR) Nomor {{$no_pr}}</h2>
+			<h2>Purchase Requisition (PR) Nomor {{$no_pr}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -209,14 +209,17 @@
 			<p style="font-size: 18px;">PR Tidak Disetujui<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 			<br>
-			<h2>Purchase Requisition (PR) Nomor {{$no_pr}} Telah Ditolak</h2>
+			<h2>Purchase Requisition (PR) Nomor {{$no_pr}} Tidak Disetujui</h2>
 			<h3>PR Tidak Disetujui Dengan Catatan :<h3>
 			<h3>
 				{{ $alasan }}	
 			</h3>
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/purchase_requisition/detail/{{ $id }}">PR Detail</a>
+			
+			<a href="http://172.17.128.4/mirai/public/purchase_requisition/report/{{ $id }}">Cek PR</a>
+			<br>
+			<a href="http://172.17.128.4/mirai/public/purchase_requisition">List PR</a>
 
 			@endif
 			

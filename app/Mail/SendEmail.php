@@ -184,7 +184,7 @@ class SendEmail extends Mailable
 
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Requisition '.$this->data[0]->no_pr.'')
+                ->subject('Purchase Requisition')
                 ->view('mails.purchase_requisition')
                 ->attach(public_path('files/pr/'.$all_file[0]))
                 ->attach(public_path('pr_list/'.$this->data[0]->file_pdf));
@@ -192,13 +192,13 @@ class SendEmail extends Mailable
             else if($this->data[0]->file_pdf != null){
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Requisition '.$this->data[0]->no_pr.'')
+                ->subject('Purchase Requisition')
                 ->view('mails.purchase_requisition')
                 ->attach(public_path('pr_list/'.$this->data[0]->file_pdf));
             }else{
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Requisition '.$this->data[0]->no_pr.'')
+                ->subject('Purchase Requisition')
                 ->view('mails.purchase_requisition');
             }
         }
@@ -207,13 +207,13 @@ class SendEmail extends Mailable
             if($this->data[0]->file_pdf != null ){
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Order '.$this->data[0]->no_po.'')
+                ->subject('Purchase Order')
                 ->view('mails.purchase_order')
                 ->attach(public_path('po_list/'.$this->data[0]->file_pdf));
             } else{
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Order '.$this->data[0]->no_po.'')
+                ->subject('Purchase Order')
                 ->view('mails.purchase_order');
             }
         }
@@ -224,7 +224,7 @@ class SendEmail extends Mailable
 
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Investment '.$this->data[0]->reff_number.'')
+                ->subject('Investment')
                 ->view('mails.investment')
                 ->attach(public_path('files/investment/'.$all_file[0]))
                 ->attach(public_path('investment_list/'.$this->data[0]->pdf));
@@ -232,13 +232,13 @@ class SendEmail extends Mailable
             if($this->data[0]->pdf != null ){
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Investment '.$this->data[0]->reff_number.'')
+                ->subject('Investment')
                 ->view('mails.investment')
                 ->attach(public_path('investment_list/'.$this->data[0]->pdf));
             } else{
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Investment '.$this->reff_number.'')
+                ->subject('Investment')
                 ->view('mails.investment');
             }
         }

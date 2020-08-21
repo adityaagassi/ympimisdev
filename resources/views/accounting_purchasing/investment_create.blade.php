@@ -19,7 +19,7 @@
 </style>
 @endsection
 @section('header')
-<section class="content-header">
+<section class="content-header" style="margin-left: 10%">
   <h1>
     Create {{ $page }}
     <small>{{$title_jp}}</small>
@@ -35,7 +35,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
   @if (session('status'))
-  <div class="alert alert-success alert-dismissible">
+  <div class="alert alert-success alert-dismissible" style="margin-left: 10%;width: 80%;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
     {{ session('status') }}
@@ -43,7 +43,7 @@
   @endif
 
   @if (session('error'))
-  <div class="alert alert-danger alert-dismissible">
+  <div class="alert alert-danger alert-dismissible" style="margin-left: 10%;width: 80%;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa fa-ban"></i> Error!</h4>
     {{ session('error') }}
@@ -56,7 +56,7 @@
     </p>
   </div>
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
+  <div class="box box-primary" style="margin-left: 10%;width: 80%">
     <div class="box-header" style="margin-top: 10px;text-align: center">
       <h2 class="box-title"><b>Investment - Expense Apllication</b></h2>
     </div>  
@@ -65,14 +65,14 @@
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
 
         <div class="row">
-          <div class="col-xs-4 col-xs-offset-2">
+          <div class="col-xs-5 col-xs-offset-1">
             <label for="form_identitas">Applicant<span class="text-red">*</span></label>
             <input type="text" id="form_identitas" class="form-control" value="{{$employee->employee_id}} - {{$employee->name}} - {{$employee->department}}" readonly>
             <input type="hidden" id="applicant_id" name="applicant_id" class="form-control" value="{{$employee->employee_id}}" readonly>
             <input type="hidden" id="applicant_name" name="applicant_name" class="form-control" value="{{$employee->name}}" readonly>
             <input type="hidden" id="applicant_department" name="applicant_department" class="form-control" value="{{$employee->department}}" readonly>
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-5">
             <label for="form_bagian">Submission Date<span class="text-red">*</span></label>
             <input type="text" id="date" class="form-control" value="<?= date('d F Y')?>" readonly>
             <input type="hidden" id="submission_date" name="submission_date" class="form-control" value="<?= date('Y-m-d')?>" readonly>
@@ -80,7 +80,7 @@
         </div>
 
         <div class="row">
-          <div class="col-xs-4 col-xs-offset-2">
+          <div class="col-xs-5 col-xs-offset-1">
             <label for="form_kategori">Kind Of Application<span class="text-red">*</span></label>
             <select class="form-control select2" id="category" name="category" data-placeholder='Choose Category' style="width: 100%"  
             onchange="selectClass(this); getNomor();" required="">
@@ -89,21 +89,21 @@
               <option value="Expense">Expense</option>
             </select>
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-5">
             <label for="form_judul">Subject<span class="text-red">*</span></label>
             <input type="text" id="subject" name="subject" class="form-control" placeholder="Subject" required="" >
           </div>
         </div>
 
         <div class="row">
-          <div class="col-xs-4 col-xs-offset-2">
+          <div class="col-xs-5 col-xs-offset-1">
             <label for="form_kategori">Class Of Assets / Kind Of Expense<span class="text-red">*</span></label>
             <select class="form-control select2" id="type" name="type" data-placeholder='Choose Type' style="width: 100%" required="" onchange="getNomor()">
 
             </select>
           </div>
 
-          <div class="col-xs-4">
+          <div class="col-xs-5">
             <label for="form">Vendor<span class="text-red">*</span></label>
             <select class="form-control select2" id="vendor" name="vendor" data-placeholder='Choose Supplier' style="width: 100%" required="" onchange="getSupplier(this)">
               <option value="">&nbsp;</option>
@@ -116,7 +116,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-xs-4 col-xs-offset-2">
+          <div class="col-xs-5 col-xs-offset-1">
             <label for="form_grup">Main Objective<span class="text-red">*</span></label>
             <select class="form-control select2" id="objective" name="objective" data-placeholder='Choose objective' style="width: 100%" required="">
               <option value="">&nbsp;</option>
@@ -129,14 +129,14 @@
             </select>
           </div>
 
-          <div class="col-xs-4">
+          <div class="col-xs-5">
             <label for="form_judul">Objective Explanation<span class="text-red">*</span></label>
             <input type="text" id="objective_detail" name="objective_detail" class="form-control" placeholder="Objective Explanation" required="">
           </div>
         </div>
 
         <div class="row">
-          <div class="col-xs-4 col-xs-offset-2">
+          <div class="col-xs-5 col-xs-offset-1">
             <label for="form_judul">Date Of Order<span class="text-red">*</span></label>
             <div class="input-group date">
               <div class="input-group-addon">
@@ -145,7 +145,7 @@
               <input type="text" class="form-control pull-right datepicker" id="date_order" name="date_order" placeholder="Date of Order" required="">
             </div>
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-5">
             <label for="form">Date Of Delivery<span class="text-red">*</span></label>
             <div class="input-group date">
               <div class="input-group-addon">
@@ -157,29 +157,29 @@
         </div>
 
         <div class="row">
-          <div class="col-xs-4 col-xs-offset-2">
+          <div class="col-xs-5 col-xs-offset-1">
             <label for="payment">Payment Term<span class="text-red">*</span></label>
             <input type="text" id="payment_term" name="payment_term" class="form-control" placeholder="Payment Term" required="" readonly="">
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-5">
             <label for="file">File Quotation<span class="text-red">*</span></label>
             <input type="file" id="attachment" name="attachment[]" multiple="" required="">
           </div>
         </div>
 
         <div class="row">
-          <div class="col-xs-8 col-xs-offset-2">
+          <div class="col-xs-10 col-xs-offset-1">
             <label for="form_bagian">Reff Number<span class="text-red">*</span></label>
             <input type="text" class="form-control" id="reff_number" name="reff_number" placeholder="Reff Number" required="" readonly="">
           </div>
         </div>
 
         <div class="row">
-          <div class="col-xs-4 col-xs-offset-2">
+          <div class="col-xs-5 col-xs-offset-1">
               <label>Note (Optional)</label>
               <textarea class="form-control pull-right" id="note" name="note"></textarea>
           </div>
-          <div class="col-xs-4">
+          <div class="col-xs-5">
               <label>Other Quotation (Optional)</label>
               <textarea class="form-control pull-right" id="quotation_supplier" name="quotation_supplier"></textarea>
           </div>
@@ -216,12 +216,6 @@
     jQuery(document).ready(function() {
       $('body').toggleClass("sidebar-collapse");
       $("#navbar-collapse").text('');
-      $('.select2').select2({
-        language : {
-          noResults : function(params) {
-          }
-        }
-      });
 
       CKEDITOR.replace('note' ,{
         filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
@@ -237,7 +231,10 @@
       });
 
       $(function () {
-        $('.select2').select2()
+        $('.select2').select2({
+          dropdownAutoWidth : true,
+          allowClear:true,
+        });
       });
 
       $('.datepicker').datepicker({

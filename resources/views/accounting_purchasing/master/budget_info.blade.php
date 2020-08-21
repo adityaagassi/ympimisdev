@@ -114,12 +114,15 @@
 									<label style="color: white;"> x</label>
 									<button class="btn btn-danger form-control" onclick="clearSearch()"><i class="fa fa-close"></i> Clear</button>
 								</div>
+
+								<?php if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC" || Auth::user()->role_code == "ACC-SPL") { ?>
 								<div class="col-md-4">
 									<label style="color: white;"> x</label><br>
 									<button class="btn btn-success " data-toggle="modal"  data-target="#upload_budget" style="margin-right: 5px">
 										<i class="fa fa-upload"></i>&nbsp;&nbsp;Upload Budget
 									</button>
 								</div>
+								<?php } ?>
 							</div>
 						</div>
 					</div>

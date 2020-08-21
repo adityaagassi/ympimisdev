@@ -363,13 +363,18 @@
 										</div>
 										<div class="form-group">
 											<label>Authorized 3<span class="text-red">*</span></label>
-											<select class="form-control select4" id="authorized3" name="authorized3" data-placeholder='Pilih Authorized 3' style="width: 100%" onchange="getAuthorized3(this);">
+											<input type="text" class="form-control" id="authorized3_name" name="authorized3_name" readonly="" value="{{$authorized3->name}}">
+											<input type="hidden" class="form-control" id="authorized3" name="authorized3" readonly="" value="{{$authorized3->employee_id}}">
+										</div>
+										<div class="form-group">
+											<label>Authorized 4<span class="text-red">*</span></label>
+											<select class="form-control select4" id="authorized4" name="authorized4" data-placeholder='Pilih Authorized 4' style="width: 100%" onchange="getAuthorized4(this);">
 												<option value="">&nbsp;</option>
-												@foreach($authorized3 as $author3)
-												<option value="{{$author3->employee_id}}">{{$author3->name}}</option>
+												@foreach($authorized4 as $author4)
+												<option value="{{$author4->employee_id}}">{{$author4->name}}</option>
 												@endforeach
 											</select>
-											<input type="hidden" class="form-control" id="authorized3_name" name="authorized3_name" readonly="">
+											<input type="hidden" class="form-control" id="authorized4_name" name="authorized4_name" readonly="">
 										</div>
 										<div class="form-group">
 											<label>Catatan / Keterangan</label>
@@ -620,17 +625,21 @@
 											<label>Authorized 2<span class="text-red">*</span></label>
 											<input type="text" class="form-control" id="authorized2_name" name="authorized2_name" readonly="" value="{{$authorized2->name}}">
 											<input type="hidden" class="form-control" id="authorized2" name="authorized2" readonly="" value="{{$authorized2->employee_id}}">
-											
 										</div>
 										<div class="form-group">
 											<label>Authorized 3<span class="text-red">*</span></label>
-											<select class="form-control select5" id="authorized3_edit" name="authorized3_edit" data-placeholder='Pilih Authorized 3' style="width: 100%" onchange="getAuthorized3Edit(this)">
+											<input type="text" class="form-control" id="authorized3_name" name="authorized3_name" readonly="" value="{{$authorized3->name}}">
+											<input type="hidden" class="form-control" id="authorized3" name="authorized3" readonly="" value="{{$authorized3->employee_id}}">
+										</div>
+										<div class="form-group">
+											<label>Authorized 4<span class="text-red">*</span></label>
+											<select class="form-control select5" id="authorized4_edit" name="authorized4_edit" data-placeholder='Pilih Authorized 3' style="width: 100%" onchange="getAuthorized4Edit(this)">
 												<option value="">&nbsp;</option>
-												@foreach($authorized3 as $author3)
-												<option value="{{$author3->employee_id}}">{{$author3->name}}</option>
+												@foreach($authorized4 as $author4)
+												<option value="{{$author4->employee_id}}">{{$author4->name}}</option>
 												@endforeach
 											</select>
-											<input type="hidden" class="form-control" id="authorized3_name_edit" name="authorized3_name_edit" readonly="">
+											<input type="hidden" class="form-control" id="authorized4_name_edit" name="authorized4_name_edit" readonly="">
 										</div>
 										<div class="form-group">
 											<label>Catatan / Keterangan</label>
@@ -829,6 +838,7 @@
 	jQuery(document).ready(function() {
 		fillTableOutstanding();
 		fillTable();
+		getExchangeRate();
 		getInvList();
 
 	    limitdate = new Date();
@@ -856,9 +866,9 @@
 			var price_vat = $('#price_vat').val();
 			var delivery_term = $('#delivery_term').val();
 			var currency = $('#currency').val();
-			var authorized3 = $('#authorized3').val();
+			var authorized4 = $('#authorized4').val();
 
-			if(no_po2 == '' || supplier == "" || material == "" || price_vat == "" || delivery_term == "" || currency == "" || authorized3 == ""){
+			if(no_po2 == '' || supplier == "" || material == "" || price_vat == "" || delivery_term == "" || currency == "" || authorized4 == ""){
 				alert('All field must be filled');	
 			}	
 			else{
@@ -872,9 +882,9 @@
 			var price_vat = $('#price_vat_edit').val();
 			var delivery_term = $('#delivery_term_edit').val();
 			var currency = $('#currency_edit').val();
-			var authorized3 = $('#authorized3_edit').val();
+			var authorized4 = $('#authorized4_edit').val();
 
-			if( supplier == "" || material == "" || price_vat == "" || delivery_term == "" || currency == "" || authorized3 == ""){
+			if( supplier == "" || material == "" || price_vat == "" || delivery_term == "" || currency == "" || authorized4 == ""){
 				alert('All field must be filled');	
 			}	
 			else{
@@ -1147,22 +1157,6 @@
 			}
 		});
 
-		$.ajax({
-			url: "{{ url('purchase_requisition/get_exchange_rate') }}", 
-			type : 'GET', 
-			success : function(data){
-				var obj = jQuery.parseJSON(data);
-				for (var i = 0; i < obj.length; i++) {
-            		var currency = obj[i].currency; // currency
-	            	var rate = obj[i].rate; //nilai tukar
-
-	            	exchange_rate.push({
-	            		'currency' :  obj[i].currency, 
-	            		'rate' :  obj[i].rate,
-	            	});
-	            }
-	        }
-	    });
 
 	}
 
@@ -1196,28 +1190,28 @@
 		});
 	}
 
-	function getAuthorized3(elem){
+	function getAuthorized4(elem){
 
 		$.ajax({
-			url: "{{ route('admin.pogetname') }}?authorized3="+elem.value,
+			url: "{{ route('admin.pogetname') }}?authorized4="+elem.value,
 			method: 'GET',
 			success: function(data) {
 				var json = data,
 				obj = JSON.parse(json);
-				$('#authorized3_name').val(obj.name);
+				$('#authorized4_name').val(obj.name);
 			} 
 		});
 	}
 
-	function getAuthorized3Edit(elem){
+	function getAuthorized4Edit(elem){
 
 		$.ajax({
-			url: "{{ route('admin.pogetname') }}?authorized3="+elem.value,
+			url: "{{ route('admin.pogetname') }}?authorized4="+elem.value,
 			method: 'GET',
 			success: function(data) {
 				var json = data,
 				obj = JSON.parse(json);
-				$('#authorized3_name_edit').val(obj.name);
+				$('#authorized4_name_edit').val(obj.name);
 			} 
 		});
 	}
@@ -1278,6 +1272,7 @@
 				}else if (obj.currency == "IDR"){
 					$('#ket_harga'+no).text("Rp.");
 				}
+				$('#last_price'+no).attr('readonly', true).val(obj.last_price);
 				$('#goods_price'+no).attr('readonly', false).val(obj.price);
 				$('#service_price'+no).attr('readonly', false).val(0);
 
@@ -1464,23 +1459,6 @@
     	var isi = "";
     	$('#modalEdit').modal("show");
 
-    	$.ajax({
-			url: "{{ url('purchase_requisition/get_exchange_rate') }}", 
-			type : 'GET', 
-			success : function(data){
-				var obj = jQuery.parseJSON(data);
-				for (var i = 0; i < obj.length; i++) {
-            		var currency = obj[i].currency; // currency
-	            	var rate = obj[i].rate; //nilai tukar
-
-	            	exchange_rate.push({
-	            		'currency' :  obj[i].currency, 
-	            		'rate' :  obj[i].rate,
-	            	});
-	            }
-	        }
-	    });
-
     	var data = {
     		id:id
     	};
@@ -1499,7 +1477,7 @@
     		$("#currency_edit").val(result.purchase_order.currency).trigger('change.select2');
     		$("#buyer_id_edit").val(result.purchase_order.buyer_id);
     		$("#buyer_name_edit").val(result.purchase_order.buyer_name);
-    		$("#authorized3_edit").val(result.purchase_order.authorized3).trigger('change.select2');
+    		$("#authorized4_edit").val(result.purchase_order.authorized4).trigger('change.select2');
     		$("#note_edit").val(result.purchase_order.note).trigger('change.select2');
 
 
@@ -1521,7 +1499,7 @@
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='qty"+value.id+"' name='qty"+value.id+"' placeholder='Qty' required='' onkeyup='getkonversiEdit(this)' value="+value.qty+"></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='uomhide"+value.id+"' id='uomhide"+value.id+"' value='"+ value.uom +"'><select class='form-control select6' id='uom_edit"+value.id+"' name='uom_edit"+value.id+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"'>?</span><input type='text' class='form-control currency' id='goods_price"+value.id+"' name='goods_price"+value.id+"' placeholder='Goods Price' required='' onkeyup='getkonversiEdit(this)' value="+value.goods_price+"></div></div>";
-		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+value.id+"' name='last_price"+value.id+"' placeholder='Last Price' readonly=''></div>";
+		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='last_price"+value.id+"' name='last_price"+value.id+"' placeholder='Last Price' value="+value.last_price+" readonly=''></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='service_price"+value.id+"' name='service_price"+value.id+"' placeholder='Service' required='' value="+value.service_price+"></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='konversi_dollar"+value.id+"' name='konversi_dollar"+value.id+"' placeholder='Konversi Dollar' required='' value="+value.konversi_dollar+"></div>";
 		    	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='gl_number"+value.id+"' name='gl_number"+value.id+"' placeholder='GL Number' required='' value="+value.gl_number+"></div>";
@@ -1688,6 +1666,25 @@
             
       });
     }
+
+    function getExchangeRate(){
+		$.ajax({
+			url: "{{ url('purchase_requisition/get_exchange_rate') }}", 
+			type : 'GET', 
+			success : function(data){
+				var obj = jQuery.parseJSON(data);
+				for (var i = 0; i < obj.length; i++) {
+            		var currency = obj[i].currency; // currency
+	            	var rate = obj[i].rate; //nilai tukar
+
+	            	exchange_rate.push({
+	            		'currency' :  obj[i].currency, 
+	            		'rate' :  obj[i].rate,
+	            	});
+	            }
+	        }
+	    });
+	}
 
 
 </script>
