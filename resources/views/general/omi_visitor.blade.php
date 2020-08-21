@@ -3,6 +3,10 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
 
+	.content-wrapper{
+		background-color: white !important;
+	}
+
 	.clapclap {
 		/*width: 50px;
 		height: 50px;*/
@@ -18,7 +22,7 @@
 			/opacity: 0;/
 		}
 		50%, 100% {
-			background-color: rgb(230, 230, 230);
+			background-color: rgb(255,255,0);
 		}
 	}
 
