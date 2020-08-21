@@ -233,7 +233,7 @@
 				
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" onclick="location.reload()">Reload</button>
+				<a  class="btn btn-danger" href="{{ url('') }}">Tutup</button>
 				<a id="modalDeleteButton" href="#" type="button" class="btn btn-success">Buat Laporan Audit ISO</a>
 			</div>
 		</div>
@@ -433,7 +433,7 @@
 					if (stat == countpoint) {
 						$('#loading').hide();
 						$('#myModal').modal('show');
-						$('.modal-body').html("Terima Kasih telah mengisi Audit ISO.<br>Jika Anda akan membuat Laporan Audit ISO, silahkan klik tombol di bawah ini.");
+						$('.modal-body').html("Terima Kasih telah mengisi Audit Internal ISO.<br>Jika Anda akan membuat Laporan Audit ISO, silahkan klik tombol di bawah ini.");
 						$('#modalDeleteButton').attr("href", '{{ url("/index/audit_iso/create") }}');
 					}
 				}
