@@ -3357,7 +3357,7 @@ class RecorderProcessController extends Controller
                 $machine = $machine.',';
               }
             }
-            $machinein = " and `injection_cdm_checks.machine` in (".$machine.") ";
+            $machinein = " and injection_cdm_checks.machine in (".$machine.") ";
           }
           else{
             $machinein = "";
