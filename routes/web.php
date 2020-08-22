@@ -2744,7 +2744,7 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_report/verifikasicpar/{id}', 'QcReportController@verifikasicpar');
 	Route::post('index/qc_report/checked/{id}', 'QcReportController@checked');
 	Route::post('index/qc_report/unchecked/{id}', 'QcReportController@unchecked');
-
+	Route::post('index/qc_report/uncheckedqa/{id}', 'QcReportController@uncheckedqa');
 
 	Route::get('index/qc_report/getdepartemen', 'QcReportController@getDepartemen')->name('admin.getDepartemen');
 	

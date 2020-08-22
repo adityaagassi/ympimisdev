@@ -2442,7 +2442,7 @@ class QcReportController extends Controller
 
           $cpars = QcCpar::find($id);
           
-          $cpars->alasan = $alasan;
+          $cpars->alasan = $alasan; 
 
           if ($cpars->posisi == "QA2") {
             $cpars->posisi = "QA";
@@ -2470,18 +2470,7 @@ class QcReportController extends Controller
 
           foreach($mails as $mail){
             $mailtoo = $mail->email;
-            $number = $mail->phone;
           }
-
-          if (strpos($number, '/') !== false) {
-            $number2 = explode("/", $number);
-            $mailnumber = '62'.substr($number2[0],1);
-          }else{
-            $mailnumber = '62'.substr($number, 1);
-          }
-
-          
-
           Mail::to($mailtoo)->send(new SendEmail($querycpar, 'rejectcpar'));
           return redirect('/index/qc_report/verifikasiqa/'.$id)->with('success', 'Verification Not Approved')->with('page', 'CPAR');
       }
