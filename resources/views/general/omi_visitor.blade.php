@@ -5,8 +5,8 @@
 
 	.content-wrapper{
 		background-color: white !important;
+		background-image:url({{url('images/omi/covid_bg.jpg')}});
 	}
-
 	.clapclap {
 		/*width: 50px;
 		height: 50px;*/
@@ -47,6 +47,7 @@
 		vertical-align: middle;
 	}
 	#loading { display: none; }
+	
 </style>
 @stop
 @section('header')
