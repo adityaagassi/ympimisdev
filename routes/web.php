@@ -2927,7 +2927,7 @@ Route::get('fetch/audit_iso/cek_report', 'CparController@fetch_audit_report');
 //Form Laporan Ketidaksesuaian
 
 Route::get('index/audit_iso/create/{id}', 'CparController@audit_create_checklist');
-Route::post('post/audit_iso/create', 'CparController@audit_post_create');
+Route::post('post/audit_iso_checklist/create', 'CparController@audit_post_create_checklist');
 
 
 //CUBEACON WAREHOUSE

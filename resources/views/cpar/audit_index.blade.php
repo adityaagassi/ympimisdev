@@ -249,7 +249,7 @@ td {
         tableData += '<td width="12%">'+ day2 +' '+month2+' '+year2+'</td>';
    
         if (value.status == "cpar") {
-          tableData += '<td><span class="label label-success"> Open </span></td>';          
+          tableData += '<td><span class="label label-success" style="font-size: 13px"> Open </span></td>';          
         }
         else if (value.status == "rejected") {
           tableData += '<td><span class="label label-danger" style="font-size: 13px"> Rejected </span></td>';          

@@ -1912,6 +1912,86 @@ class CparController extends Controller
        }
     }
 
+    public function audit_create_checklist($id)
+    {
+      $audit = StandarisasiAuditIso::find($id);
+
+      $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position', 'department')->first();
+
+      $leader = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+        where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+
+      return view('cpar.audit_create_checklist', array(
+        'audit' => $audit,
+        'employee' => $emp,
+        'leaders' => $leader
+      ))->with('page', 'Form Audit ISO');
+    }
+
+    public function audit_post_create_checklist(Request $request)
+    {
+      try {
+        $id_user = Auth::id();
+
+        $syarat = null;
+        if ($request->get('auditor_persyaratan') == null || $request->get('auditor_persyaratan') == "") {
+            $syarat = "0";
+        }
+        else{
+            $syarat = $request->get('auditor_persyaratan');
+        }
+
+        $audits = StandarisasiAudit::create([
+           'auditor' => $request->get('auditor'),
+           'auditor_name' => $request->get('auditor_name'),
+           'auditor_date' => $request->get('auditor_date'),
+           'auditor_jenis' => $request->get('auditor_jenis'),
+           'auditor_lokasi' => $request->get('auditor_lokasi'),
+           'auditor_kategori' => $request->get('auditor_kategori'),
+           'auditor_persyaratan' => $syarat,
+           'auditor_permasalahan' => $request->get('auditor_permasalahan'),
+           'auditor_bukti' => $request->get('auditor_bukti'),
+           'auditee' => $request->get('auditee'),
+           'auditee_name' => $request->get('auditee_name'),
+           'auditee_due_date' => $request->get('auditee_due_date'),
+           'audit_no' => $request->get('audit_no'),
+           'posisi' => 'std',
+           'status' => 'cpar',
+           'created_by' => $id_user
+        ]);
+
+        $audits->save();
+
+        $data3 = StandarisasiAuditIso::where('id', $request->get('id_checklist'))
+        ->update(['status_ditangani' => 'true']);
+
+        $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.`group` = 'Standardization'";
+        $mailtoo = DB::select($mails);
+
+        $isimail = "select * FROM standarisasi_audits where standarisasi_audits.id = ".$audits->id;
+        $auditiso = db::select($isimail);
+
+        Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($auditiso, 'std_audit'));
+
+        $response = array(
+          'status' => true,
+          'datas' => "Berhasil",
+          'id' => $audits->id
+        );
+
+        return Response::json($response);
+
+     } catch (QueryException $e){
+        $response = array(
+             'status' => false,
+             'datas' => $e->getMessage()
+        );
+        return Response::json($response);
+       }
+    }
+
+
     public function audit_get_nama(Request $request){
       $auditee = $request->auditee;
       $query = "SELECT name,section,department FROM employee_syncs where employee_id = '$auditee'";
@@ -2127,6 +2207,7 @@ class CparController extends Controller
   {
     try {
       $audit = StandarisasiAudit::find($id);
+      $audit->auditor_penyebab = $request->get('auditor_penyebab');
       $audit->auditee_perbaikan = $request->get('auditee_perbaikan');
       $audit->auditee_pencegahan = $request->get('auditee_pencegahan');
       $audit->auditee_biaya = $request->get('auditee_biaya');
@@ -2673,7 +2754,7 @@ class CparController extends Controller
         $auditor = $request->get("auditor");
         $tanggal = $request->get("date");
 
-        $query = 'SELECT * FROM standarisasi_audit_isos where deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" and auditor_name = "'.$auditor.'" and tanggal = "'.$tanggal.'" order by klausul asc';
+        $query = 'SELECT * FROM standarisasi_audit_isos where deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" and auditor_name = "'.$auditor.'" and tanggal = "'.$tanggal.'" order by status desc, id asc';
         $detail = db::select($query);
 
         $response = array(

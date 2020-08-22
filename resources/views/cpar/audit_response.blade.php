@@ -76,7 +76,7 @@
 
     <?php $user = STRTOUPPER(Auth::user()->username)?>
 
-    @if($std->auditee_perbaikan != null && $std->auditee_pencegahan != null && $std->auditee_perbaikan != null)
+    @if($std->auditor_penyebab != null && $std->auditee_perbaikan != null && $std->auditee_pencegahan != null && $std->auditee_perbaikan != null)
 
      @if($std->posisi == "auditee")
          <a class="btn btn-sm btn-success pull-right" data-toggle="tooltip" title="Send Email" onclick="sendemailpenanganan({{ $std->id }})" style="width:200px">Send Email</a>
@@ -139,12 +139,21 @@
                 </div>
               </div>
 
+
+              <div class="col-sm-6" style="margin-top: 15px">              
+                <label class="col-sm-12" style="font-size: 18px;padding-left: 0">Penyebab Permasalahan</label>
+                <div class="col-sm-12" style="padding-left: 0">
+                  <textarea type="text" class="form-control" name="auditor_penyebab" placeholder="Penyebab Permasalahan"><?= $std->auditor_penyebab  ?></textarea>
+                </div>
+              </div>
+
               <div class="col-sm-6" style="margin-top: 15px">              
                 <label class="col-sm-12" style="font-size: 18px;padding-left: 0">Tindakan Perbaikan</label>
                 <div class="col-sm-12" style="padding-left: 0">
                   <textarea type="text" class="form-control" name="auditee_perbaikan" placeholder="Tindakan Perbaikan" style="height: 100%"><?= $std->auditee_perbaikan ?></textarea>
                 </div>
               </div>
+
 
               <div class="col-sm-6" style="margin-top: 15px">              
                 <label class="col-sm-12" style="font-size: 18px;padding-left: 0">Tindakan Pencegahan</label>
@@ -153,7 +162,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-6 col-sm-offset-3" style="margin-top: 15px">              
+              <div class="col-sm-6" style="margin-top: 15px">              
                 <label class="col-sm-12" style="font-size: 18px;padding-left: 0">Biaya Yang Dikeluarkan Untuk Perbaikan / Uraian Perbaikan</label>
                 <div class="col-sm-12" style="padding-left: 0">
                   <textarea type="text" class="form-control" name="auditee_biaya" placeholder="Masukkan Biaya"><?= $std->auditee_biaya  ?></textarea>
@@ -240,6 +249,11 @@
       })
     }
 
+
+    CKEDITOR.replace('auditor_penyebab' ,{
+        filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}',
+        height: '350px'
+    });
 
     CKEDITOR.replace('auditee_perbaikan' ,{
         filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}',

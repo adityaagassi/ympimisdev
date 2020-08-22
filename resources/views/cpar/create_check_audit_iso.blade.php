@@ -175,7 +175,7 @@
 							<th>Subject</th>
 							<th>Question</th>
 							<th>Condition</th>
-							<th>Note</th>
+							<th>Permasalahan</th>
 							<th>Evidence</th>
 						</tr>
 					</thead>
@@ -191,7 +191,7 @@
 </section>
 
 <div class="modal fade" id="modalFirst">
-	<div class="modal-dialog modal-sm">
+	<div class="modal-dialog modal-sm" style="width: 400px">
 		<div class="modal-content">
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
@@ -215,8 +215,11 @@
 					</div>
 
 					<div class="form-group">
-						<button class="btn btn-success" onclick="selectData()">Submit</button>
+						<a href="{{ url("index/audit_iso/cek_report")}}" class="btn btn-danger btn-sm" target="_blank" style="color:white;margin-right: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil {{ $page }} </a>
+						<button class="btn btn-success pull-right" onclick="selectData()">Submit</button>
+
 					</div>
+
 				</div>
 			</div>
 		</div>
@@ -234,7 +237,8 @@
 			</div>
 			<div class="modal-footer">
 				<a  class="btn btn-danger" href="{{ url('') }}">Tutup</button>
-				<a id="modalDeleteButton" href="#" type="button" class="btn btn-success">Buat Laporan Audit ISO</a>
+				<a href="{{ url("index/audit_iso/cek_report")}}" class="btn btn-success btn-sm" target="_blank" style="color:white;margin-right: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil {{ $page }} </a>
+				<!-- <a id="modalDeleteButton" href="#" type="button" class="btn btn-success">Buat Laporan Audit ISO</a> -->
 			</div>
 		</div>
 	</div>
@@ -327,10 +331,10 @@
 				body += "<td width='5%' id='klausul_"+count+"'>"+value.klausul+"<input type='hidden' id='id_point_"+count+"' value='"+value.id+"'><input type='hidden' id='jumlah_point_"+count+"' value='"+result.lists.length+"'></td>";
 				body += "<td width='10%' id='point_judul_"+count+"'>"+value.point_judul+"</td>";
 				body += "<td width='20%' id='point_question_"+count+"'>"+value.point_question+"</td>";
-				body += "<td><label class='radio' style='margin-top: 5px;margin-left: 5px'>Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>Not Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Not Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>None<input type='radio' id='status_"+count+"' name='status_"+count+"' value='None'><span class='checkmark'></span></label></td>";
-				body += "<td width='20%'><textarea id='note_"+count+"' height='50%'></textarea></td>";
+				body += "<td><label class='radio' style='margin-top: 5px;margin-left: 5px'>Good<input onclick='goodchoice(this.id)' type='radio' id='status_"+count+"' name='status_"+count+"' value='Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>Not Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Not Good' onclick='notgoodchoice(this.id)'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>None<input type='radio' id='status_"+count+"' name='status_"+count+"' value='None' onclick='goodchoice(this.id)'><span class='checkmark'></span></label></td>";
+				body += "<td width='20%'><textarea id='note_"+count+"' height='50%' style='display:none'></textarea></td>";
 				var idid = '#file_'+count;
-				body += '<td width="20%"><input type="file" style="display:none" onchange="readURL(this,\''+count+'\');" id="file_'+count+'"><button class="btn btn-primary btn-lg" id="btnImage_'+count+'" value="Photo" onclick="buttonImage(\''+idid+'\')">Photo</button><img width="150px" id="blah_'+count+'" src="" style="display: none" alt="your image" /></td>';
+				body += '<td width="20%"><input type="file" style="display:none" onchange="readURL(this,\''+count+'\');" id="file_'+count+'"><button class="btn btn-primary btn-lg" id="btnImage_'+count+'" value="Photo" style="display:none" onclick="buttonImage(\''+idid+'\')">Photo</button><img width="150px" id="blah_'+count+'" src="" style="display: none" alt="your image" /></td>';
 				body += "</tr>";
 				count++;
 			})
@@ -348,6 +352,18 @@
 
 	function buttonImage(idfile) {
 		$(idfile).click();
+	}
+
+	function goodchoice(id) {
+		var idid = id.split('_');
+		$('#note_'+idid[1]).hide();
+		$('#btnImage_'+idid[1]).hide();
+	}
+
+	function notgoodchoice(id) {
+		var idid = id.split('_');
+		$('#note_'+idid[1]).show();
+		$('#btnImage_'+idid[1]).show();
 	}
 
 	function readURL(input,idfile) {
@@ -375,12 +391,22 @@
 
 
 			for (var z = 1; z <= countpoint; z++) {
+
 				if($('input[id="status_'+z+'"]:checked').val() == undefined){
 					$('#loading').hide();
 					alert('Mohon Isi Semua Kolom Kondisi');
 					return false;
 				}
+
+				if($('input[id="status_'+z+'"]:checked').val() == "Not Good"){
+					if($('#note_'+z).val() == "" || $('#file_'+z).prop('files')[0] == undefined){
+						$('#loading').hide();
+						alert('Mohon Lengkapi Foto & Catatan Hasil Audit Untuk Kondisi NG');
+						return false;
+					}
+				}
 			}
+
 
 			for(var i = 0; i < countpoint; i++){
 				var a = i+1;

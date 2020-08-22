@@ -78,29 +78,29 @@
 							
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
 					<thead style="font-weight: bold; color: white; background-color: #607d8b;">
-						<tr>
+						<!-- <tr>
 							<th colspan="2">PT. Yamaha Musical Products Indonesia</th>
 							<th rowspan="2">Tanggal<br> 21 Maret 2019</th>
 							<th rowspan="2" colspan="2">Revisi  00</th>
 							<th rowspan="2" colspan="2">ISO 45001:2018</th>
-						</tr>
+						</tr> -->
 						<tr>
-							<th colspan="2" style="border-right: 1px solid black">
-							Checklist
-							(Internal Audit ISO)
+							<th colspan="7" style="border-right: 1px solid black;background: #7e5686">
+							Laporan Hasil Internal Audit ISO
 							</th>
 						</tr>
 
 						<tr>
-							<th rowspan="2">Ref</th>
-							<th rowspan="2">Requirement & Question</th>
-							<th colspan="2">Status</th>
-							<th rowspan="2" style="border-left: 1px solid black">Note</th>
-							<th rowspan="2">Evidence</th>
+							<th rowspan="2" style="background-color: #cddc39;color: black">Ref</th>
+							<th rowspan="2" style="background-color: #cddc39;color: black">Requirement & Question</th>
+							<th colspan="2" style="background-color: #cddc39;color: black">Status</th>
+							<th rowspan="2" style="border-left: 1px solid black;background-color: #cddc39;color: black">Note</th>
+							<th rowspan="2" style="background-color: #cddc39;color: black">Evidence</th>
+							<th rowspan="2" style="background-color: #cddc39;color: black">Action</th>
 						</tr>
 						<tr>
-							<th>Good</th>
-							<th style="border-right: 1px solid black">No Good</th>
+							<th style="background-color: #cddc39;color: black">Good</th>
+							<th style="border-right: 1px solid black;background-color: #cddc39;color: black">No Good</th>
 						</tr>
 
 					</thead>
@@ -255,6 +255,7 @@
 		var auditor = $('#auditor').val();
 		var date = $('#date').val();
 
+
 		var data = {
 			location:location,
 			category:category,
@@ -266,18 +267,21 @@
 
 		$.get('{{ url("fetch/audit_iso/cek_report") }}', data, function(result, status, xhr){
 			$("#loading").hide();
-			openSuccessGritter("Success","Report Has Been Load");
-			var body = "";
+
 			$('#tableResult').DataTable().clear();
 		    $('#tableResult').DataTable().destroy();
+
+			var body = "";
 		    $('#body_cek').html("");
 
 		    count = 1;
-		    console.log(result.lists);
 			$.each(result.lists, function(index, value){
+				// console.log(count);
+
 				body += "<tr>";
 				body += "<td width='5%'>"+value.klausul+"</td>";
 				body += "<td width='30%'>"+value.point_judul+"<br>"+value.point_question+"</td>";
+
 				if (value.status == "Good") {
 					body += "<td style='color:green'>Good</td>";					
 				}else{
@@ -296,6 +300,7 @@
 				else{
 					body += "<td width='20%'>-</td>";
 				}
+				
 				if (value.foto != null) {
 					body += "<td width='20%'><img src={{url('files/audit_iso/')}}/"+value.foto+" width='200'></td>";					
 				}
@@ -303,9 +308,22 @@
 					body += "<td width='20%'>Tidak Ada Foto</td>";
 				}
 
+				if (value.status == "Not Good") {
+					if (value.status_ditangani == null) {
+						body += "<td width='10%'><a href={{url('index/audit_iso/create/')}}/"+value.id+" class='btn btn-success'>Buat Laporan</a></td>";
+					}else{
+						body += "<td width='10%'><span style='color:green'>Sudah Ditangani</span></td>";
+					}
+				}
+				else{
+					body += "<td width='10%'>-</td>";
+				}
+
 				body += "</tr>";
 				count++;
 			})
+
+			// console.log(body);
 
 			$("#body_cek").append(body);
 
@@ -313,7 +331,8 @@
 				responsive: true,
 				paging: false,
 				searching: false,
-				bInfo : false
+				bInfo : false,
+				sorting: false
 			} );
 		})
 	}
