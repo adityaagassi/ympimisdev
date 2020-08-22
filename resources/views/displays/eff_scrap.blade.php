@@ -158,7 +158,7 @@
 								return this.value/1000+'K';
 							}
 						},
-						endOnTick: false
+						endOnTick: true
 					},
 					tooltip: {
 						formatter: function () {
@@ -237,7 +237,7 @@
 								return this.value/1000+'K';
 							}
 						},
-						endOnTick: false
+						endOnTick: true
 					},
 					tooltip: {
 						formatter: function () {
