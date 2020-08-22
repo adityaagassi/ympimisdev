@@ -428,7 +428,7 @@
 	});
 
 	$(function () {
-		$('.select2').select2({ dropdownParent: $('#createModal'), width: '100%' })
+		$('.select2').select2({ dropdownParent: $('#createModal'), width: '100%', allowClear: true })
 	})
 	$(function () {
 		$('.select3').select2({ dropdownParent: $('#createModal'), width: '100%', tags: true })

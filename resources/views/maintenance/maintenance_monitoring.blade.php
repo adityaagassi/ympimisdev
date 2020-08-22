@@ -44,13 +44,13 @@
 			<table id="masterTable" class="table">
 				<thead>
 					<tr>
-						<th rowspan='2' style="width: 5%">ORDER NO.</th>
-						<th rowspan='2' style="border-left: 3px solid #f44336; width: 5%">REQUESTER</th>
+						<th rowspan='2' style="width: 3%">ORDER NO.</th>
+						<th rowspan='2' style="border-left: 3px solid #f44336; width: 12%">REQUESTER</th>
 						<th rowspan='2' style="border-left: 3px solid #f44336; width: 5%">PRIORITY</th>
-						<th rowspan='2' style="border-left: 3px solid #f44336; width: 5%">JOB TYPE</th>
-						<th rowspan='2' style="border-left: 3px solid #f44336; width: 5%">PIC</th>
+						<th rowspan='2' style="border-left: 3px solid #f44336;">JOB TYPE</th>
+						<th rowspan='2' style="border-left: 3px solid #f44336; width: 12%">PIC</th>
 						<th colspan="3" style="border-left: 3px solid #f44336; width: 5%">STATUS</th>
-						<th rowspan='2' style="border-left: 3px solid #f44336; width: 15%">ESTIMATED TIME</Tth>
+						<th rowspan='2' style="border-left: 3px solid #f44336; width: 25%">ESTIMATED TIME</Tth>
 						</tr>
 						<tr>
 							<th style="border-left: 3px solid #f44336">REQUESTED</th>
@@ -127,13 +127,15 @@
 				tableData += '<tr>';
 				tableData += '<td>'+ value.order_no +'</td>';
 				tableData += '<td style="border-left: 3px solid #f44336">'+ value.requester +'</td>';
-				tableData += '<td style="border-left: 3px solid #f44336">'+ value.priority +'</td>';
+
 				if(value.priority == 'Urgent'){
 					var priority = '<span style="font-size: 13px;" class="label label-danger">Urgent</span>';
 				}else{
 					var priority = '<span style="font-size: 13px;" class="label label-default">Normal</span>';
 				}
-				tableData += '<td style="border-left: 3px solid #f44336">'+ value.type +'</td>';
+
+				tableData += '<td style="border-left: 3px solid #f44336">'+ priority +'</td>';
+				tableData += '<td style="border-left: 3px solid #f44336">'+ value.type +' - '+ value.category +'</td>';
 				tableData += '<td style="border-left: 3px solid #f44336">'+ (value.pic || '-') +'</td>';
 				tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-success">'+ value.request_date +'</span></td>';
 				tableData += '<td><span class="label label-success">'+ (value.target_date || '-') +'</span></td>';

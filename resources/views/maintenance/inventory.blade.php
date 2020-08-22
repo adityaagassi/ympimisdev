@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
@@ -10,6 +10,8 @@
   }
   thead>tr>th{
     text-align:center;
+    padding: 3px;
+    color: white;
   }
   tbody>tr>td{
     text-align:center;
@@ -21,14 +23,19 @@
     overflow: visible;
   }
   table.table-bordered{
-    border:1px solid black;
+    border:1px solid white;
   }
   table.table-bordered > thead > tr > th{
-    border:1px solid black;
+    border:1px solid white;
+    color: white;
+  }
+  table.table-bordered > thead > tr > th > input{
+    color: black;
   }
   table.table-bordered > tbody > tr > td{
     border:1px solid rgb(211,211,211);
     padding: 3px;
+    background-color: #fffcb7;
   }
   table.table-bordered > tfoot > tr > th{
     border:1px solid rgb(211,211,211);
@@ -54,14 +61,6 @@
     {{ $title }}
     <small><span class="text-purple"> {{ $title_jp }}</span></small>
   </h1>
-
-  <ol class="breadcrumb">
-    @if($permission == 1)
-    <button class="btn bg-purple" onclick="modalNew()"><b><i class="fa fa-plus"></i>&nbsp;New Spare Part</b></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="{{ url("/index/maintenance/inventory/in") }}" target="_blank" class="btn btn-success"><b><i class="fa fa-arrow-down"></i>&nbsp;IN</b></a>
-    @endif
-    <a href="{{ url("/index/maintenance/inventory/out") }}" target="_blank" class="btn btn-danger"><b><i class="fa fa-arrow-up"></i>&nbsp;OUT</b></a>
-  </ol>
 </section>
 @stop
 @section('content')
@@ -69,6 +68,35 @@
 <section class="content">
   <div class="row">
     <div class="col-md-12" style="overflow-x: auto;">
+      <table style="width: 100%; border: 1px solid white" class="table">
+        <thead>
+          <tr>
+            <th colspan="6">SPARE PART OUT</th>
+          </tr>
+          <tr>
+            <td width="12%">
+              <input type="text" class="form-control" id="emp_id" placeholder="Scan ID Card...">
+            </td>
+            <td width="12%">
+              <input type="text" class="form-control" id="barcode_scan" placeholder="Scan Part...">
+            </td>
+            <th width="12%">Sparepart Number</th>
+            <th>Sparepart Name</th>
+            <th width="7%">Stock</th>
+            <th width="7%">Qty</th>
+            <!-- <th width="5%"></th> -->
+          </tr>
+        </thead>
+        <tbody id="body_out" style="color: white"></tbody>
+      </table>
+      <br>
+      <div class="pull-right">
+        @if($permission == 1)
+        <button class="btn bg-purple" onclick="modalNew()"><b><i class="fa fa-plus"></i>&nbsp;New Spare Part</b></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="{{ url("/index/maintenance/inventory/in") }}" target="_blank" class="btn btn-success"><b><i class="fa fa-arrow-down"></i>&nbsp;IN</b></a>
+        @endif
+      </div>
+
       <table id="tableList" class="table table-bordered table-striped table-hover" style="width: 100%;">
         <thead style="background-color: rgba(126,86,134,.7);">
           <tr>
@@ -418,8 +446,36 @@
     }
   });
 
+  var op = '<?php echo json_encode($op_mtc) ?>';
+  ops = op.split('},{');
+  var op2 = [];
+  var scan_arr = [];
+
+  $.each(ops, function(index, value){
+    // var tmp = value.split(":")[1].substr(1, 9);
+    tmp = value.replace(/\"/g, ""); 
+    tmp = tmp.replace(/\[/g, ""); 
+    tmp = tmp.replace(/\{/g, ""); 
+    tmp = tmp.replace(/\}/g, ""); 
+    tmp = tmp.replace(/\]/g, ""); 
+    tmp = tmp.replace("tag:", ""); 
+    tmp = tmp.replace("name:", ""); 
+
+    tmp = tmp.split(',');
+
+    if (tmp[0] != "null") {
+      op2.push({'tag': tmp[0], 'name': tmp[1]});
+    }
+
+  })
+
+  console.log(op2);
+
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
+
+    $("#emp_id").focus();
+
     $('.select2').select2({
       dropdownParent: $('#modalBaru'),
     });
@@ -617,6 +673,115 @@
     $.post('{{ url("post/maintenance/inven/list/edit") }}', data, function(result, status, xhr){
       openSuccessGritter("Success", "Spare parts Added Successfully");
     })
+  }
+
+  $('#emp_id').keyup(function(e){
+    if(e.keyCode == 13)
+    {
+      var stat = 0;
+      var name = "";
+      var vals = $(this).val();
+      $.each(op2, function(index, value){
+        if (vals == value.tag) {
+          stat = 1;
+          name = value.name;
+        }
+      })
+
+      if (stat == 1) {
+        $(this).val(name);
+        $(this).attr("readonly","true");
+        $("#barcode_scan").focus();
+        openSuccessGritter('Success', '');
+      } else {
+        $(this).val("");
+        openErrorGritter('Error', 'Karyawan Tidak Terdaftar');
+      }
+    }
+  });
+
+  $('#barcode_scan').keyup(function(e){
+    if(e.keyCode == 13)
+    {
+      var body = "";
+      var vals = $(this).val();
+
+      var data = {
+        code: vals
+      }
+
+      $(this).val("");
+      $.get('{{ url("fetch/maintenance/inven/code") }}', data, function(result, status, xhr){
+        if (result.status) {
+          if (result.datas.stock < 1) {
+            openErrorGritter('Gagal', 'Stok '+result.datas.part_number+' tidak Mencukupi');
+            return false;
+          }
+
+          if (scan_arr.length == 0) {
+            scan_arr.push({'item_number' : result.datas.part_number, 'part_name' : result.datas.part_name+" - "+result.datas.specification, 'stock' : result.datas.stock, 'qty' : 1});
+            minus_stok(result.datas.part_number, 'out');
+          } else {
+            var qty = 0;
+            var stat = 0;
+
+            $.each(scan_arr, function(index, value){
+              if (typeof value.item_number !== 'undefined') {
+                if (value.item_number == result.datas.part_number) {
+                  qty = parseInt(value.qty);
+                  stat = 1;
+
+                  if (result.datas.stock < qty+1) {
+                    openErrorGritter('Gagal', 'Stok '+result.datas.part_number+' tidak Mencukupi');
+                    return false;
+                  }
+
+                  value.qty = qty + 1;
+                  minus_stok(result.datas.part_number, 'out');
+                }
+              }
+            })
+
+            if (stat == 0) {
+              scan_arr.push({'item_number' : result.datas.part_number, 'part_name' : result.datas.part_name+" - "+result.datas.specification, 'stock' : result.datas.stock, 'qty' : 1});
+              openSuccessGritter('Sukses', 'Sparepart Berhasil discan');
+            }
+          }
+
+          $("#body_out").empty();
+
+          $.each(scan_arr, function(index, value){
+            body += "<tr>";
+            body += "<td></td>";
+            body += "<td></td>";
+            body += "<td>"+value.item_number+"</td>";
+            body += "<td>"+value.part_name+"</td>";
+            body += "<td>"+value.stock+"</td>";
+            body += "<td id='"+value.item_number+"'>"+value.qty+"</td>";
+            body += "</tr>";
+          })
+
+          $("#body_out").append(body);
+        } else {
+          openErrorGritter('Gagal', 'Kode Part '+vals+' Tidak Terdaftar');
+        }
+      })
+    }
+  })
+
+  function minus_stok(material_number, stat) {
+    var data = {
+      material_number : material_number,
+      status : stat
+    }
+    $.post('{{ url("post/maintenance/inven/transaction") }}', data, function(result, status, xhr){
+      if (result.status) {
+        openSuccessGritter('Sukses', 'Sparepart berhasil dikurangi');
+      } else {
+        openErrorGritter('Gagal', result.message);
+      }
+    })
+
   }
 
   function openSuccessGritter(title, message){
