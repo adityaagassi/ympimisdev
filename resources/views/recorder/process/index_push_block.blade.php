@@ -364,7 +364,7 @@
 									<div class="col-xs-12">
 										<div class="row">
 											<div class="col-xs-12">
-												<input id="injection_date_head" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Head">
+												<input id="injection_date_head" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Head" readonly>
 											</div>
 										</div>
 									</div>
@@ -382,7 +382,7 @@
 									<div class="col-xs-12">
 										<div class="row">
 											<div class="col-xs-12">
-												<input id="injection_date_block" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Block">
+												<input id="injection_date_block" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Block" readonly>
 											</div>
 										</div>
 									</div>
@@ -2146,8 +2146,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
@@ -2155,8 +2155,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 			}else{
 				tableData += '<tr>';
@@ -2218,8 +2218,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
@@ -2227,8 +2227,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 			}else{
 				tableData += '<tr>';
@@ -2290,8 +2290,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
@@ -2299,8 +2299,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 			}else{
 				tableData += '<tr>';
@@ -2336,8 +2336,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 			}
 			$('#tableBodyResume3').append(tableData);
@@ -2362,8 +2362,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
@@ -2371,8 +2371,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 			}else{
 				tableData += '<tr>';
@@ -2434,8 +2434,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
@@ -2443,8 +2443,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 			}else{
 				tableData += '<tr>';
@@ -2506,8 +2506,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
@@ -2515,8 +2515,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 			}else{
 				tableData += '<tr>';
@@ -2578,8 +2578,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
@@ -2587,8 +2587,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 			}else{
 				tableData += '<tr>';
@@ -2650,8 +2650,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
@@ -2659,8 +2659,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
 				tableData += '</tr>';
 			}else{
 				tableData += '<tr>';
