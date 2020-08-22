@@ -265,7 +265,7 @@ class RecorderProcessController extends Controller
               $head = $request->get('head');
               $block = $request->get('block');
               $push_block_code = $request->get('push_block_code');
-              if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)") {
+              if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)" || $request->get('product_type') == "YRF21") {
                 for($i = 0; $i<8;$i++){
                   $check_date = $request->get('check_date');
                   $product_type = $request->get('product_type');
@@ -342,7 +342,7 @@ class RecorderProcessController extends Controller
               }
 
               $push_block_id_gen = $front."_".$request->get('check_date')."_".$request->get('product_type')."_".$request->get('pic_check');
-              if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)") {
+              if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)" || $request->get('product_type') == "YRF21") {
                 for($i = 0; $i<8;$i++){
                   $check_date = $request->get('check_date');
                   $product_type = $request->get('product_type');
@@ -406,7 +406,7 @@ class RecorderProcessController extends Controller
         $temp = [];
 
         // $ng_temp = PushBlockRecorderTemp::where('mesin',$mesin)->get();
-        if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)") {
+        if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)" || $request->get('product_type') == "YRF21") {
           for($i = 0; $i < 8; $i++){
             for($j = 0; $j < 2; $j++){
               $temptemp = PushBlockRecorderTemp::where('head',$array_head[$j])->where('block',$array_block[$i])->where('push_block_code',$remark)->where('product_type',$product_type)->get();
@@ -446,7 +446,7 @@ class RecorderProcessController extends Controller
               $block = $request->get('block');
               $push_block_code = $request->get('push_block_code');
               $notes = $request->get('notes');
-              if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)") {
+              if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)" || $request->get('product_type') == "YRF21") {
                 for($i = 0; $i<8;$i++){
                   $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->get();
                   foreach ($temptemp as $key) {

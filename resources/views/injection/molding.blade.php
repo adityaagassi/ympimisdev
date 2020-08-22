@@ -432,14 +432,14 @@
 						} else {
 							color = 'style="background-color: #ffd8b7;font-size: 20px;"';
 						}
-					if (value.total_running_shot >= 15000) {
+					if (value.shot >= 15000) {
 						color = 'style="background-color: #ff3030;font-size: 20px;color:white"';
 					}
-					moldingLog += '<tr onclick="fetchCount(\''+value.id+'\')">';
+					moldingLog += '<tr onclick="fetchCount(\''+value.mesin+'\',\''+value.part+'\',\''+value.color+'\',\''+value.shot+'\')">';
 					moldingLog += '<td '+color+'>'+value.mesin+'</td>';
 					moldingLog += '<td '+color+'>'+value.part+'</td>';
 					moldingLog += '<td '+color+'>'+value.color+'</td>';
-					moldingLog += '<td '+color+'>'+value.total_running_shot+'</td>';
+					moldingLog += '<td '+color+'>'+value.shot+'</td>';
 					// moldingLog += '<td '+color+'>'+value.end_time+'</td>';
 					
 					moldingLog += '</tr>';				
@@ -505,21 +505,21 @@
 		});
 	}
 
-	function fetchCount(id){
-		var data = {
-			id : id,
-		}
-		$.get('{{ url("fetch/injeksi/fetch_molding") }}', data, function(result, status, xhr){
-			if(result.status){
-				$('#mesin_lepas').html(result.datas.mesin);
-				$('#part_lepas').html(result.datas.part);
-				$('#color_lepas').html(result.datas.color);
-				$('#total_shot_lepas').html(result.datas.total_running_shot);
-			}
-			else{
-				alert('Attempt to retrieve data failed');
-			}
-		});
+	function fetchCount(mesin,part,color,shot){
+		// var data = {
+		// 	id : id,
+		// }
+		// $.get('{{ url("fetch/injeksi/fetch_molding") }}', data, function(result, status, xhr){
+		// 	if(result.status){
+				$('#mesin_lepas').html(mesin);
+				$('#part_lepas').html(part);
+				$('#color_lepas').html(color);
+				$('#total_shot_lepas').html(shot);
+		// 	}
+		// 	else{
+		// 		alert('Attempt to retrieve data failed');
+		// 	}
+		// });
 	}
 
 	function fetchCountPasang(id){

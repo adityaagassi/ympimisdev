@@ -1214,16 +1214,31 @@
 		var array_head2 = [];
 		var array_block2 = [];
 
-		for(var i = 1; i <= 4; i++){
-			for(var j = 1; j <= 4; j++){
-				array_head.push($("#head_"+[j]).val());
-				array_block.push($("#block_"+[i]).val());
+		if (product_type == 'YRF21') {
+			for(var i = 1; i <= 4; i++){
+				for(var j = 1; j <= 2; j++){
+					array_head.push($("#head_"+[j]).val());
+					array_block.push($("#block_"+[i]).val());
+				}
 			}
-		}
-		for(var k = 5; k <= 8; k++){
-			for(var l = 1; l <= 4; l++){
-				array_head2.push($("#head_"+[l]).val());
-				array_block2.push($("#block_"+[k]).val());
+			for(var k = 5; k <= 8; k++){
+				for(var l = 1; l <= 2; l++){
+					array_head2.push($("#head_"+[l]).val());
+					array_block2.push($("#block_"+[k]).val());
+				}
+			}
+		}else{
+			for(var i = 1; i <= 4; i++){
+				for(var j = 1; j <= 4; j++){
+					array_head.push($("#head_"+[j]).val());
+					array_block.push($("#block_"+[i]).val());
+				}
+			}
+			for(var k = 5; k <= 8; k++){
+				for(var l = 1; l <= 4; l++){
+					array_head2.push($("#head_"+[l]).val());
+					array_block2.push($("#block_"+[k]).val());
+				}
 			}
 		}
 
@@ -1277,11 +1292,20 @@
 		var array_head = [];
 		var array_block = [];
 
-		for(var i = 1; i <= 8; i++){
-			array_block.push($("#block_"+[i]).val());
-		}
-		for(var j = 1; j <= 4; j++){
-			array_head.push($("#head_"+[j]).val());
+		if ($('#product_fix2').text() == 'YRF21') {
+			for(var i = 1; i <= 8; i++){
+				array_block.push($("#block_"+[i]).val());
+			}
+			for(var j = 1; j <= 2; j++){
+				array_head.push($("#head_"+[j]).val());
+			}
+		}else{
+			for(var i = 1; i <= 8; i++){
+				array_block.push($("#block_"+[i]).val());
+			}
+			for(var j = 1; j <= 4; j++){
+				array_head.push($("#head_"+[j]).val());
+			}
 		}
 
 		var remark = '{{$remark}}';
@@ -1344,8 +1368,8 @@
 
 		var notes =  $("#notes").val();
 
-		var head_value =  $("#head_value").val();
-		var block_value =  $("#block_value").val();
+		var head_value =  $("#head_value").text();
+		var block_value =  $("#block_value").text();
 
 		var check_date = $("#check_date").text();
 		var injection_date_head = $("#injection_date_head_fix").text();
@@ -1372,77 +1396,100 @@
 
 		var push_block_code = '{{ $remark }}';
 
-		for(var i = 1; i <= 4; i++){
-			for(var j = 1; j <= 4; j++){
-				array_head.push($("#head_"+[j]).val());
-				array_block.push($("#block_"+[i]).val());
-				push_pull.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
-				judgement.push($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
-				ketinggian.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
-				judgementketinggian.push($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
+		if ($('#product_fix2').text() == 'YRF21') {
+			for(var i = 1; i <= 4; i++){
+				for(var j = 1; j <= 2; j++){
+					array_head.push($("#head_"+[j]).val());
+					array_block.push($("#block_"+[i]).val());
+					push_pull.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					judgement.push($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
+					ketinggian.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					judgementketinggian.push($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
+				}
 			}
-		}
-		for(var k = 5; k <= 8; k++){
-			for(var l = 1; l <= 4; l++){
-				array_head2.push($("#head_"+[l]).val());
-				array_block2.push($("#block_"+[k]).val());
-				push_pull2.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
-				judgement2.push($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
-				ketinggian2.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
-				judgementketinggian2.push($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
+			for(var k = 5; k <= 8; k++){
+				for(var l = 1; l <= 2; l++){
+					array_head2.push($("#head_"+[l]).val());
+					array_block2.push($("#block_"+[k]).val());
+					push_pull2.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					judgement2.push($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
+					ketinggian2.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					judgementketinggian2.push($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
+				}
+			}
+		}else{
+			for(var i = 1; i <= 4; i++){
+				for(var j = 1; j <= 4; j++){
+					array_head.push($("#head_"+[j]).val());
+					array_block.push($("#block_"+[i]).val());
+					push_pull.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					judgement.push($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
+					ketinggian.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					judgementketinggian.push($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
+				}
+			}
+			for(var k = 5; k <= 8; k++){
+				for(var l = 1; l <= 4; l++){
+					array_head2.push($("#head_"+[l]).val());
+					array_block2.push($("#block_"+[k]).val());
+					push_pull2.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					judgement2.push($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
+					ketinggian2.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					judgementketinggian2.push($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
+				}
 			}
 		}
 
-			var data = {
-				push_block_code : push_block_code,
-				check_date : check_date,
-				injection_date_head : injection_date_head,
-				injection_date_block : injection_date_block,
-				mesin_head : mesin_head,
-				mesin_block : mesin_block,
-				pic_check : pic_check,
-				product_type : product_type,
-				head : array_head,
-				block : array_block,
-				push_pull : push_pull,
-				judgement : judgement,
-				ketinggian : ketinggian,
-				judgementketinggian : judgementketinggian,
-				notes : notes
+		var data = {
+			push_block_code : push_block_code,
+			check_date : check_date,
+			injection_date_head : injection_date_head,
+			injection_date_block : injection_date_block,
+			mesin_head : mesin_head,
+			mesin_block : mesin_block,
+			pic_check : pic_check,
+			product_type : product_type,
+			head : array_head,
+			block : array_block,
+			push_pull : push_pull,
+			judgement : judgement,
+			ketinggian : ketinggian,
+			judgementketinggian : judgementketinggian,
+			notes : notes
+		}
+		$.post('{{ url("index/push_block_recorder/update_temp") }}', data, function(result, status, xhr){
+			if(result.status){
+				// openSuccessGritter('Success', result.message);
 			}
-			$.post('{{ url("index/push_block_recorder/update_temp") }}', data, function(result, status, xhr){
-				if(result.status){
-					// openSuccessGritter('Success', result.message);
-				}
-				else{
-					// openErrorGritter('Error!', result.message);
-				}
-			});
-			var data2 = {
-				push_block_code : push_block_code,
-				check_date : check_date,
-				injection_date_head : injection_date_head,
-				injection_date_block : injection_date_block,
-				mesin_head : mesin_head,
-				mesin_block : mesin_block,
-				pic_check : pic_check,
-				product_type : product_type,
-				head : array_head2,
-				block : array_block2,
-				push_pull : push_pull2,
-				judgement : judgement2,
-				ketinggian : ketinggian2,
-				judgementketinggian : judgementketinggian2,
-				notes : notes
+			else{
+				// openErrorGritter('Error!', result.message);
 			}
-			$.post('{{ url("index/push_block_recorder/update_temp") }}', data2, function(result, status, xhr){
-				if(result.status){
-					// openSuccessGritter('Success', result.message);
-				}
-				else{
-					// openErrorGritter('Error!', result.message);
-				}
-			});
+		});
+		var data2 = {
+			push_block_code : push_block_code,
+			check_date : check_date,
+			injection_date_head : injection_date_head,
+			injection_date_block : injection_date_block,
+			mesin_head : mesin_head,
+			mesin_block : mesin_block,
+			pic_check : pic_check,
+			product_type : product_type,
+			head : array_head2,
+			block : array_block2,
+			push_pull : push_pull2,
+			judgement : judgement2,
+			ketinggian : ketinggian2,
+			judgementketinggian : judgementketinggian2,
+			notes : notes
+		}
+		$.post('{{ url("index/push_block_recorder/update_temp") }}', data2, function(result, status, xhr){
+			if(result.status){
+				// openSuccessGritter('Success', result.message);
+			}
+			else{
+				// openErrorGritter('Error!', result.message);
+			}
+		});
 	}
 
 	function konfirmasi(){
@@ -1453,8 +1500,8 @@
 
 		var push_block_id_gen =  $("#push_block_id_gen").val();
 
-		var head_value =  $("#head_value").val();
-		var block_value =  $("#block_value").val();
+		var head_value =  $("#head_value").text();
+		var block_value =  $("#block_value").text();
 
 		var tag_head =  $("#tag_head").val();
 		var tag_block =  $("#tag_block").val();
@@ -1491,48 +1538,96 @@
 
 		var push_block_code = '{{ $remark }}';
 
-		for(var i = 1; i <= 4; i++){
-			for(var j = 1; j <= 4; j++){
-				array_head.push($("#head_"+[j]).val());
-				array_block.push($("#block_"+[i]).val());
-				push_pull.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
-				judgement.push($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
-				ketinggian.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
-				judgementketinggian.push($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
-				if($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val() == '' || $("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val() == ''){
-					status_false++;
-				}
+		if ($('#product_fix2').text() == 'YRF21') {
+			for(var i = 1; i <= 4; i++){
+				for(var j = 1; j <= 2; j++){
+					array_head.push($("#head_"+[j]).val());
+					array_block.push($("#block_"+[i]).val());
+					push_pull.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					judgement.push($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
+					ketinggian.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					judgementketinggian.push($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
+					if($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val() == '' || $("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val() == ''){
+						status_false++;
+					}
 
-				if ($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text() == 'NG') {
-					push_pull_ng_name.push($("#head_"+[j]).val()+"-"+$("#block_"+[i]).val());
-					push_pull_ng_value.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
-				}
-				if ($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text() == 'NG') {
-					height_ng_name.push($("#head_"+[j]).val()+"-"+$("#block_"+[i]).val());
-					height_ng_value.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					if ($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text() == 'NG') {
+						push_pull_ng_name.push($("#head_"+[j]).val()+"-"+$("#block_"+[i]).val());
+						push_pull_ng_value.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					}
+					if ($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text() == 'NG') {
+						height_ng_name.push($("#head_"+[j]).val()+"-"+$("#block_"+[i]).val());
+						height_ng_value.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					}
 				}
 			}
-		}
-		for(var k = 5; k <= 8; k++){
-			for(var l = 1; l <= 4; l++){
-				array_head2.push($("#head_"+[l]).val());
-				array_block2.push($("#block_"+[k]).val());
-				push_pull2.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
-				judgement2.push($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
-				ketinggian2.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
-				judgementketinggian2.push($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
-				if($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val() == '' || $("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val() == ''){
-					status_false++;
-				}
+			for(var k = 5; k <= 8; k++){
+				for(var l = 1; l <= 2; l++){
+					array_head2.push($("#head_"+[l]).val());
+					array_block2.push($("#block_"+[k]).val());
+					push_pull2.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					judgement2.push($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
+					ketinggian2.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					judgementketinggian2.push($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
+					if($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val() == '' || $("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val() == ''){
+						status_false++;
+					}
 
-				if ($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text() == 'NG') {
-					push_pull_ng_name.push($("#head_"+[l]).val()+"-"+$("#block_"+[k]).val());
-					push_pull_ng_value.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
-				}
+					if ($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text() == 'NG') {
+						push_pull_ng_name.push($("#head_"+[l]).val()+"-"+$("#block_"+[k]).val());
+						push_pull_ng_value.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					}
 
-				if ($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text() == 'NG') {
-					height_ng_name.push($("#head_"+[l]).val()+"-"+$("#block_"+[k]).val());
-					height_ng_value.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					if ($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text() == 'NG') {
+						height_ng_name.push($("#head_"+[l]).val()+"-"+$("#block_"+[k]).val());
+						height_ng_value.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					}
+				}
+			}
+		}else{
+			for(var i = 1; i <= 4; i++){
+				for(var j = 1; j <= 4; j++){
+					array_head.push($("#head_"+[j]).val());
+					array_block.push($("#block_"+[i]).val());
+					push_pull.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					judgement.push($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
+					ketinggian.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					judgementketinggian.push($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text());
+					if($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val() == '' || $("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val() == ''){
+						status_false++;
+					}
+
+					if ($("#judgement_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text() == 'NG') {
+						push_pull_ng_name.push($("#head_"+[j]).val()+"-"+$("#block_"+[i]).val());
+						push_pull_ng_value.push($("#push_pull_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					}
+					if ($("#judgement2_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).text() == 'NG') {
+						height_ng_name.push($("#head_"+[j]).val()+"-"+$("#block_"+[i]).val());
+						height_ng_value.push($("#ketinggian_"+$("#head_"+[j]).val()+"_"+$("#block_"+[i]).val()).val());
+					}
+				}
+			}
+			for(var k = 5; k <= 8; k++){
+				for(var l = 1; l <= 4; l++){
+					array_head2.push($("#head_"+[l]).val());
+					array_block2.push($("#block_"+[k]).val());
+					push_pull2.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					judgement2.push($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
+					ketinggian2.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					judgementketinggian2.push($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text());
+					if($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val() == '' || $("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val() == ''){
+						status_false++;
+					}
+
+					if ($("#judgement_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text() == 'NG') {
+						push_pull_ng_name.push($("#head_"+[l]).val()+"-"+$("#block_"+[k]).val());
+						push_pull_ng_value.push($("#push_pull_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					}
+
+					if ($("#judgement2_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).text() == 'NG') {
+						height_ng_name.push($("#head_"+[l]).val()+"-"+$("#block_"+[k]).val());
+						height_ng_value.push($("#ketinggian_"+$("#head_"+[l]).val()+"_"+$("#block_"+[k]).val()).val());
+					}
 				}
 			}
 		}
@@ -1754,12 +1849,27 @@
 			$('#tableResume1').DataTable().clear();
 			$('#tableResume1').DataTable().destroy();
 			$('#tableBodyResume1').html("");
-			// console.log(result.datas)
 			var tableData = "";
-			// var count = 1;
-			// console.log(result.datas.cavity_1);
-			// $.each(result.datas, function(key, value) {
-				// console.log(value.cavity_1);
+			if ($('#product_fix2').text() == 'YRF21') {
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+			}else{
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
@@ -1796,9 +1906,7 @@
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
-
-				// count += 1;
-			// });
+			}
 			$('#tableBodyResume1').append(tableData);
 		});
 	}
@@ -1813,12 +1921,27 @@
 			$('#tableResume2').DataTable().clear();
 			$('#tableResume2').DataTable().destroy();
 			$('#tableBodyResume2').html("");
-			// console.log(result.datas)
 			var tableData = "";
-			// var count = 1;
-			// console.log(result.datas.cavity_1);
-			// $.each(result.datas, function(key, value) {
-				// console.log(value.cavity_1);
+			if ($('#product_fix2').text()) {
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+			}else{
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
@@ -1855,9 +1978,7 @@
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
-
-				// count += 1;
-			// });
+			}
 			$('#tableBodyResume2').append(tableData);
 		});
 	}
@@ -1872,12 +1993,27 @@
 			$('#tableResume3').DataTable().clear();
 			$('#tableResume3').DataTable().destroy();
 			$('#tableBodyResume3').html("");
-			// console.log(result.datas)
 			var tableData = "";
-			// var count = 1;
-			// console.log(result.datas.cavity_1);
-			// $.each(result.datas, function(key, value) {
-				// console.log(value.cavity_1);
+			if ($('#product_fix2').text() == 'YRF21') {
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+			}else{
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
@@ -1914,9 +2050,7 @@
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
-
-				// count += 1;
-			// });
+			}
 			$('#tableBodyResume3').append(tableData);
 		});
 	}
@@ -1931,12 +2065,27 @@
 			$('#tableResume4').DataTable().clear();
 			$('#tableResume4').DataTable().destroy();
 			$('#tableBodyResume4').html("");
-			// console.log(result.datas)
 			var tableData = "";
-			var count = 1;
-			// console.log(result.datas.cavity_1);
-			// $.each(result.datas, function(key, value) {
-				// console.log(value.cavity_1);
+			if ($('#product_fix2').text() == 'YRF21') {
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+			}else{
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
@@ -1973,9 +2122,7 @@
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
-
-				count += 1;
-			// });
+			}
 			$('#tableBodyResume4').append(tableData);
 		});
 	}
@@ -1990,12 +2137,27 @@
 			$('#tableResume5').DataTable().clear();
 			$('#tableResume5').DataTable().destroy();
 			$('#tableBodyResume5').html("");
-			// console.log(result.datas)
 			var tableData = "";
-			var count = 1;
-			// console.log(result.datas.cavity_1);
-			// $.each(result.datas, function(key, value) {
-				// console.log(value.cavity_1);
+			if ($('#product_fix2').text() == 'YRF21') {
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+			}else{
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
@@ -2032,9 +2194,7 @@
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
-
-				count += 1;
-			// });
+			}
 			$('#tableBodyResume5').append(tableData);
 		});
 	}
@@ -2049,12 +2209,27 @@
 			$('#tableResume6').DataTable().clear();
 			$('#tableResume6').DataTable().destroy();
 			$('#tableBodyResume6').html("");
-			// console.log(result.datas)
 			var tableData = "";
-			var count = 1;
-			// console.log(result.datas.cavity_1);
-			// $.each(result.datas, function(key, value) {
-				// console.log(value.cavity_1);
+			if ($('#product_fix2').text() == 'YRF21') {
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+			}else{
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
@@ -2091,9 +2266,7 @@
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
-
-				count += 1;
-			// });
+			}
 			$('#tableBodyResume6').append(tableData);
 		});
 	}
@@ -2108,12 +2281,27 @@
 			$('#tableResume7').DataTable().clear();
 			$('#tableResume7').DataTable().destroy();
 			$('#tableBodyResume7').html("");
-			// console.log(result.datas)
 			var tableData = "";
-			var count = 1;
-			// console.log(result.datas.cavity_1);
-			// $.each(result.datas, function(key, value) {
-				// console.log(value.cavity_1);
+			if ($('#product_fix2').text() == 'YRF21') {
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+			}else{
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
@@ -2150,9 +2338,7 @@
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
-
-				count += 1;
-			// });
+			}
 			$('#tableBodyResume7').append(tableData);
 		});
 	}
@@ -2167,12 +2353,27 @@
 			$('#tableResume8').DataTable().clear();
 			$('#tableResume8').DataTable().destroy();
 			$('#tableBodyResume8').html("");
-			// console.log(result.datas)
 			var tableData = "";
-			var count = 1;
-			// console.log(result.datas.cavity_1);
-			// $.each(result.datas, function(key, value) {
-				// console.log(value.cavity_1);
+			if ($('#product_fix2').text() == 'YRF21') {
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_1+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_1+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_1+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+				tableData += '<tr>';
+				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>2</b></td>';
+				tableData += '<td style="text-align:right">'+ result.datas.cavity_2 +'</td>';
+				tableData += '<td style="text-align:right">'+ block +'</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_2+'_'+block+'"></td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_2+'_'+block+'" value="0"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_2+'_'+block+'">OK</td>';
+				tableData += '</tr>';
+			}else{
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
@@ -2209,9 +2410,7 @@
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
-
-				count += 1;
-			// });
+			}
 			$('#tableBodyResume8').append(tableData);
 		});
 	}

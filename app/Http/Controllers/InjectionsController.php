@@ -4204,7 +4204,7 @@ class InjectionsController extends Controller
             // $tgl = $request->get('tgl');
             // $tag = $request->get('tag');
 
-        $molding = InjectionMoldingLog::where('status_maintenance','Running')->where('status','Running')->get();
+        $molding = DB::SELECT("select injection_molding_masters.part,status_mesin as mesin,last_counter as shot,COALESCE(injection_molding_logs.color,'-') as color from injection_molding_masters left join injection_molding_logs on injection_molding_logs.tag_molding = injection_molding_masters.tag where remark = 'RC' and injection_molding_masters.status = 'PASANG'");
 
         $response = array(
             'status' => true,            
@@ -5221,8 +5221,5 @@ class InjectionsController extends Controller
             return Response::json($response);
         }
     }
-
-
-
 }
 
