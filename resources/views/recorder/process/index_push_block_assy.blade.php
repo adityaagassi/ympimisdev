@@ -1922,7 +1922,7 @@
 			$('#tableResume2').DataTable().destroy();
 			$('#tableBodyResume2').html("");
 			var tableData = "";
-			if ($('#product_fix2').text()) {
+			if ($('#product_fix2').text() == 'YRF21') {
 				tableData += '<tr>';
 				tableData += '<td style="text-align:right;background-color:#605ca8;color:white"><b>1</b></td>';
 				tableData += '<td style="text-align:right">'+ result.datas.cavity_1 +'</td>';
