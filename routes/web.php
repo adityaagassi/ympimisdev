@@ -1320,6 +1320,7 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::post('delete/kdo', 'KnockDownController@deleteKd');
 	Route::post('delete/kdo_detail', 'KnockDownController@deleteKdDetail');
 });
+
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
 Route::get('fetch/kd_pack/{id}', 'KnockDownController@fetchKdPack');
 Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
@@ -2703,7 +2704,11 @@ Route::get('scan/recorder/tag_product', 'RecorderProcessController@scanProduct')
 Route::get('index/recorder/cdm', 'RecorderProcessController@indexCdm');
 Route::get('fetch/recorder/product', 'RecorderProcessController@fetchProduct');
 Route::get('fetch/cavity', 'RecorderProcessController@fetchCavity');
-Route::get('input/recorder/cdm', 'RecorderProcessController@inputCdm');
+Route::post('input/recorder/cdm', 'RecorderProcessController@inputCdm');
+Route::get('index/recorder/fetch_resume_cdm', 'RecorderProcessController@fetchResumeCdm');
+Route::get('fetch/recorder/cdm', 'RecorderProcessController@fetchCdm');
+Route::get('index/recorder/cdm_report', 'RecorderProcessController@indexCdmReport');
+Route::get('fetch/recorder/cdm_report', 'RecorderProcessController@fetchCdmReport');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
@@ -2918,6 +2923,11 @@ Route::get('index/audit_iso/report_point_audit', 'CparController@ReportHasilAudi
 
 Route::get('index/audit_iso/cek_report', 'CparController@check_audit_report');
 Route::get('fetch/audit_iso/cek_report', 'CparController@fetch_audit_report');
+
+//Form Laporan Ketidaksesuaian
+
+Route::get('index/audit_iso/create/{id}', 'CparController@audit_create_checklist');
+Route::post('post/audit_iso/create', 'CparController@audit_post_create');
 
 
 //CUBEACON WAREHOUSE

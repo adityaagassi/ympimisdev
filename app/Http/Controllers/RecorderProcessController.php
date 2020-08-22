@@ -33,6 +33,7 @@ use App\Mail\SendEmail;
 use App\InjectionInventory;
 use App\Inventory;
 use App\PushBlockNotProcess;
+use App\InjectionCdmCheck;
 
 class RecorderProcessController extends Controller
 {
@@ -2926,6 +2927,507 @@ class RecorderProcessController extends Controller
             );
             return Response::json($response);
         }
+    }
+
+    public function indexCdm()
+    {
+      $head_a_bawah = 124;
+      $head_a_atas = 124.5;
+      $head_b_bawah = 22.5;
+      $head_b_atas = 22.8;
+
+      $middle_a_bawah = 173.5;
+      $middle_a_atas = 173.7;
+      $middle_b_bawah = 11.8;
+      $middle_b_atas = 11.9;
+
+      $foot_a_bawah = 13.3;
+      $foot_a_atas = 14.7;
+      $foot_b_bawah = 62.8;
+      $foot_b_atas = 63.1;
+
+      return view('recorder.process.index_cdm')
+      ->with('machine', $this->mesin)
+      ->with('head_a_bawah', $head_a_bawah)
+      ->with('head_a_atas', $head_a_atas)
+      ->with('head_b_bawah', $head_b_bawah)
+      ->with('head_b_atas', $head_b_atas)
+      ->with('middle_a_bawah', $middle_a_bawah)
+      ->with('middle_a_atas', $middle_a_atas)
+      ->with('middle_b_bawah', $middle_b_bawah)
+      ->with('middle_b_atas', $middle_b_atas)
+      ->with('foot_a_bawah', $foot_a_bawah)
+      ->with('foot_a_atas', $foot_a_atas)
+      ->with('foot_b_bawah', $foot_b_bawah)
+      ->with('foot_b_atas', $foot_b_atas)
+      ->with('title', 'CDM (Check Dimension Material) Recorder')
+      ->with('title_jp', '??');
+    }
+
+    public function fetchProduct(Request $request)
+    {
+      try {
+          $product = DB::SELECT("select * from injection_parts where remark = 'injection' and part_code != 'BJ' order by part_name desc");
+
+          if (count($product) > 0) {
+              $response = array(
+                  'status' => true,
+                  'datas' => $product
+              );
+              return Response::json($response);
+          }else{
+              $response = array(
+                  'status' => false,
+              );
+              return Response::json($response);
+          }
+      } catch (\Exception $e) {
+          $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+      }
+    }
+
+    public function fetchCavity(Request $request)
+    {
+      try {
+          $cavity = DB::SELECT("select * from push_block_masters where type = '".$request->get('type')."'");
+
+          if (count($cavity) > 0) {
+              $response = array(
+                  'status' => true,
+                  'datas' => $cavity
+              );
+              return Response::json($response);
+          }else{
+              $response = array(
+                  'status' => false,
+              );
+              return Response::json($response);
+          }
+      } catch (\Exception $e) {
+          $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+      }
+    }
+
+    public function inputCdm(Request $request)
+    {
+      try {
+          $id_user = Auth::id();
+
+          if ($request->get('save_type') == 'INPUT') {
+            if (count($request->get('head')) > 0) {
+              $head = $request->get('head');
+              $awal_a = $head[0]['awal_a'];
+              $awal_b = $head[0]['awal_b'];
+              $awal_c = $head[0]['awal_c'];
+              $awal_status = $head[0]['awal_status'];
+
+              $ist1_a = $head[0]['ist1_a'];
+              $ist1_b = $head[0]['ist1_b'];
+              $ist1_c = $head[0]['ist1_c'];
+              $ist1_status = $head[0]['ist1_status'];
+
+              $ist2_a = $head[0]['ist2_a'];
+              $ist2_b = $head[0]['ist2_b'];
+              $ist2_c = $head[0]['ist2_c'];
+              $ist2_status = $head[0]['ist2_status'];
+
+              $ist3_a = $head[0]['ist3_a'];
+              $ist3_b = $head[0]['ist3_b'];
+              $ist3_c = $head[0]['ist3_c'];
+              $ist3_status = $head[0]['ist3_status'];
+            }
+
+            if (count($request->get('middle')) > 0) {
+              $middle = $request->get('middle');
+              $awal_a = $middle[0]['awal_a'];
+              $awal_b = $middle[0]['awal_b'];
+              $awal_c = $middle[0]['awal_c'];
+              $awal_status = $middle[0]['awal_status'];
+
+              $ist1_a = $middle[0]['ist1_a'];
+              $ist1_b = $middle[0]['ist1_b'];
+              $ist1_c = $middle[0]['awal_c'];
+              $ist1_status = $middle[0]['ist1_status'];
+
+              $ist2_a = $middle[0]['ist2_a'];
+              $ist2_b = $middle[0]['ist2_b'];
+              $ist2_c = $middle[0]['ist2_c'];
+              $ist2_status = $middle[0]['ist2_status'];
+
+              $ist3_a = $middle[0]['ist3_a'];
+              $ist3_b = $middle[0]['ist3_b'];
+              $ist3_c = $middle[0]['ist3_c'];
+              $ist3_status = $middle[0]['ist3_status'];
+            }
+
+            if (count($request->get('foot')) > 0) {
+              $foot = $request->get('foot');
+              $awal_a = $foot[0]['awal_a'];
+              $awal_b = $foot[0]['awal_b'];
+              $awal_c = $foot[0]['awal_c'];
+              $awal_status = $foot[0]['awal_status'];
+
+              $ist1_a = $foot[0]['ist1_a'];
+              $ist1_b = $foot[0]['ist1_b'];
+              $ist1_c = $foot[0]['ist1_c'];
+              $ist1_status = $foot[0]['ist1_status'];
+
+              $ist2_a = $foot[0]['ist2_a'];
+              $ist2_b = $foot[0]['ist2_b'];
+              $ist2_c = $foot[0]['ist2_c'];
+              $ist2_status = $foot[0]['ist2_status'];
+
+              $ist3_a = $foot[0]['ist3_a'];
+              $ist3_b = $foot[0]['ist3_b'];
+              $ist3_c = $foot[0]['ist3_c'];
+              $ist3_status = $foot[0]['ist3_status'];
+            }
+
+            $cdm = InjectionCdmCheck::create([
+                'product' => $request->get('product'),
+                'type' => $request->get('type'),
+                'part' => $request->get('part'),
+                'color' => $request->get('color'),
+                'injection_date' => $request->get('injection_date'),
+                'machine' => $request->get('machine'),
+                'cavity' => $request->get('cavity'),
+                'employee_id' => $request->get('employee_id'),
+                'awal_a' => $awal_a,
+                'awal_b' => $awal_b,
+                'awal_c' => $awal_c,
+                'awal_status' => $awal_status,
+                'ist_1_a' => $ist1_a,
+                'ist_1_b' => $ist1_b,
+                'ist_1_c' => $ist1_c,
+                'ist_1_status' => $ist1_status,
+                'ist_2_a' => $ist2_a,
+                'ist_2_b' => $ist2_b,
+                'ist_2_c' => $ist2_c,
+                'ist_2_status' => $ist2_status,
+                'ist_3_a' => $ist3_a,
+                'ist_3_b' => $ist3_b,
+                'ist_3_c' => $ist3_c,
+                'ist_3_status' => $ist3_status,
+                'created_by' => $id_user,
+            ]);
+
+            $message = 'Input Data Success';
+          }else{
+            if (count($request->get('head')) > 0) {
+              $head = $request->get('head');
+              $awal_a = $head[0]['awal_a'];
+              $awal_b = $head[0]['awal_b'];
+              $awal_c = $head[0]['awal_c'];
+              $awal_status = $head[0]['awal_status'];
+
+              $ist1_a = $head[0]['ist1_a'];
+              $ist1_b = $head[0]['ist1_b'];
+              $ist1_c = $head[0]['ist1_c'];
+              $ist1_status = $head[0]['ist1_status'];
+
+              $ist2_a = $head[0]['ist2_a'];
+              $ist2_b = $head[0]['ist2_b'];
+              $ist2_c = $head[0]['ist2_c'];
+              $ist2_status = $head[0]['ist2_status'];
+
+              $ist3_a = $head[0]['ist3_a'];
+              $ist3_b = $head[0]['ist3_b'];
+              $ist3_c = $head[0]['ist3_c'];
+              $ist3_status = $head[0]['ist3_status'];
+            }
+
+            if (count($request->get('middle')) > 0) {
+              $middle = $request->get('middle');
+              $awal_a = $middle[0]['awal_a'];
+              $awal_b = $middle[0]['awal_b'];
+              $awal_c = $middle[0]['awal_c'];
+              $awal_status = $middle[0]['awal_status'];
+
+              $ist1_a = $middle[0]['ist1_a'];
+              $ist1_b = $middle[0]['ist1_b'];
+              $ist1_c = $middle[0]['awal_c'];
+              $ist1_status = $middle[0]['ist1_status'];
+
+              $ist2_a = $middle[0]['ist2_a'];
+              $ist2_b = $middle[0]['ist2_b'];
+              $ist2_c = $middle[0]['ist2_c'];
+              $ist2_status = $middle[0]['ist2_status'];
+
+              $ist3_a = $middle[0]['ist3_a'];
+              $ist3_b = $middle[0]['ist3_b'];
+              $ist3_c = $middle[0]['ist3_c'];
+              $ist3_status = $middle[0]['ist3_status'];
+            }
+
+            if (count($request->get('foot')) > 0) {
+              $foot = $request->get('foot');
+              $awal_a = $foot[0]['awal_a'];
+              $awal_b = $foot[0]['awal_b'];
+              $awal_c = $foot[0]['awal_c'];
+              $awal_status = $foot[0]['awal_status'];
+
+              $ist1_a = $foot[0]['ist1_a'];
+              $ist1_b = $foot[0]['ist1_b'];
+              $ist1_c = $foot[0]['ist1_c'];
+              $ist1_status = $foot[0]['ist1_status'];
+
+              $ist2_a = $foot[0]['ist2_a'];
+              $ist2_b = $foot[0]['ist2_b'];
+              $ist2_c = $foot[0]['ist2_c'];
+              $ist2_status = $foot[0]['ist2_status'];
+
+              $ist3_a = $foot[0]['ist3_a'];
+              $ist3_b = $foot[0]['ist3_b'];
+              $ist3_c = $foot[0]['ist3_c'];
+              $ist3_status = $foot[0]['ist3_status'];
+            }
+
+            $cdm = InjectionCdmCheck::find($request->get('id_cdm'));
+            $cdm->product = $request->get('product');
+            $cdm->type = $request->get('type');
+            $cdm->part = $request->get('part');
+            $cdm->color = $request->get('color');
+            $cdm->injection_date = $request->get('injection_date');
+            $cdm->machine = $request->get('machine');
+            $cdm->cavity = $request->get('cavity');
+            $cdm->awal_a = $awal_a;
+            $cdm->awal_b = $awal_b;
+            $cdm->awal_c = $awal_c;
+            $cdm->awal_status = $awal_status;
+            $cdm->ist_1_a = $ist1_a;
+            $cdm->ist_1_b = $ist1_b;
+            $cdm->ist_1_c = $ist1_c;
+            $cdm->ist_1_status = $ist1_status;
+            $cdm->ist_2_a = $ist2_a;
+            $cdm->ist_2_b = $ist2_b;
+            $cdm->ist_2_c = $ist2_c;
+            $cdm->ist_2_status = $ist2_status;
+            $cdm->ist_3_a = $ist3_a;
+            $cdm->ist_3_b = $ist3_b;
+            $cdm->ist_3_c = $ist3_c;
+            $cdm->ist_3_status = $ist3_status;
+            $cdm->save();
+
+            $message = 'Update Data Success';
+          }
+
+          $response = array(
+              'status' => true,
+              'message' => $message
+          );
+          return Response::json($response);
+      } catch (\Exception $e) {
+          $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+      }
+    }
+
+    public function fetchResumeCdm(Request $request)
+    {
+      try {
+          $id_user = Auth::id();
+
+          $data = DB::SELECT("SELECT
+              product,
+              type,
+              part,
+              color,
+              injection_date,
+              machine,
+              cavity,
+              name,
+              COALESCE(awal_a,'') as awal_a,
+              COALESCE(awal_b,'') as awal_b,
+              COALESCE(awal_c,'') as awal_c,
+              COALESCE(awal_status,'') as awal_status,
+              COALESCE(ist_1_a,'') as ist_1_a,
+              COALESCE(ist_1_b,'') as ist_1_b,
+              COALESCE(ist_1_c,'') as ist_1_c,
+              COALESCE(ist_1_status,'') as ist_1_status,
+              COALESCE(ist_2_a,'') as ist_2_a,
+              COALESCE(ist_2_b,'') as ist_2_b,
+              COALESCE(ist_2_c,'') as ist_2_c,
+              COALESCE(ist_2_status,'') as ist_2_status,
+              COALESCE(ist_3_a,'') as ist_3_a,
+              COALESCE(ist_3_b,'') as ist_3_b,
+              COALESCE(ist_3_c,'') as ist_3_c,
+              COALESCE(ist_3_status,'') as ist_3_status,
+              injection_cdm_checks.created_at AS created,
+              injection_cdm_checks.id as id_cdm
+          FROM
+              `injection_cdm_checks`
+              LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_cdm_checks.employee_id
+          WHERE 
+              DATE(injection_cdm_checks.created_at) BETWEEN DATE(NOW()) - INTERVAL 7 DAY and DATE(NOW())
+          ORDER BY
+              injection_cdm_checks.created_at DESC");
+
+          $response = array(
+              'status' => true,
+              'datas' => $data
+          );
+          return Response::json($response);
+      } catch (\Exception $e) {
+          $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+      }
+    }
+
+    public function fetchCdm(Request $request)
+    {
+      try {
+          $data = InjectionCdmCheck::select('*','injection_cdm_checks.id as id_cdm')->where('id',$request->get('id'))->whereDate('created_at',date('Y-m-d'))->first();
+
+          if (count($data) > 0) {
+            $response = array(
+                'status' => true,
+                'datas' => $data
+            );
+            return Response::json($response);
+          }else{
+            $response = array(
+                'status' => false,
+                'message' => 'Data tidak tersedia'
+            );
+            return Response::json($response);
+          }
+      } catch (\Exception $e) {
+          $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+      }
+    }
+
+    public function indexCdmReport()
+    {
+      return view('recorder.report.report_cdm')
+      ->with('machine', $this->mesin)
+      ->with('title', 'CDM (Check Dimension Material) Recorder Report')
+      ->with('title_jp', '??');
+    }
+
+    public function fetchCdmReport(Request $request)
+    {
+      try {
+
+          $machine = $request->get('machine');
+          $date_from = $request->get('date_from');
+          $date_to = $request->get('date_to');
+          $datenow = date('Y-m-d');
+
+          if($request->get('date_to') == null){
+            if($request->get('date_from') == null){
+              $date = "";
+            }
+            elseif($request->get('date_from') != null){
+              $date = "and date(injection_cdm_checks.created_at) BETWEEN '".$date_from."' and '".$datenow."'";
+            }
+          }
+          elseif($request->get('date_to') != null){
+            if($request->get('date_from') == null){
+              $date = "and date(injection_cdm_checks.created_at) <= '".$date_to."'";
+            }
+            elseif($request->get('date_from') != null){
+              $date = "and date(injection_cdm_checks.created_at) BETWEEN '".$date_from."' and '".$date_to."'";
+            }
+          }
+
+          $machine = '';
+          if($request->get('machine') != null){
+            $machines =  explode(",", $request->get('machine'));
+            for ($i=0; $i < count($machines); $i++) {
+              $machine = $machine."'".$machines[$i]."'";
+              if($i != (count($machines)-1)){
+                $machine = $machine.',';
+              }
+            }
+            $machinein = " and `injection_cdm_checks.machine` in (".$machine.") ";
+          }
+          else{
+            $machinein = "";
+          }
+
+          if ($request->get('type') == null) {
+            $type = "";
+          }else{
+            $type = "AND injection_cdm_checks.type = '".$request->get('type')."'";
+          }
+
+          $data = DB::SELECT("SELECT
+            product,
+              type,
+              part,
+              color,
+              injection_date,
+              machine,
+              cavity,
+              name,
+              COALESCE(awal_a,'') as awal_a,
+              COALESCE(awal_b,'') as awal_b,
+              COALESCE(awal_c,'') as awal_c,
+              COALESCE(awal_status,'') as awal_status,
+              COALESCE(ist_1_a,'') as ist_1_a,
+              COALESCE(ist_1_b,'') as ist_1_b,
+              COALESCE(ist_1_c,'') as ist_1_c,
+              COALESCE(ist_1_status,'') as ist_1_status,
+              COALESCE(ist_2_a,'') as ist_2_a,
+              COALESCE(ist_2_b,'') as ist_2_b,
+              COALESCE(ist_2_c,'') as ist_2_c,
+              COALESCE(ist_2_status,'') as ist_2_status,
+              COALESCE(ist_3_a,'') as ist_3_a,
+              COALESCE(ist_3_b,'') as ist_3_b,
+              COALESCE(ist_3_c,'') as ist_3_c,
+              COALESCE(ist_3_status,'') as ist_3_status,
+              injection_cdm_checks.created_at AS created,
+              injection_cdm_checks.id as id_cdm
+          FROM
+              `injection_cdm_checks`
+              LEFT JOIN employee_syncs ON employee_syncs.employee_id = injection_cdm_checks.employee_id
+          WHERE
+            deleted_at is null
+            ".$date."
+            ".$machinein."
+            ".$type."
+          ORDER BY
+            injection_cdm_checks.created_at DESC");
+
+          if (count($data) > 0) {
+            $response = array(
+                'status' => true,
+                'datas' => $data,
+                'message' => 'Success Get CDM Report'
+            );
+            return Response::json($response);
+          }else{
+            $response = array(
+                'status' => false,
+                'message' => 'Data tidak tersedia'
+            );
+            return Response::json($response);
+          }
+      } catch (\Exception $e) {
+          $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+      }
     }
 }
   
