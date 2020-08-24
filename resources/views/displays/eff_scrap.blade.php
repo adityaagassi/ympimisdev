@@ -346,6 +346,12 @@
 										fontSize: '14px'
 									}
 								},
+								subtitle: {
+									text: value.reason_name,
+									style: {
+										fontSize: '10px'
+									}
+								},
 								yAxis: {
 									title: {
 										text: null
@@ -443,6 +449,12 @@
 									text:  'WSCR '+value.reason,
 									style: {
 										fontSize: '14px'
+									}
+								},
+								subtitle: {
+									text: value.reason_name,
+									style: {
+										fontSize: '10px'
 									}
 								},
 								yAxis: {
