@@ -102,7 +102,7 @@
                 <h5 class="description-header" style="font-size: 48px;">
                   <span class="description-percentage" id="tot_diff"></span>
                 </h5>      
-                <span class="description-text" style="font-size: 32px;">Diff(Act-Bdg)</span>
+                <span class="description-text" style="font-size: 32px;">Diff(Act-Fq)</span>
                 <br><span class="description-text" style="font-size: 32px;">差異</span>   
               </div>
             </td>
@@ -406,8 +406,6 @@
   Highcharts.setOptions(Highcharts.theme);
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-
-  
 
   function drawChart() {
 

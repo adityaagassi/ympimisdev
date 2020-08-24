@@ -15,6 +15,7 @@ use App\OvertimeDetail;
 use App\OrganizationStructure;
 use App\Mutationlog;
 use App\WeeklyCalendar;
+use App\EmployeeSync;
 use PDF;
 use Dompdf\Dompdf;
 use Carbon\Carbon;
@@ -1376,8 +1377,7 @@ public function overtimeControl(Request $request)
 			array_push($tot, $arr);
 		}
 
-		$employee = db::table('employees')
-		->whereNull('end_date')
+		$employee = EmployeeSync::whereNull('end_date')
 		->select(db::raw("count(employee_id) as jml"))
 		->first();
 
