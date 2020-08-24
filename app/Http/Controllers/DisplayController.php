@@ -71,7 +71,8 @@ class DisplayController extends Controller
 			scrap.storage_location,
 			IF
 			( scrap.receive_location IS NULL OR scrap.receive_location = '', 'no_scrap', scrap.receive_location ) AS receive_location,
-			SPLIT_STRING ( scrap.reference, '/', 2 ) AS reason 
+			SPLIT_STRING ( scrap.reference, '/', 2 ) AS reason,
+			scrap_reasons.reason_name 
 			FROM
 			( SELECT week_date FROM weekly_calendars WHERE week_date >= '".$first."' AND week_date <= '".$last."' ) AS w
 			LEFT JOIN (
@@ -109,6 +110,7 @@ class DisplayController extends Controller
 			AND s.reference NOT LIKE '%TRI%' 
 			AND s.reference NOT LIKE '%WAST%' 
 			) AS scrap ON scrap.posting_date = w.week_date 
+			LEFT JOIN scrap_reasons ON scrap_reasons.reason = SPLIT_STRING ( scrap.reference, '/', 2 ) 
 			ORDER BY
 			posting_date ASC");
 
@@ -127,6 +129,7 @@ class DisplayController extends Controller
 					'amount' => $actual->amount,
 					'storage_location' => $actual->storage_location,
 					'reason' => $actual->reason,
+					'reason_name' => $actual->reason_name,
 					'receive_location' => 'MSCR'
 				]);
 			}	
@@ -141,6 +144,7 @@ class DisplayController extends Controller
 					'amount' => $actual->amount,
 					'storage_location' => $actual->storage_location,
 					'reason' => $actual->reason,
+					'reason_name' => $actual->reason_name,
 					'receive_location' => 'WSCR'
 				]);
 			}

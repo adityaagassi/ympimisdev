@@ -40,6 +40,16 @@ class TransactionController extends Controller
 		];
 	}
 
+	public function indexUploadSapData(){
+		$title = "Upload SAP Data";
+		$title_jp = "";
+
+		return view('general.sap.upload_data', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'SAP Data');
+	}
+
 	public function indexReturnLogs(){
 
 		$storage_locations = StorageLocation::select('location', 'storage_location')->distinct()

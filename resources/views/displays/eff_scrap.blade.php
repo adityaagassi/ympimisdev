@@ -27,6 +27,9 @@
 		</div>
 		<div class="col-xs-12" id="scrap_mscr"></div>
 		<div class="col-xs-12" id="scrap_wscr"></div>
+		<div class="row" id="detail_scrap">
+
+		</div>
 		{{-- <div class="col-xs-6" id="pp_scrap"></div> --}}
 	</div>
 </section>
@@ -45,7 +48,7 @@
 
 	jQuery(document).ready(function() {
 		fetchChart();
-		setInterval(fetchChart, 360000);
+		setInterval(fetchChart, 720000);
 		$('#datepicker').datepicker({
 			autoclose: true,
 			format: "yyyy-mm",
@@ -284,6 +287,203 @@
 						data: sum_wscr
 					}]
 				});
+
+				var reason_mscr = [];
+				var reason_wscr = [];
+				var div_detail = "";
+				$('#detail_scrap').html("");
+
+				$.each(result.actual_mscr, function(key, value){
+					if(value.reason != null){
+						if(reason_mscr.indexOf(value.reason) === -1){
+							reason_mscr.push(value.reason);
+							var reason = value.reason;
+							div_detail = '<div style="height:300px;" class="col-xs-2" id="reason_'+value.reason+'"></div>';
+							id_div = 'reason_'+value.reason;
+							$('#detail_scrap').append(div_detail);
+
+							var new_detail_reason = [];
+
+							for(var i = 0; i < result.actual_mscr.length; i++){
+								if(result.actual_mscr[i].reason == reason || result.actual_mscr[i].reason == null){
+									new_detail_reason.push({
+										"posting_date" : result.actual_mscr[i].posting_date,
+										"amount" : result.actual_mscr[i].amount
+									});
+
+								}
+							}
+
+							var new_group = [];
+
+							new_detail_reason.reduce(function (res, value) {
+								if (!res[value.posting_date]) {
+									res[value.posting_date] = {
+										amount: 0,
+										posting_date: value.posting_date
+									};
+									new_group.push(res[value.posting_date])
+								}
+								res[value.posting_date].amount += value.amount
+								return res;
+							}, {});
+
+							var new_sum = [];
+							var new_amount = 0;
+
+							for(var i = 0; i < new_group.length; i++){
+								new_amount += new_group[i].amount;
+								new_sum.push([Date.parse(new_group[i].posting_date), parseFloat(new_amount)]);
+							}
+
+							Highcharts.chart(id_div, {
+								chart: {
+									backgroundColor: null
+								},
+								title: {
+									text: 'MSCR '+value.reason
+								},
+								yAxis: {
+									title: {
+										text: null
+									}
+								},
+								credits:{
+									enabled:false
+								},
+								xAxis: {
+									type: 'datetime',
+									tickInterval: 24 * 3600 * 1000,
+									labels: {
+										enabled:false
+									},
+									plotLines: [{
+										color: '#FF0000',
+										width: 2,
+										value: now,
+										dashStyle: 'shortdash'
+									}]
+								},
+								legend: {
+									enabled: false
+								},
+								plotOptions: {
+									series: {
+										label: {
+											connectorAllowed: false
+										},
+										pointStart: 2010
+									}
+								},
+								series: [{
+									name: 'Amount Scrap',
+									marker:{
+										enabled:false
+									},
+									color:'#ccff90',
+									data: new_sum
+								}]
+							});
+
+						}
+					}
+				});
+
+				$.each(result.actual_wscr, function(key, value){
+					if(value.reason != null){
+						if(reason_wscr.indexOf(value.reason) === -1){
+							reason_wscr.push(value.reason);
+							var reason = value.reason;
+							div_detail = '<div style="height:300px;" class="col-xs-2" id="reason_'+value.reason+'"></div>';
+							id_div = 'reason_'+value.reason;
+							$('#detail_scrap').append(div_detail);
+
+							var new_detail_reason = [];
+
+							for(var i = 0; i < result.actual_wscr.length; i++){
+								if(result.actual_wscr[i].reason == reason || result.actual_wscr[i].reason == null){
+									new_detail_reason.push({
+										"posting_date" : result.actual_wscr[i].posting_date,
+										"amount" : result.actual_wscr[i].amount
+									});
+
+								}
+							}
+
+							var new_group = [];
+
+							new_detail_reason.reduce(function (res, value) {
+								if (!res[value.posting_date]) {
+									res[value.posting_date] = {
+										amount: 0,
+										posting_date: value.posting_date
+									};
+									new_group.push(res[value.posting_date])
+								}
+								res[value.posting_date].amount += value.amount
+								return res;
+							}, {});
+
+							var new_sum = [];
+							var new_amount = 0;
+
+							for(var i = 0; i < new_group.length; i++){
+								new_amount += new_group[i].amount;
+								new_sum.push([Date.parse(new_group[i].posting_date), parseFloat(new_amount)]);
+							}
+
+							Highcharts.chart(id_div, {
+								chart: {
+									backgroundColor: null
+								},
+								title: {
+									text:  'WSCR '+value.reason
+								},
+								yAxis: {
+									title: {
+										text: null
+									}
+								},
+								credits:{
+									enabled:false
+								},
+								xAxis: {
+									type: 'datetime',
+									tickInterval: 24 * 3600 * 1000,
+									labels: {
+										enabled:false
+									},
+									plotLines: [{
+										color: '#FF0000',
+										width: 2,
+										value: now,
+										dashStyle: 'shortdash'
+									}]
+								},
+								legend: {
+									enabled: false
+								},
+								plotOptions: {
+									series: {
+										label: {
+											connectorAllowed: false
+										},
+										pointStart: 2010
+									}
+								},
+								series: [{
+									name: 'Amount Scrap',
+									marker:{
+										enabled:false
+									},
+									color:'#ccff90',
+									data: new_sum
+								}]
+							});
+						}
+					}
+				});
+
 
 				$('#loading').hide();
 			}
