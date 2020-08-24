@@ -187,7 +187,7 @@
 
   $('#kdo_number_delivery').keydown(function(event) {
     if (event.keyCode == 13 || event.keyCode == 9) {
-      if($("#kdo_number_delivery").val().length == 10){
+      if($("#kdo_number_delivery").val().length >= 10){
         scan_kdo_delivery();
         return false;
       }
