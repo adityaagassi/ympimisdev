@@ -995,7 +995,6 @@
 				$('#prod_type').html($('#product_fix2').text());
 				$('#injection_date_middle_fix').html($('#injection_date_middle').val());
 				$('#injection_date_head_fix').html($('#injection_date_head').val());
-				$('#injection_date_foot_fix').html($('#injection_date_foot').val());
 				$('#mesin_middle').html($('#mesin_middle_fix2').text());
 				$('#mesin_head').html($('#mesin_head_fix2').text());
 				$('#mesin_foot').html($('#mesin_foot_fix2').text());

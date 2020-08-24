@@ -111,9 +111,9 @@ class RecorderProcessController extends Controller
 
 	public function index_push_block($remark){
 		$name = Auth::user()->name;
-  //   if ($remark == 'After Injection') {
-  //     $view = 'recorder.process.index_push_block_assy'; //upload excel + tag
-  //   }
+    // if ($remark == 'After Injection') {
+    //   $view = 'recorder.process.index_push_block_assy'; //upload excel + tag
+    // }
     if ($remark == 'After Injection') {
       $view = 'recorder.process.index_push_block'; //upload excel
     }
@@ -265,6 +265,7 @@ class RecorderProcessController extends Controller
               $head = $request->get('head');
               $block = $request->get('block');
               $push_block_code = $request->get('push_block_code');
+              $status_input = 1;
               if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)" || $request->get('product_type') == "YRF21") {
                 for($i = 0; $i<8;$i++){
                   $check_date = $request->get('check_date');
@@ -287,7 +288,13 @@ class RecorderProcessController extends Controller
                       'pic_check' => $request->get('pic_check'),
                       'created_by' => $id_user
                   ]);
-                  $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->delete();
+                  $status_input++;
+                }
+
+                if ($status_input == 8) {
+                  for($j = 0; $j<8;$j++){
+                    $temptemp = PushBlockRecorderTemp::where('head',$head[$j])->where('block',$block[$j])->where('push_block_code',$push_block_code)->delete();
+                  }
                 }
               }else{
                 for($i = 0; $i<16;$i++){
@@ -311,7 +318,13 @@ class RecorderProcessController extends Controller
                       'pic_check' => $request->get('pic_check'),
                       'created_by' => $id_user
                   ]);
-                  $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->delete();
+                  $status_input++;
+                }
+
+                if ($status_input == 16) {
+                  for($j = 0; $j<16;$j++){
+                    $temptemp = PushBlockRecorderTemp::where('head',$head[$j])->where('block',$block[$j])->where('push_block_code',$push_block_code)->delete();
+                  }
                 }
               }
 
@@ -2233,31 +2246,49 @@ class RecorderProcessController extends Controller
               $resume_foot = 'MJ-FJ_'.join(',',$ng_foot).'_'.join(',',$avg_foot);
 
               // if ($push_block_code == 'After Injection') {
-              //   $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
-              //   $tag_middle = InjectionTag::where('tag',$request->get('tag_middle'))->first();
-              //   $tag_foot = InjectionTag::where('tag',$request->get('tag_foot'))->first();
+              //   if ($request->get('product_type') == "YRF-21K//ID" || $request->get('product_type') == "YRF-21//ID" || $request->get('product_type') == "YRF-21 (FSA)" || $request->get('product_type') == "YRF21") {
+              //     $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
+              //     $tag_middle = InjectionTag::where('tag',$request->get('tag_middle'))->first();
 
-              //   if ($check_type == 'HJ-MJ') {
-              //     if ($resume_head != 'HJ-MJ__') {
-              //       $tag_head->torque_check = $resume_head;
-              //       $tag_middle->torque_check = $resume_head;
-              //     }else{
-              //       $tag_head->torque_check = 'OK';
-              //       $tag_middle->torque_check = 'HJ-MJ_OK';
+              //     if ($check_type == 'HJ-MJ') {
+              //       if ($resume_head != 'HJ-MJ__') {
+              //         $tag_head->torque_check = $resume_head;
+              //         $tag_middle->torque_check = $resume_head;
+              //       }else{
+              //         $tag_head->torque_check = 'OK';
+              //         $tag_middle->torque_check = 'HJ-MJ_OK';
+              //       }
               //     }
+
+              //     $tag_head->save();
+              //     $tag_middle->save();
               //   }else{
-              //     if ($resume_foot != 'MJ-FJ__') {
-              //       $tag_foot->torque_check = $resume_foot;
-              //       $tag_middle->torque_check = $tag_middle->torque_check.'&'.$resume_foot;
-              //     }else{
-              //       $tag_foot->torque_check = 'OK';
-              //       $tag_middle->torque_check = $tag_middle->torque_check.'&MJ-FJ_OK';
-              //     }
-              //   }
+              //     $tag_head = InjectionTag::where('tag',$request->get('tag_head'))->first();
+              //     $tag_middle = InjectionTag::where('tag',$request->get('tag_middle'))->first();
+              //     $tag_foot = InjectionTag::where('tag',$request->get('tag_foot'))->first();
 
-              //   $tag_head->save();
-              //   $tag_middle->save();
-              //   $tag_foot->save();
+              //     if ($check_type == 'HJ-MJ') {
+              //       if ($resume_head != 'HJ-MJ__') {
+              //         $tag_head->torque_check = $resume_head;
+              //         $tag_middle->torque_check = $resume_head;
+              //       }else{
+              //         $tag_head->torque_check = 'OK';
+              //         $tag_middle->torque_check = 'HJ-MJ_OK';
+              //       }
+              //     }else{
+              //       if ($resume_foot != 'MJ-FJ__') {
+              //         $tag_foot->torque_check = $resume_foot;
+              //         $tag_middle->torque_check = $tag_middle->torque_check.'&'.$resume_foot;
+              //       }else{
+              //         $tag_foot->torque_check = 'OK';
+              //         $tag_middle->torque_check = $tag_middle->torque_check.'&MJ-FJ_OK';
+              //       }
+              //     }
+
+              //     $tag_head->save();
+              //     $tag_middle->save();
+              //     $tag_foot->save();
+              //   }
               // }
 
               $response = array(
@@ -2284,7 +2315,7 @@ class RecorderProcessController extends Controller
 
         $indexHeadFoot = (int)$request->get('indexHeadFoot');
 
-        if ($product_type == 'YRF-21K//ID' || $product_type == 'YRF-21//ID' || $product_type == "YRF-21 (FSA)") {
+        if ($product_type == 'YRF-21K//ID' || $product_type == 'YRF-21//ID' || $product_type == "YRF-21 (FSA)" || $product_type == "YRF21") {
           $index = 4;
         }else{
           $index = $indexHeadFoot * 4;
