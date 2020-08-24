@@ -353,7 +353,7 @@
 									<div class="col-xs-12">
 										<div class="row">
 											<div class="col-xs-12">
-												<input id="injection_date_head" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Head">
+												<input id="injection_date_head" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Head" readonly>
 											</div>
 										</div>
 									</div>
@@ -371,7 +371,7 @@
 									<div class="col-xs-12">
 										<div class="row">
 											<div class="col-xs-12">
-												<input id="injection_date_middle" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Middle">
+												<input id="injection_date_middle" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Middle" readonly>
 											</div>
 										</div>
 									</div>
@@ -389,7 +389,7 @@
 									<div class="col-xs-12">
 										<div class="row">
 											<div class="col-xs-12">
-												<input id="injection_date_foot" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Foot">
+												<input id="injection_date_foot" style="font-size: 20px; height: 40px; text-align: center;" type="text" class="form-control" placeholder="Tanggal Injeksi Foot" readonly>
 											</div>
 										</div>
 									</div>
