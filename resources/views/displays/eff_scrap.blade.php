@@ -298,7 +298,7 @@
 						if(reason_mscr.indexOf(value.reason) === -1){
 							reason_mscr.push(value.reason);
 							var reason = value.reason;
-							div_detail = '<div style="height:300px;" class="col-xs-2" id="reason_'+value.reason+'"></div>';
+							div_detail = '<div style="height:200px;" class="col-xs-2" id="reason_'+value.reason+'"></div>';
 							id_div = 'reason_'+value.reason;
 							$('#detail_scrap').append(div_detail);
 
@@ -341,7 +341,10 @@
 									backgroundColor: null
 								},
 								title: {
-									text: 'MSCR '+value.reason
+									text: 'MSCR '+value.reason,
+									style: {
+										fontSize: '14px'
+									}
 								},
 								yAxis: {
 									title: {
@@ -394,7 +397,7 @@
 						if(reason_wscr.indexOf(value.reason) === -1){
 							reason_wscr.push(value.reason);
 							var reason = value.reason;
-							div_detail = '<div style="height:300px;" class="col-xs-2" id="reason_'+value.reason+'"></div>';
+							div_detail = '<div style="height:200px;" class="col-xs-2" id="reason_'+value.reason+'"></div>';
 							id_div = 'reason_'+value.reason;
 							$('#detail_scrap').append(div_detail);
 
@@ -437,7 +440,10 @@
 									backgroundColor: null
 								},
 								title: {
-									text:  'WSCR '+value.reason
+									text:  'WSCR '+value.reason,
+									style: {
+										fontSize: '14px'
+									}
 								},
 								yAxis: {
 									title: {
