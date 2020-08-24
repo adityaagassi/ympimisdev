@@ -2922,6 +2922,7 @@ Route::get('index/audit_iso/fetch_point_audit', 'CparController@fetchPointAudit'
 Route::get('index/audit_iso/report_point_audit', 'CparController@ReportHasilAudit');
 
 Route::get('index/audit_iso/cek_report', 'CparController@check_audit_report');
+Route::get('index/audit_iso/cek_report/{kategori}/{lokasi}/{auditor}/{tanggal}', 'CparController@check_audit_report_new');
 Route::get('fetch/audit_iso/cek_report', 'CparController@fetch_audit_report');
 
 //Form Laporan Ketidaksesuaian

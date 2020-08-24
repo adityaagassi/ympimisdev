@@ -2679,12 +2679,16 @@ class CparController extends Controller
       ->distinct()
       ->get();
 
+      $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+        where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+
       return view('cpar.create_check_audit_iso', array(
         'title' => $title,
         'title_jp' => $title_jp,
         'employee' => $emp,
         'location' => $location,
-        'category' => $category
+        'category' => $category,
+        'auditee' => $auditee
       ))->with('page', 'Audit ISO');
     }
 
@@ -2741,6 +2745,22 @@ class CparController extends Controller
         'location' => $location,
         'category' => $category,
         'auditor' => $auditor
+
+      ))->with('page', 'Audit ISO');
+    }
+
+    public function check_audit_report_new($kategori, $lokasi, $auditor, $tanggal)
+    {
+      $title = "Audit Report";
+      $title_jp = "";
+
+      return view('cpar.report_check_audit_iso_new', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'location' => $lokasi,
+        'category' => $kategori,
+        'auditor' => $auditor,
+        'audit_date' => $tanggal
 
       ))->with('page', 'Audit ISO');
     }
@@ -2907,6 +2927,8 @@ class CparController extends Controller
                   'kategori' => $request->input('kategori'),
                   'auditor_id' => $request->input('auditor_id'),
                   'auditor_name' => $request->input('auditor_name'),
+                  'auditee' => $request->input('auditee'),
+                  'auditee_name' => $request->input('auditee_name'),
                   'lokasi' => $request->input('lokasi'),
                   'klausul' => $request->input('klausul'),
                   'point_judul' => $request->input('point_judul'),
@@ -2923,6 +2945,8 @@ class CparController extends Controller
                   'kategori' => $request->input('kategori'),
                   'auditor_id' => $request->input('auditor_id'),
                   'auditor_name' => $request->input('auditor_name'),
+                  'auditee' => $request->input('auditee'),
+                  'auditee_name' => $request->input('auditee_name'),
                   'lokasi' => $request->input('lokasi'),
                   'klausul' => $request->input('klausul'),
                   'point_judul' => $request->input('point_judul'),

@@ -162,6 +162,10 @@
 							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Location</td>
 							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="location"></td>
 						</tr>
+						<tr>
+							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditee</td>
+							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="auditee_name"></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -213,6 +217,15 @@
 							@endforeach
 						</select>
 					</div>
+					<div class="form-group">
+						<label>Pilih Auditee</label>
+						<select class="form-control select3" id="auditee" onchange="selectemployee()" data-placeholder="Pilih Auditee" style="width: 100%; font-size: 20px;">
+							<option></option>
+							@foreach($auditee as $audite)
+							<option value="{{ $audite->employee_id }}">{{ $audite->employee_id }} - {{ $audite->name }}</option>
+							@endforeach
+						</select>
+					</div>
 
 					<div class="form-group">
 						<a href="{{ url("index/audit_iso/cek_report")}}" class="btn btn-danger btn-sm" target="_blank" style="color:white;margin-right: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil {{ $page }} </a>
@@ -237,8 +250,8 @@
 			</div>
 			<div class="modal-footer">
 				<a  class="btn btn-danger" href="{{ url('') }}">Tutup</button>
-				<a href="{{ url("index/audit_iso/cek_report")}}" class="btn btn-success btn-sm" target="_blank" style="color:white;margin-right: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil {{ $page }} </a>
-				<!-- <a id="modalDeleteButton" href="#" type="button" class="btn btn-success">Buat Laporan Audit ISO</a> -->
+				<!-- <a href="{{ url("index/audit_iso/cek_report/")}}" class="btn btn-success btn-sm" target="_blank" style="color:white;margin-right: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil {{ $page }} </a> -->
+				<a id="modalDeleteButton" href="#" type="button" class="btn btn-success">Buat Laporan Audit ISO</a>
 			</div>
 		</div>
 	</div>
@@ -270,6 +283,8 @@
 			minimumResultsForSearch : -1
 		});
 
+		$('.select3').select2();
+
 		$('#modalFirst').modal({
 			backdrop: 'static',
 			keyboard: false
@@ -279,7 +294,9 @@
 	function selectData(id){
 
 		var kategori = $('#selectCategory').val();
-		var lokasi = $('#selectLocation').val()
+		var lokasi = $('#selectLocation').val();
+		var auditee = $('#auditee').val();
+		var auditee_name = $('#auditee_name').val();
 
 		if(kategori == ""){
 			$("#loading").hide();
@@ -295,10 +312,18 @@
 			return false;
 		}
 
+		if(auditee == ""){
+			$("#loading").hide();
+			alert("Kolom Auditee Harap diisi");
+			$("html").scrollTop(0);
+			return false;
+		}
+
 		$('#modalFirst').modal('hide');
 
 		$('#category').html(kategori);
 		$('#location').html(lokasi);
+		$('#auditee_name').html(auditee_name);
 
 		get_check();
 	}
@@ -416,6 +441,8 @@
 				var lokasi =  $('#location').text();
 				var auditor_id =  '{{$employee->employee_id}}';
 				var auditor_name =  '{{$employee->name}}';
+				var auditee =  $('#auditee').val();
+				var auditee_name =  $('#auditee_name').val();
 				var klausul =  $('#klausul_'+a).text();
 				var point_judul =  $('#point_judul_'+a).text();
 				var point_question =  $('#point_question_'+a).text();
@@ -434,6 +461,8 @@
 				formData.append('lokasi', lokasi);
 				formData.append('auditor_id', auditor_id);
 				formData.append('auditor_name', auditor_name);
+				formData.append('auditee', auditee);
+				formData.append('auditee_name', auditee_name);
 				formData.append('klausul', klausul);
 				formData.append('point_judul', point_judul);
 				formData.append('point_question', point_question);
@@ -459,8 +488,10 @@
 					if (stat == countpoint) {
 						$('#loading').hide();
 						$('#myModal').modal('show');
+						var url = 
+						// jQuery('#myModal').attr("href", url+'/'+id+'/'+weekly_report_id);
 						$('.modal-body').html("Terima Kasih telah mengisi Audit Internal ISO.<br>Jika Anda akan membuat Laporan Audit ISO, silahkan klik tombol di bawah ini.");
-						$('#modalDeleteButton').attr("href", '{{ url("/index/audit_iso/create") }}');
+						$('#modalDeleteButton').attr("href", '{{ url("/index/audit_iso/cek_report") }}/'+kategori+'/'+lokasi+'/'+auditor_name+'/'+tanggal);
 					}
 				}
 			})
@@ -469,6 +500,19 @@
 
 		}
 	}
+
+	function selectemployee(){
+          var auditee = document.getElementById("auditee").value;
+
+          $.ajax({
+           url: "{{ url('index/audit_iso/get_nama') }}?auditee=" +auditee, 
+           type : 'GET', 
+           success : function(data){
+            var obj = jQuery.parseJSON(data);
+            $('#auditee_name').val(obj[0].name);
+          }
+        });      
+        }
 
 	function openSuccessGritter(title, message){
 		jQuery.gritter.add({

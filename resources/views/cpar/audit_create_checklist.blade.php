@@ -161,14 +161,9 @@
               <div class="row">
                 <div class="col-xs-6">
                   <label for="auditee">Pilih Auditee</label>
-                  <select class="form-control select2" data-placeholder="Pilih Karyawan" name="auditee" id="auditee" style="width: 100% height: 35px; font-size: 15px;" onchange="selectemployee()" required>
-                    <option value=""></option>
-                    @foreach($leaders as $leader)
-                    <option value="{{ $leader->employee_id }}">{{ $leader->employee_id }} - {{ $leader->name }} - {{ $leader->section }}</option>
-                    @endforeach
-                  </select>
-
-                  <input type="hidden" class="form-control" name="auditee_name" id="auditee_name" placeholder="auditee_name" required>
+                  <input type="text" class="form-control" id="auditee_all" placeholder="Auditee" readonly value="{{$audit->auditee}} - {{$audit->auditee_name}}">
+                  <input type="hidden" class="form-control" name="auditee" id="auditee" placeholder="auditee" value="{{$audit->auditee}}">
+                  <input type="hidden" class="form-control" name="auditee_name" id="auditee_name" placeholder="auditee_name" value="{{$audit->auditee_name}}">
                 </div>
                 <div class="col-xs-6">
 
