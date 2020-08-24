@@ -25,8 +25,8 @@
 				<input type="text" class="form-control pull-right" id="datepicker" name="datepicker" onchange="fetchChart()">
 			</div>
 		</div>
-		<div class="col-xs-12" id="scrap_mscr"></div>
-		<div class="col-xs-12" id="scrap_wscr"></div>
+		<div class="col-xs-6" id="scrap_mscr"></div>
+		<div class="col-xs-6" id="scrap_wscr"></div>
 		<div class="row" id="detail_scrap">
 
 		</div>

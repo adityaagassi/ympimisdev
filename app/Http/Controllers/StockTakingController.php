@@ -150,6 +150,7 @@ class StockTakingController extends Controller{
 			'FLO Printer VN',
 			'KDO ZPRO',
 			'MIS',
+			'MIS2',
 			'Stockroom-Printer',
 			'Welding-Printer'
 		];

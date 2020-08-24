@@ -391,122 +391,100 @@ class OvertimeController extends Controller
 	}
 
 	public function fetchMonthlyResume(Request $request){
-		$fy = '';
-		$cc_ot = '';
-		$cc_all = '';
+		$start_date = "";
+		$end_date = "";
 
 		if($request->get('fy') != null){
-			$fy =  $request->get('fy');
+			$calendar = db::select("select min(week_date) as start_date, max(week_date) as end_date from weekly_calendars where fiscal_year = '".$request->get('fy')."'");
 		}else{
-			$get_fy = db::select("select fiscal_year from weekly_calendars where week_date = DATE_FORMAT(now(),'%Y-%m-%d')");
-			foreach ($get_fy as $key) {
-				$fy = $key->fiscal_year;
-			}
+			$calendar = db::select("select min(week_date) as start_date, max(week_date) as end_date from weekly_calendars where fiscal_year = (select distinct fiscal_year from weekly_calendars where week_date = DATE_FORMAT(now(),'%Y-%m-%d'))");
 		}
 
-		if($request->get('cc') != null) {
-			$ccs = $request->get('cc');
-			$cc = "";
+		$start_date = $calendar[0]->start_date;
+		$end_date = $calendar[0]->end_date;
 
-			for($x = 0; $x < count($ccs); $x++) {
-				$cc = $cc."'".$ccs[$x]."'";
-				if($x != count($ccs)-1){
-					$cc = $cc.",";
-				}
-			}
-			$cc_ot = "and ml.cost_center in (".$cc.") ";
-			$cc_all = "where cost_center in (".$cc.") ";
-		}
+		$response = array(
+			'status' => true,
+			'ot_actual' => $start_date,
+			'ot_budget' => $end_date,
+		);
+		return Response::json($response);
 
-		$query1 = "select wc.period, ot.total from
-		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
-		left join
-		(select DISTINCT DATE_FORMAT(ovr.tanggal,'%m-%Y') as period, sum(ovr.ot) as total from
-		(select tanggal, nik, SUM(IF(status = 0, jam, final)) ot from over_time
-		left join over_time_member on over_time.id = over_time_member.id_ot
-		where deleted_at is null and jam_aktual = 0 and nik not like 'osd%' group by tanggal, nik) ovr
-		left join
-		(select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) ml
-		on ovr.nik = ml.employee_id
-		left join
-		(select distinct cost_center, cost_center_name from ympimis.cost_centers) cc on cc.cost_center = ml.cost_center
-		where ml.cost_center is not null ".$cc_ot."
-		group by period
-		order by period asc) ot
-		on wc.period = ot.period";
-		$ot_actual = db::connection('mysql3')->select($query1);
+		// if($request->get('cc') != null) {
+		// 	$ccs = $request->get('cc');
+		// 	$cc = "";
 
-		$query2 = "select wc.period, bg.total_budget from
-		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
-		left join
-		(select DATE_FORMAT(period,'%m-%Y') as period, ROUND(sum(budget),2) as total_budget
-		from budgets ".$cc_all."
-		group by period
-		order by budgets.period asc) bg
-		on wc.period = bg.period";
+		// 	for($x = 0; $x < count($ccs); $x++) {
+		// 		$cc = $cc."'".$ccs[$x]."'";
+		// 		if($x != count($ccs)-1){
+		// 			$cc = $cc.",";
+		// 		}
+		// 	}
+		// 	$cc_ot = "and ml.cost_center in (".$cc.") ";
+		// 	$cc_all = "where cost_center in (".$cc.") ";
+		// }
+
+		// $query1 = "select wc.period, ot.total from
+		// (SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
+		// left join
+		// (select DISTINCT DATE_FORMAT(ovr.tanggal,'%m-%Y') as period, sum(ovr.ot) as total from
+		// (select tanggal, nik, SUM(IF(status = 0, jam, final)) ot from over_time
+		// left join over_time_member on over_time.id = over_time_member.id_ot
+		// where deleted_at is null and jam_aktual = 0 and nik not like 'osd%' group by tanggal, nik) ovr
+		// left join
+		// (select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) ml
+		// on ovr.nik = ml.employee_id
+		// left join
+		// (select distinct cost_center, cost_center_name from ympimis.cost_centers) cc on cc.cost_center = ml.cost_center
+		// where ml.cost_center is not null ".$cc_ot."
+		// group by period
+		// order by period asc) ot
+		// on wc.period = ot.period";
+		// $ot_actual = db::connection('mysql3')->select($query1);
+
+		$query2 = "select period, sum(budget) as total_budget from budgets where period >= '".$start_date."' and period <= '".$end_date."' group by period order by period asc";
 		$ot_budget = db::select($query2);
 
-		$query3 = "select wc.period, fc.total_forecast from
-		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
-		left join
-		(select DATE_FORMAT(date,'%m-%Y') as period, ROUND(sum(hour),2) as total_forecast
-		from forecasts ".$cc_all."
-		group by period
-		order by date asc) fc
-		on wc.period = fc.period";
+		$query3 = "select date_format(date, '%Y-%m-01') as period, sum(hour) as total_forecast from forecasts where date >= '".$end_date."' and date <= '".$end_date."' group by date_format(date, '%Y-%m-01') order by period asc";
 		$ot_forecast = db::select($query3);
 
-		$query4 = "select wc.period, mp.emp from
-		(SELECT DISTINCT DATE_FORMAT(week_date,'%Y-%m') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
-		left join
-		(	
-		select count(c.employee_id) as emp, mon from
-		(select * from 
-		(
-		select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
-		cross join (
-		select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy."' group by date_format(week_date, '%Y-%m')) s
-		) m
-		where hire_month <= mon and (mon < end_month OR end_month is null)
-		) as b
-		left join
-		(
-		select id, employment_logs.employee_id, employment_logs.status, date_format(employment_logs.valid_from, '%Y-%m') as mon_from, coalesce(date_format(employment_logs.valid_to, '%Y-%m'), date_format((select max(week_date) from weekly_calendars), '%Y-%m')) as mon_to from employment_logs 
-		WHERE id IN (
-		SELECT MAX(id)
-		FROM employment_logs
-		GROUP BY employment_logs.employee_id, date_format(employment_logs.valid_from, '%Y-%m')
-		)
-		) as c on b.employee_id = c.employee_id
-		left join
-		(select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) ml
-		on c.employee_id = ml.employee_id
-		left join
-		(select distinct cost_center, cost_center_name from ympimis.cost_centers) cc on cc.cost_center = ml.cost_center
-		where mon_from <= mon and mon_to >= mon and ml.cost_center is not null ".$cc_ot."
-		group by mon
-		) mp
-		on wc.period = mp.mon";
-		$mp_actual = db::select($query4);
+		// $query4 = "select wc.period, mp.emp from
+		// (SELECT DISTINCT DATE_FORMAT(week_date,'%Y-%m') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
+		// left join
+		// (	
+		// select count(c.employee_id) as emp, mon from
+		// (select * from 
+		// (
+		// select employee_id, date_format(hire_date, '%Y-%m') as hire_month, date_format(end_date, '%Y-%m') as end_month, mon from employees
+		// cross join (
+		// select date_format(weekly_calendars.week_date, '%Y-%m') as mon from weekly_calendars where fiscal_year = '".$fy."' group by date_format(week_date, '%Y-%m')) s
+		// ) m
+		// where hire_month <= mon and (mon < end_month OR end_month is null)
+		// ) as b
+		// left join
+		// (
+		// select id, employment_logs.employee_id, employment_logs.status, date_format(employment_logs.valid_from, '%Y-%m') as mon_from, coalesce(date_format(employment_logs.valid_to, '%Y-%m'), date_format((select max(week_date) from weekly_calendars), '%Y-%m')) as mon_to from employment_logs 
+		// WHERE id IN (
+		// SELECT MAX(id)
+		// FROM employment_logs
+		// GROUP BY employment_logs.employee_id, date_format(employment_logs.valid_from, '%Y-%m')
+		// )
+		// ) as c on b.employee_id = c.employee_id
+		// left join
+		// (select employee_id, cost_center from ympimis.mutation_logs where valid_to is null) ml
+		// on c.employee_id = ml.employee_id
+		// left join
+		// (select distinct cost_center, cost_center_name from ympimis.cost_centers) cc on cc.cost_center = ml.cost_center
+		// where mon_from <= mon and mon_to >= mon and ml.cost_center is not null ".$cc_ot."
+		// group by mon
+		// ) mp
+		// on wc.period = mp.mon";
+		// $mp_actual = db::select($query4);
 
-		$query5 = "select wc.period, bg.total_budget_mp from
-		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
-		left join
-		(select DATE_FORMAT(period,'%m-%Y') as period, sum(budget_mp) as total_budget_mp
-		from manpower_budgets ".$cc_all."
-		group by period
-		order by manpower_budgets.period asc) bg
-		on wc.period = bg.period;";
+		$query5 = "select period, sum(budget_mp) as total_budget_mp from budgets where period >= '".$start_date."' and period <= '".$end_date."' group by period order by period asc";
 		$mp_budget = db::select($query5);
 
-		$query6 = "select wc.period, fc.total_forecast_mp from
-		(SELECT DISTINCT DATE_FORMAT(week_date,'%m-%Y') as period from ympimis.weekly_calendars where fiscal_year = '".$fy."' order by week_date asc) wc
-		left join
-		(select DATE_FORMAT(period,'%m-%Y') as period, sum(forecast_mp) as total_forecast_mp
-		from manpower_forecasts ".$cc_all."
-		group by period
-		order by manpower_forecasts.period asc) fc
-		on wc.period = fc.period";
+		$query6 = "select period, sum(forecast_mp) as total_forecast_mp from manpower_forecasts where period >= '".$start_date."' and period <= '".$end_date."' group by period order by period asc";
 		$mp_forecast = db::select($query6);
 
 		$response = array(
@@ -2193,6 +2171,7 @@ public function fetchGAReport(Request $request)
 			CONVERT ( VARCHAR, VIEW_YMPI_Emp_OvertimePlan.ovtplanto, 108 ) AS ot_to,
 			VIEW_YMPI_Emp_OvertimePlan.SHIFT_OVTPLAN,
 			VIEW_YMPI_Emp_OvertimePlan.emp_no,
+			VIEW_YMPI_Emp_OvertimePlan.modified_date,
 			VIEW_YMPI_Emp_OrgUnit.Full_name,
 			VIEW_YMPI_Emp_OrgUnit.Section,
 			COALESCE ( VIEW_YMPI_Emp_OvertimePlan.ovttrans, '-' ) AS trans,
