@@ -76,6 +76,7 @@
           <tr>
             <td width="12%">
               <input type="text" class="form-control" id="emp_id" placeholder="Scan ID Card...">
+              <input type="hidden" id="emp_id2">
             </td>
             <td width="12%">
               <input type="text" class="form-control" id="barcode_scan" placeholder="Scan Part...">
@@ -460,16 +461,17 @@
     tmp = tmp.replace(/\]/g, ""); 
     tmp = tmp.replace("tag:", ""); 
     tmp = tmp.replace("name:", ""); 
+    tmp = tmp.replace("employee_id:", ""); 
 
     tmp = tmp.split(',');
 
     if (tmp[0] != "null") {
-      op2.push({'tag': tmp[0], 'name': tmp[1]});
+      op2.push({'tag': tmp[0], 'name': tmp[1], 'employee_id': tmp[2]});
     }
 
   })
 
-  console.log(op2);
+  console.log(tmp);
 
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
@@ -680,16 +682,19 @@
     {
       var stat = 0;
       var name = "";
+      var emp_id = "";
       var vals = $(this).val();
       $.each(op2, function(index, value){
         if (vals == value.tag) {
           stat = 1;
           name = value.name;
+          emp_id = value.employee_id;
         }
       })
 
       if (stat == 1) {
         $(this).val(name);
+        $("#emp_id2").val(emp_id);
         $(this).attr("readonly","true");
         $("#barcode_scan").focus();
         openSuccessGritter('Success', '');
@@ -772,7 +777,8 @@
   function minus_stok(material_number, stat) {
     var data = {
       material_number : material_number,
-      status : stat
+      status : stat,
+      employee_id: $("#emp_id2").val()
     }
     $.post('{{ url("post/maintenance/inven/transaction") }}', data, function(result, status, xhr){
       if (result.status) {

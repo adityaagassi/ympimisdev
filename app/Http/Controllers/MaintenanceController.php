@@ -37,7 +37,7 @@ use PDF;
 class MaintenanceController extends Controller
 {
 	public function __construct(){
-		$this->middleware('auth');
+		// $this->middleware('auth');
 
 		$this->mt_employee = EmployeeSync::where("department", "=", "Maintenance")
 		->whereNull("end_date")
@@ -340,16 +340,23 @@ class MaintenanceController extends Controller
 		$title = 'Maintenance Spare Part Inventories';
 		$title_jp = '??';
 
-		if (Auth::user()->role_code == "MIS" || strtoupper(Auth::user()->username) == "PI2003013") {
-			$permission = 1;
+		if($user = Auth::user())
+		{
+			if (Auth::user()->role_code == "MIS" || strtoupper(Auth::user()->username) == "PI2003013") {
+				$permission = 1;
+			} else {
+				$permission = 0;
+			}
 		} else {
 			$permission = 0;
 		}
 
+		
+
 		$op_mtc = EmployeeSync::leftJoin('employees', 'employees.employee_id', '=', 'employee_syncs.employee_id')
 		->where('department', '=', 'Maintenance')
 		->whereNull('employee_syncs.end_date')
-		->select('tag', 'employee_syncs.name')
+		->select('tag', 'employee_syncs.name', 'employee_syncs.employee_id')
 		->get();
 
 		return view('maintenance.inventory', array(
@@ -2048,7 +2055,7 @@ class MaintenanceController extends Controller
 				$inv_log->part_number = $request->get('material_number');
 				$inv_log->status = $request->get('status');
 				$inv_log->quantity = 1;
-				$inv_log->created_by = Auth::user()->username;
+				$inv_log->created_by = $request->get('employee_id');
 
 				$inv_log->save();
 			} else {
