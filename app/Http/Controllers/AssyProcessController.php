@@ -215,7 +215,7 @@ class AssyProcessController extends Controller
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
-		) as final group by material_number having plan > 0  
+		) as final group by material_number having plan_ori > 0  
 		) as final2
 		join materials on final2.material_number = materials.material_number
 		".$where." ".$where2." ".$where3." ".$where4."
