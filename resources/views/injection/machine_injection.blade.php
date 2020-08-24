@@ -863,9 +863,9 @@
 				$('#cavity').html(result.datas.cavity);
 				$('#total_shot').val(result.datas.shot);
 				$('#material_number').val(result.datas.material_number);
-				$('#dryer').val(result.datas.dryer);
-				$('#dryer_lot_number').val(result.datas.dryer_lot_number);
-				$('#dryer_color').val(result.datas.dryer_color);
+				$('#dryer').html(result.datas.dryer);
+				$('#dryer_lot_number').html(result.datas.dryer_lot_number);
+				$('#dryer_color').html(result.datas.dryer_color);
 				countUpFromTime(new Date(start_time));
 				$('#btn_mulai').hide();
 				$('#btn_selesai').show();
