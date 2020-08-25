@@ -152,7 +152,7 @@
 						</tr>
 						<tr>
 							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditor</td>
-							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="employee_id">{{ $employee->employee_id }} - {{ $employee->name }}</td>
+							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="employee_id">{{ $employee->employee_id }} - {{ $employee->name }}</td>
 						</tr>
 						<tr>
 							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
@@ -170,7 +170,7 @@
 				</table>
 			</div>
 
-			<div class="col-xs-12" style="padding-right: 0; padding-left: 0;">
+			<div class="col-xs-12" style="overflow-x: scroll;">
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
 					<thead style="font-weight: bold; color: black; background-color: #cddc39;">
 						<tr>

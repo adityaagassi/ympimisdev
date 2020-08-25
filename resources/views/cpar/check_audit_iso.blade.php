@@ -231,7 +231,7 @@ td {
                     <option value="Chemical Process Control">Chemical Process Control</option>
                     <option value="Human Resources">Human Resources</option>
                     <option value="General Affairs">General Affairs</option>
-                    <option value="Workshop & Maintenance Molding">Workshop & Maintenance Molding</option>
+                    <option value="Workshop and Maintenance Molding">Workshop and Maintenance Molding</option>
                     <option value="Production Engineering">Production Engineering</option>
                     <option value="Maintenance">Maintenance</option>
                     <option value="Procurement">Procurement</option>
