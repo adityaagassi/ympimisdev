@@ -142,9 +142,6 @@
 					title: {
 						text: 'MSCR'
 					},
-					subtitle:{
-						text: 'Scrap Amount'
-					},
 					xAxis: {
 						type: 'datetime',
 						tickInterval: 24 * 3600 * 1000,
@@ -220,9 +217,6 @@
 					},
 					title: {
 						text: 'WSCR'
-					},
-					subtitle:{
-						text: 'Scrap Amount'
 					},
 					xAxis: {
 						type: 'datetime',
