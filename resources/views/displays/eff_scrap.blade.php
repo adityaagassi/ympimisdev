@@ -16,7 +16,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div id="period_title" class="col-xs-9" style="background-color: rgba(248,161,63,0.9);"><center><span style="color: black; font-size: 3vw; font-weight: bold;" id="title_text"></span></center></div>
+		<div id="period_title" class="col-xs-9" style="background-color: rgba(248,161,63,0.9);"><center><span style="color: black; font-size: 1.5vw; font-weight: bold;" id="title_text"></span></center></div>
 		<div class="col-xs-3">
 			<div class="input-group date">
 				<div class="input-group-addon" style="background-color: rgba(248,161,63,0.9);">
