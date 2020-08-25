@@ -26,11 +26,11 @@
 			</div>
 		</div>
 		<div class="col-xs-12" id="scrap_wscr"></div>
-		<div class="row" id="detail_scrap_wscr">
+		<div class="col-xs-12" id="detail_scrap_wscr">
 
 		</div>
 		<div class="col-xs-12" id="scrap_mscr"></div>
-		<div class="row" id="detail_scrap_mscr">
+		<div class="col-xs-12" id="detail_scrap_mscr">
 
 		</div>
 		{{-- <div class="col-xs-6" id="pp_scrap"></div> --}}
