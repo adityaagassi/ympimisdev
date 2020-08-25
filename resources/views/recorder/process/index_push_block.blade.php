@@ -2113,19 +2113,19 @@
 			document.getElementById(id3).style.backgroundColor = "#ff4f4f";
 		}
 
-		// var id_new = push_block.split('_');
+		var id_new = push_block.split('_');
 
-		// if (id_new[0] == $('#head_4').val()) {
-		// 	var head = $('#head_1').val();
-		// 	var block = parseInt(id_new[1]) + 1;
-		// }else{
-		// 	var head = parseInt(id_new[0]) + 1;
-		// 	var block = parseInt(id_new[1]);
-		// }
+		if (id_new[0] == $('#head_4').val()) {
+			var head = $('#head_1').val();
+			var block = parseInt(id_new[1]) + 1;
+		}else{
+			var head = parseInt(id_new[0]) + 1;
+			var block = parseInt(id_new[1]);
+		}
 
-		// if (x.length >= 5) {
-		// 	$('#ketinggian_'+head+'_'+block).focus();
-		// }
+		if (x.length >= 5) {
+			$('#ketinggian_'+head+'_'+block).focus();
+		}
 	}
 
 	function itemresume1(head_id,block){
@@ -2336,8 +2336,8 @@
 				tableData += '<td style="text-align:right">'+ block +'</td>';
 				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="push_pull(this.id)" class="form-control" id="push_pull_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '<td style="height: 100%; text-align: center;" id="judgement_'+result.datas.cavity_4+'_'+block+'"></td>';
-				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'" value="0"></td>';
-				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'">OK</td>';
+				tableData += '<td style="padding:0;text-align:right"><input type="number" style="font-size: 15px; height: 100%; text-align: center;" onkeyup="ketinggian(this.id)" class="form-control" id="ketinggian_'+result.datas.cavity_4+'_'+block+'"></td>';
+				tableData += '<td style="height: 100%; text-align: center;" id="judgement2_'+result.datas.cavity_4+'_'+block+'"></td>';
 				tableData += '</tr>';
 			}
 			$('#tableBodyResume3').append(tableData);

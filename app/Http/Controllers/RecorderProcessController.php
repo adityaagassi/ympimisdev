@@ -288,13 +288,8 @@ class RecorderProcessController extends Controller
                       'pic_check' => $request->get('pic_check'),
                       'created_by' => $id_user
                   ]);
-                  $status_input++;
-                }
 
-                if ($status_input == 8) {
-                  for($j = 0; $j<8;$j++){
-                    $temptemp = PushBlockRecorderTemp::where('head',$head[$j])->where('block',$block[$j])->where('push_block_code',$push_block_code)->delete();
-                  }
+                  $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->delete();
                 }
               }else{
                 for($i = 0; $i<16;$i++){
@@ -318,13 +313,8 @@ class RecorderProcessController extends Controller
                       'pic_check' => $request->get('pic_check'),
                       'created_by' => $id_user
                   ]);
-                  $status_input++;
-                }
 
-                if ($status_input == 16) {
-                  for($j = 0; $j<16;$j++){
-                    $temptemp = PushBlockRecorderTemp::where('head',$head[$j])->where('block',$block[$j])->where('push_block_code',$push_block_code)->delete();
-                  }
+                  $temptemp = PushBlockRecorderTemp::where('head',$head[$i])->where('block',$block[$i])->where('push_block_code',$push_block_code)->delete();
                 }
               }
 
