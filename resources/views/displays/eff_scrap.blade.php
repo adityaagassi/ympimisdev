@@ -299,11 +299,11 @@
 
 				$.each(result.categories, function(key, value){
 					if(value.receive_location == 'WSCR'){
-						div_detail = '<div style="height:200px;" class="col-xs-3" id="'+value.receive_location+'_'+value.reason+'"></div>';
+						div_detail = '<div style="height:190px;" class="col-xs-3" id="'+value.receive_location+'_'+value.reason+'"></div>';
 						$('#detail_scrap_wscr').append(div_detail);
 					}
 					else{
-						div_detail = '<div style="height:200px;" class="col-xs-3" id="'+value.receive_location+'_'+value.reason+'"></div>';
+						div_detail = '<div style="height:190px;" class="col-xs-3" id="'+value.receive_location+'_'+value.reason+'"></div>';
 						$('#detail_scrap_mscr').append(div_detail);						
 					}
 
