@@ -1,5 +1,5 @@
   <!-- Main Footer -->
-  <footer class="main-footer">
+  <footer class="main-footer" style="height: 20px; padding-top: 0;">
   	<!-- To the right -->
   	<div class="pull-right hidden-xs">
   		YMPI Management Information System

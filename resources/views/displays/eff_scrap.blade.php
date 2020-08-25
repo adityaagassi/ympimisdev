@@ -26,8 +26,11 @@
 			</div>
 		</div>
 		<div class="col-xs-12" id="scrap_wscr"></div>
+		<div class="row" id="detail_scrap_wscr">
+
+		</div>
 		<div class="col-xs-12" id="scrap_mscr"></div>
-		<div class="row" id="detail_scrap">
+		<div class="row" id="detail_scrap_mscr">
 
 		</div>
 		{{-- <div class="col-xs-6" id="pp_scrap"></div> --}}
@@ -291,11 +294,19 @@
 				var reason_mscr = [];
 				var reason_wscr = [];
 				var div_detail = "";
-				$('#detail_scrap').html("");
+				$('#detail_scrap_wscr').html("");
+				$('#detail_scrap_mscr').html("");
 
 				$.each(result.categories, function(key, value){
-					div_detail = '<div style="height:200px;" class="col-xs-3" id="'+value.receive_location+'_'+value.reason+'"></div>';
-					$('#detail_scrap').append(div_detail);
+					if(value.receive_location == 'WSCR'){
+						div_detail = '<div style="height:200px;" class="col-xs-3" id="'+value.receive_location+'_'+value.reason+'"></div>';
+						$('#detail_scrap_wscr').append(div_detail);
+					}
+					else{
+						div_detail = '<div style="height:200px;" class="col-xs-3" id="'+value.receive_location+'_'+value.reason+'"></div>';
+						$('#detail_scrap_mscr').append(div_detail);						
+					}
+
 				});
 
 				$.each(result.actual_wscr, function(key, value){
