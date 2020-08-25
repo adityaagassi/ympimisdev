@@ -679,14 +679,23 @@ class StockTakingController extends Controller{
 		}
 
 
-		$data = db::select("SELECT IF (l.area = 'ST', 'SURFACE TREATMENT', l.area) AS area, s.location, s.store FROM
+		// $data = db::select("SELECT IF (l.area = 'ST', 'SURFACE TREATMENT', l.area) AS area, s.location, s.store FROM
+		// 	(SELECT DISTINCT location, store FROM stocktaking_lists) s
+		// 	LEFT JOIN storage_locations l
+		// 	ON s.location = l.storage_location
+		// 	".$store."
+		// 	ORDER BY
+		// 	l.area DESC,
+		// 	s.location ASC,
+		// 	s.store ASC");
+
+		$data = db::select("SELECT DISTINCT IF (l.area = 'ST', 'SURFACE TREATMENT', l.area) AS area, s.store FROM
 			(SELECT DISTINCT location, store FROM stocktaking_lists) s
 			LEFT JOIN storage_locations l
 			ON s.location = l.storage_location
 			".$store."
 			ORDER BY
 			l.area DESC,
-			s.location ASC,
 			s.store ASC");
 
 

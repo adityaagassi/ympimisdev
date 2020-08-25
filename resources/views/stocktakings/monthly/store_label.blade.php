@@ -51,7 +51,7 @@
 				@endphp
 				<tr>
 					<td style="padding: 0px; vertical-align: middle; font-size: 50px;">
-						{{ $data[$i]->area }} ({{ $data[$i]->location }})
+						{{ $data[$i]->area }}
 					</td>
 				</tr>				
 				<tr>

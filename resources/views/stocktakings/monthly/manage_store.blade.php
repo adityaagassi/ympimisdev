@@ -465,10 +465,6 @@
 		var store = $("#receiveStoreTags").val();
 
 
-		// $.get('{{ url("print/stocktaking/print_store") }}', data, function(result, status, xhr){
-			
-		// });
-
 		window.open('{{ url("print/stocktaking/print_store") }}'+'/'+store, '_blank');
 		
 
