@@ -226,7 +226,7 @@ td {
                     <option value="Material Process">Material Process</option>
                     <option value="Surface Treatment">Surface Treatment</option>
                     <option value="Educational Instrument">Educational Instrument</option>
-                    <option value="Standarisasi & QA Administrasi">Standarisasi & QA Administrasi</option>
+                    <option value="Standardization">Standardization</option>
                     <option value="QA Process">QA Process</option>
                     <option value="Chemical Process Control">Chemical Process Control</option>
                     <option value="Human Resources">Human Resources</option>
@@ -238,7 +238,6 @@ td {
                     <option value="Production Control">Production Control</option>
                     <option value="Warehouse">Warehouse</option>
                     <option value="Welding Process">Welding Process</option>
-
                   </select>
                 </div>
               </div>
