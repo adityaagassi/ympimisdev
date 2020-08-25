@@ -15,7 +15,7 @@ class GeneralController extends Controller
 
 	public function indexOmiVisitor(){
 		$title = 'Koyami Visitor';
-		$title_jp = '??';
+		$title_jp = '売店来客';
 
 		return view('general.omi_visitor', array(
 			'title' => $title,
@@ -28,7 +28,7 @@ class GeneralController extends Controller
 
 		$response = array(
 			'status' => true,
-			'visitors' => $visitors,
+			'visitors' => $visitors
 		);
 		return Response::json($response);
 	}
@@ -156,6 +156,7 @@ class GeneralController extends Controller
 
 		try{
 			$now = date('Y-m-d');
+			// $now = '2020-08-19';
 
 			$query = "SELECT DISTINCT
 			purpose_code,
