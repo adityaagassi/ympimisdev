@@ -57,7 +57,7 @@ class DisplayController extends Controller
 			FROM
 			scrap_targets 
 			WHERE
-			due_date >= '".$first."'
+			due_date >= '".$first."' 
 			AND due_date <= '".$last."'");
 
 		$actuals = db::select("SELECT
@@ -132,7 +132,7 @@ class DisplayController extends Controller
 					'reason_name' => $actual->reason_name,
 					'receive_location' => 'MSCR'
 				]);
-			}	
+			}
 			if($actual->receive_location == 'WSCR' || $actual->receive_location == 'no_scrap'){
 				array_push($actual_wscr, [
 					'posting_date' => $actual->posting_date,
@@ -169,7 +169,6 @@ class DisplayController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('page', 'Display Weekly Shipment')->with('head', 'Display');
-
 	}
 
 	public function indexStuffingProgress(){

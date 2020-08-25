@@ -48,7 +48,7 @@
 
 	jQuery(document).ready(function() {
 		fetchChart();
-		setInterval(fetchChart, 720000);
+		setInterval(fetchChart, 1000*60*60);
 		$('#datepicker').datepicker({
 			autoclose: true,
 			format: "yyyy-mm",
@@ -298,9 +298,11 @@
 						if(reason_mscr.indexOf(value.reason) === -1){
 							reason_mscr.push(value.reason);
 							var reason = value.reason;
-							div_detail = '<div style="height:200px;" class="col-xs-3" id="reason_'+value.reason+'"></div>';
-							id_div = 'reason_'+value.reason;
+							div_detail = '<div style="height:200px;" class="col-xs-3" id="MSCR_'+value.reason+'"></div>';
+							id_div = 'MSCR_'+value.reason;
 							$('#detail_scrap').append(div_detail);
+
+							console.log(value.reason);
 
 							var new_detail_reason = [];
 
@@ -403,8 +405,8 @@
 						if(reason_wscr.indexOf(value.reason) === -1){
 							reason_wscr.push(value.reason);
 							var reason = value.reason;
-							div_detail = '<div style="height:200px;" class="col-xs-3" id="reason_'+value.reason+'"></div>';
-							id_div = 'reason_'+value.reason;
+							div_detail = '<div style="height:200px;" class="col-xs-3" id="WSCR_'+value.reason+'"></div>';
+							id_div = 'WSCR_'+value.reason;
 							$('#detail_scrap').append(div_detail);
 
 							var new_detail_reason = [];
