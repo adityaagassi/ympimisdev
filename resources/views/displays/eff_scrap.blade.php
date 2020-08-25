@@ -241,7 +241,8 @@
 					},
 					tooltip: {
 						formatter: function () {
-							return 'USD '+(this.y/1000).toFixed(3)+'K';
+							return 'Date: '+Highcharts.dateFormat('%e - %b - %Y',
+								new Date(this.x))+'<br>'+this.series.name +': USD '+(this.y/1000).toFixed(3)+'K';
 						}
 					},
 					plotOptions: {
