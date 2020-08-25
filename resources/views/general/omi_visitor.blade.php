@@ -96,16 +96,16 @@
 
 				var count = result.visitors.length;
 
-				if(count >= 17){
+				if(count >= 10){
 					visitor_count = '<span style="background-color: #ff1744;">&nbsp;'+count+'&nbsp;</span>';
-					count_detail = '<span style="color: #ff1744;"><i class="fa fa-arrow-up"></i> Jumlah Pengunjung Melebihi Ketentuan <i class="fa fa-arrow-up"></i></span>';
-					visitor_appeal = '<span style="color: #ff1744;" class="clapclap">DILARANG MASUK</span>';
+					count_detail = '<span style="color: #ff1744; font-weight:bold;"><i class="fa fa-arrow-up"></i> Jumlah Pengunjung Melebihi Ketentuan <i class="fa fa-arrow-up"></i></span>';
+					visitor_appeal = '<span style="color: #ff1744; font-weight:bold;" class="clapclap">DILARANG MASUK</span>';
 					police_image = '<center><img style="height: 700px;" src="{{ url('images/omi/police01_b_09.png') }}"></center>';
 				}
 				else{
 					visitor_count = '<span style="background-color: #7cb342;">&nbsp;'+count+'&nbsp;</span>';
-					count_detail = '<span style="color:#7cb342;"><i class="fa fa-arrow-down"></i> Jumlah Pengunjung Dibawah Ketentuan <i class="fa fa-arrow-down"></i></span>';
-					visitor_appeal = '<span style="color: #7cb342;">BOLEH MASUK</span>';
+					count_detail = '<span style="color:#7cb342; font-weight:bold;"><i class="fa fa-arrow-down"></i> Jumlah Pengunjung Dibawah Ketentuan <i class="fa fa-arrow-down"></i></span>';
+					visitor_appeal = '<span style="color: #7cb342; font-weight:bold;">BOLEH MASUK</span>';
 					police_image = '<center><img style="height: 700px;" src="{{ url('images/omi/police01_b_10.png') }}"></center>';
 				}
 
