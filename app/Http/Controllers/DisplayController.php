@@ -114,6 +114,45 @@ class DisplayController extends Controller
 			ORDER BY
 			posting_date ASC");
 
+		$categories = db::select("SELECT
+			sum( amount ) AS total_amount,
+			receive_location,
+			reason 
+			FROM
+			(
+			SELECT
+			IF
+			(
+			s.movement_type = '9S2' 
+			OR s.movement_type = '102',
+			- 1 * s.quantity *(
+			m.standard_price / 1000 
+			),
+			s.quantity *(
+			m.standard_price / 1000 
+			)) AS amount,
+			IF
+			( s.receive_location = '' OR s.receive_location IS NULL, s.storage_location, s.receive_location ) AS receive_location,
+			SPLIT_STRING ( s.reference, '/', 2 ) AS reason 
+			FROM
+			sap_transactions s
+			LEFT JOIN material_plant_data_lists m ON m.material_number = s.material_number 
+			WHERE
+			(
+			s.receive_location IN ( 'MSCR', 'WSCR' ) 
+			OR s.storage_location IN ( 'MSCR', 'WSCR' )) 
+			AND s.posting_date >= '".$first."' 
+			AND s.posting_date <= '".$last."' 
+			AND s.reference NOT LIKE '%TRI%' 
+			AND s.reference NOT LIKE '%WAST%' 
+			) AS category 
+			GROUP BY
+			receive_location,
+			reason 
+			ORDER BY
+			receive_location DESC,
+			total_amount DESC");
+
 		$actual_mscr = array();
 		$actual_wscr = array();
 
@@ -155,6 +194,7 @@ class DisplayController extends Controller
 			'targets' => $targets,
 			'actual_mscr' => $actual_mscr,
 			'actual_wscr' => $actual_wscr,
+			'categories' => $categories,
 			'first' => date('d', strtotime($first)),
 			'last' => date('d F Y', strtotime($last))
 		);
