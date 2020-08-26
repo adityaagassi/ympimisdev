@@ -170,6 +170,14 @@
 						}
 					},
 					plotOptions: {
+						line: {
+							dataLabels: {
+								enabled: true,
+								formatter: function () {
+									return (this.y/1000).toFixed(3)+'K';
+								}
+							}
+						},
 						area: {
 							pointStart: 1940,
 							marker: {
@@ -246,6 +254,14 @@
 						}
 					},
 					plotOptions: {
+						line: {
+							dataLabels: {
+								enabled: true,
+								formatter: function () {
+									return (this.y/1000).toFixed(3)+'K';
+								}
+							}
+						},
 						area: {
 							pointStart: 1940,
 							marker: {
@@ -410,7 +426,13 @@
 										enabled:false
 									},
 									color:'#ccff90',
-									data: new_sum
+									data: new_sum,
+									dataLabels: {
+										enabled: true,
+										formatter: function () {
+											return (this.y).toFixed(1);
+										}
+									}
 								},{
 									name: 'Target',
 									type: 'line',
@@ -434,6 +456,15 @@
 							var id_div = 'MSCR_'+value.reason;
 
 							var new_detail_reason = [];
+							var new_target = 0;
+
+							$.each(result.targets, function(key, value){
+								if(value.remark == id_div){
+									new_target = value.target;
+								}
+							});
+
+							var new_target_reason = [];
 
 							for(var i = 0; i < result.actual_mscr.length; i++){
 								if(result.actual_mscr[i].reason == reason || result.actual_mscr[i].reason == null){
@@ -441,6 +472,8 @@
 										"posting_date" : result.actual_mscr[i].posting_date,
 										"amount" : result.actual_mscr[i].amount
 									});
+
+									new_target_reason.push([Date.parse(result.actual_mscr[i].posting_date), parseFloat(new_target)]);
 
 								}
 							}
@@ -521,7 +554,22 @@
 										enabled:false
 									},
 									color:'#ccff90',
-									data: new_sum
+									data: new_sum,
+									dataLabels: {
+										enabled: true,
+										formatter: function () {
+											return (this.y).toFixed(1);
+										}
+									}
+								},{
+									name: 'Target',
+									type: 'line',
+									marker:{
+										enabled:false
+									},
+									color: 'rgb(248,161,63)',
+									data: new_target_reason,
+									dashStyle: 'shortdash'
 								}]
 							});
 
