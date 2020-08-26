@@ -46,8 +46,11 @@ class AccountingController extends Controller
 
         $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits',];
 
-        $this->dgm = 'PI0109004'; // Pak Budhi
-        $this->gm = 'PI1206001'; // Pak Hayakawa
+        // $this->dgm = 'PI1910003';
+        // $this->gm = 'PI1206001';
+
+        $this->dgm = 'PI0902001';
+        $this->gm = 'PI1412008';
 
         $this->manager_acc = 'PI9902017/Romy Agung Kurniawan'; //Pak Romy
         $this->dir_acc = 'PI1712018/Kyohei Iida'; //Pak Ida
