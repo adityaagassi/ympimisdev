@@ -158,8 +158,13 @@
 
         <div class="row">
           <div class="col-xs-5 col-xs-offset-1">
-            <label for="payment">Payment Term<span class="text-red">*</span></label>
-            <input type="text" id="payment_term" name="payment_term" class="form-control" placeholder="Payment Term" required="" readonly="">
+            <label for="form_bagian">Currency<span class="text-red">*</span></label>
+             <select class="form-control select2" id="currency" name="currency" data-placeholder='Currency' style="width: 100%">
+              <option value="">&nbsp;</option>
+              <option value="USD">USD</option>
+              <option value="IDR">IDR</option>
+              <option value="JPY">JPY</option>
+            </select>
           </div>
           <div class="col-xs-5">
             <label for="file">File Quotation<span class="text-red">*</span></label>
@@ -168,9 +173,14 @@
         </div>
 
         <div class="row">
-          <div class="col-xs-10 col-xs-offset-1">
+          <div class="col-xs-5 col-xs-offset-1">
             <label for="form_bagian">Reff Number<span class="text-red">*</span></label>
             <input type="text" class="form-control" id="reff_number" name="reff_number" placeholder="Reff Number" required="" readonly="">
+          </div>
+
+          <div class="col-xs-5">
+            <label for="payment">Payment Term<span class="text-red">*</span></label>
+            <input type="text" id="payment_term" name="payment_term" class="form-control" placeholder="Payment Term" required="" readonly="">
           </div>
         </div>
 
@@ -219,14 +229,13 @@
 
       CKEDITOR.replace('note' ,{
         filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-        height: '100px'
+        height: '200px'
       });
 
       CKEDITOR.replace('quotation_supplier' ,{
         filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-        height: '100px'
+        height: '200px'
       });
-      
 
       });
 
@@ -375,6 +384,13 @@
         return false;
       }
 
+      if ($("#vendor").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Vendor Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
       if ($("#objective").val() == "") {
         $("#loading").hide();
         alert("Kolom Objective Harap diisi");
@@ -406,6 +422,13 @@
       if ($("#payment_term").val() == "") {
         $("#loading").hide();
         alert("Kolom Payment Term Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
+      if ($("#currency").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Currency Harap diisi");
         $("html").scrollTop(0);
         return false;
       }
@@ -426,6 +449,7 @@
       
       var conf = confirm("Apakah Anda yakin ingin membuat investment Ini?");
       if (conf == true) {
+        $("#loading").show();
         $('[name=importForm]').submit();
       } else {
 
@@ -434,83 +458,6 @@
     
     $("#form_submit").click( function() {
       $("#loading").show();
-
-      if ($("#applicant_name").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Nama Kosong");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#applicant_department").val() == "") {
-        $("#loading").hide();
-        alert("Akun Anda Tidak Memiliki Departemen");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#category").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Kategori Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#subject").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Subject Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#type").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Tipe Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#objective").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Objective Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#objective_detail").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Detail Objective Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#date_order").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Order Date Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#date_delivery").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Delivery Date Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#payment_term").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Payment Term Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#reff_number").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Reff Number Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
 
       var data = {
         applicant_id: $("#applicant_id").val(),

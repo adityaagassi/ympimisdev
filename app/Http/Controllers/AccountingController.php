@@ -2239,13 +2239,28 @@ class AccountingController extends Controller
     public function get_budget_name(Request $request)
     {
         $html = array();
-        $budget_no = AccBudget::where('budget_no', $request->budget)
-        ->get();
-        foreach ($budget_no as $bud)
+        
+        $tahun = date('Y');
+        $namabulan = date('F');
+        $bulan = strtolower(date('M'));
+
+        $tglnow = date('Y-m-d');
+        $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$tglnow'");
+
+        foreach ($fy as $fys) {
+            $fiscal = $fys->fiscal_year;
+        }
+
+        $budget_no = AccBudget::SELECT('*',$bulan.'_sisa_budget as budget_now')->where('budget_no', $request->budget)
+        ->where('periode', $fiscal)->get();
+
+        foreach ($budget_no as $budget)
         {
             $html = array(
-                'budget_desc' => $bud->description,
+                'budget_desc' => $budget->description,
+                'budget_now' => $budget->budget_now
             );
+
         }
         return json_encode($html);
     }
@@ -3657,9 +3672,13 @@ class AccountingController extends Controller
         {
             $id = $invest->id;
             
-            if ($invest->posisi == "user")
+            if ($invest->posisi == "user" && $invest->status == "approval")
             {
                 return '<label class="label label-danger">Belum Dikirim</label>';
+            }
+            if ($invest->posisi == "user" && $invest->status == "comment")
+            {
+                return '<label class="label label-warning">Commended</label>';
             }
             else if ($invest->posisi == "acc_budget" || $invest->posisi == "acc_pajak")
             {
@@ -3870,6 +3889,7 @@ class AccountingController extends Controller
                 'date_order' => $request->get('date_order') , 
                 'delivery_order' => $request->get('date_delivery') , 
                 'payment_term' => $request->get('payment_term') , 
+                'currency' => $request->get('currency') ,
                 'note' => $request->get('note') , 
                 'quotation_supplier' => $request->get('quotation_supplier') , 
                 'file' => $file->filename , 
@@ -4088,7 +4108,7 @@ class AccountingController extends Controller
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'potrait');
+            $pdf->setPaper('Legal', 'potrait');
 
             $pdf->loadView('accounting_purchasing.report.report_investment', array(
                 'inv' => $detail_inv,
@@ -4155,6 +4175,20 @@ class AccountingController extends Controller
         }
 
         return json_encode($html);
+    }
+
+    public function gettotalamount(Request $request)
+    {
+        $html = array();
+        $total = 0;
+        $itemDetail = AccInvestmentDetail::where('reff_number', $request->reff_number)
+        ->get();
+        foreach ($itemDetail as $item)
+        {
+            $total += $item->amount;
+        }
+
+        return $total;
     }
 
     public function create_investment_item(Request $request)
@@ -4385,7 +4419,7 @@ class AccountingController extends Controller
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'potrait');
+            $pdf->setPaper('Legal', 'potrait');
 
             $pdf->loadView('accounting_purchasing.report.report_investment', array(
                 'inv' => $detail_inv,
@@ -4467,7 +4501,7 @@ class AccountingController extends Controller
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
-            $pdf->setPaper('A4', 'potrait');
+            $pdf->setPaper('Legal', 'potrait');
 
             $pdf->loadView('accounting_purchasing.report.report_investment', array(
                 'inv' => $detail_inv,
@@ -4537,7 +4571,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('Legal', 'potrait');
 
                 $pdf->loadView('accounting_purchasing.report.report_investment', array(
                     'inv' => $detail_inv,
@@ -4607,7 +4641,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('Legal', 'potrait');
 
                 $pdf->loadView('accounting_purchasing.report.report_investment', array(
                     'inv' => $detail_inv,
@@ -4672,7 +4706,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('Legal', 'potrait');
 
                 $pdf->loadView('accounting_purchasing.report.report_investment', array(
                     'inv' => $detail_inv,
@@ -4737,7 +4771,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('Legal', 'potrait');
 
                 $pdf->loadView('accounting_purchasing.report.report_investment', array(
                     'inv' => $detail_inv,
@@ -4801,7 +4835,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('Legal', 'potrait');
 
                 $pdf->loadView('accounting_purchasing.report.report_investment', array(
                     'inv' => $detail_inv,
@@ -4865,7 +4899,7 @@ class AccountingController extends Controller
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
+                $pdf->setPaper('Legal', 'potrait');
 
                 $pdf->loadView('accounting_purchasing.report.report_investment', array(
                     'inv' => $detail_inv,
@@ -4905,6 +4939,103 @@ class AccountingController extends Controller
             ))->with('page', 'Approval');
         }
     }
+
+    //comment
+    public function investment_comment($id){
+        $invest = AccInvestment::find($id);
+        try{
+
+            return view('accounting_purchasing.verifikasi.investment_comment', array(
+                'invest' => $invest
+            ))->with('page', 'Approval');
+
+        } catch (Exception $e) {
+            return view('accounting_purchasing.verifikasi.investment_comment', array(
+                'head' => $invest->reff_number,
+                'message' => 'Error',
+                'message2' => $e->getMessage(),
+            ))->with('page', 'Approval');
+        }
+    }
+
+    //comment
+    public function investment_comment_msg($id){
+        $invest = AccInvestment::find($id);
+       
+        return view('accounting_purchasing.verifikasi.investment_comment_msg', array(
+            'invest' => $invest
+        ))->with('page', 'Approval');
+
+    }
+
+    public function investment_comment_post(Request $request,$id)
+      {
+
+          $investment = AccInvestment::find($id);
+
+          if ($investment->posisi != "user") {
+
+            $comment = $request->get('question');
+            $investment->comment_note = $comment;
+            
+            if ($investment->posisi == "manager") {
+                $keterangan = $investment->approval_manager;
+            }
+            else if($investment->posisi == "dgm"){
+                $keterangan = $investment->approval_dgm;
+            }
+            else if($investment->posisi == "gm"){
+                $keterangan = $investment->approval_gm;
+            }
+            else if($investment->posisi == "manager_acc"){
+                $keterangan = $investment->approval_manager_acc;
+            }
+            else if($investment->posisi == "direktur_acc"){
+                $keterangan = $investment->approval_dir_acc;
+            }
+            else if($investment->posisi == "presdir"){
+                $keterangan = $investment->approval_presdir;
+            }
+
+            $investment->comment = $investment->posisi."/".$keterangan;
+            $investment->status = "comment";
+            $investment->posisi = "user";
+
+            $investment->save();
+
+            //kirim email ke Applicant
+            $mails = "select distinct email from users where users.username = '".$investment->applicant_id."'";
+            $mailtoo = DB::select($mails);
+
+            $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
+            $tolak = db::select($isimail);
+
+            Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
+
+          } else if($investment->posisi == "user"){
+
+            $investment->reply = $request->get('answer');
+            $pos = explode("/", $investment->comment);
+            $investment->posisi = $pos[0];
+
+            $investment->save();
+
+            //kirim email ke Penanya
+            $mails = "select distinct email from users where users.username = '".$pos[1]."'";
+            $mailtoo = DB::select($mails);
+
+
+            $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
+            $tolak = db::select($isimail);
+
+            Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
+
+            $investment->status = 'approval';
+            $investment->save();
+          }
+
+        return redirect('/investment/comment_msg/'.$id)->with('success', 'Investment Approved')->with('page', 'Investment');
+      }
 
     //Reject Investment
 
@@ -5028,14 +5159,16 @@ class AccountingController extends Controller
         ))->with('page', 'Approval');
     }
 
-    //comment
+   
 
-    public function investment_comment(Request $request,$id)
+    //reject_acc
+
+    public function investment_reject_acc(Request $request,$id)
       {
-          $comment = $request->get('alasan');
+          $reject_note = $request->get('alasan');
 
           $investment = AccInvestment::find($id);
-          $investment->comment = $comment;
+          $investment->reject_note = $reject_note;
 
           if ($investment->posisi == "acc_budget") {
             $investment->posisi = "user";
@@ -5056,7 +5189,7 @@ class AccountingController extends Controller
           $mailtoo = DB::select($mails);
 
           Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
-          return redirect('/investment/check/'.$id)->with('error', 'Investment Not Approved')->with('page', 'CPAR');
+          return redirect('/investment/check/'.$id)->with('error', 'Investment Not Approved')->with('page', 'Investment');
       }
 
 

@@ -34,16 +34,50 @@
 				<?php $supplier_name = $datas->supplier_name ?>
 				<?php $delivery_order = $datas->delivery_order ?>
 				<?php $date_order = $datas->date_order ?>
+				<?php $reject_note = $datas->reject_note ?>
 				<?php $comment = $datas->comment ?>
+				<?php $comment_note = $datas->comment_note ?>
+				<?php $reply = $datas->reply ?>
+				<?php $status = $datas->status ?>
 			@endforeach
 
-			@if($posisi == "acc_budget")
+			@if($posisi == "user")
+
+				<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
+				
+				<p style="font-size: 18px;">Informasi Terkait Investment<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+				This is an automatic notification. Please do not reply to this address.
+				<br>
+				<h2>Investment No : {{$reff_number}}<h2>
+				@if($reject_note != "")
+					<h2>Not Approved</h2>
+					<h3>Reason : <?= $reject_note ?></h3>
+				@elseif($comment != "")
+				<?php 
+					$commentby = explode("/", $comment)
+				?>
+				<h2>Commended By : <?= $commentby[2] ?></h2>
+				<h3>Question : <?= $comment_note ?></h3>
+				@else
+					<h2>Not Approved</h2>
+				@endif
+				<hr>
+				<span style="font-weight: bold; background-color: orange;" style="font-size: 20px">&#8650; <i>Click Here For</i> &#8650;</span><br>
+				
+				@if($comment != "")
+					<a href="{{ url("investment/comment/".$id) }}" style="font-size: 20px">Reply This Message</a><br>
+				@else
+					<a href="http://172.17.128.4/mirai/public/investment" style="font-size: 20px">Check Investment</a><br>
+				@endif
+
+
+			@elseif($posisi == "acc_budget")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Investment <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -93,7 +127,7 @@
 			</table>
 			<br>
 
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
 			<a href="http://172.17.128.4/mirai/public/investment/check/{{ $id }}">Check Investment</a><br>
 
 
@@ -103,7 +137,7 @@
 			<p style="font-size: 18px;">Investment <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -153,16 +187,16 @@
 			</table>
 			<br>
 
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
 			<a href="http://172.17.128.4/mirai/public/investment/check/{{ $id }}">Check Investment Tax</a><br>
 
-			@elseif($posisi == "manager")
+			@elseif($posisi == "manager" && $status == "approval")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Investment <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -213,18 +247,21 @@
 			<br>
 			
 			<br>
-			<span style="font-weight: bold;"><i>Apakah anda ingin menyetujui investment ini ?</i></span><br>
-			<a style="background-color: green; width: 50px;" href="{{ url("investment/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: orange; width: 50px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Tidak &nbsp;</a><br>
 
-			@elseif($posisi == "dgm")
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Not Approve &nbsp;</a><br>
+
+			@elseif($posisi == "dgm" && $status == "approval")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Investment <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -275,18 +312,20 @@
 			<br>
 			
 			<br>
-			<span style="font-weight: bold;"><i>Apakah anda ingin menyetujui investment ini ?</i></span><br>
-			<a style="background-color: green; width: 50px;" href="{{ url("investment/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: orange; width: 50px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Tidak &nbsp;</a><br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			@elseif($posisi == "gm")
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Not Approve &nbsp;</a><br>
+
+			@elseif($posisi == "gm" && $status == "approval")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Investment <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -337,18 +376,20 @@
 			<br>
 			
 			<br>
-			<span style="font-weight: bold;"><i>Apakah anda ingin menyetujui investment ini ?</i></span><br>
-			<a style="background-color: green; width: 50px;" href="{{ url("investment/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: orange; width: 50px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Tidak &nbsp;</a><br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			@elseif($posisi == "manager_acc")
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Not Approve &nbsp;</a><br>
+
+			@elseif($posisi == "manager_acc" && $status == "approval")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Investment <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -399,18 +440,21 @@
 			<br>
 			
 			<br>
-			<span style="font-weight: bold;"><i>Apakah anda ingin menyetujui investment ini ?</i></span><br>
-			<a style="background-color: green; width: 50px;" href="{{ url("investment/approvemanageracc/".$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: orange; width: 50px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Tidak &nbsp;</a><br>
 
-			@elseif($posisi == "direktur_acc")
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvemanageracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Not Approve &nbsp;</a><br>
+
+			@elseif($posisi == "direktur_acc" && $status == "approval")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Investment <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -461,18 +505,20 @@
 			<br>
 			
 			<br>
-			<span style="font-weight: bold;"><i>Apakah anda ingin menyetujui investment ini ?</i></span><br>
-			<a style="background-color: green; width: 50px;" href="{{ url("investment/approvediracc/".$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: orange; width: 50px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Tidak &nbsp;</a><br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvediracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			@elseif($posisi == "presdir")
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Not Approve &nbsp;</a><br>
+
+			@elseif($posisi == "presdir" && $status == "approval")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
 			<p style="font-size: 18px;">Investment <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -523,10 +569,57 @@
 			<br>
 			
 			<br>
-			<span style="font-weight: bold;"><i>Apakah anda ingin menyetujui investment ini ?</i></span><br>
-			<a style="background-color: green; width: 50px;" href="{{ url("investment/approvepresdir/".$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a style="background-color: orange; width: 50px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Tidak &nbsp;</a><br>		
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> no&#8650;</span><br><br>
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvepresdir/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Not Approve &nbsp;</a><br>
+
+
+			@elseif($status == "comment" && ($posisi == "manager" || $posisi == "dgm" || $posisi == "gm" || $posisi == "manager_acc" || $posisi == "direktur_acc" || $posisi == "presdir"))
+
+				<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
+				
+				<p style="font-size: 18px;">Investment Information<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+				This is an automatic notification. Please do not reply to this address.
+				<br>
+				<h2>Investment No : {{ $reff_number }}<h2>
+				<h2>Has Been Answered By Apllicant ({{ $applicant_name}})</h2> 
+				<h2>Question : <?= $comment_note ?></h2>
+				<h2>Answer : <?= $reply ?></h2>
+				<hr>
+				
+				<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
+
+				@if($posisi == "manager")
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+				@elseif($posisi == "dgm")
+
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				
+				@elseif($posisi == "gm")
+
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+				@elseif($posisi == "manager_acc")
+
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvemanageracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+
+				@elseif($posisi == "direktur_acc")
+
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvediracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+				@elseif($posisi == "presdir")
+
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvepresdir/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+				@endif
+				
+				<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+				<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Not Approve &nbsp;</a><br>
 
 			@elseif($posisi == "finished")
 
@@ -534,15 +627,15 @@
 			<p style="font-size: 18px;">Informasi Terkait Investment<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 			<h3>Telah Di Approve Oleh Seluruh Approver</h3>
 			<hr>
 			<h2>Mohon Untuk Segera Dicek</h2>
 
 			<br>
 
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/investment">List Investment</a><br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
+			<a href="http://172.17.128.4/mirai/public/investment">Check List Investment</a><br>
 
 			<!-- Tolak -->
 
@@ -552,7 +645,7 @@
 			<p style="font-size: 18px;">Informasi Terkait Investment<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment Nomor {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}}</h2>
 			<h3>Telah Di Approve Oleh Bagian Accounting</h3>
 			<hr>
 			<h2>Mohon Untuk Segera Di Upload Ke Adagio</h2>
@@ -560,30 +653,11 @@
 
 			<br>
 
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Klik disini untuk</i> &#8650;</span><br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
 			<a href="http://172.17.128.4/mirai/public/investment">Upload Bukti Approval Adagio</a><br>
 
-			<!-- Tolak -->
 
-			@elseif($posisi == "user")
-
-			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			
-			<p style="font-size: 18px;">Informasi Terkait Investment<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
-			This is an automatic notification. Please do not reply to this address.
-			<br>
-			<h2>Investment Nomor {{$reff_number}}<h2>
-			@if($comment != "")
-				<h2>Commended</h2>
-				<h3>Comment : <?= $comment ?></h3>
-			@else
-				<h2>Not Approved</h2>
-			@endif
-			<hr>
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
-			<a href="http://172.17.128.4/mirai/public/investment">Cek Investment</a><br>
-
-			@endif
+		@endif
 			
 		</center>
 	</div>

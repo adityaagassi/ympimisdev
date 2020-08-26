@@ -1234,7 +1234,7 @@ Route::get('investment/edit_investment_item', 'AccountingController@fetch_invest
 Route::post('investment/delete_investment_item', 'AccountingController@delete_investment_item');
 Route::get('investment/get_detailitem', 'AccountingController@getitemdesc')->name('admin.getitemdesc');
 Route::get('investment/report/{id}', 'AccountingController@report_investment');
-
+Route::get('investment/get_totalitem', 'AccountingController@gettotalamount')->name('admin.gettotalamount');
 
 //New Investment
 Route::get('investment/approvemanager/{id}', 'AccountingController@investment_approvalmanager');
@@ -1245,7 +1245,10 @@ Route::get('investment/approvemanageracc/{id}', 'AccountingController@investment
 Route::get('investment/approvediracc/{id}', 'AccountingController@investment_approvaldiracc');
 Route::get('investment/approvepresdir/{id}', 'AccountingController@investment_approvalpresdir');
 
-Route::post('investment/comment/{id}', 'AccountingController@investment_comment');
+Route::get('investment/comment/{id}', 'AccountingController@investment_comment');
+Route::post('investment/comment/{id}', 'AccountingController@investment_comment_post');
+Route::get('investment/comment_msg/{id}', 'AccountingController@investment_comment_msg');
+Route::post('investment/reject_acc/{id}', 'AccountingController@investment_reject_acc');
 Route::get('investment/reject/{id}', 'AccountingController@investment_reject');
 
 //Budget
