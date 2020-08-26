@@ -261,7 +261,7 @@
 
 				if (value.status == "Not Good") {
 					if (value.status_ditangani == null) {
-						body += "<td width='10%'><a href={{url('index/audit_iso/create/')}}/"+value.id+" class='btn btn-success'>Buat Laporan</a></td>";
+						body += "<td width='10%'><a href={{url('index/audit_iso/create/')}}/"+value.id+" target='_blank' class='btn btn-success'>Buat Laporan</a></td>";
 					}else{
 						body += "<td width='10%'><span style='color:green'>Sudah Ditangani</span></td>";
 					}
