@@ -140,6 +140,8 @@
 									</select>
 								</div>
 							</div>	
+							<?php } else { ?>
+								<input type="hidden" name="department" id='department' data-placeholder="Select Department" style="width: 100%;">
 							<?php } ?>
 							<div class="col-md-3">
 								<div class="form-group">
