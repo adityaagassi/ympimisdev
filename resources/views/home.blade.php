@@ -876,7 +876,7 @@
                                         </a>
                                         <br>
                                         <a href="{{ url("/index/display/eff_scrap") }}">
-                                            <i class="fa fa-caret-right"></i> Scrap & Efficiency Monitoring (スクラップと効率の監視)
+                                            <i class="fa fa-caret-right"></i> Scrap Monitoring (スクラップの監視)
                                         </a>
                                         {{-- <br>
                                         <a href="{{ url("/index/production_achievement") }}">

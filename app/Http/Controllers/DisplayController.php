@@ -33,8 +33,8 @@ class DisplayController extends Controller
 	}
 
 	public function indexEffScrap(){
-		$title = 'Production Monitoring';
-		$title_jp = '生産 監視';
+		$title = 'Scrap Monitoring';
+		$title_jp = 'スクラップの監視';
 
 		return view('displays.eff_scrap', array(
 			'title' => $title,
