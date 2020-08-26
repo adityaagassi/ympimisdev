@@ -606,7 +606,7 @@ class AccountingController extends Controller
                     $department = $department . ",";
                 }
             }
-            $adddepartment = "and A.Department in (" . $department . ") ";
+            $adddepartment = "and A.department in (" . $department . ") ";
         }
 
 
@@ -619,7 +619,7 @@ class AccountingController extends Controller
             $restrict_dept = "";
         }
         else{
-            $restrict_dept = "and Department ='".$emp_dept->department."'";
+            $restrict_dept = "and department ='".$emp_dept->department."'";
         }
 
 
