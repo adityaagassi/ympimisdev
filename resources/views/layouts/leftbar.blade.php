@@ -68,6 +68,12 @@
         </li>
         @endif
 
+        @if(in_array('A7', $navs))
+        @if(isset($page) && $page == "User")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/audit_mis") }}"><i class="fa fa-users"></i> <span>MIS Audit</span></a>
+        </li>
+        @endif
+
         @if(in_array('A8', $navs))
         @if(isset($head) && $head == "Middle Process Adjustment")<li class="treeview active">@else<li class="treeview">@endif
           <a href="#">
@@ -106,42 +112,7 @@
       <li class="header">Master Menu</li>
       @endif
 
-      @if(in_array('M29', $navs))
-      @if(isset($head) && $head == "Purchasing")<li class="treeview active">@else<li class="treeview">@endif
-        <a href="#">
-          <i class="fa fa-money"></i> <span>Accounting Purchasing</span>
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i> <span>Purchase Item</span></a>
-          </li>
-          @if(isset($page) && $page == "Supplier")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/supplier") }}"><i class="fa fa-bus"></i> <span>Supplier</span></a>
-          </li>
-          @if(isset($page) && $page == "Exchange Rate")<li class="active">@else<li>@endif
-            <a href="{{ url("/index/exchange_rate") }}"><i class="fa fa-money"></i> <span>Exchange Rate</span></a>
-          </li>
-          @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
-            <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i> <span>Budget Info</span></a>
-          </li>   
-          @if(isset($page) && $page == "Purchase Requisition")<li class="active">@else<li>@endif
-            <a href="{{ url("purchase_requisition") }}"><i class="fa fa-info"></i>Purchase Requisition</a>
-          </li>
-          @if(isset($page) && $page == "Purchase Order")<li class="active">@else<li>@endif
-            <a href="{{ url("purchase_order") }}"><i class="fa fa-info"></i>Purchase Order PR</a>
-          </li>
-          @if(isset($page) && $page == "Purchase Order Investment")<li class="active">@else<li>@endif
-            <a href="{{ url("purchase_order_investment") }}"><i class="fa fa-info"></i>Purchase Order Investment</a>
-          </li>
-          @if(isset($page) && $page == "Investment")<li class="active">@else<li>@endif
-            <a href="{{ url("investment") }}"><i class="fa fa-info"></i>Investment</a>
-          </li>
-        </ul>
-      </li>
-      @endif
+      
 
 
       @if(in_array('M13', $navs))
@@ -213,6 +184,12 @@
       @if(in_array('M17', $navs))
       @if(isset($page) && $page == "Assy Picking Schedule")<li class="active">@else<li>@endif
         <a href="{{ url("/index/assy_schedule") }}"><i class="fa fa-calendar-check-o"></i> <span>Assy Picking Schedule</span></a>
+      </li>
+      @endif
+
+      @if(in_array('M29', $navs))
+      @if(isset($page) && $page == "SAP Data")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/sap_data") }}"><i class="fa fa-exchange"></i> <span>SAP Data</span></a>
       </li>
       @endif
 
@@ -318,6 +295,118 @@
   @if(in_array('S0', $navs))
   <li class="header">Service Menu</li>
   @endif
+
+  @if(in_array('S45', $navs))
+  @if(isset($head) && $head == "Purchasing")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-shopping-cart"></i> <span>Purchasing Request</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Purchase Requisition")<li class="active">@else<li>@endif
+        <a href="{{ url("purchase_requisition") }}"><i class="fa fa-shopping-cart"></i>Request PR</a>
+      </li>
+      @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
+      </li>
+      @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
+        <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
+      </li>
+    </ul>
+  </li>
+  @endif
+
+
+  @if(in_array('S46', $navs))
+  @if(isset($head) && $head == "Accounting")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-money"></i> <span>Accounting Request</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Investment")<li class="active">@else<li>@endif
+        <a href="{{ url("investment") }}"><i class="fa fa-file-pdf-o"></i>Investment</a>
+      </li>
+      @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
+      </li>
+      @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
+        <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
+      </li>
+    </ul>
+  </li>
+  @endif
+
+  @if(in_array('S43', $navs))
+  @if(isset($head) && $head == "Purchasing")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-shopping-cart"></i> <span>Purchasing</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Purchase Requisition")<li class="active">@else<li>@endif
+        <a href="{{ url("purchase_requisition") }}"><i class="fa fa-shopping-cart"></i>Purchase Requisition</a>
+      </li>
+      @if(isset($page) && $page == "Purchase Order")<li class="active">@else<li>@endif
+        <a href="{{ url("purchase_order") }}"><i class="fa fa-book"></i>Purchase Order PR</a>
+      </li>
+      @if(isset($page) && $page == "Purchase Order Investment")<li class="active">@else<li>@endif
+        <a href="{{ url("purchase_order_investment") }}"><i class="fa fa-book"></i>Purchase Order Investment</a>
+      </li>
+      @if(isset($page) && $page == "Receive Goods")<li class="active">@else<li>@endif
+        <a href="{{ url("receive_goods") }}"><i class="fa fa-upload"></i>Upload Receive</a>
+      </li>
+      @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
+      </li>
+      @if(isset($page) && $page == "Supplier")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/supplier") }}"><i class="fa fa-truck"></i><span>Supplier</span></a>
+      </li>
+      @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
+        <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
+      </li>
+    </ul>
+  </li>
+  @endif
+
+  @if(in_array('S44', $navs))
+  @if(isset($head) && $head == "Accounting")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-money"></i> <span>Accounting</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "Investment")<li class="active">@else<li>@endif
+        <a href="{{ url("investment") }}"><i class="fa fa-file-pdf-o"></i>Investment</a>
+      </li>
+      @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
+        <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
+      </li>
+      @if(isset($page) && $page == "Exchange Rate")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/exchange_rate") }}"><i class="fa fa-money"></i><span>Exchange Rate</span></a>
+      </li>
+      @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
+      </li>
+      @if(isset($page) && $page == "Supplier")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/supplier") }}"><i class="fa fa-truck"></i><span>Supplier</span></a>
+      </li>
+      @if(isset($page) && $page == "Receive Goods")<li class="active">@else<li>@endif
+        <a href="{{ url("receive_goods") }}"><i class="fa fa-upload"></i>Upload Receive</a>
+      </li>
+    </ul>
+  </li>
+  @endif
+
+
 
   @if(in_array('S39', $navs))
   @if(isset($head) && $head == "GA Control")<li class="treeview active">@else<li class="treeview">@endif
@@ -749,16 +838,13 @@
       </li>
 
       @if(isset($page) && $page == "Planned Maintenance")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/maintenance/planned") }}"><i class="fa fa-edit"></i> <span>PM Monitoring</span></a>
+        <a href="{{ url("/index/maintenance/planned_monitor/".date('Y-m')) }}"><i class="fa fa-edit"></i> <span>PM Monitoring</span></a>
       </li>
 
-      @if(isset($page) && $page == "PM")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/maintenance/list_spk") }}"><i class="fa fa-list"></i> <span>Do PM</span></a>
+      @if(isset($page) && $page == "Planned Maintenance Form")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/maintenance/planned/form") }}"><i class="fa fa-list"></i> <span>PM Check</span></a>
       </li>
 
-      @if(isset($page) && $page == "SPK")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/maintenance/spk") }}"><i class="fa fa-gears"></i> <span>SPK</span></a>
-      </li>
     </ul>
   </li>
 
