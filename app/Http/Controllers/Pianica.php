@@ -20,6 +20,8 @@ use App\PnLogProces;
 use App\PnLogNg;
 use DataTables;
 use Carbon\Carbon;
+use App\SkillEmployee;
+use App\SkillMap;
 
 
 class Pianica extends Controller{
@@ -416,28 +418,53 @@ public function input2(Request $request)
 
 public function op_pureto(Request $request)
 {  
+    try {
+        $op_pureto = PnOperator::where('tag', '=', $request->get('pureto'))
+        ->where('bagian','=' ,$request->get('op'))
+        ->select('nik', 'nama', 'tag')
+        ->first();
 
-    $op_pureto = PnOperator::where('tag', '=', $request->get('pureto'))
-    ->where('bagian','=' ,$request->get('op'))
-    ->select('nik', 'nama', 'tag')
-    ->first();
+        $employee_id = $op_pureto->nik;
 
-    if($op_pureto == null){
-        $response = array(
-            'status' => false,
-            'message' => 'Tag not registered',
-        );
-        return Response::json($response);
-    }
-    else{
-        $response = array(
-            'status' => true,
-            'message' => 'RFID found',
-            'nama' => $op_pureto->nama,
-            'nik' => $op_pureto->nik,
-        );
-        return Response::json($response);
-    }
+        $skillemp = SkillEmployee::where('employee_id',$employee_id)->first();
+
+        $process = $skillemp->process;
+        $location = $skillemp->location;
+
+        if($op_pureto == null){
+            $response = array(
+                'status' => false,
+                'message' => 'Tag Invalid',
+            );
+            return Response::json($response);
+        }
+        else{
+            if (stripos(strtoupper($process), strtoupper($request->get('op'))) !== FALSE) {
+                $response = array(
+                    'status' => true,
+                    'message' => 'Tag Ditemukan',
+                    'nama' => $op_pureto->nama,
+                    'nik' => $op_pureto->nik,
+                    'pesan_skill' => ''
+                );
+                return Response::json($response);
+            }else{
+                $response = array(
+                    'status' => false,
+                    'message' => 'Maaf, Anda tidak terdaftar di proses ini atau Skill anda belum terpenuhi untuk proses ini. Silahkan hubungi Leader untuk Upgrade Skill / Memindah Proses',
+                    'pesan_skill' => 'Maaf, Anda tidak terdaftar di proses ini atau Skill anda belum terpenuhi untuk proses ini. Silahkan hubungi Leader untuk Upgrade Skill / Memindah Proses'
+                );
+                return Response::json($response);
+            }
+        }
+    } catch (\Exception $e) {
+         $response = array(
+                'status' => false,
+                'message' => 'Tag Invalid',
+                'pesan_skill' => ''
+            );
+            return Response::json($response);
+    } 
 }
 
 public function savepureto(Request $request){

@@ -82,7 +82,6 @@
         <b>Tag RFID</b>         {{-- <b>RFID</b> --}} <b id="textmodel" style="color:red"> [ Model ] - </b><b class="destroy" id="modelb"></b><br>
         <input type="text" name="rfid" id="rfid" class="form-control"  autofocus style="text-align: center; font-size: 30px; height: 45px" placeholder="RFID"><br>
         <center><button class="btn btn-lg btn-primary" onclick="rf()">Change</button></center> <br>
-
       </div>
     </div>
   </div>
@@ -469,7 +468,7 @@
       <div class="modal-body" >
         <span>RFID</span>
         <input type="text" name="oppureto" id="oppureto"  class="form-control" autofocus style="text-align: center;  font-size: 30px; height: 45px" placeholder="RFID">
-
+        <center><span style="color: red;font-weight: bold;font-size: 20px" id="pesan_skill"></span></center>
       </div>
       <div class="modal-footer">
        <button type="button" class="btn btn-default pull-left" data-dismiss="modal" style="display: none" id="ubahpureto2">Close</button>
@@ -487,6 +486,7 @@
 <script >
 
   jQuery(document).ready(function() {
+    $('#pesan_skill').html('');
     opTunning();
     gettotalng();
     $('#ngtinggi').val('A');
@@ -777,6 +777,7 @@
 
 
   function openmodal() {
+    $('#pesan_skill').html('');
    $('#ubahpureto2').css({'display' : 'block'})
    $('#ubahpureto').css({'display' : 'block'})
    $('#edit').modal('show');
@@ -836,9 +837,6 @@ function simpan() {
       ngbiri:ngbiriI
     }
     $.post('{{ url("index/SaveKensaAwal") }}', data, function(result, status, xhr){
-      console.log(status);
-      console.log(result);
-      console.log(xhr);
       if(xhr.status == 200){
         if(result.status){
          $('#rfid').val("");
@@ -892,9 +890,6 @@ function opTunning(){
     line : line
   }
   $.get('{{ url("fetch/opTunning") }}', data, function(result, status, xhr){
-    console.log(status);
-    console.log(result);
-    console.log(xhr);
     if(xhr.status == 200){
       if(result.status){
 
@@ -973,36 +968,33 @@ function openErrorGritter(title, message) {
 
 
 function getpureto() {
- var pureto = $('#oppureto').val();
- var data ={
-  pureto:pureto,
-  op:'kensa awal',
-}
-$.get('{{ url("index/op_Pureto") }}', data, function(result, status, xhr){
-  console.log(status);
-  console.log(result);
-  console.log(xhr);
-  if(xhr.status == 200){
-    if(result.status){
-      $('#p_pureto_nama').text(result.nama);
-      $('#p_pureto_nik').text(result.nik);
-      $('#edit').modal('hide');
-      $('#rfid').focus();
-            // $('#tag_material').val(result.tag);
-            openSuccessGritter('Success!', result.message);
+   var pureto = $('#oppureto').val();
+   var data ={
+      pureto:pureto,
+      op:'kensa awal',
+    }
+  $.get('{{ url("index/op_Pureto") }}', data, function(result, status, xhr){
+    if(xhr.status == 200){
+      if(result.status){
+        $('#p_pureto_nama').text(result.nama);
+        $('#p_pureto_nik').text(result.nik);
+        $('#edit').modal('hide');
+        $('#rfid').focus();
+        openSuccessGritter('Success!', result.message);
+      }
+      else{
+          if (result.pesan_skill.length > 0) {
+            $('#pesan_skill').html(result.pesan_skill);
           }
-          else{
-           $('#oppureto').val("");
-            // $('#oppureto').removeAttr('disabled');
-            $('#oppureto').focus();
-            openErrorGritter('Error!', result.message);
-          }
+          $('#oppureto').val("");
+          $('#oppureto').focus();
+          openErrorGritter('Error!', result.message);
         }
-        else{
-
-          alert("Disconnected from server");
-        }
-      });
+    }
+    else{
+      alert("Disconnected from server");
+    }
+  });
 
 }
 
@@ -1012,9 +1004,6 @@ function getmodel() {
   tag:tag,            
 }
 $.get('{{ url("index/model") }}', data, function(result, status, xhr){
-  console.log(status);
-  console.log(result);
-  console.log(xhr);
   if(xhr.status == 200){
     if(result.status){
       $('#modelb').text(result.model);
@@ -1047,9 +1036,6 @@ function gettotalng() {
 
 }
 $.get('{{ url("index/TotalNg") }}', data, function(result, status, xhr){
-  console.log(status);
-  console.log(result);
-  console.log(xhr);
   if(xhr.status == 200){
     if(result.status){
       $('#total').text(result.total[0].total);

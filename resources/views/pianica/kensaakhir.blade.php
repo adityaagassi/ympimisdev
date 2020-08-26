@@ -432,7 +432,7 @@
       <div class="modal-body" >
         <span>RFID</span>
         <input type="text" name="oppureto" id="oppureto"  class="form-control" autofocus style="text-align: center;  font-size: 30px; height: 45px" placeholder="RFID">
-
+        <center><span style="color: red;font-weight: bold;font-size: 20px" id="pesan_skill"></span></center>
       </div>
       <div class="modal-footer">
        <button type="button" class="btn btn-default pull-left" data-dismiss="modal" style="display: none" id="ubahpureto2">Close</button>
@@ -461,6 +461,7 @@
 <script >
 
   jQuery(document).ready(function() {
+    $('#pesan_skill').html('');
     gettotalng();
     $('#ngtinggi').val('A');
     $('#ngrendah').val('A');
@@ -750,6 +751,7 @@
 
 
   function openmodal() {
+    $('#pesan_skill').html('');
    $('#ubahpureto2').css({'display' : 'block'})
    $('#ubahpureto').css({'display' : 'block'})
    $('#edit').modal('show');
@@ -802,9 +804,7 @@ function simpan() {
       ngbiri:ngbiriI
     }
     $.post('{{ url("index/SaveKensaAkhir") }}', data, function(result, status, xhr){
-      console.log(status);
-      console.log(result);
-      console.log(xhr);
+      
       if(xhr.status == 200){
         if(result.status){
          $('#rfid').val("");
@@ -867,37 +867,34 @@ function openErrorGritter(title, message) {
 
 
 function getpureto() {
- var pureto = $('#oppureto').val();
- var data ={
-  pureto:pureto,
-  op:'kensa akhir',
-}
-$.get('{{ url("index/op_Pureto") }}', data, function(result, status, xhr){
-  console.log(status);
-  console.log(result);
-  console.log(xhr);
-  if(xhr.status == 200){
-    if(result.status){
-      $('#p_pureto_nama').text(result.nama);
-      $('#p_pureto_nik').text(result.nik);
-      $('#edit').modal('hide');
-      $('#rfid').focus();
-            // $('#tag_material').val(result.tag);
-            openSuccessGritter('Success!', result.message);
-          }
-          else{
-           $('#oppureto').val("");
-            // $('#oppureto').removeAttr('disabled');
-            $('#oppureto').focus();
-            openErrorGritter('Error!', result.message);
-          }
+    var pureto = $('#oppureto').val();
+    var data ={
+      pureto:pureto,
+      op:'kensa akhir',
+    }
+    $.get('{{ url("index/op_Pureto") }}', data, function(result, status, xhr){
+      if(xhr.status == 200){
+        if(result.status){
+          $('#p_pureto_nama').text(result.nama);
+          $('#p_pureto_nik').text(result.nik);
+          $('#edit').modal('hide');
+          $('#rfid').focus();
+          openSuccessGritter('Success!', result.message);
         }
         else{
-
-          alert("Disconnected from server");
+          if (result.pesan_skill.length > 0) {
+            $('#pesan_skill').html(result.pesan_skill);
+          }
+          $('#oppureto').val("");
+          $('#oppureto').focus();
+          openErrorGritter('Error!', result.message);
         }
-      });
+      }
+      else{
 
+        alert("Disconnected from server");
+      }
+    });
 }
 
 function getmodel() {
@@ -906,9 +903,7 @@ function getmodel() {
   tag:tag,            
 }
 $.get('{{ url("index/model") }}', data, function(result, status, xhr){
-  console.log(status);
-  console.log(result);
-  console.log(xhr);
+  
   if(xhr.status == 200){
     if(result.status){
       $('#modelb').text(result.model);
@@ -941,9 +936,7 @@ function gettotalng() {
 
 }
 $.get('{{ url("index/TotalNg") }}', data, function(result, status, xhr){
-  console.log(status);
-  console.log(result);
-  console.log(xhr);
+  
   if(xhr.status == 200){
     if(result.status){
       $('#total').text(result.total[0].total);
