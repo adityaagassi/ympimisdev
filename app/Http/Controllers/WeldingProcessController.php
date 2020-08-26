@@ -968,7 +968,38 @@ class WeldingProcessController extends Controller
 				ORDER BY
 				m_ws.ws_id");
 		}elseif ($loc == 'cuci-solder') {
-			$work_stations = DB::connection('welding_controller')->select("");
+			$work_stations = DB::connection('welding_controller')->select("SELECT
+				a.date as store_date,
+				TIME(a.datetime) as store_time,
+				a.gmc,
+				a.material_description as gmcdesc, 
+				'0000-00-00 00:00:00' as waktu_akan,
+				'0000-00-00 00:00:00' as waktu_sedang
+			FROM
+				(
+				SELECT
+					DATE( order_store_date ) AS date,
+					order_store_date AS datetime,
+					hsa_name AS material_description,
+					hsa_kito_code AS gmc 
+				FROM
+					`t_before_cuci`
+					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_before_cuci.part_id 
+				WHERE
+					order_status = 0 
+					AND part_type = 2 UNION ALL
+				SELECT
+					DATE( order_store_date ) AS date,
+					order_store_date AS datetime,
+					phs_name AS material_description,
+					phs_code AS gmc 
+				FROM
+					`t_before_cuci`
+					LEFT JOIN m_phs ON m_phs.phs_id = t_before_cuci.part_id 
+				WHERE
+					order_status = 0 
+				AND part_type = 1 
+				) a");
 		}
 
 		$indexCuci1 = 0;
