@@ -312,6 +312,15 @@
 							var id_div = 'WSCR_'+value.reason;
 
 							var new_detail_reason = [];
+							var new_target = 0;
+
+							$.each(result.targets, function(key, value){
+								if(value.remark == id_div){
+									new_target = value.target;
+								}
+							});
+
+							var new_target_reason = [];
 
 							for(var i = 0; i < result.actual_wscr.length; i++){
 								if(result.actual_wscr[i].reason == reason || result.actual_wscr[i].reason == null){
@@ -319,6 +328,8 @@
 										"posting_date" : result.actual_wscr[i].posting_date,
 										"amount" : result.actual_wscr[i].amount
 									});
+
+									new_target_reason.push([Date.parse(result.actual_wscr[i].posting_date), parseFloat(new_target)]);
 
 								}
 							}
@@ -400,6 +411,15 @@
 									},
 									color:'#ccff90',
 									data: new_sum
+								},{
+									name: 'Target',
+									type: 'line',
+									marker:{
+										enabled:false
+									},
+									color: 'rgb(248,161,63)',
+									data: new_target_reason,
+									dashStyle: 'shortdash'
 								}]
 							});
 						}
