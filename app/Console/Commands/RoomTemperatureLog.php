@@ -58,5 +58,9 @@ public function handle()
             'created_by' => 1
         ]);
     }
+
+    $q = "delete from patient_list where TIMESTAMPDIFF(minute,in_time,now()) > 150 and employee_id not like 'PR%'";
+
+    $delete_klinik = db::connection('clinic')->select($q);
 }
 }
