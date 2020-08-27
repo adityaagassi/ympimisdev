@@ -304,7 +304,7 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Material<span class="text-red">*</span></label>
 									<div class="col-sm-4" align="left">
-										<input onchange="checkMaterial()" class="form-control" type="text" id="material_number" name="material_number" placeholder="Fill Material Number">
+										<input oninput="checkMaterial()" class="form-control" type="text" id="material_number" name="material_number" placeholder="Fill Material Number">
 									</div>
 								</div>
 
