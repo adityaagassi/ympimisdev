@@ -14,13 +14,13 @@
   			</li>
   			@endif
 
-        @if(isset($page) && $page == "About MIS")<li class="active">@else<li>@endif
+       {{--  @if(isset($page) && $page == "About MIS")<li class="active">@else<li>@endif
           <a href="{{ url("/about_mis") }}"><i class="fa fa-info"></i> <span>About MIS</span></a>
-        </li>
+        </li> --}}
 
-        @if(isset($page) && $page == "Project Timeline")<li class="active">@else<li>@endif
+      {{--   @if(isset($page) && $page == "Project Timeline")<li class="active">@else<li>@endif
           <a href="{{ url("/project_timeline") }}"><i class="fa fa-history"></i> <span>Project Timeline</span></a>
-        </li>
+        </li> --}}
 
         @if(in_array('A0', $navs))
         <li class="header">Administration Menu</li>
@@ -69,8 +69,14 @@
         @endif
 
         @if(in_array('A7', $navs))
-        @if(isset($page) && $page == "User")<li class="active">@else<li>@endif
-          <a href="{{ url("/index/audit_mis") }}"><i class="fa fa-users"></i> <span>MIS Audit</span></a>
+        @if(isset($page) && $page == "MIS Audit")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/audit_mis") }}"><i class="fa fa-check-square-o"></i> <span>MIS Audit</span></a>
+        </li>
+        @endif
+
+        @if(in_array('A7', $navs))
+        @if(isset($page) && $page == "MIS Inventory")<li class="active">@else<li>@endif
+          <a href="{{ url("/index/inventory_mis") }}"><i class="fa fa-cubes"></i> <span>MIS Inventory</span></a>
         </li>
         @endif
 
