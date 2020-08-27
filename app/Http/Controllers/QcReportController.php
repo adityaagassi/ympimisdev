@@ -1838,7 +1838,7 @@ class QcReportController extends Controller
 
       $pdf = \App::make('dompdf.wrapper');
       $pdf->getDomPDF()->set_option("enable_php", true);
-      $pdf->setPaper('A4', 'potrait');
+      $pdf->setPaper('Legal', 'potrait');
       $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
       
       $pdf->loadView('qc_report.print_cpar', array(
