@@ -142,10 +142,10 @@ td {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+        <h4 class="modal-title" id="myModalLabel">Konfirmasi Hapus Data</h4>
       </div>
       <div class="modal-body">
-        Are you sure want to delete this?
+        Apakah kamu yakin mau menghapus form ini?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -227,17 +227,21 @@ td {
           var sec_t = sec_to.split("_");
 
           tableData += '<tr>';
-          tableData += '<td>'+ value.kategori +'</td>';
-          tableData += '<td>'+ value.judul +'</td>';
-          tableData += '<td>'+ day +' '+month+' '+year +'</td>';
-          tableData += '<td>'+ sec_f[0] + ' - '+ sec_f[1] +'</td>';
-          tableData += '<td>'+ sec_t[0] + ' - '+ sec_t[1] +'</td>';
+          tableData += '<td width="5%">'+ value.kategori +'</td>';
+          tableData += '<td width="10%">'+ value.judul +'</td>';
+          tableData += '<td width="5%">'+ day +' '+month+' '+year +'</td>';
+          tableData += '<td width="10%">'+ sec_f[0] + ' - '+ sec_f[1] +'</td>';
+          tableData += '<td width="10%">'+ sec_t[0] + ' - '+ sec_t[1] +'</td>';
         
-          if("{{Auth::user()->username}}" == value.pelapor || "{{Auth::user()->role_code}}" == "MIS"){
-            tableData += '<td><a href="{{ url("index/form_ketidaksesuaian/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a> <a href="{{ url("index/form_ketidaksesuaian/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Detail</a></td>';            
+                
+          if(value.posisi == "sl" && ("{{Auth::user()->username}}" == value.pelapor || "{{Auth::user()->role_code}}" == "MIS")){
+            tableData += '<td width="10%"><a href="{{ url("index/form_ketidaksesuaian/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a> <a href="{{ url("index/form_ketidaksesuaian/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Detail</a> <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('+value.id+');">Delete</a></td>';        
           }
+          else if("{{Auth::user()->username}}" == value.pelapor || "{{Auth::user()->role_code}}" == "MIS"){
+            tableData += '<td width="10%"><a href="{{ url("index/form_ketidaksesuaian/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a> <a href="{{ url("index/form_ketidaksesuaian/detail") }}/'+value.id+'" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Detail</a> </td>';            
+          }  
           else{
-            tableData += '<td><a href="{{ url("index/form_ketidaksesuaian/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a></td>';
+            tableData += '<td width="10%"><a href="{{ url("index/form_ketidaksesuaian/print") }}/'+value.id+'" class="btn btn-success btn-xs"><i class="fa fa-file-pdf-o"></i> Report PDF</a></td>';
           }
 
           tableData += '</tr>';
@@ -412,7 +416,7 @@ td {
   // }
 
    function deleteConfirmation(id) {
-    jQuery('#modalDeleteButton').attr("href", '{{ url("index/qc_report/delete") }}'+'/'+id);
+    jQuery('#modalDeleteButton').attr("href", '{{ url("index/form_ketidaksesuaian/delete") }}'+'/'+id);
   }
 
   

@@ -2848,6 +2848,7 @@ Route::get('index/form_ketidaksesuaian/fetchDataTable', 'CparController@fetchDat
 Route::get('index/form_ketidaksesuaian/create', 'CparController@create');
 Route::post('post/form_ketidaksesuaian/create', 'CparController@post_create');
 Route::get('index/form_ketidaksesuaian/detail/{id}', 'CparController@detail');
+Route::get('index/form_ketidaksesuaian/delete/{id}', 'CparController@delete_form');
 Route::get('index/form_ketidaksesuaian/fetch_item/{id}', 'CparController@fetch_item');
 Route::post('index/form_ketidaksesuaian/create_item', 'CparController@create_item');
 Route::get('index/form_ketidaksesuaian/edit_item', 'CparController@fetch_item_edit');
@@ -3297,6 +3298,10 @@ Route::get('fetch/mirai_mobile/report_indication', 'MiraiMobileController@fetchI
 Route::get('index/audit_mis', 'DailyReportController@indexAuditMIS');
 Route::get('fetch/audit_mis/check', 'DailyReportController@fetchAuditCheckList');
 Route::post('post/audit_mis/check', 'DailyReportController@postCheckAudit');
+
+//inventory MIS
+Route::get('index/inventory_mis', 'DailyReportController@indexInventoryMIS');
+Route::get('fetch/inventory_mis/list', 'DailyReportController@fetchInventoryMIS');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');

@@ -110,7 +110,7 @@ class CparController extends Controller
         }
       }
 
-      $query = "SELECT * FROM cpar_departments ".$tgl." ".$secfrom." ".$secto." order by id desc";
+      $query = "SELECT * FROM cpar_departments ".$tgl." ".$secfrom." ".$secto." where deleted_at is null order by id desc";
 
       $detail = db::select($query);
 
@@ -284,6 +284,18 @@ class CparController extends Controller
       'materials' => $materials
     ))->with('page', 'Form Laporan Ketidaksesuaian');
   }
+
+  //Delete
+
+  public function delete_form($id)
+    {
+        $cpar = CparDepartment::find($id);
+        $cpar->delete();
+
+        return redirect('/index/form_ketidaksesuaian')
+        ->with('status', 'Form has been deleted.')
+        ->with('page', 'Form Laporan Ketidaksesuaian');
+    }
 
       //GMC
 
