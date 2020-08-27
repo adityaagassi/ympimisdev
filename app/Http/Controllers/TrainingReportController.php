@@ -323,7 +323,7 @@ class TrainingReportController extends Controller
         $activity_alias = $trainingReport->activity_lists->activity_alias;
         $activity_id = $trainingReport->activity_lists->id;
 
-        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id,section,sub_group as sub_section from employee_syncs where department = '".$departments."' and end_date is null";
+        $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id,section,employee_syncs.group as sub_section from employee_syncs where department = '".$departments."' and end_date is null";
         $operator = DB::select($queryOperator);
         $operator2 = DB::select($queryOperator);
         $operator3 = DB::select($queryOperator);
