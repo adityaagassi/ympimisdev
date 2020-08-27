@@ -304,7 +304,7 @@
 								<div class="form-group row" align="right">
 									<label class="col-sm-4">Material<span class="text-red">*</span></label>
 									<div class="col-sm-4" align="left">
-										<input oninput="checkMaterial()" class="form-control" type="text" id="material_number" name="material_number" placeholder="Fill Material Number">
+										<input onchange="checkMaterial()" class="form-control" type="text" id="material_number" name="material_number" placeholder="Fill Material Number">
 									</div>
 								</div>
 
@@ -538,7 +538,7 @@
 
 	function checkMaterial() {
 		var material_number = $('#material_number').val();
-		if(material_number.length == 7){
+		if(material_number.length >= 7){
 			var data = {
 				material : material_number
 			}
