@@ -540,6 +540,7 @@
 					</tr>
 				</tbody>
 			</table>
+			<span style="float: left">*Indicated Amount is valuated to Quarterly(Budget/Forecast) Exchanged Rate</span>
 	    </div>
 	</footer>
 </body>
