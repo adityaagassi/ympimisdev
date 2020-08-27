@@ -78,24 +78,15 @@
     'normal' => $fontDir . '\DejaVuSerif',
   ),
   'glyphicons halflings' => array(
-    'normal' => 'D:\xampp\htdocs\miraidev\storage\fonts/\54daba4e9d2e851f5b36d867ed0e0b04',
+    'normal' => 'G:\xampp\htdocs\ympimisdev\storage\fonts/\54daba4e9d2e851f5b36d867ed0e0b04',
   ),
   'fontawesome' => array(
-    'normal' => 'D:\xampp\htdocs\miraidev\storage\fonts/\cb2280a9863137aa3e068a73ded3ebda',
+    'normal' => 'G:\xampp\htdocs\ympimisdev\storage\fonts/\cb2280a9863137aa3e068a73ded3ebda',
   ),
   'ionicons' => array(
-    'normal' => 'D:\xampp\htdocs\miraidev\storage\fonts/\404d22c0d26c71b7e877816451af3f60',
+    'normal' => 'G:\xampp\htdocs\ympimisdev\storage\fonts/\404d22c0d26c71b7e877816451af3f60',
   ),
   'couriernew' => array(
-    'normal' => 'D:\xampp\htdocs\miraidev\storage\fonts/\e34052b44323e717dfc693944b86acc6',
-  ),
-  'bebas' => array(
-    'normal' => $fontDir . '\44f2988163e37a00804c26166dca7593',
-  ),
-  'ipag' => array(
-    'normal' => $fontDir . '/ipag',
-    'bold' => $fontDir . '/ipag',
-    'italic' => $fontDir . '/ipag',
-    'bold_italic' => $fontDir . '/ipag',
+    'normal' => $fontDir . '\e34052b44323e717dfc693944b86acc6',
   ),
 ) ?>
