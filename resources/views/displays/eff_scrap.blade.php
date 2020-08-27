@@ -196,7 +196,7 @@
 						enabled:false
 					},
 					series: [{
-						name: 'Target',
+						name: 'Budget',
 						type: 'area',
 						step: 'left',
 						zIndex: 0,
@@ -280,7 +280,7 @@
 						enabled:false
 					},
 					series: [{
-						name: 'Target',
+						name: 'Budget',
 						type: 'area',
 						step: 'left',
 						fillOpacity: 0.3,
