@@ -1168,6 +1168,15 @@ Route::get('purchase_requisition/approvedgm/{id}', 'AccountingController@prappro
 Route::get('purchase_requisition/approvegm/{id}', 'AccountingController@prapprovalgm');
 Route::get('purchase_requisition/reject/{id}', 'AccountingController@prreject');
 
+
+
+//New Approval Purchase Order
+Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
+Route::get('purchase_order/approvedgm/{id}', 'AccountingController@poapprovaldgm');
+Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
+Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
+Route::get('purchase_order/reject/{id}', 'AccountingController@poreject');
+
 //Purchase Order Khusus PR
 Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('purchase_order', 'AccountingController@purchase_order');
@@ -1185,14 +1194,9 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::post('delete/purchase_order_item', 'AccountingController@delete_item_po');
 	Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
 	Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
+
 	Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
 	Route::get('export/purchase_order/list', 'AccountingController@exportPO');
-	//New Approval Purchase Order
-	Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
-	Route::get('purchase_order/approvedgm/{id}', 'AccountingController@poapprovaldgm');
-	Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
-	Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
-	Route::get('purchase_order/reject/{id}', 'AccountingController@poreject');
 	Route::post('update/purchase_requisition/po', 'AccountingController@update_purchase_requisition_po');
 
 	//Purchase Order Khusus investment
@@ -3302,6 +3306,9 @@ Route::post('post/audit_mis/check', 'DailyReportController@postCheckAudit');
 //inventory MIS
 Route::get('index/inventory_mis', 'DailyReportController@indexInventoryMIS');
 Route::get('fetch/inventory_mis/list', 'DailyReportController@fetchInventoryMIS');
+Route::post('post/inventory_mis/item', 'DailyReportController@createInventoryMIS');
+Route::get('fetch/inventory_mis', 'DailyReportController@fetchInventoryMISbyId');
+
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');

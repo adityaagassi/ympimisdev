@@ -680,8 +680,6 @@
     var no = 2;
     exchange_rate = [];
 
-    var total_beli = 0;
-
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -701,7 +699,6 @@
       });
 
       getExchangeRate();
-      gettotalamount();
 
       $('body').toggleClass("sidebar-collapse");
       $("#navbar-collapse").text('');
@@ -772,6 +769,9 @@
         filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
         height: '100px'
       });
+
+
+      gettotalamount();
 
     $('#item tfoot th').each( function () {
       var title = $(this).text();
@@ -904,12 +904,19 @@
 
     function gettotalamount(){
 
+      var total_beli = 0;
+
       $.ajax({
           url: "{{ route('admin.gettotalamount') }}?reff_number="+ $("#reff_number").val(),
           method: 'GET',
           success: function(data) {
             $('#total_amount_beli').text(formatRupiah(data,""));
             total_beli += parseInt(data);
+
+
+            var currency = $('#currency').val();
+            var total_amount_budget = parseFloat(konversi(currency,"USD",total_beli));
+            $('#amount_budget1').val(total_amount_budget);
           }
       });
     }
@@ -1420,9 +1427,6 @@
           $("#budget_no"+no).val("").trigger('change.select2');
         }
 
-        var currency = $('#currency').val();
-        var total_amount_budget = parseFloat(konversi(currency,"USD",total_beli));
-        $('#amount_budget1').val(total_amount_budget);
       }
 
 

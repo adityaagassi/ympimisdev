@@ -4516,7 +4516,9 @@ class AccountingController extends Controller
             $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
             $investe = db::select($isimail);
 
-            Mail::to($mailtoo)->cc($mailcc)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($investe, 'investment'));
+            // Mail::to($mailtoo)->cc($mailcc)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($investe, 'investment'));
+
+            Mail::to($mailtoo)->send(new SendEmail($investe, 'investment'));
 
             return redirect('/investment/check/'.$id)->with('status', 'Investment Berhasil Dicek')
             ->with('page', 'Investment');
