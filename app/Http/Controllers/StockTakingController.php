@@ -315,19 +315,21 @@ class StockTakingController extends Controller{
 			array_push($location, $locations[$i]->storage_location); 
 		}
 
-		$data = StocktakingList::whereIn('location', $location)
-		->where('print_status', 1)
-		->get();
+		//Supaya Bisa Breakdown PI
 
-		for ($i=0; $i < count($data); $i++) { 
-			if($data[$i]->process < 2){
-				$response = array(
-					'status' => false,
-					'message' => 'Location '.$data[$i]->location.' tidak sesuai urutan',
-				);
-				return Response::json($response);
-			}
-		}
+		// $data = StocktakingList::whereIn('location', $location)
+		// ->where('print_status', 1)
+		// ->get();
+
+		// for ($i=0; $i < count($data); $i++) { 
+		// 	if($data[$i]->process < 2){
+		// 		$response = array(
+		// 			'status' => false,
+		// 			'message' => 'Ada slip yang belum di input atau di audit.',
+		// 		);
+		// 		return Response::json($response);
+		// 	}
+		// }
 
 		try{
 			DB::transaction(function() use ($location) {
