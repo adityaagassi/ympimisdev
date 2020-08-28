@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AccInvestmentDetail extends Model
 {
     protected $fillable = [
-		'reff_number','no_item','detail','qty','price','amount','vat_status','sudah_po','created_by'
+		'reff_number','no_item','detail','qty','price','amount','dollar','vat_status','sudah_po','created_by'
 	];
 
 	public function user()

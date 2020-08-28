@@ -957,7 +957,6 @@ class AccountingController extends Controller
             }
             else
             {
-
                 // Get Manager
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '" . $request->get('department') . "' and position = 'manager'");
             }
@@ -3282,7 +3281,7 @@ class AccountingController extends Controller
                 // $pdf->save(public_path() . "/pr/" . $reports[0]->id . ".pdf");
 
         $path = "po_list/" . $detail_po[0]->no_po . ".pdf";
-        return $pdf->stream("PR ".$detail_po[0]->no_po. ".pdf");
+        return $pdf->stream("PO ".$detail_po[0]->no_po. ".pdf");
 
                 // return view('accounting_purchasing.report.report_po', array(
                 //  'po' => $detail_po,
@@ -4088,12 +4087,34 @@ class AccountingController extends Controller
                 $budget_sisa = $request->get('sisa');
                 $budget_amount = $request->get('amount');
 
-                $data2 = AccInvestmentBudget::firstOrNew(['reff_number' => $request->get('reff_number'),'category_budget' => $category_budget[$i],'budget_no' => $budget_no[$i]]);
+                $data2 = AccInvestmentBudget::firstOrNew(['reff_number' => $request->get('reff_number'),'category_budget' => $category_budget[$i],'budget_no' => $budget_no[$i] ]);
                 $data2->budget_name = $budget_name[$i];
                 $data2->sisa = $budget_sisa[$i];
                 $data2->total = $budget_amount[$i];
                 $data2->created_by = $id_user;
                 $data2->save();
+
+                $investment_item = AccInvestment::join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')->where('acc_investments.id', '=', $request->get('id'))->get();
+
+
+                for ($z=0; $z < count($investment_item); $z++) { 
+                    $month = strtolower(date("M",strtotime($request->get('submission_date'))));
+
+                    $data3 = new AccBudgetHistory([
+                        'budget' => $budget_no[$i],
+                        'budget_month' => $month,
+                        'budget_date' => date('Y-m-d'),
+                        'category_number' => $request->get('reff_number'),
+                        'no_item' => $investment_item[$z]->detail,
+                        'beg_bal' => $budget_sisa[$i],
+                        'amount' => $budget_amount[$i],
+                        'status' => 'Investment',
+                        'created_by' => $id_user
+                    ]);
+
+                    $data3->save();
+                }
+
             }
 
 
@@ -4139,14 +4160,36 @@ class AccountingController extends Controller
     {
         $investment = AccInvestment::find($id);
 
-        $investment_item = AccInvestmentDetail::leftJoin("acc_investments", "acc_investment_details.reff_number", "=", "acc_investments.reff_number")->select('acc_investment_details.*')
+        $investment_item = AccInvestmentDetail::leftJoin("acc_investments", "acc_investment_details.reff_number", "=", "acc_investments.reff_number")->select('acc_investment_details.*', 'acc_investments.currency')
         ->where('acc_investment_details.reff_number', '=', $investment->reff_number)
         ->get();
 
         return DataTables::of($investment_item)
+        ->editColumn('price', function ($investment_item)
+        {
+            if ($investment_item->currency == "IDR") {
+                $cur = "Rp.";
+            }
+            else if ($investment_item->currency == "USD") {
+                $cur = "$";
+            }
+            else if($investment_item->currency == "JPY"){
+                $cur = "¥";
+            }
+            return $cur." ".number_format($investment_item->price,0,"",".");
+        })
         ->editColumn('amount', function ($investment_item)
         {
-            return $investment_item->amount;
+            if ($investment_item->currency == "IDR") {
+                $cur = "Rp.";
+            }
+            else if ($investment_item->currency == "USD") {
+                $cur = "$";
+            }
+            else if($investment_item->currency == "JPY"){
+                $cur = "¥";
+            }
+            return $cur." ".number_format($investment_item->amount,0,"",".");
         })
         ->addColumn('action', function ($investment_item)
         {
@@ -4154,10 +4197,8 @@ class AccountingController extends Controller
             <button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit(' . $investment_item->id . ')"><i class="fa fa-edit"></i></button>
             <button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete(' . $investment_item->id . ',\'' . $investment_item->reff_number . '\')"><i class="fa fa-trash"></i></button>
             ';
-
         })
-
-        ->rawColumns(['amount' => 'amount', 'action' => 'action'])
+        ->rawColumns(['price' => 'price','amount' => 'amount', 'action' => 'action'])
         ->make(true);
     }
 
@@ -4316,7 +4357,7 @@ class AccountingController extends Controller
             'inv_budget' => $inv_budget
         ));
 
-        return $pdf->stream("PR ".$detail_inv[0]->reff_number. ".pdf");
+        return $pdf->stream($detail_inv[0]->reff_number. ".pdf");
 
             // return view('accounting_purchasing.report.report_investment', array(
             //  'inv' => $detail_inv,

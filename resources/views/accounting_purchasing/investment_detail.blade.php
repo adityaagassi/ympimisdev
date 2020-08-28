@@ -560,6 +560,8 @@
               <div class="input-group">
                 <span class="input-group-addon ket_harga_item"></span>
                 <input type="text" id="amount_item" name="amount_item" class="form-control currency" placeholder="Total" data-number-to-fixed="2" data-number-stepfactor="100"  disabled required>
+
+                <input type="hidden" id="dollar_item" name="dollar_item" class="form-control currency" placeholder="Dollar">
               </div>
             </div>
           </div>
@@ -634,6 +636,7 @@
               <label class="col-sm-2">Amount</label>
               <div class="col-sm-8" align="left">
                 <input type="text" class="form-control" id="amount_item_edit" placeholder="Total" disabled required>
+                <input type="text" id="dollar_item_edit" name="dollar_item_edit" class="form-control currency" placeholder="Dollar">
               </div>
             </div>
 
@@ -863,6 +866,8 @@
 
       var qty = $("#jumlah_item").val();
       var price = $("#price_item").val();
+
+      var currency = $('#currency').val();
       var prc = price.replace(/\D/g, "");
 
       var hasil = parseInt(qty) * parseInt(prc);
@@ -872,6 +877,9 @@
 
           var total = document.getElementById("amount_item");
           total.value = formatRupiah(total.value, "");
+
+          var hasil_konversi = parseFloat(konversi(currency,"USD", hasil));
+          $('#dollar_item').val(hasil_konversi);
       }
     }
 
@@ -899,6 +907,9 @@
 
       if (!isNaN(hasil)) {
          $("#amount_item_edit").val(hasil);
+
+         var hasil_konversi_edit = parseFloat(konversi(currency,"USD", hasil));
+          $('#dollar_item_edit').val(hasil_konversi_edit);
       }
     }
 
@@ -1212,7 +1223,8 @@
         detail_item: $("#detail_item").val(),
         jumlah_item : $("#jumlah_item").val(),
         price_item : price_number,
-        amount_item : amount_number
+        amount_item : amount_number,
+        dollar : $("#dollar").val()
       };
 
       $.post('{{ url("investment/create_investment_item") }}', data, function(result, status, xhr){
@@ -1239,6 +1251,8 @@
         $("#jumlah_item_edit").val(result.datas.qty);
         $("#price_item_edit").val(result.datas.price);
         $("#amount_item_edit").val(result.datas.amount);
+        $("#dollar_item_edit").val(result.datas.dollar);
+
         $.ajax({
             url: "{{ route('admin.getitemdesc') }}?kode_item=" + $(this).val(),
             method: 'GET',
@@ -1260,6 +1274,7 @@
         jumlah_item: $("#jumlah_item_edit").val(),
         price_item: $("#price_item_edit").val(),
         amount_item: $("#amount_item_edit").val(),
+        dollar : $("#dollar_item_edit").val(),
       };
 
       $.post('{{ url("investment/edit_investment_item") }}', data, function(result, status, xhr){

@@ -56,7 +56,7 @@
 
 
 		@page { }
-        .footer { position: fixed; left: 0px; bottom: -50px; right: 0px; height: 170px;text-align: center;}
+        .footer { position: fixed; left: 0px; bottom: -30px; right: 0px; height: 170px;text-align: center;}
         .footer .pagenum:before { content: counter(page); }
 	</style>
 </head>
@@ -455,35 +455,99 @@
 
 				<?php 
 				$investmentbudget = count($inv_budget);
+
 				if($investmentbudget != 0) { ?>
 
 				@foreach($inv_budget as $bud)
 
-				<tr>
-					<td colspan="2" style="border: 1px solid black;">Budget No, Name & Balance<br><span class="droid">予算番号、名前、残高</span></td>
 					@if($bud->category_budget == "On Budget")
-					<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span>
-					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
-					<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold">$ {{ $bud->sisa }}</span></td>
-					<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> <span style="color: blue;font-weight: bold"> $ {{ $bud->total }}</span></td>
-					<td colspan="2" style="border: 1px solid black;">End Bal (US$) <br><span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold">$ <?= $bud->sisa - $bud->total ?></span></td>
+					<tr>
+						<td colspan="2" rowspan="3" style="border: 1px solid black;">Budget No, Name & Balance<br><span class="droid">予算番号、名前、残高</span></td>
+						
+						<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span></td>
+						<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
+						<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold">$ {{ $bud->sisa }}</span></td>
+						<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> <span style="color: blue;font-weight: bold"> $ {{ $bud->total }}</span></td>
+						<td colspan="2" style="border: 1px solid black;">End Bal (US$) <br><span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold">$ <?= $bud->sisa - $bud->total ?></span></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span></td>
+						<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
+						<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"> </span></td>
+						<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+						<td colspan="2" style="border: 1px solid black;">End Bal (US$) <span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+					</tr>
+					<tr>
+						<td colspan="8" style="border: 1px solid black;">Out Of Budget <span class="droid">予算不足</span> ($)</td>
+					</tr>
+
 					@elseif($bud->category_budget == "Shifting")
-					<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span>
-					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
-					<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"> $ {{ $bud->sisa }}</span></td>
-					<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span> <br> <span style="color: blue;font-weight: bold">$ {{ $bud->total }}</span></td>
-					<td colspan="2" style="border: 1px solid black;">End Bal (US$) <span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold">$ <?= $bud->sisa - $bud->total ?></span></td>
+					<tr>
+						<td colspan="2" rowspan="3" style="border: 1px solid black;">Budget No, Name & Balance<br><span class="droid">予算番号、名前、残高</span></td>
+						
+						<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span></td>
+						<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
+						<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+						<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> <span style="color: blue;font-weight: bold"> </span></td>
+						<td colspan="2" style="border: 1px solid black;">End Bal (US$)<span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+					</tr>
+
+					<tr>
+						<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span></td>
+						<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{ $bud->budget_no }} <br> {{ $bud->budget_name }}</td>
+						<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"> $ {{ $bud->sisa }}</span></td>
+						<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span> <br> <span style="color: blue;font-weight: bold">$ {{ $bud->total }}</span></td>
+						<td colspan="2" style="border: 1px solid black;">End Bal (US$)<span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold">$ <?= $bud->sisa - $bud->total ?></span></td>
+					</tr>
+					<tr>
+						<td colspan="8" style="border: 1px solid black;">Out Of Budget <span class="droid">予算不足</span> ($)</td>
+					</tr>
+
 					@elseif($bud->category_budget == "Out Of Budget")
-					<td colspan="8" style="border: 1px solid black;">Out Of Budget <span class="droid">予算不足</span> ($)</td>
+					<tr>
+						<td colspan="2" rowspan="3" style="border: 1px solid black;">Budget No, Name & Balance<br><span class="droid">予算番号、名前、残高</span></td>
+						
+						<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span></td>
+						<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
+						<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+						<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> <span style="color: blue;font-weight: bold"> </span></td>
+						<td colspan="2" style="border: 1px solid black;">End Bal (US$)<span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span></td>
+						<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
+						<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"> </span></td>
+						<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+						<td colspan="2" style="border: 1px solid black;">End Bal (US$) <span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+					</tr>
+					<tr>
+						<td colspan="8" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">Out Of Budget <span class="droid">予算不足</span> ($)</span></td>
+					</tr>
 					
 					@endif
 				</tr>
 				@endforeach
 
 				<?php } else { ?>
-				
-				<td colspan="10" style="border: 1px solid black;">&nbsp;</td>
-
+				<tr>
+					<td colspan="2" rowspan="3" style="border: 1px solid black;">Budget No, Name & Balance<br><span class="droid">予算番号、名前、残高</span></td>
+					
+					<td colspan="2" style="border: 1px solid black;">Budget No. <span class="droid">予算番号</span> <br> Budget Name <span class="droid">予算名前</span></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
+					<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+					<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span><br> <span style="color: blue;font-weight: bold"> </span></td>
+					<td colspan="2" style="border: 1px solid black;">End Bal (US$)<span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+				</tr>
+				<tr>
+					<td colspan="2" style="border: 1px solid black;">Shifting Budget No. <span class="droid">予算シフト</span> <br> Budget Name <span class="droid">予算名前</span></td>
+					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"> </td>
+					<td colspan="1" style="border: 1px solid black;">Beg Bal <span class="droid">残高</span> <br> <span style="color: blue;font-weight: bold"> </span></td>
+					<td colspan="1" style="border: 1px solid black;">Amount <span class="droid">金額</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+					<td colspan="2" style="border: 1px solid black;">End Bal (US$) <span class="droid">最終残高</span> <br> <span style="color: blue;font-weight: bold"></span></td>
+				</tr>
+				<tr>
+					<td colspan="8" style="border: 1px solid black;">Out Of Budget <span class="droid">予算不足</span> ($)</td>
+				</tr>
 				<?php } ?>
 			</tbody>
 
