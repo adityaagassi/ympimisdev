@@ -63,7 +63,7 @@
 		</li>
 		<li>
 			<?php 
-			if (strpos(strtolower($employee->position), 'operator') !== false || strpos(strtolower($employee->position), 'sub') !== false) {
+			if (strpos(strtolower($employee->position), 'operator') !== false || strpos(strtolower($employee->position), 'Sub') !== false) {
 				// echo $employee->position;
 			} else {
 				echo '<a data-toggle="modal" data-target="#createModal" class="btn btn-success btn-md" style="color:white"><i class="fa fa-plus"></i>Buat WJO Baru</a>';
