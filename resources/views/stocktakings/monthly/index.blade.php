@@ -577,7 +577,7 @@
 							type: 'column'
 						},
 						title: {
-							text: 'Progress Input PI Stocktaking',
+							text: 'Progress Input PI',
 							style: {
 								fontWeight: 'bold'
 							}
@@ -783,7 +783,7 @@
 							type: 'column'
 						},
 						title: {
-							text: 'Progress Audit 1 Stocktaking',
+							text: 'Progress Audit Internal',
 							style: {
 								fontWeight: 'bold'
 							}
