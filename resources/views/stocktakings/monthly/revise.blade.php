@@ -154,6 +154,7 @@
 					<div class="col-xs-11" style="padding: 0px;">
 						<select class="form-control select2" name="reason" id='reason' data-placeholder="Select Reason">
 							<option value=""></option>
+							<option value="Salah input PI">Salah input PI</option>
 							<option value="Kesalahan input transaksi return/repair">Kesalahan input transaksi return/repair</option>
 							<option value="Salah hitung">Salah hitung</option>
 							<option value="Belum terhitung">Belum terhitung</option>
