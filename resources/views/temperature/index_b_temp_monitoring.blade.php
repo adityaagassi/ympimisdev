@@ -214,47 +214,45 @@
 				});
 
 				Highcharts.chart('container1', {
-					chart: {
+				    chart: {
 						type: 'spline',
 						height: '500',
 						backgroundColor: "rgba(0,0,0,0)"
 					},
 					title: {
-						text: 'VISITOR BODY TEMP',
+						text: 'Visitor Body Temperature',
 						style: {
-							fontSize: '30px',
+							fontSize: '20px',
 							fontWeight: 'bold'
 						}
 					},
 					// subtitle: {
-					// 	text: 'on '+result.dateTitle,
-					// 	style: {
-					// 		fontSize: '1vw',
-					// 		fontWeight: 'bold'
-					// 	}
-					// },
-					xAxis: {
-						categories: categories1,
-						type: 'category',
+				// 	// 	text: 'on '+result.dateTitle,
+				// 	// 	style: {
+				// 	// 		fontSize: '1vw',
+				// 	// 		fontWeight: 'bold'
+				// 	// 	}
+				// 	// },
+				    xAxis: {
+				        categories: categories1,
+				        type: 'category',
 						gridLineWidth: 1,
 						gridLineColor: 'RGB(204,255,255)',
 						lineWidth:2,
 						lineColor:'#9e9e9e',
 						labels: {
 							style: {
-								fontSize: '20px',
+								fontSize: '12px',
 								fontWeight: 'bold'
 							}
 						},
-					},
-					yAxis: [
-
-					{
-						title: {
-							text: 'Highest Temperature',
+				    },
+				    yAxis: {
+				        title: {
+							text: 'Visitor Body Temperature',
 							style: {
 								color: '#eee',
-								fontSize: '20px',
+								fontSize: '12px',
 								fontWeight: 'bold',
 								fill: '#6d869f'
 							}
@@ -264,36 +262,12 @@
 				                return this.value + ' °C';
 				            },
 							style:{
-								fontSize:"16px"
+								fontSize:"12px"
 							}
 						},
-						type: 'linear',
-						opposite: true
-
-					},
-					{
-						title: {
-							text: 'Average Temperature',
-							style: {
-								color: '#eee',
-								fontSize: '20px',
-								fontWeight: 'bold',
-								fill: '#6d869f'
-							}
-						},
-						labels:{
-							formatter: function () {
-				                return this.value + ' °C';
-				            },
-							style:{
-								fontSize:"16px"
-							}
-						},
-						type: 'linear',
-						
-					}
-					],
-					tooltip: {
+						type: 'linear'
+				    },
+				    tooltip: {
 						headerFormat: '<span>{point.series.name}</span><br/>',
 						pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y} °C</b><br/>',
 					},
@@ -315,7 +289,7 @@
 					credits: {
 						enabled: false
 					},
-					plotOptions: {
+				    	plotOptions: {
 						series:{
 							cursor: 'pointer',
 							point: {
@@ -342,11 +316,11 @@
 							cursor: 'pointer'
 						},
 					},
-					series: [{
-						type: 'spline',
+				    series: [
+				    {
+				        type: 'spline',
 						data: series,
 						name: 'Avg Temp',
-						yAxis:1,
 						colorByPoint: false,
 						color:'#668eff',
 						animation: false,
@@ -358,10 +332,8 @@
 								textShadow: false
 							},
 						},
-						
-					},
-					{
-						type: 'spline',
+				    }, {
+				        type: 'spline',
 						data: series2,
 						name: 'Highest Temp',
 						colorByPoint: false,
@@ -375,9 +347,175 @@
 								textShadow: false
 							},
 						},
-					}
-					]
+				    }
+				    ]
 				});
+
+				// Highcharts.chart('container1', {
+				// 	chart: {
+				// 		type: 'spline',
+				// 		height: '500',
+				// 		backgroundColor: "rgba(0,0,0,0)"
+				// 	},
+				// 	title: {
+				// 		text: 'VISITOR BODY TEMP',
+				// 		style: {
+				// 			fontSize: '30px',
+				// 			fontWeight: 'bold'
+				// 		}
+				// 	},
+				// 	// subtitle: {
+				// 	// 	text: 'on '+result.dateTitle,
+				// 	// 	style: {
+				// 	// 		fontSize: '1vw',
+				// 	// 		fontWeight: 'bold'
+				// 	// 	}
+				// 	// },
+				// 	xAxis: {
+				// 		categories: categories1,
+				// 		type: 'category',
+				// 		gridLineWidth: 1,
+				// 		gridLineColor: 'RGB(204,255,255)',
+				// 		lineWidth:2,
+				// 		lineColor:'#9e9e9e',
+				// 		labels: {
+				// 			style: {
+				// 				fontSize: '20px',
+				// 				fontWeight: 'bold'
+				// 			}
+				// 		},
+				// 	},
+				// 	yAxis: [
+
+				// 	{
+				// 		title: {
+				// 			text: 'Highest Temperature',
+				// 			style: {
+				// 				color: '#eee',
+				// 				fontSize: '20px',
+				// 				fontWeight: 'bold',
+				// 				fill: '#6d869f'
+				// 			}
+				// 		},
+				// 		labels:{
+				// 			formatter: function () {
+				//                 return this.value + ' °C';
+				//             },
+				// 			style:{
+				// 				fontSize:"16px"
+				// 			}
+				// 		},
+				// 		type: 'linear',
+				// 		opposite: true
+
+				// 	},
+				// 	{
+				// 		title: {
+				// 			text: 'Average Temperature',
+				// 			style: {
+				// 				color: '#eee',
+				// 				fontSize: '20px',
+				// 				fontWeight: 'bold',
+				// 				fill: '#6d869f'
+				// 			}
+				// 		},
+				// 		labels:{
+				// 			formatter: function () {
+				//                 return this.value + ' °C';
+				//             },
+				// 			style:{
+				// 				fontSize:"16px"
+				// 			}
+				// 		},
+				// 		type: 'linear',
+						
+				// 	}
+				// 	],
+				// 	tooltip: {
+				// 		headerFormat: '<span>{point.series.name}</span><br/>',
+				// 		pointFormat: '<span style="color:{point.color};font-weight: bold;">{point.name} </span>: <b>{point.y} °C</b><br/>',
+				// 	},
+				// 	legend: {
+				// 		layout: 'horizontal',
+				// 		align: 'right',
+				// 		verticalAlign: 'top',
+				// 		x: -110,
+				// 		y: 30,
+				// 		floating: true,
+				// 		borderWidth: 1,
+				// 		backgroundColor:
+				// 		Highcharts.defaultOptions.legend.backgroundColor || '#2a2a2b',
+				// 		shadow: true,
+				// 		itemStyle: {
+				// 			fontSize:'14px',
+				// 		},
+				// 	},	
+				// 	credits: {
+				// 		enabled: false
+				// 	},
+				// 	plotOptions: {
+				// 		series:{
+				// 			cursor: 'pointer',
+				// 			point: {
+				// 				events: {
+				// 					click: function () {
+				// 						// ShowModal(this.category,result.date);
+				// 					}
+				// 				}
+				// 			},
+				// 			dataLabels: {
+				// 				enabled: true,
+				// 				format: '{point.y}'+ ' °C',
+				// 				style:{
+				// 					fontSize: '1vw'
+				// 				}
+				// 			},
+				// 			animation: {
+				// 				enabled: true,
+				// 				duration: 800
+				// 			},
+				// 			pointPadding: 0.93,
+				// 			groupPadding: 0.93,
+				// 			borderWidth: 0.93,
+				// 			cursor: 'pointer'
+				// 		},
+				// 	},
+				// 	series: [{
+				// 		type: 'spline',
+				// 		data: series,
+				// 		name: 'Avg Temp',
+				// 		yAxis:1,
+				// 		colorByPoint: false,
+				// 		color:'#668eff',
+				// 		animation: false,
+				// 		dataLabels: {
+				// 			enabled: true,
+				// 			format: '{point.y}'+ ' °C' ,
+				// 			style:{
+				// 				fontSize: '1vw',
+				// 				textShadow: false
+				// 			},
+				// 		},
+						
+				// 	},
+				// 	{
+				// 		type: 'spline',
+				// 		data: series2,
+				// 		name: 'Highest Temp',
+				// 		colorByPoint: false,
+				// 		color: "#eb5050",
+				// 		animation: false,
+				// 		dataLabels: {
+				// 			enabled: true,
+				// 			format: '{point.y}'+ ' °C' ,
+				// 			style:{
+				// 				fontSize: '1vw',
+				// 				textShadow: false
+				// 			},
+				// 		},
+				// 	}
+				// 	]
+				// });
 			}
 			else{
 				alert('Attempt to retrieve data failed');

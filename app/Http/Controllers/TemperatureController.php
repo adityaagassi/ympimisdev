@@ -184,7 +184,7 @@ class TemperatureController extends Controller
           $date_to = $request->get('tanggal_to');
           if ($date_from == '') {
                if ($date_to == '') {
-                    $where = "";
+                    $where = "WHERE DATE(created_at) BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND DATE(NOW())";
                }else{
                     $where = "WHERE DATE(created_at) BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND '".$date_to."'";
                }
@@ -226,7 +226,7 @@ class TemperatureController extends Controller
           $date_to = $request->get('tanggal_to');
           if ($date_from == '') {
                if ($date_to == '') {
-                    $where = "";
+                    $where = "AND week_date BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND DATE(NOW())";
                }else{
                     $where = "AND week_date BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-01')) AND '".$date_to."'";
                }
