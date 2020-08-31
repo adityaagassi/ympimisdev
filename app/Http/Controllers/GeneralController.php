@@ -36,7 +36,7 @@ class GeneralController extends Controller
 	public function indexGeneralPointingCall($id){
 		if($id == 'japanese'){
 			$title = 'Japanese Pointing Calls';
-			$title_jp = '??';
+			$title_jp = '駐在員指差し呼称';
 
 			return view('general.pointing_call.japanese', array(
 				'title' => $title,
