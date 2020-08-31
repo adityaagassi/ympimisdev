@@ -1343,7 +1343,7 @@ class StockTakingController extends Controller{
 
 			try{
 				File::put($filepath, $upload_text);
-				// $success = self::uploadFTP($filepath, $filedestination);
+				$success = self::uploadFTP($filepath, $filedestination);
 
 				$response = array(
 					'status' => true
