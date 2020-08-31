@@ -1120,7 +1120,7 @@ class StockTakingController extends Controller{
 				stocktaking_inquiry_logs
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_inquiry_logs.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_inquiry_logs.location
-				WHERE stocktaking_inquiry_logs.stocktaking_date = '".$calendar->date."'
+				WHERE stocktaking_inquiry_logs.stocktaking_date = '".$calendar->date."' and stocktaking_lists.print_status = 1
 				ORDER BY storage_locations.area, stocktaking_inquiry_logs.location, stocktaking_inquiry_logs.material_number ASC");
 		}else{
 			$inquiries = db::select("SELECT
@@ -1138,6 +1138,7 @@ class StockTakingController extends Controller{
 				stocktaking_lists
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_lists.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_lists.location
+				where stocktaking_lists.print_status = 1
 				ORDER BY storage_locations.area, stocktaking_lists.location, stocktaking_lists.material_number ASC");
 		}
 
