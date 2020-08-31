@@ -81,7 +81,16 @@
               <input type="text" id="form_bagian" class="form-control" value="{{$employee->department}} - {{$employee->section}} - {{$employee->group}}" readonly>
               @endif
           </div>
-          <div class="col-xs-6 col-sm-6 col-md-6">
+
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <label for="form_kategori">Kategori</label>
+            <select class="form-control select2" id="form_kategori" data-placeholder='Pilih Kategori'>
+              <option value="">&nbsp;</option>
+              <option <?php if($form_failures->kategori == "Permasalahan") echo "selected"; ?>>Permasalahan</option>
+              <option <?php if($form_failures->kategori == "Kegagalan") echo "selected"; ?>>Kegagalan</option>
+            </select>
+          </div>
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_tgl">Waktu Kejadian</label>
             <div class="input-group date">
               <div class="input-group-addon">
@@ -90,7 +99,7 @@
               <input type="text" class="form-control datepicker" id="form_tgl" placeholder="Masukkan Tanggal Kejadian" value="<?= date('Y-m', strtotime($form_failures->tanggal_kejadian)) ?>">
             </div>
           </div>
-          <div class="col-xs-6 col-sm-6 col-md-6">
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_loc">Lokasi Kejadian</label>
             <select class="form-control select2" data-placeholder="Pilih Lokasi Kejadian" name="form_loc" id="form_loc" style="width: 100% height: 35px; font-size: 15px;" required>
                 <option value=""></option>
@@ -115,27 +124,30 @@
                 @endforeach
             </select>
           </div>
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <label for="form_grup">Grup Kegagalan</label>
+            <input type="text" id="form_grup" class="form-control" placeholder="Contoh : Konslet" value="{{$form_failures->grup_kejadian}}">
+          </div>
         </div>
         <div class="row">
-          <div class="col-xs-2">
-            <label for="form_kategori">Kategori</label>
-            <select class="form-control select2" id="form_kategori" data-placeholder='Pilih Kategori'>
-              <option value="">&nbsp;</option>
-              <option <?php if($form_failures->kategori == "Permasalahan") echo "selected"; ?>>Permasalahan</option>
-              <option <?php if($form_failures->kategori == "Kegagalan") echo "selected"; ?>>Kegagalan</option>
-            </select>
-          </div>
-          <div class="col-xs-5">
+          <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="form_judul">Judul Permasalahan / Kegagalan</label>
             <input type="text" id="form_judul" class="form-control" placeholder="Judul Permasalahan / Kegagalan" value="{{$form_failures->judul}}">
           </div>
-          <div class="col-xs-3">
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_ket">Nama Mesin / Equipment / Part</label>
             <input type="text" id="form_ket" class="form-control" placeholder="Contoh : SAX, FL, Compressor, Chiller" value="{{$form_failures->equipment}}">
           </div>
-          <div class="col-xs-2">
-            <label for="form_grup">Grup Kegagalan</label>
-            <input type="text" id="form_grup" class="form-control" placeholder="Contoh : Konslet" value="{{$form_failures->grup_kejadian}}">
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <label for="form_loss">Loss yang Diakibatkan</label>
+            <select class="form-control select2" data-placeholder="Pilih Loss" name="form_loss" id="form_loss" style="width: 100% height: 35px; font-size: 15px;" required multiple="">
+                <?php 
+                $los = explode(",",$form_failures->loss);
+                
+                ?>
+                <option value="Waktu" selected="">Waktu</option>
+                <option value="Uang" selected="">Uang</option>
+            </select>
           </div>
         </div>
         
@@ -261,6 +273,7 @@
         equipment: $("#form_ket").val(),
         grup_kejadian: $("#form_grup").val(),
         judul: $("#form_judul").val(),
+        loss: $("#form_loss").val().toString(),
         deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
         penanganan: CKEDITOR.instances.form_perbaikan.getData(),
         tindakan: CKEDITOR.instances.form_tindakan.getData(),

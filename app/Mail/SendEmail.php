@@ -224,7 +224,7 @@ class SendEmail extends Mailable
 
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Investment')
+                ->subject('Investment - Expense Application')
                 ->view('mails.investment')
                 ->attach(public_path('files/investment/'.$all_file[0]))
                 ->attach(public_path('investment_list/'.$this->data[0]->pdf));
@@ -232,13 +232,13 @@ class SendEmail extends Mailable
             if($this->data[0]->pdf != null ){
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Investment')
+                ->subject('Investment - Expense Application')
                 ->view('mails.investment')
                 ->attach(public_path('investment_list/'.$this->data[0]->pdf));
             } else{
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Investment')
+                ->subject('Investment - Expense Application')
                 ->view('mails.investment');
             }
         }

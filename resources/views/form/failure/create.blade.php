@@ -9,6 +9,9 @@
   .col-xs-3{
     padding-top: 5px;
   }
+  .col-xs-4{
+    padding-top: 5px;
+  }
   .col-xs-5{
     padding-top: 5px;
   }
@@ -101,7 +104,16 @@
               @endif
             @endif
           </div>
-          <div class="col-xs-6 col-sm-6 col-md-6">
+
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <label for="form_kategori">Kategori</label>
+            <select class="form-control select2" id="form_kategori" data-placeholder='Pilih Kategori' style="width: 100%;height: 35px; font-size: 15px;">
+              <option value="">&nbsp;</option>
+              <option>Permasalahan</option>
+              <option>Kegagalan</option>
+            </select>
+          </div>
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_tgl">Waktu Kejadian</label>
             <div class="input-group date">
               <div class="input-group-addon">
@@ -110,7 +122,7 @@
               <input type="text" class="form-control datepicker" id="form_tgl" placeholder="Masukkan Tanggal Kejadian" required>
             </div>
           </div>
-          <div class="col-xs-6 col-sm-6 col-md-6">
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_loc">Lokasi Kejadian</label>
             <select class="form-control select2" data-placeholder="Pilih Lokasi Kejadian" name="form_loc" id="form_loc" style="width: 100% height: 35px; font-size: 15px;" required>
                 <option value=""></option>
@@ -123,27 +135,26 @@
                 @endforeach
             </select>
           </div>
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <label for="form_grup">Grup Kegagalan</label>
+            <input type="text" id="form_grup" class="form-control" placeholder="Contoh : Konslet">
+          </div>
         </div>
         <div class="row">
-          <div class="col-xs-2">
-            <label for="form_kategori">Kategori</label>
-            <select class="form-control select2" id="form_kategori" data-placeholder='Pilih Kategori'>
-              <option value="">&nbsp;</option>
-              <option>Permasalahan</option>
-              <option>Kegagalan</option>
-            </select>
-          </div>
-          <div class="col-xs-5">
+          <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="form_judul">Judul Permasalahan / Kegagalan</label>
             <input type="text" id="form_judul" class="form-control" placeholder="Judul Permasalahan / Kegagalan">
           </div>
-          <div class="col-xs-3">
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_ket">Nama Mesin / Equipment / Part</label>
             <input type="text" id="form_ket" class="form-control" placeholder="Contoh : SAX, FL, Compressor, Chiller">
           </div>
-          <div class="col-xs-2">
-            <label for="form_grup">Grup Kegagalan</label>
-            <input type="text" id="form_grup" class="form-control" placeholder="Contoh : Konslet">
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <label for="form_loss">Loss yang Diakibatkan</label>
+            <select class="form-control select2" data-placeholder="Pilih Loss yang Diakibatkan" name="form_loss" id="form_loss" style="width: 100% height: 35px; font-size: 15px;" required multiple="">
+                <option value="Waktu">Waktu</option>
+                <option value="Uang">Uang</option>
+            </select>
           </div>
         </div>
         
@@ -276,6 +287,13 @@
         return false;
       }
 
+      if ($("#form_loss").val() == "") {
+        $("#loading").hide();
+        alert("Kolom Loss Harap diisi");
+        $("html").scrollTop(0);
+        return false;
+      }
+
       var data = {
         employee_id: $("#form_nik").val(),
         employee_name: $("#form_nama").val(),
@@ -285,6 +303,7 @@
         equipment: $("#form_ket").val(),
         grup_kejadian: $("#form_grup").val(),
         judul: $("#form_judul").val(),
+        loss: $("#form_loss").val().toString(),
         deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
         penanganan: CKEDITOR.instances.form_perbaikan.getData(),
         tindakan: CKEDITOR.instances.form_tindakan.getData(),
