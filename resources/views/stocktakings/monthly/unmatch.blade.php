@@ -195,8 +195,8 @@
 						<th width="9%">Location</th>
 						<th width="10%">Material</th>
 						<th>Material Description</th>
-						<th width="10%">Lot</th>
 						<th width="10%">PI</th>
+						<th width="10%">lot</th>
 					</tr>
 				</thead>
 				<tbody id="tablePiLotBody">
@@ -682,7 +682,7 @@
 			{ "data": "material_number"},
 			{ "data": "material_description" },
 			{ "data": "quantity"},
-			{ "data": "lot_completion"}]
+			{ "data": "lot_transfer"}]
 		});
 
 		tablePiLot.columns().every( function () {
