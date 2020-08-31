@@ -296,6 +296,19 @@ class StockTakingController extends Controller{
 	public function indexCountPI(Request $request){
 		$group = $request->get('group');
 
+		$lock = db::table('locks')->where('remark', '=', 'breakdown_pi')->first();
+
+		if($lock->status == 1){
+			$response = array(
+				'status' => false,
+				'message' => 'Breakdown PI sedang dilakukan, tidak melakukan proses double.',
+			);
+			return Response::json($response);
+		}
+
+		$lock->status = 1;
+		$lock->save();
+
 		$locations = StorageLocation::whereIn('area', $group)
 		->select('storage_location')
 		->get();
@@ -345,6 +358,9 @@ class StockTakingController extends Controller{
 
 			$this->countPISingle($location);
 			$this->countPIAssyNew2($location);
+
+			$lock->status = 0;
+			$lock->save();
 
 			$response = array(
 				'status' => true,
@@ -1196,7 +1212,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
-				WHERE storage_locations.area in ('ASSEMBLY', 'ST', 'WELDING')
+				WHERE storage_locations.area is not null and storage_locations.area not in ('203', '214', '216', '217', 'MSCR', 'WSCR')
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
@@ -1235,7 +1251,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = pi_book.material_number
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				LEFT JOIN stocktaking_material_notes ON stocktaking_material_notes.material_number = pi_book.material_number
-				WHERE storage_locations.area is not null
+				WHERE storage_locations.area is not null and storage_locations.area not in ('203', '214', '216', '217', 'MSCR', 'WSCR')
 				ORDER BY
 				storage_locations.area,
 				pi_book.location,
