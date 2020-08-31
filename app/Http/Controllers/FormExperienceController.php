@@ -62,7 +62,7 @@ class FormExperienceController extends Controller
         return DataTables::of($details)
 
         ->editColumn('tanggal_kejadian',function($details){
-            return date('Y F', strtotime($details->tanggal_kejadian));
+            return date('Y-m', strtotime($details->tanggal_kejadian));
           })
 
         ->editColumn('lokasi_kejadian',function($details){
