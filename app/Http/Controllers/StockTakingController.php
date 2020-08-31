@@ -296,18 +296,18 @@ class StockTakingController extends Controller{
 	public function indexCountPI(Request $request){
 		$group = $request->get('group');
 
-		$lock = db::table('locks')->where('remark', '=', 'breakdown_pi')->first();
+		// $lock = db::table('locks')->where('remark', '=', 'breakdown_pi')->first();
 
-		if($lock->status == 1){
-			$response = array(
-				'status' => false,
-				'message' => 'Breakdown PI sedang dilakukan, tidak melakukan proses double.',
-			);
-			return Response::json($response);
-		}
+		// if($lock->status == 1){
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'message' => 'Breakdown PI sedang dilakukan, tidak melakukan proses double.',
+		// 	);
+		// 	return Response::json($response);
+		// }
 
-		$lock->status = 1;
-		$lock->save();
+		// $lock->status = 1;
+		// $lock->save();
 
 		$locations = StorageLocation::whereIn('area', $group)
 		->select('storage_location')
@@ -359,8 +359,8 @@ class StockTakingController extends Controller{
 			$this->countPISingle($location);
 			$this->countPIAssyNew2($location);
 
-			$lock->status = 0;
-			$lock->save();
+			// $lock->status = 0;
+			// $lock->save();
 
 			$response = array(
 				'status' => true,
