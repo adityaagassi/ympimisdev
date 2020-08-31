@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
         Commands\UpdatePointingCall::class,
         Commands\SkillUnfulfilledLogCommand::class,
         Commands\CostCenterHistoryCommand::class,
-        Commands\InjectionScheduleCommand::class,
+        // Commands\InjectionScheduleCommand::class,
     ];
 
     /**
