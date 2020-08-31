@@ -1807,7 +1807,7 @@ class StockTakingController extends Controller{
 	}
 
 	public function fetchPiVsLot(){
-		$data = db::select("SELECT storage_locations.area AS `group`, inventory.location, inventory.material_number, material_plant_data_lists.material_description, inventory.quantity, material_volumes.lot_completion FROM
+		$data = db::select("SELECT storage_locations.area AS `group`, inventory.location, inventory.material_number, material_plant_data_lists.material_description, inventory.quantity, material_volumes.lot_transfer FROM
 			(SELECT pi.location, lot.material_number, pi.quantity FROM
 			(SELECT location, material_number, sum(quantity) AS quantity FROM stocktaking_outputs
 			GROUP BY location, material_number) AS pi
@@ -1818,7 +1818,7 @@ class StockTakingController extends Controller{
 			LEFT JOIN material_volumes ON inventory.material_number = material_volumes.material_number
 			LEFT JOIN material_plant_data_lists ON inventory.material_number = material_plant_data_lists.material_number
 			LEFT JOIN storage_locations ON inventory.location = storage_locations.storage_location
-			WHERE (inventory.quantity % material_volumes.lot_completion) <> 0
+			WHERE (inventory.quantity % material_volumes.lot_transfer) <> 0
 			AND storage_locations.area is not null
 			");
 
@@ -2034,11 +2034,11 @@ class StockTakingController extends Controller{
 		$group = $request->get('group');
 		$month = $request->get('month');
 		$quantity = '';
-		if($request->get('series') == 'Empty'){
-			$quantity = 's.quantity IS NULL';
-		}else if ($request->get('series') == 'Inputted') {
-			$quantity = 's.quantity IS NOT NULL';
-		}
+		// if($request->get('series') == 'Empty'){
+		// 	$quantity = 'AND s.quantity IS NULL';
+		// }else if ($request->get('series') == 'Inputted') {
+		// 	$quantity = 'AND s.quantity IS NOT NULL';
+		// }
 
 		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
 		if(!$calendar){
@@ -2050,22 +2050,22 @@ class StockTakingController extends Controller{
 		}
 
 		if($calendar->status != 'finished'){
-			$input_detail = db::select("SELECT sl.area, s.location, s.category, s.store, s.material_number, mpdl.material_description, s.quantity, s.audit1, s.audit2, s.final_count FROM stocktaking_lists s
+			$input_detail = db::select("SELECT sl.area, s.location, s.category, s.store, s.material_number, mpdl.material_description, s.quantity, s.audit1, s.audit2, s.final_count, if(s.quantity is null, 0, 1) as ord FROM stocktaking_lists s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 				WHERE s.location = '".$group."'
-				AND ".$quantity."
+				".$quantity."
 				AND s.print_status = 1
-				ORDER BY sl.area, s.location, s.store, s.material_number ASC");
+				ORDER BY ord, sl.area, s.location, s.store, s.material_number ASC");
 		}else{
 			$input_detail = db::select("
 				SELECT sl.area, s.location, s.category, s.store, s.material_number, mpdl.material_description, NULL AS quantity, NULL AS audit1, NULL AS audit2, s.quantity AS final_count FROM stocktaking_inquiry_logs s
 				LEFT JOIN storage_locations sl on sl.storage_location = s.location
 				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 				WHERE s.location = '".$group."'
-				AND ".$quantity."
+				".$quantity."
 				AND s.stocktaking_date = '".$calendar->date."'
-				ORDER BY sl.area, s.location, s.store, s.material_number ASC;");
+				ORDER BY sl.area, s.location, s.store, s.material_number, s.quantity ASC;");
 		}
 
 		$response = array(
@@ -2127,14 +2127,14 @@ class StockTakingController extends Controller{
 		}
 
 		if($calendar->status != 'finished'){
-			$audit_detail = db::select("SELECT storage_locations.area, audited.location, audited.store, IF( audited.audited = 1, 'Audited', 'Not yet' ) AS audit_status FROM
+			$audit_detail = db::select("SELECT storage_locations.area, audited.location, audited.store, IF( audited.audited = 1, 1, 0) AS ord FROM
 				(SELECT location, store, IF( total = audit, 1, 0 ) AS audited, IF( total <> audit, 1, 0 ) AS not_audited FROM
 				(SELECT stocktaking_lists.location, stocktaking_lists.store, count( stocktaking_lists.id ) AS total, SUM( IF ( stocktaking_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_lists
 				WHERE stocktaking_lists.location = '".$group."'
 				AND stocktaking_lists.print_status = 1
 				GROUP BY stocktaking_lists.location, stocktaking_lists.store) audit) AS audited
 				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location
-				HAVING audit_status = '".$series."'");
+				order by ord asc");
 		}else{
 			$response = array(
 				'status' => false

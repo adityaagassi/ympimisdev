@@ -177,7 +177,6 @@
 									<th>Group</th>
 									<th>Location</th>
 									<th>Store</th>
-									<th>Status</th>
 								</tr>
 							</thead>
 							<tbody id="bodyAudit">
@@ -671,15 +670,16 @@
 				$('#bodyInput').html('');
 				$('#loading').hide();
 
-				var color = ''
-				if(series == "Empty"){
-					color = 'style="background-color: rgb(255,116,116);"';
-				}else{
-					color = 'style="background-color: rgb(144,238,126);"';	
-				}
+				
 
 				var body = '';
 				for (var i = 0; i < result.input_detail.length; i++) {
+					var color = ''
+					if(result.input_detail[i].ord == 0){
+						color = 'style="background-color: rgba(255, 0, 0, 0.25);"';
+					}else{
+						color = 'style="background-color: #00a65a;"';
+					}
 					body += '<tr '+ color +'">';
 					body += '<td style="width: 1%">'+ result.input_detail[i].area +'</td>';
 					body += '<td style="width: 1%">'+ result.input_detail[i].location +'</td>';
@@ -748,9 +748,6 @@
 
 				$('#modalInput').modal('show');
 				$('#tableInput').show();
-
-
-
 			}
 		});
 	}
@@ -877,20 +874,20 @@
 				$('#bodyAudit').html('');
 				$('#loading').hide();
 
-				var color = ''
-				if(series == "Not yet"){
-					color = 'style="background-color: rgb(255,116,116);"';
-				}else{
-					color = 'style="background-color: rgb(144,238,126);"'			
-				}
-
 				var body = '';
 				for (var i = 0; i < result.audit_detail.length; i++) {
+
+					var color = ''
+					if(result.audit_detail[i].ord == 0){
+						color = 'style="background-color: rgba(255, 0, 0, 0.25);"';
+					}else{
+						color = 'style="background-color: #00a65a;"'			
+					}
+
 					body += '<tr '+ color +'">';
 					body += '<td style="width: 1%">'+ result.audit_detail[i].area +'</td>';
 					body += '<td style="width: 1%">'+ result.audit_detail[i].location +'</td>';
 					body += '<td style="width: 1%">'+ result.audit_detail[i].store +'</td>';
-					body += '<td style="width: 1%">'+ result.audit_detail[i].audit_status +'</td>';
 					body += '</tr>';
 				}
 
