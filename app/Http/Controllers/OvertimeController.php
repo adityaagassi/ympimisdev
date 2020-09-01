@@ -1397,11 +1397,7 @@ public function overtimeReportDetail(Request $request)
 				A.Emp_no,
 				B.Full_name,
 				B.Section,
-				IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
-				) AS ot 
+				ROUND( A.total_ot / 60.0, 2 ) AS ot 
 				FROM
 				VIEW_YMPI_Emp_OvertimePlan A
 				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
@@ -1409,10 +1405,7 @@ public function overtimeReportDetail(Request $request)
 				A.daytype = 'WD' 
 				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."'
 				AND B.Department = '".$department."'
-				AND IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 ) > 3");
+				AND ROUND( A.total_ot / 60.0, 2 ) > 3");
 		}
 		if($category == '14Hours/Week'){
 			$violations = db::connection('sunfish')->select("SELECT
@@ -1421,11 +1414,7 @@ public function overtimeReportDetail(Request $request)
 				B.Full_name,
 				B.Section,
 				SUM (
-				IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
-				)) AS ot 
+				ROUND( A.total_ot / 60.0, 2 )) AS ot 
 				FROM
 				VIEW_YMPI_Emp_OvertimePlan A
 				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
@@ -1439,11 +1428,7 @@ public function overtimeReportDetail(Request $request)
 				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )),
 				B.Section 
 				HAVING
-				SUM (
-				IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 )) > 14");
+				SUM (ROUND( A.total_ot / 60.0, 2 )) > 14");
 		}
 		if($category == 'Both'){
 
@@ -1453,11 +1438,7 @@ public function overtimeReportDetail(Request $request)
 				A.Emp_no,
 				B.Full_name,
 				B.Section,
-				IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
-				) AS ot 
+				ROUND( A.total_ot / 60.0, 2 ) AS ot 
 				FROM
 				VIEW_YMPI_Emp_OvertimePlan A
 				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
@@ -1465,10 +1446,7 @@ public function overtimeReportDetail(Request $request)
 				A.daytype = 'WD' 
 				AND FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) = '".$period."' 
 				AND B.Department = '".$department."'
-				AND IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 ) > 3");
+				AND ROUND( A.total_ot / 60.0, 2 ) > 3");
 
 			$ot_14 = db::connection('sunfish')->select("SELECT
 				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )) AS period,
@@ -1476,11 +1454,8 @@ public function overtimeReportDetail(Request $request)
 				B.Full_name,
 				B.Section,
 				SUM (
-				IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
-				)) AS ot 
+				ROUND( A.total_ot / 60.0, 2 )
+				) AS ot 
 				FROM
 				VIEW_YMPI_Emp_OvertimePlan A
 				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
@@ -1494,11 +1469,7 @@ public function overtimeReportDetail(Request $request)
 				CONCAT('Week ',	DATEPART( week, A.ovtplanfrom )),
 				B.Section 
 				HAVING
-				SUM (
-				IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 )) > 14");
+				SUM (ROUND( A.total_ot / 60.0, 2 )) > 14");
 
 			$violations = array();
 
@@ -1531,11 +1502,8 @@ public function overtimeReportDetail(Request $request)
 				B.Full_name,
 				B.Section,
 				SUM (
-				IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 
-				)) AS ot 
+				ROUND( A.total_ot / 60.0, 2 )
+				) AS ot 
 				FROM
 				VIEW_YMPI_Emp_OvertimePlan A
 				LEFT JOIN VIEW_YMPI_Emp_OrgUnit B ON B.Emp_no = A.Emp_no 
@@ -1549,11 +1517,7 @@ public function overtimeReportDetail(Request $request)
 				B.Full_name,
 				B.Section 
 				HAVING
-				SUM (
-				IIF (
-				A.total_ot IS NOT NULL,
-				floor(( A.total_ot / 60.0 ) * 2 + 0.5 ) / 2,
-				floor(( A.TOTAL_OVT_PLAN / 60.0 ) * 2 + 0.5 ) / 2 )) > 56");
+				SUM (ROUND( A.total_ot / 60.0, 2 )) > 56");
 		}
 	}
 	else{

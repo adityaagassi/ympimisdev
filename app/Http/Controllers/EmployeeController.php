@@ -778,8 +778,7 @@ class EmployeeController extends Controller
           }
 
           if($now >= '2020-01-01'){
-               $overtimes2 = db::connection('sunfish')->select("
-                    SELECT
+               $overtimes2 = db::connection('sunfish')->select(" SELECT
                     orderer,
                     period,
                     Department,
@@ -804,7 +803,7 @@ class EmployeeController extends Controller
                     FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
                     B.Department,
                     SUM (
-                    IIF(IIF(A.total_ot is not null, ROUND( A.total_ot / 60.0, 2 ), ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 )) > 3, 1 , null)
+                    IIF(ROUND( A.total_ot / 60.0, 2 ) > 3, 1 , null)
                     ) AS ot_3 
                     FROM
                     VIEW_YMPI_Emp_OvertimePlan A
@@ -847,11 +846,7 @@ class EmployeeController extends Controller
                     CASE
 
                     WHEN SUM (
-                    CASE
-
-                    WHEN A.total_ot IS NOT NULL THEN
-                    ROUND( A.total_ot / 60.0, 2 ) ELSE ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 )
-                    END 
+                    ROUND( A.total_ot / 60.0, 2 ) 
                     ) > 14 THEN
                     1 ELSE NULL 
                     END AS ot_14 
@@ -894,11 +889,7 @@ class EmployeeController extends Controller
                     CASE
 
                     WHEN SUM (
-                    CASE
-
-                    WHEN A.total_ot IS NOT NULL THEN
-                    ROUND( A.total_ot / 60.0, 2 ) ELSE ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 )
-                    END 
+                    ROUND( A.total_ot / 60.0, 2 )
                     ) > 56 THEN
                     1 ELSE NULL 
                     END AS ot_56 
