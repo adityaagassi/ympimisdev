@@ -970,10 +970,11 @@ class AccountingController extends Controller
                 foreach ($manag as $mg)
                 {
                     $manager = $mg->employee_id;
+                    $manager_name = $mg->name;
                 }
             }
 
-            //cek manager
+            //cek manager ada atau tidak
 
             else if ($manag != null)
             {
@@ -982,6 +983,7 @@ class AccountingController extends Controller
                 foreach ($manag as $mg)
                 {
                     $manager = $mg->employee_id;
+                    $manager_name = $mg->name;
                 }
             }
 
@@ -1031,7 +1033,8 @@ class AccountingController extends Controller
                 'status' => 'approval', 
                 'no_budget' => $request->get('budget_no'), 
                 'staff' => $staff, 
-                'manager' => $manager, 
+                'manager' => $manager,
+                'manager_name' => $manager_name,
                 'dgm' => $this->dgm, 
                 'gm' => $this->gm, 
                 'created_by' => $id
@@ -1140,7 +1143,7 @@ class AccountingController extends Controller
             }
 
 
-            $detail_pr = AccPurchaseRequisition::select('*')
+            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
                  $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
@@ -1149,6 +1152,13 @@ class AccountingController extends Controller
             ->where('acc_purchase_requisitions.id', '=', $data->id)
             ->get();
 
+            $exchange_rate = AccExchangeRate::select('*')
+            ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+            ->where('currency','!=','USD')
+            ->orderBy('currency','ASC')
+            ->get();
+
+            //SELECT * FROM `acc_purchase_requisitions` left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_budget_histories on acc_purchase_requisition_items.no_pr = acc_budget_histories.category_number and acc_purchase_requisition_items.item_desc = acc_budget_histories.no_item where acc_purchase_requisitions.id = "45" 
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
@@ -1156,6 +1166,7 @@ class AccountingController extends Controller
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
+                'rate' => $exchange_rate
             ));
 
             $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -1255,13 +1266,19 @@ class AccountingController extends Controller
 
             $pr->save();
 
-            $detail_pr = AccPurchaseRequisition::select('*')
+            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
                  $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                  $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
              })
             ->where('acc_purchase_requisitions.id', '=', $id)
+            ->get();
+
+            $exchange_rate = AccExchangeRate::select('*')
+            ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+            ->where('currency','!=','USD')
+            ->orderBy('currency','ASC')
             ->get();
 
 
@@ -1271,6 +1288,7 @@ class AccountingController extends Controller
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
+                'rate' => $exchange_rate
             ));
 
             $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -1318,7 +1336,7 @@ class AccountingController extends Controller
             $pr->status = 'received';
             $pr->save();
 
-            $detail_pr = AccPurchaseRequisition::select('*')
+            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
                  $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
@@ -1327,12 +1345,19 @@ class AccountingController extends Controller
             ->where('acc_purchase_requisitions.id', '=', $id)
             ->get();
 
+            $exchange_rate = AccExchangeRate::select('*')
+            ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+            ->where('currency','!=','USD')
+            ->orderBy('currency','ASC')
+            ->get();
+
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
             $pdf->setPaper('A4', 'potrait');
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
+                'rate' => $exchange_rate
             ));
 
             $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -1349,7 +1374,7 @@ class AccountingController extends Controller
     //==================================//
     public function report_purchase_requisition($id){
 
-        $detail_pr = AccPurchaseRequisition::select('*')
+        $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
         ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
         ->join('acc_budget_histories', function($join) {
              $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
@@ -1358,12 +1383,19 @@ class AccountingController extends Controller
         ->where('acc_purchase_requisitions.id', '=', $id)
         ->get();
 
+        $exchange_rate = AccExchangeRate::select('*')
+        ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+        ->where('currency','!=','USD')
+        ->orderBy('currency','ASC')
+        ->get();
+
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->setPaper('A4', 'potrait');
 
         $pdf->loadView('accounting_purchasing.report.report_pr', array(
             'pr' => $detail_pr,
+            'rate' => $exchange_rate
         ));
 
         // $pdf->save(public_path() . "/pr/" . $reports[0]->id . ".pdf");
@@ -1479,13 +1511,19 @@ class AccountingController extends Controller
 
                 $pr->save();
 
-                $detail_pr = AccPurchaseRequisition::select('*')
+                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
                      $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                      $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                  })
                 ->where('acc_purchase_requisitions.id', '=', $id)
+                ->get();
+
+                $exchange_rate = AccExchangeRate::select('*')
+                ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+                ->where('currency','!=','USD')
+                ->orderBy('currency','ASC')
                 ->get();
 
 
@@ -1495,6 +1533,7 @@ class AccountingController extends Controller
 
                 $pdf->loadView('accounting_purchasing.report.report_pr', array(
                     'pr' => $detail_pr,
+                    'rate' => $exchange_rate
                 ));
 
                 $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -1546,13 +1585,19 @@ class AccountingController extends Controller
 
                 $pr->save();
 
-                $detail_pr = AccPurchaseRequisition::select('*')
+                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
                      $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                      $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                  })
                 ->where('acc_purchase_requisitions.id', '=', $id)
+                ->get();
+
+                $exchange_rate = AccExchangeRate::select('*')
+                ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+                ->where('currency','!=','USD')
+                ->orderBy('currency','ASC')
                 ->get();
 
 
@@ -1562,6 +1607,7 @@ class AccountingController extends Controller
 
                 $pdf->loadView('accounting_purchasing.report.report_pr', array(
                     'pr' => $detail_pr,
+                    'rate' => $exchange_rate
                 ));
 
                 $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -1574,13 +1620,19 @@ class AccountingController extends Controller
                 $message = 'PR dengan Nomor '.$pr->no_pr;
                 $message2 ='Berhasil di approve';
 
-                $detail_pr = AccPurchaseRequisition::select('*')
+                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
                      $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                      $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                  })
                 ->where('acc_purchase_requisitions.id', '=', $id)
+                ->get();
+
+                $exchange_rate = AccExchangeRate::select('*')
+                ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+                ->where('currency','!=','USD')
+                ->orderBy('currency','ASC')
                 ->get();
 
 
@@ -1590,6 +1642,7 @@ class AccountingController extends Controller
 
                 $pdf->loadView('accounting_purchasing.report.report_pr', array(
                     'pr' => $detail_pr,
+                    'rate' => $exchange_rate
                 ));
 
                 $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -1630,7 +1683,7 @@ class AccountingController extends Controller
 
                 $pr->save();
 
-                $detail_pr = AccPurchaseRequisition::select('*')
+                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
                      $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
@@ -1639,6 +1692,11 @@ class AccountingController extends Controller
                 ->where('acc_purchase_requisitions.id', '=', $id)
                 ->get();
 
+                $exchange_rate = AccExchangeRate::select('*')
+                ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+                ->where('currency','!=','USD')
+                ->orderBy('currency','ASC')
+                ->get();
 
                 $pdf = \App::make('dompdf.wrapper');
                 $pdf->getDomPDF()->set_option("enable_php", true);
@@ -1646,6 +1704,7 @@ class AccountingController extends Controller
 
                 $pdf->loadView('accounting_purchasing.report.report_pr', array(
                     'pr' => $detail_pr,
+                    'rate' => $exchange_rate
                 ));
 
                 $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -1658,13 +1717,19 @@ class AccountingController extends Controller
                 $message = 'PR dengan Nomor '.$pr->no_pr;
                 $message2 ='Berhasil di approve';
 
-                $detail_pr = AccPurchaseRequisition::select('*')
+                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
                 ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
                 ->join('acc_budget_histories', function($join) {
                      $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
                      $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
                  })
                 ->where('acc_purchase_requisitions.id', '=', $id)
+                ->get();
+
+                $exchange_rate = AccExchangeRate::select('*')
+                ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+                ->where('currency','!=','USD')
+                ->orderBy('currency','ASC')
                 ->get();
 
 
@@ -1674,6 +1739,7 @@ class AccountingController extends Controller
 
                 $pdf->loadView('accounting_purchasing.report.report_pr', array(
                     'pr' => $detail_pr,
+                    'rate' => $exchange_rate
                 ));
 
                 $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -1924,7 +1990,7 @@ class AccountingController extends Controller
                 $data3->save();
             }
 
-            $detail_pr = AccPurchaseRequisition::select('*')
+            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
                  $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
@@ -1933,6 +1999,11 @@ class AccountingController extends Controller
             ->where('acc_purchase_requisitions.id', '=', $request->get('id_edit_pr'))
             ->get();
 
+            $exchange_rate = AccExchangeRate::select('*')
+            ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+            ->where('currency','!=','USD')
+            ->orderBy('currency','ASC')
+            ->get();
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
@@ -1940,6 +2011,7 @@ class AccountingController extends Controller
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
+                'rate' => $exchange_rate
             ));
 
             $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -3500,7 +3572,7 @@ class AccountingController extends Controller
                 ]);
             }
 
-            $detail_pr = AccPurchaseRequisition::select('*')
+            $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
             ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
             ->join('acc_budget_histories', function($join) {
                  $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
@@ -3509,6 +3581,11 @@ class AccountingController extends Controller
             ->where('acc_purchase_requisitions.id', '=', $request->get('id_edit_pr'))
             ->get();
 
+            $exchange_rate = AccExchangeRate::select('*')
+            ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+            ->where('currency','!=','USD')
+            ->orderBy('currency','ASC')
+            ->get();
 
             $pdf = \App::make('dompdf.wrapper');
             $pdf->getDomPDF()->set_option("enable_php", true);
@@ -3516,6 +3593,7 @@ class AccountingController extends Controller
 
             $pdf->loadView('accounting_purchasing.report.report_pr', array(
                 'pr' => $detail_pr,
+                'rate' => $exchange_rate
             ));
 
             $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
@@ -4087,35 +4165,75 @@ class AccountingController extends Controller
                 $budget_sisa = $request->get('sisa');
                 $budget_amount = $request->get('amount');
 
-                $data2 = AccInvestmentBudget::firstOrNew(['reff_number' => $request->get('reff_number'),'category_budget' => $category_budget[$i],'budget_no' => $budget_no[$i] ]);
+                $data2 = AccInvestmentBudget::firstOrNew([
+                    'reff_number' => $request->get('reff_number'),
+                    'category_budget' => $category_budget[$i],
+                    'budget_no' => $budget_no[$i] 
+                ]);
+
                 $data2->budget_name = $budget_name[$i];
                 $data2->sisa = $budget_sisa[$i];
                 $data2->total = $budget_amount[$i];
                 $data2->created_by = $id_user;
-                $data2->save();
 
                 $investment_item = AccInvestment::join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')->where('acc_investments.id', '=', $request->get('id'))->get();
-
 
                 for ($z=0; $z < count($investment_item); $z++) { 
                     $month = strtolower(date("M",strtotime($request->get('submission_date'))));
 
-                    $data3 = new AccBudgetHistory([
-                        'budget' => $budget_no[$i],
-                        'budget_month' => $month,
-                        'budget_date' => date('Y-m-d'),
+                    $data3 = AccBudgetHistory::firstOrNew([
                         'category_number' => $request->get('reff_number'),
+                        'budget' => $budget_no[$i],
                         'no_item' => $investment_item[$z]->detail,
-                        'beg_bal' => $budget_sisa[$i],
-                        'amount' => $budget_amount[$i],
-                        'status' => 'Investment',
-                        'created_by' => $id_user
                     ]);
 
+                    $data3->budget = $budget_no[$i];
+                    $data3->budget_month = $month;
+                    $data3->budget_date = date('Y-m-d');
+                    $data3->category_number = $request->get('reff_number');
+                    $data3->no_item = $investment_item[$z]->detail;
+                    $data3->beg_bal = $budget_sisa[$i];
+                    $data3->amount = $investment_item[$z]->dollar;
+                    $data3->status = 'Investment';
+                    $data3->created_by = $id_user;
                     $data3->save();
                 }
 
+                $totalPembelian = $budget_amount[$i];
+
+                if ($totalPembelian != null) {
+
+                    $inv_budget = AccInvestment::join('acc_investment_budgets', 'acc_investments.reff_number', '=', 'acc_investment_budgets.reff_number')
+                    ->where('acc_investments.id', '=', $request->get('id'))->get();
+
+                    if (count($inv_budget) == 0) {
+                        $datePembelian = date('Y-m-d');
+                        $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
+
+                        foreach ($fy as $fys) {
+                            $fiscal = $fys->fiscal_year;
+                        }
+
+                        $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
+                        $sisa_bulan = $bulan.'_sisa_budget';                    
+                        //get Data Budget Based On Periode Dan Nomor
+
+                        $budget = AccBudget::where('budget_no','=',$budget_no[$i])->where('periode','=', $fiscal)->first();
+                        
+                        //perhitungan 
+                        $total = $budget->$sisa_bulan - $totalPembelian;
+                        $dataupdate = AccBudget::where('budget_no','=',$budget_no[$i])->where('periode','=', $fiscal)
+                        ->update([
+                            $sisa_bulan => $total
+                        ]);
+
+                    }
+                }
+
+
+                $data2->save();
             }
+
 
 
             $detail_inv = AccInvestment::select('acc_investments.*','acc_investment_details.no_item', 'acc_investment_details.detail', 'acc_investment_details.qty', 'acc_investment_details.price', 'acc_investment_details.vat_status', 'acc_investment_details.amount')
@@ -4140,7 +4258,7 @@ class AccountingController extends Controller
 
             $response = array(
                 'status' => true,
-                'datas' => 'Berhasil'
+                'datas' => 'Data Berhasil Diubah'
             );
             return Response::json($response);
 
@@ -4210,7 +4328,8 @@ class AccountingController extends Controller
         foreach ($kode_item as $item)
         {
             $html = array(
-                'detail' => $item->deskripsi
+                'detail' => $item->deskripsi,
+                'harga' => $item->harga
             );
 
         }
@@ -4238,7 +4357,16 @@ class AccountingController extends Controller
         {
             $id_user = Auth::id();
 
-            $item = new AccInvestmentDetail(['reff_number' => $request->get('reff_number') , 'no_item' => $request->get('kode_item') , 'detail' => $request->get('detail_item') , 'qty' => $request->get('jumlah_item') , 'price' => $request->get('price_item') , 'amount' => $request->get('amount_item') , 'created_by' => $id_user]);
+            $item = new AccInvestmentDetail([
+                'reff_number' => $request->get('reff_number') , 
+                'no_item' => $request->get('kode_item') , 
+                'detail' => $request->get('detail_item') , 
+                'qty' => $request->get('jumlah_item') , 
+                'price' => $request->get('price_item') , 
+                'amount' => $request->get('amount_item') , 
+                'dollar' => $request->get('dollar') , 
+                'created_by' => $id_user
+            ]);
 
             $item->save();
 
@@ -4291,6 +4419,7 @@ class AccountingController extends Controller
             $items->qty = $request->get('jumlah_item');
             $items->price = $request->get('price_item');
             $items->amount = $request->get('amount_item');
+            $items->dollar = $request->get('dollar');
             $items->save();
 
             $response = array(
@@ -4570,13 +4699,52 @@ class AccountingController extends Controller
     {
         try
         {
-            $master = AccInvestmentBudget::where('id', '=', $request->get('id'))
+
+            $get_budget_item = AccInvestmentBudget::find($request->get('id'));
+
+            $budget_log = AccBudgetHistory::where('budget', '=', $get_budget_item->budget_no)
+            ->where('category_number', '=', $get_budget_item->reff_number)
+            ->get();
+
+            $date = date('Y-m-d');
+            //FY
+            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+            foreach ($fy as $fys) {
+                $fiscal = $fys->fiscal_year;
+            }
+
+            $sisa_bulan = $budget_log[0]->budget_month.'_sisa_budget';
+
+            $budget = AccBudget::where('budget_no', $get_budget_item->budget_no)->where('periode', $fiscal)->first();
+
+            $total = $budget->$sisa_bulan + $get_budget_item->total; //add total
+
+            $dataupdate = AccBudget::where('budget_no', $get_budget_item->budget_no)->where('periode', $fiscal)->update([
+                $sisa_bulan => $total
+            ]);
+
+            $delete_budget_log = AccBudgetHistory::where('budget', '=', $get_budget_item->budget_no)
+            ->where('category_number', '=', $get_budget_item->reff_number)
             ->delete();
+
+            $master = AccInvestmentBudget::where('id', '=', $request->get('id'))->delete();
+
+            $response = array(
+              'status' => true,
+              'datas' => "Berhasil Hapus Data",
+            );
+            
+            return Response::json($response);
+
         }
         catch(QueryException $e)
         {
-            return redirect('/investment')->with('error', $e->getMessage())
-            ->with('page', 'Investment');
+            $response = array(
+              'status' => false,
+              'datas' => "Berhasil Hapus Data",
+            );
+            
+            return Response::json($response);
         }
     }
 

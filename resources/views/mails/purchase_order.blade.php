@@ -35,7 +35,7 @@
 			@if($posisi == "manager_pch")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Purchase Order <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Request Purchase Order (PO)<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
 			<h2>Purchase Order (PO) Nomor {{$no_po}}</h2>
@@ -89,7 +89,7 @@
 			@elseif($posisi == "dgm_pch")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Purchase Order <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Request Purchase Order (PO)<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
 			<h2>Purchase Order (PO) Nomor {{$no_po}}</h2>
@@ -143,10 +143,13 @@
 			@elseif($posisi == "gm_pch")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Purchase Order <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Request Purchase Order (PO)<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+
+			(発注申請)
+
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Purchase Order (PO) Nomor {{$no_po}}</h2>
+			<h2>Purchase Order (PO) {{$no_po}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -157,7 +160,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Buyer</td>
+						<td style="width: 2%; border:1px solid black;">Buyer （購入担当者）</td>
 						<td style="border:1px solid black; text-align: center;"><?= $buyer_name ?></td></td>
 					</tr>
 					<tr>
@@ -165,7 +168,7 @@
 						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($tgl_po)) ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Supplier</td>
+						<td style="width: 2%; border:1px solid black;">Supplier  (サプライヤー)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 					<tr>
@@ -189,7 +192,7 @@
 			<br>
 
 			<br>
-			<span style="font-weight: bold;"><i>Apakah anda ingin menyetujui PO ini ?</i></span><br>
+			<span style="font-weight: bold;"><i>Apakah anda ingin menyetujui PO ini (こちらに発注を承認しますか)?</i></span><br>
 			<a style="background-color: green; width: 50px;" href="{{ url("purchase_order/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Ya &nbsp;&nbsp;&nbsp;</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a style="background-color: orange; width: 50px;" href="{{ url("purchase_order/reject/".$id) }}">&nbsp; Tidak &nbsp;</a><br>
@@ -197,7 +200,7 @@
 			@elseif($posisi == "pch")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Purchase Order <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Request Purchase Order (PO)<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
 			<h2>Purchase Order (PO) Nomor {{$no_po}} <br> Telah Berhasil Di Diverifikasi</h2>
@@ -213,7 +216,7 @@
 			@elseif($posisi == "staff_pch")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Purchase Order Tidak Disetujui<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Request Purchase Order (PO)Tidak Disetujui<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 			<br>
 			<h2>Purchase Order (PO) Nomor {{$no_po}} Tidak Disetujui</h2>

@@ -52,8 +52,8 @@
 				<tr>
 					<td colspan="3">&nbsp;</td>
 					<td colspan="4" style="text-align: center;font-weight: bold;font-size: 16px">PURCHASE REQUISITION FORM</td>
-					<td colspan="1" style="text-align: right;font-size: 12px">No:</td>
-					<td colspan="2" style="text-align: right;font-size: 14px;font-weight: bold">{{ $pr[0]->no_pr }}</td>
+					<td colspan="2" style="text-align: right;font-size: 12px">No:</td>
+					<td colspan="1" style="text-align: right;font-size: 14px;font-weight: bold">{{ $pr[0]->no_pr }}</td>
 				</tr>
 				<tr>
 					<td colspan="10"><br></td>
@@ -72,7 +72,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" style="font-size: 12px;width: 22%">Date Of Submission</td>
-					<td colspan="8" style="font-size: 12px;">: <?= date('d F Y', strtotime($pr[0]->submission_date)) ?></td>
+					<td colspan="8" style="font-size: 12px;">: <?= date('d-M-Y', strtotime($pr[0]->submission_date)) ?></td>
 				</tr>
 
 				<tr>
@@ -96,44 +96,117 @@
 		<table style="width: 100%; font-family: arial; border-collapse: collapse; " id="isi">
 			<thead>
 				<tr style="font-size: 12px">
-					<td colspan="1" style="padding:10px;height: 15px; width:1%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">No</td>
-					<td colspan="1" style="width:2%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Item Code</td>
-					<td colspan="2" style="width:8%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Description & Specification</td>
-					<td colspan="1" style="width:2%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Stock WIP</td>
-					<td colspan="1" style="width:2%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Qty</td>
-					<td colspan="1" style="width:4%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Unit Price</td>
-					<td colspan="1" style="width:4%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Amount</td>
-					<td colspan="1" style="width:4%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Request Date</td>
-					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Status</td>
+					<td colspan="1" style="padding:10px;height: 15px; width:1%; background-color: yellow; font-weight: bold; border: 1px solid black;">No</td>
+					<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Item Code</td>
+					<td colspan="1" style="width:8%; background-color: yellow; font-weight: bold; border: 1px solid black;">Description & Specification</td>
+					<td colspan="1" style="width:2%; background-color: yellow; font-weight: bold; border: 1px solid black;">Stock WIP</td>
+					<td colspan="1" style="width:4%; background-color: yellow; font-weight: bold; border: 1px solid black;">Request Date</td>
+					<td colspan="1" style="width:2%; background-color: yellow; font-weight: bold; border: 1px solid black;">Qty</td>
+					<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Currency</td>
+					<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Unit Price</td>
+					<td colspan="1" style="width:3%; background-color: yellow; font-weight: bold; border: 1px solid black;">Amount</td>
+					<td colspan="1" style="width:4%; background-color: yellow; font-weight: bold; border: 1px solid black;">Last Order</td>
 				</tr>
 			</thead>
 			<tbody>
-				<?php $no = 1; ?>
-				@foreach($pr as $purchase_r)
+				<?php $no = 1; 
+				
+				$totalidr = 0;
+				$totaljpy = 0;
+				$totalusd = 0;
+
+				foreach($pr as $purchase_r) {
+
+				if($purchase_r->item_currency == "IDR"){
+					$totalidr += $purchase_r->item_amount;
+				}
+				else if($purchase_r->item_currency == "JPY"){
+					$totaljpy += $purchase_r->item_amount;
+				}
+				else if($purchase_r->item_currency == "USD"){
+					$totalusd += $purchase_r->item_amount;
+				}
+
+				?>
+
 				<tr>
 					<td colspan="1" style="height: 26px; border: 1px solid black;text-align: center;padding: 0">{{ $no }}</td>
 					<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_code }}</td>
-					<td colspan="2" style="border: 1px solid black;">{{ $purchase_r->item_desc }} - {{ $purchase_r->item_spec }}</td>
+					<td colspan="1" style="border: 1px solid black;">
+						{{ $purchase_r->item_desc }} 
+						@if($purchase_r->item_spec != null)
+						- {{ $purchase_r->item_spec }}
+						@endif
+					</td>
 					<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_stock }}</td>
+					<td colspan="1" style="border: 1px solid black;"><?= date('d-M-y', strtotime($purchase_r->item_request_date)) ?></td>
 					<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_qty }} {{ $purchase_r->item_uom }}</td>
-					<td colspan="1" style="border: 1px solid black;">({{$purchase_r->item_currency}}) <?= number_format($purchase_r->item_price,0,"",".") ?></td>
+					<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_currency }}</td>
+					<td colspan="1" style="border: 1px solid black;"><?= number_format($purchase_r->item_price,0,"",".") ?></td>
 					<td colspan="1" style="border: 1px solid black;"><?= number_format($purchase_r->item_amount,0,"","."); ?></td>
-					<td colspan="1" style="border: 1px solid black;"><?= date('d F Y', strtotime($purchase_r->item_request_date)) ?></td>
-					<td colspan="1" style="border: 1px solid black;text-align: center;padding: 0;">OK</td>
+					<td colspan="1" style="border: 1px solid black;">
+						@if($purchase_r->last_order != null) 
+						<?= date('d-M-Y', strtotime($purchase_r->last_order)) ?>
+						@else
+						-
+						@endif
+					</td>
 				</tr>
-				<?php $no++; ?>
-				@endforeach
-
-
+				<?php $no++; } ?>
 				<tr>
 					<td colspan="10">&nbsp;</td>
 				</tr>
 				<tr>
-					<td style="font-size: 12px;" colspan="10">Note :</td>
+					<td colspan="5" rowspan="2" style="font-size: 12px;font-weight: bold">Exchange Rate :</td>
+
+					<th colspan="1" style="background-color: yellow; border: 1px solid black;font-size: 12px;text-align: center;">Cur</th>
+					<th colspan="2" style="background-color: yellow; border: 1px solid black;font-size: 12px;text-align: center;">Original Amount</th>
+					<th colspan="2" style="background-color: yellow; border: 1px solid black;font-size: 12px;text-align: center;">Amount US$</th>
 				</tr>
 				<tr>
-					<td colspan="10" style="font-size: 12px;"><?= $pr[0]->note ?></td>
+
+					<td colspan="1" style="border: 1px solid black;font-size: 12px;text-align: center;">IDR</td>
+					<td colspan="2" style="border: 1px solid black;font-size: 12px;text-align: center;">Rp. <?= number_format($totalidr,0,"",".") ?></td>
+					<td colspan="2" style="border: 1px solid black;font-size: 12px;text-align: center;">
+						<?php 
+							$totalkonversiidr = $totalidr / $rate[0]->rate;
+						?>		
+						$ <?= number_format($totalkonversiidr,0,".","") ?>
+					</td>
 				</tr>
+				<tr>
+
+					<td colspan="5" style="font-size: 12px;">{{ $rate[0]->currency }} = {{ $rate[0]->rate }} / USD</td>
+					<td colspan="1" style="border: 1px solid black;font-size: 12px;text-align: center;">USD</td>
+					<td colspan="2" style="border: 1px solid black;font-size: 12px;text-align: center;">$ <?= number_format($totalusd,0,".","") ?></td>
+					<td colspan="2" style="border: 1px solid black;font-size: 12px;text-align: center;">$ <?= number_format($totalusd,0,".","") ?></td>
+				</tr>		
+				<tr>
+					<td colspan="5" style="font-size: 12px;">{{ $rate[1]->currency }} = {{ $rate[1]->rate }} / USD</td>
+
+					<td colspan="1" style="border: 1px solid black;font-size: 12px;text-align: center;">JPY</td>
+					<td colspan="2" style="border: 1px solid black;font-size: 12px;text-align: center;">¥ <?= number_format($totaljpy,0,"",".") ?></td>
+					<td colspan="2" style="border: 1px solid black;font-size: 12px;text-align: center;">
+						<?php 
+							$totalkonversijpy = $totaljpy / $rate[1]->rate;
+						?>		
+						$ <?= number_format($totalkonversijpy,0,".","") ?>
+							
+					</td>
+				</tr>
+				<tr>
+					<td colspan="10">
+						&nbsp;
+					</td>
+				</tr>
+				<tr>
+					<td style="font-size: 12px;" colspan="5">Note :</td>
+				</tr>
+
+				<tr>
+					<td colspan="5" style="font-size: 12px"><?= $pr[0]->note ?></td>
+				</tr>
+				
 			</tbody>
 		</table>
 	</main>
@@ -159,9 +232,9 @@
 
 					?>
 					<tr>
-						<td colspan="2" style="text-align:center; font-weight: bold; padding:5px; height: 15px; border: 1px solid black;">$ {{ $pr[0]->beg_bal }}</td>
-						<td colspan="2" style="text-align:center; font-weight: bold; padding:5px; height: 15px; border: 1px solid black;">$ {{ $totalamount }}</td>
-						<td colspan="2" style="text-align:center; font-weight: bold; padding:5px; height: 15px; border: 1px solid black;">$ {{ $pr[0]->beg_bal - $totalamount }}</td>
+						<td colspan="2" style="text-align:center; font-weight: bold; padding:5px; height: 15px; border: 1px solid black;">$ <?= number_format($pr[0]->beg_bal,0,".","") ?></td>
+						<td colspan="2" style="text-align:center; font-weight: bold; padding:5px; height: 15px; border: 1px solid black;">$ <?= number_format($totalamount,0,".","") ?></td>
+						<td colspan="2" style="text-align:center; font-weight: bold; padding:5px; height: 15px; border: 1px solid black;">$ <?= number_format($pr[0]->beg_bal - $totalamount,0,".","") ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -187,7 +260,7 @@
 						</td>
 						<td colspan="1" style="height: 40px">
 							@if($pr[0]->approvalm == "Approved")
-								<?= $pr[0]->manager ?>
+								<?= $pr[0]->manager_name ?>
 							@endif
 						</td>
 						<td colspan="1" style="height: 40px">

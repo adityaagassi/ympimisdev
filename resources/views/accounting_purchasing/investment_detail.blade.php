@@ -426,13 +426,12 @@
                   <input type="text" class="form-control" id="konversi_dollar<?= $nomor ?>" name="konversi_dollar<?= $nomor ?>" placeholder="Konversi Dollar" readonly="">
                 </div>
               </div> -->
-              <!-- <div class="col-xs-1 col-sm-1 col-md-1">
+              <div class="col-xs-1 col-sm-1 col-md-1">
                 @if($nomor == 1)
                 <label for="form_budget">Aksi</label><br>
                 @endif
-                <a href="javascript:void(0);" id="b" onclick='deleteConfirmation("<?= $inv_budget->category_budget ?>","<?= $inv_budget->id ?>");' class="btn btn-danger" data-toggle="modal" data-target='#modaldanger' style="padding: 6px"><i class='fa fa-close'></i> </a> 
-                <button type="button" class="btn btn-success" onclick='tambahDetail("tambah","lop",<?= $nomor ?>);' style="padding: 6px"><i class='fa fa-plus'></i></button>
-              </div> -->
+                <a href="javascript:void(0);" id="b" onclick='deleteConfirmation("<?= $inv_budget->category_budget ?>","<?= $inv_budget->id ?>");' class="btn btn-danger" data-toggle="modal" data-target='#modaldanger' style="padding: 6px"><i class='fa fa-trash'></i> </a> 
+              </div>
 
 
 
@@ -636,7 +635,7 @@
               <label class="col-sm-2">Amount</label>
               <div class="col-sm-8" align="left">
                 <input type="text" class="form-control" id="amount_item_edit" placeholder="Total" disabled required>
-                <input type="text" id="dollar_item_edit" name="dollar_item_edit" class="form-control currency" placeholder="Dollar">
+                <input type="hidden" id="dollar_item_edit" name="dollar_item_edit" class="form-control currency" placeholder="Dollar">
               </div>
             </div>
 
@@ -667,7 +666,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-          <a id="a" name="modalDeleteButton" href="#" type="button" onclick="delete_budget(this.id)" class="btn btn-danger">Delete</a>
+          <a id="a" name="modalDeleteButton" href="" type="button" onclick="delete_budget(this.id)" class="btn btn-danger">Delete</a>
         </div>
       </div>
     </div>
@@ -747,6 +746,7 @@
                   var json = data,
                   obj = JSON.parse(json);
                   $('#detail_item').val(obj.detail);
+                  $('#price_item').val(obj.harga);
                 }
             });
         });
@@ -759,6 +759,7 @@
                   var json = data,
                   obj = JSON.parse(json);
                   $('#detail_item_edit').val(obj.detail);
+                  $('#price_item_edit').val(obj.harga);
                 }
             });
         });
@@ -1191,7 +1192,7 @@
       $.post('{{ url("investment/update_post") }}', data, function(result, status, xhr){
         if(result.status == true){    
           $("#loading").hide();
-          openSuccessGritter("Success","Data Berhasil Diubah");
+          openSuccessGritter("Success", result.datas);
           location.reload(); 
           // console.log(data);
         }
@@ -1224,7 +1225,7 @@
         jumlah_item : $("#jumlah_item").val(),
         price_item : price_number,
         amount_item : amount_number,
-        dollar : $("#dollar").val()
+        dollar : $("#dollar_item").val()
       };
 
       $.post('{{ url("investment/create_investment_item") }}', data, function(result, status, xhr){
@@ -1546,16 +1547,27 @@
   }
 
   function delete_budget(id) {
+
+      $("#loading").show();
+
       var data = {
         id:id,
       }
 
       $.post('{{ url("delete/investment_budget") }}', data, function(result, status, xhr){
-
+        if(result.status == true){    
+          $("#loading").hide();
+          openSuccessGritter("Success","Budget Berhasil Dihapus");
+          location.reload();
+        }
+        else {
+          openErrorGritter('Error!');
+        }
+        
       });
 
-      $('#modaldanger').modal('hide');
-      $('#'+id).css("display","none");
+      // $('#modaldanger').modal('hide');
+      // $('#'+id).css("display","none");
 
   }
 

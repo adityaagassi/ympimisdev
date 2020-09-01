@@ -195,6 +195,7 @@ class FormExperienceController extends Controller
                    'equipment' => $request->get('equipment'),
                    'grup_kejadian' => $request->get('grup_kejadian'),
                    'judul' => $request->get('judul'),
+                   'loss' => $request->get('loss'),
                    'deskripsi' => $request->get('deskripsi'),
                    'penanganan' => $request->get('penanganan'),
                    'tindakan' => $request->get('tindakan'),

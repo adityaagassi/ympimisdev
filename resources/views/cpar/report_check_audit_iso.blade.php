@@ -312,7 +312,7 @@
 					if (value.status_ditangani == null) {
 						body += "<td width='10%'><a href={{url('index/audit_iso/create/')}}/"+value.id+" class='btn btn-success'>Buat Laporan</a></td>";
 					}else{
-						body += "<td width='10%'><span style='color:green'>Sudah Ditangani</span></td>";
+						body += "<td width='10%'><span style='color:green'>Sudah Dibuat Laporan</span></td>";
 					}
 				}
 				else{
