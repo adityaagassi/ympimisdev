@@ -68,70 +68,66 @@
 		<a href="http://172.17.128.4/mirai/public/purchase_requisition/check/{{ $id }}">Check PR</a><br>
 
 		@elseif($posisi == "manager" || $posisi == "dgm")
-		<p style="font-size: 18px;">Request Purchase Requisition (PR) <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+		<p style="font-size: 20px;">Request Purchase Requisition (PR) <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 		This is an automatic notification. Please do not reply to this address.
 
 		<h2>Purchase Requisition (PR) {{$no_pr}}</h2>
 
-		<table style="border-collapse: collapse;" width="40%">
-			<!-- <thead style="background-color: rgb(126,86,134);">
-				<tr>
-					<th style="width: 2%; border:1px solid black;">Point</th>
-					<th style="width: 2%; border:1px solid black;">Content</th>
-				</tr>
-			</thead> -->
+		<table style="border-collapse: collapse;" width="60%">
 			<tbody>
 				<tr>
-					<td style="width: 1%;">Submission Date</td>
-					<td style="width: 1%;text-align: left;">: <?= date('d F Y', strtotime($submission_date)) ?></td>
+					<td style="width: 4%;font-size: 18px;">Submission Date</td>
+					<td style="width: 1%;font-size: 18px;">:</td>
+					<td style="width: 5%;font-size: 18px;text-align: left;"><?= date('d F Y', strtotime($submission_date)) ?></td>
 				</tr>
 				<tr>
-					<td style="width: 1%;">User</td>
-					<td style="width: 1%;text-align: left;">: <?= $emp_name ?></td>
+					<td style="width: 4%;font-size: 18px;">User</td>
+					<td style="width: 1%;font-size: 18px;">:</td>
+					<td style="width: 7%;font-size: 18px;text-align: left;"><?= $emp_name ?></td>
 				</tr>
 				<tr>
-					<td style="width: 1%;">Department</td>
-					<td style="width: 1%;text-align: left;">: <?= $department ?></td>
+					<td style="width: 4%;font-size: 18px">Department</td>
+					<td style="width: 1%;font-size: 18px">:</td>
+					<td style="width: 7%;text-align: left;font-size: 18px"><?= $department ?></td>
 				</tr>
 				<tr>
-					<td style="width: 1%;">Budget No</td>
-					<td style="width: 1%;text-align: left;">: <?= $no_budget ?></td>
+					<td style="width: 4%;font-size: 18px;">Budget No</td>
+					<td style="width: 1%;font-size: 18px;">:</td>
+					<td style="width: 7%;text-align: left;font-size: 18px;"><?= $no_budget ?></td>
 				</tr>
 			</tbody>
 		</table>
 		<br>
-		<span style="font-weight: bold;"><i>Do you want to Approve This PR Request?</i></span>
+		<span style="font-weight: bold;font-size: 18px"><i>Do you want to Approve This PR Request?</i></span>
 		<br><br>
 
 		@if($posisi == "manager")
-		<a style="background-color: green; width: 50px; text-decoration: none;color: white;" href="{{ url("purchase_requisition/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>
+		<a style="background-color: green; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_requisition/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		@elseif($posisi == "dgm")
-		<a style="background-color: green; width: 50px; text-decoration: none;color: white;" href="{{ url("purchase_requisition/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>
+		<a style="background-color: green; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_requisition/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		@endif
-		<a style="background-color: red; width: 50px; text-decoration: none;color: white;" href="{{ url("purchase_requisition/reject/".$id) }}">&nbsp; Reject &nbsp;</a>
+		<a style="background-color: red; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_requisition/reject/".$id) }}">&nbsp; Reject &nbsp;</a>
 
 		<br><br>
 
-		Best Regards,
+		<span style="font-size: 20px">Best Regards,</span>
 		<br><br>
 
-		MIRAI
-		<br><br>
 		<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt="">
 
 
 		@elseif($posisi == "gm") <!-- General Manager -->
 
-		<p style="font-size: 18px;">Request Purchase Requisition (PR) <br>購入依頼の申請 <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+		<p style="font-size: 20px;">Request Purchase Requisition (PR) <br>購入依頼の申請 <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 
 		This is an automatic notification. Please do not reply to this address.<br>
 		自動通知です。返事しないでください。<br>
 
 		<h2>Purchase Requisition (PR) {{$no_pr}}</h2>
 
-		<table style="border-collapse: collapse;" width="40%">
+		<table style="border-collapse: collapse;" width="80%">
 			<!-- <thead style="background-color: rgb(126,86,134);">
 				<tr>
 					<th style="width: 2%; border:1px solid black;">Point</th>
@@ -140,36 +136,38 @@
 			</thead> -->
 			<tbody>
 				<tr>
-					<td style="width: 1%;">Submission Date</td>
-					<td style="width: 1%;text-align: left;">: <?= date('d F Y', strtotime($submission_date)) ?></td>
+					<td style="width: 5%;font-size: 18px;">Submission Date (作成日付)</td>
+					<td style="width: 1%;font-size: 18px;">:</td>
+					<td style="width: 5%;font-size: 18px;text-align: left;"><?= date('d F Y', strtotime($submission_date)) ?></td>
 				</tr>
 				<tr>
-					<td style="width: 1%;">User</td>
-					<td style="width: 1%;text-align: left;">: <?= $emp_name ?></td>
+					<td style="width: 5%;font-size: 18px;">User (ユーザー)</td>
+					<td style="width: 1%;font-size: 18px;">:</td>
+					<td style="width: 5%;font-size: 18px;text-align: left;"><?= $emp_name ?></td>
 				</tr>
 				<tr>
-					<td style="width: 1%;">Department</td>
-					<td style="width: 1%;text-align: left;">: <?= $department ?></td>
+					<td style="width: 5%;font-size: 18px">Department (部門) </td>
+					<td style="width: 1%;font-size: 18px">:</td>
+					<td style="width: 5%;text-align: left;font-size: 18px"><?= $department ?></td>
 				</tr>
 				<tr>
-					<td style="width: 1%;">Budget No</td>
-					<td style="width: 1%;text-align: left;">: <?= $no_budget ?></td>
+					<td style="width: 5%;font-size: 18px;">Budget No (予算番号)</td>
+					<td style="width: 1%;font-size: 18px;">:</td>
+					<td style="width: 5%;text-align: left;font-size: 18px;"><?= $no_budget ?></td>
 				</tr>
 			</tbody>
 		</table>
 		<br>
 		<span style="font-weight: bold;"><i>Do you want to Approve This PR Request?<br>こちらの購入依頼を承認しますか</i></span>
 		<br><br>
-		<a style="background-color: green; width: 50px; text-decoration: none;color: white;" href="{{ url("purchase_requisition/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve (承認) &nbsp;&nbsp;&nbsp;</a>
+		<a style="background-color: green; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_requisition/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve (承認) &nbsp;&nbsp;&nbsp;</a>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<a style="background-color: red; width: 50px; text-decoration: none;color: white;" href="{{ url("purchase_requisition/reject/".$id) }}">&nbsp; Reject (却下）&nbsp;</a>
+		<a style="background-color: red; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_requisition/reject/".$id) }}">&nbsp; Reject (却下）&nbsp;</a>
 		<br><br>
 
-		Best Regards,
+		<span style="font-size: 20px">Best Regards,</span>
 		<br><br>
 
-		MIRAI
-		<br><br>
 		<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt="">
 
 		@elseif($posisi == "pch")
