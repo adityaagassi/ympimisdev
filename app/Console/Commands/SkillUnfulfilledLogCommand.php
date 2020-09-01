@@ -114,7 +114,7 @@ class SkillUnfulfilledLogCommand extends Command
                                 'location' => $vul->location,
                                 'skill_code' => $vul->skill_code,
                                 'value' => $vul->nilai_now,
-                                'required' => $vul->nilai,
+                                'required' => 3,
                                 'remark' => $remark,
                                 'created_by' => 1
                             ]);

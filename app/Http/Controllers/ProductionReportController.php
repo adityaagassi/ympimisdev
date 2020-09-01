@@ -152,6 +152,12 @@ class ProductionReportController extends Controller
             $departments = $department->department_name;
         }
 
+        $activity =  new UserActivityLog([
+            'activity' => 'LEADER TASK MONITORING '.strtoupper($department),
+            'created_by' => Auth::user()->id,
+        ]);
+        $activity->save();
+
         $activityList = ActivityList::where('department_id',$id)->where('activity_name','!=','Null')->get();
         $queryLeader2 = "select DISTINCT(employees.name), employees.employee_id
             from employees

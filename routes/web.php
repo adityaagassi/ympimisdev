@@ -3231,6 +3231,9 @@ Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 	Route::get('get/skill_employee', 'SkillMapController@getSkillEmployee');
 
 	Route::get('fetch/skill_resume', 'SkillMapController@fetchSkillResume');
+
+	Route::get('fetch/skill_evaluation', 'SkillMapController@fetchSkillEvaluation');
+	Route::post('input/skill_evaluation', 'SkillMapController@inputSkillEvaluation');
 });
 
 //NG Jelas Report

@@ -105,7 +105,8 @@
 					<span style="font-size: 1.2vw;padding-top: 0px;background-color: red" id="warning_details"></span>
 				</center>
 				<hr>
-				<div class="modal-body" style="min-height: 100px; padding-bottom: 5px;">
+
+				<div class="modal-body" style="min-height: 100px; padding-bottom: 5px;" id="modalskill">
 					<div class="col-xs-6">
 						<div class="row" style="padding-right: 10px" id="container_detail"></div>
 					</div>
@@ -113,20 +114,64 @@
 						<div class="row" style="padding-left: 10px" id="table_detail"></div>
 					</div>
 					<div class="col-xs-12" style="padding-top: 20px">
-							<span style="font-weight: bold; font-size: 1.2vw;padding-top: 0px;padding-left: 0px" id="title_required"></span>
+						<span style="font-weight: bold; font-size: 1.2vw;padding-top: 0px;padding-left: 0px" id="title_required"></span>
 						<input type="hidden" id="required_skill_length">
 						<div class="row" id="table_required"></div>
 					</div>
-
 					<div class="col-xs-12" style="padding-top: 10px">
 						<span style="font-weight: bold; font-size: 1.2vw;padding-top: 0px;padding-left: 0px" id="title_other"></span>
 						<input type="hidden" id="other_skill_length">
 						<div class="row" id="table_other"></div>
 					</div>
 				</div>
-				<div class="modal-footer">
+
+				<div class="modal-body" style="min-height: 100px; padding-bottom: 5px;" id="modalevaluasi" style="display: none;">
+					<div class="col-xs-12" style="" style="display: none;">
+						<center><span style="font-weight: bold; font-size: 2vw;padding-top: 0px;padding-left: 0px" id="title_evaluasi"></span></center>
+						<div class="row">
+							<table id="tableEvaluasi" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
+								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+									<tr>
+										<th rowspan="4" style="background-color: rgb(126,86,134); color: #FFD700;"><center>Employee ID</center></th>
+										<th rowspan="4" style="background-color: rgb(126,86,134); color: #FFD700;"><center>Operator Name</center></th>
+									<tr>
+										<th colspan="18" style="background-color: rgb(126,86,134); color: #FFD700;"><center>Parameter Penilaian</center></th>
+										<th rowspan="4" style="background-color: rgb(126,86,134); color: #FFD700;"><center>Rata-Rata</center></th>
+									</tr>
+									<tr>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;"><center>1</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;"><center>2</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;"><center>3</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;"><center>4</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;"><center>5</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;"><center>6</center></th>
+									</tr>
+									<tr>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;" id="poin_1"><center>Bisa Mengerti & Melaksanakan Sesuai Urutan IK</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;" id="poin_2"><center>Kualitas Hasil Sesuai Standard Kualitas Proses</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;" id="poin_3"><center>Dapat Menyelesaikan Pekerjaan Sesuai Standard Waktu</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;" id="poin_4"><center>Pemahaman Jishu Hozen</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;" id="poin_5"><center>Pemahaman Potensi Bahaya Tempat Kerja</center></th>
+										<th colspan="3" style="background-color: rgb(126,86,134); color: #FFD700;" id="poin_6"><center>Pemahaman Handling Bahan Kimia</center></th>
+									</tr>
+								</thead>
+								<tbody id="bodyTableEvaluasi">
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer" id="footerskill">
 					<div class="col-xs-12">
 						<div class="row" id="skillFooter">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" id="footerevaluasi" style="display: none;">
+					<div class="col-xs-12">
+						<div class="row" id="evaluasiFooter">
 						</div>
 					</div>
 				</div>
@@ -623,7 +668,14 @@
 }
 
 function cancel(modal) {
-	$(modal).modal('hide');
+	if (modal === 'modalEvaluasi') {
+		$('#modalskill').show();
+		$('#footerskill').show();
+		$('#modalevaluasi').hide();
+		$('#footerevaluasi').hide();
+	}else{
+		$(modal).modal('hide');
+	}
 }
 
 function showModalSkillAdjusment(modal,employee_id,name,proces) {
@@ -632,6 +684,11 @@ function showModalSkillAdjusment(modal,employee_id,name,proces) {
 }
 
 function skillAdjusment(employee_id,name,proces) {
+	$('#modalskill').show();
+	$('#footerskill').show();
+	$('#modalevaluasi').hide();
+	$('#footerevaluasi').hide();
+
 	$('#employee_details').empty();
 	$('#warning_details').html("");
 	$('#employee_details').html(employee_id+' - '+name+' - '+proces);
@@ -771,13 +828,13 @@ function skillAdjusment(employee_id,name,proces) {
 					}else{
 						tableRequired += '<td style="font-weight: bold; font-size: 30px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count'+k+'">0</span></td>';
 					}
-					tableRequired += '<td id="plus" onclick="plus('+k+')" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+					tableRequired += '<td id="plus" onclick="plus('+k+',\''+employee_id+'\',\''+name+'\',\''+proces+'\',\''+result.skill_required[i].skill_code+'\')" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
 					if (result.skill_required[i].id_skill_now == null) {
 						tableRequired += '<td id="delete_other" style="background-color: rgb(255,99,99); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable"></td>';
 					}else{
 						tableRequired += '<td id="delete_other" onclick="delete_skill('+result.skill_required[i].id_skill_now+',\''+employee_id+'\',\''+name+'\',\''+proces+'\')" style="background-color: rgb(255,99,99); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;color:white" class="unselectable"><i class="fa fa-trash" aria-hidden="true"></i></td>';
 					}
-					if (result.skill_required[i].nilai_now == null || result.skill_required[i].nilai_now < result.skill_required[i].nilai) {
+					if (result.skill_required[i].nilai_now == null || result.skill_required[i].nilai_now < 3) {
 						$('#warning_details').html("<br>Karyawan ini <b>tidak memiliki nilai Skill yang sesuai</b> dengan posisinya. Lakukan <b>Upgrade Skill</b> segera.");
 					}
 					tableRequired += '</tr>';
@@ -829,7 +886,7 @@ function skillAdjusment(employee_id,name,proces) {
 					}else{
 						tableOther += '<td style="font-weight: bold; font-size: 30px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_other'+m+'">0</span></td>';
 					}
-					tableOther += '<td id="plus_other" onclick="plus_other('+m+')" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+					tableOther += '<td id="plus_other" onclick="plus_other('+m+',\''+employee_id+'\',\''+name+'\',\''+proces+'\',\''+result.other_skill[l].skill_code+'\')" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 30px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
 					if (result.other_skill[l].id_skill_now == null) {
 						tableOther += '<td id="delete_other" style="background-color: rgb(255,99,99); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable"></td>';
 					}else{
@@ -995,9 +1052,116 @@ function saveSkill(employee_id,name,proces) {
 	})
 }
 
-function plus(id){
-	var count = $('#count'+id).text();
-	$('#count'+id).text(parseInt(count)+1);
+function plus(id,employee_id,name,proces,skill_code){
+	if (confirm('Apakah Anda akan Upgrade Skill Operator ini? Anda harus mengisi Evaluasi Skill Operator.')) {
+		$('#modalskill').hide();
+		$('#footerskill').hide();
+		$('#modalevaluasi').show();
+		$('#footerevaluasi').show();
+
+		$('#bodyTableEvaluasi').empty();
+		$('#evaluasiFooter').empty();
+
+		$('#title_evaluasi').html('EVALUASI SKILL OPERATOR');
+
+		var tableData = "";
+		var footer = "";
+
+		tableData += '<tr>';
+		tableData += '<td style="background-color: #fffcb7; font-weight: bold; font-size: 15px;padding-top:5px;padding-bottom:5px; cursor: pointer;">'+employee_id+'</td>';
+		tableData += '<td style="background-color: #fffcb7; font-weight: bold; font-size: 15px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">'+name+'</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(1)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi1">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(1)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(2)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi2">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(2)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(3)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi3">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(3)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(4)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi4">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(4)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(5)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi5">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(5)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(6)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi6">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(6)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="average">0</span></td>';
+
+		tableData += '</tr>';
+
+		$('#bodyTableEvaluasi').append(tableData);
+
+		var modal = 'modalEvaluasi';
+		var skill_type = 'required';
+		footer += '<hr>';
+		footer += '<a class="btn btn-danger pull-left" style="font-weight: bold;" id="btnCancel" onclick="cancel(\''+modal+'\')">CANCEL</a>';
+		footer += '<a class="btn btn-primary pull-right" onclick="saveEvaluasi(\''+employee_id+'\',\''+name+'\',\''+proces+'\',\''+skill_code+'\',\''+id+'\',\''+skill_type+'\')" style="font-weight: bold;" id="btnSave">SAVE</a>';
+		$('#evaluasiFooter').append(footer);
+	}
+}
+
+function saveEvaluasi(employee_id,name,proces,skill_code,id,skill_type) {
+	if (confirm('Apakah Anda yakin untuk Upgrade Skill?')) {
+		$('#loading').show();
+		if (skill_type === 'required') {
+			var count = $('#count'+id).text();
+		}else{
+			var count = $('#count_other'+id).text();
+		}
+		var from_value = parseInt(count);
+		var countnew = parseInt(count)+1;
+		var to_value = countnew;
+
+		var poin = [];
+		var evaluation_value = [];
+		for(var i = 1; i <= 6;i++){
+			poin.push($('#poin_'+i).text());
+			evaluation_value.push($('#count_evaluasi'+i).text());
+		}
+
+		var data = {
+			location:'{{$location}}',
+			employee_id:employee_id,
+			name:name,
+			process:proces,
+			skill_code:skill_code,
+			from_value:from_value,
+			to_value:to_value,
+			evaluation_point:poin,
+			evaluation_value:evaluation_value
+		}
+
+		$.post('{{ url("input/skill_evaluation") }}',data, function(result, status, xhr){
+			if(result.status){
+				openSuccessGritter('Success!', result.message);
+				$('#modalskill').show();
+				$('#footerskill').show();
+				$('#modalevaluasi').hide();
+				$('#footerevaluasi').hide();
+				if (skill_type === 'required') {
+					$('#count'+id).text(parseInt(count)+1);
+				}else{
+					$('#count_other'+id).text(parseInt(count)+1);
+				}
+				$('#loading').hide();
+				saveSkill(employee_id,name,proces);
+			}
+			else{
+				audio_error.play();
+				openErrorGritter('Error!', result.message);
+			}
+		})
+	}
 }
 
 function minus(id){
@@ -1008,9 +1172,62 @@ function minus(id){
 	}
 }
 
-function plus_other(id){
-	var count = $('#count_other'+id).text();
-	$('#count_other'+id).text(parseInt(count)+1);
+function plus_other(id,employee_id,name,proces,skill_code){
+	if (confirm('Apakah Anda akan Upgrade Skill Operator ini? Anda harus mengisi Evaluasi Skill Operator.')) {
+		$('#modalskill').hide();
+		$('#footerskill').hide();
+		$('#modalevaluasi').show();
+		$('#footerevaluasi').show();
+
+		$('#bodyTableEvaluasi').empty();
+		$('#evaluasiFooter').empty();
+
+		$('#title_evaluasi').html('EVALUASI SKILL OPERATOR');
+
+		var tableData = "";
+		var footer = "";
+
+		tableData += '<tr>';
+		tableData += '<td style="background-color: #fffcb7; font-weight: bold; font-size: 15px;padding-top:5px;padding-bottom:5px; cursor: pointer;">'+employee_id+'</td>';
+		tableData += '<td style="background-color: #fffcb7; font-weight: bold; font-size: 15px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">'+name+'</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(1)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi1">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(1)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(2)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi2">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(2)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(3)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi3">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(3)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(4)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi4">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(4)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(5)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi5">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(5)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td id="minus_evaluasi" onclick="minus_evaluasi(6)" style="background-color: rgb(255,204,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">-</td>';
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="count_evaluasi6">0</span></td>';
+		tableData += '<td id="plus_evaluasi" onclick="plus_evaluasi(6)" style="background-color: rgb(204,255,255); font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; cursor: pointer;" class="unselectable">+</td>';
+
+		tableData += '<td style="font-weight: bold; font-size: 20px;padding-top:5px;padding-bottom:5px; background-color: rgb(100,100,100); color: yellow;"><span id="average">0</span></td>';
+
+		tableData += '</tr>';
+
+		$('#bodyTableEvaluasi').append(tableData);
+
+		var modal = 'modalEvaluasi';
+		var skill_type = 'other';
+		footer += '<hr>';
+		footer += '<a class="btn btn-danger pull-left" style="font-weight: bold;" id="btnCancel" onclick="cancel(\''+modal+'\')">CANCEL</a>';
+		footer += '<a class="btn btn-primary pull-right" onclick="saveEvaluasi(\''+employee_id+'\',\''+name+'\',\''+proces+'\',\''+skill_code+'\',\''+id+'\',\''+skill_type+'\')" style="font-weight: bold;" id="btnSave">SAVE</a>';
+		$('#evaluasiFooter').append(footer);
+	}
 }
 
 function minus_other(id){
@@ -1019,6 +1236,39 @@ function minus_other(id){
 	{
 		$('#count_other'+id).text(parseInt(count)-1);
 	}
+}
+
+function plus_evaluasi(id){
+	var count = $('#count_evaluasi'+id).text();
+	$('#count_evaluasi'+id).text(parseInt(count)+1);
+
+	var total = 0;
+
+	for(var i = 1;i <= 6;i++){
+		total = total + parseInt($('#count_evaluasi'+i).text());
+	}
+
+	var avg = total / 6;
+
+	$('#average').html(avg.toFixed(1));
+}
+
+function minus_evaluasi(id){
+	var count = $('#count_evaluasi'+id).text();
+	if(count > 0)
+	{
+		$('#count_evaluasi'+id).text(parseInt(count)-1);
+	}
+
+	var total = 0;
+
+	for(var i = 1;i <= 6;i++){
+		total = total + parseInt($('#count_evaluasi'+i).text());
+	}
+
+	var avg = total / 6;
+
+	$('#average').html(avg.toFixed(1));
 }
 
 function delete_skill(id_skill,employee_id,name,proces){

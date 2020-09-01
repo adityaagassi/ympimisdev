@@ -20,6 +20,8 @@ use App\SkillValue;
 use App\EmployeeSync;
 use App\SkillMutationLog;
 use App\SkillUnfulfilledLog;
+use App\UserActivityLog;
+use App\SkillMapEvaluation;
 
 class SkillMapController extends Controller
 {
@@ -52,9 +54,15 @@ class SkillMapController extends Controller
             $dept = 'Educational Instrument (EI)';
             $section = 'Pianica';
             $title = 'Skill Map Final - Pianica Assembly Final';
-            $subtitle = 'Pianica Assembly Initial';
+            $subtitle = 'Pianica Assembly Final';
             $title_jp = 'のスキルマップ ~ ピアニカ集成';
         }
+
+        $activity =  new UserActivityLog([
+            'activity' => 'Skill Map - '.$subtitle.' ('.$title_jp.')',
+            'created_by' => Auth::user()->id,
+        ]);
+        $activity->save();
 
     	return view('skill_map.index', array(
 			'title' => $title,
@@ -544,6 +552,12 @@ class SkillMapController extends Controller
                             'created_by' => $id_user
                         ]);
 
+                        $activity =  new UserActivityLog([
+                            'activity' => 'Skill Map Mutation '.$request->get('location').' - '.$request->get('employee_id').' - '.$request->get('process'),
+                            'created_by' => Auth::user()->id,
+                        ]);
+                        $activity->save();
+
                         $status = true;
                         $message = 'Update Employee Success';
                     }
@@ -757,6 +771,58 @@ class SkillMapController extends Controller
                 'unfulfilled' => $unfulfilled,
                 'mutation' => $mutation,
                 'message' => 'Get Skill Success.',
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function inputSkillEvaluation(Request $request)
+    {
+        try {
+            $location = $request->get('location');
+            $employee_id = $request->get('employee_id');
+            $name = $request->get('name');
+            $process = $request->get('process');
+            $skill_code = $request->get('skill_code');
+            $from_value = $request->get('from_value');
+            $to_value = $request->get('to_value');
+            $evaluation_point = $request->get('evaluation_point');
+            $evaluation_value = $request->get('evaluation_value');
+
+            $evaluation_code = MD5($location.'-'.$employee_id.'-'.$name);
+
+            $id_user = Auth::id();
+
+            for($i = 0; $i < count($evaluation_point); $i++){
+                SkillMapEvaluation::create([
+                    'evaluation_code' => $evaluation_code,
+                    'employee_id' => $employee_id,
+                    'skill_code' => $skill_code,
+                    'process' => $process,
+                    'location' => $location,
+                    'from_value' => $from_value,
+                    'to_value' => $to_value,
+                    'evaluation_point' => $evaluation_point[$i],
+                    'evaluation_value' => $evaluation_value[$i],
+                    'created_by' => $id_user
+                ]);
+            }
+
+            $activity =  new UserActivityLog([
+                'activity' => 'Skill Map Evaluation ('.$evaluation_code.')',
+                'created_by' => Auth::user()->id,
+            ]);
+            $activity->save();
+
+            $response = array(
+                'status' => true,
+                'message' => 'Success Input Evaluasi',
             );
             return Response::json($response);
         } catch (\Exception $e) {
