@@ -947,6 +947,7 @@ class AccountingController extends Controller
         {
             $staff = null;
             $manager = null;
+            $manager_name = null;
             $posisi = null;
 
             //jika PE maka Pak Alok
