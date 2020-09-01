@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use File;
 use App\QcTtdCoba;
+use App\UserActivityLog;
 
 
 class QcReportController extends Controller
@@ -750,6 +751,14 @@ class QcReportController extends Controller
     //grafik CPAR
 
     public function grafik_cpar(){
+
+      $activity =  new UserActivityLog([
+            'activity' => 'CPAR CAR Monitoring (QA)',
+            'created_by' => Auth::user()->id,
+        ]);
+
+      $activity->save();
+      
       $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
       $bulan = db::select("select DISTINCT MONTH(tgl_permintaan) as bulan, MONTHNAME(tgl_permintaan) as namabulan FROM qc_cpars order by bulan asc;");
       $tahun = db::select("select DISTINCT YEAR(tgl_permintaan) as tahun FROM qc_cpars order by tahun desc");
