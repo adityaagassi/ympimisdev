@@ -675,15 +675,23 @@ class EmployeeController extends Controller
                if($first <= '2020-01-01'){
                     $first_sunfish = '2020-01-01';
                }
-               $sunfish_overtimes1 = db::connection('sunfish')->select("
-                    SELECT DISTINCT
+               $sunfish_overtimes1 = db::connection('sunfish')->select("SELECT DISTINCT
                     X.orderer,
                     X.period,
                     VIEW_YMPI_Emp_OrgUnit.Department,
                     COALESCE ( Q.ot_person, 0 ) AS ot_person 
                     FROM
                     VIEW_YMPI_Emp_OrgUnit
-                    CROSS JOIN ( SELECT DISTINCT format ( ovtplanfrom, 'yyyy-MM' ) AS orderer, format ( ovtplanfrom, 'MMMM yyyy' ) AS period FROM VIEW_YMPI_Emp_OvertimePlan where ovtplanfrom >= '".$first_sunfish." 00:00:00' AND ovtplanfrom <= '".$last." 00:00:00' ) X
+                    CROSS JOIN (
+                    SELECT DISTINCT
+                    format ( ovtplanfrom, 'yyyy-MM' ) AS orderer,
+                    format ( ovtplanfrom, 'MMMM yyyy' ) AS period 
+                    FROM
+                    VIEW_YMPI_Emp_OvertimePlan 
+                    WHERE
+                    ovtplanfrom >= '".$first_sunfish." 00:00:00' 
+                    AND ovtplanfrom <= '".$last." 00:00:00' 
+                    ) X
                     LEFT JOIN (
                     SELECT
                     orderer,
@@ -696,17 +704,12 @@ class EmployeeController extends Controller
                     A.Emp_no,
                     FORMAT ( A.ovtplanfrom, 'yyyy-MM' ) AS orderer,
                     FORMAT ( A.ovtplanfrom, 'MMMM yyyy' ) AS period,
-                    SUM (
-                    CASE
-
-                    WHEN A.total_ot IS NOT NULL THEN
-                    ROUND( A.total_ot / 60.0, 2 ) ELSE ROUND( A.TOTAL_OVT_PLAN / 60.0, 2 )
-                    END 
-                    ) AS ot 
+                    SUM ( ROUND( A.total_ot / 60.0, 2 ) ) AS ot 
                     FROM
                     VIEW_YMPI_Emp_OvertimePlan A 
-                    where A.ovtplanfrom >= '".$first_sunfish." 00:00:00'
-                    AND A.ovtplanfrom <= '".$last." 23:59:59'
+                    WHERE
+                    A.ovtplanfrom >= '".$first_sunfish." 00:00:00' 
+                    AND A.ovtplanfrom <= '".$last." 23:59:59' 
                     GROUP BY
                     A.Emp_no,
                     FORMAT ( A.ovtplanfrom, 'yyyy-MM' ),
@@ -718,8 +721,9 @@ class EmployeeController extends Controller
                     period,
                     B.Department 
                     ) AS Q ON Q.orderer = X.orderer 
-                    AND Q.Department = VIEW_YMPI_Emp_OrgUnit.Department where VIEW_YMPI_Emp_OrgUnit.Department is not null
-                    ");
+                    AND Q.Department = VIEW_YMPI_Emp_OrgUnit.Department 
+                    WHERE
+                    VIEW_YMPI_Emp_OrgUnit.Department IS NOT NULL");
           }
           if($first <= '2020-01-01'){
                if($last_mirai >= '2020-01-01'){
@@ -3369,14 +3373,14 @@ public function getKaizenReward()
 
 public function fetchAbsenceEmployee(Request $request)
 {
- $username = Auth::user()->username;
+    $username = Auth::user()->username;
 
- $att_selected = "";
+    $att_selected = "";
 
- foreach ($this->attend as $att) {
-  if ($att['attend_type'] == $request->get('attend_code')) {
-     $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
-}
+    foreach ($this->attend as $att) {
+        if ($att['attend_type'] == $request->get('attend_code')) {
+          $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
+     }
 }
 
 $att_selected = substr($att_selected, 0, -2);
