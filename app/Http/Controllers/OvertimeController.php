@@ -1288,8 +1288,7 @@ public function overtimeControl(Request $request)
 			array_push($tot, $arr);
 		}
 
-		$employee = db::table('employees')
-		->whereNull('end_date')
+		$employee =  EmployeeSync::whereNull('end_date')
 		->select(db::raw("count(employee_id) as jml"))
 		->first();
 
@@ -1355,7 +1354,7 @@ public function overtimeControl(Request $request)
 			array_push($tot, $arr);
 		}
 
-		$employee = EmployeeSync::whereNull('end_date')
+		$employee =  EmployeeSync::whereNull('end_date')
 		->select(db::raw("count(employee_id) as jml"))
 		->first();
 
