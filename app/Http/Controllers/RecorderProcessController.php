@@ -2453,6 +2453,7 @@ class RecorderProcessController extends Controller
                       'role' => $role,
                       'mesin3' => $this->mesin,
                       'mesin4' => $this->mesin,
+                      'title_jp' => 'トルク測定報告',
                       'product_type' => $this->product_type);
       return view('recorder.report.report_torque_check', $data
         )->with('page', 'Report Torque Check')->with('remark', $remark);
@@ -2920,7 +2921,7 @@ class RecorderProcessController extends Controller
     {
       return view('recorder.process.return', array(
         'title' => 'Return Material Recorder',
-        'title_jp' => '??'
+        'title_jp' => 'リコーダーワークの返品'
       ))->with('page', 'Return Material Recorder');
     }
 
@@ -2982,7 +2983,7 @@ class RecorderProcessController extends Controller
       ->with('foot_b_bawah', $foot_b_bawah)
       ->with('foot_b_atas', $foot_b_atas)
       ->with('title', 'CDM (Check Dimension Material) Recorder')
-      ->with('title_jp', '??');
+      ->with('title_jp', 'リコーダーのCDM');
     }
 
     public function fetchProduct(Request $request)
@@ -3340,7 +3341,7 @@ class RecorderProcessController extends Controller
       return view('recorder.report.report_cdm')
       ->with('machine', $this->mesin)
       ->with('title', 'CDM (Check Dimension Material) Recorder Report')
-      ->with('title_jp', '??');
+      ->with('title_jp', 'リコーダーのCDM報告');
     }
 
     public function fetchCdmReport(Request $request)

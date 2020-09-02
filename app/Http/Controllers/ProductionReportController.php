@@ -2823,7 +2823,7 @@ class ProductionReportController extends Controller
     public function indexNgJelasMonitoring()
     {
         $title = 'AUDIT NG JELAS MONITORING';
-        $title_jp = '??';
+        $title_jp = '明らか不良監査の監視';
 
         return view('production_report.audit_ng_jelas', array(
             'title' => $title,

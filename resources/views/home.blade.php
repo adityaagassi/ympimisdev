@@ -749,10 +749,10 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span style="font-weight: bold;">NG Jelas (??)</span>
+                                    <span style="font-weight: bold;">NG Jelas (明らか不良)</span>
                                     <br>
                                     <a href="{{ url("/index/audit_ng_jelas_monitoring") }}">
-                                        <i class="fa fa-caret-right"></i> Audit NG Jelas Monitoring (??)
+                                        <i class="fa fa-caret-right"></i> Audit NG Jelas Monitoring (明らか不良監査の監視)
                                     </a>
                                 </td>
                             </tr>

@@ -39,7 +39,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{$page}} - {{ $remark }} <small><span class="text-purple">?? ～ @if($remark == 'After Injection')
+		{{$page}} - {{ $remark }} <small><span class="text-purple">{{$title_jp}} ～ @if($remark == 'After Injection')
 			成形上がり
 		@else
 			初物検査

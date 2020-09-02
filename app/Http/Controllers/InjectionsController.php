@@ -5017,7 +5017,7 @@ class InjectionsController extends Controller
         ->with('mesin', $this->mesin)
         ->with('dryer', $dryer)
         ->with('title', 'Injection Dryer')
-        ->with('title_jp', '??');
+        ->with('title_jp', '成形乾燥機');
     }
 
     public function fetchListResin(Request $request)
