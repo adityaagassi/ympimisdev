@@ -52,6 +52,132 @@ class OvertimeController extends Controller
 		return view('overtimes.reports.control_report')->with('page', 'Overtime Control');
 	}
 
+	public function indexOvertimeCheck(){
+		$title = 'Overtime Check';
+		$title_jp = '残業の点検';
+
+		return view('overtimes.reports.overtime_check', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Overtime Check');		
+	}
+
+	public function fetchOvertimeCheck(Request $request){
+
+		if(strlen($request->get('date_from'))>0 && strlen($request->get('date_to'))>0){
+			$date_from = date('Y-m-d', strtotime($request->get('date_from')));
+			$date_to = date('Y-m-d', strtotime($request->get('date_to')));
+			$first = date('Y-m-01', strtotime($request->get('date_from')));
+			$last = date('Y-m-t', strtotime($request->get('date_from')));
+		}
+		else{
+			$date_from = date('Y-m-01');
+			$date_to = date('Y-m-t');
+			$first = date('Y-m-01');
+			$last = date('Y-m-t');
+		}
+
+		// $response = array(
+		// 	'date_from' => $date_from,
+		// 	'date_to' => $date_to,
+		// 	'first' => $first,
+		// 	'last' => $last,
+		// );
+		// return Response::json($response);
+
+
+		$ot_3 = db::connection('sunfish')->select("SELECT
+			O.emp_no,
+			E.Full_name,
+			O.cost_center,
+			O.section,
+			O.ovtplanfrom,
+			O.ovtplanto,
+			IIF ( O.total_ot IS NULL, O.TOTAL_OVT_PLAN, O.total_ot ) / 60 AS ot 
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan O
+			LEFT JOIN VIEW_YMPI_Emp_OrgUnit E ON E.Emp_no = O.Emp_no 
+			WHERE
+			O.ovtplanfrom >= '".$date_from."' 
+			AND O.ovtplanfrom <= '".$date_to."' 
+			AND O.daytype = 'WD' 
+			AND IIF ( O.total_ot IS NULL, O.TOTAL_OVT_PLAN, O.total_ot ) > 180 
+			ORDER BY
+			O.cost_center;");
+
+		$ot_14 = db::connection('sunfish')->select("SELECT
+			O.emp_no,
+			E.Full_name,
+			O.cost_center,
+			O.section,
+			DATEPART( week, O.ovtplanfrom ) AS w,
+			SUM ( IIF ( O.total_ot IS NULL, O.TOTAL_OVT_PLAN, O.total_ot ) ) / 60 AS ot 
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan O
+			LEFT JOIN VIEW_YMPI_Emp_OrgUnit E ON E.Emp_no = O.Emp_no 
+			WHERE
+			O.ovtplanfrom >= '".$first."' 
+			AND O.ovtplanfrom <= '".$last."' 
+			AND O.daytype = 'WD' 
+			GROUP BY
+			O.emp_no,
+			E.Full_name,
+			O.cost_center,
+			O.section,
+			DATEPART( week, O.ovtplanfrom ) 
+			HAVING
+			SUM ( IIF ( O.total_ot IS NULL, O.TOTAL_OVT_PLAN, O.total_ot ) ) > 840;");
+
+		$ot_56 = db::connection('sunfish')->select("SELECT
+			O.emp_no,
+			E.Full_name,
+			O.cost_center,
+			O.section,
+			SUM ( IIF ( O.total_ot IS NULL, O.TOTAL_OVT_PLAN, O.total_ot ) ) / 60 AS ot 
+			FROM
+			VIEW_YMPI_Emp_OvertimePlan O
+			LEFT JOIN VIEW_YMPI_Emp_OrgUnit E ON E.Emp_no = O.Emp_no 
+			WHERE
+			O.ovtplanfrom >= '".$first."' 
+			AND O.ovtplanfrom <= '".$last."' 
+			AND O.daytype = 'WD' 
+			GROUP BY
+			O.emp_no,
+			E.Full_name,
+			O.cost_center,
+			O.section 
+			HAVING
+			SUM ( IIF ( O.total_ot IS NULL, O.TOTAL_OVT_PLAN, O.total_ot ) ) > 3360;");
+
+		$nsonsiabs = db::connection('sunfish')->select("SELECT
+			A.emp_no,
+			A.official_name,
+			A.shiftdaily_code,
+			A.shiftstarttime,
+			A.shiftendtime,
+			A.starttime,
+			A.endtime,
+			A.Attend_Code 
+			FROM
+			VIEW_YMPI_Emp_Attendance A 
+			WHERE
+			A.shiftstarttime >= '".$date_from."' 
+			AND A.shiftstarttime <= '".$date_to."' 
+			AND ( A.Attend_Code LIKE '%NSO%' OR A.Attend_Code LIKE '%NSI%' OR A.Attend_Code LIKE '%ABS%' ) 
+			ORDER BY
+			A.emp_no ASC, A.shiftstarttime ASC;");
+
+		$response = array(
+			'status' => true,
+			'ot_3' => $ot_3,
+			'ot_14' => $ot_14,
+			'ot_56' => $ot_56,
+			'nsonsiabs' => $nsonsiabs
+		);
+		return Response::json($response);
+
+	}
+
 	public function indexReportSection(){
 
 		$cost_centers = db::table('cost_centers2')->orderBy('cost_center', 'asc')->get();

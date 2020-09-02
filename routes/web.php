@@ -492,6 +492,8 @@ Route::get('index/report/ga_report', 'OvertimeController@indexGAReport');
 Route::get('fetch/report/ga_report', 'OvertimeController@fetchGAReport');
 
 Route::group(['nav' => 'R9', 'middleware' => 'permission'], function(){
+	Route::get('index/report/overtime_check', 'OvertimeController@indexOvertimeCheck');
+	Route::get('fetch/report/overtime_check', 'OvertimeController@fetchOvertimeCheck');
 	Route::get('index/report/overtime_control', 'OvertimeController@indexOvertimeControl');
 	Route::get('fetch/report/overtime_control', 'OvertimeController@fetchOvertimeControl');
 });
@@ -1872,8 +1874,6 @@ Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVari
 Route::get('export/stocktaking/inquiry', 'StockTakingController@exportInquiry');
 Route::get('export/stocktaking/variance', 'StockTakingController@exportVariance');
 Route::get('export/stocktaking/official_variance', 'StockTakingController@exportOfficailVariance');
-Route::get('export/stocktaking/upload_sap', 'StockTakingController@exportUploadSAP');
-Route::get('export/stocktaking/log', 'StockTakingController@exportLog');
 
 //Manage Store
 Route::get('index/stocktaking/manage_store', 'StockTakingController@indexManageStore');
@@ -1913,9 +1913,6 @@ Route::get('fetch/stocktaking/check_confirm/{id}', 'StockTakingController@fetchC
 Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@updateAudit');
 Route::post('fetch/stocktaking/update_process/{id}', 'StockTakingController@updateProcessAudit');
 
-//Count PI
-Route::post('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
-
 //Unmatch
 Route::get('index/stocktaking/unmatch/{month}', 'StockTakingController@indexUnmatch');
 Route::get('fetch/stocktaking/pi_vs_book', 'StockTakingController@fetchPiVsBook');
@@ -1924,22 +1921,20 @@ Route::get('fetch/stocktaking/kitto_vs_pi', 'StockTakingController@fetchKittoVsP
 Route::get('fetch/stocktaking/kitto_vs_book', 'StockTakingController@fetchKittoVsBook');
 Route::get('fetch/stocktaking/pi_vs_lot', 'StockTakingController@fetchPiVsLot');
 
+Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 //Revise
-Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
-Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
-Route::get('fetch/stocktaking/revise_by_id', 'StockTakingController@fetchReviseId');
-Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
-
-
-Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
-//END STOCKTAKING
-
-
-
-
+	Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
+	Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
+	Route::get('fetch/stocktaking/revise_by_id', 'StockTakingController@fetchReviseId');
+	Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
+	Route::get('export/stocktaking/upload_sap', 'StockTakingController@exportUploadSAP');
+	Route::get('export/stocktaking/log', 'StockTakingController@exportLog');
+//Count PI
+	Route::post('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
+	Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
+});
 
 //START INDIRECT REQUEST
-
 
 //Stock
 Route::get('index/indirect_material_stock', 'IndirectMaterialController@indexStock');
@@ -3057,6 +3052,7 @@ Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
 Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
 Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
 Route::get('fetch/maintenance/list_pm', 'MaintenanceController@fetchPM');
+Route::get('fetch/maintenance/list_mc', 'MaintenanceController@fetchMachine');
 
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
@@ -3237,8 +3233,9 @@ Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 });
 
 //NG Jelas Report
-Route::group(['nav' => 'M31', 'middleware' => 'permission'], function(){
-	Route::get('index/audit_ng_jelas_monitoring', 'ProductionReportController@indexNgJelasReport');
+Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
+	Route::get('index/audit_ng_jelas_monitoring', 'ProductionReportController@indexNgJelasMonitoring');
+	Route::get('fetch/audit_ng_jelas_monitoring', 'ProductionReportController@fetchNgJelasMonitoring');
 });
 
 //ROOMS
