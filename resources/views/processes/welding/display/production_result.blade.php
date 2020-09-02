@@ -71,12 +71,12 @@
 				<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 0px;font-size: 2vw;"></div>
 			</div>
 			<div class="col-xs-12" style="padding: 0px; margin-top: 0;">
-				<table id="s3" class="table table-bordered" style="margin:0">
+				<!-- <table id="s3" class="table table-bordered" style="margin:0">
 					<thead id="head_s3">
 					</thead>
 					<tbody id="body_s3">
 					</tbody>
-				</table>
+				</table> -->
 				<table id="s1" class="table table-bordered" style="margin:0">
 					<thead id="head_s1">
 					</thead>
@@ -303,8 +303,8 @@
 					body += '<tr>';
 					//End Tenor Body
 
-					$('#head_s3').append(head);
-					$('#body_s3').append(body);
+					// $('#head_s3').append(head);
+					// $('#body_s3').append(body);
 
 
 
