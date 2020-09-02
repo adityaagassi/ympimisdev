@@ -3236,6 +3236,7 @@ Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
 	Route::get('index/audit_ng_jelas_monitoring', 'ProductionReportController@indexNgJelasMonitoring');
 	Route::get('fetch/audit_ng_jelas_monitoring', 'ProductionReportController@fetchNgJelasMonitoring');
+	Route::get('fetch/detail_audit_ng_jelas_monitoring', 'ProductionReportController@fetchDetailNgJelasMonitoring');
 });
 
 //ROOMS

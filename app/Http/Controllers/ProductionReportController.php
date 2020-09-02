@@ -2822,7 +2822,7 @@ class ProductionReportController extends Controller
     
     public function indexNgJelasMonitoring()
     {
-        $title = 'Audit NG Jelas Monitoring';
+        $title = 'AUDIT NG JELAS MONITORING';
         $title_jp = '??';
 
         return view('production_report.audit_ng_jelas', array(
@@ -2834,7 +2834,7 @@ class ProductionReportController extends Controller
     public function fetchNgJelasMonitoring(Request $request)
     {
         try {
-            if ($request->get('week_date') == "") {
+            if ($request->get('week_date') != "") {
                 $month = $request->get('week_date');
             }else{
                 $month = date('Y-m');
@@ -2901,6 +2901,66 @@ class ProductionReportController extends Controller
         } catch (\Exception $e) {
             
         }
+    }
+
+    public function fetchDetailNgJelasMonitoring(Request $request){
+        if($request->get('week_date') != Null){
+            $leader_name = $request->get('leader_name');
+            $dept_id = $request->get('dept_id');
+            $week_date = $request->get('week_date');
+        }
+        else{
+            $leader_name = $request->get('leader_name');
+            $dept_id = $request->get('dept_id');
+            $week_date = date('Y-m');
+        }
+        $detail[] = null;
+        $date = db::select("select DISTINCT(week_name) as week_name from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'");
+        $date2 = db::select("select DISTINCT(week_name) as week_name from weekly_calendars where DATE_FORMAT(weekly_calendars.week_date,'%Y-%m') = '".$week_date."'");
+
+        foreach($date2 as $date2){
+            $detail[] = db::select("SELECT detail.id_activity,
+                     detail.activity_name,
+                     detail.activity_type,
+                     detail.leader_dept,
+                     detail.week_name,
+                     detail.plan,
+                     detail.jumlah_aktual,
+                     (detail.jumlah_aktual/detail.plan)*100 as persen
+                    from 
+                    (select activity_lists.id as id_activity,activity_name, activity_type,leader_dept,
+                        4 as plan,
+                        '".$date2->week_name."' as week_name,
+                        (select count(production_audits.week_name) as jumlah_audit
+                            from production_audits
+                                join activity_lists as actlist on actlist.id = activity_list_id
+                                where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$week_date."'
+                                            and leader_dept = '".$leader_name."'
+                                            and actlist.department_id = '".$dept_id."'
+                                            and week_name = '".$date2->week_name."'
+                                            and actlist.id = id_activity
+                                and actlist.frequency = 'Weekly')
+                        as jumlah_aktual
+                            from activity_lists
+                                where leader_dept = '".$leader_name."'
+                                and frequency = 'Weekly'
+                                and department_id = '".$dept_id."'
+                                and activity_name != 'Null'
+                                and activity_type = 'Audit'
+                                GROUP BY activity_type, plan_item,id,activity_name,leader_dept) detail");
+        }
+        $monthTitle = date("F Y", strtotime($week_date));
+
+        $response = array(
+            'status' => true,
+            'detail' => $detail,
+            'date' => $date,
+            'leader_name' => $leader_name,
+            'week_date' => $week_date,
+            'monthTitle' => $monthTitle
+        );
+        return Response::json($response);
+
     }
 }
 
