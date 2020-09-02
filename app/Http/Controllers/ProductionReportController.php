@@ -77,7 +77,7 @@ class ProductionReportController extends Controller
 
         $activity =  new UserActivityLog([
             'activity' => strtoupper($department).' Report',
-            'created_by' => Auth::user()->id,
+            'created_by' => Auth::id();
         ]);
         $activity->save();
 
@@ -154,7 +154,7 @@ class ProductionReportController extends Controller
 
         $activity =  new UserActivityLog([
             'activity' => 'LEADER TASK MONITORING '.strtoupper($department),
-            'created_by' => Auth::user()->id,
+            'created_by' => Auth::id();
         ]);
         $activity->save();
 
@@ -2820,18 +2820,87 @@ class ProductionReportController extends Controller
       return Response::json($response);
     }
     
-    public function indexNgJelasReport()
+    public function indexNgJelasMonitoring()
     {
-        $department = DB::SELECT("SELECT DISTINCT(department_id),UPPER(department_name) as department_name from activity_lists left join departments on departments.id = activity_lists.department_id");
-
-        $title = 'Audit NG Jelas Report';
+        $title = 'Audit NG Jelas Monitoring';
         $title_jp = '??';
 
         return view('production_report.audit_ng_jelas', array(
             'title' => $title,
             'title_jp' => $title_jp,
-            'department' => $department
-        ))->with('page', 'Audit NG Jelas Report');
+        ))->with('page', 'Audit NG Jelas Monitoring');
+    }
+
+    public function fetchNgJelasMonitoring(Request $request)
+    {
+        try {
+            if ($request->get('week_date') == "") {
+                $month = $request->get('week_date');
+            }else{
+                $month = date('Y-m');
+            }
+
+            $department = DB::SELECT("SELECT DISTINCT
+                ( department_id ),
+                UPPER( department_name ) AS department_name 
+            FROM
+                activity_lists
+                LEFT JOIN departments ON departments.id = department_id 
+            WHERE
+                activity_type = 'Audit'");
+
+            $ng_jelas = [];
+
+            foreach ($department as $key) {
+                $ng_jelas[] = DB::SELECT("SELECT DISTINCT
+                    ( leader_dept ),
+                    department_id,
+                    UPPER( department_name ) AS department_name,(
+                    SELECT DISTINCT
+                        ( leader_dept ) 
+                    FROM
+                        production_audits 
+                    WHERE
+                        production_audits.activity_list_id = activity_lists.id 
+                        AND DATE_FORMAT( created_at, '%Y-%m' ) = '".$month."' 
+                    ) AS count_leader,
+                IF
+                    ((
+                        SELECT DISTINCT
+                            ( leader_dept ) 
+                        FROM
+                            production_audits 
+                        WHERE
+                            production_audits.activity_list_id = activity_lists.id 
+                            AND DATE_FORMAT( created_at, '%Y-%m' ) = '".$month."' 
+                            ) IS NULL,
+                        0,
+                        1 
+                    ) AS count,
+                    ( SELECT count( DISTINCT ( week_name )) FROM production_audits WHERE production_audits.activity_list_id = activity_lists.id AND DATE_FORMAT( created_at, '%Y-%m' ) = '".$month."' ) AS week_actual,
+                    4 AS week_required 
+                FROM
+                    activity_lists
+                    LEFT JOIN departments ON department_id = departments.id 
+                WHERE
+                    activity_type = 'Audit'
+                    and department_id = '".$key->department_id."'");
+            }
+
+            $monthTitle = date("F Y", strtotime($month));
+
+            $response = array(
+                'status' => true,
+                'ng_jelas' => $ng_jelas,
+                'month' => $month,
+                'department' => $department,
+                'monthTitle' => $monthTitle,
+            );
+
+            return Response::json($response);
+        } catch (\Exception $e) {
+            
+        }
     }
 }
 
