@@ -1084,6 +1084,9 @@
   </span>
 </a>
 <ul class="treeview-menu">
+ @if(isset($page) && $page == "Overtime Check")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/report/overtime_check") }}"><i class="fa fa-line-chart"></i> Overtime Check</a>
+</li>
  @if(isset($page) && $page == "Overtime Control")<li class="active">@else<li>@endif
   <a href="{{ url("/index/report/overtime_control") }}"><i class="fa fa-line-chart"></i> Overtime Report</a>
 </li>
