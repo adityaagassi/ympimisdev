@@ -153,7 +153,7 @@ class ProductionReportController extends Controller
         }
 
         $activity =  new UserActivityLog([
-            'activity' => 'LEADER TASK MONITORING '.strtoupper($department),
+            'activity' => 'LEADER TASK MONITORING '.strtoupper($departments),
             'created_by' => Auth::id()
         ]);
         $activity->save();
