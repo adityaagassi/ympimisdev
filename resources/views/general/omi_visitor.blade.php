@@ -96,7 +96,7 @@
 
 				var count = result.visitors.length;
 
-				if(count >= 10){
+				if(count >= 14){
 					visitor_count = '<span style="background-color: #ff1744;">&nbsp;'+count+'&nbsp;</span>';
 					count_detail = '<span style="color: #ff1744; font-weight:bold;"><i class="fa fa-arrow-up"></i> Jumlah Pengunjung Melebihi Ketentuan <i class="fa fa-arrow-up"></i></span>';
 					visitor_appeal = '<span style="color: #ff1744; font-weight:bold;" class="clapclap">DILARANG MASUK</span>';
