@@ -302,6 +302,7 @@ class FinishedGoodsController extends Controller
 			'destinations.destination_shortname', 
 			'shipment_schedules.sales_order', 
 			'flos.container_id', 
+			'flos.status',
 			db::raw('count(container_attachments.container_id) as att'),
 			'flo_details.image')
 		->groupBy(
@@ -317,6 +318,7 @@ class FinishedGoodsController extends Controller
 			'destinations.destination_shortname', 
 			'shipment_schedules.sales_order', 
 			'flos.container_id',
+			'flos.status',
 			'flo_details.image')
 		->get();
 
