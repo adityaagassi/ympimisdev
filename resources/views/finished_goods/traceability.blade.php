@@ -43,6 +43,11 @@
 </section>
 @stop
 @section('content')
+<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+	<p style="position: absolute; color: White; top: 45%; left: 45%;">
+		<span style="font-size: 5vw;"><i class="fa fa-spin fa-circle-o-notch"></i></span>
+	</p>
+</div>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div class="row">
@@ -256,6 +261,7 @@
 	}
 
 	function fillTable(){
+		$('#loading').modal('show');
 		var prodFrom = $('#prodFrom').val();
 		var prodTo = $('#prodTo').val();
 		var shipFrom = $('#shipFrom').val();
@@ -396,12 +402,17 @@
 						"bAutoWidth": false,
 						"processing": true
 					});
+
+
+					$('#loading').modal('hide');
 				}
 				else{
+					$('#loading').modal('hide');
 					alert('Attempt to retrieve data failed');
 				}
 			}
 			else{
+				$('#loading').modal('hide');
 				alert('Disconnected from server');
 			}
 		});
