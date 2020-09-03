@@ -584,7 +584,7 @@
 								}
 								else if(now.getDay() == 5){
 									$('#progress_text_production'+i).append().empty();
-									var total = 570;
+									var total = 1080;
 									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
 									var persen = (now_menit/total) * 100;
 									if(now.getHours() >= 7 && now_menit < total){
@@ -614,7 +614,7 @@
 								}
 								else{
 									$('#progress_text_production'+i).append().empty();
-									var total = 540;
+									var total = 1080;
 									var now_menit = ((now.getHours()-7)*60) + now.getMinutes();
 									var persen = (now_menit/total) * 100;
 									if(persen > 24){
