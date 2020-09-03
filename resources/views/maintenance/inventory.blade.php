@@ -471,12 +471,9 @@
 
   })
 
-  console.log(tmp);
-
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
 
-    $("#emp_id").focus();
 
     $('.select2').select2({
       dropdownParent: $('#modalBaru'),
@@ -507,6 +504,9 @@
     });
 
     get_datas();
+
+    $("#emp_id").val("");
+    $("#emp_id").focus();
   });
 
   function isNumber(evt) {
@@ -718,10 +718,15 @@
       $(this).val("");
       $.get('{{ url("fetch/maintenance/inven/code") }}', data, function(result, status, xhr){
         if (result.status) {
-          if (result.datas.stock < 1) {
-            openErrorGritter('Gagal', 'Stok '+result.datas.part_number+' tidak Mencukupi');
+          if (!result.datas) {
+            openErrorGritter('Gagal', 'Barcode Salah');
             return false;
           }
+
+          // if (result.datas.stock < 1) {
+          //   openErrorGritter('Gagal', 'Stok '+result.datas.part_number+' tidak Mencukupi');
+          //   return false;
+          // }
 
           if (scan_arr.length == 0) {
             scan_arr.push({'item_number' : result.datas.part_number, 'part_name' : result.datas.part_name+" - "+result.datas.specification, 'stock' : result.datas.stock, 'qty' : 1});
@@ -736,10 +741,10 @@
                   qty = parseInt(value.qty);
                   stat = 1;
 
-                  if (result.datas.stock < qty+1) {
-                    openErrorGritter('Gagal', 'Stok '+result.datas.part_number+' tidak Mencukupi');
-                    return false;
-                  }
+                  // if (result.datas.stock < qty+1) {
+                  //   openErrorGritter('Gagal', 'Stok '+result.datas.part_number+' tidak Mencukupi');
+                  //   return false;
+                  // }
 
                   value.qty = qty + 1;
                   minus_stok(result.datas.part_number, 'out');

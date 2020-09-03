@@ -59,7 +59,7 @@ class OvertimeController extends Controller
 		return view('overtimes.reports.overtime_check', array(
 			'title' => $title,
 			'title_jp' => $title_jp
-		))->with('page', 'Overtime Check');		
+		))->with('page', 'Overtime Check');
 	}
 
 	public function fetchOvertimeCheck(Request $request){
@@ -72,7 +72,7 @@ class OvertimeController extends Controller
 		}
 		else{
 			$date_from = date('Y-m-01');
-			$date_to = date('Y-m-t');
+			$date_to = date('Y-m-d');
 			$first = date('Y-m-01');
 			$last = date('Y-m-t');
 		}

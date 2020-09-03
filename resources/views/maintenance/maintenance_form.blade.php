@@ -38,7 +38,7 @@
 	</h1>
 	<ol class="breadcrumb">
 		<li>
-			<a href="javascript:void(0)" onclick="get_data('all')">All ({{ $requested+$verifying+$received+$inProgress+$finished+$noPart+$canceled }})</a>
+			<a href="javascript:void(0)" onclick="get_data('all')">All ({{ $requested+$verifying+$received+$listed+$inProgress+$finished+$pending+$canceled }})</a>
 		</li>
 		<li>
 			<a href="javascript:void(0)" onclick="get_data('0')">Requested ({{ $requested }})</a>
@@ -50,16 +50,19 @@
 			<a href="javascript:void(0)" onclick="get_data('2')">Received ({{ $received }})</a>
 		</li>
 		<li>
-			<a href="javascript:void(0)" onclick="get_data('3')">InProgress ({{ $inProgress }})</a>
+			<a href="javascript:void(0)" onclick="get_data('3')">Listed ({{ $listed }})</a>
 		</li>
 		<li>
-			<a href="javascript:void(0)" onclick="get_data('5')">Finished ({{ $finished }})</a>
+			<a href="javascript:void(0)" onclick="get_data('4')">InProgress ({{ $inProgress }})</a>
 		</li>
 		<li>
-			<a href="javascript:void(0)" onclick="get_data('4')">No Part ({{ $noPart }})</a>
+			<a href="javascript:void(0)" onclick="get_data('6')">Finished ({{ $finished }})</a>
 		</li>
 		<li>
-			<a href="javascript:void(0)" onclick="get_data('6')">Canceled ({{ $canceled }})</a>
+			<a href="javascript:void(0)" onclick="get_data('5')">Pending ({{ $pending }})</a>
+		</li>
+		<li>
+			<a href="javascript:void(0)" onclick="get_data('7')">Canceled ({{ $canceled }})</a>
 		</li>
 		<li>
 			<?php 
@@ -214,13 +217,10 @@
 								<div class="col-xs-4" style="padding: 0px;" align="right">
 									<span style="font-weight: bold; font-size: 16px;">Mesin:</span>
 								</div>
-								<div class="col-xs-4">
-									<select class="form-control select2" id="nama_mesin" name="nama_mesin" data-placeholder="pilih mesin (Bila berhubungan mesin)">
-										<option></option>
+								<div class="col-xs-6">
+									<select class="form-control" id="nama_mesin" name="nama_mesin" data-placeholder="pilih mesin (Bila berhubungan mesin)">
+										<option value=""></option>
 									</select>
-								</div>
-								<div class="col-xs-2">
-									<input type="text" class="form-control" placeholder="nomor mesin" id="nomor_mesin" name="nomor_mesin">
 								</div>
 							</div>
 							<div class="col-xs-12" style="padding-bottom: 1%;">
@@ -348,13 +348,14 @@
 								<input type="text" class="form-control" id="kategori_detail" readonly>
 							</div>
 						</div>
+
 					</div>
 
 					<div class="col-xs-6">
 						<div class="form-group row" align="right">
 							<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin</label>
 							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="mesin_detail" readonly>
+								<input type="text" class="form-control" id="kondisi_mesin_detail" readonly>
 							</div>
 						</div>
 
@@ -362,6 +363,15 @@
 							<label class="col-xs-4" style="margin-top: 1%;">Potensi Bahaya</label>
 							<div class="col-xs-7" align="left">
 								<input type="text" class="form-control" id="bahaya_detail" readonly>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-12">
+						<div class="form-group row" align="right">
+							<label class="col-xs-2" style="margin-top: 1%;">Nama Mesin</label>
+							<div class="col-xs-7" align="left">
+								<input type="text" class="form-control" id="mesin_detail" readonly>
 							</div>
 						</div>
 					</div>
@@ -400,6 +410,195 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="col-xs-12" id="keterangn_detail" style="display: none">
+						<b>Maintenance Operator :</b>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Nama Operator</th>
+									<th>Start</th>
+									<th>Finish</th>
+									<th>Status</th>
+									<th>Keterangan</th>
+								</tr>
+							</thead>
+							<tbody id="body_desc">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="editModal" style="color: black;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="col-xs-12" style="background-color: #3c8dbc;">
+					<h1 style="text-align: center; margin:5px; font-weight: bold;">Edit Form SPK</h1>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<form method="POST" id="editForm" autocomplete="off">
+						<div class="col-xs-6">
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Nomor SPK</label>
+								<div class="col-xs-7" align="left">
+									<input type="text" class="form-control" id="spk_edit" name="spk_edit" readonly>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Nama Pengaju</label>
+								<div class="col-xs-7" align="left">
+									<input type="text" class="form-control" id="pengaju_edit" readonly>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xs-6">
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Tanggal Pengajuan</label>
+								<div class="col-xs-7" align="left">
+									<input type="text" class="form-control" id="tanggal_edit" readonly>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Bagian Pengaju</label>
+								<div class="col-xs-7" align="left">
+									<input type="text" class="form-control" id="bagian_edit" readonly>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12"><hr style="margin-top: 10px; margin-bottom: 10px"></div>
+						<div class="col-xs-6">
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Prioritas<span class="text-red">*</span></label>
+								<div class="col-xs-7" align="left">
+									<select class="form-control select4" id="prioritas_edit" name="prioritas_edit" data-placeholder="Pilih Prioritas Pengerjaan">
+										<option></option>
+										<option>Urgent</option>
+										<option>Normal</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Jenis Pekerjaan<span class="text-red">*</span></label>
+								<div class="col-xs-7" align="left">
+									<select class="form-control select4" id="workType_edit" name="workType_edit" data-placeholder="Pilih Jenis Pengerjaan" required>
+										<option></option>
+										<option>Perbaikan</option>
+										<option>Pemasangan</option>
+										<option>Pelepasan</option>
+										<option>Penggantian</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+								<div class="col-xs-7" align="left">
+									<select class="form-control select4" id="kategori_edit" name="kategori_edit" data-placeholder="Pilih Kategori Pekerjaan" required>
+										<option></option>
+										<optgroup label="Utilitas">
+											<option>Listrik</option>
+											<option>Jaringan</option>
+											<option>Mesin Utilitas</option>
+											<option>Utilitas Umum</option>
+										</optgroup>
+										<optgroup label="Mesin Produksi">
+											<option>Kelistrikan Mesin</option>
+											<option>Mekanis Mesin</option>
+										</optgroup>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xs-6">
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin<span class="text-red">*</span></label>
+								<div class="col-xs-7" align="left">
+									<select class="form-control select4" id="kondisi_mesin_edit" name="kondisi_mesin_edit" data-placeholder="Pilih Kondisi Mesin" required>
+										<option></option>
+										<option>Berhenti</option>
+										<option>Berjalan</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Potensi Bahaya<span class="text-red">*</span></label>
+								<div class="col-xs-7" align="left">
+									<select class="form-control" id="bahaya_edit" name="bahaya_edit[]" data-placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
+										<option></option>
+										<option>Bahan Kimia Beracun</option>
+										<option>Tersengat Listrik</option>
+										<option>Terjepit</option>
+										<option>Putaran Mesin</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xs-12">
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Mesin</label>
+								<div class="col-xs-10" align="left">
+									<select class="form-control" id="mesin_edit" name="mesin_edit" data-placeholder="pilih mesin (Bila berhubungan mesin)">
+										<option value=""></option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
+								<div class="col-xs-10" align="left">
+									<textarea class="form-control" id="uraian_edit" name="uraian_edit" required></textarea>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Catatan Keamanan<span class="text-red">**</span></label>
+								<div class="col-xs-8" align="left">
+									<textarea class="form-control" id="keamanan_edit" name="keamanan_edit" rows="1" ></textarea>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Tanggal Target</label>
+								<div class="col-xs-3" align="left">
+									<div class="input-group date">
+										<div class="input-group-addon bg-default">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<input type="text" class="form-control" id="target_edit" readonly>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-xs-10" style="font-weight: bold !important">
+									<br>
+									<span style="color: red !important; background-color: yellow">Note : </span><br>
+									<span style="color: red !important; background-color: yellow">*) Wajib diisi</span><br>
+									<span style="color: red !important; background-color: yellow">**) Diisi Pemohon, Jika pekerjaan berkaitan dengan chemical diisi oleh Chemical Staff atau kosongkan</span><br>
+								</div>
+							</div>
+
+							<div class=" form-group row">
+								<div class="col-xs-2 pull-right">
+									<center><button class="btn btn-primary" type="submit" id="edit_btn"><i class="fa fa-check"></i> Edit</button></center>
+								</div>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -433,12 +632,15 @@
 	$(function () {
 		$('.select3').select2({ dropdownParent: $('#createModal'), width: '100%', tags: true })
 	})
+	$(function () {
+		$('.select4').select2({ dropdownParent: $('#editModal'), width: '100%' })
+	})
 
 	$('.datepicker').datepicker({
 		autoclose: true,
 		format: "yyyy-mm-dd",
 		todayHighlight: true
-	});
+	});	
 
 	$('.timepicker').timepicker({
 		use24hours: true,
@@ -451,6 +653,13 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+
+		$('#bahaya_edit').select2({
+			dropdownParent: $('#editModal'), 
+			width: '100%', 
+			tags: true
+		});
+
 		$("#target_div").hide();
 		get_data('all');
 		get_machine();
@@ -484,11 +693,11 @@
 
 				if(value.remark == '0' || value.remark == '2'){
 					tableData += '<td>';
-					tableData += '<a style="padding: 10%; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+value.id+'\')" class="btn btn-warning">Edit</a>';
+					tableData += '<a style="padding: 10%; padding-top: 2%; padding-bottom: 2%; margin-right: 2%;" href="javascript:void(0)" onClick="modalEdit(\''+value.order_no+'\')" class="btn btn-warning">Edit</a>';
 					tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="showDetail(\''+value.order_no+'\')" class="btn btn-primary">Detail</a>';
 
 					if (value.remark == '2') {
-						tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="cancelWjo(\''+value.order_no+'\')" class="btn btn-danger">Cancel</a>';
+						tableData += '<a style="padding: 5%; padding-top: 2%; padding-bottom: 2%;" href="javascript:void(0)" onClick="cancelSPK(\''+value.order_no+'\')" class="btn btn-danger">Cancel</a>';
 					}
 					tableData += '</td>';
 				}else{
@@ -559,14 +768,6 @@
 	});	
 
 	$("form#createForm").submit(function(e){
-
-		if ($("#nama_mesin").val() != "") {
-			if ($("#nomor_mesin").val() == "") {
-				openErrorGritter("Fail", "Harap Melengkapi Nomor Mesin");
-				return false;
-			}
-		}
-
 		$("#create_btn").attr("disabled", true);
 		e.preventDefault();
 		var formData = new FormData(this);
@@ -613,26 +814,59 @@
 		}
 
 		$.get('{{ url("fetch/maintenance/detail") }}', data,  function(result, status, xhr){
-			$("#spk_detail").val(result.detail.order_no);
-			$("#pengaju_detail").val(result.detail.name);
-			$("#tanggal_detail").val(result.detail.date);
-			$("#bagian_detail").val(result.detail.section);
+			$("#spk_detail").val(result.detail[0].order_no);
+			$("#pengaju_detail").val(result.detail[0].name);
+			$("#tanggal_detail").val(result.detail[0].date);
+			$("#bagian_detail").val(result.detail[0].section);
 
-			if (result.detail.priority == "Normal") {
+			if (result.detail[0].priority == "Normal") {
 				$("#prioritas_detail").addClass("label-default");
 			} else {
 				$("#prioritas_detail").addClass("label-danger");
 			}
-			$("#prioritas_detail").text(result.detail.priority);
+			$("#prioritas_detail").text(result.detail[0].priority);
 
-			$("#workType_detail").val(result.detail.type);
-			$("#kategori_detail").val(result.detail.category);
-			$("#mesin_detail").val(result.detail.machine_condition);
-			$("#bahaya_detail").val(result.detail.danger);
-			$("#uraian_detail").val(result.detail.description);
-			$("#keamanan_detail").val(result.detail.safety_note);
-			$("#target_detail").val(result.detail.target_date);
-			$("#status_detail").val(result.detail.process_name);
+			$("#workType_detail").val(result.detail[0].type);
+			$("#kategori_detail").val(result.detail[0].category);
+			$("#kondisi_mesin_detail").val(result.detail[0].machine_condition);
+
+			if (result.detail[0].machine_description) {
+				$("#mesin_detail").val(result.detail[0].machine_description+" | "+result.detail[0].machine_name);
+			} else {
+				$("#mesin_detail").val("");
+			}
+
+			$("#bahaya_detail").val(result.detail[0].danger);
+			$("#uraian_detail").val(result.detail[0].description);
+			$("#keamanan_detail").val(result.detail[0].safety_note);
+			$("#target_detail").val(result.detail[0].target_date);
+			$("#status_detail").val(result.detail[0].process_name);
+
+			var stat = 0;
+			$.each(result.detail, function(index, value){
+				if (value.process_name == "Pending" || value.process_name == "Finished" || value.process_name == "InProgress") {
+					stat = 1;
+				}
+			})
+
+			var body = "";
+			$.each(result.detail, function(index, value){
+				if (stat == 1) {
+					$("#keterangn_detail").show();
+					body += "<tr>";
+					body += "<td>"+value.name_op+"</td>";
+					body += "<td>"+(value.start_actual || "")+"</td>";
+					body += "<td>"+(value.finish_actual || "")+"</td>";
+					body += "<td>"+(value.status || "")+"</td>";
+					body += "<td>"+(value.pending_desc || "")+"</td>";
+					body += "</tr>";
+				} else {
+					$("#keterangn_detail").hide();
+				}
+			})
+
+			$("#body_desc").empty();
+			$("#body_desc").append(body);
 		})
 	}
 
@@ -642,14 +876,109 @@
 			ctg: "machine"
 		}
 
-		$.get('{{ url("fetch/maintenance/list_pm") }}', data,  function(result, status, xhr){
+		$.get('{{ url("fetch/maintenance/list_mc") }}', data,  function(result, status, xhr){
 			$.each(result.datas, function(index, value){
-				options += "<option>"+value.item_check+"</option>";
+				options += "<option value='"+value.machine_id+"'>"+value.description+" | "+value.machine_name+"</option>";
 			})
 
 			$("#nama_mesin").append(options);
-		})
+			$("#mesin_edit").append(options);
+			
+			$('#nama_mesin').select2({
+				dropdownParent: $('#createModal'), 
+				width: '100%', 
+				allowClear: true,
+				minimumInputLength: 3
+			});
 
+			$('#mesin_edit').select2({
+				dropdownParent: $('#editModal'), 
+				width: '100%', 
+				allowClear: true,
+				minimumInputLength: 3
+			});
+		})
+	}
+
+	function modalEdit(order_no) {
+		$("#editModal").modal("show");
+
+		var data = {
+			order_no : order_no
+		}
+
+		$.get('{{ url("fetch/maintenance/detail") }}', data,  function(result, status, xhr){
+			$("#spk_edit").val(result.detail[0].order_no);
+			$("#pengaju_edit").val(result.detail[0].name);
+			$("#tanggal_edit").val(result.detail[0].date);
+			$("#bagian_edit").val(result.detail[0].section);
+			$("#mesin_edit").val(result.detail[0].machine_name).trigger("change");
+			$("#prioritas_edit").val(result.detail[0].priority).trigger("change");
+			$("#workType_edit").val(result.detail[0].type).trigger("change");
+			$("#kategori_edit").val(result.detail[0].category).trigger("change");
+			$("#kondisi_mesin_edit").val(result.detail[0].machine_condition).trigger("change");
+
+			var danger = result.detail[0].danger.split(', ');
+			$("#bahaya_edit").val(danger).trigger("change");
+
+			$("#uraian_edit").val(result.detail[0].description);
+
+			if (result.detail[0].safety_note)
+				$("#keamanan_edit").val(result.detail[0].safety_note);
+			else
+				$("#keamanan_edit").val("");
+
+			$("#target_edit").val(result.detail[0].date);
+		})
+	}
+
+	$("form#editForm").submit(function(e){
+		$("#edit_btn").attr("disabled", true);
+		e.preventDefault();
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: '{{ url("edit/maintenance/spk") }}',
+			type: 'POST',
+			data: formData,
+			processData: false,
+			cache: false,
+			contentType: false,
+			success: function (result, status, xhr) {
+				if(result.status) {
+					$('#editModal').modal('hide');
+					$("#edit_btn").attr("disabled", false);
+					openSuccessGritter("Success", result.message);
+
+					get_data("all");
+				} else {
+					$("#edit_btn").prop("disabled", false);
+					openErrorGritter("Error", result.message);
+				}
+			},
+			function (xhr, ajaxOptions, thrownError) {
+				$("#edit_btn").prop("disabled", false);
+				openErrorGritter(xhr.status, thrownError);
+			}
+		})
+		
+	});
+
+	function cancelSPK(order_no) {
+		if (confirm("Apakah Anda yakin akan membatalkan SPK dengan nomor '"+order_no+"' ?")) {
+			var data = {
+				order_no : order_no
+			}
+
+			$.post('{{ url("post/maintenance/spk/cancel") }}', data,  function(result, status, xhr){
+				if (result.status) {
+					openSuccessGritter("Success", "SPK Berhasil dibatalkan");
+					get_data("all");
+				} else {
+					openErrorGritter("Gagal", result.message);
+				}
+			})
+		}
 	}
 
 	function insert() {

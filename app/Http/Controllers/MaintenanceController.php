@@ -28,11 +28,15 @@ use App\MaintenanceInventoryLog;
 use App\MaintenanceJobSparepart;
 use App\MaintenancePlan;
 use App\MaintenanceJobPending;
+use App\MaintenancePlanItem;
+use App\MaintenancePlanItemCheck;
+use App\MaintenancePlanCheck;
 use App\Process;
 
 use App\Http\Controllers\Controller;
 
 use PDF;
+use Excel;
 
 class MaintenanceController extends Controller
 {
@@ -78,7 +82,7 @@ class MaintenanceController extends Controller
 		->select('employee_id', 'name', 'position', 'department', 'section')->first();
 
 		$job_order = MaintenanceJobOrder::where('created_by', '=', Auth::user()->username)
-		->select(db::raw('count(if(remark="0", 1, null)) as requested, count(if(remark="1", 1, null)) as verifying, count(if(remark="2", 1, null)) as received, count(if(remark="3", 1, null)) as inProgress, count(if(remark="4", 1, null)) as noPart, count(if(remark="5", 1, null)) as finished, count(if(remark="6", 1, null)) as canceled'))->first();
+		->select(db::raw('count(if(remark="0", 1, null)) as requested, count(if(remark="1", 1, null)) as verifying, count(if(remark="2", 1, null)) as received, count(if(remark="3", 1, null)) as listed, count(if(remark="4", 1, null)) as inProgress, count(if(remark="5", 1, null)) as pending, count(if(remark="6", 1, null)) as finished, count(if(remark="7", 1, null)) as canceled'))->first();
 
 		return view('maintenance.maintenance_form', array(
 			'title' => $title,
@@ -87,8 +91,9 @@ class MaintenanceController extends Controller
 			'requested' => $job_order->requested,
 			'verifying' => $job_order->verifying,
 			'received' => $job_order->received,
+			'listed' => $job_order->listed,
 			'inProgress' => $job_order->inProgress,
-			'noPart' => $job_order->noPart,
+			'pending' => $job_order->pending,
 			'finished' => $job_order->finished,
 			'canceled' => $job_order->canceled,
 		))->with('page', 'Maintenance Form')->with('head2', 'SPK')->with('head', 'Maintenance');	
@@ -354,7 +359,7 @@ class MaintenanceController extends Controller
 		
 
 		$op_mtc = EmployeeSync::leftJoin('employees', 'employees.employee_id', '=', 'employee_syncs.employee_id')
-		->where('department', '=', 'Maintenance')
+		->whereRaw('(department = "Maintenance" OR department = "Management Information System")')
 		->whereNull('employee_syncs.end_date')
 		->select('tag', 'employee_syncs.name', 'employee_syncs.employee_id')
 		->get();
@@ -388,15 +393,47 @@ class MaintenanceController extends Controller
 		))->with('page', 'Spare Part Transaction')->with('head', 'Maintenance');
 	}
 
-	public function indexPlanned()
+	public function indexPlanned($tgl)
 	{
-		$title = 'Maintenance Planned Maintenance';
+		$title = 'Planned Maintenance';
 		$title_jp = '??';
+
+		$week = db::table("weekly_calendars")->select("week_name")
+		->whereRaw("DATE_FORMAT(week_date, '%Y-%m') = '".$tgl."'")->groupBy("week_name")->get();
 
 		return view('maintenance.planned.maintenance_plan_monitoring', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'weeks' => $week
 		))->with('page', 'Planned Maintenance')->with('head', 'Maintenance');
+	}
+
+	public function indexPlanMaster()
+	{
+		$title = 'Planned Maintenance Data';
+		$title_jp = '??';
+
+		return view('maintenance.planned.maintenance_plan', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Planned Maintenance Data')->with('head', 'Maintenance');
+	}
+
+	public function indexPlannedForm()
+	{
+		$title = 'Planned Maintenance';
+		$title_jp = '??';
+
+		$item_check = MaintenancePlanItem::select('machine_id', 'machine_name', 'description', 'category', 'area')->get();
+
+		$op_mtc = EmployeeSync::where('department', '=', 'Maintenance')->whereNull('end_date')->select('employee_id', 'name')->orderBy('name','asc')->get();
+
+		return view('maintenance.planned.maintenance_plan_form', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'item_check' => $item_check,
+			'mtc_op' => $op_mtc
+		))->with('page', 'Planned Maintenance Form')->with('head', 'Maintenance');
 	}
 
 	// -----------------------  END INDEX --------------------
@@ -427,6 +464,7 @@ class MaintenanceController extends Controller
 		$spk = MaintenanceJobProcess::leftJoin("maintenance_job_orders", "maintenance_job_orders.order_no", "=", "maintenance_job_processes.order_no")
 		->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'maintenance_job_orders.created_by')
 		->where("operator_id", "=", Auth::user()->username)
+		->whereNull("finish_actual")
 		->whereRaw("maintenance_job_orders.remark in (3,4)")
 		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "category", "machine_condition", "danger", "description", "target_date", "safety_note", "start_plan", "finish_plan", "start_actual", "finish_actual", db::raw("DATE_FORMAT(maintenance_job_orders.created_at,'%d-%m-%Y') as request_date"), 'name', "maintenance_job_orders.remark")
 		->get();
@@ -479,7 +517,6 @@ class MaintenanceController extends Controller
 		$bahaya = implode(", ", $request->get('bahaya'));
 		$detail = $request->get('detail');
 		$machine_name = $request->get('nama_mesin');
-		$machine_no = $request->get('nomor_mesin');
 
 		if ($prioritas == "Urgent") {
 			$target_time = $request->get('jam_target');
@@ -512,7 +549,6 @@ class MaintenanceController extends Controller
 			'type' => $jenis_pekerjaan,
 			'category' => $kategori,
 			'machine_name' => $machine_name,
-			'machine_no' => $machine_no,
 			'machine_condition' => $kondisi_mesin,
 			'danger' => $bahaya,
 			'description' => $detail,
@@ -535,10 +571,11 @@ class MaintenanceController extends Controller
 				$spk_log->save();
 			});	
 
+			$data = db::select("select spk.*, u.`name` from maintenance_job_orders spk
+				left join employee_syncs u on spk.created_by = u.employee_id
+				where order_no = '".$order_no."'");
+
 			if($prioritas == 'Urgent'){
-				$data = db::select("select spk.*, u.`name` from maintenance_job_orders spk
-					left join employee_syncs u on spk.created_by = u.employee_id
-					where order_no = '".$order_no."'");
 				$remark = 0;
 
 				Mail::to('susilo.basri@music.yamaha.com')
@@ -564,6 +601,38 @@ class MaintenanceController extends Controller
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function editSPK(Request $request)
+	{
+		MaintenanceJobOrder::where('order_no', '=', $request->get("spk_edit"))
+		->update([
+			'machine_condition' => $request->get("kondisi_mesin_edit"),
+			'type' => $request->get("workType_edit"),
+			'category' => $request->get("kategori_edit"),
+			'danger' => implode(", ", $request->get('bahaya_edit')),
+			'machine_name' => $request->get('mesin_edit'),
+			'description' => $request->get('uraian_edit'),
+			'safety_note' => $request->get('keamanan_edit')
+		]);
+
+		$response = array(
+			'status' => true,
+		);
+		return Response::json($response);
+	}
+
+	public function cancelSPK(Request $request)
+	{
+		MaintenanceJobOrder::where('order_no', '=', $request->get("order_no"))
+		->update([
+			'remark' => 7
+		]);
+
+		$response = array(
+			'status' => true
+		);
+		return Response::json($response);
 	}
 
 	public function fetchSPKProgress(Request $request)
@@ -686,10 +755,11 @@ class MaintenanceController extends Controller
 		$detail = MaintenanceJobOrder::where("maintenance_job_orders.order_no", "=", $request->get('order_no'))
 		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "maintenance_job_orders.created_by")
 		->leftJoin("maintenance_job_processes", "maintenance_job_processes.order_no", "=", "maintenance_job_orders.order_no")
+		// ->leftJoin("maintenance_plan_items", "maintenance_plan_items.machine_id", "=", "maintenance_job_orders.machine_name")
 		->leftJoin("maintenance_job_pendings", "maintenance_job_orders.order_no", "=", "maintenance_job_pendings.order_no")
 		->leftJoin(db::raw("employee_syncs as  es"), "es.employee_id", "=", "maintenance_job_processes.operator_id")
 		->leftJoin(db::raw("(select process_code, process_name from processes where remark = 'maintenance') AS process"), "maintenance_job_orders.remark", "=", "process.process_code")
-		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "priority", "maintenance_job_orders.section", "type", "category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_prog"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"))
+		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "machine_name")
 		->get();
 
 		$response = array(
@@ -711,8 +781,7 @@ class MaintenanceController extends Controller
 			$jp->operator_id = $mbr['operator'];
 			$jp->start_plan = $mbr['start_date']." ".$mbr['start_time'];
 			$jp->finish_plan = $mbr['finish_date']." ".$mbr['finish_time'];
-			$jp->remark = 'persiapan';
-			$jp->created_by = Auth::user()->username;
+			$jp->created_by = strtoupper(Auth::user()->username);
 			$jp->save();
 		};
 
@@ -864,7 +933,7 @@ class MaintenanceController extends Controller
 		->update(['remark' => 4]);
 
 		MaintenanceJobProcess::where('order_no', '=', $request->get('order_no'))
-		->where('operator_id', '=', Auth::user()->username)
+		->where('operator_id', '=', strtoupper(Auth::user()->username))
 		->update(['start_actual' => date('Y-m-d H:i:s')]);
 
 		// $spk_proc = new MaintenanceJobProcess();
@@ -931,20 +1000,18 @@ class MaintenanceController extends Controller
 			->update(['remark' => 6]);
 
 			MaintenanceJobProcess::where('order_no', '=', $request->get('order_no'))
-			->where('operator_id', '=', Auth::user()->username)
+			->where('operator_id', '=', strtoupper(Auth::user()->username))
 			->update(['finish_actual' => date('Y-m-d H:i:s')]);
 
-			// $parts = $request->get('spare_part');
+			$parts = $request->get('spare_part');
 
-			// foreach ($parts as $prts) {				
-			// 	$spk_part = MaintenanceJobSparepart::firstOrNew(array('order_no' => $request->get('order_no'), 'part_number' => $prts['part_number']));
-			// 	$spk_part->order_no = $request->get('order_no');
-			// 	$spk_part->part_number = $prts['part_number'];
-			// 	$spk_part->quantity = $prts['qty'];
-			// 	$spk_part->created_by = Auth::user()->username;
+			foreach ($parts as $prts) {
+				$spk_part = MaintenanceJobSparepart::firstOrNew(array('order_no' => $request->get('order_no'), 'part_number' => $prts['part_number']));
+				$spk_part->quantity = $prts['qty'];
+				$spk_part->created_by = Auth::user()->username;
 
-			// 	$spk_part->save();
-			// }
+				$spk_part->save();
+			}
 
 			$response = array(
 				'status' => true,
@@ -965,7 +1032,7 @@ class MaintenanceController extends Controller
 	{
 		try {
 			MaintenanceJobProcess::where("order_no", "=", $request->get('order_no'))
-			->where("operator_id", "=", Auth::user()->username)
+			->where("operator_id", "=", strtoupper(Auth::user()->username))
 			->update(['finish_actual' => date("Y-m-d H:i:s")]);
 
 			$spk_pending = MaintenanceJobPending::firstOrNew(array('order_no' => $request->get('order_no')));
@@ -984,9 +1051,9 @@ class MaintenanceController extends Controller
 			->update(['remark' => 5]);
 
 			$spk_log = MaintenanceJobOrderLog::firstOrNew(array('order_no' => $request->get('order_no'), 'remark' => 5));
-			$spk_log->order_no = $request->get('order_no');
-			$spk_log->remark = 5;
 			$spk_log->created_by = Auth::user()->username;
+
+			$spk_log->save();
 
 			$response = array(
 				'status' => true,
@@ -1912,8 +1979,18 @@ class MaintenanceController extends Controller
 
 	public function fetchPM(Request $request)
 	{
+		$dt = date("F");
+		$dt = strtolower($dt);
+
+		if ($request->get('mon')) {
+			$select = db::raw($request->get('mon')." as mon");
+		} else {
+			$select = db::raw('april, may, june, july, august, september, october, november, december, january, february, march');
+		}
+
+
 		$pms = MaintenancePlan::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'maintenance_plans.pic')
-		->select("maintenance_plans.id", "item_check", "quantity", "category", "maintenance_plans.status", "schedule", "name", "fiscal", "april", "mei", "juni", "juli", "agustus", "september", "oktober", "november", "desember", "januari", "februari", "maret");
+		->select("maintenance_plans.id", "item_check", "quantity", "category", "maintenance_plans.status", "schedule", "name", "fiscal", $select);
 
 		if ($request->get('ctg')) {
 			$pms = $pms->where('category', '=', $request->get('ctg'));
@@ -1931,6 +2008,17 @@ class MaintenanceController extends Controller
 			'status' => true,
 			'datas' => $pms,
 			'daily' => $daily
+		);
+		return Response::json($response);
+	}
+
+	public function fetchMachine(Request $request)
+	{
+		$datas = MaintenancePlanItem::select('description', 'machine_name', 'machine_id')->get();
+
+		$response = array(
+			'status' => true,
+			'datas' => $datas
 		);
 		return Response::json($response);
 	}
@@ -1995,6 +2083,11 @@ class MaintenanceController extends Controller
 
 			MaintenanceJobProcess::where("order_no", "=", $request->get("order_no"))->delete();
 
+			$spk_log = new MaintenanceJobOrderLog;
+				$spk_log->order_no = $request->get('order_no');
+				$spk_log->remark = 2;
+				$spk_log->created_by = Auth::user()->username;
+
 			$response = array(
 				'status' => true,
 				'message' => 'success'
@@ -2012,9 +2105,25 @@ class MaintenanceController extends Controller
 	public function postPlannedDaily(Request $request)
 	{
 		try {
-			DB::table('maintenance_plan_logs')->insert([
-				['plan_id' => $request->get('plan_id') , 'quantity' => $request->get('qty'), 'created_by' => Auth::user()->username, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]
-			]);
+
+			foreach ($request->get('check_list') as $val) {
+				$mtc_check = new MaintenancePlanCheck;
+				$mtc_check->item_code = $request->get('item_check');
+				$mtc_check->part_check = $val[0];
+				$mtc_check->item_check = $val[1];
+				$mtc_check->substance = $val[2];
+
+				if ($val[3] == '1') {
+					$mtc_check->check = 'OK';
+				} else {
+					$mtc_check->check = 'NG';
+				}
+
+				$mtc_check->check_value = $val[4];
+				$mtc_check->created_by = $request->get('operator');
+				
+			}
+
 
 			$response = array(
 				'status' => true,
