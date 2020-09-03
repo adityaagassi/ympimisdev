@@ -167,18 +167,20 @@
 						<table id="traceabilityTable" class="table table-bordered table-striped table-hover">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
-									<th style="font-size: 14">Prod. Date</th>
-									<th style="font-size: 14">FLO No.</th>
-									<th style="font-size: 14">HPL</th>
-									<th style="font-size: 14">Material</th>
-									<th style="font-size: 14">Description</th>
-									<th style="font-size: 14">Serial No.</th>
-									<th style="font-size: 14">Qty</th>
-									<th style="font-size: 14">Ship. Date</th>
-									<th style="font-size: 14">BL Date</th>
-									<th style="font-size: 14">Dest.</th>
-									<th style="font-size: 14">SO</th>
-									<th style="font-size: 14">Evidence Att.</th>
+									<th style="width: 1%;">Prod. Date</th>
+									<th style="width: 1%;">FLO No.</th>
+									<th style="width: 1%;">HPL</th>
+									<th style="width: 1%;">Material</th>
+									<th style="width: 6%;">Description</th>
+									<th style="width: 1%;">Serial No.</th>
+									<th style="width: 1%;">Qty</th>
+									<th style="width: 1%;">Ship. Date</th>
+									<th style="width: 1%;">BL Date</th>
+									<th style="width: 1%;">Dest.</th>
+									<th style="width: 1%;">SO</th>
+									<th style="width: 1%;">Position</th>
+									{{-- <th style="">Product Img</th> --}}
+									<th style="width: 1%;">Evidence Att.</th>
 								</tr>
 							</thead>
 							<tbody id="tableBody">
@@ -203,6 +205,7 @@
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
 <script>
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('#prodFrom').datepicker({
 			autoclose: true,
 			todayHighlight: true
@@ -280,9 +283,6 @@
 			destination:destination,
 		}
 		$.get('{{ url("fetch/fg_traceability") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#last_update').html('<b>Last Updated: '+ getActualFullDate() +'</b>');
@@ -303,6 +303,32 @@
 						tableData += '<td>'+ value.bl_date +'</td>';
 						tableData += '<td>'+ value.destination_shortname +'</td>';
 						tableData += '<td>'+ value.sales_order +'</td>';
+
+						if(value.status == 'M'){
+							tableData += '<td>Prod Maedaoshi</td>';
+						}
+						else if(value.status == 0){
+							tableData += '<td>Prod Packing</td>';
+						}
+						else if(value.status == 1){
+							tableData += '<td>Prod Packed</td>';
+						}
+						else if(value.status == 2){
+							tableData += '<td>WH FSTK</td>';
+						}
+						else if(value.status == 3){
+							tableData += '<td>Stuffing</td>';
+						}
+						else if(value.status == 4){
+							tableData += '<td>Lading</td>';
+						}
+
+						// if(!value.image){
+						// 	tableData += '<td>-</td>';
+						// }
+						// else{
+						// 	tableData += '<td><img width="240" src="'+ value.image +'"/></td>';
+						// }
 						if( value.att > 0 ){
 							tableData += '<td><a href="javascript:void(0)" id="'+ value.container_id +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> '+ value.att +' attachment(s)</a></td>';
 						}
