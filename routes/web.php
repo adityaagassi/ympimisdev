@@ -35,7 +35,7 @@ Route::get('/index/emergency_response', 'TrialController@tes2');
 Route::get('/index/trials', 'TrialController@tes');
 Route::get('/index/unification_uniform', 'VoteController@indexUnificationUniform');
 Route::get('fetch/employee/data', 'TrialController@fetch_data');
-// Route::get('happybirthday', 'TrialController@ultah');
+Route::get('happybirthday', 'TrialController@birthday');
 
 
 Route::get('trialmail', 'TrialController@trialmail');
@@ -1922,6 +1922,11 @@ Route::get('fetch/stocktaking/kitto_vs_book', 'StockTakingController@fetchKittoV
 Route::get('fetch/stocktaking/pi_vs_lot', 'StockTakingController@fetchPiVsLot');
 
 Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
+
+	Route::get('index/stocktaking/stocktaking_list', 'StockTakingController@indexMonthlyStocktakingList');
+	Route::get('fetch/stocktaking/stocktaking_list', 'StockTakingController@fetchMonthlyStocktakingList');
+	Route::post('delete/stocktaking/stocktaking_list', 'StockTakingController@deleteMonthlyStocktakingList');
+	Route::post('edit/stocktaking/stocktaking_list', 'StockTakingController@editMonthlyStocktakingList');
 //Revise
 	Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
 	Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
@@ -2779,6 +2784,20 @@ Route::group(['nav' => 'M21', 'middleware' => 'permission'], function(){
 	Route::get('index/qc_report/emailverification/{id}', 'QcReportController@emailverification');
 	Route::post('index/qc_report/close2/{id}', 'QcReportController@close2');
 	Route::post('index/qc_report/deleteVerifikasi', 'QcReportController@deleteVerifikasi');
+
+	// Form Ketidaksesuaian YMMJ
+	Route::get('index/qa_ymmj', 'QcYmmjController@index');
+	Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
+	Route::get('index/qa_ymmj/create', 'QcYmmjController@create');
+	Route::post('index/qa_ymmj/create_action', 'QcYmmjController@create_action');
+	Route::get('index/qa_ymmj/update/{id}', 'QcYmmjController@update');
+	Route::post('index/qa_ymmj/update_action/{id}', 'QcYmmjController@update_action');
+	Route::post('index/qa_ymmj/deletefiles', 'QcYmmjController@deletefiles');
+	Route::get('index/qa_ymmj/grafik_ymmj', 'QcYmmjController@grafik_ymmj');
+	Route::get('index/qa_ymmj/fetchGrafik', 'QcYmmjController@fetchGrafik');
+	Route::get('index/qa_ymmj/fetchtable', 'QcYmmjController@fetchTable');
+	Route::get('index/qa_ymmj/detail', 'QcYmmjController@detail');
+	Route::get('index/qa_ymmj/print/{id}', 'QcYmmjController@print_ymmj');
 });
 
 //CPAR
@@ -2809,19 +2828,6 @@ Route::get('index/qc_report/fetchtable', 'QcReportController@fetchtable');
 Route::get('index/qc_report/fetchMonitoring', 'QcReportController@fetchMonitoring');
 Route::get('index/qc_report/fetchGantt', 'QcReportController@fetchGantt');
 
-// Form Ketidaksesuaian YMMJ
-Route::get('index/qa_ymmj', 'QcYmmjController@index');
-Route::post('index/qa_ymmj/form', 'QcYmmjController@filter');
-Route::get('index/qa_ymmj/create', 'QcYmmjController@create');
-Route::post('index/qa_ymmj/create_action', 'QcYmmjController@create_action');
-Route::get('index/qa_ymmj/update/{id}', 'QcYmmjController@update');
-Route::post('index/qa_ymmj/update_action/{id}', 'QcYmmjController@update_action');
-Route::post('index/qa_ymmj/deletefiles', 'QcYmmjController@deletefiles');
-Route::get('index/qa_ymmj/grafik_ymmj', 'QcYmmjController@grafik_ymmj');
-Route::get('index/qa_ymmj/fetchGrafik', 'QcYmmjController@fetchGrafik');
-Route::get('index/qa_ymmj/fetchtable', 'QcYmmjController@fetchTable');
-Route::get('index/qa_ymmj/detail', 'QcYmmjController@detail');
-Route::get('index/qa_ymmj/print/{id}', 'QcYmmjController@print_ymmj');
 
 // Request CPAR QA
 
@@ -3049,22 +3055,22 @@ Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
 
 //MAINTENANCE
 
-Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
-Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
 Route::get('fetch/maintenance/list_pm', 'MaintenanceController@fetchPM');
 Route::get('fetch/maintenance/list_mc', 'MaintenanceController@fetchMachine');
 
+Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
+Route::get('fetch/maintenance/list_spk/user', 'MaintenanceController@fetchMaintenance');
+Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
+Route::post('edit/maintenance/spk', 'MaintenanceController@editSPK');
+Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
+
 Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
-	Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
-	Route::get('fetch/maintenance/list_spk/user', 'MaintenanceController@fetchMaintenance');
-	Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
 
 	Route::get('index/maintenance/spk/monitoring', 'MaintenanceController@indexMaintenanceMonitoring');
 	Route::get('index/maintenance/spk/operator', 'MaintenanceController@indexOperatorMonitoring');
 
 	Route::get('index/maintenance/list_spk', 'MaintenanceController@indexMaintenanceList');
 	Route::get('fetch/maintenance/list_spk', 'MaintenanceController@fetchMaintenanceList');
-	Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
 
 	Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKProgress');
 	Route::get('fetch/maintenance/spk/operator', 'MaintenanceController@fetchSPKOperator');
@@ -3080,6 +3086,7 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
 	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
 	Route::post('post/maintenance/spk/open', 'MaintenanceController@openSPKPending');
+	Route::post('post/maintenance/spk/cancel', 'MaintenanceController@cancelSPK');
 	
 	Route::get('index/maintenance/aparTool', 'MaintenanceController@indexAparTool');
 	Route::post('post/maintenance/apar/insert', 'MaintenanceController@createTool');
@@ -3090,37 +3097,42 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	// Route::get('fetch/maintenance/spk/inv', 'MaintenanceController@fetchSPKPart');
 });
 
-// -----------  APAR -----------
-Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
-Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
-Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
-Route::get('index/maintenance/apar/resume', 'MaintenanceController@indexAparResume');
-Route::get('index/maintenance/apar/uses', 'MaintenanceController@indexAparUses');
-Route::get('index/maintenance/apar/ng_list', 'MaintenanceController@indexAparNG');
-Route::get('index/maintenance/apar/map', 'MaintenanceController@indexAparMap');
+Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
+	Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
+	Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
 
-Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
-Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
-Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
-Route::get('fetch/maintenance/apar/nglist', 'MaintenanceController@fetchAparNG');
+	// -----------  APAR -----------
+	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
+	Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
+	Route::get('index/maintenance/apar/expire', 'MaintenanceController@indexAparExpire');
+	Route::get('index/maintenance/apar/resume', 'MaintenanceController@indexAparResume');
+	Route::get('index/maintenance/apar/uses', 'MaintenanceController@indexAparUses');
+	Route::get('index/maintenance/apar/ng_list', 'MaintenanceController@indexAparNG');
+	Route::get('index/maintenance/apar/map', 'MaintenanceController@indexAparMap');
 
-Route::get('fetch/maintenance/apar/list/check', 'MaintenanceController@fetchAparCheck2');
-Route::get('fetch/maintenance/apar/list/monitoring', 'MaintenanceController@fetch_apar_monitoring');
-Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
-Route::get('fetch/maintenance/apar/resume', 'MaintenanceController@fetch_apar_resume');
-Route::get('fetch/maintenance/apar/resumeWeek', 'MaintenanceController@fetch_apar_resume_week');
-Route::get('fetch/maintenance/apar/resume/detail/week', 'MaintenanceController@fetch_apar_resume_detail_week');
-Route::get('fetch/maintenance/apar/resume/detail', 'MaintenanceController@fetch_apar_resume_detail');
+	Route::get('fetch/maintenance/apar/list', 'MaintenanceController@fetchAparList');
+	Route::get('fetch/maintenance/apar/history', 'MaintenanceController@fetchAparCheck');
+	Route::get('fetch/maintenance/apar/expire', 'MaintenanceController@fetchAparExpire');
+	Route::get('fetch/maintenance/apar/nglist', 'MaintenanceController@fetchAparNG');
 
-Route::get('fetch/maintenance/apar/use/list', 'MaintenanceController@fetch_apar_use');
-Route::get('fetch/maintenance/apar/use/check', 'MaintenanceController@check_apar_use');
+	Route::get('fetch/maintenance/apar/list/check', 'MaintenanceController@fetchAparCheck2');
+	Route::get('fetch/maintenance/apar/list/monitoring', 'MaintenanceController@fetch_apar_monitoring');
+	Route::get('fetch/maintenance/hydrant/list/monitoring', 'MaintenanceController@fetch_hydrant_monitoring');
+	Route::get('fetch/maintenance/apar/resume', 'MaintenanceController@fetch_apar_resume');
+	Route::get('fetch/maintenance/apar/resumeWeek', 'MaintenanceController@fetch_apar_resume_week');
+	Route::get('fetch/maintenance/apar/resume/detail/week', 'MaintenanceController@fetch_apar_resume_detail_week');
+	Route::get('fetch/maintenance/apar/resume/detail', 'MaintenanceController@fetch_apar_resume_detail');
 
-Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
-Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
-Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
-Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_history');
+	Route::get('fetch/maintenance/apar/use/list', 'MaintenanceController@fetch_apar_use');
+	Route::get('fetch/maintenance/apar/use/check', 'MaintenanceController@check_apar_use');
 
-Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
+	Route::post('post/maintenance/apar/check', 'MaintenanceController@postCheck');
+	Route::post('post/maintenance/apar/replace', 'MaintenanceController@replaceTool');
+	Route::post('use/maintenance/apar', 'MaintenanceController@check_apar_use');
+	Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_history');
+
+	Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
+});
 
 // ------------------ INVENTORY / SPARE PART ------------------
 
@@ -3309,6 +3321,8 @@ Route::get('index/inventory_mis', 'DailyReportController@indexInventoryMIS');
 Route::get('fetch/inventory_mis/list', 'DailyReportController@fetchInventoryMIS');
 Route::post('post/inventory_mis/item', 'DailyReportController@createInventoryMIS');
 Route::get('fetch/inventory_mis', 'DailyReportController@fetchInventoryMISbyId');
+Route::post('update/inventory_mis/data', 'DailyReportController@updateInventoryMIS');
+Route::post('delete/inventory_mis', 'DailyReportController@deleteInventoryMIS');
 
 
 Route::get('/radar_covid', function () {

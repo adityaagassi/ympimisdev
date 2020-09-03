@@ -153,6 +153,7 @@
             <label for="form_loss">Loss yang Diakibatkan</label>
             <select class="form-control select2" data-placeholder="Pilih Loss yang Diakibatkan" name="form_loss" id="form_loss" style="width: 100% height: 35px; font-size: 15px;" required multiple="">
                 <option value="Waktu">Waktu</option>
+                <option value="Orang">Orang</option>
                 <option value="Uang">Uang</option>
             </select>
           </div>

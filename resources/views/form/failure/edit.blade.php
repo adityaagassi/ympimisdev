@@ -147,6 +147,7 @@
                 ?>
                 <option value="Waktu" selected="">Waktu</option>
                 <option value="Uang" selected="">Uang</option>
+                <option value="Orang" selected="">Orang</option>
             </select>
           </div>
         </div>
