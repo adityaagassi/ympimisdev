@@ -2655,7 +2655,7 @@ class CparController extends Controller
     public function fetchHasilAudit(Request $request)
     {
       try {
-        $audit = DB::SELECT('SELECT DISTINCT tanggal,kategori,lokasi,auditor_name FROM `standarisasi_audit_isos` where standarisasi_audit_isos.deleted_at is null');
+        $audit = DB::SELECT('SELECT DISTINCT tanggal, kategori, auditor_id, auditor_name, lokasi, auditee, auditee_name from `standarisasi_audit_isos` where standarisasi_audit_isos.deleted_at is null');
 
         $response = array(
           'status' => true,

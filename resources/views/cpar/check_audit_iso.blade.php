@@ -132,10 +132,10 @@ td {
           <!-- </div> -->
         </div>
       </div>
-      <!-- <div class="box">
+      <div class="box">
         <div class="box-body">
            <div class="box-header">
-
+              <h3>List Hasil Audit</h3>
             </div>
             <table id="tableHasil" class="table table-bordered table-striped table-hover">
               <thead style="background-color: rgba(126,86,134,.7);">
@@ -145,6 +145,7 @@ td {
                   <th>Auditor</th>
                   <th>Kategori</th>
                   <th>Lokasi</th>
+                  <th>Auditee</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -158,11 +159,12 @@ td {
                   <th></th>
                   <th></th>
                   <th></th>
+                  <th></th>
                 </tr>
               </tfoot>
             </table>
           </div>
-        </div> -->
+        </div>
     </div>
   </div>
 </section>
@@ -293,7 +295,7 @@ td {
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
     fillTable();
-    // fillTableResult();
+    fillTableResult();
     $("#navbar-collapse").text('');
     $('.select2').select2({
       language : {
@@ -452,7 +454,8 @@ td {
         tableIsi += '<td>'+ value.auditor_name +'</td>';
         tableIsi += '<td>'+ value.kategori +'</td>';
         tableIsi += '<td>'+ value.lokasi +'</td>';
-        tableIsi += '<td><a class="btn btn-danger btn-sm" href="{{ url("index/audit_iso/point_check") }}/'+value.id+'"><i class="fa fa-file-pdf-o"></i> Report</a></td>';
+        tableIsi += '<td>'+ value.auditee_name +'</td>';
+        tableIsi += '<td><a class="btn btn-danger btn-sm" href="{{ url("index/audit_iso/cek_report") }}/'+value.kategori+'/'+value.lokasi+'/'+value.auditor_name+'/'+value.tanggal+'"><i class="fa fa-file-pdf-o"></i> Report Hasil Audit</a></td>';
 
         tableIsi += '</tr>';
         count += 1;
