@@ -2540,6 +2540,7 @@ class RecorderProcessController extends Controller
                       'remark' => $remark,
                       'mesin3' => $this->mesin,
                       'mesin4' => $this->mesin,
+                      'title_jp' => 'トルク測定報告',
                       'product_type' => $this->product_type);
       return view('recorder.report.report_torque_check', $data
         )->with('page', 'Report Torque Check')->with('remark', $remark);
