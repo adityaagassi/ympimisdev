@@ -295,6 +295,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								@endif
 								<!-- <p style="font-size: 28px; font-weight: bold;">Server SUNFISH sedang bermasalah, mohon bersabar dan maaf atas ketidaknyamanannya.</p> -->
 							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="4">ABS (Mangkir) bisa dikarenakan data cek log belum diupload bagian HR.</td>
+								</tr>									
+							</tfoot>
 						</table>
 						<!-- <small style="color: red; background-color: yellow">NB : Untuk Melihat data detail bisa dilakukan dengan menekan angka pada kategori.</small> -->
 					</div>
@@ -647,11 +652,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									</tr>
 								</thead>
 								<tbody id="body_absence"></tbody>
-								<tfoot>
-									<tr>
-										<td colspan="4">ABS (Mangkir) bisa dikarenakan data cek log belum diupload bagian HR.</td>
-									</tr>									
-								</tfoot>
 							</table>
 						</div>
 					</div>
