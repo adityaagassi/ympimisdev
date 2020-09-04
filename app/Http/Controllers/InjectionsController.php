@@ -42,6 +42,7 @@ use App\InjectionMachineMaster;
 use App\InjectionDryerLog;
 use App\InjectionDryer;
 use App\InjectionResin;
+use App\EmployeeSync;
 use Response;
 use DataTables;
 use Carbon\Carbon;
@@ -1477,6 +1478,10 @@ class InjectionsController extends Controller
             $tag->material_number = $request->get('material_number');
             $tag->availability = 1;
             $tag->save();
+
+            $machinestatus = InjectionMachineMaster::where('mesin',$request->get('location'))->first();
+            $machinestatus->status = 'Work';
+            $machinestatus->save();
 
             $response = array(
                 'status' => true,
@@ -4915,7 +4920,7 @@ class InjectionsController extends Controller
                 )) =  '".$request->get('color').")'";
             }
 
-            $j = 3;
+            $j = 2;
             $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
             $weekly_calendars = DB::SELECT("SELECT * FROM `weekly_calendars`");
             foreach ($weekly_calendars as $key) {
@@ -5221,5 +5226,101 @@ class InjectionsController extends Controller
             return Response::json($response);
         }
     }
-}
 
+    public function indexMachineSchedule()
+    {
+        $title = 'Injection Schedule';
+        $title_jp = '???';
+        return view('injection.schedule_view',array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Injection Schedule View')->with('jpn', '???');
+    }
+
+    public function fetchSchedule()
+    {
+        $sch = db::select("SELECT mesin, plan_mesin_injection_tmps.color, plan_mesin_injection_tmps.qty, working_date as due_date, shoot, cycle.cycle, plan_mesin_injection_tmps.part FROM `plan_mesin_injection_tmps` left join cycle_time_mesin_injections as cycle on cycle.part = SPLIT_STRING(plan_mesin_injection_tmps.color,' - ', 1) and cycle.color = SPLIT_STRING(plan_mesin_injection_tmps.color,' - ', 2)
+            order by working_date asc, plan_mesin_injection_tmps.id asc");
+
+        // $sch = db::select("SELECT mesin, plan_mesin_injections.color, plan_mesin_injections.qty, due_date, shoot, cycle.cycle, plan_mesin_injections.part FROM `plan_mesin_injections` left join cycle_time_mesin_injections as cycle on cycle.part = SPLIT_STRING(plan_mesin_injections.color,' - ', 1) and cycle.color = SPLIT_STRING(plan_mesin_injections.color,' - ', 2)
+        //     order by due_date asc, plan_mesin_injections.id asc");
+
+        // $sch2 = db::select("SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-12-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-12-30'");
+        $sch2 = db::select("SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-11-31'");
+
+        
+
+        $response = array(
+            'status' => true,            
+            'schedule' => $sch,          
+            'tgl' => $sch2
+
+        );
+        return Response::json($response);
+
+    }
+
+    public function indexInputStock()
+    {
+        $materials = DB::SELECT("SELECT *,gmc as material_number, part_name as material_description FROM `injection_parts` where remark = 'injection' and deleted_at is null");
+
+        $title = 'Input Daily Stock Recorder';
+        $title_jp = '???';
+        return view('injection.input_stock',array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'materials' => $materials,
+        ))->with('page', 'Input Daily Stock Recorder')->with('jpn', '???');
+    }
+
+    public function inputStock(Request $request)
+    {
+        try {
+            $id_user = Auth::id();
+
+            $injection_inventory = InjectionInventory::firstOrNew(['material_number' => $request->get('material_number'), 'location' => 'RC91']);
+            $injection_inventory->quantity = $request->get('quantity');
+            $injection_inventory->save();
+
+            InjectionTransaction::create([
+                'material_number' => $request->get('material_number'),
+                'location' => 'RC91',
+                'quantity' => $request->get('quantity'),
+                'status' => 'INPUT STOCK',
+                'operator_id' =>  Auth::user()->username,
+                'created_by' => $id_user
+            ]);
+
+            $response = array(
+                'status' => true
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function fetchInputStock(Request $request)
+    {
+        try {
+
+            $stock = InjectionInventory::select('*','part_name as material_description')->join('injection_parts','injection_parts.gmc','injection_inventories.material_number')->where('location','RC91')->where('injection_parts.deleted_at',null)->where('injection_parts.remark','injection')->get();
+
+            $response = array(
+                'status' => true,
+                'stock' => $stock
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+            return Response::json($response);
+        }
+    }
+}

@@ -374,6 +374,12 @@ Route::post('index/injection/update_dryer', 'InjectionsController@updateDryer');
 
 //end dryer injeksi
 
+//input stok
+
+Route::get('index/input_stock', 'InjectionsController@indexInputStock');
+Route::get('fetch/injection/stock', 'InjectionsController@fetchInputStock');
+Route::post('input/injection/stock', 'InjectionsController@inputStock');
+
 
 
 // end mesin injeksi
