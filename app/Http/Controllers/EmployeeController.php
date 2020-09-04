@@ -3424,7 +3424,7 @@ public function fetchAbsenceEmployee(Request $request)
                WHERE
                Emp_no = '".$username."' 
                AND format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."' 
-               AND ovtrequest_no is not null");
+               AND ovtrequest_no IS NOT NULL");
      }     
 
      $response = array(
