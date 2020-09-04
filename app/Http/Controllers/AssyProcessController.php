@@ -182,7 +182,7 @@ class AssyProcessController extends Controller
 		(
 		select material_number, plan, picking, plus, minus, stock, plan_ori from
 		(
-		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0))) as picking, 0 as plus, 0 as minus, 0 as stock, 0 as plan_ori from
+		select materials.material_number, 0 as plan, sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 4, 0, -(histories.lot)),0))) as picking, 0 as plus, 0 as minus, 0 as stock, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) = '".$tanggal."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number ) as pick
@@ -195,7 +195,7 @@ class AssyProcessController extends Controller
 
 		select material_number, sum(plan) as plan, 0 as picking ,0 as plus, 0 as minus, 0 as stock, sum(plan_ori) as plan_ori from
 		(
-		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', -(histories.lot),0)))) as plan, 0 as plan_ori from
+		select materials.material_number, -(sum(if(histories.transfer_movement_type = '9I3', histories.lot, if(histories.transfer_movement_type = '9I4', IF(day(histories.created_at) < 4, 0, -(histories.lot)),0)))) as plan, 0 as plan_ori from
 		(
 		select materials.id, materials.material_number from kitto.materials where materials.location = '".$location."' and category = 'key'
 		) as materials left join kitto.histories on materials.id = histories.transfer_material_id where date(histories.created_at) >= '".$first."' and date(histories.created_at) <= '".$minsatu."' and histories.category in ('transfer', 'transfer_cancel', 'transfer_return', 'transfer_adjustment') group by materials.material_number
