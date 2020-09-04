@@ -47,6 +47,29 @@ class GeneralController extends Controller
 		}
 	}
 
+	public function editGeneralPointingCallPic(Request $request){
+
+		$pics = db::table('pointing_calls')
+		->where('location', '=', $request->get('location'))
+		->where('point_title', '=', $request->get('point_title'))
+		->update([
+			'remark' => 0
+		]);
+
+		$pic = db::table('pointing_calls')
+		->where('id', '=', $request->get('id'))
+		->update([
+			'remark' => 1
+		]);
+
+		$response = array(
+			'status' => true
+		);
+		return Response::json($response);
+
+
+	}
+
 	public function fetchGeneralPointingCall(Request $request){
 		$pics = db::table('pointing_calls')
 		->where('location', '=', $request->get('location'))
