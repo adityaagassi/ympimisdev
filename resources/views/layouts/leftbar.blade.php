@@ -314,6 +314,9 @@
       @if(isset($page) && $page == "Purchase Requisition")<li class="active">@else<li>@endif
         <a href="{{ url("purchase_requisition") }}"><i class="fa fa-shopping-cart"></i>Request PR</a>
       </li>
+      @if(isset($page) && $page == "Purchase Requisition Control")<li class="active">@else<li>@endif
+        <a href="{{ url("purchase_requisition/monitoring") }}"><i class="fa fa-tv"></i>PR Monitoring & Control</a>
+      </li>
       @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
         <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
       </li>
@@ -801,7 +804,7 @@
 </li>
 @endif
 
-@if(in_array('S34', $navs))
+@if(in_array('S34', $navs) || in_array('S47', $navs))
 @if(isset($head) && $head == "Maintenance")<li class="treeview active menu-open">@else<li class="treeview">@endif
   <a href="#">
    <i class="fa fa-wrench"></i> <span>Maintenance</span>
