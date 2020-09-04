@@ -3413,6 +3413,20 @@ public function fetchAbsenceEmployee(Request $request)
           AND format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."' 
           AND ( ".$attend_code." )");
 
+     if($request->get('attend_code') == 'Overtime'){
+          $absence = db::connection('sunfish')->select("SELECT
+               format ( shiftstarttime, 'dd MMM yyyy' ) AS tanggal,
+               ovtactfrom AS starttime,
+               ovtactto AS endtime,
+               ovtrequest_no AS Attend_Code 
+               FROM
+               VIEW_YMPI_Emp_Attendance 
+               WHERE
+               Emp_no = '".$username."' 
+               AND format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."' 
+               AND ovtrequest_no is not null");
+     }     
+
      $response = array(
           'status' => true,
           'datas' => $absence

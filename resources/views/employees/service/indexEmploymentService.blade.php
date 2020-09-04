@@ -288,9 +288,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 										<i class="fa fa-check" style="color: #18c40c"></i>
 										@endif
 									</td>
-									<td>
+									<td onclick="cek('Overtime','{{$presence->periode}}')">
 										@if ($presence->overtime > 0)
-										<span class="badge bg-yellow">{{$presence->overtime}}</span>
+										<span class="badge bg-yellow">{{ round($presence->overtime,2) }}</span>
 										@else 
 										- 
 										@endif
