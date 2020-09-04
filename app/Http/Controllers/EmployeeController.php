@@ -1782,7 +1782,7 @@ public function indexEmployeeService(Request $request)
                COUNT (
                IIF ( Attend_Code LIKE '%Izin%' OR Attend_Code LIKE '%IPU%', 1, NULL )) AS izin,
                COUNT (
-               IIF ( Attend_Code LIKE '%SAKIT%' OR Attend_Cde LIKE '%SD%', 1, NULL )) AS sakit,
+               IIF ( Attend_Code LIKE '%SAKIT%' OR Attend_Code LIKE '%SD%', 1, NULL )) AS sakit,
                COUNT (
                IIF ( Attend_Code LIKE '%LTI%' OR Attend_Code LIKE '%TELAT%', 1, NULL )) AS terlambat,
                COUNT (
