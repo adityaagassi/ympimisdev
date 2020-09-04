@@ -2825,7 +2825,8 @@ class ProductionReportController extends Controller
         $title = 'AUDIT NG JELAS MONITORING';
         $title_jp = '明らか不良監査の監視';
 
-        return view('production_report.audit_ng_jelas', array(
+        // return view('production_report.audit_ng_jelas', array(
+        return view('production_report.audit_ng_jelas2', array(
             'title' => $title,
             'title_jp' => $title_jp,
         ))->with('page', 'Audit NG Jelas Monitoring');
@@ -2903,6 +2904,57 @@ class ProductionReportController extends Controller
         }
     }
 
+    public function fetchNgJelasMonitoring2(Request $request)
+    {
+        try {
+            if ($request->get('week_date') != "") {
+                $month = $request->get('week_date');
+            }else{
+                $month = date('Y-m');
+            }
+
+            $ng_jelas = DB::SELECT("SELECT b.date,DATE_FORMAT(b.date, '%d-%m-%Y') as date_format,sum( CASE WHEN b.kondisi = 'OK' THEN 1 ELSE 0 END ) as count_ok,sum( CASE WHEN b.kondisi = 'NG' THEN 1 ELSE 0 END ) as count_ng FROM
+                (SELECT
+                    count(
+                    DISTINCT ( a.activity_list_id )) AS count,
+                    activity_list_id,
+                    a.date,
+                IF
+                    ((
+                        SELECT
+                            sum( CASE WHEN production_audits.kondisi = 'Not Good' THEN 1 ELSE 0 END ) 
+                        FROM
+                            production_audits 
+                        WHERE
+                            date = a.date 
+                            AND activity_list_id = a.activity_list_id 
+                            ) > 0,
+                        'NG',
+                        'OK' 
+                    ) AS kondisi 
+                FROM
+                    production_audits a 
+                WHERE
+                    DATE_FORMAT( a.date, '%Y-%m' ) = '".$month."' 
+                GROUP BY
+                    a.date,
+                    a.activity_list_id) b GROUP BY b.date");
+
+            $monthTitle = date("F Y", strtotime($month));
+
+            $response = array(
+                'status' => true,
+                'ng_jelas' => $ng_jelas,
+                'month' => $month,
+                'monthTitle' => $monthTitle,
+            );
+
+            return Response::json($response);
+        } catch (\Exception $e) {
+            
+        }
+    }
+
     public function fetchDetailNgJelasMonitoring(Request $request){
         if($request->get('week_date') != Null){
             $leader_name = $request->get('leader_name');
@@ -2956,6 +3008,64 @@ class ProductionReportController extends Controller
             'detail' => $detail,
             'date' => $date,
             'leader_name' => $leader_name,
+            'week_date' => $week_date,
+            'monthTitle' => $monthTitle
+        );
+        return Response::json($response);
+
+    }
+
+    public function fetchDetailNgJelasMonitoring2(Request $request){
+        if($request->get('week_date') != Null){
+            $kondisi = $request->get('kondisi');
+            $date = $request->get('date');
+            $week_date = $request->get('week_date');
+        }
+        else{
+            $kondisi = $request->get('kondisi');
+            $date = $request->get('date');
+            $week_date = date('Y-m');
+        }
+
+        if ($kondisi == 'OK') {
+            $kondisinew = 'Good';
+        }else{
+            $kondisinew = 'Not Good';
+        }
+
+        $detail = [];
+
+        $actlist = DB::SELECT('SELECT DISTINCT(activity_list_id) from production_audits where production_audits.kondisi = "'.$kondisinew.'" and date = "'.$date.'"');
+
+        foreach ($actlist as $key) {
+            $detail[] = DB::SELECT("SELECT
+                    *,
+                CASE
+                        WHEN emp1.name IS NULL THEN
+                        emp3.name ELSE emp1.name 
+                    END AS pic_name,
+                    emp2.name AS auditor_name
+                FROM
+                    production_audits
+                    LEFT JOIN activity_lists ON activity_list_id = activity_lists.id
+                    LEFT JOIN point_check_audits ON point_check_audit_id = point_check_audits.id
+                    LEFT JOIN employee_syncs emp1 ON emp1.employee_id = production_audits.pic
+                    LEFT JOIN employee_syncs emp2 ON emp2.employee_id = production_audits.auditor
+                    LEFT JOIN employees emp3 ON emp3.employee_id = production_audits.pic 
+                WHERE
+                    date = '".$date."' 
+                    AND production_audits.kondisi = '".$kondisinew."'
+                    and production_audits.activity_list_id = '".$key->activity_list_id."'");
+        }
+
+        $monthTitle = date("F Y", strtotime($week_date));
+
+        $response = array(
+            'status' => true,
+            'detail' => $detail,
+            'actlist' => $actlist,
+            'date' => $date,
+            'kondisi' => $kondisi,
             'week_date' => $week_date,
             'monthTitle' => $monthTitle
         );

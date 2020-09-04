@@ -1174,6 +1174,7 @@ Route::get('purchase_requisition/reject/{id}', 'AccountingController@prreject');
 //PR Monitoring & Control
 Route::get('purchase_requisition/monitoring', 'AccountingController@monitoringPR');
 Route::get('fetch/purchase_requisition/monitoring', 'AccountingController@fetch_monitoringPR');
+Route::get('purchase_requisition/table', 'AccountingController@fetchtablePR');
 
 //New Approval Purchase Order
 Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
