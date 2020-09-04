@@ -1776,13 +1776,13 @@ public function indexEmployeeService(Request $request)
                format ( shiftstarttime, 'yyyy-MM' ) AS orderer,
                format ( shiftstarttime, 'MMMM yyyy' ) AS periode,
                COUNT (
-               IIF ( Attend_Code LIKE '%Mangkir%', 1, NULL )) AS mangkir,
+               IIF ( Attend_Code LIKE '%ABS%', 1, NULL )) AS mangkir,
                COUNT (
                IIF ( Attend_Code LIKE '%CK%' OR Attend_Code LIKE '%CUTI%' OR Attend_Code LIKE '%UPL%', 1, NULL )) AS cuti,
                COUNT (
-               IIF ( Attend_Code LIKE '%Izin%', 1, NULL )) AS izin,
+               IIF ( Attend_Code LIKE '%Izin%' OR Attend_Code LIKE '%IPU%', 1, NULL )) AS izin,
                COUNT (
-               IIF ( Attend_Code LIKE '%SAKIT%', 1, NULL )) AS sakit,
+               IIF ( Attend_Code LIKE '%SAKIT%' OR Attend_Cde LIKE '%SD%', 1, NULL )) AS sakit,
                COUNT (
                IIF ( Attend_Code LIKE '%LTI%' OR Attend_Code LIKE '%TELAT%', 1, NULL )) AS terlambat,
                COUNT (
@@ -3373,14 +3373,14 @@ public function getKaizenReward()
 
 public function fetchAbsenceEmployee(Request $request)
 {
-    $username = Auth::user()->username;
+ $username = Auth::user()->username;
 
-    $att_selected = "";
+ $att_selected = "";
 
-    foreach ($this->attend as $att) {
-        if ($att['attend_type'] == $request->get('attend_code')) {
-          $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
-     }
+ foreach ($this->attend as $att) {
+  if ($att['attend_type'] == $request->get('attend_code')) {
+     $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
+}
 }
 
 $att_selected = substr($att_selected, 0, -2);
