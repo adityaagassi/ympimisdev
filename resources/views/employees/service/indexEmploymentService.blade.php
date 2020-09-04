@@ -2,6 +2,9 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
+	#history tbody > tr > td {
+		cursor: pointer;
+	}
 	thead>tr>th{
 		text-align:center;
 		overflow:hidden;
@@ -236,42 +239,44 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								@foreach ($presences as $presence)
 								<tr>
 									<td>{{$presence->periode}}</td>
-									<td>
+									<td onclick="cek('Mangkir','{{$presence->periode}}')">
 										@if ($presence->mangkir > 0) 
-										<span onclick="cek('Mangkir','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Mangkir','{{$presence->periode}}')">{{$presence->mangkir}}</a></span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)">{{$presence->mangkir}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
-									<td>
+									<td onclick="cek('Izin','{{$presence->periode}}')">
 										@if ($presence->izin > 0) 
-										<span onclick="cek('Izin','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Izin','{{$presence->periode}}')">{{$presence->izin}}</a></span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)">{{$presence->izin}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
-									<td>
+									<td onclick="cek('Sakit','{{$presence->periode}}')">
 										@if ($presence->sakit > 0)
-										<span onclick="cek('Sakit','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Sakit','{{$presence->periode}}')">{{$presence->sakit}}</a></span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)">{{$presence->sakit}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
-									<td>@if ($presence->terlambat > 0)
-										<span onclick="cek('Terlambat','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Terlambat','{{$presence->periode}}')">{{$presence->terlambat}}</a></span>
+									<td onclick="cek('Terlambat','{{$presence->periode}}')">
+										@if ($presence->terlambat > 0)
+										<span class="badge bg-yellow"><a href="javascript:void(0)">{{$presence->terlambat}}</a></span>
 										@else 
 										- 
-									@endif</td>
-									<td>
+										@endif
+									</td>
+									<td onclick="cek('Pulang Cepat','{{$presence->periode}}')">
 										@if ($presence->pulang_cepat > 0)
-										<span onclick="cek('Pulang Cepat','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Pulang Cepat','{{$presence->periode}}')">{{$presence->pulang_cepat}}</a></span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)">{{$presence->pulang_cepat}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
-									<td>
+									<td onclick="cek('Cuti','{{$presence->periode}}')">
 										@if ($presence->cuti > 0) 
-										<span onclick="cek('Cuti','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Cuti','{{$presence->periode}}')">{{$presence->cuti}}</a></span>
+										<span class="badge bg-yellow"><a href="javascript:void(0)">{{$presence->cuti}}</a></span>
 										@else 
 										- 
 										@endif
@@ -648,7 +653,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 										<th>Keterangan</th>
 									</tr>
 									<tr id="laoding_absence">
-										<th colspan="2"><i class="fa fa-spinner fa-pulse"></i> Loading</th>
+										<th colspan="4"><i class="fa fa-spinner fa-pulse"></i> Loading</th>
 									</tr>
 								</thead>
 								<tbody id="body_absence"></tbody>
