@@ -51,7 +51,7 @@
 		$.post('{{ url("edit/general/pointing_call_pic") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#loading').hide();
-				fetchPoint();
+				location.reload(true);
 			}
 			else{
 				$('#loading').hide();
