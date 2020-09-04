@@ -238,40 +238,40 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									<td>{{$presence->periode}}</td>
 									<td>
 										@if ($presence->mangkir > 0) 
-										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Mangkir','{{$presence->periode}}')">{{$presence->mangkir}}</a></span>
+										<span onclick="cek('Mangkir','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Mangkir','{{$presence->periode}}')">{{$presence->mangkir}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
 									<td>
 										@if ($presence->izin > 0) 
-										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Izin','{{$presence->periode}}')">{{$presence->izin}}</a></span>
+										<span onclick="cek('Izin','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Izin','{{$presence->periode}}')">{{$presence->izin}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
 									<td>
 										@if ($presence->sakit > 0)
-										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Sakit','{{$presence->periode}}')">{{$presence->sakit}}</a></span>
+										<span onclick="cek('Sakit','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Sakit','{{$presence->periode}}')">{{$presence->sakit}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
 									<td>@if ($presence->terlambat > 0)
-										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Terlambat','{{$presence->periode}}')">{{$presence->terlambat}}</a></span>
+										<span onclick="cek('Terlambat','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Terlambat','{{$presence->periode}}')">{{$presence->terlambat}}</a></span>
 										@else 
 										- 
 									@endif</td>
 									<td>
 										@if ($presence->pulang_cepat > 0)
-										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Pulang Cepat','{{$presence->periode}}')">{{$presence->pulang_cepat}}</a></span>
+										<span onclick="cek('Pulang Cepat','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Pulang Cepat','{{$presence->periode}}')">{{$presence->pulang_cepat}}</a></span>
 										@else 
 										- 
 										@endif
 									</td>
 									<td>
 										@if ($presence->cuti > 0) 
-										<span class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Cuti','{{$presence->periode}}')">{{$presence->cuti}}</a></span>
+										<span onclick="cek('Cuti','{{$presence->periode}}')" class="badge bg-yellow"><a href="javascript:void(0)" onclick="cek('Cuti','{{$presence->periode}}')">{{$presence->cuti}}</a></span>
 										@else 
 										- 
 										@endif
