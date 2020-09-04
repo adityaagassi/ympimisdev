@@ -338,7 +338,7 @@
               datatable += '<tr style="border:1px solid black">';
               datatable += '<td>'+result.detail[i][j].point_check+'</td>';
               datatable += '<td>'+result.detail[i][j].cara_cek+'</td>';
-              datatable += '<td><img width="200px" src="{{ url("/data_file/'+result.detail[i][j].foto_kondisi_aktual+'") }}"></td>';
+              datatable += '<td><img width="200px" src="{{ url("/data_file/") }}/'+result.detail[i][j].foto_kondisi_aktual+'"></td>';
               datatable += '<td>'+result.detail[i][j].kondisi+'</td>';
               datatable += '<td>'+result.detail[i][j].pic_name+'</td>';
               datatable += '<td>'+result.detail[i][j].auditor_name+'</td>';
