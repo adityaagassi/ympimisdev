@@ -96,6 +96,7 @@ Route::get('404', function() {
 //POINTING CALL
 Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPointingCall');
 Route::get('fetch/general/pointing_call', 'GeneralController@fetchGeneralPointingCall');
+Route::post('edit/general/pointing_call_pic', 'GeneralController@editGeneralPointingCallPic');
 
 //GENERAL
 Route::get('index/general/omi_visitor', 'GeneralController@indexOmiVisitor');
@@ -1170,7 +1171,9 @@ Route::get('purchase_requisition/approvedgm/{id}', 'AccountingController@prappro
 Route::get('purchase_requisition/approvegm/{id}', 'AccountingController@prapprovalgm');
 Route::get('purchase_requisition/reject/{id}', 'AccountingController@prreject');
 
-
+//PR Monitoring & Control
+Route::get('purchase_requisition/monitoring', 'AccountingController@monitoringPR');
+Route::get('fetch/purchase_requisition/monitoring', 'AccountingController@fetch_monitoringPR');
 
 //New Approval Purchase Order
 Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
@@ -1961,6 +1964,7 @@ Route::get('print/indirect_material_label/{qr_code}', 'IndirectMaterialControlle
 //Control Chart
 Route::get('index/chm_solution_control', 'IndirectMaterialController@indexSolutionControl');
 Route::get('fetch/chm_solution_control', 'IndirectMaterialController@fetchSolutionControl');
+Route::get('fetch/chm_check_result', 'IndirectMaterialController@fetchcheckResult');
 Route::post('input/chm_production_result', 'IndirectMaterialController@inputProductionResult');
 
 //Request
@@ -3064,27 +3068,21 @@ Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
 Route::post('edit/maintenance/spk', 'MaintenanceController@editSPK');
 Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
 
-Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
+Route::get('verify/maintenance/spk/approve_urgent/{stat}/{order_no}', 'MaintenanceController@verifySPK');
+Route::get('verify/maintenance/spk/danger_note/{order_no}', 'MaintenanceController@indexDangerNote');
 
-	Route::get('index/maintenance/spk/monitoring', 'MaintenanceController@indexMaintenanceMonitoring');
+Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDangerNote');
+
+Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/spk/operator', 'MaintenanceController@indexOperatorMonitoring');
 
 	Route::get('index/maintenance/list_spk', 'MaintenanceController@indexMaintenanceList');
 	Route::get('fetch/maintenance/list_spk', 'MaintenanceController@fetchMaintenanceList');
 
-	Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKProgress');
 	Route::get('fetch/maintenance/spk/operator', 'MaintenanceController@fetchSPKOperator');
 
 	Route::post('post/maintenance/member', 'MaintenanceController@postMemberSPK');
 
-	Route::get('verify/maintenance/spk/approve_urgent/{stat}/{order_no}', 'MaintenanceController@verifySPK');
-	Route::get('verify/maintenance/spk/danger_note/{order_no}', 'MaintenanceController@indexDangerNote');
-
-	Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDangerNote');
-
-	Route::get('work/maintenance/spk', 'MaintenanceController@startSPK');
-	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
-	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
 	Route::post('post/maintenance/spk/open', 'MaintenanceController@openSPKPending');
 	Route::post('post/maintenance/spk/cancel', 'MaintenanceController@cancelSPK');
 	
@@ -3101,6 +3099,12 @@ Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 	Route::get('index/maintenance/spk', 'MaintenanceController@indexSPK');
 	Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
 
+	Route::get('work/maintenance/spk', 'MaintenanceController@startSPK');
+	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
+	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
+
+	Route::get('index/maintenance/spk/monitoring', 'MaintenanceController@indexMaintenanceMonitoring');
+	Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKProgress');
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
 	Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
@@ -3248,7 +3252,9 @@ Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'M30', 'middleware' => 'permission'], function(){
 	Route::get('index/audit_ng_jelas_monitoring', 'ProductionReportController@indexNgJelasMonitoring');
 	Route::get('fetch/audit_ng_jelas_monitoring', 'ProductionReportController@fetchNgJelasMonitoring');
+	Route::get('fetch/audit_ng_jelas_monitoring2', 'ProductionReportController@fetchNgJelasMonitoring2');
 	Route::get('fetch/detail_audit_ng_jelas_monitoring', 'ProductionReportController@fetchDetailNgJelasMonitoring');
+	Route::get('fetch/detail_audit_ng_jelas_monitoring2', 'ProductionReportController@fetchDetailNgJelasMonitoring2');
 });
 
 //ROOMS
