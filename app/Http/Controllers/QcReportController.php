@@ -2515,6 +2515,9 @@ class QcReportController extends Controller
             $cpars->cost = $request->get('cost');
             $cpars->save();
 
+            $ver = QcVerifikasi::where('cpar_no','=',$request->get("cpar_no"));
+            $ver->delete();
+
             $jumlahVerif = $request->get('jumlahVerif');
             for ($i = 1; $i <= $jumlahVerif; $i++) {
               $tanggal = $request->get('tanggal'.$i);

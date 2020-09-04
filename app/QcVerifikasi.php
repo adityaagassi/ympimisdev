@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class QcVerifikasi extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
 		'cpar_no','tanggal','status','keterangan','created_by'
 	];

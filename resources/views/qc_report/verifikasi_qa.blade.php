@@ -263,7 +263,7 @@ table.table-bordered > tfoot > tr > th{
                     </div>
                     
                     <div class="col-xs-2">
-                        <input type="text" class="form-control" id="tanggal<?= $i+1 ?>" name="tanggal<?= $i+1 ?>" value="<?= $verifikasi[$i]->tanggal ?>" disabled>
+                        <input type="text" class="form-control" id="tanggal<?= $i+1 ?>" name="tanggal<?= $i+1 ?>" value="<?= $verifikasi[$i]->tanggal ?>" readonly="">
                     </div>
                    
                   </div>
