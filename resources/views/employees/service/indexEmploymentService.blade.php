@@ -202,7 +202,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
 				<?php if (strpos($profil[0]->position, 'Operator') !== false) { ?>
-					<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
+				<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				<?php } ?>
 			</div>
 			<div class="col-md-9">
@@ -638,6 +638,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 									<tr>
 										<th>Tanggal</th>
+										<th>Cek Log Masuk</th>
+										<th>Cek Log Pulang</th>
 										<th>Keterangan</th>
 									</tr>
 									<tr id="laoding_absence">
@@ -645,6 +647,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									</tr>
 								</thead>
 								<tbody id="body_absence"></tbody>
+								<tfoot>
+									<tr>
+										<td colspan="4">ABS (Mangkir) bisa dikarenakan data cek log belum diupload bagian HR.</td>
+									</tr>									
+								</tfoot>
 							</table>
 						</div>
 					</div>
@@ -1036,7 +1043,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 			$.each(result.datas, function(index2, value2){
 				body += "<tr>";
-				body += "<td>"+value2.date_absence+"</td>";
+				body += "<td>"+value2.tanggal+"</td>";
+				body += "<td>"+value2.starttime+"</td>";
+				body += "<td>"+value2.endtime+"</td>";
 				body += "<td>"+value2.Attend_Code+"</td>";
 				body += "</tr>";
 			})

@@ -122,7 +122,7 @@ class EmployeeController extends Controller
           $title = 'Employee Resume';
           $title_jp = '従業員のまとめ';
 
-          // $datas = db::table('employee_syncs')->select("select * from employee_syncs");
+// $datas = db::table('employee_syncs')->select("select * from employee_syncs");
 
           $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
 
@@ -463,7 +463,7 @@ class EmployeeController extends Controller
           $dd = str_replace("'","", $this->usr);
           $dd = explode(',', $dd);
 
-          // $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
+// $get_department = Mutationlog::select('department')->whereNull('valid_to')->where("employee_id","=",Auth::user()->username)->first();
 
           $get_department = EmployeeSync::select('department')->where("employee_id","=",Auth::user()->username)->first();
 
@@ -517,12 +517,12 @@ class EmployeeController extends Controller
 
           $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
 
-          // $q_subleader = "select employees.name, position, employees.employee_id from employees 
-          // left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
-          // left join mutation_logs on mutation_logs.employee_id = employees.employee_id
-          // where promotion_logs.valid_to is null and mutation_logs.valid_to is null and position = 'Leader'
-          // and end_date is null and section = '".$section."'
-          // order by name asc";
+// $q_subleader = "select employees.name, position, employees.employee_id from employees 
+// left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
+// left join mutation_logs on mutation_logs.employee_id = employees.employee_id
+// where promotion_logs.valid_to is null and mutation_logs.valid_to is null and position = 'Leader'
+// and end_date is null and section = '".$section."'
+// order by name asc";
 
           $subleader = db::select($q_subleader);
 
@@ -578,12 +578,12 @@ class EmployeeController extends Controller
                $ldr = "grade_name = 'Staff'";
           }
 
-          // $q_subleader = "select employees.name, position, employees.employee_id from employees 
-          // left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
-          // left join mutation_logs on mutation_logs.employee_id = employees.employee_id
-          // where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
-          // and end_date is null and section = '".$section."'
-          // order by name asc";
+// $q_subleader = "select employees.name, position, employees.employee_id from employees 
+// left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
+// left join mutation_logs on mutation_logs.employee_id = employees.employee_id
+// where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
+// and end_date is null and section = '".$section."'
+// order by name asc";
 
           $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
 
@@ -617,12 +617,12 @@ class EmployeeController extends Controller
                $ldr = "grade_name = 'Staff'";
           }
 
-          // $q_subleader = "select employees.name, position, employees.employee_id from employees 
-          // left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
-          // left join mutation_logs on mutation_logs.employee_id = employees.employee_id
-          // where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
-          // and end_date is null and section = '".$section."'
-          // order by name asc";
+// $q_subleader = "select employees.name, position, employees.employee_id from employees 
+// left join promotion_logs on employees.employee_id = promotion_logs.employee_id 
+// left join mutation_logs on mutation_logs.employee_id = employees.employee_id
+// where promotion_logs.valid_to is null and mutation_logs.valid_to is null and ".$ldr."
+// and end_date is null and section = '".$section."'
+// order by name asc";
 
           $q_subleader = "select name, position, employee_id from employee_syncs where end_date is null and ".$ldr." and section = '".$section."' order by name asc";
 
@@ -1849,8 +1849,8 @@ public function indexEmployeeService(Request $request)
                'title_jp' => $title_jp,
                'emp_id' => $emp_id,
                'profil' => $profil,
-               // 'presences' => $presences,
-               // 'employee' => $employee,
+// 'presences' => $presences,
+// 'employee' => $employee,
           ))->with('page', 'Employment Services');
      }
 }
@@ -2365,9 +2365,9 @@ public function fetchAbsence(Request $request)
           Attend_Code NOT LIKE '%NSO%'
           ");
 
-     // $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and shift <> 'OFF' and shift <> 'X' GROUP BY shift ORDER BY jml";
+// $query = "SELECT shift, COUNT(nik) as jml from presensi WHERE DATE_FORMAT(tanggal,'%d-%m-%Y')='".$tgl."' and tanggal not in (select tanggal from kalender) and shift NOT REGEXP '^[1-9]+$' and shift <> 'OFF' and shift <> 'X' GROUP BY shift ORDER BY jml";
 
-     // $absence = db::connection('mysql3')->select($query);
+// $absence = db::connection('mysql3')->select($query);
      $titleChart = date('j F Y',strtotime($tgl));
 
      $response = array(
@@ -2552,15 +2552,15 @@ public function fetchAttendanceData(Request $request)
      A.emp_no ASC";
 
      $attendances = db::connection('sunfish')->select($qry);
-     
+
      return DataTables::of($attendances)->make(true);
 
-     // $response = array(
-     //      'status' => true,
-     //      'attendances' => $attendances,
-     //      'qry' => $qry
-     // );
-     // return Response::json($response);
+// $response = array(
+//      'status' => true,
+//      'attendances' => $attendances,
+//      'qry' => $qry
+// );
+// return Response::json($response);
 }
 
 public function editNumber(Request $request)
@@ -2837,7 +2837,7 @@ public function fetchDataKaizen()
                if ($kzn->status == 0) {
                     return '<span class="label bg-red"><i class="fa fa-close"></i> NOT Kaizen</span>';
                } else {
-                    // return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>';
+// return '<span class="label bg-yellow"><i class="fa fa-hourglass-half"></i>&nbsp; Unverified</span>';
                }
           }
      })
@@ -2901,7 +2901,7 @@ public function fetchDetailKaizen(Request $request)
           $aksi = false;
      }
 
-     // return Response::json($data);
+// return Response::json($data);
      return response()->json([
           'status' => true,
           'datas' => $data,
@@ -2914,7 +2914,7 @@ public function assessKaizen(Request $request)
      $id = Auth::id();
 
      if ($request->get('category') == 'manager') { 
-          // --------------- JIKA inputor Manager ----
+// --------------- JIKA inputor Manager ----
           if ($request->get('nilai1')) {
                try {
                     $data = KaizenScore::where('id_kaizen','=' , $request->get('id'))
@@ -2926,14 +2926,14 @@ public function assessKaizen(Request $request)
                     $data->save();
 
                     return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
-                    // return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
+// return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
 
                } catch (QueryException $e) {
-                    // return ['status' => 'error', 'message' => $e->getMessage()];
+// return ['status' => 'error', 'message' => $e->getMessage()];
                     return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
                }
           } else {
-                    // -------------- Jika Kaizen False -----------
+// -------------- Jika Kaizen False -----------
                try {
                     $data = KaizenForm::where('id','=' , $request->get('id'))
                     ->first();
@@ -2941,16 +2941,16 @@ public function assessKaizen(Request $request)
                     $data->status = 2;
                     $data->save();
 
-                    // return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
+// return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
                     return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
                } catch (QueryException $e) {
-                    // return ['status' => 'error', 'message' => $e->getMessage()];
+// return ['status' => 'error', 'message' => $e->getMessage()];
                     return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
                }
           }
 } else if ($request->get('category') == 'foreman') {    // --------------- JIKA inputor Foreman ----
      if ($request->get('nilai1')) {
-          // ----------------  JIKA KAIZEN true ------------
+// ----------------  JIKA KAIZEN true ------------
           try {
                $data = KaizenForm::where('id','=' , $request->get('id'))
                ->first();
@@ -2979,15 +2979,15 @@ public function assessKaizen(Request $request)
                     ]);
                }
 
-               // return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
+// return ['status' => 'success', 'message' => 'Kaizen successfully assessed'];
                return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed')->with('page', 'Assess')->with('head','Kaizen');
 
           } catch (QueryException $e) {
-               // return ['status' => 'error', 'message' => $e->getMessage()];
+// return ['status' => 'error', 'message' => $e->getMessage()];
                return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
           }
      } else {
-               // ----------------  JIKA KAIZEN false ------------
+// ----------------  JIKA KAIZEN false ------------
           try {
                $data = KaizenForm::where('id','=' , $request->get('id'))
                ->first();
@@ -2995,11 +2995,11 @@ public function assessKaizen(Request $request)
                $data->status = 0;
                $data->save();
 
-               // return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
+// return ['status' => 'success', 'message' => 'Kaizen successfully assessed (NOT KAIZEN)'];
 
                return redirect('/index/kaizen')->with('status', 'Kaizen successfully assessed (NOT KAIZEN)')->with('page', 'Assess')->with('head','Kaizen');
           } catch (QueryException $e) {
-               // return ['status' => 'error', 'message' => $e->getMessage()];
+// return ['status' => 'error', 'message' => $e->getMessage()];
                return redirect('/index/kaizen')->with('error', $e->getMessage())->with('page', 'Assess')->with('head','Kaizen');
           }
      }
@@ -3204,16 +3204,16 @@ public function fetchKaizenResume(Request $request)
 
      try {
 
-          // $q = "select final.leader_id as leader, employee_syncs.`name`, count(final.employee_id) as total_operator, count(final.kaizen) as total_sudah, count(if(final.kaizen is null, 1, null)) as total_belum, 0 as total_kaizen from
-          // (
-          // select kaizen_leaders.leader_id, kaizen_leaders.employee_id as employee_id, kaizens.employee_id as kaizen from kaizen_leaders left join 
-          // (
-          // select employee_id from kaizen_forms left join weekly_calendars on kaizen_forms.propose_date = weekly_calendars.week_date where weekly_calendars.fiscal_year = '".$fiscal->fiscal_year."') as kaizens on kaizens.employee_id = kaizen_leaders.employee_id 
-          // inner join employee_syncs on employee_syncs.employee_id = kaizen_leaders.employee_id
-          // where employee_syncs.end_date is null
-          // group by kaizen_leaders.leader_id, kaizens.employee_id, kaizen_leaders.employee_id) as final 
-          // inner join employee_syncs on employee_syncs.employee_id = final.leader_id where employee_syncs.end_date is null
-          // group by final.leader_id, employee_syncs.`name` order by total_belum desc";
+// $q = "select final.leader_id as leader, employee_syncs.`name`, count(final.employee_id) as total_operator, count(final.kaizen) as total_sudah, count(if(final.kaizen is null, 1, null)) as total_belum, 0 as total_kaizen from
+// (
+// select kaizen_leaders.leader_id, kaizen_leaders.employee_id as employee_id, kaizens.employee_id as kaizen from kaizen_leaders left join 
+// (
+// select employee_id from kaizen_forms left join weekly_calendars on kaizen_forms.propose_date = weekly_calendars.week_date where weekly_calendars.fiscal_year = '".$fiscal->fiscal_year."') as kaizens on kaizens.employee_id = kaizen_leaders.employee_id 
+// inner join employee_syncs on employee_syncs.employee_id = kaizen_leaders.employee_id
+// where employee_syncs.end_date is null
+// group by kaizen_leaders.leader_id, kaizens.employee_id, kaizen_leaders.employee_id) as final 
+// inner join employee_syncs on employee_syncs.employee_id = final.leader_id where employee_syncs.end_date is null
+// group by final.leader_id, employee_syncs.`name` order by total_belum desc";
 
           $q = "select kaizen_leaders.leader_id as leader, A.`name`, count(kz) as total_sudah, count(coalesce(kz, 1)) as total_operator, count(coalesce(kz, 1))-count(kz) total_belum from kaizen_leaders 
           left join (select employee_id, count(id) as kz from kaizen_forms where propose_date in (select week_date from weekly_calendars where fiscal_year = '".$fiscal->fiscal_year."') and `status` = '1' group by employee_id) as kaizens on kaizens.employee_id = kaizen_leaders.employee_id
@@ -3322,12 +3322,12 @@ public function UploadKaizenImage(Request $request)
 
           $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
 
-          // if (!file_exists(public_path().'/kcfinderimages/'.$request->get('employee_id'))) {
-          //   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id'), 0777, true);
-          //   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', 0777, true);
-          // }
+// if (!file_exists(public_path().'/kcfinderimages/'.$request->get('employee_id'))) {
+//   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id'), 0777, true);
+//   mkdir(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', 0777, true);
+// }
 
-          // $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
+// $file->move(public_path().'/kcfinderimages/'.$request->get('employee_id').'/files', $filename);
           return redirect('/index/upload_kaizen')->with('status', 'Upload Image Successfully');
      }
 }
@@ -3373,27 +3373,51 @@ public function getKaizenReward()
 
 public function fetchAbsenceEmployee(Request $request)
 {
- $username = Auth::user()->username;
+     $username = Auth::user()->username;
 
- $att_selected = "";
+     $attend_code = "";
 
- foreach ($this->attend as $att) {
-  if ($att['attend_type'] == $request->get('attend_code')) {
-     $att_selected .= " Attend_Code LIKE '%".$att['attend_code']."%' OR";
-}
-}
+     if($request->get('attend_code') == 'Mangkir'){
+          $attend_code = "Attend_code LIKE '%ABS%'";
+     }
 
-$att_selected = substr($att_selected, 0, -2);
-$att_selected = "(".$att_selected.")";
-$att_selected .= " AND";
+     if($request->get('attend_code') == 'Cuti'){
+          $attend_code = "Attend_Code LIKE '%CK%' OR Attend_Code LIKE '%CUTI%' OR Attend_Code LIKE '%UPL%'";
+     }
 
-$absence = db::connection('sunfish')->select("SELECT Attend_Code, format ( shiftstarttime, 'dd MMMM yyyy' ) as date_absence FROM VIEW_YMPI_Emp_Attendance where format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."' and ".$att_selected." Emp_no = '".$username."'");
+     if($request->get('attend_code') == 'Izin'){
+          $attend_code = "Attend_Code LIKE '%Izin%' OR Attend_Code LIKE '%IPU%'";
+     }
 
-$response = array(
-     'status' => true,
-     'datas' => $absence
-);
-return Response::json($response);
+     if($request->get('attend_code') == 'Sakit'){
+          $attend_code = "Attend_Code LIKE '%SAKIT%' OR Attend_Code LIKE '%SD%'";
+     }
+
+     if($request->get('attend_code') == 'Terlambat'){
+          $attend_code = "Attend_Code LIKE '%LTI%' OR Attend_Code LIKE '%TELAT%'";
+     }
+
+     if($request->get('attend_code') == 'Pulang Cepat'){
+          $attend_code = "Attend_Code LIKE '%PC%'";
+     }
+
+     $absence = db::connection('sunfish')->select("SELECT
+          format ( shiftstarttime, 'dd MMM yyyy' ) AS tanggal,
+          starttime,
+          endtime,
+          Attend_Code 
+          FROM
+          VIEW_YMPI_Emp_Attendance 
+          WHERE
+          Emp_no = '".$username."' 
+          AND format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."' 
+          AND ( ".$attend_code." )");
+
+     $response = array(
+          'status' => true,
+          'datas' => $absence
+     );
+     return Response::json($response);
 }
 
 public function fetchDataKaizenAll(Request $request)
