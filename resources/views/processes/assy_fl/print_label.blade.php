@@ -36,13 +36,13 @@
 		border:1px solid rgb(211,211,211);
 	}
 	.btn{
-	white-space: normal;
-  	word-wrap: break-word;
+		white-space: normal;
+		word-wrap: break-word;
 	}
 	.test{
-    height:60px;
-    
-}
+		height:60px;
+
+	}
 	#loading, #error { display: none; }
 </style>
 @stop
@@ -54,10 +54,10 @@
 	</h1>
 	<ol class="breadcrumb">
 		<li>
-			<button href="javascript:void(0)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reprintModal">
+			{{-- <button href="javascript:void(0)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reprintModal">
 				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint
-			</button>
-			<a href="{{ url("/stamp/resumes_sx") }}" class="btn btn-primary btn-sm" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Record</a>
+			</button> --}}
+			<a href="{{ url("/stamp/resumes_sx") }}" class="btn btn-primary btn-sm" target="_blank" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Record</a>
 		</li>
 	</ol>
 </section>
@@ -237,6 +237,9 @@
 							<button class="btn btn-lg btn-success" onclick="repintDes();">Label Deskripsi</button>
 							<button class="btn btn-lg btn-success" onclick="repintBesar();">Label Besar</button>
 							<button class="btn btn-lg btn-success" onclick="repintKecil();">Label Kecil</button><br><br>
+
+							<button class="btn btn-lg btn-success" onclick="repintBesarOuter();">Label Besar Outer</button>
+
 							<!-- <button class="btn btn-lg btn-primary" onclick="reprintAll();">Label Besar + Kecil + Deskripsi</button> -->
 						</center>
 					</div>
@@ -298,17 +301,17 @@
 				$('body').toggleClass("sidebar-collapse");
 
 				$('#modelreprint2').on('hidden.bs.modal', function () {
- 				$("#sn").val('');						
-				$('#sn').focus();
+					$("#sn").val('');						
+					$('#sn').focus();
 				});
 
 				$('#editModal').on('hidden.bs.modal', function () {
- 				$("#sn").val('');						
-				$('#sn').focus();
+					$("#sn").val('');						
+					$('#sn').focus();
 				});
 				
-				 fillPlan();
-				 fillResult();
+				fillPlan();
+				fillResult();
 				
 
 			});
@@ -463,10 +466,10 @@
 							$('#listModel3').html("");
 							var planData = '';
 							$.each(result.planData, function(key, value) {
-									if (value.remark=="J") {
+								if (value.remark=="J") {
 									planData += '<button type="button" class=" test btn bg-blue btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'J\');japan(\'(Japan)\')">'+value.material_description+'<br>Japan'+'</button>';
 								}
-							
+
 
 								else {
 									planData += '<button type="button" class=" test btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'\')">'+value.material_description+'<br>'+'</button>';	
@@ -503,14 +506,14 @@
 						$('#listModel2').html("");
 						var planData = '';
 						$.each(result.planData, function(key, value) {
-								if (value.remark=="J") {
+							if (value.remark=="J") {
 								planData += '<button type="button" class=" test btn bg-blue btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'J\');japan(\'(Japan)\')">'+value.material_description+'<br>Japan'+'</button>';
 							}
 							
 
 							else {
-									planData += '<button type="button" class="test btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'\')">'+value.material_description+'<br>'+'</button>';	
-								}					
+								planData += '<button type="button" class="test btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'\')">'+value.material_description+'<br>'+'</button>';	
+							}					
 						});						
 						$('#listModel').append(planData);
 						$('#listModel2').append('<button id="btnprint"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;" class="btn btn-primary" onclick="print(\'update\');" disabled><i class="fa fa-print"></i>&nbsp;&nbsp;Print</button><button id="btnprint2"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;display: none;" class="btn btn-info" onclick="print(\'reupdate\');" disabled><i class="fa fa-print"></i>&nbsp;Reprint</button>');
@@ -599,6 +602,12 @@
 			jpn:jpn,
 		}
 		if (status =="update") {
+
+			if(jpn == ''){
+				alert('Pilih model dahulu');			
+				return false
+			}
+
 			$.post('{{ url("index/print_FL") }}', data, function(result, status, xhr){
 				console.log(status);
 				console.log(result);
@@ -613,13 +622,13 @@
 						$('#sn').focus();
 						fillResult();
 						fillPlan();
-						
+
 						$('#btnprint').prop('disabled',true);
 						$('#btnprintmodal').prop('disabled',true);
 						$('#btnprint2').prop('disabled',true);
 
-						window.open('{{ url("index/label_besarFL") }}'+'/'+sn+'/'+gmc+'/P', '_blank');
-						
+						window.open('{{ url("index/fl_label_besar") }}'+'/'+sn+'/'+gmc+'/P', '_blank');
+
 
 					}
 					else{
@@ -765,16 +774,16 @@
 
 	function repintDes() {
 		var sn = $('#sn').val();
-		window.open('{{ url("index/label_des_fl") }}'+'/'+sn, '_blank');
+		window.open('{{ url("index/fl_label_des") }}'+'/'+sn+'/RP', '_blank');
 	}
 
 	function repintKecil() {
 		var sn = $('#sn').val();
-		window.open('{{ url("index/label_kecil_fl") }}'+'/'+sn+'/RP', '_blank');
+		window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/RP', '_blank');
 	}
 
 	function repintBesar() {
-			var sn = $('#sn').val();
+		var sn = $('#sn').val();
 		var data = {
 			sn:sn,
 		}
@@ -785,7 +794,34 @@
 			console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					window.open('{{ url("index/label_besarFL") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/R', '_blank');
+					window.open('{{ url("index/fl_label_besar") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/RP', '_blank');
+					
+				}
+				else{
+					audio_error.play();
+					alert('Attempt to retrieve data failed');
+				}
+			}
+			else{
+				audio_error.play();
+				alert('Disconnected from sever');
+			}
+		});
+	}
+
+	function repintBesarOuter() {
+		var sn = $('#sn').val();
+		var data = {
+			sn:sn,
+		}
+
+		$.get('{{ url("index/getModelReprintAllFL") }}', data, function(result, status, xhr){
+			console.log(status);
+			console.log(result);
+			console.log(xhr);
+			if(xhr.status == 200){
+				if(result.status){
+					window.open('{{ url("index/fl_label_outer") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/RP', '_blank');
 					
 				}
 				else{

@@ -2349,7 +2349,7 @@ public function label_besar_outer_fl($id,$gmc,$remark){
 		WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
 		LEFT JOIN
 		(SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6') c on a.serial_number = c.sn2";
-	}elseif ($remark =="R"){
+	}elseif ($remark =="RP"){
 		$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
@@ -2360,15 +2360,18 @@ public function label_besar_outer_fl($id,$gmc,$remark){
 
 	$barcode = DB::select($query);
 
-	$date = date('Y-m-d');
-	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date = 
-	(SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='041')";
+	// $date = date('Y-m-d');
+	$querydate = "SELECT week_date,date_code from weekly_calendars
+	WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from log_processes
+	WHERE serial_number='".$id."'
+	and process_code='6'
+	and origin_group_code='041')";
 
-	$date2 = DB::select($querydate);
+	$date = DB::select($querydate);
 
 	return view('processes.assembly.flute.label.label_besar_outer',array(
 		'barcode' => $barcode,
-		'date2' => $date2,
+		'date' => $date,
 		'remark' => $remark,
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
@@ -2384,7 +2387,7 @@ public function label_besar_fl($id,$gmc,$remark){
 		WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
 		LEFT JOIN
 		(SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6') c on a.serial_number = c.sn2";
-	}elseif ($remark =="R"){
+	}elseif ($remark =="RP"){
 		$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
@@ -2395,15 +2398,16 @@ public function label_besar_fl($id,$gmc,$remark){
 
 	$barcode = DB::select($query);
 
-	$date = date('Y-m-d');
-	$querydate = "SELECT week_date,date_code from weekly_calendars WHERE week_date = 
-	(SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from log_processes WHERE serial_number='".$id."' and process_code='4' and origin_group_code='041')";
+	$querydate = "SELECT week_date, date_code from weekly_calendars
+	WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from log_processes
+	WHERE serial_number='".$id."'
+	and process_code='4'
+	and origin_group_code='041')";
+	$date = DB::select($querydate);
 
-	$date2 = DB::select($querydate);
-
-	return view('processes.assembly.flute.label.label_besar',array(
+	return view('processes.assy_fl.label_temp.label_besar',array(
 		'barcode' => $barcode,
-		'date2' => $date2,
+		'date' => $date,
 		'remark' => $remark,
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
@@ -2413,15 +2417,22 @@ public function label_kecil_fl($id,$remark){
 	$sn = $id;
 	$date = date('Y-m-d');
 	
-	$query = " SELECT week_date,date_code from weekly_calendars WHERE week_date = 
-	(SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041') ";
-
-	$query2="SELECT serial_number,model  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041'";
-
+	$query = "SELECT week_date, date_code FROM weekly_calendars
+	WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') FROM log_processes
+	WHERE serial_number = '".$sn."'
+	AND process_code = '6'
+	AND origin_group_code = '041')";
 	$barcode = DB::select($query);
+
+
+	$query2="SELECT serial_number, model FROM log_processes
+	WHERE serial_number = '".$sn."'
+	AND process_code = '6'
+	AND origin_group_code = '041'";
 	$des = DB::select($query2);
 
-	return view('processes.assembly.flute.label.label_kecil',array(
+
+	return view('processes.assy_fl.label_temp.label_kecil',array(
 		'barcode' => $barcode,
 		'sn' => $sn,
 		'remark' => $remark2,
@@ -2434,15 +2445,22 @@ public function label_kecil2_fl($id,$remark){
 	$sn = $id;
 	$date = date('Y-m-d');
 	
-	$query = " SELECT week_date,date_code from weekly_calendars WHERE week_date = 
-	(SELECT DATE_FORMAT(created_at,'%Y-%m-%d')  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041') ";
-
-	$query2="SELECT serial_number,model  from log_processes WHERE serial_number='".$sn."' and process_code='6' and origin_group_code='041'";
-
+	$query = "SELECT week_date, date_code FROM weekly_calendars
+	WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') FROM log_processes
+	WHERE serial_number = '".$sn."'
+	AND process_code = '6'
+	AND origin_group_code = '041')";
 	$barcode = DB::select($query);
+
+
+	$query2="SELECT serial_number, model FROM log_processes
+	WHERE serial_number = '".$sn."'
+	AND process_code = '6'
+	AND origin_group_code = '041'";
 	$des = DB::select($query2);
 
-	return view('processes.assembly.flute.label.label_kecil2',array(
+
+	return view('processes.assy_fl.label_temp.label_kecil2',array(
 		'barcode' => $barcode,
 		'sn' => $sn,
 		'remark' => $remark2,
@@ -2450,15 +2468,17 @@ public function label_kecil2_fl($id,$remark){
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 
-public function label_des_fl($id){
+public function label_des_fl($id,$remark){
 	
 	$query ="select model from log_processes where process_code ='6' and serial_number='".$id."'";
 	$barcode = DB::select($query);
 	
-	return view('processes.assembly.flute.label.label_desc',array(
+	// return view('processes.assembly.flute.label.label_desc',array(
+	return view('processes.assy_fl.label_temp.label_desc',array(
 		'barcode' => $barcode,
+		'sn' => $id,
+		'remark' => $remark,
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
-
 }
 
 public function editStampLabelFL(Request $request){
@@ -2980,22 +3000,6 @@ public function fetchResultFlStamp(Request $request)
 	if (date('D')=='Fri' || date('D')=='Sat') {
 		$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
 	}
-
-	// if(date('D')=='Fri' ){
-	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(4)));
-	// }
-	// else if(date('D')=='Sat' ){
-	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(3)));
-	// }
-	// else if(date('D')=='Thu' ){
-	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
-	// }
-	// else if(date('D')=='Wed' ){
-	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(5)));
-	// }
-	// else{
-	// 	$nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays(2)));
-	// }
 
 	$first = date('Y-m-01');
 	if(date('Y-m-d') != date('Y-m-01')){
