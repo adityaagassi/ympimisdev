@@ -110,7 +110,7 @@
 							&times;
 						</span>
 					</button>
-					<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Add Operator</h1>
+					<h1 style="text-align: center; margin:5px; font-weight: bold;color: white">Add Stock</h1>
 				</div>
 			</div>
 			<div class="modal-body">

@@ -358,6 +358,17 @@ table > thead > tr > th{
 		return day + "-" + month + "-" + year + " (" + h + ":" + m + ":" + s +")";
 	}
 
+	function getActualDate() {
+		var d = new Date();
+		var day = addZero(d.getDate());
+		var month = addZero(d.getMonth()+1);
+		var year = addZero(d.getFullYear());
+		var h = addZero(d.getHours());
+		var m = addZero(d.getMinutes());
+		var s = addZero(d.getSeconds());
+		return day + "-" + month + "-" + year;
+	}
+
 	function fillChart() {
 		var data = {
 			color:$('#color').val()
@@ -394,7 +405,9 @@ table > thead > tr > th{
 						}else if(result.datas[i].color == 'IVORY)'){
 							colors.push('#fff7ba');
 						}else if(result.datas[i].color == 'BROWN)'){
-							colors.push('#bd8a15');
+							colors.push('#856111');
+						}else if(result.datas[i].color == 'BEIGE)'){
+							colors.push('#e0b146');
 						}else{
 							colors.push('#000');
 						}
@@ -409,14 +422,15 @@ table > thead > tr > th{
 							type: 'column'
 						},
 						title: {
-							text: 'Realtime After Injection Stock Monitoring',
+							text: 'Daily After Injection Stock Monitoring',
 							style: {
 								fontSize: '30px',
 								fontWeight: 'bold'
 							}
 						},
 						subtitle: {
-							text: '<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>',
+							// text: '<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>',
+							text: '<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualDate() +'</p>',
 							style: {
 								fontSize: '1vw',
 								fontWeight: 'bold'
