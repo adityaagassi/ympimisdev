@@ -132,7 +132,7 @@ var printSettings = {
 	"marginRight": 0,
 	"marginTop": -0.5,
 	"marginBottom": 0,
-	"numCopies": 2,
+	// "numCopies": 2,
 	// "scaling": 1,
 	"title": "",
 	"docURL": "",
@@ -200,7 +200,7 @@ function printWindow(win, what) {
   			window.open('{{ url("index/fl_label_des") }}'+'/'+sn+'/P', '_blank');
   		}
   		
-  		// window.close();
+  		window.close();
   	});
   }
   

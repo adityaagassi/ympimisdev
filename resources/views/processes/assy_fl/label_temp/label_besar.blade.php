@@ -219,9 +219,7 @@
 			$("#upc_janT2").css({"display":"none"});
 			$("#upc_jan2").css({"visibility":"hidden"});
 			$("#upc_jan").css({"visibility":"hidden"});
-			$("#upc_jangmc").css({"visibility":"hidden"});			
-			
-
+			$("#upc_jangmc").css({"visibility":"hidden"});		
 		}
 
 		if (jan =="-" && upc =="-") {

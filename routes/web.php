@@ -2180,8 +2180,8 @@ Route::get('index/getModelReprintAllFL', 'ProcessController@getModelReprintAllFL
 
 Route::get('index/fl_label_besar/{id}/{gmc}/{remark}', 'ProcessController@label_besar_fl');
 Route::get('index/fl_label_kecil/{id}/{remark}', 'ProcessController@label_kecil_fl');
-Route::get('index/fl_label_kecil2/{id}/{remark}', 'ProcessController@label_kecil2_fl');
 Route::get('index/fl_label_des/{id}/{remark}', 'ProcessController@label_des_fl');
+Route::get('index/fl_label_kecil2/{id}/{remark}', 'ProcessController@label_kecil2_fl');
 
 Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_besar_outer_fl');
 

@@ -17,17 +17,21 @@
 
 	</style>
 
-@php
-include(app_path() . '\barcode\barcode.php');
-@endphp
+  @php
+  include(app_path() . '\barcode\barcode.php');
+  @endphp
 
-<table border="0" >	
-	@foreach($barcode as $nomor => $barcode)	
-	<input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
-	@endforeach	
-	<tr>
-		<td class="name" align="center" id="model" style="font-size: 40pt; -moz-transform:scale(1,1.6);">YAS-280//ID </td>
-	</tr>	
+  <table border="0" >	
+{{--    <input type="text" name="rem" id="rem" value="{{$remark}}" hidden="">    
+<input type="text" name="codemodel" id="codemodel" value="{{$sn}}" hidden=""> --}}
+
+   @foreach($barcode as $nomor => $barcode) 
+  <input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
+  @endforeach 
+
+   <tr>
+    <td class="name" align="center" id="model" style="font-size: 40pt; -moz-transform:scale(1,1.6);">YFL412</td>
+  </tr>	
 </table>
 </body>
 </html>
@@ -36,10 +40,10 @@ include(app_path() . '\barcode\barcode.php');
 	jQuery(document).ready(function() {		
 		day();		
     defineCustomPaperSize();
-		printWindow(window, 'Label Besar');
+    printWindow(window, 'Label Besar');
 
-				
-	});
+
+  });
 	function day() {
 		var models = $('#codemodel').val();
 		$('#model').text(models);		
@@ -47,8 +51,8 @@ include(app_path() . '\barcode\barcode.php');
 		var	ukuran = 48;
 		if (models.length == 11) {
       // $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1.1,2)","padding-top":"5px"});
-			$('#model').css({"font-size":"40pt", "-moz-transform":"scale(1.1,2)","padding-top":"5px","padding-left":"20px"});
-		}
+      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1.1,2)","padding-top":"5px","padding-left":"20px"});
+    }
 
     if (models.length == 12) {
       // $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
@@ -74,8 +78,8 @@ include(app_path() . '\barcode\barcode.php');
     if (models.length == 17) {
       $('#model').css({"font-size":"28pt", "-moz-transform":"scale(1,2)","padding-top":"13px"});
     }		
-	}
-	
+  }
+
 
 
 // default print settings
@@ -103,7 +107,7 @@ var printSettings = {
   "footerStrLeft": "",
   "footerStrCenter": "",
   "footerStrRight": "",
-   "printerName" : "SATO CL4NX (203 dpi)"
+  "printerName" : "SATO CL4NX (203 dpi)"
 };
 
 function defineCustomPaperSize() {
@@ -156,10 +160,17 @@ function printWindow(win, what) {
   	});
   	win.addEventListener("afterprint", function(event) {
   		console.log("after print: "+what, true);
-  		
-  		window.close();
 
-  	});
+      var sn = $('#codemodel').val();
+      var rem = $('#rem').val(); 
+
+      // if (rem == "P") {
+      //   window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
+      // }
+
+      // window.close();
+
+    });
   }
   
   win.jsPrintSetup.print(printSettings).then(
