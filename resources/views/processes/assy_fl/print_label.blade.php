@@ -487,12 +487,12 @@
 		var sn = $("#sn").val();
 		var data ={
 			sn:sn,
-			log:'5',
+			log:'4',
 			
 		};
 		var data2 ={
 			sn2:sn,
-			code:'5',
+			code:'4',
 			origin:'041',
 		}
 		if (sn.length == 8) {
@@ -626,6 +626,9 @@
 						$('#btnprint').prop('disabled',true);
 						$('#btnprintmodal').prop('disabled',true);
 						$('#btnprint2').prop('disabled',true);
+
+						$('#listModel').hide();
+						$("#japan2").val('');
 
 						window.open('{{ url("index/fl_label_besar") }}'+'/'+sn+'/'+gmc+'/P', '_blank');
 

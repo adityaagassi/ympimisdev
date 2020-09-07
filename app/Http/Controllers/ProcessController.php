@@ -2203,7 +2203,7 @@ public function fetchResultFL5(){
 
 public function getModelfl(Request $request)
 {
-	if ($request->get('log')==5) {
+	if ($request->get('log')==4) {
 		// $query ="select material_number,material_description,remark from materials
 		// LEFT JOIN stamp_hierarchies on materials.material_number = stamp_hierarchies.finished
 		// WHERE stamp_hierarchies.model in ( SELECT model from log_processes WHERE serial_number='".$request->get('sn')."' )
@@ -2346,14 +2346,14 @@ public function label_besar_outer_fl($id,$gmc,$remark){
 		$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
+		WHERE log_processes.process_code='4' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
 		LEFT JOIN
 		(SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6') c on a.serial_number = c.sn2";
 	}elseif ($remark =="RP"){
 		$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
+		WHERE log_processes.process_code='4' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
 		LEFT JOIN 
 		(SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6') c on a.serial_number = c.sn2";
 	}
@@ -2384,14 +2384,14 @@ public function label_besar_fl($id,$gmc,$remark){
 		$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
+		WHERE log_processes.process_code='4' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
 		LEFT JOIN
 		(SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6') c on a.serial_number = c.sn2";
 	}elseif ($remark =="RP"){
 		$query ="SELECT serial_number,finished,janean,upc, remark,c.model_2 as model FROM (
 		select log_processes.serial_number,stamp_hierarchies.model,stamp_hierarchies.finished,stamp_hierarchies.janean,stamp_hierarchies.upc,stamp_hierarchies.remark,log_processes.created_at  from log_processes 
 		INNER JOIN stamp_hierarchies on log_processes.model = stamp_hierarchies.model
-		WHERE log_processes.process_code='5' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
+		WHERE log_processes.process_code='4' and log_processes.serial_number='".$id."' and log_processes.origin_group_code='041' and stamp_hierarchies.finished='".$gmc."') a		
 		LEFT JOIN 
 		(SELECT model as model_2, serial_number as sn2 from log_processes WHERE serial_number='".$id."' and process_code='6') c on a.serial_number = c.sn2";
 	}
@@ -2401,7 +2401,7 @@ public function label_besar_fl($id,$gmc,$remark){
 	$querydate = "SELECT week_date, date_code from weekly_calendars
 	WHERE week_date = (SELECT DATE_FORMAT(created_at,'%Y-%m-%d') from log_processes
 	WHERE serial_number='".$id."'
-	and process_code='4'
+	and process_code='6'
 	and origin_group_code='041')";
 	$date = DB::select($querydate);
 
