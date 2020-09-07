@@ -22,7 +22,7 @@
 
 		.kiri {
 			font-size: 11pt;
-			font-family: 'arial narrow';
+			font-family: 'arial';
 			font-weight: bold;
 		}
 		.bawah {

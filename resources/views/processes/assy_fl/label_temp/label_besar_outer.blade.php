@@ -9,24 +9,23 @@
 			border-collapse: collapse;
 			/*border: dashed;*/
 		}
-		.name {
-			
-			font-family: 'arial';
+		.name {			
+			font-family: 'arial' !important;
 			/*-moz-transform:scale(1.3,1);*/
 		}
 		.product {
 			font-size: 12pt;
-			font-family: 'arial';
+			font-family: 'arial' !important;
 		}
 
 		.kiri {
 			font-size: 6pt;
-			font-family: 'arial narrow';
+			font-family: 'arial' !important;
 			/*font-weight: bold;*/
 		}
 		.bawah {
 			font-size: 12pt;
-			font-family: 'arial';
+			font-family: 'arial' !important;
 			font-weight: bold;
 		}
 
@@ -66,7 +65,7 @@
 		</tr>		
 		<tr>
 			<td class="kiri" align="right"> 
-				<p id="JAN-text" style="font-size: 12pt; font-weight: bold;" id="janT"> JAN/EAN </p>
+				<p id="JAN-text" style="font-size: 12pt;" id="janT"> JAN/EAN </p>
 			</td>
 			<td class="kiri" align="right"> 
 				<img id="JAN" src="" style="height:80px;">
@@ -77,7 +76,7 @@
 		</tr>
 		<tr>
 			<td class="kiri" align="right"> 
-				<p id="upc-text" style="font-size: 12pt; font-weight: bold;" id="janT"> UPC </p>
+				<p id="upc-text" style="font-size: 12pt;" id="janT"> UPC </p>
 			</td>
 			<td class="kiri" align="right"> 
 				<img id="upc" src="" style="height:80px;">
@@ -88,7 +87,7 @@
 		</tr>
 		<tr>
 			<td class="kiri" align="right"> 
-				<p style="font-size: 12pt; font-weight: bold;" id="janT"> GMC </p>
+				<p style="font-size: 12pt;" id="janT"> GMC </p>
 			</td>
 			<td class="kiri" align="right"> 
 				<img id="gmc" src="" style="height:80px;">
@@ -98,8 +97,8 @@
 			<td colspan="3" class="name" align="left" style="height: 50pt;"></td>
 		</tr>
 		<tr>
-			<td class="kiri" style="position: fixed; left: 150px;"> 
-				<p style="font-size: 12pt; font-weight: bold;" id="day"></p>
+			<td class="kiri" style="position: fixed; top:465px; left: 120px;"> 
+				<p style="font-size: 12pt;" id="day"></p>
 			</td>
 			<td class="kiri" style="position: fixed; left: 240px;"> 
 				<img id="gmc" src="{{ asset("/images/QC_BAR.jpg")}}" style="height:50px;">
