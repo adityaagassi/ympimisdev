@@ -51,32 +51,32 @@
 		var	ukuran = 48;
 		if (models.length == 11) {
       // $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1.1,2)","padding-top":"5px"});
-      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1.1,2)","padding-top":"5px","padding-left":"20px"});
+      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1.1,1)","padding-top":"5px","padding-left":"20px"});
     }
 
     if (models.length == 12) {
       // $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
-      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,2)","padding-top":"5px","padding-left":"5px"});
+      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,1)","padding-top":"5px","padding-left":"5px"});
     }
 
     if (models.length == 13) {
-      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
+      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
     }
 
     if (models.length == 14) {
-      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
+      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
     }
 
     if (models.length == 15) {
-      $('#model').css({"font-size":"34pt", "-moz-transform":"scale(1,2)","padding-top":"10px"});
+      $('#model').css({"font-size":"34pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
     }
 
     if (models.length == 16) {
-      $('#model').css({"font-size":"32pt", "-moz-transform":"scale(1,2)","padding-top":"10px"});
+      $('#model').css({"font-size":"32pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
     }
 
     if (models.length == 17) {
-      $('#model').css({"font-size":"28pt", "-moz-transform":"scale(1,2)","padding-top":"13px"});
+      $('#model').css({"font-size":"28pt", "-moz-transform":"scale(1,1)","padding-top":"13px"});
     }		
   }
 
@@ -168,7 +168,7 @@ function printWindow(win, what) {
       //   window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
       // }
 
-      window.close();
+      // window.close();
 
     });
   }
