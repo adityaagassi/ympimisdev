@@ -50,8 +50,7 @@ class InjectionScheduleCommand extends Command
         $inventory = InjectionInventory::get();
         foreach ($inventory as $key) {
             $invent = InjectionInventory::find($key->id);
-            $invent->quantity = 0;
-            $invent->save();
+            $invent->forceDelete();
         }
         // $j = 2;
         // $nextdayplus1 = date('Y-m-d', strtotime(carbon::now()->addDays($j)));
