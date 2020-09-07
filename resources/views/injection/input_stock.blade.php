@@ -89,6 +89,8 @@
 					<tr>
 						<th>Material Number</th>
 						<th>Material Description</th>
+						<th>Part</th>
+						<th>Color</th>
 						<th>Location</th>
 						<th>Quantity</th>
 						<th>Action</th>
@@ -125,7 +127,7 @@
 									<select class="form-control select2" data-placeholder="Select Materials" name="material_number" id="material_number" style="width: 100%">
 										<option value=""></option>
 										@foreach($materials as $materials)
-										<option value="{{ $materials->material_number }}">{{ $materials->material_number }} - {{ $materials->material_description }}</option>
+										<option value="{{ $materials->material_number }}">{{ $materials->material_number }} - {{ $materials->material_description }} - {{ $materials->color }}</option>
 										@endforeach
 									</select>
 								</div>
@@ -236,6 +238,8 @@
 					tableData += '<tr style="font-size:15px">';
 					tableData += '<td>'+ value.material_number +'</td>';
 					tableData += '<td>'+ value.material_description +'</td>';
+					tableData += '<td>'+ value.part_code +'</td>';
+					tableData += '<td>'+ value.color +'</td>';
 					tableData += '<td>'+ value.location +'</td>';
 					tableData += '<td>'+ value.quantity +'</td>';
 					tableData += '<td></td>';
