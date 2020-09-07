@@ -112,16 +112,6 @@ class InjectionsController extends Controller
 
     }
 
-    public function indexMachineSchedule()
-    {
-        $title = 'Injection Schedule';
-        $title_jp = '???';
-        return view('injection.schedule_view',array(
-            'title' => $title,
-            'title_jp' => $title_jp,
-        ))->with('page', 'Injection Schedule View')->with('jpn', '???');
-    }
-
     public function scanPartInjeksi(Request $request){
         $part = CapacityPartInjection::where('capacity_part_injections.rfid', '=', $request->get('serialNumber'))->get();
 
@@ -1690,30 +1680,6 @@ class InjectionsController extends Controller
 
         // ------------------------------- end operator mesin
 
-
-
-    public function fetchSchedule()
-    {
-        $sch = db::select("SELECT mesin, plan_mesin_injection_tmps.color, plan_mesin_injection_tmps.qty, working_date as due_date, shoot, cycle.cycle, plan_mesin_injection_tmps.part FROM `plan_mesin_injection_tmps` left join cycle_time_mesin_injections as cycle on cycle.part = SPLIT_STRING(plan_mesin_injection_tmps.color,' - ', 1) and cycle.color = SPLIT_STRING(plan_mesin_injection_tmps.color,' - ', 2)
-            order by working_date asc, plan_mesin_injection_tmps.id asc");
-
-        // $sch = db::select("SELECT mesin, plan_mesin_injections.color, plan_mesin_injections.qty, due_date, shoot, cycle.cycle, plan_mesin_injections.part FROM `plan_mesin_injections` left join cycle_time_mesin_injections as cycle on cycle.part = SPLIT_STRING(plan_mesin_injections.color,' - ', 1) and cycle.color = SPLIT_STRING(plan_mesin_injections.color,' - ', 2)
-        //     order by due_date asc, plan_mesin_injections.id asc");
-
-        // $sch2 = db::select("SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-12-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-12-30'");
-        $sch2 = db::select("SELECT week_date from weekly_calendars WHERE DATE_FORMAT(week_date,'%Y-%m-%d')>='2019-11-01' and DATE_FORMAT(week_date,'%Y-%m-%d')<='2019-11-31'");
-
-        
-
-        $response = array(
-            'status' => true,            
-            'schedule' => $sch,          
-            'tgl' => $sch2
-
-        );
-        return Response::json($response);
-
-    }
 
     public function saveScheduleTmp(Request $request){
 
@@ -4196,7 +4162,7 @@ class InjectionsController extends Controller
     {
         $title = 'Molding Setup';
         $title_jp = '金型設定';
-        $molding = MoldingInjectionLog::where('status_maintenance','Running')->get();
+        $molding = InjectionMoldingLog::where('status_maintenance','Running')->get();
         return view('injection.molding', array(
             'title' => $title,
             'title_jp' => $title_jp,
@@ -5031,35 +4997,10 @@ class InjectionsController extends Controller
             $id_user = Auth::id();
 
             $data = DB::SELECT("Select * from injection_parts where remark = 'abs'");
-            if ($request->get('color') == '') {
-                $lot = DB::SELECT("SELECT DISTINCT
-                    ( injection_resins.lot_number ),
-                    injection_resins.qty,
-                    color
-                FROM
-                    `injection_resins` 
-                    left join injection_dryer_logs on injection_dryer_logs.lot_number = injection_resins.lot_number
-                WHERE
-                    injection_resins.qty != 0
-                    and injection_dryer_logs.type = 'IN'");
-            }else{
-                $lot = DB::SELECT("SELECT DISTINCT
-                    ( injection_resins.lot_number ),
-                    injection_resins.qty,
-                    color
-                FROM
-                    `injection_resins` 
-                    left join injection_dryer_logs on injection_dryer_logs.lot_number = injection_resins.lot_number
-                WHERE
-                    injection_resins.qty != 0
-                    and injection_dryer_logs.type = 'IN'
-                    and color = '".$request->get('color')."'");
-            }
 
             $response = array(
                 'status' => true,
-                'datas' => $data,
-                'lot' => $lot
+                'datas' => $data
             );
             return Response::json($response);
         } catch (\Exception $e) {
