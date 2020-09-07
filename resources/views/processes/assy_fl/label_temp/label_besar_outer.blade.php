@@ -51,7 +51,7 @@
 		<input type="text" name="codej" id="codej" value="{{$barcode->remark}}" hidden="">
 		@endforeach
 
-		@foreach($date as $nomor => $date)
+		@foreach($date as $nomor => $date) 
 		<input type="text" name="codeday" id="codeday" value="{{$date->date_code}}" hidden="">
 		@endforeach
 
