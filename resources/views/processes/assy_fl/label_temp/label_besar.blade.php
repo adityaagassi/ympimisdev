@@ -263,6 +263,12 @@ var printSettings = {
 	"printerName" : "SATO CG408TT" 
 };
 
+function label_kecil() {
+  	var sn = $('#codesn').val();
+  	window.open('{{ url("index/fl_label_kecil") }}'+'/'+sn+'/P', '_blank');
+	window.close();
+}
+
 
 function defineCustomPaperSize() {
 	console.log("Define custom paper size", false);
@@ -325,10 +331,10 @@ function printWindow(win, what) {
   		console.log(rem);
 
   		if (rem == "P") {
-  			window.open('{{ url("index/fl_label_kecil") }}'+'/'+sn+'/P', '_blank');
+  			setTimeout(label_kecil,3000);
   		}
 
-  		window.close();
+  		// window.close();
 
   	});
   }

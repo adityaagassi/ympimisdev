@@ -145,6 +145,12 @@ var printSettings = {
 	"printerName" : "SATO CX400"
 };
 
+function label_des() {
+	var sn = $('#codemodel').val();
+  	window.open('{{ url("index/fl_label_des") }}'+'/'+sn+'/P', '_blank');
+	window.close();
+}
+
 function printWindow(win, what) {
   // jsPrintSetup messages  
   function jspListener(event) {
@@ -197,10 +203,10 @@ function printWindow(win, what) {
   		// }
 
   		if (rem == "P") {
-  			window.open('{{ url("index/fl_label_des") }}'+'/'+sn+'/P', '_blank');
+  			setTimeout(label_des,3000);
   		}
   		
-  		window.close();
+  		// window.close();
   	});
   }
   
