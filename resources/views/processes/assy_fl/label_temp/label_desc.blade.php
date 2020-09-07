@@ -168,7 +168,7 @@ function printWindow(win, what) {
       //   window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
       // }
 
-      // window.close();
+      window.close();
 
     });
   }
