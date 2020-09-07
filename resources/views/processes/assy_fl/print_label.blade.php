@@ -235,8 +235,8 @@
 						<BR><BR>
 						<center>
 							<button class="btn btn-lg btn-success" onclick="repintDes();">Label Deskripsi</button>
-							<button class="btn btn-lg btn-success" onclick="repintBesar();">Label Besar</button>
-							<button class="btn btn-lg btn-success" onclick="repintKecil();">Label Kecil</button><br><br>
+							<button class="btn btn-lg btn-success" onclick="repintBesar();">Label GMC</button>
+							<button class="btn btn-lg btn-success" onclick="repintKecil();">Label No. Seri</button><br><br>
 
 							<button class="btn btn-lg btn-success" onclick="repintBesarOuter();">Label Besar Outer</button>
 
