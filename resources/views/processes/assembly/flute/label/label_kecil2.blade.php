@@ -186,7 +186,14 @@ function printWindow(win, what) {
   		console.log("before print: "+what, true);
   	});
   	win.addEventListener("afterprint", function(event) {
-  		console.log("after print: "+what, true);  		
+  		var sn = $('#codemodel').val();
+  		var rem = $('#rem').val();
+  		console.log("after print: "+what, true);
+
+  		if (rem == "P") {
+  			window.open('{{ url("index/assembly/flute/label_deskripsi") }}'+'/'+sn+'/P', '_blank');
+  		}
+
   		// window.close();
   	});
   }

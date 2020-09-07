@@ -145,6 +145,12 @@ var printSettings = {
 	"printerName" : "SATO CX400"
 };
 
+function label_kecil2() {
+  	var sn = $('#codesn').val();
+  	window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
+	window.close();
+}
+
 function printWindow(win, what) {
   // jsPrintSetup messages  
   function jspListener(event) {
@@ -191,6 +197,10 @@ function printWindow(win, what) {
   		var sn = $('#codemodel').val();
   		var rem = $('#rem').val();
   		console.log("after print: "+what, true);
+
+  		if (rem == "P") {
+  			setTimeout(label_kecil2,3000);
+  		}
   		
   		window.close();
   	});

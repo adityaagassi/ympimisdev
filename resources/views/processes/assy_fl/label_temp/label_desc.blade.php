@@ -110,6 +110,12 @@ var printSettings = {
   "printerName" : "SATO CL4NX (203 dpi)"
 };
 
+function label_kecil2() {
+    var sn = $('#codesn').val();
+    window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
+    window.close();
+}
+
 function defineCustomPaperSize() {
   console.log("Define custom paper size", false);
   jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 99, 29, jsPrintSetup.kPaperSizeInches);
@@ -164,9 +170,10 @@ function printWindow(win, what) {
       var sn = $('#codemodel').val();
       var rem = $('#rem').val(); 
 
-      // if (rem == "P") {
-      //   window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
-      // }
+      if (rem == "P") {
+        window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
+        setTimeout(label_kecil2,3000);
+      }
 
       window.close();
 
