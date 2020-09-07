@@ -269,6 +269,12 @@ function label_kecil() {
 	window.close();
 }
 
+function label_kecil2() {
+  	var sn = $('#codesn').val();
+  	window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
+	window.close();
+}
+
 
 function defineCustomPaperSize() {
 	console.log("Define custom paper size", false);
@@ -332,6 +338,7 @@ function printWindow(win, what) {
 
   		if (rem == "P") {
   			setTimeout(label_kecil,3000);
+  			setTimeout(label_kecil2,9000);
   		}
 
   		// window.close();
