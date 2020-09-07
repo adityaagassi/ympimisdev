@@ -192,7 +192,7 @@ function printWindow(win, what) {
   		var rem = $('#rem').val();
   		console.log("after print: "+what, true);
   		
-  		window.close();
+  		// window.close();
   	});
   }
   

@@ -2369,7 +2369,7 @@ public function label_besar_outer_fl($id,$gmc,$remark){
 
 	$date = DB::select($querydate);
 
-	return view('processes.assembly.flute.label.label_besar_outer',array(
+	return view('processes.assy_fl.label_temp.label_besar_outer',array(
 		'barcode' => $barcode,
 		'date' => $date,
 		'remark' => $remark,
