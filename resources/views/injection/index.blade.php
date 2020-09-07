@@ -21,7 +21,7 @@
 			<a href="{{ url("index/masterCycleMachine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Cycle Time Machine</a>
 		</div> -->
 		<div class="col-xs-4" style="text-align: center; color: red;">
-			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
+			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Injection Process <i class="fa fa-angle-double-down"></i></span>
 			<!-- <a href="{{ url("index/in") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - In</a>
 
 			<a href="{{ url("index/out") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;"> Stock - Out</a> -->
@@ -29,6 +29,8 @@
 			<!-- <a href="{{ url("index/Schedule") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule</a>
 
 			<a href="{{ url("index/indexPlanAll") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Make Schedule 3 Days</a> -->
+
+			<a href="{{ url("index/input_stock") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Input Daily Stock (Temp)</a>
 
 			<a href="{{ url("index/injection_machine") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Injection Machine</a>
 
@@ -39,6 +41,8 @@
 			<a href="{{ url("index/injection/transaction","in") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Transaction IN</a>
 
 			<a href="{{ url("index/injection/transaction","out") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Transaction OUT</a>
+
+			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Molding <i class="fa fa-angle-double-down"></i></span>
 
 			<button type="button" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;" data-toggle="modal" data-target="#push-pull-check-modal">
 				Recorder Push Block Check
