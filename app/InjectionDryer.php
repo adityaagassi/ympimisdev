@@ -10,7 +10,7 @@ class InjectionDryer extends Model
     use SoftDeletes;
 
     protected $fillable = [
-		'dryer','machine','material_number','material_description','part','color','qty','lot_number','created_by'
+		'dryer','machine','material_number','material_description','color','qty','lot_number','created_by'
 	];
 
 	public function user()

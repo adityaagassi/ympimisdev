@@ -368,7 +368,7 @@
 							<div class="col-xs-12">
 								<div class="row">
 									<div class="col-xs-12">
-										<center><span style="font-weight: bold; font-size: 18px;">Mesin</span></center>
+										<center><span style="font-weight: bold; font-size: 18px;">Product</span></center>
 									</div>
 								</div>
 							</div>

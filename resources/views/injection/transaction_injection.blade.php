@@ -238,6 +238,8 @@ table.table-bordered > tfoot > tr > th{
 				$('#resultNGBody').html("");
 				var statustransaction = '{{$status}}';
 
+				var jumlah = 0;
+
 				$.get('{{ url("scan/tag_product") }}', data, function(result, status, xhr){
 					if(result.status){
 						openSuccessGritter('Success!', 'Scan Tag Success');
@@ -262,10 +264,16 @@ table.table-bordered > tfoot > tr > th{
 
 								for(var i = 0; i < ng_arr.length; i++){
 									ngScan += '<tr>';
-									ngScan += '<td id="material_number">'+ng_arr[i]+'</td>';
-									ngScan += '<td id="part_name">'+qty_arr[i]+'</td>';
+									ngScan += '<td id="ng_name">'+ng_arr[i]+'</td>';
+									ngScan += '<td id="ng_qty">'+qty_arr[i]+'</td>';
 									ngScan += '</tr>';
+									jumlah = jumlah + parseInt(qty_arr[i]);
 								}
+
+								ngScan += '<tr style="background-color:rgba(126,86,134,.7);">';
+								ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_name"><b>TOTAL</b></td>';
+								ngScan += '<td style="border:1px solid black;border-top:1px solid black" id="total_ng_qty"><b>'+jumlah+'</b></td>';
+								ngScan += '</tr>';
 							}
 
 							if (statustransaction == 'IN') {

@@ -86,7 +86,7 @@
 						</div>
 					</div>
 				</div>
-			<div class="box">
+			<div class="box box-solid">
 				<div class="box-body">
 					<span style="font-size: 20px; font-weight: bold;">DAFTAR ITEM:</span>
 					<table class="table table-hover table-striped" id="tableList" style="width: 100%;">
@@ -95,7 +95,6 @@
 								<th style="width: 1%;">#</th>
 								<th style="width: 1%;">Material</th>
 								<th style="width: 7%;">Description</th>
-								<th style="width: 1%;">Part</th>
 								<th style="width: 1%;">Color</th>
 							</tr>					
 						</thead>
@@ -103,7 +102,6 @@
 						</tbody>
 						<tfoot>
 							<tr>
-								<th></th>
 								<th></th>
 								<th></th>
 								<th></th>
@@ -137,52 +135,36 @@
 					<span style="font-weight: bold; font-size: 16px;">Description:</span>
 					<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 24px; text-align: center;" disabled>
 				</div>
-				<div class="col-xs-12">
-					<div class="row">
-						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Part:</span>
-							<input type="text" id="part" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-						</div>
-						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Color:</span>
-							<input type="text" id="color" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-						</div>
-					</div>
+				<div class="col-xs-6" style="padding-top: 10px">
+					<span style="font-weight: bold; font-size: 16px;">Color:</span>
+					<input type="text" id="color" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 				</div>
-				<div class="col-xs-12">
+				<div class="col-xs-6" style="padding-top: 10px">
+					<span style="font-weight: bold; font-size: 16px;">Lot Number:</span>
+					<input type="text" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" placeholder="Lot Number" id="lot_number">
+				</div>
+				<div class="col-xs-12" style="padding-top: 10px">
 					<span style="font-weight: bold; font-size: 16px;">Add Count:</span>
 				</div>
-				<div class="col-xs-12">
-					<div class="row">
-						<div class="col-xs-6" style="padding-bottom: 10px;">
-							<div class="input-group">
-								<div class="input-group-btn">
-									<button type="button" class="btn btn-danger" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-minus" onclick="minusCount()"></span></button>
-								</div>
-								<input id="quantity" style="font-size: 40px; height: 60px; text-align: center;" type="number" class="form-control numpad" value="0">
+				<div class="col-xs-6">
+					<div class="input-group">
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-danger" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-minus" onclick="minusCount()"></span></button>
+						</div>
+						<input id="quantity" style="font-size: 40px; height: 60px; text-align: center;" type="number" class="form-control numpad" value="0">
 
-								<div class="input-group-btn">
-									<button type="button" class="btn btn-success" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-plus" onclick="plusCount()"></span></button>
-								</div>
-							</div>
-						</div>
-						<div class="col-xs-6" style="padding-bottom: 10px;">
-							<select name="lot_number_choice" id="lot_number_choice" class="form-group" style="width: 100%; height: 60px; font-size: 40px; text-align: center;" data-placeholder="Select Lot Number" onchange="lotNumberChange(this.value)">
-								
-							</select>
-						</div>
-						<div class="col-xs-6" style="padding-bottom: 10px;">
-							<input type="text" style="width: 100%; height: 60px; font-size: 40px; text-align: center;" placeholder="New Lot Number" disabled id="lot_number_new">
-						</div>
-						<div class="col-xs-6" style="padding-bottom: 10px;">
-							<button class="btn btn-primary" onclick="inputResin()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
-								<i class="fa fa-send"></i> INPUT
-							</button>
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-success" style="font-size: 35px; height: 60px; text-align: center;"><span class="fa fa-plus" onclick="plusCount()"></span></button>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-12">
-					<div class="box">
+				<div class="col-xs-6">
+					<button class="btn btn-primary" onclick="inputResin()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
+						<i class="fa fa-send"></i> INPUT
+					</button>
+				</div>
+				<div class="col-xs-12" style="padding-top: 10px">
+					<div class="box box-solid">
 						<div class="box-body">
 							<span style="font-size: 20px; font-weight: bold;" id="">HISTORY PEMAKAIAN RESIN (<?php echo date('d-M-Y', strtotime('-1 week')); ?> - <?php echo date('d-M-Y'); ?>)</span>
 							<table class="table table-hover table-striped table-bordered" id="tableResume">
@@ -191,9 +173,8 @@
 										<th style="width: 1%;">#</th>
 										<th style="width: 1%;">Material</th>
 										<th style="width: 6%;">Description</th>
-										<th style="width: 1%;">Part</th>
+										<th style="width: 1%;">Color</th>
 										<th style="width: 1%;">Qty</th>
-										<th style="width: 1%;">Status</th>
 										<th style="width: 1%;">Creator</th>
 										<th style="width: 1%;">Created</th>
 									</tr>
@@ -237,30 +218,26 @@
 									<input type="text" id="dryer_adjust" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 								</div>
 								<div class="col-xs-6">
-									<span style="font-weight: bold; font-size: 16px;">Part:</span>
-									<input type="text" id="part_adjust" style="width: 100%; height: 50px; font-size: 24px; text-align: center;" disabled>
+									<span style="font-weight: bold; font-size: 16px;">Color:</span>
+									<input type="text" id="color_adjust" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 								</div>
 							</div>
 						</div>
 						<div class="col-xs-12">
 							<div class="row">
-								<div class="col-xs-6">
-									<span style="font-weight: bold; font-size: 16px;">Color:</span>
-									<input type="text" id="color_adjust" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
-								</div>
 								<div class="col-xs-6">
 									<span style="font-weight: bold; font-size: 16px;">Lot Number:</span>
 									<input type="text" id="lot_number_adjust" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 								</div>
-							</div>
-						</div>
-						<div class="col-xs-12">
-							<div class="row">
 								<div class="col-xs-6">
 									<span style="font-weight: bold; font-size: 16px;">Qty:</span>
 									<input type="text" id="qty_adjust" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 								</div>
-								<div class="col-xs-6">
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<div class="row">
+								<div class="col-xs-12">
 									<span style="font-weight: bold; font-size: 16px;">Machine:</span>
 									<select name="machine_adjust" id="machine_adjust" class="form-group" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" data-placeholder="Select Machine">
 										@foreach($mesin as $mesin)
@@ -332,15 +309,14 @@
 		$('#op').val("");
 		$('#op2').val("");
 		$('#scan_tag_success').hide();
-		$('#lot_number_new').prop('disabled',true);
 		$('#material_number').val("");
 		$('#material_description').val("");
 		$('#part').val("");
 		$('#color').val("");
 		$('#quantity').val("0");
-		$('#lot_number_choice').prop('disabled',true);
 		$('#dryer').prop('disabled',true);
-		$('#lot_number_new').val('');
+		$('#lot_number').prop('disabled',true);
+		$('#lot_number').val('');
 		$('#machine_adjust').prop('disabled',true);
 		$('#dryer_id').val('');
 		$('#dryer_adjust').val('');
@@ -350,7 +326,6 @@
 		$('#lot_number_adjust').val('');
 		$('#machine_adjust').val(null).trigger('change');
 		$('#dryer').val(null).trigger('change');
-		$('#lot_number_choice').val(null).trigger('change');
 	});
 
 	function showModalAdjustment() {
@@ -379,16 +354,11 @@
 			if(result.status){
 				$('#dryer_id').val(result.dryer.id);
 				$('#dryer_adjust').val(dryer);
-				$('#part_adjust').val(result.dryer.part);
 				$('#color_adjust').val(result.dryer.color);
 				$('#lot_number_adjust').val(result.dryer.lot_number);
 				$('#qty_adjust').val(result.dryer.qty);
-				if (result.dryer.part != null) {
-					$('#machine_adjust').removeAttr('disabled');
-					$('#machine_adjust').val(result.dryer.machine).trigger('change');
-				}else{
-					$('#machine_adjust').prop('disabled',true);
-				}
+				$('#machine_adjust').removeAttr('disabled');
+				$('#machine_adjust').val(result.dryer.machine).trigger('change');
 			}
 			else{
 				audio_error.play();
@@ -429,12 +399,13 @@
 		$('#scan_tag_success').hide();
 		$('#tag').focus();
 		$('#tag').val("");
-		$('#lot_number_choice').prop('disabled',true);
-		$('#lot_number_new').val('');
-		$('#lot_number_choice').prop('disabled',true);
+		$('#material_number').val('');
+		$('#material_description').val('');
+		$('#color').val('');
+		$('#lot_number').val('');
+		$('#lot_number').prop('disabled',true);
 		$('#dryer').prop('disabled',true);
 		$('#dryer').val(null).trigger('change');
-		$('#lot_number_choice').val(null).trigger('change');
 	}
 
 	$('#tag').keydown(function(event) {
@@ -451,7 +422,7 @@
 						$('#scan_tag_success').show();
 						$('#op').val(result.employee.employee_id);
 						$('#op2').val(result.employee.name);
-						$('#lot_number_choice').removeAttr('disabled');
+						$('#lot_number').removeAttr('disabled');
 						$('#dryer').removeAttr('disabled');
 					}
 					else{
@@ -469,15 +440,6 @@
 		}
 	});
 
-	function lotNumberChange(value) {
-		if (value === 'Resin Baru') {
-			$('#lot_number_new').removeAttr('disabled');
-			$('#lot_number_new').focus();
-		}else{
-			$('#lot_number_new').prop('disabled',true);
-		}
-	}
-
 	function plusCount(){
 		$('#quantity').val(parseInt($('#quantity').val())+1);
 	}
@@ -486,36 +448,15 @@
 		$('#quantity').val(parseInt($('#quantity').val())-1);
 	}
 
-	function fetchResin(material_number,material_description,part,color) {
+	function fetchResin(material_number,material_description,color) {
 		if ($('#op').val() == '') {
 			openErrorGritter('Error!', "Scan ID Card First!");
 			$('#tag').focus();
 		}else{
+			$('#dryer').removeAttr('disabled');
 			$('#material_number').val(material_number);
 			$('#material_description').val(material_description);
-			$('#part').val(part);
 			$('#color').val(color);
-
-			var data = {
-				color:color
-			}
-
-			$('#lot_number_choice').empty();
-
-			$.get('{{ url("index/injection/fetch_resin") }}',data, function(result, status, xhr){
-				if(result.status){
-					var lot_number_choice = "";
-					if (result.lot.length > 0) {
-						$.each(result.lot, function(key, value) {
-							lot_number_choice += '<option value="'+value.lot_number+'">'+value.lot_number+'('+value.qty+')</option>';
-						});
-					}else{
-						lot_number_choice += '<option value="Belum Ada Resin">Belum Ada Resin</option>';
-					}
-				}
-				lot_number_choice += '<option value="Resin Baru">Resin Baru</option>';
-				$('#lot_number_choice').append(lot_number_choice);
-			})
 		}
 	}
 
@@ -525,78 +466,20 @@
 		}
 		$.get('{{ url("index/injection/fetch_resin") }}', data,function(result, status, xhr){
 			if(result.status){
-				$('#tableList').DataTable().clear();
-				$('#tableList').DataTable().destroy();
 				$('#tableBodyList').html("");
 				var tableData = "";
 				var count = 1;
 				$.each(result.datas, function(key, value) {
-					tableData += '<tr onclick="fetchResin(\''+value.gmc+'\''+','+'\''+value.part_name+'\''+','+'\''+value.part_code+'\''+','+'\''+value.color+'\')">';
+					tableData += '<tr onclick="fetchResin(\''+value.gmc+'\''+','+'\''+value.part_name+'\''+','+'\''+value.color+'\')">';
 					tableData += '<td>'+ count +'</td>';
 					tableData += '<td>'+ value.gmc +'</td>';
 					tableData += '<td>'+ value.part_name +'</td>';
-					tableData += '<td>'+ value.part_code +'</td>';
 					tableData += '<td>'+ value.color +'</td>';
 					tableData += '</tr>';
 
 					count += 1;
 				});
 				$('#tableBodyList').append(tableData);
-
-				var table = $('#tableList').DataTable({
-					'dom': 'Bfrtip',
-						'responsive':true,
-						'lengthMenu': [
-						[ 10, 25, 50, -1 ],
-						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-						],
-						'buttons': {
-							buttons:[
-							{
-								extend: 'pageLength',
-								className: 'btn btn-default',
-							},
-							{
-								extend: 'copy',
-								className: 'btn btn-success',
-								text: '<i class="fa fa-copy"></i> Copy',
-								exportOptions: {
-									columns: ':not(.notexport)'
-								}
-							},
-							{
-								extend: 'excel',
-								className: 'btn btn-info',
-								text: '<i class="fa fa-file-excel-o"></i> Excel',
-								exportOptions: {
-									columns: ':not(.notexport)'
-								}
-							},
-							{
-								extend: 'print',
-								className: 'btn btn-warning',
-								text: '<i class="fa fa-print"></i> Print',
-								exportOptions: {
-									columns: ':not(.notexport)'
-								}
-							}
-							]
-						},
-						'paging': true,
-						'lengthChange': true,
-						'pageLength': 10,
-						'searching': true	,
-						'ordering': true,
-						'order': [],
-						'info': true,
-						'autoWidth': true,
-						"sPaginationType": "full_numbers",
-						"bJQueryUI": true,
-						"bAutoWidth": false,
-						"processing": true
-				});
-
-				// openSuccessGritter('Success!', "Success get Resin");
 			}
 			else{
 				openErrorGritter('Error!', result.message);
@@ -613,18 +496,12 @@
 				var tableData = "";
 				var count = 1;
 				$.each(result.datas, function(key, value) {
-					if (value.type == 'IN') {
-						var type = 'DARI WH';
-					}else{
-						var type = 'MASUK DRYER';
-					}
 					tableData += '<tr>';
 					tableData += '<td>'+ count +'</td>';
 					tableData += '<td>'+ value.material_number +'</td>';
 					tableData += '<td>'+ value.material_description +'</td>';
-					tableData += '<td>'+ value.part +'<br>('+value.color+')</td>';
+					tableData += '<td>'+ value.color +'</td>';
 					tableData += '<td>'+ value.qty +'</td>';
-					tableData += '<td>'+ type +'</td>';
 					tableData += '<td>'+ value.name +'</td>';
 					tableData += '<td>'+ value.created +'</td>';
 					tableData += '</tr>';
@@ -685,8 +562,6 @@
 						"bAutoWidth": false,
 						"processing": true
 				});
-
-				// openSuccessGritter('Success!', "Success get Resume");
 			}
 			else{
 				openErrorGritter('Error!', result.message);
@@ -695,86 +570,40 @@
 	}
 
 	function inputResin() {
-		if ($('#lot_number_choice').val() == 'Resin Baru') {
-			if ($('#material_number').val() == "" || $('#quantity').val() == "0"|| $('#lot_number_new').val() == "" || $('#dryer').val() == "") {
-				openErrorGritter('Error!', 'Semua Data Harus Diisi.');
-			}else{
-				var lot = $('#lot_number_new').val();
-				var type = 'IN';
-
-				var data = {
-					material_number:$('#material_number').val(),
-					material_description:$('#material_description').val(),
-					part:$('#part').val(),
-					color:$('#color').val(),
-					qty:$('#quantity').val(),
-					lot_number:lot,
-					type:type,
-					employee_id:$('#op').val(),
-					dryer:$('#dryer').val()
-				}
-
-				$.post('{{ url("input/injection/resin") }}',data, function(result, status, xhr){
-					if(result.status){
-						openSuccessGritter('Success!', result.message);
-						$('#material_number').val("");
-						$('#material_description').val("");
-						$('#part').val("");
-						$('#color').val("");
-						$('#quantity').val("0");
-						$('#lot_number_new').val('');
-						$('#lot_number_new').prop("disabled",true);
-						fetchResinList();
-						fetchResumeResin();
-						$('#dryer').val(null).trigger('change');
-						$('#lot_number_choice').val(null).trigger('change');
-					}
-					else{
-						audio_error.play();
-						openErrorGritter('Error!', result.message);
-					}
-				})
-			}
+		if ($('#material_number').val() == "" || $('#quantity').val() == "0" || $('#dryer').val() == "" || $('#lot_number').val() == "") {
+			openErrorGritter('Error!', 'Semua Data Harus Diisi.');
 		}else{
-			if ($('#material_number').val() == "" || $('#quantity').val() == "0" || $('#dryer').val() == "") {
-				openErrorGritter('Error!', 'Semua Data Harus Diisi.');
-			}else{
-				var lot = $('#lot_number_choice').val();
-				var type = 'OUT';
-
-				var data = {
-					material_number:$('#material_number').val(),
-					material_description:$('#material_description').val(),
-					part:$('#part').val(),
-					color:$('#color').val(),
-					qty:$('#quantity').val(),
-					lot_number:lot,
-					type:type,
-					employee_id:$('#op').val(),
-					dryer:$('#dryer').val()
-				}
-
-				$.post('{{ url("input/injection/resin") }}',data, function(result, status, xhr){
-					if(result.status){
-						openSuccessGritter('Success!', result.message);
-						$('#material_number').val("");
-						$('#material_description').val("");
-						$('#part').val("");
-						$('#color').val("");
-						$('#quantity').val("0");
-						$('#lot_number_new').val('');
-						$('#lot_number_new').prop("disabled",true);
-						fetchResinList();
-						fetchResumeResin();
-						$('#dryer').val(null).trigger('change');
-						$('#lot_number_choice').val(null).trigger('change');
-					}
-					else{
-						audio_error.play();
-						openErrorGritter('Error!', result.message);
-					}
-				})
+			var data = {
+				material_number:$('#material_number').val(),
+				material_description:$('#material_description').val(),
+				part:$('#part').val(),
+				color:$('#color').val(),
+				qty:$('#quantity').val(),
+				lot_number:$('#lot_number').val(),
+				employee_id:$('#op').val(),
+				dryer:$('#dryer').val()
 			}
+
+			$.post('{{ url("input/injection/resin") }}',data, function(result, status, xhr){
+				if(result.status){
+					openSuccessGritter('Success!', result.message);
+					$('#material_number').val("");
+					$('#material_description').val("");
+					$('#part').val("");
+					$('#color').val("");
+					$('#quantity').val("0");
+					$('#lot_number').val('');
+					$('#lot_number').prop("disabled",true);
+					$('#dryer').prop("disabled",true);
+					fetchResinList();
+					fetchResumeResin();
+					$('#dryer').val(null).trigger('change');
+				}
+				else{
+					audio_error.play();
+					openErrorGritter('Error!', result.message);
+				}
+			})
 		}
 	}
 

@@ -10,7 +10,7 @@ class InjectionDryerLog extends Model
     use SoftDeletes;
 
     protected $fillable = [
-		'dryer','material_number','material_description','part','color','qty','lot_number','type','employee_id','created_by'
+		'dryer','material_number','material_description','color','qty','lot_number','type','employee_id','created_by'
 	];
 
 	public function user()

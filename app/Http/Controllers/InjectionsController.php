@@ -128,7 +128,7 @@ class InjectionsController extends Controller
 
         // $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where part_code = '".$request->get('part_type')."'");
 
-        $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$request->get('color')."' ORDER BY part_name desc");
+        $product = DB::SELECT("SELECT id,part_name,CONCAT(SUBSTRING_INDEX(part_name, ' ', 1),'-',UPPER(part_code),'-',UPPER(color),'-',UPPER(gmc)) as product FROM `injection_parts` where remark = 'injection' and color = '".$request->get('color')."' and deleted_at is null ORDER BY part_name desc");
 
         // if ($request->get('part_type') == 'HJ') {
         //     $type = 'head';
@@ -4666,6 +4666,7 @@ class InjectionsController extends Controller
                 injection_transactions.STATUS = '".$request->get('status')."' 
                 AND injection_transactions.location= 'RC91' 
                 AND DATE( injection_transactions.created_at ) = '".$now."'
+                AND injection_parts.deleted_at is null
             ORDER BY injection_transactions.created_at DESC");
 
             $response = array(
@@ -5053,42 +5054,29 @@ class InjectionsController extends Controller
                 'dryer' => $request->get('dryer'),
                 'material_number' => $request->get('material_number'),
                 'material_description' => $request->get('material_description'),
-                'part' => $request->get('part'),
                 'color' => $request->get('color'),
                 'qty' => $request->get('qty'),
                 'lot_number' => $request->get('lot_number'),
-                'type' => $request->get('type'),
+                'type' => 'IN',
                 'employee_id' => $request->get('employee_id'),
                 'created_by' => $id_user,
             ]);
 
-            if ($request->get('type') == 'IN') {
-                $resin = InjectionResin::firstOrNew(['lot_number' => $request->get('lot_number')]);
-                $resin->qty = ($resin->qty+$request->get('qty'));
-                $resin->created_by = $id_user;
-                $resin->save();
-            }else{
-                $resin = InjectionResin::firstOrNew(['lot_number' => $request->get('lot_number')]);
-                $resin->qty = ($resin->qty-$request->get('qty'));
-                $resin->created_by = $id_user;
-                $resin->save();
+            $dryer = InjectionDryer::firstOrNew(['dryer' => $request->get('dryer')]);
+            $dryer->material_number = $request->get('material_number');
+            $dryer->material_description = $request->get('material_description');
+            $dryer->color = $request->get('color');
 
-                $dryer = InjectionDryer::firstOrNew(['dryer' => $request->get('dryer')]);
-                if ($dryer->material_number != $request->get('material_number')) {
-                    $dryer->material_number = $request->get('material_number');
-                    $dryer->material_description = $request->get('material_description');
-                    $dryer->part = $request->get('part');
-                    $dryer->color = $request->get('color');
-                }
-                if ($dryer->lot_number != $request->get('lot_number')) {
-                    $dryer->lot_number = $request->get('lot_number');
-                    $dryer->qty = $request->get('qty');
-                }else{
-                    $dryer->qty = ($dryer->qty+$request->get('qty'));
-                }
-                $dryer->created_by = $id_user;
-                $dryer->save();
-            }
+            $dryer->lot_number = $request->get('lot_number');
+            $dryer->qty = $request->get('qty');
+            $dryer->created_by = $id_user;
+            $dryer->save();
+
+            $resin = InjectionResin::create([
+                'qty' => $request->get('qty'),
+                'lot_number' => $request->get('lot_number'),
+                'created_by' => $id_user,
+            ]);
 
             $response = array(
                 'status' => true,
