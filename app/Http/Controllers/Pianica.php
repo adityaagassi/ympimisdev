@@ -3424,11 +3424,17 @@ public function fetchTrendNgWelding(Request $request){
 public function opTunning(Request $request)
 {
     $line = $request->get('line');
+    // $op = db::select("SELECT pn_operators.nik,kode,id_number,nama from pn_operators 
+    //     LEFT JOIN (
+    //     SELECT * from pn_code_operators WHERE bagian='tuning'
+    //     ) a on pn_operators.nik = a.nik
+    //     WHERE pn_operators.bagian='tuning' and pn_operators.line ='".$line."' ");
+
     $op = db::select("SELECT pn_operators.nik,kode,id_number,nama from pn_operators 
-        LEFT JOIN (
+        JOIN (
         SELECT * from pn_code_operators WHERE bagian='tuning'
         ) a on pn_operators.nik = a.nik
-        WHERE pn_operators.bagian='tuning' and pn_operators.line ='".$line."' ");
+        WHERE pn_operators.bagian='tuning'");
 
     $op2 = db::select("SELECT kode,nik,employees.`name` from pn_code_operators 
         LEFT JOIN employees on pn_code_operators.nik = employees.employee_id
