@@ -203,7 +203,7 @@ function printWindow(win, what) {
   		// }
 
   		if (rem == "P") {
-  			setTimeout(label_des,3000);
+  			setTimeout(label_des,3000); 
   		}
   		
   		// window.close();

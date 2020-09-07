@@ -171,7 +171,6 @@ function printWindow(win, what) {
       var rem = $('#rem').val(); 
 
       if (rem == "P") {
-        window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
         setTimeout(label_kecil2,3000);
       }
 
