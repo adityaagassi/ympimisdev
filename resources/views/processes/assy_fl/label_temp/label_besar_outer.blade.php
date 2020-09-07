@@ -269,7 +269,7 @@ function printWindow(win, what) {
   	win.addEventListener("afterprint", function(event) {
   		console.log("after print: "+what, true);
 
-  		// window.close();
+  		window.close();
 
   	});
   }

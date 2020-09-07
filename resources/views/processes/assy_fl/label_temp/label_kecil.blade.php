@@ -200,7 +200,7 @@ function printWindow(win, what) {
   			window.open('{{ url("index/fl_label_des") }}'+'/'+sn+'/P', '_blank');
   		}
   		
-  		// window.close();
+  		window.close();
   	});
   }
   
