@@ -246,6 +246,14 @@
 
 		$.get('{{ url("fetch/report/overtime_check") }}', data, function(result, status, xhr) {
 			if(result.status){
+				$('#ot_3Table').DataTable().clear();
+				$('#ot_3Table').DataTable().destroy();
+				$('#ot_14Table').DataTable().clear();
+				$('#ot_14Table').DataTable().destroy();
+				$('#ot_56Table').DataTable().clear();
+				$('#ot_56Table').DataTable().destroy();
+				$('#nsonsiabsTable').DataTable().clear();
+				$('#nsonsiabsTable').DataTable().destroy();
 
 				ot_3_data = "";
 				$('#ot_3TableBody').html("");
