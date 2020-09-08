@@ -264,8 +264,12 @@ var printSettings = {
 };
 
 function label_kecil() {
-  	var sn = $('#codesn').val();
-  	window.open('{{ url("index/fl_label_kecil") }}'+'/'+sn+'/P', '_blank');
+	var sn = $('#codesn').val();
+	window.open('{{ url("index/fl_label_kecil") }}'+'/'+sn+'/P', '_blank');
+	window.close();
+}
+
+function close() {
 	window.close();
 }
 
@@ -331,9 +335,9 @@ function printWindow(win, what) {
 
   		if (rem == "P") {
   			setTimeout(label_kecil,3000);
+  		}else{
+  			setTimeout(close,3000);	
   		}
-
-  		// window.close();
 
   	});
   }

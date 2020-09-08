@@ -25,13 +25,13 @@
 {{--    <input type="text" name="rem" id="rem" value="{{$remark}}" hidden="">    
 <input type="text" name="codemodel" id="codemodel" value="{{$sn}}" hidden=""> --}}
 
-   @foreach($barcode as $nomor => $barcode) 
-  <input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
-  @endforeach 
+@foreach($barcode as $nomor => $barcode) 
+<input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
+@endforeach 
 
-   <tr>
-    <td class="name" align="center" id="model" style="font-size: 40pt; -moz-transform:scale(1,1.6);">YFL412</td>
-  </tr>	
+<tr>
+  <td class="name" align="center" id="model" style="font-size: 40pt; -moz-transform:scale(1,1.6);">YFL412</td>
+</tr>	
 </table>
 </body>
 </html>
@@ -64,7 +64,7 @@
     }
 
     if (models.length == 14) {
-      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
+      $('#model').css({"font-size":"36pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
     }
 
     if (models.length == 15) {
@@ -72,7 +72,7 @@
     }
 
     if (models.length == 16) {
-      $('#model').css({"font-size":"32pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
+      $('#model').css({"font-size":"30pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
     }
 
     if (models.length == 17) {
@@ -111,9 +111,13 @@ var printSettings = {
 };
 
 function label_kecil2() {
-    var sn = $('#codesn').val();
-    window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
-    window.close();
+  var sn = $('#codesn').val();
+  window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
+  window.close();
+}
+
+function close() {
+  window.close();
 }
 
 function defineCustomPaperSize() {
@@ -172,9 +176,9 @@ function printWindow(win, what) {
 
       if (rem == "P") {
         setTimeout(label_kecil2,3000);
+      }else{
+        setTimeout(close,3000);
       }
-
-      window.close();
 
     });
   }

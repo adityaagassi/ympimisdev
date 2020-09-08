@@ -111,7 +111,7 @@
 <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
 <script>
 	jQuery(document).ready(function() {
-				
+
 		jan();
 		upc();
 		gmc();
@@ -219,6 +219,10 @@ function defineCustomPaperSize() {
   console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
 }
 
+function close() {
+	window.close();
+}
+
 function printWindow(win, what) {
   // jsPrintSetup messages  
   function jspListener(event) {
@@ -268,7 +272,8 @@ function printWindow(win, what) {
   	win.addEventListener("afterprint", function(event) {
   		console.log("after print: "+what, true);
 
-  		window.close();
+  		setTimeout(close,3000);
+
 
   	});
   }

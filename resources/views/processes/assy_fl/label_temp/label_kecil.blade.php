@@ -147,7 +147,11 @@ var printSettings = {
 
 function label_des() {
 	var sn = $('#codemodel').val();
-  	window.open('{{ url("index/fl_label_des") }}'+'/'+sn+'/P', '_blank');
+	window.open('{{ url("index/fl_label_des") }}'+'/'+sn+'/P', '_blank');
+	window.close();
+}
+
+function close() {
 	window.close();
 }
 
@@ -198,15 +202,12 @@ function printWindow(win, what) {
   		var rem = $('#rem').val();
   		console.log("after print: "+what, true);
   		
-  		// if (rem == "P") {
-  		// 	window.open('{{ url("index/fl_label_kecil2") }}'+'/'+sn+'/P', '_blank');
-  		// }
-
   		if (rem == "P") {
   			setTimeout(label_des,3000); 
+  		}else{
+  			setTimeout(close,3000);
   		}
   		
-  		// window.close();
   	});
   }
   
