@@ -2662,10 +2662,20 @@ class WeldingProcessController extends Controller
 		$tgl="";
 		if(strlen($request->get('tgl')) > 0){
 			$tgl = date('Y-m-d',strtotime($request->get("tgl")));
-			$nextday =  date('Y-m-d', strtotime($tgl . " +1 days"));
+			$jam = date('Y-m-d H:i:s');
+			if ($jam > date('Y-m-d').' 00:00:01' && $jam < date('Y-m-d').' 02:00:00' && $tgl == date('Y-m-d')) {
+				$nextday =  date('Y-m-d', strtotime($tgl));
+			}else{
+				$nextday =  date('Y-m-d', strtotime($tgl . " +1 days"));
+			}
 		}else{
 			$tgl = date("Y-m-d");
-			$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+			$jam = date('Y-m-d H:i:s');
+			if ($jam > date('Y-m-d').' 00:00:01' && $jam < date('Y-m-d').' 02:00:00') {
+				$nextday = date('Y-m-d');
+			}else{
+				$nextday = date('Y-m-d', strtotime(carbon::now()->addDays(1)));
+			}
 		}
 		$tanggal = "DATE_FORMAT(l.created_at,'%Y-%m-%d') = '".$tgl."' and";
 
