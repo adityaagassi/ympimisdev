@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\CodeGenerator;
-use App\User;
+use File;
+use DataTables;
+use ZipArchive;
+use Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use App\DailyReport;
+use App\MisAudit;
 use App\DailyReportAttachment;
-use File;
-use DataTables;
-use Illuminate\Support\Facades\DB;
-use ZipArchive;
-use Response;
+use App\EmployeeSync;
+use App\MisPointAudit;
+use App\CodeGenerator;
+use App\User;
+use App\MisInventory;
 
 
 class DailyReportController extends Controller
@@ -59,15 +63,15 @@ class DailyReportController extends Controller
      */
     public function index()
     {
-     $cat = $this->cat;
-     $loc = $this->loc;
-     return view('daily_reports.index', array(
+       $cat = $this->cat;
+       $loc = $this->loc;
+       return view('daily_reports.index', array(
         'cat' => $cat,
         'loc' => $loc,
         
     ))->with('page', 'Daily Report');
         //
- }
+   }
 
     /**
      * Show the form for creating a new resource.
@@ -195,34 +199,16 @@ class DailyReportController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request)
     {
         $daily_reports = DailyReport::where('report_code', '=', $request->get('report_code'))->get();
@@ -235,20 +221,14 @@ class DailyReportController extends Controller
         return Response::json($response);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request)
     {
         try{
-         $id_user = Auth::id();
-         $ids = $request->get('report_id');
-         $lop = $request->get('lop2');
-         if($ids != null){
+           $id_user = Auth::id();
+           $ids = $request->get('report_id');
+           $lop = $request->get('lop2');
+           if($ids != null){
             foreach ($ids as $id) 
             {
                 $description = "description".$id;
@@ -296,20 +276,168 @@ class DailyReportController extends Controller
 
 }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function delete(Request $request)
-    {
-       try{
-        $master = DailyReport::where('id','=' ,$request->get('id'))
-        ->delete();
-    }catch (QueryException $e){
-        return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
-    }
+public function delete(Request $request)
+{
+ try{
+    $master = DailyReport::where('id','=' ,$request->get('id'))
+    ->delete();
+}catch (QueryException $e){
+    return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
+}
 
+}
+
+public function indexAuditMIS()
+{
+    $title = "MIS DAILY AUDIT";
+    $title_jp = "??";
+
+    $employee = EmployeeSync::where('employee_id', '=', Auth::user()->username)
+    ->select('employee_id', 'name', 'section', 'group')
+    ->first();
+
+    return view('audit_mis.index', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'employee_id' => Auth::user()->username,
+        'name' => $employee->name
+    ))->with('page', 'MIS Audit');
+}
+
+public function fetchAuditCheckList()
+{
+    $cl = MisPointAudit::select('id','system_name', 'location', 'department', 'item_check')->get();
+
+    $response = array(
+        'status' => true,
+        'check_list' => $cl
+    );
+    return Response::json($response);
+}
+
+public function postCheckAudit(Request $request)
+{
+    $ng = $request->get('ng_list');
+
+    $aud = MisAudit::firstOrNew(array('audit_date' => date('Y-m-d'), 'pic' => Auth::user()->username));
+    $aud->created_by = Auth::user()->username;
+    $aud->save();
+
+    $id = DB::getPdo()->lastInsertId();
+
+    // foreach ($ng as $key) {
+    $tujuan_upload = 'files/mis';
+    $file = $request->file('fileData');
+    $filename = md5($id.$ng.date('YmdHisa')).'.'.$request->input('extension');
+    $file->move($tujuan_upload,$filename);
+
+    db::table('mis_audit_details')->insert(['point_audit' => $ng, 'created_by' => Auth::user()->username, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), 'id_audit' => $id, 'remark' => $filename]);
+    // }
+
+    $response = array(
+        'status' => true,
+    );
+    return Response::json($response);
+}
+
+
+// ----------------------------  INVENTORY MIS ------------------------
+
+public function indexInventoryMIS()
+{
+    $title = "MIS Inventory";
+    $title_jp = "??";
+
+    return view('inventory_mis.inventory_list', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+    ))->with('page', 'MIS Inventory');
+}
+
+public function fetchInventoryMIS()
+{
+    $inv = MisInventory::orderBy('id','desc')->get();
+
+    $response = array(
+        'status' => true,
+        'inventory' => $inv
+    );
+    return Response::json($response);
+}
+
+public function createInventoryMIS(Request $request)
+{
+
+    try {
+        foreach ($request->get('item') as $value) {
+            $inv = new MisInventory;
+
+            $inv->category = $value['category'];
+            $inv->device = $value['device'];
+            $inv->description = $value['description'];
+            $inv->project = $value['project'];
+            $inv->location = $value['location'];
+            $inv->qty = $value['quantity'];
+            $inv->used_by = $value['pic'];
+            $inv->receive_date = $request->get('receive_date');
+            $inv->created_by = Auth::id();
+
+            $inv->save();
+        }
+
+        $response = array(
+            'status' => true,
+        );
+        return Response::json($response);
+    } catch (QueryException $e) {
+        $response = array(
+            'status' => false,
+            'message' => $e->getMessage()
+        );
+        return Response::json($response);
+    } 
+}
+
+public function fetchInventoryMISbyId(Request $request)
+{
+    $inv = MisInventory::where('id', '=', $request->get('id'))->first();
+
+    $response = array(
+        'status' => true,
+        'inventory' => $inv
+    );
+    return Response::json($response);
+}
+
+public function updateInventoryMIS(Request $request)
+{
+    MisInventory::where('id', '=', $request->get("id_inv"))
+    ->update([
+        'category' => $request->get("cat_edit"),
+        'device' => $request->get("device_edit"),
+        'description' => $request->get("desc_edit"),
+        'project' => $request->get('proj_edit'),
+        'location' => $request->get('loc_edit'),
+        'qty' => $request->get('qty_edit'),
+        'used_by' => $request->get('used_by_edit'),
+        'receive_date' => $request->get('receive_date_edit'),
+        'condition' => ''
+    ]);
+
+
+    $response = array(
+        'status' => true
+    );
+    return Response::json($response);
+}
+
+public function deleteInventoryMIS(Request $request)
+{
+    MisInventory::where('id', '=', $request->get("id"))->delete();
+
+    $response = array(
+        'status' => true
+    );
+    return Response::json($response);
 }
 }
