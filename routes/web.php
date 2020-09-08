@@ -2184,6 +2184,9 @@ Route::get('index/fl_label_des/{id}/{remark}', 'ProcessController@label_des_fl')
 Route::get('index/fl_label_kecil2/{id}/{remark}', 'ProcessController@label_kecil2_fl');
 
 Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_besar_outer_fl');
+Route::get('index/fl_label_carb/{id}', 'ProcessController@label_carb_fl');
+Route::get('fetch/check_carb', 'ProcessController@fetchCheckCarb');
+
 
 
 //end label flute

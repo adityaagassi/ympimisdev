@@ -832,7 +832,7 @@ class ProcessController extends Controller
 
 	public function filter_stamp_detail(Request $request){
 		$flo_detailsTable = DB::table('log_processes')
-		->leftJoin('processes', 'processes.process_code', '=', 'log_processes.process_code')
+		->leftJoin(db::raw('(select process_code, process_name from processes where remark = "YFL041") AS processes'), 'processes.process_code', '=', 'log_processes.process_code')
 		->select('log_processes.serial_number', 'log_processes.model', 'log_processes.quantity','processes.process_name', db::raw('date_format(log_processes.created_at, "%d-%b-%Y") as st_date') );
 
 		if(strlen($request->get('datefrom')) > 0){
@@ -2255,6 +2255,7 @@ public function getsnsaxfl(Request $request)
 
 
 	if ($sn != null && $sn2 == null) {
+		//Print
 		$response = array(
 			'status' => true,
 			'message' => '1',
@@ -2264,6 +2265,7 @@ public function getsnsaxfl(Request $request)
 		return Response::json($response);
 	}
 	elseif ($sn2 != null && $sn != null) {
+		//Reprint
 		$response = array(
 			'status' => true,
 			'message' => '2',
@@ -2336,6 +2338,31 @@ public function getModelReprintAllFL(Request $request){
 		'reprint' => $reprint,
 	);
 	return Response::json($response);
+}
+
+public function fetchCheckCarb(Request $request){
+	$model = db::select("SELECT * FROM log_processes
+		WHERE process_code = '6'
+		AND origin_group_code = '041'
+		AND serial_number = '".$request->get('sn')."'");
+
+	$response = array(
+		'status' => true,
+		'model' => $model
+	);
+	return Response::json($response);
+}
+
+public function label_carb_fl($id){
+
+	$date = db::select("SELECT DATE_FORMAT( created_at, '%m-%Y' ) AS tgl FROM log_processes 
+		WHERE process_code = '6'
+		AND origin_group_code = '041'
+		AND serial_number = '".$id."'");
+
+	return view('processes.assy_fl.label_temp.label_carb',array(
+		'date' => $date,
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 }
 
 

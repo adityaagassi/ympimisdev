@@ -57,7 +57,7 @@
 			{{-- <button href="javascript:void(0)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reprintModal">
 				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint
 			</button> --}}
-			<a href="{{ url("/stamp/resumes_sx") }}" class="btn btn-primary btn-sm" target="_blank" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Record</a>
+			<a href="{{ url("stamp/resumes") }}" class="btn btn-primary btn-sm" target="_blank" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Record</a>
 		</li>
 	</ol>
 </section>
@@ -238,6 +238,7 @@
 							<button class="btn btn-lg btn-success" onclick="repintBesar();">Label GMC</button>
 							<button class="btn btn-lg btn-success" onclick="repintKecil();">Label No. Seri</button><br><br>
 
+							<button class="btn btn-lg btn-success" id="btn-carb" onclick="repintCARB();">Label CARB</button>
 							<button class="btn btn-lg btn-success" onclick="repintBesarOuter();">Label Besar Outer</button>
 
 							<!-- <button class="btn btn-lg btn-primary" onclick="reprintAll();">Label Besar + Kecil + Deskripsi</button> -->
@@ -297,6 +298,8 @@
 					$('.select2').select2()
 				});
 
+				$('#btn-carb').hide();
+
 				$('#sn').focus();
 				$('body').toggleClass("sidebar-collapse");
 
@@ -324,9 +327,9 @@
 
 			function fillPlan(){
 				$.get('{{ url("stamp/fetchStampPlanFL5") }}', function(result, status, xhr){
-					console.log(status);
-					console.log(result);
-					console.log(xhr);
+					// console.log(status);
+					// console.log(result);
+					// console.log(xhr);
 					if(xhr.status = 200){
 						if(result.status){
 							$('#planTable2').DataTable().destroy();
@@ -393,9 +396,9 @@
 
 			function fillResult(){
 				$.get('{{ url("stamp/fetchResultFL5") }}', function(result, status, xhr){
-					console.log(status);
-					console.log(result);
-					console.log(xhr);
+					// console.log(status);
+					// console.log(result);
+					// console.log(xhr);
 					$('#resultTable').DataTable().destroy();
 					if(xhr.status == 200){
 						if(result.status){
@@ -457,9 +460,9 @@
 					log:'5',
 				};
 				$.get('{{ url("index/getModelfl") }}', data, function(result, status, xhr){
-					console.log(status);
-					console.log(result);
-					console.log(xhr);
+					// console.log(status);
+					// console.log(result);
+					// console.log(xhr);
 					if(xhr.status == 200){
 						if(result.status){
 
@@ -497,9 +500,9 @@
 		}
 		if (sn.length == 8) {
 			$.get('{{ url("index/getModelfl") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
+				// console.log(status);
+				// console.log(result);
+				// console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
 						$('#listModel').html("");
@@ -523,47 +526,51 @@
 						//fill serial
 
 						$.get('{{ url("index/get_snfl") }}', data2, function(result, status, xhr){
-							console.log(status);
-							console.log(result);
-							console.log(xhr);
+							// console.log(status);
+							// console.log(result);
+							// console.log(xhr);
 							if(xhr.status == 200){
 								if(result.status){
-						// alert(result.message);
-						if(result.message =="2"){
-							$('#btnprint2').css({'display':'block'});
-							$('#btnprint').css({'display':'none'});	
-							$('#btnprint2').prop('disabled',false);							
-							$('#listModel').css({'display':'none'});							
-						}else{
-							$('#btnprint').css({'display':'block'});	
-							$('#btnprint2').css({'display':'none'});
-							$('#listModel').css({'display':'block'});
-						}
-						//modal	
-						$('#snmodel').val(result.model);
-						$('#btnprint').prop('disabled',false);	
-						$('#btnprintmodal').css({'display':'none'});
+									// alert(result.message);
+									if(result.message =="2"){
 
-					}
-					else{
-						$('#snmodel').val('Not Found');
-						$('#btnprint').prop('disabled',true);
-						//modal
-						$('#btnprint').css({'display':'none'});
-						$('#btnprintmodal').css({'display':'block'});
-						$('#btnprintmodal').prop('disabled',false);
-						$('#btnprint2').css({'display':'none'});
+										if(result.model == 'YFL-212U//ID'){
+											$('#btn-carb').show();
+										}else{
+											$('#btn-carb').hide();	
+										}
 
-					}
-				}
-				else{
-					alert("Disconnected from server");
-				}
-			});
+										$('#btnprint2').css({'display':'block'});
+										$('#btnprint').css({'display':'none'});	
+										$('#btnprint2').prop('disabled',false);							
+										$('#listModel').css({'display':'none'});							
+									}else{
+										$('#btnprint').css({'display':'block'});	
+										$('#btnprint2').css({'display':'none'});
+										$('#listModel').css({'display':'block'});
+									}
+									//modal	
+									$('#snmodel').val(result.model);
+									$('#btnprint').prop('disabled',false);	
+									$('#btnprintmodal').css({'display':'none'});
+
+								}else{
+									$('#snmodel').val('Not Found');
+									$('#btnprint').prop('disabled',true);
+									//modal
+									$('#btnprint').css({'display':'none'});
+									$('#btnprintmodal').css({'display':'block'});
+									$('#btnprintmodal').prop('disabled',false);
+									$('#btnprint2').css({'display':'none'});
+
+								}
+							}
+							else{
+								alert("Disconnected from server");
+							}
+						});
 
 						//end serial 
-
-
 					}
 					else{
 						audio_error.play();
@@ -582,8 +589,6 @@
 			$('#btnprint2').prop('disabled',true);	
 		}
 	}
-
-
 
 	function print(status){	
 		$("#modela").modal('hide');
@@ -609,9 +614,9 @@
 			}
 
 			$.post('{{ url("index/print_FL") }}', data, function(result, status, xhr){
-				console.log(status);
-				console.log(result);
-				console.log(xhr);
+				// console.log(status);
+				// console.log(result);
+				// console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
 						openSuccessGritter('Success', result.message);
@@ -631,6 +636,10 @@
 						$("#japan2").val('');
 
 						window.open('{{ url("index/fl_label_besar") }}'+'/'+sn+'/'+gmc+'/P', '_blank');
+
+						setTimeout(function() {
+							printCARB(sn);
+						}, 5000);
 
 
 					}
@@ -678,9 +687,9 @@
 			id:id
 		}
 		$.get('{{ url("edit/stampLabelFL") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
+			// console.log(status);
+			// console.log(result);
+			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#modelText').val(result.stamp.model);
@@ -713,9 +722,9 @@
 			
 		}
 		$.post('{{ url("update/stampLabelFL") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
+			// console.log(status);
+			// console.log(result);
+			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#idStamp').val('');
@@ -753,9 +762,9 @@
 		}
 
 		$.get('{{ url("index/getModelReprintAllFL") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
+			// console.log(status);
+			// console.log(result);
+			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					// alert(result.reprint[0].material_number)					
@@ -792,9 +801,9 @@
 		}
 
 		$.get('{{ url("index/getModelReprintAllFL") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
+			// console.log(status);
+			// console.log(result);
+			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					window.open('{{ url("index/fl_label_besar") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/RP', '_blank');
@@ -819,9 +828,9 @@
 		}
 
 		$.get('{{ url("index/getModelReprintAllFL") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
+			// console.log(status);
+			// console.log(result);
+			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					window.open('{{ url("index/fl_label_outer") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/RP', '_blank');
@@ -837,6 +846,46 @@
 				alert('Disconnected from sever');
 			}
 		});
+	}
+
+
+
+	function repintCARB() {
+		var sn = $('#sn').val();
+		var data = {
+			sn:sn
+		}
+
+		$.get('{{ url("fetch/check_carb") }}', data, function(result, status, xhr){
+			if(result.status){
+				if(result.model[0].model == 'YFL-212U//ID'){
+					window.open('{{ url("index/fl_label_carb") }}'+'/'+sn, '_blank');
+				}else{
+					audio_error.play();
+					alert('Bukan YFL-212U//ID');
+				}
+			}
+			else{
+				audio_error.play();
+				alert('Attempt to retrieve data failed');
+			}
+		});
+
+	}
+
+	function printCARB(sn) {
+		var data = {
+			sn : sn
+		}
+
+		$.get('{{ url("fetch/check_carb") }}', data, function(result, status, xhr){
+			if(result.status){
+				if(result.model[0].model == 'YFL-212U//ID'){
+					window.open('{{ url("index/fl_label_carb") }}'+'/'+sn, '_blank');
+				}
+			}
+		});
+
 	}
 
 </script>
