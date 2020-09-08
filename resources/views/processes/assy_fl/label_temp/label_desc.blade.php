@@ -56,15 +56,15 @@
 
     if (models.length == 12) {
       // $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,2)","padding-top":"5px"});
-      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,1)","padding-top":"5px","padding-left":"5px"});
+      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,1)","padding-top":"5px","padding-left":"5px"});
     }
 
     if (models.length == 13) {
-      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
+      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
     }
 
     if (models.length == 14) {
-      $('#model').css({"font-size":"36pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
+      $('#model').css({"font-size":"34pt", "-moz-transform":"scale(1,1)","padding-top":"5px"});
     }
 
     if (models.length == 15) {
