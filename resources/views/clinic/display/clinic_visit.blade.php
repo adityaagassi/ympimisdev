@@ -278,12 +278,17 @@
 				var istirahat = [];
 				var kecelakaan = [];
 
-				var sum = 0;
-				for (i = 0; i < result.clinic_visit.length; i++) {
+				// var sum = 0;
 
-					department.push(result.clinic_visit[i].department);
-					visit.push(parseInt(result.clinic_visit[i].qty));
-					sum += parseInt(result.clinic_visit[i].qty);
+				for (i = 0; i < result.clinic_visit.length; i++) {
+					for (k = 0; k < result.employees.length; k++) {
+						if(result.clinic_visit[i].department == result.employees[k].department){
+							department.push(result.clinic_visit[i].department);
+							// sum += parseInt(result.employees[k].emp);
+						}
+
+						// visit.push(parseInt(result.clinic_visit[i].qty));
+					}
 
 
 					for (var j = 0; j < result.clinic_visit_detail.length; j++) {
@@ -303,8 +308,15 @@
 				}
 
 				for (i = 0; i < result.clinic_visit.length; i++) {
-					percentage.push(parseInt(result.clinic_visit[i].qty) / sum * 100);
+					for (j = 0; j < result.employees.length; j++) {
+						if(result.clinic_visit[i].department == result.employees[j].department){
+							percentage.push(parseInt(result.clinic_visit[i].qty) / result.employees[j].emp * 100);
+						}
+					}
 				}
+
+				console.table(percentage);
+				console.table(result.employees);
 
 
 				Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
@@ -328,7 +340,7 @@
 					xAxis: {
 						categories: department,
 					},
-					
+
 					yAxis: [{
 						title: {
 							text: 'Patient(s)'
@@ -391,7 +403,7 @@
 						scatter:{
 							dataLabels: {
 								enabled: true,
-								format: '{point.y: .0f}%',
+								format: '{point.y: .1f}%',
 								style:{
 									fontSize: '15px'
 								}
@@ -447,7 +459,7 @@
 						type: 'scatter',
 						tooltip: {
 							headerFormat: '<span></span>',
-							pointFormat: '<span>{series.name}: <b>{point.y:.0f}% </b></span>',
+							pointFormat: '<span>{series.name}: <b>{point.y:.1f}% </b></span>',
 						},
 					}
 					]
