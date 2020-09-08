@@ -71,7 +71,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="datefrom">
+									<input type="text" class="form-control pull-right" id="date_from">
 								</div>
 							</div>
 						</div>
@@ -82,7 +82,7 @@
 									<div class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</div>
-									<input type="text" class="form-control pull-right" id="dateto">
+									<input type="text" class="form-control pull-right" id="date_to">
 								</div>
 							</div>
 						</div>
@@ -243,6 +243,8 @@
 			date_from:date_from,
 			date_to:date_to
 		}
+
+		console.log(data);
 
 		$.get('{{ url("fetch/report/overtime_check") }}', data, function(result, status, xhr) {
 			if(result.status){
