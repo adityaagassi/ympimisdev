@@ -145,13 +145,13 @@ var printSettings = {
 	"printerName" : "SATO CX400"
 };
 
-function label_des() {
+function label_desc() {
 	var sn = $('#codemodel').val();
 	window.open('{{ url("index/fl_label_des") }}'+'/'+sn+'/P', '_blank');
 	window.close();
 }
 
-function close() {
+function tutup() {
 	window.close();
 }
 
@@ -203,11 +203,10 @@ function printWindow(win, what) {
   		console.log("after print: "+what, true);
   		
   		if (rem == "P") {
-  			setTimeout(label_des,3000); 
+  			setTimeout(label_desc,2000); 
   		}else{
-  			setTimeout(close,3000);
+  			setTimeout(tutup,2000);
   		}
-  		
   	});
   }
   

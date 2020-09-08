@@ -219,7 +219,7 @@ function defineCustomPaperSize() {
   console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
 }
 
-function close() {
+function tutup() {
 	window.close();
 }
 
@@ -272,9 +272,8 @@ function printWindow(win, what) {
   	win.addEventListener("afterprint", function(event) {
   		console.log("after print: "+what, true);
 
-  		setTimeout(close,3000);
-
-
+  		setTimeout(tutup,3000);
+		// window.close();
   	});
   }
   

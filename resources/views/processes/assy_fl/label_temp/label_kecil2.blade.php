@@ -145,7 +145,7 @@ var printSettings = {
 	"printerName" : "SATO CX400"
 };
 
-function close() {
+function tutup() {
 	window.close();
 }
 
@@ -196,8 +196,7 @@ function printWindow(win, what) {
   		var rem = $('#rem').val();
   		console.log("after print: "+what, true);
 
-  		setTimeout(close,3000);
-  		
+  		setTimeout(tutup,2000);
   	});
   }
   

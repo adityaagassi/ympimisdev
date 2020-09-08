@@ -22,8 +22,8 @@
   @endphp
 
   <table border="0" >	
-{{--    <input type="text" name="rem" id="rem" value="{{$remark}}" hidden="">    
-<input type="text" name="codemodel" id="codemodel" value="{{$sn}}" hidden=""> --}}
+<input type="text" name="rem" id="rem" value="{{$remark}}" hidden="">    
+<input type="text" name="codesn" id="codesn" value="{{$sn}}" hidden="">
 
 @foreach($barcode as $nomor => $barcode) 
 <input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
@@ -49,9 +49,9 @@
 		$('#model').text(models);		
 		var panjang = (models.length - 11)*2;
 		var	ukuran = 48;
-		if (models.length == 11) {
+		if (models.length <= 11) {
       // $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1.1,2)","padding-top":"5px"});
-      $('#model').css({"font-size":"40pt", "-moz-transform":"scale(1.1,1)","padding-top":"5px","padding-left":"20px"});
+      $('#model').css({"font-size":"38pt", "-moz-transform":"scale(1.1,1)","padding-top":"5px","padding-left":"20px"});
     }
 
     if (models.length == 12) {
@@ -68,7 +68,7 @@
     }
 
     if (models.length == 15) {
-      $('#model').css({"font-size":"34pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
+      $('#model').css({"font-size":"32pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
     }
 
     if (models.length == 16) {
@@ -116,7 +116,7 @@ function label_kecil2() {
   window.close();
 }
 
-function close() {
+function tutup() {
   window.close();
 }
 
@@ -175,11 +175,11 @@ function printWindow(win, what) {
       var rem = $('#rem').val(); 
 
       if (rem == "P") {
-        setTimeout(label_kecil2,3000);
+        setTimeout(label_kecil2,2000);
       }else{
-        setTimeout(close,3000);
+        setTimeout(tutup,2000);
       }
-
+      // window.close();
     });
   }
   

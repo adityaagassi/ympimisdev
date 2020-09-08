@@ -269,7 +269,7 @@ function label_kecil() {
 	window.close();
 }
 
-function close() {
+function tutup() {
 	window.close();
 }
 
@@ -334,9 +334,9 @@ function printWindow(win, what) {
   		console.log(rem);
 
   		if (rem == "P") {
-  			setTimeout(label_kecil,3000);
+  			setTimeout(label_kecil,2000);
   		}else{
-  			setTimeout(close,3000);	
+  			setTimeout(tutup,2000);	
   		}
 
   	});
