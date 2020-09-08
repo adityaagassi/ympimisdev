@@ -66,7 +66,7 @@
     </div>
     <div class="col-xs-12">
       <div class="col-xs-10">
-        <h3 style="color: white; text-align: center">Daftar APAR yang NG</h3>
+        <h3 style="color: white; text-align: center">Daftar APAR NG</h3>
       </div>
 
       <div class="col-xs-2 pull-right">

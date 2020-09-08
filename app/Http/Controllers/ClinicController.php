@@ -493,10 +493,13 @@ class ClinicController extends Controller{
 			GROUP BY e.department, visit.purpose) as qty
 			on dept.department = qty.department and dept.purpose = qty. purpose");
 
+		$tot_emp = db::select("select department ,count(employee_id) as emp from employee_syncs where end_date is null and department is not null GROUP BY department");
+
 		$response = array(
 			'status' => true,
 			'clinic_visit' => $clinic_visit,
 			'clinic_visit_detail' => $clinic_visit_detail,
+			'employees' => $tot_emp,
 			'datefrom' => date_format(date_create($datefrom), "d M Y"),
 			'dateto' => date_format(date_create($dateto), "d M Y")
 		);

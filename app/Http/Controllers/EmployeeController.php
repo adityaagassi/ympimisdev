@@ -3420,7 +3420,7 @@ public function fetchAbsenceEmployee(Request $request)
                format ( shiftstarttime, 'dd MMM yyyy' ) AS tanggal,
                ovtactfrom AS starttime,
                ovtactto AS endtime,
-               ovtrequest_no AS Attend_Code 
+               ovtrequest_no AS Attend_Code
                FROM
                VIEW_YMPI_Emp_Attendance 
                WHERE
