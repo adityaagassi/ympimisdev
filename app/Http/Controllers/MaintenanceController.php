@@ -647,7 +647,7 @@ class MaintenanceController extends Controller
 			group by order_no
 			) as prcs on prcs.order_no = maintenance_job_orders.order_no
 			left join (select * from maintenance_job_order_logs where remark = 4 and deleted_at is null) as inprogress on maintenance_job_orders.order_no = inprogress.order_no
-			where maintenance_job_orders.remark = 4
+			where maintenance_job_orders.remark in (3,4)
 			');
 
 		$data_progress = db::select('
@@ -687,7 +687,7 @@ class MaintenanceController extends Controller
 		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "maintenance_job_orders.created_by")
 		->leftJoin(db::raw("employee_syncs AS es"), "es.employee_id", "=", "maintenance_job_processes.operator_id")
 		->leftJoin("maintenance_job_pendings", "maintenance_job_orders.order_no", "=", "maintenance_job_pendings.order_no")
-		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "machine_condition", "danger", "target_date", db::raw("employee_syncs.`name` as requester"), db::raw("es.`name` as operator"), db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "process_name", "maintenance_job_orders.remark", "maintenance_job_orders.category", "start_actual", "finish_actual", "maintenance_job_pendings.status");
+		->select("maintenance_job_orders.order_no", "maintenance_job_orders.section", "priority", "type", "machine_condition", "danger", "target_date", db::raw("employee_syncs.`name` as requester"), db::raw("es.`name` as operator"), db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "process_name", "maintenance_job_orders.remark", "maintenance_job_orders.category", "start_actual", "finish_actual", "maintenance_job_pendings.status", "maintenance_job_orders.note");
 
 		if(strlen($request->get('reqFrom')) > 0 ){
 			$reqFrom = date('Y-m-d', strtotime($request->get('reqFrom')));
@@ -755,16 +755,27 @@ class MaintenanceController extends Controller
 		$detail = MaintenanceJobOrder::where("maintenance_job_orders.order_no", "=", $request->get('order_no'))
 		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "maintenance_job_orders.created_by")
 		->leftJoin("maintenance_job_processes", "maintenance_job_processes.order_no", "=", "maintenance_job_orders.order_no")
-		// ->leftJoin("maintenance_plan_items", "maintenance_plan_items.machine_id", "=", "maintenance_job_orders.machine_name")
+		->leftJoin('maintenance_job_reports', function($join)
+		{
+			$join->on('maintenance_job_reports.order_no', '=', 'maintenance_job_processes.order_no');
+			$join->on('maintenance_job_reports.operator_id','=', 'maintenance_job_processes.operator_id');
+		})
 		->leftJoin("maintenance_job_pendings", "maintenance_job_orders.order_no", "=", "maintenance_job_pendings.order_no")
 		->leftJoin(db::raw("employee_syncs as  es"), "es.employee_id", "=", "maintenance_job_processes.operator_id")
 		->leftJoin(db::raw("(select process_code, process_name from processes where remark = 'maintenance') AS process"), "maintenance_job_orders.remark", "=", "process.process_code")
-		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "machine_name")
+		->select("maintenance_job_orders.order_no", "employee_syncs.name", db::raw('DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as date'), "priority", "maintenance_job_orders.section", "type", "maintenance_job_orders.category", "machine_condition", "danger", "maintenance_job_orders.description", "safety_note", "target_date", "process_name", db::raw("es.name as name_op"), db::raw("es.employee_id as id_op"), db::raw("DATE_FORMAT(maintenance_job_processes.start_actual, '%Y-%m-%d %H:%i') start_actual"), db::raw("DATE_FORMAT(maintenance_job_processes.finish_actual, '%Y-%m-%d %H:%i') finish_actual"), "maintenance_job_pendings.status", db::raw("maintenance_job_pendings.description as pending_desc"), "machine_name", "cause", "handling", "photo")
+		->get();
+
+		$parts = MaintenanceJobOrder::where('maintenance_job_orders.order_no', '=', $request->get('order_no'))
+		->join("maintenance_job_spareparts", "maintenance_job_spareparts.order_no", "=", "maintenance_job_orders.order_no")
+		->join("maintenance_inventories", "maintenance_inventories.part_number", "=", "maintenance_job_spareparts.part_number")
+		->select("maintenance_job_orders.order_no", "maintenance_job_spareparts.part_number", "maintenance_inventories.part_name", "maintenance_inventories.specification", "maintenance_job_spareparts.quantity")
 		->get();
 
 		$response = array(
 			'status' => true,
-			'detail' => $detail
+			'detail' => $detail,
+			'part' => $parts
 		);
 		return Response::json($response);
 	}
@@ -832,6 +843,7 @@ class MaintenanceController extends Controller
 				$spk->remark = $remark;
 				$spk->priority = $priority;
 				$spk->target_date = $target_date;
+				$spk->note = "Manager_OK Chemical_None";
 
 				$manager = EmployeeSync::where('position', '=', 'Manager')
 				->where('department', '=', 'Maintenance')
@@ -883,7 +895,7 @@ class MaintenanceController extends Controller
 			$spk = MaintenanceJobOrder::where('order_no', '=', $request->get('order_no'))->first();
 			$spk->remark = $remark;
 			$spk->safety_note = $request->get('danger_note');
-
+			$spk->note = "Chemical_OK Manager_None";
 
 			$chemical = EmployeeSync::whereNull('group')
 			->where('section', '=', 'Chemical Process Control')
@@ -959,8 +971,8 @@ class MaintenanceController extends Controller
 		$operator_id = Auth::user()->username;
 
 		try {
+			$no = 1;
 			foreach ($data as $key) {
-				$no = 1;
 				if ($key != "") {
 					$image_parts = explode(";base64,", $key);
 					$image_type_aux = explode("image/", $image_parts[0]);
@@ -982,8 +994,8 @@ class MaintenanceController extends Controller
 			$rpt->operator_id = $operator_id;
 			$rpt->cause = $request->get('penyebab');
 			$rpt->handling = $request->get('penanganan');
-			// $rpt->spare_part = '';
-			$rpt->photo = implode(", ",$upload);;
+			
+			$rpt->photo = implode(", ",$upload);
 			$rpt->remark = 'OK';
 			$rpt->created_by = $operator_id;
 
@@ -1005,12 +1017,14 @@ class MaintenanceController extends Controller
 
 			$parts = $request->get('spare_part');
 
-			foreach ($parts as $prts) {
-				$spk_part = MaintenanceJobSparepart::firstOrNew(array('order_no' => $request->get('order_no'), 'part_number' => $prts['part_number']));
-				$spk_part->quantity = $prts['qty'];
-				$spk_part->created_by = Auth::user()->username;
+			if ($parts) {
+				foreach ($parts as $prts) {
+					$spk_part = MaintenanceJobSparepart::firstOrNew(array('order_no' => $request->get('order_no'), 'part_number' => $prts['part_number']));
+					$spk_part->quantity = $prts['qty'];
+					$spk_part->created_by = Auth::user()->username;
 
-				$spk_part->save();
+					$spk_part->save();
+				}
 			}
 
 			$response = array(
@@ -2084,9 +2098,9 @@ class MaintenanceController extends Controller
 			MaintenanceJobProcess::where("order_no", "=", $request->get("order_no"))->delete();
 
 			$spk_log = new MaintenanceJobOrderLog;
-				$spk_log->order_no = $request->get('order_no');
-				$spk_log->remark = 2;
-				$spk_log->created_by = Auth::user()->username;
+			$spk_log->order_no = $request->get('order_no');
+			$spk_log->remark = 2;
+			$spk_log->created_by = Auth::user()->username;
 
 			$response = array(
 				'status' => true,

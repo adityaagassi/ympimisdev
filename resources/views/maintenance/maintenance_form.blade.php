@@ -283,179 +283,30 @@
 			</div>
 		</div>
 	</div>
-</div>
 
-<div class="modal fade" id="detailModal" style="color: black;">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<div class="col-xs-12" style="background-color: #3c8dbc;">
-					<h1 style="text-align: center; margin:5px; font-weight: bold;">Detail SPK</h1>
-				</div>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-xs-6">
-						<div class="form-group row" align="right">
-							<label class="col-xs-4" style="margin-top: 1%;">Nomor SPK</label>
-							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="spk_detail" readonly>
-							</div>
-						</div>
 
-						<div class="form-group row" align="right">
-							<label class="col-xs-4" style="margin-top: 1%;">Nama Pengaju</label>
-							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="pengaju_detail" readonly>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-xs-6">
-						<div class="form-group row" align="right">
-							<label class="col-xs-4" style="margin-top: 1%;">Tanggal Pengajuan</label>
-							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="tanggal_detail" readonly>
-							</div>
-						</div>
-
-						<div class="form-group row" align="right">
-							<label class="col-xs-4" style="margin-top: 1%;">Bagian Pengaju</label>
-							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="bagian_detail" readonly>
-							</div>
-						</div>
-					</div>
-					<div class="col-xs-12"><hr style="margin-top: 10px; margin-bottom: 10px"></div>
-					<div class="col-xs-6">
-						<div class="form-group row" align="right">
-							<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
-							<div class="col-xs-7" align="left">
-								<span style="font-size: 13px;" class="label" id="prioritas_detail"></span>
-							</div>
-						</div>
-
-						<div class="form-group row" align="right">
-							<label class="col-xs-4" style="margin-top: 1%;">Jenis Pekerjaan</label>
-							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="workType_detail" readonly>
-							</div>
-						</div>
-
-						<div class="form-group row" align="right">
-							<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
-							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="kategori_detail" readonly>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="col-xs-6">
-						<div class="form-group row" align="right">
-							<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin</label>
-							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="kondisi_mesin_detail" readonly>
-							</div>
-						</div>
-
-						<div class="form-group row" align="right">
-							<label class="col-xs-4" style="margin-top: 1%;">Potensi Bahaya</label>
-							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="bahaya_detail" readonly>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-xs-12">
-						<div class="form-group row" align="right">
-							<label class="col-xs-2" style="margin-top: 1%;">Nama Mesin</label>
-							<div class="col-xs-7" align="left">
-								<input type="text" class="form-control" id="mesin_detail" readonly>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-xs-12">
-						<div class="form-group row" align="right">
-							<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan</label>
-							<div class="col-xs-10" align="left">
-								<textarea class="form-control" id="uraian_detail" readonly></textarea>
-							</div>
-						</div>
-
-						<div class="form-group row" align="right">
-							<label class="col-xs-2" style="margin-top: 1%;">Catatan Keamanan</label>
-							<div class="col-xs-8" align="left">
-								<textarea class="form-control" id="keamanan_detail" rows="1" readonly></textarea>
-							</div>
-						</div>
-
-						<div class="form-group row" align="right">
-							<label class="col-xs-2" style="margin-top: 1%;">Tanggal Target</label>
-							<div class="col-xs-3" align="left">
-								<div class="input-group date">
-									<div class="input-group-addon bg-default">
-										<i class="fa fa-calendar"></i>
-									</div>
-									<input type="text" class="form-control" id="target_detail" readonly>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group row" align="right">
-							<label class="col-xs-2" style="margin-top: 1%;">Status</label>
-							<div class="col-xs-3" align="left">
-								<input type="text" class="form-control" id="status_detail" readonly>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-xs-12" id="keterangn_detail" style="display: none">
-						<b>Maintenance Operator :</b>
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>Nama Operator</th>
-									<th>Start</th>
-									<th>Finish</th>
-									<th>Status</th>
-									<th>Keterangan</th>
-								</tr>
-							</thead>
-							<tbody id="body_desc">
-							</tbody>
-						</table>
+	<div class="modal fade" id="detailModal" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="col-xs-12" style="background-color: #3c8dbc;">
+						<h1 style="text-align: center; margin:5px; font-weight: bold;">Detail SPK</h1>
 					</div>
 				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="editModal" style="color: black;">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<div class="col-xs-12" style="background-color: #3c8dbc;">
-					<h1 style="text-align: center; margin:5px; font-weight: bold;">Edit Form SPK</h1>
-				</div>
-			</div>
-			<div class="modal-body">
-				<div class="row">
-					<form method="POST" id="editForm" autocomplete="off">
+				<div class="modal-body">
+					<div class="row">
 						<div class="col-xs-6">
 							<div class="form-group row" align="right">
 								<label class="col-xs-4" style="margin-top: 1%;">Nomor SPK</label>
 								<div class="col-xs-7" align="left">
-									<input type="text" class="form-control" id="spk_edit" name="spk_edit" readonly>
+									<input type="text" class="form-control" id="spk_detail" readonly>
 								</div>
 							</div>
 
 							<div class="form-group row" align="right">
 								<label class="col-xs-4" style="margin-top: 1%;">Nama Pengaju</label>
 								<div class="col-xs-7" align="left">
-									<input type="text" class="form-control" id="pengaju_edit" readonly>
+									<input type="text" class="form-control" id="pengaju_detail" readonly>
 								</div>
 							</div>
 						</div>
@@ -464,110 +315,79 @@
 							<div class="form-group row" align="right">
 								<label class="col-xs-4" style="margin-top: 1%;">Tanggal Pengajuan</label>
 								<div class="col-xs-7" align="left">
-									<input type="text" class="form-control" id="tanggal_edit" readonly>
+									<input type="text" class="form-control" id="tanggal_detail" readonly>
 								</div>
 							</div>
 
 							<div class="form-group row" align="right">
 								<label class="col-xs-4" style="margin-top: 1%;">Bagian Pengaju</label>
 								<div class="col-xs-7" align="left">
-									<input type="text" class="form-control" id="bagian_edit" readonly>
+									<input type="text" class="form-control" id="bagian_detail" readonly>
 								</div>
 							</div>
 						</div>
 						<div class="col-xs-12"><hr style="margin-top: 10px; margin-bottom: 10px"></div>
 						<div class="col-xs-6">
 							<div class="form-group row" align="right">
-								<label class="col-xs-4" style="margin-top: 1%;">Prioritas<span class="text-red">*</span></label>
+								<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
 								<div class="col-xs-7" align="left">
-									<select class="form-control select4" id="prioritas_edit" name="prioritas_edit" data-placeholder="Pilih Prioritas Pengerjaan">
-										<option></option>
-										<option>Urgent</option>
-										<option>Normal</option>
-									</select>
+									<span style="font-size: 13px;" class="label" id="prioritas_detail"></span>
 								</div>
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-4" style="margin-top: 1%;">Jenis Pekerjaan<span class="text-red">*</span></label>
+								<label class="col-xs-4" style="margin-top: 1%;">Jenis Pekerjaan</label>
 								<div class="col-xs-7" align="left">
-									<select class="form-control select4" id="workType_edit" name="workType_edit" data-placeholder="Pilih Jenis Pengerjaan" required>
-										<option></option>
-										<option>Perbaikan</option>
-										<option>Pemasangan</option>
-										<option>Pelepasan</option>
-										<option>Penggantian</option>
-									</select>
+									<input type="text" class="form-control" id="workType_detail" readonly>
 								</div>
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+								<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
 								<div class="col-xs-7" align="left">
-									<select class="form-control select4" id="kategori_edit" name="kategori_edit" data-placeholder="Pilih Kategori Pekerjaan" required>
-										<option></option>
-										<optgroup label="Utilitas">
-											<option>Listrik</option>
-											<option>Jaringan</option>
-											<option>Mesin Utilitas</option>
-											<option>Utilitas Umum</option>
-										</optgroup>
-										<optgroup label="Mesin Produksi">
-											<option>Kelistrikan Mesin</option>
-											<option>Mekanis Mesin</option>
-										</optgroup>
-									</select>
+									<input type="text" class="form-control" id="kategori_detail" readonly>
 								</div>
 							</div>
+
 						</div>
 
 						<div class="col-xs-6">
 							<div class="form-group row" align="right">
-								<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin<span class="text-red">*</span></label>
+								<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin</label>
 								<div class="col-xs-7" align="left">
-									<select class="form-control select4" id="kondisi_mesin_edit" name="kondisi_mesin_edit" data-placeholder="Pilih Kondisi Mesin" required>
-										<option></option>
-										<option>Berhenti</option>
-										<option>Berjalan</option>
-									</select>
+									<input type="text" class="form-control" id="kondisi_mesin_detail" readonly>
 								</div>
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-4" style="margin-top: 1%;">Potensi Bahaya<span class="text-red">*</span></label>
+								<label class="col-xs-4" style="margin-top: 1%;">Potensi Bahaya</label>
 								<div class="col-xs-7" align="left">
-									<select class="form-control" id="bahaya_edit" name="bahaya_edit[]" data-placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
-										<option></option>
-										<option>Bahan Kimia Beracun</option>
-										<option>Tersengat Listrik</option>
-										<option>Terjepit</option>
-										<option>Putaran Mesin</option>
-									</select>
+									<input type="text" class="form-control" id="bahaya_detail" readonly>
 								</div>
 							</div>
 						</div>
 
 						<div class="col-xs-12">
 							<div class="form-group row" align="right">
-								<label class="col-xs-2" style="margin-top: 1%;">Mesin</label>
+								<label class="col-xs-2" style="margin-top: 1%;">Nama Mesin</label>
+								<div class="col-xs-7" align="left">
+									<input type="text" class="form-control" id="mesin_detail" readonly>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xs-12">
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan</label>
 								<div class="col-xs-10" align="left">
-									<select class="form-control" id="mesin_edit" name="mesin_edit" data-placeholder="pilih mesin (Bila berhubungan mesin)">
-										<option value=""></option>
-									</select>
+									<textarea class="form-control" id="uraian_detail" readonly></textarea>
 								</div>
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
-								<div class="col-xs-10" align="left">
-									<textarea class="form-control" id="uraian_edit" name="uraian_edit" required></textarea>
-								</div>
-							</div>
-
-							<div class="form-group row" align="right">
-								<label class="col-xs-2" style="margin-top: 1%;">Catatan Keamanan<span class="text-red">**</span></label>
+								<label class="col-xs-2" style="margin-top: 1%;">Catatan Keamanan</label>
 								<div class="col-xs-8" align="left">
-									<textarea class="form-control" id="keamanan_edit" name="keamanan_edit" rows="1" ></textarea>
+									<textarea class="form-control" id="keamanan_detail" rows="1" readonly></textarea>
 								</div>
 							</div>
 
@@ -578,32 +398,259 @@
 										<div class="input-group-addon bg-default">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control" id="target_edit" readonly>
+										<input type="text" class="form-control" id="target_detail" readonly>
 									</div>
 								</div>
 							</div>
 
-							<div class="row">
-								<div class="col-xs-10" style="font-weight: bold !important">
-									<br>
-									<span style="color: red !important; background-color: yellow">Note : </span><br>
-									<span style="color: red !important; background-color: yellow">*) Wajib diisi</span><br>
-									<span style="color: red !important; background-color: yellow">**) Diisi Pemohon, Jika pekerjaan berkaitan dengan chemical diisi oleh Chemical Staff atau kosongkan</span><br>
-								</div>
-							</div>
-
-							<div class=" form-group row">
-								<div class="col-xs-2 pull-right">
-									<center><button class="btn btn-primary" type="submit" id="edit_btn"><i class="fa fa-check"></i> Edit</button></center>
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Status</label>
+								<div class="col-xs-3" align="left">
+									<input type="text" class="form-control" id="status_detail" readonly>
 								</div>
 							</div>
 						</div>
-					</form>
+
+						<div class="col-xs-12" id="keterangan_detail" style="display: none">
+							<hr>
+							<b>Maintenance Operator :</b>
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Nama Operator</th>
+										<th>Start</th>
+										<th>Finish</th>
+										<th>Status</th>
+										<th>Keterangan</th>
+									</tr>
+								</thead>
+								<tbody id="body_desc">
+								</tbody>
+							</table>
+						</div>
+
+						<div class="col-xs-12" id="report_detail" style="display: none">
+							<b>Report :</b>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Penyebab</label>
+								<div class="col-xs-8" align="left">
+									<textarea class="form-control" id="penyebab_detail" readonly></textarea>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Penanganan</label>
+								<div class="col-xs-8" align="left">
+									<textarea class="form-control" id="penanganan_detail" readonly></textarea>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Sparepart</label>
+								<div class="col-xs-8" align="left">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>Item</th>
+												<th>Qty</th>
+											</tr>
+										</thead>
+										<tbody id="part_detail">
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="form-group row" align="right">
+									<label class="col-xs-2" style="margin-top: 1%;">Foto</label>
+									<div class="col-xs-8" align="left" id="img_detail">
+										
+									</div>
+								</div>
+								<!-- <div class="col-xs-12" id="img_detail">
+									<img src="#">
+								</div> -->
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
+	<div class="modal fade" id="editModal" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="col-xs-12" style="background-color: #3c8dbc;">
+						<h1 style="text-align: center; margin:5px; font-weight: bold;">Edit Form SPK</h1>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<form method="POST" id="editForm" autocomplete="off">
+							<div class="col-xs-6">
+								<div class="form-group row" align="right">
+									<label class="col-xs-4" style="margin-top: 1%;">Nomor SPK</label>
+									<div class="col-xs-7" align="left">
+										<input type="text" class="form-control" id="spk_edit" name="spk_edit" readonly>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-xs-4" style="margin-top: 1%;">Nama Pengaju</label>
+									<div class="col-xs-7" align="left">
+										<input type="text" class="form-control" id="pengaju_edit" readonly>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xs-6">
+								<div class="form-group row" align="right">
+									<label class="col-xs-4" style="margin-top: 1%;">Tanggal Pengajuan</label>
+									<div class="col-xs-7" align="left">
+										<input type="text" class="form-control" id="tanggal_edit" readonly>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-xs-4" style="margin-top: 1%;">Bagian Pengaju</label>
+									<div class="col-xs-7" align="left">
+										<input type="text" class="form-control" id="bagian_edit" readonly>
+									</div>
+								</div>
+							</div>
+							<div class="col-xs-12"><hr style="margin-top: 10px; margin-bottom: 10px"></div>
+							<div class="col-xs-6">
+								<div class="form-group row" align="right">
+									<label class="col-xs-4" style="margin-top: 1%;">Prioritas<span class="text-red">*</span></label>
+									<div class="col-xs-7" align="left">
+										<select class="form-control select4" id="prioritas_edit" name="prioritas_edit" data-placeholder="Pilih Prioritas Pengerjaan">
+											<option></option>
+											<option>Urgent</option>
+											<option>Normal</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-xs-4" style="margin-top: 1%;">Jenis Pekerjaan<span class="text-red">*</span></label>
+									<div class="col-xs-7" align="left">
+										<select class="form-control select4" id="workType_edit" name="workType_edit" data-placeholder="Pilih Jenis Pengerjaan" required>
+											<option></option>
+											<option>Perbaikan</option>
+											<option>Pemasangan</option>
+											<option>Pelepasan</option>
+											<option>Penggantian</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
+									<div class="col-xs-7" align="left">
+										<select class="form-control select4" id="kategori_edit" name="kategori_edit" data-placeholder="Pilih Kategori Pekerjaan" required>
+											<option></option>
+											<optgroup label="Utilitas">
+												<option>Listrik</option>
+												<option>Jaringan</option>
+												<option>Mesin Utilitas</option>
+												<option>Utilitas Umum</option>
+											</optgroup>
+											<optgroup label="Mesin Produksi">
+												<option>Kelistrikan Mesin</option>
+												<option>Mekanis Mesin</option>
+											</optgroup>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xs-6">
+								<div class="form-group row" align="right">
+									<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin<span class="text-red">*</span></label>
+									<div class="col-xs-7" align="left">
+										<select class="form-control select4" id="kondisi_mesin_edit" name="kondisi_mesin_edit" data-placeholder="Pilih Kondisi Mesin" required>
+											<option></option>
+											<option>Berhenti</option>
+											<option>Berjalan</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-xs-4" style="margin-top: 1%;">Potensi Bahaya<span class="text-red">*</span></label>
+									<div class="col-xs-7" align="left">
+										<select class="form-control" id="bahaya_edit" name="bahaya_edit[]" data-placeholder="Pilih Bahaya yang Mungkin Terjadi" multiple="multiple" required>
+											<option></option>
+											<option>Bahan Kimia Beracun</option>
+											<option>Tersengat Listrik</option>
+											<option>Terjepit</option>
+											<option>Putaran Mesin</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xs-12">
+								<div class="form-group row" align="right">
+									<label class="col-xs-2" style="margin-top: 1%;">Mesin</label>
+									<div class="col-xs-10" align="left">
+										<select class="form-control" id="mesin_edit" name="mesin_edit" data-placeholder="pilih mesin (Bila berhubungan mesin)">
+											<option value=""></option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan<span class="text-red">*</span></label>
+									<div class="col-xs-10" align="left">
+										<textarea class="form-control" id="uraian_edit" name="uraian_edit" required></textarea>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-xs-2" style="margin-top: 1%;">Catatan Keamanan<span class="text-red">**</span></label>
+									<div class="col-xs-8" align="left">
+										<textarea class="form-control" id="keamanan_edit" name="keamanan_edit" rows="1" ></textarea>
+									</div>
+								</div>
+
+								<div class="form-group row" align="right">
+									<label class="col-xs-2" style="margin-top: 1%;">Tanggal Target</label>
+									<div class="col-xs-3" align="left">
+										<div class="input-group date">
+											<div class="input-group-addon bg-default">
+												<i class="fa fa-calendar"></i>
+											</div>
+											<input type="text" class="form-control" id="target_edit" readonly>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-xs-10" style="font-weight: bold !important">
+										<br>
+										<span style="color: red !important; background-color: yellow">Note : </span><br>
+										<span style="color: red !important; background-color: yellow">*) Wajib diisi</span><br>
+										<span style="color: red !important; background-color: yellow">**) Diisi Pemohon, Jika pekerjaan berkaitan dengan chemical diisi oleh Chemical Staff atau kosongkan</span><br>
+									</div>
+								</div>
+
+								<div class=" form-group row">
+									<div class="col-xs-2 pull-right">
+										<center><button class="btn btn-primary" type="submit" id="edit_btn"><i class="fa fa-check"></i> Edit</button></center>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </section>
 
@@ -842,6 +889,9 @@
 			$("#target_detail").val(result.detail[0].target_date);
 			$("#status_detail").val(result.detail[0].process_name);
 
+			$("#penyebab_detail").val(result.detail[0].cause);
+			$("#penanganan_detail").val(result.detail[0].handling);
+
 			var stat = 0;
 			$.each(result.detail, function(index, value){
 				if (value.process_name == "Pending" || value.process_name == "Finished" || value.process_name == "InProgress") {
@@ -850,9 +900,11 @@
 			})
 
 			var body = "";
+			$("#img_detail").empty();
+
 			$.each(result.detail, function(index, value){
 				if (stat == 1) {
-					$("#keterangn_detail").show();
+					$("#keterangan_detail").show();
 					body += "<tr>";
 					body += "<td>"+value.name_op+"</td>";
 					body += "<td>"+(value.start_actual || "")+"</td>";
@@ -861,12 +913,46 @@
 					body += "<td>"+(value.pending_desc || "")+"</td>";
 					body += "</tr>";
 				} else {
-					$("#keterangn_detail").hide();
+					$("#keterangan_detail").hide();
 				}
+
+				if (value.process_name == "Finished") {
+					$("#report_detail").show();
+
+					if (value.photo) {
+						var photo = value.photo.split(", ");
+						var img = "";
+
+						$.each(photo, function(index2, value2){
+							img += "<img src='{{ url('maintenance/spk_report') }}/"+value2+"' style='width: 30%'>";
+						})
+
+						$("#img_detail").append(img);
+					}
+
+				} else {
+					$("#report_detail").hide();
+				}
+
 			})
 
 			$("#body_desc").empty();
 			$("#body_desc").append(body);
+
+			var part = "";
+			$("#part_detail").empty();
+
+			if (result.part) {
+				$.each(result.part, function(index, value){
+					part += "<tr>";
+					part += "<td>"+value.part_name+" - "+value.specification+"</td>";
+					part += "<td>"+value.quantity+"</td>";
+					part += "</tr>";
+				})
+
+				$("#part_detail").append(part);
+			}
+
 		})
 	}
 

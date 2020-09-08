@@ -107,6 +107,7 @@
 			$.each(result.datas, function(index, value){
 				var stat = 0;
 				var progress = "0%";
+				var cls_prog = "progress-bar-success";
 
 				$.each(result.progress, function(index2, value2){
 					if (value.order_no == value2.order_no) {
@@ -141,7 +142,7 @@
 				tableData += '<td><span class="label label-success">'+ (value.target_date || '-') +'</span></td>';
 
 				if (value.inprogress) {
-					tableData += '<td><span class="label label-success">'+ value.inprogress +'</span></td>';
+					tableData += '<td><span class="label label-success">'+ (value.inprogress || '-') +'</span></td>';
 				} else {
 					tableData += '<td>-</td>';
 				}

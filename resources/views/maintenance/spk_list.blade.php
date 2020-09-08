@@ -14,6 +14,9 @@
 	tbody>tr>td{
 		text-align:center;
 	}
+	tbody>tr>th{
+		text-align:center;
+	}
 	tfoot>tr>th{
 		text-align:center;
 	}
@@ -268,7 +271,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="col-xs-12" style="background-color: #3c8dbc;">
-						<h1 style="text-align: center; margin:5px; font-weight: bold;">Penugasan SPK</h1>
+						<h1 style="text-align: center; margin:5px; font-weight: bold;">Detail SPK</h1>
 					</div>
 				</div>
 				<div class="modal-body">
@@ -371,36 +374,100 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-xs-12"><hr style="margin-top: 10px; margin-bottom: 10px"></div>
 
 						<div class="col-xs-12">
-							<div class="col-xs-4 col-xs-offset-4">
-								<center><h2>PILIH PIC</h2></center>
-								<select class="form-control input-lg select2" data-placeholder="Pilih PIC"  id="pic_detail" style="width: 100%">
-									<option value=""></option>
-									@foreach($mt_employees as $pic)
-									<option value="{{ $pic->employee_id }}">{{ $pic->name }}</option>
-									@endforeach
-								</select>
+							<div class="form-group row" align="right" id="prog" style="display: none"></div>
+							<div class="form-group row" align="right" id="pending" style="display: none"></div>
+						</div>
+
+						<div class="col-xs-12" id="open_session" style="display: none">
+							<div class="form-group row" align="right">
+								<label class="col-xs-2" style="margin-top: 1%;">Reason Open<span class="text-red">*</span></label>
+								<div class="col-xs-6">
+									<input type="text" class="form-control" placeholder="Isikan Catatan SPK Open" id="reason_open">
+								</div>
+							</div>
+							<button class="btn btn-success pull-right" id="btn_open" onclick="open_spk()">OPEN SPK</button>
+						</div>
+						<div class="col-xs-12"><hr style="margin-top: 10px; margin-bottom: 10px"></div>
+						<div id="pilih_pic">
+							<div class="col-xs-12">
+								<div class="col-xs-4 col-xs-offset-4">
+									<center><h2>PILIH PIC</h2></center>
+									<select class="form-control input-lg" data-placeholder="Pilih PIC"  id="pic_detail" style="width: 100%">
+										<option value=""></option>
+										@foreach($mt_employees as $pic)
+										<option value="{{ $pic->employee_id }}">{{ $pic->name }}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+
+							<div class="col-xs-12" style="padding-top: 1%">
+								<table class="table table-hover table-striped">
+									<thead>
+										<tr>
+											<th width="6%">ID PIC</th>
+											<th>Nama PIC</th>
+											<th width="25%">Plan Mulai</th>
+											<th width="25%">Plan Selesai</th>
+											<th width="1%">Opsi</th>
+										</tr>
+									</thead>
+									<tbody id="pic_member"></tbody>
+								</table>
+							</div>
+							<div class="col-xs-12">
+								<button type="button" class="btn btn-success pull-right" onclick="job_ok()"><i class="fa fa-save"></i> Simpan</button>
 							</div>
 						</div>
 
-						<div class="col-xs-12" style="padding-top: 1%">
-							<table class="table table-hover table-striped">
-								<thead>
-									<tr>
-										<th width="6%">ID PIC</th>
-										<th>Nama PIC</th>
-										<th width="25%">Plan Mulai</th>
-										<th width="25%">Plan Selesai</th>
-										<th width="1%">Opsi</th>
-									</tr>
-								</thead>
-								<tbody id="pic_member"></tbody>
-							</table>
-						</div>
-						<div class="col-xs-12">
-							<button type="button" class="btn btn-success pull-right" onclick="job_ok()"><i class="fa fa-save"></i> Simpan</button>
+						<div id="report_list">
+							<div class="col-xs-12">
+								<div class="col-xs-4 col-xs-offset-4">
+									<center><h2>Report</h2></center>
+								</div>
+
+								<div class="col-xs-12">
+									<div class="form-group row" align="right">
+										<label class="col-xs-2" style="margin-top: 1%;">Penyebab</label>
+										<div class="col-xs-8" align="left">
+											<textarea class="form-control" id="penyebab_detail" rows="1" readonly></textarea>
+										</div>
+									</div>
+
+									<div class="form-group row" align="right">
+										<label class="col-xs-2" style="margin-top: 1%;">Penanganan</label>
+										<div class="col-xs-8" align="left">
+											<textarea class="form-control" id="penanganan_detail" rows="1" readonly></textarea>
+										</div>
+									</div>
+
+									<div class="form-group row" align="right">
+										<label class="col-xs-2" style="margin-top: 1%;">Sparepart</label>
+										<div class="col-xs-8" align="left" id="spare_detail">
+											<center>
+												<table class="table">
+													<thead>
+														<tr>
+															<th>Item</th>
+															<th>Qty</th>
+														</tr>
+													</thead>
+													<tbody id="part_detail">
+													</tbody>
+												</table>
+											</center>
+										</div>
+									</div>
+
+									<div class="form-group row" align="right">
+										<label class="col-xs-2" style="margin-top: 1%;">Foto</label>
+										<div class="col-xs-8" align="left" id="img_detail">
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -443,7 +510,13 @@
 		fillTable();
 
 		$('.select2').select2();
+
+		$('#pic_detail').select2({
+			dropdownAutoWidth : true,
+			dropdownParent: $("#detailModal"),
+		});
 	});
+
 
 	function fillTable() {
 		var reqFrom = $('#reqFrom').val();
@@ -480,8 +553,8 @@
 				var tableData = "";
 				$.each(result.tableData ,function(index, value){
 					click = "";
-					if (value.remark == "2") {
-						// click = "onclick='showJobModal(\""+value.order_no+"\")'";
+					if (value.remark == "2" || value.remark == "4" || value.remark == "5" || value.remark == "6") {
+						click = "onclick='showJobModal(\""+value.order_no+"\")'";
 					}
 
 					tableData += "<tr "+click+">";
@@ -500,7 +573,12 @@
 					tableData += "<td>"+value.section+"</td>";
 					tableData += "<td>"+(value.category || '-')+"</td>";
 					tableData += "<td>"+value.process_name+"</td>";
-					tableData += "<td>-</td>";
+
+					if (value.process_name == 'Verifiying')
+						tableData += "<td>"+(value.note || '-')+"</td>";
+					else
+						tableData += "<td>"+(value.status || '-')+"</td>";
+
 					tableData += "<td>"+(value.target_date || '-')+"</td>";
 					tableData += "<td>"+(value.operator || '-')+"</td>";
 					tableData += "<td>"+(value.start_actual || '-')+"</td>";
@@ -595,11 +673,23 @@
 
 		$("#pic_member").append(body);
 
+		var date = new Date();
+
+		var year  = pad(date.getFullYear());
+		var month = pad(date.getMonth() + 1);
+		var day   = pad(date.getDate());
+
+		var yyyymmdd = year +"-"+ month +"-"+ day;
+
+		$('.datepicker').val(yyyymmdd);
+
+
 		$('.datepicker').datepicker({
 			autoclose: true,
 			format: "yyyy-mm-dd",
-			todayHighlight: true,	
+			todayHighlight: true
 		});
+
 
 		$('.timepicker').timepicker({
 			use24hours: true,
@@ -631,80 +721,210 @@
 		}
 
 		$.get('{{ url("fetch/maintenance/detail") }}', data,  function(result, status, xhr){
-			$("#spk_detail").val(result.detail.order_no);
-			$("#pengaju_detail").val(result.detail.name);
-			$("#tanggal_detail").val(result.detail.date);
-			$("#bagian_detail").val(result.detail.section);
+			$("#spk_detail").val(result.detail[0].order_no);
+			$("#pengaju_detail").val(result.detail[0].name);
+			$("#tanggal_detail").val(result.detail[0].date);
+			$("#bagian_detail").val(result.detail[0].section);
 
-			if (result.detail.priority == "Normal") {
+			if (result.detail[0].priority == "Normal") {
+				$("#prioritas_detail").removeClass("label-danger");
 				$("#prioritas_detail").addClass("label-default");
 			} else {
+				$("#prioritas_detail").removeClass("label-default");
 				$("#prioritas_detail").addClass("label-danger");
 			}
-			$("#prioritas_detail").text(result.detail.priority);
+			$("#prioritas_detail").text(result.detail[0].priority);
 
-			$("#workType_detail").val(result.detail.type);
-			$("#kategori_detail").val(result.detail.category);
-			$("#mesin_detail").val(result.detail.machine_condition);
-			$("#bahaya_detail").val(result.detail.danger);
-			$("#uraian_detail").val(result.detail.description);
-			$("#keamanan_detail").val(result.detail.safety_note);
-			$("#target_detail").val(result.detail.target_date);
+			$("#workType_detail").val(result.detail[0].type);
+			$("#kategori_detail").val(result.detail[0].category);
+			$("#mesin_detail").val(result.detail[0].machine_condition);
+			$("#bahaya_detail").val(result.detail[0].danger);
+			$("#uraian_detail").val(result.detail[0].description);
+			$("#keamanan_detail").val(result.detail[0].safety_note);
+			$("#target_detail").val(result.detail[0].target_date);
+
+			$("#penyebab_detail").val(result.detail[0].cause);
+			$("#penanganan_detail").val(result.detail[0].handling);
+
+
+			$("#prog").empty();
+			$("#pending").empty();
+
+			if (result.detail[0].process_name == "Pending") {
+				$("#open_session").show();
+			} else {
+				$("#open_session").hide();
+			}
+
+			if (result.detail[0].process_name == "InProgress" || result.detail[0].process_name == "Finished" || result.detail[0].process_name == "Pending") {
+				$("#prog").show();
+
+				var progress = "";
+				var pending = "";
+
+				progress += '<label class="col-xs-2" style="margin-top: 1%;">Progress</label>';
+				pending += '<label class="col-xs-2" style="margin-top: 1%;">Pending</label>';
+
+				$("#img_detail").empty();
+				
+				$.each(result.detail ,function(index, value){
+					col = "";
+					var photo = "";
+					arr_photo = [];
+					var img = "";
+
+					if (index > 0) {
+						col = "col-xs-offset-2";
+					}
+
+					progress += '<div class="col-xs-3 '+col+'" align="left"><input type="text" name="prog_name_'+index+'" id="prog_name_'+index+'" class="form-control" value="'+value.name_op+'" readonly></div>';
+					progress += '<div class="col-xs-2" align="left" style="padding-right: 0px"><input type="text" name="prog_start_'+index+'" id="prog_start_'+index+'"class="form-control" value="'+value.start_actual+'" readonly></div>';
+					progress += '<div class="col-xs-1" style="padding: 0px"><center><b> ~ </b></center></div>';
+					progress += '<div class="col-xs-2" align="left" style="padding-left: 0px"><input type="text" name="prog_finish_'+index+'" name="prog_finish_'+index+'" class="form-control" value="'+(value.finish_actual || '' )+'" readonly></div>';
+
+					photo = value.photo;
+
+
+					if (photo != undefined) {
+
+						arr_photo = photo.split(', ');
+
+						$.each(arr_photo,function(index2, value2){
+							if (value2.substring(11, 20).toLowerCase() == value.id_op.toLowerCase()) {
+								img += '<img src="{{ url("maintenance/spk_report") }}/'+value2+'" id="img_detail_'+(index2+1)+'" style="width: 30%">';
+							}
+						})
+					}
+
+					$("#img_detail").append(img);
+				})
+
+				var part = "";
+				$("#part_detail").empty();
+
+				if (result.part) {
+					$.each(result.part, function(index, value){
+						part += "<tr>";
+						part += "<td>"+value.part_name+" - "+value.specification+"</td>";
+						part += "<td>"+value.quantity+"</td>";
+						part += "</tr>";
+					})
+
+					$("#part_detail").append(part);
+				}
+
+
+				$("#prog").append(progress);
+
+				if (result.detail[0].process_name == "Pending") {
+					$("#pilih_pic").hide();
+					pending += '<div class="col-xs-2" align="left"><input type="text" name="pending_status" id="pending_status" class="form-control" value="'+result.detail[0].status+'" readonly></div>';
+					pending += '<div class="col-xs-6" align="left" style="padding-right: 0px"><input type="text" name="pending_desc" id="pending_desc" class="form-control" value="'+result.detail[0].pending_desc+'" readonly></div>';
+
+					$("#pending").show();
+					$("#report_list").hide();
+					$("#pending").append(pending);
+				} else if (result.detail[0].process_name == "Finished") {
+					$("#pilih_pic").hide();
+					$("#report_list").show();
+				} else if (result.detail[0].process_name == "InProgress") {
+					$("#prog").show();
+					$("#report_list").hide();
+					$("#pilih_pic").hide();
+					$("#pending").hide();
+				} else {
+					$("#pilih_pic").hide();
+					$("#report_list").hide();
+					$("#prog").hide();
+				}
+			} else if (result.detail[0].process_name == "Received") {
+				$("#prog").hide();
+				$("#pilih_pic").show();
+				$("#report_list").hide();
+			} else {
+				$("#prog").hide();
+				$("#report_list").hide();
+			}
+
 		})
-	}
+}
 
-	function job_ok() {
-		var order_no = $("#spk_detail").val();
-		var arr_member = [];
+function job_ok() {
+	var order_no = $("#spk_detail").val();
+	var arr_member = [];
 
-		$('.member').each(function(index, value) {
-			var ids = $(this).attr('id');
+	$('.member').each(function(index, value) {
+		var ids = $(this).attr('id');
 
-			arr_member.push({
-				'operator': $('#operator_'+ids).text(),
-				'start_date': $('#start_date_'+ids).val(),
-				'start_time': format_two_digits($('#start_time_'+ids).val().split(':')[0])+":"+ $('#start_time_'+ids).val().split(':')[1],
-				'finish_date': $('#finish_date_'+ids).val(),
-				'finish_time': format_two_digits($('#finish_time_'+ids).val().split(':')[0])+":"+ $('#finish_time_'+ids).val().split(':')[1],	
-			});
+		arr_member.push({
+			'operator': $('#operator_'+ids).text(),
+			'start_date': $('#start_date_'+ids).val(),
+			'start_time': format_two_digits($('#start_time_'+ids).val().split(':')[0])+":"+ $('#start_time_'+ids).val().split(':')[1],
+			'finish_date': $('#finish_date_'+ids).val(),
+			'finish_time': format_two_digits($('#finish_time_'+ids).val().split(':')[0])+":"+ $('#finish_time_'+ids).val().split(':')[1],	
 		});
+	});
 
-		var data = {
-			order_no : order_no,
-			member : arr_member
-		}
-
-		$.post('{{ url("post/maintenance/member") }}', data,  function(result, status, xhr){
-			$("#pic_member").empty();
-			openSuccessGritter("Success", "SPK Berhasil Ditugaskan");
-		})
+	var data = {
+		order_no : order_no,
+		member : arr_member
 	}
 
-	function format_two_digits(n) {
-		return n < 10 ? '0' + n : n;
+	$.post('{{ url("post/maintenance/member") }}', data,  function(result, status, xhr){
+		$("#pic_member").empty();
+		$("#detailModal").modal('hide');
+		fillTable();
+
+		openSuccessGritter("Success", "SPK Berhasil Ditugaskan");
+	})
+}
+
+function open_spk() {
+	if ($("#reason_open").val() == "") {
+		openErrorGritter('Fail', 'Kolom Catatan Harus diisi');
+		return false;
 	}
 
-	function openSuccessGritter(title, message){
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-success',
-			image: '{{ url("images/image-screen.png") }}',
-			sticky: false,
-			time: '3000'
-		});
+	var data = {
+		order_no : $("#spk_detail").val(),
+		reason : $("#reason_open").val()
 	}
 
-	function openErrorGritter(title, message) {
-		jQuery.gritter.add({
-			title: title,
-			text: message,
-			class_name: 'growl-danger',
-			image: '{{ url("images/image-stop.png") }}',
-			sticky: false,
-			time: '3000'
-		});
-	}
+	$.post('{{ url("post/maintenance/spk/open") }}', data,  function(result, status, xhr){
+		openSuccessGritter("Success", "SPK Berhasil Ditugaskan");
+	})
+
+}
+
+function format_two_digits(n) {
+	return n < 10 ? '0' + n : n;
+}
+
+function pad(numb) {
+	return (numb < 10 ? '0' : '') + numb;
+}
+
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
+
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
 </script>
 @endsection

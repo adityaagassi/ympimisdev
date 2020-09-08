@@ -7,9 +7,9 @@
 		table {
 			border-collapse: collapse;
 			font-family: 'arial';
-			font-size: 9pt;
+			font-size: 8.6pt;
 			font-weight: bold;
-			-moz-transform : scale(0.8,0.9);
+			-moz-transform : scale(0.75,1.1);
 		}
 
 		table, tr, td {
@@ -42,8 +42,8 @@
 			<td align="left">Contact: Yamaha Corporation of America (714) 522-9011</td>
 		</tr>
 		<tr>
-			<td style="position: fixed; left: 190px; top: 90px;"> 
-				<img id="gmc" src="{{ asset("/images/for_case_only.jpg")}}" style="width:130px; height:34px;">
+			<td style="position: fixed; left: 190px; top: 74px;"> 
+				<img id="gmc" src="{{ asset("/images/for_case_only.jpg")}}" style="width:135px; height:28px;">
 			</td>
 		</tr>
 	</table>
@@ -77,9 +77,9 @@
 		"edgeRight": 0,
 		"edgeTop": 0,
 		"edgeBottom": 0,
-		"marginLeft": -10,
+		"marginLeft": -12,
 		"marginRight": 0,
-		"marginTop": -3,
+		"marginTop": -1,
 		"marginBottom": 0,
 		"title": "",
 		"docURL": "",
@@ -153,7 +153,7 @@
 
 				console.log(rem);
 
-				setTimeout(tutup,2000);	
+				// setTimeout(tutup,2000);	
 				
 
 			});
