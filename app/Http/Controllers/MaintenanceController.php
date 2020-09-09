@@ -578,14 +578,20 @@ class MaintenanceController extends Controller
 			if($prioritas == 'Urgent'){
 				$remark = 0;
 
-				Mail::to('susilo.basri@music.yamaha.com')
-				->bcc(['aditya.agassi@music.yamaha.com', 'darma.bagus@music.yamaha.com'])
+				// Mail::to('susilo.basri@music.yamaha.com')
+				// ->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])
+				// ->send(new SendEmail($data, 'urgent_spk'));
+
+				Mail::to('nasiqul.ibat@music.yamaha.com')
 				->send(new SendEmail($data, 'urgent_spk'));
 			}
 
 			if(strpos($bahaya, 'Bahan Kimia Beracun') !== false){
-				Mail::to(['rizal.yohandhi@music.yamaha.com', 'whica.parama@music.yamaha.com'])
-				->bcc(['aditya.agassi@music.yamaha.com'])
+				// Mail::to(['rizal.yohandhi@music.yamaha.com', 'whica.parama@music.yamaha.com'])
+				// ->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])
+				// ->send(new SendEmail($data, 'chemical_spk'));
+
+				Mail::to(['nasiqul.ibat@music.yamaha.com'])
 				->send(new SendEmail($data, 'chemical_spk'));
 			}
 
