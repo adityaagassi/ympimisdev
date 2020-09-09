@@ -257,7 +257,7 @@
 
 							<div class="col-xs-12" style="padding-bottom: 1%;" id="safety_div">
 								<div class="col-xs-4" style="padding: 0px;" align="right">
-									<span style="font-weight: bold; font-size: 16px;">Catatan Keamanan:<span class="text-red">**</span></span>
+									<span style="font-weight: bold; font-size: 16px;">Catatan Keamanan:</span>
 								</div>
 								<div class="col-xs-7">
 									<textarea class="form-control" id="safety" name="safety" placeholder="Catatan Keamanan"></textarea>
@@ -275,7 +275,6 @@
 							<div class="col-xs-10" style="font-weight: bold !important">
 								<span style="color: red !important; background-color: yellow">Note : </span><br>
 								<span style="color: red !important; background-color: yellow">*) Wajib diisi</span><br>
-								<span style="color: red !important; background-color: yellow">**) Diisi Pemohon, Jika pekerjaan berkaitan dengan chemical diisi oleh Chemical Staff atau kosongkan</span><br>
 							</div>
 						</div>
 					</form>
