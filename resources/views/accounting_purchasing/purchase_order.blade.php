@@ -67,6 +67,7 @@
 
 @section('content')
 <section class="content">
+
 	@if (session('status'))
 	<div class="alert alert-success alert-dismissible">
 		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -82,6 +83,12 @@
 		{{ session('error') }}
 	</div>   
 	@endif
+
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+	    <p style="position: absolute; color: White; top: 45%; left: 35%;">
+	      <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+	    </p>
+	</div>
 
 	<div class="row">
 		<div class="col-xs-12">
@@ -1425,10 +1432,10 @@
 			success: function(data) {
 				var json = data,
 				obj = JSON.parse(json);
-				$('#qty'+no).attr('readonly', false).val(obj.item_qty);
+				$('#qty'+no).attr('readonly', true).val(obj.item_qty);
 				$('#nama_item'+no).attr('readonly', false).val(obj.item_desc);
 				$('#uom'+no).val(obj.item_uom).change();
-				$('#item_budget'+no).attr('readonly', false).val(obj.no_budget);
+				$('#item_budget'+no).attr('readonly', true).val(obj.no_budget);
 				$('#delivery_date'+no).attr('readonly', false).val(obj.item_request_date);
 				if (obj.item_currency == "USD") {
 					$('#ket_harga'+no).text("$");
@@ -1524,7 +1531,8 @@
 
 		$('.datepicker').datepicker({
 			autoclose: true,
-			format: 'yyyy-mm-dd'
+			format: 'yyyy-mm-dd',
+			todayHighlight : true
 		});
 
 		document.getElementById(lop).value = no;
@@ -1793,6 +1801,7 @@
     }
 
 	function sendEmail(id) {
+
       var data = {
         id:id
       };
@@ -1800,11 +1809,14 @@
       if (!confirm("Apakah anda yakin ingin mengirim PO ini ke Manager?")) {
         return false;
       }
+      else{
+      	$("#loading").show();
+      }
 
       $.get('{{ url("purchase_order/sendemail") }}', data, function(result, status, xhr){
-
         openSuccessGritter("Success","Email Berhasil Terkirim");
-        setTimeout(function(){  window.location.reload() }, 3000);
+      	$("#loading").hide();
+        setTimeout(function(){  window.location.reload() }, 2500);
       })
     }
 

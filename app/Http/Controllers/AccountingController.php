@@ -28,7 +28,7 @@ use App\AccInvestmentBudget;
 use App\EmployeeSync;
 use App\UtilityItemNumber;
 use App\UtilityOrder;
-
+use Carbon\Carbon;
 use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 
@@ -630,7 +630,7 @@ class AccountingController extends Controller
         return DataTables::of($pr)
         ->editColumn('submission_date', function ($pr)
         {
-            return date('d F Y', strtotime($pr->submission_date));
+            return $pr->submission_date;
         })
         ->editColumn('note', function ($pr)
         {
@@ -2149,7 +2149,7 @@ class AccountingController extends Controller
 
         ->editColumn('tgl_po', function ($po)
         {
-            return date('d F Y', strtotime($po->tgl_po));
+            return date('Y-m-d', strtotime($po->tgl_po));
         })
 
         ->editColumn('no_po_sap', function ($po)
@@ -2241,7 +2241,7 @@ class AccountingController extends Controller
 
         ->editColumn('submission_date', function ($pr)
         {
-            return date('d F Y', strtotime($pr->submission_date));
+            return $pr->submission_date;
         })
 
         ->editColumn('file', function ($pr)
@@ -3033,7 +3033,26 @@ class AccountingController extends Controller
                 }
                 $po->save();
 
-                $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " . $request->get('id');
+                // $isimail = AccPurchaseOrder::select('acc_purchase_orders.*', 'acc_budget_histories.budget', DB::raw("SUM(acc_budget_histories.amount_po) as amount"))
+                // ->join('acc_budget_histories','acc_purchase_orders.no_po','=','acc_budget_histories.po_number')
+                // ->where('acc_purchase_orders.id', '=', $request->get('id'))
+                // ->get();
+
+                $isimail = "
+                select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+                (SELECT
+                    acc_purchase_orders.*,
+                    acc_purchase_order_details.budget_item,
+                    acc_purchase_order_details.goods_price,
+                    acc_purchase_order_details.service_price,
+                    acc_purchase_order_details.qty
+                FROM
+                    acc_purchase_orders
+                    JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                WHERE
+                    acc_purchase_orders.id = ".$request->get('id').")
+                t1";
+                
                 $po_isi = db::select($isimail);
 
                 Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($po_isi, 'purchase_order'));
@@ -3103,7 +3122,23 @@ class AccountingController extends Controller
 
                 $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
 
-                $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " .$id;
+                // $isimail = "select acc_purchase_orders.*, acc_budget_histories.budget, SUM(acc_budget_histories.amount_po) as amount FROM acc_purchase_orders join acc_budget_histories on acc_purchase_orders.no_po = acc_budget_histories.po_number where acc_purchase_orders.id = ".$id;
+
+                $isimail = "
+                select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+                (SELECT
+                    acc_purchase_orders.*,
+                    acc_purchase_order_details.budget_item,
+                    acc_purchase_order_details.goods_price,
+                    acc_purchase_order_details.service_price,
+                    acc_purchase_order_details.qty
+                FROM
+                    acc_purchase_orders
+                    JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                WHERE
+                    acc_purchase_orders.id = ".$id.")
+                    t1";
+
                 $po_isi = db::select($isimail);
 
                 Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
@@ -3174,7 +3209,21 @@ class AccountingController extends Controller
 
                 $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
 
-                $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " .$id;
+                $isimail = "
+                select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+                (SELECT
+                    acc_purchase_orders.*,
+                    acc_purchase_order_details.budget_item,
+                    acc_purchase_order_details.goods_price,
+                    acc_purchase_order_details.service_price,
+                    acc_purchase_order_details.qty
+                FROM
+                    acc_purchase_orders
+                    JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                WHERE
+                 acc_purchase_orders.id = ".$id.")
+                    t1";
+
                 $po_isi = db::select($isimail);
 
                 Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
@@ -3247,7 +3296,21 @@ class AccountingController extends Controller
 
                 $pdf->save(public_path() . "/po_list/".$detail_po[0]->no_po.".pdf");
 
-                $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = " .$id;
+                $isimail = "
+                select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+                (SELECT
+                    acc_purchase_orders.*,
+                    acc_purchase_order_details.budget_item,
+                    acc_purchase_order_details.goods_price,
+                    acc_purchase_order_details.service_price,
+                    acc_purchase_order_details.qty
+                FROM
+                    acc_purchase_orders
+                    JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                WHERE
+                    acc_purchase_orders.id = ".$id.")
+                    t1";
+
                 $po_isi = db::select($isimail);
 
                 Mail::to($mailtoo)->send(new SendEmail($po_isi, 'purchase_order'));
@@ -5883,16 +5946,14 @@ class AccountingController extends Controller
                 })->get();
 
                 $rows = $rows->toArray();
-                
 
-                $total_qty = 0; 
                 for ($i=0; $i < count($rows); $i++) {
                     $currency  = $rows[$i][1];
                     $vendor_code = $rows[$i][4];
                     $vendor_name = $rows[$i][5];                    
                     $receive_date = $rows[$i][14];
                     $document_no = $rows[$i][15];
-                    $invoice_no = $rows[$i][17];
+                    $invoice_no = $rows[$i][17];    
                     $no_po_sap_urut = $rows[$i][18];
                     $no_po = $rows[$i][19];
                     $category = $rows[$i][20];
@@ -5944,22 +6005,32 @@ class AccountingController extends Controller
                             ->where('no_item',$item_no)
                             ->first();
 
-                        if ($po_detail->no_item == $item_no && $po_detail->no_po_sap == $no_po_sap[0]) {
-                            $total_qty += $qty;
-                        }else{
-                            $total_qty = 0;
-                        }
-                    
-                        $po_detail = AccPurchaseOrderDetail::where('no_po', $po_detail->no_po)
-                        ->where('no_item',$item_no)
-                        ->update(['qty_receive' => $total_qty]);
 
+                        $total_all = $po_detail->qty_receive + $qty;
+                        
+
+                        //Update QTY RECEIVE PO
+                        $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                        ->where('no_item','=',$item_no)
+                        ->update(['qty_receive' => $total_all, 'date_receive' => $receive_date]);
+
+                        //GET DATA
+                        $datapo = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                        ->where('no_item','=',$item_no)
+                        ->first();
+
+                        //UPDATE STATUS
+                        if ($datapo->qty_receive >= $datapo->qty) {
+                            $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                            ->where('no_item','=',$item_no)
+                            ->update(['status' => 'close']);
+                        }
                     }
                 }       
 
                 $response = array(
                     'status' => true,
-                    'message' => $data2,
+                    'message' => 'Upload Berhasil',
                 );
                 return Response::json($response);
 
@@ -5978,6 +6049,775 @@ class AccountingController extends Controller
             return Response::json($response);
         }
     }
+
+
+
+
+
+
+
+    //==================================//
+    //       Monitoring & Display       //
+    //==================================//
+
+    public function monitoringPR(){
+      
+      // $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
+      $dept = db::select("select DISTINCT department from employee_syncs");
+      $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+        ->select('department')
+        ->first();
+      
+        return view('accounting_purchasing.display.pr_monitoring',  
+        array(
+              'title' => 'Purchase Requisition Monitoring & Control', 
+              'title_jp' => '',
+              'department' => $dept,
+              'emp_dept' => $emp_dept
+            )
+        )->with('page', 'Purchase Requisition Control');
+    }
+
+    public function fetchMonitoringPR(Request $request)
+    {
+
+      $tahun = date('Y');
+
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $department = $request->get('department');
+
+      if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_purchase_requisitions.department in '.$dept;
+      } else {
+          $dep = '';
+      }
+
+      $data = db::select("
+        select count(no_pr) as jumlah, monthname(submission_date) as bulan, year(submission_date) as tahun, sum(case when receive_date is null then 1 else 0 end) as NotSigned , sum(case when receive_date is not null then 1 else 0 end) as Signed from acc_purchase_requisitions where acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." GROUP BY bulan,tahun order by tahun, month(submission_date) ASC");
+
+      $data_pr_belum_po = db::select("
+        select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_pr_belum_po' => $data_pr_belum_po,
+        'tahun' => $tahun,
+        'datefrom' => $datefrom,
+        'dateto' => $dateto,
+        'department' => $dep
+      );
+
+      return Response::json($response); 
+    }
+
+    public function fetchMonitoringPROutstanding(Request $request)
+    {
+
+      $tahun = date('Y');
+
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $department = $request->get('department');
+
+      if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_purchase_requisitions.department in '.$dept;
+      } else {
+          $dep = '';
+      }
+
+      $data = db::select("
+        select acc_purchase_requisitions.no_pr,acc_purchase_requisitions.department, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'tahun' => $tahun,
+        'datefrom' => $datefrom,
+        'dateto' => $dateto,
+        'departement' => $dep
+      );
+
+      return Response::json($response); 
+    }
+
+    public function monitoringPrPch(){
+      
+      // $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
+      $dept = db::select("select DISTINCT department from employee_syncs");
+      
+        return view('accounting_purchasing.display.pr_monitoring_pch',  
+        array(
+              'title' => 'Purchase Requisition Monitoring & Control', 
+              'title_jp' => '',
+              'department' => $dept
+            )
+        )->with('page', 'Purchase Requisition Control');
+    }
+
+
+    public function fetchMonitoringPRPch(Request $request){
+
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      $last = AccPurchaseRequisition::whereNull('receive_date')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(submission_date) as tanggal'))
+      ->first();
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+          }
+        }
+      }
+
+
+      if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+      }
+
+      $department = $request->get('department');
+
+      if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_purchase_requisitions.department in'.$dept;
+      } else {
+          $dep = '';
+      }
+
+      //per tgl
+      $data = db::select("
+         select date.week_date, coalesce(belum_diterima.total, 0) as jumlah_belum, coalesce(sudah_diterima.total, 0) as jumlah_sudah from 
+        (select week_date from weekly_calendars 
+        where date(week_date) >= '".$datefrom."'
+        and date(week_date) <= '".$dateto."') date
+        left join
+        (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
+        where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is null  ".$dep."
+        group by date(submission_date)) belum_diterima
+        on date.week_date = belum_diterima.date
+        left join
+        (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
+        where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is not null ".$dep."
+        group by date(submission_date)) sudah_diterima
+        on date.week_date = sudah_diterima.date
+        order by week_date asc");
+
+      //per department
+      $data_dept = db::select("
+        select dept.department, coalesce(pr.total, 0) as jumlah_dept from 
+        (select distinct department from employee_syncs where department is not null) dept
+        left join
+        (select department, count(id) as total from acc_purchase_requisitions
+        where acc_purchase_requisitions.deleted_at is null 
+        group by department) pr
+        on dept.department = pr.department
+        order by department asc");
+
+      $data_pr_belum_po = db::select("
+        select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and submission_date between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
+
+      $year = date('Y');
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_dept' => $data_dept,
+        'data_pr_belum_po' => $data_pr_belum_po,
+        'year' => $year
+      );
+
+      return Response::json($response);
+    }
+
+    public function fetchtablePR(Request $request)
+    {
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $department = $request->get('department');
+
+      if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_purchase_requisitions.department in'.$dept;
+      } else {
+          $dep = '';
+      }
+
+
+      $data = db::select("select acc_purchase_requisitions.id, no_pr, emp_id, emp_name, department_shortname, section, no_budget, submission_date, po_due_date, receive_date, file, posisi, `status`, staff, manager, manager_name, (select `name` from employee_syncs where employee_id = dgm) as dgm, (select `name` from employee_syncs where employee_id = gm) as gm , approvalm, dateapprovalm, approvaldgm, dateapprovaldgm, approvalgm, dateapprovalgm, alasan, datereject from acc_purchase_requisitions join departments on acc_purchase_requisitions.department = department_name where acc_purchase_requisitions.status != 'received' and acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date asc");
+
+      $data_pr_belum_po = db::select("select acc_purchase_requisitions.no_pr,departments.department_shortname, acc_purchase_requisition_items.item_code, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.item_request_date from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join departments on acc_purchase_requisitions.department = department_name where acc_purchase_requisitions.deleted_at is null and receive_date is not null and sudah_po is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date ASC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_pr_belum_po' => $data_pr_belum_po
+      );
+
+      return Response::json($response); 
+    }
+
+    public function fetchtablePRPch(Request $request)
+    {
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $department = $request->get('department');
+
+      if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_purchase_requisitions.department in'.$dept;
+      } else {
+          $dep = '';
+      }
+
+
+      $data = db::select("select id, no_pr, emp_id, emp_name, department, section, no_budget, submission_date, po_due_date, receive_date, file, posisi, `status`, staff, manager, manager_name, (select `name` from employee_syncs where employee_id = dgm) as dgm, (select `name` from employee_syncs where employee_id = gm) as gm , approvalm, dateapprovalm, approvaldgm, dateapprovaldgm, approvalgm, dateapprovalgm, alasan, datereject from acc_purchase_requisitions where acc_purchase_requisitions.status = 'approval_acc' and acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date asc");
+
+      $data_pr_belum_po = db::select("select acc_purchase_requisitions.no_pr,acc_purchase_requisitions.department, acc_purchase_requisition_items.item_code, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.item_request_date from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and sudah_po is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date ASC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_pr_belum_po' => $data_pr_belum_po
+      );
+
+      return Response::json($response); 
+    }
+
+    public function detailMonitoringPR(Request $request){
+
+      $bulan = $request->get("bulan");
+      $status = $request->get("status");
+      $tglfrom = $request->get("tglfrom");
+      $tglto = $request->get("status");
+      $department = $request->get("department");
+
+
+      $status_sign = "";
+
+      if ($status == "Sign Not Completed") {
+          $status_sign = "and receive_date is null";
+      }
+      else if ($status == "Sign Completed") {
+          $status_sign = "and receive_date is not null";
+      }
+
+
+
+        $qry = "SELECT  * FROM acc_purchase_requisitions WHERE deleted_at IS NULL and monthname(submission_date) = '".$bulan."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
+
+        $pr = DB::select($qry);
+
+        return DataTables::of($pr)
+        ->editColumn('submission_date', function ($pr)
+        {
+            return $pr->submission_date;
+        })
+        ->editColumn('note', function ($pr)
+        {
+            $note = "";
+            if ($pr->note != null)
+            {
+                $note = $pr->note;
+            }
+            else
+            {
+                $note = '-';
+            }
+
+            return $note;
+        })
+        ->editColumn('status', function ($pr)
+        {
+            $id = $pr->id;
+
+            if ($pr->status == "approval")
+            {
+                return '<label class="label label-warning">Approval</a>';
+            }
+            else if ($pr->status == "approval_acc")
+            {
+                return '<label class="label label-info">Diverifikasi Purchasing</a>';
+            }
+            else if ($pr->status == "received")
+            {
+                return '<label class="label label-success">Diterima Purchasing</a>';
+            }
+
+        })
+        ->addColumn('action', function ($pr)
+        {
+            $id = $pr->id;
+
+            // <a href="purchase_requisition/detail/' . $id . '" class="btn btn-info btn-xs" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i></a>
+
+            if($pr->status == "approval"){
+                return '
+                <a href="purchase_requisition/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+                ';
+            }
+            else{
+                return '
+                <a href="purchase_requisition/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+                ';
+            }
+
+
+        })
+        ->editColumn('file', function ($pr)
+        {
+
+            $data = json_decode($pr->file);
+
+            $fl = "";
+
+            if ($pr->file != null)
+            {
+                for ($i = 0;$i < count($data);$i++)
+                {
+                    $fl .= '<a href="files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+                }
+            }
+            else
+            {
+                $fl = '-';
+            }
+
+            return $fl;
+        })
+        ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file'])
+        ->make(true);
+    }
+
+    public function detailMonitoringPRPch(Request $request){
+
+          $tanggal = $request->get("tanggal");
+          $status = $request->get("status");
+          $tglfrom = $request->get("tglfrom");
+          $tglto = $request->get("status");
+          $department = $request->get("department");
+
+          $status_sign = "";
+
+          if ($status == "PR Incompleted") {
+              $status_sign = "and receive_date is null";
+          }
+          else if ($status == "PR Completed") {
+              $status_sign = "and receive_date is not null";
+          }
+
+        $qry = "SELECT  * FROM acc_purchase_requisitions WHERE deleted_at IS NULL and submission_date = '".$tanggal."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
+
+        $pr = DB::select($qry);
+
+        return DataTables::of($pr)
+        ->editColumn('submission_date', function ($pr)
+        {
+            return $pr->submission_date;
+        })
+        ->editColumn('note', function ($pr)
+        {
+            $note = "";
+            if ($pr->note != null)
+            {
+                $note = $pr->note;
+            }
+            else
+            {
+                $note = '-';
+            }
+
+            return $note;
+        })
+        ->editColumn('status', function ($pr)
+        {
+            $id = $pr->id;
+
+            if ($pr->status == "approval")
+            {
+                return '<label class="label label-warning">Approval</a>';
+            }
+            else if ($pr->status == "approval_acc")
+            {
+                return '<label class="label label-info">Diverifikasi Purchasing</a>';
+            }
+            else if ($pr->status == "received")
+            {
+                return '<label class="label label-success">Diterima Purchasing</a>';
+            }
+
+        })
+        ->addColumn('action', function ($pr)
+        {
+            $id = $pr->id;
+
+            // <a href="purchase_requisition/detail/' . $id . '" class="btn btn-info btn-xs" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i></a>
+
+            if($pr->status == "approval"){
+                return '
+                <a href="purchase_requisition/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+                ';
+            }
+            else{
+                return '
+                <a href="purchase_requisition/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+                ';
+            }
+
+
+        })
+        ->editColumn('file', function ($pr)
+        {
+
+            $data = json_decode($pr->file);
+
+            $fl = "";
+
+            if ($pr->file != null)
+            {
+                for ($i = 0;$i < count($data);$i++)
+                {
+                    $fl .= '<a href="files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+                }
+            }
+            else
+            {
+                $fl = '-';
+            }
+
+            return $fl;
+        })
+        ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file'])
+        ->make(true);
+    }
+
+    public function detailMonitoringPRPO(Request $request){
+
+        $pr = $request->get("pr");
+        $status = $request->get("status");
+        $tglfrom = $request->get("tglfrom");
+        $tglto = $request->get("status");
+        $department = $request->get("department");
+
+        $status_sign = "";
+
+        if ($status == "Belum PO") {
+            $status_sign = "and sudah_po is null";
+        }
+        else if ($status == "Sudah PO") {
+            $status_sign = "and sudah_po is not null";
+        }
+
+        $qry = "SELECT acc_purchase_requisitions.no_pr,acc_purchase_requisitions.submission_date, acc_purchase_requisition_items.* from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr WHERE acc_purchase_requisition_items.deleted_at is NULL and acc_purchase_requisitions.no_pr = '".$pr."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
+
+        $pr = DB::select($qry);
+
+        return DataTables::of($pr)
+        ->editColumn('submission_date', function ($pr)
+        {
+            return $pr->submission_date;
+        })
+        ->editColumn('status', function ($pr)
+        {
+            if ($pr->sudah_po == null) {
+                return '<span class="label label-danger">Belum PO</span>';
+            }
+            else if ($pr->sudah_po != null) {
+                return '<span class="label label-success">Sudah PO</span>';
+            }
+
+        })
+        ->rawColumns(['status' => 'status'])
+        ->make(true);
+    }
+
+
+
+    public function monitoringPO(){
+
+        return view('accounting_purchasing.display.po_monitoring',  
+        array(
+              'title' => 'Purchase Order Monitoring', 
+              'title_jp' => '',
+            )
+        )->with('page', 'Purchase Order Monitoring');
+    }
+
+    public function fetchMonitoringPO(Request $request){
+
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      $last = AccPurchaseOrder::where('status','=','pch')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(tgl_po) as tanggal'))
+      ->first();
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+      }
+      else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+          }
+        }
+      }
+
+
+      if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+      }
+
+      //per tgl
+      $data = db::select("
+            select date.week_date, coalesce(belum_diterima.total, 0) as jumlah_belum, coalesce(sudah_diterima.total, 0) as jumlah_sudah from 
+            (select week_date from weekly_calendars 
+            where date(week_date) >= '".$datefrom."'
+            and date(week_date) <= '".$dateto."') date
+            left join
+            (select date(tgl_po) as date, count(id) as total from acc_purchase_orders
+            where date(tgl_po) >= '".$datefrom."' and date(tgl_po) <= '".$dateto."' and acc_purchase_orders.deleted_at is null and posisi = 'pch' and `status` = 'sap'
+            group by date(tgl_po)) sudah_diterima
+            on date.week_date = sudah_diterima.date
+            left join
+            (select date(tgl_po) as date, count(id) as total from acc_purchase_orders
+            where date(tgl_po) >= '".$datefrom."' and date(tgl_po) <= '".$dateto."' and acc_purchase_orders.deleted_at is null and posisi != 'pch' and `status` != 'sap'
+            group by date(tgl_po)) belum_diterima
+            on date.week_date = belum_diterima.date
+            order by week_date asc
+        ");
+
+      $year = date('Y');
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'year' => $year
+      );
+
+      return Response::json($response);
+    }
+
+    public function detailMonitoringPO(Request $request){
+
+      $tanggal = $request->get("tanggal");
+      $status = $request->get("status");
+      $tglfrom = $request->get("tglfrom");
+      $tglto = $request->get("tglto");
+
+
+      $status_sign = "";
+
+      if ($status == "PO Incompleted") {
+          $status_sign = "and posisi != 'pch' and status != 'sap'";
+      }
+      else if ($status == "PO Completed") {
+          $status_sign = "and posisi = 'pch' and status = 'sap'";
+      }
+
+
+        $qry = "SELECT * FROM acc_purchase_orders WHERE deleted_at IS NULL and DATE_FORMAT(tgl_po,'%Y-%m-%d') = '".$tanggal."' ".$status_sign." order by id DESC";
+        $po = DB::select($qry);
+
+        return DataTables::of($po)
+
+        ->editColumn('tgl_po', function ($po)
+        {
+            return date('Y-m-d', strtotime($po->tgl_po));
+        })
+
+        ->editColumn('no_po_sap', function ($po)
+        {
+            $id = $po->id;
+
+            $po_sap = "";
+            if ($po->no_po_sap == null && $po->status == "not_sap")
+            {
+                $po_sap = '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-md" onClick="editSAP(' . $id . ')"><i class="fa fa-edit"></i> NO PO SAP</a>';
+            }
+            else if ($po->no_po_sap != null){
+                $po_sap = $po->no_po_sap;   
+            }
+            else
+            {
+                $po_sap = '-';
+            }
+
+            return $po_sap;
+        })
+
+        ->editColumn('status', function ($po)
+        {
+            $id = $po->id;
+
+            if ($po->posisi == "staff_pch")
+            {
+                return '<label class="label label-danger">Staff PCH</label>';
+            }
+
+            else if ($po->posisi == "manager_pch")
+            {
+                return '<label class="label label-primary">Diverifikasi Manager</label>';
+            }
+
+            else if ($po->posisi == "dgm_pch")
+            {
+                return '<label class="label label-primary">Diverifikasi DGM</label>';
+            }
+
+            else if ($po->posisi == "gm_pch")
+            {
+                return '<label class="label label-primary">Diverifikasi GM</label>';
+            }
+
+            else if ($po->posisi == "pch")
+            {
+                return '<label class="label label-success">Sudah Diverifikasi</label>';
+            }
+
+        })
+        ->addColumn('action', function ($po)
+        {
+            $id = $po->id;
+            if ($po->posisi == "staff_pch") {
+                return '
+                <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
+                <a href="purchase_order/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+                <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Send Email" style="margin-right:5px;"  onclick="sendEmail(' . $id .')"><i class="fa fa-envelope"></i> Send Email</button>
+                ';
+            }
+
+            else if ($po->posisi == "pch") {
+                return '
+                <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
+                <a href="purchase_order/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"> Report</i></a>
+                ';
+            }
+
+            else{
+                return '
+                <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
+                <a href="purchase_order/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+                <label class="label label-success">Email Sudah Dikirim</label>
+                ';   
+            }
+        })
+        ->rawColumns(['status' => 'status', 'action' => 'action', 'no_po_sap' => 'no_po_sap'])
+        ->make(true);
+    }
+
+    public function fetchtablePO(Request $request)
+    {
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $data = db::select("
+
+        SELECT
+        t1.*,IF(t1.goods_price != 0,sum( t1.goods_price * t1.qty ),sum( t1.service_price * t1.qty )) AS amount 
+        FROM
+            (
+            SELECT
+                acc_purchase_orders.*,
+                acc_purchase_order_details.budget_item,
+                acc_purchase_order_details.goods_price,
+                acc_purchase_order_details.service_price,
+                acc_purchase_order_details.qty 
+            FROM
+                acc_purchase_orders
+                JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+            WHERE
+                acc_purchase_orders.`status` != 'sap' 
+                AND acc_purchase_orders.deleted_at IS NULL 
+                AND DATE_FORMAT( tgl_po, '%Y-%m-%d' ) BETWEEN  '".$datefrom."' AND '".$dateto."' 
+            ORDER BY
+                tgl_po ASC 
+            ) t1
+        GROUP BY t1.no_po");
+
+      //select id, remark, no_po, no_po_sap, DATE_FORMAT(tgl_po,'%Y-%m-%d'),supplier_code, supplier_name, supplier_status, buyer_id, buyer_name, authorized2, authorized2_name, approval_authorized2, date_approval_authorized2, authorized3, authorized3_name, date_approval_authorized3, approval_authorized3, authorized4, authorized4_name, date_approval_authorized4, approval_authorized4, reject, datereject, posisi, `status` from acc_purchase_orders where acc_purchase_orders.`status` != 'sap' and acc_purchase_orders.deleted_at is null and DATE_FORMAT(tgl_po,'%Y-%m-%d') between '2020-08-01' and '2020-09-01'  order by tgl_po asc
+
+      $response = array(
+        'status' => true,
+        'datas' => $data
+      );
+
+      return Response::json($response); 
+    }
+
 
 }
 

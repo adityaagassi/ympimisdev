@@ -176,7 +176,8 @@
 				</tr>
 				<tr>
 					<td colspan="3"></td>
-					<td colspan="3" style="font-size: 11px"><b>Delivery Term :</b> {{$po[0]->delivery_term}}</td>
+					<td colspan="2" style="font-size: 11px"><b>Delivery Term :</b></td>
+					<td colspan="1" style="font-size: 11px;text-align: left">{{$po[0]->delivery_term}}</td>
 					<td colspan="4">Kawasan Industri PIER - Pasuruan</td>
 				</tr>
 
@@ -212,16 +213,16 @@
 			<thead>
 				<tr style="font-size: 12px">
 					<td colspan="1" style="padding:10px;height: 15px; width:1%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">No</td>
-					<td colspan="2" style="width:8%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Item Code / Description</td>
-					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Delivery Date</td>
-					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Qty</td>
-					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">UM</td>
+					<td colspan="2" style="width:7%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Item Code / Description<br><span style="font-size: 10px;font-style: italic">(Kode / Deskripsi Item)</span></td>
+					<td colspan="1" style="width:4%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Delivery Date<br><span style="font-size: 10px;font-style: italic">(Tanggal Pengiriman)</span></td>
+					<td colspan="1" style="width:2%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Qty<br><span style="font-size: 10px;font-style: italic">(Banyaknya)</span></td>
+					<td colspan="1" style="width:2%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">UM<br><span style="font-size: 10px;font-style: italic">(Satuan)</span></td>
 					@if($po[0]->goods_price != "0") 
-					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Unit Price</td>
+					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Unit Price<br><span style="font-size: 10px;font-style: italic">(Harga Satuan)</span></td>
 					@elseif($po[0]->service_price != "0") 
-					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Service Price</td>
+					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Service Price<br><span style="font-size: 10px;font-style: italic">(Harga)</span></td>
 					@endif
-					<td colspan="1" style="width:4%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Amount</td>
+					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Amount<br><span style="font-size: 10px;font-style: italic">(Total)</span></td>
 				</tr>
 			</thead>
 			<tbody>

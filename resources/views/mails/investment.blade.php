@@ -78,6 +78,7 @@
 			This is an automatic notification. Please do not reply to this address.
 
 			<h2>Investment No : {{$reff_number}}</h2>
+			<h3>Subject : <?= ucfirst($subject) ?></h3>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -89,7 +90,11 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?> - <?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Submission Date</td>
@@ -100,10 +105,6 @@
 						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Subject</td>
-						<td style="border:1px solid black; text-align: center;"><?= ucfirst($subject) ?></td>
-					</tr>
-					<tr>
 						<td style="width: 2%; border:1px solid black;">Type</td>
 						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
 					</tr>
@@ -112,12 +113,9 @@
 						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Supplier</td>
+						<td style="width: 2%; border:1px solid black;">Vendor</td>
 						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
-
-
-
 			
 				</tbody>
 			</table>
@@ -133,7 +131,8 @@
 			<p style="font-size: 18px;">Approval Investment - Expense Application <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment No : {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}} <br>
+			Subject : <?= ucfirst($subject) ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -145,7 +144,11 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?> - <?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Submission Date</td>
@@ -156,10 +159,6 @@
 						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Subject</td>
-						<td style="border:1px solid black; text-align: center;"><?= ucfirst($subject) ?></td>
-					</tr>
-					<tr>
 						<td style="width: 2%; border:1px solid black;">Type</td>
 						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
 					</tr>
@@ -168,7 +167,7 @@
 						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Supplier</td>
+						<td style="width: 2%; border:1px solid black;">Vendor</td>
 						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
@@ -185,7 +184,8 @@
 			<p style="font-size: 18px;">Approval Investment - Expense Application <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment No : {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}} <br>
+			Subject : <?= ucfirst($subject) ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -197,7 +197,11 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?> - <?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Submission Date</td>
@@ -208,10 +212,6 @@
 						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Subject</td>
-						<td style="border:1px solid black; text-align: center;"><?= ucfirst($subject) ?></td>
-					</tr>
-					<tr>
 						<td style="width: 2%; border:1px solid black;">Type</td>
 						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
 					</tr>
@@ -220,7 +220,7 @@
 						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Supplier</td>
+						<td style="width: 2%; border:1px solid black;">Vendor</td>
 						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
@@ -231,11 +231,11 @@
 			<br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
-			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
 
 			@elseif($posisi == "dgm" && $status == "approval")
 
@@ -243,7 +243,8 @@
 			<p style="font-size: 18px;">Approval Investment - Expense Application <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment No : {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}} <br>
+			Subject : <?= ucfirst($subject) ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -255,7 +256,11 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?> - <?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Submission Date</td>
@@ -266,10 +271,6 @@
 						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Subject</td>
-						<td style="border:1px solid black; text-align: center;"><?= ucfirst($subject) ?></td>
-					</tr>
-					<tr>
 						<td style="width: 2%; border:1px solid black;">Type</td>
 						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
 					</tr>
@@ -278,7 +279,7 @@
 						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Supplier</td>
+						<td style="width: 2%; border:1px solid black;">Vendor</td>
 						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
@@ -288,22 +289,22 @@
 			
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
-			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
 
 			@elseif($posisi == "gm" && $status == "approval")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Approval Investment - Expense Application <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Approval Investment - Expense Application <br>投資・経費申請の承認<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 
-			(投資・経費申請の承認)
+			This is an automatic notification. Please do not reply to this address.<br>
+			自動通知です。返事しないでください。<br>
 
-			This is an automatic notification. Please do not reply to this address.
-
-			<h2>Investment No : {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}} <br>
+			Subject : <?= ucfirst($subject) ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -315,30 +316,30 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Applicant (申請者) </td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?> - <?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Submission Date (提出日) </td>
+						<td style="width: 2%; border:1px solid black;">Department (部門)</td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Submission Date (提出日)</td>
 						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Category (部類) </td>
+						<td style="width: 2%; border:1px solid black;">Category (部類)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Subject  (件名)</td>
-						<td style="border:1px solid black; text-align: center;"><?= ucfirst($subject) ?></td>
-					</tr>
-					<tr>
-						<td style="width: 2%; border:1px solid black;">Type  (種目)</td>
+						<td style="width: 2%; border:1px solid black;">Type (種目)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Objective  (目的)</td>
+						<td style="width: 2%; border:1px solid black;">Objective (目的)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Supplier  (サプライヤー)</td>
+						<td style="width: 2%; border:1px solid black;">Vendor (サプライヤー)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 				</tbody>
@@ -346,12 +347,12 @@
 			<br>
 			
 			<br>
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to  (下をクリックしてください)</i> &#8650;</span><br><br>
-			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve  (承認) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>(下をクリックしてください)<br>
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve (承認) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment  (保留・コメント) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment (保留・コメント) &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a><br>
 
 			@elseif($posisi == "manager_acc" && $status == "approval")
 
@@ -359,7 +360,8 @@
 			<p style="font-size: 18px;">Approval Investment - Expense Application <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment No : {{$reff_number}}</h2>
+			<h2>Investment No : {{$reff_number}} <br>
+			Subject : <?= ucfirst($subject) ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -371,7 +373,11 @@
 				<tbody>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?> - <?= $applicant_department ?></td></td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Department</td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Submission Date</td>
@@ -382,10 +388,6 @@
 						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Subject</td>
-						<td style="border:1px solid black; text-align: center;"><?= ucfirst($subject) ?></td>
-					</tr>
-					<tr>
 						<td style="width: 2%; border:1px solid black;">Type</td>
 						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
 					</tr>
@@ -394,7 +396,7 @@
 						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Supplier</td>
+						<td style="width: 2%; border:1px solid black;">Vendor</td>
 						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
@@ -405,19 +407,22 @@
 			<br>
 
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
-			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvemanageracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvemanageracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
 
 			@elseif($posisi == "direktur_acc" && $status == "approval")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Approval Investment - Expense Application <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
-			This is an automatic notification. Please do not reply to this address.
+			<p style="font-size: 18px;">Approval Investment - Expense Application <br>投資・経費申請の承認<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 
-			<h2>Investment No : {{$reff_number}}</h2>
+			This is an automatic notification. Please do not reply to this address.<br>
+			自動通知です。返事しないでください。<br>
+
+			<h2>Investment No : {{$reff_number}} <br>
+			Subject : <?= ucfirst($subject) ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -428,31 +433,31 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?> - <?= $applicant_department ?></td></td>
+						<td style="width: 2%; border:1px solid black;">Applicant (申請者) </td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Submission Date</td>
+						<td style="width: 2%; border:1px solid black;">Department (部門)</td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Submission Date (提出日)</td>
 						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Category</td>
+						<td style="width: 2%; border:1px solid black;">Category (部類)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Subject</td>
-						<td style="border:1px solid black; text-align: center;"><?= ucfirst($subject) ?></td>
-					</tr>
-					<tr>
-						<td style="width: 2%; border:1px solid black;">Type</td>
+						<td style="width: 2%; border:1px solid black;">Type (種目)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Objective</td>
+						<td style="width: 2%; border:1px solid black;">Objective (目的)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Supplier</td>
+						<td style="width: 2%; border:1px solid black;">Vendor (サプライヤー)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
@@ -462,19 +467,22 @@
 			
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
-			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvediracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvediracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
 
 			@elseif($posisi == "presdir" && $status == "approval")
 
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">Approval Investment - Expense Application <br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
-			This is an automatic notification. Please do not reply to this address.
+			<p style="font-size: 18px;">Approval Investment - Expense Application <br>投資・経費申請の承認<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 
-			<h2>Investment No : {{$reff_number}}</h2>
+			This is an automatic notification. Please do not reply to this address.<br>
+			自動通知です。返事しないでください。<br>
+
+			<h2>Investment No : {{$reff_number}} <br>
+			Subject : <?= ucfirst($subject) ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -485,31 +493,31 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Applicant</td>
-						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?> - <?= $applicant_department ?></td></td>
+						<td style="width: 2%; border:1px solid black;">Applicant (申請者) </td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_name ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Submission Date</td>
+						<td style="width: 2%; border:1px solid black;">Department (部門)</td>
+						<td style="border:1px solid black; text-align: center;"><?= $applicant_department ?></td></td>
+					</tr>
+					<tr>
+						<td style="width: 2%; border:1px solid black;">Submission Date (提出日)</td>
 						<td style="border:1px solid black; text-align: center;"><?php echo date('d F Y', strtotime($submission_date)) ?></td></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Category</td>
+						<td style="width: 2%; border:1px solid black;">Category (部類)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $category ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Subject</td>
-						<td style="border:1px solid black; text-align: center;"><?= ucfirst($subject) ?></td>
-					</tr>
-					<tr>
-						<td style="width: 2%; border:1px solid black;">Type</td>
+						<td style="width: 2%; border:1px solid black;">Type (種目)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $type ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Objective</td>
+						<td style="width: 2%; border:1px solid black;">Objective (目的)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
 					</tr>
 					<tr>
-						<td style="width: 2%; border:1px solid black;">Supplier</td>
+						<td style="width: 2%; border:1px solid black;">Vendor (サプライヤー)</td>
 						<td style="border:1px solid black; text-align: center;"><?= $supplier_code ?> - <?= $supplier_name ?></td>
 					</tr>
 			
@@ -519,12 +527,11 @@
 			
 			<br>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> no&#8650;</span><br><br>
-			<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvepresdir/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvepresdir/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
-
+			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
 
 			@elseif($status == "comment" && ($posisi == "manager" || $posisi == "dgm" || $posisi == "gm" || $posisi == "manager_acc" || $posisi == "direktur_acc" || $posisi == "presdir"))
 
@@ -542,33 +549,33 @@
 				<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br>
 
 				@if($posisi == "manager")
-				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvemanager/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 				@elseif($posisi == "dgm")
 
-				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				
 				@elseif($posisi == "gm")
 
-				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 				@elseif($posisi == "manager_acc")
 
-				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvemanageracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvemanageracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\
 
 				@elseif($posisi == "direktur_acc")
 
-				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvediracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvediracc/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 				@elseif($posisi == "presdir")
 
-				<a style="background-color: green; width: 50px;text-decoration: none;color: white" href="{{ url("investment/approvepresdir/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size:20px;" href="{{ url("investment/approvepresdir/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 				@endif
 				
-				<a style="background-color: blue; width: 50px;text-decoration: none;color: white" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a style="background-color: blue; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/comment/".$id) }}">&nbsp;&nbsp;&nbsp; Hold & Comment &nbsp;&nbsp;&nbsp;</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-				<a style="background-color: red; width: 50px;text-decoration: none;color: white" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
+				<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("investment/reject/".$id) }}">&nbsp; Reject &nbsp;</a><br>
 
 			@elseif($posisi == "finished")
 

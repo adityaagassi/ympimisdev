@@ -55,13 +55,13 @@
 
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {
-	    /* display: none; <- Crashes Chrome on hover */
-	    -webkit-appearance: none;
-	    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+		/* display: none; <- Crashes Chrome on hover */
+		-webkit-appearance: none;
+		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 	}
 
 	input[type=number] {
-	    -moz-appearance:textfield; /* Firefox */
+		-moz-appearance:textfield; /* Firefox */
 	}
 </style>
 @endsection
@@ -97,38 +97,38 @@
 		{{ session('error') }}
 	</div>   
 	@endif
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="box no-border" style="margin-bottom: 5px;">
-					<div class="box-header">
-						<h3 class="box-title">Detail Filter <span class="text-purple"> フィルター詳細</span></span></h3>
-					</div>
-					<div class="row">
-						<input type="hidden" value="{{csrf_token()}}" name="_token" />
-						<div class="col-xs-12">
-							<div class="col-md-3">
-								<div class="form-group">
-									<label>Tanggal Pengajuan</label>
-									<div class="input-group date">
-										<div class="input-group-addon">
-											<i class="fa fa-calendar"></i>
-										</div>
-										<input type="text" class="form-control pull-right" id="datefrom">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box no-border" style="margin-bottom: 5px;">
+				<div class="box-header">
+					<h3 class="box-title">Detail Filter <span class="text-purple"> フィルター詳細</span></span></h3>
+				</div>
+				<div class="row">
+					<input type="hidden" value="{{csrf_token()}}" name="_token" />
+					<div class="col-xs-12">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Tanggal Pengajuan</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
 									</div>
+									<input type="text" class="form-control pull-right" id="datefrom">
 								</div>
 							</div>
-							<div class="col-md-3">
-								<div class="form-group">
-									<label>Tanggal Pengajuan Sampai</label>
-									<div class="input-group date">
-										<div class="input-group-addon">
-											<i class="fa fa-calendar"></i>
-										</div>
-										<input type="text" class="form-control pull-right" id="dateto">
+						</div>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label>Tanggal Pengajuan Sampai</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
 									</div>
+									<input type="text" class="form-control pull-right" id="dateto">
 								</div>
 							</div>
-							<?php if(Auth::user()->role_code == "MIS" || $employee->department == "Procurement" || $employee->department == "Purchasing Control") { ?>
+						</div>
+						<?php if(Auth::user()->role_code == "MIS" || $employee->department == "Procurement" || $employee->department == "Purchasing Control") { ?>
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Departemen</label>
@@ -140,28 +140,28 @@
 									</select>
 								</div>
 							</div>	
-							<?php } else { ?>
-								<input type="hidden" name="department" id='department' data-placeholder="Select Department" style="width: 100%;">
-							<?php } ?>
-							<div class="col-md-3">
-								<div class="form-group">
-									<div class="col-md-6" style="padding-right: 0;">
-										<label style="color: white;"> x</label>
-										<button class="btn btn-primary form-control" onclick="fillTable()"><i class="fa fa-search"></i> Cari</button>
-									</div>
-									<div class="col-md-6" style="padding-right: 0;">
-										<label style="color: white;"> x</label>
-										<button class="btn btn-danger form-control" onclick="clearConfirmation()">Reset</button>
-									</div>
+						<?php } else { ?>
+							<input type="hidden" name="department" id='department' data-placeholder="Select Department" style="width: 100%;">
+						<?php } ?>
+						<div class="col-md-3">
+							<div class="form-group">
+								<div class="col-md-6" style="padding-right: 0;">
+									<label style="color: white;"> x</label>
+									<button class="btn btn-primary form-control" onclick="fillTable()"><i class="fa fa-search"></i> Cari</button>
+								</div>
+								<div class="col-md-6" style="padding-right: 0;">
+									<label style="color: white;"> x</label>
+									<button class="btn btn-danger form-control" onclick="clearConfirmation()">Reset</button>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="box no-border">
-							<div class="box-header">
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="box no-border">
+						<div class="box-header">
 							<!-- <button class="btn btn-success" data-toggle="modal" data-target="#download" style="width: 
 								16%">Download</button> -->
 							</div>
@@ -266,9 +266,9 @@
 												<label>Staff</label>
 												<select class="form-control select2" data-placeholder="Pilih Staff" name="staff" id="staff" style="width: 100% height: 35px;" required>
 													<option value=""></option>
-									                  @foreach($staff as $stf)
-									                  <option value="{{ $stf->employee_id }}">{{ $stf->employee_id }} - {{ $stf->name }} - {{ $stf->section }}</option>
-									                  @endforeach
+													@foreach($staff as $stf)
+													<option value="{{ $stf->employee_id }}">{{ $stf->employee_id }} - {{ $stf->name }} - {{ $stf->section }}</option>
+													@endforeach
 												</select>
 											</div>
 											@endif
@@ -398,131 +398,131 @@
 										<input type="text" name="lop" id="lop" value="1" hidden>
 										<div class="col-xs-1" style="padding:5px;">
 											<select class="form-control select4" data-placeholder="Choose Item" name="item_code1" id="item_code1" style="width: 100% height: 35px;" onchange="pilihItem(this)">
-							              </select>
-							          </div>
-							        <div class="col-xs-2" style="padding:5px;">
-							          	<input type="text" class="form-control" id="item_desc1" name="item_desc1" placeholder="Description" required="">
-						          	</div>
-						          	<div class="col-xs-1" style="padding:5px;">
-						          		<input type="text" class="form-control" id="item_spec1" name="item_spec1" placeholder="Specification">
-						          	</div>
-						          	<div class="col-xs-1" style="padding:5px;">
-						          		<input type="text" class="form-control" id="item_stock1" name="item_stock1" placeholder="Stock">
-						          	</div>
-						          	<div class="col-xs-1" style="padding:5px;">
-						          		<div class="input-group date">
-						          			<div class="input-group-addon">
-						          				<i class="fa fa-calendar" style="font-size: 10px"></i>
-						          			</div>
-						          			<input type="text" class="form-control pull-right datepicker" id="req_date1" name="req_date1" placeholder="Tanggal" required="">
-						          		</div>
-						          	</div>
+											</select>
+										</div>
+										<div class="col-xs-2" style="padding:5px;">
+											<input type="text" class="form-control" id="item_desc1" name="item_desc1" placeholder="Description" required="">
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<input type="text" class="form-control" id="item_spec1" name="item_spec1" placeholder="Specification">
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<input type="text" class="form-control" id="item_stock1" name="item_stock1" placeholder="Stock">
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<div class="input-group date">
+												<div class="input-group-addon">
+													<i class="fa fa-calendar" style="font-size: 10px"></i>
+												</div>
+												<input type="text" class="form-control pull-right datepicker" id="req_date1" name="req_date1" placeholder="Tanggal" required="">
+											</div>
+										</div>
 
-						          	<div class="col-xs-1" style="padding: 5px">
-						          		<select class="form-control select2" id="item_currency1" name="item_currency1" data-placeholder='Currency' style="width: 100%" onchange="currency(this)">
-						          			<option value="">&nbsp;</option>
-						          			<option value="USD">USD</option>
-						          			<option value="IDR">IDR</option>
-						          			<option value="JPY">JPY</option>
-						          		</select>
-						          		<input type="text" class="form-control" id="item_currency_text1" name="item_currency_text1" style="display:none">
-						          	</div>
+										<div class="col-xs-1" style="padding: 5px">
+											<select class="form-control select2" id="item_currency1" name="item_currency1" data-placeholder='Currency' style="width: 100%" onchange="currency(this)">
+												<option value="">&nbsp;</option>
+												<option value="USD">USD</option>
+												<option value="IDR">IDR</option>
+												<option value="JPY">JPY</option>
+											</select>
+											<input type="text" class="form-control" id="item_currency_text1" name="item_currency_text1" style="display:none">
+										</div>
 
-						          	<div class="col-xs-1" style="padding:5px;">
+										<div class="col-xs-1" style="padding:5px;">
 
-						          		<div class="input-group"> 
-						          			<span class="input-group-addon" id="ket_harga1" style="padding:3px">?</span>
-						          			<input type="text" class="form-control currency" id="item_price1" name="item_price1" placeholder="Harga" data-number-to-fixed="2" data-number-stepfactor="100"required="" style="padding: 6px 6px">
-						          		</div>
-						          		<!-- input type="text" class="form-control" id="item_price1" name="item_price1" placeholder="Price" required="" onkeyup='getTotal(this.id)'> -->
-						          	</div>
-						          	<div class="col-xs-1" style="padding:5px;">
-						          		<input type="number" class="form-control" id="qty1" name="qty1" placeholder="Qty" required="" onkeyup='getTotal(this.id)'>
-						          		<input type="hidden" class="form-control" id="moq1" name="moq1" placeholder="Moq" required="">
-						          	</div>
-						          	<div class="col-xs-1" style="padding:5px;">
-						          		<select class="form-control select4" id="uom1" name="uom1" data-placeholder="UOM" style="width: 100%;">
-							              <option></option>
-							              @foreach($uom as $um)
-							              <option value="{{ $um }}">{{ $um }}</option>
-							              @endforeach
-							            </select>
-						          		<!-- <input type="text" class="form-control" id="uom1" name="uom1" placeholder="UOM"> -->
-						          	</div>
-						          	<div class="col-xs-1" style="padding:5px;">
-						          		<input type="text" class="form-control" id="amount1" name="amount1" placeholder="Total" required="" readonly="">
-						          		<input type="hidden" class="form-control" id="konversi_dollar1" name="konversi_dollar1" placeholder="Total" required="" readonly="">
-						          	</div>						          		
-						          	<div class="col-xs-1" style="padding:5px;">
-						          		<a type="button" class="btn btn-success" onclick='tambah("tambah","lop");'><i class='fa fa-plus' ></i></a>
-						          	</div>	
-						          </div>
+											<div class="input-group"> 
+												<span class="input-group-addon" id="ket_harga1" style="padding:3px">?</span>
+												<input type="text" class="form-control currency" id="item_price1" name="item_price1" placeholder="Harga" data-number-to-fixed="2" data-number-stepfactor="100"required="" style="padding: 6px 6px">
+											</div>
+											<!-- input type="text" class="form-control" id="item_price1" name="item_price1" placeholder="Price" required="" onkeyup='getTotal(this.id)'> -->
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<input type="number" class="form-control" id="qty1" name="qty1" placeholder="Qty" required="" onkeyup='getTotal(this.id)'>
+											<input type="hidden" class="form-control" id="moq1" name="moq1" placeholder="Moq" required="">
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<select class="form-control select4" id="uom1" name="uom1" data-placeholder="UOM" style="width: 100%;">
+												<option></option>
+												@foreach($uom as $um)
+												<option value="{{ $um }}">{{ $um }}</option>
+												@endforeach
+											</select>
+											<!-- <input type="text" class="form-control" id="uom1" name="uom1" placeholder="UOM"> -->
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<input type="text" class="form-control" id="amount1" name="amount1" placeholder="Total" required="" readonly="">
+											<input type="hidden" class="form-control" id="konversi_dollar1" name="konversi_dollar1" placeholder="Total" required="" readonly="">
+										</div>						          		
+										<div class="col-xs-1" style="padding:5px;">
+											<a type="button" class="btn btn-success" onclick='tambah("tambah","lop");'><i class='fa fa-plus' ></i></a>
+										</div>	
+									</div>
 
-						          <div id="tambah"></div>
+									<div id="tambah"></div>
 
-						          <div class="col-md-2 col-md-offset-5">
-						          	<p><b>Total Dollar</b></p>
-						          	<div class="input-group">
-						          		<span class="input-group-addon">$ </span><input type="text" id="total_usd" class="form-control" readonly>
-						          	</div>
-						          </div>
+									<div class="col-md-2 col-md-offset-5">
+										<p><b>Total Dollar</b></p>
+										<div class="input-group">
+											<span class="input-group-addon">$ </span><input type="text" id="total_usd" class="form-control" readonly>
+										</div>
+									</div>
 
-						          <div class="col-md-2">
-						          	<p><b>Total Rupiah</b></p>
-						          	<div class="input-group">
-						          		<span class="input-group-addon">Rp. </span><input type="text" id="total_id" class="form-control" readonly>
-						          	</div>
-						          </div>
+									<div class="col-md-2">
+										<p><b>Total Rupiah</b></p>
+										<div class="input-group">
+											<span class="input-group-addon">Rp. </span><input type="text" id="total_id" class="form-control" readonly>
+										</div>
+									</div>
 
-						          <div class="col-md-2">
-						          	<p><b>Total Yen</b></p>
-						          	<div class="input-group">
-						          		<span class="input-group-addon">¥ </span><input type="text" id="total_yen" class="form-control" readonly>
-						          	</div>
-						          </div>
+									<div class="col-md-2">
+										<p><b>Total Yen</b></p>
+										<div class="input-group">
+											<span class="input-group-addon">¥ </span><input type="text" id="total_yen" class="form-control" readonly>
+										</div>
+									</div>
 
-						          <div class="col-md-3 col-md-offset-8" style="margin-top: 20px">
-						          	<p><b>Total Keseluruhan</b></p>
-						          	<div class="input-group">
-						          		<span class="input-group-addon">$ </span><input type="text" id="total_keseluruhan" class="form-control" readonly>
-						          	</div>
-						          </div>
+									<div class="col-md-3 col-md-offset-8" style="margin-top: 20px">
+										<p><b>Total Keseluruhan</b></p>
+										<div class="input-group">
+											<span class="input-group-addon">$ </span><input type="text" id="total_keseluruhan" class="form-control" readonly>
+										</div>
+									</div>
 
-						          <div class="col-md-11" style="margin-top: 20px">
-						          	<p><b>Informasi Budget</b></p>
-						          	<table class="table table-striped text-center">
-						          		<tr>
-						          			<th>Bulan</th>
-						          			<th>Budget Bulanan</th>
-						          			<th>Total Pembelian</th>
-						          			<th>Sisa Budget</th>
-						          		</tr>
-						          		<tr>
-						          			<td>
-						          				<label id="bulanbudget" name="bulanbudget"></label>
-						          			</td>
-						          			<td>
-						          				<label id="budgetLabel" name="budgetLabel"></label>
-						          				<input type="hidden" id="budget" name="budget">
-						          			</td>
-						          			<td>
-						          				<label id="TotalPembelianLabel" name="TotalPembelianLabel"></label>
-						          				<input type="hidden" id="TotalPembelian" name="TotalPembelian">
-						          			</td>
-						          			<td>
-						          				<label id="SisaBudgetLabel" name="SisaBudgetLabel"></label>
-						          			</td>
-						          		</tr>
-						          	</table>
-						          </div>
-						          <div class="col-md-12">
-						          	<br>
-						          	<button type="submit" class="btn btn-success pull-right">Konfirmasi</button> 
-						          	<span class="pull-right">&nbsp;</span>
-						          	<a class="btn btn-primary btnPrevious pull-right">Kembali</a>
-						          </div>
-						      </div>
-						  </div>
+									<div class="col-md-11" style="margin-top: 20px">
+										<p><b>Informasi Budget</b></p>
+										<table class="table table-striped text-center">
+											<tr>
+												<th>Bulan</th>
+												<th>Budget Bulanan</th>
+												<th>Total Pembelian</th>
+												<th>Sisa Budget</th>
+											</tr>
+											<tr>
+												<td>
+													<label id="bulanbudget" name="bulanbudget"></label>
+												</td>
+												<td>
+													<label id="budgetLabel" name="budgetLabel"></label>
+													<input type="hidden" id="budget" name="budget">
+												</td>
+												<td>
+													<label id="TotalPembelianLabel" name="TotalPembelianLabel"></label>
+													<input type="hidden" id="TotalPembelian" name="TotalPembelian">
+												</td>
+												<td>
+													<label id="SisaBudgetLabel" name="SisaBudgetLabel"></label>
+												</td>
+											</tr>
+										</table>
+									</div>
+									<div class="col-md-12">
+										<br>
+										<button type="submit" class="btn btn-success pull-right">Konfirmasi</button> 
+										<span class="pull-right">&nbsp;</span>
+										<a class="btn btn-primary btnPrevious pull-right">Kembali</a>
+									</div>
+								</div>
+							</div>
 
 						</div>
 					</div>
@@ -624,32 +624,32 @@
 
 						</div>
 						<div class="col-md-11" style="margin-top: 20px">
-				          	<p><b>Informasi Budget</b></p>
-				          	<table class="table table-striped text-center">
-				          		<tr>
-				          			<th>Bulan</th>
-				          			<th>Budget Bulanan</th>
-				          			<th>Total Pembelian</th>
-				          			<th>Sisa Budget</th>
-				          		</tr>
-				          		<tr>
-				          			<td>
-				          				<label id="bulanbudgetedit" name="bulanbudgetedit"></label>
-				          			</td>
-				          			<td>
-				          				<label id="budgetLabelEdit" name="budgetLabelEdit"></label>
-				          			</td>
-				          			<td>
-				          				<label id="TotalPembelianEditLabel" name="TotalPembelianEditLabel"></label>
-				          				<input type="hidden" id="TotalPembelianEdit" name="TotalPembelianEdit">
-				          			</td>
-				          			<td>
-				          				<label id="SisaBudgetLabelEdit" name="SisaBudgetLabelEdit"></label>
-				          				<input type="hidden" id="SisaBudgetEdit" name="SisaBudgetEdit">
-				          			</td>
-				          		</tr>
-				          	</table>
-				          </div>
+							<p><b>Informasi Budget</b></p>
+							<table class="table table-striped text-center">
+								<tr>
+									<th>Bulan</th>
+									<th>Budget Bulanan</th>
+									<th>Total Pembelian</th>
+									<th>Sisa Budget</th>
+								</tr>
+								<tr>
+									<td>
+										<label id="bulanbudgetedit" name="bulanbudgetedit"></label>
+									</td>
+									<td>
+										<label id="budgetLabelEdit" name="budgetLabelEdit"></label>
+									</td>
+									<td>
+										<label id="TotalPembelianEditLabel" name="TotalPembelianEditLabel"></label>
+										<input type="hidden" id="TotalPembelianEdit" name="TotalPembelianEdit">
+									</td>
+									<td>
+										<label id="SisaBudgetLabelEdit" name="SisaBudgetLabelEdit"></label>
+										<input type="hidden" id="SisaBudgetEdit" name="SisaBudgetEdit">
+									</td>
+								</tr>
+							</table>
+						</div>
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" class="form-control" id="id_edit_pr" name="id_edit_pr" placeholder="ID">
@@ -718,29 +718,29 @@
 
 		jQuery(document).ready(function() {
 
-		$("#importForm").submit(function(){
-			if (!confirm("Apakah Anda Yakin Ingin Membuat PR Ini??")) {
-		        return false;
-		    } else {
-		    	var status = 0;  		
-		        var len = $('#SisaBudgetLabel').text();
-		        if (len != "") {
-			        var sisa = parseFloat(len.substr(1));
-			        if (sisa > 0) {
-			           
-			        } else {
-			        	status++;
-			        }			        	
-		        }
+			$("#importForm").submit(function(){
+				if (!confirm("Apakah Anda Yakin Ingin Membuat PR Ini??")) {
+					return false;
+				} else {
+					var status = 0;  		
+					var len = $('#SisaBudgetLabel').text();
+					if (len != "") {
+						var sisa = parseFloat(len.substr(1));
+						if (sisa > 0) {
+							
+						} else {
+							status++;
+						}			        	
+					}
 
-		    	if (status > 0) {
-		    		openErrorGritter("Error","Tidak Boleh Melebihi Budget");
-				    return false;
-		    	}else{
-		    		this.submit();
-		    	}
-		    }
-		});
+					if (status > 0) {
+						openErrorGritter("Error","Tidak Boleh Melebihi Budget");
+						return false;
+					}else{
+						this.submit();
+					}
+				}
+			});
 
 		// data table
 		fillTable();		
@@ -751,9 +751,9 @@
         getExchangeRate();
 
         CKEDITOR.replace('note' ,{
-	      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-	      height: '100px'
-	    });
+        	filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        	height: '100px'
+        });
 
         usd = document.getElementById('total_usd');
         usd.value = 0;
@@ -1112,12 +1112,12 @@
 				$('#budget_amount').text("$"+obj.amount);
 				$('#budget_sisa').text("$"+obj.budget_now.toFixed(2));
 
-	            $('#budgetLabel').text("$"+obj.budget_now.toFixed(2));
-	            $('#budget').val(obj.budget_now.toFixed(2));
-    	    	$('#bulanbudget').text(obj.namabulan);
+				$('#budgetLabel').text("$"+obj.budget_now.toFixed(2));
+				$('#budget').val(obj.budget_now.toFixed(2));
+				$('#bulanbudget').text(obj.namabulan);
 
-	        } 
-	    });
+			} 
+		});
 	}
 
 	//Get total amount + Per Currency
@@ -1137,7 +1137,7 @@
 
       	if (moq != null && qty < moq && qty > 0) {
       		openErrorGritter("Error","Jumlah Kurang Dari Minimum Order. Minimum order = "+moq);
-			return false;
+      		return false;
       	}
 
       	if (!isNaN(hasil)) {
@@ -1165,11 +1165,11 @@
 
         		var mata_uang = $('#item_currency'+i).val();
         		var mata_uang_text = $('#item_currency_text'+i).val();
-	    		var dollar = document.getElementById('konversi_dollar'+i);
+        		var dollar = document.getElementById('konversi_dollar'+i);
 
-	        	tot_usd = document.getElementById('amount'+i).value;
-    	    	tot_yen = document.getElementById('amount'+i).value;
-    	    	tot_id = document.getElementById('amount'+i).value;
+        		tot_usd = document.getElementById('amount'+i).value;
+        		tot_yen = document.getElementById('amount'+i).value;
+        		tot_id = document.getElementById('amount'+i).value;
 
         		if (mata_uang == "USD" || mata_uang_text == "USD" ) {
         			total_usd += parseFloat(tot_usd.replace(/\D/g, ""));
@@ -1180,64 +1180,64 @@
         		else if (mata_uang == "JPY" || mata_uang_text == "JPY"){
         			total_yen += parseFloat(tot_yen.replace(/\D/g, ""));
 
-	    			total_konversi = parseFloat(tot_yen.replace(/\D/g, ""));
-	    			dollar.value = konversi("JPY","USD",total_konversi);
+        			total_konversi = parseFloat(tot_yen.replace(/\D/g, ""));
+        			dollar.value = konversi("JPY","USD",total_konversi);
 
-	    			total_yen_konversi = parseFloat(konversi("JPY","USD",total_konversi));
+        			total_yen_konversi = parseFloat(konversi("JPY","USD",total_konversi));
         		}
         		else if (mata_uang == "IDR" || mata_uang_text == "IDR"){
         			total_id += parseFloat(tot_id.replace(/\D/g, ""));	
 
-	    			total_konversi = parseFloat(tot_id.replace(/\D/g, ""));
+        			total_konversi = parseFloat(tot_id.replace(/\D/g, ""));
         			dollar.value = konversi("IDR","USD",total_konversi);   	    			
 
-	    			total_id_konversi = parseFloat(konversi("IDR","USD",total_id));
+        			total_id_konversi = parseFloat(konversi("IDR","USD",total_id));
         		}
 
-	        	document.getElementById('total_usd').value = rubah(total_usd);
-	        	document.getElementById('total_yen').value = rubah(total_yen);
-	        	document.getElementById('total_id').value = rubah(total_id);
+        		document.getElementById('total_usd').value = rubah(total_usd);
+        		document.getElementById('total_yen').value = rubah(total_yen);
+        		document.getElementById('total_id').value = rubah(total_id);
 
-    	    	total_beli = total_usd + total_yen_konversi + total_id_konversi;
-    	    	budget = $('#budget').val();
+        		total_beli = total_usd + total_yen_konversi + total_id_konversi;
+        		budget = $('#budget').val();
 
-    	    	if (total_beli > 0) {
-	    	    	$('#TotalPembelianLabel').text("$"+total_beli.toFixed(2));
-	    	    	$('#TotalPembelian').val(total_beli.toFixed(2));
-	    	    }else{
-	    	    	$('#TotalPembelianLabel').text("");
-	    	    }
+        		if (total_beli > 0) {
+        			$('#TotalPembelianLabel').text("$"+total_beli.toFixed(2));
+        			$('#TotalPembelian').val(total_beli.toFixed(2));
+        		}else{
+        			$('#TotalPembelianLabel').text("");
+        		}
 
-    	    	var sisa = parseFloat(budget) - parseFloat(total_beli);
+        		var sisa = parseFloat(budget) - parseFloat(total_beli);
 
-    	    	if (total_beli > 0) {
-	    	    	if (sisa < 0) {
-		    	    	$('#SisaBudgetLabel').text("$"+sisa.toFixed(2)).css("color", "red");   	    		
-	    	    	}else if(sisa > 0){
-	    	    		$('#SisaBudgetLabel').text("$"+sisa.toFixed(2)).css("color", "green");
-	    	    	}
-	    	    	else{
-	    	    		$('#SisaBudgetLabel').text("$"+sisa.toFixed(2));
-	    	    	}
-    	    	}
-    	    	else{
-    	    		$('#SisaBudgetLabel').text("");
-    	    	}
+        		if (total_beli > 0) {
+        			if (sisa < 0) {
+        				$('#SisaBudgetLabel').text("$"+sisa.toFixed(2)).css("color", "red");   	    		
+        			}else if(sisa > 0){
+        				$('#SisaBudgetLabel').text("$"+sisa.toFixed(2)).css("color", "green");
+        			}
+        			else{
+        				$('#SisaBudgetLabel').text("$"+sisa.toFixed(2));
+        			}
+        		}
+        		else{
+        			$('#SisaBudgetLabel').text("");
+        		}
 
-	        	var curr;
-	        	if (mata_uang != "") {
-	        		curr = mata_uang;
-	        	}
-	        	else if(mata_uang_text != ""){
-	        		curr = mata_uang_text;
-	        	}
+        		var curr;
+        		if (mata_uang != "") {
+        			curr = mata_uang;
+        		}
+        		else if(mata_uang_text != ""){
+        			curr = mata_uang_text;
+        		}
 
-    	    	document.getElementById('total_keseluruhan').value = konversiToUSD(curr,'USD');
-	        }
-	    }
-	}
+        		document.getElementById('total_keseluruhan').value = konversiToUSD(curr,'USD');
+        	}
+        }
+    }
 
-	function getTotalEdit(id) {
+    function getTotalEdit(id) {
 		// console.log(id);
 		var num = id.match(/\d/g);
 		num = num.join("");
@@ -1249,94 +1249,94 @@
       	var hasil = parseInt(qty) * parseInt(prc); //Dikalikan qty
 
       	if (!isNaN(hasil)) {
-    		$("#amount_edit"+num).val(rubah(hasil));
-	    	var dollar = document.getElementById('konversi_dollar'+num);
+      		$("#amount_edit"+num).val(rubah(hasil));
+      		var dollar = document.getElementById('konversi_dollar'+num);
 
-	    	total_usd = 0;
-    		total_id = 0;
-    		total_yen = 0;
-    		total_usd_arr = [0,0,0,0,0,0,0,0,0,0,0,0];
-    		total_yen_arr = [0,0,0,0,0,0,0,0,0,0,0,0];
-    		total_id_arr = [0,0,0,0,0,0,0,0,0,0,0,0];
-    		total_yen_konversi = [0,0,0,0,0,0,0,0,0,0,0,0];
-    		total_id_konversi = [0,0,0,0,0,0,0,0,0,0,0,0];
-    		total_beli = [0,0,0,0,0,0,0,0,0,0,0,0];
-
-
-    		var req_date = $('#req_date_edit'+num).val();
-    		date_js = new Date(req_date);
-    		req_bulan = date_js.getMonth()+1;
-
-			var mata_uang = $('#item_currency_edit'+num).val();
-			var mata_uang_text = $('#item_currency_text_edit'+num).val();
-
-	    	if (mata_uang == "USD" || mata_uang_text == "USD" ) {
-    			total_usd += parseInt(hasil);
-
-    			$("#konversi_dollar"+num).val(konversi("USD","USD",hasil));
-    		}
-    		else if (mata_uang == "JPY" || mata_uang_text == "JPY"){
-    			total_yen += parseInt(hasil);
-
-    			$("#konversi_dollar"+num).val(konversi("JPY","USD",hasil));
-    		}
-
-    		else if (mata_uang == "IDR" || mata_uang_text == "IDR"){
-    			total_id += parseInt(hasil);
-
-    			$("#konversi_dollar"+num).val(konversi("IDR","USD",hasil));
-    		}
+      		total_usd = 0;
+      		total_id = 0;
+      		total_yen = 0;
+      		total_usd_arr = [0,0,0,0,0,0,0,0,0,0,0,0];
+      		total_yen_arr = [0,0,0,0,0,0,0,0,0,0,0,0];
+      		total_id_arr = [0,0,0,0,0,0,0,0,0,0,0,0];
+      		total_yen_konversi = [0,0,0,0,0,0,0,0,0,0,0,0];
+      		total_id_konversi = [0,0,0,0,0,0,0,0,0,0,0,0];
+      		total_beli = [0,0,0,0,0,0,0,0,0,0,0,0];
 
 
-	    	if (mata_uang == "USD" || mata_uang_text == "USD" ) {	
-    			total_usd_arr[parseInt(req_bulan) - 1] += parseInt(total_usd);
-    		}
-    		else if (mata_uang == "JPY" || mata_uang_text == "JPY"){
-				total_yen_arr[parseInt(req_bulan) - 1] += parseInt(total_yen);    	    			
-    			total_yen_konversi[parseInt(req_bulan) - 1] = parseFloat(konversi("JPY","USD",total_yen_arr[parseInt(req_bulan) - 1]));
-    		}
-    		else if (mata_uang == "IDR" || mata_uang_text == "IDR"){
-    			total_id_arr[parseInt(req_bulan) - 1] += parseInt(total_id);    	    			
-    			total_id_konversi[parseInt(req_bulan) - 1] = parseFloat(konversi("IDR","USD",total_id_arr[parseInt(req_bulan) - 1]));
-    		}
+      		var req_date = $('#req_date_edit'+num).val();
+      		date_js = new Date(req_date);
+      		req_bulan = date_js.getMonth()+1;
+
+      		var mata_uang = $('#item_currency_edit'+num).val();
+      		var mata_uang_text = $('#item_currency_text_edit'+num).val();
+
+      		if (mata_uang == "USD" || mata_uang_text == "USD" ) {
+      			total_usd += parseInt(hasil);
+
+      			$("#konversi_dollar"+num).val(konversi("USD","USD",hasil));
+      		}
+      		else if (mata_uang == "JPY" || mata_uang_text == "JPY"){
+      			total_yen += parseInt(hasil);
+
+      			$("#konversi_dollar"+num).val(konversi("JPY","USD",hasil));
+      		}
+
+      		else if (mata_uang == "IDR" || mata_uang_text == "IDR"){
+      			total_id += parseInt(hasil);
+
+      			$("#konversi_dollar"+num).val(konversi("IDR","USD",hasil));
+      		}
 
 
-    		for (var j = 0; j < total_usd_arr.length; j++) {
-    	    	total_beli[j] = total_usd_arr[j] + total_yen_konversi[j] + total_id_konversi[j];
+      		if (mata_uang == "USD" || mata_uang_text == "USD" ) {	
+      			total_usd_arr[parseInt(req_bulan) - 1] += parseInt(total_usd);
+      		}
+      		else if (mata_uang == "JPY" || mata_uang_text == "JPY"){
+      			total_yen_arr[parseInt(req_bulan) - 1] += parseInt(total_yen);    	    			
+      			total_yen_konversi[parseInt(req_bulan) - 1] = parseFloat(konversi("JPY","USD",total_yen_arr[parseInt(req_bulan) - 1]));
+      		}
+      		else if (mata_uang == "IDR" || mata_uang_text == "IDR"){
+      			total_id_arr[parseInt(req_bulan) - 1] += parseInt(total_id);    	    			
+      			total_id_konversi[parseInt(req_bulan) - 1] = parseFloat(konversi("IDR","USD",total_id_arr[parseInt(req_bulan) - 1]));
+      		}
 
-    	    	budget = $('#BudgetEdit'+parseInt(j+1)).text();
-    	    	
-    	    	if (total_beli[j] > 0) {
-	    	    	$('#TotalPembelianEditLabel'+parseInt(j+1)).text("$"+total_beli[j]);
-	    	    	$('#TotalPembelianEdit'+parseInt(j+1)).val(total_beli[j])
-	    	    }else{
-	    	    	$('#TotalPembelianEditLabel'+parseInt(j+1)).text("");
-	    	    }
 
-    	    	var sisa = parseFloat(budget.substr(1)) - parseFloat(total_beli[j]);
+      		for (var j = 0; j < total_usd_arr.length; j++) {
+      			total_beli[j] = total_usd_arr[j] + total_yen_konversi[j] + total_id_konversi[j];
 
-    	    	if (total_beli[j] > 0) {
-	    	    	if (sisa < 0) {
-		    	    	$('#SisaBudgetEdit'+parseInt(j+1)).text("$"+sisa.toFixed(2)).css("color", "red");	    	    		
-	    	    	}else if(sisa > 0){
-	    	    		$('#SisaBudgetEdit'+parseInt(j+1)).text("$"+sisa.toFixed(2)).css("color", "green");
-	    	    	}
-	    	    	else{
-	    	    		$('#SisaBudgetEdit'+parseInt(j+1)).text("$"+sisa.toFixed(2));
-	    	    	}
-    	    	}
-    	    	else{
-    	    		$('#SisaBudgetEdit'+parseInt(j+1)).text("");
-    	    	}
-    		}
-	    }
-	}
+      			budget = $('#BudgetEdit'+parseInt(j+1)).text();
+      			
+      			if (total_beli[j] > 0) {
+      				$('#TotalPembelianEditLabel'+parseInt(j+1)).text("$"+total_beli[j]);
+      				$('#TotalPembelianEdit'+parseInt(j+1)).val(total_beli[j])
+      			}else{
+      				$('#TotalPembelianEditLabel'+parseInt(j+1)).text("");
+      			}
 
-	function konversi(from, to, amount){
+      			var sisa = parseFloat(budget.substr(1)) - parseFloat(total_beli[j]);
 
-		var obj = exchange_rate;
+      			if (total_beli[j] > 0) {
+      				if (sisa < 0) {
+      					$('#SisaBudgetEdit'+parseInt(j+1)).text("$"+sisa.toFixed(2)).css("color", "red");	    	    		
+      				}else if(sisa > 0){
+      					$('#SisaBudgetEdit'+parseInt(j+1)).text("$"+sisa.toFixed(2)).css("color", "green");
+      				}
+      				else{
+      					$('#SisaBudgetEdit'+parseInt(j+1)).text("$"+sisa.toFixed(2));
+      				}
+      			}
+      			else{
+      				$('#SisaBudgetEdit'+parseInt(j+1)).text("");
+      			}
+      		}
+      	}
+      }
 
-		for (var i = 0; i < obj.length; i++) {
+      function konversi(from, to, amount){
+
+      	var obj = exchange_rate;
+
+      	for (var i = 0; i < obj.length; i++) {
     		var currency = obj[i].currency; // currency
         	var rate = obj[i].rate; //nilai tukar
 
@@ -1349,16 +1349,16 @@
         	}
         }
         hasil_konversi = (amount / fromrate) * torate;
-	    return hasil_konversi.toFixed(2);		    
-	}
+        return hasil_konversi.toFixed(2);		    
+    }
 
-	function konversiToUSD(from, to){
+    function konversiToUSD(from, to){
 
-		var obj = exchange_rate;
-		var fromrate = 0;
-		var torate = 0;
+    	var obj = exchange_rate;
+    	var fromrate = 0;
+    	var torate = 0;
 
-		for (var i = 0; i < obj.length; i++) {
+    	for (var i = 0; i < obj.length; i++) {
     		var currency = obj[i].currency; // currency
         	var rate = obj[i].rate; //nilai tukar
 
@@ -1372,16 +1372,16 @@
         }
         if (from == "JPY") {
         	hasil_konversi_yen = (total_yen / fromrate) * torate;
-    	}
-    	if (from == "IDR") {
-    		hasil_konversi_id = (total_id / fromrate) * torate;
-	    }
+        }
+        if (from == "IDR") {
+        	hasil_konversi_id = (total_id / fromrate) * torate;
+        }
 
-	    var hasil= total_usd + parseFloat(hasil_konversi_yen.toFixed(2)) + parseFloat(hasil_konversi_id.toFixed(2));
-    	return hasil.toFixed(2);
+        var hasil= total_usd + parseFloat(hasil_konversi_yen.toFixed(2)) + parseFloat(hasil_konversi_id.toFixed(2));
+        return hasil.toFixed(2);
 
     	// document.getElementById('total_keseluruhan').value = total_usd + parseFloat(hasil_konversi_yen.toFixed(2)) + parseFloat(hasil_konversi_id.toFixed(2));
-	 }
+    }
 
     //Fungsi Tambah
 
@@ -1564,9 +1564,9 @@
   }
 
   $('.select2').select2({
-    	allowClear: true,
-    	dropdownAutoWidth : true
-	});
+  	allowClear: true,
+  	dropdownAutoWidth : true
+  });
 
   $(function () {
   	$('.select4').select2({
@@ -1580,166 +1580,166 @@
 
 
   function editPR(id){
-		var isi = "";
-		$('#modalEdit').modal("show");
-	    
-	    var data = {
-		    id:id
-		};
-	      
-	    $.get('{{ url("edit/purchase_requisition") }}', data, function(result, status, xhr){	
+  	var isi = "";
+  	$('#modalEdit').modal("show");
+  	
+  	var data = {
+  		id:id
+  	};
+  	
+  	$.get('{{ url("edit/purchase_requisition") }}', data, function(result, status, xhr){	
 
-			$("#identitas_edit").val(result.purchase_requisition.emp_id+' - '+result.purchase_requisition.emp_name).attr('readonly', true);
-			$("#departemen_edit").val(result.purchase_requisition.department).attr('readonly', true);
-			$("#no_pr_edit").val(result.purchase_requisition.no_pr).attr('readonly', true);
-			$("#no_budget_edit").val(result.purchase_requisition.no_budget).attr('readonly', true);
-			$("#tgl_pengajuan_edit").val(result.purchase_requisition.submission_date).attr('readonly', true);
-			$("#id_edit_pr").val(result.purchase_requisition.id).attr('readonly', true);
+  		$("#identitas_edit").val(result.purchase_requisition.emp_id+' - '+result.purchase_requisition.emp_name).attr('readonly', true);
+  		$("#departemen_edit").val(result.purchase_requisition.department).attr('readonly', true);
+  		$("#no_pr_edit").val(result.purchase_requisition.no_pr).attr('readonly', true);
+  		$("#no_budget_edit").val(result.purchase_requisition.no_budget).attr('readonly', true);
+  		$("#tgl_pengajuan_edit").val(result.purchase_requisition.submission_date).attr('readonly', true);
+  		$("#id_edit_pr").val(result.purchase_requisition.id).attr('readonly', true);
 
-	        $('#modalDetailBodyEdit').html('');
-	        
-	        var ids = [];
-	        var total_amount = 0;
+  		$('#modalDetailBodyEdit').html('');
+  		
+  		var ids = [];
+  		var total_amount = 0;
 
-			$.ajax({
-				url: "{{ route('admin.prgetbudgetdesc') }}?budget_no="+result.purchase_requisition.no_budget,
-				method: 'GET',
-				success: function(data) {
-					var json = data,
-					obj = JSON.parse(json);
-	    	    	$('#bulanbudgetedit').text(obj.namabulan);
-		        }
-		    });
+  		$.ajax({
+  			url: "{{ route('admin.prgetbudgetdesc') }}?budget_no="+result.purchase_requisition.no_budget,
+  			method: 'GET',
+  			success: function(data) {
+  				var json = data,
+  				obj = JSON.parse(json);
+  				$('#bulanbudgetedit').text(obj.namabulan);
+  			}
+  		});
 
-			$.each(result.purchase_requisition_item, function(key, value) {
- 	
-				var tambah2 = "tambah2";
-		    	var	lop2 = "lop2";
+  		$.each(result.purchase_requisition_item, function(key, value) {
+  			
+  			var tambah2 = "tambah2";
+  			var	lop2 = "lop2";
 
-				isi = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
-				if (value.item_code != null) {
+  			isi = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
+  			if (value.item_code != null) {
 
-					isi += "<input type='hidden' class='form-control' id='item_code_edit_hide"+value.id+"' name='item_code_edit_hide"+value.id+"' value="+value.item_code+">";
+  				isi += "<input type='hidden' class='form-control' id='item_code_edit_hide"+value.id+"' name='item_code_edit_hide"+value.id+"' value="+value.item_code+">";
 
-					isi += "<div class='col-xs-1' style='padding:5px;'><select class='form-control select5 item_code_edit' data-placeholder='Choose Item' name='item_code_edit"+value.id+"' id='item_code_edit"+value.id+"' style='width: 100% height: 35px;' onchange='pilihItemEdit(this)'><option></option></select></div>";
+  				isi += "<div class='col-xs-1' style='padding:5px;'><select class='form-control select5 item_code_edit' data-placeholder='Choose Item' name='item_code_edit"+value.id+"' id='item_code_edit"+value.id+"' style='width: 100% height: 35px;' onchange='pilihItemEdit(this)'><option></option></select></div>";
 
-				} else{
-					isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_code_edit"+value.id+"' name='item_code_edit"+value.id+"'></div>";
-				}
-				
-				isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value='"+value.item_spec+"'></div>";
+  			} else{
+  				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_code_edit"+value.id+"' name='item_code_edit"+value.id+"'></div>";
+  			}
+  			
+  			isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
+  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value='"+value.item_spec+"'></div>";
 
-				if (value.item_stock != null) {
-					isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
-				}else{
-					isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock'></div>";
-				}
-				isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date_edit"+value.id+"' name='req_date_edit"+value.id+"' placeholder='Tanggal' required='' value='"+value.item_request_date+"'' readonly=''></div></div>";
-				isi += "<div class='col-xs-1' style='padding: 5px'><input type='text' class='form-control' id='item_currency_edit"+value.id+"' name='item_currency_edit"+value.id+"' value='"+value.item_currency+"' readonly=''><input type='text' class='form-control' id='item_currency_text_edit"+value.id+"' name='item_currency_text_edit"+value.id+"' readonly='' style='display:none'></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price_edit"+value.id+"' name='item_price_edit"+value.id+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' readonly='' value="+value.item_price+" style='padding: 6px 6px'></div></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty_edit"+value.id+"' name='qty_edit"+value.id+"' placeholder='Qty' onkeyup='' required='' value='"+value.item_qty+"' readonly=''></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='uomhide"+value.id+"' id='uomhide"+value.id+"' value='"+value.item_uom+"'><select class='form-control select5' id='uom_edit"+value.id+"' name='uom_edit"+value.id+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount_edit"+value.id+"' name='amount_edit"+value.id+"' placeholder='Total' required='' value='"+value.item_amount+"' readonly=''><input type='hidden' class='form-control' id='konversi_dollar"+value.id+"' name='konversi_dollar"+value.id+"' placeholder='Total' required='' readonly='' value="+value.amount+"></div>";
-				isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.item_desc +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a> <button type='button' class='btn btn-success' onclick='tambah(\""+ tambah2 +"\",\""+ lop2 +"\");'><i class='fa fa-plus' ></i></button></div>";
-				isi += "</div>";
+  			if (value.item_stock != null) {
+  				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
+  			}else{
+  				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock'></div>";
+  			}
+  			isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date_edit"+value.id+"' name='req_date_edit"+value.id+"' placeholder='Tanggal' required='' value='"+value.item_request_date+"'' readonly=''></div></div>";
+  			isi += "<div class='col-xs-1' style='padding: 5px'><input type='text' class='form-control' id='item_currency_edit"+value.id+"' name='item_currency_edit"+value.id+"' value='"+value.item_currency+"' readonly=''><input type='text' class='form-control' id='item_currency_text_edit"+value.id+"' name='item_currency_text_edit"+value.id+"' readonly='' style='display:none'></div>";
+  			isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price_edit"+value.id+"' name='item_price_edit"+value.id+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' readonly='' value="+value.item_price+" style='padding: 6px 6px'></div></div>";
+  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty_edit"+value.id+"' name='qty_edit"+value.id+"' placeholder='Qty' onkeyup='' required='' value='"+value.item_qty+"' readonly=''></div>";
+  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='hidden' name='uomhide"+value.id+"' id='uomhide"+value.id+"' value='"+value.item_uom+"'><select class='form-control select5' id='uom_edit"+value.id+"' name='uom_edit"+value.id+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div>";
+  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount_edit"+value.id+"' name='amount_edit"+value.id+"' placeholder='Total' required='' value='"+value.item_amount+"' readonly=''><input type='hidden' class='form-control' id='konversi_dollar"+value.id+"' name='konversi_dollar"+value.id+"' placeholder='Total' required='' readonly='' value="+value.amount+"></div>";
+  			isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.item_desc +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a> <button type='button' class='btn btn-success' onclick='tambah(\""+ tambah2 +"\",\""+ lop2 +"\");'><i class='fa fa-plus' ></i></button></div>";
+  			isi += "</div>";
 
-				ids.push(value.id);
+  			ids.push(value.id);
 
-				$('#modalDetailBodyEdit').append(isi);
+  			$('#modalDetailBodyEdit').append(isi);
 
-		    	$('.item_code_edit').append(item_list);
+  			$('.item_code_edit').append(item_list);
 
-		    	$('.datepicker').datepicker({
-					autoclose: true,
-					format: 'yyyy-mm-dd'
-				});
+  			$('.datepicker').datepicker({
+  				autoclose: true,
+  				format: 'yyyy-mm-dd'
+  			});
 
-				$(function () {
-					$('.select5').select2({
-						dropdownAutoWidth : true,
-						dropdownParent: $("#"+id),
-						allowClear: true,
-						minimumInputLength: 3
-					});
-				})
+  			$(function () {
+  				$('.select5').select2({
+  					dropdownAutoWidth : true,
+  					dropdownParent: $("#"+id),
+  					allowClear: true,
+  					minimumInputLength: 3
+  				});
+  			})
 
-				if (value.item_currency == "USD") {
-		    		$('#ket_harga_edit'+value.id).text("$");
-		    	}else if (value.item_currency == "JPY") {
-		    		$('#ket_harga_edit'+value.id).text("¥");
-		    	}else if (value.item_currency == "IDR"){
-		    		$('#ket_harga_edit'+value.id).text("Rp.");
-		    	}
+  			if (value.item_currency == "USD") {
+  				$('#ket_harga_edit'+value.id).text("$");
+  			}else if (value.item_currency == "JPY") {
+  				$('#ket_harga_edit'+value.id).text("¥");
+  			}else if (value.item_currency == "IDR"){
+  				$('#ket_harga_edit'+value.id).text("Rp.");
+  			}
 
-				var uom = $('#uomhide'+value.id).val();
-		    	$("#uom_edit"+value.id).val(uom).trigger("change");
+  			var uom = $('#uomhide'+value.id).val();
+  			$("#uom_edit"+value.id).val(uom).trigger("change");
 
-		    	var item_code = $('#item_code_edit_hide'+value.id).val();
-		    	$("#item_code_edit"+value.id).val(item_code).trigger("change");
+  			var item_code = $('#item_code_edit_hide'+value.id).val();
+  			$("#item_code_edit"+value.id).val(item_code).trigger("change");
 
-				$("#looping").val(ids);
+  			$("#looping").val(ids);
 
-        		date_budget = new Date(value.budget_date);
-        		budget_bulan = date_budget.getMonth()+1;
-        		total_amount = total_amount + value.amount;
-        		total_sisa = value.beg_bal - total_amount;
+  			date_budget = new Date(value.budget_date);
+  			budget_bulan = date_budget.getMonth()+1;
+  			total_amount = total_amount + value.amount;
+  			total_sisa = value.beg_bal - total_amount;
 
-        		$("#budgetLabelEdit").text("$"+value.beg_bal).attr('readonly', true);
-        		
-				$("#TotalPembelianEdit").val(total_amount).attr('readonly', true);
-				$("#TotalPembelianEditLabel").text("$"+total_amount).attr('readonly', true);
+  			$("#budgetLabelEdit").text("$"+value.beg_bal).attr('readonly', true);
+  			
+  			$("#TotalPembelianEdit").val(total_amount).attr('readonly', true);
+  			$("#TotalPembelianEditLabel").text("$"+total_amount).attr('readonly', true);
 
-				$('#SisaBudgetLabelEdit').text("$"+total_sisa.toFixed(2));
-		        $('#SisaBudgetEdit').val(total_sisa.toFixed(2));
+  			$('#SisaBudgetLabelEdit').text("$"+total_sisa.toFixed(2));
+  			$('#SisaBudgetEdit').val(total_sisa.toFixed(2));
 
-			});
-			
-			
+  		});
 
-	    });
+
+
+});
+}
+
+function deleteConfirmation(name, id) {
+	$('#modalDeleteBody').text("Are you sure want to delete ' " + name + " '");
+	$('[name=modalDeleteButton]').attr("id",id);
+}
+
+function delete_item(id) {
+	var data = {
+		id:id,
 	}
 
-	function deleteConfirmation(name, id) {
-		$('#modalDeleteBody').text("Are you sure want to delete ' " + name + " '");
-		$('[name=modalDeleteButton]').attr("id",id);
-	}
+	$.post('{{ url("delete/purchase_requisition_item") }}', data, function(result, status, xhr){
 
-	function delete_item(id) {
-		var data = {
-			id:id,
-		}
+	});
 
-		$.post('{{ url("delete/purchase_requisition_item") }}', data, function(result, status, xhr){
+	$('#modaldanger').modal('hide');
+	$('#'+id).css("display","none");
+}
 
-		});
 
-		$('#modaldanger').modal('hide');
-		$('#'+id).css("display","none");
-	}
+function openSuccessGritter(title, message){
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-success',
+		image: '{{ url("images/image-screen.png") }}',
+		sticky: false,
+		time: '3000'
+	});
+}
 
-	
-	function openSuccessGritter(title, message){
-      jQuery.gritter.add({
-        title: title,
-        text: message,
-        class_name: 'growl-success',
-        image: '{{ url("images/image-screen.png") }}',
-        sticky: false,
-        time: '3000'
-      });
-    }
-
-    function openErrorGritter(title, message) {
-        jQuery.gritter.add({
-          title: title,
-          text: message,
-          class_name: 'growl-danger',
-          image: '{{ url("images/image-stop.png") }}',
-          sticky: false,
-          time: '2000'
-        });
-    }
+function openErrorGritter(title, message) {
+	jQuery.gritter.add({
+		title: title,
+		text: message,
+		class_name: 'growl-danger',
+		image: '{{ url("images/image-stop.png") }}',
+		sticky: false,
+		time: '2000'
+	});
+}
 
 
 

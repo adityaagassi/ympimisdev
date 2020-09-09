@@ -380,6 +380,12 @@
       @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
         <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
       </li>
+      @if(isset($page) && $page == "Purchase Requisition Control")<li class="active">@else<li>@endif
+        <a href="{{ url("purchase_requisition/monitoringpch") }}"><i class="fa fa-tv"></i>PR Monitoring & Control</a>
+      </li>
+      @if(isset($page) && $page == "Purchase Order Monitoring")<li class="active">@else<li>@endif
+        <a href="{{ url("purchase_order/monitoring") }}"><i class="fa fa-tv"></i>PO Monitoring</a>
+      </li>
     </ul>
   </li>
   @endif
@@ -582,6 +588,28 @@
   @if(in_array('S24', $navs))
   @if(isset($page) && $page == "KD Z-PRO")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_zpro/"."z-pro") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Z-PRO</span></a>
+  </li>
+  @endif
+
+  @if(in_array('S48', $navs))
+  @if(isset($head) && $head == "KD Mouthpiece")<li class="treeview active">@else<li class="treeview">@endif
+    <a href="#">
+      <i class="fa fa-pencil-square-o"></i> <span> KD  <i class="fa fa-angle-right"></i> Mouthpiece</span>
+      <span class="pull-right-container">
+        <i class="fa fa-angle-left pull-right"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      @if(isset($page) && $page == "MP Create Checksheet")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/kd_mouthpiece/checksheet") }}"><i class="fa fa-coffee"></i><span>Create Checksheet</span></a>
+      </li>
+      @if(isset($page) && $page == "MP Material Picking")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/kd_mouthpiece/picking") }}"><i class="fa fa-calendar-plus-o"></i>Material Picking</a>
+      </li>
+      @if(isset($page) && $page == "MP Material Packing")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/kd_mouthpiece/packing") }}"><i class="fa fa-calendar-plus-o"></i>Material Packing</a>
+      </li>
+    </ul>
   </li>
   @endif
 
@@ -1090,7 +1118,7 @@
  @if(isset($page) && $page == "Overtime Check")<li class="active">@else<li>@endif
   <a href="{{ url("/index/report/overtime_check") }}"><i class="fa fa-line-chart"></i> Overtime Check</a>
 </li>
- @if(isset($page) && $page == "Overtime Control")<li class="active">@else<li>@endif
+@if(isset($page) && $page == "Overtime Control")<li class="active">@else<li>@endif
   <a href="{{ url("/index/report/overtime_control") }}"><i class="fa fa-line-chart"></i> Overtime Report</a>
 </li>
 @if(isset($page) && $page == "GA Report")<li class="active">@else<li>@endif

@@ -83,6 +83,12 @@
 	</div>   
 	@endif
 
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+	    <p style="position: absolute; color: White; top: 45%; left: 35%;">
+	      <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+	    </p>
+	</div>
+
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="box no-border" style="margin-bottom: 5px;">
@@ -856,7 +862,8 @@
 
 		$('.datepicker').datepicker({
 			autoclose: true,
-			format: 'yyyy-mm-dd'
+			format: 'yyyy-mm-dd',
+			todayHighlight: true
 		});
 
 		$('.btnNext').click(function(){
@@ -1260,10 +1267,10 @@
 			success: function(data) {
 				var json = data,
 				obj = JSON.parse(json);
-				$('#qty'+no).attr('readonly', false).val(obj.qty);
+				$('#qty'+no).attr('readonly', true).val(obj.qty);
 				$('#nama_item'+no).attr('readonly', false).val(obj.deskripsi);
 				$('#uom'+no).val(obj.uom).change();
-				$('#item_budget'+no).attr('readonly', false).val(obj.budget_no);
+				$('#item_budget'+no).attr('readonly', true).val(obj.budget_no);
 				$('#delivery_date'+no).attr('readonly', false);
 				if (obj.currency == "USD") {
 					$('#ket_harga'+no).text("$");
@@ -1618,10 +1625,13 @@
       if (!confirm("Apakah anda yakin ingin mengirim PO ini ke Manager?")) {
         return false;
       }
+      else{
+      	$("#loading").show();
+      }
 
       $.get('{{ url("purchase_order/sendemail") }}', data, function(result, status, xhr){
-
         openSuccessGritter("Success","Email Berhasil Terkirim");
+        $("#loading").hide();
         setTimeout(function(){  window.location.reload() }, 3000);
       })
     }

@@ -36,6 +36,7 @@ Route::get('/index/trials', 'TrialController@tes');
 Route::get('/index/unification_uniform', 'VoteController@indexUnificationUniform');
 Route::get('fetch/employee/data', 'TrialController@fetch_data');
 Route::get('happybirthday', 'TrialController@birthday');
+Route::get('tesseract', 'TrialController@testTesseract');
 
 
 Route::get('trialmail', 'TrialController@trialmail');
@@ -1179,8 +1180,23 @@ Route::get('purchase_requisition/reject/{id}', 'AccountingController@prreject');
 
 //PR Monitoring & Control
 Route::get('purchase_requisition/monitoring', 'AccountingController@monitoringPR');
-Route::get('fetch/purchase_requisition/monitoring', 'AccountingController@fetch_monitoringPR');
+Route::get('fetch/purchase_requisition/monitoring', 'AccountingController@fetchMonitoringPR');
+Route::get('fetch/purchase_requisition/outstanding', 'AccountingController@fetchMonitoringPROutstanding');
 Route::get('purchase_requisition/table', 'AccountingController@fetchtablePR');
+Route::get('purchase_requisition/detail', 'AccountingController@detailMonitoringPR');
+Route::get('purchase_requisition/detailPO', 'AccountingController@detailMonitoringPRPO');
+
+Route::get('purchase_requisition/monitoringpch', 'AccountingController@monitoringPrPch');
+Route::get('fetch/purchase_requisition/monitoringpch', 'AccountingController@fetchMonitoringPRPch');
+Route::get('purchase_requisition/tablepch', 'AccountingController@fetchtablePRPch');
+Route::get('purchase_requisition/detailPch', 'AccountingController@detailMonitoringPRPch');
+
+//PO Monitoring & Control
+
+Route::get('purchase_order/monitoring', 'AccountingController@monitoringPO');
+Route::get('fetch/purchase_order/monitoring', 'AccountingController@fetchMonitoringPO');
+Route::get('purchase_order/detail', 'AccountingController@detailMonitoringPO');
+Route::get('purchase_order/table', 'AccountingController@fetchtablePO');
 
 //New Approval Purchase Order
 Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
@@ -1293,6 +1309,14 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 });
 
 //KD
+Route::group(['nav' => 'S48', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_mouthpiece/checksheet', 'MouthpieceController@indexKdMouthpieceChecksheet');
+	Route::get('index/kd_mouthpiece/material', 'MouthpieceController@indexKdMouthpieceMaterial');
+	Route::get('index/kd_mouthpiece/picking', 'MouthpieceController@indexKdMouthpiecePicking');
+	Route::get('index/kd_mouthpiece/packing', 'MouthpieceController@indexKdMouthpiecePacking');
+});
+
+
 Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_zpro/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_zpro', 'KnockDownController@printLabel');	
@@ -2187,6 +2211,9 @@ Route::get('index/fl_label_outer/{id}/{gmc}/{remark}', 'ProcessController@label_
 Route::get('index/fl_label_carb/{id}', 'ProcessController@label_carb_fl');
 Route::get('fetch/check_carb', 'ProcessController@fetchCheckCarb');
 
+
+Route::get('index/kd_label_besar_fl/{id}', 'ProcessController@kd_label_besar_fl');
+Route::get('index/kd_label_besar_outer_fl/{id}', 'ProcessController@kd_label_besar_outer_fl');
 
 
 //end label flute
@@ -3339,6 +3366,7 @@ Route::get('fetch/inventory_mis', 'DailyReportController@fetchInventoryMISbyId')
 Route::post('update/inventory_mis/data', 'DailyReportController@updateInventoryMIS');
 Route::post('delete/inventory_mis', 'DailyReportController@deleteInventoryMIS');
 
+Route::get('print/inventory_mis/{id}', 'DailyReportController@printInventory');
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');
