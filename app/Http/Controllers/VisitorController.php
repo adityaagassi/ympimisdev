@@ -391,7 +391,7 @@ public function inputtag(Request $request){
 
 	try {
 		$id = $request->get('id');
-		$intime = date('H:i:s');
+		$intime = date('Y-m-d H:i:s');
 		$visitordetail = VisitorDetail::where('id','=', str_replace("V","",$id))
 		->withTrashed()       
 		->first();
@@ -1128,7 +1128,7 @@ public function out(Request $request){
 		// $id = $request->get('id');
 		$tag = $request->get('idtag');
 		$reason = $request->get('reason');
-		$time = date('H:i:s');
+		$time = date('Y-m-d H:i:s');
 
 		$visitordetail = VisitorDetail::where('tag','=', $tag)
 		->where('out_time','=','')		      
