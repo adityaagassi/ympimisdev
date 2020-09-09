@@ -198,11 +198,11 @@
 	});
 
 	jQuery(document).ready(function() {
-		$('#datefrom').datepicker({
+		$('#date_from').datepicker({
 			autoclose: true,
 			todayHighlight: true
 		});
-		$('#dateto').datepicker({
+		$('#date_to').datepicker({
 			autoclose: true,
 			todayHighlight: true
 		});
