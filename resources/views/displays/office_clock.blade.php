@@ -81,7 +81,7 @@ table > thead > tr > th{
 	.content-wrapper{
 		padding-top: 0px !important;
 		padding-bottom: 0px !important;
-		background-color: rgb(75,30,120) !important;
+		/*background-color: rgb(75,30,120) !important;*/
 	}
 	.visitor {
 	  margin: auto;
@@ -103,7 +103,7 @@ table > thead > tr > th{
 	<div class="row" style="padding-bottom: 0px;">
 		<h1 id="jam" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
 		<h1 id="visitor_info" style="margin-top: 0px;padding-top: 30px;font-size: 30em;font-weight: bold;text-align: center;margin-bottom: -70px"></h1>
-		<center><span id="tanggal" style="font-size: 80px;background-color: rgb(75,30,120);color: #fff"></span></center>
+		<center id="tanggal_all"><span id="tanggal" style="font-size: 80px;background-color: rgb(75,30,120);color: #fff"></span></center>
 	</div>
 </section>
 
@@ -136,6 +136,7 @@ table > thead > tr > th{
 		$('#tanggal').html('{{$dateTitle}}');
 		$('#visitor_info').hide();
 		setInterval(fillVisitor,10000);
+		$(".content-wrapper").css("background-color",'rgb(75, 30, 120)','important');
 	});
 
 	function refresh() {
@@ -242,18 +243,26 @@ table > thead > tr > th{
 							document.getElementById("visitor_info").style.fontSize = '7em';
 							document.getElementById("visitor_info").style.marginBottom = '10px';
 							// document.getElementsByClassName("content").style.backgroundColor = '#f07400';
-							$(".content").css("background-color",'#fff700');
-							$("#tanggal").css("background-color",'#fff700');
+							$(".content-wrapper").css("background-color",'rgb(255, 247, 0)','important');
+							$(".content").css("background-color",'rgb(255, 247, 0)','important');
+							// var x = document.querySelectorAll(".content-wrapper");
+  					// 		x[0].setAttribute('style', 'background-color: #fff700 !important');
+  							$("#tanggal_all").css("background-color",'rgb(255, 247, 0)');
+							$("#tanggal").css("background-color",'rgb(255, 247, 0)');
 							$("#tanggal").css("color",'#1100ff');
 							$("#visitor_info").css("color",'#1100ff');
+							$("#visitor_info").css("background-color",'rgb(255, 247, 0)');
 							audio_clock_lobby.play();
 						}
 					}
 				}else{
 					$('#visitor_info').hide();
 					$('#jam').show();
-					$(".content").css("background-color",'#4b1e78');
-					$("#tanggal").css("background-color",'#4b1e78');
+					$(".content-wrapper").css("background-color",'rgb(75, 30, 120)','important');
+					$(".content").css("background-color",'rgb(75, 30, 120)','important');
+					// $(".content-wrapper").css("background-color",'rgb(75, 30, 120)');
+					$("#tanggal_all").css("background-color",'rgb(75, 30, 120)');
+					$("#tanggal").css("background-color",'rgb(75, 30, 120)');
 					$("#tanggal").css("color",'#fff');
 				}
 			}
