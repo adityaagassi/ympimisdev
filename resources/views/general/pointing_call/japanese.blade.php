@@ -41,6 +41,10 @@
 		}); 
 	});
 
+	function clearConfirmation(){
+		location.reload(true);		
+	}
+
 	function editPIC(id, point_title, location){
 		$('#loading').show();
 		var data = {
@@ -51,7 +55,7 @@
 		$.post('{{ url("edit/general/pointing_call_pic") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#loading').hide();
-				location.reload(true);
+				clearConfirmation();
 			}
 			else{
 				$('#loading').hide();
