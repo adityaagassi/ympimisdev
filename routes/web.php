@@ -35,7 +35,7 @@ Route::get('/index/emergency_response', 'TrialController@tes2');
 Route::get('/index/trials', 'TrialController@tes');
 Route::get('/index/unification_uniform', 'VoteController@indexUnificationUniform');
 Route::get('fetch/employee/data', 'TrialController@fetch_data');
-Route::get('happybirthday', 'TrialController@birthday');
+Route::get('happybirthday', 'DailyReportController@birthday');
 Route::get('tesseract', 'TrialController@testTesseract');
 
 

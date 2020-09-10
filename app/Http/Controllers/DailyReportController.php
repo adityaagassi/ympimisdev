@@ -440,4 +440,8 @@ public function deleteInventoryMIS(Request $request)
     );
     return Response::json($response);
 }
+public function birthday()
+{
+    return view('trials.birthday');
+}
 }
