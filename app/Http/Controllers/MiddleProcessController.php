@@ -1436,7 +1436,7 @@ class MiddleProcessController extends Controller
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
 				GROUP BY l.operator_id) g
 				on ng.operator_id = g.operator_id) rate
-				left join employee_syncs e on e.employee_id = rate.operator_id
+				left join employees e on e.employee_id = rate.operator_id
 				order by rate.ng_rate asc");
 		}
 
