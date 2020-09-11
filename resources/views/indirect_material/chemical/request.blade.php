@@ -477,12 +477,16 @@
 
 		}
 
+		$("#loading").show();
+
 		$.post('{{ url("delete/chm_out") }}', data, function(result, status, xhr){
 			if(result.status){
+
 				$('#scanner').hide();
 				$('#modalOut').modal('hide');
 				$(".modal-backdrop").remove();
 
+				$("#loading").hide();
 				openSuccessGritter('Success', result.message);		
 			}else{
 				
@@ -573,12 +577,16 @@
 			schedule_id : schedule_id
 		}
 
+		$("#loading").show();
+
 		$.get('{{ url("fetch/check_qr") }}', data, function(result, status, xhr){
 			if(result.status){
 				fillPicked();
+				$("#loading").hide();
 				openSuccessGritter('Success', result.message);
 
 			}else{
+				$("#loading").hide();
 				openErrorGritter('Error!', result.message);
 			}
 
@@ -666,7 +674,9 @@
 			schedule_id : schedule_id
 		}
 
+
 		if(confirm("Apa anda ingin yakin menyimpan pengambilan chemical ?\nData yang disimpan tidak bisa dikembalikan")){
+			$("#loading").show();
 			$.post('{{ url("input/chm_picked") }}', data,  function(result, status, xhr){
 				if(result.status){
 					fillTableList();
@@ -683,9 +693,11 @@
 					$('#stock').val('');
 					$('#out').val('');
 
+					$("#loading").hide();
 					openSuccessGritter('Success', result.message);
 
 				}else{
+					$("#loading").hide();
 					openErrorGritter('Error!', result.message);
 				}
 			});
