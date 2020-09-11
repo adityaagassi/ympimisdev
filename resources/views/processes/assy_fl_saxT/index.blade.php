@@ -17,26 +17,28 @@
 <section class="content">
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
-			<span style="font-size: 3vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
+			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Stock Taking <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("index/stocktaking/silver", "sx_assembly") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Body</a>
+			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<!-- <a href="{{ url("index/process_stamp_sx_1") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Stamp <b><i>IoT</i></b></a> -->
-			<a href="{{ url("index/process_stamp_sx_2") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy - Print</a>
-			<a href="{{ url("index/process_stamp_sx_check") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy - Print Check Sheet</a>
-			<a href="{{ url("index/process_stamp_sx_3") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Assy - Print Label</a>
-			<a href="{{ url("index/fetchResultSaxnew") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Picking Schedule</a>
+			<a href="{{ url("index/process_stamp_sx_2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Assy - Print</a>
+			<a href="{{ url("index/process_stamp_sx_check") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Assy - Print Check Sheet</a>
+			<a href="{{ url("index/process_stamp_sx_3") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Assy - Print Label</a>
+			<a href="{{ url("index/fetchResultSaxnew") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Picking Schedule</a>
 			{{-- 
 			<a href="{{ url("index/process_assy_fl_2") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Tanpoawase</a>
 			<a href="{{ url("index/process_assy_fl_3") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Seasoning-Kanggou</a>
 			<a href="{{ url("index/process_assy_fl_4") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;">Chousei</a> --}}
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
-			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> NG <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("/index/repairSx") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Return/Repair</a>
-			<a href="{{ url("index/ngSx") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: red;">Ng</a>
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> NG <i class="fa fa-angle-double-down"></i></span>
+			<a href="{{ url("/index/repairSx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Return/Repair</a>
+			<a href="{{ url("index/ngSx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Ng</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
-			<span style="font-size: 3vw;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			 <!-- <a href="{{ url("/stamp/log") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Log Process</a> -->
-			<a href="{{ url("stamp/resumes_sx") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Production Result</a>
+			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
+			<!-- <a href="{{ url("/stamp/log") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Log Process</a> -->
+			<a href="{{ url("stamp/resumes_sx") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Production Result</a>
 			<!-- <a href="{{ url("/index/displayWipFl") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Chart Inventory</a>  -->
 		</div>
 	</div>

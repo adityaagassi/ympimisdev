@@ -158,6 +158,102 @@ class StockTakingController extends Controller{
 	}
 
 	//Stock Taking Bulanan
+	public function indexMonthlyStocktakingList(){
+
+		$title = "Stocktaking List";
+		$title_jp = "";
+
+		$storage_locations = StorageLocation::whereNotNull('area')->orderBy('storage_location', 'asc')->get();
+		$stores = StocktakingList::select('store')->distinct()->orderBy('store', 'asc')->get();
+		$materials = MaterialPlantDataList::orderBy('material_number', 'asc')->get();
+
+		return view('stocktakings.monthly.report.stocktaking_list', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'storage_locations' => $storage_locations,
+			'stores' => $stores,
+			'materials' => $materials
+		))->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
+	}
+
+	public function fetchMonthlyStocktakingList(Request $request){
+
+		$stocktaking_lists = StocktakingList::leftJoin('material_plant_data_lists', 'material_plant_data_lists.material_number', '=', 'stocktaking_lists.material_number')
+		->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_lists.location');
+
+		if($request->get('store') != null){
+			$stocktaking_lists = $stocktaking_lists->whereIn('stocktaking_lists.store', $request->get('store'));
+		}
+
+		if($request->get('material_number') != null){
+			$stocktaking_lists = $stocktaking_lists->whereIn('stocktaking_lists.material_number', $request->get('material_number'));
+		}
+
+		if($request->get('storage_location') != null){
+			$stocktaking_lists = $stocktaking_lists->whereIn('stocktaking_lists.location', $request->get('storage_location'));
+		}
+
+		if($request->get('area') != null){
+			$stocktaking_lists = $stocktaking_lists->whereIn('storage_locations.area', $request->get('area'));
+		}
+
+		$stocktaking_lists = $stocktaking_lists->select('stocktaking_lists.id', 'storage_locations.area', 'stocktaking_lists.store', 'stocktaking_lists.material_number', 'material_plant_data_lists.material_description', 'material_plant_data_lists.bun', 'stocktaking_lists.location', 'stocktaking_lists.category', 'stocktaking_lists.process', 'stocktaking_lists.print_status')
+		->orderBy('storage_locations.area', 'asc')
+		->orderBy('stocktaking_lists.store', 'asc')
+		->orderBy('stocktaking_lists.material_number', 'asc')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'stocktaking_lists' => $stocktaking_lists
+		);
+		return Response::json($response);
+	}
+
+	public function deleteMonthlyStocktakingList(Request $request){
+		try{
+			$stocktaking_list = StocktakingList::where('id', $request->get('id'))->first();
+			$stocktaking_list->forceDelete();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Stocktaking list berhasil di delete.'
+			);
+			return Response::json($response);
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function editMonthlyStocktakingList(Request $request){
+		try{
+			$stocktaking_list = StocktakingList::where('id', $request->get('id'))->first();
+
+			$stocktaking_list->store = $request->get('store');
+			$stocktaking_list->material_number = $request->get('material');
+			$stocktaking_list->store = $request->get('location');
+			$stocktaking_list->store = $request->get('category');
+
+			$response = array(
+				'status' => true,
+				'message' => 'Stocktaking list berhasil di delete.'
+			);
+			return Response::json($response);
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function indexMonthlyStocktaking(){
 		$title = 'Monthly Stocktaking';
 		$title_jp = '月次棚卸';
@@ -569,7 +665,7 @@ class StockTakingController extends Controller{
 	}
 
 	public function breakdownNew3($bom){
-		
+
 		$this->temp = array();
 
 		for ($i=0; $i < count($this->cek); $i++) {
@@ -837,7 +933,7 @@ class StockTakingController extends Controller{
 				$this->printSummary($list, $id[$index][1], $printer_name);
 				$index++;
 			}
-			
+
 			$response = array(
 				'status' => true,
 				'message' => 'Print Successful'
@@ -3046,6 +3142,12 @@ class StockTakingController extends Controller{
 			$title = 'Silver Stock Taking (Flute Assembly)';
 			$title_jp = 'FL組み立て職場の銀材棚卸';
 			$location = 'FL ASSEMBLY';
+		}
+
+		if($id == 'sx_assembly'){
+			$title = 'Body Stock Taking (Saxophone Assembly)';
+			$title_jp = 'SX組み立て職場の棚卸';
+			$location = 'SX ASSEMBLY';
 		}
 
 		if($id == 'fl_middle'){

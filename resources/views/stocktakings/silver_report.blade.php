@@ -370,7 +370,7 @@
 
 				var xCategories = [];
 
-
+				var sx91 = [];
 				var fl51 = [];
 				var fl21 = [];
 				var fla1 = [];
@@ -385,6 +385,9 @@
 						xCategories[xCategories.length] = cat;
 					}
 
+					if(result.variances[i].storage_location == 'SX91'){
+						sx91.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
+					}
 					if(result.variances[i].storage_location == 'FL91'){
 						fl91.push(Math.round(parseInt(result.variances[i].variance) / (parseInt(result.variances[i].variance) + parseInt(result.variances[i].ok)) * 100));
 					}
@@ -456,6 +459,9 @@
 
 					series: [
 					{
+						name: 'SX91',
+						data: sx91
+					},{
 						name: 'FL91',
 						data: fl91
 					},{
@@ -481,12 +487,14 @@
 
 				var data = result.variances;
 				var xCategories = [];
+				var varSX91 = [];
 				var varFL91 = [];
 				var varFL51 = [];
 				var varFL21 = [];
 				var varFLA1 = [];
 				var varFLA0 = [];
 				var varZPA0 = [];
+				var okSX91 = [];
 				var okFL91 = [];
 				var okFL51 = [];
 				var okFL21 = [];
@@ -504,6 +512,10 @@
 					cat = data[i].stock_date;
 					if(xCategories.indexOf(cat) === -1){
 						xCategories[xCategories.length] = cat;
+					}
+					if(data[i].storage_location == 'SX91'){
+						varSX91.push(intVal(data[i].variance));
+						okSX91.push(intVal(data[i].ok));
 					}
 					if(data[i].storage_location == 'FL91'){
 						varFL91.push(intVal(data[i].variance));
@@ -642,6 +654,11 @@
 					},
 					series: [{
 						name: 'Variance',
+						data: varSX91,
+						stack: 'SX91',
+						color: 'rgb(255,116,116)'
+					},{
+						name: 'Variance',
 						data: varFL91,
 						stack: 'FL91',
 						color: 'rgb(255,116,116)'
@@ -670,6 +687,11 @@
 						data: varZPA0,
 						stack: 'ZPA0',
 						color: 'rgb(255,116,116)'
+					}, {
+						name: 'OK',
+						data: okSX91,
+						stack: 'SX91',
+						color: 'rgb(144,238,126)'
 					}, {
 						name: 'OK',
 						data: okFL91,
