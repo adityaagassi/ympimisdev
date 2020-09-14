@@ -204,7 +204,7 @@ table > thead > tr > th{
           <div id="chart" style="width: 99%"></div>
       </div>
       
-      <div class="col-md-12" style="padding-right: 0;padding-left: 10px">
+      <div class="col-md-12" style="padding-right: 0;padding-left: 10;overflow-x: scroll;">
           <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
