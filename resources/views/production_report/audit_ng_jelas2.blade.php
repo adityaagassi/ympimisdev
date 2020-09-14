@@ -280,14 +280,15 @@
             },credits: {
               enabled: false
             },
-            series: [{
-              name: 'OK',
-              data: ok,
-              color: '#00a65a',
-            }, {
+            series: [
+            {
               name: 'NG',
               data: ng,
               color:'rgba(255, 0, 0, 0.25)',
+            },{
+              name: 'OK',
+              data: ok,
+              color: '#00a65a',
             }]
           });
         } else{
