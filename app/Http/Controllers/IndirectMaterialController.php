@@ -797,7 +797,18 @@ class IndirectMaterialController extends Controller{
 		$id = $request->get('id');
 
 		try {
-			$schedule = IndirectMaterialSchedule::where('id', $id)->delete();
+			$schedule = IndirectMaterialSchedule::where('id', $id)->first();
+
+			$larutan = ChemicalSolution::where('id', $schedule->solution_id)
+			->update([
+				'is_add_schedule' => 1
+			]);
+
+			$delete = IndirectMaterialSchedule::where('schedule_date', $schedule->schedule_date)
+			->where('solution_id', $schedule->solution_id)
+			->where('cost_center_id', $schedule->cost_center_id)
+			->delete();
+
 
 			$response = array(
 				'status' => true,
