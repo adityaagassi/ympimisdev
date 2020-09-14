@@ -26,7 +26,7 @@
     <input type="text" name="codesn" id="codesn" value="{{$sn}}" hidden="">
 
     @foreach($barcode as $nomor => $barcode) 
-    <input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
+    <input type="text" name="codemodel" id="codemodel" value="{{ str_replace(' ', '&nbsp;', $barcode->model) }}" hidden="">
     @endforeach 
 
     <tr>
@@ -46,7 +46,7 @@
   });
 	function day() {
 		var models = $('#codemodel').val();
-		$('#model').text(models);		
+		$('#model').html(models);
 		var panjang = (models.length - 11)*2;
 		var	ukuran = 48;
 		if (models.length <= 11) {
@@ -91,8 +91,8 @@
     }
 
     if (models.length > 17) {
-      $('#model').css({"font-size":"18pt", "-moz-transform":"scale(0.68,2.5)","padding-top":"13px","float":"right"});
-      $('#model').css({"position":"fixed", "left":"-55px", "top":"10px"});
+      $('#model').css({"font-size":"19pt", "-moz-transform":"scale(0.7,2.5)","padding-top":"13px","float":"right"});
+      $('#model').css({"position":"fixed", "left":"-45px", "top":"10px"});
       $('#tabel').css({"position":"fixed", "left":"-50px", "top":"30px", "width":"40%"});
     }
 
@@ -112,7 +112,7 @@ var printSettings = {
   "edgeRight": 0,
   "edgeTop": 0,
   "edgeBottom": 0,
-  "marginLeft": 1,
+  "marginLeft": 2,
   "marginRight": 0,
   "marginTop": 3,
   "marginBottom": 0,
@@ -140,7 +140,7 @@ function tutup() {
 
 function defineCustomPaperSize() {
   console.log("Define custom paper size", false);
-  jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 99, 29, jsPrintSetup.kPaperSizeInches);
+  jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 200, 29, jsPrintSetup.kPaperSizeInches);
   // w, h
   console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
 }

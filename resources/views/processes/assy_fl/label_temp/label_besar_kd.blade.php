@@ -6,24 +6,11 @@
 	<style type="text/css">
 		table {
 			border-collapse: collapse;
+		}
+		.kiri {
+			font-size: 25pt;
 			font-family: 'arial';
-			font-size: 8.6pt;
-			font-weight: bold;
-			-moz-transform : scale(0.75,1.1);
-		}
-
-		table, tr, td {
-			padding: 0px;
-		}
-
-		#case{
-			border: 1.5px solid black;
-			-moz-transform : scale(1.8,1.1);
-			margin-top: 5px;
-			padding-top: 1.5%;		
-			padding-bottom: 1.5%;		
-			padding-right: 2%;		
-			padding-left: 2%;		
+			/*font-weight: bold;*/
 		}
 	</style>
 
@@ -31,30 +18,16 @@
 	include(app_path() . '\barcode\barcode.php');
 	@endphp
 
-	@foreach($date as $dt) 
-	<input type="text" name="tgl" id="tgl" value="{{$dt->tgl}}" hidden="">
-	@endforeach 
+	<input type="text" name="codegmc" id="codegmc" value="{{$barcode}}" hidden="">
 
-	<table border="0" style="margin-left: 0px;">
+
+	<table id="tabel" border="0" style="margin-left: 0px;">
 		<tr>
-			<td align="left">For USA Customers only:</td>
-		</tr>
-		<tr>
-			<td align="left" style="">Complies with California 93120 Phase 2 and TSCA Title VI</td>
-		</tr>
-		<tr>
-			<td align="left" id="tgl_text">Date: 07-2020</td>
-		</tr>
-		<tr>
-			<td align="left">Fabricator: 0000042</td>
-		</tr>
-		<tr>
-			<td align="left">Contact: Yamaha Corporation of America (714) 522-9011</td>
-		</tr>
-		<tr>
-			<td style="position: fixed; left: 190px; top: 74px;" id='case'>
-				<span style="font-weight: normal;">FOR CASE ONLY</span>
-				{{-- <img id="gmc" src="{{ asset("/images/for_case_only.jpg")}}" style="width:135px; height:28px;"> --}}
+			<td>
+				<img id="gmc" src="" style="position: fixed; top: 15px; left: 45px; width: 250px;">
+			</td>
+			<td  class="kiri">
+				<p id="gmc_text" src="" style="position: fixed; top: 92px; left: 95px; margin: 0px;"></p>
 			</td>
 		</tr>
 	</table>
@@ -63,20 +36,27 @@
 </html>
 <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
 <script>
-	jQuery(document).ready(function() {		
-		setAttr();
+	jQuery(document).ready(function() {
 		
+		gmc();
+
 		defineCustomPaperSize();
 		printWindow(window, 'Label Besar');
 
+		
 	});
 
-	
-	function setAttr() {
-		var tgl = $('#tgl').val();
-		$('#tgl_text').text("Date: " + tgl);
+	function gmc() {
+		var gmc = $('#codegmc').val();
+		var url1 = "{{url('/app/barcode/')}}";
+		var url2 ="/barcode.php?f=svg&s=code-128&w=340&h=110&p=0&wq=0";
+		var code ="&d="+gmc;
+		var janfix = url1.replace("/public","");
+		$("#gmc").attr("src",janfix+url2+code);
+		$("#gmc_text").text(gmc);
 	}
-	
+
+
 	var printSettings = {
 		"printSilent": true,
 		"shrinkToFit": true,
@@ -88,9 +68,9 @@
 		"edgeRight": 0,
 		"edgeTop": 0,
 		"edgeBottom": 0,
-		"marginLeft": -12,
+		"marginLeft": -10,
 		"marginRight": 0,
-		"marginTop": -1,
+		"marginTop": -3,
 		"marginBottom": 0,
 		"title": "",
 		"docURL": "",
@@ -100,12 +80,9 @@
 		"footerStrLeft": "",
 		"footerStrCenter": "",
 		"footerStrRight": "",
-		"printerName" : "SATO CG408TT"
+		"printerName" : "SATO CG408TT" 
 	};
 
-	function tutup() {
-		window.close();
-	}
 
 	function defineCustomPaperSize() {
 		console.log("Define custom paper size", false);
@@ -146,17 +123,14 @@
 				}
 			}
 		}
-
 		if (typeof(win.privListenersAdded) === "undefined") {
 			win.privListenersAdded = true;    
 			win.addEventListener("message", jspListener);
 
 			win.addEventListener("beforeprint", function(event) {
-				setAttr();
-
+				gmc();
 				console.log("before print: "+what, true);
 			});
-
 			win.addEventListener("afterprint", function(event) {
 				console.log("after print: "+what, true);
 				var sn = $('#codesn').val();
@@ -175,9 +149,10 @@
 				console.log(what+" Print job for submitted with id:"+jobId);
 				console.log(what+" Print job for submitted with id:"+jobId, true);
 				checkJobInfo(what, win,jobId);
+
 				setTimeout(() => {checkJobInfo(what, win, jobId);}, 5000);
-			},
-			(err) => {
+			}
+			, (err) => {
 				console.log(what+" Pint job rejected:"+err);
 				console.log(what+" Pint job rejected:"+err, true);
 			}
@@ -195,5 +170,6 @@
 			console.log("Can't find jobInfo for jobId:"+jobId, true);
 		}
 	}
+
 
 </script>

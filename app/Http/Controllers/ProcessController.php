@@ -33,6 +33,12 @@ class ProcessController extends Controller
 {
 	public function __construct(){
 		$this->middleware('auth');
+
+		$this->kd_gmc = [
+			'WY69490',
+			'ZE92410',
+			'WY8954P'
+		];
 	}
 
 	public function indexLog(){
@@ -3146,6 +3152,93 @@ public function indexfetchResultFlStamp(){
 		'title_jp' => '',
 	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
 
+}
+
+public function kd_label_besar_fl($gmc){
+
+	if($gmc == 'ZE92410'){
+		$barcode = db::select("SELECT 'serial_number' AS serial_number, stamp_hierarchies.finished, stamp_hierarchies.janean, stamp_hierarchies.upc, 'remark' AS remark, materials.material_description as model FROM stamp_hierarchies
+			LEFT JOIN materials ON materials.material_number = stamp_hierarchies.finished 
+			WHERE stamp_hierarchies.finished = '".$gmc."'");
+
+		return view('processes.assy_fl.label_temp.label_besar',array(
+			'barcode' => $barcode,
+			'remark' => 'RP'
+		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');	
+	}else{
+		return view('processes.assy_fl.label_temp.label_besar_kd',array(
+			'barcode' => $gmc
+		))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+	}
+	
+	
+}
+
+public function kd_label_besar_outer_fl($gmc){
+	
+	$barcode = db::select("SELECT 'serial_number' AS serial_number, stamp_hierarchies.finished, stamp_hierarchies.janean, stamp_hierarchies.upc, 'remark' AS remark, materials.material_description as model FROM stamp_hierarchies
+		LEFT JOIN materials ON materials.material_number = stamp_hierarchies.finished 
+		WHERE stamp_hierarchies.finished = '".$gmc."'");
+
+	$date = DB::select("SELECT week_date, date_code from weekly_calendars
+		WHERE week_date = '".date('Y-m-d')."'");
+
+	return view('processes.assy_fl.label_temp.label_besar_outer_kd',array(
+		'barcode' => $barcode,
+		'date' => $date,
+		'remark' => 'RP'
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function kd_label_des_fl($gmc){
+
+	if($gmc == 'ZE92410'){
+		$barcode = DB::select("select material_description as model from materials where material_number = '".$gmc."'");
+	}else{
+		$barcode = DB::select("select kd_name as model from materials where material_number = '".$gmc."'");
+	}
+
+	return view('processes.assy_fl.label_temp.label_desc_kd',array(
+		'barcode' => $barcode,
+		'sn' => $gmc,
+		'remark' => 'RP',
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function kd_label_carb_fl($id){
+	$date = db::select("SELECT DATE_FORMAT( week_date, '%m-%Y' ) AS tgl FROM weekly_calendars where week_date = '".date('Y-m-d')."'");
+
+	return view('processes.assy_fl.label_temp.label_carb',array(
+		'date' => $date
+	))->with('page', 'Process Assy FL')->with('head', 'Assembly Process');
+}
+
+public function fetchCheckKd(Request $request){
+	
+	$gmc = $request->get('gmc');
+
+	if(in_array($gmc, $this->kd_gmc)){
+		if($gmc == 'ZE92410'){
+			$material = Material::where('material_number', $gmc)
+			->select('material_number', 'material_description')
+			->first();
+		}else{
+			$material = Material::where('material_number', $gmc)
+			->select('material_number', db::raw('kd_name AS material_description'))
+			->first();
+		}
+
+		$response = array(
+			'status' => true,
+			'material' => $material
+		);
+		return Response::json($response);
+	}else{
+		$response = array(
+			'status' => false
+		);
+		return Response::json($response);
+	}
 }
 
 }

@@ -35,7 +35,7 @@
 
 
 
-	<table border="0" style="margin-left: 10px;">
+	<table id="tabel" border="0" style="margin-left: 10px;">
 
 		<input type="text" name="rem" id="rem" value="{{$remark}}" hidden="">
 		@foreach($barcode as $nomor => $barcode)
@@ -54,7 +54,7 @@
 
 
 		<tr>
-			<td colspan="3" class="name" align="left" id="model" style="font-size: 14pt;padding-left: 25px; font-weight: bold; ">  </b></td>
+			<td colspan="3" class="name" align="left" id="model" style="font-size: 14pt;padding-left: 25px; font-weight: bold;"></td>
 		</tr>
 
 		<tr>
@@ -77,7 +77,7 @@
 			<td  class="kiri">
 				<img id="gmc" src="" style="position: fixed; top: 43px; left: 30px;height:55px; width: 130px;">
 				<img id ="upc_jangmc" src="" style="position: fixed; top: 25px;left: 30px;height:100px; width: 130px;">
-				<b  id="gmcT" style="margin-left: 33px; position: fixed; top: 35px;left: 10px;right: 0px;height: 50px;">GMC </b>
+				<b  id="gmcT" style="margin-left: 33px; position: fixed; top: 43px;left: 10px;right: 0px;height: 50px;">GMC </b>
 				<b id="upc_jangmcT" style="margin-left: 33px; position: fixed; top: 40px;left: 10px;right: 0px;height: 50px;">GMC </b>
 			</td>
 		</tr>
@@ -121,7 +121,12 @@
 		}
 
 		var models = $('#codemodel').val();
-		$('#model').text(models);		
+		$('#model').text(models);
+
+		if(models.includes("FHJ-200U//02")){
+			$('#model').css({"font-size":"12pt","-moz-transform":"scale(0.8,1)","padding-left":"0px"});
+			$('#tabel').css({"margin-left":"7px"});
+		}
 
 		var panjang = (models.length - 11)*2;
 		var	ukuran = 20;

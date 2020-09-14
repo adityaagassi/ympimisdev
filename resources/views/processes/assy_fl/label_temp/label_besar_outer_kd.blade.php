@@ -40,7 +40,7 @@
 		<input type="text" name="rem" id="rem" value="{{$remark}}" hidden="">
 		@foreach($barcode as $nomor => $barcode)
 		{{-- <input type="text" name="codesn" id="codesn" value="{{$barcode->serial_number}}" hidden=""> --}}
-		<input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
+		<input type="text" name="codemodel" id="codemodel" value="{{ str_replace(' ', '&nbsp;', $barcode->model) }}" hidden="">
 		<input type="text" name="codegmc" id="codegmc" value="{{$barcode->finished}}" hidden="">
 		<input type="text" name="codejan" id="codejan" value="{{$barcode->janean}}" hidden="">
 		<input type="text" name="codeupc" id="codeupc" value="{{$barcode->upc}}" hidden="">
@@ -103,8 +103,8 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="3" class="kiri" style="position: fixed; top:-5px; left: -22px; width: 26%;"> 
-				<p id="kd_text" style="position: fixed; top:-5px; left: -175px;"></p>
+			<td colspan="3" class="kiri" style="position: fixed; top:20px; left: -75px;"> 
+				<p id="kd_text"></p>
 			</td>
 		</tr>
 	</table>
@@ -152,7 +152,7 @@
 			$('#model').css('visibility', 'hidden');
 
 			$('#kd_text').text(models);
-			$('#kd_text').css({"font-size":"20px","-moz-transform":"scale(0.6,2)","padding-left":"0px"});
+			$('#kd_text').css({"font-size":"30px","-moz-transform":"scale(0.6,2)","padding-left":"0px"});
 		}
 
 	}
