@@ -132,10 +132,9 @@ class IndirectMaterialController extends Controller{
 		$title = 'Indirect Material Request';
 		$title_jp = '??';
 
-		$locations = IndirectMaterialCostCenter::select('id', 'section', 'location')
-		->orderBy('section', 'ASC')
-		->orderBy('location', 'ASC')
-		->get();
+		$locations = db::select("SELECT id, section, location FROM indirect_material_cost_centers
+			WHERE id in (SELECT DISTINCT cost_center_id FROM chemical_solutions)
+			ORDER BY section, location ASC");
 
 		return view('indirect_material.chemical.request', array(
 			'title' => $title,
