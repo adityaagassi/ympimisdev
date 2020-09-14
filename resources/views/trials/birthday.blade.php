@@ -124,7 +124,7 @@
     <script src="{{ url("js/jszip.min.js")}}"></script>
     <script src="{{ url("js/vfs_fonts.js")}}"></script>
     <script>  
-      var audio = new Audio('{{ url("sounds/backsound.mp3")}}');
+      var audio = new Audio('{{ url("hbd.mp3")}}');
       audio.play();
       audio.loop = true;
 
