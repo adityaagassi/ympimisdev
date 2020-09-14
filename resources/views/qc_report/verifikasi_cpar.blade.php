@@ -88,6 +88,13 @@
     {{ session('error') }}
   </div>   
   @endif
+
+  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+    <p style="position: absolute; color: White; top: 45%; left: 35%;">
+      <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+    </p>
+  </div>
+
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
       <div class="box-body">
@@ -1603,7 +1610,10 @@
         return false;
       }
 
+      $("#loading").show();
+
       $.get('{{ url("index/qc_report/sendemail/$cpar->id/$cpar->posisi") }}', data, function(result, status, xhr){
+        $("#loading").hide();
         openSuccessGritter("Success","Email Has Been Sent");
         window.location.reload();
       })
