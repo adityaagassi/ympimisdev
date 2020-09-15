@@ -851,7 +851,7 @@ class MiddleProcessController extends Controller
 
 	public function fetchResumeKanban(){
 		$data = db::select("SELECT resume.material_number, materials.material_description, materials.model, materials.`key`, materials.surface, resume.queue, resume.wip, resume.stockroom, (resume.queue+resume.wip+resume.stockroom) AS total_edar, resume.wip_tiga, resume.inactive FROM
-			(SELECT kanban.material_number, kanban.quantity, SUM(queue) AS queue, SUM(wip) AS wip, SUM(wip_tiga) AS wip_tiga, SUM(stockroom) AS stockroom, SUM(inactive) AS inactive FROM
+			(SELECT kanban.material_number, SUM(queue) AS queue, SUM(wip) AS wip, SUM(wip_tiga) AS wip_tiga, SUM(stockroom) AS stockroom, SUM(inactive) AS inactive FROM
 			(SELECT material_number, quantity, 1 AS queue, 0 AS wip, 0 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM barrel_queues
 			UNION ALL
 			SELECT material_number, quantity, 0 AS queue, 1 AS wip, 0 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM middle_inventories
@@ -862,12 +862,25 @@ class MiddleProcessController extends Controller
 			SELECT inventories.material_number, inventories.lot, 0 AS queue, 0 AS wip, 0 AS wip_tiga, 1 AS stockroom, 0 AS inactive FROM kitto.inventories
 			LEFT JOIN kitto.materials ON materials.material_number = inventories.material_number 
 			WHERE materials.category = 'KEY'
-			AND materials.location not in ('SX21', 'FL21', 'CL21')
+			AND materials.location like '%51%'
 			AND inventories.lot > 0
 			UNION ALL
 			SELECT material_number, quantity, 0 AS queue, 0 AS wip, 0 AS wip_tiga, 0 AS stockroom, 1 AS inactive FROM barrel_queue_inactives
+			UNION ALL
+			SELECT inventories.material_number, inventories.lot, 0 AS queue, 1 AS wip, 0 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM kitto.inventories
+			LEFT JOIN kitto.completions ON kitto.completions.barcode_number = kitto.inventories.barcode_number
+			WHERE kitto.completions.active = 1
+			AND kitto.inventories.lot = 0
+			AND kitto.inventories.issue_location = 'CL51'
+			UNION ALL
+			SELECT inventories.material_number, inventories.lot, 0 AS queue, 0 AS wip, 1 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM kitto.inventories
+			LEFT JOIN kitto.completions ON kitto.completions.barcode_number = kitto.inventories.barcode_number
+			WHERE kitto.completions.active = 1
+			AND kitto.inventories.lot = 0
+			AND kitto.inventories.issue_location = 'CL51'
+			AND TIMESTAMPDIFF(DAY,kitto.inventories.updated_at,NOW()) > 3
 			) AS kanban
-			GROUP BY kanban.material_number, kanban.quantity) AS resume
+			GROUP BY kanban.material_number) AS resume
 			LEFT JOIN materials ON materials.material_number = resume.material_number
 			ORDER BY materials.`key`, materials.model, materials.surface");
 
