@@ -26,9 +26,7 @@
 	td:hover {
 		overflow: visible;
 	}
-	/*table.table-bordered{
-		border:1px solid black;
-	}*/
+	
 	table.table-bordered > thead > tr > th{
 		border:1px solid black;
 	}
@@ -44,10 +42,6 @@
 	td{
 		overflow:hidden;
 		text-overflow: ellipsis;
-	}
-
-	.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
-		background-color: #ffd8b7;
 	}
 
 	.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
@@ -67,7 +61,7 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-	
+
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
 		<p style="position: absolute; color: White; top: 45%; left: 35%;">
 			<span style="font-size: 40px">Uploading, please wait <i class="fa fa-spin fa-refresh"></i></span>
@@ -79,7 +73,7 @@
 			<table id="tableResume" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 					<tr>
-						<th width="10%">Material Number</th>
+						<th style="border: 1px solid black" width="10%">Material Number</th>
 						<th width="20%">Material Description</th>
 						<th width="10%">Model</th>
 						<th width="10%">Key</th>
@@ -97,7 +91,7 @@
 				</tbody>
 				<tfoot>
 					<tr style="color: black">
-						<th></th>
+						<th style="border: 1px solid black;" ></th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -156,8 +150,8 @@
 			'dom': 'Brtip',
 			'responsive': true,
 			'lengthMenu': [
-			[ 10, 25, 50, -1 ],
-			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			[ 20, 50, 100, -1 ],
+			[ '20 rows', '50 rows', '100 rows', 'Show all' ]
 			],
 			'buttons': {
 				buttons:[
@@ -211,6 +205,16 @@
 						$(td).css('color', '#ecf0f5');
 						$(td).css('border-top-style', 'none');
 						$(td).css('border-bottom-style', 'none');
+					}
+				},{
+					"targets": [0],
+					"createdCell": function (td, cellData, rowData, row, col) {
+						$(td).css('border-left', '1px solid black');
+					}
+				},{
+					"targets": [11],
+					"createdCell": function (td, cellData, rowData, row, col) {
+						$(td).css('border-right', '1px solid black');
 					}
 				}],
 

@@ -862,6 +862,7 @@ class MiddleProcessController extends Controller
 			SELECT inventories.material_number, inventories.lot, 0 AS queue, 0 AS wip, 0 AS wip_tiga, 1 AS stockroom, 0 AS inactive FROM kitto.inventories
 			LEFT JOIN kitto.materials ON materials.material_number = inventories.material_number 
 			WHERE materials.category = 'KEY'
+			AND materials.location not in ('SX21', 'FL21', 'CL21')
 			AND inventories.lot > 0
 			UNION ALL
 			SELECT material_number, quantity, 0 AS queue, 0 AS wip, 0 AS wip_tiga, 0 AS stockroom, 1 AS inactive FROM barrel_queue_inactives
