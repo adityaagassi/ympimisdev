@@ -195,7 +195,7 @@ function printWindow(win, what) {
       if (rem == "P") {
         setTimeout(label_kecil2,2000);
       }else{
-        // setTimeout(tutup,2000);
+        setTimeout(tutup,2000);
       }
       // window.close();
     });
