@@ -56,6 +56,16 @@ class MiddleProcessController extends Controller
 		];
 	}
 
+	public function indexResumeKanban(){
+		$title = 'Resume Kanban';
+		$title_jp = '??';
+
+		return view('processes.middle.resume_kanban', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Resume Kanban');
+	}
+
 	public function indexOpAnalysis(){
 		$title = 'Buffing Operator Analysis';
 		$title_jp = 'バフ作業者の分析';
@@ -837,6 +847,35 @@ class MiddleProcessController extends Controller
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function fetchResumeKanban(){
+		$data = db::select("SELECT resume.material_number, materials.material_description, materials.model, materials.`key`, materials.surface, resume.queue, resume.wip, resume.stockroom, (resume.queue+resume.wip+resume.stockroom) AS total_edar, resume.wip_tiga, resume.inactive FROM
+			(SELECT kanban.material_number, kanban.quantity, SUM(queue) AS queue, SUM(wip) AS wip, SUM(wip_tiga) AS wip_tiga, SUM(stockroom) AS stockroom, SUM(inactive) AS inactive FROM
+			(SELECT material_number, quantity, 1 AS queue, 0 AS wip, 0 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM barrel_queues
+			UNION ALL
+			SELECT material_number, quantity, 0 AS queue, 1 AS wip, 0 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM middle_inventories
+			UNION ALL
+			SELECT material_number, quantity, 0 AS queue, 0 AS wip, 1 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM middle_inventories
+			WHERE TIMESTAMPDIFF(DAY,created_at,NOW()) > 3
+			UNION ALL
+			SELECT inventories.material_number, inventories.lot, 0 AS queue, 0 AS wip, 0 AS wip_tiga, 1 AS stockroom, 0 AS inactive FROM kitto.inventories
+			LEFT JOIN kitto.materials ON materials.material_number = inventories.material_number 
+			WHERE materials.category = 'KEY'
+			AND inventories.lot > 0
+			UNION ALL
+			SELECT material_number, quantity, 0 AS queue, 0 AS wip, 0 AS wip_tiga, 0 AS stockroom, 1 AS inactive FROM barrel_queue_inactives
+			) AS kanban
+			GROUP BY kanban.material_number, kanban.quantity) AS resume
+			LEFT JOIN materials ON materials.material_number = resume.material_number
+			ORDER BY materials.`key`, materials.model, materials.surface");
+
+
+		$response = array(
+			'status' => true,
+			'data' => $data	
+		);
+		return Response::json($response);
 	}
 
 	public function fetchOpAnalysisDetail(Request $request){

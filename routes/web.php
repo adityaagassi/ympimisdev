@@ -644,6 +644,10 @@ Route::group(['nav' => 'A8', 'middleware' => 'permission'], function(){
 	Route::post('post/middle/barrel_inactive_wip', 'MiddleProcessController@postInactiveWIP');
 	Route::post('post/middle/new/barrel_inactive', 'MiddleProcessController@CreateInactive');
 	Route::post('import/barrel_inactive', 'MiddleProcessController@importInactive');
+
+	Route::get('index/resume_kanban', 'MiddleProcessController@indexResumeKanban');
+	Route::get('fetch/resume_kanban', 'MiddleProcessController@fetchResumeKanban');
+
 });
 
 Route::group(['nav' => 'A9', 'middleware' => 'permission'], function(){

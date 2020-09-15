@@ -114,6 +114,12 @@
       </li>
       @endif
 
+      @if(in_array('A8', $navs))
+      @if(isset($page) && $page == "Resume Kanban")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/resume_kanban") }}"><i class="fa fa-list-ol"></i> <span>Resume Kanban</span></a>
+      </li>
+      @endif
+
       @if(in_array('M0', $navs))
       <li class="header">Master Menu</li>
       @endif
