@@ -25,6 +25,22 @@
 		</p>
 	</div>
 </section>
+
+<div class="modal fade" id="modalImage">
+	<div class="modal-dialog" style="width: 90%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body" id="modalImageBody">
+
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 @section('scripts')
 <script>
@@ -64,6 +80,12 @@
 		});
 	}
 
+	function modalImage(id){
+		$('#modalImageBody').html('');
+		$('#modalImageBody').append('<img src="{{ asset('images/pointing_calls') }}/'+id+'.jpg" style="width: 100%;">');
+		$('#modalImage').modal('show');
+	}
+
 	function fetchPoint(){
 		var location = $('#location').val();
 		var data = {
@@ -79,7 +101,7 @@
 				pic_data += '<center>';
 				$.each(result.pics, function(key, value){
 					if(value.remark == 1){
-						pic_data += '<button onCLick="editPIC(\''+value.id+'\''+','+'\''+value.point_title+'\''+','+'\''+value.location+'\')" class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: orange; padding: 2px 5px 2px 5px; margin-left: 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
+						pic_data += '<button onClick="editPIC(\''+value.id+'\''+','+'\''+value.point_title+'\''+','+'\''+value.location+'\')" class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: orange; padding: 2px 5px 2px 5px; margin-left: 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
 					}
 					else{
 						pic_data += '<button onCLick="editPIC(\''+value.id+'\''+','+'\''+value.point_title+'\''+','+'\''+value.location+'\')" class="btn btn-lg" style="border-color: black; width: 18%; font-weight: bold; background-color: white; padding: 2px 5px 2px 5px; margin-left: 5px;">'+value.point_description+'<br>'+value.point_description_jp+'</button>';
@@ -100,8 +122,21 @@
 					image_data += '</div>';
 					count += 1;
 				});
-				image_data += '<div style="height: 1200px;"></div>'
 				$('.content').append(image_data);
+
+				var navigation_data = '';
+
+				navigation_data += '<div class="col-xs-12" style="position: absolute; top: 1650px;"><center>';
+				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'alur_pasca_kecelakaan_jp\');" class="btn btn-lg btn-success">Alur Pelaporan Pasca Kecelakaan<br>交通事故の報告のフロー</a>';
+				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'iso9001_jp.jpg\');" class="btn btn-lg btn-success">Target Kualitas FY197<br>197期　品質目標</a>';
+				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_alarm_kebakaran_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Alarm Kebakaran<br>火災警報が鳴った場合のガイドライン</a>';
+				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_keadaan_emergency_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Darurat<br>火災発生のガイドライン</a>';
+				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'slogan_mutu_jp\');" class="btn btn-lg btn-success">Slogan Mutu<br>品質スローガン</a>';
+				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'susunan_organisasi_jp\');" class="btn btn-lg btn-success">Safety Comitee<br>安全委員会</a>';
+				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'zero_complain_jp\');" class="btn btn-lg btn-success">Zero Complain<br>ゼロ・クレーム</a>';
+				navigation_data += '</center></div>';
+
+				$('.content').append(navigation_data);
 
 				$.each(result.pointing_calls, function(key, value){
 					var point_data = '';
@@ -598,29 +633,29 @@ $(function() {
 	});
 });
 
-$(function() {
-	$(document).mousedown(function(e) {
-		switch(e.which) {
-			case 3:
+// $(function() {
+// 	$(document).mousedown(function(e) {
+// 		switch(e.which) {
+// 			case 3:
 
-			var c = curr+1;
+// 			var c = curr+1;
 
-			for (var i = 1; i <= count; i++) {
-				$("[name='"+i+"']").hide();	
-			}
+// 			for (var i = 1; i <= count; i++) {
+// 				$("[name='"+i+"']").hide();	
+// 			}
 
-			$("[name='"+c+"']").show();	
+// 			$("[name='"+c+"']").show();	
 
-			curr += 1;
+// 			curr += 1;
 
-			if(curr == count-1){
-				curr = 0;
-			}
+// 			if(curr == count-1){
+// 				curr = 0;
+// 			}
 
-			break;
-		}
-	});
-});
+// 			break;
+// 		}
+// 	});
+// });
 
 }
 else{
