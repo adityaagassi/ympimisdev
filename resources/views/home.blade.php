@@ -466,7 +466,7 @@
                     <table class="table table-bordered">
                         <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                             <tr>
-                                <th>SunFish<br>サンフィッシュ</th>
+                                <th>YMPI Supporting System<br> YMPI サポートシステム</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -475,8 +475,28 @@
                                     <a href="http://172.17.128.8/sf6/" target="_blank">
                                         <i class="fa fa-caret-right"></i> Sunfish (サンフィッシュ)
                                     </a>
-                                </td>
-                            </tr>
+                                    <br>
+                                    <a href="https://a01.yamaha.co.jp/fw/dfw/CERT/Portal.php" target="_blank">
+                                        <i class="fa fa-caret-right"></i> IDM Portal (IDMポータル)
+                                    </a>
+                                    <br>
+                                    <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
+                                        <i class="fa fa-caret-right"></i> SAP
+                                    </a>
+                                    <br>
+                                    <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                                        <i class="fa fa-caret-right"></i> Adagio
+                                    </a>
+                                    <br>
+                                    <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                                        <i class="fa fa-caret-right"></i> MA5
+                                    </a>
+                                    <br>
+                                    <a href="https://yamahagroup.sharepoint.com/sites/prj00220" target="_blank">
+                                        <i class="fa fa-caret-right"></i> Sharepoint (シェアポイント)
+                                    </a>
+                                </td>     
+                            </tr>                                                                             
                         </tbody>
                     </table>
                     <table class="table table-bordered">
