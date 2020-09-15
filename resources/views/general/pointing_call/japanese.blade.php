@@ -128,7 +128,7 @@
 
 				navigation_data += '<div class="col-xs-12" style="position: absolute; top: 1650px;"><center>';
 				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'alur_pasca_kecelakaan_jp\');" class="btn btn-lg btn-success">Alur Pelaporan Pasca Kecelakaan<br>交通事故の報告のフロー</a>';
-				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'iso9001_jp.jpg\');" class="btn btn-lg btn-success">Target Kualitas FY197<br>197期　品質目標</a>';
+				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'iso9001_jp\');" class="btn btn-lg btn-success">Target Kualitas FY197<br>197期　品質目標</a>';
 				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_alarm_kebakaran_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Alarm Kebakaran<br>火災警報が鳴った場合のガイドライン</a>';
 				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_keadaan_emergency_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Darurat<br>火災発生のガイドライン</a>';
 				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'slogan_mutu_jp\');" class="btn btn-lg btn-success">Slogan Mutu<br>品質スローガン</a>';
