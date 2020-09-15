@@ -54,9 +54,6 @@
 	</h1>
 	<ol class="breadcrumb">
 		<li>
-			{{-- <button href="javascript:void(0)" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint
-			</button> --}}
 			<a href="{{ url("stamp/resumes") }}" class="btn btn-primary btn-sm" target="_blank" style="color:white"><i class="fa fa-calendar-check-o "></i>&nbsp;Record</a>
 		</li>
 	</ol>
@@ -136,10 +133,6 @@
 								</center>
 								<input type="text" id="japan2" hidden="">
 								<input type="text" id="gmc"  value="" hidden="">
-							{{-- 	<button id="btnprint"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;" class="btn btn-primary" onclick="print('update');" disabled><i class="fa fa-print"></i>&nbsp;&nbsp;Print</button>
-								<button id="btnprint2"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw;display: none;" class="btn btn-info" onclick="print('update');" disabled><i class="fa fa-print"></i>&nbsp;Reprint</button>
-								<button id="btnprintmodal"  style="font-weight: bold; width: 100%; text-align: center; font-size: 4vw; display: none;" class="btn btn-warning" onclick="modalshow();" disabled>Show Model</button> --}}
-
 							</center>
 						</div>
 						<div class="col-xs-5">
@@ -187,7 +180,6 @@
 				</center>
 			</div>
 			<div class="modal-footer">
-				{{-- <button type="button" onclick="destroyStamp()" class="btn btn-danger pull-left">Delete</button> --}}
 				<button type="button" onclick="updateStamp()" class="btn btn-primary">Confirm</button>
 			</div>
 		</div>
@@ -199,310 +191,324 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Choose a Model</h4>
-				</div>
-				<div class="modal-body">
-					<input id="modelmoddal" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 2vw" value="Model" disabled><br><br>
-					<center>
-						<div id="listModel2">
-						</div><br>
-						<div id="listModel">
-						</div>
-					</center>
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Choose a Model</h4>
+			</div>
+			<div class="modal-body">
+				<input id="modelmoddal" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 2vw" value="Model" disabled><br><br>
+				<center>
+					<div id="listModel2">
+					</div><br>
+					<div id="listModel">
+					</div>
+				</center>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" onclick="print('new')">Print</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modelreprint2">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Reprint</h4>
+			</div>
+			<div class="modal-body">
+				<input type="text" style="font-weight: bold; background-color: rgb(255,255,204);; width: 100%; text-align: center; font-size: 4vw"  name="serialNumberText" id="serialNumberText2"  disabled><br>
+				<input type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 2vw"  name="modelText" id="modelText2"  disabled>
+				<BR><BR>
+				<center>
+					<button class="btn btn-lg btn-success" onclick="repintDes();">Label Deskripsi</button>
+					<button class="btn btn-lg btn-success" onclick="repintBesar();">Label GMC</button>
+					<button class="btn btn-lg btn-success" onclick="repintKecil();">Label No. Seri</button><br><br>
+
+					<button class="btn btn-lg btn-success" id="btn-carb" onclick="repintCARB();">Label CARB</button>
+					<button class="btn btn-lg btn-success" onclick="repintBesarOuter();">Label Besar Outer</button>
+
+				</center>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal modal-default fade" id="reprintModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="titleModal">Reprint Stamp</h4>
+			</div>
+			<form class="form-horizontal" role="form" method="post" action="{{url('reprint/stamp2')}}">
+				<input type="hidden" value="{{csrf_token()}}" name="_token" />
+				<div class="modal-body" id="messageModal">
+					<label>Serial Number</label>
+					<select class="form-control select2" name="stamp_number_reprint" style="width: 100%;" data-placeholder="Choose a Serial Number ..." id="stamp_number_reprint" required>
+						<option value=""></option>
+
+					</select>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary" onclick="print('new')">Print</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button id="modalReprintButton" type="submit" class="btn btn-danger"><i class="fa fa-print"></i>&nbsp; Reprint</button>
 				</div>
-			</div>
-			<!-- /.modal-content -->
+			</form>
 		</div>
-		<!-- /.modal-dialog -->
 	</div>
+</div>
 
-	<div class="modal fade" id="modelreprint2">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">Reprint</h4>
-					</div>
-					<div class="modal-body">
-						<input type="text" style="font-weight: bold; background-color: rgb(255,255,204);; width: 100%; text-align: center; font-size: 4vw"  name="serialNumberText" id="serialNumberText2"  disabled><br>
-						<input type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 2vw"  name="modelText" id="modelText2"  disabled>
-						<BR><BR>
-						<center>
-							<button class="btn btn-lg btn-success" onclick="repintDes();">Label Deskripsi</button>
-							<button class="btn btn-lg btn-success" onclick="repintBesar();">Label GMC</button>
-							<button class="btn btn-lg btn-success" onclick="repintKecil();">Label No. Seri</button><br><br>
-
-							<button class="btn btn-lg btn-success" id="btn-carb" onclick="repintCARB();">Label CARB</button>
-							<button class="btn btn-lg btn-success" onclick="repintBesarOuter();">Label Besar Outer</button>
-
-							<!-- <button class="btn btn-lg btn-primary" onclick="reprintAll();">Label Besar + Kecil + Deskripsi</button> -->
-						</center>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-						{{-- <button type="button" class="btn btn-primary" onclick="print('new')">Print</button> --}}
-
-
-					</div>
-				</div>
-				<!-- /.modal-content -->
+<div class="modal fade" id="print_kd">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">Print Label KD</h4>
 			</div>
-			<!-- /.modal-dialog -->
-		</div>
-
-		<div class="modal modal-default fade" id="reprintModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="titleModal">Reprint Stamp</h4>
+			<div class="modal-body">
+				<input type="text" style="font-weight: bold; background-color: rgb(255,255,204);; width: 100%; text-align: center; font-size: 4vw" id="kd_gmc"  disabled><br>
+				<input type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 2vw" id="kd_desc"  disabled>
+				<BR><BR>
+				<center>
+					<div id='all'>
+						<button class="btn btn-lg btn-success btn-kd-desc" onclick="printKdDes();">Label Deskripsi</button>
+						<button class="btn btn-lg btn-success btn-kd-besar" onclick="printKdBesar();">Label GMC</button>
+						<button class="btn btn-lg btn-success btn-kd-carb" onclick="printKdCarb();">Label CARB</button>
+						<button class="btn btn-lg btn-success btn-kd-outer" onclick="printKdOuter();">Label Outer</button>
 					</div>
-					<form class="form-horizontal" role="form" method="post" action="{{url('reprint/stamp2')}}">
-						<input type="hidden" value="{{csrf_token()}}" name="_token" />
-						<div class="modal-body" id="messageModal">
-							<label>Serial Number</label>
-							<select class="form-control select2" name="stamp_number_reprint" style="width: 100%;" data-placeholder="Choose a Serial Number ..." id="stamp_number_reprint" required>
-								<option value=""></option>
-								
-							</select>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<button id="modalReprintButton" type="submit" class="btn btn-danger"><i class="fa fa-print"></i>&nbsp; Reprint</button>
-						</div>
-					</form>
-				</div>
+					<div id='partial'>
+						<button class="btn btn-lg btn-success btn-kd-desc" onclick="printKdDes();">Label Deskripsi</button>
+						<button class="btn btn-lg btn-success btn-kd-besar" onclick="printKdBesar();">Label GMC</button>
+					</div>
+
+				</center>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
 			</div>
 		</div>
+	</div>
+</div>
 
 
 
-		@endsection
-		@section('scripts')
-		<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-		<script>
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+@endsection
+@section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
+	jQuery(document).ready(function() {
+		$(function () {
+			$('.select2').select2()
+		});
+
+		$('#btn-carb').hide();
+
+		$('#sn').focus();
+		$('body').toggleClass("sidebar-collapse");
+
+		$('#modelreprint2').on('hidden.bs.modal', function () {
+			$("#sn").val('');						
+			$('#sn').focus();
+		});
+
+		$('#editModal').on('hidden.bs.modal', function () {
+			$("#sn").val('');						
+			$('#sn').focus();
+		});
+
+		fillPlan();
+		fillResult();
+
+
+	});
+
+	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
+
+	function insert(num){
+		document.form.textview.value = document.form.textview.value+num;
+	}
+
+	function fillPlan(){
+		$.get('{{ url("stamp/fetchStampPlanFL5") }}', function(result, status, xhr){
+			if(xhr.status = 200){
+				if(result.status){
+					$('#planTable2').DataTable().destroy();
+					$('#planTableBody2').html("");
+					var planData = '';
+					$.each(result.planData, function(key, value) {
+						planData += '<tr>';
+						planData += '<td>'+ value.model +'</td>';
+
+						planData += '<td>'+ value.actual +'</td>';
+
+						planData += '</tr>';
+					});
+					$('#planTableBody2').append(planData);
+
+					$('#planTable2').DataTable({
+						'paging': false,
+						'lengthChange': false,
+						'searching': false,
+						'ordering': false,
+						'order': [],
+						'info': false,
+						'autoWidth': true,
+						"footerCallback": function (tfoot, data, start, end, display) {
+							var intVal = function ( i ) {
+								return typeof i === 'string' ?
+								i.replace(/[\$,]/g, '')*1 :
+								typeof i === 'number' ?
+								i : 0;
+							};
+							var api = this.api();
+
+							var total_diff = api.column(1).data().reduce(function (a, b) {
+								return intVal(a)+intVal(b);
+							}, 0)
+							$(api.column(1).footer()).html(total_diff.toLocaleString());
+
+						},
+						"columnDefs": [ {
+							"targets": 1,
+							"createdCell": function (td, cellData, rowData, row, col) {
+								if ( cellData <  0 ) {
+									$(td).css('background-color', 'RGB(255,204,255)')
+								}
+								else
+								{
+									$(td).css('background-color', 'RGB(204,255,255)')
+								}
+							}
+						}]
+					});
 				}
-			});
-
-			jQuery(document).ready(function() {
-				$(function () {
-					$('.select2').select2()
-				});
-
-				$('#btn-carb').hide();
-
-				$('#sn').focus();
-				$('body').toggleClass("sidebar-collapse");
-
-				$('#modelreprint2').on('hidden.bs.modal', function () {
-					$("#sn").val('');						
-					$('#sn').focus();
-				});
-
-				$('#editModal').on('hidden.bs.modal', function () {
-					$("#sn").val('');						
-					$('#sn').focus();
-				});
-				
-				fillPlan();
-				fillResult();
-				
-
-			});
-
-			var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
-
-			function insert(num){
-				document.form.textview.value = document.form.textview.value+num;
+				else{
+					audio_error.play();
+					alert('Attempt to retrieve data failed');
+				}
 			}
-
-			function fillPlan(){
-				$.get('{{ url("stamp/fetchStampPlanFL5") }}', function(result, status, xhr){
-					// console.log(status);
-					// console.log(result);
-					// console.log(xhr);
-					if(xhr.status = 200){
-						if(result.status){
-							$('#planTable2').DataTable().destroy();
-							$('#planTableBody2').html("");
-							var planData = '';
-							$.each(result.planData, function(key, value) {
-								planData += '<tr>';
-								planData += '<td>'+ value.model +'</td>';
-
-								planData += '<td>'+ value.actual +'</td>';
-
-								planData += '</tr>';
-							});
-							$('#planTableBody2').append(planData);
-
-							$('#planTable2').DataTable({
-								'paging': false,
-								'lengthChange': false,
-								'searching': false,
-								'ordering': false,
-								'order': [],
-								'info': false,
-								'autoWidth': true,
-								"footerCallback": function (tfoot, data, start, end, display) {
-									var intVal = function ( i ) {
-										return typeof i === 'string' ?
-										i.replace(/[\$,]/g, '')*1 :
-										typeof i === 'number' ?
-										i : 0;
-									};
-									var api = this.api();
-
-									var total_diff = api.column(1).data().reduce(function (a, b) {
-										return intVal(a)+intVal(b);
-									}, 0)
-									$(api.column(1).footer()).html(total_diff.toLocaleString());
-
-								},
-								"columnDefs": [ {
-									"targets": 1,
-									"createdCell": function (td, cellData, rowData, row, col) {
-										if ( cellData <  0 ) {
-											$(td).css('background-color', 'RGB(255,204,255)')
-										}
-										else
-										{
-											$(td).css('background-color', 'RGB(204,255,255)')
-										}
-									}
-								}]
-							});
-						}
-						else{
-							audio_error.play();
-							alert('Attempt to retrieve data failed');
-						}
-					}
-					else{
-						audio_error.play();
-						alert('Disconnected from server');
-					}
-				});
+			else{
+				audio_error.play();
+				alert('Disconnected from server');
 			}
+		});
+	}
 
-			function fillResult(){
-				$.get('{{ url("stamp/fetchResultFL5") }}', function(result, status, xhr){
-					// console.log(status);
-					// console.log(result);
-					// console.log(xhr);
-					$('#resultTable').DataTable().destroy();
-					if(xhr.status == 200){
-						if(result.status){
-							$('#resultTableBody').html("");
-							var resultData = '';
-							$.each(result.resultData, function(key, value){
-								resultData += '<tr>';
-								resultData += '<td>'+ value.serial_number +'</td>';
-								resultData += '<td>'+ value.model +'</td>';
-								resultData += '<td>'+ value.created_at +'</td>';
-								resultData += '<td><button class="btn btn-xs btn-danger" id="'+value.id+'" onclick="editStamp(id)"><span class="fa fa-edit"></span></button></td>';
-								resultData += '</tr>';
-							});
-							$('#resultTableBody').append(resultData);
-							$('#resultTable').DataTable({
-								"sDom": '<"top"i>rt<"bottom"flp><"clear">',
-								'paging'      	: true,
-								'lengthChange'	: false,
-								'searching'   	: true,
-								'ordering'		: false,
-								'info'       	: true,
-								'autoWidth'		: false,
-								"sPaginationType": "full_numbers",
-								"bJQueryUI": true,
-								"bAutoWidth": false,
-								"infoCallback": function( settings, start, end, max, total, pre ) {
-									return "<b>Total "+ total +" pc(s)</b>";
-								}
-							});
+	function fillResult(){
+		$.get('{{ url("stamp/fetchResultFL5") }}', function(result, status, xhr){
+			$('#resultTable').DataTable().destroy();
+			if(xhr.status == 200){
+				if(result.status){
+					$('#resultTableBody').html("");
+					var resultData = '';
+					$.each(result.resultData, function(key, value){
+						resultData += '<tr>';
+						resultData += '<td>'+ value.serial_number +'</td>';
+						resultData += '<td>'+ value.model +'</td>';
+						resultData += '<td>'+ value.created_at +'</td>';
+						resultData += '<td><button class="btn btn-xs btn-danger" id="'+value.id+'" onclick="editStamp(id)"><span class="fa fa-edit"></span></button></td>';
+						resultData += '</tr>';
+					});
+					$('#resultTableBody').append(resultData);
+					$('#resultTable').DataTable({
+						"sDom": '<"top"i>rt<"bottom"flp><"clear">',
+						'paging'      	: true,
+						'lengthChange'	: false,
+						'searching'   	: true,
+						'ordering'		: false,
+						'info'       	: true,
+						'autoWidth'		: false,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"infoCallback": function( settings, start, end, max, total, pre ) {
+							return "<b>Total "+ total +" pc(s)</b>";
 						}
-						else{
-							audio_error.play();
-							alert('Attempt to retrieve data');
-						}
-					}
-					else{
-						audio_error.play();
-						alert('Disconnected from server');
-					}
-				});
+					});
+				}
+				else{
+					audio_error.play();
+					alert('Attempt to retrieve data');
+				}
 			}
-
-			function openSuccessGritter(title, message){
-				jQuery.gritter.add({
-					title: title,
-					text: message,
-					class_name: 'growl-success',
-					image: '{{ url("images/image-screen.png") }}',
-					sticky: false,
-					time: '3000'
-				});
+			else{
+				audio_error.play();
+				alert('Disconnected from server');
 			}
+		});
+	}
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
 
 
-			function getmodels() {
-				var sn = $("#serialNumberText").val();
-				var data ={
-					sn:sn,
-					log:'5',
-				};
-				$.get('{{ url("index/getModelfl") }}', data, function(result, status, xhr){
-					// console.log(status);
-					// console.log(result);
-					// console.log(xhr);
-					if(xhr.status == 200){
-						if(result.status){
+	function getmodels() {
+		var sn = $("#serialNumberText").val();
+		var data ={
+			sn:sn,
+			log:'5',
+		};
+		$.get('{{ url("index/getModelfl") }}', data, function(result, status, xhr){
+			if(xhr.status == 200){
+				if(result.status){
 
-							$('#listModel3').html("");
-							var planData = '';
-							$.each(result.planData, function(key, value) {
-								if (value.remark=="J") {
-									planData += '<button type="button" class=" test btn bg-blue btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'J\');japan(\'(Japan)\')">'+value.material_description+'<br>Japan'+'</button>';
-								}
-
-
-								else {
-									planData += '<button type="button" class=" test btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'\')">'+value.material_description+'<br>'+'</button>';	
-								}						
-							});
-							$('#listModel3').append(planData);	
-						}
-					}
-				});
+					$('#listModel3').html("");
+					var planData = '';
+					$.each(result.planData, function(key, value) {
+						if (value.remark=="J") {
+							planData += '<button type="button" class=" test btn bg-blue btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'J\');japan(\'(Japan)\')">'+value.material_description+'<br>Japan'+'</button>';
+						} else {
+							planData += '<button type="button" class=" test btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'\')">'+value.material_description+'<br>'+'</button>';	
+						}						
+					});
+					$('#listModel3').append(planData);	
+				}
 			}
-
-	// reprint 
+		});
+	}
 
 	function getserial() {
 		var sn = $("#sn").val();
 		var data ={
 			sn:sn,
 			log:'4',
-			
+
 		};
 		var data2 ={
 			sn2:sn,
 			code:'4',
 			origin:'041',
-		}
-		if (sn.length == 8) {
+		};
+		var data3 ={
+			gmc:sn
+		};
+		if(sn.length == 8) {
 			$.get('{{ url("index/getModelfl") }}', data, function(result, status, xhr){
-				// console.log(status);
-				// console.log(result);
-				// console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
 						$('#listModel').html("");
@@ -512,7 +518,7 @@
 							if (value.remark=="J") {
 								planData += '<button type="button" class=" test btn bg-blue btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'J\');japan(\'(Japan)\')">'+value.material_description+'<br>Japan'+'</button>';
 							}
-							
+
 
 							else {
 								planData += '<button type="button" class="test btn bg-olive btn-lg" style="margin-top: 2px; margin-left: 1px; margin-right: 1px; width: 32%; font-size: 0.8vw" id="'+value.material_number+'" name="'+value.material_description+'" onclick="model(name,id,\'NJ\');japan(\'\')">'+value.material_description+'<br>'+'</button>';	
@@ -526,12 +532,8 @@
 						//fill serial
 
 						$.get('{{ url("index/get_snfl") }}', data2, function(result, status, xhr){
-							// console.log(status);
-							// console.log(result);
-							// console.log(xhr);
 							if(xhr.status == 200){
 								if(result.status){
-									// alert(result.message);
 									if(result.message =="2"){
 
 										if(result.model == 'YFL-212U//ID'){
@@ -582,6 +584,27 @@
 					alert("Disconnected from server");
 				}
 			});
+
+		}else if(sn.length == 7){
+
+			$.get('{{ url("fetch/check_kd_gmc") }}', data3, function(result, status, xhr){
+				if(result.status){
+
+					$("#kd_gmc").val(result.material.material_number);
+					$("#kd_desc").val(result.material.material_description);
+
+					if(result.material.material_number == 'ZE92410'){
+						$("#all").css({"display":"block"});
+						$("#partial").css({"display":"none"});
+					}else{
+						$("#all").css({"display":"none"});
+						$("#partial").css({"display":"block"});
+					}
+					$('#print_kd').modal('show');
+
+
+				}
+			});
 		}else{
 			$("#snmodel").val('Not Found');
 			$('#btnprint').prop('disabled',true);
@@ -589,6 +612,11 @@
 			$('#btnprint2').prop('disabled',true);	
 		}
 	}
+
+	$("#print_kd").on("hidden.bs.modal", function () {
+		$("#sn").val('');
+		$("#sn").focus();
+	});
 
 	function print(status){	
 		$("#modela").modal('hide');
@@ -614,9 +642,6 @@
 			}
 
 			$.post('{{ url("index/print_FL") }}', data, function(result, status, xhr){
-				// console.log(status);
-				// console.log(result);
-				// console.log(xhr);
 				if(xhr.status == 200){
 					if(result.status){
 						openSuccessGritter('Success', result.message);
@@ -660,7 +685,6 @@
 				}
 			});
 		}else{
-			// alert("as")
 			$('#modelText2').val($('#snmodel').val());
 			$('#serialNumberText2').val($('#sn').val());
 			$('#modelreprint2').modal('show');
@@ -687,9 +711,6 @@
 			id:id
 		}
 		$.get('{{ url("edit/stampLabelFL") }}', data, function(result, status, xhr){
-			// console.log(status);
-			// console.log(result);
-			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#modelText').val(result.stamp.model);
@@ -722,9 +743,6 @@
 			
 		}
 		$.post('{{ url("update/stampLabelFL") }}', data, function(result, status, xhr){
-			// console.log(status);
-			// console.log(result);
-			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					$('#idStamp').val('');
@@ -762,15 +780,9 @@
 		}
 
 		$.get('{{ url("index/getModelReprintAllFL") }}', data, function(result, status, xhr){
-			// console.log(status);
-			// console.log(result);
-			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
-					// alert(result.reprint[0].material_number)					
-					window.open('{{ url("index/label_besarFL") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/'+result.reprint[0].status+'R', '_blank');
-					// window.open('{{ url("index/label_des") }}'+'/'+result.reprint[0].serial_number, '_blank');
-					
+					window.open('{{ url("index/label_besarFL") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/'+result.reprint[0].status+'R', '_blank');			
 				}
 				else{
 					audio_error.play();
@@ -801,9 +813,6 @@
 		}
 
 		$.get('{{ url("index/getModelReprintAllFL") }}', data, function(result, status, xhr){
-			// console.log(status);
-			// console.log(result);
-			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					window.open('{{ url("index/fl_label_besar") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/RP', '_blank');
@@ -828,9 +837,6 @@
 		}
 
 		$.get('{{ url("index/getModelReprintAllFL") }}', data, function(result, status, xhr){
-			// console.log(status);
-			// console.log(result);
-			// console.log(xhr);
 			if(xhr.status == 200){
 				if(result.status){
 					window.open('{{ url("index/fl_label_outer") }}'+'/'+result.reprint[0].serial_number+'/'+result.reprint[0].material_number+'/RP', '_blank');
@@ -886,6 +892,46 @@
 			}
 		});
 
+	}
+
+	function printKdDes() {
+		var gmc = $('#kd_gmc').val();
+		$('.btn-kd-desc').prop('disabled', true);
+		
+		setTimeout(function() {
+			window.open('{{ url("index/kd_label_des_fl") }}'+'/'+gmc, '_blank');
+			$('.btn-kd-desc').prop('disabled', false);
+		}, 3000);
+	}
+
+	function printKdBesar() {
+		var gmc = $('#kd_gmc').val();
+		$('.btn-kd-besar').prop('disabled', true);
+
+		setTimeout(function() {
+			window.open('{{ url("index/kd_label_besar_fl") }}'+'/'+gmc, '_blank');
+			$('.btn-kd-besar').prop('disabled', false);
+		}, 3000);
+	}
+
+	function printKdCarb() {
+		var gmc = $('#kd_gmc').val();
+		$('.btn-kd-carb').prop('disabled', true);
+
+		setTimeout(function() {
+			window.open('{{ url("index/kd_label_carb_fl") }}'+'/'+gmc, '_blank');
+			$('.btn-kd-carb').prop('disabled', false);
+		}, 3000);
+	}
+
+	function printKdOuter() {
+		var gmc = $('#kd_gmc').val();
+		$('.btn-kd-outer').prop('disabled', true);
+
+		setTimeout(function() {
+			window.open('{{ url("index/kd_label_besar_outer_fl") }}'+'/'+gmc, '_blank');
+			$('.btn-kd-outer').prop('disabled', false);
+		}, 3000);
 	}
 
 </script>

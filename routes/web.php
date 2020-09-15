@@ -2215,8 +2215,11 @@ Route::get('index/fl_label_carb/{id}', 'ProcessController@label_carb_fl');
 Route::get('fetch/check_carb', 'ProcessController@fetchCheckCarb');
 
 
-Route::get('index/kd_label_besar_fl/{id}', 'ProcessController@kd_label_besar_fl');
-Route::get('index/kd_label_besar_outer_fl/{id}', 'ProcessController@kd_label_besar_outer_fl');
+Route::get('fetch/check_kd_gmc', 'ProcessController@fetchCheckKd');
+Route::get('index/kd_label_besar_fl/{gmc}', 'ProcessController@kd_label_besar_fl');
+Route::get('index/kd_label_besar_outer_fl/{gmc}', 'ProcessController@kd_label_besar_outer_fl');
+Route::get('index/kd_label_des_fl/{gmc}', 'ProcessController@kd_label_des_fl');
+Route::get('index/kd_label_carb_fl/{gmc}', 'ProcessController@kd_label_carb_fl');
 
 
 //end label flute
