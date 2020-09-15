@@ -633,29 +633,29 @@ $(function() {
 	});
 });
 
-// $(function() {
-// 	$(document).mousedown(function(e) {
-// 		switch(e.which) {
-// 			case 3:
+$(function() {
+	$(document).mousedown(function(e) {
+		switch(e.which) {
+			case 3:
 
-// 			var c = curr+1;
+			var c = curr+1;
 
-// 			for (var i = 1; i <= count; i++) {
-// 				$("[name='"+i+"']").hide();	
-// 			}
+			for (var i = 1; i <= count; i++) {
+				$("[name='"+i+"']").hide();	
+			}
 
-// 			$("[name='"+c+"']").show();	
+			$("[name='"+c+"']").show();	
 
-// 			curr += 1;
+			curr += 1;
 
-// 			if(curr == count-1){
-// 				curr = 0;
-// 			}
+			if(curr == count-1){
+				curr = 0;
+			}
 
-// 			break;
-// 		}
-// 	});
-// });
+			break;
+		}
+	});
+});
 
 }
 else{
