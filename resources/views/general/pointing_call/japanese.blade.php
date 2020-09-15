@@ -126,14 +126,35 @@
 
 				var navigation_data = '';
 
-				navigation_data += '<div class="col-xs-12" style="position: absolute; top: 1650px;"><center>';
-				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'alur_pasca_kecelakaan_jp\');" class="btn btn-lg btn-success">Alur Pelaporan Pasca Kecelakaan<br>交通事故の報告のフロー</a>';
-				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'iso9001_jp\');" class="btn btn-lg btn-success">Target Kualitas FY197<br>197期　品質目標</a>';
-				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_alarm_kebakaran_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Alarm Kebakaran<br>火災警報が鳴った場合のガイドライン</a>';
-				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_keadaan_emergency_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Darurat<br>火災発生のガイドライン</a>';
-				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'slogan_mutu_jp\');" class="btn btn-lg btn-success">Slogan Mutu<br>品質スローガン</a>';
-				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'susunan_organisasi_jp\');" class="btn btn-lg btn-success">Safety Comitee<br>安全委員会</a>';
-				navigation_data += '<a style="margin: 5px;" href="javascript:void(0)" onclick="modalImage(\'zero_complain_jp\');" class="btn btn-lg btn-success">Zero Complain<br>ゼロ・クレーム</a>';
+				navigation_data += '<div class="col-xs-12" style="position: absolute; font-size: 1vw; top: 1650px;"><center>';
+				navigation_data += '<div class="row">';
+				navigation_data += '<div class="col-xs-12">';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'iso9001_jp\');" class="btn btn-lg btn-success">Target Kualitas FY197<br>197期　品質目標</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'slogan_mutu_jp\');" class="btn btn-lg btn-success">Slogan Mutu<br>品質スローガン</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'susunan_organisasi_jp\');" class="btn btn-lg btn-success">Safety Comitee<br>安全委員会</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'zero_complain_jp\');" class="btn btn-lg btn-success">Zero Complain<br>ゼロ・クレーム</a>';
+				navigation_data += '</div>';
+
+				navigation_data += '<div class="col-xs-12">';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'alur_pasca_kecelakaan_jp\');" class="btn btn-lg btn-success">Alur Pelaporan Pasca Kecelakaan<br>交通事故の報告のフロー</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_alarm_kebakaran_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Alarm Kebakaran<br>火災警報が鳴った場合のガイドライン</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_keadaan_emergency_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Darurat<br>火災発生のガイドライン</a>';
+				navigation_data += '</div>';
+
+				navigation_data += '<div class="col-xs-12">';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'diamond_jp\');" class="btn btn-lg btn-warning">Yamaha Diamond<br>ヤマハ・ダイヤモンド</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'k3_jp\');" class="btn btn-lg btn-warning">Aturan K3 Yamaha<br>ヤマハ安全衛生心得</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'6_pasal_jp\');" class="btn btn-lg btn-warning">6 Pasal<br>ヤマハ交通安全６々条</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'budaya_jp\');" class="btn btn-lg btn-warning">Budaya Kerja<br>YMPI取組姿勢</a>';				
+				navigation_data += '</div>';
+
+				
+				navigation_data += '<div class="col-xs-12">';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'10_komitmen_jp\');" class="btn btn-lg btn-warning">10 Komitmen<br>交通安全のための１０の掟</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'janji_jp\');" class="btn btn-lg btn-warning">Janji Tindakan Dasar<br>ホテルコンセプト達成ための基本行動の約束</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'komitmen_jp\');" class="btn btn-lg btn-warning">Komitmen Hotel Konsep<br>YMPI従業員　ホテルコンセプトへの誓い</a>';	
+				navigation_data += '</div>';
+				navigation_data += '</div>';
 				navigation_data += '</center></div>';
 
 				$('.content').append(navigation_data);
@@ -632,31 +653,6 @@ $(function() {
 		}
 	});
 });
-
-$(function() {
-	$(document).mousedown(function(e) {
-		switch(e.which) {
-			case 3:
-
-			var c = curr+1;
-
-			for (var i = 1; i <= count; i++) {
-				$("[name='"+i+"']").hide();	
-			}
-
-			$("[name='"+c+"']").show();	
-
-			curr += 1;
-
-			if(curr == count-1){
-				curr = 0;
-			}
-
-			break;
-		}
-	});
-});
-
 }
 else{
 	$('#loading').show();

@@ -11,6 +11,13 @@
 			text-align: center;
 		}
 
+		.cropped_small {
+			width: 75px;
+			height: 75px;
+			vertical-align: middle;
+			text-align: center;
+		}
+
 		table tr td{
 			border: 3px solid black !important;
 			border-collapse: collapse;
@@ -23,7 +30,7 @@
 		}
 
 		.page-break {
-		    page-break-after: always;
+			page-break-after: always;
 		}
 
 
@@ -43,6 +50,7 @@
 		@php
 		QRcode::png($data[$i]->qr_code, public_path().'/qr_code.png');
 		@endphp
+
 
 		<table style="width: 100%; margin-top: 5%;">
 			<tbody style="font-weight: bold;">
@@ -71,21 +79,11 @@
 				</tr>
 			</tbody>
 		</table>
+		
+		<br><br><br><br><br>
+		<br><br><br><br><br>
 
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<div style="border-bottom: 2px dashed #000;"></div>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-
-		<table style="width: 100%;" class="page-break">
+		<table style="width: 100%;">
 			<tbody style="font-weight: bold;">
 				<tr>
 					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 25px; width: 20%">GMC</td>
@@ -112,6 +110,42 @@
 				</tr>
 			</tbody>
 		</table>
+
+		@if($i != (count($data)-1))
+
+		<div class="page-break"></div>
+
+		<br><br><br><br><br>
+		<table style="width: 45%;">
+			<tbody style="font-weight: bold;">
+				<tr>
+					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px; width: 20%">GMC</td>
+					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 28px; width: 50%">{{ $data[$i]->material_number }}</td>
+					<td style="vertical-align: middle; font-size: 10px; width: 30%; text-align: center;">
+						{{ $data[$i]->month }}
+					</td>
+				</tr>
+				<tr>
+					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px;">Desc.</td>
+					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px;">{{ $data[$i]->material_description }}</td>
+					<td rowspan="3" style="text-align: center; vertical-align: middle;">
+						<img src="{{ public_path() . '/qr_code.png' }}" class="cropped_small">
+						<span style="font-size: 10px;">{{ $data[$i]->qr_code }}</span>
+					</td>
+				</tr>
+				<tr>
+					<td style="padding: 0px 5px 0px 5px; font-size: 12px; vertical-align: middle;">Tgl Masuk</td>
+					<td style="padding: 0px 5px 0px 5px; font-size: 20px; vertical-align: middle;">{{ $data[$i]->masuk }}</td>
+				</tr>
+				<tr>
+					<td style="padding: 0px 5px 0px 5px; font-size: 12px; vertical-align: middle;">Tgl Exp</td>
+					<td style="padding: 0px 5px 0px 5px; font-size: 20px; vertical-align: middle;">{{ $data[$i]->exp }}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+
+		@endif
 		
 		@php
 	}	
