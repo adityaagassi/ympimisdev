@@ -869,16 +869,20 @@ class MiddleProcessController extends Controller
 			UNION ALL
 			SELECT inventories.material_number, inventories.lot, 0 AS queue, 1 AS wip, 0 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM kitto.inventories
 			LEFT JOIN kitto.completions ON kitto.completions.barcode_number = kitto.inventories.barcode_number
+			LEFT JOIN kitto.materials ON kitto.materials.material_number = kitto.inventories.material_number 
 			WHERE kitto.completions.active = 1
 			AND kitto.inventories.lot = 0
 			AND kitto.inventories.issue_location = 'CL51'
+			AND kitto.materials.category = 'KEY'
 			UNION ALL
 			SELECT inventories.material_number, inventories.lot, 0 AS queue, 0 AS wip, 1 AS wip_tiga, 0 AS stockroom, 0 AS inactive FROM kitto.inventories
 			LEFT JOIN kitto.completions ON kitto.completions.barcode_number = kitto.inventories.barcode_number
+			LEFT JOIN kitto.materials ON kitto.materials.material_number = kitto.inventories.material_number 
 			WHERE kitto.completions.active = 1
 			AND kitto.inventories.lot = 0
 			AND kitto.inventories.issue_location = 'CL51'
 			AND TIMESTAMPDIFF(DAY,kitto.inventories.updated_at,NOW()) > 3
+			AND kitto.materials.category = 'KEY'
 			) AS kanban
 			GROUP BY kanban.material_number) AS resume
 			LEFT JOIN materials ON materials.material_number = resume.material_number
