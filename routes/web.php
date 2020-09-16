@@ -1331,6 +1331,7 @@ Route::get('investment/detailInv', 'AccountingController@detailMonitoringInvTabl
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
 Route::get('budget/report', 'AccountingController@budget_control');
+Route::get('transfer/budget', 'AccountingController@budget_info');
 Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
 Route::get('fetch/budget/table', 'AccountingController@fetch_budget_table');
 Route::get('fetch/budget/detail_table', 'AccountingController@fetch_budget_detail');
@@ -1356,7 +1357,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('print/middle/barrel_reprint', 'MiddleProcessController@printMiddleBarrelReprint');
 });
 
-//KD
+//START KD
 Route::group(['nav' => 'S48', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_mouthpiece/checksheet', 'MouthpieceController@indexKdMouthpieceChecksheet');
 	Route::get('index/kd_mouthpiece/material', 'MouthpieceController@indexKdMouthpieceMaterial');
@@ -1364,7 +1365,7 @@ Route::group(['nav' => 'S48', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_mouthpiece/packing', 'MouthpieceController@indexKdMouthpiecePacking');
 });
 
-
+//ZPRO
 Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_zpro/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_zpro', 'KnockDownController@printLabel');	
@@ -1374,6 +1375,7 @@ Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 
 });
 
+//SUBASSY SX
 Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_sx/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');	
@@ -1383,6 +1385,7 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 
 });
 
+//SUBASSY FL
 Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_fl/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
@@ -1392,6 +1395,7 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 
 });
 
+//SUBASSY CL
 Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_cl/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
@@ -1413,6 +1417,7 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 });
 
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
+Route::get('fetch/kd_new/{id}', 'KnockDownController@fetchKdNew');
 Route::get('fetch/kd_pack/{id}', 'KnockDownController@fetchKdPack');
 Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
 Route::get('index/kd_daily_production_result', 'KnockDownController@indexKdDailyProductionResult');
@@ -1428,6 +1433,8 @@ Route::get('fetch/kd_shipment_progress_detail', 'KnockDownController@fetchKdShip
 Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
 Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 Route::get('fetch/kd_reprint_kdo', 'KnockDownController@reprintKDO');
+
+//END KD
 
 
 Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){

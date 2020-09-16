@@ -10,9 +10,12 @@ use App\User;
 use App\Plc;
 use App\standart_temperature;
 use App\BodyTemperature;
+use App\IvmsTemperature;
 use Response;
 use DataTables;
 use App\Libraries\ActMLEasyIf;
+use Excel;
+use File;
 
 class TemperatureController extends Controller
 {
@@ -271,4 +274,271 @@ class TemperatureController extends Controller
 
           return Response::json($response);
      }
+
+     public function indexMinMoe($location)
+     {
+          if ($location == 'office') {
+               $loc = 'YMPI-OFFICE';
+          }
+          return view('temperature.index_minmoe', array(
+               'loc' => $loc,
+               'location' => $location
+          ))->with('page', 'Temperature');
+     }
+
+     public function fetchMinMoe(Request $request)
+     {
+          try {
+               $date_from = $request->get('tanggal_from');
+               $date_to = $request->get('tanggal_to');
+
+               if ($date_from == '') {
+                    if ($date_to == '') {
+                         $where = "AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT(NOW() - INTERVAL 7 DAY,'%Y-%m-%d')) AND DATE(NOW())";
+                    }else{
+                         $where = "AND DATE(date_in) BETWEEN CONCAT(DATE_FORMAT(".$date_to." - INTERVAL 7 DAY,'%Y-%m-%d')) AND '".$date_to."'";
+                    }
+               }else{
+                    if ($date_to == '') {
+                         $where = "AND DATE(date_in) BETWEEN '".$date_from."' AND DATE(NOW())";
+                    }else{
+                         $where = "AND DATE(date_in) BETWEEN '".$date_from."' AND '".$date_to."'";
+                    }
+               }
+
+               $minmoeall = DB::SELECT('SELECT person_id,employee_syncs.employee_id,ivms_temperatures.location,employee_syncs.name,ivms_temperatures.date_in,ivms_temperatures.point,ivms_temperatures.temperature,ivms_temperatures.abnormal_status from ivms_temperatures left join employee_groups on employee_groups.group = ivms_temperatures.person_id left join employee_syncs on employee_groups.employee_id = employee_syncs.employee_id where employee_groups.location = "'.$request->get('location').'" '.$where.' order by date_in desc');
+
+               $response = array(
+                    'status' => true,
+                    'message' => 'Get Data Success',
+                    'datas' => $minmoeall
+               );
+
+               return Response::json($response);
+          } catch (\Exception $e) {
+               $response = array(
+                    'status' => false,
+                    'message' => 'Get Data Failed'
+               );
+
+               return Response::json($response);
+          }
+     }
+
+     public function importMinMoe(Request $request)
+    {
+          try{
+
+            $id_user = Auth::id();
+
+            $file = $request->file('file');
+            $file_name = 'temp_'. MD5(date("YmdHisa")) .'.'.$file->getClientOriginalExtension();
+            $file->move('data_file/temperature/minmoe/', $file_name);
+
+            $excel = 'data_file/temperature/minmoe/' . $file_name;
+            $rows = Excel::load($excel, function($reader) {
+              $reader->noHeading();
+              $reader->skipRows(1);
+
+              $reader->each(function($row) {
+              });
+            })->toObject();
+
+            $person_id = [];
+
+            $data = [];
+
+            for ($i=0; $i < count($rows); $i++) {
+               $exprow = explode(',', $rows[$i][0]);
+
+               $expperid = explode("'", $exprow[0]);
+
+               $points = explode('_', $exprow[5]);
+
+               if ($exprow[8] != '-') {
+                    $temps = explode('°', $exprow[8]);
+               }
+
+               if (in_array($expperid[1], $person_id)) {
+                    
+               }else{
+                    if ($exprow[8] != '-') {
+                         $person_id[] = $expperid[1];
+                         IvmsTemperature::create([
+                              'person_id' => $expperid[1],
+                              'name' => $exprow[1],
+                              'location' => $exprow[2],
+                              'date_in' => $exprow[3],
+                              'point' => $points[0],
+                              'temperature' => $temps[0],
+                              'abnormal_status' => $exprow[9],
+                              'created_by' => $id_user
+                         ]);
+                    }
+               }
+            }
+
+            $response = array(
+              'status' => true,
+              'message' => 'Upload file success',
+            );
+            return Response::json($response);
+
+          }catch(\Exception $e){
+            $response = array(
+              'status' => false,
+              'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+          }
+    }
+
+    public function indexMinMoeMonitoring($location)
+    {
+         if ($location == 'office') {
+               $loc = 'YMPI-OFFICE';
+          }
+          return view('temperature.minmoe_monitoring', array(
+               'loc' => $loc,
+               'location' => $location
+          ))->with('page', 'Temperature');
+    }
+
+    public function fetchMinMoeMonitoring(Request $request)
+    {
+         try {
+               $date_from = $request->get('tanggal_from');
+               // $date_to = $request->get('tanggal_to');
+               $now  = date('Y-m-d');
+
+               if ($date_from != null) {
+                    $now  = $date_from;
+               }
+
+               // if ($date_from == '') {
+               //      if ($date_to == '') {
+               //           $where = "WHERE DATE(a.date_in) BETWEEN CONCAT(DATE_FORMAT(NOW() - INTERVAL 7 DAY,'%Y-%m-%d')) AND DATE(NOW())";
+               //      }else{
+               //           $where = "WHERE DATE(a.date_in) BETWEEN CONCAT(DATE_FORMAT(".$date_to." - INTERVAL 7 DAY,'%Y-%m-%d')) AND '".$date_to."'";
+               //      }
+               // }else{
+               //      if ($date_to == '') {
+               //           $where = "WHERE DATE(a.date_in) BETWEEN '".$date_from."' AND DATE(NOW())";
+               //      }else{
+               //           $where = "WHERE DATE(a.date_in) BETWEEN '".$date_from."' AND '".$date_to."'";
+               //      }
+               // }
+
+               $datatoday = DB::SELECT("SELECT DISTINCT ( a.temperature ),( SELECT count( person_id ) FROM ivms_temperatures WHERE DATE( date_in ) = '".$now."' AND temperature = a.temperature ) AS jumlah 
+                    FROM
+                         `ivms_temperatures` AS a 
+                    WHERE
+                         DATE( a.date_in ) = '".$now."' 
+                    AND 
+                         location = '".$request->get('location')."'
+                    ORDER BY
+                         a.temperature DESC");
+
+               // $dataavgmax = DB::SELECT("SELECT DISTINCT
+               //      (
+               //           date( a.date_in )) AS date,(
+               //      SELECT
+               //           ROUND( AVG( temperature ), 1 ) 
+               //      FROM
+               //           ivms_temperatures 
+               //      WHERE
+               //      DATE( date_in ) = DATE( a.date_in )) AS average,
+               //      (
+               //      SELECT
+               //           ROUND( MAX( temperature ), 1 ) 
+               //      FROM
+               //           ivms_temperatures 
+               //      WHERE
+               //      DATE( date_in ) = DATE( a.date_in )) AS highest 
+               // FROM
+               //      ivms_temperatures AS a 
+               // ".$where."");
+
+               $datacheck = DB::SELECT("SELECT
+                    employee_groups.employee_id,
+                    employee_syncs.name,
+                    employee_groups.group,(
+                    SELECT
+                         ivms_temperatures.person_id 
+                    FROM
+                         ivms_temperatures 
+                    WHERE
+                         DATE( date_in ) = '".$now."' 
+                         AND person_id = employee_groups.GROUP 
+                    ) AS checks 
+               FROM
+                    employee_groups
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+               WHERE
+                    employee_groups.location = '".$request->get('location')."'
+               ORDER BY employee_groups.group");
+
+               $response = array(
+                    'status' => true,
+                    'message' => 'Get Data Success',
+                    'datatoday' => $datatoday,
+                    // 'dataavgmax' => $dataavgmax,
+                    'datacheck' => $datacheck,
+               );
+
+               return Response::json($response);
+          } catch (\Exception $e) {
+               $response = array(
+                    'status' => false,
+                    'message' => 'Get Data Failed'
+               );
+
+               return Response::json($response);
+          }
+    }
+
+    public function fetchDetailMinMoeMonitoring(Request $request)
+    {
+         try {
+               $date_from = $request->get('tanggal_from');
+               $now  = date('Y-m-d');
+
+               if ($date_from != null) {
+                    $now  = $date_from;
+               }
+
+               $temperature = $request->get('temperature');
+
+               // var_dump(str_replace('.', ',', $temperature));
+               // var_dump($now);
+               // var_dump($request->get('location'));
+
+               $detail = DB::SELECT("SELECT
+                    * 
+               FROM
+                    ivms_temperatures 
+                    LEFT JOIN employee_groups ON employee_groups.GROUP = ivms_temperatures.person_id
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+               WHERE
+                    employee_groups.location = '".$request->get('location')."' 
+                    AND DATE( date_in ) = '".$now."' 
+                    AND temperature = ".$temperature."");
+
+
+               $response = array(
+                    'status' => true,
+                    'message' => 'Get Data Success',
+                    'details' => $detail
+               );
+
+               return Response::json($response);
+          } catch (\Exception $e) {
+               $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage()
+               );
+
+               return Response::json($response);
+          }
+    }
 }

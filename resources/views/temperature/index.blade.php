@@ -17,17 +17,16 @@
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
-			<!-- <a href="{{ url("index/press/master_kanagata") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Master Kanagata</a>
-			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Press Machine <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/press/create") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Press Machine Forging</a> -->
+			<a href="{{ url('index/temperature/minmoe','office') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">HikVision MinMoe Office Temperature</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: red;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Display <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/temperature/body_temp_monitoring?tanggal=") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Body Temperature Monitoring</a>
+			<a href="{{ url('index/temperature/body_temp_monitoring?tanggal=') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Visitor Temperature Monitoring</a>
+			<a href="{{ url('index/temperature/minmoe_monitoring','office') }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: red;">Office Temperature Monitoring</a>
 		</div>
 		<div class="col-xs-4" style="text-align: center; color: purple;">
 			<span style="font-size: 30px;"><i class="fa fa-angle-double-down"></i> Report <i class="fa fa-angle-double-down"></i></span>
-			<a href="{{ url("index/temperature/body_temperature_report") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Body Temperature Report</a>
+			<a href="{{ url("index/temperature/body_temperature_report") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: purple;">Visitor Temperature Report</a>
 		</div>
 	</div>
 </section>
