@@ -342,7 +342,7 @@ class TemperatureController extends Controller
 
               $reader->each(function($row) {
               });
-            })->toObject()->groupBy('Person ID');
+            })->toObject();
 
             $person_id = [];
 
@@ -359,21 +359,38 @@ class TemperatureController extends Controller
                     $temps = explode('°', $exprow[8]);
                }
 
+               $datein = date('Y-m-d', strtotime($exprow[3]));
+
+               // var_dump(IvmsTemperature::select(DB::raw('DATE(date_in)'))->first());
+
+               // var_dump($datein);
+
                if (in_array($expperid[1], $person_id)) {
                     
                }else{
                     if ($exprow[8] != '-') {
                          $person_id[] = $expperid[1];
-                         IvmsTemperature::create([
-                              'person_id' => $expperid[1],
-                              'name' => $exprow[1],
-                              'location' => $exprow[2],
-                              'date_in' => $exprow[3],
-                              'point' => $points[0],
-                              'temperature' => $temps[0],
-                              'abnormal_status' => $exprow[9],
-                              'created_by' => $id_user
-                         ]);
+                         $ivms = IvmsTemperature::firstOrNew(['person_id' => $expperid[1], 'date' => $datein]);
+                         $ivms->person_id = $expperid[1];
+                         $ivms->name = $exprow[1];
+                         $ivms->location = $exprow[2];
+                         $ivms->date = $datein;
+                         $ivms->date_in = $exprow[3];
+                         $ivms->point = $points[0];
+                         $ivms->temperature = $temps[0];
+                         $ivms->abnormal_status = $exprow[9];
+                         $ivms->created_by = $id_user;
+                         $ivms->save();
+                         // IvmsTemperature::create([
+                         //      'person_id' => $expperid[1],
+                         //      'name' => $exprow[1],
+                         //      'location' => $exprow[2],
+                         //      'date_in' => $exprow[3],
+                         //      'point' => $points[0],
+                         //      'temperature' => $temps[0],
+                         //      'abnormal_status' => $exprow[9],
+                         //      'created_by' => $id_user
+                         // ]);
                     }
                }
             }
