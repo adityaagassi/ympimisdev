@@ -20,7 +20,7 @@
 <input type="hidden" id="default_language" value="{{ $default_language }}">
 <section class="content" style="padding-top: 0;">
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
-		<p style="position: absolute; color: White; top: 45%; left: 45%;">
+		<p style="position: absolute; color: white; top: 45%; left: 45%;">
 			<span style="font-size: 5vw;"><i class="fa fa-spin fa-circle-o-notch"></i></span>
 		</p>
 	</div>
@@ -80,9 +80,24 @@
 		});
 	}
 
-	function modalImage(id){
+	function modalImage(id, count){
+		var he = $('.content-wrapper').height()*0.45+'px';
+		var image_body = '';
+
 		$('#modalImageBody').html('');
-		$('#modalImageBody').append('<img src="{{ asset('images/pointing_calls') }}/'+id+'.jpg" style="width: 100%;">');
+
+		image_body += '<center>';
+		if(count == 1){
+			image_body += '<img src="{{ asset('images/pointing_calls') }}/'+id+'_jp.jpg" style="width:100%;">';
+		}
+		else{
+			image_body += '<img src="{{ asset('images/pointing_calls') }}/'+id+'_jp.jpg" style="max-height: '+he+'; max-width:100%;">';
+			image_body += '<img src="{{ asset('images/pointing_calls') }}/'+id+'_id.jpg" style="max-height: '+he+'; max-width:100%;">';
+		}
+		image_body += '</center>';
+
+		$('#modalImageBody').append(image_body);
+
 		$('#modalImage').modal('show');
 	}
 
@@ -126,33 +141,35 @@
 
 				var navigation_data = '';
 
-				navigation_data += '<div class="col-xs-12" style="position: absolute; font-size: 1vw; top: 1650px;"><center>';
+				navigation_data += '<div class="col-xs-12" style="position:absolute; font-size: 1vw; left: 0px; top: 1650px;"><center>';
 				navigation_data += '<div class="row">';
 				navigation_data += '<div class="col-xs-12">';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'iso9001_jp\');" class="btn btn-lg btn-success">Target Kualitas FY197<br>197期　品質目標</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'slogan_mutu_jp\');" class="btn btn-lg btn-success">Slogan Mutu<br>品質スローガン</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'susunan_organisasi_jp\');" class="btn btn-lg btn-success">Safety Comitee<br>安全委員会</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'zero_complain_jp\');" class="btn btn-lg btn-success">Zero Complain<br>ゼロ・クレーム</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'iso9001\''+','+'\'2\');" class="btn btn-lg btn-success">Target Kualitas FY197<br>197期　品質目標</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'susunan_organisasi\''+','+'\'1\');" class="btn btn-lg btn-success">Safety Comitee<br>安全委員会</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'zero_complain\''+','+'\'2\');" class="btn btn-lg btn-success">Zero Complain<br>ゼロ・クレーム</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'kecelakaan_kerja\''+','+'\'2\');" class="btn btn-lg btn-success">Kecelakaan Kerja<br>労働災害発生時の連絡系統</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'kecelakaan_lalulintas\''+','+'\'2\');" class="btn btn-lg btn-success">Kecelakaan Lalu Lintas<br>交通災害発生時の連絡系統</a>';
 				navigation_data += '</div>';
 
 				navigation_data += '<div class="col-xs-12">';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'alur_pasca_kecelakaan_jp\');" class="btn btn-lg btn-success">Alur Pelaporan Pasca Kecelakaan<br>交通事故の報告のフロー</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_alarm_kebakaran_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Alarm Kebakaran<br>火災警報が鳴った場合のガイドライン</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_keadaan_emergency_jp\');" class="btn btn-lg btn-success">Panduan Kondisi Darurat<br>火災発生のガイドライン</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'alur_pasca_kecelakaan\''+','+'\'1\');" class="btn btn-lg btn-success">Alur Pelaporan Pasca Kecelakaan<br>交通事故の報告のフロー</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_alarm_kebakaran\''+','+'\'2\');" class="btn btn-lg btn-success">Panduan Kondisi Alarm Kebakaran<br>火災警報が鳴った場合のガイドライン</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'petunjuk_keadaan_emergency\''+','+'\'2\');" class="btn btn-lg btn-success">Panduan Kondisi Darurat<br>火災発生のガイドライン</a>';
 				navigation_data += '</div>';
 
 				navigation_data += '<div class="col-xs-12">';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'diamond_jp\');" class="btn btn-lg btn-warning">Yamaha Diamond<br>ヤマハ・ダイヤモンド</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'k3_jp\');" class="btn btn-lg btn-warning">Aturan K3 Yamaha<br>ヤマハ安全衛生心得</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'6_pasal_jp\');" class="btn btn-lg btn-warning">6 Pasal<br>ヤマハ交通安全６々条</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 24%;" href="javascript:void(0)" onclick="modalImage(\'budaya_jp\');" class="btn btn-lg btn-warning">Budaya Kerja<br>YMPI取組姿勢</a>';				
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'diamond\''+','+'\'2\');" class="btn btn-lg btn-warning">Yamaha Diamond<br>ヤマハ・ダイヤモンド</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'k3\''+','+'\'1\');" class="btn btn-lg btn-warning">Aturan K3 Yamaha<br>ヤマハ安全衛生心得</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'6_pasal\''+','+'\'1\');" class="btn btn-lg btn-warning">6 Pasal<br>ヤマハ交通安全６々条</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'budaya\''+','+'\'2\');" class="btn btn-lg btn-warning">Budaya Kerja<br>YMPI取組姿勢</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 19%;" href="javascript:void(0)" onclick="modalImage(\'slogan_mutu\''+','+'\'2\');" class="btn btn-lg btn-warning">Slogan Mutu<br>品質スローガン</a>';				
 				navigation_data += '</div>';
 
 				
 				navigation_data += '<div class="col-xs-12">';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'10_komitmen_jp\');" class="btn btn-lg btn-warning">10 Komitmen<br>交通安全のための１０の掟</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'janji_jp\');" class="btn btn-lg btn-warning">Janji Tindakan Dasar<br>ホテルコンセプト達成ための基本行動の約束</a>';
-				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'komitmen_jp\');" class="btn btn-lg btn-warning">Komitmen Hotel Konsep<br>YMPI従業員　ホテルコンセプトへの誓い</a>';	
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'10_komitmen\''+','+'\'1\');" class="btn btn-lg btn-warning">10 Komitmen<br>交通安全のための１０の掟</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'janji\''+','+'\'1\');" class="btn btn-lg btn-warning">Janji Tindakan Dasar<br>ホテルコンセプト達成ための基本行動の約束</a>';
+				navigation_data += '<a style="margin: 5px; padding: 0 10px 0 10px; width: 32.25%;" href="javascript:void(0)" onclick="modalImage(\'komitmen\''+','+'\'1\');" class="btn btn-lg btn-warning">Komitmen Hotel Konsep<br>YMPI従業員　ホテルコンセプトへの誓い</a>';	
 				navigation_data += '</div>';
 				navigation_data += '</div>';
 				navigation_data += '</center></div>';
@@ -677,6 +694,7 @@ $(function() {
 		}
 	});
 });
+
 }
 else{
 	$('#loading').show();
