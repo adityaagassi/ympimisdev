@@ -595,6 +595,16 @@ class KnockDownController extends Controller{
 			'created_by' => $id,
 		]);
 
+		$shipment_sch = ShipmentSchedule::where('id', $knock_down_detail->shipment_schedule_id)->first();
+		$shipment_sch->actual_quantity = $shipment_sch->actual_quantity - $knock_down_detail->quantity;
+
+		$inventory = Inventory::where('plant','=','8190')
+		->where('material_number','=',$knock_down_detail->material_number)
+		->where('storage_location','=',$knock_down_detail->storage_location)
+		->first();
+
+		$inventory->quantity = $inventory->quantity - $knock_down_detail->quantity;
+
 		try{
 			if($knock_down->actual_count-1 == 0){
 				$knock_down->forceDelete();
@@ -604,9 +614,11 @@ class KnockDownController extends Controller{
 				$knock_down->save(); 
 			}
 
-			DB::transaction(function() use ($knock_down_detail, $transaction_completion){
+			DB::transaction(function() use ($knock_down_detail, $transaction_completion, $shipment_sch, $inventory){
 				$knock_down_detail->forceDelete();
 				$transaction_completion->save();
+				$shipment_sch->save();
+				$inventory->save();
 			});	
 		}
 		catch(\Exception $e){
