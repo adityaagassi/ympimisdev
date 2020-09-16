@@ -130,7 +130,7 @@ hr { background-color: red; height: 1px; border: 0; }
             <div class="input-group-addon bg-green" style="border: none;">
               <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" class="form-control datepicker" id="datefrom" placeholder="Select Date From">
+            <input type="text" class="form-control datepicker" id="datefrom" placeholder="Bulan Dari" onchange="drawChart()">
           </div>
         </div>
         <div class="col-xs-2">
@@ -138,7 +138,7 @@ hr { background-color: red; height: 1px; border: 0; }
             <div class="input-group-addon bg-green" style="border: none;">
               <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To">
+            <input type="text" class="form-control datepicker" id="dateto" placeholder="Bulan Ke" onchange="drawChart()">
           </div>
         </div>
         @if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC-SPL")
@@ -202,12 +202,12 @@ hr { background-color: red; height: 1px; border: 0; }
               <table id="tableResult" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
-                    <th>Budget</th>
-                    <th>Budget Month</th>
-                    <th>Category Number</th>
-                    <th>No Item</th>
-                    <th>Status</th>
-                    <th>Amount</th>
+                    <th width="10%">Budget</th>
+                    <th width="10%">Budget Month</th>
+                    <th width="30%">Category Number</th>
+                    <th width="30%">Detail Item</th>
+                    <th width="10%">Status</th>
+                    <th width="10%">Amount</th>
                   </tr>
                 </thead>
                 <tbody id="tableBodyResult">
@@ -274,12 +274,14 @@ hr { background-color: red; height: 1px; border: 0; }
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
   $('.datepicker').datepicker({
+    format: "yyyy-mm",
+    startView: "months", 
+    minViewMode: "months",
     autoclose: true,
-    format: "dd-mm-yyyy",
-    todayHighlight: true,
   });
 
   function drawChart() {
+    fetchTable();
     
     var tglfrom = $('#tglfrom').val();
     var tglto = $('#tglto').val();
@@ -454,7 +456,7 @@ hr { background-color: red; height: 1px; border: 0; }
               table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'Investment\')">$ '+value.Investment+'</td>';
               table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'PO\')">$ '+value.PO+'</td>';
               table += '<td style="border-left:3px solid #000;cursor:pointer">$ 0</td>';
-              table += '<td style="border-left:3px solid #000;cursor:pointer">$ 0</td>';
+              table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'Actual\')">$ '+value.Actual+'</td>';
               table += '<td style="border-left:3px solid #000;">$ '+ending.toFixed(2)+'</td>';
               table += '</tr>';
           })
@@ -584,11 +586,20 @@ hr { background-color: red; height: 1px; border: 0; }
 
           else if(value.status == "PO"){
             tableData += '<td>'+ value.budget_month_po +'</td>';
-            tableData += '<td>'+ value.po_number +'</td>';
+            tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
             tableData += '<td>'+ value.no_item +'</td>';
             tableData += '<td>'+ value.status+ '</td>';
             tableData += '<td>$ '+ value.amount_po +'</td>';
             total += parseFloat(value.amount_po);
+          }
+
+          else if(value.status == "Actual"){
+            tableData += '<td>'+ value.budget_month_receive +'</td>';
+            tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
+            tableData += '<td>'+ value.no_item +'</td>';
+            tableData += '<td>'+ value.status+ '</td>';
+            tableData += '<td>$ '+ value.amount_receive +'</td>';
+            total += parseFloat(value.amount_receive);
           }
 
           tableData += '</tr>';

@@ -5543,812 +5543,900 @@ public function update_purchase_requisition_po(Request $request)
 
         Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
 
-    } else if($investment->posisi == "user"){
+        } else if($investment->posisi == "user"){
 
-        $investment->reply = $request->get('answer');
-        $pos = explode("/", $investment->comment);
-        $investment->posisi = $pos[0];
+            $investment->reply = $request->get('answer');
+            $pos = explode("/", $investment->comment);
+            $investment->posisi = $pos[0];
 
-        $investment->save();
+            $investment->save();
 
-            //kirim email ke Penanya
-        $mails = "select distinct email from users where users.username = '".$pos[1]."'";
-        $mailtoo = DB::select($mails);
+                //kirim email ke Penanya
+            $mails = "select distinct email from users where users.username = '".$pos[1]."'";
+            $mailtoo = DB::select($mails);
 
 
-        $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
-        $tolak = db::select($isimail);
+            $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
+            $tolak = db::select($isimail);
 
-        Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
+            Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
 
-        $investment->status = 'approval';
-        $investment->save();
+            $investment->status = 'approval';
+            $investment->save();
+        }
+
+        return redirect('/investment/comment_msg/'.$id)->with('success', 'Investment Approved')->with('page', 'Investment');
     }
-
-    return redirect('/investment/comment_msg/'.$id)->with('success', 'Investment Approved')->with('page', 'Investment');
-}
 
     //Reject Investment
 
-public function investment_reject(Request $request, $id)
-{
-    $invest = AccInvestment::find($id);
-
-    if ($invest->posisi == "manager")
+    public function investment_reject(Request $request, $id)
     {
-        $invest->posisi = "user";         
-        $invest->reject = "manager/".date('Y-m-d H:i:s');
+        $invest = AccInvestment::find($id);
+
+        if ($invest->posisi == "manager")
+        {
+            $invest->posisi = "user";         
+            $invest->reject = "manager/".date('Y-m-d H:i:s');
+        }
+        else if($invest->posisi == "dgm"){
+            $invest->posisi = "user";         
+            $invest->reject = "dgm/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $invest->approval_manager);
+            if(count($manager) > 1){
+                $invest->approval_manager = $manager[0]."/".$manager[1];
+            }
+        }
+        else if($invest->posisi == "gm"){
+            $invest->posisi = "user";         
+            $invest->reject = "gm/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $invest->approval_manager);
+            $dgm = explode("/", $invest->approval_dgm);
+
+            if(count($manager) > 1){
+                $invest->approval_manager = $manager[0]."/".$manager[1];
+            }
+            if(count($dgm) > 1){
+                $invest->approval_dgm = $dgm[0]."/".$dgm[1];
+            } 
+        }
+        else if($invest->posisi == "manager_acc"){
+            $invest->posisi = "user";         
+            $invest->reject = "manager_acc/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $invest->approval_manager);
+            $dgm = explode("/", $invest->approval_dgm);
+            $gm = explode("/", $invest->approval_gm);
+
+            if(count($manager) > 1){
+                $invest->approval_manager = $manager[0]."/".$manager[1];
+            }
+            if(count($dgm) > 1){
+                $invest->approval_dgm = $dgm[0]."/".$dgm[1];
+            }
+            if(count($gm) > 1){
+                $invest->approval_gm = $gm[0]."/".$gm[1];
+            } 
+        }
+        else if($invest->posisi == "direktur_acc"){
+            $invest->posisi = "user";         
+            $invest->reject = "direktur_acc/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $invest->approval_manager);
+            $dgm = explode("/", $invest->approval_dgm);
+            $gm = explode("/", $invest->approval_gm);
+            $manager_acc = explode("/", $invest->approval_manager_acc);
+
+            if(count($manager) > 1){
+                $invest->approval_manager = $manager[0]."/".$manager[1];
+            }
+            if(count($dgm) > 1){
+                $invest->approval_dgm = $dgm[0]."/".$dgm[1];
+            }
+            if(count($gm) > 1){
+                $invest->approval_gm = $gm[0]."/".$gm[1];
+            } 
+            if(count($manager_acc) > 1){
+                $invest->approval_manager_acc = $manager_acc[0]."/".$manager_acc[1];
+            } 
+        }
+        else if($invest->posisi == "presdir"){
+            $invest->posisi = "user";         
+            $invest->reject = "presdir/".date('Y-m-d H:i:s');
+
+            $manager = explode("/", $invest->approval_manager);
+            $dgm = explode("/", $invest->approval_dgm);
+            $gm = explode("/", $invest->approval_gm);
+            $manager_acc = explode("/", $invest->approval_manager_acc);
+            $dir_acc = explode("/", $invest->approval_dir_acc);
+
+            if(count($manager) > 1){
+                $invest->approval_manager = $manager[0]."/".$manager[1];
+            }
+            if(count($dgm) > 1){
+                $invest->approval_dgm = $dgm[0]."/".$dgm[1];
+            }
+            if(count($gm) > 1){
+                $invest->approval_gm = $gm[0]."/".$gm[1];
+            } 
+            if(count($manager_acc) > 1){
+                $invest->approval_manager_acc = $manager_acc[0]."/".$manager_acc[1];
+            } 
+            if(count($dir_acc) > 1){
+                $invest->approval_dir_acc = $dir_acc[0]."/".$dir_acc[1];
+            } 
+        }
+
+        $invest->save();
+
+        $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+        $tolak = db::select($isimail);
+
+            //kirim email ke Buyer
+        $mails = "select distinct email from users where users.username = '".$invest->applicant_id."'";
+        $mailtoo = DB::select($mails);
+
+        Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
+
+        $message = 'Investment '.$invest->reff_number;
+        $message2 ='Rejected';
+
+        return view('accounting_purchasing.verifikasi.pr_message', array(
+            'head' => $invest->reff_number,
+            'message' => $message,
+            'message2' => $message2,
+        ))->with('page', 'Approval');
     }
-    else if($invest->posisi == "dgm"){
-        $invest->posisi = "user";         
-        $invest->reject = "dgm/".date('Y-m-d H:i:s');
 
-        $manager = explode("/", $invest->approval_manager);
-        if(count($manager) > 1){
-            $invest->approval_manager = $manager[0]."/".$manager[1];
-        }
+
+
+        //reject_acc
+
+    public function investment_reject_acc(Request $request,$id)
+    {
+      $reject_note = $request->get('alasan');
+
+      $investment = AccInvestment::find($id);
+      $investment->reject_note = $reject_note;
+
+      if ($investment->posisi == "acc_budget") {
+        $investment->posisi = "user";
+        $investment->reject = "acc_budget/".date('Y-m-d H:i:s');
     }
-    else if($invest->posisi == "gm"){
-        $invest->posisi = "user";         
-        $invest->reject = "gm/".date('Y-m-d H:i:s');
-
-        $manager = explode("/", $invest->approval_manager);
-        $dgm = explode("/", $invest->approval_dgm);
-
-        if(count($manager) > 1){
-            $invest->approval_manager = $manager[0]."/".$manager[1];
-        }
-        if(count($dgm) > 1){
-            $invest->approval_dgm = $dgm[0]."/".$dgm[1];
-        } 
-    }
-    else if($invest->posisi == "manager_acc"){
-        $invest->posisi = "user";         
-        $invest->reject = "manager_acc/".date('Y-m-d H:i:s');
-
-        $manager = explode("/", $invest->approval_manager);
-        $dgm = explode("/", $invest->approval_dgm);
-        $gm = explode("/", $invest->approval_gm);
-
-        if(count($manager) > 1){
-            $invest->approval_manager = $manager[0]."/".$manager[1];
-        }
-        if(count($dgm) > 1){
-            $invest->approval_dgm = $dgm[0]."/".$dgm[1];
-        }
-        if(count($gm) > 1){
-            $invest->approval_gm = $gm[0]."/".$gm[1];
-        } 
-    }
-    else if($invest->posisi == "direktur_acc"){
-        $invest->posisi = "user";         
-        $invest->reject = "direktur_acc/".date('Y-m-d H:i:s');
-
-        $manager = explode("/", $invest->approval_manager);
-        $dgm = explode("/", $invest->approval_dgm);
-        $gm = explode("/", $invest->approval_gm);
-        $manager_acc = explode("/", $invest->approval_manager_acc);
-
-        if(count($manager) > 1){
-            $invest->approval_manager = $manager[0]."/".$manager[1];
-        }
-        if(count($dgm) > 1){
-            $invest->approval_dgm = $dgm[0]."/".$dgm[1];
-        }
-        if(count($gm) > 1){
-            $invest->approval_gm = $gm[0]."/".$gm[1];
-        } 
-        if(count($manager_acc) > 1){
-            $invest->approval_manager_acc = $manager_acc[0]."/".$manager_acc[1];
-        } 
-    }
-    else if($invest->posisi == "presdir"){
-        $invest->posisi = "user";         
-        $invest->reject = "presdir/".date('Y-m-d H:i:s');
-
-        $manager = explode("/", $invest->approval_manager);
-        $dgm = explode("/", $invest->approval_dgm);
-        $gm = explode("/", $invest->approval_gm);
-        $manager_acc = explode("/", $invest->approval_manager_acc);
-        $dir_acc = explode("/", $invest->approval_dir_acc);
-
-        if(count($manager) > 1){
-            $invest->approval_manager = $manager[0]."/".$manager[1];
-        }
-        if(count($dgm) > 1){
-            $invest->approval_dgm = $dgm[0]."/".$dgm[1];
-        }
-        if(count($gm) > 1){
-            $invest->approval_gm = $gm[0]."/".$gm[1];
-        } 
-        if(count($manager_acc) > 1){
-            $invest->approval_manager_acc = $manager_acc[0]."/".$manager_acc[1];
-        } 
-        if(count($dir_acc) > 1){
-            $invest->approval_dir_acc = $dir_acc[0]."/".$dir_acc[1];
-        } 
+    else if($investment->posisi == "acc_pajak"){
+        $investment->posisi = "user";
+        $investment->reject = "acc_pajak/".date('Y-m-d H:i:s');
     }
 
-    $invest->save();
+    $investment->save();
 
-    $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
+    $isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
     $tolak = db::select($isimail);
 
-        //kirim email ke Buyer
-    $mails = "select distinct email from users where users.username = '".$invest->applicant_id."'";
+              //kirim email ke Buyer
+    $mails = "select distinct email from users where users.username = '".$investment->applicant_id."'";
     $mailtoo = DB::select($mails);
 
     Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
-
-    $message = 'Investment '.$invest->reff_number;
-    $message2 ='Rejected';
-
-    return view('accounting_purchasing.verifikasi.pr_message', array(
-        'head' => $invest->reff_number,
-        'message' => $message,
-        'message2' => $message2,
-    ))->with('page', 'Approval');
-}
-
-
-
-    //reject_acc
-
-public function investment_reject_acc(Request $request,$id)
-{
-  $reject_note = $request->get('alasan');
-
-  $investment = AccInvestment::find($id);
-  $investment->reject_note = $reject_note;
-
-  if ($investment->posisi == "acc_budget") {
-    $investment->posisi = "user";
-    $investment->reject = "acc_budget/".date('Y-m-d H:i:s');
-}
-else if($investment->posisi == "acc_pajak"){
-    $investment->posisi = "user";
-    $investment->reject = "acc_pajak/".date('Y-m-d H:i:s');
-}
-
-$investment->save();
-
-$isimail = "select * FROM acc_investments where acc_investments.id = ".$id;
-$tolak = db::select($isimail);
-
-          //kirim email ke Buyer
-$mails = "select distinct email from users where users.username = '".$investment->applicant_id."'";
-$mailtoo = DB::select($mails);
-
-Mail::to($mailtoo)->send(new SendEmail($tolak, 'investment'));
-return redirect('/investment/check/'.$id)->with('error', 'Investment Not Approved')->with('page', 'Investment');
-}
-
-
-
-    //ADAGIO
-
-
-public function post_adagio(Request $request)
-{
-    try
-    {
-        $id_user = Auth::id();
-
-        $files = array();
-        $file = new AccInvestment();
-        if ($request->file('file') != NULL)
-        {
-            $file = $request->file('file');
-            $nama = $file->getClientOriginalName();
-            $file->move('files/investment/adagio', $nama);
-        }
-        else
-        {
-            $nama = NULL;
-        }
-
-        $inv = AccInvestment::where('id', $request->get('id_edit'))
-        ->update(['bukti_adagio' => $nama, 'status' => 'completed' ,'created_by' => $id_user]);
-
-
-        return redirect('/investment')->with('status', 'Bukti Approval Adagio Berhasil Diunggah')
-        ->with('page', 'Form Investment');
-
-
+    return redirect('/investment/check/'.$id)->with('error', 'Investment Not Approved')->with('page', 'Investment');
     }
-    catch(QueryException $e)
+
+
+
+        //ADAGIO
+
+
+    public function post_adagio(Request $request)
     {
-        return redirect('/investment')->with('error', 'Investment Gagal Dibuat')
-        ->with('page', 'Form Investment');
-    }
-}
-
-
-    //==================================//
-    //     Purchase Order Investment    //
-    //==================================//
-public function purchase_order_investment()
-{
-    $title = 'Purchase Order Investment';
-    $title_jp = '投資申請に対する発注依頼';
-
-    $emp = EmployeeSync::where('employee_id', Auth::user()->username)
-    ->select('employee_id', 'name', 'position', 'department', 'section', 'group')
-    ->first();
-
-    $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
-    ->distinct()
-    ->get();
-
-    $authorized2 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Manager')
-    ->where('department', '=', 'Procurement')
-    ->first();
-
-    $authorized3 = EmployeeSync::select('employee_id', 'name')
-    ->where('position', '=', 'Deputy General Manager')
-    ->first();
-
-    $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
-    ->Orwhere('position', '=', 'General Manager')
-    ->get();
-
-    return view('accounting_purchasing.purchase_order_investment', array(
-        'title' => $title,
-        'title_jp' => $title_jp,
-        'employee' => $emp,
-        'vendor' => $vendor,
-        'delivery' => $this->delivery,
-        'transportation' => $this->transportation,
-        'authorized2' => $authorized2,
-        'authorized3' => $authorized3,
-        'authorized4' => $authorized4,
-        'uom' => $this->uom
-    ))
-    ->with('page', 'Purchase Order Investment')
-    ->with('head', 'Purchase Order Investment');
-}
-
-public function fetch_po_outstanding_investment(Request $request)
-{
-    $qry = "SELECT DISTINCT acc_investments.* FROM `acc_investments` join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number where acc_investment_details.sudah_po is null and acc_investments.deleted_at is null and acc_investments.posisi = 'finished'";
-    $invest = DB::select($qry);
-
-    return DataTables::of($invest)
-
-    ->editColumn('submission_date', function ($invest)
-    {
-        return date('d F Y', strtotime($invest->submission_date));
-    })
-
-    ->editColumn('file', function ($invest)
-    {
-        $data = json_decode($invest->file);
-        $fl = "";
-        if ($invest->file != null)
+        try
         {
-            for ($i = 0;$i < count($data);$i++)
+            $id_user = Auth::id();
+
+            $files = array();
+            $file = new AccInvestment();
+            if ($request->file('file') != NULL)
             {
-                $fl .= '<a href="files/investment/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+                $file = $request->file('file');
+                $nama = $file->getClientOriginalName();
+                $file->move('files/investment/adagio', $nama);
             }
+            else
+            {
+                $nama = NULL;
+            }
+
+            $inv = AccInvestment::where('id', $request->get('id_edit'))
+            ->update(['bukti_adagio' => $nama, 'status' => 'completed' ,'created_by' => $id_user]);
+
+
+            return redirect('/investment')->with('status', 'Bukti Approval Adagio Berhasil Diunggah')
+            ->with('page', 'Form Investment');
+
+
         }
-        else
+        catch(QueryException $e)
         {
-            $fl = '-';
+            return redirect('/investment')->with('error', 'Investment Gagal Dibuat')
+            ->with('page', 'Form Investment');
         }
-        return $fl;
-    })
-
-    ->addColumn('action', function ($invest)
-    {
-        $id = $invest->id;
-
-        return '
-        <a href="javascript:void(0)" class="btn btn-xs btn-warning" onClick="editInvestment('.$id.')" data-toggle="tooltip" title="Edit Investment"><i class="fa fa-edit"></i> Edit</a>
-        <a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
-        <a href="javascript:void(0)" class="btn btn-xs  btn-primary" onClick="detailInvestment(' . $id . ')" style="margin-right:5px;" data-toggle="tooltip" title="Detail Investment"><i class="fa fa-eye"></i> Detail Item</a>
-        ';
-    })
-
-    ->rawColumns(['file' => 'file', 'action' => 'action'])
-    ->make(true);
-}
-
-public function fetch_investment_detail(Request $request)
-{
-    $investment = AccInvestment::find($request->get('id'));
-    $investment_item = AccInvestment::join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')->where('acc_investments.id', '=', $request->get('id'))
-    ->get();
-
-    $response = array(
-        'status' => true,
-        'investment' => $investment,
-        'investment_item' => $investment_item
-    );
-    return Response::json($response);
-}
-
-public function fetchInvList(Request $request)
-{
-    $inv = AccInvestment::select('acc_investments.reff_number')->join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')
-    ->whereNull('sudah_po')
-    ->where('acc_investments.posisi','=','finished')
-    ->distinct()
-    ->get();
-
-    $response = array(
-        'status' => true,
-        'investment' => $inv
-    );
-
-    return Response::json($response);
-}
-
-public function pilihInvestment(Request $request)
-{
-    $html = array();
-    $list_item = AccInvestmentDetail::where('reff_number', $request->reff_number)
-    ->whereNull('sudah_po')
-    ->get();
-
-    $lists = "<option value=''>-- Pilih Item --</option>";
-    foreach ($list_item as $item)
-    {
-        $lists .= "<option value='".$item->no_item."'>".$item->no_item." - ".$item->detail."</option>"; 
-
-    }
-    return json_encode($lists);
-}
-
-    //==================================//
-    //        Budget Information        //
-    //==================================//
-
-public function budget_info()
-{
-    $title = 'Budget Information';
-    $title_jp = '予算情報';
-
-    $status = AccBudget::select('*')->whereNull('acc_budgets.deleted_at')
-    ->distinct()
-    ->get();
-
-    return view('accounting_purchasing.master.budget_info', array(
-        'title' => $title,
-        'title_jp' => $title_jp,
-    ))->with('page', 'Budget Information')
-    ->with('head', 'Budget Information');
-}
-
-public function fetch_budget_info(Request $request)
-{
-
-        //Get Employee Department
-    $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-    ->select('department')
-    ->first();
-
-    $budget = AccBudget::orderBy('acc_budgets.budget_no', 'asc');
-
-    if ($request->get('periode') != null)
-    {
-        $budget = $budget->whereIn('acc_budgets.periode', $request->get('periode'));
     }
 
-    if ($request->get('category') != null)
+
+        //==================================//
+        //     Purchase Order Investment    //
+        //==================================//
+    public function purchase_order_investment()
     {
-        $budget = $budget->whereIn('acc_budgets.category', $request->get('category'));
+        $title = 'Purchase Order Investment';
+        $title_jp = '投資申請に対する発注依頼';
+
+        $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+        ->select('employee_id', 'name', 'position', 'department', 'section', 'group')
+        ->first();
+
+        $vendor = AccSupplier::select('acc_suppliers.*')->whereNull('acc_suppliers.deleted_at')
+        ->distinct()
+        ->get();
+
+        $authorized2 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Manager')
+        ->where('department', '=', 'Procurement')
+        ->first();
+
+        $authorized3 = EmployeeSync::select('employee_id', 'name')
+        ->where('position', '=', 'Deputy General Manager')
+        ->first();
+
+        $authorized4 = EmployeeSync::select('employee_id', 'name')->where('position', '=', 'Director')
+        ->Orwhere('position', '=', 'General Manager')
+        ->get();
+
+        return view('accounting_purchasing.purchase_order_investment', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'employee' => $emp,
+            'vendor' => $vendor,
+            'delivery' => $this->delivery,
+            'transportation' => $this->transportation,
+            'authorized2' => $authorized2,
+            'authorized3' => $authorized3,
+            'authorized4' => $authorized4,
+            'uom' => $this->uom
+        ))
+        ->with('page', 'Purchase Order Investment')
+        ->with('head', 'Purchase Order Investment');
     }
 
-    if (Auth::user()->role_code == "MIS" || $emp_dept->department == "Accounting" || $emp_dept->department == "Procurement" || $emp_dept->department == "Purchasing Control") {
-
-    }
-    else if ($emp_dept->department == "General Affairs"){
-        $budget = $budget->where('department','=','Human Resources');
-    }
-    else {
-        $budget = $budget->where('department','=',$emp_dept->department);
-    }
-
-    $budget = $budget->select('*')->get();
-
-    return DataTables::of($budget)
-
-    ->editColumn('amount', function ($budget)
+    public function fetch_po_outstanding_investment(Request $request)
     {
-        return '$'.$budget->amount;
-    })
+        $qry = "SELECT DISTINCT acc_investments.* FROM `acc_investments` join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number where acc_investment_details.sudah_po is null and acc_investments.deleted_at is null and acc_investments.posisi = 'finished'";
+        $invest = DB::select($qry);
 
-    ->addColumn('action', function ($budget)
+        return DataTables::of($invest)
+
+        ->editColumn('submission_date', function ($invest)
+        {
+            return date('d F Y', strtotime($invest->submission_date));
+        })
+
+        ->editColumn('file', function ($invest)
+        {
+            $data = json_decode($invest->file);
+            $fl = "";
+            if ($invest->file != null)
+            {
+                for ($i = 0;$i < count($data);$i++)
+                {
+                    $fl .= '<a href="files/investment/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+                }
+            }
+            else
+            {
+                $fl = '-';
+            }
+            return $fl;
+        })
+
+        ->addColumn('action', function ($invest)
+        {
+            $id = $invest->id;
+
+            return '
+            <a href="javascript:void(0)" class="btn btn-xs btn-warning" onClick="editInvestment('.$id.')" data-toggle="tooltip" title="Edit Investment"><i class="fa fa-edit"></i> Edit</a>
+            <a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+            <a href="javascript:void(0)" class="btn btn-xs  btn-primary" onClick="detailInvestment(' . $id . ')" style="margin-right:5px;" data-toggle="tooltip" title="Detail Investment"><i class="fa fa-eye"></i> Detail Item</a>
+            ';
+        })
+
+        ->rawColumns(['file' => 'file', 'action' => 'action'])
+        ->make(true);
+    }
+
+    public function fetch_investment_detail(Request $request)
     {
-        $id = $budget->id;
+        $investment = AccInvestment::find($request->get('id'));
+        $investment_item = AccInvestment::join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')->where('acc_investments.id', '=', $request->get('id'))
+        ->get();
 
-        return ' 
-        <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$id.')"><i class="fa fa-eye"></i> Detail</button>
-        ';
-    })
-
-    ->rawColumns(['action' => 'action'])
-    ->make(true);
-}
-
-public function budget_detail(Request $request)
-{
-    $detail = AccBudget::find($request->get('id'));
-
-    $response = array(
-        'status' => true,
-        'datas' => $detail,
-    );
-
-    return Response::json($response);
-}
-
-public function import_budget(Request $request){
-    if($request->hasFile('upload_file')) {
-        try{                
-            $file = $request->file('upload_file');
-            $file_name = 'budget'.'('. date("ymd_h.i") .')'.'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('uploads/budget/'), $file_name);
-            $excel = public_path('uploads/budget/') . $file_name;
-
-            $rows = Excel::load($excel, function($reader) {
-                $reader->noHeading();
-                    //Skip Header
-                $reader->skipRows(1);
-            })->get();
-
-            $rows = $rows->toArray();
-
-            for ($i=0; $i < count($rows); $i++) {
-                $periode = $rows[$i][0];
-                $budget_no = $rows[$i][1];
-                $department = $rows[$i][2];
-                $description = $rows[$i][3];
-                $amount = $rows[$i][4];
-                $env = $rows[$i][5];
-                $purpose = $rows[$i][6];
-                $pic = $rows[$i][7];
-                $account = $rows[$i][8];
-                $category = $rows[$i][9];
-                $apr_awal = $rows[$i][10];
-                $may_awal = $rows[$i][11];
-                $jun_awal = $rows[$i][12];
-                $jul_awal = $rows[$i][13];
-                $aug_awal = $rows[$i][14];
-                $sep_awal = $rows[$i][15];
-                $oct_awal = $rows[$i][16];
-                $nov_awal = $rows[$i][17];
-                $dec_awal = $rows[$i][18];
-                $jan_awal = $rows[$i][19];
-                $feb_awal = $rows[$i][20];
-                $mar_awal = $rows[$i][21];
-                $adj_frc = $rows[$i][22];
-                $apr_adj = $rows[$i][23];
-                $may_adj = $rows[$i][24];
-                $jun_adj = $rows[$i][25];
-                $jul_adj = $rows[$i][26];
-                $aug_adj = $rows[$i][27];
-                $sep_adj = $rows[$i][28];
-                $oct_adj = $rows[$i][29];
-                $nov_adj = $rows[$i][30];
-                $dec_adj = $rows[$i][31];
-                $jan_adj = $rows[$i][32];
-                $feb_adj = $rows[$i][33];
-                $mar_adj = $rows[$i][34];
-                $apr_sisa = $rows[$i][35];
-                $may_sisa = $rows[$i][36];
-                $jun_sisa = $rows[$i][37];
-                $jul_sisa = $rows[$i][38];
-                $aug_sisa = $rows[$i][39];
-                $sep_sisa = $rows[$i][40];
-                $oct_sisa = $rows[$i][41];
-                $nov_sisa = $rows[$i][42];
-                $dec_sisa = $rows[$i][43];
-                $jan_sisa = $rows[$i][44];
-                $feb_sisa = $rows[$i][45];
-                $mar_sisa = $rows[$i][46];
-
-                $data2 = AccBudget::firstOrNew(['periode' => $periode, 'budget_no' => $budget_no]);
-                $data2->department = $department;
-                $data2->description = $description;
-                $data2->amount = $amount;
-                $data2->env = $env;
-                $data2->purpose = $purpose;
-                $data2->pic = $pic;
-                $data2->account_name = $account;
-                $data2->category = $category;
-                $data2->apr_budget_awal = $apr_awal;
-                $data2->may_budget_awal = $may_awal;
-                $data2->jun_budget_awal = $jun_awal;
-                $data2->jul_budget_awal = $jul_awal;
-                $data2->aug_budget_awal = $aug_awal;
-                $data2->sep_budget_awal = $sep_awal;
-                $data2->oct_budget_awal = $oct_awal;
-                $data2->nov_budget_awal = $nov_awal;
-                $data2->dec_budget_awal = $dec_awal;
-                $data2->jan_budget_awal = $jan_awal;
-                $data2->feb_budget_awal = $feb_awal;
-                $data2->mar_budget_awal = $mar_awal;
-                $data2->adj_frc = $adj_frc;
-                $data2->apr_after_adj = $apr_adj;
-                $data2->may_after_adj = $may_adj;
-                $data2->jun_after_adj = $jun_adj;
-                $data2->jul_after_adj = $jul_adj;
-                $data2->aug_after_adj = $aug_adj;
-                $data2->sep_after_adj = $sep_adj;
-                $data2->oct_after_adj = $oct_adj;
-                $data2->nov_after_adj = $nov_adj;
-                $data2->dec_after_adj = $dec_adj;
-                $data2->jan_after_adj = $jan_adj;
-                $data2->feb_after_adj = $feb_adj;
-                $data2->mar_after_adj = $mar_adj;
-                $data2->apr_sisa_budget = $apr_sisa;
-                $data2->may_sisa_budget = $may_sisa;
-                $data2->jun_sisa_budget = $jun_sisa;
-                $data2->jul_sisa_budget = $jul_sisa;
-                $data2->aug_sisa_budget = $aug_sisa;
-                $data2->sep_sisa_budget = $sep_sisa;
-                $data2->oct_sisa_budget = $oct_sisa;
-                $data2->nov_sisa_budget = $nov_sisa;
-                $data2->dec_sisa_budget = $dec_sisa;
-                $data2->jan_sisa_budget = $jan_sisa;
-                $data2->feb_sisa_budget = $feb_sisa;
-                $data2->mar_sisa_budget = $mar_sisa;
-                $data2->created_by = Auth::id();
-                $data2->save();
-            }       
-
-            $response = array(
-                'status' => true,
-                'message' => 'Upload file success',
-            );
-            return Response::json($response);
-
-        }catch(\Exception $e){
-            $response = array(
-                'status' => false,
-                'message' => $e->getMessage(),
-            );
-            return Response::json($response);
-        }
-    }else{
         $response = array(
-            'status' => false,
-            'message' => 'Upload failed, File not found',
+            'status' => true,
+            'investment' => $investment,
+            'investment_item' => $investment_item
         );
         return Response::json($response);
     }
-}
 
-public function budget_control()
-{
-    $title = 'Budget Report & Control';
-    $title_jp = '';
+    public function fetchInvList(Request $request)
+    {
+        $inv = AccInvestment::select('acc_investments.reff_number')->join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')
+        ->whereNull('sudah_po')
+        ->where('acc_investments.posisi','=','finished')
+        ->distinct()
+        ->get();
 
-    $dept = db::select("select DISTINCT department from employee_syncs");
-    $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-    ->select('department')
-    ->first();
+        $response = array(
+            'status' => true,
+            'investment' => $inv
+        );
 
-    return view('accounting_purchasing.display.budget_control', array(
-        'title' => $title,
-        'title_jp' => $title_jp,
-        'emp_dept' => $emp_dept,
-        'department' => $dept
-    ))->with('page', 'Budget Report & Control')
-    ->with('head', 'Budget Report & Control');
-}
-
-public function fetch_budget_table(Request $request)
-{
-  $datefrom = date("Y-m-d",  strtotime('-30 days'));
-  $dateto = date("Y-m-d");
-
-  $last = AccInvestment::where('posisi','!=','finished')
-  ->orderBy('tanggal', 'asc')
-  ->select(db::raw('date(submission_date) as tanggal'))
-  ->first();
-
-  if(strlen($request->get('datefrom')) > 0){
-    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-}else{
-    if($last){
-      $tanggal = date_create($last->tanggal);
-      $now = date_create(date('Y-m-d'));
-      $interval = $now->diff($tanggal);
-      $diff = $interval->format('%a%');
-
-      if($diff > 30){
-        $datefrom = date('Y-m-d', strtotime($last->tanggal));
+        return Response::json($response);
     }
-}
-}
 
+    public function pilihInvestment(Request $request)
+    {
+        $html = array();
+        $list_item = AccInvestmentDetail::where('reff_number', $request->reff_number)
+        ->whereNull('sudah_po')
+        ->get();
 
-if(strlen($request->get('dateto')) > 0){
-    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-}
+        $lists = "<option value=''>-- Pilih Item --</option>";
+        foreach ($list_item as $item)
+        {
+            $lists .= "<option value='".$item->no_item."'>".$item->no_item." - ".$item->detail."</option>"; 
 
+        }
+        return json_encode($lists);
+    }
 
-$department = $request->get('department');
+        //==================================//
+        //        Budget Information        //
+        //==================================//
 
-if ($department != null) {
-  $deptt = json_encode($department);
-  $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+    public function budget_info()
+    {
+        $title = 'Budget Information';
+        $title_jp = '予算情報';
 
-  $dep = 'and acc_budget_histories.applicant_department in'.$dept;
-} else {
-  $dep = '';
-}
+        $status = AccBudget::select('*')->whereNull('acc_budgets.deleted_at')
+        ->distinct()
+        ->get();
 
-$data = db::select('
-    SELECT
-    budget,
-    acc_budgets.amount,
-    acc_budgets.description,
-    sum(CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ) AS PR,
-    sum(CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ) AS PO,
-    sum(CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ) AS Investment 
-    FROM
-    acc_budget_histories 
-    JOIN 
-    acc_budgets
-    ON 
-    acc_budget_histories.budget = acc_budgets.budget_no
-    WHERE
-    acc_budgets.deleted_at IS NULL
-    GROUP BY
-    budget,amount,description
-    ');
+        return view('accounting_purchasing.master.budget_info', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Budget Information')
+        ->with('head', 'Budget Information');
+    }
 
-$response = array(
-    'status' => true,
-    'datas' => $data
-);
+    public function fetch_budget_info(Request $request)
+    {
 
-return Response::json($response); 
-}
+            //Get Employee Department
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+        ->select('department')
+        ->first();
 
-public function fetch_budget_detail(Request $request){
-    $budget = $request->get("budget");
-    $status = $request->get("status");
+        $budget = AccBudget::orderBy('acc_budgets.budget_no', 'asc');
 
-    if ($status == "PR" || $status == "Investment") {
+        if ($request->get('periode') != null)
+        {
+            $budget = $budget->whereIn('acc_budgets.periode', $request->get('periode'));
+        }
+
+        if ($request->get('category') != null)
+        {
+            $budget = $budget->whereIn('acc_budgets.category', $request->get('category'));
+        }
+
+        if (Auth::user()->role_code == "MIS" || $emp_dept->department == "Accounting" || $emp_dept->department == "Procurement" || $emp_dept->department == "Purchasing Control") {
+
+        }
+        else if ($emp_dept->department == "General Affairs"){
+            $budget = $budget->where('department','=','Human Resources');
+        }
+        else {
+            $budget = $budget->where('department','=',$emp_dept->department);
+        }
+
+        $budget = $budget->select('*')->get();
+
+        return DataTables::of($budget)
+
+        ->editColumn('amount', function ($budget)
+        {
+            return '$'.$budget->amount;
+        })
+
+        ->addColumn('action', function ($budget)
+        {
+            $id = $budget->id;
+
+            return ' 
+            <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$id.')"><i class="fa fa-eye"></i> Detail</button>
+            ';
+        })
+
+        ->rawColumns(['action' => 'action'])
+        ->make(true);
+    }
+
+    public function budget_detail(Request $request)
+    {
+        $detail = AccBudget::find($request->get('id'));
+
+        $response = array(
+            'status' => true,
+            'datas' => $detail,
+        );
+
+        return Response::json($response);
+    }
+
+    public function import_budget(Request $request){
+        if($request->hasFile('upload_file')) {
+            try{                
+                $file = $request->file('upload_file');
+                $file_name = 'budget'.'('. date("ymd_h.i") .')'.'.'.$file->getClientOriginalExtension();
+                $file->move(public_path('uploads/budget/'), $file_name);
+                $excel = public_path('uploads/budget/') . $file_name;
+
+                $rows = Excel::load($excel, function($reader) {
+                    $reader->noHeading();
+                        //Skip Header
+                    $reader->skipRows(1);
+                })->get();
+
+                $rows = $rows->toArray();
+
+                for ($i=0; $i < count($rows); $i++) {
+                    $periode = $rows[$i][0];
+                    $budget_no = $rows[$i][1];
+                    $department = $rows[$i][2];
+                    $description = $rows[$i][3];
+                    $amount = $rows[$i][4];
+                    $env = $rows[$i][5];
+                    $purpose = $rows[$i][6];
+                    $pic = $rows[$i][7];
+                    $account = $rows[$i][8];
+                    $category = $rows[$i][9];
+                    $apr_awal = $rows[$i][10];
+                    $may_awal = $rows[$i][11];
+                    $jun_awal = $rows[$i][12];
+                    $jul_awal = $rows[$i][13];
+                    $aug_awal = $rows[$i][14];
+                    $sep_awal = $rows[$i][15];
+                    $oct_awal = $rows[$i][16];
+                    $nov_awal = $rows[$i][17];
+                    $dec_awal = $rows[$i][18];
+                    $jan_awal = $rows[$i][19];
+                    $feb_awal = $rows[$i][20];
+                    $mar_awal = $rows[$i][21];
+                    $adj_frc = $rows[$i][22];
+                    $apr_adj = $rows[$i][23];
+                    $may_adj = $rows[$i][24];
+                    $jun_adj = $rows[$i][25];
+                    $jul_adj = $rows[$i][26];
+                    $aug_adj = $rows[$i][27];
+                    $sep_adj = $rows[$i][28];
+                    $oct_adj = $rows[$i][29];
+                    $nov_adj = $rows[$i][30];
+                    $dec_adj = $rows[$i][31];
+                    $jan_adj = $rows[$i][32];
+                    $feb_adj = $rows[$i][33];
+                    $mar_adj = $rows[$i][34];
+                    $apr_sisa = $rows[$i][35];
+                    $may_sisa = $rows[$i][36];
+                    $jun_sisa = $rows[$i][37];
+                    $jul_sisa = $rows[$i][38];
+                    $aug_sisa = $rows[$i][39];
+                    $sep_sisa = $rows[$i][40];
+                    $oct_sisa = $rows[$i][41];
+                    $nov_sisa = $rows[$i][42];
+                    $dec_sisa = $rows[$i][43];
+                    $jan_sisa = $rows[$i][44];
+                    $feb_sisa = $rows[$i][45];
+                    $mar_sisa = $rows[$i][46];
+
+                    $data2 = AccBudget::firstOrNew(['periode' => $periode, 'budget_no' => $budget_no]);
+                    $data2->department = $department;
+                    $data2->description = $description;
+                    $data2->amount = $amount;
+                    $data2->env = $env;
+                    $data2->purpose = $purpose;
+                    $data2->pic = $pic;
+                    $data2->account_name = $account;
+                    $data2->category = $category;
+                    $data2->apr_budget_awal = $apr_awal;
+                    $data2->may_budget_awal = $may_awal;
+                    $data2->jun_budget_awal = $jun_awal;
+                    $data2->jul_budget_awal = $jul_awal;
+                    $data2->aug_budget_awal = $aug_awal;
+                    $data2->sep_budget_awal = $sep_awal;
+                    $data2->oct_budget_awal = $oct_awal;
+                    $data2->nov_budget_awal = $nov_awal;
+                    $data2->dec_budget_awal = $dec_awal;
+                    $data2->jan_budget_awal = $jan_awal;
+                    $data2->feb_budget_awal = $feb_awal;
+                    $data2->mar_budget_awal = $mar_awal;
+                    $data2->adj_frc = $adj_frc;
+                    $data2->apr_after_adj = $apr_adj;
+                    $data2->may_after_adj = $may_adj;
+                    $data2->jun_after_adj = $jun_adj;
+                    $data2->jul_after_adj = $jul_adj;
+                    $data2->aug_after_adj = $aug_adj;
+                    $data2->sep_after_adj = $sep_adj;
+                    $data2->oct_after_adj = $oct_adj;
+                    $data2->nov_after_adj = $nov_adj;
+                    $data2->dec_after_adj = $dec_adj;
+                    $data2->jan_after_adj = $jan_adj;
+                    $data2->feb_after_adj = $feb_adj;
+                    $data2->mar_after_adj = $mar_adj;
+                    $data2->apr_sisa_budget = $apr_sisa;
+                    $data2->may_sisa_budget = $may_sisa;
+                    $data2->jun_sisa_budget = $jun_sisa;
+                    $data2->jul_sisa_budget = $jul_sisa;
+                    $data2->aug_sisa_budget = $aug_sisa;
+                    $data2->sep_sisa_budget = $sep_sisa;
+                    $data2->oct_sisa_budget = $oct_sisa;
+                    $data2->nov_sisa_budget = $nov_sisa;
+                    $data2->dec_sisa_budget = $dec_sisa;
+                    $data2->jan_sisa_budget = $jan_sisa;
+                    $data2->feb_sisa_budget = $feb_sisa;
+                    $data2->mar_sisa_budget = $mar_sisa;
+                    $data2->created_by = Auth::id();
+                    $data2->save();
+                }       
+
+                $response = array(
+                    'status' => true,
+                    'message' => 'Upload file success',
+                );
+                return Response::json($response);
+
+            }catch(\Exception $e){
+                $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage(),
+                );
+                return Response::json($response);
+            }
+        }else{
+            $response = array(
+                'status' => false,
+                'message' => 'Upload failed, File not found',
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function budget_control()
+    {
+        $title = 'Budget Report & Control';
+        $title_jp = '';
+
+        $dept = db::select("select DISTINCT department from employee_syncs");
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+        ->select('department')
+        ->first();
+
+        return view('accounting_purchasing.display.budget_control', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'emp_dept' => $emp_dept,
+            'department' => $dept
+        ))->with('page', 'Budget Report & Control')
+        ->with('head', 'Budget Report & Control');
+    }
+
+    public function fetch_budget_table(Request $request)
+    {
+
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+              $date = ''; 
+      }
+      
+      if($datefrom != ""){
+
+          if ($dateto != "") {
+              $date = 'and DATE_FORMAT(budget_date,"%Y-%m") between '.$datefrom.' and '.$dateto.''; 
+          }
+          
+          $date = 'and DATE_FORMAT(budget_date,"%Y-%m") = "'.$datefrom.'"'; 
+      }
+
+        $department = $request->get('department');
+
+        if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_budgets.department in'.$dept;
+        } else {
+          $dep = '';
+        }
+
+        $data = db::select('
+            SELECT
+            budget,
+            acc_budgets.amount,
+            acc_budgets.description,
+            acc_budgets.department,
+            sum(CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ) AS PR,
+            sum(CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ) AS Investment,
+            sum(CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ) AS PO,
+            sum(CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ) AS Actual
+            FROM
+            acc_budget_histories 
+            JOIN 
+            acc_budgets
+            ON 
+            acc_budget_histories.budget = acc_budgets.budget_no
+            WHERE
+            acc_budgets.deleted_at IS NULL '.$date.' '.$dep.'
+            GROUP BY
+            budget,amount,description,department
+            ');
+
+        $response = array(
+            'status' => true,
+            'datas' => $data
+        );
+
+        return Response::json($response); 
+    }
+
+    public function fetch_budget_detail(Request $request){
+        $budget = $request->get("budget");
+        $status = $request->get("status");
+
         $qry = "select * from acc_budget_histories where budget = '".$budget."' and status = '".$status."' order by id desc";
         $bud = DB::select($qry);
-    }else if ($status == "PO") {
-        $qry = "select * from acc_budget_histories where budget = '".$budget."' and status = '".$status."' order by id desc";
-        $bud = DB::select($qry);
+
+        $response = array(
+            'status' => true,
+            'datas' => $bud
+        );
+
+        return Response::json($response); 
     }
 
-    $response = array(
-        'status' => true,
-        'datas' => $bud
-    );
+        //==================================//
+        //          Receive Goods           //
+        //==================================//
 
-    return Response::json($response); 
-}
-
-    //==================================//
-    //          Receive Goods           //
-    //==================================//
-
-public function receive_goods()
-{
-    $title = 'Receive Goods';
-    $title_jp = '着荷品';
-
-    $status = AccActual::select('*')->whereNull('acc_actuals.deleted_at')
-    ->distinct()
-    ->get();
-
-    return view('accounting_purchasing.master.receive_goods', array(
-        'title' => $title,
-        'title_jp' => $title_jp,
-    ))->with('page', 'Receive Goods')
-    ->with('head', 'Receive Goods');
-}
-
-public function fetch_receive(Request $request)
-{
-    $actual = AccActual::orderBy('acc_actuals.id', 'desc');
-
-    if ($request->get('category') != null)
+    public function receive_goods()
     {
-        $actual = $actual->whereIn('acc_actuals.category', $request->get('category'));
+        $title = 'Receive Goods';
+        $title_jp = '着荷品';
+
+        $status = AccActual::select('*')->whereNull('acc_actuals.deleted_at')
+        ->distinct()
+        ->get();
+
+        return view('accounting_purchasing.master.receive_goods', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Receive Goods')
+        ->with('head', 'Receive Goods');
     }
 
-    $actual = $actual->select('*')->get();
-
-    return DataTables::of($actual)
-
-    ->editColumn('vendor_code', function ($actual)
+    public function fetch_receive(Request $request)
     {
-        return $actual->vendor_code. ' - ' .$actual->vendor_name;
-    })
+        $actual = AccActual::orderBy('acc_actuals.id', 'desc');
 
-    ->editColumn('amount', function ($actual)
+        if ($request->get('category') != null)
+        {
+            $actual = $actual->whereIn('acc_actuals.category', $request->get('category'));
+        }
+
+        $actual = $actual->select('*')->get();
+
+        return DataTables::of($actual)
+
+        ->editColumn('vendor_code', function ($actual)
+        {
+            return $actual->vendor_code. ' - ' .$actual->vendor_name;
+        })
+
+        ->editColumn('amount', function ($actual)
+        {
+            return '$'.$actual->amount;
+        })
+
+        ->addColumn('action', function ($actual)
+        {
+            $id = $actual->id;
+
+            return ' 
+            <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$id.')"><i class="fa fa-eye"></i> Detail</button>
+            ';
+        })
+
+        ->rawColumns(['action' => 'action'])
+        ->make(true);
+    }
+
+    public function receive_detail(Request $request)
     {
-        return '$'.$actual->amount;
-    })
+        $detail = AccActual::find($request->get('id'));
 
-    ->addColumn('action', function ($actual)
-    {
-        $id = $actual->id;
+        $response = array(
+            'status' => true,
+            'datas' => $detail,
+        );
 
-        return ' 
-        <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$id.')"><i class="fa fa-eye"></i> Detail</button>
-        ';
-    })
+        return Response::json($response);
+    }
 
-    ->rawColumns(['action' => 'action'])
-    ->make(true);
-}
+    public function import_receive(Request $request){
+        if($request->hasFile('upload_file')) {
+            try{                
+                $file = $request->file('upload_file');
+                $file_name = 'receive_'. date("ymd_h.i") .'.'.$file->getClientOriginalExtension();
+                $file->move(public_path('uploads/receive/'), $file_name);
+                $excel = public_path('uploads/receive/') . $file_name;
 
-public function receive_detail(Request $request)
-{
-    $detail = AccActual::find($request->get('id'));
+                //podo lho padahal 
 
-    $response = array(
-        'status' => true,
-        'datas' => $detail,
-    );
+                $rows = Excel::load($excel, function($reader) {
+                    $reader->noHeading();
+                        //Skip Header
+                    $reader->skipRows(1);
+                })->get();
 
-    return Response::json($response);
-}
+                $rows = $rows->toArray();
 
-public function import_receive(Request $request){
-    if($request->hasFile('upload_file')) {
-        try{                
-            $file = $request->file('upload_file');
-            $file_name = 'receive_'. date("ymd_h.i") .'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('uploads/receive/'), $file_name);
-            $excel = public_path('uploads/receive/') . $file_name;
+                for ($i=0; $i < count($rows); $i++) {
+                    $currency  = $rows[$i][1];
+                    $vendor_code = $rows[$i][4];
+                    $vendor_name = $rows[$i][5];                    
+                    $receive_date = $rows[$i][14];
+                    $document_no = $rows[$i][15];
+                    $invoice_no = $rows[$i][17];    
+                    $no_po_sap_urut = $rows[$i][18];
+                    $no_po = $rows[$i][19];
+                    $category = $rows[$i][20];
+                    $item_description = $rows[$i][22];
+                    $qty = $rows[$i][25];
+                    $uom = $rows[$i][26];
+                    $price = $rows[$i][27];
+                    $amount = $rows[$i][28];
+                    $amount_dollar = $rows[$i][31];
+                    $gl_number = $rows[$i][40];
+                    $gl_description = $rows[$i][41];
+                    $cost_center = $rows[$i][42];
+                    $cost_description = $rows[$i][43];
+                    $pch_code = $rows[$i][44];
 
-            //podo lho padahal 
+                    $no_po_sap = explode("-", trim($no_po_sap_urut));
+                        $item_no = substr($item_description,0,7); //get 7 char kode item
 
-            $rows = Excel::load($excel, function($reader) {
-                $reader->noHeading();
-                    //Skip Header
-                $reader->skipRows(1);
-            })->get();
+                        if($pch_code == "G40" && ($category == "A" || $category == "K")) {
 
-            $rows = $rows->toArray();
+                            $actual = AccActual::where('document_no', $document_no)
+                            ->select('document_no')
+                            ->first();
 
-            for ($i=0; $i < count($rows); $i++) {
-                $currency  = $rows[$i][1];
-                $vendor_code = $rows[$i][4];
-                $vendor_name = $rows[$i][5];                    
-                $receive_date = $rows[$i][14];
-                $document_no = $rows[$i][15];
-                $invoice_no = $rows[$i][17];    
-                $no_po_sap_urut = $rows[$i][18];
-                $no_po = $rows[$i][19];
-                $category = $rows[$i][20];
-                $item_description = $rows[$i][22];
-                $qty = $rows[$i][25];
-                $uom = $rows[$i][26];
-                $price = $rows[$i][27];
-                $amount = $rows[$i][28];
-                $amount_dollar = $rows[$i][31];
-                $gl_number = $rows[$i][40];
-                $gl_description = $rows[$i][41];
-                $cost_center = $rows[$i][42];
-                $cost_description = $rows[$i][43];
-                $pch_code = $rows[$i][44];
+                            if (count($actual) == 0) { //kalo insert
 
-                $no_po_sap = explode("-", trim($no_po_sap_urut));
-                    $item_no = substr($item_description,0,7); //get 7 char kode item
+                                   $data2 = AccActual::create([
+                                    'currency' => $currency,
+                                    'vendor_code' => $vendor_code,
+                                    'vendor_name' => $vendor_name,
+                                    'receive_date' => $receive_date,
+                                    'document_no' => $document_no,
+                                    'invoice_no' => $invoice_no,
+                                    'no_po_sap' => $no_po_sap[0],
+                                    'no_urut' => $no_po_sap[1],
+                                    'no_po' => $no_po,
+                                    'category' => $category,
+                                    'item_no' => $item_no,
+                                    'item_description' => $item_description,
+                                    'qty' => $qty,
+                                    'uom' => $uom,
+                                    'price' => $price,
+                                    'amount' => $amount,
+                                    'amount_dollar' => $amount_dollar,
+                                    'gl_number' => $gl_number,
+                                    'gl_description' => $gl_description,
+                                    'cost_center' => $cost_center,
+                                    'cost_description' => $cost_description,
+                                    'pch_code' => $pch_code,
+                                    'created_by' => Auth::id()
+                                ]);
 
-                    if($pch_code == "G40" && ($category == "A" || $category == "K")) {
+                               $data2->save();
 
-                        $actual = AccActual::where('document_no', $document_no)
-                        ->select('document_no')
-                        ->first();
+                               //Get PO
+                               $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
+                               ->where('no_po_sap', $no_po_sap[0])
+                               ->where('no_item',$item_no)
+                               ->first();
 
-                        if (count($actual) == 0) { //kalo insert
+                               $total_all = $po_detail->qty_receive + $qty;
 
-                               $data2 = AccActual::create([
+                                //Update QTY RECEIVE PO
+                                $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                               ->where('no_item','=',$item_no)
+                               ->update(['qty_receive' => $total_all, 'date_receive' => $receive_date]);
+
+                                //get log amount
+
+                                $budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
+                                ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
+                                ->where('budget','=',$po_detail->budget_item)
+                                ->first();
+
+                                $amount = $budget_log->amount_po;
+                                $datenow = date('Y-m-d');
+                                //Get Data From Budget Master
+                                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
+
+                                foreach ($fy as $fys) {
+                                    $fiscal = $fys->fiscal_year;
+                                }
+                                
+                                $bulan = strtolower(date("M",strtotime($datenow)));
+
+                                $sisa_bulan = $bulan.'_sisa_budget';
+
+                                if ($budget_log->status != "Actual") {
+                                    //get Data Budget Based On Periode Dan Nomor
+                                    $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
+
+                                    //Tambahkan Budget Skrg Dengan PO yang Ada Di Log
+                                    $totalPlusPO = $budgetdata->$sisa_bulan + $amount;
+
+                                    $updatebudget = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)
+                                    ->update([
+                                        $sisa_bulan => $totalPlusPO
+                                    ]);
+                                }
+
+                                // get Data Budget Based On Periode Dan Nomor
+                                $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
+
+                                // Kurangi dengan amount_dollar
+                                $totalminusreceive = $budgetdata->$sisa_bulan - $amount_dollar;
+
+                                // Setelah itu update data budgetnya dengan yang actual
+                                $dataupdate = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode', $fiscal)
+                                ->update([
+                                    $sisa_bulan => $totalminusreceive
+                                ]);
+
+                               //Update Log Budget
+
+                               $total_budget = $budget_log->amount_receive + $amount_dollar;
+
+                               $update_budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
+                               ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
+                               ->where('budget','=',$po_detail->budget_item)
+                               ->update([
+                                    'budget_month_receive' => strtolower(date('M')),
+                                    'amount_receive' => $total_budget,
+                                    'status' => 'Actual'
+                                ]);
+
+
+                           } else if (count($actual) > 0){ //kalo update
+
+                            $data2 = AccActual::where('document_no','=',$document_no)
+                            ->update([
                                 'currency' => $currency,
                                 'vendor_code' => $vendor_code,
                                 'vendor_name' => $vendor_name,
@@ -6374,1274 +6462,1171 @@ public function import_receive(Request $request){
                                 'created_by' => Auth::id()
                             ]);
 
-                           $data2->save();
-
+                            
                            //Get PO
                            $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
                            ->where('no_po_sap', $no_po_sap[0])
                            ->where('no_item',$item_no)
                            ->first();
 
-                           $total_all = $po_detail->qty_receive + $qty;
+                            // $data2->currency = $currency;
+                            // $data2->vendor_code = $vendor_code;
+                            // $data2->vendor_name = $vendor_name;
+                            // $data2->receive_date = $receive_date;
+                            // $data2->document_no = $document_no;
+                            // $data2->invoice_no = $invoice_no;
+                            // $data2->no_po_sap = $no_po_sap[0];
+                            // $data2->no_urut = $no_po_sap[1];
+                            // $data2->no_po = $no_po;
+                            // $data2->category = $category;
+                            // $data2->item_no = $item_no;
+                            // $data2->item_description = $item_description;
+                            // $data2->qty = $qty;
+                            // $data2->uom = $uom;
+                            // $data2->price = $price;
+                            // $data2->amount = $amount;
+                            // $data2->amount_dollar = $amount_dollar;
+                            // $data2->gl_number = $gl_number;
+                            // $data2->gl_description = $gl_description;
+                            // $data2->cost_center = $cost_center;
+                            // $data2->cost_description = $cost_description;
+                            // $data2->pch_code = $pch_code;
+                            // $data2->created_by = Auth::id();
+                            // $data2->save(); 
+                        }
 
-                            //Update QTY RECEIVE PO
-                            $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
-                           ->where('no_item','=',$item_no)
-                           ->update(['qty_receive' => $total_all, 'date_receive' => $receive_date]);
-
-                            //get log amount
-
-                            $budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
-                            ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
-                            ->where('budget','=',$po_detail->budget_item)
-                            ->first();
-
-                            $amount = $budget_log->amount_po;
-                            $datenow = date('Y-m-d');
-                            //Get Data From Budget Master
-                            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
-
-                            foreach ($fy as $fys) {
-                                $fiscal = $fys->fiscal_year;
-                            }
-                            
-                            $bulan = strtolower(date("M",strtotime($datenow)));
-
-                            $sisa_bulan = $bulan.'_sisa_budget';
-
-                            if ($budget_log->status != "Actual") {
-                                //get Data Budget Based On Periode Dan Nomor
-                                $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
-
-                                //Tambahkan Budget Skrg Dengan PO yang Ada Di Log
-                                $totalPlusPO = $budgetdata->$sisa_bulan + $amount;
-
-                                $updatebudget = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)
-                                ->update([
-                                    $sisa_bulan => $totalPlusPO
-                                ]);
-                            }
-
-                            // get Data Budget Based On Periode Dan Nomor
-                            $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
-
-                            // Kurangi dengan amount_dollar
-                            $totalminusreceive = $budgetdata->$sisa_bulan - $amount_dollar;
-
-                            // Setelah itu update data budgetnya dengan yang actual
-                            $dataupdate = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode', $fiscal)
-                            ->update([
-                                $sisa_bulan => $totalminusreceive
-                            ]);
-
-                           //Update Log Budget
-
-                           $total_budget = $budget_log->amount_receive + $amount_dollar;
-
-                           $update_budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
-                           ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
-                           ->where('budget','=',$po_detail->budget_item)
-                           ->update([
-                                'budget_month_receive' => strtolower(date('M')),
-                                'amount_receive' => $total_budget,
-                                'status' => 'Actual'
-                            ]);
-
-
-                       } else if (count($actual) > 0){ //kalo update
-
-                        $data2 = AccActual::where('document_no','=',$document_no)
-                        ->update([
-                            'currency' => $currency,
-                            'vendor_code' => $vendor_code,
-                            'vendor_name' => $vendor_name,
-                            'receive_date' => $receive_date,
-                            'document_no' => $document_no,
-                            'invoice_no' => $invoice_no,
-                            'no_po_sap' => $no_po_sap[0],
-                            'no_urut' => $no_po_sap[1],
-                            'no_po' => $no_po,
-                            'category' => $category,
-                            'item_no' => $item_no,
-                            'item_description' => $item_description,
-                            'qty' => $qty,
-                            'uom' => $uom,
-                            'price' => $price,
-                            'amount' => $amount,
-                            'amount_dollar' => $amount_dollar,
-                            'gl_number' => $gl_number,
-                            'gl_description' => $gl_description,
-                            'cost_center' => $cost_center,
-                            'cost_description' => $cost_description,
-                            'pch_code' => $pch_code,
-                            'created_by' => Auth::id()
-                        ]);
-
-                        
-                       //Get PO
-                       $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
-                       ->where('no_po_sap', $no_po_sap[0])
-                       ->where('no_item',$item_no)
-                       ->first();
-
-                        // $data2->currency = $currency;
-                        // $data2->vendor_code = $vendor_code;
-                        // $data2->vendor_name = $vendor_name;
-                        // $data2->receive_date = $receive_date;
-                        // $data2->document_no = $document_no;
-                        // $data2->invoice_no = $invoice_no;
-                        // $data2->no_po_sap = $no_po_sap[0];
-                        // $data2->no_urut = $no_po_sap[1];
-                        // $data2->no_po = $no_po;
-                        // $data2->category = $category;
-                        // $data2->item_no = $item_no;
-                        // $data2->item_description = $item_description;
-                        // $data2->qty = $qty;
-                        // $data2->uom = $uom;
-                        // $data2->price = $price;
-                        // $data2->amount = $amount;
-                        // $data2->amount_dollar = $amount_dollar;
-                        // $data2->gl_number = $gl_number;
-                        // $data2->gl_description = $gl_description;
-                        // $data2->cost_center = $cost_center;
-                        // $data2->cost_description = $cost_description;
-                        // $data2->pch_code = $pch_code;
-                        // $data2->created_by = Auth::id();
-                        // $data2->save(); 
-                    }
-
-                    //GET DATA
-                    $datapo = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
-                    ->where('no_item','=',$item_no)
-                    ->first();
-
-                    //UPDATE STATUS
-                    if ($datapo->qty_receive >= $datapo->qty) {
-                        $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                        //GET DATA
+                        $datapo = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
                         ->where('no_item','=',$item_no)
-                        ->update(['status' => 'close']);
+                        ->first();
+
+                        //UPDATE STATUS
+                        if ($datapo->qty_receive >= $datapo->qty) {
+                            $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                            ->where('no_item','=',$item_no)
+                            ->update(['status' => 'close']);
+                        }
                     }
-                }
-            }       
+                }       
 
-            $response = array(
-                'status' => true,
-                'message' => 'Upload Berhasil',
-            );
-            return Response::json($response);
+                $response = array(
+                    'status' => true,
+                    'message' => 'Upload Berhasil',
+                );
+                return Response::json($response);
 
-        }catch(\Exception $e){
+            }catch(\Exception $e){
+                $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage(),
+                );
+                return Response::json($response);
+            }
+        }else{
             $response = array(
                 'status' => false,
-                'message' => $e->getMessage(),
+                'message' => 'Upload failed, File not found',
             );
             return Response::json($response);
         }
-    }else{
-        $response = array(
-            'status' => false,
-            'message' => 'Upload failed, File not found',
-        );
-        return Response::json($response);
-    }
-}
-
-
-    //==================================//
-    //       Monitoring & Display       //
-    //==================================//
-
-public function monitoringPR(){
-
-      // $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
-  $dept = db::select("select DISTINCT department from employee_syncs");
-  $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-  ->select('department')
-  ->first();
-
-  return view('accounting_purchasing.display.pr_monitoring',  
-    array(
-      'title' => 'Purchase Requisition Monitoring & Control', 
-      'title_jp' => '',
-      'department' => $dept,
-      'emp_dept' => $emp_dept
-  )
-)->with('page', 'Purchase Requisition Control');
-}
-
-public function fetchMonitoringPR(Request $request)
-{
-
-  $tahun = date('Y');
-
-  $datefrom = $request->get('datefrom');
-  $dateto = $request->get('dateto');
-
-  if ($datefrom == "") {
-      $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
-  }
-
-  if ($dateto == "") {
-      $dateto = date('Y-m', strtotime(carbon::now()));
-  }
-
-  $department = $request->get('department');
-
-  if ($department != null) {
-      $deptt = json_encode($department);
-      $dept = str_replace(array("[","]"),array("(",")"),$deptt);
-
-      $dep = 'and acc_purchase_requisitions.department in '.$dept;
-  } else {
-      $dep = '';
-  }
-
-  $data = db::select("
-    select count(no_pr) as jumlah, monthname(submission_date) as bulan, year(submission_date) as tahun, sum(case when receive_date is null then 1 else 0 end) as NotSigned , sum(case when receive_date is not null then 1 else 0 end) as Signed from acc_purchase_requisitions where acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." GROUP BY bulan,tahun order by tahun, month(submission_date) ASC");
-
-  $data_pr_belum_po = db::select("
-    select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
-
-  $response = array(
-    'status' => true,
-    'datas' => $data,
-    'data_pr_belum_po' => $data_pr_belum_po,
-    'tahun' => $tahun,
-    'datefrom' => $datefrom,
-    'dateto' => $dateto,
-    'department' => $dep
-);
-
-  return Response::json($response); 
-}
-
-public function fetchMonitoringPROutstanding(Request $request)
-{
-
-  $tahun = date('Y');
-
-  $datefrom = $request->get('datefrom');
-  $dateto = $request->get('dateto');
-
-  if ($datefrom == "") {
-      $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
-  }
-
-  if ($dateto == "") {
-      $dateto = date('Y-m', strtotime(carbon::now()));
-  }
-
-  $department = $request->get('department');
-
-  if ($department != null) {
-      $deptt = json_encode($department);
-      $dept = str_replace(array("[","]"),array("(",")"),$deptt);
-
-      $dep = 'and acc_purchase_requisitions.department in '.$dept;
-  } else {
-      $dep = '';
-  }
-
-  $data = db::select("
-    select acc_purchase_requisitions.no_pr,acc_purchase_requisitions.department, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
-
-  $response = array(
-    'status' => true,
-    'datas' => $data,
-    'tahun' => $tahun,
-    'datefrom' => $datefrom,
-    'dateto' => $dateto,
-    'departement' => $dep
-);
-
-  return Response::json($response); 
-}
-
-public function monitoringPrPch(){
-
-      // $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
-  $dept = db::select("select DISTINCT department from employee_syncs");
-
-  return view('accounting_purchasing.display.pr_monitoring_pch',  
-    array(
-      'title' => 'Purchase Requisition Monitoring & Control', 
-      'title_jp' => '',
-      'department' => $dept
-  )
-)->with('page', 'Purchase Requisition Control');
-}
-
-
-public function fetchMonitoringPRPch(Request $request){
-
-  $datefrom = date("Y-m-d",  strtotime('-30 days'));
-  $dateto = date("Y-m-d");
-
-  $last = AccPurchaseRequisition::whereNull('receive_date')
-  ->orderBy('tanggal', 'asc')
-  ->select(db::raw('date(submission_date) as tanggal'))
-  ->first();
-
-  if(strlen($request->get('datefrom')) > 0){
-    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-}else{
-    if($last){
-      $tanggal = date_create($last->tanggal);
-      $now = date_create(date('Y-m-d'));
-      $interval = $now->diff($tanggal);
-      $diff = $interval->format('%a%');
-
-      if($diff > 30){
-        $datefrom = date('Y-m-d', strtotime($last->tanggal));
-    }
-}
-}
-
-
-if(strlen($request->get('dateto')) > 0){
-    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-}
-
-$department = $request->get('department');
-
-if ($department != null) {
-  $deptt = json_encode($department);
-  $dept = str_replace(array("[","]"),array("(",")"),$deptt);
-
-  $dep = 'and acc_purchase_requisitions.department in'.$dept;
-} else {
-  $dep = '';
-}
-
-      //per tgl
-$data = db::select("
-   select date.week_date, coalesce(belum_diterima.total, 0) as jumlah_belum, coalesce(sudah_diterima.total, 0) as jumlah_sudah from 
-   (select week_date from weekly_calendars 
-   where date(week_date) >= '".$datefrom."'
-   and date(week_date) <= '".$dateto."') date
-   left join
-   (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
-   where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is null  ".$dep."
-   group by date(submission_date)) belum_diterima
-   on date.week_date = belum_diterima.date
-   left join
-   (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
-   where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is not null ".$dep."
-   group by date(submission_date)) sudah_diterima
-   on date.week_date = sudah_diterima.date
-   order by week_date asc");
-
-      //per department
-$data_dept = db::select("
-    select dept.department, coalesce(pr.total, 0) as jumlah_dept from 
-    (select distinct department from employee_syncs where department is not null) dept
-    left join
-    (select department, count(id) as total from acc_purchase_requisitions
-    where acc_purchase_requisitions.deleted_at is null 
-    group by department) pr
-    on dept.department = pr.department
-    order by department asc");
-
-$data_pr_belum_po = db::select("
-    select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and submission_date between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
-
-$year = date('Y');
-
-$response = array(
-    'status' => true,
-    'datas' => $data,
-    'data_dept' => $data_dept,
-    'data_pr_belum_po' => $data_pr_belum_po,
-    'year' => $year
-);
-
-return Response::json($response);
-}
-
-public function fetchtablePR(Request $request)
-{
-  $datefrom = $request->get('datefrom');
-  $dateto = $request->get('dateto');
-
-  if ($datefrom == "") {
-      $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
-  }
-
-  if ($dateto == "") {
-      $dateto = date('Y-m', strtotime(carbon::now()));
-  }
-
-  $department = $request->get('department');
-
-  if ($department != null) {
-      $deptt = json_encode($department);
-      $dept = str_replace(array("[","]"),array("(",")"),$deptt);
-
-      $dep = 'and acc_purchase_requisitions.department in'.$dept;
-  } else {
-      $dep = '';
-  }
-
-
-  $data = db::select("select acc_purchase_requisitions.id, no_pr, emp_id, emp_name, department_shortname, section, no_budget, submission_date, po_due_date, receive_date, file, posisi, `status`, staff, manager, manager_name, (select `name` from employee_syncs where employee_id = dgm) as dgm, (select `name` from employee_syncs where employee_id = gm) as gm , approvalm, dateapprovalm, approvaldgm, dateapprovaldgm, approvalgm, dateapprovalgm, alasan, datereject from acc_purchase_requisitions join departments on acc_purchase_requisitions.department = department_name where acc_purchase_requisitions.status != 'received' and acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date asc");
-
-  $data_pr_belum_po = db::select("select acc_purchase_requisitions.no_pr,departments.department_shortname, acc_purchase_requisition_items.item_code, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.item_request_date from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join departments on acc_purchase_requisitions.department = department_name where acc_purchase_requisitions.deleted_at is null and receive_date is not null and sudah_po is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date ASC");
-
-  $response = array(
-    'status' => true,
-    'datas' => $data,
-    'data_pr_belum_po' => $data_pr_belum_po
-);
-
-  return Response::json($response); 
-}
-
-public function fetchtablePRPch(Request $request)
-{
-  $datefrom = $request->get('datefrom');
-  $dateto = $request->get('dateto');
-
-  if ($datefrom == "") {
-      $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
-  }
-
-  if ($dateto == "") {
-      $dateto = date('Y-m', strtotime(carbon::now()));
-  }
-
-  $department = $request->get('department');
-
-  if ($department != null) {
-      $deptt = json_encode($department);
-      $dept = str_replace(array("[","]"),array("(",")"),$deptt);
-
-      $dep = 'and acc_purchase_requisitions.department in'.$dept;
-  } else {
-      $dep = '';
-  }
-
-
-  $data = db::select("select id, no_pr, emp_id, emp_name, department, section, no_budget, submission_date, po_due_date, receive_date, file, posisi, `status`, staff, manager, manager_name, (select `name` from employee_syncs where employee_id = dgm) as dgm, (select `name` from employee_syncs where employee_id = gm) as gm , approvalm, dateapprovalm, approvaldgm, dateapprovaldgm, approvalgm, dateapprovalgm, alasan, datereject from acc_purchase_requisitions where acc_purchase_requisitions.status = 'approval_acc' and acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date asc");
-
-  $data_pr_belum_po = db::select("select acc_purchase_requisitions.no_pr,acc_purchase_requisitions.department, acc_purchase_requisition_items.item_code, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.item_request_date from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and sudah_po is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date ASC");
-
-  $response = array(
-    'status' => true,
-    'datas' => $data,
-    'data_pr_belum_po' => $data_pr_belum_po
-);
-
-  return Response::json($response); 
-}
-
-public function detailMonitoringPR(Request $request){
-
-  $bulan = $request->get("bulan");
-  $status = $request->get("status");
-  $tglfrom = $request->get("tglfrom");
-  $tglto = $request->get("status");
-  $department = $request->get("department");
-
-
-  $status_sign = "";
-
-  if ($status == "Sign Not Completed") {
-      $status_sign = "and receive_date is null";
-  }
-  else if ($status == "Sign Completed") {
-      $status_sign = "and receive_date is not null";
-  }
-
-
-
-  $qry = "SELECT  * FROM acc_purchase_requisitions WHERE deleted_at IS NULL and monthname(submission_date) = '".$bulan."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
-
-  $pr = DB::select($qry);
-
-  return DataTables::of($pr)
-  ->editColumn('submission_date', function ($pr)
-  {
-    return $pr->submission_date;
-})
-  ->editColumn('note', function ($pr)
-  {
-    $note = "";
-    if ($pr->note != null)
-    {
-        $note = $pr->note;
-    }
-    else
-    {
-        $note = '-';
-    }
-
-    return $note;
-})
-  ->editColumn('status', function ($pr)
-  {
-    $id = $pr->id;
-
-    if ($pr->status == "approval")
-    {
-        return '<label class="label label-warning">Approval</a>';
-    }
-    else if ($pr->status == "approval_acc")
-    {
-        return '<label class="label label-info">Diverifikasi Purchasing</a>';
-    }
-    else if ($pr->status == "received")
-    {
-        return '<label class="label label-success">Diterima Purchasing</a>';
-    }
-
-})
-  ->addColumn('action', function ($pr)
-  {
-    $id = $pr->id;
-
-            // <a href="purchase_requisition/detail/' . $id . '" class="btn btn-info btn-xs" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i></a>
-
-    if($pr->status == "approval"){
-        return '
-        <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
-        ';
-    }
-    else{
-        return '
-        <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
-        ';
     }
 
 
-})
-  ->editColumn('file', function ($pr)
-  {
+        //==================================//
+        //       Monitoring & Display       //
+        //==================================//
 
-    $data = json_decode($pr->file);
+    public function monitoringPR(){
 
-    $fl = "";
+          // $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
+      $dept = db::select("select DISTINCT department from employee_syncs");
+      $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('department')
+      ->first();
 
-    if ($pr->file != null)
-    {
-        for ($i = 0;$i < count($data);$i++)
-        {
-            $fl .= '<a href="files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
-        }
-    }
-    else
-    {
-        $fl = '-';
-    }
-
-    return $fl;
-})
-  ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file'])
-  ->make(true);
-}
-
-public function detailMonitoringPRPch(Request $request){
-
-  $tanggal = $request->get("tanggal");
-  $status = $request->get("status");
-  $tglfrom = $request->get("tglfrom");
-  $tglto = $request->get("status");
-  $department = $request->get("department");
-
-  $status_sign = "";
-
-  if ($status == "PR Incompleted") {
-      $status_sign = "and receive_date is null";
-  }
-  else if ($status == "PR Completed") {
-      $status_sign = "and receive_date is not null";
-  }
-
-  $qry = "SELECT  * FROM acc_purchase_requisitions WHERE deleted_at IS NULL and submission_date = '".$tanggal."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
-
-  $pr = DB::select($qry);
-
-  return DataTables::of($pr)
-  ->editColumn('submission_date', function ($pr)
-  {
-    return $pr->submission_date;
-})
-  ->editColumn('note', function ($pr)
-  {
-    $note = "";
-    if ($pr->note != null)
-    {
-        $note = $pr->note;
-    }
-    else
-    {
-        $note = '-';
-    }
-
-    return $note;
-})
-  ->editColumn('status', function ($pr)
-  {
-    $id = $pr->id;
-
-    if ($pr->status == "approval")
-    {
-        return '<label class="label label-warning">Approval</a>';
-    }
-    else if ($pr->status == "approval_acc")
-    {
-        return '<label class="label label-info">Diverifikasi Purchasing</a>';
-    }
-    else if ($pr->status == "received")
-    {
-        return '<label class="label label-success">Diterima Purchasing</a>';
-    }
-
-})
-  ->addColumn('action', function ($pr)
-  {
-    $id = $pr->id;
-
-            // <a href="purchase_requisition/detail/' . $id . '" class="btn btn-info btn-xs" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i></a>
-
-    if($pr->status == "approval"){
-        return '
-        <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
-        ';
-    }
-    else{
-        return '
-        <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
-        ';
-    }
-
-
-})
-  ->editColumn('file', function ($pr)
-  {
-
-    $data = json_decode($pr->file);
-
-    $fl = "";
-
-    if ($pr->file != null)
-    {
-        for ($i = 0;$i < count($data);$i++)
-        {
-            $fl .= '<a href="files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
-        }
-    }
-    else
-    {
-        $fl = '-';
-    }
-
-    return $fl;
-})
-  ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file'])
-  ->make(true);
-}
-
-public function detailMonitoringPRPO(Request $request){
-
-    $pr = $request->get("pr");
-    $status = $request->get("status");
-    $tglfrom = $request->get("tglfrom");
-    $tglto = $request->get("status");
-    $department = $request->get("department");
-
-    $status_sign = "";
-
-    if ($status == "Belum PO") {
-        $status_sign = "and sudah_po is null";
-    }
-    else if ($status == "Sudah PO") {
-        $status_sign = "and sudah_po is not null";
-    }
-
-    $qry = "SELECT acc_purchase_requisitions.no_pr,acc_purchase_requisitions.submission_date, acc_purchase_requisition_items.* from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr WHERE acc_purchase_requisition_items.deleted_at is NULL and acc_purchase_requisitions.no_pr = '".$pr."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
-
-    $pr = DB::select($qry);
-
-    return DataTables::of($pr)
-    ->editColumn('submission_date', function ($pr)
-    {
-        return $pr->submission_date;
-    })
-    ->editColumn('status', function ($pr)
-    {
-        if ($pr->sudah_po == null) {
-            return '<span class="label label-danger">Belum PO</span>';
-        }
-        else if ($pr->sudah_po != null) {
-            return '<span class="label label-success">Sudah PO</span>';
-        }
-
-    })
-    ->rawColumns(['status' => 'status'])
-    ->make(true);
-}
-
-
-
-public function monitoringPO(){
-
-    return view('accounting_purchasing.display.po_monitoring',  
+      return view('accounting_purchasing.display.pr_monitoring',  
         array(
-          'title' => 'Purchase Order Monitoring', 
+          'title' => 'Purchase Requisition Monitoring & Control', 
           'title_jp' => '',
+          'department' => $dept,
+          'emp_dept' => $emp_dept
       )
-    )->with('page', 'Purchase Order Monitoring');
-}
-
-public function fetchMonitoringPO(Request $request){
-
-  $datefrom = date("Y-m-d",  strtotime('-30 days'));
-  $dateto = date("Y-m-d");
-
-  $last = AccPurchaseOrder::where('status','=','pch')
-  ->orderBy('tanggal', 'asc')
-  ->select(db::raw('date(tgl_po) as tanggal'))
-  ->first();
-
-  if(strlen($request->get('datefrom')) > 0){
-    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-}
-else{
-    if($last){
-      $tanggal = date_create($last->tanggal);
-      $now = date_create(date('Y-m-d'));
-      $interval = $now->diff($tanggal);
-      $diff = $interval->format('%a%');
-
-      if($diff > 30){
-        $datefrom = date('Y-m-d', strtotime($last->tanggal));
+    )->with('page', 'Purchase Requisition Control');
     }
-}
-}
 
-
-if(strlen($request->get('dateto')) > 0){
-    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-}
-
-      //per tgl
-$data = db::select("
-    select date.week_date, coalesce(belum_diterima.total, 0) as jumlah_belum, coalesce(sudah_diterima.total, 0) as jumlah_sudah from 
-    (select week_date from weekly_calendars 
-    where date(week_date) >= '".$datefrom."'
-    and date(week_date) <= '".$dateto."') date
-    left join
-    (select date(tgl_po) as date, count(id) as total from acc_purchase_orders
-    where date(tgl_po) >= '".$datefrom."' and date(tgl_po) <= '".$dateto."' and acc_purchase_orders.deleted_at is null and posisi = 'pch' and `status` = 'sap'
-    group by date(tgl_po)) sudah_diterima
-    on date.week_date = sudah_diterima.date
-    left join
-    (select date(tgl_po) as date, count(id) as total from acc_purchase_orders
-    where date(tgl_po) >= '".$datefrom."' and date(tgl_po) <= '".$dateto."' and acc_purchase_orders.deleted_at is null and `status` != 'sap'
-    group by date(tgl_po)) belum_diterima
-    on date.week_date = belum_diterima.date
-    order by week_date asc
-    ");
-
-$year = date('Y');
-
-$response = array(
-    'status' => true,
-    'datas' => $data,
-    'year' => $year
-);
-
-return Response::json($response);
-}
-
-public function detailMonitoringPO(Request $request){
-
-  $tanggal = $request->get("tanggal");
-  $status = $request->get("status");
-  $tglfrom = $request->get("tglfrom");
-  $tglto = $request->get("tglto");
-
-
-  $status_sign = "";
-
-  if ($status == "PO Incompleted") {
-      $status_sign = "and status != 'sap'";
-  }
-  else if ($status == "PO Completed") {
-      $status_sign = "and posisi = 'pch' and status = 'sap'";
-  }
-
-
-  $qry = "SELECT * FROM acc_purchase_orders WHERE deleted_at IS NULL and DATE_FORMAT(tgl_po,'%Y-%m-%d') = '".$tanggal."' ".$status_sign." order by id DESC";
-  $po = DB::select($qry);
-
-  return DataTables::of($po)
-
-  ->editColumn('tgl_po', function ($po)
-  {
-    return date('Y-m-d', strtotime($po->tgl_po));
-})
-
-  ->editColumn('no_po_sap', function ($po)
-  {
-    $id = $po->id;
-
-    $po_sap = "";
-    if ($po->no_po_sap == null && $po->status == "not_sap")
+    public function fetchMonitoringPR(Request $request)
     {
-        $po_sap = '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-md" onClick="editSAP(' . $id . ')"><i class="fa fa-edit"></i> NO PO SAP</a>';
+
+      $tahun = date('Y');
+
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $department = $request->get('department');
+
+      if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_purchase_requisitions.department in '.$dept;
+      } else {
+          $dep = '';
+      }
+
+      $data = db::select("
+        select count(no_pr) as jumlah, monthname(submission_date) as bulan, year(submission_date) as tahun, sum(case when receive_date is null then 1 else 0 end) as NotSigned , sum(case when receive_date is not null then 1 else 0 end) as Signed from acc_purchase_requisitions where acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." GROUP BY bulan,tahun order by tahun, month(submission_date) ASC");
+
+      $data_pr_belum_po = db::select("
+        select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_pr_belum_po' => $data_pr_belum_po,
+        'tahun' => $tahun,
+        'datefrom' => $datefrom,
+        'dateto' => $dateto,
+        'department' => $dep
+    );
+
+      return Response::json($response); 
     }
-    else if ($po->no_po_sap != null){
-        $po_sap = $po->no_po_sap;   
-    }
-    else
+
+    public function fetchMonitoringPROutstanding(Request $request)
     {
-        $po_sap = '-';
+
+      $tahun = date('Y');
+
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $department = $request->get('department');
+
+      if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_purchase_requisitions.department in '.$dept;
+      } else {
+          $dep = '';
+      }
+
+      $data = db::select("
+        select acc_purchase_requisitions.no_pr,acc_purchase_requisitions.department, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'tahun' => $tahun,
+        'datefrom' => $datefrom,
+        'dateto' => $dateto,
+        'departement' => $dep
+    );
+
+      return Response::json($response); 
     }
 
-    return $po_sap;
-})
+    public function monitoringPrPch(){
 
-  ->editColumn('status', function ($po)
-  {
-    $id = $po->id;
+          // $fys = db::select("select DISTINCT fiscal_year from weekly_calendars");
+      $dept = db::select("select DISTINCT department from employee_syncs");
 
-    if ($po->posisi == "staff_pch")
-    {
-        return '<label class="label label-danger">Staff PCH</label>';
-    }
-
-    else if ($po->posisi == "manager_pch")
-    {
-        return '<label class="label label-primary">Diverifikasi Manager</label>';
-    }
-
-    else if ($po->posisi == "dgm_pch")
-    {
-        return '<label class="label label-primary">Diverifikasi DGM</label>';
-    }
-
-    else if ($po->posisi == "gm_pch")
-    {
-        return '<label class="label label-primary">Diverifikasi GM</label>';
-    }
-
-    else if ($po->posisi == "pch")
-    {
-        return '<label class="label label-success">Sudah Diverifikasi</label>';
-    }
-
-})
-  ->addColumn('action', function ($po)
-  {
-    $id = $po->id;
-    if ($po->posisi == "staff_pch") {
-        return '
-        <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
-        <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
-        <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Send Email" style="margin-right:5px;"  onclick="sendEmail(' . $id .')"><i class="fa fa-envelope"></i> Send Email</button>
-        ';
-    }
-
-    else if ($po->posisi == "pch") {
-        return '
-        <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
-        <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"> Report</i></a>
-        ';
-    }
-
-    else{
-        return '
-        <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
-        <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
-        <label class="label label-success">Email Sudah Dikirim</label>
-        ';   
-    }
-})
-  ->rawColumns(['status' => 'status', 'action' => 'action', 'no_po_sap' => 'no_po_sap'])
-  ->make(true);
-}
-
-public function fetchtablePO(Request $request)
-{
-  $datefrom = $request->get('datefrom');
-  $dateto = $request->get('dateto');
-
-  if ($datefrom == "") {
-      $datefrom = date('Y-m-d', strtotime(carbon::now()->subMonth(11)));
-  }
-
-  if ($dateto == "") {
-      $dateto = date('Y-m-d', strtotime(carbon::now()));
-  }
-
-  $data = db::select("
-
-    SELECT
-    t1.*,IF(t1.goods_price != 0,sum( t1.goods_price * t1.qty ),sum( t1.service_price * t1.qty )) AS amount 
-    FROM
-    (
-    SELECT
-    acc_purchase_orders.*,
-    acc_purchase_order_details.budget_item,
-    acc_purchase_order_details.goods_price,
-    acc_purchase_order_details.service_price,
-    acc_purchase_order_details.qty 
-    FROM
-    acc_purchase_orders
-    JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
-    WHERE
-    acc_purchase_orders.`status` != 'sap' 
-    AND acc_purchase_orders.deleted_at IS NULL 
-    AND DATE_FORMAT( tgl_po, '%Y-%m-%d' ) BETWEEN  '".$datefrom."' AND '".$dateto."' 
-    ORDER BY
-    tgl_po ASC 
-    ) t1
-    GROUP BY t1.no_po");
-
-      //select id, remark, no_po, no_po_sap, DATE_FORMAT(tgl_po,'%Y-%m-%d'),supplier_code, supplier_name, supplier_status, buyer_id, buyer_name, authorized2, authorized2_name, approval_authorized2, date_approval_authorized2, authorized3, authorized3_name, date_approval_authorized3, approval_authorized3, authorized4, authorized4_name, date_approval_authorized4, approval_authorized4, reject, datereject, posisi, `status` from acc_purchase_orders where acc_purchase_orders.`status` != 'sap' and acc_purchase_orders.deleted_at is null and DATE_FORMAT(tgl_po,'%Y-%m-%d') between '2020-08-01' and '2020-09-01'  order by tgl_po asc
-
-  $response = array(
-    'status' => true,
-    'datas' => $data
-);
-
-  return Response::json($response); 
-}
-
-public function investmentControl(){
-
-    $dept = db::select("select DISTINCT department from employee_syncs");
-    $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-    ->select('department')
-    ->first();
-
-    return view('accounting_purchasing.display.investment_control',  
+      return view('accounting_purchasing.display.pr_monitoring_pch',  
         array(
-          'title' => 'Investment Monitoring & Control', 
+          'title' => 'Purchase Requisition Monitoring & Control', 
           'title_jp' => '',
-          'emp_dept' => $emp_dept,
           'department' => $dept
       )
-    )->with('page', 'Investment Control');
-
-}
-
-public function fetchInvestmentControl(Request $request){
-
-  $datefrom = date("Y-m-d",  strtotime('-30 days'));
-  $dateto = date("Y-m-d");
-
-  $last = AccInvestment::where('posisi','!=','finished')
-  ->orderBy('tanggal', 'asc')
-  ->select(db::raw('date(submission_date) as tanggal'))
-  ->first();
-
-  if(strlen($request->get('datefrom')) > 0){
-    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-}else{
-    if($last){
-      $tanggal = date_create($last->tanggal);
-      $now = date_create(date('Y-m-d'));
-      $interval = $now->diff($tanggal);
-      $diff = $interval->format('%a%');
-
-      if($diff > 30){
-        $datefrom = date('Y-m-d', strtotime($last->tanggal));
+    )->with('page', 'Purchase Requisition Control');
     }
-}
-}
 
 
-if(strlen($request->get('dateto')) > 0){
-    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-}
+    public function fetchMonitoringPRPch(Request $request){
 
-$department = $request->get('department');
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
 
-if ($department != null) {
-  $deptt = json_encode($department);
-  $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+      $last = AccPurchaseRequisition::whereNull('receive_date')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(submission_date) as tanggal'))
+      ->first();
 
-  $dep = 'and acc_investments.applicant_department in '.$dept;
-} else {
-  $dep = '';
-}
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+    }else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
 
-      //per tgl
-$data = db::select("
-    select date2.week_date, date2.week_name, sum(date2.not_finish) as undone, sum(date2.finish) done from 
-    (
-    select date.week_date, date.week_name, coalesce(not_finish.total, 0) as not_finish, coalesce(finish.total, 0) as finish from 
-    (select week_date,week_name from weekly_calendars 
-    where date(week_date) >= '".$datefrom."'
-    and date(week_date) <= '".$dateto."') date
-    left join
-    (select date(submission_date) as date, count(id) as total from acc_investments
-    where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' ".$dep." and acc_investments.deleted_at is null and posisi = 'finished'
-    group by date(submission_date)) finish
-    on date.week_date = finish.date
-    left join
-    (select date(submission_date) as date, count(id) as total from acc_investments
-    where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' ".$dep." and acc_investments.deleted_at is null and `posisi` != 'finished'
-    group by date(submission_date)) not_finish
-    on date.week_date = not_finish.date
-    order by week_date asc) date2 group by date2.week_name              
-    ");
-
-$data_investment_belum_po = db::select("
-    select acc_investments.reff_number, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_investments left join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number where acc_investments.deleted_at is null and posisi = 'finished' ".$dep."  GROUP BY reff_number order by submission_date ASC");
-
-$year = date('Y');
-
-$response = array(
-    'status' => true,
-    'datas' => $data,
-    'year' => $year,
-    'data_investment_belum_po' => $data_investment_belum_po
-);
-
-return Response::json($response);
-}
-
-
-
-public function fetchtableinv(Request $request)
-{
-  $datefrom = date("Y-m-d",  strtotime('-30 days'));
-  $dateto = date("Y-m-d");
-
-  $last = AccInvestment::where('posisi','!=','finished')
-  ->orderBy('tanggal', 'asc')
-  ->select(db::raw('date(submission_date) as tanggal'))
-  ->first();
-
-  if(strlen($request->get('datefrom')) > 0){
-    $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-}else{
-    if($last){
-      $tanggal = date_create($last->tanggal);
-      $now = date_create(date('Y-m-d'));
-      $interval = $now->diff($tanggal);
-      $diff = $interval->format('%a%');
-
-      if($diff > 30){
-        $datefrom = date('Y-m-d', strtotime($last->tanggal));
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+        }
     }
-}
-}
+    }
 
 
-if(strlen($request->get('dateto')) > 0){
-    $dateto = date('Y-m-d', strtotime($request->get('dateto')));
-}
+    if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+    }
 
+    $department = $request->get('department');
 
-$department = $request->get('department');
+    if ($department != null) {
+      $deptt = json_encode($department);
+      $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 
-if ($department != null) {
-  $deptt = json_encode($department);
-  $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+      $dep = 'and acc_purchase_requisitions.department in'.$dept;
+    } else {
+      $dep = '';
+    }
 
-  $dep = 'and acc_investments.applicant_department in'.$dept;
-} else {
-  $dep = '';
-}
+          //per tgl
+    $data = db::select("
+       select date.week_date, coalesce(belum_diterima.total, 0) as jumlah_belum, coalesce(sudah_diterima.total, 0) as jumlah_sudah from 
+       (select week_date from weekly_calendars 
+       where date(week_date) >= '".$datefrom."'
+       and date(week_date) <= '".$dateto."') date
+       left join
+       (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
+       where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is null  ".$dep."
+       group by date(submission_date)) belum_diterima
+       on date.week_date = belum_diterima.date
+       left join
+       (select date(submission_date) as date, count(id) as total from acc_purchase_requisitions
+       where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' and acc_purchase_requisitions.deleted_at is null and receive_date is not null ".$dep."
+       group by date(submission_date)) sudah_diterima
+       on date.week_date = sudah_diterima.date
+       order by week_date asc");
 
-$data = db::select("
+          //per department
+    $data_dept = db::select("
+        select dept.department, coalesce(pr.total, 0) as jumlah_dept from 
+        (select distinct department from employee_syncs where department is not null) dept
+        left join
+        (select department, count(id) as total from acc_purchase_requisitions
+        where acc_purchase_requisitions.deleted_at is null 
+        group by department) pr
+        on dept.department = pr.department
+        order by department asc");
 
-    SELECT 
-    acc_investments.*, departments.department_shortname
-    FROM
-    acc_investments
-    JOIN 
-    departments
-    on acc_investments.applicant_department = departments.department_name
-    WHERE
-    acc_investments.`posisi` != 'finished' 
-    AND acc_investments.deleted_at IS NULL 
-    AND DATE_FORMAT( submission_date, '%Y-%m-%d' ) BETWEEN '".$datefrom."' 
-    AND '".$dateto."' ".$dep."
-    ORDER BY
-    submission_date ASC
-    ");
+    $data_pr_belum_po = db::select("
+        select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and submission_date between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
 
-$data_investment_belum_po = db::select("select acc_investments.*,acc_investment_details.*, departments.department_shortname from acc_investments left join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number join departments on acc_investments.applicant_department = departments.department_name where acc_investments.deleted_at is null and sudah_po is null and posisi = 'finished' ".$dep." order by submission_date ASC");
+    $year = date('Y');
 
-$response = array(
-    'status' => true,
-    'datas' => $data,
-    'data_investment_belum_po' => $data_investment_belum_po
-);
+    $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_dept' => $data_dept,
+        'data_pr_belum_po' => $data_pr_belum_po,
+        'year' => $year
+    );
 
-return Response::json($response); 
-}
+    return Response::json($response);
+    }
 
-
-public function detailMonitoringInv(Request $request){
-
-  $week = $request->get("week");
-  $status = $request->get("status");
-  $tglfrom = $request->get("tglfrom");
-  $tglto = $request->get("status");
-  $department = $request->get("department");
-
-  $status_sign = "";
-
-  if ($status == "Investment Incompleted") {
-      $status_sign = "and posisi != 'finished'";
-  }
-  else if ($status == "Investment Completed") {
-      $status_sign = "and posisi = 'finished'";
-  }
-
-
-
-  $qry = "SELECT acc_investments.*, weekly_calendars.week_name FROM acc_investments JOIN weekly_calendars on acc_investments.submission_date = weekly_calendars.week_date WHERE acc_investments.deleted_at is null and week_name = '".$week."' ".$department." ".$status_sign." ORDER BY acc_investments.id DESC";
-
-
-  $invest = DB::select($qry);
-
-  return DataTables::of($invest)
-  ->editColumn('submission_date', function ($invest)
-  {
-    return date('d F Y', strtotime($invest->submission_date));
-})
-
-  ->editColumn('supplier_code', function ($invest)
-  {
-    return $invest->supplier_code.' - '.$invest->supplier_name;
-})
-  ->editColumn('file', function ($invest)
-  {
-    $data = json_decode($invest->file);
-
-    $fl = "";
-
-    if ($invest->file != null)
+    public function fetchtablePR(Request $request)
     {
-        for ($i = 0;$i < count($data);$i++)
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $department = $request->get('department');
+
+      if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_purchase_requisitions.department in'.$dept;
+      } else {
+          $dep = '';
+      }
+
+
+      $data = db::select("select acc_purchase_requisitions.id, no_pr, emp_id, emp_name, department_shortname, section, no_budget, submission_date, po_due_date, receive_date, file, posisi, `status`, staff, manager, manager_name, (select `name` from employee_syncs where employee_id = dgm) as dgm, (select `name` from employee_syncs where employee_id = gm) as gm , approvalm, dateapprovalm, approvaldgm, dateapprovaldgm, approvalgm, dateapprovalgm, alasan, datereject from acc_purchase_requisitions join departments on acc_purchase_requisitions.department = department_name where acc_purchase_requisitions.status != 'received' and acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date asc");
+
+      $data_pr_belum_po = db::select("select acc_purchase_requisitions.no_pr,departments.department_shortname, acc_purchase_requisition_items.item_code, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.item_request_date from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join departments on acc_purchase_requisitions.department = department_name where acc_purchase_requisitions.deleted_at is null and receive_date is not null and sudah_po is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date ASC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_pr_belum_po' => $data_pr_belum_po
+    );
+
+      return Response::json($response); 
+    }
+
+    public function fetchtablePRPch(Request $request)
+    {
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m', strtotime(carbon::now()));
+      }
+
+      $department = $request->get('department');
+
+      if ($department != null) {
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and acc_purchase_requisitions.department in'.$dept;
+      } else {
+          $dep = '';
+      }
+
+
+      $data = db::select("select id, no_pr, emp_id, emp_name, department, section, no_budget, submission_date, po_due_date, receive_date, file, posisi, `status`, staff, manager, manager_name, (select `name` from employee_syncs where employee_id = dgm) as dgm, (select `name` from employee_syncs where employee_id = gm) as gm , approvalm, dateapprovalm, approvaldgm, dateapprovaldgm, approvalgm, dateapprovalgm, alasan, datereject from acc_purchase_requisitions where acc_purchase_requisitions.status = 'approval_acc' and acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date asc");
+
+      $data_pr_belum_po = db::select("select acc_purchase_requisitions.no_pr,acc_purchase_requisitions.department, acc_purchase_requisition_items.item_code, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.item_request_date from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and sudah_po is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date ASC");
+
+      $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_pr_belum_po' => $data_pr_belum_po
+    );
+
+      return Response::json($response); 
+    }
+
+    public function detailMonitoringPR(Request $request){
+
+      $bulan = $request->get("bulan");
+      $status = $request->get("status");
+      $tglfrom = $request->get("tglfrom");
+      $tglto = $request->get("status");
+      $department = $request->get("department");
+
+
+      $status_sign = "";
+
+      if ($status == "Sign Not Completed") {
+          $status_sign = "and receive_date is null";
+      }
+      else if ($status == "Sign Completed") {
+          $status_sign = "and receive_date is not null";
+      }
+
+
+
+      $qry = "SELECT  * FROM acc_purchase_requisitions WHERE deleted_at IS NULL and monthname(submission_date) = '".$bulan."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
+
+      $pr = DB::select($qry);
+
+      return DataTables::of($pr)
+      ->editColumn('submission_date', function ($pr)
+      {
+        return $pr->submission_date;
+    })
+      ->editColumn('note', function ($pr)
+      {
+        $note = "";
+        if ($pr->note != null)
         {
-            $fl .= '<a href="files/investment/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+            $note = $pr->note;
         }
-    }
-    else
-    {
-        $fl = '-';
-    }
+        else
+        {
+            $note = '-';
+        }
 
-    return $fl;
-})
-  ->editColumn('status', function ($invest)
-  {
-    $id = $invest->id;
-
-    if ($invest->posisi == "user" && $invest->status == "approval")
-    {
-        return '<label class="label label-danger">Belum Dikirim</label>';
-    }
-    if ($invest->posisi == "user" && $invest->status == "comment")
-    {
-        return '<label class="label label-warning">Commended</label>';
-    }
-    else if ($invest->posisi == "acc_budget" || $invest->posisi == "acc_pajak")
-    {
-        return '<label class="label label-warning">Verifikasi Oleh Accounting</label>';
-    }
-    else if ($invest->posisi == "manager")
-    {
-        return '<label class="label label-warning">Diverifikasi Manager</label>';
-    }
-    else if ($invest->posisi == "dgm")
-    {
-        return '<label class="label label-warning">Diverifikasi DGM</label>';
-    }
-    else if ($invest->posisi == "gm")
-    {
-        return '<label class="label label-warning">Diverifikasi GM</label>';
-    }
-    else if ($invest->posisi == "manager_acc")
-    {
-        return '<label class="label label-warning">Diverifikasi Manager Accounting</label>';
-    }
-    else if ($invest->posisi == "direktur_acc")
-    {
-        return '<label class="label label-warning">Diverifikasi Direktur Accounting</label>';
-    }
-    else if ($invest->posisi == "presdir")
-    {
-        return '<label class="label label-warning">Diverifikasi Presdir</label>';
-    }
-    else if ($invest->posisi == "finished")
-    {
-        return '<label class="label label-success">Telah Diverifikasi</label>';
-    }
-
-})
-  ->addColumn('action', function ($invest)
-  {
-    $id = $invest->id;
-
-    if ($invest->posisi == "user")
-    {
-        return '<a href="detail/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Edit</a>
-        <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>
-        ';
-    }
-    else if ($invest->posisi == "acc_budget" || $invest->posisi == "acc_pajak")
-    {
-        return '<a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>';
-    }
-    else if ($invest->posisi == "acc" || $invest->posisi == "manager" || $invest->posisi == "dgm" || $invest->posisi == "gm" || $invest->posisi == "manager_acc" || $invest->posisi == "direktur_acc" || $invest->posisi == "presdir" || $invest->posisi == "finished")
-    {
-        return '
-        <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>
-        ';
-    }
-})
-
-  ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file', 'supplier_code' => 'supplier_code'])
-  ->make(true);
-}
-
-public function detailMonitoringInvTable(Request $request){
-
-    $reff_number = $request->get("reff");
-    $status = $request->get("status");
-    $tglfrom = $request->get("tglfrom");
-    $tglto = $request->get("status");
-    $department = $request->get("department");
-
-    $status_sign = "";
-
-    if ($status == "Belum PO") {
-        $status_sign = "and sudah_po is null";
-    }
-    else if ($status == "Sudah PO") {
-        $status_sign = "and sudah_po is not null";
-    }
-
-    $qry = "SELECT acc_investments.reff_number,acc_investments.submission_date, acc_investment_details.* from acc_investments left join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number WHERE acc_investment_details.deleted_at is NULL and acc_investments.reff_number = '".$reff_number."' ".$department." ".$status_sign." ";
-
-    $inv = DB::select($qry);
-
-    return DataTables::of($inv)
-    ->editColumn('submission_date', function ($inv)
-    {
-        return $inv->submission_date;
+        return $note;
     })
-    ->editColumn('status', function ($inv)
-    {
-        if ($inv->sudah_po == null) {
-            return '<span class="label label-danger">Belum PO</span>';
+      ->editColumn('status', function ($pr)
+      {
+        $id = $pr->id;
+
+        if ($pr->status == "approval")
+        {
+            return '<label class="label label-warning">Approval</a>';
         }
-        else if ($inv->sudah_po != null) {
-            return '<span class="label label-success">Sudah PO</span>';
+        else if ($pr->status == "approval_acc")
+        {
+            return '<label class="label label-info">Diverifikasi Purchasing</a>';
+        }
+        else if ($pr->status == "received")
+        {
+            return '<label class="label label-success">Diterima Purchasing</a>';
+        }
+
+    })
+      ->addColumn('action', function ($pr)
+      {
+        $id = $pr->id;
+
+                // <a href="purchase_requisition/detail/' . $id . '" class="btn btn-info btn-xs" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i></a>
+
+        if($pr->status == "approval"){
+            return '
+            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+            ';
+        }
+        else{
+            return '
+            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+            ';
+        }
+
+
+    })
+      ->editColumn('file', function ($pr)
+      {
+
+        $data = json_decode($pr->file);
+
+        $fl = "";
+
+        if ($pr->file != null)
+        {
+            for ($i = 0;$i < count($data);$i++)
+            {
+                $fl .= '<a href="files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+            }
+        }
+        else
+        {
+            $fl = '-';
+        }
+
+        return $fl;
+    })
+      ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file'])
+      ->make(true);
+    }
+
+    public function detailMonitoringPRPch(Request $request){
+
+      $tanggal = $request->get("tanggal");
+      $status = $request->get("status");
+      $tglfrom = $request->get("tglfrom");
+      $tglto = $request->get("status");
+      $department = $request->get("department");
+
+      $status_sign = "";
+
+      if ($status == "PR Incompleted") {
+          $status_sign = "and receive_date is null";
+      }
+      else if ($status == "PR Completed") {
+          $status_sign = "and receive_date is not null";
+      }
+
+      $qry = "SELECT  * FROM acc_purchase_requisitions WHERE deleted_at IS NULL and submission_date = '".$tanggal."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
+
+      $pr = DB::select($qry);
+
+      return DataTables::of($pr)
+      ->editColumn('submission_date', function ($pr)
+      {
+        return $pr->submission_date;
+    })
+      ->editColumn('note', function ($pr)
+      {
+        $note = "";
+        if ($pr->note != null)
+        {
+            $note = $pr->note;
+        }
+        else
+        {
+            $note = '-';
+        }
+
+        return $note;
+    })
+      ->editColumn('status', function ($pr)
+      {
+        $id = $pr->id;
+
+        if ($pr->status == "approval")
+        {
+            return '<label class="label label-warning">Approval</a>';
+        }
+        else if ($pr->status == "approval_acc")
+        {
+            return '<label class="label label-info">Diverifikasi Purchasing</a>';
+        }
+        else if ($pr->status == "received")
+        {
+            return '<label class="label label-success">Diterima Purchasing</a>';
+        }
+
+    })
+      ->addColumn('action', function ($pr)
+      {
+        $id = $pr->id;
+
+                // <a href="purchase_requisition/detail/' . $id . '" class="btn btn-info btn-xs" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i></a>
+
+        if($pr->status == "approval"){
+            return '
+            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+            ';
+        }
+        else{
+            return '
+            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+            ';
+        }
+
+
+    })
+      ->editColumn('file', function ($pr)
+      {
+
+        $data = json_decode($pr->file);
+
+        $fl = "";
+
+        if ($pr->file != null)
+        {
+            for ($i = 0;$i < count($data);$i++)
+            {
+                $fl .= '<a href="files/pr/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+            }
+        }
+        else
+        {
+            $fl = '-';
+        }
+
+        return $fl;
+    })
+      ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file'])
+      ->make(true);
+    }
+
+    public function detailMonitoringPRPO(Request $request){
+
+        $pr = $request->get("pr");
+        $status = $request->get("status");
+        $tglfrom = $request->get("tglfrom");
+        $tglto = $request->get("status");
+        $department = $request->get("department");
+
+        $status_sign = "";
+
+        if ($status == "Belum PO") {
+            $status_sign = "and sudah_po is null";
+        }
+        else if ($status == "Sudah PO") {
+            $status_sign = "and sudah_po is not null";
+        }
+
+        $qry = "SELECT acc_purchase_requisitions.no_pr,acc_purchase_requisitions.submission_date, acc_purchase_requisition_items.* from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr WHERE acc_purchase_requisition_items.deleted_at is NULL and acc_purchase_requisitions.no_pr = '".$pr."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
+
+        $pr = DB::select($qry);
+
+        return DataTables::of($pr)
+        ->editColumn('submission_date', function ($pr)
+        {
+            return $pr->submission_date;
+        })
+        ->editColumn('status', function ($pr)
+        {
+            if ($pr->sudah_po == null) {
+                return '<span class="label label-danger">Belum PO</span>';
+            }
+            else if ($pr->sudah_po != null) {
+                return '<span class="label label-success">Sudah PO</span>';
+            }
+
+        })
+        ->rawColumns(['status' => 'status'])
+        ->make(true);
+    }
+
+
+
+    public function monitoringPO(){
+
+        return view('accounting_purchasing.display.po_monitoring',  
+            array(
+              'title' => 'Purchase Order Monitoring', 
+              'title_jp' => '',
+          )
+        )->with('page', 'Purchase Order Monitoring');
+    }
+
+    public function fetchMonitoringPO(Request $request){
+
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      $last = AccPurchaseOrder::where('status','=','pch')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(tgl_po) as tanggal'))
+      ->first();
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+    }
+    else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+        }
+    }
+    }
+
+
+    if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+    }
+
+          //per tgl
+    $data = db::select("
+        select date.week_date, coalesce(belum_diterima.total, 0) as jumlah_belum, coalesce(sudah_diterima.total, 0) as jumlah_sudah from 
+        (select week_date from weekly_calendars 
+        where date(week_date) >= '".$datefrom."'
+        and date(week_date) <= '".$dateto."') date
+        left join
+        (select date(tgl_po) as date, count(id) as total from acc_purchase_orders
+        where date(tgl_po) >= '".$datefrom."' and date(tgl_po) <= '".$dateto."' and acc_purchase_orders.deleted_at is null and posisi = 'pch' and `status` = 'sap'
+        group by date(tgl_po)) sudah_diterima
+        on date.week_date = sudah_diterima.date
+        left join
+        (select date(tgl_po) as date, count(id) as total from acc_purchase_orders
+        where date(tgl_po) >= '".$datefrom."' and date(tgl_po) <= '".$dateto."' and acc_purchase_orders.deleted_at is null and `status` != 'sap'
+        group by date(tgl_po)) belum_diterima
+        on date.week_date = belum_diterima.date
+        order by week_date asc
+        ");
+
+    $year = date('Y');
+
+    $response = array(
+        'status' => true,
+        'datas' => $data,
+        'year' => $year
+    );
+
+    return Response::json($response);
+    }
+
+    public function detailMonitoringPO(Request $request){
+
+      $tanggal = $request->get("tanggal");
+      $status = $request->get("status");
+      $tglfrom = $request->get("tglfrom");
+      $tglto = $request->get("tglto");
+
+
+      $status_sign = "";
+
+      if ($status == "PO Incompleted") {
+          $status_sign = "and status != 'sap'";
+      }
+      else if ($status == "PO Completed") {
+          $status_sign = "and posisi = 'pch' and status = 'sap'";
+      }
+
+
+      $qry = "SELECT * FROM acc_purchase_orders WHERE deleted_at IS NULL and DATE_FORMAT(tgl_po,'%Y-%m-%d') = '".$tanggal."' ".$status_sign." order by id DESC";
+      $po = DB::select($qry);
+
+      return DataTables::of($po)
+
+      ->editColumn('tgl_po', function ($po)
+      {
+        return date('Y-m-d', strtotime($po->tgl_po));
+    })
+
+      ->editColumn('no_po_sap', function ($po)
+      {
+        $id = $po->id;
+
+        $po_sap = "";
+        if ($po->no_po_sap == null && $po->status == "not_sap")
+        {
+            $po_sap = '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-md" onClick="editSAP(' . $id . ')"><i class="fa fa-edit"></i> NO PO SAP</a>';
+        }
+        else if ($po->no_po_sap != null){
+            $po_sap = $po->no_po_sap;   
+        }
+        else
+        {
+            $po_sap = '-';
+        }
+
+        return $po_sap;
+    })
+
+      ->editColumn('status', function ($po)
+      {
+        $id = $po->id;
+
+        if ($po->posisi == "staff_pch")
+        {
+            return '<label class="label label-danger">Staff PCH</label>';
+        }
+
+        else if ($po->posisi == "manager_pch")
+        {
+            return '<label class="label label-primary">Diverifikasi Manager</label>';
+        }
+
+        else if ($po->posisi == "dgm_pch")
+        {
+            return '<label class="label label-primary">Diverifikasi DGM</label>';
+        }
+
+        else if ($po->posisi == "gm_pch")
+        {
+            return '<label class="label label-primary">Diverifikasi GM</label>';
+        }
+
+        else if ($po->posisi == "pch")
+        {
+            return '<label class="label label-success">Sudah Diverifikasi</label>';
+        }
+
+    })
+      ->addColumn('action', function ($po)
+      {
+        $id = $po->id;
+        if ($po->posisi == "staff_pch") {
+            return '
+            <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
+            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+            <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Send Email" style="margin-right:5px;"  onclick="sendEmail(' . $id .')"><i class="fa fa-envelope"></i> Send Email</button>
+            ';
+        }
+
+        else if ($po->posisi == "pch") {
+            return '
+            <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
+            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"> Report</i></a>
+            ';
+        }
+
+        else{
+            return '
+            <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
+            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+            <label class="label label-success">Email Sudah Dikirim</label>
+            ';   
         }
     })
-    ->rawColumns(['status' => 'status'])
-    ->make(true);
-}
+      ->rawColumns(['status' => 'status', 'action' => 'action', 'no_po_sap' => 'no_po_sap'])
+      ->make(true);
+    }
+
+    public function fetchtablePO(Request $request)
+    {
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+
+      if ($datefrom == "") {
+          $datefrom = date('Y-m-d', strtotime(carbon::now()->subMonth(11)));
+      }
+
+      if ($dateto == "") {
+          $dateto = date('Y-m-d', strtotime(carbon::now()));
+      }
+
+      $data = db::select("
+
+        SELECT
+        t1.*,IF(t1.goods_price != 0,sum( t1.goods_price * t1.qty ),sum( t1.service_price * t1.qty )) AS amount 
+        FROM
+        (
+        SELECT
+        acc_purchase_orders.*,
+        acc_purchase_order_details.budget_item,
+        acc_purchase_order_details.goods_price,
+        acc_purchase_order_details.service_price,
+        acc_purchase_order_details.qty 
+        FROM
+        acc_purchase_orders
+        JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+        WHERE
+        acc_purchase_orders.`status` != 'sap' 
+        AND acc_purchase_orders.deleted_at IS NULL 
+        AND DATE_FORMAT( tgl_po, '%Y-%m-%d' ) BETWEEN  '".$datefrom."' AND '".$dateto."' 
+        ORDER BY
+        tgl_po ASC 
+        ) t1
+        GROUP BY t1.no_po");
+
+          //select id, remark, no_po, no_po_sap, DATE_FORMAT(tgl_po,'%Y-%m-%d'),supplier_code, supplier_name, supplier_status, buyer_id, buyer_name, authorized2, authorized2_name, approval_authorized2, date_approval_authorized2, authorized3, authorized3_name, date_approval_authorized3, approval_authorized3, authorized4, authorized4_name, date_approval_authorized4, approval_authorized4, reject, datereject, posisi, `status` from acc_purchase_orders where acc_purchase_orders.`status` != 'sap' and acc_purchase_orders.deleted_at is null and DATE_FORMAT(tgl_po,'%Y-%m-%d') between '2020-08-01' and '2020-09-01'  order by tgl_po asc
+
+      $response = array(
+        'status' => true,
+        'datas' => $data
+    );
+
+      return Response::json($response); 
+    }
+
+    public function investmentControl(){
+
+        $dept = db::select("select DISTINCT department from employee_syncs");
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+        ->select('department')
+        ->first();
+
+        return view('accounting_purchasing.display.investment_control',  
+            array(
+              'title' => 'Investment Monitoring & Control', 
+              'title_jp' => '',
+              'emp_dept' => $emp_dept,
+              'department' => $dept
+          )
+        )->with('page', 'Investment Control');
+
+    }
+
+    public function fetchInvestmentControl(Request $request){
+
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      $last = AccInvestment::where('posisi','!=','finished')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(submission_date) as tanggal'))
+      ->first();
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+    }else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+        }
+    }
+    }
+
+
+    if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+    }
+
+    $department = $request->get('department');
+
+    if ($department != null) {
+      $deptt = json_encode($department);
+      $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+      $dep = 'and acc_investments.applicant_department in '.$dept;
+    } else {
+      $dep = '';
+    }
+
+          //per tgl
+    $data = db::select("
+        select date2.week_date, date2.week_name, sum(date2.not_finish) as undone, sum(date2.finish) done from 
+        (
+        select date.week_date, date.week_name, coalesce(not_finish.total, 0) as not_finish, coalesce(finish.total, 0) as finish from 
+        (select week_date,week_name from weekly_calendars 
+        where date(week_date) >= '".$datefrom."'
+        and date(week_date) <= '".$dateto."') date
+        left join
+        (select date(submission_date) as date, count(id) as total from acc_investments
+        where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' ".$dep." and acc_investments.deleted_at is null and posisi = 'finished'
+        group by date(submission_date)) finish
+        on date.week_date = finish.date
+        left join
+        (select date(submission_date) as date, count(id) as total from acc_investments
+        where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' ".$dep." and acc_investments.deleted_at is null and `posisi` != 'finished'
+        group by date(submission_date)) not_finish
+        on date.week_date = not_finish.date
+        order by week_date asc) date2 group by date2.week_name              
+        ");
+
+    $data_investment_belum_po = db::select("
+        select acc_investments.reff_number, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_investments left join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number where acc_investments.deleted_at is null and posisi = 'finished' ".$dep."  GROUP BY reff_number order by submission_date ASC");
+
+    $year = date('Y');
+
+    $response = array(
+        'status' => true,
+        'datas' => $data,
+        'year' => $year,
+        'data_investment_belum_po' => $data_investment_belum_po
+    );
+
+    return Response::json($response);
+    }
+
+
+
+    public function fetchtableinv(Request $request)
+    {
+      $datefrom = date("Y-m-d",  strtotime('-30 days'));
+      $dateto = date("Y-m-d");
+
+      $last = AccInvestment::where('posisi','!=','finished')
+      ->orderBy('tanggal', 'asc')
+      ->select(db::raw('date(submission_date) as tanggal'))
+      ->first();
+
+      if(strlen($request->get('datefrom')) > 0){
+        $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+    }else{
+        if($last){
+          $tanggal = date_create($last->tanggal);
+          $now = date_create(date('Y-m-d'));
+          $interval = $now->diff($tanggal);
+          $diff = $interval->format('%a%');
+
+          if($diff > 30){
+            $datefrom = date('Y-m-d', strtotime($last->tanggal));
+        }
+    }
+    }
+
+
+    if(strlen($request->get('dateto')) > 0){
+        $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+    }
+
+
+    $department = $request->get('department');
+
+    if ($department != null) {
+      $deptt = json_encode($department);
+      $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+      $dep = 'and acc_investments.applicant_department in'.$dept;
+    } else {
+      $dep = '';
+    }
+
+    $data = db::select("
+
+        SELECT 
+        acc_investments.*, departments.department_shortname
+        FROM
+        acc_investments
+        JOIN 
+        departments
+        on acc_investments.applicant_department = departments.department_name
+        WHERE
+        acc_investments.`posisi` != 'finished' 
+        AND acc_investments.deleted_at IS NULL 
+        AND DATE_FORMAT( submission_date, '%Y-%m-%d' ) BETWEEN '".$datefrom."' 
+        AND '".$dateto."' ".$dep."
+        ORDER BY
+        submission_date ASC
+        ");
+
+    $data_investment_belum_po = db::select("select acc_investments.*,acc_investment_details.*, departments.department_shortname from acc_investments left join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number join departments on acc_investments.applicant_department = departments.department_name where acc_investments.deleted_at is null and sudah_po is null and posisi = 'finished' ".$dep." order by submission_date ASC");
+
+    $response = array(
+        'status' => true,
+        'datas' => $data,
+        'data_investment_belum_po' => $data_investment_belum_po
+    );
+
+    return Response::json($response); 
+    }
+
+
+    public function detailMonitoringInv(Request $request){
+
+      $week = $request->get("week");
+      $status = $request->get("status");
+      $tglfrom = $request->get("tglfrom");
+      $tglto = $request->get("status");
+      $department = $request->get("department");
+
+      $status_sign = "";
+
+      if ($status == "Investment Incompleted") {
+          $status_sign = "and posisi != 'finished'";
+      }
+      else if ($status == "Investment Completed") {
+          $status_sign = "and posisi = 'finished'";
+      }
+
+
+
+      $qry = "SELECT acc_investments.*, weekly_calendars.week_name FROM acc_investments JOIN weekly_calendars on acc_investments.submission_date = weekly_calendars.week_date WHERE acc_investments.deleted_at is null and week_name = '".$week."' ".$department." ".$status_sign." ORDER BY acc_investments.id DESC";
+
+
+      $invest = DB::select($qry);
+
+      return DataTables::of($invest)
+      ->editColumn('submission_date', function ($invest)
+      {
+        return date('d F Y', strtotime($invest->submission_date));
+    })
+
+      ->editColumn('supplier_code', function ($invest)
+      {
+        return $invest->supplier_code.' - '.$invest->supplier_name;
+    })
+      ->editColumn('file', function ($invest)
+      {
+        $data = json_decode($invest->file);
+
+        $fl = "";
+
+        if ($invest->file != null)
+        {
+            for ($i = 0;$i < count($data);$i++)
+            {
+                $fl .= '<a href="files/investment/' . $data[$i] . '" target="_blank" class="fa fa-paperclip"></a>';
+            }
+        }
+        else
+        {
+            $fl = '-';
+        }
+
+        return $fl;
+    })
+      ->editColumn('status', function ($invest)
+      {
+        $id = $invest->id;
+
+        if ($invest->posisi == "user" && $invest->status == "approval")
+        {
+            return '<label class="label label-danger">Belum Dikirim</label>';
+        }
+        if ($invest->posisi == "user" && $invest->status == "comment")
+        {
+            return '<label class="label label-warning">Commended</label>';
+        }
+        else if ($invest->posisi == "acc_budget" || $invest->posisi == "acc_pajak")
+        {
+            return '<label class="label label-warning">Verifikasi Oleh Accounting</label>';
+        }
+        else if ($invest->posisi == "manager")
+        {
+            return '<label class="label label-warning">Diverifikasi Manager</label>';
+        }
+        else if ($invest->posisi == "dgm")
+        {
+            return '<label class="label label-warning">Diverifikasi DGM</label>';
+        }
+        else if ($invest->posisi == "gm")
+        {
+            return '<label class="label label-warning">Diverifikasi GM</label>';
+        }
+        else if ($invest->posisi == "manager_acc")
+        {
+            return '<label class="label label-warning">Diverifikasi Manager Accounting</label>';
+        }
+        else if ($invest->posisi == "direktur_acc")
+        {
+            return '<label class="label label-warning">Diverifikasi Direktur Accounting</label>';
+        }
+        else if ($invest->posisi == "presdir")
+        {
+            return '<label class="label label-warning">Diverifikasi Presdir</label>';
+        }
+        else if ($invest->posisi == "finished")
+        {
+            return '<label class="label label-success">Telah Diverifikasi</label>';
+        }
+
+    })
+      ->addColumn('action', function ($invest)
+      {
+        $id = $invest->id;
+
+        if ($invest->posisi == "user")
+        {
+            return '<a href="detail/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Edit</a>
+            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>
+            ';
+        }
+        else if ($invest->posisi == "acc_budget" || $invest->posisi == "acc_pajak")
+        {
+            return '<a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>';
+        }
+        else if ($invest->posisi == "acc" || $invest->posisi == "manager" || $invest->posisi == "dgm" || $invest->posisi == "gm" || $invest->posisi == "manager_acc" || $invest->posisi == "direktur_acc" || $invest->posisi == "presdir" || $invest->posisi == "finished")
+        {
+            return '
+            <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>
+            ';
+        }
+    })
+
+      ->rawColumns(['status' => 'status', 'action' => 'action', 'file' => 'file', 'supplier_code' => 'supplier_code'])
+      ->make(true);
+    }
+
+    public function detailMonitoringInvTable(Request $request){
+
+        $reff_number = $request->get("reff");
+        $status = $request->get("status");
+        $tglfrom = $request->get("tglfrom");
+        $tglto = $request->get("status");
+        $department = $request->get("department");
+
+        $status_sign = "";
+
+        if ($status == "Belum PO") {
+            $status_sign = "and sudah_po is null";
+        }
+        else if ($status == "Sudah PO") {
+            $status_sign = "and sudah_po is not null";
+        }
+
+        $qry = "SELECT acc_investments.reff_number,acc_investments.submission_date, acc_investment_details.* from acc_investments left join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number WHERE acc_investment_details.deleted_at is NULL and acc_investments.reff_number = '".$reff_number."' ".$department." ".$status_sign." ";
+
+        $inv = DB::select($qry);
+
+        return DataTables::of($inv)
+        ->editColumn('submission_date', function ($inv)
+        {
+            return $inv->submission_date;
+        })
+        ->editColumn('status', function ($inv)
+        {
+            if ($inv->sudah_po == null) {
+                return '<span class="label label-danger">Belum PO</span>';
+            }
+            else if ($inv->sudah_po != null) {
+                return '<span class="label label-success">Sudah PO</span>';
+            }
+        })
+        ->rawColumns(['status' => 'status'])
+        ->make(true);
+    }
 
 
 }
