@@ -754,6 +754,10 @@ class AccountingController extends Controller
             $dept = "Human Resources";
             $budgets->where('department', '=', $dept);
         }
+        else if($request->get('department') == "Purchasing Control") {
+            $dept = "Procurement";
+            $budgets->where('department', '=', $dept);
+        }
         else if ($request->get('department') == "Management Information System") {
         }
         else{
@@ -4361,6 +4365,9 @@ public function update_purchase_requisition_po(Request $request)
 
         if ($request->get('department') == "General Affairs") {
             $dept = "Human Resources";
+        } 
+        else if($request->get('department') == "Purchasing Control") {
+            $dept = "Procurement";
         }
         else{
             $dept = $request->get('department');
@@ -5944,6 +5951,9 @@ public function update_purchase_requisition_po(Request $request)
         }
         else if ($emp_dept->department == "General Affairs"){
             $budget = $budget->where('department','=','Human Resources');
+        }
+        else if($emp_dept->department == "Purchasing Control") {
+            $budget = $budget->where('department','=','Procurement');
         }
         else {
             $budget = $budget->where('department','=',$emp_dept->department);
