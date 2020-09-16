@@ -703,7 +703,6 @@
 		hasil_konversi_yen = 0;
 		hasil_konversi_id = 0;
 		item = [];
-		budget_list = "";
 		item_list = "";
 		total_usd = 0;
 		total_id = 0;
@@ -1087,7 +1086,11 @@
 			department:"{{ $employee->department }}",
 		}
 
+
 		$.get('{{ url("fetch/purchase_requisition/budgetlist") }}', data, function(result, status, xhr) {
+
+	  		$('#budget_no').html('');
+	  		budget_list = "";
 			$.each(result.budget, function(index, value){
 				budget_list += "<option value="+value.budget_no+">"+value.budget_no+" - "+value.description+"</option> ";
 			});

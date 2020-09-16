@@ -906,7 +906,7 @@ class AccountingController extends Controller
                 $dept = "BP";
             }
         }
-        else if ($dept == "Procurement" || $dept == "Purchasing")
+        else if ($dept == "Procurement" || $dept == "Purchasing Control")
         {
             $dept = "PH";
         }
