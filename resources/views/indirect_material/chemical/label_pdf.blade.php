@@ -52,98 +52,95 @@
 		@endphp
 
 
-		<table style="width: 100%; margin-top: 5%;">
-			<tbody style="font-weight: bold;">
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 25px; width: 20%">GMC</td>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 50px; width: 50%">{{ $data[$i]->material_number }}</td>
-					<td style="vertical-align: middle; font-size: 30px; width: 30%; text-align: center;">
-						{{ $data[$i]->month }}
-					</td>
-				</tr>
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 25px;">Desc.</td>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 26px;">{{ $data[$i]->material_description }}</td>
-					<td rowspan="3" style="text-align: center; vertical-align: middle;">
-						<img src="{{ public_path() . '/qr_code.png' }}" class="cropped">
-						<span style="font-size: 10px;">{{ $data[$i]->qr_code }}</span>
-					</td>
-				</tr>
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; font-size: 25px; vertical-align: middle;">Tgl Masuk</td>
-					<td style="padding: 0px 5px 0px 5px; font-size: 50px; vertical-align: middle;">{{ $data[$i]->masuk }}</td>
-				</tr>
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; font-size: 25px; vertical-align: middle;">Tgl Exp</td>
-					<td style="padding: 0px 5px 0px 5px; font-size: 50px; vertical-align: middle;">{{ $data[$i]->exp }}</td>
-				</tr>
-			</tbody>
-		</table>
-		
-		<br><br><br><br><br>
-		<br><br><br><br><br>
+		@php
+		if($data[$i]->label == 'BESAR'){
+			for ($j=0; $j < 2; $j++) {
+				@endphp
+				<table style="width: 100%; margin-top: 5%;">
+					<tbody style="font-weight: bold;">
+						<tr>
+							<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 25px; width: 20%">GMC</td>
+							<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 50px; width: 50%">{{ $data[$i]->material_number }}</td>
+							<td style="vertical-align: middle; font-size: 30px; width: 30%; text-align: center;">
+								{{ $data[$i]->month }}
+							</td>
+						</tr>
+						<tr>
+							<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 25px;">Desc.</td>
+							<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 26px;">{{ $data[$i]->material_description }}</td>
+							<td rowspan="3" style="text-align: center; vertical-align: middle;">
+								<img src="{{ public_path() . '/qr_code.png' }}" class="cropped">
+								<span style="font-size: 10px;">{{ $data[$i]->qr_code }}</span>
+							</td>
+						</tr>
+						<tr>
+							<td style="padding: 0px 5px 0px 5px; font-size: 25px; vertical-align: middle;">Tgl Masuk</td>
+							<td style="padding: 0px 5px 0px 5px; font-size: 50px; vertical-align: middle;">{{ $data[$i]->masuk }}</td>
+						</tr>
+						<tr>
+							<td style="padding: 0px 5px 0px 5px; font-size: 25px; vertical-align: middle;">Tgl Exp</td>
+							<td style="padding: 0px 5px 0px 5px; font-size: 50px; vertical-align: middle;">{{ $data[$i]->exp }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<br><br><br><br><br>
+				@php
+			}
+		}else{	
+			@endphp
+			<table style="border: 2px solid black;">
+				<tbody style="font-weight: bold;">
+					<tr>
+						<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px; width: 20%">GMC</td>
+						<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 20px; width: 50%">{{ $data[$i]->material_number }}</td>
+						<td style="vertical-align: middle; font-size: 11px; width: 30%; text-align: center;">
+							{{ $data[$i]->month }}
+						</td>
+						<td rowspan="4" style="background-color: white; border: 0; color: white">A</td>
+						<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px; width: 20%">GMC</td>
+						<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 20px; width: 50%">{{ $data[$i]->material_number }}</td>
+						<td style="vertical-align: middle; font-size: 11px; width: 30%; text-align: center;">
+							{{ $data[$i]->month }}
+						</td>
+					</tr>
+					<tr>
+						<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px;">Desc.</td>
+						<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 14px;">{{ $data[$i]->material_description }}</td>
+						<td rowspan="3" style="text-align: center; vertical-align: middle;">
+							<img src="{{ public_path() . '/qr_code.png' }}" class="cropped_small" style="margin-top: 3px;">
+							<span style="font-size: 10px;">{{ $data[$i]->qr_code }}</span>
+						</td>
 
-		<table style="width: 100%;">
-			<tbody style="font-weight: bold;">
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 25px; width: 20%">GMC</td>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 50px; width: 50%">{{ $data[$i]->material_number }}</td>
-					<td style="vertical-align: middle; font-size: 30px; width: 30%; text-align: center;">
-						{{ $data[$i]->month }}
-					</td>
-				</tr>
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 25px;">Desc.</td>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 26px;">{{ $data[$i]->material_description }}</td>
-					<td rowspan="3" style="text-align: center; vertical-align: middle;">
-						<img src="{{ public_path() . '/qr_code.png' }}" class="cropped">
-						<span style="font-size: 10px;">{{ $data[$i]->qr_code }}</span>
-					</td>
-				</tr>
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; font-size: 25px; vertical-align: middle;">Tgl Masuk</td>
-					<td style="padding: 0px 5px 0px 5px; font-size: 50px; vertical-align: middle;">{{ $data[$i]->masuk }}</td>
-				</tr>
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; font-size: 25px; vertical-align: middle;">Tgl Exp</td>
-					<td style="padding: 0px 5px 0px 5px; font-size: 50px; vertical-align: middle;">{{ $data[$i]->exp }}</td>
-				</tr>
-			</tbody>
-		</table>
+						<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px;">Desc.</td>
+						<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 14px;">{{ $data[$i]->material_description }}</td>
+						<td rowspan="3" style="text-align: center; vertical-align: middle;">
+							<img src="{{ public_path() . '/qr_code.png' }}" class="cropped_small" style="margin-top: 3px;">
+							<span style="font-size: 10px;">{{ $data[$i]->qr_code }}</span>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding: 0px 5px 0px 5px; font-size: 12px; vertical-align: middle;">Tgl Masuk</td>
+						<td style="padding: 0px 5px 0px 5px; font-size: 20px; vertical-align: middle;">{{ $data[$i]->masuk }}</td>
+
+						<td style="padding: 0px 5px 0px 5px; font-size: 12px; vertical-align: middle;">Tgl Masuk</td>
+						<td style="padding: 0px 5px 0px 5px; font-size: 20px; vertical-align: middle;">{{ $data[$i]->masuk }}</td>
+					</tr>
+					<tr>
+						<td style="padding: 0px 5px 0px 5px; font-size: 12px; vertical-align: middle;">Tgl Exp</td>
+						<td style="padding: 0px 5px 0px 5px; font-size: 20px; vertical-align: middle;">{{ $data[$i]->exp }}</td>
+
+						<td style="padding: 0px 5px 0px 5px; font-size: 12px; vertical-align: middle;">Tgl Exp</td>
+						<td style="padding: 0px 5px 0px 5px; font-size: 20px; vertical-align: middle;">{{ $data[$i]->exp }}</td>
+					</tr>
+				</tbody>
+			</table>
+			@php
+		}	
+		@endphp
 
 		@if($i != (count($data)-1))
 
 		<div class="page-break"></div>
-
-		<br><br><br><br><br>
-		<table style="width: 45%;">
-			<tbody style="font-weight: bold;">
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px; width: 20%">GMC</td>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 28px; width: 50%">{{ $data[$i]->material_number }}</td>
-					<td style="vertical-align: middle; font-size: 10px; width: 30%; text-align: center;">
-						{{ $data[$i]->month }}
-					</td>
-				</tr>
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px;">Desc.</td>
-					<td style="padding: 0px 5px 0px 5px; vertical-align: middle; font-size: 12px;">{{ $data[$i]->material_description }}</td>
-					<td rowspan="3" style="text-align: center; vertical-align: middle;">
-						<img src="{{ public_path() . '/qr_code.png' }}" class="cropped_small">
-						<span style="font-size: 10px;">{{ $data[$i]->qr_code }}</span>
-					</td>
-				</tr>
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; font-size: 12px; vertical-align: middle;">Tgl Masuk</td>
-					<td style="padding: 0px 5px 0px 5px; font-size: 20px; vertical-align: middle;">{{ $data[$i]->masuk }}</td>
-				</tr>
-				<tr>
-					<td style="padding: 0px 5px 0px 5px; font-size: 12px; vertical-align: middle;">Tgl Exp</td>
-					<td style="padding: 0px 5px 0px 5px; font-size: 20px; vertical-align: middle;">{{ $data[$i]->exp }}</td>
-				</tr>
-			</tbody>
-		</table>
-		
 
 		@endif
 		

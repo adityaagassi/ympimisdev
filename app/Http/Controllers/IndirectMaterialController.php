@@ -672,6 +672,126 @@ class IndirectMaterialController extends Controller{
 		}
 	}
 
+	public function inputResult($id, $material, $quantity, $convertion, $date){
+
+		$solution = ChemicalSolution::where('id', $id)->first();
+
+		try {		
+
+			if($solution->category == 'CONTROLLING CHART'){
+				if($solution->target_uom == 'DM2'){
+					$solution->actual_quantity = $solution->actual_quantity + ($quantity * $convertion);
+					$solution->updated_at = Carbon::now();
+					$solution->save();				
+
+					$log = new ChemicalControlLog([
+						'date' => $date,
+						'solution_name' => $solution->solution_name,
+						'cost_center_id' => $solution->cost_center_id,
+						'target_max' => $solution->target_max,
+						'target_warning' => $solution->target_warning,
+						'note' => $material,
+						'quantity' => $quantity * $convertion,
+						'accumulative' => $solution->actual_quantity,
+						'created_by' => Auth::id()
+					]);
+					$log->save();
+				}else{
+					$solution->actual_quantity = $solution->actual_quantity + $quantity;
+					$solution->updated_at = Carbon::now();
+					$solution->save();
+
+					$log = new ChemicalControlLog([
+						'date' => $date,
+						'solution_name' => $solution->solution_name,
+						'cost_center_id' => $solution->cost_center_id,
+						'target_max' => $solution->target_max,
+						'target_warning' => $solution->target_warning,
+						'note' => $material,
+						'quantity' => $quantity,
+						'accumulative' => $solution->actual_quantity,
+						'created_by' => Auth::id()
+					]);
+					$log->save();
+				}
+
+				if($solution->actual_quantity > $solution->target_warning){
+					if($solution->is_add_schedule == 1){
+						$this->inputChmControl($solution->id);
+
+						$solution->is_add_schedule = 0;
+						$solution->save();
+					}
+				}
+			}		
+			
+			
+		} catch (Exception $e) {
+			$error_log = new ErrorLog([
+				'error_message' => $e->getMessage(),
+				'created_by' => $id
+			]);
+			$error_log->save();
+		}
+
+		
+	}
+
+	public function inputStrikeNickel($material, $quantity, $convertion, $date){
+
+		//STRIKE NICKEL
+		// $solution = ChemicalSolution::where('id', 36)->first();
+		$this->inputResult(36, $material, $quantity, $convertion, $date);
+
+		//ULTRASONIC CLEANER
+		// $solution = ChemicalSolution::where('id', 30)->first();
+		$this->inputResult(30, $material, $quantity, $convertion, $date);
+		
+		//ALKALI DEGREASING
+		// $solution = ChemicalSolution::where('id', 31)->first();
+		$this->inputResult(31, $material, $quantity, $convertion, $date);
+		
+		//ELECTRO ALKALI DEGREASING
+		// $solution = ChemicalSolution::where('id', 32)->first();
+		$this->inputResult(32, $material, $quantity, $convertion, $date);
+		
+		//ACID ACTIVATION
+		// $solution = ChemicalSolution::where('id', 33)->first();
+		$this->inputResult(33, $material, $quantity, $convertion, $date);
+	}
+
+	public function inputStrikeSilver($material, $quantity, $convertion, $date){
+
+		//STRIKE SILVER
+		// $solution = ChemicalSolution::where('id', 39)->first();
+		$this->inputResult(39, $material, $quantity, $convertion, $date);
+
+		//ULTRASONIC CLEANER
+		// $solution = ChemicalSolution::where('id', 30)->first();
+		$this->inputResult(30, $material, $quantity, $convertion, $date);
+		
+		//ALKALI DEGREASING
+		// $solution = ChemicalSolution::where('id', 31)->first();
+		$this->inputResult(31, $material, $quantity, $convertion, $date);
+		
+		//ELECTRO ALKALI DEGREASING
+		// $solution = ChemicalSolution::where('id', 32)->first();
+		$this->inputResult(32, $material, $quantity, $convertion, $date);
+		
+		//ACID ACTIVATION
+		// $solution = ChemicalSolution::where('id', 33)->first();
+		$this->inputResult(33, $material, $quantity, $convertion, $date);
+
+		//ALKALI DIPPING
+		// $solution = ChemicalSolution::where('id', 34)->first();
+		$this->inputResult(34, $material, $quantity, $convertion, $date);
+		
+		//NETRALISASI
+		// $solution = ChemicalSolution::where('id', 35)->first();
+		$this->inputResult(35, $material, $quantity, $convertion, $date);
+
+	}
+
 	public function inputProductionResult(Request $request){
 		$date = $request->get('date');
 		$larutan = $request->get('larutan');
@@ -683,28 +803,58 @@ class IndirectMaterialController extends Controller{
 
 				$solution = ChemicalSolution::where('id', $larutan)->first();
 
-				if($solution->target_uom == 'DM2'){
-					$solution->actual_quantity = $solution->actual_quantity + ($material[$i][2] * $convertion->dm2);
-					$solution->updated_at = Carbon::now();
-					$solution->save();					
+				if (strpos($solution->solution_name, 'GLOSSY NI') !== false) {
+					$this->inputStrikeNickel($material[$i][1], $material[$i][2], $convertion->dm2, $date);
+				}else if (strpos($solution->solution_name, 'GLOSSY SILVER') !== false){
+					$this->inputStrikeSilver($material[$i][1], $material[$i][2], $convertion->dm2, $date);
+				}
 
-					$log = new ChemicalControlLog([
-						'date' => $date,
-						'solution_name' => $solution->solution_name,
-						'cost_center_id' => $solution->cost_center_id,
-						'target_max' => $solution->target_max,
-						'target_warning' => $solution->target_warning,
-						'note' => $material[$i][1],
-						'quantity' => $material[$i][2] * $convertion->dm2,
-						'accumulative' => $solution->actual_quantity,
-						'created_by' => Auth::id()
-					]);
-					$log->save();
+				if($solution->category == 'CONTROLLING CHART'){
+					if($solution->target_uom == 'DM2'){
+						$solution->actual_quantity = $solution->actual_quantity + ($material[$i][2] * $convertion->dm2);
+						$solution->updated_at = Carbon::now();
+						$solution->save();
+
+						$log = new ChemicalControlLog([
+							'date' => $date,
+							'solution_name' => $solution->solution_name,
+							'cost_center_id' => $solution->cost_center_id,
+							'target_max' => $solution->target_max,
+							'target_warning' => $solution->target_warning,
+							'note' => $material[$i][1],
+							'quantity' => $material[$i][2] * $convertion->dm2,
+							'accumulative' => $solution->actual_quantity,
+							'created_by' => Auth::id()
+						]);
+						$log->save();
+					}else{
+						$solution->actual_quantity = $solution->actual_quantity + $material[$i][2];
+						$solution->updated_at = Carbon::now();
+						$solution->save();
+
+						$log = new ChemicalControlLog([
+							'date' => $date,
+							'solution_name' => $solution->solution_name,
+							'cost_center_id' => $solution->cost_center_id,
+							'target_max' => $solution->target_max,
+							'target_warning' => $solution->target_warning,
+							'note' => $material[$i][1],
+							'quantity' => $material[$i][2],
+							'accumulative' => $solution->actual_quantity,
+							'created_by' => Auth::id()
+						]);
+						$log->save();
+					}
+
+					if($solution->actual_quantity > $solution->target_warning){
+						if($solution->is_add_schedule == 1){
+							$this->inputChmControl($solution->id);
+
+							$solution->is_add_schedule = 0;
+							$solution->save();
+						}
+					}
 				}else{
-					$solution->actual_quantity = $solution->actual_quantity + $material[$i][2];
-					$solution->updated_at = Carbon::now();
-					$solution->save();
-
 					$log = new ChemicalControlLog([
 						'date' => $date,
 						'solution_name' => $solution->solution_name,
@@ -717,18 +867,6 @@ class IndirectMaterialController extends Controller{
 						'created_by' => Auth::id()
 					]);
 					$log->save();
-				}				
-
-				if($solution->actual_quantity > $solution->target_warning){
-					if($solution->is_add_schedule == 1){
-						$this->inputChmControl($solution->id);
-
-						$solution->is_add_schedule = 0;
-						$solution->save();
-					}
-
-					// $solution->actual_quantity = 0;
-					// $solution->save();
 				}
 			}		
 
@@ -1367,32 +1505,39 @@ class IndirectMaterialController extends Controller{
 
 		$larutan = ChemicalSolution::leftJoin('indirect_material_cost_centers','indirect_material_cost_centers.id','=','chemical_solutions.cost_center_id')
 		->where('chemical_solutions.id', $larutan_id)
-		->select('chemical_solutions.id', 'chemical_solutions.solution_name', 'chemical_solutions.cost_center_id', 'indirect_material_cost_centers.department', 'indirect_material_cost_centers.location')
+		->select('chemical_solutions.id', 'chemical_solutions.solution_name', 'chemical_solutions.category', 'chemical_solutions.cost_center_id', 'indirect_material_cost_centers.department', 'indirect_material_cost_centers.location')
 		->first();
 
+		if($larutan->category == 'CONTROLLING CHART'){
+			$data = db::select("SELECT date.week_date AS date, accumulative, target_max, target_warning FROM
+				(SELECT week_date FROM weekly_calendars
+				WHERE week_date >= '".$datefrom."'
+				AND week_date <= '".$dateto."'
+				) date
+				LEFT JOIN
+				(SELECT date, target_max, target_warning, MAX(accumulative) as accumulative from chemical_control_logs
+				WHERE date >= '".$datefrom."'
+				AND date <= '".$dateto."'
+				AND solution_name = '".$larutan->solution_name."'
+				AND cost_center_id = ".$larutan->cost_center_id."
+				GROUP BY date, target_max, target_warning
+				) chm
+				ON date.week_date = chm.date
+				ORDER BY date.week_date ASC");
 
-		$data = db::select("SELECT date.week_date AS date, accumulative, target_max, target_warning FROM
-			(SELECT week_date FROM weekly_calendars
-			WHERE week_date >= '".$datefrom."'
-			AND week_date <= '".$dateto."'
-			) date
-			LEFT JOIN
-			(SELECT date, target_max, target_warning, MAX(accumulative) as accumulative from chemical_control_logs
-			WHERE date >= '".$datefrom."'
-			AND date <= '".$dateto."'
-			AND solution_name = '".$larutan->solution_name."'
-			AND cost_center_id = ".$larutan->cost_center_id."
-			GROUP BY date, target_max, target_warning
-			) chm
-			ON date.week_date = chm.date
-			ORDER BY date.week_date ASC");
+			$response = array(
+				'status' => true,
+				'data' => $data,
+				'location' => $larutan
+			);
+			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
+		}
 
-		$response = array(
-			'status' => true,
-			'data' => $data,
-			'location' => $larutan
-		);
-		return Response::json($response);
 	}
 
 	public function printLabel($param){
@@ -1404,19 +1549,22 @@ class IndirectMaterialController extends Controller{
 			'print_status' => 1
 		]);
 
-		$data = IndirectMaterialLog::leftJoin(db::raw('(SELECT DISTINCT material_number, material_description, expired FROM chemical_solution_composers) AS chm'), 'indirect_material_logs.material_number', '=', 'chm.material_number')
+		$data = IndirectMaterialLog::leftJoin('indirect_materials', 'indirect_material_logs.material_number', '=', 'indirect_materials.material_number')
 		->whereIn('qr_code', $qr_code)
 		->where('remark', 'in')
 		->select(
 			'indirect_material_logs.qr_code',
 			'indirect_material_logs.material_number',
-			'chm.material_description',
+			'indirect_materials.material_description',
+			'indirect_materials.label',
 			db::raw('date_format(indirect_material_logs.created_at, "%d-%m-%Y") AS masuk'),
-			db::raw('date_format(indirect_material_logs.created_at + INTERVAL chm.expired DAY, "%d-%m-%Y") AS exp'),
+			db::raw('date_format(indirect_material_logs.created_at + INTERVAL indirect_materials.expired DAY, "%d-%m-%Y") AS exp'),
 			db::raw('date_format(indirect_material_logs.created_at, "%M") AS month')
 		)
 		->orderBy('indirect_material_logs.qr_code', 'desc')
 		->get();
+
+		// dd($data);
 
 		$pdf = \App::make('dompdf.wrapper');
 		$pdf->getDomPDF()->set_option("enable_php", true);
@@ -1426,8 +1574,10 @@ class IndirectMaterialController extends Controller{
 		$pdf->loadView('indirect_material.chemical.label_pdf', array(
 			'data' => $data
 		));
-		// return $pdf->stream($data->qr_code + "-" + $data->material_number + ".pdf");
 		return $pdf->stream("Print_label.pdf");
+
+
+
 
 	}
 

@@ -6,7 +6,6 @@
 		cursor: pointer;
 		background-color: #7dfa8c;
 	}
-
 	thead input {
 		width: 100%;
 		padding: 3px;
@@ -46,16 +45,13 @@
 	table.table-bordered > tfoot > tr > th{
 		border:1px solid rgb(211,211,211);
 	}
-
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {
-		/* display: none; <- Crashes Chrome on hover */
 		-webkit-appearance: none;
-		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+		margin: 0;
 	}
-
 	input[type=number] {
-		-moz-appearance:textfield; /* Firefox */
+		-moz-appearance:textfield;
 	}
 	
 	#loading { display: none; }

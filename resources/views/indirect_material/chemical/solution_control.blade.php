@@ -396,6 +396,8 @@
 				$("#add_material").prop('selectedIndex', 0).change();
 				$('#add_qty').val('');
 				$('#tableAddBody').html('');
+
+				$("#larutan_id").prop('selectedIndex', 0).change();
 				
 				$("#loading").hide();
 
@@ -428,7 +430,7 @@
 			dateto:dateto
 		}
 
-		$.get('{{ url("fetch/chm_solution_control") }}', data, function(result, status, xhr) {			
+		$.get('{{ url("fetch/chm_solution_control") }}', data, function(result, status, xhr) {
 			if(result.status){
 				$('#chart').show();
 
