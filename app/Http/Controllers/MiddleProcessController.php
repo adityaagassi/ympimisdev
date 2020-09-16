@@ -4314,7 +4314,7 @@ class MiddleProcessController extends Controller
 		$check2 = BarrelQueue::leftJoin('materials', 'materials.material_number', '=', 'barrel_queues.material_number')->count();
 
 		if($check2 >= 64 && ($check2-$count) < 64 ){
-			self::sendEmailMinQueue();
+			// self::sendEmailMinQueue();
 		}
 
 		if($request->get('surface') == 'LCQ'){
