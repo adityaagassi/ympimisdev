@@ -26,7 +26,7 @@
     <input type="text" name="codesn" id="codesn" value="{{$sn}}" hidden="">
 
     @foreach($barcode as $nomor => $barcode) 
-    <input type="text" name="codemodel" id="codemodel" value="{{$barcode->model}}" hidden="">
+    <input type="text" name="codemodel" id="codemodel" value="{{ str_replace(' ', '&nbsp;', $barcode->model) }}" hidden="">
     @endforeach 
 
     <tr>
@@ -68,7 +68,11 @@
     }
 
     if (models.length == 15) {
-      $('#model').css({"font-size":"32pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
+      if(models.includes("PROTO")){
+        $('#model').css({"font-size":"32pt", "-moz-transform":"scale(0.9,1.1)","padding-top":"13px"});
+      }else{
+        $('#model').css({"font-size":"32pt", "-moz-transform":"scale(1,1)","padding-top":"10px"});
+      }
     }
 
     if (models.length == 16) {
@@ -195,7 +199,7 @@ function printWindow(win, what) {
       if (rem == "P") {
         setTimeout(label_kecil2,2000);
       }else{
-        setTimeout(tutup,2000);
+        // setTimeout(tutup,2000);
       }
       // window.close();
     });
