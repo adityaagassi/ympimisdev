@@ -111,8 +111,8 @@
 								</thead>
 								<tbody id="ot_3TableBody">
 								</tbody>
-								<tfoot style="background-color: RGB(252, 248, 227);">
-								</tfoot>
+								<!-- <tfoot style="background-color: RGB(252, 248, 227);">
+								</tfoot> -->
 							</table>
 						</div>
 						<div class="col-md-12">
@@ -124,14 +124,14 @@
 										<th style="width: 1%">Name</th>
 										<th style="width: 1%">Cost Center</th>
 										<th style="width: 1%">Section</th>
-										<th style="width: 1%">Week</th>
+										<th style="width: 1%">Week</th>	
 										<th style="width: 1%">OT (Hour)</th>
 									</tr>
 								</thead>
 								<tbody id="ot_14TableBody">
 								</tbody>
-								<tfoot style="background-color: RGB(252, 248, 227);">
-								</tfoot>
+								<!-- <tfoot style="background-color: RGB(252, 248, 227);">
+								</tfoot> -->
 							</table>
 						</div>
 						<div class="col-md-12">
@@ -148,8 +148,8 @@
 								</thead>
 								<tbody id="ot_56TableBody">
 								</tbody>
-								<tfoot style="background-color: RGB(252, 248, 227);">
-								</tfoot>
+								<!-- <tfoot style="background-color: RGB(252, 248, 227);">
+								</tfoot> -->
 							</table>
 						</div>
 						<div class="col-md-12">
@@ -169,8 +169,8 @@
 								</thead>
 								<tbody id="nsonsiabsTableBody">
 								</tbody>
-								<tfoot style="background-color: RGB(252, 248, 227);">
-								</tfoot>
+								<!-- <tfoot style="background-color: RGB(252, 248, 227);">
+								</tfoot> -->
 							</table>
 						</div>
 					</div>
@@ -244,8 +244,6 @@
 			date_to:date_to
 		}
 
-		console.log(data);
-
 		$.get('{{ url("fetch/report/overtime_check") }}', data, function(result, status, xhr) {
 			if(result.status){
 				$('#ot_3Table').DataTable().clear();
@@ -284,6 +282,7 @@
 					ot_14_data += '<td>'+value.Full_name+'</td>';
 					ot_14_data += '<td>'+value.cost_center+'</td>';
 					ot_14_data += '<td>'+value.section+'</td>';
+					ot_14_data += '<td>'+value.w+'</td>';
 					ot_14_data += '<td>'+value.ot+'</td>';
 					ot_14_data += '</tr>';
 				});
