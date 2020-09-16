@@ -41,11 +41,11 @@
 
 	input.currency {
 		text-align: left;
-		padding-right: 15px;
+		padding: 2px 2px;
 	}
 
 	.input-group-addon {
-		padding: 6px 6px;
+		padding: 2px 5px;
 	}
 
 </style>
@@ -720,6 +720,58 @@
 	</form>
 </div>
 
+
+<div class="modal fade in" id="modalEditInv">
+    <form id ="importFormEditInv" name="importFormEditInv" method="post" action="{{ url('update/investment/po') }}">
+      <input type="hidden" value="{{csrf_token()}}" name="_token" />
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Edit Investment</h4>
+            <br>
+            <div>
+              <div class="col-md-12" style="margin-bottom : 5px">
+                <div class="col-xs-2" style="padding:5px;">
+                  <b>Kode Item</b>
+                </div>
+                <div class="col-xs-2" style="padding:5px;">
+                  <b>Deskripsi</b>
+                </div>
+                <div class="col-xs-2" style="padding:5px;">
+                  <b>Qty</b>
+                </div>
+                <div class="col-xs-2" style="padding:5px;">
+                  <b>Harga</b>
+                </div>
+                <div class="col-xs-2" style="padding:5px;">
+                  <b>Total</b>
+                </div>
+                <div class="col-xs-2" style="padding:5px;">
+                  <b>Dollar</b>
+                </div>
+              </div>
+              <div id="modalDetailBodyEditInv">
+              </div>
+            </div>
+            <br>
+            <div id="tambah3">
+              <input type="text" name="lop" id="lop" value="1" hidden="">
+			  <input type="text" name="looping_inv" id="looping_inv" hidden="">
+            </div>
+	    </div>
+      	<div class="modal-footer">
+            <input type="hidden" class="form-control" id="id_edit_inv" name="id_edit_inv" placeholder="ID">
+            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-warning">Update</button>
+      	</div>
+    </div>
+   	</div>
+	</form>
+</div>
+
   <div class="modal fade in" id="modalDetailInvestment">
       <input type="hidden" value="{{csrf_token()}}" name="_token" />
       <div class="modal-dialog modal-lg" style="width: 1300px">
@@ -1271,7 +1323,7 @@
 				$('#nama_item'+no).attr('readonly', false).val(obj.deskripsi);
 				$('#uom'+no).val(obj.uom).change();
 				$('#item_budget'+no).attr('readonly', true).val(obj.budget_no);
-				$('#delivery_date'+no).attr('readonly', false);
+				$('#delivery_date'+no).attr('readonly', false).val(obj.delivery_date);
 				if (obj.currency == "USD") {
 					$('#ket_harga'+no).text("$");
 				}else if (obj.currency == "JPY") {
@@ -1695,6 +1747,58 @@
 	        }
 	    });
 	}
+
+	function editInvestment(id){
+      var isi = "";
+      $('#modalEditInv').modal("show");
+        
+        var data = {
+          id:id
+      };
+          
+      $.get('{{ url("edit/investment") }}', data, function(result, status, xhr){  
+		
+		$("#id_edit_inv").val(result.investment.id).attr('readonly', true);
+		$('#modalDetailBodyEditInv').html('');
+
+		var gg = [];
+
+        $.each(result.investment_detail, function(key, value) {
+	          isi = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
+
+	          if (value.no_item != null) {
+	            isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='no_item_edit"+value.id+"' name='no_item_edit"+value.id+"' value="+value.no_item+"></div>";
+	          }else{
+	            isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='no_item_edit"+value.id+"' name='no_item_edit"+value.id+"'></div>";
+	          }
+	          
+	          isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='detail_edit"+value.id+"' name='detail_edit"+value.id+"' placeholder='Description' required='' value='"+value.detail+"'></div>";
+	          isi += "<div class='col-xs-2' style='padding:5px;'><input type='number' class='form-control' id='qty_edit"+value.id+"' name='qty_edit"+value.id+"' placeholder='Qty' required='' value='"+value.qty+"' disabled=''></div>";
+	          isi += "<div class='col-xs-2' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit2"+value.id+"'>?</span><input type='text' class='form-control currency' id='price_edit"+value.id+"' name='price_edit"+value.id+"' placeholder='Goods Price' required='' value="+value.price+" disabled=''></div></div>";	          
+	          isi += "<div class='col-xs-2' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit3"+value.id+"'>?</span><input type='text' class='form-control currency' id='amount_edit"+value.id+"' name='amount_edit"+value.id+"' placeholder='value' required='' value="+value.amount+" disabled=''></div></div>";
+	          isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='dollar_edit"+value.id+"' name='dollar_edit"+value.id+"' placeholder='Dollar' required='' value='"+value.dollar+"' disabled=''></div>";
+	          isi += "</div>";
+
+	          gg.push(value.id);
+	         
+	          	$('#modalDetailBodyEditInv').append(isi);
+
+	          	if (result.investment.currency == "USD") {
+	              $('#ket_harga_edit2'+value.id).text("$");
+	              $('#ket_harga_edit3'+value.id).text("$");
+	            }else if (result.investment.currency == "JPY") {
+	              $('#ket_harga_edit2'+value.id).text("¥");
+	              $('#ket_harga_edit3'+value.id).text("¥");
+	            }else if (result.investment.currency == "IDR"){
+	              $('#ket_harga_edit2'+value.id).text("Rp.");
+	              $('#ket_harga_edit3'+value.id).text("Rp.");	              
+	            }
+
+	            $("#looping_inv").val(gg);
+
+        	});
+      	});
+    }
 
 
 </script>

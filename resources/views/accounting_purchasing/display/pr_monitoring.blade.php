@@ -4,7 +4,7 @@
 <style type="text/css">
 
 table.table-bordered{
-  border:1px solid rgb(150,150,150);
+  border:1px solid rgba(150, 150, 150, 0);
 }
 table.table-bordered > thead > tr > th{
   border:1px solid rgb(54, 59, 56) !important;
@@ -13,7 +13,8 @@ table.table-bordered > thead > tr > th{
   color:black;
 }
 table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(54, 59, 56);
+  border-collapse: collapse !important;
+  border:1px solid rgb(54, 59, 56)!important;
   background-color: #f0f0ff;
   color: black;
   vertical-align: middle;
@@ -66,7 +67,7 @@ table > thead > tr > th{
   color: white;
 }
 #tabelmonitor{
-  font-size: 0.83vw;
+  font-size: 1vw;
 }
 
 .zoom{
@@ -137,7 +138,7 @@ table > thead > tr > th{
           </div>
         </div>
 
-        @if(Auth::user()->role_code == "MIS")
+        @if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "PCH" || Auth::user()->role_code == "PCH-SPL")
         <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-addon bg-blue">
@@ -159,29 +160,35 @@ table > thead > tr > th{
 
       <div class="col-md-12">
 
-        <div class="col-md-12" style="margin-top: 5px;background-color: #e0e0e0;text-align: center;">
-            <span style="font-size: 24px;font-weight: bold;">Outstanding PR (Sign Verification)</span>
-        </div>
 
         <div class="col-md-5" style="margin-top: 5px; padding:0 !important">
             <div id="chart" style="width: 99%"></div>
         </div>
 
+
+         
+
         <div class="col-md-7" style="padding-right: 0;padding-left: 10px">
-          <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
+
+           <div class="col-md-12" style="margin-top: 5px;background-color: #ffeb3b;text-align: center;">
+              <span style="font-size: 24px;font-weight: bold;">Outstanding PR (Sign Verification)</span>
+          </div>
+
+          <table id="tabelmonitor" class="table table-bordered" style="width: 100%;margin-top: 0px !important">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
-                <th style="width: 15%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #ffeb3b;" rowspan="2">No PR</th>
-                <th style="width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;background-color: #ffeb3b;" rowspan="2">Submission Date</th>
-                <th style="width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;background-color: #ffeb3b;" rowspan="2">Department</th>
-                <th style="width: 55%; padding: 0;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;background-color: #ffeb3b;" colspan="5">Progress PR</th>
+                <th style="width: 15%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #00a65a;color:white;" rowspan="2">No PR</th>
+                <th style="width: 15%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #00a65a;color:white;" rowspan="2">Submission Date</th>
+                <th style="width: 15%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #00a65a;color:white;" rowspan="2">Department</th>
+                <th style="width: 55%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #00a65a;color:white;" colspan="5">Progress PR</th>
+
               </tr>
               <tr>
-                <th style="width: 5%; padding: 0;border-left:3px solid #000 !important;vertical-align: middle;background-color: #ffeb3b;">Staff</th>
-                <th style="width: 5%; padding: 0;vertical-align: middle;background-color: #ffeb3b;">Manager</th>
-                <th style="width: 5%; padding: 0;vertical-align: middle;background-color: #ffeb3b;">DGM</th>
-                <th style="width: 5%; padding: 0;vertical-align: middle;background-color: #ffeb3b;">GM</th>
-                <th style="width: 5%; padding: 0;vertical-align: middle;background-color: #ffeb3b;">Received By Purchasing</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;background-color: #00a65a;color:white;font-size: 16px">Staff</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;background-color: #00a65a;color:white;font-size: 16px">Manager</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;background-color: #00a65a;color:white;font-size: 16px">DGM</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;background-color: #00a65a;color:white;font-size: 16px">GM</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;background-color: #00a65a;color:white;font-size: 16px">Received By Purchasing</th>
               </tr>
             </thead>
             <tbody id="tabelisi">
@@ -194,23 +201,24 @@ table > thead > tr > th{
 
       <div class="col-md-12">
 
-        <div class="col-md-12" style="margin-top: 5px;background-color: #e0e0e0;text-align: center;">
-            <span style="font-size: 24px;font-weight: bold;">Outstanding PR Yang Belum PO (Per Item)</span>
-        </div>
 
         <div class="col-md-5" style="margin-top: 5px; padding:0 !important">
             <div id="chartundone" style="width: 99%"></div>
         </div>
 
         <div class="col-md-7" style="padding-right: 0;padding-left: 10px">
-          <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
+
+          <div class="col-md-12" style="margin-top: 5px;background-color: #ffeb3b;text-align: center;">
+              <span style="font-size: 24px;font-weight: bold;">Outstanding PR Yang Belum PO (Per Item)</span>
+          </div>
+          <table id="tabelmonitor" class="table table-bordered" style="width: 100%">
             <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
               <tr>
-                <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #ffeb3b;">No PR</th>
-                <th style="width: 6%; padding: 5;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;background-color: #ffeb3b;">Department</th>
-                <th style="width: 6%; padding: 5;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;background-color: #ffeb3b;">Kode Item</th>
-                <th style="width: 15%; padding: 5;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;background-color: #ffeb3b;">Deskripsi</th>
-                <th style="width: 10%; padding: 5;vertical-align: middle;border-left:3px solid #000 !important;font-size: 16px;background-color: #ffeb3b;">Request Date</th>
+                <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">No PR</th>
+                <th style="width: 6%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">Department</th>
+                <th style="width: 6%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">Kode Item</th>
+                <th style="width: 15%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">Deskripsi</th>
+                <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">Request Date</th>
               </tr>
             </thead>
             <tbody id="tabelisipo_undone">
@@ -384,15 +392,16 @@ table > thead > tr > th{
           })
 
           $.each(result.data_pr_belum_po, function(key, value) {
-            no_pr.push(value.no_pr);
-            belum_po.push(parseInt(value.belum_po));
-            sudah_po.push(parseInt(value.sudah_po));
+            if (value.belum_po != 0) {
+              no_pr.push(value.no_pr);
+              belum_po.push(parseInt(value.belum_po));
+              sudah_po.push(parseInt(value.sudah_po));              
+            }
           })
 
           $('#chart').highcharts({
             chart: {
-              type: 'column',
-              height: 350
+              type: 'column'
             },
             title: {
               text: 'PR List By Month',
@@ -425,7 +434,7 @@ table > thead > tr > th{
               }
             },
             legend: {
-              enabled:false,
+              enabled:true,
               reversed: true,
               itemStyle:{
                 color: "white",
@@ -497,8 +506,7 @@ table > thead > tr > th{
 
           $('#chartundone').highcharts({
             chart: {
-              type: 'column',
-              height: 350
+              type: 'column'
             },
             title: {
               text: 'Outstanding PR Belum PO (Per Item)',
@@ -531,7 +539,7 @@ table > thead > tr > th{
               }
             },
             legend: {
-              enabled:false,
+              enabled:true,
               reversed: true,
               itemStyle:{
                 color: "white",
@@ -635,20 +643,24 @@ table > thead > tr > th{
 
           var emp_name = value.emp_name;
           var username = emp_name.split(' ').slice(0,2).join(' ');
+          var coloruser = "";
 
           if (value.manager_name != null) {
             var manager_name = value.manager_name;
             var managername = manager_name.split(' ').slice(0,2).join(' ');
           }
+          var colormanager = "";
 
           var dgm_name = value.dgm;
           var dgmname = dgm_name.split(' ').slice(0,2).join(' ');
+          var colordgm = "";
 
           var gm_name = value.gm;
           var gmname = gm_name.split(' ').slice(0,2).join(' ');
+          var colorgm = "";
 
-          var color = "";
-          var color2 = "";
+          var colorpch = "";
+
           var d = 0;
           var e = 0;
 
@@ -660,12 +672,12 @@ table > thead > tr > th{
 
             if (value.posisi != "user") {
               user = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+username+'</span></a>';
-              color = 'style="background-color:green"';
+              coloruser = 'style="background-color:#00a65a"';
             }
             else {
               if (d == 0) {  
                   user = '<a href="'+urldetail+'"><span class="label label-danger zoom">'+username+'</span></a>';
-                  color = 'style="background-color:red"';                    
+                  coloruser = 'style="background-color:#dd4b39"';                    
                   d = 1;
                 } else {
                   user = '';
@@ -679,7 +691,7 @@ table > thead > tr > th{
                     if (value.posisi == "manager") {
                         if (d == 0) {  
                             manager = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+managername+'</span></a>';   
-                            color = 'style="background-color:red"';                  
+                            colormanager = 'style="background-color:#dd4b39"';                  
                             d = 1;
                           } else {
                             manager = '';
@@ -687,13 +699,13 @@ table > thead > tr > th{
                     }
                     else{
                         manager = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+managername+'</span></a>';
-                        color = 'style="background-color:green"'; 
+                        colormanager = 'style="background-color:#00a65a"'; 
                     }
                 }
                 else{
                   if (d == 0) {  
                     manager = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+managername+'</span></a>'; 
-                    color = 'style="background-color:red"';                  
+                    colormanager = 'style="background-color:#dd4b39"';                  
                     d = 1;
                   } else {
                     manager = '';
@@ -702,6 +714,7 @@ table > thead > tr > th{
               }
               else{
                 manager = '<span class="label label-warning">None</span>'; 
+                colormanager = 'style="background-color:#f39c12"';
               }
 
 
@@ -710,7 +723,7 @@ table > thead > tr > th{
                   if (value.posisi == "dgm") {
                     if (d == 0) {  
                         dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
-                        color = 'style="background-color:red"';              
+                        colordgm = 'style="background-color:#dd4b39"';              
                         d = 1;
                       } else {
                         dgm = '';
@@ -718,13 +731,14 @@ table > thead > tr > th{
                   }
                   else {
                     dgm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+dgmname+'</span></a>';
-                    color = 'style="background-color:green"'; 
+                    colordgm = 'style="background-color:#00a65a"';
+
                   } 
               }
               else {
                 if (d == 0) {  
                   dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
-                  color = 'style="background-color:red"';                   
+                  colordgm = 'style="background-color:#dd4b39"';                   
                   d = 1;
                 } else {
                   dgm = '';
@@ -736,21 +750,21 @@ table > thead > tr > th{
                   if (value.posisi == "gm") {
                       if (d == 0) {  
                         gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
-                        color = 'style="background-color:red"'; 
+                        colorgm = 'style="background-color:#dd4b39"'; 
                         d = 1;
                       } else {
                         gm = '';
                       }
                   } else {
                     gm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+gmname+'</span></a>'; 
-                    color = 'style="background-color:green"'; 
+                    colorgm = 'style="background-color:#00a65a"'; 
                   }
               } 
 
               else {
                 if (d == 0) {  
                   gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
-                  color = 'style="background-color:red"'; 
+                  colorgm = 'style="background-color:#dd4b39"'; 
                   d = 1;
                 } else {
                   gm = '';
@@ -762,20 +776,20 @@ table > thead > tr > th{
                   if (value.status == "approval_acc") {
                       if (d == 0) {  
                         pch = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">Purchasing</span></a>'; 
-                        color = 'style="background-color:red"';
+                        colorpch = 'style="background-color:#dd4b39"';
                         d = 1;
                       } else {
                         pch = '';
                       }
                   } else {
                       pch = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+value.receive_date+'</span></a>'; 
-                      color = 'style="background-color:green"';       
+                      colorpch = 'style="background-color:#00a65a"';       
                   }
               }
               else{
                 if (d == 0) {  
                   pch = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">Purchasing</span></a>'; 
-                  color = 'style="background-color:red"';
+                  colorpch = 'style="background-color:#dd4b39"';
                   d = 1;
                 } else {
                   pch = '';
@@ -784,13 +798,13 @@ table > thead > tr > th{
 
             table += '<tr>';
             table += '<td>'+value.no_pr+'</td>';
-            table += '<td style="border-left:3px solid #000">'+value.submission_date+'</td>';
-            table += '<td style="border-left:3px solid #000">'+value.department_shortname+'</td>';
-            table += '<td style="border-left:3px solid #000">'+user+'</td>';  
-            table += '<td>'+manager+'</td>';
-            table += '<td>'+dgm+'</td>';
-            table += '<td>'+gm+'</td>';
-            table += '<td>'+pch+'</td>';
+            table += '<td>'+value.submission_date+'</td>';
+            table += '<td>'+value.department_shortname+'</td>';
+            table += '<td '+coloruser+'>'+user+'</td>';  
+            table += '<td '+colormanager+'>'+manager+'</td>';
+            table += '<td '+colordgm+'>'+dgm+'</td>';
+            table += '<td '+colorgm+'>'+gm+'</td>';
+            table += '<td '+colorpch+'>'+pch+'</td>';
             table += '</tr>';
           })
 
@@ -822,10 +836,10 @@ table > thead > tr > th{
           $.each(result.data_pr_belum_po, function(key, value) {
             table_belum_po += '<tr>';
             table_belum_po += '<td>'+value.no_pr+'</td>';
-            table_belum_po += '<td style="border-left:3px solid #000">'+value.department_shortname+'</td>';
-            table_belum_po += '<td style="border-left:3px solid #000">'+value.item_code+'</td>';
-            table_belum_po += '<td style="border-left:3px solid #000">'+value.item_desc+'</td>';
-            table_belum_po += '<td style="border-left:3px solid #000">'+value.item_request_date+'</td>';
+            table_belum_po += '<td>'+value.department_shortname+'</td>';
+            table_belum_po += '<td>'+value.item_code+'</td>';
+            table_belum_po += '<td>'+value.item_desc+'</td>';
+            table_belum_po += '<td>'+value.item_request_date+'</td>';
             table_belum_po += '</tr>';
           })
 
@@ -1010,48 +1024,251 @@ table > thead > tr > th{
     
   }
 
-  Highcharts.createElement('link', {
+//   Highcharts.createElement('link', {
+//           href: '{{ url("fonts/UnicaOne.css")}}',
+//           rel: 'stylesheet',
+//           type: 'text/css'
+//         }, null, document.getElementsByTagName('head')[0]);
+
+//         Highcharts.theme = {
+//           colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572',   
+//                    '#FF9655', '#FFF263', '#6AF9C4'],
+//           chart: {
+//               backgroundColor: {
+//                   linearGradient: [500, 500, 500, 500],
+//                   stops: [
+//                       [0, 'rgb(255, 255, 255)'],
+//                       [1, 'rgb(240, 240, 255)']
+//                   ]
+//               },
+//           },
+//           title: {
+//               style: {
+//                   color: '#000',
+//                   font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+//               }
+//           },
+//           subtitle: {
+//               style: {
+//                   color: '#666666',
+//                   font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+//               }
+//           },
+//           legend: {
+//               itemStyle: {
+//                   font: '9pt Trebuchet MS, Verdana, sans-serif',
+//                   color: 'black'
+//               },
+//               itemHoverStyle:{
+//                   color: 'gray'
+//               }   
+//           }
+// };
+// // Apply the theme
+// Highcharts.setOptions(Highcharts.theme);
+
+Highcharts.createElement('link', {
           href: '{{ url("fonts/UnicaOne.css")}}',
           rel: 'stylesheet',
           type: 'text/css'
         }, null, document.getElementsByTagName('head')[0]);
 
         Highcharts.theme = {
-          colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572',   
-                   '#FF9655', '#FFF263', '#6AF9C4'],
+          colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+          '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
           chart: {
-              backgroundColor: {
-                  linearGradient: [500, 500, 500, 500],
-                  stops: [
-                      [0, 'rgb(255, 255, 255)'],
-                      [1, 'rgb(240, 240, 255)']
-                  ]
-              },
+            backgroundColor: {
+              linearGradient: { x1: 0, y1: 0, x2: 1, y2: 1 },
+              stops: [
+              [0, '#2a2a2b']
+              ]
+            },
+            style: {
+              fontFamily: 'sans-serif'
+            },
+            plotBorderColor: '#606063'
           },
           title: {
-              style: {
-                  color: '#000',
-                  font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
-              }
+            style: {
+              color: '#E0E0E3',
+              textTransform: 'uppercase',
+              fontSize: '20px'
+            }
           },
           subtitle: {
+            style: {
+              color: '#E0E0E3',
+              textTransform: 'uppercase'
+            }
+          },
+          xAxis: {
+            gridLineColor: '#707073',
+            labels: {
               style: {
-                  color: '#666666',
-                  font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+                color: '#E0E0E3'
               }
+            },
+            lineColor: '#707073',
+            minorGridLineColor: '#505053',
+            tickColor: '#707073',
+            title: {
+              style: {
+                color: '#A0A0A3'
+
+              }
+            }
+          },
+          yAxis: {
+            gridLineColor: '#707073',
+            labels: {
+              style: {
+                color: '#E0E0E3'
+              }
+            },
+            lineColor: '#707073',
+            minorGridLineColor: '#505053',
+            tickColor: '#707073',
+            tickWidth: 1,
+            title: {
+              style: {
+                color: '#A0A0A3'
+              }
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            style: {
+              color: '#F0F0F0'
+            }
+          },
+          plotOptions: {
+            series: {
+              dataLabels: {
+                color: 'white'
+              },
+              marker: {
+                lineColor: '#333'
+              }
+            },
+            boxplot: {
+              fillColor: '#505053'
+            },
+            candlestick: {
+              lineColor: 'white'
+            },
+            errorbar: {
+              color: 'white'
+            }
           },
           legend: {
-              itemStyle: {
-                  font: '9pt Trebuchet MS, Verdana, sans-serif',
-                  color: 'black'
+            // itemStyle: {
+            //   color: '#E0E0E3'
+            // },
+            // itemHoverStyle: {
+            //   color: '#FFF'
+            // },
+            // itemHiddenStyle: {
+            //   color: '#606063'
+            // }
+          },
+          credits: {
+            style: {
+              color: '#666'
+            }
+          },
+          labels: {
+            style: {
+              color: '#707073'
+            }
+          },
+
+          drilldown: {
+            activeAxisLabelStyle: {
+              color: '#F0F0F3'
+            },
+            activeDataLabelStyle: {
+              color: '#F0F0F3'
+            }
+          },
+
+          navigation: {
+            buttonOptions: {
+              symbolStroke: '#DDDDDD',
+              theme: {
+                fill: '#505053'
+              }
+            }
+          },
+
+          rangeSelector: {
+            buttonTheme: {
+              fill: '#505053',
+              stroke: '#000000',
+              style: {
+                color: '#CCC'
               },
-              itemHoverStyle:{
-                  color: 'gray'
-              }   
-          }
-};
-// Apply the theme
-Highcharts.setOptions(Highcharts.theme);
+              states: {
+                hover: {
+                  fill: '#707073',
+                  stroke: '#000000',
+                  style: {
+                    color: 'white'
+                  }
+                },
+                select: {
+                  fill: '#000003',
+                  stroke: '#000000',
+                  style: {
+                    color: 'white'
+                  }
+                }
+              }
+            },
+            inputBoxBorderColor: '#505053',
+            inputStyle: {
+              backgroundColor: '#333',
+              color: 'silver'
+            },
+            labelStyle: {
+              color: 'silver'
+            }
+          },
+
+          navigator: {
+            handles: {
+              backgroundColor: '#666',
+              borderColor: '#AAA'
+            },
+            outlineColor: '#CCC',
+            maskFill: 'rgba(255,255,255,0.1)',
+            series: {
+              color: '#7798BF',
+              lineColor: '#A6C7ED'
+            },
+            xAxis: {
+              gridLineColor: '#505053'
+            }
+          },
+
+          scrollbar: {
+            barBackgroundColor: '#808083',
+            barBorderColor: '#808083',
+            buttonArrowColor: '#CCC',
+            buttonBackgroundColor: '#606063',
+            buttonBorderColor: '#606063',
+            rifleColor: '#FFF',
+            trackBackgroundColor: '#404043',
+            trackBorderColor: '#404043'
+          },
+
+          legendBackgroundColor: 'rgba(0, 0, 0, 0.5)',
+          background2: '#505053',
+          dataLabelsColor: '#B0B0B3',
+          textColor: '#C0C0C0',
+          contrastTextColor: '#F0F0F3',
+          maskColor: 'rgba(255,255,255,0.3)'
+        };
+        Highcharts.setOptions(Highcharts.theme);
       
 
   function openSuccessGritter(title, message){

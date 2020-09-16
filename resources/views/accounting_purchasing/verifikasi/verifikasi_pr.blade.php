@@ -57,12 +57,11 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Verifikasi {{ $page }}
-    <small>Verifikasi Form</small>
+    Check & Verifikasi {{ $page }}
+    <small>Verifikasi Form PR</small>
   </h1>
   <ol class="breadcrumb">
 
-   <a class="btn btn-warning btn-sm pull-right" data-toggle="tooltip" title="Lihat Report" href="{{url('purchase_requisition/report', $pr['id'])}}" target="_blank" style="margin-right: 5px;width: 150px">Preview Report PDF PR</a>
  </ol>
 </section>
 
@@ -99,9 +98,6 @@
         <table class="table" style="border: 1px solid black;">
             <thead>
             <tr>
-              <!-- <th colspan="2" class="centera" >
-                <center><img width="150px" src="{{ asset('images/logo_yamaha3.png') }}" alt="" style="vertical-align: middle !important"></center>
-              </th> -->
               <th colspan="10" style="text-align: center; vertical-align: middle;font-size: 22px;font-weight: bold">Form Purchase Requisition</th>
               @if(($user == $pr->manager || Auth::user()->role_code == "MIS") && $pr->approvalm == null && $pr->posisi == "manager")
               <th colspan="2" style="border: 1px solid black;vertical-align: middle;font-size: 20px"><center>Approval</center></th>

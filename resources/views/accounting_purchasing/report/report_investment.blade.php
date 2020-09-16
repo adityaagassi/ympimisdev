@@ -67,11 +67,11 @@
 
 		$ket_harga = "";
 
-		if($inv[0]->currency = "USD"){
+		if($inv[0]->currency == "USD"){
 			$ket_harga = "$";
-		}else if($inv[0]->currency = "JPY"){
+		}else if($inv[0]->currency == "JPY"){
 			$ket_harga = "¥";
-		}else if($inv[0]->currency = "IDR"){
+		}else if($inv[0]->currency == "IDR"){
 			$ket_harga = "Rp.";
 		}
 

@@ -103,7 +103,7 @@
 						<div class="col-md-3">
 							<div class="form-group">
 								<label>Keyword</label>
-								<input type="text" class="form-control" id="keyword2" placeholder="Masukkan Keyword">
+								<input type="text" class="form-control" id="keyword2" placeholder="Masukkan Kata Kunci">
 							</div>
 						</div>
 

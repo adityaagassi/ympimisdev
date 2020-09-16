@@ -346,6 +346,9 @@
       @if(isset($page) && $page == "Investment")<li class="active">@else<li>@endif
         <a href="{{ url("investment") }}"><i class="fa fa-file-pdf-o"></i>Investment</a>
       </li>
+      @if(isset($page) && $page == "Investment Control")<li class="active">@else<li>@endif
+        <a href="{{ url("investment/control") }}"><i class="fa fa-tv"></i><span>Investment Control</span></a>
+      </li>
       @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
         <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
       </li>
@@ -410,6 +413,9 @@
       </li>
       @if(isset($page) && $page == "Budget")<li class="active">@else<li>@endif
         <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
+      </li>
+      @if(isset($page) && $page == "Budget Report")<li class="active">@else<li>@endif
+        <a href="{{ url("budget/report") }}"><i class="fa fa-money"></i><span>Budget Report</span></a>
       </li>
       @if(isset($page) && $page == "Exchange Rate")<li class="active">@else<li>@endif
         <a href="{{ url("/index/exchange_rate") }}"><i class="fa fa-money"></i><span>Exchange Rate</span></a>
@@ -1218,6 +1224,12 @@
 @if(in_array('R4', $navs))
 @if(isset($page) && $page == "Chorei Production Result")<li class="active">@else<li>@endif
  <a href="{{ url("/index/ch_daily_production_result") }}"><i class="fa fa-tv"></i> <span>Chorei</span></a>
+</li>
+@endif
+
+@if(in_array('R10', $navs))
+@if(isset($page) && $page == "Report Attendances & Tsransportations")<li class="active">@else<li>@endif
+  <a href="{{ url("/index/general/report_transportation") }}"><i class="fa fa-bus"></i> <span>Report Transport</span></a>
 </li>
 @endif
 {{-- <li class="header">Trial Menu</li>

@@ -97,6 +97,16 @@ Route::get('404', function() {
 	return view('404');
 });
 
+//ONLINE ATTENDANCE AND TRANSPORTAION
+
+Route::get('index/general/online_transportation', 'GeneralController@indexOnlineTransportation');
+Route::get('fetch/general/online_transportation', 'GeneralController@fetchOnlineTransportation');
+Route::post('input/general/online_transportation', 'GeneralController@inputOnlineTransportation');
+Route::post('delete/general/online_transportation', 'GeneralController@deleteOnlineTransportation');
+Route::get('index/general/online_transportation_report', 'GeneralController@indexOnlineTransportationReport');
+Route::post('confirm/general/online_transportation_report', 'GeneralController@confirmOnlineTransportationReport');
+
+
 //POINTING CALL
 Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPointingCall');
 Route::get('fetch/general/pointing_call', 'GeneralController@fetchGeneralPointingCall');
@@ -161,7 +171,14 @@ Route::get('index/temperature/omron/{id}', 'TemperatureController@indexOmron');
 Route::get('fetch/temperature/omron', 'TemperatureController@fetchOmron');
 Route::post('input/temperature/omron_operator', 'TemperatureController@inputOmronOperator');
 
-//OMRON TEMPERATURE
+//HIKVISION TEMPERATURE
+Route::get('index/temperature/minmoe/{location}', 'TemperatureController@indexMinMoe');
+Route::get('fetch/temperature/minmoe', 'TemperatureController@fetchMinMoe');
+Route::post('import/temperature/minmoe', 'TemperatureController@importMinMoe');
+
+Route::get('index/temperature/minmoe_monitoring/{location}', 'TemperatureController@indexMinMoeMonitoring');
+Route::get('fetch/temperature/minmoe_monitoring', 'TemperatureController@fetchMinMoeMonitoring');
+Route::get('fetch/temperature/detail_minmoe_monitoring', 'TemperatureController@fetchDetailMinMoeMonitoring');
 
 // ROOM Temperature
 Route::get('index/temperature/room_temperature', 'TemperatureController@RoomTemperature');
@@ -182,7 +199,7 @@ Route::post('index/injeksi/store_molding_log', 'InjectionsController@store_moldi
 Route::get('index/injeksi/get_ng_temp', 'InjectionsController@get_ng_temp');
 Route::get('index/injeksi/get_molding_log', 'InjectionsController@get_molding_log');
 Route::post('index/injeksi/delete_ng_temp', 'InjectionsController@delete_ng_temp');
-Route::get('index/machine_operational', 'InjectionsController@indexMachineSchedule');
+
 //in
 Route::get('index/in', 'InjectionsController@in');
 Route::post('scan/part_injeksi', 'InjectionsController@scanPartInjeksi');
@@ -214,7 +231,6 @@ Route::get('fetch/InOutpart', 'InjectionsController@getDataInOut');
 Route::get('index/Schedule', 'InjectionsController@schedule');
 Route::get('fetch/Schedulepart', 'InjectionsController@getSchedule');
 Route::get('fetch/getStatusMesin', 'InjectionsController@getStatusMesin');
-Route::get('fetch/schedule', 'InjectionsController@fetchSchedule');
 
 Route::get('fetch/getDateWorking', 'InjectionsController@getDateWorking');
 Route::post('save/Schedule', 'InjectionsController@saveSchedule');
@@ -384,6 +400,10 @@ Route::get('index/input_stock', 'InjectionsController@indexInputStock');
 Route::get('fetch/injection/stock', 'InjectionsController@fetchInputStock');
 Route::post('input/injection/stock', 'InjectionsController@inputStock');
 
+// injection schedule
+Route::get('index/injection_schedule', 'InjectionsController@indexInjectionSchedule');
+Route::get('fetch/injection_schedule', 'InjectionsController@fetchInjectionSchedule');
+
 
 
 // end mesin injeksi
@@ -460,6 +480,8 @@ Route::get('fetch/recorder_repair/by_date', 'AdditionalController@fetchRecorderB
 
 //EMPLOYEE
 Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
+	Route::get('index/general/report_transportation', 'GeneralController@indexReportTransportation');
+	Route::post('confirm/general/report_transportation/{id}', 'GeneralController@confirmReportTransportation');
 });
 Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
 Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');
@@ -1205,12 +1227,19 @@ Route::get('fetch/purchase_order/monitoring', 'AccountingController@fetchMonitor
 Route::get('purchase_order/detail', 'AccountingController@detailMonitoringPO');
 Route::get('purchase_order/table', 'AccountingController@fetchtablePO');
 
+//Approval Purchase Requisition
+Route::get('purchase_order/verifikasi/{id}', 'AccountingController@verifikasi_purchase_order');
+Route::post('purchase_order/approval/{id}', 'AccountingController@approval_purchase_order');
+Route::post('purchase_order/notapprove/{id}', 'AccountingController@reject_purchase_order');
+
 //New Approval Purchase Order
 Route::get('purchase_order/approvemanager/{id}', 'AccountingController@poapprovalmanager');
 Route::get('purchase_order/approvedgm/{id}', 'AccountingController@poapprovaldgm');
 Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
 Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
 Route::get('purchase_order/reject/{id}', 'AccountingController@poreject');
+
+Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
 
 //Purchase Order Khusus PR
 Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
@@ -1219,7 +1248,6 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('fetch/purchase_order_pr', 'AccountingController@fetch_po_outstanding_pr');
 	Route::post('create/purchase_order', 'AccountingController@create_purchase_order');
 	Route::get('purchase_order/get_nomor_po', 'AccountingController@get_nomor_po');
-	Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
 	Route::get('purchase_order/get_detailname', 'AccountingController@pogetname')->name('admin.pogetname');
 	Route::get('purchase_order/report/{id}', 'AccountingController@report_purchase_order');
 	Route::get('purchase_order/sendemail', 'AccountingController@po_send_email');
@@ -1242,6 +1270,9 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('fetch/purchase_order/pilih_investment', 'AccountingController@pilihInvestment');
 	Route::get('fetch/purchase_order/invlist', 'AccountingController@fetchInvList');
 	Route::get('purchase_order/investment_get_item', 'AccountingController@pogetiteminvest');
+
+	Route::get('edit/investment', 'AccountingController@edit_investment_po');
+	Route::post('update/investment/po', 'AccountingController@update_investment_po');
 
 });
 
@@ -1290,9 +1321,19 @@ Route::get('investment/comment_msg/{id}', 'AccountingController@investment_comme
 Route::post('investment/reject_acc/{id}', 'AccountingController@investment_reject_acc');
 Route::get('investment/reject/{id}', 'AccountingController@investment_reject');
 
+//Investment Monitoring & Control
+Route::get('investment/control', 'AccountingController@investmentControl');
+Route::get('fetch/investment/control', 'AccountingController@fetchInvestmentControl');
+Route::get('investment/table', 'AccountingController@fetchtableInv');
+Route::get('investment/detail', 'AccountingController@detailMonitoringInv');
+Route::get('investment/detailInv', 'AccountingController@detailMonitoringInvTable');
+
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
+Route::get('budget/report', 'AccountingController@budget_control');
 Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
+Route::get('fetch/budget/table', 'AccountingController@fetch_budget_table');
+Route::get('fetch/budget/detail_table', 'AccountingController@fetch_budget_detail');
 Route::get('budget/detail', 'AccountingController@budget_detail');
 Route::post('import/budget', 'AccountingController@import_budget');
 
@@ -2019,9 +2060,13 @@ Route::get('index/chm_picking_schedule', 'IndirectMaterialController@indexPickin
 Route::get('fetch/chm_picking_schedule', 'IndirectMaterialController@fetchPickingSchedule');
 Route::get('fetch/chm_picking_schedule_detail', 'IndirectMaterialController@fetchPickingScheduleDetail');
 Route::get('fetch/get_addition_chm', 'IndirectMaterialController@fetchAdditionChm');
-Route::post('index/chm_input_addition', 'IndirectMaterialController@inputChmAddition');
-Route::post('index/chm_input_new', 'IndirectMaterialController@inputChmNew');
-Route::post('delete/chm_schedule', 'IndirectMaterialController@deleteSchedule');
+
+Route::group(['nav' => 'S41', 'middleware' => 'permission'], function(){
+	Route::post('index/chm_input_addition', 'IndirectMaterialController@inputChmAddition');
+	Route::post('index/chm_input_new', 'IndirectMaterialController@inputChmNew');
+	Route::post('delete/chm_schedule', 'IndirectMaterialController@deleteSchedule');
+});
+
 
 //Larutan
 Route::get('index/chm_larutan', 'IndirectMaterialController@indexLarutan');
@@ -3107,6 +3152,9 @@ Route::get('fetch/office_clock/weather', 'OfficeClockController@fetchWeather');
 
 Route::get('fetch/maintenance/list_pm', 'MaintenanceController@fetchPM');
 Route::get('fetch/maintenance/list_mc', 'MaintenanceController@fetchMachine');
+
+Route::get('index/maintenance/pic/{category}', 'MaintenanceController@indexPIC');
+Route::get('fetch/maintenance/pic', 'MaintenanceController@fetchMaintenanePic');
 
 Route::get('index/maintenance/list/user', 'MaintenanceController@indexMaintenanceForm');
 Route::get('fetch/maintenance/list_spk/user', 'MaintenanceController@fetchMaintenance');

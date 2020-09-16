@@ -41,11 +41,11 @@
 
 	input.currency {
 		text-align: left;
-		padding-right: 15px;
+		padding: 2px 5px;
 	}
 
 	.input-group-addon {
-		padding: 6px 6px;
+		padding: 2px 5px;
 	}
 
 </style>

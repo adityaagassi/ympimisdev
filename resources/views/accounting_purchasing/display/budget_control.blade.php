@@ -14,9 +14,9 @@ table.table-bordered > thead > tr > th{
 }
 table.table-bordered > tbody > tr > td{
   border:1px solid rgb(54, 59, 56);
-  vertical-align: middle;
   background-color: #212121;
   color: white;
+  vertical-align: middle;
   text-align: center;
   padding:3px;
 }
@@ -24,7 +24,7 @@ table.table-condensed > thead > tr > th{
   color: black
 }
 table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(150,150,150);
+  /*border:1px solid rgb(150,150,150);*/
   padding:0;
 }
 table.table-bordered > tbody > tr > td > p{
@@ -66,7 +66,7 @@ table > thead > tr > th{
   color: white;
 }
 #tabelmonitor{
-  font-size: 0.90vw;
+  font-size: 0.9vw;
 }
 
 .zoom{
@@ -116,6 +116,11 @@ hr { background-color: red; height: 1px; border: 0; }
 @endsection
 
 @section('content')
+<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+    <p style="position: absolute; color: White; top: 45%; left: 35%;">
+      <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+    </p>
+  </div>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0; padding-bottom: 0">
   <div class="row">
@@ -136,43 +141,49 @@ hr { background-color: red; height: 1px; border: 0; }
             <input type="text" class="form-control datepicker" id="dateto" placeholder="Select Date To">
           </div>
         </div>
+        @if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC-SPL")
+        <div class="col-md-2">
+            <div class="input-group">
+              <div class="input-group-addon bg-blue">
+                <i class="fa fa-search"></i>
+              </div>
+              <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8" >
+                  @foreach($department as $dept)
+                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+                  @endforeach
+                </select>
+            </div>
+        </div>
+        @else
+           <select class="form-control select2 hideselect" multiple="multiple" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8">
+             <option value="{{$emp_dept->department}}" selected="">{{$emp_dept->department}}</option>
+           </select>
+        @endif
       </div>
 
       <div class="col-md-12">
-        
-          <div class="col-md-12" style="margin-top: 5px; padding:0;">
-              <div id="chart" style="width: 99%"></div>
-          </div>
-
           <div class="col-md-12" style="padding:0">
-<!--               <div class="col-md-12" style="margin-top: 5px;background-color: #000;text-align: center;">
-                  <span style="font-size: 24px;font-weight: bold;color: white">Outstanding PO</span>
-              </div> -->
               <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
-                <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
-                  <tr>
-                    <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">No PO</th>
-                    <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">Tanggal PO</th>
-                    <th style="width: 16%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">Supplier</th>
-                    <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">Budget</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">Net Payment</th>
-                    <th style="width: 50%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" colspan="4">Progress Purchase Order</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">SAP</th>
-                  </tr>
-                  <tr>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;">Buyer</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;">Manager</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;">DGM</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;">GM</th>
+                <thead>
+                  <tr style="font-size: 16px">
+                    <th style="padding:10px;height: 15px; background-color: black;">No Budget</th>
+                    <th style="padding:10px;height: 15px; background-color: black;">Deskripsi</th>
+                    <th style="padding:10px;height: 15px; background-color: black;">Budget 1 Tahun</th>
+                    <th style="padding:10px;height: 15px; background-color: black;">Purchase Requisition</th>
+                    <th style="padding:10px;height: 15px; background-color: black;">Investment</th>
+                    <th style="padding:10px;height: 15px; background-color: black;">Purchase Order</th>
+                    <th style="padding:10px;height: 15px; background-color: black;">Transfer</th>
+                    <th style="padding:10px;height: 15px; background-color: black;">Actual</th>
+                    <th style="padding:10px;height: 15px; background-color: black;">Ending Balance</th>
                   </tr>
                 </thead>
-                <tbody id="tabelisi">
+                <tbody id="tablebudget">
+                  
                 </tbody>
-                <tfoot>
-                </tfoot>
               </table>
           </div>
         </div>
+        
       </div>
     </div>
   </div>
@@ -188,20 +199,27 @@ hr { background-color: red; height: 1px; border: 0; }
         <div class="modal-body">
           <div class="row">
             <div class="col-md-12">
-              <table id="example2" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
+              <table id="tableResult" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
                 <thead style="background-color: rgba(126,86,134,.7);">
                   <tr>
-                    <th>No PO</th>
-                    <th>Remark</th>
-                    <th>Tanggal PO</th>
-                    <th>Supplier</th>
-                    <th>No PO SAP</th>
+                    <th>Budget</th>
+                    <th>Budget Month</th>
+                    <th>Category Number</th>
+                    <th>No Item</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Amount</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="tableBodyResult">
                 </tbody>
+                <tfoot style="background-color: RGB(252, 248, 227);">
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Total</th>
+                <th id="resultTotal"></th>
+              </tfoot>
               </table>
             </div>
           </div>
@@ -246,6 +264,8 @@ hr { background-color: red; height: 1px; border: 0; }
 
     $('.select2').select2();
 
+    $('.hideselect').next(".select2-container").hide();
+
     drawChart();
     fetchTable();
     setInterval(fetchTable, 300000);
@@ -260,7 +280,7 @@ hr { background-color: red; height: 1px; border: 0; }
   });
 
   function drawChart() {
-    fetchTable();
+    
     var tglfrom = $('#tglfrom').val();
     var tglto = $('#tglto').val();
     var department = $('#department').val();
@@ -271,17 +291,23 @@ hr { background-color: red; height: 1px; border: 0; }
       department: department,
     };
 
-    $.get('{{ url("fetch/purchase_order/monitoring") }}', data, function(result, status, xhr) {
+    $.get('{{ url("fetch/investment/control") }}', data, function(result, status, xhr) {
       if(xhr.status == 200){
         if(result.status){
 
-          var tgl = [], jml = [], dept = [], not_sign = [], sign = [];
+          var week = [], week_date = [], not_sign = [], sign = [],gg = [],gg2 = [], reff_number = [], belum_po = [], sudah_po = [];
 
           $.each(result.datas, function(key, value) {
-            tgl.push(value.week_date);
-            // jml.push(value.jumlah);
-            not_sign.push(parseInt(value.jumlah_belum));
-            sign.push(parseInt(value.jumlah_sudah));
+            week.push(value.week_name);
+            week_date.push(value.week_date);
+            not_sign.push(parseInt(value.undone));
+            sign.push(parseInt(value.done));
+          })
+
+          $.each(result.data_investment_belum_po, function(key, value) {
+            reff_number.push(value.reff_number);
+            belum_po.push(parseInt(value.belum_po));
+            sudah_po.push(parseInt(value.sudah_po));
           })
 
           $('#chart').highcharts({
@@ -289,7 +315,7 @@ hr { background-color: red; height: 1px; border: 0; }
               type: 'column'
             },
             title: {
-              text: 'PO Monitoring & Outstanding',
+              text: 'Investment Monitoring & Control',
               style: {
                 fontSize: '24px',
                 fontWeight: 'bold'
@@ -304,19 +330,24 @@ hr { background-color: red; height: 1px; border: 0; }
             },
             xAxis: {
               type: 'category',
-              categories: tgl,
+              categories: week,
               lineWidth:2,
               lineColor:'#9e9e9e',
-              gridLineWidth: 1
+              gridLineWidth: 1,
+              labels: {
+                formatter: function (e) {
+                  return ''+ this.value +' Start from '+week_date[(this.pos)];
+                }
+              }
             },
             yAxis: {
               lineWidth:2,
               lineColor:'#fff',
               type: 'linear',
                 title: {
-                  text: 'Total PO'
+                  text: 'Total Investment'
                 },
-              tickInterval: 5,  
+              tickInterval: 1,  
               stackLabels: {
                   enabled: true,
                   style: {
@@ -326,11 +357,11 @@ hr { background-color: red; height: 1px; border: 0; }
               }
             },
             legend: {
-              enabled:true,
+              enabled:false,
               reversed: true,
               itemStyle:{
                 color: "white",
-                fontSize: "14px",
+                fontSize: "12px",
                 fontWeight: "bold",
 
               },
@@ -341,7 +372,7 @@ hr { background-color: red; height: 1px; border: 0; }
                 point: {
                   events: {
                     click: function () {
-                      ShowModalPO(this.category,this.series.name,result.tglfrom,result.tglto);
+                      ShowModalInv(this.category,this.series.name,result.tglfrom,result.tglto,result.department);
                     }
                   }
                 },
@@ -371,17 +402,18 @@ hr { background-color: red; height: 1px; border: 0; }
             },
             series: [
               {
-                name: 'PO Incompleted',
+                name: 'Investment Incompleted',
                 color: '#ff6666',
                 data: not_sign
               },
               {
-                name: 'PO Completed',
+                name: 'Investment Completed',
                 color: '#00a65a',
                 data: sign
               }
             ]
           })
+
         } else{
           alert('Attempt to retrieve data failed');
         }
@@ -389,8 +421,6 @@ hr { background-color: red; height: 1px; border: 0; }
       }
     })
   }
-
-  
 
   function fetchTable(){
 
@@ -404,208 +434,39 @@ hr { background-color: red; height: 1px; border: 0; }
       department: department,
     };
 
-    $.get('{{ url("purchase_order/table") }}', data, function(result, status, xhr){
+    $.get('{{ url("fetch/budget/table") }}', data, function(result, status, xhr){
       if(xhr.status == 200){
         if(result.status){
-
-          $("#tabelisi").find("td").remove();  
-          $('#tabelisi').html("");
           
+
+          $("#tablebudget").find("td").remove();  
+          $('#tablebudget').html("");
+
           var table = "";
 
-          var buyer = "";
-          var manager = "";
-          var dgm = "";
-          var gm = "";
-          var sap = "";
-
           $.each(result.datas, function(key, value) {
-
-            var buyer_name = value.buyer_name;
-            var buyername = buyer_name.split(' ').slice(0,2).join(' ');
-            var colorbuyer = "";
-
-            var manager_name = value.authorized2_name;
-            var managername = manager_name.split(' ').slice(0,2).join(' ');
-            var colormanager = "";
-
-            var dgm_name = value.authorized3_name;
-            var dgmname = dgm_name.split(' ').slice(0,2).join(' ');
-            var colordgm = "";
-
-            var gm_name = value.authorized4_name;
-            var gmname = gm_name.split(' ').slice(0,2).join(' ');
-            var colorgm = "";
-            var colorsap = "";
-
-            var d = 0;
-
-            //CPAR
-            var urldetail = '{{ url("purchase_order") }}';
-            var urlreport = '{{ url("purchase_order/report/") }}';
-            var urlverifikasi = '{{ url("purchase_order/verifikasi/") }}';
-            var urlcheck = '{{ url("purchase_order/check/") }}';
-
-
-              if (value.posisi != "staff_pch") {
-                buyer = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+buyername+'</span></a>';
-                colorbuyer = 'style="background-color:#00a65a"';
-              }
-              else {
-                if (d == 0) {  
-                    buyer = '<a href="'+urldetail+'"><span class="label label-danger zoom">'+buyername+'</span></a>';
-                    colorbuyer = 'style="background-color:#dd4b39"';                    
-                    d = 1;
-                  } else {
-                    buyer = '';
-                  }
-              }
-
-              //Manager
-              if (value.approval_authorized2 == "Approved") {
-                  if (value.posisi == "manager_pch") {
-                      if (d == 0) {  
-                          manager = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+managername+'</span></a>';   
-                          colormanager = 'style="background-color:#dd4b39"';                  
-                          d = 1;
-                        } else {
-                          manager = '';
-                        }
-                  }
-                  else{
-                      manager = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+managername+'</span></a>';
-                      colormanager = 'style="background-color:#00a65a"'; 
-                  }
-              }
-              else{
-                if (d == 0) {  
-                  manager = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+managername+'</span></a>'; 
-                  colormanager = 'style="background-color:#dd4b39"';                  
-                  d = 1;
-                } else {
-                  manager = '';
-                }
-              }
-
-
-              //DGM
-              if (value.approval_authorized3 == "Approved") {
-                  if (value.posisi == "dgm") {
-                    if (d == 0) {  
-                        dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
-                        colordgm = 'style="background-color:#dd4b39"';              
-                        d = 1;
-                      } else {
-                        dgm = '';
-                      }
-                  }
-                  else {
-                    dgm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+dgmname+'</span></a>';
-                    colordgm = 'style="background-color:#00a65a"'; 
-                  } 
-              }
-              else {
-                if (d == 0) {  
-                  dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
-                  colordgm = 'style="background-color:#dd4b39"';                   
-                  d = 1;
-                } else {
-                  dgm = '';
-                }
-              }
-
-              //GM
-              if (value.approval_authorized4 == "Approved") {
-                  if (value.posisi == "gm") {
-                      if (d == 0) {  
-                        gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
-                        colorgm = 'style="background-color:#dd4b39"'; 
-                        d = 1;
-                      } else {
-                        gm = '';
-                      }
-                  } else {
-                    gm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+gmname+'</span></a>'; 
-                    colorgm = 'style="background-color:#00a65a"'; 
-                  }
-              } 
-
-              else {
-                if (d == 0) {  
-                  gm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+gmname+'</span></a>';
-                  colorgm = 'style="background-color:#dd4b39"'; 
-                  d = 1;
-                } else {
-                  gm = '';
-                }
-              }
-
-              //SAP
-              if (value.posisi == "pch") {
-                  if (value.status == "not_sap") {
-                      if (d == 0) {  
-                        sap = '<a href="'+urldetail+'"><span class="label label-danger">Nomor PO SAP</span></a>';
-                        colorsap = 'style="background-color:#dd4b39"'; 
-                        d = 1;
-                      } else {
-                        sap = '';
-                      }
-                  } else {
-                    sap = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">Finish</span></a>'; 
-                    colorsap = 'style="background-color:#00a65a"'; 
-                  }
-              } 
-
-              else {
-                if (d == 0) {  
-                  sap = '<a href="'+urldetail+'"><span class="label label-danger">Nomor PO SAP</span></a>';
-                  colorsap = 'style="background-color:#dd4b39"'; 
-                  d = 1;
-                } else {
-                  sap = '';
-                }
-              }
-
+              var ending = parseFloat(value.amount) - (parseFloat(value.PR) + parseFloat(value.Investment) + parseFloat(value.PO));
               table += '<tr>';
-              table += '<td>'+value.no_po+'</td>';
-              table += '<td>'+value.tgl_po+'</td>';
-              table += '<td>'+value.supplier_name+'</td>';
-              table += '<td>'+value.budget_item+'</td>';
-
-              var curr = "";
-
-              if(value.currency == "USD") {
-                curr = "$";
-              } else if(value.currency == "JPY"){
-                curr = "¥"; 
-              }else if(value.currency == "IDR"){
-                curr = "Rp.";  
-              }
-
-              table += '<td>'+curr+' '+value.amount+'</td>';
-              table += '<td '+colorbuyer+'>'+buyer+'</td>';  
-              table += '<td '+colormanager+'>'+manager+'</td>';
-              table += '<td '+colordgm+'>'+dgm+'</td>';
-              table += '<td '+colorgm+'>'+gm+'</td>';
-              table += '<td '+colorsap+'>'+sap+'</td>';
-
-              
+              table += '<td>'+value.budget+'</td>';
+              table += '<td>'+value.description+'</td>';
+              table += '<td style="border-left:3px solid #000;">$ '+value.amount+'</td>';
+              table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'PR\')">$ '+value.PR+'</td>';
+              table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'Investment\')">$ '+value.Investment+'</td>';
+              table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'PO\')">$ '+value.PO+'</td>';
+              table += '<td style="border-left:3px solid #000;cursor:pointer">$ 0</td>';
+              table += '<td style="border-left:3px solid #000;cursor:pointer">$ 0</td>';
+              table += '<td style="border-left:3px solid #000;">$ '+ending.toFixed(2)+'</td>';
+              table += '</tr>';
           })
 
-          $('#tabelisi').append(table);
-
-
-
+          $('#tablebudget').append(table);
         }
       }
-    })
+    });
   }
 
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+  function detailBudget(budget,status){
 
-  function ShowModalPO(tanggal, status, tglfrom, tglto) {
     tabel = $('#example2').DataTable();
     tabel.destroy();
 
@@ -665,30 +526,96 @@ hr { background-color: red; height: 1px; border: 0; }
       "serverSide": true,
       "ajax": {
            "type" : "get",
-          "url" : "{{ url("purchase_order/detail") }}",
+          "url" : "{{ url("fetch/budget/detail_table") }}",
           "data" : {
-            tanggal : tanggal,
-            status : status,
-            tglfrom : tglfrom,
-            tglto : tglto
+            budget : budget,
+            status : status
           }
         },
       "columns": [
-          { "data": "no_po" },
-          { "data": "remark" },
-          { "data": "tgl_po" },
-          { "data": "supplier_name" },
-          { "data": "no_po_sap" },
+          { "data": "budget" },
+          { "data": "budget_month" },
+          { "data": "category_number" },
+          { "data": "no_item" },
+          { "data": "amount" },
           { "data": "status" },
-          { "data": "action" },
         ]    });
 
     $('#judul_table').append().empty();
-    $('#judul_table').append('<center><b>'+status+' Tanggal '+tanggal+'</center></b>');
+    $('#judul_table').append('<center><b>'+status+' Budget '+budget+'</center></b>');
     
   }
 
-     Highcharts.createElement('link', {
+  function detail_budget(budget,status){
+    $("#myModal").modal("show");
+
+
+    var data = {
+        budget:budget,
+        status:status,
+    }
+
+    $("#loading").show();
+    $.get('{{ url("fetch/budget/detail_table") }}', data, function(result, status, xhr) {
+
+
+      $("#loading").hide();
+      if(result.status){
+        $('#tableResult').DataTable().clear();
+        $('#tableResult').DataTable().destroy();
+        $('#tableBodyResult').html("");
+
+        var tableData = "";
+        var total = 0;
+        var count = 1;
+        
+        $.each(result.datas, function(key, value) {
+          tableData += '<tr>';
+          tableData += '<td>'+ value.budget +'</td>';
+
+          if (value.status == "PR" || value.status == "Investment") {
+            tableData += '<td>'+ value.budget_month +'</td>';
+            tableData += '<td>'+ value.category_number +'</td>';
+            tableData += '<td>'+ value.no_item +'</td>';
+            tableData += '<td>'+ value.status+ '</td>';
+            tableData += '<td>$ '+ value.amount +'</td>'; 
+            total += parseFloat(value.amount);           
+          }
+
+          else if(value.status == "PO"){
+            tableData += '<td>'+ value.budget_month_po +'</td>';
+            tableData += '<td>'+ value.po_number +'</td>';
+            tableData += '<td>'+ value.no_item +'</td>';
+            tableData += '<td>'+ value.status+ '</td>';
+            tableData += '<td>$ '+ value.amount_po +'</td>';
+            total += parseFloat(value.amount_po);
+          }
+
+          tableData += '</tr>';
+          count += 1;
+        });
+
+        $('#tableBodyResult').append(tableData);
+        $('#resultTotal').html('');
+        $('#resultTotal').append('$ '+total.toFixed(2));
+
+      }
+      else{
+        alert('Attempt to retrieve data failed');
+      }
+
+    });
+
+    $('#judul_table').append().empty();
+    $('#judul_table').append('<center><b>'+status+' Budget '+budget+'</center></b>');
+    
+  }
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  Highcharts.createElement('link', {
           href: '{{ url("fonts/UnicaOne.css")}}',
           rel: 'stylesheet',
           type: 'text/css'
