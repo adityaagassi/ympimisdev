@@ -46,7 +46,7 @@ class EmailHrq extends Command
 
 
         if($data != null){
-            Mail::to(['m.hamzah@music.yamaha.com', 'prawoto@music.yamaha.com', 'putri.sukma.riyanti@music.yamaha.com', 'budhi.apriyanto@music.yamaha.com', 'aditya.agassi@music.yamaha.com'])->send(new SendEmail($data, 'hrq'));
+            Mail::to(['mahendra.putra@music.yamaha.com', 'prawoto@music.yamaha.com', 'putri.sukma.riyanti@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com', 'anton.budi.santoso@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($data, 'hrq'));
         }
     }
 }
