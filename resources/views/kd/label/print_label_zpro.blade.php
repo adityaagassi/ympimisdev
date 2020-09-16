@@ -171,6 +171,10 @@ var printSettings = {
 	"printerName" : "SATO CG408"
 };
 
+function tutup() {
+	window.close();
+}
+
 function printWindow(win, what) {
   // jsPrintSetup messages
   function jspListener(event) {
@@ -218,7 +222,8 @@ function printWindow(win, what) {
 		});
   	win.addEventListener("afterprint", function(event) {
 
-  		window.close();
+  		setTimeout(tutup,3000);  		
+  		// window.close();
   	});
   }
   
