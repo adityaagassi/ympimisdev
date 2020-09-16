@@ -342,7 +342,7 @@ class TemperatureController extends Controller
 
               $reader->each(function($row) {
               });
-            })->toObject();
+            })->toObject()->groupBy('Person ID');
 
             $person_id = [];
 
@@ -395,12 +395,18 @@ class TemperatureController extends Controller
 
     public function indexMinMoeMonitoring($location)
     {
+
+          $title = "Resume Pengecekan Suhu Tubuh Karyawan";
+          $title_jp = "従業員の検温のまとめ";
+
          if ($location == 'office') {
                $loc = 'YMPI-OFFICE';
           }
           return view('temperature.minmoe_monitoring', array(
                'loc' => $loc,
-               'location' => $location
+               'location' => $location,
+               'title' => $title,
+               'title_jp' => $title_jp
           ))->with('page', 'Temperature');
     }
 

@@ -198,7 +198,7 @@
 								<th>Employee ID</th>
 								<th>Name</th>
 								<th>Location</th>
-								<th>Date In</th>
+								<th>Check Date</th>
 								<th>Check Point</th>
 								<th>Temperature</th>
 								<th>Abnormal Status</th>

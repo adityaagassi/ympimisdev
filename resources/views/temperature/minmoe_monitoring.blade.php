@@ -73,22 +73,22 @@
 		<div class="col-xs-12" style="padding-bottom: 5px;">
 			<div class="row">
 				<div class="col-xs-4">
-					<span style="color: white; font-size: 22px; font-weight: bold;"><i class="fa fa-caret-right"></i> Today's Check</span>
+					<span style="color: white; font-size: 22px; font-weight: bold;"><i class="fa fa-caret-right"></i> Cek Hari Ini</span>
 					<table class="table table-bordered" id="tableTotal" style="margin-bottom: 5px;">
 						<thead>
 							<tr>
-								<th style="width: 50%; text-align: center;color: white">Total Check</th>
-								<th style="width: 50%; text-align: center;color: white">Total Uncheck</th>
+								<th style="width: 50%; text-align: center;color: white">Sudah Cek</th>
+								<th style="width: 50%; text-align: center;color: white">Belum Cek</th>
 							</tr>			
 						</thead>
 						<tbody id="tableTotalBody">
 							<tr>
-								<td style="font-size: 30px; font-weight: bold;color: black" id="total_check">99</td>
-								<td style="font-size: 30px; font-weight: bold;color: black" id="total_uncheck">99</td>
+								<td style="font-size: 30px; font-weight: bold;color: black" id="total_check"></td>
+								<td style="font-size: 30px; font-weight: bold;color: black" id="total_uncheck"></td>
 							</tr>
 						</tbody>
 					</table>
-					<span style="color: white; font-size: 22px; font-weight: bold;"><i class="fa fa-caret-right"></i> Haven't Check</span>
+					<span style="color: white; font-size: 22px; font-weight: bold;"><i class="fa fa-caret-right"></i> Detail Belum Cek</span>
 					<table class="table table-bordered" id="tableNoCheck" style="margin-bottom: 5px;">
 						<thead>
 							<tr>
