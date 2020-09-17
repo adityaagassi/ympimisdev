@@ -128,7 +128,7 @@ class TransactionController extends Controller
 				"completion_issue_plant" => "8190",
 				"completion_material_id" => $material->id,
 				"completion_reference_number" => "",
-				"lot" => $return->quantity*-1,
+				"lot" => $return->quantity,
 				"synced" => 0,
 				'user_id' => "1",
 				'created_at' => date("Y-m-d H:i:s"),
@@ -221,8 +221,12 @@ class TransactionController extends Controller
 			return Response::json($response);
 		}
 
+
 		if($id[0] == 'receive'){
 			try{
+
+				dd($return);
+
 				$return_log = new ReturnLog([
 					'return_id' => $return->id,
 					'material_number' => $return->material_number,
@@ -240,6 +244,7 @@ class TransactionController extends Controller
 				$material = db::connection('mysql2')->table('materials')
 				->where('material_number', '=', $return->material_number)
 				->first();
+
 
 				$return_data = db::connection('mysql2')->table('transfers_return')->insert([
 					'material_id' => $material->id,
