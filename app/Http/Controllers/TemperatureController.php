@@ -519,11 +519,13 @@ class TemperatureController extends Controller
                     employee_groups.location = '".$request->get('location')."'
                ORDER BY employee_groups.group");
 
+               $dateTitle = date("d M Y", strtotime($now));
+
                $response = array(
                     'status' => true,
                     'message' => 'Get Data Success',
                     'datatoday' => $datatoday,
-                    // 'dataavgmax' => $dataavgmax,
+                    'dateTitle' => $dateTitle,
                     'datacheck' => $datacheck,
                );
 

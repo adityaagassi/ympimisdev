@@ -225,7 +225,7 @@
 					backgroundColor: null
 				},
 				title: {
-					text: 'Employees Temperature Monitoring <br>On '+'{{date("d M Y")}}',
+					text: 'Employees Temperature Monitoring <br>On '+result.dateTitle,
 					style: {
 						fontSize: '25px',
 						fontWeight: 'bold'
