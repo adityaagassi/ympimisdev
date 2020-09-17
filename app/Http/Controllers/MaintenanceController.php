@@ -1969,7 +1969,7 @@ class MaintenanceController extends Controller
 	public function inventory_edit(Request $request)
 	{
 		try {
-			MaintenanceInventory::where('part_number', $prt[$i][0])
+			MaintenanceInventory::where('part_number', $request->get('part_number'))
 			->update([
 				'item_number' => $request->get('item_number'),
 				'part_name' => $request->get('part_name'),
