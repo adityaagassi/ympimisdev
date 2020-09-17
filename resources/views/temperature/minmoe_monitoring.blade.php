@@ -66,7 +66,7 @@
 							<input type="text" class="form-control datepicker" id="tanggal_to" name="tanggal_to" placeholder="Select Date To" onchange="fetchTemperature()">
 						</div>
 					</div> -->
-					<div class="pull-right" id="loc" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 2vw;"></div>
+					<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 1vw;color: white"></div>
 				</form>
 			</div>
 		</div>
@@ -217,22 +217,17 @@
 				series1.push({y:parseFloat(value.jumlah),key:value.temperature});
 			});
 
+			$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Update: '+ getActualFullDate() +'</p>');
+
 			var chart = Highcharts.chart('container1', {
 				chart: {
 					type: 'column',
 					backgroundColor: null
 				},
 				title: {
-					text: 'Employees Temperature Monitoring',
+					text: 'Employees Temperature Monitoring <br>On '+'{{date("d M Y")}}',
 					style: {
 						fontSize: '25px',
-						fontWeight: 'bold'
-					}
-				},
-				subtitle: {
-					text: 'Last Update: '+getActualFullDate(),
-					style: {
-						fontSize: '12px',
 						fontWeight: 'bold'
 					}
 				},
