@@ -650,7 +650,11 @@ class AccountingController extends Controller
         {
             $id = $pr->id;
 
-            if ($pr->status == "approval")
+            if ($pr->posisi == "user" && $pr->status == "approval")
+            {
+                return '<label class="label label-danger">Not Sent</a>';
+            }
+            else if($pr->status == "approval")
             {
                 return '<label class="label label-warning">Approval</a>';
             }
@@ -669,13 +673,24 @@ class AccountingController extends Controller
             $id = $pr->id;
 
             // <a href="purchase_requisition/detail/' . $id . '" class="btn btn-info btn-xs" data-toggle="tooltip" title="Detail PR"><i class="fa fa-eye"></i></a>
+            // <a href="javascript:void(0)" class="btn btn-xs btn-warning" onClick="editPR(' . $id . ')" data-toggle="tooltip" title="Detail PR"><i class="fa fa-edit"></i> Detail</a>
 
-            if($pr->status == "approval"){
+            if ($pr->posisi == "user" && $pr->status == "approval") {
                 return '
-                <a href="javascript:void(0)" class="btn btn-xs btn-warning" onClick="editPR(' . $id . ')" data-toggle="tooltip" title="Detail PR"><i class="fa fa-edit"></i> Detail</a>
+                <button class="btn btn-xs btn-success" data-toggle="tooltip" title="Send Email" style="margin-right:5px;"  onclick="sendEmail('.$id.')"><i class="fa fa-envelope"></i> Send Email</button>
+                <a href="javascript:void(0)" class="btn btn-xs btn-warning" onClick="editPR(' . $id . ')" data-toggle="tooltip" title="Edit PR"><i class="fa fa-edit"></i> Edit PR</a>
                 <a href="purchase_requisition/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+                <a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="deleteConfirmationPR('.$id.')" data-toggle="modal" data-target="#modalDeletePR"  title="Delete PR"><i class="fa fa-trash"></i> Delete PR</a>
                 ';
+
             }
+
+            // if($pr->status == "approval"){
+            //     return '
+                
+            //     <a href="purchase_requisition/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
+            //     ';
+            // }
             else{
                 return '
                 <a href="purchase_requisition/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report</a>
@@ -989,7 +1004,8 @@ class AccountingController extends Controller
 
             else if ($manag != null)
             {
-                $posisi = "manager";
+                // $posisi = "manager";
+                $posisi = "user";
 
                 foreach ($manag as $mg)
                 {
@@ -1002,7 +1018,8 @@ class AccountingController extends Controller
             // Jika gaada manager di departemen itu
             else
             {
-                $posisi = "dgm";
+                // $posisi = "dgm";
+                $posisi = "user";
             }
 
             //Cek File
@@ -1043,7 +1060,7 @@ class AccountingController extends Controller
                 'posisi' => $posisi, 
                 'status' => 'approval', 
                 'no_budget' => $request->get('budget_no'), 
-                'staff' => $staff, 
+                'staff' => $staff,
                 'manager' => $manager,
                 'manager_name' => $manager_name,
                 'dgm' => $this->dgm, 
@@ -1096,8 +1113,8 @@ class AccountingController extends Controller
                 }
 
                 //get only number
-                $price_real = preg_replace('/[^0-9]/', '', $request->get($item_price));
-                $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
+                // $price_real = preg_replace('/[^0-9]/', '', $request->get($item_price));
+                // $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
 
                 $data2 = new AccPurchaseRequisitionItem([
                     'no_pr' => $request->get('no_pr') , 
@@ -1107,10 +1124,10 @@ class AccountingController extends Controller
                     'item_stock' => $request->get($item_stock) , 
                     'item_request_date' => $request->get($item_request_date), 
                     'item_currency' => $current, 
-                    'item_price' => $price_real, 
+                    'item_price' => $request->get($item_price), 
                     'item_qty' => $request->get($item_qty),
                     'item_uom' => $request->get($item_uom),
-                    'item_amount' => $amount,
+                    'item_amount' => $request->get($item_amount),
                     'status' => $status,
                     'created_by' => $id
                 ]);
@@ -1182,30 +1199,30 @@ class AccountingController extends Controller
 
             $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
 
-            $mails = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.staff = users.username where acc_purchase_requisitions.id = " . $data->id;
-            $mailtoo = DB::select($mails);
+            // $mails = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.staff = users.username where acc_purchase_requisitions.id = " . $data->id;
+            // $mailtoo = DB::select($mails);
 
-            // Jika gaada staff
-            if ($mailtoo == null)
-            {   
-                //ke manager
-                $mails = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.manager = users.username where acc_purchase_requisitions.id = " . $data->id;
-                $mailtoo = DB::select($mails);
+            // // Jika gaada staff
+            // if ($mailtoo == null)
+            // {   
+            //     //ke manager
+            //     $mails = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.manager = users.username where acc_purchase_requisitions.id = " . $data->id;
+            //     $mailtoo = DB::select($mails);
 
-                // Jika Gaada Manager
-                if ($mailtoo == null)
-                { 
-                    // ke DGM
-                    $mails = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.dgm = users.username where acc_purchase_requisitions.id = " . $data->id;
-                    $mailtoo = DB::select($mails);
-                }
+            //     // Jika Gaada Manager
+            //     if ($mailtoo == null)
+            //     { 
+            //         // ke DGM
+            //         $mails = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.dgm = users.username where acc_purchase_requisitions.id = " . $data->id;
+            //         $mailtoo = DB::select($mails);
+            //     }
                 
-            }
+            // }
 
-            $isimail = "select * FROM acc_purchase_requisitions where acc_purchase_requisitions.id = " . $data->id;
-            $purchaserequisition = db::select($isimail);
+            // $isimail = "select * FROM acc_purchase_requisitions where acc_purchase_requisitions.id = " . $data->id;
+            // $purchaserequisition = db::select($isimail);
 
-            Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($purchaserequisition, 'purchase_requisition'));
+            // Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($purchaserequisition, 'purchase_requisition'));
 
             return redirect('/purchase_requisition')->with('status', 'PR Berhasil Dibuat')
             ->with('page', 'Purchase Requisition');
@@ -1216,6 +1233,61 @@ class AccountingController extends Controller
             ->with('page', 'Purchase Requisition');
         }
     }
+
+    public function pr_send_email(Request $request){
+            $pr = AccPurchaseRequisition::find($request->get('id'));
+
+            try{
+                if ($pr->posisi == "user")
+                {
+                    $mails = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.staff = users.username where acc_purchase_requisitions.id = ".$request->get('id');
+                    $mailtoo = DB::select($mails);
+
+                    $pr->posisi = "staff";
+
+                    // Jika gaada staff
+                    if ($mailtoo == null)
+                    {   
+                        //ke manager
+                        $mails = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.manager = users.username where acc_purchase_requisitions.id = ".$request->get('id');
+                        $mailtoo = DB::select($mails);
+
+                        $pr->posisi = "manager";
+
+                        // Jika Gaada Manager
+                        if ($mailtoo == null)
+                        { 
+                            // ke DGM
+                            $mails = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.dgm = users.username where acc_purchase_requisitions.id = ".$request->get('id');
+                            $mailtoo = DB::select($mails);
+
+                            $pr->posisi = "dgm";
+                        }
+                    }
+
+                    $pr->save();
+
+                    $isimail = "select * FROM acc_purchase_requisitions where acc_purchase_requisitions.id = ".$request->get('id');
+                    $purchaserequisition = db::select($isimail);
+
+                    Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($purchaserequisition, 'purchase_requisition'));
+
+                    $response = array(
+                      'status' => true,
+                      'datas' => "Berhasil"
+                    );
+
+                    return Response::json($response);
+                }
+            } 
+            catch (Exception $e) {
+                $response = array(
+                  'status' => false,
+                  'datas' => "Gagal"
+                );
+            return Response::json($response);
+         }
+     }
 
     //==================================//
     //          Detail PR               //
@@ -1951,7 +2023,7 @@ class AccountingController extends Controller
                 $item_price = "item_price_edit" . $lp;
                 $item_amount = "amount_edit" . $lp;
 
-                $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
+                // $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
 
                 $data2 = AccPurchaseRequisitionItem::where('id', $lp)->update([
                   'item_code' => $request->get($item_code), 
@@ -1962,7 +2034,7 @@ class AccountingController extends Controller
                   'item_request_date' => $request->get($item_req), 
                   'item_qty' => $request->get($item_qty),
                   'item_price' => $request->get($item_price),
-                  'item_amount' => $amount,
+                  'item_amount' => $request->get($item_amount),
                   'created_by' => $id
               ]);
             }
@@ -1981,6 +2053,7 @@ class AccountingController extends Controller
                 $item_qty = "qty" . $i;
                 $item_uom = "uom" . $i;
                 $item_amount = "amount" . $i;
+                $dollar = "konversi_dollar" . $i;
                 $status = "";
 
                 //Jika ada value kosong
@@ -2009,8 +2082,8 @@ class AccountingController extends Controller
                 }
 
                 //get only number
-                $price_real = preg_replace('/[^0-9]/', '', $request->get($item_price));
-                $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
+                // $price_real = preg_replace('/[^0-9]/', '', $request->get($item_price));
+                // $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
 
                 $data2 = new AccPurchaseRequisitionItem([
                     'no_pr' => $request->get('no_pr_edit') , 
@@ -2020,17 +2093,42 @@ class AccountingController extends Controller
                     'item_stock' => $request->get($item_stock) , 
                     'item_request_date' => $request->get($item_req) , 
                     'item_currency' => $current,
-                    'item_price' => $price_real,
+                    'item_price' => $request->get($item_price),
                     'item_qty' => $request->get($item_qty) , 
                     'item_uom' => $request->get($item_uom) , 
-                    'item_amount' => $amount, 
+                    'item_amount' => $request->get($item_amount), 
                     'status' => $status, 
                     'created_by' => $id
                 ]);
 
                 $data2->save();
 
-                $dollar = "konversi_dollar" . $i;
+                $datenow = date('Y-m-d');
+
+                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
+
+                foreach ($fy as $fys) {
+                    $fiscal = $fys->fiscal_year;
+                }
+
+                $bulan = strtolower(date("M",strtotime($datenow)));
+
+                $sisa_bulan = $bulan.'_sisa_budget';
+
+                 //get Data Budget Based On Periode Dan Nomor
+                $budgetdata = AccBudget::where('budget_no','=',$request->get('no_budget_edit'))->where('periode','=', $fiscal)->first();
+
+                //Get Amount Di PO
+                $total_dollar = $request->get($dollar);
+
+                $totalminusPO = $budgetdata->$sisa_bulan - $total_dollar;
+
+                // Setelah itu update data budgetnya dengan yang actual
+                $dataupdate = AccBudget::where('budget_no',$request->get('no_budget_edit'))->where('periode','=', $fiscal)
+                ->update([
+                    $sisa_bulan => $totalminusPO
+                ]);
+
                 $month = strtolower(date("M",strtotime($request->get('tgl_pengajuan_edit'))));
                 $begbal = $request->get('SisaBudgetEdit') + $request->get('TotalPembelianEdit');
 
@@ -2039,9 +2137,10 @@ class AccountingController extends Controller
                     'budget_month' => $month,
                     'budget_date' => date('Y-m-d'),
                     'category_number' => $request->get('no_pr_edit'),
-                    'beg_bal' => $beg_bal,
+                    'beg_bal' => $begbal,
                     'no_item' => $request->get($item_desc),
                     'amount' => $request->get($dollar),
+                    'status' => 'PR',
                     'created_by' => $id
                 ]);
 
@@ -2141,6 +2240,49 @@ class AccountingController extends Controller
         ->with('head', 'Purchase Order');
     }
 
+    public function delete_purchase_requisition(Request $request)
+    {
+        try
+        {
+            $pr = AccPurchaseRequisition::find($request->get('id'));
+
+            $budget_log = AccBudgetHistory::where('category_number', '=', $pr->no_pr)
+            ->get();
+
+            $date = date('Y-m-d');
+            //FY
+            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+            foreach ($fy as $fys) {
+                $fiscal = $fys->fiscal_year;
+            }
+
+            foreach ($budget_log as $log) {
+                $sisa_bulan = $log->budget_month.'_sisa_budget';
+                $budget = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->first();
+
+                $total = $budget->$sisa_bulan + $log->amount; //add total
+                $dataupdate = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->update([
+                    $sisa_bulan => $total
+                ]);
+            }
+
+            $delete_budget_log = AccBudgetHistory::where('category_number', '=', $pr->no_pr)->delete();
+            $delete_pr_item = AccPurchaseRequisitionItem::where('no_pr', '=', $pr->no_pr)->delete();
+            $delete_pr = AccPurchaseRequisition::where('no_pr', '=', $pr->no_pr)->delete();
+
+            $response = array(
+                'status' => true,
+            );
+
+            return Response::json($response);
+        }
+        catch(QueryException $e)
+        {
+            return redirect('/purchase_requisition')->with('error', $e->getMessage())
+            ->with('page', 'Purchase Requisition');
+        }
+    }
+
     public function delete_item_pr(Request $request)
     {
         try
@@ -2173,6 +2315,12 @@ class AccountingController extends Controller
             ->delete();
 
             $delete_item = AccPurchaseRequisitionItem::where('id', '=', $request->get('id'))->delete();
+
+            $response = array(
+                'status' => true,
+            );
+
+            return Response::json($response);
 
         }
         catch(QueryException $e)
@@ -3073,68 +3221,68 @@ class AccountingController extends Controller
         }
     }
 
-    public function po_send_email(Request $request){
-        $po = AccPurchaseOrder::find($request->get('id'));
+        public function po_send_email(Request $request){
+            $po = AccPurchaseOrder::find($request->get('id'));
 
-        try{
-            if ($po->posisi == "staff_pch")
-            {
-                $po->posisi = "manager_pch";
-
-                $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized2 = users.username where acc_purchase_orders.id = '" . $request->get('id') . "'";
-                $mails = DB::select($mailto);
-
-                foreach ($mails as $mail)
+            try{
+                if ($po->posisi == "staff_pch")
                 {
-                    $mailtoo = $mail->email;
+                    $po->posisi = "manager_pch";
+
+                    $mailto = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.authorized2 = users.username where acc_purchase_orders.id = '" . $request->get('id') . "'";
+                    $mails = DB::select($mailto);
+
+                    foreach ($mails as $mail)
+                    {
+                        $mailtoo = $mail->email;
+                    }
+                    $po->save();
+
+                    // $isimail = AccPurchaseOrder::select('acc_purchase_orders.*', 'acc_budget_histories.budget', DB::raw("SUM(acc_budget_histories.amount_po) as amount"))
+                    // ->join('acc_budget_histories','acc_purchase_orders.no_po','=','acc_budget_histories.po_number')
+                    // ->where('acc_purchase_orders.id', '=', $request->get('id'))
+                    // ->get();
+
+                    $isimail = "
+                    select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+                    (SELECT
+                    acc_purchase_orders.*,
+                    acc_purchase_order_details.budget_item,
+                    acc_purchase_order_details.goods_price,
+                    acc_purchase_order_details.service_price,
+                    acc_purchase_order_details.qty
+                    FROM
+                    acc_purchase_orders
+                    JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+                    WHERE
+                    acc_purchase_orders.id = ".$request->get('id').")
+                    t1";
+                    
+                    $po_isi = db::select($isimail);
+
+                    Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($po_isi, 'purchase_order'));
+
+                    $response = array(
+                      'status' => true,
+                      'datas' => "Berhasil"
+                  );
+
+                    return Response::json($response);
                 }
-                $po->save();
+                else{
 
-                // $isimail = AccPurchaseOrder::select('acc_purchase_orders.*', 'acc_budget_histories.budget', DB::raw("SUM(acc_budget_histories.amount_po) as amount"))
-                // ->join('acc_budget_histories','acc_purchase_orders.no_po','=','acc_budget_histories.po_number')
-                // ->where('acc_purchase_orders.id', '=', $request->get('id'))
-                // ->get();
-
-                $isimail = "
-                select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
-                (SELECT
-                acc_purchase_orders.*,
-                acc_purchase_order_details.budget_item,
-                acc_purchase_order_details.goods_price,
-                acc_purchase_order_details.service_price,
-                acc_purchase_order_details.qty
-                FROM
-                acc_purchase_orders
-                JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
-                WHERE
-                acc_purchase_orders.id = ".$request->get('id').")
-                t1";
-                
-                $po_isi = db::select($isimail);
-
-                Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($po_isi, 'purchase_order'));
-
-                $response = array(
-                  'status' => true,
-                  'datas' => "Berhasil"
-              );
-
-                return Response::json($response);
-            }
-            else{
-
-            }
+                }
 
 
-        } catch (Exception $e) {
-         $response = array(
-          'status' => false,
-          'datas' => "Gagal"
-      );
+            } catch (Exception $e) {
+             $response = array(
+              'status' => false,
+              'datas' => "Gagal"
+          );
 
-         return Response::json($response);
+             return Response::json($response);
+         }
      }
- }
 
     //==================================//
     //          Verifikasi PO           //
@@ -3668,7 +3816,7 @@ public function update_purchase_requisition_po(Request $request)
             $item_price = "item_price_edit" . $lp;
             $item_amount = "amount_edit" . $lp;
 
-            $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
+            // $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
 
             $getitem = AccPurchaseRequisitionItem::where('id', $lp)->first();
 
@@ -3687,7 +3835,7 @@ public function update_purchase_requisition_po(Request $request)
               'item_request_date' => $request->get($item_req), 
               'item_qty' => $request->get($item_qty),
               'item_price' => $request->get($item_price),
-              'item_amount' => $amount,
+              'item_amount' => $request->get($item_amount),
               'created_by' => $id
           ]);
 
@@ -3756,8 +3904,8 @@ public function update_purchase_requisition_po(Request $request)
             }
 
                     //get only number
-            $price_real = preg_replace('/[^0-9]/', '', $request->get($item_price));
-            $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
+            // $price_real = preg_replace('/[^0-9]/', '', $request->get($item_price));
+            // $amount = preg_replace('/[^0-9]/', '', $request->get($item_amount));
 
             $data2 = new AccPurchaseRequisitionItem([
                 'no_pr' => $request->get('no_pr_edit') , 
@@ -3767,10 +3915,10 @@ public function update_purchase_requisition_po(Request $request)
                 'item_stock' => $request->get($item_stock) , 
                 'item_request_date' => $request->get($item_req) , 
                 'item_currency' => $current,
-                'item_price' => $price_real,
+                'item_price' => $request->get($item_price),
                 'item_qty' => $request->get($item_qty) , 
                 'item_uom' => $request->get($item_uom) , 
-                'item_amount' => $amount, 
+                'item_amount' => $request->get($item_amount), 
                 'status' => $status, 
                 'created_by' => $id
             ]);

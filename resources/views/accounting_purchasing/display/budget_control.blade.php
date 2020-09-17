@@ -10,7 +10,8 @@ table.table-bordered > thead > tr > th{
   border:1px solid rgb(54, 59, 56) !important;
   text-align: center;
   background-color: #212121;  
-  color:white;
+  color:#eee;
+  font-size: 18px;
 }
 table.table-bordered > tbody > tr > td{
   border:1px solid rgb(54, 59, 56);
@@ -18,8 +19,10 @@ table.table-bordered > tbody > tr > td{
   color: white;
   vertical-align: middle;
   text-align: center;
-  padding:3px;
+  padding:8px;
+  font-size: 16px;
 }
+
 table.table-condensed > thead > tr > th{   
   color: black
 }
@@ -104,6 +107,11 @@ table > thead > tr > th{
 hr { background-color: red; height: 1px; border: 0; }
 #loading, #error { display: none; }
 
+#tablebudget > tr > td:hover {
+    /*cursor: pointer;*/
+    background-color: #36bf23;
+  }
+
 </style>
 @endsection
 @section('header')
@@ -166,15 +174,15 @@ hr { background-color: red; height: 1px; border: 0; }
               <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
                 <thead>
                   <tr style="font-size: 16px">
-                    <th style="padding:10px;height: 15px; background-color: black;">No Budget</th>
-                    <th style="padding:10px;height: 15px; background-color: black;">Deskripsi</th>
-                    <th style="padding:10px;height: 15px; background-color: black;">Budget 1 Tahun</th>
-                    <th style="padding:10px;height: 15px; background-color: black;">Purchase Requisition</th>
-                    <th style="padding:10px;height: 15px; background-color: black;">Investment</th>
-                    <th style="padding:10px;height: 15px; background-color: black;">Purchase Order</th>
-                    <th style="padding:10px;height: 15px; background-color: black;">Transfer</th>
-                    <th style="padding:10px;height: 15px; background-color: black;">Actual</th>
-                    <th style="padding:10px;height: 15px; background-color: black;">Ending Balance</th>
+                    <th style="padding:15px;height: 15px; background-color: #36bf23;">No Budget</th>
+                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Deskripsi</th>
+                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Budget 1 Tahun</th>
+                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Purchase Requisition</th>
+                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Investment</th>
+                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Purchase Order</th>
+                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Transfer</th>
+                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Actual</th>
+                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Ending Balance</th>
                   </tr>
                 </thead>
                 <tbody id="tablebudget">
@@ -450,14 +458,17 @@ hr { background-color: red; height: 1px; border: 0; }
               var ending = parseFloat(value.amount) - (parseFloat(value.PR) + parseFloat(value.Investment) + parseFloat(value.PO));
               table += '<tr>';
               table += '<td>'+value.budget+'</td>';
-              table += '<td>'+value.description+'</td>';
-              table += '<td style="border-left:3px solid #000;">$ '+value.amount+'</td>';
-              table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'PR\')">$ '+value.PR+'</td>';
-              table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'Investment\')">$ '+value.Investment+'</td>';
-              table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'PO\')">$ '+value.PO+'</td>';
-              table += '<td style="border-left:3px solid #000;cursor:pointer">$ 0</td>';
-              table += '<td style="border-left:3px solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'Actual\')">$ '+value.Actual+'</td>';
-              table += '<td style="border-left:3px solid #000;">$ '+ending.toFixed(2)+'</td>';
+              table += '<td style="border-left:2 solid #000;">'+value.description+'</td>';
+              table += '<td style="border-left:2 solid #000;">$ '+value.amount+'</td>';
+              table += '<td style="border-left:2 solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'PR\')">$ '+value.PR+'</td>';
+              table += '<td style="border-left:2 solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'Investment\')">$ '+value.Investment+'</td>';
+              table += '<td style="border-left:2 solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'PO\')">$ '+value.PO+'</td>';
+              table += '<td style="border-left:2 solid #000;cursor:pointer">$ 0</td>';
+              table += '<td style="border-left:2 solid #000;cursor:pointer" onclick="detail_budget(\''+value.budget+'\',\'Actual\')">$ '+value.Actual+'</td>';
+              if (ending > 0) {
+              table += '<td style="border-left:2 solid #000;background-color:#1b5e20">$ '+ending.toFixed(2)+'</td>';                
+              }
+
               table += '</tr>';
           })
 

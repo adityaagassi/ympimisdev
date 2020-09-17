@@ -1182,6 +1182,7 @@ Route::get('purchase_requisition/get_nomor_pr', 'AccountingController@get_nomor_
 Route::get('purchase_requisition', 'AccountingController@purchase_requisition');
 Route::get('fetch/purchase_requisition', 'AccountingController@fetch_purchase_requisition');
 Route::post('create/purchase_requisition', 'AccountingController@create_purchase_requisition');
+Route::get('purchase_requisition/sendemail', 'AccountingController@pr_send_email');
 Route::get('fetch/purchase_requisition/itemlist', 'AccountingController@fetchItemList');
 Route::get('purchase_requisition/get_detailitem', 'AccountingController@prgetitemdesc')->name('admin.prgetitemdesc');
 Route::get('fetch/purchase_requisition/budgetlist', 'AccountingController@fetchBudgetList');
@@ -1191,6 +1192,7 @@ Route::get('purchase_requisition/get_exchange_rate', 'AccountingController@get_e
 Route::get('edit/purchase_requisition', 'AccountingController@edit_purchase_requisition');
 Route::get('detail/purchase_requisition/po', 'AccountingController@detail_pr_po');
 Route::post('update/purchase_requisition', 'AccountingController@update_purchase_requisition');
+Route::post('delete/purchase_requisition', 'AccountingController@delete_purchase_requisition');
 Route::post('delete/purchase_requisition_item', 'AccountingController@delete_item_pr');
 Route::get('purchase_requisition/report/{id}', 'AccountingController@report_purchase_requisition');
 Route::get('purchase_requisition/check/{id}', 'AccountingController@check_purchase_requisition');
@@ -1360,7 +1362,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 //START KD
 Route::group(['nav' => 'S48', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_mouthpiece/checksheet', 'MouthpieceController@indexKdMouthpieceChecksheet');
-	Route::get('index/kd_mouthpiece/material', 'MouthpieceController@indexKdMouthpieceMaterial');
+	Route::get('fetch/kd_mouthpiece/material', 'MouthpieceController@fetchKdMouthpieceMaterial');
 	Route::get('index/kd_mouthpiece/picking', 'MouthpieceController@indexKdMouthpiecePicking');
 	Route::get('index/kd_mouthpiece/packing', 'MouthpieceController@indexKdMouthpiecePacking');
 });
@@ -1369,6 +1371,7 @@ Route::group(['nav' => 'S48', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_zpro/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_zpro', 'KnockDownController@printLabel');	
+	Route::post('fetch/kd_print_zpro_new', 'KnockDownController@printLabelNew');	
 	Route::post('fetch/kd_force_print_zpro', 'KnockDownController@forcePrintLabel');
 
 	Route::get('index/print_label_zpro/{id}', 'KnockDownController@indexPrintLabelZpro');
@@ -1379,6 +1382,7 @@ Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_sx/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');	
+	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');	
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
 	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
@@ -1389,6 +1393,7 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_fl/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
+	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');
 
 	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
 	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
@@ -1399,6 +1404,7 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy_cl/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
+	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');
 
 	Route::get('index/print_label_subassy/{location}/{id}', 'KnockDownController@indexPrintLabelSubassy');
 	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');

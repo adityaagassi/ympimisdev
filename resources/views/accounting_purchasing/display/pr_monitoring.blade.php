@@ -713,8 +713,8 @@ table > thead > tr > th{
                 }
               }
               else{
-                manager = '<span class="label label-warning">None</span>'; 
-                colormanager = 'style="background-color:#f39c12"';
+                manager = '<span style="color:white">None</span>'; 
+                colormanager = 'style="background-color:#424242"';
               }
 
 

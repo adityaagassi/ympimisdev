@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccPurchaseRequisition extends Model
 {
-	use SoftDeletes;
+	// use SoftDeletes;
 
     protected $fillable = [
 		'no_pr','emp_id','emp_name','department','section','submission_date','po_due_date','receive_date','file','file_pdf','note','posisi','status','no_budget','staff','manager','manager_name','dgm','gm','approvalm','dateapprovalm','approvaldgm','dateapprovaldgm','approvalgm','dateapprovalgm','alasan','datereject','created_by'
