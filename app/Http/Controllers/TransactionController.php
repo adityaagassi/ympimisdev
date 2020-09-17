@@ -225,8 +225,6 @@ class TransactionController extends Controller
 		if($id[0] == 'receive'){
 			try{
 
-				dd($return);
-
 				$return_log = new ReturnLog([
 					'return_id' => $return->id,
 					'material_number' => $return->material_number,
