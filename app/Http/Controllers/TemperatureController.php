@@ -344,56 +344,74 @@ class TemperatureController extends Controller
               });
             })->toObject();
 
-            $person_id = [];
-
-            $data = [];
+            // var_dump($rows[0][1]);
+            $person = [];
 
             for ($i=0; $i < count($rows); $i++) {
-               $exprow = explode(',', $rows[$i][0]);
+               if ($rows[$i][1] == 'Face Authentication Passed') {
+                    if (in_array($rows[$i][2], $person)) {
+                         
+                    }else{
+                         if ($rows[$i][4] != '-') {
+                              $temps = explode('°', $rows[$i][4]);
 
-               $expperid = explode("'", $exprow[0]);
-
-               $points = explode('_', $exprow[5]);
-
-               if ($exprow[8] != '-') {
-                    $temps = explode('°', $exprow[8]);
-               }
-
-               $datein = date('Y-m-d', strtotime($exprow[3]));
-
-               // var_dump(IvmsTemperature::select(DB::raw('DATE(date_in)'))->first());
-
-               // var_dump($datein);
-
-               if (in_array($expperid[1], $person_id)) {
-                    
-               }else{
-                    if ($exprow[8] != '-') {
-                         $person_id[] = $expperid[1];
-                         $ivms = IvmsTemperature::firstOrNew(['person_id' => $expperid[1], 'date' => $datein]);
-                         $ivms->person_id = $expperid[1];
-                         $ivms->name = $exprow[1];
-                         $ivms->location = $exprow[2];
-                         $ivms->date = $datein;
-                         $ivms->date_in = $exprow[3];
-                         $ivms->point = $points[0];
-                         $ivms->temperature = $temps[0];
-                         $ivms->abnormal_status = $exprow[9];
-                         $ivms->created_by = $id_user;
-                         $ivms->save();
-                         // IvmsTemperature::create([
-                         //      'person_id' => $expperid[1],
-                         //      'name' => $exprow[1],
-                         //      'location' => $exprow[2],
-                         //      'date_in' => $exprow[3],
-                         //      'point' => $points[0],
-                         //      'temperature' => $temps[0],
-                         //      'abnormal_status' => $exprow[9],
-                         //      'created_by' => $id_user
-                         // ]);
+                              $person[] = $rows[$i][2];
+                              $personid = DB::SELECT('SELECT employee_groups.group FROM employee_groups left join employee_syncs on employee_syncs.employee_id = employee_groups.employee_id where employee_syncs.name = "'.$rows[$i][2].'"');
+                              foreach ($personid as $key) {
+                                   $person_id = $key->group;
+                              }
+                              $ivms = IvmsTemperature::firstOrNew(['person_id' => $person_id, 'date' => date('Y-m-d', strtotime($rows[$i][6]))]);
+                              $ivms->person_id = $person_id;
+                              $ivms->name = $rows[$i][2];
+                              $ivms->location = $request->get('location');
+                              $ivms->date = date('Y-m-d', strtotime($rows[$i][6]));
+                              $ivms->date_in = $rows[$i][6];
+                              $ivms->point = $rows[$i][8];
+                              $ivms->temperature = $temps[0];
+                              $ivms->abnormal_status = $rows[$i][5];
+                              $ivms->created_by = $id_user;
+                              $ivms->save();
+                         }
                     }
                }
             }
+
+            // $person_id = [];
+
+            // $data = [];
+
+            // for ($i=0; $i < count($rows); $i++) {
+            //    $exprow = explode(',', $rows[$i][0]);
+
+            //    $expperid = explode("'", $exprow[0]);
+
+            //    $points = explode('_', $exprow[5]);
+
+            //    if ($exprow[8] != '-') {
+            //         $temps = explode('°', $exprow[8]);
+            //    }
+
+            //    $datein = date('Y-m-d', strtotime($exprow[3]));
+
+            //    if (in_array($expperid[1], $person_id)) {
+                    
+            //    }else{
+            //         if ($exprow[8] != '-') {
+            //              $person_id[] = $expperid[1];
+            //              $ivms = IvmsTemperature::firstOrNew(['person_id' => $expperid[1], 'date' => $datein]);
+            //              $ivms->person_id = $expperid[1];
+            //              $ivms->name = $exprow[1];
+            //              $ivms->location = $exprow[2];
+            //              $ivms->date = $datein;
+            //              $ivms->date_in = $exprow[3];
+            //              $ivms->point = $points[0];
+            //              $ivms->temperature = $temps[0];
+            //              $ivms->abnormal_status = $exprow[9];
+            //              $ivms->created_by = $id_user;
+            //              $ivms->save();
+            //         }
+            //    }
+            // }
 
             $response = array(
               'status' => true,
