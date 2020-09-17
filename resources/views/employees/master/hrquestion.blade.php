@@ -107,6 +107,10 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 									<option value="BPJS Kes">BPJS Kes</option>
 									<option value="BPJS TK">BPJS TK</option>
 								</select>
+								<select class="form-control select2" id="order">
+									<option value="tanggal">Order by Date</option>
+									<option value="unanswered">Order by Unanswered</option>
+								</select>
 							</div>
 							<div class="col-xs-9">
 								<h4>Chat History</h4>
@@ -143,10 +147,12 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 	var emp = "";
 	var saringan = "";
 	var cat = "";
+	var ordering = "tanggal";
 
 	jQuery(document).ready(function() {
+		$('.select2').select2();
 		$('body').toggleClass("sidebar-collapse");
-		getMasterQuestion("","");
+		getMasterQuestion("","","tanggal");
 
 		$("#search").keypress(function() {
 			var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -155,8 +161,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					cat = $('#category').val();
 				}
 
-				getMasterQuestion(this.value, cat);
 				saringan = this.value;
+				getMasterQuestion(saringan, cat, ordering);
 			}
 		});
 
@@ -165,12 +171,17 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 	$('#category').on('change', function() {
 		cat = this.value;
-		getMasterQuestion(saringan, cat);
+		getMasterQuestion(saringan, cat, ordering);
+	});
+
+	$('#order').on('change', function() {
+		ordering = this.value;
+		getMasterQuestion(saringan, cat, ordering);
 	});
 
 	function check_chart() {
 		if (!$(".komen").is(':focus')) {
-			getMasterQuestion(saringan, cat);
+			getMasterQuestion(saringan, cat, ordering);
 
 			if (emp != "") {
 				getDetailQuestion(emp);
@@ -180,10 +191,11 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		}
 	}
 
-	function getMasterQuestion(cat, cat2) {
+	function getMasterQuestion(cat, cat2, order2) {
 		var data = {
 			filter:cat,
-			ctg:cat2
+			ctg:cat2,
+			order:order2
 		}
 
 		$.get('{{ url("fetch/hr/hrqa") }}', data,function(result, status, xhr){

@@ -2398,22 +2398,37 @@ public function fetchMasterQuestion(Request $request)
 {
      $filter = $request->get("filter");
      $ctg = $request->get("ctg");
+     $order = $request->get("order");
 
-     $getQuestion = HrQuestionLog::leftJoin(db::raw('hr_question_logs as hr'),'hr.created_by' ,'=','hr_question_logs.created_by')
-     ->select('hr_question_logs.message', db::raw('GROUP_CONCAT(hr.category) as category'), 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), 'hr_question_logs.created_by', db::raw('SUM(hr.remark) as notif'))
-     ->whereRaw('hr_question_logs.id IN ( SELECT MAX(id) FROM hr_question_logs GROUP BY created_by )');
+     $filter2 = "";
+     $ctg2 = "";
 
      if($filter != "") {
-          $getQuestion = $getQuestion->whereRaw('hr_question_logs.created_by like "%'.$filter.'%"');
+          $filter2 = ' and hr_question_logs.created_by like "%'.$filter.'%"';
      }
 
      if($ctg != "") {
-          $getQuestion = $getQuestion->whereRaw('hr.category = "'.$ctg.'"');
+          $ctg2 = ' and hr.category = "'.$ctg.'"';
      }
 
-     $getQuestion = $getQuestion->groupBy('hr_question_logs.created_by','hr_question_logs.message', 'hr_question_logs.created_at', 'hr_question_logs.created_by')
-     ->orderBy('hr_question_logs.created_at', 'desc')
-     ->get();
+     if ($order == "tanggal") {
+          $order2 =" order by created_at desc";
+     } else {
+          $order2 = " order by notif desc";
+     }
+
+     $getQuestion = db::select('SELECT message, category, created_at, created_at_new, created_by, notif from
+          (select `hr_question_logs`.`message`, GROUP_CONCAT(hr.category) as category, `hr_question_logs`.`created_at`, date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new, `hr_question_logs`.`created_by`, SUM(hr.remark) as notif from `hr_question_logs` left join hr_question_logs as hr on `hr`.`created_by` = `hr_question_logs`.`created_by` where hr_question_logs.id IN ( SELECT MAX(id) FROM hr_question_logs GROUP BY created_by ) '.$filter2.' '.$ctg2.' and `hr_question_logs`.`deleted_at` is null group by `hr_question_logs`.`created_by`, `hr_question_logs`.`message`, `hr_question_logs`.`created_at`, `hr_question_logs`.`created_by`) as main
+          '.$order2.' ');
+
+     // $getQuestion = HrQuestionLog::leftJoin(db::raw('hr_question_logs as hr'),'hr.created_by' ,'=','hr_question_logs.created_by')
+     // ->select('hr_question_logs.message', db::raw('GROUP_CONCAT(hr.category) as category'), 'hr_question_logs.created_at', db::raw('date_format(hr_question_logs.created_at, "%b %d, %H:%i") as created_at_new'), 'hr_question_logs.created_by', db::raw('SUM(hr.remark) as notif'))
+     // ->whereRaw('hr_question_logs.id IN ( SELECT MAX(id) FROM hr_question_logs GROUP BY created_by )');
+
+
+     // $getQuestion = $getQuestion->groupBy('hr_question_logs.created_by','hr_question_logs.message', 'hr_question_logs.created_at', 'hr_question_logs.created_by')
+     // ->orderBy('hr_question_logs.created_at', 'desc')
+     // ->get();
 
      $response = array(
           'status' => true,
