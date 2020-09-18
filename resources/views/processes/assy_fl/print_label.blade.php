@@ -123,6 +123,7 @@
 
 								<span style="font-size: 24px">Input SN:</span><br>
 								<input id="sn" type="text" style="font-weight: bold;  width: 100%; text-align: center; font-size: 4vw"  onkeyup="getserial()">
+								<input id="basemodel" type="text" hidden>
 								<input id="snmodel" type="text" style="font-weight: bold; background-color: rgb(255,127,80);; width: 100%; text-align: center; font-size: 2vw" value="Not Found" disabled>
 								<span style="font-size: 24px">Select Model</span><b id="japan" style="font-size: 24px"></b><br>
 								<center>
@@ -494,6 +495,10 @@
 	}
 
 	function getserial() {
+
+		$("#snmodel").val('');
+		$("#basemodel").val('');
+
 		var sn = $("#sn").val();
 		var data ={
 			sn:sn,
@@ -553,6 +558,7 @@
 										$('#listModel').css({'display':'block'});
 									}
 									//modal	
+									$('#basemodel').val(result.model);
 									$('#snmodel').val(result.model);
 									$('#btnprint').prop('disabled',false);	
 									$('#btnprintmodal').css({'display':'none'});
@@ -624,6 +630,7 @@
 		var	status = status;
 		var sn = $("#sn").val();
 		var snmodel = $("#snmodel").val();
+		var basemodel = $("#basemodel").val();
 		var jpn = $("#japan2").val();
 		var gmc = $("#gmc").val();
 		// alert(status);
@@ -637,7 +644,14 @@
 		}
 		if (status =="update") {
 
-			if(jpn == ''){
+			if(snmodel != ''){
+				if(snmodel == basemodel){
+					console.log('A');			
+					alert('Pilih model dahulu');			
+					return false
+				}
+			}else{
+				console.log('B');			
 				alert('Pilih model dahulu');			
 				return false
 			}
@@ -650,6 +664,7 @@
 						$("#model").val(snmodel);						
 						$("#sn").val('');
 						$("#snmodel").val('');
+						$("#basemodel").val('');
 						$('#sn').focus();
 						fillResult();
 						fillPlan();
