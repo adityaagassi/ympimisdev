@@ -977,11 +977,11 @@ class AccountingController extends Controller
 
             //jika PE maka Pak Alok
 
-            if ($request->get('department') == "Production Engineering")
+            if($request->get('department') == "Production Engineering")
             {
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance' and position = 'manager'");
             }
-            else if ($request->get('department') == "Purchasing Control") {
+            else if($request->get('department') == "Purchasing Control")
             {
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement' and position = 'manager'");
             }
