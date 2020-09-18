@@ -10,7 +10,7 @@ class IvmsTemperature extends Model
     use SoftDeletes;
 
     protected $fillable = [
-		'person_id','name','location', 'date_in','date', 'point','temperature','abnormal_status','created_by'
+		'person_id','employee_id','name','location', 'date_in','date', 'point','temperature','abnormal_status','created_by'
 	];
 
 	public function user()
