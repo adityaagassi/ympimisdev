@@ -69,6 +69,7 @@
 								<th style="width: 1%;">#</th>
 								<th style="width: 3%;">Material</th>
 								<th style="width: 9%;">Description</th>
+								<th style="width: 1%;">Remark</th>
 								<th style="width: 3%;">Stock/Day</th>
 								<th style="width: 3%;">Act. Stock</th>
 								<th style="width: 3%;">Stock</th>
@@ -100,7 +101,7 @@
 		$('#locs').val('');
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 10000);
+		// setInterval(fillChart, 10000);
 	});
 
 	Highcharts.createElement('link', {
@@ -337,14 +338,35 @@
 			if(result.status){
 				var data = result.stocks;
 				var categories = [];
-				var series = [];
+				// var series = [];
 
 				for(i = 0; i < data.length; i++){
-					categories.push(data[i].category);
-					series.push(data[i].material);
+					if (categories.indexOf(data[i].category) === -1) {
+						categories.push(data[i].category);
+					}
+				}
+
+				var series = [];
+				var names = [];
+
+				for (let i = 0; i < data.length; i++) {
+					if (names.indexOf(data[i].remark) !== -1) {
+						series[names.indexOf(data[i].remark)].data.push(
+							data[i].material
+							)
+					} else {
+						names.push(data[i].remark)
+						series.push({
+							name: data[i].remark,
+							data: [data[i].material]
+						})
+					}
 				}
 
 				var chart = Highcharts.chart('container', {
+					chart: {
+						type: 'column'
+					},
 					title: {
 						text: 'Realtime M-PRO Stock Monitoring',
 						style: {
@@ -359,11 +381,6 @@
 							fontWeight: 'bold'
 						}
 					},
-					yAxis: {
-						title: {
-							text: 'COUNT ITEM'
-						}
-					},
 					xAxis: {
 						categories: categories,
 						type: 'category',
@@ -375,41 +392,62 @@
 							}
 						},
 					},
+					yAxis: {
+						min: 0,
+						title: {
+							text: 'Count Item'
+						},
+						stackLabels: {
+							enabled: true,
+							style: {
+								fontWeight: 'bold',
+								fontSize: '20px',
+								textOutline: false,
+								color: 'white'
+							}
+						}
+					},
+					legend: {
+						align: 'right',
+						x: -30,
+						verticalAlign: 'top',
+						y: 35,
+						floating: true,
+						borderWidth: 1,
+						shadow: false
+					},
 					credits: {
-						enabled:false
+						enabled: false
+					},
+					tooltip: {
+						headerFormat: '<b>{point.x}</b><br/>',
+						pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
 					},
 					plotOptions: {
 						series:{
+							stacking: 'normal',
 							dataLabels: {
 								enabled: true,
 								format: '{point.y}',
 								style:{
-									textOutline: false,
-									fontSize: '26px'
+									textOutline: false
 								}
 							},
 							animation: false,
 							pointPadding: 0.93,
 							groupPadding: 0.93,
-							borderWidth: 0.93,
+							borderWidth: 0,
 							cursor: 'pointer',
 							point: {
 								events: {
 									click: function () {
-										fetchModal(this.category);
+										fetchModal(this.category, this.series.name);
 									}
 								}
 							}
 						}
 					},
-					series: [{
-						name:'Materials',
-						type: 'column',
-						colorByPoint: true,
-						data: series,
-						showInLegend: false
-					}]
-
+					series: series
 				});
 			}
 			else{
@@ -419,7 +457,7 @@
 
 	}
 
-	function fetchModal(category){
+	function fetchModal(category, name){
 		$('#modalDetail').modal('show');
 		$('#loading').show();
 		$('#modalDetailTitle').html("");
@@ -430,7 +468,8 @@
 		}
 		var data = {
 			location : location,
-			category:category
+			category:category,
+			remark:name
 		}
 		$.get('{{ url("fetch/initial/stock_monitoring_detail") }}', data, function(result, status, xhr){
 			if(result.status){
@@ -444,6 +483,7 @@
 					resultData += '<td>'+ index +'</td>';
 					resultData += '<td>'+ value.material_number +'</td>';
 					resultData += '<td>'+ value.description +'</td>';
+					resultData += '<td>'+ value.remark +'</td>';
 					resultData += '<td>'+ value.safety.toLocaleString() +'</td>';
 					resultData += '<td>'+ parseInt(value.quantity).toLocaleString() +'</td>';
 					resultData += '<td>'+ value.days.toFixed(2) +' Day(s)</td>';

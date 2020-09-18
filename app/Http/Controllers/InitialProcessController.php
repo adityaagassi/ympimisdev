@@ -144,18 +144,95 @@ class InitialProcessController extends Controller
 
 	public function fetchStockMonitoring(Request $request){
 		$now = date('Y-m');
-		$query = "select stock, category, count(material_number) as material from
+		$query = "SELECT
+		initial_helpers.orderer AS stock,
+		initial_helpers.category,
+		initial_helpers.remark,
+		COALESCE ( initial.material, 0 ) AS material 
+		FROM
+		initial_helpers
+		LEFT JOIN (
+		SELECT
+		stock,
+		category,
+		COALESCE ( remark, 'UNIDENTIFIED' ) AS remark,
+		count( material_number ) AS material 
+		FROM
 		(
-		select inventories.material_number, inventories.description, inventories.quantity, stocks.quantity as safety, 
-		if(ceiling(inventories.quantity/stocks.quantity)=0, 0, if(inventories.quantity/stocks.quantity>0 and inventories.quantity/stocks.quantity <= 0.5, 0.5, if(inventories.quantity/stocks.quantity > 0.5 and inventories.quantity/stocks.quantity <= 1, 1, if(inventories.quantity/stocks.quantity>1 and inventories.quantity/stocks.quantity<=1.5, 1.5, if(inventories.quantity/stocks.quantity>1.5 and inventories.quantity/stocks.quantity<=2, 2, if(inventories.quantity/stocks.quantity>2 and inventories.quantity/stocks.quantity<=2.5, 2.5, if(inventories.quantity/stocks.quantity>2.5 and inventories.quantity/stocks.quantity<=3, 3, if(inventories.quantity/stocks.quantity>3 and inventories.quantity/stocks.quantity<=3.5, 3.5, if(inventories.quantity/stocks.quantity>3.5 and inventories.quantity/stocks.quantity<=4, 4, if(inventories.quantity/stocks.quantity>4 and inventories.quantity/stocks.quantity<=4.5, 4.5, if(inventories.quantity/stocks.quantity>4.5, 4.6, 4.6))))))))))) as stock, if(ceiling(inventories.quantity/stocks.quantity)=0, '0Days', if(inventories.quantity/stocks.quantity>0 and inventories.quantity/stocks.quantity <= 0.5, '<0.5Days', if(inventories.quantity/stocks.quantity > 0.5 and inventories.quantity/stocks.quantity <= 1, '<1Days', if(inventories.quantity/stocks.quantity>1 and inventories.quantity/stocks.quantity<=1.5, '<1.5Days', if(inventories.quantity/stocks.quantity>1.5 and inventories.quantity/stocks.quantity<=2, '<2Days', if(inventories.quantity/stocks.quantity>2 and inventories.quantity/stocks.quantity<=2.5, '<2.5Days', if(inventories.quantity/stocks.quantity>2.5 and inventories.quantity/stocks.quantity<=3, '<3Days', if(inventories.quantity/stocks.quantity>3 and inventories.quantity/stocks.quantity<=3.5, '<3.5Days', if(inventories.quantity/stocks.quantity>3.5 and inventories.quantity/stocks.quantity<=4, '<4Days', if(inventories.quantity/stocks.quantity>4 and inventories.quantity/stocks.quantity<=4.5, '<4.5Days', if(inventories.quantity/stocks.quantity>4.5, '>4.5Days', '>4.5Days'))))))))))) as category from
+		SELECT
+		inventories.material_number,
+		inventories.description,
+		inventories.remark,
+		inventories.quantity,
+		stocks.quantity AS safety,
+		IF
 		(
-		select kitto.inventories.material_number, kitto.materials.description, sum(kitto.inventories.lot) as quantity from kitto.inventories left join kitto.materials on kitto.materials.material_number = kitto.inventories.material_number where kitto.materials.location in (".$request->get('location').") group by kitto.inventories.material_number, kitto.materials.description
-		) as inventories
-		inner join
+		ceiling( inventories.quantity / stocks.quantity )= 0,
+		0,
+		IF
 		(
-		select initial_safety_stocks.material_number, initial_safety_stocks.quantity from initial_safety_stocks where DATE_FORMAT(valid_date, '%Y-%m') = '".$now."' and initial_safety_stocks.quantity > 0
-		) as stocks on stocks.material_number = inventories.material_number)
-		as final group by category, stock order by stock asc";
+		inventories.quantity / stocks.quantity > 0 
+		AND inventories.quantity / stocks.quantity <= 0.5, 0.5, IF ( inventories.quantity / stocks.quantity > 0.5 
+		AND inventories.quantity / stocks.quantity <= 1, 1, IF ( inventories.quantity / stocks.quantity > 1 
+		AND inventories.quantity / stocks.quantity <= 1.5, 1.5, IF ( inventories.quantity / stocks.quantity > 1.5 
+		AND inventories.quantity / stocks.quantity <= 2, 2, IF ( inventories.quantity / stocks.quantity > 2 
+		AND inventories.quantity / stocks.quantity <= 2.5, 2.5, IF ( inventories.quantity / stocks.quantity > 2.5 
+		AND inventories.quantity / stocks.quantity <= 3, 3, IF ( inventories.quantity / stocks.quantity > 3 
+		AND inventories.quantity / stocks.quantity <= 3.5, 3.5, IF ( inventories.quantity / stocks.quantity > 3.5 
+		AND inventories.quantity / stocks.quantity <= 4, 4, IF ( inventories.quantity / stocks.quantity > 4 
+		AND inventories.quantity / stocks.quantity <= 4.5, 4.5, IF ( inventories.quantity / stocks.quantity > 4.5,
+		4.6,
+		4.6 
+		))))))))))) AS stock,
+		IF
+		(
+		ceiling( inventories.quantity / stocks.quantity )= 0,
+		'0Days',
+		IF
+		(
+		inventories.quantity / stocks.quantity > 0 
+		AND inventories.quantity / stocks.quantity <= 0.5, '<0.5Days', IF ( inventories.quantity / stocks.quantity > 0.5 
+		AND inventories.quantity / stocks.quantity <= 1, '<1Days', IF ( inventories.quantity / stocks.quantity > 1 
+		AND inventories.quantity / stocks.quantity <= 1.5, '<1.5Days', IF ( inventories.quantity / stocks.quantity > 1.5 
+		AND inventories.quantity / stocks.quantity <= 2, '<2Days', IF ( inventories.quantity / stocks.quantity > 2 
+		AND inventories.quantity / stocks.quantity <= 2.5, '<2.5Days', IF ( inventories.quantity / stocks.quantity > 2.5 
+		AND inventories.quantity / stocks.quantity <= 3, '<3Days', IF ( inventories.quantity / stocks.quantity > 3 
+		AND inventories.quantity / stocks.quantity <= 3.5, '<3.5Days', IF ( inventories.quantity / stocks.quantity > 3.5 
+		AND inventories.quantity / stocks.quantity <= 4, '<4Days', IF ( inventories.quantity / stocks.quantity > 4 
+		AND inventories.quantity / stocks.quantity <= 4.5, '<4.5Days', IF ( inventories.quantity / stocks.quantity > 4.5,
+		'>4.5Days',
+		'>4.5Days' 
+		))))))))))) AS category 
+		FROM
+		(
+		SELECT
+		kitto.inventories.material_number,
+		kitto.materials.description,
+		kitto.materials.remark,
+		sum( kitto.inventories.lot ) AS quantity 
+		FROM
+		kitto.inventories
+		LEFT JOIN kitto.materials ON kitto.materials.material_number = kitto.inventories.material_number 
+		WHERE
+		kitto.materials.location IN ( ".$request->get('location')." ) 
+		GROUP BY
+		kitto.inventories.material_number,
+		kitto.materials.remark,
+		kitto.materials.description 
+		) AS inventories
+		INNER JOIN ( SELECT initial_safety_stocks.material_number, initial_safety_stocks.quantity FROM initial_safety_stocks WHERE DATE_FORMAT( valid_date, '%Y-%m' ) = '".$now."' AND initial_safety_stocks.quantity > 0 ) AS stocks ON stocks.material_number = inventories.material_number 
+		) AS final 
+		GROUP BY
+		category,
+		remark,
+		stock 
+		ORDER BY
+		stock ASC 
+		) AS initial ON initial_helpers.orderer = initial.stock 
+		AND initial_helpers.category = initial.category 
+		AND initial_helpers.remark = initial.remark 
+		WHERE
+		initial_helpers.location = 'part process'";
 
 		$stocks = db::select($query);
 
@@ -168,14 +245,75 @@ class InitialProcessController extends Controller
 
 	public function fetchStockMonitoringDetail(Request $request){
 		$now = date('Y-m');
-		$query = "select inventories.material_number, inventories.description, inventories.quantity, stocks.quantity as safety, 
-		if(ceiling(inventories.quantity/stocks.quantity)=0, 0, if(inventories.quantity/stocks.quantity>0 and inventories.quantity/stocks.quantity <= 0.5, 0.5, if(inventories.quantity/stocks.quantity > 0.5 and inventories.quantity/stocks.quantity <= 1, 1, if(inventories.quantity/stocks.quantity>1 and inventories.quantity/stocks.quantity<=1.5, 1.5, if(inventories.quantity/stocks.quantity>1.5 and inventories.quantity/stocks.quantity<=2, 2, if(inventories.quantity/stocks.quantity>2 and inventories.quantity/stocks.quantity<=2.5, 2.5, if(inventories.quantity/stocks.quantity>2.5 and inventories.quantity/stocks.quantity<=3, 3, if(inventories.quantity/stocks.quantity>3 and inventories.quantity/stocks.quantity<=3.5, 3.5, if(inventories.quantity/stocks.quantity>3.5 and inventories.quantity/stocks.quantity<=4, 4, if(inventories.quantity/stocks.quantity>4 and inventories.quantity/stocks.quantity<=4.5, 4.5, if(inventories.quantity/stocks.quantity>4.5, 4.6, 4.6))))))))))) as stock, if(ceiling(inventories.quantity/stocks.quantity)=0, '0Days', if(inventories.quantity/stocks.quantity>0 and inventories.quantity/stocks.quantity <= 0.5, '<0.5Days', if(inventories.quantity/stocks.quantity > 0.5 and inventories.quantity/stocks.quantity <= 1, '<1Days', if(inventories.quantity/stocks.quantity>1 and inventories.quantity/stocks.quantity<=1.5, '<1.5Days', if(inventories.quantity/stocks.quantity>1.5 and inventories.quantity/stocks.quantity<=2, '<2Days', if(inventories.quantity/stocks.quantity>2 and inventories.quantity/stocks.quantity<=2.5, '<2.5Days', if(inventories.quantity/stocks.quantity>2.5 and inventories.quantity/stocks.quantity<=3, '<3Days', if(inventories.quantity/stocks.quantity>3 and inventories.quantity/stocks.quantity<=3.5, '<3.5Days', if(inventories.quantity/stocks.quantity>3.5 and inventories.quantity/stocks.quantity<=4, '<4Days', if(inventories.quantity/stocks.quantity>4 and inventories.quantity/stocks.quantity<=4.5, '<4.5Days', if(inventories.quantity/stocks.quantity>4.5, '>4.5Days', '>4.5Days'))))))))))) as category, inventories.quantity/stocks.quantity as days from
+		
+		$query = "SELECT
+		inventories.material_number,
+		inventories.description,
+		COALESCE ( inventories.remark, 'UNIDENTIFIED' ) AS remark,
+		inventories.quantity,
+		stocks.quantity AS safety,
+		IF
 		(
-		select kitto.inventories.material_number, kitto.materials.description, sum(kitto.inventories.lot) as quantity from kitto.inventories left join kitto.materials on kitto.materials.material_number = kitto.inventories.material_number where kitto.materials.location in (".$request->get('location').") group by kitto.inventories.material_number, kitto.materials.description
-		) as inventories
-		inner join
+		ceiling( inventories.quantity / stocks.quantity )= 0,
+		0,
+		IF
 		(
-		select initial_safety_stocks.material_number, initial_safety_stocks.quantity from initial_safety_stocks where DATE_FORMAT(valid_date, '%Y-%m') = '".$now."' and initial_safety_stocks.quantity > 0) as stocks on stocks.material_number = inventories.material_number having category = '".$request->get('category')."' order by days asc";
+		inventories.quantity / stocks.quantity > 0 
+		AND inventories.quantity / stocks.quantity <= 0.5, 0.5, IF ( inventories.quantity / stocks.quantity > 0.5 
+		AND inventories.quantity / stocks.quantity <= 1, 1, IF ( inventories.quantity / stocks.quantity > 1 
+		AND inventories.quantity / stocks.quantity <= 1.5, 1.5, IF ( inventories.quantity / stocks.quantity > 1.5 
+		AND inventories.quantity / stocks.quantity <= 2, 2, IF ( inventories.quantity / stocks.quantity > 2 
+		AND inventories.quantity / stocks.quantity <= 2.5, 2.5, IF ( inventories.quantity / stocks.quantity > 2.5 
+		AND inventories.quantity / stocks.quantity <= 3, 3, IF ( inventories.quantity / stocks.quantity > 3 
+		AND inventories.quantity / stocks.quantity <= 3.5, 3.5, IF ( inventories.quantity / stocks.quantity > 3.5 
+		AND inventories.quantity / stocks.quantity <= 4, 4, IF ( inventories.quantity / stocks.quantity > 4 
+		AND inventories.quantity / stocks.quantity <= 4.5, 4.5, IF ( inventories.quantity / stocks.quantity > 4.5,
+		4.6,
+		4.6 
+		))))))))))) AS stock,
+		IF
+		(
+		ceiling( inventories.quantity / stocks.quantity )= 0,
+		'0Days',
+		IF
+		(
+		inventories.quantity / stocks.quantity > 0 
+		AND inventories.quantity / stocks.quantity <= 0.5, '<0.5Days', IF ( inventories.quantity / stocks.quantity > 0.5 
+		AND inventories.quantity / stocks.quantity <= 1, '<1Days', IF ( inventories.quantity / stocks.quantity > 1 
+		AND inventories.quantity / stocks.quantity <= 1.5, '<1.5Days', IF ( inventories.quantity / stocks.quantity > 1.5 
+		AND inventories.quantity / stocks.quantity <= 2, '<2Days', IF ( inventories.quantity / stocks.quantity > 2 
+		AND inventories.quantity / stocks.quantity <= 2.5, '<2.5Days', IF ( inventories.quantity / stocks.quantity > 2.5 
+		AND inventories.quantity / stocks.quantity <= 3, '<3Days', IF ( inventories.quantity / stocks.quantity > 3 
+		AND inventories.quantity / stocks.quantity <= 3.5, '<3.5Days', IF ( inventories.quantity / stocks.quantity > 3.5 
+		AND inventories.quantity / stocks.quantity <= 4, '<4Days', IF ( inventories.quantity / stocks.quantity > 4 
+		AND inventories.quantity / stocks.quantity <= 4.5, '<4.5Days', IF ( inventories.quantity / stocks.quantity > 4.5,
+		'>4.5Days',
+		'>4.5Days' 
+		))))))))))) AS category,
+		inventories.quantity / stocks.quantity AS days 
+		FROM
+		(
+		SELECT
+		kitto.inventories.material_number,
+		kitto.materials.description,
+		kitto.materials.remark,
+		sum( kitto.inventories.lot ) AS quantity 
+		FROM
+		kitto.inventories
+		LEFT JOIN kitto.materials ON kitto.materials.material_number = kitto.inventories.material_number 
+		WHERE
+		kitto.materials.location IN ( ".$request->get('location')." ) 
+		GROUP BY
+		kitto.inventories.material_number,
+		kitto.materials.remark,
+		kitto.materials.description 
+		) AS inventories
+		INNER JOIN ( SELECT initial_safety_stocks.material_number, initial_safety_stocks.quantity FROM initial_safety_stocks WHERE DATE_FORMAT( valid_date, '%Y-%m' ) = '".$now."' AND initial_safety_stocks.quantity > 0 ) AS stocks ON stocks.material_number = inventories.material_number 
+		HAVING
+		category = '".$request->get('category')."' 
+		AND remark = '".$request->get('remark')."' 
+		ORDER BY
+		days ASC";
 
 		$stocks = db::select($query);
 
