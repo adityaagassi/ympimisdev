@@ -101,7 +101,7 @@
 		$('#locs').val('');
 		$('.select2').select2();
 		fillChart();
-		setInterval(fillChart, 10000);
+		setInterval(fillChart, 1000*60*5);
 	});
 
 	Highcharts.createElement('link', {
