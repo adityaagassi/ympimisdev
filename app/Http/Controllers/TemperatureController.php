@@ -11,6 +11,7 @@ use App\Plc;
 use App\standart_temperature;
 use App\BodyTemperature;
 use App\IvmsTemperature;
+use App\IvmsTemperatureTemp;
 use Response;
 use DataTables;
 use App\Libraries\ActMLEasyIf;
@@ -347,44 +348,108 @@ class TemperatureController extends Controller
             // var_dump($rows[0][1]);
             $person = [];
 
+            $persondata = [];
+
+            $index1 = 0;
+
             for ($i=0; $i < count($rows); $i++) {
                if ($rows[$i][1] == 'Face Authentication Passed') {
-                    if (in_array($rows[$i][2], $person)) {
-                         
-                    }else{
-                         if ($rows[$i][4] != '-') {
-                              $temps = explode('°', $rows[$i][4]);
+                    if ($rows[$i][4] != '-') {
+                         $empid = explode(' ', $rows[$i][2]);
+                         $temps = explode('°', $rows[$i][4]);
 
-                              $empid = explode(' ', $rows[$i][2]);
+                         $personid = DB::SELECT('SELECT
+                                    *,employee_groups.group as geroups
+                               FROM
+                                    employee_groups
+                                    JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+                               WHERE
+                                    employee_groups.employee_id = "'.$empid[0].'"');
 
-                              $person[] = $rows[$i][2];
-                              $personid = DB::SELECT('SELECT
-                                   *,employee_groups.group as geroups
-                              FROM
-                                   employee_groups
-                                   JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
-                              WHERE
-                                   employee_groups.employee_id = "'.$empid[0].'"');
-                              foreach ($personid as $key) {
-                                   $person_id = $key->geroups;
-                                   $name = $key->name;
-                              }
-                              $ivms = IvmsTemperature::firstOrNew(['employee_id' => $empid[0], 'date' => date('Y-m-d', strtotime($rows[$i][6]))]);
-                              $ivms->person_id = $person_id;
-                              $ivms->employee_id = $empid[0];
-                              $ivms->name = $name;
-                              $ivms->location = $request->get('location');
-                              $ivms->date = date('Y-m-d', strtotime($rows[$i][6]));
-                              $ivms->date_in = $rows[$i][6];
-                              $ivms->point = $rows[$i][8];
-                              $ivms->temperature = $temps[0];
-                              $ivms->abnormal_status = $rows[$i][5];
-                              $ivms->created_by = $id_user;
-                              $ivms->save();
+                         foreach ($personid as $key) {
+                              $person_id = $key->geroups;
+                              $name = $key->name;
                          }
+
+                         $ivms = IvmsTemperatureTemp::create([
+                              'person_id' => $person_id,
+                              'employee_id' => $empid[0],
+                              'name' => $name,
+                              'location' => $request->get('location'),
+                              'date' => date('Y-m-d', strtotime($rows[$i][6])),
+                              'date_in' => $rows[$i][6],
+                              'point' => $rows[$i][8],
+                              'temperature' => $temps[0],
+                              'abnormal_status' => $rows[$i][5],
+                              'created_by' => $id_user,
+                         ]);
                     }
+
+                    // if (in_array($rows[$i][2], $person)) {
+                         
+                    // }else{
+                    //      if ($rows[$i][4] != '-') {
+                    //           $temps = explode('°', $rows[$i][4]);
+
+                    //           $empid = explode(' ', $rows[$i][2]);
+
+                    //           $person[] = $rows[$i][2];
+                    //           $personid = DB::SELECT('SELECT
+                    //                *,employee_groups.group as geroups
+                    //           FROM
+                    //                employee_groups
+                    //                JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+                    //           WHERE
+                    //                employee_groups.employee_id = "'.$empid[0].'"');
+                    //           foreach ($personid as $key) {
+                    //                $person_id = $key->geroups;
+                    //                $name = $key->name;
+                    //           }
+
+                    //           $persondata[$i][]
+                    //           // $ivms = IvmsTemperature::firstOrNew(['employee_id' => $empid[0], 'date' => date('Y-m-d', strtotime($rows[$i][6]))]);
+                    //           // $ivms->person_id = $person_id;
+                    //           // $ivms->employee_id = $empid[0];
+                    //           // $ivms->name = $name;
+                    //           // $ivms->location = $request->get('location');
+                    //           // $ivms->date = date('Y-m-d', strtotime($rows[$i][6]));
+                    //           // $ivms->date_in = $rows[$i][6];
+                    //           // $ivms->point = $rows[$i][8];
+                    //           // $ivms->temperature = $temps[0];
+                    //           // $ivms->abnormal_status = $rows[$i][5];
+                    //           // $ivms->created_by = $id_user;
+                    //           // $ivms->save();
+                    //      }
+                    // }
                }
             }
+
+            $ivmstemp = DB::SELECT("SELECT DISTINCT ( a.employee_id ), name, person_id,( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
+               ( SELECT MIN( date_in ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS date_in,
+               location,
+               point,
+               abnormal_status ,
+               date
+               FROM
+                    `ivms_temperature_temps` AS a");
+
+            foreach ($ivmstemp as $key) {
+               $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
+               $ivms->person_id = $key->person_id;
+               $ivms->employee_id = $key->employee_id;
+               $ivms->name = $key->name;
+               $ivms->location = $key->location;
+               $ivms->date = $key->date;
+               $ivms->date_in = $key->date_in;
+               $ivms->point = $key->point;
+               $ivms->temperature = $key->temperature;
+               $ivms->abnormal_status = $key->abnormal_status;
+               $ivms->created_by = $id_user;
+               $ivms->save();
+            }
+
+            IvmsTemperatureTemp::truncate();
+            // var_dump($persondata);
 
             // $person_id = [];
 
