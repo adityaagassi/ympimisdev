@@ -363,10 +363,6 @@
 					}
 				}
 
-				Highcharts.setOptions({
-					colors: ['#99cc60', '#a00037', '#004ba0', '#ffa000', '#24CBE5', '#ff1744']
-				});
-
 				var chart = Highcharts.chart('container', {
 					chart: {
 						type: 'column'
