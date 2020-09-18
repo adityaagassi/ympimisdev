@@ -355,14 +355,24 @@ class TemperatureController extends Controller
                          if ($rows[$i][4] != '-') {
                               $temps = explode('°', $rows[$i][4]);
 
+                              $empid = explode(' ', $rows[$i][2]);
+
                               $person[] = $rows[$i][2];
-                              $personid = DB::SELECT('SELECT employee_groups.group FROM employee_groups left join employee_syncs on employee_syncs.employee_id = employee_groups.employee_id where employee_syncs.name = "'.$rows[$i][2].'"');
+                              $personid = DB::SELECT('SELECT
+                                   *,employee_groups.group as geroups
+                              FROM
+                                   employee_groups
+                                   JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+                              WHERE
+                                   employee_groups.employee_id = "'.$empid[0].'"');
                               foreach ($personid as $key) {
-                                   $person_id = $key->group;
+                                   $person_id = $key->geroups;
+                                   $name = $key->name;
                               }
-                              $ivms = IvmsTemperature::firstOrNew(['person_id' => $person_id, 'date' => date('Y-m-d', strtotime($rows[$i][6]))]);
+                              $ivms = IvmsTemperature::firstOrNew(['employee_id' => $empid[0], 'date' => date('Y-m-d', strtotime($rows[$i][6]))]);
                               $ivms->person_id = $person_id;
-                              $ivms->name = $rows[$i][2];
+                              $ivms->employee_id = $empid[0];
+                              $ivms->name = $name;
                               $ivms->location = $request->get('location');
                               $ivms->date = date('Y-m-d', strtotime($rows[$i][6]));
                               $ivms->date_in = $rows[$i][6];
