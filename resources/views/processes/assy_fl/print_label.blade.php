@@ -646,12 +646,10 @@
 
 			if(snmodel != ''){
 				if(snmodel == basemodel){
-					console.log('A');			
 					alert('Pilih model dahulu');			
 					return false
 				}
 			}else{
-				console.log('B');			
 				alert('Pilih model dahulu');			
 				return false
 			}
