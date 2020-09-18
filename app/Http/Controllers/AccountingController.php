@@ -981,11 +981,16 @@ class AccountingController extends Controller
             {
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance' and position = 'manager'");
             }
+            else if ($request->get('department') == "Purchasing Control") {
+            {
+                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement' and position = 'manager'");
+            }
             else
             {
                 // Get Manager
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '" . $request->get('department') . "' and position = 'manager'");
             }
+
 
             // Jika ada staff
             if ($request->get('staff') != "") {
