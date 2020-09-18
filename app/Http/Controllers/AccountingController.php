@@ -2427,6 +2427,7 @@ class AccountingController extends Controller
                 return '
                 <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
                 <a href="purchase_order/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"> Report</i></a>
+                <a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="deleteConfirmationPR('.$id.')" data-toggle="modal" data-target="#modalDeletePR"  title="Delete PR"><i class="fa fa-trash"></i> Delete PR</a>
                 ';
             }
 
@@ -5246,32 +5247,38 @@ public function update_purchase_requisition_po(Request $request)
 
             $get_budget_item = AccInvestmentBudget::find($request->get('id'));
 
-            $budget_log = AccBudgetHistory::where('budget', '=', $get_budget_item->budget_no)
-            ->where('category_number', '=', $get_budget_item->reff_number)
-            ->get();
+            if ($get_budget_item->category_budget != "Out Of Budget") {
+                $budget_log = AccBudgetHistory::where('budget', '=', $get_budget_item->budget_no)
+                ->where('category_number', '=', $get_budget_item->reff_number)
+                ->get();
 
-            $date = date('Y-m-d');
-            //FY
-            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
-            foreach ($fy as $fys) {
-                $fiscal = $fys->fiscal_year;
+                $date = date('Y-m-d');
+                //FY
+                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+                foreach ($fy as $fys) {
+                    $fiscal = $fys->fiscal_year;
+                }
+
+                $sisa_bulan = $budget_log[0]->budget_month.'_sisa_budget';
+
+                $budget = AccBudget::where('budget_no', $get_budget_item->budget_no)->where('periode', $fiscal)->first();
+
+                $total = $budget->$sisa_bulan + $get_budget_item->total; //add total
+
+                $dataupdate = AccBudget::where('budget_no', $get_budget_item->budget_no)->where('periode', $fiscal)->update([
+                    $sisa_bulan => $total
+                ]);
+
+                $delete_budget_log = AccBudgetHistory::where('budget', '=', $get_budget_item->budget_no)
+                ->where('category_number', '=', $get_budget_item->reff_number)
+                ->delete();
+
+                $master = AccInvestmentBudget::where('id', '=', $request->get('id'))->delete();
+
+            }else{
+                $master = AccInvestmentBudget::where('id', '=', $request->get('id'))->delete();
             }
 
-            $sisa_bulan = $budget_log[0]->budget_month.'_sisa_budget';
-
-            $budget = AccBudget::where('budget_no', $get_budget_item->budget_no)->where('periode', $fiscal)->first();
-
-            $total = $budget->$sisa_bulan + $get_budget_item->total; //add total
-
-            $dataupdate = AccBudget::where('budget_no', $get_budget_item->budget_no)->where('periode', $fiscal)->update([
-                $sisa_bulan => $total
-            ]);
-
-            $delete_budget_log = AccBudgetHistory::where('budget', '=', $get_budget_item->budget_no)
-            ->where('category_number', '=', $get_budget_item->reff_number)
-            ->delete();
-
-            $master = AccInvestmentBudget::where('id', '=', $request->get('id'))->delete();
 
             $response = array(
               'status' => true,
