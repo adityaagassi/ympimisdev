@@ -2,7 +2,7 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <style type="text/css">
-  
+
   .col-xs-2{
     padding-top: 5px;
   }
@@ -35,9 +35,9 @@
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
-  </ol>
+   <li><a href="#">Examples</a></li>
+   <li class="active">Blank page</li> --}}
+ </ol>
 </section>
 @endsection
 @section('content')
@@ -74,34 +74,34 @@
         <div class="row">
           <div class="col-xs-6 col-sm-6 col-md-6">
             @if(Auth::user()->username == "PI0507001")
-              <label for="form_nik">Identitas</label>
-              <select class="form-control select2" data-placeholder="Pilih Karyawan" name="form_nik" id="form_nik" style="width: 100% height: 35px; font-size: 15px;" onchange="selectemployee()" required>
-                  <option value=""></option>
-                  @foreach($leaders as $leader)
-                  <option value="{{ $leader->employee_id }}">{{ $leader->employee_id }} - {{ $leader->name }} - {{ $leader->section }}</option>
-                  @endforeach
-              </select>
+            <label for="form_nik">Identitas</label>
+            <select class="form-control select2" data-placeholder="Pilih Karyawan" name="form_nik" id="form_nik" style="width: 100% height: 35px; font-size: 15px;" onchange="selectemployee()" required>
+              <option value=""></option>
+              @foreach($leaders as $leader)
+              <option value="{{ $leader->employee_id }}">{{ $leader->employee_id }} - {{ $leader->name }} - {{ $leader->section }}</option>
+              @endforeach
+            </select>
 
-              <input type="hidden" class="form-control" name="form_nama" id="form_nama" placeholder="form_nama" required>
+            <input type="hidden" class="form-control" name="form_nama" id="form_nama" placeholder="form_nama" required>
 
             @else
-              <label for="form_identitas">Identitas</label>
-              <input type="text" id="form_identitas" class="form-control" value="{{$employee->employee_id}} - {{$employee->name}}" readonly>
-              <input type="hidden" id="form_nik" class="form-control" value="{{$employee->employee_id}}" readonly>
-              <input type="hidden" id="form_nama" class="form-control" value="{{$employee->name}}" readonly>
+            <label for="form_identitas">Identitas</label>
+            <input type="text" id="form_identitas" class="form-control" value="{{$employee->employee_id}} - {{$employee->name}}" readonly>
+            <input type="hidden" id="form_nik" class="form-control" value="{{$employee->employee_id}}" readonly>
+            <input type="hidden" id="form_nama" class="form-control" value="{{$employee->name}}" readonly>
 
             @endif
           </div>
           <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="form_bagian">Bagian</label>
             @if(Auth::user()->username == "PI0507001")
-              <input type="text" id="form_bagian" class="form-control" readonly>
+            <input type="text" id="form_bagian" class="form-control" readonly>
             @else
-              @if($employee->group == null)
-              <input type="text" id="form_bagian" class="form-control" value="{{$employee->department}} - {{$employee->section}}" readonly>
-              @else
-              <input type="text" id="form_bagian" class="form-control" value="{{$employee->department}} - {{$employee->section}} - {{$employee->group}}" readonly>
-              @endif
+            @if($employee->group == null)
+            <input type="text" id="form_bagian" class="form-control" value="{{$employee->department}} - {{$employee->section}}" readonly>
+            @else
+            <input type="text" id="form_bagian" class="form-control" value="{{$employee->department}} - {{$employee->section}} - {{$employee->group}}" readonly>
+            @endif
             @endif
           </div>
 
@@ -125,14 +125,14 @@
           <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_loc">Lokasi Kejadian</label>
             <select class="form-control select2" data-placeholder="Pilih Lokasi Kejadian" name="form_loc" id="form_loc" style="width: 100% height: 35px; font-size: 15px;" required>
-                <option value=""></option>
-                @foreach($sections as $section)
-                @if($section->group == null)
-                <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
-                @else
-                <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
-                @endif
-                @endforeach
+              <option value=""></option>
+              @foreach($sections as $section)
+              @if($section->group == null)
+              <option value="{{ $section->department }}_{{ $section->section }}">{{ $section->department }} - {{ $section->section }}</option>
+              @else
+              <option value="{{ $section->section }}_{{ $section->group }}">{{ $section->section }} - {{ $section->group }}</option>
+              @endif
+              @endforeach
             </select>
           </div>
           <div class="col-xs-3 col-sm-3 col-md-3">
@@ -141,7 +141,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-xs-6 col-sm-6 col-md-6">
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_judul">Judul Permasalahan / Kegagalan</label>
             <input type="text" id="form_judul" class="form-control" placeholder="Judul Permasalahan / Kegagalan">
           </div>
@@ -152,217 +152,222 @@
           <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_loss">Loss yang Diakibatkan</label>
             <select class="form-control select2" data-placeholder="Pilih Loss yang Diakibatkan" name="form_loss" id="form_loss" style="width: 100% height: 35px; font-size: 15px;" required multiple="">
-                <option value="Waktu">Waktu</option>
-                <option value="Orang">Orang</option>
-                <option value="Uang">Uang</option>
+              <option value="Waktu">Waktu</option>
+              <option value="Orang">Orang</option>
+              <option value="Uang">Uang</option>
             </select>
           </div>
-        </div>
-        
-        <div class="row">
-          <div class="col-xs-6">
-            <label for="form_deskripsi">Deskripsi Kegagalan / Permasalahan</label>
-            <textarea class="form-control" id="form_deskripsi"></textarea>
-          </div>
-          <div class="col-xs-6">
-            <label for="form_perbaikan">Penanganan / Perbaikan Yang Dilakukan</label>
-            <textarea class="form-control" id="form_perbaikan"></textarea>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-6 col-sm-offset-3">
-            <label for="form_tindakan">Tindakan Supaya Tidak Terjadi Lagi</label>
-            <textarea class="form-control" id="form_tindakan"></textarea>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-4 col-sm-offset-5" style="padding-top: 10px">
-            <div class="btn-group">
-              <a class="btn btn-danger" href="{{ url('index/form_experience') }}">Cancel</a>
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <label for="form_rugi">Estimasi Kerugian</label>
+
+            <div class="input-group date">
+              <div class="input-group-addon">
+              $
+              </div>
+              <input type="text" id="form_rugi" class="form-control" placeholder="Contoh: 2000 (Satuan Dollar)">
             </div>
-            <div class="btn-group">
-              <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
-            </div>
-          </div>
         </div>
       </div>
-    </form>
-  </div>
 
-  @endsection
+      <div class="row">
+        <div class="col-xs-4">
+          <label for="form_deskripsi">Deskripsi Kegagalan / Permasalahan</label>
+          <textarea class="form-control" id="form_deskripsi"></textarea>
+        </div>
+        <div class="col-xs-4">
+          <label for="form_perbaikan">Penanganan / Perbaikan Yang Dilakukan</label>
+          <textarea class="form-control" id="form_perbaikan"></textarea>
+        </div>
+        <div class="col-xs-4">
+          <label for="form_tindakan">Tindakan Supaya Tidak Terjadi Lagi</label>
+          <textarea class="form-control" id="form_tindakan"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12" style="margin-top: 10px;">
+          <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
+          <a class="btn btn-danger pull-right" href="{{ url('index/form_experience') }}" style="margin-right: 5px;">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
 
-  @section('scripts')
-  <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-  <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $("body").on("click",".btn-danger",function(){ 
-          $(this).parents(".control-group").remove();
-      });
+@endsection
+
+@section('scripts')
+<script src="{{ url("js/jquery.gritter.min.js") }}"></script>
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("body").on("click",".btn-danger",function(){ 
+      $(this).parents(".control-group").remove();
     });
+  });
 
 </script>
-  <script>
-    
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    }); 
+<script>
 
-    jQuery(document).ready(function() {
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  }); 
+
+  jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
     $("#navbar-collapse").text('');
-      $('.select2').select2({
-        language : {
-          noResults : function(params) {
+    $('.select2').select2({
+      language : {
+        noResults : function(params) {
             // return "There is no cpar with status 'close'";
           }
         }
       });
 
 
-    });
+  });
 
-    $(function () {
-      $('.select2').select2()
-    });
+  $(function () {
+    $('.select2').select2()
+  });
 
-    $('.datepicker').datepicker({
-      format: "yyyy-mm",
-      startView: "months", 
-      minViewMode: "months",
-      autoclose: true,
-      orientation: 'bottom auto',
-    });
+  $('.datepicker').datepicker({
+    format: "yyyy-mm",
+    startView: "months", 
+    minViewMode: "months",
+    autoclose: true,
+    orientation: 'bottom auto',
+  });
 
-    function selectemployee(){
-      var nik = document.getElementById("form_nik").value;
+  function selectemployee(){
+    var nik = document.getElementById("form_nik").value;
 
-      $.ajax({
-         url: "{{ url('index/form_experience/get_nama') }}?nik=" +nik, 
-         type : 'GET', 
-         success : function(data){
-            var obj = jQuery.parseJSON(data);
-            $('#form_nama').val(obj[0].name);
-            $('#form_bagian').val(obj[0].section +' - '+obj[0].department)
-         }
-      });      
+    $.ajax({
+     url: "{{ url('index/form_experience/get_nama') }}?nik=" +nik, 
+     type : 'GET', 
+     success : function(data){
+      var obj = jQuery.parseJSON(data);
+      $('#form_nama').val(obj[0].name);
+      $('#form_bagian').val(obj[0].section +' - '+obj[0].department)
+    }
+  });      
+  }
+
+  $("#form_submit").click( function() {
+    $("#loading").show();
+
+    if ($("#form_judul").val() == "") {
+      $("#loading").hide();
+      alert("Kolom Judul Harap diisi");
+      $("html").scrollTop(0);
+      return false;
     }
 
-    $("#form_submit").click( function() {
-      $("#loading").show();
-
-      if ($("#form_judul").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Judul Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#form_tgl").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Tanggal Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#form_kategori").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Kategori Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#form_loc").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Lokasi Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#form_ket").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Nama Mesin / Equipment / Part Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      if ($("#form_loss").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Loss Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
-
-      var data = {
-        employee_id: $("#form_nik").val(),
-        employee_name: $("#form_nama").val(),
-        kategori: $("#form_kategori").val(),
-        tanggal_kejadian: $("#form_tgl").val(),
-        lokasi_kejadian: $("#form_loc").val(),
-        equipment: $("#form_ket").val(),
-        grup_kejadian: $("#form_grup").val(),
-        judul: $("#form_judul").val(),
-        loss: $("#form_loss").val().toString(),
-        deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
-        penanganan: CKEDITOR.instances.form_perbaikan.getData(),
-        tindakan: CKEDITOR.instances.form_tindakan.getData(),
-      };
-
-      $.post('{{ url("index/post/form_experience") }}', data, function(result, status, xhr){
-        if(result.status == true){    
-          $("#loading").hide();
-          openSuccessGritter("Success","Berhasil Dibuat");
-          setTimeout(function(){ window.history.back(); }, 2000); 
-        }
-        else {
-          $("#loading").hide();
-          openErrorGritter('Error!', result.datas);
-        }
-        
-      });
-
-    });
-
-    CKEDITOR.replace('form_deskripsi' ,{
-      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-      height: '300px'
-    });
-
-    CKEDITOR.replace('form_perbaikan' ,{
-      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-      height: '300px'
-    });
-
-    CKEDITOR.replace('form_tindakan' ,{
-      filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-      height: '300px'
-    });
-
-
-    function openSuccessGritter(title, message){
-      jQuery.gritter.add({
-        title: title,
-        text: message,
-        class_name: 'growl-success',
-        image: '{{ url("images/image-screen.png") }}',
-        sticky: false,
-        time: '3000'
-      });
+    if ($("#form_tgl").val() == "") {
+      $("#loading").hide();
+      alert("Kolom Tanggal Harap diisi");
+      $("html").scrollTop(0);
+      return false;
     }
 
-    function openErrorGritter(title, message) {
-        jQuery.gritter.add({
-          title: title,
-          text: message,
-          class_name: 'growl-danger',
-          image: '{{ url("images/image-stop.png") }}',
-          sticky: false,
-          time: '2000'
-        });
+    if ($("#form_kategori").val() == "") {
+      $("#loading").hide();
+      alert("Kolom Kategori Harap diisi");
+      $("html").scrollTop(0);
+      return false;
+    }
+
+    if ($("#form_loc").val() == "") {
+      $("#loading").hide();
+      alert("Kolom Lokasi Harap diisi");
+      $("html").scrollTop(0);
+      return false;
+    }
+
+    if ($("#form_ket").val() == "") {
+      $("#loading").hide();
+      alert("Kolom Nama Mesin / Equipment / Part Harap diisi");
+      $("html").scrollTop(0);
+      return false;
+    }
+
+    if ($("#form_loss").val() == "") {
+      $("#loading").hide();
+      alert("Kolom Loss Harap diisi");
+      $("html").scrollTop(0);
+      return false;
+    }
+
+    var data = {
+      employee_id: $("#form_nik").val(),
+      employee_name: $("#form_nama").val(),
+      kategori: $("#form_kategori").val(),
+      tanggal_kejadian: $("#form_tgl").val(),
+      lokasi_kejadian: $("#form_loc").val(),
+      equipment: $("#form_ket").val(),
+      grup_kejadian: $("#form_grup").val(),
+      judul: $("#form_judul").val(),
+      loss: $("#form_loss").val().toString(),
+      kerugian: $("#form_rugi").val(),
+      deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
+      penanganan: CKEDITOR.instances.form_perbaikan.getData(),
+      tindakan: CKEDITOR.instances.form_tindakan.getData(),
+    };
+
+    $.post('{{ url("index/post/form_experience") }}', data, function(result, status, xhr){
+      if(result.status == true){    
+        $("#loading").hide();
+        openSuccessGritter("Success","Berhasil Dibuat");
+        setTimeout(function(){ window.history.back(); }, 2000); 
+      }
+      else {
+        $("#loading").hide();
+        openErrorGritter('Error!', result.datas);
       }
 
-  </script>
+    });
+
+  });
+
+  CKEDITOR.replace('form_deskripsi' ,{
+    filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+    height: '300px'
+  });
+
+  CKEDITOR.replace('form_perbaikan' ,{
+    filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+    height: '300px'
+  });
+
+  CKEDITOR.replace('form_tindakan' ,{
+    filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+    height: '300px'
+  });
+
+
+  function openSuccessGritter(title, message){
+    jQuery.gritter.add({
+      title: title,
+      text: message,
+      class_name: 'growl-success',
+      image: '{{ url("images/image-screen.png") }}',
+      sticky: false,
+      time: '3000'
+    });
+  }
+
+  function openErrorGritter(title, message) {
+    jQuery.gritter.add({
+      title: title,
+      text: message,
+      class_name: 'growl-danger',
+      image: '{{ url("images/image-stop.png") }}',
+      sticky: false,
+      time: '2000'
+    });
+  }
+
+</script>
 @stop
 

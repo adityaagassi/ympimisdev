@@ -111,6 +111,7 @@ td{
                 <th>Grup</th>
                 <th>Kategori</th>
                 <th>Loss</th>
+                <th>Estimasi Kerugian</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -119,6 +120,7 @@ td{
             <tfoot>
               <tr>
                 <!-- <th></th> -->
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -260,13 +262,14 @@ td{
         "columns": [
           // { "data": "employee_name", "width": "10%"},
           { "data": "tanggal_kejadian", "width": "10%"},
-          { "data": "lokasi_kejadian", "width": "15%"},
-          { "data": "judul", "width": "20%"},
+          { "data": "lokasi_kejadian", "width": "10%"},
+          { "data": "judul", "width": "15%"},
           { "data": "equipment", "width": "10%"},
           { "data": "grup_kejadian", "width": "10%"},
           { "data": "kategori", "width": "10%"},
           { "data": "loss", "width": "10%"},
-          { "data": "action", "width": "15%"}
+          { "data": "kerugian", "width": "15%"},
+          { "data": "action", "width": "10%"}
         ]
       });
 

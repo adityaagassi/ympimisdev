@@ -69,6 +69,15 @@ class FormExperienceController extends Controller
             return str_replace('_', ' - ', $details->lokasi_kejadian);
           })
 
+        ->editColumn('kerugian',function($details){
+            if ($details->kerugian != null) {
+              return "$ ".number_format($details->kerugian,0,"",".");
+            }
+            else {
+              return $details->kerugian;
+            }
+          })
+
         ->addColumn('action', function($details){
           $id = $details->id;
           if ($details->created_by == Auth::id() || Auth::user()->role_code == "MIS" || Auth::id() == "13") {
@@ -134,6 +143,7 @@ class FormExperienceController extends Controller
                    'grup_kejadian' => $request->get('grup_kejadian'),
                    'judul' => $request->get('judul'),
                    'loss' => $request->get('loss'),
+                   'kerugian' => $request->get('kerugian'),
                    'deskripsi' => $request->get('deskripsi'),
                    'penanganan' => $request->get('penanganan'),
                    'tindakan' => $request->get('tindakan'),
@@ -196,6 +206,7 @@ class FormExperienceController extends Controller
                    'grup_kejadian' => $request->get('grup_kejadian'),
                    'judul' => $request->get('judul'),
                    'loss' => $request->get('loss'),
+                   'kerugian' => $request->get('kerugian'),
                    'deskripsi' => $request->get('deskripsi'),
                    'penanganan' => $request->get('penanganan'),
                    'tindakan' => $request->get('tindakan'),

@@ -130,7 +130,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-xs-6 col-sm-6 col-md-6">
+          <div class="col-xs-3 col-sm-3 col-md-3">
             <label for="form_judul">Judul Permasalahan / Kegagalan</label>
             <input type="text" id="form_judul" class="form-control" placeholder="Judul Permasalahan / Kegagalan" value="{{$form_failures->judul}}">
           </div>
@@ -150,25 +150,42 @@
                 <option value="Orang" selected="">Orang</option>
             </select>
           </div>
+
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <label for="form_rugi">Estimasi Kerugian</label>
+
+            <div class="input-group date">
+              <div class="input-group-addon">
+                $
+              </div>
+              <input type="text" id="form_rugi" class="form-control" placeholder="Contoh: 2000000" value="{{ $form_failures->kerugian }}">
+            </div>
+          </div>
         </div>
+
+
         
         <div class="row">
-          <div class="col-xs-6">
+          <div class="col-xs-4">
             <label for="form_penyebab">Penyebab Permasalahan</label>
             <textarea class="form-control" id="form_deskripsi">{{$form_failures->deskripsi}}</textarea>
           </div>
-          <div class="col-xs-6">
+          <div class="col-xs-4">
             <label for="form_perbaikan">Penanganan / Perbaikan Yang Dilakukan</label>
             <textarea class="form-control" id="form_perbaikan">{{$form_failures->penanganan}}</textarea>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-6 col-sm-offset-3">
+
+          <div class="col-xs-4">
             <label for="form_tindakan">Tindakan Supaya Tidak Terjadi Lagi</label>
             <textarea class="form-control" id="form_tindakan">{{$form_failures->tindakan}}</textarea>
           </div>
         </div>
         <div class="row">
+          <div class="col-xs-12" style="margin-top: 10px;">
+          <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
+          <a class="btn btn-danger pull-right" href="{{ url('index/form_experience') }}" style="margin-right: 5px;">Cancel</a>
+        </div>
+<!-- 
           <div class="col-sm-4 col-sm-offset-5" style="padding-top: 10px">
             <div class="btn-group">
               <a class="btn btn-danger" href="{{ url('index/form_experience') }}">Cancel</a>
@@ -176,7 +193,7 @@
             <div class="btn-group">
               <button type="button" class="btn btn-primary pull-right" id="form_submit"><i class="fa fa-edit"></i>&nbsp; Submit </button>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </form>
@@ -275,6 +292,7 @@
         grup_kejadian: $("#form_grup").val(),
         judul: $("#form_judul").val(),
         loss: $("#form_loss").val().toString(),
+        kerugian: $("#form_rugi").val(),
         deskripsi: CKEDITOR.instances.form_deskripsi.getData(),
         penanganan: CKEDITOR.instances.form_perbaikan.getData(),
         tindakan: CKEDITOR.instances.form_tindakan.getData(),

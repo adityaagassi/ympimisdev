@@ -28,24 +28,29 @@
 		<?php $lokasi = explode('_',$form_failures->lokasi_kejadian) ?>
 		<tbody>
 			<tr>
-				<td colspan="6" style="vertical-align: middle;font-size: 16px;font-weight: bold">Form Kegagalan & Permasalahan</td>
+				<td colspan="6" style="vertical-align: middle;font-size: 16px;font-weight: bold">Form Kegagalan & Permasalahan </td>
 			</tr>
 			<tr>
+				<td colspan="6" rowspan="2" style="vertical-align: middle;text-align: center;font-size: 12px"><b><?= strtoupper($form_failures->judul)?></b><br>Tanggal Kejadian : <b><?php echo date('d F Y', strtotime($form_failures->tanggal_kejadian)) ?></b></td>
+			</tr>
+			<tr></tr>
+<!-- 			<tr>
 				<td>Tanggal Kejadian : </td>
-				<td colspan="5"><b><?php echo date('d F Y', strtotime($form_failures->tanggal_kejadian)) ?></b></td>
-			</tr>
+				<td colspan="5"><b></b></td>
+			</tr> -->
 			<tr>
-				<td>Lokasi Kejadian : </td>
-				<td colspan="5"><b><?= $lokasi[0]; ?> - <?= $lokasi[1] ?></b></td>
-			</tr>
-			<tr>
-				<td colspan="3">Equipment : <b>{{$form_failures->equipment}}</b></td>
+				<td colspan="3">Lokasi Kejadian : <b><?= $lokasi[0]; ?> - <?= $lokasi[1] ?></b></td>
 				<td colspan="3">Grup Kejadian : <b>{{$form_failures->grup_kejadian}}</b></td>
 			</tr>
 			<tr>
-				<td colspan="6" rowspan="2" style="vertical-align: middle;text-align: center;font-size: 12px"><b><?= strtoupper($form_failures->judul)?></b></td>
+				<td colspan="3">
+					Loss : <b>{{$form_failures->loss}}</b>
+					@if($form_failures->kerugian != null)
+					<b>(Estimasi Kerugian : $ {{$form_failures->kerugian}})</b>
+					@endif
+				</td>
+				<td colspan="3">Equipment : <b>{{$form_failures->equipment}}</b></td>
 			</tr>
-			<tr></tr>
 			<tr>
 				<td colspan="6"><b style="font-size: 10px">Deskripsi Kegagalan / Permasalahan</b> : <?= $form_failures->deskripsi ?></td>
 			</tr>
