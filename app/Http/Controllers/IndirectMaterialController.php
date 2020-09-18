@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\Mail\SendEmail;
 use App\CodeGenerator;
 use App\EmployeeSync;
+use App\IndirectMaterial;
 use App\IndirectMaterialCostCenter;
 use App\IndirectMaterialLog;
 use App\IndirectMaterialOut;
@@ -113,11 +114,7 @@ class IndirectMaterialController extends Controller{
 		$title = 'Indirect Material Logs';
 		$title_jp = '??';
 
-		$materials = db::select("SELECT material.material_number, mpdl.material_description FROM
-			(SELECT DISTINCT material_number FROM chemical_solution_composers) AS material
-			LEFT JOIN material_plant_data_lists mpdl
-			ON material.material_number = mpdl.material_number
-			ORDER BY mpdl.material_description ASC");
+		$materials = IndirectMaterial::select('material_number', 'material_description')->get();
 
 		return view('indirect_material.logs', array(
 			'title' => $title,
@@ -149,11 +146,7 @@ class IndirectMaterialController extends Controller{
 		$title = 'Indirect Material Stock';
 		$title_jp = '??';
 
-		$materials = db::select("SELECT material.material_number, mpdl.material_description FROM
-			(SELECT DISTINCT material_number FROM chemical_solution_composers) AS material
-			LEFT JOIN material_plant_data_lists mpdl
-			ON material.material_number = mpdl.material_number
-			ORDER BY mpdl.material_description ASC");
+		$materials = IndirectMaterial::select('material_number', 'material_description')->get();
 
 		return view('indirect_material.stock', array(
 			'title' => $title,
@@ -187,8 +180,7 @@ class IndirectMaterialController extends Controller{
 					$material_number = $rows[$i][0];
 					$quantity = $rows[$i][1];
 
-					$isChm = ChemicalSolutionComposer::where('material_number','=',$material_number)
-					->first();
+					$isChm = IndirectMaterial::where('material_number','=',$material_number)->first();
 
 					if($isChm){
 						$inventory = Inventory::where('plant','=','8190')
