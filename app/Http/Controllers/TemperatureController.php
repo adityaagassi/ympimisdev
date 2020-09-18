@@ -478,7 +478,7 @@ class TemperatureController extends Controller
                     AND 
                          location = '".$request->get('location')."'
                     ORDER BY
-                         a.temperature DESC");
+                         a.temperature asc");
 
                // $dataavgmax = DB::SELECT("SELECT DISTINCT
                //      (
