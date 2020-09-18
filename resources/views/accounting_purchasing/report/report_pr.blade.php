@@ -90,7 +90,7 @@
 
 	@if($pr[0]->receive_date != null)
 		<img width="120" src="{{ public_path() . '/files/ttd_pr_po/received.jpg' }}" alt="" style="padding: 0;position: absolute;top: 55px;left: 540px">
-		<span style="position: absolute;width: 80px;font-size: 12px;font-weight: bold;font-family: arial-narrow;top:88px;left: 561px;color:#c34354"><?= date('d F Y', strtotime($pr[0]->receive_date)) ?></span>
+		<span style="position: absolute;width: 100px;font-size: 10px;font-weight: bold;font-family: arial-narrow;top:88px;left: 561px;color:#c34354"><?= date('d F Y', strtotime($pr[0]->receive_date)) ?></span>
 	@endif
 	<main>
 		<table style="width: 100%; font-family: arial; border-collapse: collapse; " id="isi">
@@ -199,13 +199,6 @@
 						&nbsp;
 					</td>
 				</tr>
-				<tr>
-					<td style="font-size: 12px;" colspan="5">Note :</td>
-				</tr>
-
-				<tr>
-					<td colspan="5" style="font-size: 12px"><?= $pr[0]->note ?></td>
-				</tr>
 				
 			</tbody>
 		</table>
@@ -247,7 +240,14 @@
 						<td colspan="1" style="width:15%;">Acknowledge By</td>
 						<td colspan="1" style="width:15%;">Acknowledge By</td>
 						<td colspan="1" style="width:15%;">Approve By</td>
-						<td colspan="6" rowspan="3">&nbsp;</td>
+						<td colspan="6" rowspan="3" style="text-align: left;padding: 5px;vertical-align: top;font-size: 11px">
+							Note :
+							@if($pr[0]->note == null)
+							-
+							@else
+							<br><?= $pr[0]->note ?>
+							@endif
+						</td>
 					</tr>
 
 				</thead>

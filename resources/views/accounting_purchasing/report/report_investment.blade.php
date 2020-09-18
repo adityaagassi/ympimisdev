@@ -322,24 +322,24 @@
 					if($jumlahitem < 2)
 						$jumlah = 1;
 					else if($jumlahitem == 2)
-						$jumlah = 2;
-					else if($jumlahitem == 3)
 						$jumlah = 3;
-					else if($jumlahitem == 4)
-						$jumlah = 4;
-					else if($jumlahitem == 5)
+					else if($jumlahitem == 3)
 						$jumlah = 5;
-					else if($jumlahitem == 6)
-						$jumlah = 6;
-					else if($jumlahitem == 7)
+					else if($jumlahitem == 4)
 						$jumlah = 7;
+					else if($jumlahitem == 5)
+						$jumlah = 9;
+					else if($jumlahitem == 6)
+						$jumlah = 11;
+					else if($jumlahitem == 7)
+						$jumlah = 13;
 					else if($jumlahitem == 8)
-						$jumlah = 8;
+						$jumlah = 15;
 					?>
 
 				?>
 				<tr>
-					<td colspan="2" rowspan="{{ 9 + $jumlah }}" style="border: 1px solid black;">Description<br><br>For Taxation Purpose, Please break down good / material cost & Service expense (if possible) <br><br> <span class="droid">課税目的のため、可能<br>であれば材料費とサ><br>ービス費用の内訳をご<br>記入ください</span></td>
+					<td colspan="2" rowspan="{{ 10 + $jumlah }}" style="border: 1px solid black;">Description<br><br>For Taxation Purpose, Please break down good / material cost & Service expense (if possible) <br><br> <span class="droid">課税目的のため、可能<br>であれば材料費とサ><br>ービス費用の内訳をご<br>記入ください</span></td>
 					<td colspan="8" style="border-right: 1px solid black;font-weight: bold;"><u>Supplier <span class="droid">サプライヤー</span></u></td>
 				</tr>
 				<tr>
@@ -385,19 +385,21 @@
 					<td colspan="2" style="border: 1px solid black;">Amount <span class="droid">金額</span></td>
 				</tr>
 				<?php 
+
 				$total = 0;
 				$vat = 0;
 				$total_all = 0;
 				$investmentitem = count($inv);
+
 				if($investmentitem != 0) { 
 
 				?>
 				@foreach($inv as $item)
 				<tr>
-					<td colspan="3" style="border: 1px solid black;color: blue;font-weight: bold">{{$item->detail}}</td>
-					<td colspan="1" style="border: 1px solid black;color: blue;font-weight: bold">{{$item->qty}}</td>
-					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
-					<td colspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
+					<td colspan="3" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{$item->detail}}</td>
+					<td colspan="1" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{$item->qty}}</td>
+					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
+					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
 
 					<?php 
 					if($item->vat_status == "Yes"){
@@ -405,6 +407,8 @@
 					} 
 					?>
 				</tr>
+
+				<tr></tr>
 				<?php
 					$total = $total + $item->amount;
 				?>
@@ -414,11 +418,12 @@
 				} else { 
 				?>
 				<tr>
-					<td colspan="3" style="border: 1px solid black;"></td>
-					<td colspan="1" style="border: 1px solid black;"></td>
-					<td colspan="2" style="border: 1px solid black;"></td>
-					<td colspan="2" style="border: 1px solid black;"></td>
+					<td colspan="3" rowspan="2" style="border: 1px solid black;"></td>
+					<td colspan="1" rowspan="2" style="border: 1px solid black;"></td>
+					<td colspan="2" rowspan="2" style="border: 1px solid black;"></td>
+					<td colspan="2" rowspan="2" style="border: 1px solid black;"></td>
 				</tr>
+				<tr></tr>
 				<?php } ?>
 				<tr>
 					<td colspan="2" rowspan="3" style="border: 1px solid black;">Currency<br><span class="droid">通貨</span></td>
@@ -565,7 +570,7 @@
 			<table style="table-layout: fixed;width: 100%; font-family: arial; border-collapse: collapse; text-align: center;font-size: 12px;" border="1">
 				<thead>
 					<tr>
-						<td colspan="4" rowspan="3" style="text-align: left;margin-left: 10px">Note <span class="droid">備考</span>: <span style="color:blue;font-weight: bold"><?= $inv[0]->note ?> </span>
+						<td colspan="4" rowspan="3" style="text-align: left;margin-left: 10px">Note <span class="droid">備考</span>: <span style="color:blue;font-weight: bold"><br><?= $inv[0]->note ?> </span>
 						</td>
 						<td colspan="2" rowspan="2">Approval By Acc Manager </td>
 						<td colspan="4">Checked By Acc Staff <span class="droid">経理担当が確認</span></td>

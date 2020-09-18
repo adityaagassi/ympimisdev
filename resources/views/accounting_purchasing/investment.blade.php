@@ -148,12 +148,12 @@
 							<table id="invTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
+										<th style="width: 1%">Reff Number</th>
 										<th style="width: 1%">Submission Date</th>
 										<th style="width: 1%">Department</th>
 										<th style="width: 1%">Applicant</th>
 										<th style="width: 1%">Category</th>
-										<th style="width: 1%">Subject</th>
-										<th style="width: 1%">Type</th>
+										<th style="width: 3%">Subject</th>
 										<th style="width: 3%">Vendor</th>
 										<th style="width: 1%">File</th>
 										<th style="width: 2%">Status</th>
@@ -208,6 +208,25 @@
 			</div>
 		</div>
 	</div>
+
+<div class="modal modal-danger fade" id="modalDeleteInvestment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Konfirmasi Hapus Data</h4>
+      </div>
+      <div class="modal-body">
+        Apakah anda yakin ingin menghapus Form Investment Ini ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <a id="a" name="modalButton" href="" type="button"  onclick="deleteInvestment(this.id)" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -315,12 +334,13 @@
 				"data" : data
 			},
 			"columns": [
+			{ "data": "reff_number" },
 			{ "data": "submission_date" },
 			{ "data": "applicant_department" },
 			{ "data": "applicant_name" },
 			{ "data": "category" },
 			{ "data": "subject" },
-			{ "data": "type" },
+			// { "data": "type" },
 			{ "data": "supplier_code" },
 			{ "data": "file" },
 			{ "data": "status" },
@@ -350,6 +370,55 @@
     	$("#id_edit").val(id);
     	$('#upload_adagio').modal("show");
     }
+
+    function deleteConfirmationInvestment(id) {
+		$('[name=modalButton]').attr("id",id);
+	}
+
+	function deleteInvestment(id){
+
+		var data = {
+			id:id,
+		}
+
+		$("#loading").show();
+
+		$.post('{{ url("delete/investment") }}', data, function(result, status, xhr){
+			if (result.status == true) {
+	        	openSuccessGritter("Success","Data Investment Berhasil Dihapus");
+	        	$("#loading").hide();
+	        	setTimeout(function(){  window.location.reload() }, 2500);
+			}
+			else{
+				openErrorGritter("Success","Data Gagal Dihapus");
+			}
+		});
+	}
+
+
+	function openSuccessGritter(title, message){
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-success',
+			image: '{{ url("images/image-screen.png") }}',
+			sticky: false,
+			time: '3000'
+		});
+	}
+
+	function openErrorGritter(title, message) {
+		jQuery.gritter.add({
+			title: title,
+			text: message,
+			class_name: 'growl-danger',
+			image: '{{ url("images/image-stop.png") }}',
+			sticky: false,
+			time: '2000'
+		});
+	}
+
+
 
 	$('.select2').select2();
 

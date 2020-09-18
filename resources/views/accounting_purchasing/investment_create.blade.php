@@ -215,7 +215,7 @@
 
   @section('scripts')
   <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-  <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+  <!-- <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script> -->
   <script>
     $.ajaxSetup({
       headers: {
@@ -227,15 +227,15 @@
       $('body').toggleClass("sidebar-collapse");
       $("#navbar-collapse").text('');
 
-      CKEDITOR.replace('note' ,{
-        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-        height: '200px'
-      });
+      // CKEDITOR.replace('note' ,{
+      //   filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+      //   height: '200px'
+      // });
 
-      CKEDITOR.replace('quotation_supplier' ,{
-        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-        height: '200px'
-      });
+      // CKEDITOR.replace('quotation_supplier' ,{
+      //   filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+      //   height: '200px'
+      // });
 
       });
 
@@ -475,10 +475,13 @@
         date_order: $("#date_order").val(),
         date_delivery: $("#date_delivery").val(),
         payment_term: $("#payment_term").val(),
-        note: CKEDITOR.instances.note.getData(),
-        quotation_supplier: CKEDITOR.instances.quotation_supplier.getData(),
+        note : $("#note").val(),
+        quotation_supplier : $("#quotation_supplier").val(),
         attachment: $("#attachment").val()
       };
+
+        // note: CKEDITOR.instances.note.getData(),
+        // quotation_supplier: CKEDITOR.instances.quotation_supplier.getData(),
 
       $.post('{{ url("investment/create_post") }}', data, function(result, status, xhr){
         if(result.status == true){    

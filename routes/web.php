@@ -1290,6 +1290,7 @@ Route::get('investment/check/{id}', 'AccountingController@check_investment');
 Route::post('investment/check_budget/{id}', 'AccountingController@check_investment_budget');
 Route::post('delete/investment_budget', 'AccountingController@delete_investment_budget');
 Route::get('investment/get_budget_name', 'AccountingController@get_budget_name')->name('admin.getbudget');
+Route::post('delete/investment', 'AccountingController@delete_investment');
 
 //Nomor Investment
 Route::get('investment/get_nomor_investment', 'AccountingController@get_nomor_inv');

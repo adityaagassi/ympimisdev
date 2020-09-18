@@ -4269,8 +4269,10 @@ public function update_purchase_requisition_po(Request $request)
             
             if ($invest->posisi == "user")
             {
-                return '<a href="investment/detail/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Edit</a>
+                return '
+                <a href="investment/detail/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Edit</a>
                 <a href="investment/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>
+                <a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="deleteConfirmationInvestment('.$id.')" data-toggle="modal" data-target="#modalDeleteInvestment"  title="Delete Investment"><i class="fa fa-trash"></i> Delete Investment</a>
                 ';
             }
             else if ($invest->posisi == "acc_budget" || $invest->posisi == "acc_pajak")
@@ -4502,6 +4504,53 @@ public function update_purchase_requisition_po(Request $request)
         return json_encode($result);
     }
 
+    public function delete_investment(Request $request)
+    {
+        try
+        {
+            $invest = AccInvestment::find($request->get('id'));
+            $date = date('Y-m-d');
+
+            $budget_log = AccBudgetHistory::where('category_number', '=', $invest->reff_number)
+            ->get();
+
+            if ($budget_log != null) {
+                //FY
+                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+                
+                foreach ($fy as $fys) {
+                    $fiscal = $fys->fiscal_year;
+                }
+
+                foreach ($budget_log as $log) {
+                    $sisa_bulan = $log->budget_month.'_sisa_budget';
+                    $budget = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->first();
+
+                    $total = $budget->$sisa_bulan + $log->amount; //add total
+                    $dataupdate = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->update([
+                        $sisa_bulan => $total
+                    ]);
+                }
+            }
+
+            $delete_history = AccBudgetHistory::where('category_number', '=', $invest->reff_number)->delete();
+            $delete_budget_log = AccInvestmentBudget::where('reff_number', '=', $invest->reff_number)->delete();
+            $delete_inv_item = AccInvestmentDetail::where('reff_number', '=', $invest->reff_number)->delete();
+            $delete_inv = AccInvestment::where('reff_number', '=', $invest->reff_number)->delete();
+
+            $response = array(
+                'status' => true,
+            );
+
+            return Response::json($response);
+        }
+        catch(QueryException $e)
+        {
+            return redirect('/investment')->with('error', $e->getMessage())
+            ->with('page', 'Investment');
+        }
+    }
+
     public function fetchInvBudgetList(Request $request)
     {
         if ($request->get('category') == "Investment") {
@@ -4628,84 +4677,99 @@ public function update_purchase_requisition_po(Request $request)
                 'note' => $request->get('note') , 
                 'quotation_supplier' => $request->get('quotation_supplier'),
                 'currency' => $request->get('currency') , 
-                'pdf' => 'INV_'.$judul.'.pdf' ,'created_by' => $id_user
+                'pdf' => 'INV_'.$judul.'.pdf' ,
+                'created_by' => $id_user
             ]);
 
 
             for ($i = 0;$i < $jumlah;$i++)
             {
                 $category_budget = $request->get('budget_cat');
-                $budget_no = $request->get('budget');
-                $budget_name = $request->get('budget_name');
-                $budget_sisa = $request->get('sisa');
-                $budget_amount = $request->get('amount');
+                if($category_budget[$i] != 'Out Of Budget'){
 
-                $data2 = AccInvestmentBudget::firstOrNew([
-                    'reff_number' => $request->get('reff_number'),
-                    'category_budget' => $category_budget[$i],
-                    'budget_no' => $budget_no[$i] 
-                ]);
+                    $budget_no = $request->get('budget');
+                    $budget_name = $request->get('budget_name');
+                    $budget_sisa = $request->get('sisa');
+                    $budget_amount = $request->get('amount');
 
-                $data2->budget_name = $budget_name[$i];
-                $data2->sisa = $budget_sisa[$i];
-                $data2->total = $budget_amount[$i];
-                $data2->created_by = $id_user;
-
-                $investment_item = AccInvestment::join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')->where('acc_investments.id', '=', $request->get('id'))->get();
-
-                for ($z=0; $z < count($investment_item); $z++) { 
-                    $month = strtolower(date("M",strtotime($request->get('submission_date'))));
-
-                    $data3 = AccBudgetHistory::firstOrNew([
-                        'category_number' => $request->get('reff_number'),
-                        'budget' => $budget_no[$i],
-                        'no_item' => $investment_item[$z]->detail,
+                    $data2 = AccInvestmentBudget::firstOrNew([
+                        'reff_number' => $request->get('reff_number'),
+                        'category_budget' => $category_budget[$i],
+                        'budget_no' => $budget_no[$i] 
                     ]);
 
-                    $data3->budget = $budget_no[$i];
-                    $data3->budget_month = $month;
-                    $data3->budget_date = date('Y-m-d');
-                    $data3->category_number = $request->get('reff_number');
-                    $data3->no_item = $investment_item[$z]->detail;
-                    $data3->beg_bal = $budget_sisa[$i];
-                    $data3->amount = $investment_item[$z]->dollar;
-                    $data3->status = 'Investment';
-                    $data3->created_by = $id_user;
-                    $data3->save();
-                }
+                    $data2->budget_name = $budget_name[$i];
+                    $data2->sisa = $budget_sisa[$i];
+                    $data2->total = $budget_amount[$i];
+                    $data2->created_by = $id_user;
 
-                $totalPembelian = $budget_amount[$i];
+                    $investment_item = AccInvestment::join('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')->where('acc_investments.id', '=', $request->get('id'))->get();
 
-                if ($totalPembelian != null) {
+                    for ($z=0; $z < count($investment_item); $z++) { 
+                        $month = strtolower(date("M",strtotime($request->get('submission_date'))));
 
-                    $inv_budget = AccInvestment::join('acc_investment_budgets', 'acc_investments.reff_number', '=', 'acc_investment_budgets.reff_number')
-                    ->where('acc_investments.id', '=', $request->get('id'))->get();
-
-                    if (count($inv_budget) == 0) {
-                        $datePembelian = date('Y-m-d');
-                        $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
-
-                        foreach ($fy as $fys) {
-                            $fiscal = $fys->fiscal_year;
-                        }
-
-                        $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
-                        $sisa_bulan = $bulan.'_sisa_budget';                    
-                        //get Data Budget Based On Periode Dan Nomor
-
-                        $budget = AccBudget::where('budget_no','=',$budget_no[$i])->where('periode','=', $fiscal)->first();
-                        
-                        //perhitungan 
-                        $total = $budget->$sisa_bulan - $totalPembelian;
-                        $dataupdate = AccBudget::where('budget_no','=',$budget_no[$i])->where('periode','=', $fiscal)
-                        ->update([
-                            $sisa_bulan => $total
+                        $data3 = AccBudgetHistory::firstOrNew([
+                            'category_number' => $request->get('reff_number'),
+                            'budget' => $budget_no[$i],
+                            'no_item' => $investment_item[$z]->detail,
                         ]);
 
+                        $data3->budget = $budget_no[$i];
+                        $data3->budget_month = $month;
+                        $data3->budget_date = date('Y-m-d');
+                        $data3->category_number = $request->get('reff_number');
+                        $data3->no_item = $investment_item[$z]->detail;
+                        $data3->beg_bal = $budget_sisa[$i];
+                        $data3->amount = $investment_item[$z]->dollar;
+                        $data3->status = 'Investment';
+                        $data3->created_by = $id_user;
+                        $data3->save();
+                    }
+
+                    $totalPembelian = $budget_amount[$i];
+
+                    if ($totalPembelian != null) {
+
+                        $inv_budget = AccInvestment::join('acc_investment_budgets', 'acc_investments.reff_number', '=', 'acc_investment_budgets.reff_number')
+                        ->where('acc_investments.id', '=', $request->get('id'))->get();
+
+                        if (count($inv_budget) == 0) {
+                            $datePembelian = date('Y-m-d');
+                            $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datePembelian'");
+
+                            foreach ($fy as $fys) {
+                                $fiscal = $fys->fiscal_year;
+                            }
+
+                            $bulan = strtolower(date("M",strtotime($datePembelian))); //aug,sep,oct
+                            $sisa_bulan = $bulan.'_sisa_budget';                    
+                            //get Data Budget Based On Periode Dan Nomor
+
+                            $budget = AccBudget::where('budget_no','=',$budget_no[$i])->where('periode','=', $fiscal)->first();
+                            
+                            //perhitungan 
+                            $total = $budget->$sisa_bulan - $totalPembelian;
+                            $dataupdate = AccBudget::where('budget_no','=',$budget_no[$i])->where('periode','=', $fiscal)
+                            ->update([
+                                $sisa_bulan => $total
+                            ]);
+
+                        }
                     }
                 }
+                else{ // kalo out of budget
+                    $category_budget = $request->get('budget_cat');
+                    $budget_amount = $request->get('amount');
 
+                    $data2 = AccInvestmentBudget::firstOrNew([
+                        'reff_number' => $request->get('reff_number'),
+                        'category_budget' => $category_budget[$i]
+                    ]);
 
+                    $data2->total = $budget_amount[$i];
+                    $data2->created_by = $id_user;
+
+                }
                 $data2->save();
             }
 
@@ -7727,13 +7791,15 @@ public function update_purchase_requisition_po(Request $request)
 
         if ($invest->posisi == "user")
         {
-            return '<a href="detail/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Edit</a>
+            return '
+            <a href="detail/' . $id . '" class="btn btn-warning btn-xs"><i class="fa fa-edit"></i> Edit</a>
             <a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>
             ';
         }
         else if ($invest->posisi == "acc_budget" || $invest->posisi == "acc_pajak")
         {
             return '<a href="report/' . $id . '" target="_blank" class="btn btn-danger btn-xs" style="margin-right:5px;" data-toggle="tooltip" title="Report PDF"><i class="fa fa-file-pdf-o"></i> Report PDF</a>';
+
         }
         else if ($invest->posisi == "acc" || $invest->posisi == "manager" || $invest->posisi == "dgm" || $invest->posisi == "gm" || $invest->posisi == "manager_acc" || $invest->posisi == "direktur_acc" || $invest->posisi == "presdir" || $invest->posisi == "finished")
         {

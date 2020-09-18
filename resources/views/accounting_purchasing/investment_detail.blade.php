@@ -118,21 +118,22 @@
 
           <div class="col-xs-4 col-xs-offset-1">
             <label for="form_judul">Subject</label>
-            <input type="text" id="subject" class="form-control" placeholder="Subject" value="{{ $investment->subject }}" readonly="">
+            <input type="text" id="subject" class="form-control" placeholder="Subject" value="{{ $investment->subject }}">
           </div>
           <div class="col-xs-3">
             <label for="form_kategori">Kind Of Application</label>
-            <input type="text" id="category" class="form-control" placeholder="Category" value="{{ $investment->category }}" readonly="">
+            <!-- <input type="text" id="category" class="form-control" placeholder="Category" value="{{ $investment->category }}"> -->
 
-            <!-- <select class="form-control select2" id="category" data-placeholder='Choose Category' style="width: 100%" onchange="getNomor()" readonly="">
+            <select class="form-control select2" id="category" data-placeholder='Choose Category' style="width: 100%" onchange="getNomor()">
               <option value="Investment" <?php if($investment->category == "Investment") echo "selected"; ?>>Investment</option>
               <option value="Expense"<?php if($investment->category == "Expense") echo "selected"; ?>>Expense</option>
-            </select> -->
+            </select>
           </div>
           <div class="col-xs-3">
             <label for="form_kategori">Class Of Assets / Kind Of Expense</label>
-            <input type="text" id="type" class="form-control" placeholder="Type" value="{{ $investment->type }}" readonly="">
-            <!--  <select class="form-control select2" id="type" data-placeholder='Choose Type' style="width: 100%" readonly="">
+            <!-- <input type="text" id="type" class="form-control" placeholder="Type" value="{{ $investment->type }}"> -->
+
+            <select class="form-control select2" id="type" data-placeholder='Choose Type' style="width: 100%">
               <option value="">&nbsp;</option>
               <option value="Building" <?php if($investment->type == "Building") echo "selected"; ?>>Building</option>
               <option value="Machine & Equipment" <?php if($investment->type == "Machine & Equipment") echo "selected"; ?>>Machine & Equipment</option>
@@ -147,7 +148,7 @@
               <option value="Professional Fee" <?php if($investment->type == "Professional Fee") echo "selected"; ?>>Proffesional Fee</option>
               <option value="Miscellaneous" <?php if($investment->type == "Miscellaneous") echo "selected"; ?>>Miscellaneous</option>
               <option value="Others" <?php if($investment->type == "Others") echo "selected"; ?>>Others</option>
-            </select> -->
+            </select>
           </div>
           <div class="col-xs-4 col-xs-offset-1">
             <label for="form_grup">Main Objective</label>
@@ -348,7 +349,7 @@
             
             <button type="button" class="btn btn-success" onclick='tambah("tambah","lop");' style="padding: 6px 8px"><i class='fa fa-plus'></i></button>
           </div> -->
-          <input type="text" name="lop" id="lop" value="1" hidden>
+          <input type="text" name="lop" id="lop" value="0" hidden>
 
         </div>
 
@@ -482,7 +483,7 @@
             </div>
 
             <div class="btn-group pull-right">
-              <a class="btn btn-danger" href="{{ url('investment') }}" style="margin-right:5px;"><i class="fa fa-close"></i>&nbsp;Cancel</a>
+              <a class="btn btn-danger" href="{{ url('investment') }}" style="margin-right:5px;"><i class="fa fa-arrow-circle-left"></i>&nbsp;Kembali</a>
             </div>
 
             
@@ -676,7 +677,7 @@
 
   @section('scripts')
   <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
-  <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+  <!-- <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script> -->
   <script type="text/javascript">
 
     var no = 2;
@@ -764,15 +765,15 @@
             });
         });
 
-      CKEDITOR.replace('note' ,{
-        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-        height: '100px'
-      });
+      // CKEDITOR.replace('note' ,{
+      //   filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+      //   height: '100px'
+      // });
 
-      CKEDITOR.replace('quotation_supplier' ,{
-        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-        height: '100px'
-      });
+      // CKEDITOR.replace('quotation_supplier' ,{
+      //   filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+      //   height: '100px'
+      // });
 
 
       gettotalamount();
@@ -997,7 +998,22 @@
 
       var reff_no = document.getElementById("reff_number");
 
-      reff_no.value = 'N'+kode+'-'+jenis;
+      $.ajax({
+        url: "{{ url('investment/get_nomor_investment') }}", 
+        type : 'GET', 
+        success : function(data){
+          var obj = jQuery.parseJSON(data);
+          var tahun = obj.tahun;
+          var bulan = obj.bulan;
+          var no_urut = obj.no_urut;
+
+          var no = parseInt(no_urut);
+          var romawi = romanize(bulan);
+          reff_no.value = 'N'+tahun+no_urut+'/'+romawi+'/'+kode+'-'+jenis;
+        }
+      });
+
+      // reff_no.value = 'N'+kode+'-'+jenis;
         
     }
 
@@ -1103,12 +1119,7 @@
         return false;
       }
 
-      if ($("#budget_category1").val() == "") {
-        $("#loading").hide();
-        alert("Kolom Budget Harap diisi");
-        $("html").scrollTop(0);
-        return false;
-      }
+
 
       if ($("#currency").val() == "") {
         $("#loading").hide();
@@ -1118,6 +1129,11 @@
       }
 
       var jml = $("#lop").val();
+
+      if ($("#budget_category1").val() != "") {
+          jml = 1;   
+      }
+
       var budget_cat = [];
       var budget = [];
       var budget_name = [];
@@ -1176,8 +1192,8 @@
         date_order: $("#date_order").val(),
         date_delivery: $("#date_delivery").val(),
         payment_term: $("#payment_term").val(),
-        note: CKEDITOR.instances.note.getData(),
-        quotation_supplier: CKEDITOR.instances.quotation_supplier.getData(),
+        note : $("#note").val(),
+        quotation_supplier : $("#quotation_supplier").val(),
         currency: $("#currency").val(),
         jumlah: jml,
         budget_cat: budget_cat,
@@ -1188,6 +1204,10 @@
         // budget_category: $("#budget_category").val(),
         // budget_no: $("#budget_no").val(),
       };
+
+      
+        // note: CKEDITOR.instances.note.getData(),
+        // quotation_supplier: CKEDITOR.instances.quotation_supplier.getData(),
 
       $.post('{{ url("investment/update_post") }}', data, function(result, status, xhr){
         if(result.status == true){    

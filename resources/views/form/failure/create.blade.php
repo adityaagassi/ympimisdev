@@ -319,7 +319,8 @@
       if(result.status == true){    
         $("#loading").hide();
         openSuccessGritter("Success","Berhasil Dibuat");
-        setTimeout(function(){ window.history.back(); }, 2000); 
+        location.reload();
+        // setTimeout(function(){ window.history.back(); }, 2000); 
       }
       else {
         $("#loading").hide();

@@ -262,7 +262,14 @@
 											</div>											
 										</div>
 
-										<div class="col-md-3">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label>Catatan / Keterangan Pendukung PR (Optional)</label>
+												<textarea class="form-control pull-right" id="note" name="note"></textarea>
+											</div>
+										</div>
+
+										<div class="col-md-6">
 											<div class="form-group">
 												<label>File Terlampir (Optional)</label>
 												<input type="file" id="reportAttachment" name="reportAttachment[]" multiple="">
@@ -280,12 +287,6 @@
 											@endif
 										</div>
 
-										<div class="col-md-9">
-											<div class="form-group">
-												<label>Catatan / Keterangan (Informasi / Foto Pendukung Terkait PR) <span class="text-red">*</span></label>
-												<textarea class="form-control pull-right" id="note" name="note"></textarea>
-											</div>
-										</div>
 									</div>
 									<div class="col-md-12" style="padding-right: 30px;padding-top: 10px">
 										<a class="btn btn-primary btnNext pull-right">Selanjutnya</a>
@@ -717,7 +718,7 @@
 	<script src="{{ url("js/buttons.html5.min.js")}}"></script>
 	<script src="{{ url("js/buttons.print.min.js")}}"></script>
 	<script src="{{ url("js/jquery.tagsinput.min.js") }}"></script>
-	<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
+	<!-- <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script> -->
 	<script>
 
 
@@ -773,10 +774,10 @@
 
         getExchangeRate();
 
-        CKEDITOR.replace('note' ,{
-        	filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
-        	height: '100px'
-        });
+        // CKEDITOR.replace('note' ,{
+        // 	filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        // 	height: '100px'
+        // });
 
         usd = document.getElementById('total_usd');
         usd.value = 0;
@@ -818,9 +819,10 @@
         	var emp_id = $('#emp_id').val();
         	var no_pr = $('#no_pr').val();
         	var staff = $('#staff').val();
-        	var catatan = CKEDITOR.instances.note.getData();
-
-        	if(emp_id == '' || no_pr == '' || catatan == '' || staff == ''){
+        	var catatan = $('#note').val();
+        	// var catatan = CKEDITOR.instances.note.getData();
+        	// || catatan == ''
+        	if(emp_id == '' || no_pr == '' || staff == ''){ 
         		alert('Semua Kolom Harus Diisi');	
         	}
         	else{
@@ -1010,7 +1012,7 @@
 					$('#item_desc'+no).val(obj.deskripsi).attr('readonly', true);
 					$('#item_spec'+no).val(obj.spesifikasi).attr('readonly', true);
 					$('#item_price'+no).val(obj.price).attr('readonly', true);
-					$('#uom'+no).val(obj.uom).change();
+					$('#uom'+no).val(obj.uom).change().attr('readonly', true);
 					$('#qty'+no).val("0");
 					$('#moq'+no).val(obj.moq);
 					$('#amount'+no).val("0");

@@ -9,14 +9,15 @@ table.table-bordered{
 table.table-bordered > thead > tr > th{
   border:1px solid rgb(54, 59, 56) !important;
   text-align: center;
-  background-color: #212121;  
+  background-color: #fff;  
   color:#eee;
   font-size: 18px;
 }
 table.table-bordered > tbody > tr > td{
   border:1px solid rgb(54, 59, 56);
-  background-color: #212121;
+  background-color: #000;
   color: white;
+  font-weight: bold;
   vertical-align: middle;
   text-align: center;
   padding:8px;
@@ -174,15 +175,15 @@ hr { background-color: red; height: 1px; border: 0; }
               <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
                 <thead>
                   <tr style="font-size: 16px">
-                    <th style="padding:15px;height: 15px; background-color: #36bf23;">No Budget</th>
-                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Deskripsi</th>
-                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Budget 1 Tahun</th>
-                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Purchase Requisition</th>
-                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Investment</th>
-                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Purchase Order</th>
-                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Transfer</th>
-                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Actual</th>
-                    <th style="padding:15px;height: 15px; background-color: #36bf23;">Ending Balance</th>
+                    <th style="padding:15px;height: 15px; background-color: #0d47a1;">No Budget</th>
+                    <th style="padding:15px;height: 15px; background-color: #0d47a1;">Deskripsi</th>
+                    <th style="padding:15px;height: 15px; background-color: #0d47a1;">Budget 1 Tahun</th>
+                    <th style="padding:15px;height: 15px; background-color: #0d47a1;">Purchase Requisition</th>
+                    <th style="padding:15px;height: 15px; background-color: #0d47a1;">Investment</th>
+                    <th style="padding:15px;height: 15px; background-color: #0d47a1;">Purchase Order</th>
+                    <th style="padding:15px;height: 15px; background-color: #0d47a1;">Transfer</th>
+                    <th style="padding:15px;height: 15px; background-color: #0d47a1;">Actual</th>
+                    <th style="padding:15px;height: 15px; background-color: #0d47a1;">Ending Balance</th>
                   </tr>
                 </thead>
                 <tbody id="tablebudget">
