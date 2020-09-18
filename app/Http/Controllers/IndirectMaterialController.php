@@ -1475,6 +1475,7 @@ class IndirectMaterialController extends Controller{
 			'users.name',
 			'indirect_material_logs.created_at')
 		->orderBy('indirect_material_logs.qr_code', 'desc')
+		->limit(500)
 		->get();
 
 		return DataTables::of($data)->make(true);

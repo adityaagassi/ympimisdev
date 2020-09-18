@@ -168,9 +168,8 @@
 									<th style="width: 40%">Material Description</th>
 									<th style="width: 10%">Storage Location</th>
 									<th style="width: 5%">Remark</th>
-									<th style="width: 10%">PIC</th>
 									<th style="width: 10%">Qty</th>
-									<th style="width: 10%">Bun</th>
+									<th style="width: 10%">PIC</th>
 									<th style="width: 10%">Created At</th>
 								</tr>
 							</thead>
@@ -178,7 +177,6 @@
 							</tbody>
 							<tfoot>
 								<tr>
-									<th></th>
 									<th></th>
 									<th></th>
 									<th></th>
@@ -322,9 +320,8 @@
 			{ "data": "material_description"},
 			{ "data": "storage_location"},
 			{ "data": "remark"},
-			{ "data": "name"},
 			{ "data": "quantity"},
-			{ "data": "bun"},
+			{ "data": "name"},
 			{ "data": "created_at"}
 			]
 		});
