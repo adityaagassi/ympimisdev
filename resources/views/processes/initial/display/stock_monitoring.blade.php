@@ -101,7 +101,7 @@
 		$('#locs').val('');
 		$('.select2').select2();
 		fillChart();
-		// setInterval(fillChart, 10000);
+		setInterval(fillChart, 10000);
 	});
 
 	Highcharts.createElement('link', {
@@ -363,9 +363,14 @@
 					}
 				}
 
+				Highcharts.setOptions({
+					colors: ['#99cc60', '#a00037', '#004ba0', '#ffa000', '#24CBE5', '#ff1744']
+				});
+
 				var chart = Highcharts.chart('container', {
 					chart: {
 						type: 'column'
+
 					},
 					title: {
 						text: 'Realtime M-PRO Stock Monitoring',
