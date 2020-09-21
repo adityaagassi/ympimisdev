@@ -5,105 +5,89 @@
 </head>
 <body >
 	<style type="text/css">
-		.product {
-			font-size: 9pt;
-			font-family: 'arial';
-			font-weight: bold;
-			margin: 0px;
-			position: fixed;
-			top: 0px;
-			left: 0px;
-			right: 0px;
-			height: 50px;
-			max-width: 120px;
-			text-align: left;
-		}
-		.crop {
-			position: fixed;
-			top: 16px;
-			/*left: px;*/
-		}
-		.kiri {
-			font-size: 10pt;
-			font-family: 'arial';
-			margin: 0px;
-			position: fixed;
-			top: 44px;
-			left: 0px;
-			right: 0px;
-			height: 50px;
-			max-width: 120px;
-			text-align: center;
-		}
-		.tengah {
-			font-size: 7pt;
-			font-family: 'arial';
-			margin: 0px;
-			position: fixed;
-			top: 57px;
-			left: 0px;
-			right: 0px;
-			height: 50px;
-			max-width: 120px;
-			text-align: center;
+		table {
+			font-family: 'calibri';
+			border-collapse: collapse;
+			padding: 0px;
 		}
 
-		.bawah {
-			font-size: 7pt;
-			font-family: 'arial';
-			margin: 0px;
-			position: fixed;
-			top: 80px;
-			left: 0px;
-			right: 0px;
-			height: 50px;
-			max-width: 120px;
-			text-align: center;
+		table, th, td {
+			border: 1.5px solid black;
+			padding: 0px;
 		}
 
-		td{
+		p {
 			padding: 0px;
 			margin: 0px;
-			vertical-align: text-bottom;
 		}
 
-		
+		.top {
+			font-size: 12pt;
+		}
+
+		.gmc {
+			font-size: 9pt;
+		}
+
+		.desc {
+			font-size: 9pt;
+		}
+
+		#kd_number {
+			font-size: 7pt;
+			font-weight: normal;
+			padding-bottom: 1pt;			
+		}
+
+		#barcode {
+			padding-top: 1pt;
+		}
 
 	</style>
-
 
 	@php
 	include(app_path() . '\barcode\barcode.php');
 	@endphp
 
+	<input type="hidden" id="input_kd_number" value="{{$knock_down_detail->kd_number}}">
+	<input type="hidden" id="input_material_number" value="{{$knock_down_detail->material_number}}">
+	<input type="hidden" id="input_material_description" value="{{$knock_down_detail->material_description}}">
+	<input type="hidden" id="input_quantity" value="{{$knock_down_detail->quantity}}">
+	<input type="hidden" id="input_kd_name" value="{{$knock_down_detail->kd_name}}">
+	<input type="hidden" id="input_xy" value="{{$knock_down_detail->xy}}">
+	<input type="hidden" id="input_mj" value="{{$knock_down_detail->mj}}">
 
-	<table border="0" style="margin: 0px;">
-		<input type="text" name="material_number" id="material_number" value="{{$knock_down_detail->material_number}}" hidden="">
-		<input type="text" name="material_description" id="material_description" value="{{$knock_down_detail->material_description}}" hidden="">
-		<input type="text" name="quantity" id="quantity" value="{{$knock_down_detail->quantity}}" hidden="">
-		
-		<tr>		
-			<td align="left">
-				<p class="product">GMC: </p>
-				<img class="crop" id="128" src="">
-				<p class="kiri" id="print_material_number">ZQ66151</p>
-			</td>
-		</tr>	
-		<tr>
-			<td align="left"><p class="tengah" id="print_material_description">CL221 24 CONNECTING ARM (PACKED) PI</p></td>
+	<table>
+		<tr height="20">
+			<th width="75px" class="top" id="material_number"></th>
+			<th width="60px" class="top" id="quantity">QTY</th>
+			<th width="75px" class="top" id="kd_name" colspan="2">18N</th>
 		</tr>
-		<tr>
-			<td align="left"><p class="bawah" id="print_quantity">QTY: 100PC(s)</p></td>
+		<tr height="18">
+			<th width="100px" class="desc" id="material_description" rowspan="2" colspan="2">DESKRIPSI</th>
+			<th width="25px" class="gmc">XY</th>
+			<th width="75px" class="gmc" id="xy">XY GMC</th>
 		</tr>
-		
+		<tr height="18">
+			<th width="25px" class="gmc">MJ</th>
+			<th width="75px" class="gmc" id="mj">MJ GMC</th>
+		</tr>
+		<tr height="25px">
+			<th colspan="4">
+				<img id="barcode" src="">
+				<p id="kd_number"></p>
+			</th>
+		</tr>
 	</table>
+
+
 
 </body>
 </html>
 <script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
 <script>
 	jQuery(document).ready(function() {		
-		jan();
+		initialize();
 		 // window.print();
 
 		 defineCustomPaperSize();
@@ -111,30 +95,29 @@
 		 // window.close();
 		});
 
-	function jan() {
-		var material_number = $('#material_number').val();
-		var material_description = $('#material_description').val();
-		var quantity = $('#quantity').val();
+	function initialize() {
+		var kd_number = $('#input_kd_number').val();
+		var material_number = $('#input_material_number').val();
+		var material_description = $('#input_material_description').val();
+		var quantity = $('#input_quantity').val();
+		var kd_name = $('#input_kd_name').val();
+		var xy = $('#input_xy').val();
+		var mj = $('#input_mj').val();
+
+		$('#material_number').text(material_number);
+		$('#material_description').text(material_description);
+		$('#quantity').text(quantity +" PC(s)");
+		$('#kd_name').text(kd_name);
+		$('#xy').text(xy);
+		$('#mj').text(mj);
+		$('#kd_number').text(kd_number);
+
 		var url1 = "{{url('/app/barcode/')}}";
-		var url2 ="/barcode.php?f=svg&s=code-128&w=100&h=27&p=0&wq=0";
-		var code ="&d="+ material_number;
+		var url2 ="/barcode.php?f=svg&s=code-128&w=250&h=30&p=0&wq=0";
+		var code ="&d="+ kd_number;
 		var janfix = url1.replace("/public","");
-		$("#128").attr("src",janfix+url2+code);
+		$('#barcode').attr("src", janfix + url2 + code);
 
-		$('#print_material_number').text(material_number);
-
-
-		if(material_description.length > 35){
-			$('#print_material_description').css('font-size', '6pt');
-			$('#print_material_description').css('font-weight', 'bold');
-		}else{
-			$('#print_material_description').css('font-size', '7pt');
-		}
-		$('#print_material_description').text(material_description);
-		
-
-
-		$('#print_quantity').text("QTY: "+ quantity +"PC(s)");
 	}
 // default print settings
 
@@ -214,15 +197,15 @@ function printWindow(win, what) {
   	win.addEventListener("message", jspListener);
 
   	win.addEventListener("beforeprint", function(event) {
-  		jan();
+  		// jan();
 		 // window.print();
 
 		 defineCustomPaperSize();
 		 console.log("before print: "+what, true);
 		});
   	win.addEventListener("afterprint", function(event) {
-
-  		setTimeout(tutup,3000);
+  		
+  		setTimeout(tutup,2000);
   		
   	});
   }
