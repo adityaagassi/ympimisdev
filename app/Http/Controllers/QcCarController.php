@@ -355,7 +355,7 @@ class QcCarController extends Controller
 
             foreach ($cpar as $cpar) {
               $idcpar = $cpar->id;
-              $cpar->status_code = "6";
+              // $cpar->status_code = "6";
               $cpar->save();
             }
 

@@ -2003,6 +2003,7 @@ class QcReportController extends Controller
             $cpars->email_status = "SentBagian";
             $cpars->email_send_date = date('Y-m-d');
             $cpars->posisi = "bagian";
+            $cpars->status_code = "6"; // add++
             $cpars->received_manager = "Received";
             $cpars->progress = "60";
             $cpars->save();
@@ -2184,6 +2185,7 @@ class QcReportController extends Controller
                 $qc_cpars->posisi = "bagian";
                 $qc_cpars->received_manager = "Received";
                 $qc_cpars->progress = "60";
+                $qc_cpars->status_code = "6";
                 $qc_cpars->save();
 
                 $cars = new QcCar([
@@ -2334,6 +2336,7 @@ class QcReportController extends Controller
               $cpars->posisi = "bagian";
               $cpars->received_manager = "Received";
               $cpars->progress = "60";
+              $cpars->status_code = "6";
               $cpars->save();
 
               $cars = new QcCar([
