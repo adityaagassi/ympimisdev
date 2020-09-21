@@ -194,16 +194,18 @@
 			$.each(result.datacheck, function(key, value) {
 				if (value.checks == null) {
 					if (result.attendance[key][0] != undefined) {
-						resultData += '<tr>';
-						resultData += '<td>'+ index +'</td>';
-						resultData += '<td>'+ value.employee_id +'</td>';
-						resultData += '<td>'+ value.name +'</td>';
-						resultData += '<td>'+ result.attendance[key][0].attend_code +'</td>';
-						resultData += '</tr>';
-						index++;
-						uncheck++;
-
+						var attnd = result.attendance[key][0].attend_code;
+					}else{
+						var attnd = '-';
 					}
+					resultData += '<tr>';
+					resultData += '<td>'+ index +'</td>';
+					resultData += '<td>'+ value.employee_id +'</td>';
+					resultData += '<td>'+ value.name +'</td>';
+					resultData += '<td>'+ attnd +'</td>';
+					resultData += '</tr>';
+					index++;
+					uncheck++;
 				}else{
 					check++;
 				}
