@@ -66,35 +66,35 @@
 							<input type="text" class="form-control datepicker" id="tanggal_to" name="tanggal_to" placeholder="Select Date To" onchange="fetchTemperature()">
 						</div>
 					</div> -->
-					<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 1vw;color: white"></div>
+					<div class="pull-right" id="last_update" style="margin: 0px;padding-top: 0px;padding-right: 1vw	;font-size: 1vw;color: white"></div>
 				</form>
 			</div>
 		</div>
 		<div class="col-xs-12" style="padding-bottom: 5px;">
 			<div class="row">
 				<div class="col-xs-4">
-					<span style="color: white; font-size: 22px; font-weight: bold;"><i class="fa fa-caret-right"></i> Cek Hari Ini</span>
+					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Cek Hari Ini</span>
 					<table class="table table-bordered" id="tableTotal" style="margin-bottom: 5px;">
 						<thead>
 							<tr>
-								<th style="width: 50%; text-align: center;color: white">Sudah Cek</th>
-								<th style="width: 50%; text-align: center;color: white">Belum Cek</th>
+								<th style="width: 50%; text-align: center;color: white; font-size: 1.2vw;">Sudah Cek</th>
+								<th style="width: 50%; text-align: center;color: white; font-size: 1.2vw">Belum Cek</th>;
 							</tr>			
 						</thead>
 						<tbody id="tableTotalBody">
 							<tr>
-								<td style="font-size: 30px; font-weight: bold;color: black" id="total_check"></td>
-								<td style="font-size: 30px; font-weight: bold;color: black" id="total_uncheck"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_check"></td>
+								<td style="font-size: 1.7vw; font-weight: bold;color: black" id="total_uncheck"></td>
 							</tr>
 						</tbody>
 					</table>
-					<span style="color: white; font-size: 22px; font-weight: bold;"><i class="fa fa-caret-right"></i> Detail Belum Cek</span>
+					<span style="color: white; font-size: 1.7vw; font-weight: bold;"><i class="fa fa-caret-right"></i> Detail Belum Cek</span>
 					<table class="table table-bordered" id="tableNoCheck" style="margin-bottom: 5px;">
 						<thead>
 							<tr>
-								<th style="color:white;width: 1%;">#</th>
-								<th style="color:white;width: 5%; text-align: center;">ID</th>
-								<th style="color:white;width: 30%; text-align: center;">Name</th>
+								<th style="color:white;width: 1%; font-size: 1.2vw;">#</th>
+								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
+								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
 							</tr>					
 						</thead>
 						<tbody id="tableNoCheckBody">
@@ -102,7 +102,7 @@
 					</table>
 				</div>
 				<div class="col-xs-8">
-					<div id="container1" class="container1" style="width: 100%;height: 520px"></div>
+					<div id="container1" class="container1" style="width: 100%;height: 600px"></div>
 					<!-- <div id="container2" class="container2" style="width: 100%;"></div> -->
 				</div>
 			</div>
