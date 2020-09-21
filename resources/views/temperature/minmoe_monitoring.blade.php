@@ -95,7 +95,7 @@
 								<th style="color:white;width: 1%; font-size: 1.2vw;">#</th>
 								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
 								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
-								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Attendance</th>
+								<th style="color:white;width: 10%; font-size: 1.2vw; text-align: center;">Attendance</th>
 							</tr>					
 						</thead>
 						<tbody id="tableNoCheckBody">
