@@ -576,23 +576,23 @@ class TemperatureController extends Controller
                // ".$where."");
 
                $datacheck = DB::SELECT("SELECT
-                    employee_groups.employee_id,
+                    a.employee_id,
                     employee_syncs.name,
-                    employee_groups.group,(
+                    a.group,(
                     SELECT
                          ivms_temperatures.person_id 
                     FROM
                          ivms_temperatures 
                     WHERE
-                         DATE( date_in ) = '".$now."' 
-                         AND person_id = employee_groups.GROUP 
+                         ivms_temperatures.date = '".$now."' 
+                         AND employee_id = a.employee_id
                     ) AS checks 
                FROM
-                    employee_groups
-                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+                    employee_groups a
+                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id 
                WHERE
-                    employee_groups.location = '".$request->get('location')."'
-               ORDER BY employee_groups.group");
+                    a.location = '".$request->get('location')."'
+               ORDER BY a.group");
 
                $dateTitle = date("d M Y", strtotime($now));
 
