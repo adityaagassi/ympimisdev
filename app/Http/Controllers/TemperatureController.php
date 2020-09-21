@@ -531,20 +531,6 @@ class TemperatureController extends Controller
                     $now  = $date_from;
                }
 
-               // if ($date_from == '') {
-               //      if ($date_to == '') {
-               //           $where = "WHERE DATE(a.date_in) BETWEEN CONCAT(DATE_FORMAT(NOW() - INTERVAL 7 DAY,'%Y-%m-%d')) AND DATE(NOW())";
-               //      }else{
-               //           $where = "WHERE DATE(a.date_in) BETWEEN CONCAT(DATE_FORMAT(".$date_to." - INTERVAL 7 DAY,'%Y-%m-%d')) AND '".$date_to."'";
-               //      }
-               // }else{
-               //      if ($date_to == '') {
-               //           $where = "WHERE DATE(a.date_in) BETWEEN '".$date_from."' AND DATE(NOW())";
-               //      }else{
-               //           $where = "WHERE DATE(a.date_in) BETWEEN '".$date_from."' AND '".$date_to."'";
-               //      }
-               // }
-
                $datatoday = DB::SELECT("SELECT DISTINCT ( a.temperature ),( SELECT count( person_id ) FROM ivms_temperatures WHERE DATE( date_in ) = '".$now."' AND temperature = a.temperature ) AS jumlah 
                     FROM
                          `ivms_temperatures` AS a 
@@ -555,25 +541,41 @@ class TemperatureController extends Controller
                     ORDER BY
                          a.temperature asc");
 
-               // $dataavgmax = DB::SELECT("SELECT DISTINCT
-               //      (
-               //           date( a.date_in )) AS date,(
-               //      SELECT
-               //           ROUND( AVG( temperature ), 1 ) 
-               //      FROM
-               //           ivms_temperatures 
-               //      WHERE
-               //      DATE( date_in ) = DATE( a.date_in )) AS average,
-               //      (
-               //      SELECT
-               //           ROUND( MAX( temperature ), 1 ) 
-               //      FROM
-               //           ivms_temperatures 
-               //      WHERE
-               //      DATE( date_in ) = DATE( a.date_in )) AS highest 
-               // FROM
-               //      ivms_temperatures AS a 
-               // ".$where."");
+               $employee_groups = DB::SELECT("SELECT employee_id from employee_groups where location = '".$request->get('location')."'");
+
+               $attendance = [];
+
+               foreach ($employee_groups as $key) {
+                    $attendance[] = DB::connection('sunfish')->select("SELECT
+                    IIF (
+                         Attend_Code LIKE '%Mangkir%',
+                         'Mangkir',
+                         IIF (
+                              Attend_Code LIKE '%CK%' 
+                              OR Attend_Code LIKE '%CUTI%' 
+                              OR Attend_Code LIKE '%UPL%',
+                              'Cuti',
+                              IIF (
+                                   Attend_Code LIKE '%Izin%',
+                                   'Izin',
+                                   IIF (
+                                        Attend_Code LIKE '%SAKIT%',
+                                        'Sakit',
+                                        IIF ( Attend_Code LIKE '%LTI%' OR Attend_Code LIKE '%TELAT%', 'Terlambat', IIF ( Attend_Code LIKE '%LTI%', 'Pulang Cepat',
+                                        IIF ( Attend_Code LIKE '%PRS%', 'Present', '-' ) ) ) 
+                                   ) 
+                              ) 
+                         ) 
+                    ) as attend_code,
+                    emp_no 
+                    FROM
+                         VIEW_YMPI_Emp_Attendance 
+                    WHERE
+                         Emp_no = '".$key->employee_id."'
+                         AND FORMAT ( shiftstarttime, 'yyyy-MM-dd' ) = '".$now."'");
+                    // var_dump($key->employee_id);
+                    // var_dump($now);
+               }
 
                $datacheck = DB::SELECT("SELECT
                     a.employee_id,
@@ -602,6 +604,7 @@ class TemperatureController extends Controller
                     'datatoday' => $datatoday,
                     'dateTitle' => $dateTitle,
                     'datacheck' => $datacheck,
+                    'attendance' => $attendance,
                );
 
                return Response::json($response);

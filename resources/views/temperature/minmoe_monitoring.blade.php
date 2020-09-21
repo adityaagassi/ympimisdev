@@ -95,6 +95,7 @@
 								<th style="color:white;width: 1%; font-size: 1.2vw;">#</th>
 								<th style="color:white;width: 5%; font-size: 1.2vw; text-align: center;">ID</th>
 								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Name</th>
+								<th style="color:white;width: 30%; font-size: 1.2vw; text-align: center;">Attendance</th>
 							</tr>					
 						</thead>
 						<tbody id="tableNoCheckBody">
@@ -192,13 +193,17 @@
 
 			$.each(result.datacheck, function(key, value) {
 				if (value.checks == null) {
-					resultData += '<tr>';
-					resultData += '<td>'+ index +'</td>';
-					resultData += '<td>'+ value.employee_id +'</td>';
-					resultData += '<td>'+ value.name +'</td>';
-					resultData += '</tr>';
-					index++;
-					uncheck++;
+					if (result.attendance[key][0] != undefined) {
+						resultData += '<tr>';
+						resultData += '<td>'+ index +'</td>';
+						resultData += '<td>'+ value.employee_id +'</td>';
+						resultData += '<td>'+ value.name +'</td>';
+						resultData += '<td>'+ result.attendance[key][0].attend_code +'</td>';
+						resultData += '</tr>';
+						index++;
+						uncheck++;
+
+					}
 				}else{
 					check++;
 				}
