@@ -90,7 +90,7 @@
 
 	@if($pr[0]->receive_date != null)
 		<img width="120" src="{{ public_path() . '/files/ttd_pr_po/received.jpg' }}" alt="" style="padding: 0;position: absolute;top: 55px;left: 540px">
-		<span style="position: absolute;width: 100px;font-size: 10px;font-weight: bold;font-family: arial-narrow;top:88px;left: 561px;color:#c34354"><?= date('d F Y', strtotime($pr[0]->receive_date)) ?></span>
+		<span style="position: absolute;width: 100px;font-size: 12px;font-weight: bold;font-family: arial-narrow;top:88px;left: 575px;color:#c34354"><?= date('d-M-y', strtotime($pr[0]->receive_date)) ?></span>
 	@endif
 	<main>
 		<table style="width: 100%; font-family: arial; border-collapse: collapse; " id="isi">

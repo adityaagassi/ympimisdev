@@ -380,10 +380,10 @@
 						<td colspan="3" style="width: 40%">
 							@if($po->buyer_id == "PI1908032")
 								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.png' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->tgl_po)) ?></span>
+								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->tgl_po)) ?></span>
 							@elseif($po->buyer_id == "PI1810020")
 								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.png' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 80px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->tgl_po)) ?></span>
+								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 80px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->tgl_po)) ?></span>
 							@else
 								<?= $po->buyer_name ?>
 							@endif
@@ -391,20 +391,20 @@
 						<td colspan="3" style="width: 30%">
 							@if($po->approval_authorized2 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 220px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->date_approval_authorized2)) ?></span>
+								<span style="position: absolute;left: 220px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->date_approval_authorized2)) ?></span>
 							@endif
 						</td>
 						<td colspan="3" style="width: 30%">
 							@if($po->approval_authorized3 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 380px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->date_approval_authorized3)) ?></span>
+								<span style="position: absolute;left: 380px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->date_approval_authorized3)) ?></span>
 							@endif
 						</td>
 
 						<td colspan="3" style="width: 30%">
 							@if($po->approval_authorized4 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d F Y', strtotime($po->date_approval_authorized4)) ?></span>
+								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->date_approval_authorized4)) ?></span>
 							@endif
 						</td>
 					</tr>
