@@ -89,6 +89,13 @@
     {{ session('error') }}
   </div>   
   @endif
+
+  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+      <p style="position: absolute; color: White; top: 45%; left: 35%;">
+        <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+      </p>
+  </div>
+
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
     <div class="box-body">
@@ -99,7 +106,7 @@
       || (($user == $po->authorized3 || Auth::user()->role_code == "MIS") && $po->approval_authorized3 == null && $po->posisi == "dgm_pch")
       || (($user == $po->authorized4) && $po->approval_authorized4 == null && $po->posisi == "gm_pch"))
 
-      <form role="form" method="post" action="{{url('purchase_order/approval/'.$po->id)}}" enctype="multipart/form-data">
+      <form role="form" id="myForm" method="post" action="{{url('purchase_order/approval/'.$po->id)}}" enctype="multipart/form-data">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />  
         <table class="table table-bordered">
           <tr id="show-att">
@@ -171,6 +178,7 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <script>
     $(document).ready(function() {
 
@@ -196,8 +204,18 @@
       if(showAtt.includes('.jp') || showAtt.includes('.JP')){
         $('#attach_pdf').append("<embed src='"+ path +"' width='100%' height='800px'>");
       }
+    }); 
+
+    CKEDITOR.replace('alasan' ,{
+        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        height: '250px'
     });
 
+    function loading(){
+      $("#loading").show();
+    }
+
+    document.getElementById("myForm").addEventListener("submit", loading);    
 
     $.ajaxSetup({
       headers: {

@@ -218,17 +218,20 @@
 		<p style="font-size: 18px;">PR Request Not Approved<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 		This is an automatic notification. Please do not reply to this address.
 		<br>
-		<h2>Purchase Requisition (PR) Nomor {{$no_pr}} Tidak Disetujui</h2>
-		<h3>PR Tidak Disetujui Dengan Catatan :<h3>
-		<h3>
-			{{ $alasan }}	
-		</h3>
-		<br>
+		<h2>Purchase Requisition (PR) {{$no_pr}} Not Approved</h2>
+		
+		<?php if ($alasan != null) { ?>
+			<h3>Reason :<h3>
+			<h3>
+				<?= $alasan ?>	
+			</h3>
+		<?php } ?>
+
 		<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 		
-		<a href="http://172.17.128.4/mirai/public/purchase_requisition/report/{{ $id }}">Cek PR</a>
+		<a href="http://172.17.128.4/mirai/public/purchase_requisition/report/{{ $id }}">PR Check</a>
 		<br>
-		<a href="http://172.17.128.4/mirai/public/purchase_requisition">List PR</a>
+		<a href="http://172.17.128.4/mirai/public/purchase_requisition">PR List</a>
 
 		<br><br>
 

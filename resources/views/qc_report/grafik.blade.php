@@ -211,8 +211,8 @@ table > thead > tr > th{
                 <th style="width: 15%; padding: 0;vertical-align: middle;;font-size: 16px;" rowspan="2">No CPAR</th>
                 <th style="width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" rowspan="2">Subject</th>
                 <th style="width: 15%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" rowspan="2">Departemen</th>
-                <th style="width: 25%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="5">CPAR</th>
-                <th style="width: 25%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="6">CAR</th>
+                <th style="width: 25%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="6">CPAR</th>
+                <th style="width: 25%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="5">CAR</th>
                 <th style="background-color:#448aff;width: 20%; padding: 0;vertical-align: middle;border-left:3px solid #f44336 !important;font-size: 16px;" colspan="3">QA Verification</th>
               </tr>
               <tr>
@@ -221,9 +221,9 @@ table > thead > tr > th{
                 <th style="width: 5%; padding: 0;vertical-align: middle;">Manager</th>
                 <th style="width: 5%; padding: 0;vertical-align: middle;">DGM</th>
                 <th style="width: 5%; padding: 0;vertical-align: middle;">GM</th>
-                <th style="width: 5%; padding: 0;border-left:3px solid #f44336 !important;vertical-align: middle;">Received By Manager</th>
+                <th style="width: 5%; padding: 0;vertical-align: middle;">Received By Manager</th>
 
-                <th style="width: 6%; padding: 0;vertical-align: middle;">Staff / Leader</th>
+                <th style="width: 6%; padding: 0;border-left:3px solid #f44336 !important;vertical-align: middle;">Staff / Leader</th>
                 <th style="width: 6%; padding: 0;vertical-align: middle;">Chief / Foreman</th>
                 <th style="width: 6%; padding: 0;vertical-align: middle;">Manager</th>
                 <th style="width: 6%; padding: 0;vertical-align: middle;">DGM</th>
@@ -1057,8 +1057,8 @@ table > thead > tr > th{
             table += '<td>'+statusm+'</td>';
             table += '<td>'+statusdgm+'</td>';
             table += '<td>'+statusgm+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+statusbagian+'</td>';
-            table += '<td>'+statusawalcar+'</td>';
+            table += '<td>'+statusbagian+'</td>';
+            table += '<td style="border-left:3px solid #f44336">'+statusawalcar+'</td>';
             table += '<td>'+statuscfcar+'</td>';
             table += '<td>'+statusmcar+'</td>';
             table += '<td>'+statusdgmcar+'</td>';

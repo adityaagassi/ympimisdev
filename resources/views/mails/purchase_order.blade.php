@@ -32,7 +32,7 @@
 				<?php $remark = $datas->remark ?>
 				<?php $budget = $datas->budget_item ?>
 				<?php $amount = $datas->amount ?>
-
+				<?php $alasan = $datas->reject ?>
 			@endforeach
 
 			@if($posisi == "manager_pch")
@@ -258,7 +258,13 @@
 			This is an automatic notification. Please do not reply to this address.
 			<br>
 			<h2>Purchase Order (PO) {{$no_po}} Not Approved</h2>
-			<br>
+			
+			<?php if ($alasan != null) { ?>
+				<h3>Reason :<h3>
+				<h3>
+					<?= $alasan ?>	
+				</h3>
+			<?php } ?>
 			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
 
 			<a href="http://172.17.128.4/mirai/public/purchase_order/report/{{ $id }}">Check PO</a>

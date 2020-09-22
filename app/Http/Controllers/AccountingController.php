@@ -1930,7 +1930,7 @@ class AccountingController extends Controller
         {
             $pr->alasan = $alasan;
             $pr->datereject = date('Y-m-d H:i:s');
-            $pr->posisi = "staff";
+            $pr->posisi = "user";
             $pr->approvalm = null;
             $pr->dateapprovalm = null;
             $pr->approvaldgm = null;
@@ -2427,7 +2427,7 @@ class AccountingController extends Controller
                 return '
                 <a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" class="btn btn-primary btn-sm" onClick="editPO(' . $id . ')"><i class="fa fa-edit"></i> Edit</a>
                 <a href="purchase_order/report/' . $id . '" target="_blank" class="btn btn-danger btn-xs"  data-toggle="tooltip" title="PO Report PDF"><i class="fa fa-file-pdf-o"> Report</i></a>
-                <a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="deleteConfirmationPR('.$id.')" data-toggle="modal" data-target="#modalDeletePR"  title="Delete PR"><i class="fa fa-trash"></i> Delete PR</a>
+                <a href="javascript:void(0)" class="btn btn-xs btn-danger" onClick="cancelPO('.$id.')" data-toggle="modal" data-target="#modalcancelPO"  title="Cancel PO"><i class="fa fa-close"></i> Cancel PO</a>
                 ';
             }
 
@@ -3290,6 +3290,106 @@ class AccountingController extends Controller
          }
      }
 
+    public function cancel_purchase_order(Request $request)
+    {
+        try
+        {
+            $po = AccPurchaseOrder::find($request->get('id'));
+            $date = date('Y-m-d');
+
+            $budget_log = AccBudgetHistory::where('po_number', '=', $po->no_po)
+            ->get();
+
+            if ($budget_log != null) {
+                //FY
+                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+                
+                foreach ($fy as $fys) {
+                    $fiscal = $fys->fiscal_year;
+                }
+
+                foreach ($budget_log as $log) {
+                    $sisa_bulan = $log->budget_month_po.'_sisa_budget';
+                    $budget = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->first();
+
+                    $total = $budget->$sisa_bulan + $log->amount_po; //add total PO
+                    $dataupdate = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->update([
+                        $sisa_bulan => $total
+                    ]);
+
+                    //get Data Budget Based On Periode Dan Nomor
+                    $budgetdata = AccBudget::where('budget_no', $log->budget)->where('periode', $fiscal)->first();
+
+                    $totalNew = $budgetdata->$sisa_bulan - $log->amount; //minus amount PR
+
+                    $dataupdate = AccBudget::where('budget_no', $log->budget)->where('periode','=', $fiscal)
+                    ->update([
+                        $sisa_bulan => $totalNew
+                    ]);
+                }
+
+                $data5 = AccBudgetHistory::where('po_number', $po->no_po)
+                ->update([
+                    'budget_month_po' => null,
+                    'po_number' => null,
+                    'amount_po' => null,
+                    'status' => 'PR',
+                    'created_by' => Auth::id()
+                ]);
+            }
+
+            // $delete_history = AccBudgetHistory::where('po_number', '=', $po->no_po)->delete();
+
+
+
+            if($po->remark == "PR"){
+                
+                $data3 = AccPurchaseOrderDetail::where('no_po', $po->no_po)
+                ->select('*')
+                ->get();
+                
+                foreach ($data3 as $datapr) {
+                    $updatepr = AccPurchaseRequisitionItem::where('item_code', $datapr->no_item)
+                    ->where('no_pr', $datapr->no_pr)
+                    ->update(['sudah_po' => null ]);
+                }
+            }
+            else if($po->remark == "Investment"){
+
+                $data3 = AccPurchaseOrderDetail::where('no_po', $po->no_po)
+                ->select('*')
+                ->get();
+                
+                foreach ($data3 as $datainv) {
+                    $data3 = AccInvestmentDetail::where('no_item', $datainv->no_item)
+                    ->where('reff_number', $datainv->reff_number)
+                    ->update(['sudah_po' => null]);
+                }
+            }
+
+            $delete_po_item = AccPurchaseOrderDetail::where('no_po', '=', $po->no_po)->delete();
+            $delete_po = AccPurchaseOrder::where('no_po', '=', $po->no_po)->delete();
+
+            $response = array(
+                'status' => true,
+            );
+
+            return Response::json($response);
+
+        }
+        catch(QueryException $e)
+        {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage()
+            );
+
+            return Response::json($response);
+        }
+
+    }
+
+
     //==================================//
     //          Verifikasi PO           //
     //==================================//
@@ -3677,41 +3777,103 @@ public function poapprovalgm($id){
     }
 }
 
-public function poreject(Request $request, $id)
-{
-    $po = AccPurchaseOrder::find($id);
-
-    if ($po->posisi == "manager_pch" || $po->posisi == "dgm_pch" || $po->posisi == "gm_pch")
+    public function poreject(Request $request, $id)
     {
-        $po->datereject = date('Y-m-d H:i:s');
-        $po->posisi = "staff_pch";
-        $po->approval_authorized2 = null;
-        $po->date_approval_authorized2 = null;
-        $po->approval_authorized3 = null;
-        $po->date_approval_authorized3 = null;
-        $po->approval_authorized4 = null;
-        $po->date_approval_authorized4 = null;
-    }
-    $po->save();
+        $po = AccPurchaseOrder::find($id);
 
-    $isimail = "select * FROM acc_purchase_orders where acc_purchase_orders.id = ".$po->id;
-    $tolak = db::select($isimail);
+        if ($po->posisi == "manager_pch" || $po->posisi == "dgm_pch" || $po->posisi == "gm_pch")
+        {
+            $po->datereject = date('Y-m-d H:i:s');
+            $po->posisi = "staff_pch";
+            $po->approval_authorized2 = null;
+            $po->date_approval_authorized2 = null;
+            $po->approval_authorized3 = null;
+            $po->date_approval_authorized3 = null;
+            $po->approval_authorized4 = null;
+            $po->date_approval_authorized4 = null;
+        }
+        $po->save();
+
+        $isimail = "
+            select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+            (SELECT
+            acc_purchase_orders.*,
+            acc_purchase_order_details.budget_item,
+            acc_purchase_order_details.goods_price,
+            acc_purchase_order_details.service_price,
+            acc_purchase_order_details.qty
+            FROM
+            acc_purchase_orders
+            JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+            WHERE
+            acc_purchase_orders.id = ".$po->id.")
+            t1";
+
+        $tolak = db::select($isimail);
 
         //kirim email ke Buyer
-    $mails = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id ='" . $po->id . "'";
-    $mailtoo = DB::select($mails);
+        $mails = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id ='" . $po->id . "'";
+        $mailtoo = DB::select($mails);
 
-    Mail::to($mailtoo)->send(new SendEmail($tolak, 'purchase_order'));
 
-    $message = 'PO dengan Nomor. '.$po->no_po;
-    $message2 ='Tidak Disetujui';
+        Mail::to($mailtoo)->send(new SendEmail($tolak, 'purchase_order'));
 
-    return view('accounting_purchasing.verifikasi.pr_message', array(
-        'head' => $po->no_po,
-        'message' => $message,
-        'message2' => $message2,
-    ))->with('page', 'Approval');
-}
+        $message = 'PO dengan Nomor. '.$po->no_po;
+        $message2 ='Tidak Disetujui';
+
+        return view('accounting_purchasing.verifikasi.pr_message', array(
+            'head' => $po->no_po,
+            'message' => $message,
+            'message2' => $message2,
+        ))->with('page', 'Approval');
+    }
+
+    public function reject_purchase_order(Request $request, $id)
+    {
+        $alasan = $request->get('alasan');
+
+        $po = AccPurchaseOrder::find($id);
+
+        if ($po->posisi == "manager_pch" || $po->posisi == "dgm_pch" || $po->posisi == "gm_pch")
+        {
+            $po->reject = $alasan;
+            $po->datereject = date('Y-m-d H:i:s');
+            $po->posisi = "staff_pch";
+            $po->approval_authorized2 = null;
+            $po->date_approval_authorized2 = null;
+            $po->approval_authorized3 = null;
+            $po->date_approval_authorized3 = null;
+            $po->approval_authorized4 = null;
+            $po->date_approval_authorized4 = null;
+        }
+
+        $po->save();
+
+        $isimail = "
+            select t1.*,  IF(t1.goods_price != 0,sum(t1.goods_price*t1.qty),sum(t1.service_price*t1.qty)) as amount from 
+            (SELECT
+            acc_purchase_orders.*,
+            acc_purchase_order_details.budget_item,
+            acc_purchase_order_details.goods_price,
+            acc_purchase_order_details.service_price,
+            acc_purchase_order_details.qty
+            FROM
+            acc_purchase_orders
+            JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po 
+            WHERE
+            acc_purchase_orders.id = ".$po->id.")
+            t1";
+
+        $tolak = db::select($isimail);
+
+            //kirim email ke Buyer
+        $mails = "select distinct email from acc_purchase_orders join users on acc_purchase_orders.buyer_id = users.username where acc_purchase_orders.id ='" . $po->id . "'";
+        $mailtoo = DB::select($mails);
+
+        Mail::to($mailtoo)->send(new SendEmail($tolak, 'purchase_order'));
+        return redirect('/purchase_order/verifikasi/' . $id)->with('status', 'PO Not Approved')
+        ->with('page', 'Purchase Requisition');
+    }
 
     //==================================//
     //          Report PO               //

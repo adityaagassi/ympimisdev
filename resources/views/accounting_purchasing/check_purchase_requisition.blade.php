@@ -61,12 +61,12 @@
     <small>Form PR</small>
   </h1>
   <ol class="breadcrumb">
-    @if($pr->posisi == "staff")
+    <!-- @if($pr->posisi == "staff")
     <button class="btn btn-sm btn-warning pull-right" data-toggle="tooltip" title="Edit" onclick="editPR({{$pr->id}})">Update Purchase Requisition</button>
 
     @elseif($pr->posisi == "pch")
     <button class="btn btn-sm btn-warning pull-right" data-toggle="tooltip" title="Edit" onclick="editPR({{$pr->id}})">Update Purchase Requisition</button>
-    @endif
+    @endif -->
  </ol>
 </section>
 @endsection

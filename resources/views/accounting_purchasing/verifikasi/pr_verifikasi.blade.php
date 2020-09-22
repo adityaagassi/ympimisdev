@@ -89,6 +89,12 @@
     {{ session('error') }}
   </div>   
   @endif
+
+  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+      <p style="position: absolute; color: White; top: 45%; left: 35%;">
+        <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+      </p>
+  </div>
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
     <div class="box-body">
@@ -99,7 +105,7 @@
       || (($user == $pr->dgm || Auth::user()->role_code == "MIS") && $pr->approvaldgm == null && $pr->posisi == "dgm")
       || (($user == $pr->gm) && $pr->approvalgm == null && $pr->posisi == "gm"))
 
-      <form role="form" method="post" action="{{url('purchase_requisition/approval/'.$pr->id)}}" enctype="multipart/form-data">
+      <form role="form" id="myForm" method="post" action="{{url('purchase_requisition/approval/'.$pr->id)}}" enctype="multipart/form-data">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />  
         <table class="table table-bordered">
           <tr id="show-att">
@@ -171,6 +177,7 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <script>
     $(document).ready(function() {
 
@@ -198,7 +205,19 @@
       }
     });
 
+    CKEDITOR.replace('alasan' ,{
+        filebrowserImageBrowseUrl : '{{ url("kcfinder_master") }}',
+        height: '250px'
+    });
 
+
+    function loading(){
+      $("#loading").show();
+    }
+
+
+    document.getElementById("myForm").addEventListener("submit", loading);
+    
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

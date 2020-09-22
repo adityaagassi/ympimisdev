@@ -527,7 +527,11 @@
 						<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
 					</tr>
 					<tr>
-						<td colspan="8" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">Out Of Budget <span class="droid">予算不足</span> ($)</span></td>
+						<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">Out Of Budget <span class="droid">予算不足</span> ($)</span></td>
+						<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
+						<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>
+						<td colspan="1" style="border: 1px solid black;"><span style="color: blue;font-weight: bold">$ {{ $bud->total }}</span></td>
+						<td colspan="2" style="border: 1px solid black;"><span style="color: blue;font-weight: bold"></span></td>						
 					</tr>
 					
 					@endif

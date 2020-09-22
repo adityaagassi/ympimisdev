@@ -1694,8 +1694,11 @@
   			}
   			
   			isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
-  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value='"+value.item_spec+"'></div>";
-
+  			if (value.item_spec != null) {
+	  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value='"+value.item_spec+"'></div>";
+	  		}else{
+	  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value=''></div>";
+	  		}
   			if (value.item_stock != null) {
   				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
   			}else{
@@ -1753,8 +1756,8 @@
 
   			$("#budgetLabelEdit").text("$"+value.beg_bal).attr('readonly', true);
   			
-  			$("#TotalPembelianEdit").val(total_amount).attr('readonly', true);
-  			$("#TotalPembelianEditLabel").text("$"+total_amount).attr('readonly', true);
+  			$("#TotalPembelianEdit").val(total_amount.toFixed(2)).attr('readonly', true);
+  			$("#TotalPembelianEditLabel").text("$"+total_amount.toFixed(2)).attr('readonly', true);
 
   			$('#SisaBudgetLabelEdit').text("$"+total_sisa.toFixed(2));
   			$('#SisaBudgetEdit').val(total_sisa.toFixed(2));
