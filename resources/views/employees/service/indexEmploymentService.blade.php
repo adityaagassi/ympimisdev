@@ -681,34 +681,17 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<div class="row">
 						<div class="col-md-12">
 							<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
-									<div class="item active">
-										<img class="img-responsive" src="{{url('images/announchement3.jpg')}}" alt="...">
-										<!-- <div class="carousel-caption">
-											Another Image
-										</div> -->
+									<div class="item">
+										<center>
+											<img class="img-responsive" src="{{url('images/hrq_announcement/0001.jpg')}}" alt="..."><br>
+											<img class="img-responsive" src="{{url('images/hrq_announcement/0002.jpg')}}" alt="...">
+										</center>
 									</div>
 									<div class="item">
-										<center><img class="img-responsive" src="{{url('images/corona.jpg')}}" alt="..." width="600px"></center>
-										<!-- <div class="carousel-caption">
-											Alur Penanganan Corona Virus
-										</div> -->
+										<center><img class="img-responsive" src="{{url('images/announchement2.png')}}" alt="..."></center>
 									</div>
-									<div class="item">
-										<img class="img-responsive" src="{{url('images/announchement2.png')}}" alt="...">
-										<!-- <div class="carousel-caption">
-											Another Image
-										</div> -->
-									</div>
-									<!-- <div class="item">
-										<img class="img-responsive" src="http://placehold.it/1200x600/fcf00c/000&text=Three" alt="...">
-										<div class="carousel-caption">
-											Another Image
-										</div>
-									</div> -->
 								</div>
-								<!-- Controls -->
 								<a class="left carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="prev">
 									<span class="glyphicon glyphicon-chevron-left"></span>
 								</a>
@@ -723,9 +706,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 				</div>
 			</div>
-			<!-- /.modal-content -->
 		</div>
-		<!-- /.modal-dialog -->
 	</div>
 
 </section>

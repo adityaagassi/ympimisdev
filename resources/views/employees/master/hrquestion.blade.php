@@ -46,49 +46,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
 	<div class="row">
-		<div class="col-xs-12">
-			<div class="box box-solid">
-				<div class="box-body">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="col-md-4">
-								<p class="text-center">
-									<strong>&Sigma; Unanswered / &Sigma; Question</strong>
-								</p>
-
-								<?php $tot_q = 0; $tot_uns = 0; foreach ($all_question as $q): ?>
-
-								<div class="progress-group">
-									<span class="progress-text"><?php echo $q->category; ?></span>
-									<span class="progress-number"><b><?php echo $q->unanswer; ?></b>/<?php echo $q->total_question; ?></span>
-
-									<div class="progress sm">
-										<?php $persentase = $q->unanswer / $q->total_question * 100; ?>
-										<div class="progress-bar progress-bar-blue" <?php echo 'style="width: '.$persentase.'%"' ?>></div>
-									</div>
-								</div>
-								
-								<?php
-								$tot_q += $q->total_question;
-								$tot_uns += $q->unanswer;
-							endforeach ?>
-
-							<!-- /.progress-group -->
-							<div class="progress-group">
-								<span class="progress-text">Total</span>
-								<span class="progress-number"><b><?php echo $tot_uns; ?></b>/<?php echo $tot_q; ?></span>
-
-								<div class="progress sm">
-									<?php $persentase = $tot_uns / $tot_q * 100; ?>
-									<div class="progress-bar progress-bar-red" <?php echo 'style="width: '.$persentase.'%"' ?>></div>
-								</div>
-							</div>
-							<!-- /.progress-group -->
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 		<div class="box box-solid">
 			<div class="box-body">
 				<div class="row">
