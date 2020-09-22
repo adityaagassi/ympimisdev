@@ -98,14 +98,22 @@ Route::get('404', function() {
 });
 
 //ONLINE ATTENDANCE AND TRANSPORTAION
-
 Route::get('index/general/online_transportation', 'GeneralController@indexOnlineTransportation');
 Route::get('fetch/general/online_transportation', 'GeneralController@fetchOnlineTransportation');
 Route::post('input/general/online_transportation', 'GeneralController@inputOnlineTransportation');
 Route::post('delete/general/online_transportation', 'GeneralController@deleteOnlineTransportation');
 Route::get('index/general/online_transportation_report', 'GeneralController@indexOnlineTransportationReport');
+Route::get('fetch/general/online_transportation_report', 'GeneralController@fetchOnlineTransportationReport');
+Route::get('fetch/general/online_transportation_resume_report', 'GeneralController@fetchOnlineTransportationResumeReport');
 Route::post('confirm/general/online_transportation_report', 'GeneralController@confirmOnlineTransportationReport');
 
+//SURAT DOKTER
+Route::get('index/general/surat_dokter', 'GeneralController@indexSuratDokter');
+Route::get('fetch/general/surat_dokter', 'GeneralController@fetchSuratDokter');
+Route::post('input/general/surat_dokter', 'GeneralController@inputSuratDokter');
+Route::post('delete/general/surat_dokter', 'GeneralController@deleteSuratDokter');
+Route::get('index/general/surat_dokter_report', 'GeneralController@indexSuratDokterReport');
+Route::get('fetch/general/surat_dokter_report', 'GeneralController@fetchSuratDokterReport');
 
 //POINTING CALL
 Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPointingCall');
@@ -1240,6 +1248,7 @@ Route::get('purchase_order/approvedgm/{id}', 'AccountingController@poapprovaldgm
 Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
 Route::get('purchase_order/approvegm/{id}', 'AccountingController@poapprovalgm');
 Route::get('purchase_order/reject/{id}', 'AccountingController@poreject');
+Route::post('purchase_order/notapprove/{id}', 'AccountingController@reject_purchase_order');
 
 Route::get('purchase_order/get_detailsupplier', 'AccountingController@pogetsupplier')->name('admin.pogetsupplier');
 
@@ -1260,6 +1269,7 @@ Route::group(['nav' => 'S43', 'middleware' => 'permission'], function(){
 	Route::get('fetch/purchase_order/prlist', 'AccountingController@fetchPrList');
 	Route::get('fetch/purchase_order/pilih_pr', 'AccountingController@pilihPR');
 
+	Route::post('cancel/purchase_order', 'AccountingController@cancel_purchase_order');
 	Route::get('purchase_order/get_item', 'AccountingController@pogetitem');
 	Route::get('export/purchase_order/list', 'AccountingController@exportPO');
 	Route::post('update/purchase_requisition/po', 'AccountingController@update_purchase_requisition_po');
@@ -1361,7 +1371,7 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 });
 
 //START KD
-Route::group(['nav' => 'S48', 'middleware' => 'permission'], function(){
+Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_mouthpiece/checksheet', 'MouthpieceController@indexKdMouthpieceChecksheet');
 	Route::get('fetch/kd_mouthpiece/material', 'MouthpieceController@fetchKdMouthpieceMaterial');
 	Route::get('index/kd_mouthpiece/picking', 'MouthpieceController@indexKdMouthpiecePicking');
@@ -1379,38 +1389,18 @@ Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 
 });
 
-//SUBASSY SX
+//SUBASSY
 Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
-	Route::get('index/kd_subassy_sx/{id}', 'KnockDownController@indexKD');
+	Route::get('index/kd_subassy/{id}', 'KnockDownController@indexKD');
+
 	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');	
 	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');	
-
-	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
-	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
-
-});
-
-//SUBASSY FL
-Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
-	Route::get('index/kd_subassy_fl/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
-	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');
-
-	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
-	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
-
-});
-
-//SUBASSY CL
-Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
-	Route::get('index/kd_subassy_cl/{id}', 'KnockDownController@indexKD');
-	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
-	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');
 
 	Route::get('index/print_label_subassy/{location}/{id}', 'KnockDownController@indexPrintLabelSubassy');
 	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
 
 });
+
 
 Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_delivery', 'KnockDownController@indexKdDelivery');
@@ -3244,6 +3234,8 @@ Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 	Route::post('delete/maintenance/apar/history', 'MaintenanceController@delete_history');
 
 	Route::get('print/apar/qr/{apar_id}/{apar_name}/{exp_date}/{last_check}/{last_check2}/{hasil_check}/{remark}', 'MaintenanceController@print_apar2');
+
+	Route::get('fetch/maintenance/pm/history', 'MaintenanceController@getHistoryPlanned');
 });
 
 // ------------------ INVENTORY / SPARE PART ------------------
@@ -3264,12 +3256,14 @@ Route::post('post/maintenance/inven/transaction', 'MaintenanceController@postInv
 // -------------------------- PLANNED MAINTENANCE -----------------------
 
 Route::get('index/maintenance/planned/form', 'MaintenanceController@indexPlannedForm');
-Route::get('index/maintenance/planned_monitor/{tgl}', 'MaintenanceController@indexPlanned');
+// Route::get('index/maintenance/planned_monitor/{tgl}', 'MaintenanceController@indexPlanned');
 Route::get('index/maintenance/planned/master', 'MaintenanceController@indexPlanMaster');
 Route::post('import/maintenance/planned', 'MaintenanceController@importPM');
 Route::get('fetch/maintenance/plan/checkList', 'MaintenanceController@fetchItemCheckList');
 
-Route::post('post/maintenance/pm/daily', 'MaintenanceController@postPlannedDaily');
+Route::post('post/maintenance/pm/check', 'MaintenanceController@postPlannedCheck');
+
+Route::get('index/maintenance/pm/monitoring', 'MaintenanceController@indexPlanned');
 // Route::get('fetch/maintenance/planned', 'MaintenanceController@fetchPlanned');
 
 //Assemblies
