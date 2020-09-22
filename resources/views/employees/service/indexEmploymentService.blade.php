@@ -669,7 +669,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 	<!-- MODAL ANNOUNCEMENT -->
 	<div class="modal fade" id="modalBerita">
-		<div class="modal-dialog modal-lg modal-default">
+		<div class="modal-dialog modal-lg modal-default" style="width: 80%;">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -684,8 +684,8 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
 									<div class="item active">
-										<img class="img-responsive" src="{{url('images/hrq_announcement/0001.jpg')}}" alt="..."><br>
-										<img class="img-responsive" src="{{url('images/hrq_announcement/0002.jpg')}}" alt="...">
+										<img class="img-responsive" src="{{url('images/hrq_announcement/0001.jpg')}}" alt="..." style="width: 49%;">
+										<img class="img-responsive" src="{{url('images/hrq_announcement/0002.jpg')}}" alt="..." style="width: 49%;">
 										<!-- <div class="carousel-caption">
 											Another Image
 										</div> -->
