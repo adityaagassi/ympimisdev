@@ -38,7 +38,6 @@ class WorkshopNotificationController extends Controller{
 				'remark' => 1,
 				'created_by' => $manager->employee_id
 			]);
-			$wjo->save();
 
 			try {
 				DB::transaction(function() use ($wjo, $wjo_log){
@@ -93,8 +92,7 @@ class WorkshopNotificationController extends Controller{
 				'order_no' => $id,
 				'remark' => 1,
 				'created_by' => $manager->employee_id		
-			]);
-			$wjo->save();			
+			]);		
 
 			try {
 				DB::transaction(function() use ($wjo, $wjo_log){
