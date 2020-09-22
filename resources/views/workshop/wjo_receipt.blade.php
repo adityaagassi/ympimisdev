@@ -98,7 +98,7 @@
 
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box">
+			<div class="box box-primary box-solid">
 				<div class="box-body">
 					<center><h1><i class="fa fa-angle-double-down"></i>&nbsp;Daftar WJO yang Selesai&nbsp;<i class="fa fa-angle-double-down"></i></h1></center>
 
@@ -139,9 +139,58 @@
 				</div>
 			</div>
 		</div>
-
+	</div>
+	<hr style="margin-top: 0px; border: 3px solid black">
+	<div class="row">
 		<div class="col-xs-12">
-			<div class="box">
+			<div class="box box-primary box-solid">
+				<div class="box-body">
+					<form>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label>Tanggal Pengajuan</label>
+								<div class="input-group" style="width: 100%;">
+									<input type="text" placeholder="Pilih tanggal" class="form-control" name="s_tgl2" id="s_tgl2">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Pemohon</label>
+								<div class="input-group" style="width: 100%;">
+									<input type="text" placeholder="Tulisakan Nama Pemohon" class="form-control" name="s_pemohon2" id="s_pemohon2">
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Bagian</label>
+								<div class="input-group" style="width: 100%;">
+									<select class="form-control select2" data-placeholder="Pilih Bagan" name="s_bagian2" id="s_bagian2" style="width: 100% height: 35px; font-size: 15px;" required>
+										<option value=""></option>
+										@foreach($bagian as $bg)
+										<option value="{{$bg->section}}">{{$bg->section}}</option>
+										@endforeach
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<label>&nbsp;</label>
+							<div class="input-group" style="width: 100%;">
+								<a href="javascript:void(0)" onClick="fillSecondTable()" class="btn btn-primary"><span class="fa fa-search"></span> Search</a>
+								<button onclick="clearSearch2()" class="btn btn-danger" type="button"> Clear</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box box-primary box-solid">
 				<div class="box-body">
 					<center><h1><i class="fa fa-angle-double-down"></i>&nbsp;Daftar WJO yang Sudah Diambil&nbsp;<i class="fa fa-angle-double-down"></i></h1></center>
 					<table id="pickedTable" class="table table-bordered table-striped table-hover">
@@ -227,6 +276,137 @@
 							<input type="text" name="scan_tag" id="scan_tag" class="form-control form-lg" placeholder="Scan Tag Penerima" style="text-align: center; font-size: 20px">
 						</div>
 					</div>					
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="detailModal" style="color: black;">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="col-xs-12" style="background-color: #3c8dbc;">
+						<h1 style="text-align: center; margin:5px; font-weight: bold;">Penugasan WJO</h1>
+					</div>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-xs-12">
+								<div id="detail_body" style="padding: 2%;">									
+									<div class="row">
+										<div class="col-xs-6">
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Prioritas</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" id="detail_priority" readonly>
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Order No.</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="detail_order_no" id="detail_order_no" readonly>
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Dept.</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" id="detail_department" readonly>
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Bagian</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" id="detail_bagian" readonly>
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-6">
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Tipe Pekerjaan</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="detail_type" id="detail_type" readonly>
+												</div>
+											</div>
+
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Nama Barang</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="detail_item_name" id="detail_item_name" readonly>
+												</div>
+											</div>
+
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Jumlah</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="detail_quantity" id="detail_quantity" readonly>
+												</div>
+											</div>
+
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Material</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="detail_material" id="detail_material" readonly>
+												</div>
+											</div>
+
+
+										</div>
+										<div class="col-xs-12">
+											<div class="form-group row" align="right">
+												<label class="col-xs-2" style="margin-top: 1%;">Uraian Permintaan</label>
+												<div class="col-xs-10" align="left">
+													<textarea class="form-control" name="detail_problem_desc" id="detail_problem_desc" rows="3" readonly></textarea>
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-6" style="margin-top: 2%;">
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Target Selesai</label>
+												<div class="col-xs-8">
+													<div class="input-group date">
+														<div class="input-group-addon bg-default">
+															<i class="fa fa-calendar"></i>
+														</div>
+														<input type="text" class="form-control" name="detail_target_date" id="detail_target_date" readonly>
+													</div>
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Kategori Part</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="detail_category" id="detail_category" readonly>
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-6" id="drawing2" style="margin-top: 2%;">
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">Nama Drawing</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="detail_drawing_name" id="detail_drawing_name" readonly>
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">No. Drawing</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="detail_drawing_number" id="detail_drawing_number" readonly>
+												</div>
+											</div>
+											<div class="form-group row" align="right">
+												<label class="col-xs-4" style="margin-top: 1%;">No. Part</label>
+												<div class="col-xs-8" align="left">
+													<input type="text" class="form-control" name="detail_part_number" id="detail_part_number" readonly>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 				</div>
 			</div>
 		</div>
@@ -350,94 +530,193 @@
 
 
 		function fillSecondTable() {
-			$('#pickedTable').DataTable().destroy();
-			$('#pickedTable tfoot th').each( function () {
-				var title = $(this).text();
-				$(this).html( '<input style="text-align: center;" class="input" type="text" placeholder="Search '+title+'" />' );
-			});
-			var table = $('#pickedTable').DataTable({
-				'dom': 'Bfrtip',
-				'responsive': true,
-				'lengthMenu': [
-				[ 10, 25, 50, -1 ],
-				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-				],
-				'buttons': {
-					buttons:[
-					{
-						extend: 'pageLength',
-						className: 'btn btn-default',
-					},
-					{
-						extend: 'copy',
-						className: 'btn btn-success',
-						text: '<i class="fa fa-copy"></i> Copy',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'excel',
-						className: 'btn btn-info',
-						text: '<i class="fa fa-file-excel-o"></i> Excel',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'print',
-						className: 'btn btn-warning',
-						text: '<i class="fa fa-print"></i> Print',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					]
-				},
-				'paging'        : true,
-				'lengthChange'  : true,
-				'searching'     : true,
-				'ordering'      : true,
-				'info'        : true,
-				'order'       : [],
-				'autoWidth'   : true,
-				"sPaginationType": "full_numbers",
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"processing": true,
-				"serverSide": true,
-				"ajax": {
-					"type" : "get",
-					"url" : "{{ url("fetch/workshop/receipt/after") }}",
-				},
-				"columns": [
-				{ "data": "tgl_pengajuan"},
-				{ "data": "name"},
-				{ "data": "bagian"},
-				{ "data": "order_no"},
-				{ "data": "priority"},
-				{ "data": "type"},
-				{ "data": "item_name"},
-				{ "data": "quantity"},
-				{ "data": "receiver"},
-				{ "data": "att"},
-				{ "data": "action"}
-				]
-			});
+			s_tgl2
+			s_pemohon2
+			s_bagian2
 
-			table.columns().every( function () {
-				var that = this;
+			var s_tgl = $('#s_tgl2').val();
+			var s_pemohon = $('#s_pemohon2').val();
+			var s_bagian = $('#s_bagian2').val();
+			
+			var data = {
+				tgl:s_tgl,
+				pemohon:s_pemohon,
+				bagian:s_bagian
+			}
 
-				$( '.input', this.footer() ).on( 'keyup change', function () {
-					if ( that.search() !== this.value ) {
-						that
-						.search( this.value )
-						.draw();
-					}
-				} );
-			});
+			$.get('{{ url("fetch/workshop/receipt/after") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#pickedTable').DataTable().clear();
+					$('#pickedTable').DataTable().destroy();
+					$('#body_diambil').html("");
 
-			$('#pickedTable tfoot tr').appendTo('#pickedTable thead');
+					var body = "";
+
+					$.each(result.data, function(index, value){
+						body += "<tr>";
+						body += "<td>"+value.tgl_pengajuan+"</td>";
+						body += "<td>"+value.name+"</td>";
+						body += "<td>"+value.bagian+"</td>";
+						body += "<td>"+value.order_no+"</td>";
+						body += "<td>"+value.priority+"</td>";
+						body += "<td>"+value.type+"</td>";
+						body += "<td>"+value.item_name+"</td>";
+						body += "<td>"+value.quantity+"</td>";
+						body += "<td>"+value.receiver+"</td>";
+
+						if(value.attachment != null){
+							body += '<td><a href="javascript:void(0)" onClick="downloadAtt(\''+value.attachment+'\')" class="fa fa-paperclip"></a></td>';
+						}else{
+							body += '<td>-</td>';							
+						}
+
+						body += "<td><a href='javascript:void(0)' class='btn btn-xs btn-info' onClick='detailReport(\""+value.order_no+"\")'>Details</a></td>";
+
+						body += "</tr>";
+					})
+
+					$("#body_diambil").append(body);
+
+					$('#pickedTable tfoot th').each(function(){
+						var title = $(this).text();
+						$(this).html( '<input style="text-align: center;" class="input2" type="text" placeholder="Search '+title+'" size="8"/>' );
+					});
+
+
+					var table2 = $('#pickedTable').DataTable({
+						'dom': 'Bfrtip',
+						'responsive':true,
+						'lengthMenu': [
+						[ 10, 25, 50, -1 ],
+						[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+						],
+						'buttons': {
+							buttons:[
+							{
+								extend: 'pageLength',
+								className: 'btn btn-default',
+							},
+							]
+						},
+						'paging': true,
+						'lengthChange': true,
+						'searching': true,
+						'ordering': true,
+						'info': true,
+						'autoWidth': true,
+						"sPaginationType": "full_numbers",
+						"bJQueryUI": true,
+						"bAutoWidth": false,
+						"processing": true,
+					});
+
+
+					table2.columns().every( function () {
+						var that = this;
+
+						$( '.input2', this.footer() ).on( 'keyup change', function () {
+							if ( that.search() !== this.value ) {
+								that
+								.search( this.value )
+								.draw();
+							}
+						} );
+					} );
+
+					$('#pickedTable tfoot tr').appendTo('#pickedTable thead');
+				}
+			})
+
+
+
+			// $('#pickedTable').DataTable().destroy();
+			// $('#pickedTable tfoot th').each( function () {
+			// 	var title = $(this).text();
+			// 	$(this).html( '<input style="text-align: center;" class="input" type="text" placeholder="Search '+title+'" />' );
+			// });
+			// var table = $('#pickedTable').DataTable({
+			// 	'dom': 'Bfrtip',
+			// 	'responsive': true,
+			// 	'lengthMenu': [
+			// 	[ 10, 25, 50, -1 ],
+			// 	[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+			// 	],
+			// 	'buttons': {
+			// 		buttons:[
+			// 		{
+			// 			extend: 'pageLength',
+			// 			className: 'btn btn-default',
+			// 		},
+			// 		{
+			// 			extend: 'copy',
+			// 			className: 'btn btn-success',
+			// 			text: '<i class="fa fa-copy"></i> Copy',
+			// 			exportOptions: {
+			// 				columns: ':not(.notexport)'
+			// 			}
+			// 		},
+			// 		{
+			// 			extend: 'excel',
+			// 			className: 'btn btn-info',
+			// 			text: '<i class="fa fa-file-excel-o"></i> Excel',
+			// 			exportOptions: {
+			// 				columns: ':not(.notexport)'
+			// 			}
+			// 		},
+			// 		{
+			// 			extend: 'print',
+			// 			className: 'btn btn-warning',
+			// 			text: '<i class="fa fa-print"></i> Print',
+			// 			exportOptions: {
+			// 				columns: ':not(.notexport)'
+			// 			}
+			// 		},
+			// 		]
+			// 	},
+			// 	'paging'        : true,
+			// 	'lengthChange'  : true,
+			// 	'searching'     : true,
+			// 	'ordering'      : true,
+			// 	'info'        : true,
+			// 	'order'       : [],
+			// 	'autoWidth'   : true,
+			// 	"sPaginationType": "full_numbers",
+			// 	"bJQueryUI": true,
+			// 	"bAutoWidth": false,
+			// 	"processing": true,
+			// 	"serverSide": true,
+			// 	"ajax": {
+			// 		"type" : "get",
+			// 		"url" : "{{ url("fetch/workshop/receipt/after") }}",
+			// 	},
+			// 	"columns": [
+			// 	{ "data": "tgl_pengajuan"},
+			// 	{ "data": "name"},
+			// 	{ "data": "bagian"},
+			// 	{ "data": "order_no"},
+			// 	{ "data": "priority"},
+			// 	{ "data": "type"},
+			// 	{ "data": "item_name"},
+			// 	{ "data": "quantity"},
+			// 	{ "data": "receiver"},
+			// 	{ "data": "att"},
+			// 	{ "data": "action"}
+			// 	]
+			// });
+
+			// table.columns().every( function () {
+			// 	var that = this;
+
+			// 	$( '.input', this.footer() ).on( 'keyup change', function () {
+			// 		if ( that.search() !== this.value ) {
+			// 			that
+			// 			.search( this.value )
+			// 			.draw();
+			// 		}
+			// 	} );
+			// });
+
+			// $('#pickedTable tfoot tr').appendTo('#pickedTable thead');
 		}
 
 		function openModal(order_no, bagian, item, quantity) {
@@ -461,6 +740,7 @@
 					$.get('{{ url("scan/workshop/receipt") }}', data, function(result, status, xhr){
 						if (result.status) {
 							openSuccessGritter('Success!',result.message);
+							$("#wjo_num").val("");
 							$("#modalComfirm").modal("hide");
 							fillMasterTable();
 							fillSecondTable();
@@ -472,98 +752,151 @@
 			}
 		})
 
-		function fillPickedTable() {
-			$('#pickedTable').DataTable().destroy();
-			$('#pickedTable tfoot th').each( function () {
-				var title = $(this).text();
-				$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
-			});
-			var table = $('#pickedTable').DataTable({
-				'dom': 'Bfrtip',
-				'responsive': true,
-				'lengthMenu': [
-				[ 10, 25, 50, -1 ],
-				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
-				],
-				'buttons': {
-					buttons:[
-					{
-						extend: 'pageLength',
-						className: 'btn btn-default',
-					},
-					{
-						extend: 'copy',
-						className: 'btn btn-success',
-						text: '<i class="fa fa-copy"></i> Copy',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'excel',
-						className: 'btn btn-info',
-						text: '<i class="fa fa-file-excel-o"></i> Excel',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					{
-						extend: 'print',
-						className: 'btn btn-warning',
-						text: '<i class="fa fa-print"></i> Print',
-						exportOptions: {
-							columns: ':not(.notexport)'
-						}
-					},
-					]
-				},
-				'paging'        : true,
-				'lengthChange'  : true,
-				'searching'     : true,
-				'ordering'      : true,
-				'info'        : true,
-				'order'       : [],
-				'autoWidth'   : true,
-				"sPaginationType": "full_numbers",
-				"bJQueryUI": true,
-				"bAutoWidth": false,
-				"processing": true,
-				"serverSide": true,
-				"ajax": {
-					"type" : "get",
-					"url" : "{{ url("fetch/workshop/picked") }}",
-				},
-				"columns": [
-				{ "data": "tgl_pengajuan"},
-				{ "data": "name"},
-				{ "data": "bagian"},
-				{ "data": "order_no"},
-				{ "data": "priority"},
-				{ "data": "type"},
-				{ "data": "item_name"},
-				{ "data": "quantity"},
-				{ "data": "target_date"},
-				{ "data": "att"},
-				{ "data": "action"}
-				]
-			});
+		function detailReport(order_no) {
+			$('#detail_target_date').val("");
+			$('#detail_order_no').val("");
+			$('#detail_bagian').val("");
+			$('#detail_department').val("");
+			$('#detail_priority').val("");
+			$('#detail_type').val("");
+			$('#detail_item_name').val("");
+			$('#detail_quantity').val("");
+			$('#detail_material').val("");
+			$('#detail_problem_desc').val("");
+			$('#detail_category').val("");
 
-			table.columns().every( function () {
-				var that = this;
+			$('#detailModal').modal('show');
 
-				$( 'input', this.footer() ).on( 'keyup change', function () {
-					if ( that.search() !== this.value ) {
-						that
-						.search( this.value )
-						.draw();
-					}
-				} );
-			});
+			var data = {
+				order_no : order_no
+			}
 
-			$('#pickedTable tfoot tr').appendTo('#pickedTable thead');
+			$.get('{{ url("fetch/workshop/process_detail") }}', data, function(result, status, xhr){
+				var group = result.detail.sub_section.split("_");
 
+				if (result.detail.category == 'Molding' || result.detail.category == 'Jig') {
+					$("#drawing2").show();
+				} else {
+					$("#drawing2").hide();
+				}
+
+				if (result.detail.reject_reason != null) {
+					$("#reject").show();
+					$('#detail_reject_reason').val(result.detail.reject_reason);
+				} else {
+					$("#reject").hide();
+					$('#detail_reject_reason').val("");
+				}
+
+				$('#detail_target_date').val(result.detail.target_date);
+				$('#detail_order_no').val(result.detail.order_no);
+				$('#detail_bagian').val(group[1]);
+				$('#detail_department').val(group[0]);
+				$('#detail_priority').val(result.detail.priority);
+				$('#detail_type').val(result.detail.type);
+				$('#detail_item_name').val(result.detail.item_name);
+				$('#detail_quantity').val(result.detail.quantity);
+				$('#detail_material').val(result.detail.material);
+				$('#detail_problem_desc').val(result.detail.problem_description);
+				$('#detail_category').val(result.detail.category);
+
+				$('#detail_drawing_name').val(result.detail.drawing_name);
+				$('#detail_drawing_number').val(result.detail.item_number);
+				$('#detail_part_number').val(result.detail.part_number);
+			})
 		}
 
+		// function fillPickedTable() {
+		// 	$('#pickedTable').DataTable().destroy();
+		// 	$('#pickedTable tfoot th').each( function () {
+		// 		var title = $(this).text();
+		// 		$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
+		// 	});
+		// 	var table = $('#pickedTable').DataTable({
+		// 		'dom': 'Bfrtip',
+		// 		'responsive': true,
+		// 		'lengthMenu': [
+		// 		[ 10, 25, 50, -1 ],
+		// 		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		// 		],
+		// 		'buttons': {
+		// 			buttons:[
+		// 			{
+		// 				extend: 'pageLength',
+		// 				className: 'btn btn-default',
+		// 			},
+		// 			{
+		// 				extend: 'copy',
+		// 				className: 'btn btn-success',
+		// 				text: '<i class="fa fa-copy"></i> Copy',
+		// 				exportOptions: {
+		// 					columns: ':not(.notexport)'
+		// 				}
+		// 			},
+		// 			{
+		// 				extend: 'excel',
+		// 				className: 'btn btn-info',
+		// 				text: '<i class="fa fa-file-excel-o"></i> Excel',
+		// 				exportOptions: {
+		// 					columns: ':not(.notexport)'
+		// 				}
+		// 			},
+		// 			{
+		// 				extend: 'print',
+		// 				className: 'btn btn-warning',
+		// 				text: '<i class="fa fa-print"></i> Print',
+		// 				exportOptions: {
+		// 					columns: ':not(.notexport)'
+		// 				}
+		// 			},
+		// 			]
+		// 		},
+		// 		'paging'        : true,
+		// 		'lengthChange'  : true,
+		// 		'searching'     : true,
+		// 		'ordering'      : true,
+		// 		'info'        : true,
+		// 		'order'       : [],
+		// 		'autoWidth'   : true,
+		// 		"sPaginationType": "full_numbers",
+		// 		"bJQueryUI": true,
+		// 		"bAutoWidth": false,
+		// 		"processing": true,
+		// 		"serverSide": true,
+		// 		"ajax": {
+		// 			"type" : "get",
+		// 			"url" : "{{ url("fetch/workshop/picked") }}",
+		// 		},
+		// 		"columns": [
+		// 		{ "data": "tgl_pengajuan"},
+		// 		{ "data": "name"},
+		// 		{ "data": "bagian"},
+		// 		{ "data": "order_no"},
+		// 		{ "data": "priority"},
+		// 		{ "data": "type"},
+		// 		{ "data": "item_name"},
+		// 		{ "data": "quantity"},
+		// 		{ "data": "target_date"},
+		// 		{ "data": "att"},
+		// 		{ "data": "action"}
+		// 		]
+		// 	});
+
+		// 	table.columns().every( function () {
+		// 		var that = this;
+
+		// 		$( 'input', this.footer() ).on( 'keyup change', function () {
+		// 			if ( that.search() !== this.value ) {
+		// 				that
+		// 				.search( this.value )
+		// 				.draw();
+		// 			}
+		// 		} );
+		// 	});
+
+		// 	$('#pickedTable tfoot tr').appendTo('#pickedTable thead');
+
+		// }
 
 		$('#modalComfirm').on('shown.bs.modal', function () {
 			$("#scan_tag").focus();
@@ -574,6 +907,10 @@
 			$("#s_pemohon").val("");
 		}
 
+		function clearSearch2() {
+			$("#s_bagian2").val('').trigger('change') ;
+			$("#s_pemohon2").val("");
+		}
 
 		var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 

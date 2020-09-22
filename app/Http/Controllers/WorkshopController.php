@@ -1971,30 +1971,35 @@ class WorkshopController extends Controller{
 		return Response::json($response);
 	}
 
-	public function fetchReceivedWJO()
+	public function fetchReceivedWJO(Request $request)
 	{
-		$datas = db::table('workshop_receipts')
-		->leftJoin('workshop_job_orders','workshop_receipts.order_no','=','workshop_job_orders.order_no')
+		$datas = db::table('workshop_receipts');
+
+		if(strlen($request->get('tgl')) > 0 ){
+			$datas = $datas->where(db::raw("DATE_FORMAT(workshop_job_orders.created_at, '%Y-%m-%d')"), '=', $request->get('tgl'));
+		}
+
+		if(strlen($request->get('pemohon')) > 0 ){
+			$datas = $datas->where('employee_syncs.name', 'like', "%".$request->get('pemohon')."%");
+		}
+
+		if(strlen($request->get('bagian')) > 0 ){
+			$datas = $datas->where('workshop_job_orders.sub_section', '=', $request->get('bagian'));
+		}
+
+
+		$datas = $datas->leftJoin('workshop_job_orders','workshop_receipts.order_no','=','workshop_job_orders.order_no')
 		->leftJoin("employee_syncs", "employee_syncs.employee_id", "=", "workshop_job_orders.created_by")
 		->leftJoin(db::raw("employees es"), "es.tag", "=", "workshop_receipts.receiver")
 		->select(db::raw("DATE_FORMAT(workshop_job_orders.created_at, '%Y-%m-%d') as tgl_pengajuan"), "employee_syncs.name", db::raw("workshop_job_orders.sub_section as bagian"), "workshop_job_orders.order_no", "workshop_job_orders.priority" , "workshop_job_orders.type", "workshop_job_orders.item_name", "quantity", db::raw("es.name as receiver"), "attachment")
 		->orderBy("workshop_receipts.created_at")
 		->get();
 
-		return DataTables::of($datas)
-		->addColumn('action', function($datas){
-			return '<a href="javascript:void(0)" class="btn btn-xs btn-info" onClick="detailReport(id)" id="' . $datas->order_no . '">Details</a>';
-		})
-		->addColumn('att', function($datas){
-			if($datas->attachment){
-				return '<a href="javascript:void(0)" id="' . $datas->attachment . '" onClick="downloadAtt(id)" class="fa fa-paperclip"></a>';
-			}
-			else{
-				return '-';
-			}
-		})
-		->rawColumns([ 'att' => 'att','action' => 'action'])
-		->make(true);
+		$response = array(
+			'status' => true,
+			'data' => $datas
+		);
+		return Response::json($response);
 	}
 
 	public function scanWJOReceipt(Request $request)
