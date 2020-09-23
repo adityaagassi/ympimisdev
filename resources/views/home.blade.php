@@ -77,14 +77,14 @@
                 <tbody>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">HR Report ()</span>
+                            <span style="font-weight: bold;">HR Report (人事報告)</span>
                             <br>
                             <a href="{{ url("index/general/online_transportation") }}">
-                                <i class="fa fa-caret-right"></i> Attendance And Transportation Report ()
+                                <i class="fa fa-caret-right"></i> Attendance And Transportation Report (出社・移動費のオンライン報告)
                             </a>
                             <br>
                             <a href="{{ url("index/general/surat_dokter") }}">
-                                <i class="fa fa-caret-right"></i> Penyerahan Surat Dokter ()
+                                <i class="fa fa-caret-right"></i> Dropbox Surat Dokter (診断書のドロップボックス)
                             </a>
                             <br>
                         </td>
