@@ -28,22 +28,42 @@ class ProductionScheduleController extends Controller
      */
     public function index()
     {
+        $materials = Material::where('category', '=', 'FG')->get();
 
-    	$locations = Material::whereIn('category', ['KD', 'FG'])
+    	$locations = Material::where('category', '=', 'FG')
     	->whereNotNull('hpl')
-    	->select('hpl')
+    	->select('hpl', 'category')
     	->distinct()
-    	->orderBy('hpl', 'asc')
-    	->get();
+        ->orderBy('category', 'asc')
+        ->orderBy('issue_storage_location', 'asc')
+        ->orderBy('hpl', 'asc')
+        ->get();
 
-    	$materials = Material::orderBy('material_number', 'ASC')->get();
-    	$origin_groups = OriginGroup::orderBy('origin_group_code', 'ASC')->get();
+        return view('production_schedules.index', array(
+          'locations' => $locations,
+          'materials' => $materials
+      ))->with('page', 'Production Schedule');
+        //
+    }
 
-    	return view('production_schedules.index', array(
-    		'origin_groups' => $origin_groups,
-    		'materials' => $materials,
-    		'locations' => $locations
-    	))->with('page', 'Production Schedule');
+    public function indexKD()
+    {
+
+        $materials = Material::where('category', '=', 'KD')->get();
+
+        $locations = Material::where('category', '=', 'KD')
+        ->whereNotNull('hpl')
+        ->select('hpl', 'category')
+        ->distinct()
+        ->orderBy('category', 'asc')
+        ->orderBy('issue_storage_location', 'asc')
+        ->orderBy('hpl', 'asc')
+        ->get();
+
+        return view('production_schedules.index_kd', array(
+          'locations' => $locations,
+          'materials' => $materials
+      ))->with('page', 'Production Schedule KD');
         //
     }
 
@@ -51,21 +71,44 @@ class ProductionScheduleController extends Controller
     {
     	$production_schedules = ProductionSchedule::leftJoin("materials","materials.material_number","=","production_schedules.material_number")
     	->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
-    	->select('production_schedules.id','production_schedules.material_number','production_schedules.due_date','production_schedules.quantity','materials.material_description','origin_groups.origin_group_name')
+    	->select('production_schedules.id','production_schedules.material_number','production_schedules.due_date','production_schedules.quantity','materials.material_description','origin_groups.origin_group_name', 'materials.hpl')
         ->limit(1000)
-    	->orderByRaw('due_date DESC', 'production_schedules.material_number ASC')
-    	->get();
+        ->orderByRaw('due_date DESC', 'production_schedules.material_number ASC')
+        ->where('materials.category', '=', 'FG')
+        ->get();
 
-    	return DataTables::of($production_schedules)
-    	->addColumn('action', function($production_schedules){
-    		return '
-    		<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$production_schedules->id.')">View</button>
-    		<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$production_schedules->id.')">Edit</button>
-    		<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$production_schedules->id.',\''.$production_schedules->material_number.'\',\''.$production_schedules->due_date.'\')">Delete</button>';
-    	})
+        return DataTables::of($production_schedules)
+        ->addColumn('action', function($production_schedules){
+          return '
+          <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$production_schedules->id.')">View</button>
+          <button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$production_schedules->id.')">Edit</button>
+          <button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$production_schedules->id.',\''.$production_schedules->material_number.'\',\''.$production_schedules->due_date.'\')">Delete</button>';
+      })
 
-    	->rawColumns(['action' => 'action'])
-    	->make(true);
+        ->rawColumns(['action' => 'action'])
+        ->make(true);
+    }
+
+    public function fetchScheduleKD(Request $request)
+    {
+        $production_schedules = ProductionSchedule::leftJoin("materials","materials.material_number","=","production_schedules.material_number")
+        ->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
+        ->select('production_schedules.id','production_schedules.material_number','production_schedules.due_date','production_schedules.quantity','materials.material_description','origin_groups.origin_group_name', 'materials.hpl')
+        ->limit(1000)
+        ->orderByRaw('due_date DESC', 'production_schedules.material_number ASC')
+        ->where('materials.category', '=', 'KD')
+        ->get();
+
+        return DataTables::of($production_schedules)
+        ->addColumn('action', function($production_schedules){
+          return '
+          <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$production_schedules->id.')">View</button>
+          <button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$production_schedules->id.')">Edit</button>
+          <button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$production_schedules->id.',\''.$production_schedules->material_number.'\',\''.$production_schedules->due_date.'\')">Delete</button>';
+      })
+
+        ->rawColumns(['action' => 'action'])
+        ->make(true);
     }
 
     /**
@@ -216,31 +259,33 @@ class ProductionScheduleController extends Controller
     	$date_from = date('Y-m-d', strtotime($request->get('datefrom')));
     	$date_to = date('Y-m-d', strtotime($request->get('dateto')));
 
-    	$materials = Material::whereIn('category', ['KD', 'FG']);
+    	$materials = Material::select('material_number');
 
-    	if($request->get('origin_group') == null && $request->get('location') == null){
-    		return redirect('/index/production_schedule')
-    		->with('error', 'Tanggal harus diisikan.')
-    		->with('page', 'Production Schedule');
-    	}
+        foreach($request->get('location') as $location){
+            $locations = explode(",", $location);
 
-    	if($request->get('origin_group') != null){
-    		$materials = $materials->whereIn('origin_group_code', $request->get('origin_group'));
-    	}
-    	if($request->get('location') != null){
-    		$materials = $materials->whereIn('hpl', $request->get('location'));
-    	}
+            $category = $locations[0];
+            $hpl = $locations[1];
 
-    	$materials = $materials->select('material_number')->get();
+            $materials = Material::where('hpl', '=', $hpl)
+            ->where('category', $category)
+            ->select('material_number')
+            ->get();
 
-    	$production_schedule = ProductionSchedule::where('due_date', '>=', $date_from)
-    	->where('due_date', '<=', $date_to)
-    	->whereIn('material_number', $materials)
-    	->forceDelete();
+            try{
+                $production_schedules = ProductionSchedule::where('due_date', '>=', $date_from)
+                ->where('due_date', '<=', $date_to)
+                ->whereIn('material_number', $materials)
+                ->forceDelete();                
+            }
+            catch (\Exception $e) {
+                return redirect('/index/production_schedule')->with('error', $e->getMessage())->with('page', 'Production Schedule');
+            }
+        }
 
-    	return redirect('/index/production_schedule')
-    	->with('status', 'Production schedules has been deleted.')
-    	->with('page', 'Production Schedule');
+        return redirect('/index/production_schedule')
+        ->with('status', 'Production schedules has been deleted.')
+        ->with('page', 'Production Schedule');
     }
 
     /**

@@ -801,7 +801,9 @@ Route::group(['nav' => 'M2', 'middleware' => 'permission'], function(){
 
 Route::group(['nav' => 'M7', 'middleware' => 'permission'], function(){
 	Route::get('index/production_schedule', 'ProductionScheduleController@index');
+	Route::get('index/production_schedule_kd', 'ProductionScheduleController@indexKD');
 	Route::get('fetch/production_schedule', 'ProductionScheduleController@fetchSchedule');
+	Route::get('fetch/production_schedule_kd', 'ProductionScheduleController@fetchScheduleKD');
 	// Route::get('create/production_schedule', 'ProductionScheduleController@create');
 	Route::post('create/production_schedule', 'ProductionScheduleController@store');
 	Route::get('destroy/production_schedule', 'ProductionScheduleController@destroy');
@@ -1416,6 +1418,7 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
 Route::get('fetch/kd_new/{id}', 'KnockDownController@fetchKdNew');
 Route::get('fetch/kd_pack/{id}', 'KnockDownController@fetchKdPack');
+// Route::get('fetch/kd_print', 'KnockDownController@fetchKdPrint');
 Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
 Route::get('index/kd_daily_production_result', 'KnockDownController@indexKdDailyProductionResult');
 Route::get('fetch/kd_daily_production_result', 'KnockDownController@fetchKdDailyProductionResult');
@@ -3166,7 +3169,7 @@ Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
 Route::post('edit/maintenance/spk', 'MaintenanceController@editSPK');
 Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
 
-Route::get('verify/maintenance/spk/approve_urgent/{stat}/{order_no}', 'MaintenanceController@verifySPK');
+Route::get('verify/maintenance/spk/approve_urgent', 'MaintenanceController@verifySPK');
 Route::get('verify/maintenance/spk/danger_note/{order_no}', 'MaintenanceController@indexDangerNote');
 
 Route::post('verify/maintenance/spk/danger_note', 'MaintenanceController@addDangerNote');

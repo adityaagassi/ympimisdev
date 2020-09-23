@@ -417,7 +417,7 @@
       "processing": true,
       "ajax": {
         "type" : "get",
-        "url" : "{{ url("fetch/production_schedule") }}"
+        "url" : "{{ url("fetch/production_schedule_kd") }}"
       },
       "columns": [
       { "data": "material_number" },
