@@ -189,7 +189,13 @@
 
       @if(in_array('M7', $navs))
       @if(isset($page) && $page == "Production Schedule")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/production_schedule") }}"><i class="fa fa-calendar-check-o"></i> <span>Production Schedule</span></a>
+        <a href="{{ url("/index/production_schedule") }}"><i class="fa fa-calendar-check-o"></i> <span>Production Schedule FG</span></a>
+      </li>
+      @endif
+
+      @if(in_array('M7', $navs))
+      @if(isset($page) && $page == "Production Schedule KD")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/production_schedule_kd") }}"><i class="fa fa-calendar-check-o"></i> <span>Production Schedule KD</span></a>
       </li>
       @endif
 
