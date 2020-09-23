@@ -179,6 +179,7 @@
 									<th style="width: 6%;">Description</th>
 									<th style="width: 1%;">Serial No.</th>
 									<th style="width: 1%;">Qty</th>
+									<th style="width: 1%;">I/V</th>
 									<th style="width: 1%;">Ship. Date</th>
 									<th style="width: 1%;">BL Date</th>
 									<th style="width: 1%;">Dest.</th>
@@ -305,6 +306,7 @@
 						tableData += '<td>'+ value.material_description +'</td>';
 						tableData += '<td>'+ value.serial_number +'</td>';
 						tableData += '<td>'+ value.quantity +'</td>';
+						tableData += '<td>'+ value.invoice_number +'</td>';
 						tableData += '<td>'+ value.st_date +'</td>';
 						tableData += '<td>'+ value.bl_date +'</td>';
 						tableData += '<td>'+ value.destination_shortname +'</td>';

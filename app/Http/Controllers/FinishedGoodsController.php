@@ -303,6 +303,7 @@ class FinishedGoodsController extends Controller
 			'shipment_schedules.sales_order', 
 			'flos.container_id', 
 			'flos.status',
+			'flos.invoice_number',
 			db::raw('count(container_attachments.container_id) as att'),
 			'flo_details.image')
 		->groupBy(
@@ -319,6 +320,7 @@ class FinishedGoodsController extends Controller
 			'shipment_schedules.sales_order', 
 			'flos.container_id',
 			'flos.status',
+			'flos.invoice_number',
 			'flo_details.image')
 		->get();
 
