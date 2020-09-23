@@ -102,18 +102,12 @@ Route::get('index/general/online_transportation', 'GeneralController@indexOnline
 Route::get('fetch/general/online_transportation', 'GeneralController@fetchOnlineTransportation');
 Route::post('input/general/online_transportation', 'GeneralController@inputOnlineTransportation');
 Route::post('delete/general/online_transportation', 'GeneralController@deleteOnlineTransportation');
-Route::get('index/general/online_transportation_report', 'GeneralController@indexOnlineTransportationReport');
-Route::get('fetch/general/online_transportation_report', 'GeneralController@fetchOnlineTransportationReport');
-Route::get('fetch/general/online_transportation_resume_report', 'GeneralController@fetchOnlineTransportationResumeReport');
-Route::post('confirm/general/online_transportation_report', 'GeneralController@confirmOnlineTransportationReport');
 
 //SURAT DOKTER
 Route::get('index/general/surat_dokter', 'GeneralController@indexSuratDokter');
 Route::get('fetch/general/surat_dokter', 'GeneralController@fetchSuratDokter');
 Route::post('input/general/surat_dokter', 'GeneralController@inputSuratDokter');
 Route::post('delete/general/surat_dokter', 'GeneralController@deleteSuratDokter');
-Route::get('index/general/surat_dokter_report', 'GeneralController@indexSuratDokterReport');
-Route::get('fetch/general/surat_dokter_report', 'GeneralController@fetchSuratDokterReport');
 
 //POINTING CALL
 Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPointingCall');
@@ -490,7 +484,15 @@ Route::get('fetch/recorder_repair/by_date', 'AdditionalController@fetchRecorderB
 Route::group(['nav' => 'R10', 'middleware' => 'permission'], function(){
 	Route::get('index/general/report_transportation', 'GeneralController@indexReportTransportation');
 	Route::post('confirm/general/report_transportation/{id}', 'GeneralController@confirmReportTransportation');
+	Route::get('fetch/general/online_transportation_report', 'GeneralController@fetchOnlineTransportationReport');
+	Route::get('fetch/general/online_transportation_resume_report', 'GeneralController@fetchOnlineTransportationResumeReport');
+	Route::post('confirm/general/online_transportation_report', 'GeneralController@confirmOnlineTransportationReport');
+
+	Route::get('index/general/report_surat_dokter', 'GeneralController@indexReportSuratDokter');
+	Route::get('fetch/general/report_surat_dokter', 'GeneralController@fetchReportSuratDokter');
+	Route::post('confirm/general/surat_dokter_report', 'GeneralController@confirmSuratDokterReport');
 });
+
 Route::get('index/report/manpower', 'EmployeeController@indexReportManpower');
 Route::get('fetch/report/manpower', 'EmployeeController@fetchReportManpower');
 Route::get('fetch/report/manpower_detail', 'EmployeeController@fetchReportManpowerDetail');

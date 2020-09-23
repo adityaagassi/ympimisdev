@@ -317,7 +317,7 @@
   @if(in_array('S45', $navs))
   @if(isset($head) && $head == "Purchasing")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
-      <i class="fa fa-shopping-cart"></i> <span>Purchasing Request</span>
+      <i class="fa fa-shopping-cart"></i> <span>Purchase Requisition</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
@@ -344,7 +344,7 @@
   @if(in_array('S46', $navs))
   @if(isset($head) && $head == "Accounting")<li class="treeview active">@else<li class="treeview">@endif
     <a href="#">
-      <i class="fa fa-money"></i> <span>Accounting Request</span>
+      <i class="fa fa-money"></i> <span>Investment</span>
       <span class="pull-right-container">
         <i class="fa fa-angle-left pull-right"></i>
       </span>
