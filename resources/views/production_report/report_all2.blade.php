@@ -35,14 +35,9 @@
         </div>
       </div>
     </h1>
-    <div id="container1" class="gambar"></div>
-    <div id="container2" class="gambar"></div>
-    <div id="container3" class="gambar"></div>
-    <div id="container4" class="gambar"></div>
-    <div id="container5" class="gambar"></div>
-    <div id="container6" class="gambar"></div>
-    <div id="container7" class="gambar"></div>
-    <div id="container8" class="gambar"></div>
+  </div>
+  <div class="row" style="padding: 0" id="containergambar">
+    <!-- <div id="container1" class="gambar"></div> -->
   </div>
   <div class="modal fade" id="myModal" style="color: black;">
     <div class="modal-dialog modal-lg">
@@ -425,6 +420,13 @@
       if(xhr.status == 200){
         if(result.status){
           // console.table(result.leaderrr);
+          $('#containergambar').empty();
+          var gambar = "";
+          for(var k=1; k< result.datas.length;k++){
+            gambar += '<div id="container'+k+'" class="gambar"></div>';
+          }
+          
+          $('#containergambar').append(gambar);
           for(var i=1; i< result.datas.length;i++){
             for(var j=0; j< result.datas[i].length;j++){
               var result_monthly;
@@ -508,20 +510,6 @@
                 },
                 tooltip: {
                   enabled:false
-                  // borderWidth: 0,
-                  // backgroundColor: 'none',
-                  // shadow: false,
-                  // style: {
-                  //   fontSize: '6px'
-                  // },
-                  // valueSuffix: '%',
-                  // pointFormat: '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}</span>',
-                  // positioner: function (labelWidth) {
-                  //   return {
-                  //     x: (this.chart.chartWidth - labelWidth)/2,
-                  //     y: (this.chart.plotHeight / 2) + 25
-                  //   };
-                  // }
                 },
 
                 pane: {
@@ -551,35 +539,6 @@
                         .get(),
                         borderWidth: 0
                       }]
-                      // background: [{ // Track for Move
-                      //   outerRadius: '100%',
-                      //   innerRadius: '80%',
-                      //   backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0])
-                      //   .setOpacity(0.3)
-                      //   .get(),
-                      //   borderWidth: 0
-                      // },{ // Track for Move
-                      //   outerRadius: '80%',
-                      //   innerRadius: '60%',
-                      //   backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[1])
-                      //   .setOpacity(0.3)
-                      //   .get(),
-                      //   borderWidth: 0
-                      // }, { // Track for Exercise
-                      //   outerRadius: '60%',
-                      //   innerRadius: '40%',
-                      //   backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[2])
-                      //   .setOpacity(0.3)
-                      //   .get(),
-                      //   borderWidth: 0
-                      // }, { // Track for Stand
-                      //   outerRadius: '40%',
-                      //   innerRadius: '20%',
-                      //   backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[3])
-                      //   .setOpacity(0.3)
-                      //   .get(),
-                      //   borderWidth: 0
-                      // }]
                     },
                     yAxis: {
                       min: 0,
@@ -588,9 +547,6 @@
                       tickPositions: []
                     },
                     legend: {
-                      // borderColor: 'white',
-                      // borderWidth: 1,
-
                       itemStyle:{
                         color: "white",
                         fontSize: "12px",
@@ -602,7 +558,6 @@
                       itemHiddenStyle: {
                         color: '#606063'
                       },
-                      // shadow: false,
                       labelFormatter: function(e) {
                         return '<span style="text-weight:bold;color:' + this.userOptions.color + ';">' + this.name + '</span>';
                       },
@@ -624,38 +579,19 @@
                           events: {
                             click: function(e) {
                               if(e.point.series.name == 'Prev Month'){
-                                // ShowModalChartPrev(this.options.key,e.point.series.name);
                               }
                               else if(e.point.series.name != 'Current Day'){
                                 ShowModalChart(this.options.key,e.point.series.name);
-                                    // ShowModalDetails(this.options.key,e.point.series.name);
                                   }
                                 }
                               },
                             },
-                        // dataLabels:{
-                        //   // color: 'white',
-                        //   enabled: true,
-                        //   format : '{point.y}'
-                        // }
                       }
                     },
                     credits: {
                       enabled: false
                     },
                     series: [
-                    // {
-                    //   name: 'Prev Month',
-                    //   color: Highcharts.getOptions().colors[0],
-                    //   data: [{
-                    //     color: Highcharts.getOptions().colors[0],
-                    //     outerRadius: '100%',
-                    //     innerRadius: '80%',
-                    //     y: result_prev,
-                    //     key: result.datas[i][j].leader_name
-                    //   }],
-                    //   showInLegend: true,
-                    // },
                     {
                       name: 'Monthly',
                       color: Highcharts.getOptions().colors[1],

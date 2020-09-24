@@ -51,15 +51,29 @@
 					
 				@endif
 				@if($activity_list->activity_type == "Pengecekan Foto")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Daily Check FG / KD</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Cek FG / KD</a>
+
 				@elseif($activity_list->activity_type == "Laporan Aktivitas")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Laporan Aktivitas Audit IK</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Laporan Audit IK</a>
+
 				@elseif($activity_list->activity_type == "Pengecekan")
 					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Audit Product Pertama</a>
+
 				@elseif($activity_list->activity_type == "Labelisasi")
-					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Labeling Safety Sign</a>
+					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Audit Label Safety</a>
+
 				@elseif($activity_list->activity_type == "Audit")
 					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Audit NG Jelas</a>
+
+				@elseif($activity_list->activity_type == "Pemahaman Proses")
+					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Audit Pemahaman Proses</a>
+
+				@elseif($activity_list->activity_type == "Jishu Hozen")
+					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Audit Jishu Hozen</a>
+
+					@elseif($activity_list->activity_type == "Interview")
+					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">Interview Pointing Call</a>
+
 				@else
 					<a href="{{ url("index/activity_list/filter/".$id."/".$activity_list->no."/".$activity_list->frequency) }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;{{$bgcolor}}">{{ $activity_list->activity_type }}</a>
 				@endif
