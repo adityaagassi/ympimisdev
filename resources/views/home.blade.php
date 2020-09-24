@@ -80,7 +80,7 @@
                             <span style="font-weight: bold;">HR Report (人事報告)</span>
                             <br>
                             <a href="{{ url("index/general/online_transportation") }}">
-                                <i class="fa fa-caret-right"></i> Attendance And Transportation Report (出社・移動費のオンライン報告)
+                                <i class="fa fa-caret-right"></i> Attendance & Transportation Report (出社・移動費のオンライン報告)
                             </a>
                             <br>
                             <a href="{{ url("index/general/surat_dokter") }}">
@@ -200,17 +200,17 @@
                             <tr>
                                 <td>
                                     <span style="font-weight: bold;">Quality Assurance (品保)</span>
+                                    <br>                            
+                                    <a href="{{ url("index/qc_report/grafik_cpar") }}">
+                                        <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring (是正予防策・是正策監視)
+                                    </a>
                                     <br>
                                     <a href="{{ url("index/qc_report") }}">
-                                        <i class="fa fa-caret-right"></i> Corrective and Preventive Action Request <br> (是正予防策依頼)
+                                        <i class="fa fa-caret-right"></i> Corrective & Preventive Action Request (是正予防策依頼)
                                     </a>
                                     <br>
                                     <a href="{{ url("index/qc_car") }}">
                                         <i class="fa fa-caret-right"></i> Corrective Action Report (是正策リポート)
-                                    </a>
-                                    <br>                            
-                                    <a href="{{ url("index/qc_report/grafik_cpar") }}">
-                                        <i class="fa fa-caret-right"></i> CPAR & CAR Monitoring (是正予防策・是正策監視)
                                     </a>
                                     <br>
                                     <a href="{{ url("index/cpar/resume") }}">
@@ -219,7 +219,8 @@
                                     <br>
                                     <a href="{{ url("index/qc_report/grafik_kategori") }}">
                                         <i class="fa fa-caret-right"></i> Report CPAR By Category (種類別の是正処置報告書)
-                                    </a>                        
+                                    </a>
+                                    <br>                   
                                     <a href="{{ url("index/qa_ymmj") }}">
                                         <i class="fa fa-caret-right"></i> Form Ketidaksesuaian YMMJ (YMMJ不具合リポート)
                                     </a>
