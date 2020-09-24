@@ -127,7 +127,7 @@ table > thead > tr > th{
             <div class="input-group-addon bg-green">
               <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" class="form-control datepicker" id="tglfrom" placeholder="Bulan Dari" onchange="drawChart()">
+            <input type="text" class="form-control datepicker" id="tglfrom" placeholder="Bulan Dari" onchange="drawChart()" style="width: 100%;">
           </div>
         </div>
         <div class="col-md-2">
@@ -135,7 +135,7 @@ table > thead > tr > th{
             <div class="input-group-addon bg-green">
               <i class="fa fa-calendar"></i>
             </div>
-            <input type="text" class="form-control datepicker" id="tglto" placeholder="Bulan Ke" onchange="drawChart()">
+            <input type="text" class="form-control datepicker" id="tglto" placeholder="Bulan Ke" onchange="drawChart()" style="width: 100%;">
           </div>
         </div>
         <div class="col-md-2">
@@ -143,7 +143,7 @@ table > thead > tr > th{
             <div class="input-group-addon bg-blue">
               <i class="fa fa-search"></i>
             </div>
-            <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="kategori" data-placeholder="Select Kategori">
+            <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="kategori" data-placeholder="Select Kategori" style="width: 100%">
                 <option value="Eksternal">Eksternal</option>
                 <option value="Internal">Internal</option>
                 <option value="Supplier">Supplier</option>
@@ -155,7 +155,7 @@ table > thead > tr > th{
               <div class="input-group-addon bg-blue">
                 <i class="fa fa-search"></i>
               </div>
-              <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="departemen" data-placeholder="Pilih Departemen" style="border-color: #605ca8" >
+              <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="departemen" data-placeholder="Pilih Departemen" style="width: 100%;border-color: #605ca8" >
                   <!-- <option value="" selected>Semua Departemen</option> -->
                   @foreach($departemens as $departemen)
                     <option value="{{ $departemen->id }}">{{ $departemen->department_name }}</option>
@@ -169,7 +169,7 @@ table > thead > tr > th{
             <div class="input-group-addon bg-blue">
               <i class="fa fa-search"></i>
             </div>
-            <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="status" data-placeholder="Pilih Status" style="border-color: #605ca8" >
+            <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="status" data-placeholder="Pilih Status" style="width: 100%;border-color: #605ca8" >
                 @foreach($status as $status)
                   <option value="{{ $status->status_code }}">{{ $status->status_name }}</option>
                 @endforeach
@@ -177,7 +177,7 @@ table > thead > tr > th{
           </div>
         </div>
 
-        <div class="col-md-2">
+        <!-- <div class="col-md-2">
           <div class="input-group">
             <div class="input-group-addon bg-blue">
               <i class="fa fa-search"></i>
@@ -186,6 +186,16 @@ table > thead > tr > th{
                 @foreach($sumber as $sbr)
                   <option value="{{ $sbr->kategori_komplain }}">{{ $sbr->kategori_komplain }}</option>
                 @endforeach
+              </select>
+          </div>
+        </div> -->
+
+        <div class="col-md-2">
+          <div class="input-group">
+            <div class="input-group-addon bg-blue">
+              <i class="fa fa-search"></i>
+            </div>
+            <select class="form-control select2" onchange="drawChart()" id="picprogress" data-placeholder="Pilih PIC on Progress" style="width: 100%;border-color: #605ca8">
               </select>
           </div>
         </div>
@@ -308,12 +318,17 @@ table > thead > tr > th{
     }
   });
 
+  var arr_option = [];
+
   jQuery(document).ready(function() {
     $('body').toggleClass("sidebar-collapse");
     $('#myModal').on('hidden.bs.modal', function () {
       $('#example2').DataTable().clear();
     });
-    $('.select2').select2();
+    $('.select2').select2({
+      dropdownAutoWidth : true,
+      allowClear:true,
+    });
 
     drawChart();
     // drawChartResume();
@@ -535,13 +550,13 @@ table > thead > tr > th{
     var kategori = $('#kategori').val();
     var departemen = $('#departemen').val();
     var status = $('#status').val();
-    var sumber = $('#sumber').val();
+    var pic = $('#picprogress').val();
 
     var data = {
       kategori: kategori,
       departemen: departemen,
       status:status,
-      sumber:sumber
+      pic:pic
     }
 
     $.get('{{ url("index/qc_report/fetchtable") }}', data, function(result, status, xhr){
@@ -557,8 +572,15 @@ table > thead > tr > th{
           var statusdgm = "";
           var statusgm = "";
 
+          // console.log(result.pic);
+
+          arr_option = [];
+
+            var num = 0;
 
           $.each(result.datas, function(key, value) {
+
+            num += 1;
           var namasl = value.namasl;
           var namasl2 = namasl.split(' ').slice(0,2).join(' ');
 
@@ -605,6 +627,9 @@ table > thead > tr > th{
             var urlverifikasigmcar = '{{ url("index/qc_car/verifikasigm/") }}';
             var urlverifikasiqa = '{{ url("index/qc_report/verifikasiqa/") }}';
 
+            var ido = "";
+
+
 
             if (value.posisi_cpar != "staff" && value.posisi_cpar != "leader") {
               // statusawal = '<img src="{{ url("ok.png")}}" width="40" height="40"';
@@ -615,7 +640,11 @@ table > thead > tr > th{
               if (d == 0) {  
                   // statusawal = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                   statusawal = '<a href="'+urldetailcpar+'/'+value.id+'"><span class="label label-danger zoom">'+namasl2+'</span></a>';
-                  color = 'style="background-color:red"';                    
+                  color = 'style="background-color:red"';
+                  ido = namasl2+"_"+num;
+                  if (arr_option.includes(namasl2) == false) {
+                    arr_option.push(namasl2);
+                  }
                   d = 1;
                 } else {
                   statusawal = '';
@@ -630,7 +659,11 @@ table > thead > tr > th{
                         if (d == 0) {  
                             // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                             statuscf = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namacf2+'</span></a>';   
-                            color = 'style="background-color:red"';                  
+                            color = 'style="background-color:red"';      
+                            ido = namacf2+"_"+num;            
+                            if (arr_option.includes(namacf2) == false) {
+                              arr_option.push(namacf2);
+                            }
                             d = 1;
                           } else {
                             statuscf = '';
@@ -646,7 +679,11 @@ table > thead > tr > th{
                   if (d == 0) {  
                     // statuscf = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
                     statuscf = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namacf2+'</span></a>'; 
-                    color = 'style="background-color:red"';                  
+                    color = 'style="background-color:red"';  
+                    ido = namacf2+"_"+num;                
+                    if (arr_option.includes(namacf2) == false) {
+                      arr_option.push(namacf2);
+                    }
                     d = 1;
                   } else {
                     statuscf = '';
@@ -664,7 +701,11 @@ table > thead > tr > th{
                     if (d == 0) {  
                         statusm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namam2+'</span></a>';
                         color = 'style="background-color:red"'; 
-                        // statusm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        // statusm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">'; 
+                        ido = namam2+"_"+num;
+                        if (arr_option.includes(namam2) == false) {
+                          arr_option.push(namam2);
+                        }
                         d = 1;
                       } else {
                         statusm = '';
@@ -680,7 +721,11 @@ table > thead > tr > th{
                 if (d == 0) {  
                   statusm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namam2+'</span></a>';
                   color = 'style="background-color:red"'; 
-                  // statusm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  // statusm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';    
+                  ido = namam2+"_"+num;                
+                  if (arr_option.includes(namam2) == false) {
+                    arr_option.push(namam2);
+                  }
                   d = 1;
                 } else {
                   statusm = '';
@@ -694,6 +739,10 @@ table > thead > tr > th{
                         statusdgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namadgm2+'</span></a>';
                         color = 'style="background-color:red"'; 
                         // statusdgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                        ido = namadgm2+"_"+num;
+                        if (arr_option.includes(namadgm2) == false) {
+                          arr_option.push(namadgm2);
+                        }
                         d = 1;
                       } else {
                         statusdgm = '';
@@ -710,6 +759,10 @@ table > thead > tr > th{
                   statusdgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+namadgm2+'</span></a>';
                   color = 'style="background-color:red"'; 
                   // statusdgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                  ido = namadgm2+"_"+num;
+                  if (arr_option.includes(namadgm2) == false) {
+                    arr_option.push(namadgm2);
+                  }
                   d = 1;
                 } else {
                   statusdgm = '';
@@ -723,6 +776,10 @@ table > thead > tr > th{
                         statusgm = '<a href="'+urlverifikasigm+'/'+value.id+'"><span class="label label-danger">'+namagm2+'</span></a>'; 
                         color = 'style="background-color:red"';
                         // statusgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                        ido = namagm2+"_"+num;
+                        if (arr_option.includes(namagm2) == false) {
+                          arr_option.push(namagm2);
+                        }
                         d = 1;
                       } else {
                         statusgm = '';
@@ -738,6 +795,10 @@ table > thead > tr > th{
                   statusgm = '<a href="'+urlverifikasigm+'/'+value.id+'"><span class="label label-danger">'+namagm2+'</span></a>'; 
                   color = 'style="background-color:red"';
                   // statusgm = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                  ido = namagm2+"_"+num;
+                  if (arr_option.includes(namagm2) == false) {
+                    arr_option.push(namagm2);
+                  }
                   d = 1;
                 } else {
                   statusgm = '';
@@ -750,6 +811,10 @@ table > thead > tr > th{
                         statusbagian = '<a href="'+urldetailcar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                         color = 'style="background-color:red"';
                         // statusbagian = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                        ido = namabagian2+"_"+num;
+                        if (arr_option.includes(namabagian2) == false) {
+                          arr_option.push(namabagian2);
+                        }
                         d = 1;
                       } else {
                         statusbagian = '';
@@ -765,6 +830,10 @@ table > thead > tr > th{
                   statusbagian = '<a href="'+urldetailcar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                   color = 'style="background-color:red"';
                   // statusbagian = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                  ido = namabagian2+"_"+num;
+                  if (arr_option.includes(namabagian2) == false) {
+                    arr_option.push(namabagian2);
+                  }
                   d = 1;
                 } else {
                   statusbagian = '';
@@ -785,6 +854,10 @@ table > thead > tr > th{
                         statusawalcar = '<a href="'+urldetailcar+'/'+value.id_car+'"><span class="label label-danger">'+namapiccar2+'</span></a>';
                         color = 'style="background-color:red"'; 
                         // statusawalcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                        ido = namapiccar2+"_"+num;
+                        if (arr_option.includes(namapiccar2) == false) {
+                          arr_option.push(namapiccar2);
+                        }
                         d = 1 ;
                       }
                       else {
@@ -797,6 +870,10 @@ table > thead > tr > th{
                       statusawalcar = '<a href="'+urldetailcar+'/'+value.id_car+'"><span class="label label-danger">'+namapiccar2+'</span></a>';
                       color = 'style="background-color:red"'; 
                       // statusawalcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                      ido = namapiccar2+"_"+num;
+                      if (arr_option.includes(namapiccar2) == false) {
+                        arr_option.push(namapiccar2);
+                      }
                       d = 1 ;
                     }
                     else {
@@ -812,6 +889,10 @@ table > thead > tr > th{
                       if (d == 0) {
                           statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';
                           color = 'style="background-color:red"';   
+                          ido = namacfcar2+"_"+num;
+                          if (arr_option.includes(namacfcar2) == false) {
+                            arr_option.push(namacfcar2);
+                          }
                           d = 1;
                         } else {
                           statuscfcar = '';
@@ -849,11 +930,19 @@ table > thead > tr > th{
                       if (value.kategori == "Internal") {
                         statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namapiccar2+'</span></a>';
                         color = 'style="background-color:red"';
+                        ido = namapiccar2+"_"+num;
+                        if (arr_option.includes(namapiccar2) == false) {
+                            arr_option.push(namapiccar2);
+                          }
                         d=1;
                       }
                       else{
                         statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';
                         color = 'style="background-color:red"';
+                        ido = namacfcar2+"_"+num;
+                        if (arr_option.includes(namacfcar2) == false) {
+                            arr_option.push(namacfcar2);
+                          }
                         d=1;
                       }
                       
@@ -861,6 +950,10 @@ table > thead > tr > th{
                     else{
                       statuscfcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namacfcar2+'</span></a>';
                       color = 'style="background-color:red"';
+                      ido = namacfcar2+"_"+num;
+                      if (arr_option.includes(namacfcar2) == false) {
+                        arr_option.push(namacfcar2);
+                      }
                       d=1;
                     }
                   }
@@ -878,7 +971,11 @@ table > thead > tr > th{
                       if (d == 0) {  
                         statusmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                         color = 'style="background-color:red"';
-                        // statusmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        // statusmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                        ido = namabagian2+"_"+num;                   
+                        if (arr_option.includes(namabagian2) == false) {
+                          arr_option.push(namabagian2);
+                        }
                         d = 1;
                       } else {
                         statusmcar = '';
@@ -894,7 +991,11 @@ table > thead > tr > th{
                 if (d == 0) {  
                   statusmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namabagian2+'</span></a>';
                   color = 'style="background-color:red"';
-                  // statusmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  // statusmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';
+                  ido = namabagian2+"_"+num;                   
+                  if (arr_option.includes(namabagian2) == false) {
+                    arr_option.push(namabagian2);
+                  }
                   d = 1;
                 } else {
                   statusmcar = '';
@@ -908,7 +1009,11 @@ table > thead > tr > th{
                       if (d == 0) {  
                         statusdgmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namadgm2+'</span></a>';
                         color = 'style="background-color:red"';
-                        // statusdgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        // statusdgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';      
+                        ido = namadgm2+"_"+num;              
+                        if (arr_option.includes(namadgm2) == false) {
+                          arr_option.push(namadgm2);
+                        }
                         d = 1;
                       } else {
                         statusdgmcar = '';
@@ -924,7 +1029,11 @@ table > thead > tr > th{
                 if (d == 0) {  
                   statusdgmcar = '<a href="'+urlverifikasicar+'/'+value.id_car+'"><span class="label label-danger">'+namadgm2+'</span></a>';
                   color = 'style="background-color:red"';
-                  // statusdgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" cl  ass="zoom">';                    
+                  // statusdgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" cl  ass="zoom">';      
+                  ido = namadgm2+"_"+num;              
+                  if (arr_option.includes(namadgm2) == false) {
+                    arr_option.push(namadgm2);
+                  }
                   d = 1;
                 } else {
                   statusdgmcar = '';
@@ -938,7 +1047,11 @@ table > thead > tr > th{
                       if (d == 0) {  
                         statusgmcar = '<a href="'+urlverifikasigmcar+'/'+value.id_car+'"><span class="label label-danger">'+namagm+'</span></a>';
                         color = 'style="background-color:red"';
-                        // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';    
+                        ido = namagm+"_"+num;                
+                        if (arr_option.includes(namagm) == false) {
+                            arr_option.push(namagm);
+                          }
                         d = 1;
                       } else {
                         statusgmcar = '';
@@ -954,7 +1067,11 @@ table > thead > tr > th{
                 if (d == 0) {  
                   statusgmcar = '<a href="'+urlverifikasigmcar+'/'+value.id_car+'"><span class="label label-danger">'+namagm+'</span></a>';
                   color = 'style="background-color:red"';
-                  // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  // statusgmcar = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">'; 
+                  ido = namagm+"_"+num;                    
+                  if (arr_option.includes(namagm) == false) {
+                    arr_option.push(namagm);
+                  }
                   d = 1;
                 } else {
                   statusgmcar = '';
@@ -968,7 +1085,11 @@ table > thead > tr > th{
                       if (d == 0) {  
                         statusqa = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namasl2+'</span></a>';
                         color = 'style="background-color:red"';
-                        // statusqa = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        // statusqa = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">'; 
+                        ido = namasl2+"_"+num;                    
+                        if (arr_option.includes(namasl2) == false) {
+                          arr_option.push(namasl2);
+                        }
                         d = 1;
                       } else {
                         statusqa = '';
@@ -984,7 +1105,11 @@ table > thead > tr > th{
                 if (d == 0) {  
                   statusqa = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namasl2+'</span></a>';
                   color = 'style="background-color:red"';
-                  // statusqa = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  // statusqa = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';     
+                  ido = namasl2+"_"+num;               
+                  if (arr_option.includes(namasl2) == false) {
+                    arr_option.push(namasl2);
+                  }
                   d = 1;
                 } else {
                   statusqa = '';
@@ -996,7 +1121,11 @@ table > thead > tr > th{
                       if (d == 0) {  
                           statusqa2 = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namacf2+'</span></a>';
                           color = 'style="background-color:red"';
-                        // statusqa2 = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        // statusqa2 = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';  
+                        ido = namacf2+"_"+num;                  
+                        if (arr_option.includes(namacf2) == false) {
+                          arr_option.push(namacf2);
+                        }
                         d = 1;
                       } else {
                         statusqa2 = '';
@@ -1012,7 +1141,11 @@ table > thead > tr > th{
                 if (d == 0) {  
                   statusqa2 = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namacf2+'</span></a>';
                   color = 'style="background-color:red"';
-                  // statusqa2 = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  // statusqa2 = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';      
+                  ido = namacf2+"_"+num;                
+                  if (arr_option.includes(namacf2) == false) {
+                    arr_option.push(namacf2);
+                  }
                   d = 1;
                 } else {
                   statusqa2 = '';
@@ -1024,7 +1157,11 @@ table > thead > tr > th{
                       if (d == 0) {  
                           statusqamanager = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namam2+'</span></a>';
                           color = 'style="background-color:red"';
-                        // statusqamanager = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                        // statusqamanager = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';    
+                        ido = namam2+"_"+num;                  
+                        if (arr_option.includes(namam2) == false) {
+                          arr_option.push(namam2);
+                        }
                         d = 1;
                       } else {
                         statusqamanager = '';
@@ -1040,36 +1177,79 @@ table > thead > tr > th{
                 if (d == 0) {  
                   statusqamanager = '<a href="'+urlverifikasiqa+'/'+value.id+'"><span class="label label-danger">'+namam2+'</span></a>';
                   color = 'style="background-color:red"';
-                  // statusqamanager = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';                    
+                  // statusqamanager = '<img src="{{ url("nok2.png")}}" width="45" height="45" class="zoom">';   
+                  ido = namam2+"_"+num;                   
+                  if (arr_option.includes(namam2) == false) {
+                    arr_option.push(namam2);
+                  }
                   d = 1;
                 } else {
                   statusqamanager = '';
                 }
               }
 
+              if ($("#picprogress option:selected").text() != "") {
+                if (ido.split('_')[0] == $("#picprogress option:selected").text()) {
 
-            table += '<tr>';
-            table += '<td>'+value.cpar_no+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+value.judul_komplain+'</td>'; 
-            table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(value.department_name)+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+statusawal+'</td>';  
-            table += '<td>'+statuscf+'</td>';
-            table += '<td>'+statusm+'</td>';
-            table += '<td>'+statusdgm+'</td>';
-            table += '<td>'+statusgm+'</td>';
-            table += '<td>'+statusbagian+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+statusawalcar+'</td>';
-            table += '<td>'+statuscfcar+'</td>';
-            table += '<td>'+statusmcar+'</td>';
-            table += '<td>'+statusdgmcar+'</td>';
-            table += '<td>'+statusgmcar+'</td>';
-            table += '<td style="border-left:3px solid #f44336">'+statusqa+'</td>';
-            table += '<td>'+statusqa2+'</td>';
-            table += '<td>'+statusqamanager+'</td>';
-            table += '</tr>';
+                  table += '<tr id="'+ido+'">';
+                  table += '<td>'+value.cpar_no+'</td>';
+                  table += '<td style="border-left:3px solid #f44336">'+value.judul_komplain+'</td>'; 
+                  table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(value.department_name)+'</td>';
+                  table += '<td style="border-left:3px solid #f44336">'+statusawal+'</td>';  
+                  table += '<td>'+statuscf+'</td>';
+                  table += '<td>'+statusm+'</td>';
+                  table += '<td>'+statusdgm+'</td>';
+                  table += '<td>'+statusgm+'</td>';
+                  table += '<td>'+statusbagian+'</td>';
+                  table += '<td style="border-left:3px solid #f44336">'+statusawalcar+'</td>';
+                  table += '<td>'+statuscfcar+'</td>';
+                  table += '<td>'+statusmcar+'</td>';
+                  table += '<td>'+statusdgmcar+'</td>';
+                  table += '<td>'+statusgmcar+'</td>';
+                  table += '<td style="border-left:3px solid #f44336">'+statusqa+'</td>';
+                  table += '<td>'+statusqa2+'</td>';
+                  table += '<td>'+statusqamanager+'</td>';
+                  table += '</tr>';
+                }                
+              }
+              else{
+                  table += '<tr>';
+                  table += '<td>'+value.cpar_no+'</td>';
+                  table += '<td style="border-left:3px solid #f44336">'+value.judul_komplain+'</td>'; 
+                  table += '<td style="border-left:3px solid #f44336">'+capitalizeFirstLetter(value.department_name)+'</td>';
+                  table += '<td style="border-left:3px solid #f44336">'+statusawal+'</td>';  
+                  table += '<td>'+statuscf+'</td>';
+                  table += '<td>'+statusm+'</td>';
+                  table += '<td>'+statusdgm+'</td>';
+                  table += '<td>'+statusgm+'</td>';
+                  table += '<td>'+statusbagian+'</td>';
+                  table += '<td style="border-left:3px solid #f44336">'+statusawalcar+'</td>';
+                  table += '<td>'+statuscfcar+'</td>';
+                  table += '<td>'+statusmcar+'</td>';
+                  table += '<td>'+statusdgmcar+'</td>';
+                  table += '<td>'+statusgmcar+'</td>';
+                  table += '<td style="border-left:3px solid #f44336">'+statusqa+'</td>';
+                  table += '<td>'+statusqa2+'</td>';
+                  table += '<td>'+statusqamanager+'</td>';
+                  table += '</tr>';
+              }
+
+
 
               
           })
+
+          var opt = "";
+
+          opt += "<option></option>";
+          $.each(arr_option, function(index, value){
+            opt += "<option value="+value+">"+value+"</option>";
+          })
+
+          if ($("#picprogress").children().length == 0) {
+          $("#picprogress").empty();
+            $("#picprogress").append(opt);
+          }
 
           $('#tabelisi').append(table);
 

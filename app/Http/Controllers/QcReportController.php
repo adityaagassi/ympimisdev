@@ -1641,27 +1641,30 @@ class QcReportController extends Controller
           $sta = 'and qc_cpars.status_code not in (1)';
       }
 
-      $sumber = $request->get('sumber');
+      // $sumber = $request->get('sumber');
 
-      if ($sumber != null) {
-          $sumbb = json_encode($sumber);
-          $sumb = str_replace(array("[","]"),array("(",")"),$sumbb);
+      // if ($sumber != null) {
+      //     $sumbb = json_encode($sumber);
+      //     $sumb = str_replace(array("[","]"),array("(",")"),$sumbb);
 
-          $sum = 'and qc_cpars.kategori_komplain in '.$sumb;
-      } else {
-          $sum = '';
-      }      
+      //     $sum = 'and qc_cpars.kategori_komplain in '.$sumb;
+      // } else {
+      //     $sum = '';
+      // }
+
+      $pic = $request->get('pic');
 
       $data = db::select("select qc_cpars.id,qc_cars.id as id_car,qc_cpars.kategori, qc_cpars.cpar_no, qc_cpars.status_code, qc_cpars.judul_komplain, departments.department_name, qc_cpars.posisi as posisi_cpar, qc_cpars.email_status, qc_cpars.checked_chief, qc_cpars.checked_foreman, qc_cpars.checked_manager, qc_cpars.approved_dgm, qc_cpars.approved_gm, qc_cpars.received_manager, qc_cars.posisi as posisi_car, qc_cars.email_status as email_status_car,qc_cars.checked_chief as checked_chief_car,qc_cars.checked_foreman as checked_foreman_car,qc_cars.checked_coordinator as checked_coordinator_car,qc_cars.checked_manager as checked_manager_car,qc_cars.approved_dgm as approved_dgm_car,qc_cars.approved_gm as approved_gm_car, IF(qc_cpars.leader is null,(select name from employees where employee_id = qc_cpars.staff),(select name from employees where employee_id = qc_cpars.leader)) as namasl, IF(qc_cpars.chief is null,(select name from employees where employee_id = qc_cpars.foreman),(select name from employees where employee_id = qc_cpars.chief)) as namacf, (select name from employees where employee_id = qc_cpars.manager) as namam, (select name from employees where employee_id = qc_cpars.dgm) as namadgm, (select name from employees where employee_id = qc_cpars.gm) as namagm, (select name from employees where employee_id = qc_cpars.employee_id) as namabagian, (select name from employees where employee_id = qc_cars.pic) as namapiccar,
         (CASE WHEN qc_verifikators.verifikatorchief is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),(select name from employees where employee_id = qc_verifikators.verifikatorchief)))
               WHEN qc_verifikators.verifikatorcoordinator is not null THEN (select name from employees where employee_id = qc_verifikators.verifikatorcoordinator)
               WHEN qc_verifikators.verifikatorforeman is not null THEN (IF(qc_cpars.kategori = 'internal',(select name from employees where employee_id = qc_verifikators.verifikatorforeman),'Tidak Ada'))
               ELSE 'Tidak Ada'
-        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.deleted_at is null ".$kate." ".$dep." ".$sta." ".$sum." order by kategori,id,cpar_no asc");
+        END) as namacfcar from qc_cpars join departments on departments.id = qc_cpars.department_id left join qc_cars on qc_cpars.cpar_no = qc_cars.cpar_no join qc_verifikators on qc_cpars.department_id = qc_verifikators.department_id where qc_cpars.deleted_at is null ".$kate." ".$dep." ".$sta." order by kategori,id,cpar_no asc");
 
       $response = array(
         'status' => true,
-        'datas' => $data
+        'datas' => $data,
+        'pic' => $pic
       );
 
       return Response::json($response); 
