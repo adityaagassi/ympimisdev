@@ -90,6 +90,7 @@ table.table-bordered > tfoot > tr > th{
             </div>
             </form>
           </div>
+          {{$name}}
           <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
@@ -106,25 +107,40 @@ table.table-bordered > tfoot > tr > th{
                 <td>
                   @if($activity_list->link != null)
                     @if($role_code == 'L-Assy' || $name == 'Bagus Sudibyo')
-                      @if($activity_list->frequency == 'Weekly' && $activity_list->jumlah >= '4')
-                        <button class="btn btn-success">Sudah Dilaksanakan</button>
-                      @elseif($activity_list->frequency == 'Weekly' && $activity_list->jumlah < '4')
-                        <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
-                      @elseif($activity_list->frequency == 'Monthly' && $activity_list->jumlah >= '1' || $activity_list->frequency == 'Conditional' && $activity_list->jumlah >= '1')
-                        <button class="btn btn-success">Sudah Dilaksanakan</button>
-                      @elseif($activity_list->frequency == 'Daily' && $activity_list->jumlah >= '1')
-                        <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
+                      @if($name == 'Tofik Nur Hidayat')
+                        @if($activity_list->frequency == 'Weekly' && $activity_list->jumlah >= '4')
+                          <button class="btn btn-success">Sudah Dilaksanakan</button>
+                        @elseif($activity_list->frequency == 'Weekly' && $activity_list->jumlah < '4')
+                          <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
+                        @elseif($activity_list->frequency == 'Monthly' && $activity_list->jumlah >= '1' || $activity_list->frequency == 'Conditional' && $activity_list->jumlah >= '1')
+                          <button class="btn btn-success">Sudah Dilaksanakan</button>
+                        @elseif($activity_list->frequency == 'Daily' && $activity_list->jumlah >= '1')
+                          <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
+                        @else
+                          <button class="btn btn-danger">Belum Dilaksanakan</button>
+                        @endif
+                        <a target="_blank" class="btn btn-primary" href="{{url("$activity_list->link")}}">Details</a>
                       @else
-                        <button class="btn btn-danger">Belum Dilaksanakan</button>
+                        @if($activity_list->frequency == 'Weekly' && $activity_list->jumlah >= '4')
+                          <button class="btn btn-success">Sudah Dilaksanakan</button>
+                        @elseif($activity_list->frequency == 'Weekly' && $activity_list->jumlah < '4')
+                          <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
+                        @elseif($activity_list->frequency == 'Monthly' && $activity_list->jumlah >= '1' || $activity_list->frequency == 'Conditional' && $activity_list->jumlah >= '1')
+                          <button class="btn btn-success">Sudah Dilaksanakan</button>
+                        @elseif($activity_list->frequency == 'Daily' && $activity_list->jumlah >= '1')
+                          <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
+                        @else
+                          <button class="btn btn-danger">Belum Dilaksanakan</button>
+                        @endif
                       @endif
                     @else
-                      <a target="_blank" class="btn btn-primary btn-sm" href="{{url("$activity_list->link")}}">Details</a>
+                      <a target="_blank" class="btn btn-primary" href="{{url("$activity_list->link")}}">Details</a>
                     @endif
                   @else
                     @if($role_code == 'L-Assy' || $name == 'Bagus Sudibyo')
                       <button class="btn btn-danger">Belum Dilaksanakan</button>
                     @else
-                      <a class="btn btn-danger btn-sm" href="">Data Tidak Tersedia</a>
+                      <a class="btn btn-danger" href="">Data Tidak Tersedia</a>
                     @endif
                   @endif
                 </td>

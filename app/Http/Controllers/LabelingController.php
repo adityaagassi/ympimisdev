@@ -438,7 +438,8 @@ class LabelingController extends Controller
         foreach($labeling as $labeling){
             $product = $labeling->product;
             $section = $labeling->section;
-            $periode = $labeling->periode;
+            $fy = WeeklyCalendar::where('week_date',$labeling->date)->first();
+            $periode = $fy->fiscal_year;
             $foreman = $labeling->foreman;
             $leader = $labeling->leader;
             if ($labeling->approval == Null) {
