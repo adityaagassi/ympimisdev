@@ -115,6 +115,11 @@
 		@endif
 		<a style="background-color: red; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_requisition/reject/".$id) }}">&nbsp; Reject &nbsp;</a>
 
+		<br><br><br>
+
+		<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+		<a href="{{ url('purchase_requisition/monitoring') }}">Purchase Requisition (PR) Monitoring</a>
+
 		<br><br>
 
 		<span style="font-size: 20px">Best Regards,</span>
@@ -130,7 +135,7 @@
 		This is an automatic notification. Please do not reply to this address.<br>
 		自動通知です。返事しないでください。<br>
 
-		<h2>Purchase Requisition (PR) {{$no_pr}}</h2>
+		<h2>Purchase Requisition (購入申請) {{$no_pr}} </h2>
 
 		<table style="border-collapse: collapse;" width="80%">
 			<thead style="background-color: rgb(126,86,134);">
@@ -165,6 +170,11 @@
 		<a style="background-color: green; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_requisition/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve (承認) &nbsp;&nbsp;&nbsp;</a>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<a style="background-color: red; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_requisition/reject/".$id) }}">&nbsp; Reject (却下）&nbsp;</a>
+
+
+		<br><br>
+
+		<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt="">
 		
 
 		@elseif($posisi == "pch")

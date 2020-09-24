@@ -40,6 +40,10 @@
 	    overflow:hidden;
 	    text-overflow: ellipsis;
 	  }
+	#tablebudget > tr > td:hover {
+	    /*cursor: pointer;*/
+	    background-color: #4caf50;
+	  }
 	#loading { display: none; }
 </style>
 @stop
@@ -104,6 +108,22 @@
 								</select>
 							</div>
 						</div>
+						@if(Auth::user()->role_code == "MIS" || Auth::user()->role_code == "ACC" || Auth::user()->role_code == "ACC-SPL")
+				        <div class="col-md-2">
+							<div class="form-group">
+								<label>Department</label>
+				              	<select class="form-control select2" multiple="multiple" id="department" data-placeholder="Select Department" style="width: 100%;border-color: #605ca8" >
+				                  @foreach($department as $dept)
+				                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+				                  @endforeach
+				                </select>
+							</div>
+				        </div>
+				        @else
+				           <select class="form-control select2 hideselect" multiple="multiple" id="department" data-placeholder="Select Department" style="border-color: #605ca8">
+				             <option value="{{$emp_dept->department}}" selected="">{{$emp_dept->department}}</option>
+				           </select>
+				        @endif
 						<div class="col-md-4">
 							<div class="form-group">
 								<div class="col-md-4" style="padding-right: 0;">
@@ -139,19 +159,22 @@
 							<table id="budgetTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width:5%;">Periode</th>
-										<th style="width:6%;">Budget No</th>
-										<th style="width:5%;">Description</th>
-										<th style="width:5%;">Amount</th>
-										<th style="width:5%;">Env</th>
-										<th style="width:5%;">Purpose</th>
-										<th style="width:7%;">PIC</th>
-										<th style="width:6%;">Account Name</th>
-										<th style="width:6%;">Cateogry</th>
-										<th style="width:6%;">Action</th>
+										<th>Periode</th>
+										<th>Budget No</th>
+										<th>Description</th>
+										<th>Account Name</th>
+										<th>Category</th>
+										<th>Amount</th>
+										<th>Purchase requisition</th>
+										<th>Investment</th>
+										<th>Purchase Order</th>
+										<th>Transfer</th>
+										<th>Actual</th>
+										<th>Ending</th>
+										<th>Action</th>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody id="tablebudget">
 								</tbody>
 								<tfoot>
 					              <tr>
@@ -165,9 +188,13 @@
 					                <th></th>
 					                <th></th>
 					                <th></th>
+					                <th></th>
+					                <th></th>
+					                <th></th>
 					              </tr>
 					            </tfoot>
 							</table>
+						
 						</div>
 					</div>
 				</div>
@@ -362,6 +389,51 @@
 		</div>
 	</div>
 
+
+	<div class="modal fade" id="myModal">
+	    <div class="modal-dialog" style="width:1250px;">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <h4 style="float: right;" id="modal-title"></h4>
+	          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+	          <br><h4 class="modal-title" id="judul_table"></h4>
+	        </div>
+	        <div class="modal-body">
+	          <div class="row">
+	            <div class="col-md-12">
+	              <table id="tableResult" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
+	                <thead style="background-color: rgba(126,86,134,.7);">
+	                  <tr>
+	                    <th width="10%">Budget</th>
+	                    <th width="10%">Budget Month</th>
+	                    <th width="30%">Category Number</th>
+	                    <th width="30%">Detail Item</th>
+	                    <th width="10%">Status</th>
+	                    <th width="10%">Amount</th>
+	                  </tr>
+	                </thead>
+	                <tbody id="tableBodyResult">
+	                </tbody>
+	                <tfoot style="background-color: RGB(252, 248, 227);">
+	                <th></th>
+	                <th></th>
+	                <th></th>
+	                <th></th>
+	                <th>Total</th>
+	                <th id="resultTotal"></th>
+	              </tfoot>
+	              </table>
+	            </div>
+	          </div>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+
+
 @endsection
 
 @section('scripts')
@@ -384,6 +456,7 @@
 
 	jQuery(document).ready(function() {
 		$('.select2').select2();
+    	$('.hideselect').next(".select2-container").hide();
 		fetchTable();
 		$('body').toggleClass("sidebar-collapse");
 	});
@@ -397,14 +470,136 @@
 	}
 
 	function fetchTable(){
-		$('#budgetTable').DataTable().destroy();
-		
+
 		var periode = $('#periode').val();
 		var category = $('#category').val();
+	    var department = $('#department').val();
+
 		var data = {
 			periode:periode,
-			category:category
+			category:category,
+		    department: department,
 		}
+
+	    $.get('{{ url("fetch/budget/info") }}', data, function(result, status, xhr){
+	      if(xhr.status == 200){
+	        if(result.status){
+
+	       	  $('#budgetTable').DataTable().clear();
+			  $('#budgetTable').DataTable().destroy();
+
+	          $("#tablebudget").find("td").remove();  
+	          $('#tablebudget').html("");
+
+	          var table = "";
+
+	          $.each(result.datas, function(key, value) {
+
+	              var ending = parseFloat(value.amount) - (parseFloat(value.PR) + parseFloat(value.Investment) + parseFloat(value.PO));
+
+	              table += '<tr>';
+	              table += '<td>'+value.periode+'</td>';
+	              table += '<td>'+value.budget_no+'</td>';
+	              table += '<td>'+value.description+'</td>';
+	              table += '<td>'+value.account_name+'</td>';
+	              table += '<td>'+value.category+'</td>';
+	              table += '<td>$ '+value.amount+'</td>';
+	              table += '<td style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PR\')">$ '+value.PR+'</td>';
+	              table += '<td style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Investment\')">$ '+value.Investment+'</td>';
+	              table += '<td style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PO\')">$ '+value.PO+'</td>';
+	              table += '<td style="cursor:pointer">$ 0</td>';
+	              table += '<td style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Actual\')">$ '+value.Actual+'</td>';
+	              if (ending > 0) {
+	              table += '<td style="color:blue">$ '+ending.toFixed(2)+'</td>';                
+	              }
+
+	              table += '<td><button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('+value.id+')"><i class="fa fa-eye"></i> Detail Sisa Budget</button></td>';  
+
+	              table += '</tr>';
+	          })
+
+	          $('#tablebudget').append(table);
+
+	          $('#budgetTable tfoot th').each( function () {
+		        var title = $(this).text();
+			        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
+			      } );
+			      var table = $('#budgetTable').DataTable({
+			        'dom': 'Bfrtip',
+			        'responsive':true,
+			        'lengthMenu': [
+			        [ 5, 10, 25, -1 ],
+			        [ '5 rows', '10 rows', '25 rows', 'Show all' ]
+			        ],
+			        'buttons': {
+			          buttons:[
+			          {
+			            extend: 'pageLength',
+			            className: 'btn btn-default',
+			          },
+			          {
+			          extend: 'copy',
+			          className: 'btn btn-success',
+			          text: '<i class="fa fa-copy"></i> Copy',
+			          exportOptions: {
+			            columns: ':not(.notexport)'
+			          }
+			          },
+			          {
+			            extend: 'excel',
+			            className: 'btn btn-info',
+			            text: '<i class="fa fa-file-excel-o"></i> Excel',
+			            exportOptions: {
+			              columns: ':not(.notexport)'
+			            }
+			          },
+			          {
+			            extend: 'print',
+			            className: 'btn btn-warning',
+			            text: '<i class="fa fa-print"></i> Print',
+			            exportOptions: {
+			              columns: ':not(.notexport)'
+			            }
+			          },
+			          ]
+			        },
+			        'paging': true,
+			        'lengthChange': true,
+			        'pageLength': 15,
+			        'searching': true,
+			        'ordering': true,
+			        'order': [],
+			        'info': true,
+			        'autoWidth': true,
+			        "sPaginationType": "full_numbers",
+			        "bJQueryUI": true,
+			        "bAutoWidth": false,
+			        "processing": true
+			      });
+	        }
+	        else{
+		      alert('Attempt to retrieve data failed');
+		    }
+	      }
+
+		    table.columns().every( function () {
+		      var that = this;
+
+		      $( 'input', this.footer() ).on( 'keyup change', function () {
+		        if ( that.search() !== this.value ) {
+		          that
+		          .search( this.value )
+		          .draw();
+		        }
+		      } );
+		    } );
+
+		    $('#budgetTable tfoot tr').appendTo('#budgetTable thead');
+	    });
+	  }
+
+	function fetchTable2(){
+		$('#budgetTable').DataTable().destroy();
 		
 		$('#budgetTable tfoot th').each( function () {
 	      var title = $(this).text();
@@ -479,12 +674,9 @@
 				{ "data": "periode", "width":"5%"},
 				{ "data": "budget_no", "width":"10%"},
 				{ "data": "description", "width":"20%"},
-				{ "data": "amount"},
-				{ "data": "env"},
-				{ "data": "purpose"},
-				{ "data": "pic"},
 				{ "data": "account_name"},
 				{ "data": "category"},
+				{ "data": "amount"},
 				{ "data": "action"}
 			]
 		});
@@ -592,6 +784,80 @@
 			processData: false
 		});
 	});
+
+	  function detail_budget(budget,status){
+	    $("#myModal").modal("show");
+
+
+	    var data = {
+	        budget:budget,
+	        status:status,
+	    }
+
+	    $("#loading").show();
+	    $.get('{{ url("fetch/budget/detail_table") }}', data, function(result, status, xhr) {
+
+
+	      $("#loading").hide();
+	      if(result.status){
+	        $('#tableResult').DataTable().clear();
+	        $('#tableResult').DataTable().destroy();
+	        $('#tableBodyResult').html("");
+
+	        var tableData = "";
+	        var total = 0;
+	        var count = 1;
+	        
+	        $.each(result.datas, function(key, value) {
+	          tableData += '<tr>';
+	          tableData += '<td>'+ value.budget +'</td>';
+
+	          if (value.status == "PR" || value.status == "Investment") {
+	            tableData += '<td>'+ value.budget_month +'</td>';
+	            tableData += '<td>'+ value.category_number +'</td>';
+	            tableData += '<td>'+ value.no_item +'</td>';
+	            tableData += '<td>'+ value.status+ '</td>';
+	            tableData += '<td>$ '+ value.amount +'</td>'; 
+	            total += parseFloat(value.amount);           
+	          }
+
+	          else if(value.status == "PO"){
+	            tableData += '<td>'+ value.budget_month_po +'</td>';
+	            tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
+	            tableData += '<td>'+ value.no_item +'</td>';
+	            tableData += '<td>'+ value.status+ '</td>';
+	            tableData += '<td>$ '+ value.amount_po +'</td>';
+	            total += parseFloat(value.amount_po);
+	          }
+
+	          else if(value.status == "Actual"){
+	            tableData += '<td>'+ value.budget_month_receive +'</td>';
+	            tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
+	            tableData += '<td>'+ value.no_item +'</td>';
+	            tableData += '<td>'+ value.status+ '</td>';
+	            tableData += '<td>$ '+ value.amount_receive +'</td>';
+	            total += parseFloat(value.amount_receive);
+	          }
+
+	          tableData += '</tr>';
+	          count += 1;
+	        });
+
+	        $('#tableBodyResult').append(tableData);
+	        $('#resultTotal').html('');
+	        $('#resultTotal').append('$ '+total.toFixed(2));
+
+	      }
+	      else{
+	        alert('Attempt to retrieve data failed');
+	      }
+
+	    });
+
+	    $('#judul_table').append().empty();
+	    $('#judul_table').append('<center><b>'+status+' Budget '+budget+'</center></b>');
+	    
+	  }
 
 	function openSuccessGritter(title, message){
       jQuery.gritter.add({

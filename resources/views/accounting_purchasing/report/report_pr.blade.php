@@ -142,8 +142,18 @@
 					<td colspan="1" style="border: 1px solid black;"><?= date('d-M-y', strtotime($purchase_r->item_request_date)) ?></td>
 					<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_qty }} {{ $purchase_r->item_uom }}</td>
 					<td colspan="1" style="border: 1px solid black;">{{ $purchase_r->item_currency }}</td>
+					@if($purchase_r->item_currency == "IDR")
 					<td colspan="1" style="border: 1px solid black;"><?= number_format($purchase_r->item_price,0,"",".") ?></td>
-					<td colspan="1" style="border: 1px solid black;"><?= number_format($purchase_r->item_amount,0,"","."); ?></td>
+					@else
+					<td colspan="1" style="border: 1px solid black;"><?= $purchase_r->item_price ?></td>
+					@endif
+
+					@if($purchase_r->item_currency == "IDR")
+					<td colspan="1" style="border: 1px solid black;"><?= number_format($purchase_r->item_amount,0,"",".") ?></td>
+					@else
+					<td colspan="1" style="border: 1px solid black;"><?= $purchase_r->item_amount ?></td>
+					@endif
+
 					<td colspan="1" style="border: 1px solid black;">
 						@if($purchase_r->last_order != null) 
 						<?= date('d-M-Y', strtotime($purchase_r->last_order)) ?>

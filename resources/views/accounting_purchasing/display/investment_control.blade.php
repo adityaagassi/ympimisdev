@@ -14,8 +14,8 @@ table.table-bordered > thead > tr > th{
 }
 table.table-bordered > tbody > tr > td{
   border:1px solid rgb(54, 59, 56);
-  /*  background-color: #212121;
-    color: white;*/
+  background-color: #eeeeee;
+    /*color: white;*/
   vertical-align: middle;
   text-align: center;
   padding:3px;
@@ -142,7 +142,7 @@ hr { background-color: red; height: 1px; border: 0; }
               <div class="input-group-addon bg-blue">
                 <i class="fa fa-search"></i>
               </div>
-              <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8" >
+              <select class="form-control select2" multiple="multiple" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8;width: 100%">
                   @foreach($department as $dept)
                     <option value="{{ $dept->department }}">{{ $dept->department }}</option>
                   @endforeach
@@ -150,7 +150,7 @@ hr { background-color: red; height: 1px; border: 0; }
             </div>
         </div>
         @else
-           <select class="form-control select2 hideselect" multiple="multiple" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8">
+           <select class="form-control select2 hideselect" multiple="multiple" onchange="drawChart()" id="department" data-placeholder="Select Department" style="border-color: #605ca8;width: 100%">
              <option value="{{$emp_dept->department}}" selected="">{{$emp_dept->department}}</option>
            </select>
         @endif
@@ -165,21 +165,18 @@ hr { background-color: red; height: 1px; border: 0; }
               <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
                 <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
                   <tr>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;;font-size: 14px;background-color: #63228a" rowspan="2">No Investment</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a" rowspan="2">Submission Date</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a" rowspan="2">Department</th>
-                    <th style="width: 50%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a" colspan="9">Progress Investment</th>
-                  </tr>
-                  <tr>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a">User</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a">Cek Budget</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a">Cek Pajak</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a">Manager</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a">DGM</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a">GM</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a">Manager Acc</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a">Direktur</th>
-                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 14px;background-color: #63228a">Presdir</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">No Investment</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Submission Date</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px" rowspan="2">Department</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">User</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Cek Budget</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Cek Pajak</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Manager</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">DGM</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">GM</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Manager Acc</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Direktur</th>
+                    <th style="width: 6%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;padding: 3px">Presdir</th>
                   </tr>
                 </thead>
                 <tbody id="tabelisi">
@@ -202,15 +199,15 @@ hr { background-color: red; height: 1px; border: 0; }
               <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
                 <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
                   <tr>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black;background-color: #7b1fa2;color: white">Investment No</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #7b1fa2;color: white">Submission Date</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #7b1fa2;color: white">Department</th>
-                    <th style="width: 15%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #7b1fa2;color: white">Description</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #7b1fa2;color: white">Qty</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #7b1fa2;color: white">Price</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #7b1fa2;color: white">Amount</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #7b1fa2;color: white">Dollar</th>
-                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #7b1fa2;color: white">Status</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black;background-color: #3f51b5;color: white">Investment No</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Submission Date</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Department</th>
+                    <th style="width: 15%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Description</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Qty</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Price</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Amount</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Dollar</th>
+                    <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;color: black; background-color: #3f51b5;color: white">Status</th>
                   </tr>
                 </thead>
                 <tbody id="tabelisipo_undone">
@@ -757,8 +754,8 @@ hr { background-color: red; height: 1px; border: 0; }
                 }
               }
               else{
-                manager = '<span class="label label-warning">None</span>'; 
-                colormanager = 'style="background-color:#f39c12"';
+                manager = '<span style="color:white">None</span>'; 
+                colormanager = 'style="background-color:#424242"';
               }
 
               //DGM
@@ -789,8 +786,8 @@ hr { background-color: red; height: 1px; border: 0; }
                 }
               }
               else{
-                dgm = '<span class="label label-warning">None</span>'; 
-                colordgm = 'style="background-color:#f39c12"';
+                dgm = '<span style="color:white">None</span>'; 
+                colordgm = 'style="background-color:#424242"';
               }
 
               //GM
@@ -820,8 +817,8 @@ hr { background-color: red; height: 1px; border: 0; }
                   }
                 }
               }else{
-                gm = '<span class="label label-warning">None</span>';
-                colorgm = 'style="background-color:#f39c12"';
+                gm = '<span style="color:white">None</span>';
+                colorgm = 'style="background-color:#424242"';
               }
 
               //Manager ACC
@@ -906,7 +903,7 @@ hr { background-color: red; height: 1px; border: 0; }
               }
               
 
-              table += '<tr>';
+              table += '<tr style="font-size:16px">';
               table += '<td>'+value.reff_number+'</td>';
               table += '<td>'+value.submission_date+'</td>';
               table += '<td>'+value.department_shortname+'</td>';

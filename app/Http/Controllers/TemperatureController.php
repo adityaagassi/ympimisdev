@@ -449,44 +449,30 @@ class TemperatureController extends Controller
             }
 
             IvmsTemperatureTemp::truncate();
-            // var_dump($persondata);
 
-            // $person_id = [];
+            $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employee_groups join miraimobile.quiz_logs on employee_groups.employee_id = miraimobile.quiz_logs.employee_id where location = 'YMPI-OFFICE' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh'");
 
-            // $data = [];
+            // var_dump($miraimobile);
 
-            // for ($i=0; $i < count($rows); $i++) {
-            //    $exprow = explode(',', $rows[$i][0]);
-
-            //    $expperid = explode("'", $exprow[0]);
-
-            //    $points = explode('_', $exprow[5]);
-
-            //    if ($exprow[8] != '-') {
-            //         $temps = explode('°', $exprow[8]);
-            //    }
-
-            //    $datein = date('Y-m-d', strtotime($exprow[3]));
-
-            //    if (in_array($expperid[1], $person_id)) {
-                    
-            //    }else{
-            //         if ($exprow[8] != '-') {
-            //              $person_id[] = $expperid[1];
-            //              $ivms = IvmsTemperature::firstOrNew(['person_id' => $expperid[1], 'date' => $datein]);
-            //              $ivms->person_id = $expperid[1];
-            //              $ivms->name = $exprow[1];
-            //              $ivms->location = $exprow[2];
-            //              $ivms->date = $datein;
-            //              $ivms->date_in = $exprow[3];
-            //              $ivms->point = $points[0];
-            //              $ivms->temperature = $temps[0];
-            //              $ivms->abnormal_status = $exprow[9];
-            //              $ivms->created_by = $id_user;
-            //              $ivms->save();
-            //         }
-            //    }
-            // }
+            foreach ($miraimobile as $val) {
+                    $ivms = IvmsTemperature::firstOrNew(['employee_id' => $val->employee_id, 'date' => $val->answer_date]);
+                    $ivms->person_id = $val->group;
+                    $ivms->employee_id = $val->employee_id;
+                    $ivms->name = $val->name;
+                    $ivms->location = $val->location;
+                    $ivms->date = $val->answer_date;
+                    $ivms->date_in = $val->date_in;
+                    $ivms->point = "Mirai Mobile";
+                    $tempmobile = floatval($val->answer);
+                    $ivms->temperature = $tempmobile;
+                    if ($tempmobile > '37.5') {
+                         $ivms->abnormal_status = "Yes";
+                    }else{
+                         $ivms->abnormal_status = "No";
+                    }
+                    $ivms->created_by = $id_user;
+                    $ivms->save();
+            }
 
             $response = array(
               'status' => true,

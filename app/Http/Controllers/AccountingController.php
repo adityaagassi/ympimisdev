@@ -44,7 +44,7 @@ class AccountingController extends Controller
 
     $this->transportation = ['AIR', 'BOAT', 'COURIER SERVICE', 'DHL', 'FEDEX', 'SUV-Car'];
 
-    $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits',];
+    $this->delivery = ['CIF Surabaya', 'CIP', 'Cost And Freight ', 'Delivered At Frontier', 'Delivered Duty Paid', 'Delivered Duty Unpaid', 'Delivered Ex Quay', 'Ex Works', 'Ex Factory', 'Ex Ship', 'FRANCO', 'Franco', 'FOB', 'Flee Alongside Ship', 'Free Carrier (FCA)', 'Letter Of Credits',];
 
         // $this->dgm = 'PI1910003';
         // $this->gm = 'PI1206001';
@@ -984,6 +984,10 @@ class AccountingController extends Controller
             else if($request->get('department') == "Purchasing Control")
             {
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement' and position = 'manager'");
+            }
+            else if($request->get('department') == "General Affairs")
+            {
+                $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources' and position = 'manager'");
             }
             else
             {
@@ -4810,7 +4814,8 @@ public function update_purchase_requisition_po(Request $request)
             'investment_item' => $inv_item,
             'employee' => $emp,
             'vendor' => $vendor,
-            'items' => $items
+            'items' => $items,
+            'uom' => $this->uom
         ))->with('page', 'Form Investment');
     }
 
@@ -5069,6 +5074,7 @@ public function update_purchase_requisition_po(Request $request)
                 'no_item' => $request->get('kode_item') , 
                 'detail' => $request->get('detail_item') , 
                 'qty' => $request->get('jumlah_item') , 
+                'uom' => $request->get('uom') , 
                 'price' => $request->get('price_item') , 
                 'amount' => $request->get('amount_item') , 
                 'dollar' => $request->get('dollar') , 
@@ -5124,6 +5130,7 @@ public function update_purchase_requisition_po(Request $request)
             $items->no_item = $request->get('kode_item');
             $items->detail = $request->get('detail_item');
             $items->qty = $request->get('jumlah_item');
+            $items->uom = $request->get('uom');
             $items->price = $request->get('price_item');
             $items->amount = $request->get('amount_item');
             $items->dollar = $request->get('dollar');
@@ -5175,7 +5182,7 @@ public function update_purchase_requisition_po(Request $request)
         //==================================//
     public function report_investment($id){
 
-        $detail_inv = AccInvestment::select('acc_investments.*','acc_investment_details.no_item', 'acc_investment_details.detail', 'acc_investment_details.qty', 'acc_investment_details.price', 'acc_investment_details.vat_status', 'acc_investment_details.amount')
+        $detail_inv = AccInvestment::select('acc_investments.*','acc_investment_details.no_item', 'acc_investment_details.detail', 'acc_investment_details.qty' , 'acc_investment_details.uom', 'acc_investment_details.price', 'acc_investment_details.vat_status', 'acc_investment_details.amount')
         ->leftJoin('acc_investment_details', 'acc_investments.reff_number', '=', 'acc_investment_details.reff_number')
         ->where('acc_investments.id', '=', $id)
         ->get();
@@ -6305,9 +6312,16 @@ public function update_purchase_requisition_po(Request $request)
         ->distinct()
         ->get();
 
+        $dept = db::select("select DISTINCT department from employee_syncs");
+        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+        ->select('department')
+        ->first();
+
         return view('accounting_purchasing.master.budget_info', array(
             'title' => $title,
             'title_jp' => $title_jp,
+            'emp_dept' => $emp_dept,
+            'department' => $dept
         ))->with('page', 'Budget Information')
         ->with('head', 'Budget Information');
     }
@@ -6315,56 +6329,243 @@ public function update_purchase_requisition_po(Request $request)
     public function fetch_budget_info(Request $request)
     {
 
-            //Get Employee Department
-        $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
-        ->select('department')
-        ->first();
+        //Get Employee Department
+        // $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
+        // ->select('department')
+        // ->first();
 
-        $budget = AccBudget::orderBy('acc_budgets.budget_no', 'asc');
+        // $budget = AccBudget::orderBy('acc_budgets.budget_no', 'asc');
 
-        if ($request->get('periode') != null)
+        // if ($request->get('periode') != null)
+        // {
+        //     $budget = $budget->whereIn('acc_budgets.periode', $request->get('periode'));
+        // }
+
+        // if ($request->get('category') != null)
+        // {
+        //     $budget = $budget->whereIn('acc_budgets.category', $request->get('category'));
+        // }
+
+        // if (Auth::user()->role_code == "MIS" || $emp_dept->department == "Accounting" || $emp_dept->department == "Procurement" || $emp_dept->department == "Purchasing Control") {
+
+        // }
+        // else if ($emp_dept->department == "General Affairs"){
+        //     $budget = $budget->where('department','=','Human Resources');
+        // }
+        // else if($emp_dept->department == "Purchasing Control") {
+        //     $budget = $budget->where('department','=','Procurement');
+        // }
+        // else {
+        //     $budget = $budget->where('department','=',$emp_dept->department);
+        // }
+
+        // $budget = $budget->select('*')->get();
+
+        // return DataTables::of($budget)
+
+        // ->editColumn('amount', function ($budget)
+        // {
+        //     return '$'.$budget->amount;
+        // })
+
+        // ->addColumn('action', function ($budget)
+        // {
+        //     $id = $budget->id;
+
+        //     return ' 
+        //     <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$id.')"><i class="fa fa-eye"></i> Detail Sisa Budget</button>
+        //     ';
+        // })
+
+        // ->rawColumns(['action' => 'action'])
+        // ->make(true);
+
+        $category = $request->get('category');
+
+        if ($category != null)
         {
-            $budget = $budget->whereIn('acc_budgets.periode', $request->get('periode'));
-        }
+          $cattt = json_encode($category);
+          $catt = str_replace(array("[","]"),array("(",")"),$cattt);
 
-        if ($request->get('category') != null)
-        {
-            $budget = $budget->whereIn('acc_budgets.category', $request->get('category'));
-        }
-
-        if (Auth::user()->role_code == "MIS" || $emp_dept->department == "Accounting" || $emp_dept->department == "Procurement" || $emp_dept->department == "Purchasing Control") {
-
-        }
-        else if ($emp_dept->department == "General Affairs"){
-            $budget = $budget->where('department','=','Human Resources');
-        }
-        else if($emp_dept->department == "Purchasing Control") {
-            $budget = $budget->where('department','=','Procurement');
+          $cat = 'and a.category in'.$catt;
         }
         else {
-            $budget = $budget->where('department','=',$emp_dept->department);
+          $cat = '';
         }
 
-        $budget = $budget->select('*')->get();
+        $periode = $request->get('periode');
 
-        return DataTables::of($budget)
-
-        ->editColumn('amount', function ($budget)
+        if ($periode != null)
         {
-            return '$'.$budget->amount;
-        })
+          $period = json_encode($periode);
+          $perio = str_replace(array("[","]"),array("(",")"),$period);
 
-        ->addColumn('action', function ($budget)
-        {
-            $id = $budget->id;
+          $per = 'and a.periode in'.$perio;
+        }
+        else {
+          $per = '';
+        }
 
-            return ' 
-            <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$id.')"><i class="fa fa-eye"></i> Detail</button>
-            ';
-        })
 
-        ->rawColumns(['action' => 'action'])
-        ->make(true);
+        $department = $request->get('department');
+
+        if ($department != null) {
+
+          if ($department[0] == "Maintenance") {
+            array_push($department,"Production Engineering");
+          }
+
+          else if ($department[0] == "Procurement") {
+            array_push($department,"Purchasing Control");
+          }
+
+          else if ($department[0] == "Human Resources") {
+            array_push($department,"General Affairs");
+          }
+
+
+          $deptt = json_encode($department);
+          $dept = str_replace(array("[","]"),array("(",")"),$deptt);
+
+          $dep = 'and a.department in'.$dept;
+        } else {
+          $dep = '';
+        }
+
+        // $data = db::select('
+        //     SELECT periode, budget_no, department, description, amount, account_name, category, SUM(PR) as PR, SUM(investment) as Investment, SUM(PO) as PO, SUM(Actual) as Actual FROM
+        //         (
+        //         SELECT
+        //             periode,
+        //             budget_no,
+        //             department,
+        //             description,
+        //             amount,
+        //             account_name,
+        //             category,
+        //             0 AS PR,
+        //             0 AS Investment,
+        //             0 AS PO,
+        //             0 AS Actual 
+        //         FROM
+        //             acc_budgets 
+
+        //         UNION ALL
+                
+        //         SELECT
+        //             acc_budgets.periode,
+        //             budget,
+        //             acc_budgets.description,
+        //             acc_budgets.department,
+        //             acc_budgets.amount,
+        //             acc_budgets.account_name,
+        //             acc_budgets.category,
+        //             sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ) AS PR,
+        //             sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ) AS Investment,
+        //             sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ) AS PO,
+        //             sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ) AS Actual 
+        //         FROM
+        //             acc_budget_histories
+        //             JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+        //         WHERE
+        //             acc_budgets.deleted_at IS NULL 
+        //     GROUP BY
+        //         budget) acc
+        //     group by budget_no
+        // ');
+
+//         SELECT periode, budget_no, department, description, amount, account_name, category
+// -- , 
+// -- SUM(PR) as PR, SUM(investment) as Investment, SUM(PO) as PO, SUM(Actual) as Actual 
+// FROM acc_budgets LEFT JOIN 
+//     (
+//     SELECT
+//         budget_no,
+//         0 AS PR,
+//         0 AS Investment,
+//         0 AS PO,
+//         0 AS Actual 
+//     FROM
+//         acc_budgets 
+//         UNION ALL
+//     SELECT
+//         budget,
+//         sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ) AS PR,
+//         sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ) AS Investment,
+//         sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ) AS PO,
+//         sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ) AS Actual 
+//     FROM
+//         acc_budget_histories
+//         JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+//     WHERE
+//         acc_budgets.deleted_at IS NULL 
+//     GROUP BY
+//         budget 
+//     ) 
+//     AS acc
+//     on acc_budgets.budget_no = acc.budget_no
+
+// group by acc_budgets.budget_no
+
+// SELECT periode, budget_no, department, description, amount, account_name, category FROM acc_budgets
+
+        $data = db::select('
+          SELECT
+            a.id,
+            ( SELECT periode FROM acc_budgets WHERE budget_no = a.budget_no ) AS periode,
+            a.budget_no,
+            ( SELECT department FROM acc_budgets WHERE budget_no = a.budget_no ) AS department,
+            ( SELECT description FROM acc_budgets WHERE budget_no = a.budget_no ) AS description,
+            ( SELECT amount FROM acc_budgets WHERE budget_no = a.budget_no ) AS amount,
+            ( SELECT account_name FROM acc_budgets WHERE budget_no = a.budget_no ) AS account_name,
+            ( SELECT category FROM acc_budgets WHERE budget_no = a.budget_no ) AS category,
+            SUM( a.PR ) AS PR,
+            SUM( a.investment ) AS Investment,
+            SUM( a.PO ) AS PO,
+            SUM( a.actual ) AS Actual
+        FROM
+            (
+            SELECT
+              id,
+                budget_no,
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO,
+                0 AS Actual 
+            FROM
+                acc_budgets UNION ALL
+            SELECT
+                acc_budgets.id,
+                budget,
+                sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ) AS PR,
+                sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ) AS Investment,
+                sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ) AS PO,
+                sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ) AS Actual 
+            FROM
+                acc_budget_histories
+                JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
+            WHERE
+                acc_budgets.deleted_at IS NULL 
+            GROUP BY
+                budget, acc_budgets.id
+            ) a 
+
+
+        GROUP BY
+             a.id,a.budget_no
+            ');
+
+        $response = array(
+            'status' => true,
+            'datas' => $data
+        );
+
+        return Response::json($response); 
+
+        // where a.deleted_at is null            
+        // '.$dep.' '.$cat.' '.$per.'
+
+
     }
 
     public function budget_detail(Request $request)
@@ -6585,7 +6786,7 @@ public function update_purchase_requisition_po(Request $request)
             acc_budgets.deleted_at IS NULL '.$date.' '.$dep.'
             GROUP BY
             budget,amount,description,department
-            ');
+        ');
 
         $response = array(
             'status' => true,
@@ -6969,6 +7170,18 @@ public function update_purchase_requisition_po(Request $request)
       $department = $request->get('department');
 
       if ($department != null) {
+          if ($department[0] == "Maintenance") {
+              array_push($department,"Production Engineering");
+          }
+
+          else if ($department[0] == "Procurement") {
+              array_push($department,"Purchasing Control");
+          }
+
+          else if ($department[0] == "Human Resources") {
+              array_push($department,"General Affairs");
+          }
+
           $deptt = json_encode($department);
           $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 
@@ -6990,7 +7203,7 @@ public function update_purchase_requisition_po(Request $request)
         'tahun' => $tahun,
         'datefrom' => $datefrom,
         'dateto' => $dateto,
-        'department' => $dep
+        'department' => $department
     );
 
       return Response::json($response); 
@@ -7015,6 +7228,19 @@ public function update_purchase_requisition_po(Request $request)
       $department = $request->get('department');
 
       if ($department != null) {
+
+        if ($department[0] == "Maintenance") {
+              array_push($department,"Production Engineering");
+          }
+
+          else if ($department[0] == "Procurement") {
+              array_push($department,"Purchasing Control");
+          }
+
+          else if ($department[0] == "Human Resources") {
+              array_push($department,"General Affairs");
+          }
+
           $deptt = json_encode($department);
           $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 
@@ -7155,6 +7381,19 @@ public function update_purchase_requisition_po(Request $request)
       $department = $request->get('department');
 
       if ($department != null) {
+
+          if ($department[0] == "Maintenance") {
+              array_push($department,"Production Engineering");
+          }
+
+          else if ($department[0] == "Procurement") {
+              array_push($department,"Purchasing Control");
+          }
+
+          else if ($department[0] == "Human Resources") {
+              array_push($department,"General Affairs");
+          }
+
           $deptt = json_encode($department);
           $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 
@@ -7232,8 +7471,6 @@ public function update_purchase_requisition_po(Request $request)
       else if ($status == "Sign Completed") {
           $status_sign = "and receive_date is not null";
       }
-
-
 
       $qry = "SELECT  * FROM acc_purchase_requisitions WHERE deleted_at IS NULL and monthname(submission_date) = '".$bulan."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
 

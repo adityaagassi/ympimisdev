@@ -184,7 +184,7 @@ class SendEmail extends Mailable
 
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Requisition')
+                ->subject('Purchase Requisition (購入申請)')
                 ->view('mails.purchase_requisition')
                 ->attach(public_path('files/pr/'.$all_file[0]))
                 ->attach(public_path('pr_list/'.$this->data[0]->file_pdf));
@@ -192,13 +192,13 @@ class SendEmail extends Mailable
             else if($this->data[0]->file_pdf != null){
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Requisition')
+                ->subject('Purchase Requisition (購入申請)')
                 ->view('mails.purchase_requisition')
                 ->attach(public_path('pr_list/'.$this->data[0]->file_pdf));
             }else{
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Requisition')
+                ->subject('Purchase Requisition (購入申請)')
                 ->view('mails.purchase_requisition');
             }
         }
@@ -207,13 +207,13 @@ class SendEmail extends Mailable
             if($this->data[0]->file_pdf != null ){
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Order')
+                ->subject('Purchase Order (発注依頼)')
                 ->view('mails.purchase_order')
                 ->attach(public_path('po_list/'.$this->data[0]->file_pdf));
             } else{
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Purchase Order')
+                ->subject('Purchase Order (発注依頼)')
                 ->view('mails.purchase_order');
             }
         }
@@ -224,7 +224,7 @@ class SendEmail extends Mailable
 
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Investment - Expense Application')
+                ->subject('Investment - Expense Application (投資・経費申請)')
                 ->view('mails.investment')
                 ->attach(public_path('files/investment/'.$all_file[0]))
                 ->attach(public_path('investment_list/'.$this->data[0]->pdf));
@@ -232,13 +232,13 @@ class SendEmail extends Mailable
             if($this->data[0]->pdf != null ){
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Investment - Expense Application')
+                ->subject('Investment - Expense Application (投資・経費申請)')
                 ->view('mails.investment')
                 ->attach(public_path('investment_list/'.$this->data[0]->pdf));
             } else{
                 return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
                 ->priority(1)
-                ->subject('Investment - Expense Application')
+                ->subject('Investment - Expense Application (投資申請)')
                 ->view('mails.investment');
             }
         }
@@ -249,6 +249,13 @@ class SendEmail extends Mailable
 
         if($this->remark == 'apar'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Verify APAR Purchase Requisition')->view('mails.verify_spk');
+        }
+
+        if($this->remark == 'chemical_not_input'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Input Production Result (Controlling Chart) Reminder')
+            ->view('mails.chemical_not_input');
         }
     }
 }

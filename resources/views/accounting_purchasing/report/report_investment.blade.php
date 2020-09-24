@@ -396,10 +396,10 @@
 				?>
 				@foreach($inv as $item)
 				<tr>
-					<td colspan="3" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{$item->detail}}</td>
-					<td colspan="1" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold">{{$item->qty}}</td>
-					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
-					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
+					<td colspan="3" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->detail}}</td>
+					<td colspan="1" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;">{{$item->qty}} {{$item->uom}}</td>
+					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;"><?= $ket_harga ?> <?= number_format($item->price,2,",",".");?></td>
+					<td colspan="2" rowspan="2" style="border: 1px solid black;color: blue;font-weight: bold;vertical-align: top;"><?= $ket_harga ?> <?= number_format($item->amount,2,",",".");?></td>
 
 					<?php 
 					if($item->vat_status == "Yes"){
@@ -407,7 +407,6 @@
 					} 
 					?>
 				</tr>
-
 				<tr></tr>
 				<?php
 					$total = $total + $item->amount;

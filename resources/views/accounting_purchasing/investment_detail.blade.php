@@ -264,6 +264,7 @@
                   <th>No Item</th>
                   <th>Detail</th>    
                   <th>Qty</th>
+                  <th>Uom</th>
                   <th>Price</th>
                   <th>Amount</th>
                   <th>Action</th>
@@ -273,6 +274,7 @@
               </tbody>
               <tfoot>
                 <tr>
+                  <th></th>
                   <th></th>
                   <th></th>
                   <th></th>
@@ -537,10 +539,19 @@
             <div class="col-sm-1"></div>
             <label class="col-sm-2">Qty</span></label>
             <div class="col-sm-8">
-              <div class="input-group">
                 <input type="number" class="form-control" id="jumlah_item" placeholder="Jumlah Item" onkeyup="getPersen()" required>
-                <span class="input-group-addon">pc(s)</span>
-              </div>
+            </div>
+          </div>
+          <div class="form-group row" align="left">
+            <div class="col-sm-1"></div>
+            <label class="col-sm-2">UOM</span></label>
+            <div class="col-sm-8">
+              <select class="form-control select2" id="uom" name="uom" data-placeholder="UOM" style="width: 100%;">
+                  <option></option>
+                  @foreach($uom as $um)
+                  <option value="{{ $um }}">{{ $um }}</option>
+                  @endforeach
+                </select>
             </div>
           </div>
           <div class="form-group row" align="left">
@@ -597,9 +608,9 @@
             <label class="col-sm-2">Nomor Item<span class="text-red">*</span></label>
             <div class="col-sm-8">
               <select class="form-control select4" id="kode_item_edit" name="kode_item_edit" style="width: 100%;" data-placeholder="Pilih Nomor Item" required>
-                <option value=""></option>
-                 @foreach($items as $item)
-                  <option value="{{ $item->kode_item }}">{{ $item->kode_item }} - {{ $item->deskripsi }}</option>
+                  <option></option>
+                  @foreach($uom as $um)
+                  <option value="{{ $um }}">{{ $um }}</option>
                   @endforeach
               </select>
             </div>
@@ -619,6 +630,18 @@
                   <input type="number" class="form-control" id="jumlah_item_edit" placeholder="Jumlah Item" onkeyup="getPersenEdit()" required>
                   <span class="input-group-addon">pc(s)</span>
                 </div>
+              </div>
+            </div>
+            <div class="form-group row" align="left">
+              <div class="col-sm-1"></div>
+              <label class="col-sm-2">UOM</span></label>
+              <div class="col-sm-8">
+                <select class="form-control select4" id="uom_edit" name="uom_edit" style="width: 100%;" data-placeholder="Pilih UOM" required>
+                <option value=""></option>
+                  @foreach($uom as $um)
+                  <option value="{{ $um }}">{{ $um }}</option>
+                  @endforeach
+              </select>
               </div>
             </div>
             <div class="form-group row" align="left">
@@ -811,6 +834,7 @@
       { "data": "no_item"},
       { "data": "detail" },
       { "data": "qty" },
+      { "data": "uom" },
       { "data": "price" },
       { "data": "amount" },
       { "data": "action", "width": "10%" }
@@ -1243,6 +1267,7 @@
         kode_item: $("#kode_item").val(),
         detail_item: $("#detail_item").val(),
         jumlah_item : $("#jumlah_item").val(),
+        uom : $("#uom").val(),
         price_item : price_number,
         amount_item : amount_number,
         dollar : $("#dollar_item").val()
@@ -1270,6 +1295,7 @@
         $("#kode_item_edit").val(result.datas.no_item).trigger('change.select2');
         $("#detail_item_edit").val(result.datas.detail);
         $("#jumlah_item_edit").val(result.datas.qty);
+        $("#uom_edit").val(result.datas.uom).trigger('change.select2');
         $("#price_item_edit").val(result.datas.price);
         $("#amount_item_edit").val(result.datas.amount);
         $("#dollar_item_edit").val(result.datas.dollar);
@@ -1293,6 +1319,7 @@
         kode_item: $("#kode_item_edit").val(),
         detail_item: $("#detail_item_edit").val(),
         jumlah_item: $("#jumlah_item_edit").val(),
+        uom: $("#uom_edit").val(),
         price_item: $("#price_item_edit").val(),
         amount_item: $("#amount_item_edit").val(),
         dollar : $("#dollar_item_edit").val(),

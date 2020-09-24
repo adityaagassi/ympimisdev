@@ -1177,7 +1177,7 @@
     		//isi amount + amount dirubah
     		var amount = document.getElementById('amount'+num);
     		// amount.value = rubah(hasil);
-    		amount.value = hasil;
+    		amount.value = hasil.toFixed(2);
 
     		total_usd = 0;
     		total_id = 0;
@@ -1292,7 +1292,7 @@
       	// }
 
       	if (!isNaN(hasil)) {
-      		$("#amount_edit"+num).val(hasil);
+      		$("#amount_edit"+num).val(hasil.toFixed(2));
     		total_usd = 0;
     		total_id = 0;
     		total_yen = 0;

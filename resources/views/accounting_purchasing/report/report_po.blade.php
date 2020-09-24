@@ -94,7 +94,7 @@
 					<td colspan="4" style="font-size: 12px">{{$po[0]->supplier_address}}</td>
 					<td colspan="2"></td>
 					<td colspan="1" style="font-size: 12px;">Date</td>
-					<td colspan="3" style="font-size: 12px;">: <?= date('d F Y H:i:s', strtotime($po[0]->tgl_po)) ?></td>
+					<td colspan="3" style="font-size: 12px;">: <?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></td>
 				</tr>
 
 				<tr>
@@ -222,7 +222,7 @@
 					@elseif($po[0]->service_price != "0") 
 					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Service Price<br><span style="font-size: 10px;font-style: italic">(Harga)</span></td>
 					@endif
-					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Amount<br><span style="font-size: 10px;font-style: italic">(Total)</span></td>
+					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Amount<br><span style="font-size: 10px;font-style: italic">(Jumlah)</span></td>
 				</tr>
 			</thead>
 			<tbody>
@@ -233,7 +233,7 @@
 				<tr>
 					<td colspan="1" style="height: 26px; border: 1px solid black;text-align: center;padding: 0">{{ $no }}</td>
 					<td colspan="2" style="border: 1px solid black;">{{ $po->nama_item }}</td>
-					<td colspan="1" style="border: 1px solid black;text-align: center;"><?= date('d F Y', strtotime($po->delivery_date)) ?></td>
+					<td colspan="1" style="border: 1px solid black;text-align: center;"><?= date('d-M-y', strtotime($po->delivery_date)) ?></td>
 					<td colspan="1" style="border: 1px solid black;text-align: center;">{{ $po->qty }}</td>
 					<td colspan="1" style="border: 1px solid black;text-align: center;">{{ $po->uom }}</td>
 					@if($po->goods_price != "0") 
@@ -413,10 +413,10 @@
 				<tbody>
 
 					<tr>
-						<td colspan="3" style="height: 26px;padding: 0">{{ $po->buyer_name }}</td>
-						<td colspan="3" style="">{{ $po->authorized2_name }}</td>
-						<td colspan="3" style="">{{ $po->authorized3_name }}</td>
-						<td colspan="3" style="">{{ $po->authorized4_name }}</td>
+						<td colspan="3" style="height: 26px;padding: 0;font-weight: bold;text-decoration: underline;">{{ $po->buyer_name }}</td>
+						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po->authorized2_name }}</td>
+						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po->authorized3_name }}</td>
+						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po->authorized4_name }}</td>
 					</tr>
 					<tr>
 						<td colspan="3">Procurement Staff</td>

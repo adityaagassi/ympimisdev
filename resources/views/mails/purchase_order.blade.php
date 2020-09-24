@@ -94,6 +94,12 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a style="background-color: red; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_order/reject/".$id) }}">&nbsp; Reject &nbsp;</a>
 
+
+			<br><br><br>
+
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="{{ url('purchase_order/monitoring') }}">Purchase Order (PO) Monitoring</a>
+
 			<br><br>
 
 			<span style="font-size: 20px">Best Regards,</span>
@@ -159,6 +165,11 @@
 			<a style="background-color: green; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_order/approvedgm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve &nbsp;&nbsp;&nbsp;</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a style="background-color: red; width: 50px; text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_order/reject/".$id) }}">&nbsp; Reject &nbsp;</a>
+
+			<br><br><br>
+
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="{{ url('purchase_order/monitoring') }}">Purchase Order (PO) Monitoring</a>
 
 			<br><br>
 
@@ -227,6 +238,12 @@
 			<a style="background-color: green; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_order/approvegm/".$id) }}">&nbsp;&nbsp;&nbsp; Approve (承認) &nbsp;&nbsp;&nbsp;</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<a style="background-color: red; width: 50px;text-decoration: none;color: white;font-size: 20px;" href="{{ url("purchase_order/reject/".$id) }}">&nbsp; Reject (却下) &nbsp;</a><br>
+
+			
+			<br><br><br>
+
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<a href="{{ url('purchase_order/monitoring') }}">Purchase Order (PO) Monitoring</a>
 			
 			<br><br>
 
