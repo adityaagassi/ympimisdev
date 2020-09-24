@@ -356,6 +356,7 @@ class LabelingController extends Controller
 					join activity_lists on activity_lists.id = activity_list_id
 					join departments on departments.id =  activity_lists.department_id
 					where DATE_FORMAT(labelings.date,'%Y-%m') = '".$date."'
+                    and activity_list_id = '".$id."'
 					and department_id = '".$id_departments."'
 					and labelings.deleted_at is null";
             $labeling = DB::select($queryLabeling);
@@ -423,6 +424,7 @@ class LabelingController extends Controller
 					join activity_lists on activity_lists.id = activity_list_id
 					join departments on departments.id =  activity_lists.department_id
 					where DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
+                    and activity_list_id = '".$id."'
 					and department_id = '".$id_departments."'
 					and labelings.deleted_at is null";
             $labeling = DB::select($queryLabeling);
