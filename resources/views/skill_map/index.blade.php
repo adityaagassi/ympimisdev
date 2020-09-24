@@ -1307,7 +1307,7 @@ function fillTableMaster() {
 				tableData += '<td>'+ value.skill +'</td>';
 				tableData += '<td>'+ value.process +'</td>';
 				tableData += '<td>'+ value.value +'</td>';
-				tableData += '<td><button class="btn btn-warning btn-sm" onclick="editMaster('+value.id+')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>  <button class="btn btn-danger btn-sm" onclick="deleteMaster('+value.id+')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+				tableData += '<td><button class="btn btn-warning btn-sm" onclick="editMaster('+value.id+')">Edit</button>  <button class="btn btn-danger btn-sm" onclick="deleteMaster('+value.id+')">Delete</button></td>';
 				tableData += '</tr>';
 			});
 			$('#bodyTableMaster').append(tableData);
@@ -1522,7 +1522,7 @@ function fillTableMaster() {
 					tableData += '<td>'+ value.employee_id +'</td>';
 					tableData += '<td>'+ value.name +'</td>';
 					tableData += '<td>'+ value.process +'</td>';
-					tableData += '<td><button class="btn btn-warning btn-sm" onclick="editEmployee('+value.id+')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>  <button class="btn btn-danger btn-sm" onclick="deleteEmployee('+value.id+')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+					tableData += '<td><button class="btn btn-warning btn-sm" onclick="editEmployee('+value.id+')">Edit</button>  <button class="btn btn-danger btn-sm" onclick="deleteEmployee('+value.id+')">Delete</button></td>';
 					tableData += '</tr>';
 				});
 				$('#bodyTableEmployee').append(tableData);
@@ -1685,7 +1685,7 @@ function fillTableMaster() {
 					tableData += '<tr>';
 					tableData += '<td>'+ value.value +'</td>';
 					tableData += '<td>'+ value.description +'</td>';
-					tableData += '<td><button class="btn btn-warning btn-sm" onclick="editValue('+value.id+')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>  <button class="btn btn-danger btn-sm" onclick="deleteValue('+value.id+')"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+					tableData += '<td><button class="btn btn-warning btn-sm" onclick="editValue('+value.id+')">Edit</button>  <button class="btn btn-danger btn-sm" onclick="deleteValue('+value.id+')">Delete</button></td>';
 					tableData += '</tr>';
 				});
 				$('#bodyTableValue').append(tableData);
