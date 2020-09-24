@@ -221,9 +221,9 @@
 										</div>
 									</div>
 									<div class="form-group" style="padding-top: 30px">
-										<label for="" class="col-sm-2 control-label">Required Value<span class="text-red">*</span></label>
+										<label for="" class="col-sm-2 control-label">Nilai Max.<span class="text-red">*</span></label>
 										<div class="col-sm-10">
-											<input type="number" class="form-control" name="value" id="value" placeholder="Masukkan Required Value">
+											<input type="number" class="form-control" name="value" id="value" placeholder="Masukkan Nilai Max.">
 										</div>
 									</div>
 								</div>
@@ -240,7 +240,7 @@
 												<th>Skill Code</th>
 												<th>Skill Name</th>
 												<th>Process</th>
-												<th>Value</th>
+												<th>Nilai Max.</th>
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -260,15 +260,15 @@
 									<input type="hidden" id="condition_value" value="INPUT">
 									<input type="hidden" id="id_value">
 									<div class="form-group">
-										<label for="" class="col-sm-2 control-label">Skill Value<span class="text-red">*</span></label>
+										<label for="" class="col-sm-2 control-label">Nilai Skill<span class="text-red">*</span></label>
 										<div class="col-sm-10">
-											<input type="number"  class="form-control" name="skill_value" id="skill_value" placeholder="Masukkan Skill Value">
+											<input type="number"  class="form-control" name="skill_value" id="skill_value" placeholder="Masukkan Nilai Skill">
 										</div>
 									</div>
 									<div class="form-group" style="padding-top: 30px">
 										<label for="" class="col-sm-2 control-label">Desc.<span class="text-red">*</span></label>
 										<div class="col-sm-10">
-											<input type="text"  class="form-control" name="description" id="description" placeholder="Masukkan Deskripsi Value">
+											<input type="text"  class="form-control" name="description" id="description" placeholder="Masukkan Deskripsi Nilai">
 										</div>
 									</div>
 								</div>
@@ -282,8 +282,8 @@
 									<table id="tableValue" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 										<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 											<tr>
-												<th>Skill Value</th>
-												<th>Description</th>
+												<th>Nilai Skill</th>
+												<th>Deskripsi</th>
 												<th>Action</th>
 											</tr>
 										</thead>
@@ -343,6 +343,11 @@
 							</div>
 						</div>
 						<div class="col-xs-12" style="padding-top: 30px">
+							<div class="row">
+								<span style="color: red;"><i>* Klik <b>Edit</b> untuk Memindah Proses Operator</i></span>
+							</div>
+						</div>
+						<div class="col-xs-12" style="padding-top: 10px">
 							<div class="row">
 								<table id="tableEmployee" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 									<thead style="background-color: rgb(126,86,134); color: #FFD700;">
@@ -428,19 +433,19 @@
 						<div class="row" style="padding-top: 20px">
 							<div style="padding-bottom: 20px;">
 								<center style="background-color: #ffac26;color: white">
-									<span style="font-weight: bold; font-size: 2vw;">Adjustment Employee History</span>
+									<span style="font-weight: bold; font-size: 2vw;">History Perpindahan Operator</span>
 								</center>
 							</div>
 							<table id="tableMutationLog" class="table table-bordered table-striped table-hover" style="margin-bottom: 0;">
 								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 									<tr>
 										<th>Employee ID</th>
-										<th>Name</th>
-										<th>Process From</th>
-										<th>Process To</th>
+										<th>Nama</th>
+										<th>Proses Sebelum</th>
+										<th>Proses Sesudah</th>
 										<th>Remark</th>
-										<th>Adjusted By</th>
-										<th>Adjusted At</th>
+										<th>Dipindah Oleh</th>
+										<th>Dipindah Pada</th>
 									</tr>
 								</thead>
 								<tbody id="bodyTableMutationLog">
@@ -717,9 +722,9 @@ function skillAdjusment(employee_id,name,proces) {
 				tableDetail += '<thead>';
 				tableDetail += '<tr>';
 				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Skill</center></th>';
-				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Value</center></th>';
-				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Required</center></th>';
-				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Result</center></th>';
+				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Nilai Sekarang</center></th>';
+				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Nilai Max.</center></th>';
+				tableDetail += '<th style="background-color: rgb(126,86,134); color: #FFD700;"><center>Deskripsi</center></th>';
 				tableDetail += '</tr>';
 				tableDetail += '</thead>';
 				for(var j = 0; j < result.skill_map.length;j++){
@@ -799,10 +804,10 @@ function skillAdjusment(employee_id,name,proces) {
 				tableRequired += '<table style="padding:0px" class="table table-bordered">';
 				tableRequired += '<thead>';
 				tableRequired += '<tr>';
-				tableRequired += '<th style="padding:0px"><center>Required Skill</center></th>';
-				tableRequired += '<th style="padding:0px"><center>Required Value</center></th>';
-				tableRequired += '<th style="padding:0px"><center>Current Skill</center></th>';
-				tableRequired += '<th colspan="4" style="padding:0px"><center>Current Value</center></th>';
+				tableRequired += '<th style="padding:0px"><center>Skill yang <b>Harus</b> Dimiliki</center></th>';
+				tableRequired += '<th style="padding:0px"><center>Nilai Max.</center></th>';
+				tableRequired += '<th style="padding:0px"><center>Skill yang Dimiliki</center></th>';
+				tableRequired += '<th colspan="4" style="padding:0px"><center>Nilai Sekarang</center></th>';
 				tableRequired += '</tr>';
 				tableRequired += '</thead>';
 				for(var i = 0; i < result.skill_required.length;i++){
@@ -841,7 +846,7 @@ function skillAdjusment(employee_id,name,proces) {
 				}
 				tableRequired += '</table>';
 				$('#table_required').append(tableRequired);
-				$('#title_required').html("Skill for Process "+proces);
+				$('#title_required').html("Skill untuk Proses "+proces);
 
 
 
@@ -857,10 +862,10 @@ function skillAdjusment(employee_id,name,proces) {
 				tableOther += '<table style="padding:0px" class="table table-bordered">';
 				tableOther += '<thead>';
 				tableOther += '<tr>';
-				tableOther += '<th style="padding:0px"><center>Required Skill</center></th>';
-				tableOther += '<th style="padding:0px"><center>Required Value</center></th>';
-				tableOther += '<th style="padding:0px"><center>Current Skill</center></th>';
-				tableOther += '<th colspan="4" style="padding:0px"><center>Current Value</center></th>';
+				tableOther += '<th style="padding:0px"><center>Skill yang <b>Harus</b> Dimiliki</center></th>';
+				tableOther += '<th style="padding:0px"><center>Nilai Max.</center></th>';
+				tableOther += '<th style="padding:0px"><center>Skill yang Dimiliki</center></th>';
+				tableOther += '<th colspan="4" style="padding:0px"><center>Nilai Sekarang</center></th>';
 				tableOther += '</tr>';
 				tableOther += '</thead>';
 				for(var l = 0; l < result.other_skill.length;l++){
@@ -896,7 +901,7 @@ function skillAdjusment(employee_id,name,proces) {
 				}
 				tableOther += '</table>';
 				$('#table_other').append(tableOther);
-				$('#title_other').html("Add Other Skill");
+				$('#title_other').html("Skill yang Lain");
 			}
 
 			Highcharts.chart('container_detail', {
