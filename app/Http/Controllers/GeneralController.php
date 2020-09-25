@@ -18,8 +18,8 @@ class GeneralController extends Controller
 {
 
 	public function indexReportSuratDokter(){
-		$title = 'Penyerahan Surat Dokter Report';
-		$title_jp = '';
+		$title = 'Laporan Dropbox Surat Dokter';
+		$title_jp = '診断書のドロップボックス';
 
 		return view('general.dropbox.surat_dokter_report', array(
 			'title' => $title,
@@ -149,7 +149,8 @@ class GeneralController extends Controller
 		$first = date('Y-m-d', strtotime("-90 days"));
 
 		$employee = EmployeeSync::where('employee_id', '=', Auth::user()->username)->first();
-		$general_doctors = db::table('general_doctors')->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_doctors.employee_id');
+		$general_doctors = db::table('general_doctors')->leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_doctors.employee_id')
+		->where('general_doctors.created_by', '=', Auth::user()->username);
 
 		if(Auth::user()->role_code != 'MIS' && Auth::user()->role_code != 'S' && Auth::user()->role_code != 'HR'){
 			$general_doctors = $general_doctors->where('employee_syncs.department', '=', $employee->department);
@@ -253,7 +254,7 @@ class GeneralController extends Controller
 
 	public function indexReportTransportation(){
 		$title = 'Online Attendace And Transportation Report';
-		$title_jp = '';
+		$title_jp = '出社・移動費のオンライン報告';
 
 		return view('general.dropbox.online_transportation_report', array(
 			'title' => $title,
