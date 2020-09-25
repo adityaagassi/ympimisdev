@@ -60,7 +60,43 @@
 
 			<a href="{{ url("/index/reportVisualDaily") }}" class="btn btn-default btn-block" style="font-size: 2vw; border-color: purple;">Daily Report Kakunin Visual</a>
 
+			<button type="button" class="btn btn-default btn-block" style="font-size: 2vw; border-color: green;" data-toggle="modal" data-target="#skill-map-eval-modal">
+				Skill Map Evaluation
+			</button>
 
+		</div>
+	</div>
+
+	<div class="modal fade" id="skill-map-eval-modal">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-body table-responsive no-padding">
+						<div class="col-xs-12">
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="row">
+										<center><span style="font-weight: bold; font-size: 18px;">Location</span></center>
+									</div>
+								</div>
+								<div class="col-xs-12">
+									<div class="row">
+										@foreach($location as $location)
+										<a href="{{ url('/report/skill_map_evaluation',$location) }}" class="btn btn-default btn-block" style="font-size: 1.5vw;">{{$location}}</a>
+										@endforeach
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12">
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
+								<button value="CONFIRM" onclick="confirm()" class="btn btn-success pull-right">CONFIRM</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </section>

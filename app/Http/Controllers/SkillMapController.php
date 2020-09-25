@@ -22,6 +22,8 @@ use App\SkillMutationLog;
 use App\SkillUnfulfilledLog;
 use App\UserActivityLog;
 use App\SkillMapEvaluation;
+use File;
+use PDF;
 
 class SkillMapController extends Controller
 {
@@ -36,6 +38,9 @@ class SkillMapController extends Controller
                 die();
             }
         }
+
+        $this->location = ['pn-assy-initial',
+                      'pn-assy-final'];
     }
 
     public function indexSkillMap($location)
@@ -53,7 +58,7 @@ class SkillMapController extends Controller
     	}else if ($location == 'pn-assy-final') {
             $dept = 'Educational Instrument (EI)';
             $section = 'Pianica';
-            $title = 'Skill Map Final - Pianica Assembly Final';
+            $title = 'Skill Map - Pianica Assembly Final';
             $subtitle = 'Pianica Assembly Final';
             $title_jp = 'のスキルマップ ~ ピアニカ集成';
         }
@@ -832,5 +837,150 @@ class SkillMapController extends Controller
             );
             return Response::json($response);
         }
+    }
+
+    public function reportSkillMapEvaluation($location)
+    {
+        if ($location == 'pn-assy-initial') {
+            $dept = 'Educational Instrument (EI)';
+            $section = 'Pianica';
+            $title = 'Report Skill Map Evaluation - Pianica Assembly Initial';
+            $subtitle = 'Pianica Assembly Initial';
+            $title_jp = 'のスキルマップリポート ~ ピアニカ集成';
+        }else if ($location == 'pn-assy-final') {
+            $dept = 'Educational Instrument (EI)';
+            $section = 'Pianica';
+            $title = 'Report Skill Map Evaluation - Pianica Assembly Final';
+            $subtitle = 'Pianica Assembly Final';
+            $title_jp = 'のスキルマップリポート ~ ピアニカ集成';
+        }
+
+        $activity =  new UserActivityLog([
+            'activity' => 'Report Skill Map Evaluation - '.$subtitle,
+            'created_by' => Auth::user()->id,
+        ]);
+        $activity->save();
+
+        return view('skill_map.report_evaluation', array(
+            'title' => $title,
+            'subtitle' => $subtitle,
+            'title_jp' => $title_jp,
+            'location' => $location,
+            'dept' => $dept,
+            'section' => $section
+        ))->with('page', 'Report Skill Map Evaluation');
+    }
+
+    public function fetchReportSkillMapEvaluation(Request $request)
+    {
+        try {
+            $evaluation = DB::SELECT("SELECT DISTINCT
+                ( a.evaluation_code ),
+                a.employee_id,
+                employee_syncs.name,
+                a.skill_code,
+                skills.skill,
+                a.process,
+                a.location,
+                from_value,
+                to_value,(
+                SELECT
+                    ROUND( AVG( evaluation_value ), 1 ) 
+                FROM
+                    skill_map_evaluations 
+                WHERE
+                    skill_map_evaluations.evaluation_code = a.evaluation_code 
+                ) AS average 
+            FROM
+                `skill_map_evaluations` a
+                JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
+                JOIN skills ON skills.skill_code = a.skill_code 
+            WHERE
+                a.location = '".$request->get('location')."'");
+
+            $response = array(
+                'status' => true,
+                'message' => 'Success Get Data',
+                'datas' => $evaluation,
+            );
+            return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+        }
+    }
+
+    public function printSkillMapEvaluation($location,$evaluation_code)
+    {
+
+        if ($evaluation_code != "") {
+            $detail_evaluation = DB::SELECT("SELECT
+                a.evaluation_code,
+                a.employee_id,
+                employee_syncs.name,
+                a.skill_code,
+                skills.skill,
+                a.process,
+                a.location,
+                from_value,
+                to_value,
+                a.created_at,
+                a.evaluation_value,
+                (
+                SELECT
+                    ROUND( AVG( evaluation_value ), 1 ) 
+                FROM
+                    skill_map_evaluations 
+                WHERE
+                    skill_map_evaluations.evaluation_code = a.evaluation_code 
+                ) AS average 
+            FROM
+                `skill_map_evaluations` a
+                JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id
+                JOIN skills ON skills.skill_code = a.skill_code 
+            WHERE
+                a.location = '".$location."'
+            AND
+                a.evaluation_code = '".$evaluation_code."'");
+        }else{
+
+        }
+
+        $evcode = [];
+        $detail = [];
+
+        if (count($detail_evaluation) > 0) {
+            for($i = 0; $i< count($detail_evaluation);$i++){
+                $evcode[] = $detail_evaluation[$i]->evaluation_value;
+            }
+
+            $detail = array(
+                'evaluation_code' => $detail_evaluation[0]->evaluation_code,
+                'employee_id' => $detail_evaluation[0]->employee_id,
+                'name' => $detail_evaluation[0]->name,
+                'skill_code' => $detail_evaluation[0]->skill_code,
+                'process' => $detail_evaluation[0]->process,
+                'evaluation_value' => $evcode,
+                'average' => $detail_evaluation[0]->average,
+                'created_at' => $detail_evaluation[0]->created_at,
+            );
+        }else{
+
+        }
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->setPaper('A4', 'landscape');
+
+        $pdf->loadView('skill_map.print_evaluation', array(
+            'detail' => $detail,
+            'location' => $location
+        ));
+
+
+        return $pdf->stream("Skill Map Evaluation.pdf");
     }
 }

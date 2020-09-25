@@ -63,6 +63,9 @@ class Pianica extends Controller{
               'Kensa Akhir',
               'Kakuning Visual',
           ];
+
+          $this->location = ['pn-assy-initial',
+                      'pn-assy-final'];
       }
 
       public function indexDailyNg(){
@@ -97,8 +100,7 @@ class Pianica extends Controller{
 
     public function index()
     {
-
-        return view('pianica.index')->with('page', 'Bensuki');
+        return view('pianica.index')->with('page', 'Bensuki')->with('location',$this->location);
     }
 
 
