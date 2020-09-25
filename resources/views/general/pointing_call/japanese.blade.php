@@ -31,7 +31,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">×</span>
+					<span aria-hidden="true">x</span>
 				</button>
 			</div>
 			<div class="modal-body" id="modalImageBody">
@@ -646,13 +646,60 @@
 					}
 				});
 
-var curr = 0;
+var curr = 1;
 $(function() {
 	$(document).keydown(function(e) {
 		switch(e.which) {
-			case 13:
+			case 39:
 
-			var c = curr+1;
+			// var c = curr+1;
+
+			// for (var i = 1; i <= count; i++) {
+			// 	$("[name='"+i+"']").hide();	
+			// }
+
+			// $("[name='"+c+"']").show();	
+
+			// curr += 1;
+
+			// if(curr >= count-1){
+			// 	curr = 0;
+			// }
+
+			var c;
+
+			if(curr == 8){
+				curr = 1;
+				c = 1;
+			}else{
+				c = curr++;
+			}
+
+			for (var i = 1; i <= count; i++) {
+				if(i==curr){
+					$("[name='"+curr+"']").show();	
+				}else{
+					$("[name='"+i+"']").hide();	
+				}
+			}
+
+			
+
+			alert(curr+'&'+count);
+			break;
+
+
+
+			case 37:
+			if(curr == 1){
+				curr = count;
+			}
+
+			if(curr <= 0){
+				curr = 1;
+			}
+			
+			var c = curr-1;
 
 			for (var i = 1; i <= count; i++) {
 				$("[name='"+i+"']").hide();	
@@ -660,37 +707,15 @@ $(function() {
 
 			$("[name='"+c+"']").show();	
 
-			curr += 1;
+			curr = curr-1;
 
-			if(curr == count-1){
-				curr = 0;
+			if(curr == 1){
+				curr = count;
 			}
 
+			alert(curr+'&'+count);
 			break;
-		}
-	});
-});
 
-$(function() {
-	$(document).mousedown(function(e) {
-		switch(e.which) {
-			case 3:
-
-			var c = curr+1;
-
-			for (var i = 1; i <= count; i++) {
-				$("[name='"+i+"']").hide();	
-			}
-
-			$("[name='"+c+"']").show();	
-
-			curr += 1;
-
-			if(curr == count-1){
-				curr = 0;
-			}
-
-			break;
 		}
 	});
 });
