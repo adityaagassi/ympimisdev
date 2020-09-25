@@ -685,7 +685,7 @@ $(function() {
 
 			
 
-			alert(curr+'&'+count);
+			// alert(curr+'&'+count);
 			break;
 
 
@@ -713,7 +713,7 @@ $(function() {
 				curr = count;
 			}
 
-			alert(curr+'&'+count);
+			// alert(curr+'&'+count);
 			break;
 
 		}
