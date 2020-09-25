@@ -1228,6 +1228,7 @@ Route::get('fetch/purchase_requisition/outstanding', 'AccountingController@fetch
 Route::get('purchase_requisition/table', 'AccountingController@fetchtablePR');
 Route::get('purchase_requisition/detail', 'AccountingController@detailMonitoringPR');
 Route::get('purchase_requisition/detailPO', 'AccountingController@detailMonitoringPRPO');
+Route::get('purchase_requisition/detailActual', 'AccountingController@detailMonitoringPRActual');
 
 Route::get('purchase_requisition/monitoringpch', 'AccountingController@monitoringPrPch');
 Route::get('fetch/purchase_requisition/monitoringpch', 'AccountingController@fetchMonitoringPRPch');
@@ -1301,6 +1302,9 @@ Route::get('investment/detail/{id}', 'AccountingController@detail_investment');
 Route::post('investment/update_post', 'AccountingController@detail_investment_post');
 Route::get('investment/sendemail', 'AccountingController@investment_send_email');
 Route::get('investment/check/{id}', 'AccountingController@check_investment');
+Route::get('investment/check_pch/{id}', 'AccountingController@check_investment_pch');
+Route::post('investment/checked/{id}', 'AccountingController@checked_investment');
+
 Route::post('investment/check_budget/{id}', 'AccountingController@check_investment_budget');
 Route::post('delete/investment_budget', 'AccountingController@delete_investment_budget');
 Route::get('investment/get_budget_name', 'AccountingController@get_budget_name')->name('admin.getbudget');
@@ -1344,6 +1348,7 @@ Route::get('fetch/investment/control', 'AccountingController@fetchInvestmentCont
 Route::get('investment/table', 'AccountingController@fetchtableInv');
 Route::get('investment/detail', 'AccountingController@detailMonitoringInv');
 Route::get('investment/detailInv', 'AccountingController@detailMonitoringInvTable');
+Route::get('investment/detailActual', 'AccountingController@detailMonitoringInvActual');
 
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
@@ -1397,8 +1402,12 @@ Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_subassy/{id}', 'KnockDownController@indexKD');
 
-	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');	
-	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');	
+	//Based on production sch item>1
+	Route::post('fetch/kd_print_subassy', 'KnockDownController@printLabel');
+	//Based on shipment sch
+	Route::post('fetch/kd_print_subassy_new', 'KnockDownController@printLabelNew');
+	//Based on production sch item=1
+	Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelNewSingle');
 
 	Route::get('index/print_label_subassy/{location}/{id}', 'KnockDownController@indexPrintLabelSubassy');
 	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
@@ -3203,6 +3212,8 @@ Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/spk', 'MaintenanceController@fetchSPK');
 
 	Route::get('work/maintenance/spk', 'MaintenanceController@startSPK');
+	Route::get('rework/maintenance/spk', 'MaintenanceController@restartSPK');
+
 	Route::post('report/maintenance/spk', 'MaintenanceController@reportingSPK');
 	Route::post('report/maintenance/spk/pending', 'MaintenanceController@reportingSPKPending');
 
@@ -3268,7 +3279,8 @@ Route::get('fetch/maintenance/plan/checkList', 'MaintenanceController@fetchItemC
 
 Route::post('post/maintenance/pm/check', 'MaintenanceController@postPlannedCheck');
 
-Route::get('index/maintenance/pm/monitoring', 'MaintenanceController@indexPlanned');
+Route::get('index/maintenance/pm/monitoring', 'MaintenanceController@indexPlannedMonitoring');
+Route::get('index/maintenance/pm/schedule', 'MaintenanceController@indexPlannedSchedule');
 // Route::get('fetch/maintenance/planned', 'MaintenanceController@fetchPlanned');
 
 //Assemblies
@@ -3353,6 +3365,12 @@ Route::group(['nav' => 'M28', 'middleware' => 'permission'], function(){
 
 	Route::get('fetch/skill_evaluation', 'SkillMapController@fetchSkillEvaluation');
 	Route::post('input/skill_evaluation', 'SkillMapController@inputSkillEvaluation');
+
+	Route::get('index/skill_map/{location}', 'SkillMapController@indexSkillMap');
+
+	Route::get('report/skill_map_evaluation/{location}', 'SkillMapController@reportSkillMapEvaluation');
+	Route::get('fetch/report/skill_map_evaluation', 'SkillMapController@fetchReportSkillMapEvaluation');
+	Route::get('print/report/skill_map_evaluation/{location}/{evaluation_code}', 'SkillMapController@printSkillMapEvaluation');
 });
 
 //NG Jelas Report
