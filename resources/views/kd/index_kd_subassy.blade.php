@@ -445,7 +445,7 @@
 			var tableData = "";
 			$.each(result.target, function(key, value) {
 				tableData += '<tr id="'+value.id+'_'+value.lot_completion+'" onclick="fillField(id)">';
-				tableData += '<td>Week '+ value.week +'</td>';
+				tableData += '<td>'+ value.due_date +'</td>';
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';
 				tableData += '<td>'+ value.hpl +'</td>';
