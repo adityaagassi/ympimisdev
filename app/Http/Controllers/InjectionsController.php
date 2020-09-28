@@ -4904,7 +4904,7 @@ class InjectionsController extends Controller
             $first = date('Y-m-01');
             $now = date('Y-m-d');
 
-            $data = DB::SELECT("SELECT
+            $data1 = DB::SELECT("SELECT
                 c.part,
                 TRIM( 
                     RIGHT(
@@ -4963,13 +4963,103 @@ class InjectionsController extends Controller
                 GROUP BY
                     a.part 
                 ) c 
+                where c.part not like '%YRF%' AND
+                c.part not like '%IVORY%' AND
+                c.part not like '%BEIGE%'
             ".$color."
             GROUP BY
                 c.part ORDER BY color");
 
+            
+            $data2 = DB::SELECT("SELECT
+                c.part,
+                TRIM( 
+                    RIGHT(
+                            c.part, 
+                            (LENGTH(c.part) - LOCATE('(',c.part)) 
+                    )
+                ) as color,
+                SUM( c.stock ) AS stock,
+                SUM( c.plan ) AS plan 
+            FROM
+                (
+                SELECT
+                    CONCAT( UPPER( injection_parts.part_code ), ' (', injection_parts.color, ')' ) AS part,
+                    COALESCE (( SELECT quantity FROM injection_inventories WHERE location = 'RC91' AND material_number = gmc ), 0 ) AS stock,
+                    0 AS plan 
+                FROM
+                    injection_parts where remark = 'injection'
+                GROUP BY injection_parts.part_code,injection_parts.color,gmc,color  UNION ALL
+                SELECT
+                    part,
+                    0 AS stock,
+                    sum( a.plan )- sum( a.stamp ) AS plan 
+                FROM
+                    (
+                    SELECT
+                        CONCAT( part_code, ' (', color, ')' ) AS part,
+                        SUM( quantity ) AS plan,
+                        0 AS stamp 
+                    FROM
+                        production_schedules
+                        LEFT JOIN materials ON materials.material_number = production_schedules.material_number
+                        LEFT JOIN injection_part_details ON injection_part_details.model = materials.model 
+                    WHERE
+                        materials.category = 'FG' 
+                        AND materials.origin_group_code = '072' 
+                        AND production_schedules.due_date BETWEEN '".$first."' 
+                        AND '".$nextdayplus1."' 
+                    GROUP BY
+                        part_code,color UNION ALL
+                    SELECT
+                        CONCAT( part_code, ' (', color, ')' ) AS part,
+                        0 AS plan,
+                        SUM( quantity ) AS stamp 
+                    FROM
+                        flo_details
+                        LEFT JOIN materials ON materials.material_number = flo_details.material_number
+                        LEFT JOIN injection_part_details ON injection_part_details.model = materials.model 
+                    WHERE
+                        materials.category = 'FG' 
+                        AND materials.origin_group_code = '072' 
+                        AND DATE( flo_details.created_at ) BETWEEN '".$first."' 
+                        AND '".$now."' 
+                    GROUP BY
+                        part_code,color
+                    ) a 
+                GROUP BY
+                    a.part 
+                ) c 
+                where c.part not like '%PINK%' AND
+                c.part not like '%RED%' AND
+                c.part not like '%BLUE%' AND
+                c.part not like '%BROWN%' AND
+                c.part not like '%GREEN%'
+            ".$color."
+            GROUP BY
+                c.part ORDER BY part");
+
+            $datas = [];
+
+            foreach ($data1 as $key) {
+                $datas[] = array(
+                    'part' => $key->part,
+                    'color' => $key->color,
+                    'stock' => $key->stock,
+                    'plan' => $key->plan, );
+            }
+
+            foreach ($data2 as $key) {
+                $datas[] = array(
+                    'part' => $key->part,
+                    'color' => $key->color,
+                    'stock' => $key->stock,
+                    'plan' => $key->plan, );
+            }
+
             $response = array(
                 'status' => true,
-                'datas' => $data
+                'datas' => $datas
             );
             return Response::json($response);
         } catch (\Exception $e) {
