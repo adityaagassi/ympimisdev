@@ -1136,31 +1136,31 @@
 							actualBLCountEI.push(data3[i].prc_actual);
 						}
 
-						if(data2[i].hpl == "FLFG"){
+						if(data3[i].hpl == "FLFG"){
 							$('#fl_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#fl_id').text(Math.round(data3[i].prc_actual*100));
 						}
-						if(data2[i].hpl == "CLFG"){
+						if(data3[i].hpl == "CLFG"){
 							$('#cl_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#cl_id').text(Math.round(data3[i].prc_actual*100));
 						}
-						if(data2[i].hpl == "ASFG"){
+						if(data3[i].hpl == "ASFG"){
 							$('#as_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#as_id').text(Math.round(data3[i].prc_actual*100));
 						}
-						if(data2[i].hpl == "TSFG"){
+						if(data3[i].hpl == "TSFG"){
 							$('#ts_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#ts_id').text(Math.round(data3[i].prc_actual*100));
 						}
-						if(data2[i].hpl == "VENOVA"){
+						if(data3[i].hpl == "VENOVA"){
 							$('#vn_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#vn_id').text(Math.round(data3[i].prc_actual*100));
 						}
-						if(data2[i].hpl == "RC"){
+						if(data3[i].hpl == "RC"){
 							$('#rc_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#rc_id').text(Math.round(data3[i].prc_actual*100));
 						}
-						if(data2[i].hpl == "PN"){
+						if(data3[i].hpl == "PN"){
 							$('#pn_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#pn_id').text(Math.round(data3[i].prc_actual*100));
 						}
