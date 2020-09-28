@@ -175,8 +175,8 @@
 									<th style="width: 5%">Material Description</th>
 									<th style="width: 2%">Location</th>
 									<th style="width: 1%">Qty</th>
-									<th style="width: 2%">Stuffing Date</th>
-									<th style="width: 2%">Destination</th>
+									{{-- <th style="width: 2%">Stuffing Date</th> --}}
+									{{-- <th style="width: 2%">Destination</th> --}}
 									<th style="width: 3%">Created At</th>
 									<th style="width: 1%">Reprint</th>
 									<th style="width: 1%">Delete</th>
@@ -194,8 +194,8 @@
 									<th></th>
 									<th></th>
 									<th></th>
-									<th></th>
-									<th></th>
+									{{-- <th></th> --}}
+									{{-- <th></th> --}}
 								</tr>
 							</tfoot>
 						</table>
@@ -347,8 +347,8 @@
 			{ "data": "material_description" },
 			{ "data": "location" },
 			{ "data": "quantity" },
-			{ "data": "st_date" },
-			{ "data": "destination_shortname" },
+			// { "data": "st_date" },
+			// { "data": "destination_shortname" },
 			{ "data": "updated_at" },
 			{ "data": "reprintKDO" },
 			{ "data": "deleteKDO" }

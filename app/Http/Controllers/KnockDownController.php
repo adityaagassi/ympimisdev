@@ -1319,34 +1319,43 @@ class KnockDownController extends Controller{
 
 
 		//Shipment
-		$shipment_schedule = ShipmentSchedule::where('material_number', '=', $material_number)
-		->where('actual_quantity','<',db::raw('quantity'))
-		->orderBy('st_date', 'asc')
-		->orderBy('id', 'asc')
-		->first();
+		// $shipment_schedule = ShipmentSchedule::where('material_number', '=', $material_number)
+		// ->where('actual_quantity','<',db::raw('quantity'))
+		// ->orderBy('st_date', 'asc')
+		// ->orderBy('id', 'asc')
+		// ->first();
 
-		if($shipment_schedule){
-			$shipment_schedule->actual_quantity = $shipment_schedule->actual_quantity + $quantity;
+		// if($shipment_schedule){
+		// 	$shipment_schedule->actual_quantity = $shipment_schedule->actual_quantity + $quantity;
 
-			//KnockDown Detail
-			$knock_down_detail = new KnockDownDetail([
-				'kd_number' => $kd_number,
-				'material_number' => $material_number,
-				'quantity' => $quantity,
-				'shipment_schedule_id' => $shipment_schedule->id,
-				'storage_location' => $storage_location,
-				'created_by' => Auth::id(),
-			]);
-		}else{
-			//KnockDown Detail
-			$knock_down_detail = new KnockDownDetail([
-				'kd_number' => $kd_number,
-				'material_number' => $material_number,
-				'quantity' => $quantity,
-				'storage_location' => $storage_location,
-				'created_by' => Auth::id(),
-			]);
-		}
+		// 	//KnockDown Detail
+		// 	$knock_down_detail = new KnockDownDetail([
+		// 		'kd_number' => $kd_number,
+		// 		'material_number' => $material_number,
+		// 		'quantity' => $quantity,
+		// 		'shipment_schedule_id' => $shipment_schedule->id,
+		// 		'storage_location' => $storage_location,
+		// 		'created_by' => Auth::id(),
+		// 	]);
+		// }else{
+		// 	//KnockDown Detail
+		// 	$knock_down_detail = new KnockDownDetail([
+		// 		'kd_number' => $kd_number,
+		// 		'material_number' => $material_number,
+		// 		'quantity' => $quantity,
+		// 		'storage_location' => $storage_location,
+		// 		'created_by' => Auth::id(),
+		// 	]);
+		// }
+
+		//KnockDown Detail
+		$knock_down_detail = new KnockDownDetail([
+			'kd_number' => $kd_number,
+			'material_number' => $material_number,
+			'quantity' => $quantity,
+			'storage_location' => $storage_location,
+			'created_by' => Auth::id(),
+		]);
 
 		
 		//Inventory
@@ -1392,7 +1401,7 @@ class KnockDownController extends Controller{
 		]);
 
 		try{
-			DB::transaction(function() use ($production_schedule, $knock_down, $knock_down_detail, $knock_down_log, $inventory, $transaction_completion, $shipment_schedule){
+			DB::transaction(function() use ($production_schedule, $knock_down, $knock_down_detail, $knock_down_log, $inventory, $transaction_completion){
 				$production_schedule->save();
 				$knock_down->save();
 				$knock_down_detail->save();
@@ -1400,9 +1409,9 @@ class KnockDownController extends Controller{
 				$inventory->save();
 				$transaction_completion->save();
 
-				if($shipment_schedule){
-					$shipment_schedule->save();
-				}
+				// if($shipment_schedule){
+				// 	$shipment_schedule->save();
+				// }
 
 			});
 

@@ -135,8 +135,6 @@
     </div>
   </div>
 </div>
-
-
 </section>
 @stop
 
