@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MaintenanceJobOrderLog extends Model
+class MaintenancePic extends Model
 {
-	use SoftDeletes;
+    Use SoftDeletes;
+
 	protected $fillable = [
-		'order_no', 'remark', 'created_by'
+		'item_name', 'pic_id', 'pic_name', 'skill', 'remark', 'created_by'
 	];
 }

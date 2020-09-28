@@ -619,8 +619,12 @@
                             <td>
                                 <span style="font-weight: bold;">Planned Maintenance ()</span>
                                 <br>
+                                <a href="{{ url("index/maintenance/pm/schedule") }}">
+                                    <i class="fa fa-caret-right"></i> Planned Maintenance Schedule ()
+                                </a>
+                                <br>
                                 <a href="{{ url("index/maintenance/pm/monitoring") }}">
-                                    <i class="fa fa-caret-right"></i> Planned Monitoring ()
+                                    <i class="fa fa-caret-right"></i> Planned Maintenance Monitoring ()
                                 </a>
                                 <br>
                                 <a href="{{ url("index/maintenance/apar") }}">

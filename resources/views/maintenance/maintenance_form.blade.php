@@ -44,9 +44,6 @@
 			<a href="javascript:void(0)" onclick="get_data('0')">Requested ({{ $requested }})</a>
 		</li>
 		<li>
-			<a href="javascript:void(0)" onclick="get_data('1')">Verifying ({{ $verifying }})</a>
-		</li>
-		<li>
 			<a href="javascript:void(0)" onclick="get_data('2')">Received ({{ $received }})</a>
 		</li>
 		<li>
@@ -143,10 +140,19 @@
 								</div>
 								<div class="col-xs-4">
 									<select class="form-control select2" id="prioritas" name="prioritas" data-placeholder="Pilih Prioritas Pengerjaan">
-										<option></option>
-										<option>Urgent</option>
+										<!-- <option></option> -->
 										<option>Normal</option>
+										<option>Urgent</option>
 									</select>
+								</div>
+							</div>
+
+							<div class="col-xs-12" style="padding-bottom: 1%; display: none" id="div_reason">
+								<div class="col-xs-4" style="padding: 0px;" align="right">
+									<span style="font-weight: bold; font-size: 16px;">Reason Urgent:<span class="text-red">*</span></span>
+								</div>
+								<div class="col-xs-5">
+									<textarea class="form-control" placeholder="Isikan Catatan Urgent" name="reason_urgent" id="reason_urgent" rows="1"></textarea>
 								</div>
 							</div>
 
@@ -170,17 +176,18 @@
 									<span style="font-weight: bold; font-size: 16px;">Kategori:<span class="text-red">*</span></span>
 								</div>
 								<div class="col-xs-4">
-									<select class="form-control select2" id="kategori" name="kategori" data-placeholder="Pilih Kategori Pekerjaan" required>
+									<select class="form-control select2" id="kategori" name="kategori" data-placeholder="Pilih Kategori Pekerjaan" required onchange="get_machine('kategori')">
 										<option></option>
-										<optgroup label="Utilitas">
+										<optgroup label="Utilitas" value="Utility">
 											<option>Listrik</option>
 											<option>Jaringan</option>
 											<option>Mesin Utilitas</option>
 											<option>Utilitas Umum</option>
 										</optgroup>
-										<optgroup label="Mesin Produksi">
+										<optgroup label="Mesin Produksi" value="Production Machine">
 											<option>Kelistrikan Mesin</option>
 											<option>Mekanis Mesin</option>
+											<option>Otomatisasi Mesin</option>
 										</optgroup>
 									</select>
 								</div>
@@ -217,7 +224,7 @@
 								<div class="col-xs-4" style="padding: 0px;" align="right">
 									<span style="font-weight: bold; font-size: 16px;">Mesin:</span>
 								</div>
-								<div class="col-xs-6">
+								<div class="col-xs-7">
 									<select class="form-control" id="nama_mesin" name="nama_mesin" data-placeholder="pilih mesin (Bila berhubungan mesin)">
 										<option value=""></option>
 									</select>
@@ -241,7 +248,7 @@
 										<div class="input-group-addon bg-default">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input class="form-control datepicker" id="target" name="target" placeholder="Pilih Target Selesai">
+										<input class="form-control datepicker" id="target" name="target" placeholder="Pilih Target Selesai" required>
 									</div>
 								</div>
 
@@ -250,7 +257,7 @@
 										<div class="input-group-addon bg-default">
 											<i class="fa fa-clock-o"></i>
 										</div>
-										<input class="form-control timepicker" id="jam_target" name="jam_target" placeholder="Pilih Jam Selesai" >
+										<input class="form-control timepicker" id="jam_target" name="jam_target" placeholder="Pilih Jam Selesai" required>
 									</div>
 								</div>
 							</div>
@@ -335,12 +342,21 @@
 							</div>
 
 							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Reason Urgent</label>
+								<div class="col-xs-7" align="left">
+									<textarea class="form-control" id="reason_urgent_detail" rows="1" readonly></textarea>
+								</div>
+							</div>
+
+							<div class="form-group row" align="right">
 								<label class="col-xs-4" style="margin-top: 1%;">Jenis Pekerjaan</label>
 								<div class="col-xs-7" align="left">
 									<input type="text" class="form-control" id="workType_detail" readonly>
 								</div>
 							</div>
+						</div>
 
+						<div class="col-xs-6">
 							<div class="form-group row" align="right">
 								<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
 								<div class="col-xs-7" align="left">
@@ -348,9 +364,6 @@
 								</div>
 							</div>
 
-						</div>
-
-						<div class="col-xs-6">
 							<div class="form-group row" align="right">
 								<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin</label>
 								<div class="col-xs-7" align="left">
@@ -534,6 +547,13 @@
 									</div>
 								</div>
 
+								<div class="form-group row" align="right" id="div_reason_edit">
+									<label class="col-xs-4" style="margin-top: 1%;">Reason Urgent<span class="text-red">*</span></label>
+									<div class="col-xs-7" align="left">
+										<textarea class="form-control" placeholder="Isikan Catatan Urgent" name="reason_urgent_edit" id="reason_urgent_edit" rows="1"></textarea>
+									</div>
+								</div>
+
 								<div class="form-group row" align="right">
 									<label class="col-xs-4" style="margin-top: 1%;">Jenis Pekerjaan<span class="text-red">*</span></label>
 									<div class="col-xs-7" align="left">
@@ -546,28 +566,29 @@
 										</select>
 									</div>
 								</div>
+							</div>
 
+							<div class="col-xs-6">
 								<div class="form-group row" align="right">
 									<label class="col-xs-4" style="margin-top: 1%;">Kategori<span class="text-red">*</span></label>
 									<div class="col-xs-7" align="left">
-										<select class="form-control select4" id="kategori_edit" name="kategori_edit" data-placeholder="Pilih Kategori Pekerjaan" required>
+										<select class="form-control select4" id="kategori_edit" name="kategori_edit" data-placeholder="Pilih Kategori Pekerjaan" required onchange="get_machine('kategori_edit')">
 											<option></option>
-											<optgroup label="Utilitas">
+											<optgroup label="Utilitas" value="Utility">
 												<option>Listrik</option>
 												<option>Jaringan</option>
 												<option>Mesin Utilitas</option>
 												<option>Utilitas Umum</option>
 											</optgroup>
-											<optgroup label="Mesin Produksi">
+											<optgroup label="Mesin Produksi" value="Production Machine">
 												<option>Kelistrikan Mesin</option>
 												<option>Mekanis Mesin</option>
+												<option>Otomatisasi Mesin</option>
 											</optgroup>
 										</select>
 									</div>
 								</div>
-							</div>
 
-							<div class="col-xs-6">
 								<div class="form-group row" align="right">
 									<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin<span class="text-red">*</span></label>
 									<div class="col-xs-7" align="left">
@@ -706,9 +727,8 @@
 			tags: true
 		});
 
-		$("#target_div").hide();
 		get_data('all');
-		get_machine();
+		// get_machine('all');
 	})
 
 	function get_data(param) {
@@ -807,14 +827,21 @@
 
 	$('#prioritas').on('change', function() {
 		if ($(this).val() == 'Urgent') {
-			$("#target_div").show();
+			$("#div_reason").show();
 		} else {
-			$("#target_div").hide();
+			$("#div_reason").hide();
 		}
 	});	
 
 	$("form#createForm").submit(function(e){
+
+		if ($("#prioritas").val() == "Urgent" && $("#reason_urgent").val() == "") {
+			openErrorGritter('Gagal', 'Harap Melengkapi Catatan Urgent');
+			return false;
+		}
+
 		$("#create_btn").attr("disabled", true);
+
 		e.preventDefault();
 		var formData = new FormData(this);
 
@@ -891,6 +918,8 @@
 			$("#penyebab_detail").val(result.detail[0].cause);
 			$("#penanganan_detail").val(result.detail[0].handling);
 
+			$("#reason_urgent_detail").val(result.detail[0].note);
+
 			var stat = 0;
 			$.each(result.detail, function(index, value){
 				if (value.process_name == "Pending" || value.process_name == "Finished" || value.process_name == "InProgress") {
@@ -955,32 +984,46 @@
 		})
 	}
 
-	function get_machine() {
+	function get_machine(cat) {
+		var mesin_cat = $("#"+cat+" option:selected").parents("optgroup").attr("value");
+
+		// if (mesin_cat != null) {
+
+		// } else {
+
+		// }
+
+		console.log(mesin_cat);
 		var options = "";
+
 		var data = {
-			ctg: "machine"
+			kategori : mesin_cat
 		}
 
+		$("#nama_mesin").empty();
+		$("#mesin_edit").empty();
+
 		$.get('{{ url("fetch/maintenance/list_mc") }}', data,  function(result, status, xhr){
+			options += "<option></option>";
 			$.each(result.datas, function(index, value){
-				options += "<option value='"+value.machine_id+"'>"+value.description+" | "+value.machine_name+"</option>";
+				options += "<option value='"+value.machine_id+"'>"+value.description+" --- "+value.area+"</option>";
 			})
 
 			$("#nama_mesin").append(options);
 			$("#mesin_edit").append(options);
 			
 			$('#nama_mesin').select2({
-				dropdownParent: $('#createModal'), 
+				dropdownParent: $('#createModal'),
 				width: '100%', 
 				allowClear: true,
-				minimumInputLength: 3
+				// minimumInputLength: 3
 			});
 
 			$('#mesin_edit').select2({
 				dropdownParent: $('#editModal'), 
 				width: '100%', 
 				allowClear: true,
-				minimumInputLength: 3
+				// minimumInputLength: 3
 			});
 		})
 	}
@@ -997,6 +1040,7 @@
 			$("#pengaju_edit").val(result.detail[0].name);
 			$("#tanggal_edit").val(result.detail[0].date);
 			$("#bagian_edit").val(result.detail[0].section);
+			$("#reason_urgent_edit").val(result.detail[0].note);
 			$("#mesin_edit").val(result.detail[0].machine_name).trigger("change");
 			$("#prioritas_edit").val(result.detail[0].priority).trigger("change");
 			$("#workType_edit").val(result.detail[0].type).trigger("change");

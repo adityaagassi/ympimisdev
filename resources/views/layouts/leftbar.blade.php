@@ -967,10 +967,6 @@
         <a href="{{ url("/index/maintenance/planned/master") }}"><i class="fa fa-edit"></i> <span>PM Data</span></a>
       </li>
 
-      @if(isset($page) && $page == "Planned Maintenance")<li class="active">@else<li>@endif
-        <a href="{{ url("/index/maintenance/planned_monitor/".date('Y-m')) }}"><i class="fa fa-edit"></i> <span>PM Monitoring</span></a>
-      </li>
-
       @if(isset($page) && $page == "Planned Maintenance Form")<li class="active">@else<li>@endif
         <a href="{{ url("/index/maintenance/planned/form") }}"><i class="fa fa-list"></i> <span>PM Check</span></a>
       </li>
