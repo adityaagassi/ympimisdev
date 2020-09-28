@@ -530,7 +530,7 @@
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PO\')">'+value.PO.toLocaleString()+'</td>';
 	              table += '<td id="tdhover" style="cursor:pointer">0</td>';
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Actual\')">'+value.Actual.toLocaleString()+'</td>';
-	              if (ending > 0) {
+	              if (ending >= 0) {
 	              	table += '<td style="color:blue">'+ending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+'</td>';                
 	              }
 
