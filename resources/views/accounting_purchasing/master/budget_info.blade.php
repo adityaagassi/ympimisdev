@@ -784,14 +784,12 @@
 			success: function (result, status, xhr) {
 				if(result.status){
 					$("#loading").hide();
-					$('#budgetTable').DataTable().ajax.reload();
 					$("#upload_file").val('');
 					$('#upload_budget').modal('hide');
 					openSuccessGritter('Success', result.message);
-
+					fetchTable();
 				}else{
 					$("#loading").hide();
-
 					openErrorGritter('Error!', result.message);
 				}
 			},
