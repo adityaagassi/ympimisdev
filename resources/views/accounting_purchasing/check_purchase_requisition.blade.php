@@ -128,9 +128,13 @@
             </tr>
           </table>
 
+          <?php if ($pr->receive_date == null) { ?>
+
           <div class="col-sm-12" style="margin-top: 20px;padding: 0">
               <button type="submit" class="btn btn-success col-sm-12" style="width: 100%; font-weight: bold; font-size: 20px">Receive PR</button>
           </div>
+
+          <?php } ?>
         </form>
 
         @else

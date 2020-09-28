@@ -151,19 +151,19 @@ hr { background-color: red; height: 1px; border: 0; }
               <table id="tabelmonitor" class="table table-bordered" style="margin-top: 5px; width: 99%">
                 <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
                   <tr>
-                    <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">No PO</th>
-                    <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">Tanggal PO</th>
-                    <th style="width: 16%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">Supplier</th>
-                    <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">Budget</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">Net Payment</th>
-                    <th style="width: 50%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" colspan="4">Progress Purchase Order</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;" rowspan="2">SAP</th>
+                    <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">No PO</th>
+                    <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Tanggal PO</th>
+                    <th style="width: 16%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Supplier</th>
+                    <th style="width: 8%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Budget</th>
+                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">Net Payment</th>
+                    <th style="width: 50%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" colspan="4">Progress Purchase Order</th>
+                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;" rowspan="2">SAP</th>
                   </tr>
                   <tr>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;">Buyer</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;">Manager</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;">DGM</th>
-                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 16px;background-color: #3f51b5;">GM</th>
+                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">Buyer</th>
+                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">Manager</th>
+                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">DGM</th>
+                    <th style="width: 10%; padding: 0;vertical-align: middle;font-size: 1vw;background-color: #3f51b5;">GM</th>
                   </tr>
                 </thead>
                 <tbody id="tabelisi">
@@ -568,7 +568,7 @@ hr { background-color: red; height: 1px; border: 0; }
 
               table += '<tr>';
               table += '<td>'+value.no_po+'</td>';
-              table += '<td>'+value.tgl_po+'</td>';
+              table += '<td>'+value.po_date+'</td>';
               table += '<td>'+value.supplier_name+'</td>';
               table += '<td>'+value.budget_item+'</td>';
 

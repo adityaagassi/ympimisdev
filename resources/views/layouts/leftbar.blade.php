@@ -510,6 +510,10 @@
       @if(isset($page) && $page == "Receive Goods")<li class="active">@else<li>@endif
         <a href="{{ url("receive_goods") }}"><i class="fa fa-upload"></i>Upload Receive</a>
       </li>
+
+      @if(isset($page) && $page == "Upload Transaksi")<li class="active">@else<li>@endif
+        <a href="{{ url("upload_transaksi") }}"><i class="fa fa-upload"></i>Upload Transaksi Diluar PO</a>
+      </li>
     </ul>
   </li>
   @endif

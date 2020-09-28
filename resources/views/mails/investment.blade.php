@@ -580,18 +580,17 @@
 			@elseif($posisi == "finished")
 
 			<!-- <img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br> -->
-			<p style="font-size: 18px;">Informasi Terkait Investment<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
+			<p style="font-size: 18px;">Investment Approval Completed<br>(Last Update: {{ date('d-M-Y H:i:s') }})</p>
 			This is an automatic notification. Please do not reply to this address.
 
-			<h2>Investment No : {{$reff_number}}</h2>
-			<h3>Telah Di Approve Oleh Seluruh Approver</h3>
-			<hr>
-			<h2>Mohon Untuk Segera Dicek</h2>
-
+			<h2>Investment {{$reff_number}}</h2>
+			<h2>Fully Approved</h2>
+			<h3>Please Check Your Investment</h3>
 			<br>
-
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below to</i> &#8650;</span><br><br>
-			<a href="http://172.17.128.4/mirai/public/investment">Check List Investment</a><br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Below To</i> &#8650;</span><br><br>
+			<a href="{{ url('investment/check_pch') }}/{{ $id }}">Receive Investment</a><br>
+			<a href="{{ url('investment/control') }}">Investment Monitoring & Control</a><br>
+			<a href="{{ url('investment') }}">List Investment</a><br>
 
 			<!-- Tolak -->
 

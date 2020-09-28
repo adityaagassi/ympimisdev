@@ -500,9 +500,9 @@
 										<table class="table table-striped text-center">
 											<tr>
 												<th>Bulan</th>
-												<th>Budget Bulanan</th>
+												<th>Saldo Awal</th>
 												<th>Total Pembelian</th>
-												<th>Sisa Budget</th>
+												<th>Saldo Akhir</th>
 											</tr>
 											<tr>
 												<td>
@@ -1140,8 +1140,8 @@
 				$('#budget_description').text(obj.description);
 				$('#budget_account').text(obj.account);
 				$('#budget_category').text(obj.category);
-				$('#budget_amount').text("$"+obj.amount);
-				$('#budget_sisa').text("$"+obj.budget_now.toFixed(2));
+				$('#budget_amount').text("$"+obj.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+				$('#budget_sisa').text("$"+obj.budget_now.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
 				$('#budgetLabel').text("$"+obj.budget_now.toFixed(2));
 				$('#budget').val(obj.budget_now.toFixed(2));

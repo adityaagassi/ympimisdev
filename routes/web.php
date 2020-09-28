@@ -1146,6 +1146,8 @@ Route::get('index/welding/jig_data', 'WeldingProcessController@indexWeldingJigDa
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 Route::get('scan/welding/jig', 'WeldingProcessController@scanWeldingJig');
 Route::get('fetch/welding/schedule_jig', 'WeldingProcessController@scanWeldingJig');
+Route::get('fetch/welding/jig_check', 'WeldingProcessController@fetchJigCheck');
+Route::get('fetch/welding/drawing_list', 'WeldingProcessController@fetchDrawingList');
 
 
 
@@ -1366,6 +1368,10 @@ Route::get('fetch/receive', 'AccountingController@fetch_receive');
 Route::get('receive/detail', 'AccountingController@receive_detail');
 Route::post('import/receive', 'AccountingController@import_receive');
 
+Route::get('upload_transaksi', 'AccountingController@upload_transaksi');
+Route::get('fetch/transaksi', 'AccountingController@fetch_upload_transaksi');
+Route::post('import/transaksi', 'AccountingController@import_transaksi');
+
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
 	Route::get('scan/middle/operator', 'MiddleProcessController@scanMiddleOperator');
@@ -1425,6 +1431,9 @@ Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::post('delete/kdo', 'KnockDownController@deleteKd');
 	Route::post('delete/kdo_detail', 'KnockDownController@deleteKdDetail');
 });
+
+Route::get('upload_kd', 'KnockDownController@indexUploadSch');
+
 
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
 Route::get('fetch/kd_new/{id}', 'KnockDownController@fetchKdNew');
@@ -3194,6 +3203,8 @@ Route::group(['nav' => 'S34', 'middleware' => 'permission'], function(){
 	Route::get('fetch/maintenance/spk/operator', 'MaintenanceController@fetchSPKOperator');
 
 	Route::post('post/maintenance/member', 'MaintenanceController@postMemberSPK');
+
+	Route::post('post/maintenance/member/change', 'MaintenanceController@postNewMemberSPK');
 
 	Route::post('post/maintenance/spk/open', 'MaintenanceController@openSPKPending');
 	Route::post('post/maintenance/spk/cancel', 'MaintenanceController@cancelSPK');

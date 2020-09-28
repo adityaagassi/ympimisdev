@@ -978,6 +978,26 @@
                                 </tbody>
                             </table>
 
+                            <table class="table table-bordered">
+                                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                                    <tr>
+                                        <th>PR & Investment<br/> 購入依頼書・投資申請</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="{{ url("purchase_requisition/monitoring") }}">
+                                                <i class="fa fa-caret-right"></i> PR Monitoring & Control ()
+                                            </a>
+                                            <br>
+                                            <a href="{{ url("investment/control") }}">
+                                                <i class="fa fa-caret-right"></i> Investment Control ()
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </section>

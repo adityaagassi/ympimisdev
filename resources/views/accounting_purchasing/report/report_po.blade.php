@@ -175,27 +175,34 @@
 					<td colspan="4" style="font-size: 11px">Jl. Rembang Industri I/36-44</td>
 				</tr>
 				<tr>
+					<td colspan="1" style="font-size: 11px;width: 10%"><b>Delivery Term</b></td>
+					<td colspan="2" style="font-size: 11px;width: 20%"><b>:</b> {{$po[0]->delivery_term}}</td>
 					<td colspan="3"></td>
-					<td colspan="2" style="font-size: 11px"><b>Delivery Term :</b></td>
-					<td colspan="1" style="font-size: 11px;text-align: left">{{$po[0]->delivery_term}}</td>
 					<td colspan="4">Kawasan Industri PIER - Pasuruan</td>
 				</tr>
 
 				<tr>
-					<td colspan="3" style="font-size: 11px"><b>Vendor Status :</b> {{$po[0]->supplier_status}}</td>
-					<td colspan="3" style="font-size: 11px"><b>Price &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {{$po[0]->vat}}</td>
+					<td colspan="1" style="font-size: 11px;"><b>Vendor Status</b></td>
+					<td colspan="2" style="font-size: 11px;"><b>:</b> {{$po[0]->supplier_status}}</td>
+					<td colspan="1" style="font-size: 11px"><b>Price</b></td>
+					<td colspan="2" style="font-size: 11px"><b>:</b> {{$po[0]->vat}}</td>
 					<td colspan="4">Pandean - Rembang</td>
 				</tr>
 
 				<tr>
-					<td colspan="3" style="font-size: 11px"><b>Payment &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {{$po[0]->supplier_due_payment}}</td>
-					<td colspan="3" style="font-size: 11px"><b>W/H Tax &nbsp;:</b> {{$po[0]->holding_tax}} %</td>
+					<td colspan="1" style="font-size: 11px;"><b>Payment</b></td>
+					<td colspan="2" style="font-size: 11px;"><b>:</b> {{$po[0]->supplier_due_payment}}</td>
+					<td colspan="1" style="font-size: 11px;"><b>W/H Tax</b></td>
+					<td colspan="2" style="font-size: 11px;"><b>:</b> {{$po[0]->holding_tax}} %</td>
 					<td colspan="4">Kab. Pasuruan Jawa Timur 67152</td>
 				</tr>
 
 				<tr>
-					<td colspan="3" style="font-size: 11px"><b>Buyer &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> {{$po[0]->buyer_name}}</td>
-					<td colspan="3" style="font-size: 11px"><b>Currency :</b> {{$po[0]->currency}}</td>
+					<td colspan="1" style="font-size: 11px;"><b>Buyer</b></td>
+					<td colspan="2" style="font-size: 11px;"><b>:</b> {{$po[0]->buyer_name}}</td>
+
+					<td colspan="1" style="font-size: 11px;"><b>Currency</b></td>
+					<td colspan="2" style="font-size: 11px;"><b>:</b> {{$po[0]->currency}}</td>
 					<td colspan="4">NPWP : 01.824.283.4-052.000</td>
 				</tr>
 

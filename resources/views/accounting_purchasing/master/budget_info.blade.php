@@ -40,9 +40,10 @@
 	    overflow:hidden;
 	    text-overflow: ellipsis;
 	  }
-	#tablebudget > tr > td:hover {
+	#tdhover:hover {
 	    /*cursor: pointer;*/
 	    background-color: #4caf50;
+	    color: white;
 	  }
 	#loading { display: none; }
 </style>
@@ -93,7 +94,7 @@
 						<div class="col-md-2">
 							<div class="form-group">
 								<label>Periode</label>
-								<select class="form-control select2" multiple="multiple" id='periode' data-placeholder="Select Periode" style="width: 100%;">
+								<select class="form-control select2" multiple="multiple" id='periode' data-placeholder="Select Periode" onchange="fetchTable()" style="width: 100%;">
 									<option>FY196</option>
 									<option>FY197</option>
 								</select>
@@ -101,8 +102,27 @@
 						</div>
 						<div class="col-md-2">
 							<div class="form-group">
+								<label>Bulan</label>
+								<select class="form-control select2" multiple="multiple" id='bulan' data-placeholder="Select Bulan" onchange="fetchTable()" style="width: 100%;">
+									<option>Jan</option>
+									<option>Feb</option>
+									<option>Mar</option>
+									<option>Apr</option>
+									<option>May</option>
+									<option>Jun</option>
+									<option>Jul</option>
+									<option>Aug</option>
+									<option>Sep</option>
+									<option>Oct</option>
+									<option>Nov</option>
+									<option>Des</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
 								<label>Category</label>
-								<select class="form-control select2" multiple="multiple" id='category' data-placeholder="Select Category" style="width: 100%;">
+								<select class="form-control select2" multiple="multiple" id='category' data-placeholder="Select Category" onchange="fetchTable()" style="width: 100%;">
 									<option value="Expenses">Expenses</option>
 									<option value="Fixed Asset">Fixed Asset</option>
 								</select>
@@ -112,7 +132,7 @@
 				        <div class="col-md-2">
 							<div class="form-group">
 								<label>Department</label>
-				              	<select class="form-control select2" multiple="multiple" id="department" data-placeholder="Select Department" style="width: 100%;border-color: #605ca8" >
+				              	<select class="form-control select2" multiple="multiple" id="department" data-placeholder="Select Department" onchange="fetchTable()" style="width: 100%;border-color: #605ca8" >
 				                  @foreach($department as $dept)
 				                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
 				                  @endforeach
@@ -120,16 +140,16 @@
 							</div>
 				        </div>
 				        @else
-				           <select class="form-control select2 hideselect" multiple="multiple" id="department" data-placeholder="Select Department" style="border-color: #605ca8">
+				           <select class="form-control select2 hideselect" multiple="multiple" id="department" data-placeholder="Select Department" onchange="fetchTable()" style="border-color: #605ca8">
 				             <option value="{{$emp_dept->department}}" selected="">{{$emp_dept->department}}</option>
 				           </select>
 				        @endif
 						<div class="col-md-4">
 							<div class="form-group">
-								<div class="col-md-4" style="padding-right: 0;">
+								<!-- <div class="col-md-4" style="padding-right: 0;">
 									<label style="color: white;"> x</label>
 									<button class="btn btn-primary form-control" onclick="fetchTable()"><i class="fa fa-search"></i> Search</button>
-								</div>
+								</div> -->
 								<div class="col-md-4" style="padding-right: 0;">
 									<label style="color: white;"> x</label>
 									<button class="btn btn-danger form-control" onclick="clearSearch()"><i class="fa fa-close"></i> Clear</button>
@@ -164,13 +184,13 @@
 										<th>Description</th>
 										<th>Account Name</th>
 										<th>Category</th>
-										<th>Amount</th>
-										<th>Purchase requisition</th>
-										<th>Investment</th>
-										<th>Purchase Order</th>
-										<th>Transfer</th>
-										<th>Actual</th>
-										<th>Ending</th>
+										<th>Amount ($)</th>
+										<th>Purchase requisition ($)</th>
+										<th>Investment ($)</th>
+										<th>Purchase Order ($)</th>
+										<th>Transfer ($)</th>
+										<th>Actual ($)</th>
+										<th>Ending ($)</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -409,7 +429,7 @@
 	                    <th width="30%">Category Number</th>
 	                    <th width="30%">Detail Item</th>
 	                    <th width="10%">Status</th>
-	                    <th width="10%">Amount</th>
+	                    <th width="10%">Amount ($)</th>
 	                  </tr>
 	                </thead>
 	                <tbody id="tableBodyResult">
@@ -470,12 +490,13 @@
 	}
 
 	function fetchTable(){
-
+		var bulan = $('#bulan').val();
 		var periode = $('#periode').val();
 		var category = $('#category').val();
 	    var department = $('#department').val();
 
 		var data = {
+			bulan:bulan,
 			periode:periode,
 			category:category,
 		    department: department,
@@ -503,14 +524,14 @@
 	              table += '<td>'+value.description+'</td>';
 	              table += '<td>'+value.account_name+'</td>';
 	              table += '<td>'+value.category+'</td>';
-	              table += '<td>$ '+value.amount+'</td>';
-	              table += '<td style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PR\')">$ '+value.PR+'</td>';
-	              table += '<td style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Investment\')">$ '+value.Investment+'</td>';
-	              table += '<td style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PO\')">$ '+value.PO+'</td>';
-	              table += '<td style="cursor:pointer">$ 0</td>';
-	              table += '<td style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Actual\')">$ '+value.Actual+'</td>';
+	              table += '<td>'+value.amount.toLocaleString()+'</td>';
+	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PR\')">'+value.PR.toLocaleString()+'</td>';
+	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Investment\')">'+value.Investment.toLocaleString()+'</td>';
+	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PO\')">'+value.PO.toLocaleString()+'</td>';
+	              table += '<td id="tdhover" style="cursor:pointer">0</td>';
+	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Actual\')">'+value.Actual.toLocaleString()+'</td>';
 	              if (ending > 0) {
-	              table += '<td style="color:blue">$ '+ending.toFixed(2)+'</td>';                
+	              	table += '<td style="color:blue">'+ending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+'</td>';                
 	              }
 
 	              table += '<td><button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('+value.id+')"><i class="fa fa-eye"></i> Detail Sisa Budget</button></td>';  
@@ -817,7 +838,7 @@
 	            tableData += '<td>'+ value.category_number +'</td>';
 	            tableData += '<td>'+ value.no_item +'</td>';
 	            tableData += '<td>'+ value.status+ '</td>';
-	            tableData += '<td>$ '+ value.amount +'</td>'; 
+	            tableData += '<td>'+ value.amount.toLocaleString() +'</td>'; 
 	            total += parseFloat(value.amount);           
 	          }
 
@@ -826,7 +847,7 @@
 	            tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
 	            tableData += '<td>'+ value.no_item +'</td>';
 	            tableData += '<td>'+ value.status+ '</td>';
-	            tableData += '<td>$ '+ value.amount_po +'</td>';
+	            tableData += '<td>'+ value.amount_po.toLocaleString() +'</td>';
 	            total += parseFloat(value.amount_po);
 	          }
 
@@ -835,7 +856,7 @@
 	            tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
 	            tableData += '<td>'+ value.no_item +'</td>';
 	            tableData += '<td>'+ value.status+ '</td>';
-	            tableData += '<td>$ '+ value.amount_receive +'</td>';
+	            tableData += '<td>'+ value.amount_receive.toLocaleString() +'</td>';
 	            total += parseFloat(value.amount_receive);
 	          }
 
@@ -845,8 +866,61 @@
 
 	        $('#tableBodyResult').append(tableData);
 	        $('#resultTotal').html('');
-	        $('#resultTotal').append('$ '+total.toFixed(2));
+	        $('#resultTotal').append(total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
+
+	        $('#tableResult').DataTable({
+		      'dom': 'Bfrtip',
+		      'responsive': true,
+		      'lengthMenu': [
+		      [ 10, 25, 50, -1 ],
+		      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		      ],
+		      'buttons': {
+		        buttons:[
+		        {
+		          extend: 'pageLength',
+		          className: 'btn btn-default',
+		          // text: '<i class="fa fa-print"></i> Show',
+		        },
+		        {
+		          extend: 'copy',
+		          className: 'btn btn-success',
+		          text: '<i class="fa fa-copy"></i> Copy',
+		          exportOptions: {
+		            columns: ':not(.notexport)'
+		          }
+		        },
+		        {
+		          extend: 'excel',
+		          className: 'btn btn-info',
+		          text: '<i class="fa fa-file-excel-o"></i> Excel',
+		          exportOptions: {
+		            columns: ':not(.notexport)'
+		          }
+		        },
+		        {
+		          extend: 'print',
+		          className: 'btn btn-warning',
+		          text: '<i class="fa fa-print"></i> Print',
+		          exportOptions: {
+		            columns: ':not(.notexport)'
+		          }
+		        },
+		        ]
+		      },
+		      'paging': true,
+		      'lengthChange': true,
+		      'searching': true,
+		      'ordering': true,
+		      'order': [],
+		      'info': true,
+		      'autoWidth': true,
+		      "sPaginationType": "full_numbers",
+		      "bJQueryUI": true,
+		      "bAutoWidth": false,
+		      "processing": true,
+		    });
 	      }
 	      else{
 	        alert('Attempt to retrieve data failed');

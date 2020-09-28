@@ -199,8 +199,13 @@ table > thead > tr > th{
         </div>
       </div>
 
-      <div class="col-md-12">
+      <div class="col-xs-12">
+        <div class="row">
+          <hr style="border: 1px solid red;background-color: red">
+        </div>
+      </div>
 
+      <div class="col-md-12">
 
         <div class="col-md-5" style="margin-top: 5px; padding:0 !important">
             <div id="chartundone" style="width: 99%"></div>
@@ -222,6 +227,43 @@ table > thead > tr > th{
               </tr>
             </thead>
             <tbody id="tabelisipo_undone">
+            </tbody>
+            <tfoot>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-xs-12">
+        <div class="row">
+          <hr style="border: 1px solid red;background-color: red">
+        </div>
+      </div>
+
+
+      <div class="col-md-12">
+        <div class="col-md-5" style="margin-top: 5px; padding:0 !important">
+            <div id="chartactual" style="width: 99%"></div>
+        </div>
+
+        <div class="col-md-7" style="padding-right: 0;padding-left: 10px">
+
+          <div class="col-md-12" style="margin-top: 5px;background-color: #ffeb3b;text-align: center;">
+              <span style="font-size: 24px;font-weight: bold;">Outstanding PR Sudah PO Belum Receive</span>
+          </div>
+          <table id="tabelmonitor" class="table table-bordered" style="width: 100%">
+            <thead style="background-color: rgb(255,255,255); color: rgb(0,0,0); font-size: 12px;font-weight: bold">
+              <tr>
+                <th style="width: 6%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">No PR</th>
+                <th style="width: 5%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">Department</th>
+                <th style="width: 6%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">No PO</th>
+                <th style="width: 5%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">Tanggal PO</th>
+                <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">Supplier</th>
+                <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">Deskripsi Item</th>
+                <th style="width: 10%; padding: 5;vertical-align: middle;font-size: 16px;background-color: #00a65a;color: white">Status PO</th>
+              </tr>
+            </thead>
+            <tbody id="tabelisiactual">
             </tbody>
             <tfoot>
             </tfoot>
@@ -313,6 +355,45 @@ table > thead > tr > th{
     </div>
   </div>
 
+  <div class="modal fade" id="modalActual">
+    <div class="modal-dialog" style="width:1250px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 style="float: right;" id="modal-title"></h4>
+          <h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+          <br><h4 class="modal-title" id="judul_table"></h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table id="tabelActual" class="table table-striped table-bordered table-hover" style="width: 100%;"> 
+                <thead style="background-color: rgba(126,86,134,.7);">
+                  <tr>
+                    <th>Nomor PR</th>
+                    <th>Nomor PO</th>
+                    <th>Tanggal PO</th>
+                    <th>Item</th>
+                    <th>Supplier</th>
+                    <th>Tanggal Pengiriman</th>
+                    <th>Budget No</th>
+                    <th>Qty</th>
+                    <th>Total Receive</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </section>
 @endsection
 
@@ -383,7 +464,7 @@ table > thead > tr > th{
       if(xhr.status == 200){
         if(result.status){
 
-          var bulan = [], jml = [], dept = [], jml_dept = [], not_sign = [], sign = [], no_pr = [], belum_po = [], sudah_po = [];
+          var bulan = [], jml = [], dept = [], jml_dept = [], not_sign = [], sign = [], no_pr = [], belum_po = [], sudah_po = [], pr_close = [], belum_close = [], sudah_close = [];
 
           $.each(result.datas, function(key, value) {
             bulan.push(value.bulan);
@@ -396,6 +477,14 @@ table > thead > tr > th{
               no_pr.push(value.no_pr);
               belum_po.push(parseInt(value.belum_po));
               sudah_po.push(parseInt(value.sudah_po));              
+            }
+          })
+
+          $.each(result.data_po_belum_receive, function(key, value) {
+            if (value.belum_close != 0) {
+              pr_close.push(value.no_pr);
+              belum_close.push(parseInt(value.belum_close));
+              sudah_close.push(parseInt(value.sudah_close));              
             }
           })
 
@@ -592,6 +681,100 @@ table > thead > tr > th{
                 name: 'Sudah PO',
                 color: '#00a65a',
                 data: sudah_po
+              }
+            ]
+          })
+
+
+
+          $('#chartactual').highcharts({
+            chart: {
+              type: 'column'
+            },
+            title: {
+              text: 'Outstanding PR Sudah PO (Belum Receive)',
+              style: {
+                fontSize: '24px',
+                fontWeight: 'bold'
+              }
+            },
+            xAxis: {
+              type: 'category',
+              categories: pr_close,
+              lineWidth:2,
+              lineColor:'#9e9e9e',
+              gridLineWidth: 1
+            },
+            yAxis: {
+              lineWidth:2,
+              lineColor:'#fff',
+              type: 'linear',
+              title: {
+                enabled:false
+              },
+              tickInterval: 3,  
+              stackLabels: {
+                  enabled: true,
+                  style: {
+                      fontWeight: 'bold',
+                      color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                  }
+              }
+            },
+            legend: {
+              enabled:true,
+              reversed: true,
+              itemStyle:{
+                color: "white",
+                fontSize: "12px",
+                fontWeight: "bold",
+
+              },
+            },
+            plotOptions: {
+              series: {
+                cursor: 'pointer',
+                point: {
+                  events: {
+                    click: function () {
+                      ShowModalActual(this.category,this.series.name,result.datefrom,result.dateto,result.department);
+                    }
+                  }
+                },
+                borderWidth: 0,
+                dataLabels: {
+                  enabled: false,
+                  format: '{point.y}'
+                }
+              },
+              column: {
+                  color:  Highcharts.ColorString,
+                  stacking: 'normal',
+                  borderRadius: 1,
+                  dataLabels: {
+                      enabled: true
+                  }
+              }
+            },
+            credits: {
+              enabled: false
+            },
+
+            tooltip: {
+              formatter:function(){
+                return this.series.name+' : ' + this.y;
+              }
+            },
+            series: [
+              {
+                name: 'Belum Datang',
+                color: '#ff7043', //ff6666
+                data: belum_close
+              },
+              {
+                name: 'Sudah Datang',
+                color: '#00a65a',
+                data: sudah_close
               }
             ]
           })
@@ -845,6 +1028,31 @@ table > thead > tr > th{
 
           $('#tabelisipo_undone').append(table_belum_po);
 
+
+          $("#tabelisiactual").find("td").remove();  
+          $('#tabelisiactual').html("");
+          
+          var table_belum_actual = "";
+
+          $.each(result.data_po_belum_receive, function(key, value) {
+            table_belum_actual += '<tr>';
+            table_belum_actual += '<td>'+value.no_pr+'</td>';
+            table_belum_actual += '<td>'+value.department_shortname+'</td>';
+            table_belum_actual += '<td>'+value.no_po+'</td>';
+            table_belum_actual += '<td>'+value.tgl_po+'</td>';
+            table_belum_actual += '<td>'+value.supplier_name+'</td>';
+            table_belum_actual += '<td>'+value.nama_item+'</td>';
+            if (value.status_po == 'PO Terkirim') {
+              table_belum_actual += '<td><span class="label label-success"> '+value.status_po+' </span></td>';              
+            }else if(value.status_po == 'PO Approval'){
+              table_belum_actual += '<td><span class="label label-warning">'+value.status_po+' </span></td>';   
+            }
+            
+            table_belum_actual += '</tr>';
+          })
+
+          $('#tabelisiactual').append(table_belum_actual);
+
         }
       }
     })
@@ -1017,6 +1225,94 @@ table > thead > tr > th{
           { "data": "item_uom" },
           { "data": "item_amount" },
           { "data": "status", "width": "15%"}
+        ]    });
+
+    $('#judul_table').append().empty();
+    $('#judul_table').append('<center><b>'+status+' No PR '+pr+'</center></b>'); 
+  }
+
+
+
+  function ShowModalActual(pr, status, datefrom, dateto, department) {
+    tabel = $('#tabelActual').DataTable();
+    tabel.destroy();
+
+    $("#modalActual").modal("show");
+
+    var table = $('#tabelActual').DataTable({
+      'dom': 'Bfrtip',
+      'responsive': true,
+      'lengthMenu': [
+      [ 10, 25, 50, -1 ],
+      [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+      ],
+      'buttons': {
+        buttons:[
+        {
+          extend: 'pageLength',
+          className: 'btn btn-default',
+          // text: '<i class="fa fa-print"></i> Show',
+        },
+        {
+          extend: 'copy',
+          className: 'btn btn-success',
+          text: '<i class="fa fa-copy"></i> Copy',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'excel',
+          className: 'btn btn-info',
+          text: '<i class="fa fa-file-excel-o"></i> Excel',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        {
+          extend: 'print',
+          className: 'btn btn-warning',
+          text: '<i class="fa fa-print"></i> Print',
+          exportOptions: {
+            columns: ':not(.notexport)'
+          }
+        },
+        ]
+      },
+      'paging': true,
+      'lengthChange': true,
+      'searching': true,
+      'ordering': true,
+      'order': [],
+      'info': true,
+      'autoWidth': true,
+      "sPaginationType": "full_numbers",
+      "bJQueryUI": true,
+      "bAutoWidth": false,
+      "processing": true,
+      "serverSide": true,
+      "ajax": {
+          "type" : "get",
+          "url" : "{{ url("purchase_requisition/detailActual") }}",
+          "data" : {
+            pr : pr,
+            status : status,
+            department : department,
+            datefrom : datefrom,
+            dateto : dateto
+          }
+        },
+      "columns": [
+          { "data": "no_pr" },
+          { "data": "no_po" },
+          { "data": "tgl_po" },
+          { "data": "nama_item" },
+          { "data": "supplier_name" },
+          { "data": "delivery_date" },
+          { "data": "budget_item" },
+          { "data": "qty" },
+          { "data": "qty_receive" },
+          { "data": "status" }
         ]    });
 
     $('#judul_table').append().empty();

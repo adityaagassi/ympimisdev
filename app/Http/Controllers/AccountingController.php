@@ -15,6 +15,7 @@ use App\AccExchangeRate;
 use App\AccItem;
 use App\AccItemCategory;
 use App\AccActual;
+use App\AccActualLog;
 use App\AccBudget;
 use App\AccBudgetHistory;
 use App\AccSupplier;
@@ -4985,6 +4986,32 @@ public function update_purchase_requisition_po(Request $request)
         }
     }
 
+
+    public function check_investment_pch($id)
+    {
+        $emp_id = Auth::user()->username;
+
+        $investment = AccInvestment::find($id);
+
+        $path = '/investment_list/' . $investment->pdf;            
+        $file_path = asset($path);
+
+        return view('accounting_purchasing.check_investment', array(
+            'investment' => $investment,
+            'file_path' => $file_path,
+        ))->with('page', 'Investment');
+    }
+
+    public function checked_investment(Request $request, $id){
+
+        $invest = AccInvestment::find($id);
+        $invest->receive_date = date('Y-m-d');
+        $invest->save();
+
+        return redirect('/investment/check_pch/'.$id)->with('status', 'Investment Sudah Berhasil Diterima')
+        ->with('page', 'Invesment');
+    }
+
         //Item Invesment
     public function fetch_investment_item($id)
     {
@@ -5839,14 +5866,18 @@ public function update_purchase_requisition_po(Request $request)
 
                 $pdf->save(public_path() . "/investment_list/INV_".$judul.".pdf");
 
-
-                $mails = "select distinct email from users where users.username = '".$invest->applicant_id."'";
+                //kirim email ke Mas Shega & Mas Erlangga
+                $mails = "select distinct email from employee_syncs join users on employee_syncs.employee_id = users.username where end_date is null and employee_syncs.department = 'Purchasing Control' and (employee_id = 'PI1908032' or employee_id = 'PI1810020')";
                 $mailtoo = DB::select($mails);
+
+
+                $mailcc = "select distinct email from users where users.username = '".$invest->applicant_id."'";
+                $mailtoocc = DB::select($mailcc);
 
                 $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
-                Mail::to($mailtoo)->send(new SendEmail($investe, 'investment'));
+                Mail::to($mailtoo)->cc($mailtoocc)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($investe, 'investment'));
 
                 $message = 'Investment '.$invest->reff_number;
                 $message2 ='Approved Successfully';
@@ -6210,7 +6241,7 @@ public function update_purchase_requisition_po(Request $request)
 
     public function fetch_po_outstanding_investment(Request $request)
     {
-        $qry = "SELECT DISTINCT acc_investments.* FROM `acc_investments` join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number where acc_investment_details.sudah_po is null and acc_investments.deleted_at is null and acc_investments.posisi = 'finished'";
+        $qry = "SELECT DISTINCT acc_investments.* FROM `acc_investments` join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number where acc_investment_details.sudah_po is null and acc_investments.deleted_at is null and acc_investments.posisi = 'finished' and acc_investments.receive_date is not null";
         $invest = DB::select($qry);
 
         return DataTables::of($invest)
@@ -6387,7 +6418,7 @@ public function update_purchase_requisition_po(Request $request)
           $cattt = json_encode($category);
           $catt = str_replace(array("[","]"),array("(",")"),$cattt);
 
-          $cat = 'and a.category in'.$catt;
+          $cat = 'and category in'.$catt;
         }
         else {
           $cat = '';
@@ -6400,10 +6431,23 @@ public function update_purchase_requisition_po(Request $request)
           $period = json_encode($periode);
           $perio = str_replace(array("[","]"),array("(",")"),$period);
 
-          $per = 'and a.periode in'.$perio;
+          $per = 'and periode in'.$perio;
         }
         else {
           $per = '';
+        }
+
+        $bulan = $request->get('bulan');
+
+        if ($bulan != null)
+        {
+          $bula = json_encode($bulan);
+          $bul = str_replace(array("[","]"),array("(",")"),$bula);
+
+          $bu = 'and budget_month in'.$bul;
+        }
+        else {
+          $bu = '';
         }
 
 
@@ -6427,7 +6471,7 @@ public function update_purchase_requisition_po(Request $request)
           $deptt = json_encode($department);
           $dept = str_replace(array("[","]"),array("(",")"),$deptt);
 
-          $dep = 'and a.department in'.$dept;
+          $dep = 'and department in'.$dept;
         } else {
           $dep = '';
         }
@@ -6519,6 +6563,7 @@ public function update_purchase_requisition_po(Request $request)
             ( SELECT amount FROM acc_budgets WHERE budget_no = a.budget_no ) AS amount,
             ( SELECT account_name FROM acc_budgets WHERE budget_no = a.budget_no ) AS account_name,
             ( SELECT category FROM acc_budgets WHERE budget_no = a.budget_no ) AS category,
+            ( SELECT deleted_at FROM acc_budgets WHERE budget_no = a.budget_no ) AS deleted,
             SUM( a.PR ) AS PR,
             SUM( a.investment ) AS Investment,
             SUM( a.PO ) AS PO,
@@ -6545,14 +6590,16 @@ public function update_purchase_requisition_po(Request $request)
                 acc_budget_histories
                 JOIN acc_budgets ON acc_budget_histories.budget = acc_budgets.budget_no 
             WHERE
-                acc_budgets.deleted_at IS NULL 
+                acc_budgets.deleted_at IS NULL
+                '.$bu.'
             GROUP BY
                 budget, acc_budgets.id
             ) a 
-
-
         GROUP BY
              a.id,a.budget_no
+        HAVING
+            deleted IS NULL
+            '.$dep.' '.$cat.' '.$per.'
             ');
 
         $response = array(
@@ -6597,102 +6644,105 @@ public function update_purchase_requisition_po(Request $request)
                 $rows = $rows->toArray();
 
                 for ($i=0; $i < count($rows); $i++) {
-                    $periode = $rows[$i][0];
-                    $budget_no = $rows[$i][1];
-                    $department = $rows[$i][2];
-                    $description = $rows[$i][3];
-                    $amount = $rows[$i][4];
-                    $env = $rows[$i][5];
-                    $purpose = $rows[$i][6];
-                    $pic = $rows[$i][7];
-                    $account = $rows[$i][8];
-                    $category = $rows[$i][9];
-                    $apr_awal = $rows[$i][10];
-                    $may_awal = $rows[$i][11];
-                    $jun_awal = $rows[$i][12];
-                    $jul_awal = $rows[$i][13];
-                    $aug_awal = $rows[$i][14];
-                    $sep_awal = $rows[$i][15];
-                    $oct_awal = $rows[$i][16];
-                    $nov_awal = $rows[$i][17];
-                    $dec_awal = $rows[$i][18];
-                    $jan_awal = $rows[$i][19];
-                    $feb_awal = $rows[$i][20];
-                    $mar_awal = $rows[$i][21];
-                    $adj_frc = $rows[$i][22];
-                    $apr_adj = $rows[$i][23];
-                    $may_adj = $rows[$i][24];
-                    $jun_adj = $rows[$i][25];
-                    $jul_adj = $rows[$i][26];
-                    $aug_adj = $rows[$i][27];
-                    $sep_adj = $rows[$i][28];
-                    $oct_adj = $rows[$i][29];
-                    $nov_adj = $rows[$i][30];
-                    $dec_adj = $rows[$i][31];
-                    $jan_adj = $rows[$i][32];
-                    $feb_adj = $rows[$i][33];
-                    $mar_adj = $rows[$i][34];
-                    $apr_sisa = $rows[$i][35];
-                    $may_sisa = $rows[$i][36];
-                    $jun_sisa = $rows[$i][37];
-                    $jul_sisa = $rows[$i][38];
-                    $aug_sisa = $rows[$i][39];
-                    $sep_sisa = $rows[$i][40];
-                    $oct_sisa = $rows[$i][41];
-                    $nov_sisa = $rows[$i][42];
-                    $dec_sisa = $rows[$i][43];
-                    $jan_sisa = $rows[$i][44];
-                    $feb_sisa = $rows[$i][45];
-                    $mar_sisa = $rows[$i][46];
+                    if ($rows[$i][0] != "") {
+                        $periode = $rows[$i][0];
+                        $budget_no = $rows[$i][1];
+                        $department = $rows[$i][2];
+                        $description = $rows[$i][3];
+                        $amount = $rows[$i][4];
+                        $env = $rows[$i][5];
+                        $purpose = $rows[$i][6];
+                        $pic = $rows[$i][7];
+                        $account = $rows[$i][8];
+                        $category = $rows[$i][9];
+                        $apr_awal = $rows[$i][10];
+                        $may_awal = $rows[$i][11];
+                        $jun_awal = $rows[$i][12];
+                        $jul_awal = $rows[$i][13];
+                        $aug_awal = $rows[$i][14];
+                        $sep_awal = $rows[$i][15];
+                        $oct_awal = $rows[$i][16];
+                        $nov_awal = $rows[$i][17];
+                        $dec_awal = $rows[$i][18];
+                        $jan_awal = $rows[$i][19];
+                        $feb_awal = $rows[$i][20];
+                        $mar_awal = $rows[$i][21];
+                        $adj_frc = $rows[$i][22];
+                        $apr_adj = $rows[$i][23];
+                        $may_adj = $rows[$i][24];
+                        $jun_adj = $rows[$i][25];
+                        $jul_adj = $rows[$i][26];
+                        $aug_adj = $rows[$i][27];
+                        $sep_adj = $rows[$i][28];
+                        $oct_adj = $rows[$i][29];
+                        $nov_adj = $rows[$i][30];
+                        $dec_adj = $rows[$i][31];
+                        $jan_adj = $rows[$i][32];
+                        $feb_adj = $rows[$i][33];
+                        $mar_adj = $rows[$i][34];
+                        $apr_sisa = $rows[$i][35];
+                        $may_sisa = $rows[$i][36];
+                        $jun_sisa = $rows[$i][37];
+                        $jul_sisa = $rows[$i][38];
+                        $aug_sisa = $rows[$i][39];
+                        $sep_sisa = $rows[$i][40];
+                        $oct_sisa = $rows[$i][41];
+                        $nov_sisa = $rows[$i][42];
+                        $dec_sisa = $rows[$i][43];
+                        $jan_sisa = $rows[$i][44];
+                        $feb_sisa = $rows[$i][45];
+                        $mar_sisa = $rows[$i][46];
 
-                    $data2 = AccBudget::firstOrNew(['periode' => $periode, 'budget_no' => $budget_no]);
-                    $data2->department = $department;
-                    $data2->description = $description;
-                    $data2->amount = $amount;
-                    $data2->env = $env;
-                    $data2->purpose = $purpose;
-                    $data2->pic = $pic;
-                    $data2->account_name = $account;
-                    $data2->category = $category;
-                    $data2->apr_budget_awal = $apr_awal;
-                    $data2->may_budget_awal = $may_awal;
-                    $data2->jun_budget_awal = $jun_awal;
-                    $data2->jul_budget_awal = $jul_awal;
-                    $data2->aug_budget_awal = $aug_awal;
-                    $data2->sep_budget_awal = $sep_awal;
-                    $data2->oct_budget_awal = $oct_awal;
-                    $data2->nov_budget_awal = $nov_awal;
-                    $data2->dec_budget_awal = $dec_awal;
-                    $data2->jan_budget_awal = $jan_awal;
-                    $data2->feb_budget_awal = $feb_awal;
-                    $data2->mar_budget_awal = $mar_awal;
-                    $data2->adj_frc = $adj_frc;
-                    $data2->apr_after_adj = $apr_adj;
-                    $data2->may_after_adj = $may_adj;
-                    $data2->jun_after_adj = $jun_adj;
-                    $data2->jul_after_adj = $jul_adj;
-                    $data2->aug_after_adj = $aug_adj;
-                    $data2->sep_after_adj = $sep_adj;
-                    $data2->oct_after_adj = $oct_adj;
-                    $data2->nov_after_adj = $nov_adj;
-                    $data2->dec_after_adj = $dec_adj;
-                    $data2->jan_after_adj = $jan_adj;
-                    $data2->feb_after_adj = $feb_adj;
-                    $data2->mar_after_adj = $mar_adj;
-                    $data2->apr_sisa_budget = $apr_sisa;
-                    $data2->may_sisa_budget = $may_sisa;
-                    $data2->jun_sisa_budget = $jun_sisa;
-                    $data2->jul_sisa_budget = $jul_sisa;
-                    $data2->aug_sisa_budget = $aug_sisa;
-                    $data2->sep_sisa_budget = $sep_sisa;
-                    $data2->oct_sisa_budget = $oct_sisa;
-                    $data2->nov_sisa_budget = $nov_sisa;
-                    $data2->dec_sisa_budget = $dec_sisa;
-                    $data2->jan_sisa_budget = $jan_sisa;
-                    $data2->feb_sisa_budget = $feb_sisa;
-                    $data2->mar_sisa_budget = $mar_sisa;
-                    $data2->created_by = Auth::id();
-                    $data2->save();
+                        $data2 = AccBudget::firstOrNew(['periode' => $periode, 'budget_no' => $budget_no]);
+                        $data2->department = $department;
+                        $data2->description = $description;
+                        $data2->amount = $amount;
+                        $data2->env = $env;
+                        $data2->purpose = $purpose;
+                        $data2->pic = $pic;
+                        $data2->account_name = $account;
+                        $data2->category = $category;
+                        $data2->apr_budget_awal = $apr_awal;
+                        $data2->may_budget_awal = $may_awal;
+                        $data2->jun_budget_awal = $jun_awal;
+                        $data2->jul_budget_awal = $jul_awal;
+                        $data2->aug_budget_awal = $aug_awal;
+                        $data2->sep_budget_awal = $sep_awal;
+                        $data2->oct_budget_awal = $oct_awal;
+                        $data2->nov_budget_awal = $nov_awal;
+                        $data2->dec_budget_awal = $dec_awal;
+                        $data2->jan_budget_awal = $jan_awal;
+                        $data2->feb_budget_awal = $feb_awal;
+                        $data2->mar_budget_awal = $mar_awal;
+                        $data2->adj_frc = $adj_frc;
+                        $data2->apr_after_adj = $apr_adj;
+                        $data2->may_after_adj = $may_adj;
+                        $data2->jun_after_adj = $jun_adj;
+                        $data2->jul_after_adj = $jul_adj;
+                        $data2->aug_after_adj = $aug_adj;
+                        $data2->sep_after_adj = $sep_adj;
+                        $data2->oct_after_adj = $oct_adj;
+                        $data2->nov_after_adj = $nov_adj;
+                        $data2->dec_after_adj = $dec_adj;
+                        $data2->jan_after_adj = $jan_adj;
+                        $data2->feb_after_adj = $feb_adj;
+                        $data2->mar_after_adj = $mar_adj;
+                        $data2->apr_sisa_budget = $apr_sisa;
+                        $data2->may_sisa_budget = $may_sisa;
+                        $data2->jun_sisa_budget = $jun_sisa;
+                        $data2->jul_sisa_budget = $jul_sisa;
+                        $data2->aug_sisa_budget = $aug_sisa;
+                        $data2->sep_sisa_budget = $sep_sisa;
+                        $data2->oct_sisa_budget = $oct_sisa;
+                        $data2->nov_sisa_budget = $nov_sisa;
+                        $data2->dec_sisa_budget = $dec_sisa;
+                        $data2->jan_sisa_budget = $jan_sisa;
+                        $data2->feb_sisa_budget = $feb_sisa;
+                        $data2->mar_sisa_budget = $mar_sisa;
+                        $data2->created_by = Auth::id();
+                        $data2->save();
+                    }
+                    
                 }       
 
                 $response = array(
@@ -7153,7 +7203,6 @@ public function update_purchase_requisition_po(Request $request)
 
     public function fetchMonitoringPR(Request $request)
     {
-
       $tahun = date('Y');
 
       $datefrom = $request->get('datefrom');
@@ -7191,15 +7240,68 @@ public function update_purchase_requisition_po(Request $request)
       }
 
       $data = db::select("
-        select count(no_pr) as jumlah, monthname(submission_date) as bulan, year(submission_date) as tahun, sum(case when receive_date is null then 1 else 0 end) as NotSigned , sum(case when receive_date is not null then 1 else 0 end) as Signed from acc_purchase_requisitions where acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." GROUP BY bulan,tahun order by tahun, month(submission_date) ASC");
+        SELECT
+            count( no_pr ) AS jumlah,
+            monthname( submission_date ) AS bulan,
+            YEAR ( submission_date ) AS tahun,
+            sum( CASE WHEN receive_date IS NULL THEN 1 ELSE 0 END ) AS NotSigned,
+            sum( CASE WHEN receive_date IS NOT NULL THEN 1 ELSE 0 END ) AS Signed 
+        FROM
+            acc_purchase_requisitions 
+        WHERE
+            acc_purchase_requisitions.deleted_at IS NULL 
+            AND DATE_FORMAT( submission_date, '%Y-%m' ) BETWEEN '".$datefrom."' AND '".$dateto."' ".$dep." 
+        GROUP BY
+            bulan,
+            tahun 
+        ORDER BY
+            tahun,
+            MONTH ( submission_date ) ASC
+        ");
 
       $data_pr_belum_po = db::select("
-        select acc_purchase_requisitions.no_pr, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr where acc_purchase_requisitions.deleted_at is null and receive_date is not null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep."  GROUP BY no_pr order by submission_date ASC");
+        SELECT
+            acc_purchase_requisitions.no_pr,
+            sum( CASE WHEN sudah_po IS NULL THEN 1 ELSE 0 END ) AS belum_po,
+            sum( CASE WHEN sudah_po IS NOT NULL THEN 1 ELSE 0 END ) AS sudah_po 
+        FROM
+            acc_purchase_requisitions
+            LEFT JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr 
+        WHERE
+            acc_purchase_requisitions.deleted_at IS NULL 
+            AND receive_date IS NOT NULL 
+            AND DATE_FORMAT( submission_date, '%Y-%m' ) BETWEEN '".$datefrom."' AND '".$dateto."' ".$dep." 
+        GROUP BY
+            no_pr 
+        ORDER BY
+            submission_date ASC");
+
+      $data_po_belum_receive = db::select("
+        SELECT
+            acc_purchase_requisitions.no_pr,
+            sum( CASE WHEN acc_purchase_order_details.`status` IS NULL THEN 1 ELSE 0 END ) AS belum_close,
+            sum( CASE WHEN acc_purchase_order_details.`status` IS NOT NULL THEN 1 ELSE 0 END ) AS sudah_close 
+        FROM
+            acc_purchase_requisitions
+            LEFT JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr 
+            LEFT JOIN acc_purchase_order_details on acc_purchase_requisition_items.no_pr = acc_purchase_order_details.no_pr and acc_purchase_requisition_items.item_code = acc_purchase_order_details.no_item
+        WHERE
+            acc_purchase_requisitions.deleted_at IS NULL 
+            AND acc_purchase_requisition_items.sudah_po IS NOT NULL 
+            AND acc_purchase_requisitions.receive_date IS NOT NULL
+            AND DATE_FORMAT( submission_date, '%Y-%m' ) 
+            BETWEEN '".$datefrom."' AND '".$dateto."' ".$dep." 
+        GROUP BY
+            no_pr 
+        ORDER BY
+            submission_date ASC
+            ");
 
       $response = array(
         'status' => true,
         'datas' => $data,
         'data_pr_belum_po' => $data_pr_belum_po,
+        'data_po_belum_receive' => $data_po_belum_receive,
         'tahun' => $tahun,
         'datefrom' => $datefrom,
         'dateto' => $dateto,
@@ -7403,14 +7505,95 @@ public function update_purchase_requisition_po(Request $request)
       }
 
 
-      $data = db::select("select acc_purchase_requisitions.id, no_pr, emp_id, emp_name, department_shortname, section, no_budget, submission_date, po_due_date, receive_date, file, posisi, `status`, staff, manager, manager_name, (select `name` from employee_syncs where employee_id = dgm) as dgm, (select `name` from employee_syncs where employee_id = gm) as gm , approvalm, dateapprovalm, approvaldgm, dateapprovaldgm, approvalgm, dateapprovalgm, alasan, datereject from acc_purchase_requisitions join departments on acc_purchase_requisitions.department = department_name where acc_purchase_requisitions.status != 'received' and acc_purchase_requisitions.deleted_at is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date asc");
+      $data = db::select("
+        SELECT
+            acc_purchase_requisitions.id,
+            no_pr,
+            emp_id,
+            emp_name,
+            department_shortname,
+            section,
+            no_budget,
+            submission_date,
+            po_due_date,
+            receive_date,
+            file,
+            posisi,
+            `status`,
+            staff,
+            manager,
+            manager_name,
+            ( SELECT `name` FROM employee_syncs WHERE employee_id = dgm ) AS dgm,
+            ( SELECT `name` FROM employee_syncs WHERE employee_id = gm ) AS gm,
+            approvalm,
+            dateapprovalm,
+            approvaldgm,
+            dateapprovaldgm,
+            approvalgm,
+            dateapprovalgm,
+            alasan,
+            datereject 
+        FROM
+            acc_purchase_requisitions
+            JOIN departments ON acc_purchase_requisitions.department = department_name 
+        WHERE
+            acc_purchase_requisitions.STATUS != 'received' 
+            AND acc_purchase_requisitions.deleted_at IS NULL 
+            AND DATE_FORMAT( submission_date, '%Y-%m' ) BETWEEN '".$datefrom."' 
+            AND '".$dateto."' ".$dep." 
+            ORDER BY submission_date ASC");
 
-      $data_pr_belum_po = db::select("select acc_purchase_requisitions.no_pr,departments.department_shortname, acc_purchase_requisition_items.item_code, acc_purchase_requisition_items.item_desc, acc_purchase_requisition_items.item_request_date from acc_purchase_requisitions left join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join departments on acc_purchase_requisitions.department = department_name where acc_purchase_requisitions.deleted_at is null and receive_date is not null and sudah_po is null and DATE_FORMAT(submission_date,'%Y-%m') between '".$datefrom."' and '".$dateto."' ".$dep." order by submission_date ASC");
+
+      $data_pr_belum_po = db::select("
+        SELECT 
+            acc_purchase_requisitions.no_pr,
+            departments.department_shortname,
+            acc_purchase_requisition_items.item_code,
+            acc_purchase_requisition_items.item_desc,
+            acc_purchase_requisition_items.item_request_date 
+        FROM
+            acc_purchase_requisitions
+            LEFT JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr
+            JOIN departments ON acc_purchase_requisitions.department = departments.department_name 
+        WHERE
+            acc_purchase_requisitions.deleted_at IS NULL 
+            AND receive_date IS NOT NULL 
+            AND sudah_po IS NULL 
+            AND DATE_FORMAT( submission_date, '%Y-%m' ) BETWEEN '".$datefrom."' 
+            AND '".$dateto."' ".$dep." 
+            ORDER BY submission_date ASC");
+
+
+      $data_po_belum_receive = db::select("
+        SELECT DISTINCT
+            acc_purchase_requisitions.no_pr, 
+            departments.department_shortname,
+            acc_purchase_orders.no_po,
+            acc_purchase_orders.tgl_po,
+            acc_purchase_orders.supplier_name,
+            acc_purchase_order_details.nama_item,
+            IF(acc_purchase_orders.posisi = 'pch', 'PO Terkirim', 'PO Approval') as status_po
+            FROM acc_purchase_orders
+            LEFT JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
+            LEFT JOIN acc_purchase_requisitions ON acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr
+            LEFT JOIN acc_purchase_requisition_items ON acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr
+            JOIN departments ON acc_purchase_requisitions.department = departments.department_name 
+            WHERE
+                acc_purchase_requisitions.deleted_at IS NULL 
+                AND acc_purchase_requisitions.receive_date IS NOT NULL
+                AND acc_purchase_requisition_items.sudah_po IS NOT NULL 
+                AND acc_purchase_orders.deleted_at IS NULL
+                AND acc_purchase_order_details.`status` IS NULL 
+                AND DATE_FORMAT( tgl_po, '%Y-%m' ) BETWEEN '".$datefrom."' AND '".$dateto."' 
+                ".$dep." 
+                ORDER BY
+                tgl_po ASC ");
 
       $response = array(
         'status' => true,
         'datas' => $data,
-        'data_pr_belum_po' => $data_pr_belum_po
+        'data_pr_belum_po' => $data_pr_belum_po,
+        'data_po_belum_receive' => $data_po_belum_receive
     );
 
       return Response::json($response); 
@@ -7462,7 +7645,6 @@ public function update_purchase_requisition_po(Request $request)
       $tglto = $request->get("status");
       $department = $request->get("department");
 
-
       $status_sign = "";
 
       if ($status == "Sign Not Completed") {
@@ -7472,9 +7654,17 @@ public function update_purchase_requisition_po(Request $request)
           $status_sign = "and receive_date is not null";
       }
 
-      $qry = "SELECT  * FROM acc_purchase_requisitions WHERE deleted_at IS NULL and monthname(submission_date) = '".$bulan."' and DATE_FORMAT(submission_date,'%Y-%m') between '".$tglfrom."' and '".$tglto."' ".$department." ".$status_sign." ";
-
-      $pr = DB::select($qry);
+      $pr = DB::select("
+        SELECT
+            * 
+        FROM
+            acc_purchase_requisitions 
+        WHERE
+            deleted_at IS NULL 
+            AND monthname( submission_date ) = '".$bulan."' 
+            AND DATE_FORMAT( submission_date, '%Y-%m' ) BETWEEN '".$tglfrom."' 
+            AND '".$tglto."' '".$department."' ".$status_sign."
+        ");
 
       return DataTables::of($pr)
       ->editColumn('submission_date', function ($pr)
@@ -7699,6 +7889,55 @@ public function update_purchase_requisition_po(Request $request)
         ->make(true);
     }
 
+    public function detailMonitoringPRActual(Request $request){
+
+        $pr = $request->get("pr");
+        $status = $request->get("status");
+        $tglfrom = $request->get("tglfrom");
+        $tglto = $request->get("status");
+        $department = $request->get("department");
+
+        $status_sign = "";
+
+        if ($status == "Belum Datang") {
+            $status_sign = "and acc_purchase_order_details.`status` is null";
+        }
+        else if ($status == "Sudah Datang") {
+            $status_sign = "and acc_purchase_order_details.`status` is not null";
+        }
+
+
+        $practual = DB::select("
+            SELECT acc_purchase_orders.*, acc_purchase_order_details.*, acc_purchase_requisitions.department FROM acc_purchase_orders
+            LEFT JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
+            LEFT JOIN acc_purchase_requisitions ON acc_purchase_order_details.no_pr = acc_purchase_requisitions.no_pr
+            WHERE
+            acc_purchase_orders.deleted_at IS NULL
+                AND acc_purchase_order_details.no_pr = '".$pr."'
+                AND DATE_FORMAT( submission_date, '%Y-%m' ) BETWEEN '".$tglfrom."' 
+                AND '".$tglto."' ".$department." ".$status_sign."
+            ");
+
+        return DataTables::of($practual)
+
+        ->editColumn('tgl_po', function ($practual)
+        {
+            return $practual->tgl_po;
+        })
+        ->editColumn('status', function ($practual)
+        {
+            if ($practual->status == null) {
+                return '<span class="label label-danger">Belum Close</span>';
+            }
+            else if ($practual->status != null) {
+                return '<span class="label label-success">Sudah Close</span>';
+            }
+
+        })
+        ->rawColumns(['status' => 'status'])
+        ->make(true);
+    }
+
 
 
     public function monitoringPO(){
@@ -7901,6 +8140,7 @@ public function update_purchase_requisition_po(Request $request)
         (
         SELECT
         acc_purchase_orders.*,
+        date(acc_purchase_orders.tgl_po) as po_date,
         acc_purchase_order_details.budget_item,
         acc_purchase_order_details.goods_price,
         acc_purchase_order_details.service_price,
@@ -7957,17 +8197,18 @@ public function update_purchase_requisition_po(Request $request)
 
       if(strlen($request->get('datefrom')) > 0){
         $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
-    }else{
-        if($last){
-          $tanggal = date_create($last->tanggal);
-          $now = date_create(date('Y-m-d'));
-          $interval = $now->diff($tanggal);
-          $diff = $interval->format('%a%');
-
-          if($diff > 30){
-            $datefrom = date('Y-m-d', strtotime($last->tanggal));
         }
-    }
+        else{
+            if($last){
+              $tanggal = date_create($last->tanggal);
+              $now = date_create(date('Y-m-d'));
+              $interval = $now->diff($tanggal);
+              $diff = $interval->format('%a%');
+
+              if($diff > 30){
+                $datefrom = date('Y-m-d', strtotime($last->tanggal));
+            }
+        }
     }
 
 
@@ -7988,38 +8229,103 @@ public function update_purchase_requisition_po(Request $request)
 
           //per tgl
     $data = db::select("
-        select date2.week_date, date2.week_name, sum(date2.not_finish) as undone, sum(date2.finish) done from 
-        (
-        select date.week_date, date.week_name, coalesce(not_finish.total, 0) as not_finish, coalesce(finish.total, 0) as finish from 
-        (select week_date,week_name from weekly_calendars 
-        where date(week_date) >= '".$datefrom."'
-        and date(week_date) <= '".$dateto."') date
-        left join
-        (select date(submission_date) as date, count(id) as total from acc_investments
-        where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' ".$dep." and acc_investments.deleted_at is null and posisi = 'finished'
-        group by date(submission_date)) finish
-        on date.week_date = finish.date
-        left join
-        (select date(submission_date) as date, count(id) as total from acc_investments
-        where date(submission_date) >= '".$datefrom."' and date(submission_date) <= '".$dateto."' ".$dep." and acc_investments.deleted_at is null and `posisi` != 'finished'
-        group by date(submission_date)) not_finish
-        on date.week_date = not_finish.date
-        order by week_date asc) date2 group by date2.week_name              
+       SELECT
+            date2.week_date,
+            date2.week_name,
+            sum( date2.not_finish ) AS undone,
+            sum( date2.finish ) done 
+        FROM
+            (
+            SELECT
+                date.week_date,
+                date.week_name,
+                COALESCE ( not_finish.total, 0 ) AS not_finish,
+                COALESCE ( finish.total, 0 ) AS finish 
+            FROM
+                ( SELECT week_date, week_name FROM weekly_calendars WHERE date( week_date ) >= '".$datefrom."' AND date( week_date ) <= '".$dateto."' ) date
+                LEFT JOIN (
+                SELECT
+                    date( submission_date ) AS date,
+                    count( id ) AS total 
+                FROM
+                    acc_investments 
+                WHERE
+                    date( submission_date ) >= '".$datefrom."' 
+                    AND date( submission_date ) <= '".$dateto."' ".$dep." 
+                    AND acc_investments.deleted_at IS NULL 
+                    AND posisi = 'finished' 
+                GROUP BY
+                date( submission_date )) finish ON date.week_date = finish.date
+                LEFT JOIN (
+                SELECT
+                    date( submission_date ) AS date,
+                    count( id ) AS total 
+                FROM
+                    acc_investments 
+                WHERE
+                    date( submission_date ) >= '".$datefrom."' 
+                    AND date( submission_date ) <= '".$dateto."' ".$dep." 
+                    AND acc_investments.deleted_at IS NULL 
+                    AND `posisi` != 'finished' 
+                GROUP BY
+                date( submission_date )) not_finish ON date.week_date = not_finish.date 
+            ORDER BY
+                week_date ASC 
+            ) date2 
+        GROUP BY
+            date2.week_name          
         ");
 
     $data_investment_belum_po = db::select("
-        select acc_investments.reff_number, sum(case when sudah_po is null then 1 else 0 end) as belum_po, sum(case when sudah_po is not null then 1 else 0 end) as sudah_po from acc_investments left join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number where acc_investments.deleted_at is null and posisi = 'finished' ".$dep."  GROUP BY reff_number order by submission_date ASC");
+        SELECT
+            acc_investments.reff_number,
+            sum( CASE WHEN sudah_po IS NULL THEN 1 ELSE 0 END ) AS belum_po,
+            sum( CASE WHEN sudah_po IS NOT NULL THEN 1 ELSE 0 END ) AS sudah_po 
+        FROM
+            acc_investments
+            LEFT JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number 
+        WHERE
+            acc_investments.deleted_at IS NULL
+            AND posisi = 'finished' 
+            ".$dep." 
+        GROUP BY
+            reff_number 
+        ORDER BY
+            submission_date ASC
+    ");
 
-    $year = date('Y');
+    $data_investment_belum_receive = db::select("
+        SELECT
+            acc_investments.reff_number,
+            sum( CASE WHEN acc_purchase_order_details.`status` IS NULL THEN 1 ELSE 0 END ) AS belum_close,
+            sum( CASE WHEN acc_purchase_order_details.`status` IS NOT NULL THEN 1 ELSE 0 END ) AS sudah_close 
+        FROM
+            acc_investments
+            LEFT JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number 
+            LEFT JOIN acc_purchase_order_details on acc_investment_details.reff_number = acc_purchase_order_details.no_pr 
+            and acc_investment_details.no_item = acc_purchase_order_details.no_item
+        WHERE
+            acc_investments.deleted_at IS NULL 
+            AND acc_investment_details.sudah_po IS NOT NULL 
+            AND acc_investments.receive_date IS NOT NULL
+            ".$dep." 
+        GROUP BY
+            reff_number 
+        ORDER BY
+            submission_date ASC
+        ");
 
-    $response = array(
-        'status' => true,
-        'datas' => $data,
-        'year' => $year,
-        'data_investment_belum_po' => $data_investment_belum_po
-    );
+        $year = date('Y');
 
-    return Response::json($response);
+        $response = array(
+            'status' => true,
+            'datas' => $data,
+            'year' => $year,
+            'data_investment_belum_po' => $data_investment_belum_po,
+            'data_investment_belum_receive' => $data_investment_belum_receive
+        );
+
+        return Response::json($response);
     }
 
 
@@ -8045,8 +8351,8 @@ public function update_purchase_requisition_po(Request $request)
 
           if($diff > 30){
             $datefrom = date('Y-m-d', strtotime($last->tanggal));
+            }
         }
-    }
     }
 
 
@@ -8067,7 +8373,6 @@ public function update_purchase_requisition_po(Request $request)
     }
 
     $data = db::select("
-
         SELECT 
         acc_investments.*, departments.department_shortname
         FROM
@@ -8082,14 +8387,56 @@ public function update_purchase_requisition_po(Request $request)
         AND '".$dateto."' ".$dep."
         ORDER BY
         submission_date ASC
-        ");
+    ");
 
-    $data_investment_belum_po = db::select("select acc_investments.*,acc_investment_details.*, departments.department_shortname from acc_investments left join acc_investment_details on acc_investments.reff_number = acc_investment_details.reff_number join departments on acc_investments.applicant_department = departments.department_name where acc_investments.deleted_at is null and sudah_po is null and posisi = 'finished' ".$dep." order by submission_date ASC");
+    $data_investment_belum_po = db::select("
+        SELECT
+            acc_investments.*,
+            acc_investment_details.*,
+            departments.department_shortname 
+        FROM
+            acc_investments
+            LEFT JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number
+            JOIN departments ON acc_investments.applicant_department = departments.department_name 
+        WHERE
+            acc_investments.deleted_at IS NULL 
+            AND sudah_po IS NULL 
+            AND posisi = 'finished' ".$dep." 
+        ORDER BY
+            submission_date ASC
+    ");
+
+    $data_po_belum_receive = db::select("
+        SELECT DISTINCT
+            acc_investments.reff_number, 
+            departments.department_shortname,
+            acc_purchase_orders.no_po,
+            acc_purchase_orders.tgl_po,
+            acc_purchase_orders.supplier_name,
+            acc_purchase_order_details.nama_item,
+            IF(acc_purchase_orders.posisi = 'pch', 'PO Terkirim', 'PO Approval') as status_po
+            FROM acc_purchase_orders
+            LEFT JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
+            LEFT JOIN acc_investments ON acc_purchase_order_details.no_pr = acc_investments.reff_number
+            LEFT JOIN acc_investment_details ON acc_investments.reff_number = acc_investment_details.reff_number
+            JOIN departments ON acc_investments.applicant_department = departments.department_name 
+            WHERE
+                acc_investments.deleted_at IS NULL 
+                AND acc_investments.receive_date IS NOT NULL
+                AND acc_investment_details.sudah_po IS NOT NULL 
+                AND acc_purchase_orders.deleted_at IS NULL
+                AND acc_purchase_order_details.`status` IS NULL 
+                AND DATE_FORMAT( tgl_po, '%Y-%m' ) BETWEEN '".$datefrom."' AND '".$dateto."' 
+                ".$dep." 
+                ORDER BY
+                tgl_po ASC 
+    ");
 
     $response = array(
         'status' => true,
         'datas' => $data,
-        'data_investment_belum_po' => $data_investment_belum_po
+        'data_investment_belum_po' => $data_investment_belum_po,
+        'data_po_belum_receive' => $data_po_belum_receive
     );
 
     return Response::json($response); 
@@ -8262,6 +8609,359 @@ public function update_purchase_requisition_po(Request $request)
         ->rawColumns(['status' => 'status'])
         ->make(true);
     }
+
+
+    public function detailMonitoringInvActual(Request $request){
+
+        $reff_number = $request->get("reff");
+        $status = $request->get("status");
+        $tglfrom = $request->get("tglfrom");
+        $tglto = $request->get("status");
+        $department = $request->get("department");
+
+        $status_sign = "";
+
+        if ($status == "Belum Datang") {
+            $status_sign = "and acc_purchase_order_details.`status` is null";
+        }
+        else if ($status == "Sudah Datang") {
+            $status_sign = "and acc_purchase_order_details.`status` is not null";
+        }
+
+        $inv = DB::select("
+            SELECT acc_purchase_orders.*, acc_purchase_order_details.*, acc_investments.applicant_department FROM acc_purchase_orders
+            LEFT JOIN acc_purchase_order_details ON acc_purchase_orders.no_po = acc_purchase_order_details.no_po
+            LEFT JOIN acc_investments ON acc_purchase_order_details.no_pr = acc_investments.reff_number
+            WHERE
+            acc_purchase_orders.deleted_at IS NULL
+                AND acc_purchase_order_details.no_pr = '".$reff_number."'
+                AND DATE_FORMAT( submission_date, '%Y-%m' ) BETWEEN '".$tglfrom."' 
+                AND '".$tglto."' ".$department." ".$status_sign."
+
+            ");
+
+        return DataTables::of($inv)
+        
+        ->editColumn('tgl_po', function ($inv)
+        {
+            return $inv->tgl_po;
+        })
+        ->editColumn('status', function ($inv)
+        {
+            if ($inv->status == null) {
+                return '<span class="label label-danger">Belum Close</span>';
+            }
+            else if ($inv->status != null) {
+                return '<span class="label label-success">Sudah Close</span>';
+            }
+
+        })
+        ->rawColumns(['status' => 'status'])
+        ->make(true);
+    }
+
+
+
+
+    //==================================//
+    //    Upload Transaksi Diluar PO    //
+    //==================================//
+
+    public function upload_transaksi()
+    {
+        $title = 'Upload Transaksi';
+        $title_jp = '';
+
+        $status = AccActualLog::select('*')->whereNull('acc_actual_logs.deleted_at')
+        ->distinct()
+        ->get();
+
+        return view('accounting_purchasing.master.upload_transaksi', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+        ))->with('page', 'Upload Transaksi')
+        ->with('head', 'Upload Transaksi');
+    }
+
+    public function fetch_upload_transaksi(Request $request)
+    {
+        $actual = AccActualLog::orderBy('acc_actual_logs.id', 'desc');
+
+        if ($request->get('category') != null)
+        {
+            $actual = $actual->whereIn('acc_actual_logs.periode', $request->get('periode'));
+        }
+
+        $actual = $actual->select('*')->get();
+
+        return DataTables::of($actual)
+
+        ->editColumn('amount', function ($actual)
+        {
+            return $actual->amount;
+        })
+
+        ->addColumn('action', function ($actual)
+        {
+            $id = $actual->id;
+
+            return ' 
+            <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$id.')"><i class="fa fa-eye"></i> Detail</button>
+            ';
+        })
+
+        ->rawColumns(['action' => 'action'])
+        ->make(true);
+    }
+   
+
+    public function import_transaksi(Request $request){
+        if($request->hasFile('upload_file')) {
+            try{                
+                $file = $request->file('upload_file');
+                $file_name = 'transaksi_'. date("ymd_h.i") .'.'.$file->getClientOriginalExtension();
+                $file->move(public_path('uploads/transaksi/'), $file_name);
+                $excel = public_path('uploads/transaksi/') . $file_name;
+
+                $rows = Excel::load($excel, function($reader) {
+                    $reader->noHeading();
+                    //Skip Header
+                    $reader->skipRows(1);
+                })->get();
+
+                $rows = $rows->toArray();
+
+                for ($i=0; $i < count($rows); $i++) {
+                    $fiscal_year  = $rows[$i][0];
+                    $document_no = $rows[$i][1];
+                    $type = $rows[$i][5];                    
+                    $reference = $rows[$i][14];
+                    $document_no = $rows[$i][15];
+                    $invoice_no = $rows[$i][17];    
+                    $no_po_sap_urut = $rows[$i][18];
+                    $no_po = $rows[$i][19];
+                    $category = $rows[$i][20];
+                    $item_description = $rows[$i][22];
+                    $qty = $rows[$i][25];
+                    $uom = $rows[$i][26];
+                    $price = $rows[$i][27];
+                    $amount = $rows[$i][28];
+                    $amount_dollar = $rows[$i][31];
+                    $gl_number = $rows[$i][40];
+                    $gl_description = $rows[$i][41];
+                    $cost_center = $rows[$i][42];
+                    $cost_description = $rows[$i][43];
+                    $pch_code = $rows[$i][44];
+
+                    $no_po_sap = explode("-", trim($no_po_sap_urut));
+                        $item_no = substr($item_description,0,7); //get 7 char kode item
+
+                        if($pch_code == "G40" && ($category == "A" || $category == "K")) {
+
+                            $actual = AccActual::where('document_no', $document_no)
+                            ->select('document_no')
+                            ->first();
+
+                            if (count($actual) == 0) { //kalo insert
+
+                                   $data2 = AccActual::create([
+                                    'currency' => $currency,
+                                    'vendor_code' => $vendor_code,
+                                    'vendor_name' => $vendor_name,
+                                    'receive_date' => $receive_date,
+                                    'document_no' => $document_no,
+                                    'invoice_no' => $invoice_no,
+                                    'no_po_sap' => $no_po_sap[0],
+                                    'no_urut' => $no_po_sap[1],
+                                    'no_po' => $no_po,
+                                    'category' => $category,
+                                    'item_no' => $item_no,
+                                    'item_description' => $item_description,
+                                    'qty' => $qty,
+                                    'uom' => $uom,
+                                    'price' => $price,
+                                    'amount' => $amount,
+                                    'amount_dollar' => $amount_dollar,
+                                    'gl_number' => $gl_number,
+                                    'gl_description' => $gl_description,
+                                    'cost_center' => $cost_center,
+                                    'cost_description' => $cost_description,
+                                    'pch_code' => $pch_code,
+                                    'created_by' => Auth::id()
+                                ]);
+
+                               $data2->save();
+
+                               //Get PO
+                               $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
+                               ->where('no_po_sap', $no_po_sap[0])
+                               ->where('no_item',$item_no)
+                               ->first();
+
+                               $total_all = $po_detail->qty_receive + $qty;
+
+                                //Update QTY RECEIVE PO
+                                $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                               ->where('no_item','=',$item_no)
+                               ->update(['qty_receive' => $total_all, 'date_receive' => $receive_date]);
+
+                                //get log amount
+
+                                $budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
+                                ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
+                                ->where('budget','=',$po_detail->budget_item)
+                                ->first();
+
+                                $amount = $budget_log->amount_po;
+                                $datenow = date('Y-m-d');
+                                //Get Data From Budget Master
+                                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
+
+                                foreach ($fy as $fys) {
+                                    $fiscal = $fys->fiscal_year;
+                                }
+                                
+                                $bulan = strtolower(date("M",strtotime($datenow)));
+
+                                $sisa_bulan = $bulan.'_sisa_budget';
+
+                                if ($budget_log->status != "Actual") {
+                                    //get Data Budget Based On Periode Dan Nomor
+                                    $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
+
+                                    //Tambahkan Budget Skrg Dengan PO yang Ada Di Log
+                                    $totalPlusPO = $budgetdata->$sisa_bulan + $amount;
+
+                                    $updatebudget = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)
+                                    ->update([
+                                        $sisa_bulan => $totalPlusPO
+                                    ]);
+                                }
+
+                                // get Data Budget Based On Periode Dan Nomor
+                                $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
+
+                                // Kurangi dengan amount_dollar
+                                $totalminusreceive = $budgetdata->$sisa_bulan - $amount_dollar;
+
+                                // Setelah itu update data budgetnya dengan yang actual
+                                $dataupdate = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode', $fiscal)
+                                ->update([
+                                    $sisa_bulan => $totalminusreceive
+                                ]);
+
+                               //Update Log Budget
+
+                               $total_budget = $budget_log->amount_receive + $amount_dollar;
+
+                               $update_budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
+                               ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
+                               ->where('budget','=',$po_detail->budget_item)
+                               ->update([
+                                    'budget_month_receive' => strtolower(date('M')),
+                                    'amount_receive' => $total_budget,
+                                    'status' => 'Actual'
+                                ]);
+
+
+                           } else if (count($actual) > 0){ //kalo update
+
+                            $data2 = AccActual::where('document_no','=',$document_no)
+                            ->update([
+                                'currency' => $currency,
+                                'vendor_code' => $vendor_code,
+                                'vendor_name' => $vendor_name,
+                                'receive_date' => $receive_date,
+                                'document_no' => $document_no,
+                                'invoice_no' => $invoice_no,
+                                'no_po_sap' => $no_po_sap[0],
+                                'no_urut' => $no_po_sap[1],
+                                'no_po' => $no_po,
+                                'category' => $category,
+                                'item_no' => $item_no,
+                                'item_description' => $item_description,
+                                'qty' => $qty,
+                                'uom' => $uom,
+                                'price' => $price,
+                                'amount' => $amount,
+                                'amount_dollar' => $amount_dollar,
+                                'gl_number' => $gl_number,
+                                'gl_description' => $gl_description,
+                                'cost_center' => $cost_center,
+                                'cost_description' => $cost_description,
+                                'pch_code' => $pch_code,
+                                'created_by' => Auth::id()
+                            ]);
+
+                            
+                           //Get PO
+                           $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
+                           ->where('no_po_sap', $no_po_sap[0])
+                           ->where('no_item',$item_no)
+                           ->first();
+
+                            // $data2->currency = $currency;
+                            // $data2->vendor_code = $vendor_code;
+                            // $data2->vendor_name = $vendor_name;
+                            // $data2->receive_date = $receive_date;
+                            // $data2->document_no = $document_no;
+                            // $data2->invoice_no = $invoice_no;
+                            // $data2->no_po_sap = $no_po_sap[0];
+                            // $data2->no_urut = $no_po_sap[1];
+                            // $data2->no_po = $no_po;
+                            // $data2->category = $category;
+                            // $data2->item_no = $item_no;
+                            // $data2->item_description = $item_description;
+                            // $data2->qty = $qty;
+                            // $data2->uom = $uom;
+                            // $data2->price = $price;
+                            // $data2->amount = $amount;
+                            // $data2->amount_dollar = $amount_dollar;
+                            // $data2->gl_number = $gl_number;
+                            // $data2->gl_description = $gl_description;
+                            // $data2->cost_center = $cost_center;
+                            // $data2->cost_description = $cost_description;
+                            // $data2->pch_code = $pch_code;
+                            // $data2->created_by = Auth::id();
+                            // $data2->save(); 
+                        }
+
+                        //GET DATA
+                        $datapo = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                        ->where('no_item','=',$item_no)
+                        ->first();
+
+                        //UPDATE STATUS
+                        if ($datapo->qty_receive >= $datapo->qty) {
+                            $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
+                            ->where('no_item','=',$item_no)
+                            ->update(['status' => 'close']);
+                        }
+                    }
+                }       
+
+                $response = array(
+                    'status' => true,
+                    'message' => 'Upload Berhasil',
+                );
+                return Response::json($response);
+
+            }catch(\Exception $e){
+                $response = array(
+                    'status' => false,
+                    'message' => $e->getMessage(),
+                );
+                return Response::json($response);
+            }
+        }else{
+            $response = array(
+                'status' => false,
+                'message' => 'Upload failed, File not found',
+            );
+            return Response::json($response);
+        }
+    }
+
 
 
 }
