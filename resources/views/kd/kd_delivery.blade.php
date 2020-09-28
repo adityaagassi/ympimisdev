@@ -417,6 +417,8 @@
     $.post('{{ url("delete/kdo_delivery") }}', data, function(result, status, xhr){
       if(result.status){
         openSuccessGritter('Success!', result.message);
+        $('#kdo_table').DataTable().ajax.reload();
+        $('#kdo_detail').DataTable().ajax.reload();
         $("#kdo_number_delivery").val("");
         $("#kdo_number_delivery").focus();
       }
@@ -439,6 +441,7 @@
     if(result.status){
       openSuccessGritter('Success!', result.message);
       $('#kdo_table').DataTable().ajax.reload();
+      $('#kdo_detail').DataTable().ajax.reload();
       $("#kdo_number_delivery").val("");
       $("#kdo_number_delivery").focus();
     }

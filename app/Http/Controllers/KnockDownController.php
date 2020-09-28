@@ -1005,6 +1005,7 @@ class KnockDownController extends Controller{
 			'knock_downs.invoice_number',
 			'knock_downs.container_id',
 			'knock_down_details.quantity')
+		->orderBy('knock_down_details.kd_number', 'DESC')
 		->get();
 
 		return DataTables::of($knock_down_details)
@@ -1070,7 +1071,7 @@ class KnockDownController extends Controller{
 			date( p.due_date ) >= '".$datefrom."' 
 			AND date( p.due_date ) <= '".$dateto."' 
 			AND m.category = 'KD' 
-			AND m.hpl IN ( 'SUBASSY-SX', 'ASSY-SX' )
+			AND m.hpl IN ".$storage."
 			HAVING target > 0
 			ORDER BY p.due_date ASC, box DESC");
 
