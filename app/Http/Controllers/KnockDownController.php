@@ -27,6 +27,7 @@ use App\StorageLocation;
 use App\TransactionCompletion;
 use App\TransactionTransfer;
 use App\UserActivityLog;
+use App\WeeklyCalendar;
 use Carbon\Carbon;
 use DataTables;
 use Response;
@@ -1020,8 +1021,11 @@ class KnockDownController extends Controller{
 	}
 
 	public function fetchKD($id){
-		$datefrom = date('Y-m-01');
-		$dateto = date('Y-m-d', strtotime('+7 day'));
+		// $datefrom = date('Y-m-01');
+		// $dateto = date('Y-m-d', strtotime('+7 day'));
+
+		$now = WeeklyCalendar::where('week_date', date('Y-m-d'))->first();
+		$dateto = WeeklyCalendar::where('week_name', $now->week_name)->orderBy('week_date', 'desc')->first();
 
 		$storage = '';
 		if($id == 'z-pro'){
@@ -1067,9 +1071,8 @@ class KnockDownController extends Controller{
 			FROM production_schedules p
 			LEFT JOIN materials m ON m.material_number = p.material_number
 			LEFT JOIN material_volumes v ON v.material_number = p.material_number
-			WHERE
-			date( p.due_date ) >= '".$datefrom."' 
-			AND date( p.due_date ) <= '".$dateto."' 
+			WHERE date( p.due_date ) <= '".$dateto->week_date."' 
+			AND p.actual_quantity < p.quantity
 			AND m.category = 'KD' 
 			AND m.hpl IN ".$storage."
 			HAVING target > 0
