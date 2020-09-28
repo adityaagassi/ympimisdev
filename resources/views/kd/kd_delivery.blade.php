@@ -74,21 +74,21 @@
   <div class="col-xs-12" style="padding-top: 1%;">
     <div class="nav-tabs-custom">
       <ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-        <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Delivery</a></li>
-        <li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO Delivery Detail</a></li>
+        <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Delivery Detail</a></li>
+        <li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO Delivery</a></li>
       </ul>
 
       <div class="tab-content">
         <div class="tab-pane active" id="tab_1">
-          <table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
+          <table id="kdo_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
-                <th style="width: 10%">KDO</th>
-                <th style="width: 10%">Count Item</th>
-                <th style="width: 10%">Location</th>
-                <th style="width: 10%">Received At</th>
-                <th style="width: 8%">Reprint</th>
-                <th style="width: 8%">Cancel Delivery</th>
+                <th style="width: 13%">KDO</th>
+                <th style="width: 13%">Material Number</th>
+                <th style="width: 30%">Material Description</th>
+                <th style="width: 5%">Location</th>
+                <th style="width: 15%">Received At</th>
+                <th style="width: 5%">Quantity</th>
               </tr>
             </thead>
             <tbody>
@@ -106,15 +106,15 @@
           </table>
         </div>
         <div class="tab-pane" id="tab_2">
-          <table id="kdo_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
+          <table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
-                <th style="width: 13%">KDO</th>
-                <th style="width: 13%">Material Number</th>
-                <th style="width: 30%">Material Description</th>
-                <th style="width: 5%">Location</th>
-                <th style="width: 15%">Received At</th>
-                <th style="width: 5%">Quantity</th>
+                <th style="width: 10%">KDO</th>
+                <th style="width: 10%">Count Item</th>
+                <th style="width: 10%">Location</th>
+                <th style="width: 10%">Received At</th>
+                <th style="width: 8%">Reprint</th>
+                <th style="width: 8%">Cancel Delivery</th>
               </tr>
             </thead>
             <tbody>

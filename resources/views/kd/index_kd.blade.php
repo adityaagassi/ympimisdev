@@ -180,38 +180,12 @@
 		<div class="col-xs-12">
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO</a></li>
-					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO Detail</a></li>
+					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Detail</a></li>
+					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO</a></li>
 				</ul>
 
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_1">
-						<table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
-							<thead style="background-color: rgba(126,86,134,.7);">
-								<tr>
-									<th style="width: 1%">KDO</th>
-									<th style="width: 1%">Count Item</th>
-									<th style="width: 1%">Location</th>
-									<th style="width: 1%">Created At</th>
-									<th style="width: 1%">Reprint KDO</th>
-									<th style="width: 1%">Cancel</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-							<tfoot>
-								<tr>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-									<th></th>
-								</tr>
-							</tfoot>
-						</table>
-					</div>
-					<div class="tab-pane" id="tab_2">
 						<table id="kdo_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
@@ -235,6 +209,32 @@
 									<th></th>
 									<th></th>
 									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+					<div class="tab-pane" id="tab_2">
+						<table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th style="width: 1%">KDO</th>
+									<th style="width: 1%">Count Item</th>
+									<th style="width: 1%">Location</th>
+									<th style="width: 1%">Created At</th>
+									<th style="width: 1%">Reprint KDO</th>
+									<th style="width: 1%">Cancel</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+							<tfoot>
+								<tr>
 									<th></th>
 									<th></th>
 									<th></th>
