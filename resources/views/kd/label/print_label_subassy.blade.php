@@ -90,12 +90,13 @@
 <script>
 	jQuery(document).ready(function() {		
 		initialize();
-		 // window.print();
+		defineCustomPaperSize();
 
-		 defineCustomPaperSize();
-		 printWindow(window, 'Label Kecil');
-		 // window.close();
-		});
+		setTimeout(function() {
+			printWindow(window, 'Label Kecil');
+		}, 2000)
+
+	});
 
 	function initialize() {
 		var kd_number = $('#input_kd_number').val();
@@ -121,134 +122,125 @@
 		$('#barcode').attr("src", janfix + url2 + code);
 
 	}
-// default print settings
 
-function defineCustomPaperSize() {
-	console.log("Define custom paper size", false);
-	jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 33, 25, jsPrintSetup.kPaperSizeInches);
-  // w, h
-  console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
-}
-var printSettings = {
-	"printSilent": true,
-	"shrinkToFit": true,
-	"unwriteableMarginLeft": 0,
-	"unwriteableMarginRight": 0,
-	"unwriteableMarginTop": 0,
-	"unwriteableMarginBottom": 0,
-	"edgeLeft": 0,
-	"edgeRight": 0,
-	"edgeTop": 0,
-	"edgeBottom": 0,
-	"marginLeft": 1,
-	"marginRight": 0,
-	"marginTop": 0,
-	"marginBottom": 0,
-	// "scaling": 1,
-	"title": "",
-	"docURL": "",
-	"headerStrLeft": "",
-	"headerStrCenter": "",
-	"headerStrRight": "",
-	"footerStrLeft": "",
-	"footerStrCenter": "",
-	"footerStrRight": "",
-	"printerName" : "SATO CG408 (Copy 1)"
-};
+	function defineCustomPaperSize() {
+		console.log("Define custom paper size", false);
+		jsPrintSetup.definePaperSize(101, 101, 'Custom Size 1', 'Custom Size 1', 'My Test Custom Size 1', 33, 25, jsPrintSetup.kPaperSizeInches);
+		console.log(JSON.stringify(jsPrintSetup.getPaperSizeDataByID(101), null, "\t"), true);
+	}
+	var printSettings = {
+		"printSilent": true,
+		"shrinkToFit": true,
+		"unwriteableMarginLeft": 0,
+		"unwriteableMarginRight": 0,
+		"unwriteableMarginTop": 0,
+		"unwriteableMarginBottom": 0,
+		"edgeLeft": 0,
+		"edgeRight": 0,
+		"edgeTop": 0,
+		"edgeBottom": 0,
+		"marginLeft": 1,
+		"marginRight": 0,
+		"marginTop": 0,
+		"marginBottom": 0,
+		"title": "",
+		"docURL": "",
+		"headerStrLeft": "",
+		"headerStrCenter": "",
+		"headerStrRight": "",
+		"footerStrLeft": "",
+		"footerStrCenter": "",
+		"footerStrRight": "",
+		"printerName" : "SATO CG408 (Copy 1)"
+	};
 
-function tutup() {
-	window.close();
-}
+	function tutup() {
+		window.close();
+	}
 
-function printWindow(win, what) {
-  // jsPrintSetup messages
-  function jspListener(event) {
-  	console.log('event.data:'+JSON.stringify(event.data));
-  	if (event.source == win 
-  		&& event.data.source && event.data.source == "jsPrintSetup"
-  		) {
-  		if (event.data.message == "job_start") {  
-  			console.log(what+" Job "+event.data.jobId+" started");
-  			console.log(what+" Job "+event.data.jobId+" started", true);
-  		} else if (event.data.message == "job_progress") {
-  			console.log(what+" Job "+event.data.jobId+" progress:"+event.data.progress);
-  			console.log(what+" Job "+event.data.jobId+" progress:"+event.data.progress, true);
-  		} else if (event.data.message == "job_error") {
-  			console.log(what+" Job "+event.data.jobId+" error:"+event.data.statusMessage);
-  			console.log(what+" Job "+event.data.jobId+" error:"+event.data.statusMessage, true);
-  		} else if (event.data.message == "job_rejected") {
-  			console.log(what+" Job "+event.data.jobId+" rejected.");
-  			console.log(what+" Job "+event.data.jobId+" rejected.", true);
-  		} else if (event.data.message == "job_submited") {
-  			console.log(what+" Job "+event.data.jobId+" submited.");
-  			console.log(what+" Job "+event.data.jobId+" submited.", true);
-  		} else if (event.data.message == "job_complete") {
-  			console.log(what+" Job "+event.data.jobId+" completed.");
-  			console.log(what+" Job "+event.data.jobId+" completed.", true);
-  		} else if (event.data.message == "jsp_permission") {
-  			console.log(what+" jsPrintSetup accessEnabled:"+event.data.accessEnabled+" permission:"+event.data.permission);
-  			console.log(what+" jsPrintSetup accessEnabled:"+event.data.accessEnabled+" permission:"+event.data.permission, true);
-  		} else {
-  			console.log(what+" Unknown message:"+event.data.message);
-  			console.log(what+" Unknown message:"+event.data.message, true);
-  		}
-  	}
-  }
-  if (typeof(win.privListenersAdded) === "undefined") {
-  	win.privListenersAdded = true;    
-  	win.addEventListener("message", jspListener);
+	function printWindow(win, what) {
+		function jspListener(event) {
+			console.log('event.data:'+JSON.stringify(event.data));
+			if (event.source == win 
+				&& event.data.source && event.data.source == "jsPrintSetup"
+				) {
+				if (event.data.message == "job_start") {  
+					console.log(what+" Job "+event.data.jobId+" started");
+					console.log(what+" Job "+event.data.jobId+" started", true);
+				} else if (event.data.message == "job_progress") {
+					console.log(what+" Job "+event.data.jobId+" progress:"+event.data.progress);
+					console.log(what+" Job "+event.data.jobId+" progress:"+event.data.progress, true);
+				} else if (event.data.message == "job_error") {
+					console.log(what+" Job "+event.data.jobId+" error:"+event.data.statusMessage);
+					console.log(what+" Job "+event.data.jobId+" error:"+event.data.statusMessage, true);
+				} else if (event.data.message == "job_rejected") {
+					console.log(what+" Job "+event.data.jobId+" rejected.");
+					console.log(what+" Job "+event.data.jobId+" rejected.", true);
+				} else if (event.data.message == "job_submited") {
+					console.log(what+" Job "+event.data.jobId+" submited.");
+					console.log(what+" Job "+event.data.jobId+" submited.", true);
+				} else if (event.data.message == "job_complete") {
+					console.log(what+" Job "+event.data.jobId+" completed.");
+					console.log(what+" Job "+event.data.jobId+" completed.", true);
+				} else if (event.data.message == "jsp_permission") {
+					console.log(what+" jsPrintSetup accessEnabled:"+event.data.accessEnabled+" permission:"+event.data.permission);
+					console.log(what+" jsPrintSetup accessEnabled:"+event.data.accessEnabled+" permission:"+event.data.permission, true);
+				} else {
+					console.log(what+" Unknown message:"+event.data.message);
+					console.log(what+" Unknown message:"+event.data.message, true);
+				}
+			}
+		}
+		if (typeof(win.privListenersAdded) === "undefined") {
+			win.privListenersAdded = true;    
+			win.addEventListener("message", jspListener);
 
-  	win.addEventListener("beforeprint", function(event) {
-  		// jan();
-		 // window.print();
+			win.addEventListener("beforeprint", function(event) {
+				defineCustomPaperSize();
+				console.log("before print: "+what, true);
+			});
+			win.addEventListener("afterprint", function(event) {
 
-		 defineCustomPaperSize();
-		 console.log("before print: "+what, true);
-		});
-  	win.addEventListener("afterprint", function(event) {
+				var id = $('#id').val();
+				var location = $('#location').val();
+				console.log("after print: "+what, true);
+				console.log(location);
 
-  		var id = $('#id').val();
-  		var location = $('#location').val();
-  		console.log("after print: "+what, true);
-  		console.log(location);
+				if (location == "sub-assy-cl") {
+					window.open('{{ url("index/print_label_subassy_kecil") }}'+'/'+id, '_blank');
+				}else{
+					setTimeout(tutup,1000);
+				}
 
-  		if (location == "sub-assy-cl") {
-  			window.open('{{ url("index/print_label_subassy_kecil") }}'+'/'+id, '_blank');
-  		}else{
-  			setTimeout(tutup,2000);
-  		}
-  		
-  	});
-  }
-  
-  win.jsPrintSetup.print(printSettings).then(
-  	(jobId) => {
-  		console.log(what+" Print job for submitted with id:"+jobId);
-  		console.log(what+" Print job for submitted with id:"+jobId, true);
-  		checkJobInfo(what, win,jobId);
+			});
+		}
 
-  		setTimeout(() => {checkJobInfo(what, win, jobId);}, 5000);
-  	}
-  	, (err) => {
-  		console.log(what+" Pint job rejected:"+err);
-  		console.log(what+" Pint job rejected:"+err, true);
-  	}
-  	);
-}
+		win.jsPrintSetup.print(printSettings).then(
+			(jobId) => {
+				console.log(what+" Print job for submitted with id:"+jobId);
+				console.log(what+" Print job for submitted with id:"+jobId, true);
+				checkJobInfo(what, win,jobId);
 
-function checkJobInfo(what, win, jobId) {
-	var jobInfo = win.jsPrintSetup.getJobInfo(jobId);
-	console.log(what+ " Async Checking Ifo for Job:"+jobId, true);
-	if (jobInfo) {
-  //  jobInfo_1 = JSON.parse(jobInfo);
-  console.log("----- job info:"+JSON.stringify(jobInfo));
-  console.log(JSON.stringify(jobInfo, null, "\t"), true);
-} else {
-	console.log("----- Can't find jobInfo for jobId:"+jobId);
-	console.log("Can't find jobInfo for jobId:"+jobId, true);
-}
-} 
+				setTimeout(() => {checkJobInfo(what, win, jobId);}, 5000);
+			}
+			, (err) => {
+				console.log(what+" Pint job rejected:"+err);
+				console.log(what+" Pint job rejected:"+err, true);
+			}
+			);
+	}
+
+	function checkJobInfo(what, win, jobId) {
+		var jobInfo = win.jsPrintSetup.getJobInfo(jobId);
+		console.log(what+ " Async Checking Ifo for Job:"+jobId, true);
+		if (jobInfo) {
+			console.log("----- job info:"+JSON.stringify(jobInfo));
+			console.log(JSON.stringify(jobInfo, null, "\t"), true);
+		} else {
+			console.log("----- Can't find jobInfo for jobId:"+jobId);
+			console.log("Can't find jobInfo for jobId:"+jobId, true);
+		}
+	} 
 
 
-// window.print();
 </script>

@@ -707,7 +707,7 @@
   @endif
 
   @if(in_array(Auth::user()->role_code, ['S','MIS','PROD']) || Auth::user()->username == 'op subassy sx')
-  @if(isset($page) && $page == "KD Sub Assy SX")<li class="active">@else<li>@endif
+  @if(isset($page) && $page == "KD Assy - SubAssy SX")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-sx") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Assy - SubAssy SX</span></a>
   </li>
   @endif

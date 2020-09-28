@@ -49,13 +49,12 @@
 
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {
-		/* display: none; <- Crashes Chrome on hover */
 		-webkit-appearance: none;
-		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+		margin: 0;
 	}
 
 	input[type=number] {
-		-moz-appearance:textfield; /* Firefox */
+		-moz-appearance:textfield;
 	}
 	
 	#loading { display: none; }
@@ -697,8 +696,10 @@
 				$.each(result.pack, function(key, value) {
 					tableData += '<tr>';
 					tableData += '<td>'+ ++count +'</td>';
+					tableData += '<td>'+ value.st_date +'</td>';
 					tableData += '<td>'+ value.material_number +'</td>';
 					tableData += '<td>'+ value.material_description +'</td>';
+					tableData += '<td>'+ value.destination_shortname +'</td>';
 					tableData += '<td>'+ value.quantity +'</td>';
 					tableData += '</tr>';
 					total_qty += value.quantity;
@@ -706,7 +707,7 @@
 				$('#tableBodyPack').append(tableData);
 
 				tableFoot += '<tr>';
-				tableFoot += '<th colspan="3" style="text-align:center;">Total:</th>';
+				tableFoot += '<th colspan="5" style="text-align:center;">Total:</th>';
 				tableFoot += '<th>'+ total_qty +'</th>';
 				tableFoot += '</tr>';
 				$('#tableFootPack').append(tableFoot);

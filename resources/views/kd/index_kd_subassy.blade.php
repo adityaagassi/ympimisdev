@@ -41,6 +41,11 @@
 		border:1px solid black;
 	}
 	table.table-bordered > tbody > tr > td{
+		/*display: inline-block;*/
+		overflow: block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+
 		border:1px solid rgb(211,211,211);
 	}
 	table.table-bordered > tfoot > tr > th{
@@ -49,13 +54,12 @@
 
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {
-		/* display: none; <- Crashes Chrome on hover */
 		-webkit-appearance: none;
-		margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+		margin: 0;
 	}
 
 	input[type=number] {
-		-moz-appearance:textfield; /* Firefox */
+		-moz-appearance:textfield;
 	}
 	
 	#loading { display: none; }
@@ -81,22 +85,27 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-xs-6">
+				<div class="col-xs-7">
 					<div class="box box-danger">
 						<div class="box-body">
-							<table class="table table-hover table-striped" id="tableList">
+							<table class="table table-hover table-bordered table-striped" id="tableList">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width: 20%;">Material</th>
-										<th style="width: 65%;">Description</th>
-										<th style="width: 15%;">Sisa Target</th>
+										<th style="width: 10%;">Due Date</th>
+										<th style="width: 10%;">Material</th>
+										<th style="width: 45%;">Description</th>
+										<th style="width: 15%;">Category</th>
+										<th style="width: 10%;">Surface</th>
+										<th style="width: 5%;">Target</th>
+										<th style="width: 5%;">Box</th>
 									</tr>					
 								</thead>
 								<tbody id="tableBodyList">
 								</tbody>
 								<tfoot style="background-color: rgb(252, 248, 227);">
 									<tr>
-										<th colspan="2" style="text-align:center;">Total:</th>
+										<th colspan="5" style="text-align:center;">Total:</th>
+										<th></th>
 										<th></th>
 									</tr>
 								</tfoot>
@@ -104,34 +113,47 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-6">
+				<div class="col-xs-5" style="margin-top: 3%;">
 					<div class="row">
+						<input type="hidden" id="production_id">
+						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Due Date:</span>
+						</div>
+						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Category:</span>
+						</div>
+						<div class="col-xs-6">
+							<input type="text" id="due_date" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						</div>
+						<div class="col-xs-6">
+							<input type="text" id="category"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+						</div>						
 						<div class="col-xs-6">
 							<span style="font-weight: bold; font-size: 16px;">Material Number:</span>
 						</div>
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Quantity:</span>
+							<span style="font-weight: bold; font-size: 16px;">Surface:</span>
 						</div>
 						<div class="col-xs-6">
 							<input type="text" id="material_number" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-6">
-							<input type="text" id="quantity"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+							<input type="text" id="surface"  style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-12">
 							<span style="font-weight: bold; font-size: 16px;">Material Description:</span>
-							<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+							<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 25px; text-align: center;" disabled>
 						</div>
-						<div class="col-xs-12">
-							<div class="row">
-								<div class="col-xs-6 pull-right" style="padding-bottom: 10px;">
-									<br>
-									<button class="btn btn-primary" onclick="print()" style="font-size: 40px; width: 100%; font-weight: bold; padding: 0;">
-										CONFIRM
-									</button>
-								</div>
-							</div>
+						<div class="col-xs-6">
+							<span style="font-weight: bold; font-size: 16px;">Qty Lot:</span>
+							<input type="text" id="qty_lot" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
+						<div class="col-xs-6" style="padding-top: 3.9%;">
+							<button class="btn btn-primary" onclick="print()" style="font-size: 2.5vw; width: 100%; font-weight: bold; padding: 0;">
+								CONFIRM
+							</button>
+						</div>
+
 					</div>
 				</div>
 			</div>
@@ -153,6 +175,8 @@
 									<th style="width: 5%">Material Description</th>
 									<th style="width: 2%">Location</th>
 									<th style="width: 1%">Qty</th>
+									<th style="width: 2%">Stuffing Date</th>
+									<th style="width: 2%">Destination</th>
 									<th style="width: 3%">Created At</th>
 									<th style="width: 1%">Reprint</th>
 									<th style="width: 1%">Delete</th>
@@ -170,36 +194,12 @@
 									<th></th>
 									<th></th>
 									<th></th>
+									<th></th>
+									<th></th>
 								</tr>
 							</tfoot>
 						</table>
 					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="modal modal-default fade" id="print_kdo_modal">
-		<div class="modal-dialog modal-xs">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">
-							&times;
-						</span>
-					</button>
-					<h4 class="modal-title">
-						Print KDO Number
-					</h4>
-				</div>
-				<div class="modal-body">
-					<div class="modal-body">
-						<h5>Are you sure print KDO Number ?</h5>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button class="btn btn-success" onclick="forcePrint()"><span><i class="fa fa-print"></i> Print</span></button>
 				</div>
 			</div>
 		</div>
@@ -224,9 +224,10 @@
 		}
 	});
 
+
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
-		
+
 		fillTableList();
 		fillTableDetail();
 
@@ -255,6 +256,7 @@
 			}
 			$.post('{{ url("delete/kdo_detail") }}', data, function(result, status, xhr){
 				if(result.status){
+					fillTableList();
 					$('#kdo_detail').DataTable().ajax.reload();
 					$("#loading").hide();
 					openSuccessGritter('Success!', result.message);
@@ -263,30 +265,7 @@
 					$("#loading").hide();
 					openErrorGritter('Error!', result.message);
 				}
-			});
-		}
-		else{
-			$("#loading").hide();				
-		}
-	}
-
-	function deleteKDO(id){
-		if(confirm("Apa anda yakin akan menghapus data?")){
-			$("#loading").show();
-			var data = {
-				kd_number:id
-			}
-			$.post('{{ url("delete/kdo") }}', data, function(result, status, xhr){
-				if(result.status){
-					$('#kdo_detail').DataTable().ajax.reload();
-					$("#loading").hide();
-					openSuccessGritter('Success!', result.message);
-				}
-				else{
-					$("#loading").hide();
-					openErrorGritter('Error!', result.message);
-				}
-			});
+			});	
 		}
 		else{
 			$("#loading").hide();				
@@ -368,6 +347,8 @@
 			{ "data": "material_description" },
 			{ "data": "location" },
 			{ "data": "quantity" },
+			{ "data": "st_date" },
+			{ "data": "destination_shortname" },
 			{ "data": "updated_at" },
 			{ "data": "reprintKDO" },
 			{ "data": "deleteKDO" }
@@ -389,63 +370,41 @@
 		$('#kdo_detail tfoot tr').appendTo('#kdo_detail thead');
 	}
 
-	function forcePrint() {
-		var location = "{{ $location }}";
-
-		var data = {
-			location : location,
-		}
-
-		$("#print_kdo_modal").modal('hide');
-		$("#loading").show();
-		$.post('{{ url("fetch/kd_force_print_zpro") }}', data,  function(result, status, xhr){
-			if(result.status){
-				$("#loading").hide();
-				$('#actual_count').val(result.actual_count);
-				fillTableList();
-				$('#kdo_detail').DataTable().ajax.reload();
-				openSuccessGritter('Success', result.message);
-			}else{
-				$("#loading").hide();
-				openErrorGritter('Error!', result.message);
-			}
-
-		});
-	}
 
 	function print() {
-		var material_number = $("#material_number").val();
-		var quantity = $("#quantity").val();
-		var material_description = $("#material_description").val();
+		var production_id = $("#production_id").val();
 		var location = "{{ $location }}";
 
 		var data = {
-			material_number : material_number,
-			quantity : quantity,
-			material_description : material_description,
+			production_id : production_id,
 			location : location,
 		}
 
-		if(material_number == ''){
-			alert("Material tidak ada");
+		if(production_id == ''){
+			alert("Material belum dipilih");
 			return false;
 		}
 
 		$("#loading").show();
-		$.post('{{ url("fetch/kd_print_subassy") }}', data,  function(result, status, xhr){
+		$.post('{{ url("fetch/kd_print_subassy_new_single") }}', data,  function(result, status, xhr){
 			if(result.status){
-				var id = result.knock_down_detail_id;
+				var id = result.knock_down_detail.id;
 
 				window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+id, '_blank');
 
+				$('#production_id').val('');
+				$('#due_date').val('');
+				$('#category').val('');
 				$('#material_number').val('');
-				$('#quantity').val('');
+				$('#surface').val('');
 				$('#material_description').val('');
+				$('#qty_lot').val('');
 
-				$("#loading").hide();
-				$('#actual_count').val(result.actual_count);
+				
 				fillTableList();
 				$('#kdo_detail').DataTable().ajax.reload();
+
+				$("#loading").hide();
 				openSuccessGritter('Success', result.message);
 			}else{
 				$("#loading").hide();
@@ -456,20 +415,24 @@
 	}
 
 	function fillField(param) {
-		var location = "{{ $location }}";
+		var data = param.split('_');
+		var id = data[0];
 
-		data = {
-			material_number: param,
-			location : location,
-		}
+		var due_date = $('#'+param).find('td').eq(0).text();
+		var material_number = $('#'+param).find('td').eq(1).text();
+		var material_description = $('#'+param).find('td').eq(2).text();
+		var hpl = $('#'+param).find('td').eq(3).text();
+		var surface = $('#'+param).find('td').eq(4).text();
+		var lot_completion = data[1];
 
-		$.get('{{ url("fetch/kd_detail") }}', data,  function(result, status, xhr){
-			if(result.status){
-				$('#material_number').val(result.detail[0].material_number);
-				$('#quantity').val(result.detail[0].lot_completion);
-				$('#material_description').val(result.detail[0].material_description);
-			}
-		});
+		$('#production_id').val(id);
+		$('#due_date').val(due_date);
+		$('#category').val(hpl);
+		$('#material_number').val(material_number);
+		$('#surface').val(surface);
+		$('#material_description').val(material_description);
+		$('#qty_lot').val(lot_completion);
+
 	}
 
 	function fillTableList(){
@@ -480,19 +443,21 @@
 			$('#tableBodyList').html("");
 
 			var tableData = "";
-			var total_target = 0;
 			$.each(result.target, function(key, value) {
-				tableData += '<tr onclick="fillField(\''+value.material_number+'\')">';
+				tableData += '<tr id="'+value.id+'_'+value.lot_completion+'" onclick="fillField(id)">';
+				tableData += '<td>Week '+ value.week +'</td>';
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';
+				tableData += '<td>'+ value.hpl +'</td>';
+				tableData += '<td>'+ value.surface +'</td>';
 				tableData += '<td>'+ value.target +'</td>';
+				tableData += '<td>'+ value.box +'</td>';
 				tableData += '</tr>';
-				total_target += value.target;
 			});
 			$('#tableBodyList').append(tableData);
 
-
-			$('#tableList').DataTable({
+			var table = $('#tableList').DataTable({
+				'stateSave': true,
 				'dom': 'Bfrtip',
 				'responsive':true,
 				'lengthMenu': [
@@ -500,13 +465,11 @@
 				[ '10 rows', '25 rows', '50 rows', 'Show all' ]
 				],
 				'buttons': {
-
 					buttons:[
 					{
 						extend: 'pageLength',
 						className: 'btn btn-default',
 					},
-
 					]
 				},
 				"footerCallback": function (tfoot, data, start, end, display) {
@@ -517,10 +480,15 @@
 						i : 0;
 					};
 					var api = this.api();
-					var totalPlan = api.column(2).data().reduce(function (a, b) {
+					var totalPlan = api.column(5).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
-					$(api.column(2).footer()).html(totalPlan.toLocaleString());
+					$(api.column(5).footer()).html(totalPlan.toLocaleString());
+
+					var totalPlan = api.column(6).data().reduce(function (a, b) {
+						return intVal(a)+intVal(b);
+					}, 0)
+					$(api.column(6).footer()).html(totalPlan.toLocaleString());
 				},
 				'paging': true,
 				'lengthChange': true,
@@ -533,10 +501,11 @@
 				"sPaginationType": "full_numbers",
 				"bJQueryUI": true,
 				"bAutoWidth": false,
+				"bSortCellsTop": true,
+				"bFilter": true,
 				"processing": true
-
 			});
-
+			
 		});
 	}
 
