@@ -315,10 +315,6 @@
 					}
 				}
 
-				console.table(percentage);
-				console.table(result.employees);
-
-
 				Highcharts.SVGRenderer.prototype.symbols['c-rect'] = function (x, y, w, h) {
 					return ['M', x, y + h / 2, 'L', x + w, y + h / 2];
 				};

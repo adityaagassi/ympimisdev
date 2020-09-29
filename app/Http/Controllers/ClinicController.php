@@ -401,7 +401,7 @@ class ClinicController extends Controller{
 	public function fetchPatient(){
 		$visitor = db::connection('clinic')->select("select p.idx, p.in_time, p.employee_id, e.name, e.hire_date, e.section, d.purpose, p.note as bed from patient_list p
 			left join ympimis.employee_syncs e on e.employee_id = p.employee_id
-			left join ympimis.clinic_patient_details d on d.id = p.`status`
+			left join ympimis.clinic_patient_details d on d.patient_list_id = p.idx
 			order by p.in_time asc");
 
 		$response = array(
