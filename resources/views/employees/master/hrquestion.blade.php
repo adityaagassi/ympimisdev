@@ -45,39 +45,33 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 @endphp
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-	<div class="row">
-		<div class="box box-solid">
-			<div class="box-body">
+	<div class="box box-solid">
+		<div class="box-body">
+			<div class="col-xs-12">
 				<div class="row">
-					<div class="col-xs-12">
-						<div class="row">
-							<div class="col-xs-3">
-								<input type="text" id="search" class="form-control" placeholder="Search . . .">
-								<select class="form-control select2" id="category">
-									<option value="">All</option>
-									<option value="Great Day">Great Day</option>
-									<option value="Absensi">Absensi</option>
-									<option value="Lembur">Lembur</option>
-									<option value="Cuti">Cuti</option>
-									<option value="PKB">PKB</option>
-									<option value="Penggajian">Penggajian</option>
-									<option value="BPJS Kes">BPJS Kes</option>
-									<option value="BPJS TK">BPJS TK</option>
-								</select>
-								<select class="form-control select2" id="order">
-									<option value="tanggal">Order by Date</option>
-									<option value="unanswered">Order by Unanswered</option>
-								</select>
-							</div>
-							<div class="col-xs-9">
-								<h4>Chat History</h4>
-								<hr>
-							</div>
-						</div>
+					<div class="col-xs-3">
+						<input type="text" id="search" class="form-control" placeholder="Search . . .">
 					</div>
+					<div class="col-xs-2">
+						<select class="form-control select2" id="category" style="width: 100%;">
+							<option value="">All</option>
+							@foreach($all_question as $question)
+							<option value="{{ $question->category }}">{{ $question->category }} ({{ $question->unanswer }})</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="col-xs-2">
+						<select class="form-control select2" id="order" style="width: 100%;">
+							<option value="tanggal">Order by Date</option>
+							<option value="unanswered">Order by Unanswered</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12" style="padding-top: 10px;">
+				<div class="row">
 					<div class="col-xs-3" id="left" style="padding: 0 5px 0 10px;">
 						<table class="table table-responsive" id="tabel">
-
 						</table>
 					</div>
 					<div class="col-xs-9" id="right">

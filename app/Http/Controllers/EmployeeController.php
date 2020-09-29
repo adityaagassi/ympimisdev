@@ -335,13 +335,24 @@ class EmployeeController extends Controller
 
      public function indexHRQA()
      {
-          // $q_question = "select category, count(id) as total_question, SUM(IF(remark = 1,1,0)) as unanswer from hr_question_logs group by category";
-          // $question = DB::select($q_question);
+          $q_question = "SELECT
+          category,
+          SUM(
+          IF
+          ( remark = 1, 1, 0 )) AS unanswer 
+          FROM
+          hr_question_logs 
+          GROUP BY
+          category 
+          ORDER BY
+          category ASC";
+
+          $question = DB::select($q_question);
 
           return view('employees.master.hrquestion', array(
                'title' => 'HR Question & Answer',
                'title_jp' => '??',
-               // 'all_question' => $question
+               'all_question' => $question
           ))->with('page', 'qna');
      }
 
