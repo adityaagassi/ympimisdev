@@ -685,7 +685,7 @@ $(function() {
 
 			
 
-			// alert(curr+'&'+count);
+			console.log('tampil = '+curr+'; jml = '+count);
 			break;
 
 
@@ -699,21 +699,19 @@ $(function() {
 				curr = 1;
 			}
 			
-			var c = curr-1;
+			var c = curr--;
 
 			for (var i = 1; i <= count; i++) {
-				$("[name='"+i+"']").hide();	
+				if(i==c){
+					$("[name='"+curr+"']").show();	
+				}else{
+					$("[name='"+i+"']").hide();	
+				}
 			}
 
-			$("[name='"+c+"']").show();	
+			curr = curr--;
 
-			curr = curr-1;
-
-			if(curr == 1){
-				curr = count;
-			}
-
-			// alert(curr+'&'+count);
+			console.log('tampil = '+curr+'; jml = '+count);
 			break;
 
 		}
