@@ -1453,6 +1453,7 @@ Route::get('fetch/kd_shipment_progress_detail', 'KnockDownController@fetchKdShip
 Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
 Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 Route::get('fetch/kd_reprint_kdo', 'KnockDownController@reprintKDO');
+Route::get('fetch/container_resume', 'KnockDownController@fetchContainerResume');
 
 //END KD
 
@@ -3119,6 +3120,8 @@ Route::post('index/press/store_kanagata', 'PressController@store_kanagata');
 Route::post('index/press/store_trouble', 'PressController@store_trouble');
 Route::post('index/press/finish_trouble', 'PressController@finish_trouble');
 Route::post('input/press/kanagata_lifetime', 'PressController@create_kanagata_lifetime');
+Route::get('fetch/press/kanagata', 'PressController@fetchKanagata');
+Route::get('excel/press/kanagata_last_data', 'PressController@excelKanagataLastData');
 //Display Press
 Route::get('index/press/monitoring', 'PressController@monitoring');
 Route::get('fetch/press/monitoring', 'PressController@fetchMonitoring');
@@ -3467,6 +3470,11 @@ Route::post('update/inventory_mis/data', 'DailyReportController@updateInventoryM
 Route::post('delete/inventory_mis', 'DailyReportController@deleteInventoryMIS');
 
 Route::get('print/inventory_mis/{id}', 'DailyReportController@printInventory');
+
+
+//Sakurentsu
+Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
+
 
 Route::get('/radar_covid', function () {
 	return view('mirai_mobile.radar_covid');

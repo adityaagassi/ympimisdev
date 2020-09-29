@@ -1217,4 +1217,114 @@ class PressController extends Controller
             return Response::json($response);
     	}
     }
+
+    public function fetchKanagata(Request $request)
+    {
+    	try {
+    		$date_from = $request->get('date_from');
+		      $date_to = $request->get('date_to');
+		      $datenow = date('Y-m-d');
+
+		      if($request->get('date_to') == null){
+		        if($request->get('date_from') == null){
+		          $date = "";
+		        }
+		        elseif($request->get('date_from') != null){
+		          $date = "where date BETWEEN '".$date_from."' and '".$datenow."'";
+		        }
+		      }
+		      elseif($request->get('date_to') != null){
+		        if($request->get('date_from') == null){
+		          $date = "where date <= '".$date_to."'";
+		        }
+		        elseif($request->get('date_from') != null){
+		          $date = "where date BETWEEN '".$date_from."' and '".$date_to."'";
+		        }
+		      }
+
+		     $kanagata_lifetime = db::select("select *,mp_kanagata_logs.id as kanagata_lifetime_id
+			from mp_kanagata_logs
+			join employee_syncs on mp_kanagata_logs.pic = employee_syncs.employee_id
+			join mp_materials on mp_kanagata_logs.material_number= mp_materials.material_number
+			".$date."
+			ORDER BY mp_kanagata_logs.id desc");
+
+    		$response = array(
+               'status' => true,
+               'message' => 'Success Get Data',
+               'kanagata' => $kanagata_lifetime
+            );
+            return Response::json($response);
+    	} catch (\Exception $e) {
+    		$response = array(
+               'status' => false,
+               'message' => $e->getMessage(),
+            );
+            return Response::json($response);
+    	}
+    }
+
+    public function excelKanagataLastData(Request $request)
+    {
+    	// try {
+		     $kanagata_lifetime = db::select("SELECT
+				a.material_number,
+				a.material_name,
+				a.material_description,
+				a.product,
+				a.punch_die_number,
+				a.part,
+			COALESCE(IF
+				(
+					a.part LIKE '%PUNCH%',(
+					SELECT
+						punch_total 
+					FROM
+						mp_kanagata_logs 
+					WHERE
+						a.punch_die_number = punch_number 
+					ORDER BY
+						mp_kanagata_logs.id DESC 
+						LIMIT 1 
+						),(
+					SELECT
+						die_total 
+					FROM
+						mp_kanagata_logs 
+					WHERE
+						a.punch_die_number = die_number 
+					ORDER BY
+						mp_kanagata_logs.id DESC 
+						LIMIT 1 
+					)) , 0) as last_data
+			FROM
+				mp_kanagatas a");
+
+		     $data = array(
+				'kanagata_lifetime' => $kanagata_lifetime
+			);
+
+		     ob_clean();
+			Excel::create('Latest Kanagata Lifetime Report', function($excel) use ($data){
+				$excel->sheet('Kanagata Lifetime', function($sheet) use ($data) {
+					return $sheet->loadView('press.excel_kanagata_lifetime', $data);
+				});
+			})->export('xlsx');
+
+		     return view('press.excel_kanagata_lifetime',$data);
+
+			// $response = array(
+   //             'status' => true,
+   //             'message' => 'Export Excel Success',
+   //          );
+   //          return Response::json($response);
+
+   //  	} catch (\Exception $e) {
+   //  		$response = array(
+   //             'status' => false,
+   //             'message' => $e->getMessage(),
+   //          );
+   //          return Response::json($response);
+   //  	}
+    }
 }

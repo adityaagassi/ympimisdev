@@ -40,11 +40,6 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
 	<h1>
 		{{ $page }} <span class="text-purple">プレス機金型寿命</span>
-		@if($role_code == 'PROD' || $role_code == 'MIS' || $role_code == 'L-Press')
-			<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-		        Create
-		    </button>
-		@endif
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -74,124 +69,103 @@ table.table-bordered > tfoot > tr > th{
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
-					<div class="col-xs-4">
+					<div class="col-xs-3">
 						<div class="box-header">
 							<h3 class="box-title">Filter</h3>
 						</div>
-						<form role="form" method="post" action="{{url('index/press/filter_report_kanagata_lifetime')}}">
-						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="col-md-12">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Date From</label>
-									<div class="input-group date">
-										<div class="input-group-addon">
-											<i class="fa fa-calendar"></i>
-										</div>
-										<input type="text" class="form-control pull-right" id="date_from" name="date_from" autocomplete="off" placeholder="Choose a Date">
+							<div class="form-group">
+								<label>Date From</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
 									</div>
+									<input type="text" class="form-control pull-right" id="date_from" name="date_from" autocomplete="off" placeholder="Choose a Date">
 								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Date To</label>
-									<div class="input-group date">
-										<div class="input-group-addon">
-											<i class="fa fa-calendar"></i>
-										</div>
-										<input type="text" class="form-control pull-right" id="date_to" name="date_to" autocomplete="off" placeholder="Choose a Date">
+								<label>Date To</label>
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
 									</div>
+									<input type="text" class="form-control pull-right" id="date_to" name="date_to" autocomplete="off" placeholder="Choose a Date">
 								</div>
 							</div>
 						</div>
-						<div class="col-md-12 col-md-offset-3">
-							<div class="col-md-9">
-								<div class="form-group pull-right">
-									<a href="{{ url('index/initial/press') }}" class="btn btn-warning">Back</a>
-									<a href="{{ url('index/press/report_kanagata_lifetime') }}" class="btn btn-danger">Clear</a>
-									<button type="submit" class="btn btn-primary col-sm-14">Search</button>
-								</div>
+						<div class="col-md-12">
+							<div class="form-group pull-right">
+								<a href="{{ url('index/initial/press') }}" class="btn btn-warning">Back</a>
+								<a href="{{ url('index/press/report_kanagata_lifetime') }}" class="btn btn-danger">Clear</a>
+								<button class="btn btn-primary" onclick="fetchKanagata()">Search</button>
 							</div>
 						</div>
-						</form>
 					</div>
 					@if($role_code == 'PROD' || $role_code == 'MIS' || $role_code == 'L-Press')
-					<div class="col-xs-4">
+					<div class="col-xs-3">
 						<div class="box-header">
 							<h3 class="box-title">Edit Kanagata Lifetime</h3>
 						</div>
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
-						<div class="col-md-12">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Kanagata</label>
-									<select class="form-control select3" name="kanagata" id="kanagata" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
-					                  <option value=""></option>
-					                  <option value="Punch">Punch</option>
-					                  <option value="Dies">Dies</option>
-					                </select>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Kanagata Number</label>
-									<input type="text" class="form-control pull-right" id="kanagata_number" name="kanagata_number" autocomplete="off" placeholder="Enter Kanagata Number">
-								</div>
+						<div class="col-md-12" style="padding-bottom: 14px">
+							<div class="form-group">
+								<label>Kanagata</label>
+								<select class="form-control select3" name="kanagata" id="kanagata" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
+				                  <option value=""></option>
+				                  <option value="Punch">Punch</option>
+				                  <option value="Dies">Dies</option>
+				                </select>
+				                <label>Kanagata Number</label>
+								<input type="text" class="form-control pull-right" id="kanagata_number" name="kanagata_number" autocomplete="off" placeholder="Enter Kanagata Number">
 							</div>
 						</div>
-						<div class="col-md-9 pull-right">
-							<!-- <div class="col-md-6"> -->
-								<div class="form-group pull-right">
-									<!-- <button type="submit" class="btn btn-primary col-sm-14">Edit</button> -->
-									<button type="button" class="btn btn-warning col-sm-14" onclick="edit_kanagata('{{ url("index/kanagata/update") }}',$('#kanagata').val(),$('#kanagata_number').val());">
-						               Edit
-						            </button>
-								</div>
-							<!-- </div> -->
+						<div class="col-md-12">
+							<div class="form-group pull-right">
+								<button type="button" class="btn btn-warning col-sm-14" onclick="edit_kanagata('{{ url("index/kanagata/update") }}',$('#kanagata').val(),$('#kanagata_number').val());">
+					               Edit
+					            </button>
+							</div>
 						</div>
 					</div>
-					<div class="col-xs-4">
+					<div class="col-xs-3">
 						<div class="box-header">
 							<h3 class="box-title">Reset Kanagata Lifetime</h3>
 						</div>
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
+						<div class="col-md-12" style="padding-bottom: 14px">
+							<div class="form-group">
+								<label>Kanagata</label>
+								<select class="form-control select3" name="kanagata_reset" id="kanagata_reset" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
+				                  <option value=""></option>
+				                  <option value="Punch">Punch</option>
+				                  <option value="Dies">Dies</option>
+				                </select>
+				                <label>Kanagata Number</label>
+								<input type="text" class="form-control pull-right" id="kanagata_number2" name="kanagata_number2" autocomplete="off" placeholder="Enter Kanagata Number">
+							</div>
+						</div>
 						<div class="col-md-12">
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Kanagata</label>
-									<select class="form-control select3" name="kanagata_reset" id="kanagata_reset" style="width: 100%;" data-placeholder="Choose a Kanagata..." required>
-					                  <option value=""></option>
-					                  <option value="Punch">Punch</option>
-					                  <option value="Dies">Dies</option>
-					                </select>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label>Kanagata Number</label>
-									<input type="text" class="form-control pull-right" id="kanagata_number2" name="kanagata_number2" autocomplete="off" placeholder="Enter Kanagata Number">
-								</div>
+							<div class="form-group pull-right">
+								<button type="button" class="btn btn-danger col-sm-14" onclick="reset_kanagata('{{ url("index/kanagata/reset") }}',$('#kanagata_reset').val(),$('#kanagata_number2').val());">
+					               Reset
+					            </button>
 							</div>
 						</div>
-						<div class="col-md-9 pull-right">
-							<!-- <div class="col-md-6"> -->
-								<div class="form-group pull-right">
-									<!-- <button type="submit" class="btn btn-primary col-sm-14">Edit</button> -->
-									<button type="button" class="btn btn-danger col-sm-14" onclick="reset_kanagata('{{ url("index/kanagata/reset") }}',$('#kanagata_reset').val(),$('#kanagata_number2').val());">
-						               Reset
-						            </button>
-								</div>
-							<!-- </div> -->
-						</div>
+					</div>
+					<div class="col-xs-3">
+					    <form method="GET" action="{{ url('excel/press/kanagata_last_data') }}" style="padding-top: 0px">
+					    <button type="submit" class="btn btn-success pull-right" style="margin-left: 5px"><i class="fa fa-download"></i> Export All Last Data</button>
+						</form>
+						<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+					        Tambah Data
+					    </button>
 					</div>
 					@endif
 				  <div class="row">
 				    <div class="col-xs-12">
-				      <div class="box">
+				      <div class="box box-solid">
 				        <div class="box-body" style="overflow-x: scroll;">
-				          <table class="table table-bordered table-striped table-hover" id="example1">
+				          <table class="table table-bordered table-striped table-hover" id="tableKanagata">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
 				              	<th>No</th>
@@ -213,32 +187,7 @@ table.table-bordered > tfoot > tr > th{
 				                <th>Dies Status</th>
 				              </tr>
 				            </thead>
-				            <tbody id="tableTroubleList">
-				            <?php $no = 1 ?>
-				              <?php if (ISSET($kanagata_lifetime)): ?>
-				              	@foreach($kanagata_lifetime as $kanagata_lifetime)
-					              <tr>
-					              	<td>{{ $no }}</td>
-					                <td>{{$kanagata_lifetime->name}}</td>
-					                <td>{{$kanagata_lifetime->date}}</td>
-					                <td>{{$kanagata_lifetime->shift}}</td>
-					                <td>{{$kanagata_lifetime->product}}</td>
-					                <td>{{$kanagata_lifetime->material_number}}</td>
-					                <td>{{$kanagata_lifetime->material_name}}</td>
-					                <td>{{$kanagata_lifetime->process}}</td>
-					                <td>{{$kanagata_lifetime->machine}}</td>
-					                <td>{{$kanagata_lifetime->punch_number}}</td>
-					                <td>{{$kanagata_lifetime->die_number}}</td>
-					                <td>{{$kanagata_lifetime->punch_value}}</td>
-					                <td>{{$kanagata_lifetime->die_value}}</td>
-					                <td>{{$kanagata_lifetime->punch_total}}</td>
-					                <td>{{$kanagata_lifetime->die_total}}</td>
-					                <td>{{$kanagata_lifetime->punch_status}}</td>
-					                <td>{{$kanagata_lifetime->die_status}}</td>
-					              </tr>
-					              <?php $no++ ?>
-					              @endforeach
-				              <?php endif ?>
+				            <tbody id="bodyTableKanagata">
 				            </tbody>
 				            <tfoot>
 				              <tr>
@@ -567,6 +516,140 @@ table.table-bordered > tfoot > tr > th{
 		});
 	});
 
+	function fetchKanagata() {
+		$("#loading").show();
+		var data = {
+			date_from:$('#date_from').val(),
+			date_to:$('#date_to').val()
+		}
+		$.get('{{ url("fetch/press/kanagata") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableKanagata').DataTable().clear();
+				$('#tableKanagata').DataTable().destroy();
+				$('#bodyTableKanagata').html("");
+				var tableData = "";
+				var index = 1;
+				$.each(result.kanagata, function(key, value) {
+					tableData += '<tr>';
+					tableData += '<td>'+ index +'</td>';
+					tableData += '<td>'+ value.name +'</td>';
+					tableData += '<td>'+ value.date +'</td>';
+					tableData += '<td>'+ value.shift +'</td>';
+					tableData += '<td>'+ value.product +'</td>';
+					tableData += '<td>'+ value.material_number +'</td>';
+					tableData += '<td>'+ value.material_name +'</td>';
+					tableData += '<td>'+ value.process +'</td>';
+					tableData += '<td>'+ value.machine +'</td>';
+					tableData += '<td>'+ value.punch_number +'</td>';
+					tableData += '<td>'+ value.punch_value +'</td>';
+					tableData += '<td>'+ value.die_number +'</td>';
+					tableData += '<td>'+ value.die_value +'</td>';
+					tableData += '<td>'+ value.punch_total +'</td>';
+					tableData += '<td>'+ value.die_total +'</td>';
+					tableData += '<td>'+ value.punch_status +'</td>';
+					tableData += '<td>'+ value.die_status +'</td>';
+					tableData += '</tr>';
+					index++;
+				});
+				$('#bodyTableKanagata').append(tableData);
+
+				var table = $('#tableKanagata').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						}
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'pageLength': 10,
+					'searching': true	,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"bSortCellsTop": true,
+					"bFilter": true,
+					"processing": true
+				});
+				
+				
+
+				$('#tableKanagata tfoot th').each(function(){
+					var title = $(this).text();
+					$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="8"/>' );
+				});
+
+				table.columns().every( function () {
+					var that = this;
+					$( 'input', this.footer() ).on( 'keyup change', function () {
+						if ( that.search() !== this.value ) {
+							that
+							.search( this.value )
+							.draw();
+						}
+					} );
+				} );
+
+				$('#tableKanagata tfoot tr').appendTo('#tableKanagata thead');
+
+				$("#loading").hide();
+				openSuccessGritter('Success','Success Get Data');
+			} else {
+				audio_error.play();
+				openErrorGritter('Error','Success Get Data');
+			}
+		});
+	}
+
+	function fetchLastData() {
+		// $("#loading").show();
+		$.get('{{ url("excel/press/kanagata_last_data") }}',function(result, status, xhr){
+			// if(result.status){
+			// 	$("#loading").hide();
+			// 	openSuccessGritter('Success','Success Get Data');
+			// } else {
+			// 	audio_error.play();
+			// 	openErrorGritter('Error','Success Get Data');
+			// }
+		});
+	}
+
 	function create() {
 		$("#loading").show();
 		var data = {
@@ -727,8 +810,6 @@ table.table-bordered > tfoot > tr > th{
                 method: 'GET',
                 success: function(data) {
                   var json = data;
-                  // obj = JSON.parse(json);
-                  // console.log(data.data);
                   var data = data.data;
                   $("#url_reset").val(url+'/'+data.kanagata_log_id);
                   $("#resetproduct").val(data.product);
@@ -751,9 +832,6 @@ table.table-bordered > tfoot > tr > th{
                 }
             });
 		}
-    	
-      // jQuery('#formedit2').attr("action", url+'/'+interview_id+'/'+detail_id);
-      // console.log($('#formedit2').attr("action"));
     }
 
     function reset(kanagata,kanagata_number) {
@@ -785,7 +863,6 @@ table.table-bordered > tfoot > tr > th{
 			punch_total:punch_total,
 			die_total:die_total
 		}
-		console.table(data);
 		
 		$.post(url, data, function(result, status, xhr){
 			if(result.status){
