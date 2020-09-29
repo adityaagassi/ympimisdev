@@ -7,6 +7,15 @@
 		position: absolute;
 		z-index: 10;
 	}
+	table.table-bordered{
+		border:1px solid black;
+	}
+	table.table-bordered > thead > tr > th{
+		border:1px solid black;
+	}
+	table.table-bordered > tbody > tr > td{
+		border:1px solid rgb(211,211,211);
+	}
 	.content-wrapper {
 		background-color: white !important;
 	}
@@ -132,9 +141,41 @@
 				var image_data = '';
 
 				$.each(result.pointing_calls, function(key, value){
-					image_data += '<div class="row" id="'+value.point_title+'" name="'+count+'" tabindex="1">';
-					image_data += '<img src="{{ asset('images/pointing_calls') }}/'+value.point_title+'_jp.jpg" style="width: 100%;">';
-					image_data += '</div>';
+					if(value.point_title != 'janji_safety'){
+						image_data += '<div class="row" id="'+value.point_title+'" name="'+count+'" tabindex="1">';
+						image_data += '<img src="{{ asset('images/pointing_calls') }}/'+value.point_title+'_jp.jpg" style="width: 100%;">';
+						image_data += '</div>';
+					}
+					else{
+						image_data += '<div id="'+value.point_title+'" name="'+count+'" tabindex="1">';
+						image_data += '<center><span style="font-weight: bold; font-size: 3vw;">『安全運転宣言』　実践記録表</span></center><br><br>';
+						image_data += '<span style="font-weight: bold; font-size: 2vw;">①時間と気持ちにゆとりを持って安全に目的地に着くことを考えよう。（余裕のある出勤をしよう。）</span><br>';
+						image_data += '<span style="font-weight: bold; font-size: 2vw;">②あなたの大切な人の為にも交通マナーを守りましょう。</span><br><br><br>';
+						image_data += '<span style="font-weight: bold; font-size: 1.8vw;">部門: 駐在員グループ</span><br>';
+						image_data += '<table class="table table-bordered">';
+						image_data += '<thead>';
+						image_data += '<tr style="background-color: rgba(126,86,134,.7); font-size:1.7vw;">';
+						image_data += '<th>氏名</th>';
+						image_data += '<th>私の安全運転宣言</th>';
+						image_data += '</tr>';
+						image_data += '</thead>';
+						image_data += '<tbody>';
+						$.each(result.pics, function(key, value){
+							if(value.remark == 1){
+								image_data += '<tr style="background-color: orange; font-weight: bold; font-size: 1.7vw;">';
+							}
+							else{
+								image_data += '<tr>';								
+							}
+							image_data += '<td>'+value.point_description_jp+'</td>';
+							image_data += '<td>'+value.safety_riding+'</td>';
+							image_data += '</tr>';							
+						});						
+						image_data += '</tbody>';
+						image_data += '</table>';
+						image_data += '</div>';
+					}
+
 					count += 1;
 				});
 				$('.content').append(image_data);
@@ -668,7 +709,7 @@ $(function() {
 
 			var c;
 
-			if(curr == 8){
+			if(curr == count-1){
 				curr = 1;
 				c = 1;
 			}else{
@@ -676,12 +717,10 @@ $(function() {
 			}
 
 			for (var i = 1; i <= count; i++) {
-				if(i==curr){
-					$("[name='"+curr+"']").show();	
-				}else{
-					$("[name='"+i+"']").hide();	
-				}
+				$("[name='"+i+"']").hide();	
 			}
+
+			$("[name='"+curr+"']").show();
 
 			
 
@@ -702,12 +741,11 @@ $(function() {
 			var c = curr--;
 
 			for (var i = 1; i <= count; i++) {
-				if(i==c){
-					$("[name='"+curr+"']").show();	
-				}else{
-					$("[name='"+i+"']").hide();	
-				}
+				$("[name='"+i+"']").hide();	
 			}
+
+			$("[name='"+curr+"']").show();
+
 
 			curr = curr--;
 
