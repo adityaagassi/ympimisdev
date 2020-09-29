@@ -579,6 +579,11 @@ fillChart();
 								// }
 
 								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
+								if(maxDeviation <= 0){
+									maxDeviation = 1;
+								}
+
+
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -690,6 +695,11 @@ fillChart();
 								// }
 
 								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
+								if(maxDeviation <= 0){
+									maxDeviation = 1;
+								}
+
+
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -801,6 +811,11 @@ fillChart();
 								// }
 
 								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
+								if(maxDeviation <= 0){
+									maxDeviation = 1;
+								}
+
+
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -911,8 +926,14 @@ fillChart();
 								// 	var maxDeviation = 100;
 								// }
 
-								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
+								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));	
+
+								if(maxDeviation <= 0){
+									maxDeviation = 1;
+								}
+
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
+
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
 							},
@@ -1023,6 +1044,11 @@ fillChart();
 								// }
 
 								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
+								if(maxDeviation <= 0){
+									maxDeviation = 1;
+								}
+
+
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -1134,6 +1160,11 @@ fillChart();
 								// }
 
 								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
+								if(maxDeviation <= 0){
+									maxDeviation = 1;
+								}
+
+
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
@@ -1245,6 +1276,11 @@ fillChart();
 								// }
 
 								var maxDeviation = Math.ceil(Math.max(Math.abs(this.dataMax), Math.abs(this.dataMin)));						
+								if(maxDeviation <= 0){
+									maxDeviation = 1;
+								}
+
+
 								var halfMaxDeviation = Math.ceil(maxDeviation / 2);
 
 								return [-maxDeviation, -halfMaxDeviation, 0, halfMaxDeviation, maxDeviation];
