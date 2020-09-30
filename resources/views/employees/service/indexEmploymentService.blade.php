@@ -21,7 +21,7 @@
 	}
 	.crop2 img {
 		width: 100%;
-		margin: -40% 0 0 0;
+		margin: -20% 0 -20% 0;
 	}
 	.list-group-item {
 		padding-top: 5px;

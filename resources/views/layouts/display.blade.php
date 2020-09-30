@@ -27,7 +27,7 @@
       overflow: hidden;
     }
     .crop img {
-      margin: -20% 0 0 0;
+      margin: -10% 0 -10% 0;
     }
   </style>
 </head>

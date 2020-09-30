@@ -27,7 +27,7 @@
     overflow: hidden;
   }
   .crop img {
-    margin: -20% 0 0 0;
+    margin: -10% 0 -10% 0;
   }
     .sidebar-menu > li > a {
       padding: 7px 5px 7px 15px;
