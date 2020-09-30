@@ -16,10 +16,10 @@
 		text-align: center;
 		font-size: 1.5vw;
 	}
-	.crop {
+	.crop2 {
 		overflow: hidden;
 	}
-	.crop img {
+	.crop2 img {
 		width: 100%;
 		margin: -40% 0 0 0;
 	}
@@ -149,7 +149,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 			<!-- Profile Image -->
 			<div class="box">
 				<div class="box-body">
-					<div class="col-xs-5 crop">
+					<div class="col-xs-5 crop2">
 						<img src="{{ url($avatar) }}">
 					</div>
 					<div class="col-xs-7" style="padding-left: 0; font-weight: bold; font-size: 0.9vw; padding-right: 0;">

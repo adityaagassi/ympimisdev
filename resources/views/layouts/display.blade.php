@@ -18,8 +18,18 @@
   <link rel="stylesheet" href="{{ url("dist/css/skins/skin-purple.css")}}">
   <link rel="stylesheet" href="{{ url("fonts/SourceSansPro.css")}}">
   <link rel="stylesheet" href="{{ url("css/buttons.dataTables.min.css")}}">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   {{-- <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}"> --}}
   @yield('stylesheets')
+
+  <style>
+    .crop {
+      overflow: hidden;
+    }
+    .crop img {
+      margin: -20% 0 0 0;
+    }
+  </style>
 </head>
 
 
@@ -65,7 +75,9 @@
               </a>
               <ul class="dropdown-menu">
                 <li class="user-header">
-                  <img src="{{ url($avatar) }}" class="img-circle" alt="User Image">
+                  <div class="col-xs-12 crop">
+                    <img src="{{ url($avatar) }}" style="width: 45%;">
+                  </div>
                   <p>
                     {{Auth::user()->name}}
                     <small>{{Auth::user()->email}}</small>
