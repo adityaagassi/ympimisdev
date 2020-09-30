@@ -20,6 +20,7 @@
     }
     table.table-bordered{
         border:1px solid black;
+        margin-bottom: 5px;
     }
     table.table-bordered > thead > tr > th{
         border:1px solid black;
