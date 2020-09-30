@@ -1779,7 +1779,7 @@ public function indexEmployeeService(Request $request)
      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
      $now = date('Y-m-d');
 
-     $profil = db::select("select employee_id, name, hire_date, phone, phone as wa_number, address, employment_status as `status`, division, department, section, `group`, sub_group, cost_center, grade_code, grade_name,position from employee_syncs where employee_id = '".$emp_id."'
+     $profil = db::select("select * from employee_syncs where employee_id = '".$emp_id."'
           ");
 
      try{

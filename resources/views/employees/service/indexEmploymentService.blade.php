@@ -5,6 +5,28 @@
 	#history tbody > tr > td {
 		cursor: pointer;
 	}
+	.timeline-header {
+		border: 1px solid black;
+	}
+	.timeline-body {
+		border: 1px solid black;		
+	}
+	.time-label span {
+		width: 100%;
+		text-align: center;
+		font-size: 1.5vw;
+	}
+	.crop {
+		overflow: hidden;
+	}
+	.crop img {
+		width: 100%;
+		margin: -40% 0 0 0;
+	}
+	.list-group-item {
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
 	thead>tr>th{
 		text-align:center;
 		overflow:hidden;
@@ -123,39 +145,80 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0px;">
 	<div class="row">
-		<div class="col-md-3">
+		<div class="col-md-3" style="padding-right: 0;">
 			<!-- Profile Image -->
 			<div class="box">
-				<div class="box-body box-profile">
-					<img class="profile-user-img img-responsive img-circle" src="{{ url($avatar) }}" alt="User profile picture">
-
-					<h3 class="profile-username text-center">{{ $profil[0]->name }}</h3>
-
-					<p class="text-muted text-center">{{ strtoupper($emp_id) }}</p>
-
-					<ul class="list-group list-group-unbordered" style="margin:0">
-						<li class="list-group-item">
-							<b>Sisa Cuti</b> <a class="pull-right">
-								<span class="label label-danger" style="color: black">
-									@if(isset($employee[0]->remaining))
-									{{ round($employee[0]->remaining) }} hari
-									@endif
-								</span>
-							</a>
-						</li>
-						<li class="list-group-item">
-							<b>Penugasan</b> <a class="pull-right">
-								<span class="label label-success">{{ $profil[0]->position }}</span>
-							</a>
-						</li>
-					</ul>
+				<div class="box-body">
+					<div class="col-xs-5 crop">
+						<img src="{{ url($avatar) }}">
+					</div>
+					<div class="col-xs-7" style="padding-left: 0; font-weight: bold; font-size: 0.9vw; padding-right: 0;">
+						<span>{{ strtoupper($emp_id) }}</span><br>
+						<span>{{ $profil[0]->name }}</span><br><br>
+						{{-- <span>{{ $profil[0]->birth_place }}, {{ date("d F Y",strtotime($profil[0]->birth_date)) }}</span> --}}
+					</div>
+					<div class="col-xs-12" style="padding-top: 10px;">
+						<ul class="list-group list-group-unbordered" style="margin:0">
+							<li class="list-group-item">
+								<b>Sisa Cuti</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										@if(isset($employee[0]->remaining))
+										{{ round($employee[0]->remaining) }} hari
+										@endif
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>Posisi</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->grade_code }} ({{ $profil[0]->grade_name }}) - {{ $profil[0]->position }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>Departemen</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->department }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>Section</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->section }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>Group</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->group }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>Alamat</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->address }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>Telepon</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->phone }}
+									</span>
+								</a>
+							</li>
+						</ul>
+					</div>
 				</div>
 				<!-- /.box-body -->
 			</div>
 			<!-- /.box -->
 
 			<!-- About Me Box -->
-			<div class="box">
+			{{-- <div class="box">
 				<div class="box-header with-border">
 					<h3 class="box-title">Tentang Saya</h3>
 				</div>
@@ -188,36 +251,30 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<hr style="margin:2px;">
 
 					<strong><i class="fa fa-phone margin-r-5"></i> Nomor Telepon</strong>
-					<!-- <div class="pull-right"><button class="btn btn-sm btn-primary" style="padding: 2px 5px 2px 5px" data-toggle="modal" data-target="#editModal"><u><i class="fa fa-pencil"></i> Edit</button></u></div> -->
+					<div class="pull-right"><button class="btn btn-sm btn-primary" style="padding: 2px 5px 2px 5px" data-toggle="modal" data-target="#editModal"><u><i class="fa fa-pencil"></i> Edit</button></u></div>
 
 					<p class="text-muted"><i class="fa fa-mobile-phone margin-r-5"></i>&nbsp;&nbsp; {{$profil[0]->phone}}<br>
-						<i class="fa fa-whatsapp margin-r-5"></i> {{$profil[0]->wa_number}}</p>
+						<i class="fa fa-whatsapp margin-r-5"></i> {{$profil[0]->phone}}</p>
 						<p style="color: red">* UPDATE NOMOR TELEPON HANYA BISA DILAKUKAN MELALUI SUNFISH OLEH ADMIN MASING MASING BAGIAN</p>
 
 					</div>
-					<!-- /.box-body -->
-				</div>
-				<!-- /.box -->
+				</div> --}}
 			</div>
-			<!-- /.col -->
-			<div class="col-md-9" style="margin-bottom: 10px">
+			<div class="col-md-9" style="padding-bottom: 10px;">
 				<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
 				<?php if (strpos($profil[0]->position, 'Operator') !== false) { ?>
 				<button class="btn btn-primary" onclick="ekaizen()" id="btnKaizen"><i class="fa  fa-bullhorn"></i>&nbsp; e - Kaizen &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				<?php } ?>
+				<div class="pull-right">
+					<select class="form-control select2">
+						<option>2020</option>
+					</select>
+				</div>
 			</div>
 			<div class="col-md-9">
 				<div class="box" id="boxing">
-					<div class="box-header">
-						<h3 class="box-title">Resume Absensi & Lembur</h3>
-						<div class="pull-right">
-							<select class="form-control select2">
-								<option>2020</option>
-							</select>
-						</div>
-					</div>
 					<!-- /.box-header -->
 					<div class="box-body">
 						<table class="table table-bordered table-striped" id="history">
@@ -238,7 +295,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								@if(isset($presences))
 								@foreach ($presences as $presence)
 								<tr>
-									<td>{{$presence->periode}}</td>
+									<td>{{ date("M Y", strtotime($presence->periode))}}</td>
 									<td onclick="cek('Mangkir','{{$presence->periode}}')">
 										@if ($presence->mangkir > 0) 
 										<span class="badge bg-yellow"><a href="javascript:void(0)">{{$presence->mangkir}}</a></span>
@@ -302,149 +359,58 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan="4">ABS (Mangkir) bisa dikarenakan data cek log belum diupload bagian HR.</td>
+									<td colspan="9">ABS (Mangkir) bisa dikarenakan data cek log belum diupload bagian HR.</td>
 								</tr>									
 							</tfoot>
 						</table>
-						<!-- <small style="color: red; background-color: yellow">NB : Untuk Melihat data detail bisa dilakukan dengan menekan angka pada kategori.</small> -->
-					</div>
-					<!-- /.box-body -->
-				</div>
-
-				<!-- QUESTION & ANSWER -->
-
-				<div class="box" id="question" style="display: none;">
-					<div class="box-header">
-						<h3 class="box-title">Question & Answer</h3>
-					</div>
-					<div class="box-body">
-						<div class="col-xs-12">
-							<div class="row">
-								<div class="col-xs-2">
-									<select class="form-control select2" style="width: 100%" id="category">
-										<option disabled selected value="">Category</option>
-										<option value="Great Day">Great Day</option>
-										<option value="Absensi">Absensi</option>
-										<option value="Lembur">Lembur</option>
-										<option value="Cuti">Cuti</option>
-										<option value="PKB">PKB</option>
-										<option value="Penggajian">Penggajian</option>
-										<option value="BPJS Kes">BPJS Kes</option>
-										<option value="BPJS TK">BPJS TK</option>
-									</select>
-								</div>
-								<div class="col-xs-10">
-									<div class="input-group input-group">
-										<input type="text" class="form-control" id="msg" placeholder="Write a Message...">
-										<span class="input-group-btn">
-											<button type="button" class="btn btn-success btn-flat" onclick="posting()"><i class="fa fa-send-o"></i>&nbsp; Post</button>
-										</span>
+						<div class="col-md-12" style="padding-top: 10px;">
+							<ul class="timeline">
+								<li class="time-label">
+									<span style="background-color: red; color: white;">
+										20 April 2020
+									</span>
+								</li>
+								<li>
+									<i class="fa fa-info-circle" style="background-color: red; color: white;"></i>
+									<div class="timeline-item">
+										<h3 class="timeline-header" style="color: red; font-weight: bold;">Informasi Terkait Pelanggaran Kode Etik Power Harassment (Pelecehan Kekuasaan)</h3>
+										<div class="timeline-body">
+											Surat informasi dapat didownload melalui link di bawah ini:
+											<br>
+											<a href="{{ asset('\files\info\Pengumuman_Kasus_COC.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Pengumuman Kasus COC <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											Buku kepatuhan kode etik karyawan dapat didownload melalui link di bawah ini:
+											<br>
+											<a href="{{ asset('\files\info\Kode_Etik_Kepatuhan_rev4.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Kode Etik Kepatuhan Rev4.0 <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+										</div>
 									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xs-12">
-							<hr>
-							<div id="chat">
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- E-KAIZEN -->
-
-				<div class="box" id="kaizen" style="display: none;">
-					<div class="box-header">
-						<h3 class="box-title">E-Kaizen</h3>
-						<?php $grp = str_replace("/"," ",$profil[0]->group); ?>
-						<a class="btn btn-primary pull-right" 
-						href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name."/".$profil[0]->section."/".$grp) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
-					</div>
-					<div class="box-body">
-						<div class="row">
-							<div class="col-xs-1">
-								<label>Filter :</label>
-							</div>
-							<div class="col-xs-4">
-								<input type="text" id="bulanAwal" class="form-control datepicker" placeholder="Tanggal dari..">
-							</div>
-							<div class="col-xs-4">
-								<input type="text" id="bulanAkhir" class="form-control datepicker" placeholder="Tanggal sampai..">
-							</div>
-							<div class="col-xs-2">
-								<button class="btn btn-default" onclick="fill_kaizen()">Cari</button>
-							</div>
-						</div>
-						<hr>
-						<table class="table table-bordered" id="tableKaizen" width="100%">
-							<thead style="background-color: rgb(126,86,134); color: #FFD700;">
-								<tr>
-									<th style="width: 900px">Id</th>
-									<th>Tanggal</th>
-									<th>Usulan</th>
-									<th>Kategori</th>
-									<th>Status</th>
-									<th>Aplikasi</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
-						<font style="color: red">* NB : Jika kategori "Terdapat Catatan" maka terdapat catatan dari Foreman / Manager, tekan tombol "details" untuk melihat catatan dan lakukan perubahan pada kaizen teian</font>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="col-md-9" style="padding-top: 0;">
-				<ul class="timeline">
-					<li class="time-label">
-						<span style="background-color: red; color: white;">
-							20 April 2020
-						</span>
-					</li>
-					<li>
-						<i class="fa fa-info-circle" style="background-color: red; color: white;"></i>
-						<div class="timeline-item">
-							<h3 class="timeline-header" style="color: red; font-weight: bold;">Informasi Terkait Pelanggaran Kode Etik Power Harassment (Pelecehan Kekuasaan)</h3>
-							<div class="timeline-body">
-								Surat informasi dapat didownload melalui link di bawah ini:
-								<br>
-								<a href="{{ asset('\files\info\Pengumuman_Kasus_COC.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Pengumuman Kasus COC <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
-								<br>
-								Buku kepatuhan kode etik karyawan dapat didownload melalui link di bawah ini:
-								<br>
-								<a href="{{ asset('\files\info\Kode_Etik_Kepatuhan_rev4.pdf') }}"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Kode Etik Kepatuhan Rev4.0 <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
-							</div>
-						</div>
-					</li>
-					<li class="time-label">
-						<span style="background-color: #00a65a; color: white;">
-							24 January 2019
-						</span>
-					</li>
-					<li>
-						<i class="fa fa-info-circle" style="background-color: #00a65a; color: white;"></i>
-						<div class="timeline-item">
-							<h3 class="timeline-header" style="color: #00a65a; font-weight: bold;">Yamaha Group Helpline</h3>
-							<div class="timeline-body">
-								Karyawan dapat menyampaikan informasi terkait tindakan ketidaksesuaian terhadap Kode Etik Kepatuhan (Compliance Code of Conduct) pada link berikut:
-								<br>
-								<a href="http://ml.helpline.jp/yamahacompliance/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Yamaha Helpline <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
-								<br>
-								Username: <b>yamaha</b>
-								<br>
-								Password: <b>helpline</b>
-							</div>
-						</div>
-					</li>
-					<li class="time-label">
+								</li>
+								<li class="time-label">
+									<span style="background-color: #00a65a; color: white;">
+										24 January 2019
+									</span>
+								</li>
+								<li>
+									<i class="fa fa-info-circle" style="background-color: #00a65a; color: white;"></i>
+									<div class="timeline-item">
+										<h3 class="timeline-header" style="color: #00a65a; font-weight: bold;">Yamaha Group Helpline</h3>
+										<div class="timeline-body">
+											Karyawan dapat menyampaikan informasi terkait tindakan ketidaksesuaian terhadap Kode Etik Kepatuhan (Compliance Code of Conduct) pada link berikut:
+											<br>
+											<a href="http://ml.helpline.jp/yamahacompliance/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Yamaha Helpline <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
+											<br>
+											Username: <b>yamaha</b>
+											<br>
+											Password: <b>helpline</b>
+										</div>
+									</div>
+								</li>
+					{{-- <li class="time-label">
 						<span style="background-color: #605ca8; color: white;">
 							01 January 2020
 						</span>
-					</li>
-					<li>
+					</li> --}}
+					{{-- <li>
 						<i class="fa fa-info-circle" style="background-color: #605ca8; color: white;"></i>
 						<div class="timeline-item">
 							<h3 class="timeline-header" style="color: #605ca8; font-weight: bold;">Sunfish</h3>
@@ -454,254 +420,343 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<a href="http://172.17.128.8/sf6/"><i class="fa fa-angle-double-right"></i><i class="fa fa-angle-double-right"></i> Link Sunfish Overtime <i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-left"></i></a>
 							</div>
 						</div>
-					</li>
+					</li> --}}
 					<li>
 						<i class="fa fa-dot-circle-o bg-gray"></i>
 					</li>
 				</ul>
 			</div>
+			<!-- <small style="color: red; background-color: yellow">NB : Untuk Melihat data detail bisa dilakukan dengan menekan angka pada kategori.</small> -->
+		</div>
+		<!-- /.box-body -->
+	</div>
+
+	<!-- QUESTION & ANSWER -->
+
+	<div class="box" id="question" style="display: none;">
+		<div class="box-header">
+			<h3 class="box-title">Question & Answer</h3>
+		</div>
+		<div class="box-body">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-2">
+						<select class="form-control select2" style="width: 100%" id="category">
+							<option disabled selected value="">Category</option>
+							<option value="Great Day">Great Day</option>
+							<option value="Absensi">Absensi</option>
+							<option value="Lembur">Lembur</option>
+							<option value="Cuti">Cuti</option>
+							<option value="PKB">PKB</option>
+							<option value="Penggajian">Penggajian</option>
+							<option value="BPJS Kes">BPJS Kes</option>
+							<option value="BPJS TK">BPJS TK</option>
+						</select>
+					</div>
+					<div class="col-xs-10">
+						<div class="input-group input-group">
+							<input type="text" class="form-control" id="msg" placeholder="Write a Message...">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-success btn-flat" onclick="posting()"><i class="fa fa-send-o"></i>&nbsp; Post</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<hr>
+				<div id="chat">
+				</div>
+			</div>
 		</div>
 	</div>
 
-	<div class="modal fade" id="modalDetail">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-xs-12">
-							<p style="font-size: 25px; font-weight: bold; text-align: center" id="kz_title"></p>
-							<table id="tabelDetail" width="100%">
+	<!-- E-KAIZEN -->
+
+	<div class="box" id="kaizen" style="display: none;">
+		<div class="box-header">
+			<h3 class="box-title">E-Kaizen</h3>
+			<?php $grp = str_replace("/"," ",$profil[0]->group); ?>
+			<a class="btn btn-primary pull-right" 
+			href="{{ url("create/ekaizen/".$emp_id."/".$profil[0]->name."/".$profil[0]->section."/".$grp) }}"><i class="fa fa-bullhorn"></i>&nbsp; Buat Kaizen</a>
+		</div>
+		<div class="box-body">
+			<div class="row">
+				<div class="col-xs-1">
+					<label>Filter :</label>
+				</div>
+				<div class="col-xs-4">
+					<input type="text" id="bulanAwal" class="form-control datepicker" placeholder="Tanggal dari..">
+				</div>
+				<div class="col-xs-4">
+					<input type="text" id="bulanAkhir" class="form-control datepicker" placeholder="Tanggal sampai..">
+				</div>
+				<div class="col-xs-2">
+					<button class="btn btn-default" onclick="fill_kaizen()">Cari</button>
+				</div>
+			</div>
+			<hr>
+			<table class="table table-bordered" id="tableKaizen" width="100%">
+				<thead style="background-color: rgb(126,86,134); color: #FFD700;">
+					<tr>
+						<th style="width: 900px">Id</th>
+						<th>Tanggal</th>
+						<th>Usulan</th>
+						<th>Kategori</th>
+						<th>Status</th>
+						<th>Aplikasi</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<font style="color: red">* NB : Jika kategori "Terdapat Catatan" maka terdapat catatan dari Foreman / Manager, tekan tombol "details" untuk melihat catatan dan lakukan perubahan pada kaizen teian</font>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12">
+						<p style="font-size: 25px; font-weight: bold; text-align: center" id="kz_title"></p>
+						<table id="tabelDetail" width="100%">
+							<tr>
+								<th>NIK/Name </th>
+								<td> : </td>
+								<td id="kz_nik"></td>
+								<th>Date</th>
+								<td> : </td>
+								<td id="kz_tanggal"></td>
+							</tr>
+							<tr>
+								<th>Section</th>
+								<td> : </td>
+								<td id="kz_section"></td>
+								<th>Area Kaizen</th>
+								<td> : </td>
+								<td id="kz_area"></td>
+							</tr>
+							<tr>
+								<th>Leader</th>
+								<td> : </td>
+								<td id="kz_leader"></td>
+							</tr>
+							<tr>
+								<td colspan="6"><hr style="margin: 5px 0px 5px 0px; border-color: black"></td>
+							</tr>
+						</table>
+						<table width="100%" border="1" id="tabel_Kz">
+							<tr>
+								<th style="border-bottom: 1px solid black" width="50%">BEFORE :</th>
+								<th style="border-bottom: 1px solid black; border-left: 1px" width="50%">AFTER :</th>
+							</tr>
+							<tr>
+								<td id="kz_before"></td>
+								<td id="kz_after"></td>
+							</tr>
+						</table>
+						<table id="tableEstimasi" style="border: 1px solid black" width="100%"></table>
+						<table width="100%" id="tabel_note">
+							<tr><th colspan="2">Note :</th></tr>
+							<tr><th style="border: 1px solid black;" width="50%">Foreman</th><th style="border: 1px solid black;" width="50%">Manager</th></tr>
+							<tr><td style="text-align: left; border: 1px solid" id="note_foreman"></td><td style="text-align: left; border: 1px solid" id="note_manager"></td></tr>
+						</table>
+						<br>
+						<table width="100%" border="1" id="tabel_assess">
+							<tr>
+								<th colspan="4">TABEL NILAI KAIZEN</th>
+							</tr>
+							<tr>
+								<th width="5%">No</th>
+								<th>Kategori</th>
+								<th>Foreman / Chief</th>
+								<th>Manager</th>
+							</tr>
+							<tr>
+								<th>1</th>
+								<th>Estimasi Hasil</th>
+								<td id="foreman_point1"></td>
+								<td id="manager_point1"></td>
+							</tr>
+							<tr>
+								<th>2</th>
+								<th>Ide</th>
+								<td id="foreman_point2"></td>
+								<td id="manager_point2"></td>
+							</tr>
+							<tr>
+								<th>3</th>
+								<th>Implementasi</th>
+								<td id="foreman_point3"></td>
+								<td id="manager_point3"></td>
+							</tr>
+							<tr>
+								<th colspan="2"> TOTAL</th>
+								<td id="foreman_total" style="font-weight: bold;"></td>
+								<td id="manager_total" style="font-weight: bold;"></td>
+							</tr>
+						</table>
+						<br>
+						<table width="100%" id="tabel_nilai_all" border="1">
+							<tr>
+								<th>No</th>
+								<th>Total Nilai</th>
+								<th>Point</th>
+								<th>Keterangan</th>
+								<th>Reward Aplikasi</th>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td><300</td>
+								<td>2</td>
+								<td>Kurang</td>
+								<td>Rp 2.000,-</td>
+							</tr>
+
+							<tr>
+								<td>2</td>
+								<td>300 - 350</td>
+								<td>4</td>
+								<td>Cukup</td>
+								<td>Rp 5.000,-</td>
+							</tr>
+
+							<tr>
+								<td>3</td>
+								<td>351 - 400</td>
+								<td>6</td>
+								<td>Baik</td>
+								<td>Rp 10.000,-</td>
+							</tr>
+
+							<tr>
+								<td>4</td>
+								<td>401 - 450</td>
+								<td>8</td>
+								<td>Sangat Baik</td>
+								<td>Rp 25,000,-</td>
+							</tr>
+
+							<tr>
+								<td>5</td>
+								<td>> 450</td>
+								<td>10</td>
+								<td>Potensi Excellent</td>
+								<td>Rp 50,000,-</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalDelete">
+	<div class="modal-dialog modal-md modal-danger">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title"><b>Apakah anda yakin ingin menghapus kaizen ?</b></h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<p id="kz_title_delete"></p>
+						<input type="hidden" id="id_delete">
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="deleteKaizen()"><i class="fa fa-close"></i> YES</button>
+				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> NO</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalAbsenceDetail">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<table class="table table-bordered">
+							<thead style="background-color: rgb(126,86,134); color: #FFD700;">
 								<tr>
-									<th>NIK/Name </th>
-									<td> : </td>
-									<td id="kz_nik"></td>
-									<th>Date</th>
-									<td> : </td>
-									<td id="kz_tanggal"></td>
-								</tr>
-								<tr>
-									<th>Section</th>
-									<td> : </td>
-									<td id="kz_section"></td>
-									<th>Area Kaizen</th>
-									<td> : </td>
-									<td id="kz_area"></td>
-								</tr>
-								<tr>
-									<th>Leader</th>
-									<td> : </td>
-									<td id="kz_leader"></td>
-								</tr>
-								<tr>
-									<td colspan="6"><hr style="margin: 5px 0px 5px 0px; border-color: black"></td>
-								</tr>
-							</table>
-							<table width="100%" border="1" id="tabel_Kz">
-								<tr>
-									<th style="border-bottom: 1px solid black" width="50%">BEFORE :</th>
-									<th style="border-bottom: 1px solid black; border-left: 1px" width="50%">AFTER :</th>
-								</tr>
-								<tr>
-									<td id="kz_before"></td>
-									<td id="kz_after"></td>
-								</tr>
-							</table>
-							<table id="tableEstimasi" style="border: 1px solid black" width="100%"></table>
-							<table width="100%" id="tabel_note">
-								<tr><th colspan="2">Note :</th></tr>
-								<tr><th style="border: 1px solid black;" width="50%">Foreman</th><th style="border: 1px solid black;" width="50%">Manager</th></tr>
-								<tr><td style="text-align: left; border: 1px solid" id="note_foreman"></td><td style="text-align: left; border: 1px solid" id="note_manager"></td></tr>
-							</table>
-							<br>
-							<table width="100%" border="1" id="tabel_assess">
-								<tr>
-									<th colspan="4">TABEL NILAI KAIZEN</th>
-								</tr>
-								<tr>
-									<th width="5%">No</th>
-									<th>Kategori</th>
-									<th>Foreman / Chief</th>
-									<th>Manager</th>
-								</tr>
-								<tr>
-									<th>1</th>
-									<th>Estimasi Hasil</th>
-									<td id="foreman_point1"></td>
-									<td id="manager_point1"></td>
-								</tr>
-								<tr>
-									<th>2</th>
-									<th>Ide</th>
-									<td id="foreman_point2"></td>
-									<td id="manager_point2"></td>
-								</tr>
-								<tr>
-									<th>3</th>
-									<th>Implementasi</th>
-									<td id="foreman_point3"></td>
-									<td id="manager_point3"></td>
-								</tr>
-								<tr>
-									<th colspan="2"> TOTAL</th>
-									<td id="foreman_total" style="font-weight: bold;"></td>
-									<td id="manager_total" style="font-weight: bold;"></td>
-								</tr>
-							</table>
-							<br>
-							<table width="100%" id="tabel_nilai_all" border="1">
-								<tr>
-									<th>No</th>
-									<th>Total Nilai</th>
-									<th>Point</th>
+									<th>Tanggal</th>
+									<th>Cek Log Masuk</th>
+									<th>Cek Log Pulang</th>
 									<th>Keterangan</th>
-									<th>Reward Aplikasi</th>
 								</tr>
-								<tr>
-									<td>1</td>
-									<td><300</td>
-									<td>2</td>
-									<td>Kurang</td>
-									<td>Rp 2.000,-</td>
+								<tr id="laoding_absence">
+									<th colspan="4"><i class="fa fa-spinner fa-pulse"></i> Loading</th>
 								</tr>
-
-								<tr>
-									<td>2</td>
-									<td>300 - 350</td>
-									<td>4</td>
-									<td>Cukup</td>
-									<td>Rp 5.000,-</td>
-								</tr>
-
-								<tr>
-									<td>3</td>
-									<td>351 - 400</td>
-									<td>6</td>
-									<td>Baik</td>
-									<td>Rp 10.000,-</td>
-								</tr>
-
-								<tr>
-									<td>4</td>
-									<td>401 - 450</td>
-									<td>8</td>
-									<td>Sangat Baik</td>
-									<td>Rp 25,000,-</td>
-								</tr>
-
-								<tr>
-									<td>5</td>
-									<td>> 450</td>
-									<td>10</td>
-									<td>Potensi Excellent</td>
-									<td>Rp 50,000,-</td>
-								</tr>
-							</table>
-						</div>
+							</thead>
+							<tbody id="body_absence"></tbody>
+						</table>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-				</div>
-			</div>
+			</div>				
 		</div>
 	</div>
+</div>
 
-	<div class="modal fade" id="modalDelete">
-		<div class="modal-dialog modal-md modal-danger">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title"><b>Apakah anda yakin ingin menghapus kaizen ?</b></h4>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-12">
-							<p id="kz_title_delete"></p>
-							<input type="hidden" id="id_delete">
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="deleteKaizen()"><i class="fa fa-close"></i> YES</button>
-					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> NO</button>
-				</div>
+<div class="modal fade" id="modalBerita">
+	<div class="modal-dialog modal-lg modal-default" style="width: 80%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<center><h4 class="modal-title"><b>YMPI Announcement</b></h4></center>
 			</div>
-		</div>
-	</div>
-
-	<div class="modal fade" id="modalAbsenceDetail">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-12">
-							<table class="table table-bordered">
-								<thead style="background-color: rgb(126,86,134); color: #FFD700;">
-									<tr>
-										<th>Tanggal</th>
-										<th>Cek Log Masuk</th>
-										<th>Cek Log Pulang</th>
-										<th>Keterangan</th>
-									</tr>
-									<tr id="laoding_absence">
-										<th colspan="4"><i class="fa fa-spinner fa-pulse"></i> Loading</th>
-									</tr>
-								</thead>
-								<tbody id="body_absence"></tbody>
-							</table>
-						</div>
-					</div>
-				</div>				
-			</div>
-		</div>
-	</div>
-
-	<div class="modal fade" id="modalBerita">
-		<div class="modal-dialog modal-lg modal-default" style="width: 80%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<center><h4 class="modal-title"><b>YMPI Announcement</b></h4></center>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-12">
-							<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-								<div class="carousel-inner">
-									<div class="item active">
-										<div class="col-xs-6">
-											<img class="img-responsive" src="{{url('images/hrq_announcement/0001.jpg')}}" style="width: 100%;">
-										</div>
-										<div class="col-xs-6">
-											<img class="img-responsive" src="{{url('images/hrq_announcement/0002.jpg')}}" style="width: 100%;">
-										</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+							<div class="carousel-inner">
+								<div class="item active">
+									<div class="col-xs-6">
+										<img class="img-responsive" src="{{url('images/hrq_announcement/0001.jpg')}}" style="width: 100%;">
 									</div>
-									<div class="item">
-										<center>
-											<img class="img-responsive" src="{{url('images/announchement2.png')}}" alt="...">
-										</center>
+									<div class="col-xs-6">
+										<img class="img-responsive" src="{{url('images/hrq_announcement/0002.jpg')}}" style="width: 100%;">
 									</div>
 								</div>
-								<a class="left carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="prev">
-									<span class="glyphicon glyphicon-chevron-left"></span>
-								</a>
-								<a class="right carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="next">
-									<span class="glyphicon glyphicon-chevron-right"></span>
-								</a>
+								<div class="item">
+									<center>
+										<img class="img-responsive" src="{{url('images/announchement2.png')}}" alt="...">
+									</center>
+								</div>
 							</div>
+							<a class="left carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="prev">
+								<span class="glyphicon glyphicon-chevron-left"></span>
+							</a>
+							<a class="right carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="next">
+								<span class="glyphicon glyphicon-chevron-right"></span>
+							</a>
 						</div>
 					</div>
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 			</div>
 		</div>
 	</div>
+</div>
 
 </section>
 @endsection
@@ -738,7 +793,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		name = name.replace('&#039;','');
 
 		$("#phone_number").val("{{$profil[0]->phone}}");
-		$("#wa_number").val("{{$profil[0]->wa_number}}");
+		$("#wa_number").val("{{$profil[0]->phone}}");
 
 		fill_chat();
 
