@@ -3428,21 +3428,9 @@ public function fetchAbsenceEmployee(Request $request)
           $attend_code = "Attend_Code LIKE '%PC%'";
      }
 
-     $absence = db::connection('sunfish')->select("SELECT
-          format ( shiftstarttime, 'dd MMM yyyy' ) AS tanggal,
-          starttime,
-          endtime,
-          Attend_Code 
-          FROM
-          VIEW_YMPI_Emp_Attendance 
-          WHERE
-          Emp_no = '".$username."' 
-          AND format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."' 
-          AND ( ".$attend_code." )");
+     
 
      if($request->get('attend_code') == 'Overtime'){
-          $absence = "";
-
           $absence = db::connection('sunfish')->select("SELECT
                format ( shiftstarttime, 'dd MMM yyyy' ) AS tanggal,
                ovtactfrom AS starttime,
@@ -3454,13 +3442,26 @@ public function fetchAbsenceEmployee(Request $request)
                ovtrequest_no IS NOT NULL
                AND Emp_no = '".$username."' 
                AND format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."'");
-     }     
+     }
+     else{
+          $absence = db::connection('sunfish')->select("SELECT
+               format ( shiftstarttime, 'dd MMM yyyy' ) AS tanggal,
+               starttime,
+               endtime,
+               Attend_Code 
+               FROM
+               VIEW_YMPI_Emp_Attendance 
+               WHERE
+               Emp_no = '".$username."' 
+               AND format ( shiftstarttime, 'MMMM yyyy' ) = '".$request->get('period')."' 
+               AND ( ".$attend_code." )");  
+     }
 
-     $response = array(
-          'status' => true,
-          'datas' => $absence
-     );
-     return Response::json($response);
+   $response = array(
+     'status' => true,
+     'datas' => $absence
+);
+   return Response::json($response);
 }
 
 public function fetchDataKaizenAll(Request $request)
