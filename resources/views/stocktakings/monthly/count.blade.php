@@ -2,6 +2,9 @@
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css/jquery.numpad.css") }}" rel="stylesheet">
+<meta name="mobile-web-app-capable" content="yes"> 
+<meta name="viewport" content="initial-scale=1"> 
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> 
 
 
 <style type="text/css">

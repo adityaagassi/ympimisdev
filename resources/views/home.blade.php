@@ -172,11 +172,11 @@
                                     </a>
                                     <br> --}}
                                     <a href="{{ url("index/report/absence") }}">
-                                        <i class="fa fa-caret-right"></i>Absence (欠勤)
+                                        <i class="fa fa-caret-right"></i> Absence (欠勤)
                                     </a>
                                     <br>
                                     <a href="{{ url("index/report/attendance_data")}}">
-                                        <i class="fa fa-caret-right"></i>Attendance Data (出席データ)
+                                        <i class="fa fa-caret-right"></i> Attendance Data (出席データ)
                                     </a>
                                 </td>
                             </tr>
@@ -359,7 +359,7 @@
             </thead>
             <tbody>
                 <tr>
-                 <td>
+                   <td>
                     {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                         <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                     </a> --}}
@@ -510,19 +510,19 @@
                                         <i class="fa fa-caret-right"></i> Sharepoint;
                                     </a>
                                     <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                                       SAP;
-                                   </a>
-                                   <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                                       Adagio;
-                                   </a>
-                                   <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                                       MA5;
-                                   </a>
-                               </td>     
-                           </tr>                                                                             
-                       </tbody>
-                   </table>
-                   <table class="table table-bordered">
+                                     SAP;
+                                 </a>
+                                 <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                                     Adagio;
+                                 </a>
+                                 <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                                     MA5;
+                                 </a>
+                             </td>     
+                         </tr>                                                                             
+                     </tbody>
+                 </table>
+                 <table class="table table-bordered">
                     <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                         <tr>
                             <th>Workshop<br>ワークショップ</th>
@@ -620,11 +620,11 @@
                                 <span style="font-weight: bold;">Planned Maintenance ()</span>
                                 <br>
                                 <a href="{{ url("index/maintenance/pm/schedule") }}">
-                                    <i class="fa fa-caret-right"></i> Planned Maintenance Schedule ()
+                                    <i class="fa fa-caret-right"></i> Plan Maintenance Schedule ()
                                 </a>
                                 <br>
                                 <a href="{{ url("index/maintenance/pm/monitoring") }}">
-                                    <i class="fa fa-caret-right"></i> Planned Maintenance Monitoring ()
+                                    <i class="fa fa-caret-right"></i> Plan Maintenance Monitoring ()
                                 </a>
                                 <br>
                                 <a href="{{ url("index/maintenance/apar") }}">
@@ -763,7 +763,7 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("/index/middle/stock_monitoring") }}">
-                                    <i class="fa fa-caret-right"></i>Middle Stock Monitoring (中間工程の仕掛品監視)
+                                    <i class="fa fa-caret-right"></i> Middle Stock Monitoring (中間工程の仕掛品監視)
                                 </a>
                             </td>
                         </tr>
@@ -882,7 +882,7 @@
                                         </a>
                                         <br>
                                         <a href="{{ url("/index/kd_shipment_progress") }}">
-                                            <i class="fa fa-caret-right"></i>KD Shipment Progress (出荷結果)
+                                            <i class="fa fa-caret-right"></i> KD Shipment Progress (出荷結果)
                                         </a>
                                     </td>
                                 </tr>
@@ -903,11 +903,11 @@
                                         </a>
                                         <br>
                                         <a href="{{ url("/index/display/shipment_progress") }}">
-                                            <i class="fa fa-caret-right"></i>FG Shipment Progress (出荷結果)
+                                            <i class="fa fa-caret-right"></i> FG Shipment Progress (出荷結果)
                                         </a>
                                         <br>
                                         <a href="{{ url("/index/display/shipment_report") }}">
-                                            <i class="fa fa-caret-right"></i>Weekly Shipment ETD SUB (週次出荷　スラバヤ着荷)
+                                            <i class="fa fa-caret-right"></i> Weekly Shipment ETD SUB (週次出荷　スラバヤ着荷)
                                         </a>
                                         <br>
                                         <a href="{{ url("/index/fg_container_departure") }}">
@@ -998,6 +998,23 @@
                                     </tr>
                                 </tbody>
                             </table>
+
+                           <!--  <table class="table table-bordered">
+                                <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
+                                    <tr>
+                                        <th>Sakurentsu<br/></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="{{ url("index/sakurentsu/monitoring") }}">
+                                                <i class="fa fa-caret-right"></i> Sakurentsu Monitoring ()
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table> -->
                         </div>
                     </div>
                 </section>

@@ -139,7 +139,7 @@
 					<div class="col-xs-12">
 						<center>
 							<button class="btn btn-success" style="font-weight: bold; width: 50%; font-size: 1.5vw; margin-bottom: 10px;" onclick="openModalCreate()">
-								<i class="fa fa-pencil-square-o"></i> Tambah Data Kehadiran <i class="fa fa-pencil-square-o"></i>
+								<i class="fa fa-pencil-square-o"></i> Tambah Laporan <i class="fa fa-pencil-square-o"></i>
 							</button>
 						</center>
 					</div>

@@ -713,9 +713,6 @@ function deleteConfirmation(id){
 	};
 	if(confirm("Are you sure you want to delete this data?")){
 		$.post('{{ url("destroy/serial_number") }}', data, function(result, status, xhr){
-			console.log(status);
-			console.log(result);
-			console.log(xhr);
 
 			if(xhr.status == 200){
 				if(result.status){

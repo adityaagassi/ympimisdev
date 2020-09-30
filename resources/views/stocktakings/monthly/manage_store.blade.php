@@ -65,11 +65,11 @@
 	@endphp
 	@endforeach
 
-	@if(in_array('S36', $navs))	
+	{{-- @if(in_array('S36', $navs))	
 	<button class="btn btn-success btn-sm pull-right" data-toggle="modal"  data-target="#add_material" style="margin-right: 5px">
 		<i class="fa fa-plus"></i>&nbsp;&nbsp;Add New Material
 	</button>
-	@endif
+	@endif --}}
 
 	<button class="btn btn-primary btn-sm pull-right" data-toggle="modal"  data-target="#print_store" style="margin-right: 5px">
 		<i class="fa fa-print"></i>&nbsp;&nbsp;Print Store
@@ -319,7 +319,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success" onclick="addMaterial()"><i class="fa fa-plus"></i> Add Material</button>
+					<button class="btn btn-success" onclick="addMaterial()">Tambah List</button>
 				</div>
 			</div>
 		</div>

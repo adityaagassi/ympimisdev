@@ -46,13 +46,14 @@
 			<h2 style="margin-top: 0px;">{{ $title }}<span class="text-purple"> {{ $title_jp }}</span></h2>
 		</div>
 		<div class="col-xs-3">
-			<h3 style="margin: 0px;" class="pull-right" id="month_text"></h3>
+			{{-- <h3 style="margin: 0px;" id="month_text"></h3> --}}
+			<div class="pull-right" id="last_update" style="color: black; margin: 0px; padding-top: 0px; padding-right: 0px; font-size: 0.9vw;"></div>
 		</div>
 	</div>
 </section>
 @stop
 @section('content')
-<section class="content">
+<section class="content" style="padding-top: 0;">
 
 	@foreach(Auth::user()->role->permissions as $perm)
 	@php
@@ -72,12 +73,58 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xs-3" style="text-align: center;">
+		<div class="col-xs-6" style="text-align: center; padding-right: 1px;">
+			<div id="container"></div>
+			{{-- <div id="container2"></div> --}}
+		</div>
+		<div class="col-xs-6" style="text-align: center; padding-left: 1px;">
+			<div id="container1"></div>
+		</div>
+		<div class="col-xs-12">
+			<div class="row">
+				<div class="col-xs-3" style="text-align: center;">
+					<span style="font-size: 1.5vw; color: black;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
+					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Storage Loc Stock</a>
+					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Bom Output</a>
+					<a href="javascript:void(0)"  data-toggle="modal" data-target="#importMPDLModal" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Material Plant Data List</a>
+					<a href="javascript:void(0)"  data-toggle="modal" data-target="#importModal" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Storage Loc Stock</a>
+					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Storage Location</a>
+					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Item Silver</a>
+					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Stocktaking Calendar</a>
+					<a href="{{ url("index/stocktaking/stocktaking_list") }}" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw; color:white; background-color: #616161;">Master Stocktaking List</a>
+				</div>
+				<div class="col-xs-3" style="text-align: center;">
+					<span style="font-size: 1.5vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
+					<a id="manage_store" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;">Print Summary Of Counting</a>
+					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input No Use</a>
+					<a id="input_pi" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input Physical Inventory (PI)</a>
+					<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Audit Internal</a>
+					<a id="revise" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;">Revise Physical Inventory (PI)</a>
+				</div>
+				<div class="col-xs-3" style="text-align: center;">
+					<span style="font-size: 1.5vw; color: purple;"><i class="fa fa-angle-double-down"></i> Result <i class="fa fa-angle-double-down"></i></span>
+					<a id="breakdown" data-toggle="modal" data-target="#modalBreakdown" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Breakdown Physical Inventory (PI)</a>
+					<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple; background-color: #e040fb;">Unmatch Check</a>
+					<a id="" href="{{ url("index/stocktaking/inquiry") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Inquiry</a>
+					<a id="" href="{{ url("index/stocktaking/variance_report") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple; background-color: #e040fb;">Variance Report</a>
+					<a id="" href="{{ url("") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Official Variance Report</a>
+				</div>
+				<div class="col-xs-3" style="text-align: center;">
+					<span style="font-size: 1.5vw; color: red;"><i class="fa fa-angle-double-down"></i> Final <i class="fa fa-angle-double-down"></i></span>
+					<a id="upload_sap" onclick="uploadSap()" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: red;">Upload Textfile to SAP</a>
+					{{-- <a id="export_log" onclick="exportLog()" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: red; background-color: #ff5252;">End Stocktaking</a> --}}
+				</div>
+			</div>
+		</div>
+
+
+
+		{{-- <div class="col-xs-3" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 
 			<a id="manage_store" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Manage Store</a>
 
-			@if(in_array('S36', $navs))	
+			@if(in_array('S36', $navs))
 			<a id="summary_of_counting" href="{{ url("index/stocktaking/summary_of_counting") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Summary of Counting</a>
 			@endif
 			
@@ -86,9 +133,9 @@
 			<a id="input_pi" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Input PI</a>
 			<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 1</a>
 
-			@if(in_array('S36', $navs))	
+			@if(in_array('S36', $navs))	 --}}
 			{{-- <a id="audit2" href="{{ url("index/stocktaking/audit/"."2") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Audit 2</a> --}}
-			<a id="breakdown" data-toggle="modal" data-target="#modalBreakdown" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Breakdown PI</a>
+			{{-- <a id="breakdown" data-toggle="modal" data-target="#modalBreakdown" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Breakdown PI</a>
 			<a id="revise" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Revise</a>
 			
 			@endif
@@ -121,22 +168,7 @@
 
 			@endif
 
-		</div>
-		<div class="col-xs-9" style="text-align: center; color: red;">
-			<div class="pull-right" id="last_update" style="color: black; margin: 0px; padding-top: 0px; padding-right: 0px; font-size: 1vw;"></div>
-
-			<div class="col-xs-12">
-				<div id="container"></div>
-			</div>
-
-			<div class="col-xs-12">
-				<div id="container1"></div>
-			</div>
-
-			<div class="col-xs-12">
-				<div id="container2"></div>
-			</div>
-		</div>
+		</div> --}}
 	</div>
 
 	<div class="modal fade" id="modalVariance">
@@ -263,14 +295,61 @@
 
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success" onclick="countPI()"><i class="fa fa-play"></i> 	Start</button>
+					<button class="btn btn-success" onclick="countPI()"><i class="fa fa-play"></i>Start</button>
 				</div>
 			</div>
 		</div>
 	</div>
-
-
 </section>
+
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id ="importForm" method="post" action="{{ url('import/material/storage') }}" enctype="multipart/form-data">
+				<input type="hidden" value="{{csrf_token()}}" name="_token" />
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Import Storage Location</h4>
+					Format: [Material Number][Material Description][SLoc][Unrestricted][Download Date][Download Time]<br>
+					Sample: <a href="{{ url('download/manual/import_storage_location_stock.txt') }}">import_storage_location_stock.txt</a> Code: #Truncate
+				</div>
+				<div class="modal-body">
+					Select Date:
+					<input type="text" class="form-control" id="date_stock" name="date_stock" style="width:25%;"><br>
+					<input type="file" name="storage_location_stock" id="storage_location_stock" accept="text/plain">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button id="modalImportButton" type="submit" class="btn btn-success" onclick="loadingPage()">Import</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="importMPDLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id ="importForm" method="post" action="{{ url('import/material/mpdl') }}" enctype="multipart/form-data">
+				<input type="hidden" value="{{csrf_token()}}" name="_token" />
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Import MPDL</h4>
+					Format: [Material Number][Material Description][SLoc][Unrestricted][Download Date][Download Time]<br>
+					Sample: <a href="{{ url('download/manual/import_mpdl.txt') }}">import_storage_location_stock.txt</a> Code: #Truncate
+				</div>
+				<div class="modal-body">
+					<input type="file" name="mpdl" id="mpdl" accept="text/plain">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button id="modalImportButton" type="submit" class="btn btn-success" onclick="loadingPage()">Import</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
@@ -290,6 +369,11 @@
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
 
+		$('#date_stock').datepicker({
+			autoclose: true,
+			todayHighlight: true
+		});
+
 		$('input[type="checkbox"].minimal').iCheck({
 			checkboxClass: 'icheckbox_minimal-blue'
 		});
@@ -304,7 +388,7 @@
 		});
 
 		var error = $('#msg_error').val();
-		console.log(error);
+		// console.log(error);
 
 		if(error){
 			var error_message = error.split('(ime)');
@@ -318,8 +402,8 @@
 			auditedList();
 			// variance();
 
-			console.log(error_message);
-			console.log(month);
+			// console.log(error_message);
+			// console.log(month);
 
 			openErrorGritter('Error', message);
 		}else{
@@ -340,6 +424,9 @@
 
 	});
 
+	function loadingPage(){
+		$("#loading").show();
+	}
 
 	function uploadSap() {
 		$("#loading").show();
@@ -402,7 +489,7 @@
 			month : month
 		}
 
-		$('#month_text').text(bulanText(month));
+		// $('#month_text').text(bulanText(month));
 		$('#modalMonth').modal('hide');
 
 		$.get('{{ url("fetch/stocktaking/check_month") }}', data, function(result, status, xhr){
@@ -440,11 +527,11 @@
 				auditedList();
 				// variance();
 
-				$('#month_text').text(bulanText(month));
+				// $('#month_text').text(bulanText(month));
 				$('#modalMonth').modal('hide');
 
 			}else{
-				$('#month_text').text(bulanText(month));
+				// $('#month_text').text(bulanText(month));
 				$('#modalMonth').modal('hide');
 				openErrorGritter('Error', result.message);
 
@@ -576,10 +663,7 @@
 							type: 'column'
 						},
 						title: {
-							text: 'Progress Input PI',
-							style: {
-								fontWeight: 'bold'
-							}
+							text: 'Progress Input'
 						},	
 						legend:{
 							enabled: false
@@ -780,10 +864,7 @@
 							type: 'column'
 						},
 						title: {
-							text: 'Progress Audit Internal',
-							style: {
-								fontWeight: 'bold'
-							}
+							text: 'Progress Audit'
 						},	
 						legend:{
 							enabled: false

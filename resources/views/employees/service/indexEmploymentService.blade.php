@@ -461,10 +461,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 				</ul>
 			</div>
 		</div>
-		<!-- /.col -->
 	</div>
-
-	<!-- DETAIL -->
 
 	<div class="modal fade" id="modalDetail">
 		<div class="modal-dialog modal-lg">
@@ -609,7 +606,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 		</div>
 	</div>
 
-	<!-- DELETE -->
 	<div class="modal fade" id="modalDelete">
 		<div class="modal-dialog modal-md modal-danger">
 			<div class="modal-content">
@@ -629,12 +625,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> NO</button>
 				</div>
 			</div>
-			<!-- /.modal-content -->
 		</div>
-		<!-- /.modal-dialog -->
 	</div>
 
-	<!-- Modal Absen Detail -->
 	<div class="modal fade" id="modalAbsenceDetail">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -662,12 +655,9 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					</div>
 				</div>				
 			</div>
-			<!-- /.modal-content -->
 		</div>
-		<!-- /.modal-dialog -->
 	</div>
 
-	<!-- MODAL ANNOUNCEMENT -->
 	<div class="modal fade" id="modalBerita">
 		<div class="modal-dialog modal-lg modal-default" style="width: 80%;">
 			<div class="modal-content">
@@ -681,7 +671,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<div class="row">
 						<div class="col-md-12">
 							<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
 									<div class="item active">
 										<div class="col-xs-6">
@@ -690,15 +679,13 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 										<div class="col-xs-6">
 											<img class="img-responsive" src="{{url('images/hrq_announcement/0002.jpg')}}" style="width: 100%;">
 										</div>
-										<!-- <div class="carousel-caption">
-											Another Image
-										</div> -->
 									</div>
 									<div class="item">
-										<img class="img-responsive" src="{{url('images/announchement2.png')}}" alt="...">
+										<center>
+											<img class="img-responsive" src="{{url('images/announchement2.png')}}" alt="...">
+										</center>
 									</div>
 								</div>
-								<!-- Controls -->
 								<a class="left carousel-control" style="color: black;" href="#carousel-example-generic" role="button" data-slide="prev">
 									<span class="glyphicon glyphicon-chevron-left"></span>
 								</a>
@@ -713,9 +700,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
 				</div>
 			</div>
-			<!-- /.modal-content -->
 		</div>
-		<!-- /.modal-dialog -->
 	</div>
 
 </section>

@@ -494,17 +494,18 @@
 			format: "yyyy-mm-dd",
 			todayHighlight: true	
 		});
-		$('.timepicker').timepicker({
-			use24hours: true,
-			showInputs: false,
-			showMeridian: false,
-			minuteStep: 30,
-			defaultTime: '00:00',
-			timeFormat: 'h:mm'
-		});
 		setInterval(fetchRequest, 30000);
 		setInterval(fetchDriverDuty, 30000);
 		setInterval(fetchDriver, 30000);
+	});
+	
+	$('.timepicker').timepicker({
+		use24hours: true,
+		showInputs: false,
+		showMeridian: false,
+		minuteStep: 30,
+		defaultTime: '00:00',
+		timeFormat: 'h:mm'
 	});
 
 	var passenger = [];
@@ -515,6 +516,7 @@
 		destination = [];
 		$('#tablePassengerBody').html('');
 		$('#tableDestinationBody').html('');
+		$('#createDriver').prop('selectedIndex', 0).change();
 		$('#createPurpose').val('');
 		$('#createDestination').val('');
 		$('#createStart').val('');

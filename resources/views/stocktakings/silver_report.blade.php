@@ -794,7 +794,7 @@ function fillModal(cat, name){
 					resultTotal1 += value.pi;
 					resultTotal2 += value.book;
 					resultTotal3 += value.diff_qty;	
-					resultTotal4 += Math.abs(value.diff_qty);				
+					resultTotal4 += Math.abs(value.diff_qty);		
 				}
 
 			});

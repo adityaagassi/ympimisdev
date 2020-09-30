@@ -50,6 +50,13 @@
               Or you do not have permission to access this page.<br><br>
               Meanwhile, you may <a href="javascript:history.back()">back to previous page</a>.
             </p>
+            <p style="font-weight: bold; font-size:20px; color: red;">
+                  @if(isset($message))
+                  {{$message}}
+                  @else
+
+                  @endif
+                </p>
           </div>
         </div>
       </div>
