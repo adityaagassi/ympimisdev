@@ -169,6 +169,13 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								</a>
 							</li>
 							<li class="list-group-item">
+								<b>Tanggal Masuk</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ date("d F Y", strtotime($profil[0]->hire_date)) }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
 								<b>Posisi</b> <a class="pull-right">
 									<span style="font-weight: bold;">
 										{{ $profil[0]->grade_code }} ({{ $profil[0]->grade_name }}) - {{ $profil[0]->position }}
@@ -176,7 +183,14 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								</a>
 							</li>
 							<li class="list-group-item">
-								<b>Departemen</b> <a class="pull-right">
+								<b>Division</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->division }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>Department</b> <a class="pull-right">
 									<span style="font-weight: bold;">
 										{{ $profil[0]->department }}
 									</span>
@@ -197,6 +211,13 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								</a>
 							</li>
 							<li class="list-group-item">
+								<b>Sub Group</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->sub_group }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
 								<b>Alamat</b> <a class="pull-right">
 									<span style="font-weight: bold;">
 										{{ $profil[0]->address }}
@@ -207,6 +228,27 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								<b>Telepon</b> <a class="pull-right">
 									<span style="font-weight: bold;">
 										{{ $profil[0]->phone }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>Rekening</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->card_id }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>NPWP</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->npwp }}
+									</span>
+								</a>
+							</li>
+							<li class="list-group-item">
+								<b>Serikat</b> <a class="pull-right">
+									<span style="font-weight: bold;">
+										{{ $profil[0]->union }}
 									</span>
 								</a>
 							</li>
