@@ -861,6 +861,10 @@
                                             <i class="fa fa-caret-right"></i> Finished Goods Stock (完成品在庫)
                                         </a>
                                         <br>
+                                        <a href="{{ url("/index/display/shipment_progress") }}">
+                                            <i class="fa fa-caret-right"></i> FG Shipment Progress (出荷結果)
+                                        </a>
+                                        <br>
                                         <a href="{{ url("/index/fg_traceability") }}">
                                             <i class="fa fa-caret-right"></i> Traceability (完成品追跡)
                                         </a>
@@ -873,10 +877,10 @@
                                         <a href="{{ url("/index/kd_production_schedule_data") }}">
                                             <i class="fa fa-caret-right"></i> Production Schedule Data (生産スケジュールデータ)
                                         </a> --}}
-                                        <br>
+                                      {{--   <br>
                                         <a href="{{ url("/index/kd_daily_production_result") }}">
                                             <i class="fa fa-caret-right"></i> Daily Production Result (日常生産実績)
-                                        </a>
+                                        </a> --}}
                                         <br>
                                         <a href="{{ url("/index/kd_stock") }}">
                                             <i class="fa fa-caret-right"></i> KD Parts Stock (KD部品在庫)
@@ -903,8 +907,8 @@
                                             <i class="fa fa-caret-right"></i> Shipment Result (出荷結果)
                                         </a>
                                         <br>
-                                        <a href="{{ url("/index/display/shipment_progress") }}">
-                                            <i class="fa fa-caret-right"></i> FG Shipment Progress (出荷結果)
+                                        <a href="{{ url("/index/display/shipment_progress_all") }}">
+                                            <i class="fa fa-caret-right"></i> Shipment Progress (出荷結果)
                                         </a>
                                         <br>
                                         <a href="{{ url("/index/display/shipment_report") }}">

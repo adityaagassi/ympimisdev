@@ -21,7 +21,7 @@
 	}
 	.crop2 img {
 		width: 100%;
-		margin: -20% 0 -20% 0;
+		margin: -30% 0 -20% 0;
 	}
 	.list-group-item {
 		padding-top: 5px;
@@ -232,7 +232,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 								</a>
 							</li>
 							<li class="list-group-item">
-								<b>Rekening</b> <a class="pull-right">
+								<b>KTP</b> <a class="pull-right">
 									<span style="font-weight: bold;">
 										{{ $profil[0]->card_id }}
 									</span>
