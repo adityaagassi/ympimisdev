@@ -567,13 +567,18 @@
                             <td>
                                 <span style="font-weight: bold;">Machine Monitoring (マシン監視)</span>
                                 <br>
-                                <a href="http://172.17.129.10/zed/dashboard/awal">
+                                <a href="http://172.17.129.10/zed/dashboard/awal" target="_blank">
                                     <i class="fa fa-caret-right"></i> Overall Equipment Efficiency (稼働率)
                                 </a>
                                 <br>
                                 <a href="{{ url("/machinery_monitoring?mesin=") }}">
                                     <i class="fa fa-caret-right"></i> Machinery Monitoring (機械監視)
                                 </a>
+                                <br>
+                                <a href="http://172.17.129.10/mtnc/login/log" target="_blank">
+                                    <i class="fa fa-caret-right"></i> Planned Maintenance Activity Finding
+                                </a>
+
                             </td>                     
                         </tr>
                         <tr>
@@ -1023,11 +1028,11 @@
                                     <tr>
                                         <td>
                                             <a href="{{ url("purchase_requisition/monitoring") }}">
-                                                <i class="fa fa-caret-right"></i> PR Monitoring & Control ()
+                                                <i class="fa fa-caret-right"></i> PR Monitoring & Control (PR監視・管理)
                                             </a>
                                             <br>
                                             <a href="{{ url("investment/control") }}">
-                                                <i class="fa fa-caret-right"></i> Investment Control ()
+                                                <i class="fa fa-caret-right"></i> Investment Control (投資管理)
                                             </a>
                                         </td>
                                     </tr>
