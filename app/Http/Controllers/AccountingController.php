@@ -8698,7 +8698,13 @@ public function update_purchase_requisition_po(Request $request)
 
         ->editColumn('amount', function ($actual)
         {
-            return $actual->amount;
+            if ($actual->currency == "USD") {
+                return "$ ".$actual->amount;   
+            } else if ($actual->currency == "JPY") {
+                return "¥ ".$actual->amount;   
+            } else if ($actual->currency == "IDR") {
+                return "Rp. ".$actual->amount;   
+            }
         })
 
         ->addColumn('action', function ($actual)
@@ -8706,7 +8712,7 @@ public function update_purchase_requisition_po(Request $request)
             $id = $actual->id;
 
             return ' 
-            <button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$id.')"><i class="fa fa-eye"></i> Detail</button>
+            <button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Details" onclick="modalDelete('.$id.')"><i class="fa fa-trash"></i> Delete</button>
             ';
         })
 
@@ -8732,211 +8738,55 @@ public function update_purchase_requisition_po(Request $request)
                 $rows = $rows->toArray();
 
                 for ($i=0; $i < count($rows); $i++) {
-                    $fiscal_year  = $rows[$i][0];
-                    $document_no = $rows[$i][1];
-                    $type = $rows[$i][5];                    
-                    $reference = $rows[$i][14];
-                    $document_no = $rows[$i][15];
-                    $invoice_no = $rows[$i][17];    
-                    $no_po_sap_urut = $rows[$i][18];
-                    $no_po = $rows[$i][19];
-                    $category = $rows[$i][20];
-                    $item_description = $rows[$i][22];
-                    $qty = $rows[$i][25];
-                    $uom = $rows[$i][26];
-                    $price = $rows[$i][27];
-                    $amount = $rows[$i][28];
-                    $amount_dollar = $rows[$i][31];
-                    $gl_number = $rows[$i][40];
-                    $gl_description = $rows[$i][41];
-                    $cost_center = $rows[$i][42];
-                    $cost_description = $rows[$i][43];
-                    $pch_code = $rows[$i][44];
+                    if ($rows[$i][0] != "") {
+                        $periode  = $rows[$i][0];
+                        $document_no = $rows[$i][1];
+                        $type = $rows[$i][2];                    
+                        $description = $rows[$i][3];            
+                        $reference = $rows[$i][4];
+                        $gl_number = $rows[$i][5];
+                        $post_date = $rows[$i][6];    
+                        $local_amount = $rows[$i][7];
+                        $local_currency = $rows[$i][8];
+                        $amount = $rows[$i][9];
+                        $currency = $rows[$i][10];
+                        $budget_no = $rows[$i][11];
+                        $investment_no = $rows[$i][12];
+                        $month_date = $rows[$i][13];
 
-                    $no_po_sap = explode("-", trim($no_po_sap_urut));
-                        $item_no = substr($item_description,0,7); //get 7 char kode item
+                        $data2 = AccActualLog::create([
+                            'periode' => $periode,
+                            'document_no' => $document_no,
+                            'type' => $type,
+                            'description' => $description,
+                            'reference' => $reference,
+                            'gl_number' => $gl_number,
+                            'post_date' => $post_date,
+                            'local_amount' => $local_amount,
+                            'local_currency' => $local_currency,
+                            'amount' => $amount,
+                            'currency' => $currency,
+                            'budget_no' => $budget_no,
+                            'investment_no' => $investment_no,
+                            'month_date' => $month_date,
+                            'created_by' => Auth::id()
+                        ]);
 
-                        if($pch_code == "G40" && ($category == "A" || $category == "K")) {
+                        $data2->save();
 
-                            $actual = AccActual::where('document_no', $document_no)
-                            ->select('document_no')
-                            ->first();
+                        $bulan = strtolower(date("M",strtotime($post_date)));
+                        $sisa_bulan = $bulan.'_sisa_budget';
+                        
+                        $budgetdata = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)->first();
 
-                            if (count($actual) == 0) { //kalo insert
+                        //Kurangi Budget Skrg Dengan Actual
+                        $total = $budgetdata->$sisa_bulan - $local_amount;
 
-                                   $data2 = AccActual::create([
-                                    'currency' => $currency,
-                                    'vendor_code' => $vendor_code,
-                                    'vendor_name' => $vendor_name,
-                                    'receive_date' => $receive_date,
-                                    'document_no' => $document_no,
-                                    'invoice_no' => $invoice_no,
-                                    'no_po_sap' => $no_po_sap[0],
-                                    'no_urut' => $no_po_sap[1],
-                                    'no_po' => $no_po,
-                                    'category' => $category,
-                                    'item_no' => $item_no,
-                                    'item_description' => $item_description,
-                                    'qty' => $qty,
-                                    'uom' => $uom,
-                                    'price' => $price,
-                                    'amount' => $amount,
-                                    'amount_dollar' => $amount_dollar,
-                                    'gl_number' => $gl_number,
-                                    'gl_description' => $gl_description,
-                                    'cost_center' => $cost_center,
-                                    'cost_description' => $cost_description,
-                                    'pch_code' => $pch_code,
-                                    'created_by' => Auth::id()
-                                ]);
+                        $updatebudget = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)
+                        ->update([
+                            $sisa_bulan => $total
+                        ]);
 
-                               $data2->save();
-
-                               //Get PO
-                               $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
-                               ->where('no_po_sap', $no_po_sap[0])
-                               ->where('no_item',$item_no)
-                               ->first();
-
-                               $total_all = $po_detail->qty_receive + $qty;
-
-                                //Update QTY RECEIVE PO
-                                $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
-                               ->where('no_item','=',$item_no)
-                               ->update(['qty_receive' => $total_all, 'date_receive' => $receive_date]);
-
-                                //get log amount
-
-                                $budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
-                                ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
-                                ->where('budget','=',$po_detail->budget_item)
-                                ->first();
-
-                                $amount = $budget_log->amount_po;
-                                $datenow = date('Y-m-d');
-                                //Get Data From Budget Master
-                                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$datenow'");
-
-                                foreach ($fy as $fys) {
-                                    $fiscal = $fys->fiscal_year;
-                                }
-                                
-                                $bulan = strtolower(date("M",strtotime($datenow)));
-
-                                $sisa_bulan = $bulan.'_sisa_budget';
-
-                                if ($budget_log->status != "Actual") {
-                                    //get Data Budget Based On Periode Dan Nomor
-                                    $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
-
-                                    //Tambahkan Budget Skrg Dengan PO yang Ada Di Log
-                                    $totalPlusPO = $budgetdata->$sisa_bulan + $amount;
-
-                                    $updatebudget = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)
-                                    ->update([
-                                        $sisa_bulan => $totalPlusPO
-                                    ]);
-                                }
-
-                                // get Data Budget Based On Periode Dan Nomor
-                                $budgetdata = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode','=', $fiscal)->first();
-
-                                // Kurangi dengan amount_dollar
-                                $totalminusreceive = $budgetdata->$sisa_bulan - $amount_dollar;
-
-                                // Setelah itu update data budgetnya dengan yang actual
-                                $dataupdate = AccBudget::where('budget_no','=',$po_detail->budget_item)->where('periode', $fiscal)
-                                ->update([
-                                    $sisa_bulan => $totalminusreceive
-                                ]);
-
-                               //Update Log Budget
-
-                               $total_budget = $budget_log->amount_receive + $amount_dollar;
-
-                               $update_budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
-                               ->where(DB::raw('SUBSTRING(no_item, 1, 7)'),'=',$item_no)
-                               ->where('budget','=',$po_detail->budget_item)
-                               ->update([
-                                    'budget_month_receive' => strtolower(date('M')),
-                                    'amount_receive' => $total_budget,
-                                    'status' => 'Actual'
-                                ]);
-
-
-                           } else if (count($actual) > 0){ //kalo update
-
-                            $data2 = AccActual::where('document_no','=',$document_no)
-                            ->update([
-                                'currency' => $currency,
-                                'vendor_code' => $vendor_code,
-                                'vendor_name' => $vendor_name,
-                                'receive_date' => $receive_date,
-                                'document_no' => $document_no,
-                                'invoice_no' => $invoice_no,
-                                'no_po_sap' => $no_po_sap[0],
-                                'no_urut' => $no_po_sap[1],
-                                'no_po' => $no_po,
-                                'category' => $category,
-                                'item_no' => $item_no,
-                                'item_description' => $item_description,
-                                'qty' => $qty,
-                                'uom' => $uom,
-                                'price' => $price,
-                                'amount' => $amount,
-                                'amount_dollar' => $amount_dollar,
-                                'gl_number' => $gl_number,
-                                'gl_description' => $gl_description,
-                                'cost_center' => $cost_center,
-                                'cost_description' => $cost_description,
-                                'pch_code' => $pch_code,
-                                'created_by' => Auth::id()
-                            ]);
-
-                            
-                           //Get PO
-                           $po_detail = AccPurchaseOrder::join('acc_purchase_order_details','acc_purchase_orders.no_po','=','acc_purchase_order_details.no_po')
-                           ->where('no_po_sap', $no_po_sap[0])
-                           ->where('no_item',$item_no)
-                           ->first();
-
-                            // $data2->currency = $currency;
-                            // $data2->vendor_code = $vendor_code;
-                            // $data2->vendor_name = $vendor_name;
-                            // $data2->receive_date = $receive_date;
-                            // $data2->document_no = $document_no;
-                            // $data2->invoice_no = $invoice_no;
-                            // $data2->no_po_sap = $no_po_sap[0];
-                            // $data2->no_urut = $no_po_sap[1];
-                            // $data2->no_po = $no_po;
-                            // $data2->category = $category;
-                            // $data2->item_no = $item_no;
-                            // $data2->item_description = $item_description;
-                            // $data2->qty = $qty;
-                            // $data2->uom = $uom;
-                            // $data2->price = $price;
-                            // $data2->amount = $amount;
-                            // $data2->amount_dollar = $amount_dollar;
-                            // $data2->gl_number = $gl_number;
-                            // $data2->gl_description = $gl_description;
-                            // $data2->cost_center = $cost_center;
-                            // $data2->cost_description = $cost_description;
-                            // $data2->pch_code = $pch_code;
-                            // $data2->created_by = Auth::id();
-                            // $data2->save(); 
-                        }
-
-                        //GET DATA
-                        $datapo = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
-                        ->where('no_item','=',$item_no)
-                        ->first();
-
-                        //UPDATE STATUS
-                        if ($datapo->qty_receive >= $datapo->qty) {
-                            $update_qty_receive = AccPurchaseOrderDetail::where('no_po','=',$po_detail->no_po)
-                            ->where('no_item','=',$item_no)
-                            ->update(['status' => 'close']);
-                        }
                     }
                 }       
 
@@ -8963,6 +8813,30 @@ public function update_purchase_requisition_po(Request $request)
     }
 
 
+    public function delete_transaksi(Request $request)
+    {
+        $actual = AccActualLog::find($request->get("id"));
 
+
+        $bulan = strtolower(date("M",strtotime($actual->post_date)));
+        $sisa_bulan = $bulan.'_sisa_budget';
+        
+        $budgetdata = AccBudget::where('budget_no','=',$actual->budget_no)->where('periode','=', $actual->periode)->first();
+
+        //Kurangi Budget Skrg Dengan Actual
+        $total = $budgetdata->$sisa_bulan + $actual->local_amount;
+
+        $updatebudget = AccBudget::where('budget_no','=',$actual->budget_no)->where('periode','=', $actual->periode)
+        ->update([
+            $sisa_bulan => $total
+        ]);
+
+        $actual->delete();
+
+        $response = array(
+            'status' => true
+        );
+
+        return Response::json($response);
+    }
 }
-

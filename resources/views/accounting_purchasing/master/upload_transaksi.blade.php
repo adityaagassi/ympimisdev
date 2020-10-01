@@ -133,6 +133,7 @@
 										<th style="width:5%;">Original Amount</th>
 										<th style="width:5%;">Budget No</th>
 										<th style="width:5%;">Investment No</th>
+										<th style="width:5%;">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -148,7 +149,8 @@
 					                <th></th>
 					                <th></th>
 					                <th></th>
-					                <th></th>					                
+					                <th></th>	
+					                <th></th>				                
 					              </tr>
 					            </tfoot>
 							</table>
@@ -217,6 +219,47 @@
 	function loadingPage(){
 		$("#loading").show();
 	}
+
+	$("form#importForm").submit(function(e) {
+		if ($('#upload_file').val() == '') {
+			openErrorGritter('Error!', 'You need to select file');
+			return false;
+		}
+
+		$("#loading").show();
+
+		e.preventDefault();    
+		var formData = new FormData(this);
+
+		$.ajax({
+			url: '{{ url("import/transaksi") }}',
+			type: 'POST',
+			data: formData,
+			success: function (result, status, xhr) {
+				if(result.status){
+					$("#loading").hide();
+					$('#TranskasiTable').DataTable().ajax.reload();
+					$("#upload_file").val('');
+					$('#upload_transaksi').modal('hide');
+					openSuccessGritter('Success', result.message);
+
+				}else{
+					$("#loading").hide();
+
+					openErrorGritter('Error!', result.message);
+				}
+			},
+			error: function(result, status, xhr){
+				$("#loading").hide();
+				
+				openErrorGritter('Error!', result.message);
+			},
+			cache: false,
+			contentType: false,
+			processData: false
+		});
+	});
+
 
 	function fetchTable(){
 		$('#TranskasiTable').DataTable().destroy();
@@ -296,15 +339,16 @@
 				"data" : data
 			},
 			"columns": [
-				{ "data": "receive_date", "width":"8%"},
-				{ "data": "document_no", "width":"8%"},
-				{ "data": "vendor_code", "width":"20%"},
-				{ "data": "no_po_sap"},
-				{ "data": "category"},
-				{ "data": "item_description"},
+				{ "data": "document_no", "width":"7%"},
+				{ "data": "type", "width":"7%"},
+				{ "data": "description", "width":"15%"},
+				{ "data": "reference"},
 				{ "data": "gl_number"},
-				{ "data": "cost_center"},
-				{ "data": "cost_center"},
+				{ "data": "post_date"},
+				{ "data": "local_amount"},
+				{ "data": "amount"},
+				{ "data": "budget_no"},
+				{ "data": "investment_no"},
 				{ "data": "action"}
 			]
 		});
@@ -324,45 +368,22 @@
       	$('#TranskasiTable tfoot tr').appendTo('#TranskasiTable thead');
 	}
 
-	$("form#importForm").submit(function(e) {
-		if ($('#upload_file').val() == '') {
-			openErrorGritter('Error!', 'You need to select file');
-			return false;
-		}
+	function modalDelete(id) {
+      var data = {
+        id: id
+      };
 
-		$("#loading").show();
+      if (!confirm("Apakah anda yakin ingin menghapus ini?")) {
+        return false;
+      }
 
-		e.preventDefault();    
-		var formData = new FormData(this);
+      $.post('{{ url("delete/actual/transaksi") }}', data, function(result, status, xhr){
+        $('#TranskasiTable').DataTable().ajax.reload(null, false);
+        openSuccessGritter("Success","Berhasil Hapus Data Actual");
+      })
+    }
 
-		$.ajax({
-			url: '{{ url("import/transaksi") }}',
-			type: 'POST',
-			data: formData,
-			success: function (result, status, xhr) {
-				if(result.status){
-					$("#loading").hide();
-					$('#TranskasiTable').DataTable().ajax.reload();
-					$("#upload_file").val('');
-					$('#upload_transaksi').modal('hide');
-					openSuccessGritter('Success', result.message);
-
-				}else{
-					$("#loading").hide();
-
-					openErrorGritter('Error!', result.message);
-				}
-			},
-			error: function(result, status, xhr){
-				$("#loading").hide();
-				
-				openErrorGritter('Error!', result.message);
-			},
-			cache: false,
-			contentType: false,
-			processData: false
-		});
-	});
+	
 
 	function openSuccessGritter(title, message){
       jQuery.gritter.add({

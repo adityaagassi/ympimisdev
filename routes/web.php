@@ -1148,7 +1148,9 @@ Route::get('scan/welding/jig', 'WeldingProcessController@scanWeldingJig');
 Route::get('fetch/welding/schedule_jig', 'WeldingProcessController@scanWeldingJig');
 Route::get('fetch/welding/jig_check', 'WeldingProcessController@fetchJigCheck');
 Route::get('fetch/welding/drawing_list', 'WeldingProcessController@fetchDrawingList');
+Route::post('input/welding/kensa_jig', 'WeldingProcessController@inputKensaJig');
 
+Route::get('index/welding/repair_jig', 'WeldingProcessController@indexWeldingRepairJig');
 
 
 //Supplier
@@ -1371,6 +1373,7 @@ Route::post('import/receive', 'AccountingController@import_receive');
 Route::get('upload_transaksi', 'AccountingController@upload_transaksi');
 Route::get('fetch/transaksi', 'AccountingController@fetch_upload_transaksi');
 Route::post('import/transaksi', 'AccountingController@import_transaksi');
+Route::post('delete/actual/transaksi', 'AccountingController@delete_transaksi');
 
 Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 	Route::get('scan/middle/kensa', 'MiddleProcessController@ScanMiddleKensa');
