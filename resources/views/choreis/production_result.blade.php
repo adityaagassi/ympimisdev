@@ -510,6 +510,21 @@
 						$('#export_date_id').text(result.dateTitle);
 						$('#export_week_id').text(result.weekTitle);
 
+						$('#fl_jp').text("????");
+						$('#fl_id').text("????");
+						$('#cl_jp').text("????");
+						$('#cl_id').text("????");
+						$('#as_jp').text("????");
+						$('#as_id').text("????");
+						$('#ts_jp').text("????");
+						$('#ts_id').text("????");
+						$('#vn_jp').text("????");
+						$('#vn_id').text("????");
+						$('#rc_jp').text("????");
+						$('#rc_id').text("????");
+						$('#pn_jp').text("????");
+						$('#pn_id').text("????");
+
 
 						// Progres bar hari kerja/minggu
 						for (var i = 1; i < 3; i++) {
@@ -1135,21 +1150,6 @@
 							planBLCountEI.push(data3[i].prc_plan);
 							actualBLCountEI.push(data3[i].prc_actual);
 						}
-
-						$('#fl_jp').text("????");
-						$('#fl_id').text("????");
-						$('#cl_jp').text("????");
-						$('#cl_id').text("????");
-						$('#as_jp').text("????");
-						$('#as_id').text("????");
-						$('#ts_jp').text("????");
-						$('#ts_id').text("????");
-						$('#vn_jp').text("????");
-						$('#vn_id').text("????");
-						$('#rc_jp').text("????");
-						$('#rc_id').text("????");
-						$('#pn_jp').text("????");
-						$('#pn_id').text("????");
 
 						if(data3[i].hpl == "FLFG"){
 							$('#fl_jp').text(Math.round(data3[i].prc_actual*100));
