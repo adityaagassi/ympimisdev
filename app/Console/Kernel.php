@@ -38,11 +38,15 @@ class Kernel extends ConsoleKernel
         Commands\RoomTemperatureLog::class,
         Commands\UpdateAddress::class,
         // Commands\APARAutoPR::class,
-        // Commands\SchedulingChemical::class,
+        Commands\SchedulingChemical::class,
+        Commands\SendEmailChemicalNotInput::class,
+        Commands\SendEmailChemicalUnpicked::class,
         Commands\UpdatePointingCall::class,
         Commands\SkillUnfulfilledLogCommand::class,
         Commands\CostCenterHistoryCommand::class,
         Commands\InjectionScheduleCommand::class,
+        Commands\KDShipment::class,
+        
     ];
 
     /**
@@ -102,11 +106,16 @@ class Kernel extends ConsoleKernel
         // $schedule->command('scheduling:chemical')->dailyAt('13:20');
         // $schedule->command('scheduling:chemical')->dailyAt('16:20');
         // $schedule->command('scheduling:chemical')->dailyAt('21:20');
+        // $schedule->command('email:controlling_chart')->dailyAt('06:00');
+        // $schedule->command('email:chemical_unpicked')->dailyAt('06:00');
 
         $schedule->command('update:pointing_calls')->dailyAt('01:00');
         $schedule->command('skill:unfulfilled_log')->dailyAt('01:00');
         $schedule->command('costcenter:history')->dailyAt('01:00');
         $schedule->command('injection:schedule')->dailyAt('04:00');
+
+
+        $schedule->command('kd:shipment')->everyThirtyMinutes();
     }
 
     /**
