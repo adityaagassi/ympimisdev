@@ -1357,12 +1357,18 @@ Route::get('investment/detailActual', 'AccountingController@detailMonitoringInvA
 //Budget
 Route::get('budget/info', 'AccountingController@budget_info');
 Route::get('budget/report', 'AccountingController@budget_control');
-Route::get('transfer/budget', 'AccountingController@budget_info');
 Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
 Route::get('fetch/budget/table', 'AccountingController@fetch_budget_table');
 Route::get('fetch/budget/detail_table', 'AccountingController@fetch_budget_detail');
 Route::get('budget/detail', 'AccountingController@budget_detail');
 Route::post('import/budget', 'AccountingController@import_budget');
+
+//Transfer Budget
+Route::get('transfer/budget', 'AccountingController@transfer_budget');
+Route::get('fetch/transfer', 'AccountingController@fetch_transfer_budget');
+Route::post('transfer/budget', 'AccountingController@transfer_budget_post');
+Route::get('transfer_budget/approvemanagerfrom/{id}', 'AccountingController@transfer_approvalfrom');
+Route::get('transfer_budget/approvemanagerto/{id}', 'AccountingController@transfer_approvalto');
 
 //Receive
 Route::get('receive_goods', 'AccountingController@receive_goods');

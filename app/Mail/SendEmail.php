@@ -243,6 +243,13 @@ class SendEmail extends Mailable
             }
         }
 
+        if($this->remark == 'transfer_budget'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->priority(1)
+            ->subject('Transfer Budget')
+            ->view('mails.transfer_budget');
+        }
+
         if($this->remark == 'chemical_spk'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Verify Maintenance Job Order')->view('mails.verify_spk');
         }

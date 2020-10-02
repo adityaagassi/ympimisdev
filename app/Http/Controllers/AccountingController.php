@@ -18,6 +18,7 @@ use App\AccActual;
 use App\AccActualLog;
 use App\AccBudget;
 use App\AccBudgetHistory;
+use App\AccBudgetTransfer;
 use App\AccSupplier;
 use App\AccPurchaseRequisition;
 use App\AccPurchaseRequisitionItem;
@@ -6770,7 +6771,7 @@ public function update_purchase_requisition_po(Request $request)
     public function budget_control()
     {
         $title = 'Budget Report & Control';
-        $title_jp = '';
+        $title_jp = '予算報告・管理';
 
         $dept = db::select("select DISTINCT department from employee_syncs");
         $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
@@ -7067,7 +7068,7 @@ public function update_purchase_requisition_po(Request $request)
                                 ]);
 
                                //Update Log Budget
-
+                               $total_budget_ori = $budget_log->amount_original + $amount;
                                $total_budget = $budget_log->amount_receive + $amount_dollar;
 
                                $update_budget_log = AccBudgetHistory::where('po_number','=',$po_detail->no_po)
@@ -7075,6 +7076,7 @@ public function update_purchase_requisition_po(Request $request)
                                ->where('budget','=',$po_detail->budget_item)
                                ->update([
                                     'budget_month_receive' => strtolower(date('M')),
+                                    'amount_original' => $total_budget_ori,
                                     'amount_receive' => $total_budget,
                                     'status' => 'Actual'
                                 ]);
@@ -7194,7 +7196,7 @@ public function update_purchase_requisition_po(Request $request)
       return view('accounting_purchasing.display.pr_monitoring',  
         array(
           'title' => 'Purchase Requisition Monitoring & Control', 
-          'title_jp' => '',
+          'title_jp' => 'PR監視・管理',
           'department' => $dept,
           'emp_dept' => $emp_dept
       )
@@ -7374,7 +7376,7 @@ public function update_purchase_requisition_po(Request $request)
       return view('accounting_purchasing.display.pr_monitoring_pch',  
         array(
           'title' => 'Purchase Requisition Monitoring & Control', 
-          'title_jp' => '',
+          'title_jp' => 'PR監視・管理',
           'department' => $dept
       )
     )->with('page', 'Purchase Requisition Control');
@@ -7945,7 +7947,7 @@ public function update_purchase_requisition_po(Request $request)
         return view('accounting_purchasing.display.po_monitoring',  
             array(
               'title' => 'Purchase Order Monitoring', 
-              'title_jp' => '',
+              'title_jp' => 'PO管理',
           )
         )->with('page', 'Purchase Order Monitoring');
     }
@@ -8177,7 +8179,7 @@ public function update_purchase_requisition_po(Request $request)
         return view('accounting_purchasing.display.investment_control',  
             array(
               'title' => 'Investment Monitoring & Control', 
-              'title_jp' => '',
+              'title_jp' => '投資監視・管理',
               'emp_dept' => $emp_dept,
               'department' => $dept
           )
@@ -8670,7 +8672,7 @@ public function update_purchase_requisition_po(Request $request)
     public function upload_transaksi()
     {
         $title = 'Upload Transaksi';
-        $title_jp = '';
+        $title_jp = '取引処理のアップロード';
 
         $status = AccActualLog::select('*')->whereNull('acc_actual_logs.deleted_at')
         ->distinct()
@@ -8839,4 +8841,311 @@ public function update_purchase_requisition_po(Request $request)
 
         return Response::json($response);
     }
+
+    //==================================//
+    //          Transfer Budget         //
+    //==================================//
+
+    public function transfer_budget()
+    {
+        $title = 'Transfer Budget';
+        $title_jp = '予算流用';
+
+        $status = AccBudgetTransfer::select('*')
+        ->whereNull('acc_budget_transfers.deleted_at')
+        ->distinct()
+        ->get();
+
+
+        $budgets = AccBudget::select('acc_budgets.budget_no', 'acc_budgets.description')
+        ->distinct()
+        ->get();
+
+        return view('accounting_purchasing.master.transfer_budget', array(
+            'title' => $title,
+            'title_jp' => $title_jp,
+            'budgets' => $budgets
+        ))->with('page', 'Transfer Budget')
+        ->with('head', 'Transfer Budget');
+    }
+
+    public function transfer_budget_post(Request $request)
+    {
+        try {
+
+
+            $budget_from = $request->get('budget_from');
+            $budget_to = $request->get('budget_to');
+
+            $department_from = AccBudget::select('department')
+            ->where('budget_no','=',$budget_from)
+            ->first();
+
+            $department_to = AccBudget::select('department')
+            ->where('budget_no','=',$budget_to)
+            ->first();
+
+            $manager_from = null;
+            $manager_name_from = null;
+            
+            $manager_to = null;
+            $manager_name_to = null;
+
+            $posisi = null;
+
+            if($department_from->department == "Production Engineering")
+            {
+                $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance' and position = 'manager'");
+            }
+            else if($department_from->department == "Purchasing Control")
+            {
+                $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement' and position = 'manager'");
+            }
+            else if($department_from->department == "General Affairs")
+            {
+                $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources' and position = 'manager'");
+            }
+            else if($department_from->department == "Management Information System")
+            {
+                $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and position = 'Deputy General Manager'");
+            }
+            else
+            {
+                $managfrom = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$department_from->department."' and position = 'manager'");
+            }
+
+
+            //cek manager ada atau tidak
+            if ($managfrom != null)
+            {
+                $posisi = "manager_from";
+
+                foreach ($managfrom as $mgfrom)
+                {
+                    $manager_from = $mgfrom->employee_id;
+                    $manager_name_from = $mgfrom->name;
+                }
+            }
+
+
+
+            if($department_to->department == "Production Engineering")
+            {
+                $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Maintenance' and position = 'manager'");
+            }
+            else if($department_to->department == "Purchasing Control")
+            {
+                $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Procurement' and position = 'manager'");
+            }
+            else if($department_to->department == "General Affairs")
+            {
+                $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = 'Human Resources' and position = 'manager'");
+            }
+            else if($department_to->department == "Management Information System")
+            {
+                $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and position = 'Deputy General Manager'");
+            }
+            else
+            {
+                $managto = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '".$department_to->department."' and position = 'manager'");
+            }
+            //cek manager ada atau tidak
+            if ($managto != null)
+            {
+                foreach ($managto as $mgto)
+                {
+                    $manager_to = $mgto->employee_id;
+                    $manager_name_to = $mgto->name;
+                }
+            }
+
+            $id_user = Auth::id();
+
+            $acc = AccBudgetTransfer::create([
+                   'request_date' => date('Y-m-d'),
+                   'budget_from' => $budget_from,
+                   'budget_to' => $budget_to,
+                   'amount' => $request->get('amount'),
+                   'approval_f' => $manager_from,
+                   'approval_t' => $manager_to,
+                   'approval_from' => $manager_name_from,
+                   'approval_to' => $manager_name_to,
+                   'posisi' => $posisi,
+                   'created_by' => $id_user
+            ]);
+
+            $acc->save();
+
+            $nik_manager = explode("-",$acc->approval_f);
+
+            $mails = "select distinct email from acc_budget_transfers join users on acc_budget_transfers.approval_f = users.username where acc_budget_transfers.id=".$acc->id;
+
+            $mailtoo = DB::select($mails);
+
+            $isimail = "select * FROM acc_budget_transfers where acc_budget_transfers.id =". $acc->id;
+            $isitransfer = db::select($isimail);
+
+            Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($isitransfer, 'transfer_budget'));
+
+            $response = array(
+                'status' => true,
+                'datas' => "Berhasil",
+            );
+            return Response::json($response);
+
+         } catch (QueryException $e){
+              $response = array(
+                   'status' => false,
+                   'datas' => $e->getMessage()
+              );
+              return Response::json($response);
+         }
+    }
+
+    public function fetch_transfer_budget(){
+        $data = db::select('
+            select * from acc_budget_transfers where deleted_at is null
+        ');
+
+        $response = array(
+            'status' => true,
+            'datas' => $data
+        );
+
+        return Response::json($response);
+    }
+
+    public function transfer_approvalfrom($id){
+
+        $transfer = AccBudgetTransfer::find($id);
+
+        try{
+            if ($transfer->posisi == "manager_from")
+            {
+                $transfer->posisi = "manager_to";
+                $transfer->date_approval_from = "Approval_".date('Y-m-d');
+
+                $mailto = "select distinct email from acc_budget_transfers join users on acc_budget_transfers.approval_t = users.username where acc_budget_transfers.id = '".$id."'";
+                $mails = DB::select($mailto);
+                foreach ($mails as $mail)
+                {
+                    $mailtoo = $mail->email;
+                }
+                $transfer->save();
+
+                $isimail = "select * from acc_budget_transfers where acc_budget_transfers.id = ".$id;
+
+                $transfer_isi = db::select($isimail);
+
+                Mail::to($mailtoo)->send(new SendEmail($transfer_isi, 'transfer_budget'));
+
+                $message = 'Transfer Budget Dari '.$transfer->budget_from.' Ke '.$transfer->budget_to ;
+                $message2 ='Berhasil di approve';
+            }
+            else{
+                $message = 'Transfer Budget Dari '.$transfer->budget_from.' Ke '.$transfer->budget_to ;
+                $message2 ='Sudah di approve/reject';
+            }
+
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $transfer->budget_from,
+                'message' => $message,
+                'message2' => $message2,
+            ))->with('page', 'Approval');
+
+        } catch (Exception $e) {
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $transfer->budget_to,
+                'message' => 'Error',
+                'message2' => $e->getMessage(),
+            ))->with('page', 'Approval');
+        }
+    }
+
+
+    public function transfer_approvalto($id){
+
+        $transfer = AccBudgetTransfer::find($id);
+
+        try{
+            if ($transfer->posisi == "manager_to")
+            {
+                $transfer->posisi = "acc";
+                $transfer->date_approval_to = "Approval_".date('Y-m-d');
+
+                //Mulai proses perhitungan Budget
+
+                $date = date('Y-m-d');
+                //FY
+                $fy = db::select("select fiscal_year from weekly_calendars where week_date = '$date'");
+                
+                foreach ($fy as $fys) {
+                    $fiscal = $fys->fiscal_year;
+                }
+
+                $sisa_bulan = strtolower(date('M')).'_sisa_budget';
+
+                $budget_from = AccBudget::where('budget_no', $transfer->budget_from)->where('periode', $fiscal)->first();
+
+                // Dikurangi dulu dari budget awal
+
+                $amountfrom = $budget_from->amount - $transfer->amount; //total
+                $totalfrom = $budget_from->$sisa_bulan - $transfer->amount; //sisa budget 
+
+                $dataupdate = AccBudget::where('budget_no', $transfer->budget_from)->where('periode', $fiscal)->update([
+                    $sisa_bulan => $totalfrom,
+                    'amount' => $amountfrom
+                ]);
+
+                // Ditambah Ke Budget Tujuan
+
+                $budget_to = AccBudget::where('budget_no', $transfer->budget_to)->where('periode', $fiscal)->first();
+
+                $amountto = $budget_to->amount + $transfer->amount; //total
+                $totalto = $budget_to->$sisa_bulan + $transfer->amount; //sisa budget 
+
+                $dataupdate = AccBudget::where('budget_no', $transfer->budget_to)->where('periode', $fiscal)->update([
+                    $sisa_bulan => $totalto,
+                    'amount' => $amountto
+                ]);
+
+                $mailto = "select distinct email from users where username = 'PI0902001'"; // kirim bu laila
+                $mails = DB::select($mailto);
+                foreach ($mails as $mail)
+                {
+                    $mailtoo = $mail->email;
+                }
+
+                $transfer->save();
+
+                $isimail = "select * from acc_budget_transfers where acc_budget_transfers.id = ".$id;
+
+                $transfer_isi = db::select($isimail);
+
+                Mail::to($mailtoo)->send(new SendEmail($transfer_isi, 'transfer_budget'));
+
+                $message = 'Transfer Budget Dari '.$transfer->budget_from.' Ke '.$transfer->budget_to ;
+                $message2 ='Berhasil di approve';
+            }
+            else{
+
+                $message = 'Transfer Budget Dari '.$transfer->budget_from.' Ke '.$transfer->budget_to ;
+                $message2 ='Sudah di approve/reject';
+            }
+
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $transfer->budget_from,
+                'message' => $message,
+                'message2' => $message2,
+            ))->with('page', 'Approval');
+
+        } catch (Exception $e) {
+            return view('accounting_purchasing.verifikasi.pr_message', array(
+                'head' => $transfer->budget_to,
+                'message' => 'Error',
+                'message2' => $e->getMessage(),
+            ))->with('page', 'Approval');
+        }
+    }
+
 }

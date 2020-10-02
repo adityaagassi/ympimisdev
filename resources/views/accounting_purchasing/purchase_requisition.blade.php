@@ -1112,10 +1112,7 @@
 		data = {
 			department:"{{ $employee->department }}",
 		}
-
-
 		$.get('{{ url("fetch/purchase_requisition/budgetlist") }}', data, function(result, status, xhr) {
-
 	  		$('#budget_no').html('');
 	  		budget_list = "";
 	  		budget_list = "<option value=''></option>";
