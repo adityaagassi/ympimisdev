@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\BomComponent;
 use App\CodeGenerator;
 use App\ContainerSchedule;
+use App\DetailChecksheet;
 use App\ErrorLog;
 use App\Inventory;
 use App\KnockDown;
@@ -35,9 +36,9 @@ use Response;
 
 class KnockDownController extends Controller{
 
-	public function __construct(){
-		$this->middleware('auth');
-	}
+	// public function __construct(){
+	// 	$this->middleware('auth');
+	// }
 
 	public function indexKD($id){
 		if($id == 'z-pro'){
@@ -73,8 +74,35 @@ class KnockDownController extends Controller{
 		return view('kd.display.shipment_progress')->with('page', 'KD Shipment Progress');
 	}
 
-	public function fetchKdPrint(Request $request){
+	public function fetchContainerResume(Request $request){
+		$container_id = $request->get('container_id');
 
+		$data = db::select("SELECT resume.marking, resume.material_number, materials.material_description, materials.category, resume.ck_qty, resume.st_qty FROM
+			(SELECT ck.marking, ck.gmc AS material_number, ck.ck_qty, COALESCE(st.st_qty,0) AS st_qty FROM
+			(SELECT marking, gmc, SUM(qty_qty) as ck_qty FROM detail_checksheets ck
+			WHERE id_checkSheet = '".$container_id."'
+			GROUP BY marking, gmc) AS ck
+			LEFT JOIN
+			(SELECT d.material_number, SUM(d.quantity) as st_qty FROM knock_down_details d
+			LEFT JOIN knock_downs k on k.kd_number = d.kd_number
+			WHERE k.container_id = '".$container_id."'
+			GROUP BY d.material_number) st
+			ON ck.gmc = st.material_number) AS resume
+			LEFT JOIN materials ON resume.material_number = materials.material_number
+			ORDER BY resume.marking, materials.material_description ASC");
+
+		$pallet = DetailChecksheet::where('id_checkSheet', $container_id)
+		->select('marking')
+		->distinct()
+		->orderBy('marking', 'ASC')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'pallet' => $pallet,
+			'data' => $data
+		);
+		return Response::json($response);
 	}
 
 	public function fetchKdShipmentProgress(Request $request){
@@ -95,13 +123,41 @@ class KnockDownController extends Controller{
 			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(14)));
 		}
 
-		$shipment_results = ShipmentSchedule::leftJoin('materials', 'materials.material_number', '=', 'shipment_schedules.material_number')
-		->where('materials.category', '=', 'KD')
-		->where('shipment_schedules.st_date', '>=', $datefrom)
-		->where('shipment_schedules.st_date', '<=', $dateto)
-		->select(db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y") as st_date'), 'materials.hpl', db::raw('sum(coalesce(shipment_schedules.actual_quantity)) as act'), db::raw('sum(shipment_schedules.quantity) as plan'))
-		->groupBy(db::raw('date_format(shipment_schedules.st_date, "%d-%b-%Y")'), 'materials.hpl')
-		->get();
+		$shipment_results = DB::select("SELECT
+			A.st_date, A.hpl, COALESCE(plan,0) as plan, COALESCE(act,0) as act, round(( COALESCE ( act, 0 )/ plan )* 100, 1 ) AS actual 
+			FROM
+			(
+			SELECT DISTINCT
+			materials.hpl,
+			shipment_schedules.st_date 
+			FROM
+			materials
+			CROSS JOIN shipment_schedules 
+			WHERE
+			shipment_schedules.st_date >= '".$datefrom."' 
+			AND shipment_schedules.st_date <= '".$dateto."' 
+			AND materials.category = 'KD' 
+			) AS A
+			LEFT JOIN (
+			SELECT
+			shipment_schedules.st_date,
+			materials.hpl,
+			sum( quantity ) AS plan,
+			sum( actual_quantity ) AS act 
+			FROM
+			shipment_schedules
+			LEFT JOIN materials ON materials.material_number = shipment_schedules.material_number 
+			WHERE
+			shipment_schedules.st_date >= '".$datefrom."' 
+			AND shipment_schedules.st_date <= '".$dateto."' 
+			AND materials.category = 'KD' 
+			GROUP BY
+			shipment_schedules.st_date,
+			materials.hpl 
+			) AS B ON A.hpl = B.hpl and A.st_date = B.st_date
+			ORDER BY
+			A.st_date ASC,
+			A.hpl ASC");
 
 		$response = array(
 			'status' => true,
@@ -847,6 +903,7 @@ class KnockDownController extends Controller{
 		$status = $request->get('status');
 		$invoice_number = $request->get('invoice_number');
 		$container_id = $request->get('container_id');
+		$marking = $request->get('marking');
 
 		$knock_down = KnockDown::where('kd_number', '=', $request->get('kd_number'))
 		->where('status', '=', ($status - 1))
@@ -860,32 +917,72 @@ class KnockDownController extends Controller{
 			return Response::json($response);
 		}
 
-		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
+		$knock_down_details = db::select("SELECT kd_number, material_number, SUM(quantity) AS quantity FROM knock_down_details
+			WHERE kd_number = '".$request->get('kd_number')."'
+			GROUP BY kd_number, material_number");
 
+
+		//Cek Marking		
 		foreach ($knock_down_details as $knock_down_detail) {
-			$checksheet = MasterChecksheet::where('master_checksheets.id_checkSheet', '=', $container_id)
-			->leftJoin('detail_checksheets', 'detail_checksheets.id_checkSheet', '=', 'master_checksheets.id_checkSheet')
-			->where('detail_checksheets.gmc', '=', $knock_down_detail->material_number)
-			->first();
 
-			if($checksheet == null){
+
+
+			$act_pallet = db::select("SELECT kd.kd_number, d.material_number, SUM(d.quantity) AS quantity FROM knock_downs kd
+				LEFT JOIN knock_down_details d ON d.kd_number = kd.kd_number
+				WHERE kd.container_id = '".$container_id."'
+				AND kd.marking = '".$marking."'
+				AND d.material_number = '".$knock_down_detail->material_number."'
+				GROUP BY kd.kd_number, d.material_number");
+
+			$qty_pallet = db::select("SELECT marking, gmc, SUM(qty_qty) AS quantity FROM `detail_checksheets`
+				WHERE id_checkSheet = '".$container_id."'
+				AND marking = '".$marking."'
+				AND gmc = '".$knock_down_detail->material_number."'
+				GROUP BY marking, gmc");
+
+
+			if(count($qty_pallet) == 0){
 				$response = array(
 					'status' => false,
-					'message' => 'Terdapat material yang tidak ditemukan pada checksheet',
+					'message' => 'Terdapat material yang tidak untuk di Stuffing pada pallet ' . $marking,
 				);
 				return Response::json($response);
 			}
-		}	
+
+			if(count($act_pallet) > 0){
+				if($act_pallet[0]->quantity + $knock_down_detail->quantity > $qty_pallet[0]->quantity){
+					$response = array(
+						'status' => false,
+						'message' => 'Quantity item pada pallet ' . $marking . ' sudah terpenuhi',
+					);
+					return Response::json($response);
+				}
+			}else{
+				if($knock_down_detail->quantity > $qty_pallet[0]->quantity){
+					$response = array(
+						'status' => false,
+						'message' => 'Quantity item pada pallet ' . $marking . ' sudah terpenuhi',
+					);
+					return Response::json($response);
+				}
+			}
+
+
+		}
+
 
 		$knock_down->status = $status;
 		$knock_down->invoice_number = $invoice_number;
 		$knock_down->container_id = $container_id;
+		$knock_down->marking = $marking;
 
 		foreach ($knock_down_details as $knock_down_detail) {
 
 			$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $knock_down_detail->material_number, 'storage_location' => 'FSTK']);
 			$inventoryFSTK->quantity = ($inventoryFSTK->quantity-$knock_down_detail->quantity);
 
+
+			
 			try{
 				DB::transaction(function() use ($inventoryFSTK, $knock_down){
 					$inventoryFSTK->save();
@@ -929,6 +1026,7 @@ class KnockDownController extends Controller{
 		$response = array(
 			'status' => true,
 			'message' => 'KDO berhasil distuffing',
+			'knock_down_details' => $knock_down_details
 		);
 		return Response::json($response);
 
