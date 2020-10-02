@@ -66,7 +66,7 @@
 					<button id="search" onClick="fillChart()" class="btn btn-primary bg-purple">Update Chart</button>
 				</div>
 			</div>
-			<div id="container" style="min-width: 310px; height:600px; margin: 0 auto"></div>
+			<div id="container2" style="min-width: 310px; height:600px; margin: 0 auto"></div>
 		</div>
 	</div>
 </section>
@@ -431,24 +431,10 @@
 				var xCategories = [];
 				var planZPRO = [];
 				var actualZPRO = [];
-				var planMPRO = [];
-				var actualMPRO = [];
-				var planBPRO = [];
-				var actualBPRO = [];
-				var planMIDD = [];
-				var actualMIDD = [];
-				var planTNPO = [];
-				var actualTNPO = [];
-				var planCASE = [];
-				var actualCASE = [];
-				var planEDIN = [];
-				var actualEDIN = [];
-				var planCL91 = [];
-				var actualCL91 = [];
-				var planFL91 = [];
-				var actualFL91 = [];
-				var planSX91 = [];
-				var actualSX91 = [];
+				var planSubAssySX = [];
+				var actualSubAssySX = [];
+				var planAssySX = [];
+				var actualAssySX = [];
 				var i, cat;
 				var intVal = function ( i ) {
 					return typeof i === 'string' ?
@@ -465,41 +451,13 @@
 						planZPRO.push(data[i].plan-data[i].act);
 						actualZPRO.push(data[i].act);
 					}
-					if(data[i].hpl == 'MPRO'){
-						planMPRO.push(data[i].plan-data[i].act);
-						actualMPRO.push(data[i].act);
+					if(data[i].hpl == 'SUBASSY-SX'){
+						planSubAssySX.push(data[i].plan-data[i].act);
+						actualSubAssySX.push(data[i].act);
 					}
-					if(data[i].hpl == 'BPRO'){
-						planMBPRO.push(data[i].plan-data[i].act);
-						actualBPRO.push(data[i].act);
-					}
-					if(data[i].hpl == 'MIDD'){
-						planWELD.push(data[i].plan-data[i].act);
-						actualWELD.push(data[i].act);
-					}
-					if(data[i].hpl == 'TNPO'){
-						planTNPO.push(data[i].plan-data[i].act);
-						actualTNPO.push(data[i].act);
-					}
-					if(data[i].hpl == 'CASE'){
-						planTANP.push(data[i].plan-data[i].act);
-						actualTANP.push(data[i].act);
-					}
-					if(data[i].hpl == 'EDIN'){
-						planEDIN.push(data[i].plan-data[i].act);
-						actualEDIN.push(data[i].act);
-					}
-					if(data[i].hpl == 'SX91'){
-						planSX91.push(data[i].plan-data[i].act);
-						actualSX91.push(data[i].act);
-					}
-					if(data[i].hpl == 'CL91'){
-						planCL91.push(data[i].plan-data[i].act);
-						actualCL91.push(data[i].act);
-					}
-					if(data[i].hpl == 'FL91'){
-						planFL91.push(data[i].plan-data[i].act);
-						actualFL91.push(data[i].act);
+					if(data[i].hpl == 'ASSY-SX'){
+						planAssySX.push(data[i].plan-data[i].act);
+						actualAssySX.push(data[i].act);
 					}
 				}
 
@@ -512,7 +470,7 @@
 
 
 				var yAxisLabels = [0,25,50,75,100,110];
-				var chart = Highcharts.chart('container', {
+				var chart = Highcharts.chart('container2', {
 
 					chart: {
 						type: 'column'
@@ -565,8 +523,7 @@
 								fontSize: '20px',
 								color: 'white',
 								textOutline: false,
-								fontWeight: 'bold',
-								color:'yellow'
+								fontWeight: 'bold'
 							},
 							rotation: -90,
 							formatter:  function() {
@@ -619,48 +576,13 @@
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
-						data: planMPRO,
-						stack: 'MPRO',
+						data: planSubAssySX,
+						stack: 'SUBASSY-SX',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
-						data: planBPRO,
-						stack: 'BPRO',
-						color: 'rgba(255, 0, 0, 0.25)'
-					}, {
-						name: 'Plan',
-						data: planMIDD,
-						stack: 'MIDD',
-						color: 'rgba(255, 0, 0, 0.25)'
-					}, {
-						name: 'Plan',
-						data: planTNPO,
-						stack: 'TNPO',
-						color: 'rgba(255, 0, 0, 0.25)'
-					}, {
-						name: 'Plan',
-						data: planCASE,
-						stack: 'CASE',
-						color: 'rgba(255, 0, 0, 0.25)'
-					}, {
-						name: 'Plan',
-						data: planEDIN,
-						stack: 'EDIN',
-						color: 'rgba(255, 0, 0, 0.25)'
-					}, {
-						name: 'Plan',
-						data: planSX91,
-						stack: 'SX91',
-						color: 'rgba(255, 0, 0, 0.25)'
-					}, {
-						name: 'Plan',
-						data: planCL91,
-						stack: 'CL91',
-						color: 'rgba(255, 0, 0, 0.25)'
-					}, {
-						name: 'Plan',
-						data: planFL91,
-						stack: 'FL91',
+						data: planAssySX,
+						stack: 'ASSY-SX',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Actual',
@@ -669,74 +591,39 @@
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
-						data: actualMPRO,
-						stack: 'MPRO',
+						data: actualSubAssySX,
+						stack: 'SUBASSY-SX',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
-						data: actualBPRO,
-						stack: 'BPRO',
-						color: 'rgba(0, 255, 0, 0.90)'
-					}, {
-						name: 'Actual',
-						data: actualMIDD,
-						stack: 'MIDD',
-						color: 'rgba(0, 255, 0, 0.90)'
-					}, {
-						name: 'Actual',
-						data: actualTNPO,
-						stack: 'TNPO',
-						color: 'rgba(0, 255, 0, 0.90)'
-					}, {
-						name: 'Actual',
-						data: actualCASE,
-						stack: 'CASE',
-						color: 'rgba(0, 255, 0, 0.90)'
-					}, {
-						name: 'Actual',
-						data: actualEDIN,
-						stack: 'EDIN',
-						color: 'rgba(0, 255, 0, 0.90)'
-					}, {
-						name: 'Actual',
-						data: actualSX91,
-						stack: 'SX91',
-						color: 'rgba(0, 255, 0, 0.90)'
-					}, {
-						name: 'Actual',
-						data: actualCL91,
-						stack: 'CL91',
-						color: 'rgba(0, 255, 0, 0.90)'
-					}, {
-						name: 'Actual',
-						data: actualFL91,
-						stack: 'FL91',
+						data: actualAssySX,
+						stack: 'ASSY-SX',
 						color: 'rgba(0, 255, 0, 0.90)'
 					}]
 				});
 
-$('.highcharts-xaxis-labels text').on('click', function () {
-	fillModal(this.textContent, 'all');
-});
+				$('.highcharts-xaxis-labels text').on('click', function () {
+					fillModal(this.textContent, 'all');
+				});
 
-$.each(chart.xAxis[0].ticks, function(i, tick) {
-	$('.highcharts-xaxis-labels text').hover(function () {
-		$(this).css('fill', '#33c570');
-		$(this).css('cursor', 'pointer');
+				$.each(chart.xAxis[0].ticks, function(i, tick) {
+					$('.highcharts-xaxis-labels text').hover(function () {
+						$(this).css('fill', '#33c570');
+						$(this).css('cursor', 'pointer');
 
-	},
-	function () {
-		$(this).css('cursor', 'pointer');
-		$(this).css('fill', 'white');
-	});
-});
+					},
+					function () {
+						$(this).css('cursor', 'pointer');
+						$(this).css('fill', 'white');
+					});
+				});
 
 
-}
-else{
-	alert('Attempt to retrieve data failed.')
-}
-});
+			}
+			else{
+				alert('Attempt to retrieve data failed.')
+			}
+		});
 }
 
 

@@ -109,6 +109,11 @@ Route::get('fetch/general/surat_dokter', 'GeneralController@fetchSuratDokter');
 Route::post('input/general/surat_dokter', 'GeneralController@inputSuratDokter');
 Route::post('delete/general/surat_dokter', 'GeneralController@deleteSuratDokter');
 
+//MOSAIC
+Route::get('index/general/mosaic', 'GeneralController@indexMosaic');
+Route::get('fetch/general/mosaic', 'GeneralController@fetchMosaic');
+Route::get('fetch/general/mosaic_detail', 'GeneralController@fetchMosaicDetail');
+
 //POINTING CALL
 Route::get('index/general/pointing_call/{id}', 'GeneralController@indexGeneralPointingCall');
 Route::get('fetch/general/pointing_call', 'GeneralController@fetchGeneralPointingCall');
@@ -1151,6 +1156,7 @@ Route::get('fetch/welding/drawing_list', 'WeldingProcessController@fetchDrawingL
 Route::post('input/welding/kensa_jig', 'WeldingProcessController@inputKensaJig');
 
 Route::get('index/welding/repair_jig', 'WeldingProcessController@indexWeldingRepairJig');
+Route::post('input/welding/repair_jig', 'WeldingProcessController@inputRepairJig');
 
 
 //Supplier
@@ -2379,6 +2385,10 @@ Route::get('fetch/display/stuffing_progress', 'DisplayController@fetchStuffingPr
 Route::get('fetch/display/stuffing_detail', 'DisplayController@fetchStuffingDetail');
 Route::get('index/display/all_stock', 'DisplayController@indexAllStock');
 Route::get('fetch/display/all_stock', 'DisplayController@fetchAllStock');
+
+//DISPLAY SHIPMENT PROGRESS
+Route::get('index/display/shipment_progress_all', 'ShipmentController@indexShipmentProgress');
+
 
 //DISPLAY EFFICIENCY & SCRAP
 Route::get('index/display/eff_scrap', 'DisplayController@indexEffScrap');

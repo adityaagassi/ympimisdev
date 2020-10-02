@@ -100,38 +100,71 @@ class FinishedGoodsController extends Controller
 			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(14)));
 		}
 		
-		$query = "select date_format(e.st_date, '%d-%b-%Y') as st_date, e.hpl, act, plan, actual from
+		$query = "SELECT
+		A.hpl,
+		A.st_date,
+		B.act AS act,
+		B.plan AS plan,
+		B.actual AS actual 
+		FROM
 		(
-		select distinct materials.hpl, c.st_date from materials
-		left join
+		SELECT DISTINCT
+		materials.hpl,
+		shipment_schedules.st_date 
+		FROM
+		materials
+		CROSS JOIN shipment_schedules 
+		WHERE
+		shipment_schedules.st_date >= '".$datefrom."' 
+		AND shipment_schedules.st_date <= '".$dateto."'  
+		AND materials.category = 'FG' 
+		) AS A
+		LEFT JOIN (
+		SELECT
+		b.st_date,
+		b.hpl,
+		a.actual AS act,
+		b.plan AS plan,
+		round(( COALESCE ( a.actual, 0 )/ b.plan )* 100, 1 ) AS actual 
+		FROM
 		(
-		select shipment_schedules.st_date, materials.category from shipment_schedules left join materials on materials.material_number = shipment_schedules.material_number where shipment_schedules.st_date >= '" . $datefrom . "' and shipment_schedules.st_date <= '" . $dateto . "' group by shipment_schedules.st_date, materials.category
-		) as c 
-		on c.category = materials.category
-		where materials.category = 'FG'
-		) as e
-
-		left join
-		(
-		select b.st_date, b.hpl, a.actual as act, b.plan as plan, round((coalesce(a.actual,0)/b.plan)*100,1) as actual from
-		(
-		select shipment_schedules.st_date, materials.hpl, sum(flos.actual) as actual from flos 
-		left join shipment_schedules on flos.shipment_schedule_id = shipment_schedules.id
-		left join materials on materials.material_number = shipment_schedules.material_number
-		where materials.category = 'FG'
-		group by shipment_schedules.st_date, materials.hpl
-		) as a
-		right join
-		(
-		select shipment_schedules.st_date, materials.hpl, sum(shipment_schedules.quantity) as plan from shipment_schedules
-		left join materials on materials.material_number = shipment_schedules.material_number
-		where materials.category = 'FG'
-		group by  shipment_schedules.st_date, materials.hpl
-		) as b on b.st_date = a.st_date and a.hpl = b.hpl
-		where b.st_date >= '" . $datefrom . "' and b.st_date <= '" . $dateto . "'
-		) as d
-		on d.st_date = e.st_date and d.hpl = e.hpl
-		order by e.st_date asc, e.hpl desc";
+		SELECT
+		shipment_schedules.st_date,
+		materials.hpl,
+		sum( flos.actual ) AS actual 
+		FROM
+		flos
+		LEFT JOIN shipment_schedules ON flos.shipment_schedule_id = shipment_schedules.id
+		LEFT JOIN materials ON materials.material_number = shipment_schedules.material_number 
+		WHERE
+		materials.category = 'FG' 
+		GROUP BY
+		shipment_schedules.st_date,
+		materials.hpl 
+		) AS a
+		RIGHT JOIN (
+		SELECT
+		shipment_schedules.st_date,
+		materials.hpl,
+		sum( shipment_schedules.quantity ) AS plan 
+		FROM
+		shipment_schedules
+		LEFT JOIN materials ON materials.material_number = shipment_schedules.material_number 
+		WHERE
+		materials.category = 'FG' 
+		GROUP BY
+		shipment_schedules.st_date,
+		materials.hpl 
+		) AS b ON b.st_date = a.st_date 
+		AND a.hpl = b.hpl 
+		WHERE
+		b.st_date >= '".$datefrom."' 
+		AND b.st_date <= '".$dateto."'  
+		) AS B ON A.st_date = B.st_date 
+		AND A.hpl = B.hpl 
+		ORDER BY
+		A.st_date ASC,
+		B.hpl ASC";
 
 		$shipment_results = db::select($query);
 

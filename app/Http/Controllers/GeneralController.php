@@ -17,6 +17,31 @@ use Response;
 class GeneralController extends Controller
 {
 
+	public function indexMosaic(){
+		$title = "Yamaha Day Mosaic Art Project";
+		$title_jp = "";
+
+		$mosaics = db::select("SELECT COALESCE
+			( employee_syncs.department, 'Management' ) AS department,
+			count( DISTINCT general_mosaics.employee_id ) AS count_person,
+			count( general_mosaics.mosaic_id ) count_upload 
+			FROM
+			general_mosaics
+			LEFT JOIN employee_syncs ON employee_syncs.employee_id = general_mosaics.employee_id 
+			GROUP BY
+			employee_syncs.department");
+
+		return view('general.mosaic', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'mosaics' => $mosaics
+		));
+	}
+
+	public function fetchMosaicDetail(){
+
+	}
+
 	public function indexReportSuratDokter(){
 		$title = 'Laporan Dropbox Surat Dokter';
 		$title_jp = '診断書のドロップボックス';
