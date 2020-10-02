@@ -1136,6 +1136,21 @@
 							actualBLCountEI.push(data3[i].prc_actual);
 						}
 
+						$('#fl_jp').text("????");
+						$('#fl_id').text("????");
+						$('#cl_jp').text("????");
+						$('#cl_id').text("????");
+						$('#as_jp').text("????");
+						$('#as_id').text("????");
+						$('#ts_jp').text("????");
+						$('#ts_id').text("????");
+						$('#vn_jp').text("????");
+						$('#vn_id').text("????");
+						$('#rc_jp').text("????");
+						$('#rc_id').text("????");
+						$('#pn_jp').text("????");
+						$('#pn_id').text("????");
+
 						if(data3[i].hpl == "FLFG"){
 							$('#fl_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#fl_id').text(Math.round(data3[i].prc_actual*100));
@@ -1148,7 +1163,7 @@
 							$('#as_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#as_id').text(Math.round(data3[i].prc_actual*100));
 						}
-						if(data3[i].hpl == "TSFG"){
+						if(data3[i].hpl == "TSFG"){	
 							$('#ts_jp').text(Math.round(data3[i].prc_actual*100));
 							$('#ts_id').text(Math.round(data3[i].prc_actual*100));
 						}
