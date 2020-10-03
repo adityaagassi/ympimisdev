@@ -516,7 +516,7 @@
 
 	          $.each(result.datas, function(key, value) {
 
-	              var ending = parseFloat(value.amount) - (parseFloat(value.PR) + parseFloat(value.Investment) + parseFloat(value.PO));
+	              var ending = parseFloat(value.amount) - (parseFloat(value.PR) + parseFloat(value.Investment) + parseFloat(value.PO) + parseFloat(value.Actual)) + parseFloat(value.Transfer);
 
 	              table += '<tr>';
 	              table += '<td>'+value.periode+'</td>';
@@ -528,13 +528,13 @@
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PR\')">'+value.PR.toLocaleString()+'</td>';
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Investment\')">'+value.Investment.toLocaleString()+'</td>';
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'PO\')">'+value.PO.toLocaleString()+'</td>';
-	              table += '<td id="tdhover" style="cursor:pointer">0</td>';
+	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Transfer\')">'+value.Transfer.toLocaleString()+'</td>';
 	              table += '<td id="tdhover" style="cursor:pointer" onclick="detail_budget(\''+value.budget_no+'\',\'Actual\')">'+value.Actual.toLocaleString()+'</td>';
 	              if (ending >= 0) {
 	              	table += '<td style="color:blue">'+ending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+'</td>';                
 	              }
 
-	              table += '<td><button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('+value.id+')"><i class="fa fa-eye"></i> Detail Sisa Budget</button></td>';  
+	              table += '<td><button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView(\''+value.budget_no+'\')"><i class="fa fa-eye"></i> Detail Sisa Budget</button></td>';  
 
 	              table += '</tr>';
 	          })
@@ -807,7 +807,6 @@
 	  function detail_budget(budget,status){
 	    $("#myModal").modal("show");
 
-
 	    var data = {
 	        budget:budget,
 	        status:status,
@@ -829,9 +828,9 @@
 	        
 	        $.each(result.datas, function(key, value) {
 	          tableData += '<tr>';
-	          tableData += '<td>'+ value.budget +'</td>';
 
 	          if (value.status == "PR" || value.status == "Investment") {
+	            tableData += '<td>'+ value.budget +'</td>';
 	            tableData += '<td>'+ value.budget_month +'</td>';
 	            tableData += '<td>'+ value.category_number +'</td>';
 	            tableData += '<td>'+ value.no_item +'</td>';
@@ -841,6 +840,7 @@
 	          }
 
 	          else if(value.status == "PO"){
+	          	tableData += '<td>'+ value.budget +'</td>';
 	            tableData += '<td>'+ value.budget_month_po +'</td>';
 	            tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
 	            tableData += '<td>'+ value.no_item +'</td>';
@@ -849,13 +849,46 @@
 	            total += parseFloat(value.amount_po);
 	          }
 
+	          else if(value.status == "Transfer"){
+	          	tableData += '<td>'+ value.budget_from +'</td>';
+	            tableData += '<td>'+ value.request_date +'</td>';
+	            tableData += '<td>-</td>';
+	            tableData += '<td>'+ value.budget_from +' -> '+value.budget_to+'</td>';
+	            tableData += '<td>Transfer Budget</td>';
+	            tableData += '<td>'+ value.amount +'</td>';
+	            total += parseFloat(value.amount);
+	          }
+
 	          else if(value.status == "Actual"){
-	            tableData += '<td>'+ value.budget_month_receive +'</td>';
-	            tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
-	            tableData += '<td>'+ value.no_item +'</td>';
-	            tableData += '<td>'+ value.status+ '</td>';
-	            tableData += '<td>'+ value.amount_receive.toLocaleString() +'</td>';
-	            total += parseFloat(value.amount_receive);
+	         //  	if (value.description == null) {
+		        //   	tableData += '<td>'+ value.budget +'</td>';
+		        //     tableData += '<td>'+ value.budget_month_receive +'</td>';
+		        //     tableData += '<td> Nomor PR/Inv : '+ value.category_number+ ' <br> Nomor PO : '+ value.po_number +'</td>';
+		        //     tableData += '<td>'+ value.no_item +'</td>';
+		        //     tableData += '<td>'+ value.status+ '</td>';
+		        //     tableData += '<td>'+ value.amount_receive.toLocaleString() +'</td>';
+	         //    	total += parseFloat(value.amount_receive);
+	         //  	}
+
+	         //    if(value.description != null){
+		        //   	tableData += '<td>'+ value.budget_no +'</td>';
+		        //     tableData += '<td>'+ value.month_date +'</td>';
+		        //     tableData += '<td>-</td>';
+		        //     tableData += '<td>'+value.description+'</td>';
+		        //     tableData += '<td>Actual Non PO</td>';
+		        //     tableData += '<td>'+ value.local_amount.toLocaleString() +'</td>';
+		        //     total += parseFloat(value.local_amount);
+		        // }
+
+		        tableData += '<td>'+ value.budget_no +'</td>';
+	            tableData += '<td>'+ value.month_date +'</td>';
+	            tableData += '<td> - </td>';
+	            tableData += '<td>'+ value.description +'</td>';
+	            tableData += '<td>'+ value.status +'</td>';
+	            tableData += '<td>'+ value.amount.toLocaleString() +'</td>';
+            	total += parseFloat(value.amount);
+
+
 	          }
 
 	          tableData += '</tr>';

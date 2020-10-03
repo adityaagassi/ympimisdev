@@ -6331,9 +6331,9 @@ public function update_purchase_requisition_po(Request $request)
         return json_encode($lists);
     }
 
-        //==================================//
-        //        Budget Information        //
-        //==================================//
+    //==================================//
+    //        Budget Information        //
+    //==================================//
 
     public function budget_info()
     {
@@ -6556,7 +6556,6 @@ public function update_purchase_requisition_po(Request $request)
 
         $data = db::select('
           SELECT
-            a.id,
             ( SELECT periode FROM acc_budgets WHERE budget_no = a.budget_no ) AS periode,
             a.budget_no,
             ( SELECT department FROM acc_budgets WHERE budget_no = a.budget_no ) AS department,
@@ -6568,24 +6567,28 @@ public function update_purchase_requisition_po(Request $request)
             SUM( a.PR ) AS PR,
             SUM( a.investment ) AS Investment,
             SUM( a.PO ) AS PO,
+            SUM( a.Transfer ) AS Transfer,
             SUM( a.actual ) AS Actual
         FROM
             (
             SELECT
-              id,
                 budget_no,
                 0 AS PR,
                 0 AS Investment,
                 0 AS PO,
+                0 AS Transfer,
                 0 AS Actual 
             FROM
-                acc_budgets UNION ALL
+                acc_budgets 
+
+            UNION ALL
+            
             SELECT
-                acc_budgets.id,
                 budget,
                 sum( CASE WHEN `status` = "PR" THEN acc_budget_histories.amount ELSE 0 END ) AS PR,
                 sum( CASE WHEN `status` = "Investment" THEN acc_budget_histories.amount ELSE 0 END ) AS Investment,
                 sum( CASE WHEN `status` = "PO" THEN acc_budget_histories.amount_po ELSE 0 END ) AS PO,
+                0 AS Transfer,
                 sum( CASE WHEN `status` = "Actual" THEN acc_budget_histories.amount_receive ELSE 0 END ) AS Actual 
             FROM
                 acc_budget_histories
@@ -6595,9 +6598,55 @@ public function update_purchase_requisition_po(Request $request)
                 '.$bu.'
             GROUP BY
                 budget, acc_budgets.id
+
+            UNION ALL
+                        
+            SELECT
+                budget_no,
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO,
+                0 AS Transfer,
+                SUM(local_amount) as Actual
+            FROM
+                acc_actual_logs 
+                        WHERE
+                acc_actual_logs.deleted_at IS NULL
+            GROUP BY
+                budget_no
+
+            UNION ALL
+                        
+            SELECT 
+                budget_from,
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO,
+                -SUM(amount) as Transfer,
+                0 as Actual
+                    FROM  acc_budget_transfers
+                    WHERE acc_budget_transfers.deleted_at IS NULL
+                    and posisi = "acc"
+                GROUP BY
+                    budget_from
+
+            UNION ALL
+                        
+            SELECT 
+                budget_to,
+                0 AS PR,
+                0 AS Investment,
+                0 AS PO,
+                SUM(amount) as Transfer,
+                0 as Actual
+                    FROM acc_budget_transfers
+                    WHERE acc_budget_transfers.deleted_at IS NULL
+                    and posisi = "acc"
+                GROUP BY
+                    budget_to
             ) a 
         GROUP BY
-             a.id,a.budget_no
+             a.budget_no
         HAVING
             deleted IS NULL
             '.$dep.' '.$cat.' '.$per.'
@@ -6618,7 +6667,7 @@ public function update_purchase_requisition_po(Request $request)
 
     public function budget_detail(Request $request)
     {
-        $detail = AccBudget::find($request->get('id'));
+        $detail = AccBudget::where('budget_no','=',$request->get('id'))->first();
 
         $response = array(
             'status' => true,
@@ -6851,7 +6900,59 @@ public function update_purchase_requisition_po(Request $request)
         $budget = $request->get("budget");
         $status = $request->get("status");
 
-        $qry = "select * from acc_budget_histories where budget = '".$budget."' and status = '".$status."' order by id desc";
+        
+        // $qry = "select acc_budget_histories.* from acc_budgets
+        // left join acc_budget_histories on acc_budget_histories.budget = acc_budgets.budget_no
+        // left join acc_actual_logs on acc_actual_logs.budget_no = acc_budgets.budget_no
+        // where budget = '".$budget."' and status='".$status."'";
+
+        if ($status == "Transfer") {
+            $qry = "
+                select *, 'Transfer' as status from acc_budget_transfers
+                where acc_budget_transfers.budget_from = '".$budget."' or acc_budget_transfers.budget_to = '".$budget."'  ";
+        }
+        else if($status == "Actual")
+            // select acc_budget_histories.budget,acc_budget_histories.budget_month_receive, acc_budget_histories.category_number,acc_budget_histories.po_number,acc_budget_histories.no_item,acc_budget_histories.amount_receive,acc_actual_logs.budget_no, acc_actual_logs.month_date,acc_actual_logs.description, acc_actual_logs.local_amount, 'Actual' as status from acc_budgets
+            //     left join acc_budget_histories on acc_budget_histories.budget = acc_budgets.budget_no
+            //     left join acc_actual_logs on acc_actual_logs.budget_no = acc_budgets.budget_no
+            //     where acc_budget_histories.budget = '".$budget."' and status = '".$status."'  or acc_actual_logs.budget_no = '".$budget."' ";
+            $qry = "
+                SELECT
+                    a.budget_no,
+                    a.month_date,
+                    a.description,
+                    a.amount,
+                    a.`status`
+                    FROM (
+                        select 
+                            budget as budget_no, 
+                            budget_month_receive as month_date,
+                            no_item as description,
+                            amount_receive as amount,
+                            'Actual' as `status`
+                            from acc_budget_histories
+                            where acc_budget_histories.budget = '".$budget."' 
+                            
+                        UNION ALL
+
+                        select
+                            acc_actual_logs.budget_no, 
+                            acc_actual_logs.month_date,
+                            acc_actual_logs.description, 
+                            acc_actual_logs.local_amount as amount,
+                            'Actual' as `status`
+                            from acc_actual_logs
+                            where acc_actual_logs.budget_no = '".$budget."' 
+                        ) a        
+                    ";
+        else{
+            $qry = "
+                select * from acc_budget_histories
+                where acc_budget_histories.budget = '".$budget."' and status = '".$status."'";
+        }
+
+       
+
         $bud = DB::select($qry);
 
         $response = array(
@@ -9088,25 +9189,20 @@ public function update_purchase_requisition_po(Request $request)
                 $budget_from = AccBudget::where('budget_no', $transfer->budget_from)->where('periode', $fiscal)->first();
 
                 // Dikurangi dulu dari budget awal
-
-                $amountfrom = $budget_from->amount - $transfer->amount; //total
                 $totalfrom = $budget_from->$sisa_bulan - $transfer->amount; //sisa budget 
 
                 $dataupdate = AccBudget::where('budget_no', $transfer->budget_from)->where('periode', $fiscal)->update([
-                    $sisa_bulan => $totalfrom,
-                    'amount' => $amountfrom
+                    $sisa_bulan => $totalfrom
                 ]);
 
                 // Ditambah Ke Budget Tujuan
 
                 $budget_to = AccBudget::where('budget_no', $transfer->budget_to)->where('periode', $fiscal)->first();
 
-                $amountto = $budget_to->amount + $transfer->amount; //total
                 $totalto = $budget_to->$sisa_bulan + $transfer->amount; //sisa budget 
 
                 $dataupdate = AccBudget::where('budget_no', $transfer->budget_to)->where('periode', $fiscal)->update([
-                    $sisa_bulan => $totalto,
-                    'amount' => $amountto
+                    $sisa_bulan => $totalto
                 ]);
 
                 $mailto = "select distinct email from users where username = 'PI0902001'"; // kirim bu laila

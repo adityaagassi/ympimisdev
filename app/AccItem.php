@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AccItem extends Model
 {
     protected $fillable = [
-		'kode_item','kategori','deskripsi','uom','spesifikasi','harga','lot','moq','leadtime','currency','created_by'
+		'kode_item','kategori','deskripsi','uom','spesifikasi','harga','lot','moq','leadtime','currency','remark','created_by'
 	];
 
 	public function user()
