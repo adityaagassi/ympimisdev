@@ -30,10 +30,10 @@ class ProductionScheduleController extends Controller
     {
         $materials = Material::where('category', '=', 'FG')->get();
 
-    	$locations = Material::where('category', '=', 'FG')
-    	->whereNotNull('hpl')
-    	->select('hpl', 'category')
-    	->distinct()
+        $locations = Material::where('category', '=', 'FG')
+        ->whereNotNull('hpl')
+        ->select('hpl', 'category')
+        ->distinct()
         ->orderBy('category', 'asc')
         ->orderBy('issue_storage_location', 'asc')
         ->orderBy('hpl', 'asc')
@@ -69,10 +69,12 @@ class ProductionScheduleController extends Controller
 
     public function fetchSchedule(Request $request)
     {
-    	$production_schedules = ProductionSchedule::leftJoin("materials","materials.material_number","=","production_schedules.material_number")
-    	->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
-    	->select('production_schedules.id','production_schedules.material_number','production_schedules.due_date','production_schedules.quantity','materials.material_description','origin_groups.origin_group_name', 'materials.hpl')
-        ->limit(1000)
+        $due_date = date('Y-m-d', strtotime("first day of -2 month"));
+
+        $production_schedules = ProductionSchedule::leftJoin("materials","materials.material_number","=","production_schedules.material_number")
+        ->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
+        ->select('production_schedules.id','production_schedules.material_number','production_schedules.due_date','production_schedules.quantity','materials.material_description','origin_groups.origin_group_name', 'materials.hpl')
+        ->whereRaw('due_date >= "'.$due_date.'"')
         ->orderByRaw('due_date DESC', 'production_schedules.material_number ASC')
         ->where('materials.category', '=', 'FG')
         ->get();
@@ -91,10 +93,12 @@ class ProductionScheduleController extends Controller
 
     public function fetchScheduleKD(Request $request)
     {
+        $due_date = date('Y-m-d', strtotime("first day of -2 month"));
+
         $production_schedules = ProductionSchedule::leftJoin("materials","materials.material_number","=","production_schedules.material_number")
         ->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
         ->select('production_schedules.id','production_schedules.material_number','production_schedules.due_date','production_schedules.quantity','materials.material_description','origin_groups.origin_group_name', 'materials.hpl')
-        ->limit(1000)
+        ->whereRaw('due_date >= "'.$due_date.'"')
         ->orderByRaw('due_date DESC', 'production_schedules.material_number ASC')
         ->where('materials.category', '=', 'KD')
         ->get();
