@@ -19,7 +19,7 @@
 	<div>
 		<center>
 			<img src="data:image/png;base64,{{base64_encode(file_get_contents(public_path('mirai.jpg')))}}" alt=""><br>
-			<p style="font-size: 18px;">NG Report of Push Pull Check Recorder (??) on {{ $data['push_block_code'] }}</p>
+			<p style="font-size: 18px;">NG Report of Push Pull Check Recorder (リコーダーのプッシュプル検査の不良報告) on {{ $data['push_block_code'] }}</p>
 			This is an automatic notification. Please do not reply to this address.
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -53,8 +53,8 @@
 					<?php } ?>
 				</tbody>
 			</table>
-			<br>
-			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br>
+			<!-- <br>
+			<span style="font-weight: bold; background-color: orange;">&#8650; <i>Click Here For</i> &#8650;</span><br> -->
 		</center>
 	</div>
 </body>
