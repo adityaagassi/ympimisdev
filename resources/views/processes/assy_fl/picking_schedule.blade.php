@@ -197,7 +197,7 @@
 							color = 'style="background-color: rgb(100,100,100)"';
 						}
 
-						if (value.model != 'YFL212//J' || value.model != 'YFL-312//J' || value.model != 'YFL412//J') {
+						if (value.model != 'YFL212//J' && value.model != 'YFL-312//J' && value.model != 'YFL412//J' && value.model != 'YFL372//J') {
 							planData += '<tr '+color+'>';
 							planData += '<td style="width: 1%">'+ value.model +'</td>';
 							planData += '<td style="width: 1%">'+ value.debt +'</td>';						
