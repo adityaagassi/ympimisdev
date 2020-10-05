@@ -1007,6 +1007,14 @@ class KnockDownController extends Controller{
 		$knock_down = KnockDown::where('kd_number', '=', $request->get('kd_number'))
 		->where('status', ($status-1))
 		->first();
+
+		if(!$knock_down){
+			$response = array(
+				'status' => false,
+				'message' => 'Nomor KDO tidak ditemukan'
+			);
+			return Response::json($response);
+		}
 		
 		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
 

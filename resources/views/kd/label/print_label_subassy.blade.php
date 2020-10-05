@@ -59,7 +59,7 @@
 	<input type="hidden" id="id" value="{{$id}}">
 	<input type="hidden" id="location" value="{{$location}}">
 
-	<table style="margin-top: 1px;">
+	<table style="margin-top: 1px; width: 404px;">
 		<tr height="35">
 			<th width="100px" class="top" id="material_number"></th>
 			<th width="80px" class="top" id="quantity">QTY</th>
@@ -116,7 +116,7 @@
 		$('#kd_number').text(kd_number);
 
 		var url1 = "{{url('/app/barcode/')}}";
-		var url2 ="/barcode.php?f=svg&s=code-128&w=400&h=50&p=0&wq=0";
+		var url2 ="/barcode.php?f=svg&s=code-128&w=225&h=52&p=0&wq=0";
 		var code ="&d="+ kd_number;
 		var janfix = url1.replace("/public","");
 		$('#barcode').attr("src", janfix + url2 + code);
