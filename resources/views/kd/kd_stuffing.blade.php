@@ -33,6 +33,7 @@
           border:1px solid rgb(211,211,211);
      }
      #loading, #error { display: none; }
+
 </style>
 @stop
 @section('header')
@@ -47,7 +48,7 @@
 @section('content')
 <section class="content">
      <div class="row">
-          <div class="col-xs-12">
+          <div class="col-xs-12" id="main">
                <div class="box">
                     <div class="box-header">
                          <h3 class="box-title">Knock Downs Stuffing <span class="text-purple">??</span></h3>
@@ -55,7 +56,7 @@
                     <div class="box-body" style="padding-bottom: 30px;">
                          <div class="row">
                               <div class="col-md-12">
-                                   <div class="col-md-6 col-md-offset-3">
+                                   <div class="col-md-6 col-md-offset-3 resize">
                                         <div class="col-md-10">
                                              <div class="input-group">
                                                   <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
@@ -66,7 +67,7 @@
                                              <br>
                                         </div>
                                    </div>
-                                   <div class="col-md-6 col-md-offset-3">
+                                   <div class="col-md-6 col-md-offset-3 resize">
                                         <div class="col-md-10">
                                              <div class="input-group">
                                                   <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
@@ -89,32 +90,78 @@
                                    </div>
                               </div>
                               <div class="col-md-12">
-                                   <div class="input-group col-md-8 col-md-offset-2">
-                                        <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
-                                             <i class="glyphicon glyphicon-barcode"></i>
+                                   <div class="col-md-2 col-md-offset-2 resize-bottom">
+                                        <div class="input-group">
+                                             <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+                                                  <i class="fa fa-cubes"></i>
+                                             </div>
+                                             <select class="form-control select2" id="marking" name="marking" style="width: 100%;" data-placeholder="No.Pallet" required>
+                                             </select>
                                         </div>
-                                        <input type="text" style="text-align: center; font-size: 22" class="form-control" id="kdo_number_settlement" name="kdo_number_settlement" placeholder="Scan KDO Here..." required>
-                                        <div class="input-group-addon" id="icon-serial">
-                                             <i class="glyphicon glyphicon-ok"></i>
+                                        <br>
+                                   </div>
+
+                                   <div class="col-md-7">
+                                        <div class="input-group">
+                                             <div class="input-group-addon" id="icon-serial" style="font-weight: bold">
+                                                  <i class="glyphicon glyphicon-barcode"></i>
+                                             </div>
+                                             <input type="text" style="text-align: center; font-size: 22" class="form-control" id="kdo_number_settlement" name="kdo_number_settlement" placeholder="Scan KDO Here..." required>
+                                             <div class="input-group-addon" id="icon-serial">
+                                                  <i class="glyphicon glyphicon-ok"></i>
+                                             </div>
                                         </div>
                                    </div>
                               </div>
                          </div>
                     </div>
                </div>
-          </div>
-     </div>
 
-     <div class="row">
-          <div class="col-xs-12" style="padding-top: 1%;">
                <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-                         <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Stuffing</a></li>
-                         <li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO Stuffing Detail</a></li>
+                         <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">KDO Stuffing Detail</a></li>
+                         <li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">KDO Stuffing</a></li>
                     </ul>
 
                     <div class="tab-content">
                          <div class="tab-pane active" id="tab_1">
+                              <div class="box-body">                                   
+                                   <div class="col-md-12" style="overflow-x: auto; padding: 0px;">
+                                        <table id="kdo_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
+                                             <thead style="background-color: rgba(126,86,134,.7);">
+                                                  <tr>
+                                                       <th style="width: 10%">KD Number</th>
+                                                       <th style="width: 10%">Ship. Date</th>
+                                                       <th style="width: 10%">Material Number</th>
+                                                       <th style="width: 50%">Material Description</th>
+                                                       <th style="width: 10%">Location</th>
+                                                       <th style="width: 10%">I/V</th>
+                                                       <th style="width: 10%">Container ID</th>
+                                                       <th style="width: 10%">Stuff. Date</th>
+                                                       <th style="width: 10%">Quantity</th>
+                                                  </tr>
+                                             </thead>
+                                             <tbody>
+                                             </tbody>
+                                             <tfoot>
+                                                  <tr>
+                                                       <th></th>
+                                                       <th></th>
+                                                       <th></th>
+                                                       <th></th>
+                                                       <th></th>
+                                                       <th></th>
+                                                       <th></th>
+                                                       <th></th>
+                                                       <th></th>
+                                                  </tr>
+                                             </tfoot>
+                                        </table>
+                                   </div>
+                              </div>
+                         </div>
+
+                         <div class="tab-pane" id="tab_2">
                               <table id="kdo_table" class="table table-bordered table-striped table-hover" style="width: 100%;">
                                    <thead style="background-color: rgba(126,86,134,.7);">
                                         <tr>
@@ -144,43 +191,44 @@
                                    </tfoot>
                               </table>
                          </div>
+                    </div>
+               </div>
+               
+          </div>
 
-                         <div class="tab-pane" id="tab_2">
-                              <table id="kdo_detail" class="table table-bordered table-striped table-hover" style="width: 100%;">
-                                   <thead style="background-color: rgba(126,86,134,.7);">
-                                        <tr>
-                                             <th style="width: 5%">KD Number</th>
-                                             <th style="width: 5%">Ship. Date</th>
-                                             <th style="width: 5%">Material Number</th>
-                                             <th style="width: 30%">Material Description</th>
-                                             <th style="width: 10%">Location</th>
-                                             <th style="width: 5%">I/V</th>
-                                             <th style="width: 5%">Container ID</th>
-                                             <th style="width: 15%">Stuff. Date</th>
-                                             <th style="width: 5%">Quantity</th>
-                                        </tr>
-                                   </thead>
-                                   <tbody>
-                                   </tbody>
-                                   <tfoot>
-                                        <tr>
-                                             <th></th>
-                                             <th></th>
-                                             <th></th>
-                                             <th></th>
-                                             <th></th>
-                                             <th></th>
-                                             <th></th>
-                                             <th></th>
-                                             <th></th>
-                                        </tr>
-                                   </tfoot>
-                              </table>
-                         </div>
+          <div class="col-xs-5" id="resume" style="padding-left: 0px;">
+               <div class="box" style="overflow-x: auto;">
+                    <div class="box-header">
+                         <h3 style="font-weight: bold;" class="box-title" id="container_id_text">A  </h3>
+                         <br>
+
+                         <span style="font-weight: bold; font-size: 18px;">Actual Stuffing: </span>
+                         <span id="stuffing" style="font-weight: bold; font-size: 24px; color: red;">0</span>
+                         <span style="font-weight: bold; font-size: 16px; color: red;">of</span>
+                         <span id="total" style="font-weight: bold; font-size: 16px; color: red;">0</span>
+                         <span style="font-weight: bold; font-size: 16px; color: red;">Box</span>
+
+                    </div>
+                    <div class="box-body" style="padding-bottom: 30px;">
+                         <table id="resume" class="table table-bordered table-striped table-hover" style="width: 100%;">
+                              <thead style="background-color: rgba(126,86,134,.7);">
+                                   <tr>
+                                        <th style="width: 10%">Marking</th>
+                                        <th style="width: 20%">Material Number</th>
+                                        <th style="width: 50%">Material Description</th>
+                                        <th style="width: 10%">Category</th>
+                                        <th style="width: 10%">Qty Checksheet</th>
+                                        <th style="width: 10%">Qty Stuffing</th>
+                                   </tr>
+                              </thead>
+                              <tbody id="tableBodyResume">
+                              </tbody>
+                         </table>
                     </div>
                </div>
           </div>
      </div>
+
 </section>
 @stop
 
@@ -201,24 +249,71 @@
      });
 
      jQuery(document).ready(function() {
+          $('body').toggleClass("sidebar-collapse");
+
           $("#kdo_number_delivery").focus();
+          $('#marking').prop('disabled', true);
+
           fetchKDO();
           fetchKDODetail();
           refresh();
+
+          $("#resume").css({"display":"none"});
+
           $('#toggle_lock').change(function(){        
                if(this.checked){
                     $('#invoice_number').prop('disabled', true);
                     $('#container_id').prop('disabled', true);
                     $('#kdo_number_settlement').prop('disabled', false);
                     $('#kdo_number_settlement').focus();
+                    $('#marking').prop('disabled', false);
+                    
+
+                    $('#main').removeClass('col-xs-12');
+                    $('#main').addClass('col-xs-7');
+                    $("#resume").css({"display":"block"});
+
+                    $('.resize').removeClass('col-md-6');
+                    $('.resize').removeClass('col-md-offset-3');
+                    $('.resize').addClass('col-md-8');
+                    $('.resize').addClass('col-md-offset-2');
+
+
+                    $('.resize-bottom').removeClass('col-md-2');
+                    $('.resize-bottom').removeClass('col-md-offset-2');
+                    $('.resize-bottom').addClass('col-md-3');
+                    $('.resize-bottom').addClass('col-md-offset-1');
+
+                    fillResume();
+
                }
                else{
                     $('#invoice_number').prop('disabled', false);
                     $('#invoice_number').val('');
                     $('#container_id').prop('disabled', false);
                     $("#container_id").val('').change();
+                    $('#marking').prop('disabled', true);
+                    $("#marking").val('').change();
                     $('#kdo_number_settlement').prop('disabled', true);
                     $('#invoice_number').focus();
+
+                    $('#main').removeClass('col-xs-7');
+                    $('#main').addClass('col-xs-12');
+                    $("#resume").css({"display":"none"});
+
+
+                    $('.resize').removeClass('col-md-8');
+                    $('.resize').removeClass('col-md-offset-2');
+                    $('.resize').addClass('col-md-6');
+                    $('.resize').addClass('col-md-offset-3');
+
+
+                    $('.resize-bottom').removeClass('col-md-3');
+                    $('.resize-bottom').removeClass('col-md-offset-1');
+                    $('.resize-bottom').addClass('col-md-2');
+                    $('.resize-bottom').addClass('col-md-offset-2');
+
+
                }
           });
 
@@ -504,23 +599,126 @@
           });
 
           $('#kdo_detail tfoot tr').appendTo('#kdo_detail thead');
+     }
+
+
+
+     function updateResume(knock_down_details, marking){
+
+          for (var i = 0; i < knock_down_details.length; i++) {
+               console.log(marking+'_'+knock_down_details[i].material_number);
+
+
+               var curr_qty = $('#'+marking+'_'+knock_down_details[i].material_number).find('td').eq(5).text();               
+               
+               $('#'+marking+'_'+knock_down_details[i].material_number).find('td').eq(5).text(parseInt(curr_qty) + parseInt(knock_down_details[i].quantity));
+
+
+               var ck_qty = $('#'+marking+'_'+knock_down_details[i].material_number).find('td').eq(4).text();
+               var st_qty = $('#'+marking+'_'+knock_down_details[i].material_number).find('td').eq(5).text();
+
+
+               if(ck_qty != st_qty){
+                    $('#'+marking+'_'+knock_down_details[i].material_number).css({"background-color" : "rgb(255, 204, 255)"});
+               }else{
+                    $('#'+marking+'_'+knock_down_details[i].material_number).css({"background-color" : "rgb(204, 255, 255)"});
+               }
+
+               stuffing++;
+               $("#stuffing").text(stuffing);
+
+          }
 
      }
+
+     var stuffing = 0;
+
+
+     function fillResume(){
+          var container_id = $("#container_id").val();
+
+          if(container_id != ''){
+
+               var data = {
+                    container_id : container_id
+               }
+
+               $.get('{{ url("fetch/container_resume") }}', data, function(result, status, xhr){
+                    if(result.status){
+                         $('#tableBodyResume').html("");
+                         $('#container_id_text').html("");
+                         $('#container_id_text').text("Resume Container ID: "+container_id);
+
+                         var tableData = "";
+                         $.each(result.resume, function(key, value) {
+
+                              var background = '';
+                              if(value.ck_qty != value.st_qty){
+                                   background = 'style="background-color: rgb(255, 204, 255)"';
+                              }else{
+                                   background = 'style="background-color: rgb(204, 255, 255)"';
+                              }
+
+                              tableData += '<tr '+background+' id="'+value.marking+'_'+value.material_number+'">';
+                              tableData += '<td>'+ value.marking +'</td>';
+                              tableData += '<td>'+ value.material_number +'</td>';
+                              tableData += '<td>'+ value.material_description +'</td>';
+                              tableData += '<td>'+ value.category +'</td>';
+                              tableData += '<td>'+ value.ck_qty +'</td>';
+                              tableData += '<td>'+ value.st_qty +'</td>';
+                              tableData += '</tr>';
+                         });
+
+                         $('#tableBodyResume').append(tableData);
+
+
+                         $("#marking").html('');                                                   
+                         var select = ' <option></option>';
+                         $.each(result.pallet, function(key, value) {
+                              select += '<option value="'+value.marking+'">'+value.marking+'</option>';
+                         });
+                         $("#marking").html(select);
+
+                         var total = 0;
+                         $.each(result.checksheet, function(key, value) {
+                              total += value.box;
+                         });
+                         $("#total").text(total);
+
+
+                         stuffing = result.stuffing.length;
+                         $("#stuffing").text(result.stuffing.length);
+
+
+                    }
+               });
+          }
+     }
+
 
      function scanKdoNumber(){
           var kdo_number = $("#kdo_number_settlement").val();
           var invoice_number = $("#invoice_number").val();
           var container_id = $("#container_id").val();
+          var marking = $("#marking").val();
+          if(marking == ''){
+               openErrorGritter('Error!', "Pilih Pallet Terlebih Dahulu");
+               return false;
+          }
           var data = {
                kd_number : kdo_number,
                status : '3',
                invoice_number : invoice_number,
                container_id : container_id,
+               marking : marking
           }
           $.post('{{ url("scan/kd_stuffing") }}', data, function(result, status, xhr){
                if(xhr.status == 200){
                     if(result.status){
                          openSuccessGritter('Success!', result.message);
+
+                         updateResume(result.knock_down_details, marking);
+
                          $('#kdo_table').DataTable().ajax.reload();
                          $('#kdo_detail').DataTable().ajax.reload();
                          $('#kdo_number_settlement').val('');

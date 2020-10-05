@@ -1150,13 +1150,28 @@ Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/jig_data', 'WeldingProcessController@indexWeldingJigData');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 Route::get('scan/welding/jig', 'WeldingProcessController@scanWeldingJig');
-Route::get('fetch/welding/schedule_jig', 'WeldingProcessController@scanWeldingJig');
 Route::get('fetch/welding/jig_check', 'WeldingProcessController@fetchJigCheck');
 Route::get('fetch/welding/drawing_list', 'WeldingProcessController@fetchDrawingList');
 Route::post('input/welding/kensa_jig', 'WeldingProcessController@inputKensaJig');
 
 Route::get('index/welding/repair_jig', 'WeldingProcessController@indexWeldingRepairJig');
 Route::post('input/welding/repair_jig', 'WeldingProcessController@inputRepairJig');
+
+Route::get('index/welding/monitoring_jig', 'WeldingProcessController@indexWldJigMonitoring');
+Route::get('fetch/welding/monitoring_jig', 'WeldingProcessController@fetchWldJigMonitoring');
+
+
+//Sakurentsu
+Route::get('index/sakurentsu/upload_sakurentsu', 'SakurentsuController@upload_sakurentsu');
+Route::post('index/sakurentsu/upload_sakurentsu', 'SakurentsuController@upload_file_sakurentsu');
+Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
+
+
+
+
+
+
+
 
 
 //Supplier
@@ -1401,8 +1416,11 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 });
 
 //START KD
+
+//MOUTHPIECE
 Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_mouthpiece/checksheet', 'MouthpieceController@indexKdMouthpieceChecksheet');
+	Route::post('create/kd_mouthpiece/checksheet', 'MouthpieceController@createKdMouthpieceChecksheet');
 	Route::get('fetch/kd_mouthpiece/material', 'MouthpieceController@fetchKdMouthpieceMaterial');
 	Route::get('index/kd_mouthpiece/picking', 'MouthpieceController@indexKdMouthpiecePicking');
 	Route::get('index/kd_mouthpiece/packing', 'MouthpieceController@indexKdMouthpiecePacking');
@@ -1436,6 +1454,14 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 });
 
 
+//CLOSURE
+Route::group(['nav' => 'S27', 'middleware' => 'permission'], function(){
+	Route::get('index/kd_closure', 'KnockDownController@indexKDClosure');
+	Route::get('scan/kd_closure', 'KnockDownController@scanKDClosure');
+	Route::post('fetch/kd_closure', 'KnockDownController@fetchKDClosure');
+});
+
+
 Route::group(['nav' => 'S29', 'middleware' => 'permission'], function(){
 	Route::get('index/kd_delivery', 'KnockDownController@indexKdDelivery');
 	Route::post('scan/kd_delivery', 'KnockDownController@scanKdDelivery');
@@ -1453,6 +1479,7 @@ Route::get('upload_kd', 'KnockDownController@indexUploadSch');
 Route::get('fetch/kd/{id}', 'KnockDownController@fetchKd');
 Route::get('fetch/kd_new/{id}', 'KnockDownController@fetchKdNew');
 Route::get('fetch/kd_pack/{id}', 'KnockDownController@fetchKdPack');
+Route::get('fetch/kd_delivery_closure', 'KnockDownController@fetchKdDeliveryClosure');
 // Route::get('fetch/kd_print', 'KnockDownController@fetchKdPrint');
 Route::get('fetch/kd_detail', 'KnockDownController@fetchKdDetail');
 Route::get('index/kd_daily_production_result', 'KnockDownController@indexKdDailyProductionResult');
@@ -1471,6 +1498,10 @@ Route::get('fetch/kd_reprint_kdo', 'KnockDownController@reprintKDO');
 Route::get('fetch/container_resume', 'KnockDownController@fetchContainerResume');
 
 //END KD
+
+
+
+
 
 
 Route::group(['nav' => 'S30', 'middleware' => 'permission'], function(){
@@ -3311,6 +3342,7 @@ Route::post('import/maintenance/planned', 'MaintenanceController@importPM');
 Route::get('fetch/maintenance/plan/checkList', 'MaintenanceController@fetchItemCheckList');
 
 Route::post('post/maintenance/pm/check', 'MaintenanceController@postPlannedCheck');
+Route::post('post/maintenance/pm/session', 'MaintenanceController@postPlannedSession');
 
 Route::get('index/maintenance/pm/monitoring', 'MaintenanceController@indexPlannedMonitoring');
 Route::get('index/maintenance/pm/schedule', 'MaintenanceController@indexPlannedSchedule');
@@ -3490,9 +3522,6 @@ Route::post('delete/inventory_mis', 'DailyReportController@deleteInventoryMIS');
 
 Route::get('print/inventory_mis/{id}', 'DailyReportController@printInventory');
 
-
-//Sakurentsu
-Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
 
 
 Route::get('/radar_covid', function () {
