@@ -111,7 +111,7 @@
 	jQuery(document).ready(function() {
 		fillPlannew();
 
-		setInterval(fillPlannew, 1000);
+		setInterval(fillPlannew, 5000);
 	});
 
 	function fillPlannew(){
@@ -128,8 +128,8 @@
 					var sisaH2 = 0;
 					var no = 1;
 
-					console.log(result.nextday);
-					console.log(result.nextdayplus1);
+					// console.log(result.nextday);
+					// console.log(result.nextdayplus1);
 
 					$.each(result.planData, function(key, value) {
 						// alert(value.planh2 );
@@ -196,23 +196,25 @@
 						} else {
 							color = 'style="background-color: rgb(100,100,100)"';
 						}
-						
-						planData += '<tr '+color+'>';
-						planData += '<td style="width: 1%">'+ value.model +'</td>';
-						planData += '<td style="width: 1%">'+ value.debt +'</td>';						
-						planData += '<td style="width: 1%">'+ value.plan +'</td>';
-						planData += '<td style="width: 1%">'+ value.actual +'</td>';
-						planData += '<td style="width: 1%">'+ value.wip +'</td>';
-						planData += '<td style="width: 1%">'+ value.ng +'</td>';
-						planData += '<td style="width: 1%">'+ value.targetToday +'</td>';
-						planData += '<td style="width: 1%">'+ sisaToday +'</td>';
-						planData += '<td style="width: 1%">'+ value.stamp +'</td>';
-						planData += '<td style="width: 1%">'+ value.stamp_kd +'</td>';
-						planData += '<td style="width: 1%">'+ value.h1 +'</td>';
-						planData += '<td style="width: 1%">'+ sisaH1 +'</td>';
-						planData += '<td style="width: 1%">'+ value.h2 +'</td>';
-						planData += '<td style="width: 1%">'+ sisaH2 +'</td>';
-						planData += '</tr>';
+
+						if (value.model != 'YFL212//J' || value.model != 'YFL-312//J' || value.model != 'YFL412//J') {
+							planData += '<tr '+color+'>';
+							planData += '<td style="width: 1%">'+ value.model +'</td>';
+							planData += '<td style="width: 1%">'+ value.debt +'</td>';						
+							planData += '<td style="width: 1%">'+ value.plan +'</td>';
+							planData += '<td style="width: 1%">'+ value.actual +'</td>';
+							planData += '<td style="width: 1%">'+ value.wip +'</td>';
+							planData += '<td style="width: 1%">'+ value.ng +'</td>';
+							planData += '<td style="width: 1%">'+ value.targetToday +'</td>';
+							planData += '<td style="width: 1%">'+ sisaToday +'</td>';
+							planData += '<td style="width: 1%">'+ value.stamp +'</td>';
+							planData += '<td style="width: 1%">'+ value.stamp_kd +'</td>';
+							planData += '<td style="width: 1%">'+ value.h1 +'</td>';
+							planData += '<td style="width: 1%">'+ sisaH1 +'</td>';
+							planData += '<td style="width: 1%">'+ value.h2 +'</td>';
+							planData += '<td style="width: 1%">'+ sisaH2 +'</td>';
+							planData += '</tr>';
+						}
 
 						no += 1;
 					});
