@@ -47,8 +47,8 @@ class InitialProcessController extends Controller
 		$title_jp = '最初工程の在庫監視';
 
 		if($id == 'mpro'){
-			$location = "'FLA0','CLA0','SXA0','VNA0'";
-			$locs = ["'FLA0'","'CLA0'","'SXA0'","'VNA0'"];
+			$location = "'FLA0','CLA0','SXA0','VNA0','SXA2'";
+			$locs = ["'FLA0'","'CLA0'","'SXA0'","'VNA0'","'SXA2'"];
 		}
 
 		return view('processes.initial.display.stock_monitoring', array(
