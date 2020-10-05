@@ -128,6 +128,9 @@
 					var sisaH2 = 0;
 					var no = 1;
 
+					console.log(result.nextday);
+					console.log(result.nextdayplus1);
+
 					$.each(result.planData, function(key, value) {
 						// alert(value.planh2 );
 						
