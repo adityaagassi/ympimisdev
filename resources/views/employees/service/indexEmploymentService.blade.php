@@ -145,14 +145,14 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content" style="padding-top: 0px;">
 	<div class="row">
-		<div class="col-md-3" style="padding-right: 0;">
+		<div class="col-md-4" style="padding-right: 0;">
 			<!-- Profile Image -->
 			<div class="box">
 				<div class="box-body">
 					<div class="col-xs-5 crop2">
 						<img src="{{ url($avatar) }}">
 					</div>
-					<div class="col-xs-7" style="padding-left: 0; font-weight: bold; font-size: 0.9vw; padding-right: 0;">
+					<div class="col-xs-7" style="padding-left: 0; font-weight: bold; font-size: 1.2vw; padding-right: 0;">
 						<span>{{ strtoupper($emp_id) }}</span><br>
 						<span>{{ $profil[0]->name }}</span><br><br>
 						{{-- <span>{{ $profil[0]->birth_place }}, {{ date("d F Y",strtotime($profil[0]->birth_date)) }}</span> --}}
@@ -302,7 +302,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					</div>
 				</div> --}}
 			</div>
-			<div class="col-md-9" style="padding-bottom: 10px;">
+			<div class="col-md-8" style="padding-bottom: 10px;">
 				<button class="btn btn-success" onclick="questionForm()" id="btnTanya"><i class="fa fa-question-circle"></i>&nbsp; Tanya HR &nbsp;<i class="fa fa-angle-double-right"></i></button>
 				<button class="btn btn-default" onclick="kembali()" style="display: none" id="btnKembali"><i class="fa fa-angle-double-left"></i>&nbsp; Kembali</button>
 
@@ -315,7 +315,7 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 					</select>
 				</div>
 			</div>
-			<div class="col-md-9">
+			<div class="col-md-8">
 				<div class="box" id="boxing">
 					<!-- /.box-header -->
 					<div class="box-body">
