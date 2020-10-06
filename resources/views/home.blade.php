@@ -179,6 +179,10 @@
                                     <a href="{{ url("index/report/attendance_data")}}">
                                         <i class="fa fa-caret-right"></i> Attendance Data (出席データ)
                                     </a>
+                                    <br>
+                                    <a href="{{ url("index/report/checklog_data")}}">
+                                        <i class="fa fa-caret-right"></i> Checklog Data (??)
+                                    </a>
                                 </td>
                             </tr>
                             <tr>

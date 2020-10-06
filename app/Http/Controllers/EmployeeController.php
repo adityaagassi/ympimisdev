@@ -326,6 +326,22 @@ class EmployeeController extends Controller
           ));
      }
 
+     public function checklogData()
+     {
+          $title = 'Checklog Data';
+          $title_jp = '??';
+
+          $q = "select employee_syncs.employee_id, employee_syncs.name, employee_syncs.department, employee_syncs.`section`, employee_syncs.`group`, employee_syncs.cost_center, cost_centers2.cost_center_name from employee_syncs left join cost_centers2 on cost_centers2.cost_center = employee_syncs.cost_center";
+
+          $datas = db::select($q);
+
+          return view('employees.report.checklog_data', array(
+               'title' => $title,
+               'title_jp' => $title_jp,
+               'datas' => $datas
+          ));
+     }
+
 
      public function getNotif()
      {
@@ -2590,6 +2606,120 @@ public function fetchAttendanceData(Request $request)
 // return Response::json($response);
 }
 
+public function fetchChecklogData(Request $request)
+{
+
+     $tanggal = "";
+     $adddepartment = "";
+     $addsection = "";
+     $addgrup = "";
+     $addnik = "";
+
+     if(strlen($request->get('datefrom')) > 0){
+          $datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+          $tanggal = "and DATE(checklog) >= '".$datefrom." 00:00:00' ";
+          if(strlen($request->get('dateto')) > 0){
+               $dateto = date('Y-m-d', strtotime($request->get('dateto')));
+               $tanggal = $tanggal."and DATE(checklog) <= '".$dateto." 23:59:59' ";
+          }
+     }
+
+     if($request->get('department') != null) {
+          $departments = $request->get('department');
+          $deptlength = count($departments);
+          $department = "";
+
+          for($x = 0; $x < $deptlength; $x++) {
+               $department = $department."'".$departments[$x]."'";
+               if($x != $deptlength-1){
+                    $department = $department.",";
+               }
+          }
+          $adddepartment = "and employee_syncs.department in (".$department.") ";
+     }
+
+     if($request->get('section') != null) {
+          $sections = $request->get('section');
+          $sectlength = count($sections);
+          $section = "";
+
+          for($x = 0; $x < $sectlength; $x++) {
+               $section = $section."'".$sections[$x]."'";
+               if($x != $sectlength-1){
+                    $section = $section.",";
+               }
+          }
+          $addsection = "and employee_syncs.section in (".$section.") ";
+     }
+
+     if($request->get('group') != null) {
+          $groups = $request->get('group');
+          $grplen = count($groups);
+          $group = "";
+
+          for($x = 0; $x < $grplen; $x++) {
+               $group = $group."'".$groups[$x]."'";
+               if($x != $grplen-1){
+                    $group = $group.",";
+               }
+          }
+          $addgrup = "and employee_syncs.group in (".$group.") ";
+     }
+
+     if($request->get('employee_id') != null) {
+          $niks = $request->get('employee_id');
+          $niklen = count($niks);
+          $nik = "";
+
+          for($x = 0; $x < $niklen; $x++) {
+               $nik = $nik."'".$niks[$x]."'";
+               if($x != $niklen-1){
+                    $nik = $nik.",";
+               }
+          }
+          $addnik = "and employee_syncs.employee_id in (".$nik.") ";
+     }
+
+     $qry = "SELECT
+          * 
+     FROM
+          employee_syncs 
+     WHERE
+          end_date IS NULL
+     ".$adddepartment."".$addsection."".$addgrup."".$addnik."
+     ORDER BY
+     employee_syncs.employee_id ASC";
+
+     $emp = db::select($qry);
+
+     $datachecklog = [];
+
+     foreach ($emp as $key) {
+          $checklog = DB::CONNECTION('ftm')->SELECT("SELECT *,date(checklog) as date FROM `sunfish` where nik = '".$key->employee_id."' ".$tanggal."");
+
+          foreach ($checklog as $val) {
+               $datachecklog[] = array(
+                    'employee_id' => $key->employee_id,
+                    'date' => $val->date,
+                    'name' => $key->name,
+                    'department' => $key->department,
+                    'section' => $key->section,
+                    'group' => $key->group,
+                    'checklog' => $val->checklog,
+               );
+          }
+     }
+
+     return DataTables::of($datachecklog)->make(true);
+
+// $response = array(
+//      'status' => true,
+//      'attendances' => $attendances,
+//      'qry' => $qry
+// );
+// return Response::json($response);
+}
+
 public function editNumber(Request $request)
 {
      try {
@@ -3457,11 +3587,11 @@ public function fetchAbsenceEmployee(Request $request)
                AND ( ".$attend_code." )");  
      }
 
-   $response = array(
-     'status' => true,
-     'datas' => $absence
-);
-   return Response::json($response);
+     $response = array(
+          'status' => true,
+          'datas' => $absence
+     );
+     return Response::json($response);
 }
 
 public function fetchDataKaizenAll(Request $request)

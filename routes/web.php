@@ -587,6 +587,9 @@ Route::get('index/report/absence', 'EmployeeController@indexAbsence');
 Route::get('fetch/report/absence', 'EmployeeController@fetchAbsence');
 Route::get('fetch/report/detail_absence', 'EmployeeController@detailAbsence');
 Route::get('fetch/absence/employee', 'EmployeeController@fetchAbsenceEmployee');
+// Checklog
+Route::get('index/report/checklog_data', 'EmployeeController@checklogData');
+Route::get('fetch/report/checklog_data', 'EmployeeController@fetchChecklogData');
 
 Route::group(['nav' => 'R3', 'middleware' => 'permission'], function(){
 	Route::get('index/fg_production', 'FinishedGoodsController@index_fg_production');
@@ -1159,14 +1162,16 @@ Route::post('input/welding/repair_jig', 'WeldingProcessController@inputRepairJig
 
 Route::get('index/welding/monitoring_jig', 'WeldingProcessController@indexWldJigMonitoring');
 Route::get('fetch/welding/monitoring_jig', 'WeldingProcessController@fetchWldJigMonitoring');
+Route::get('fetch/welding/detail_monitoring_jig', 'WeldingProcessController@fetchWldDetailJigMonitoring');
 
 
 //Sakurentsu
 Route::get('index/sakurentsu/upload_sakurentsu', 'SakurentsuController@upload_sakurentsu');
 Route::post('index/sakurentsu/upload_sakurentsu', 'SakurentsuController@upload_file_sakurentsu');
 Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
-
-
+Route::get('fetch/sakurentsu', 'SakurentsuController@fetch_sakuretsu');
+Route::get('index/sakurentsu/upload_sakurentsu_translate/{id}', 'SakurentsuController@upload_sakurentsu_translate');
+Route::post('index/sakurentsu/upload_sakurentsu_translate/{id}', 'SakurentsuController@upload_file_sakurentsu_translate');
 
 
 
@@ -1419,10 +1424,17 @@ Route::group(['nav' => 'S12', 'middleware' => 'permission'], function(){
 
 //MOUTHPIECE
 Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
+	Route::get('scan/kd_mouthpiece/operator', 'MouthpieceController@scanKdMouthpieceOperator');
+
 	Route::get('index/kd_mouthpiece/checksheet', 'MouthpieceController@indexKdMouthpieceChecksheet');
+	Route::get('fetch/kd_mouthpiece/checksheet', 'MouthpieceController@fetchKdMouthpieceChecksheet');
 	Route::post('create/kd_mouthpiece/checksheet', 'MouthpieceController@createKdMouthpieceChecksheet');
-	Route::get('fetch/kd_mouthpiece/material', 'MouthpieceController@fetchKdMouthpieceMaterial');
+	Route::post('delete/kd_mouthpiece/checksheet', 'MouthpieceController@deleteKdMouthpieceChecksheet');
+
 	Route::get('index/kd_mouthpiece/picking', 'MouthpieceController@indexKdMouthpiecePicking');
+	Route::get('fetch/kd_mouthpiece/picking', 'MouthpieceController@fetchKdMouthpiecePicking');
+	Route::post('scan/kd_mouthpiece/picking', 'MouthpieceController@scanKdMouthpiecePicking');
+
 	Route::get('index/kd_mouthpiece/packing', 'MouthpieceController@indexKdMouthpiecePacking');
 });
 
@@ -1492,6 +1504,7 @@ Route::get('fetch/kd_stock_detail', 'KnockDownController@fetchKdStockDetail');
 Route::get('index/kd_shipment_progress', 'KnockDownController@indexKdShipmentProgress');
 Route::get('fetch/kd_shipment_progress', 'KnockDownController@fetchKdShipmentProgress');
 Route::get('fetch/kd_shipment_progress_detail', 'KnockDownController@fetchKdShipmentProgressDetail');
+Route::get('fetch/kdo_closure', 'KnockDownController@fetchKDOClosure');
 Route::get('fetch/kdo', 'KnockDownController@fetchKDO');
 Route::get('fetch/kdo_detail', 'KnockDownController@fetchKDODetail');
 Route::get('fetch/kd_reprint_kdo', 'KnockDownController@reprintKDO');
@@ -2098,14 +2111,14 @@ Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 	Route::get('fetch/stocktaking/stocktaking_list', 'StockTakingController@fetchMonthlyStocktakingList');
 	Route::post('delete/stocktaking/stocktaking_list', 'StockTakingController@deleteMonthlyStocktakingList');
 	Route::post('edit/stocktaking/stocktaking_list', 'StockTakingController@editMonthlyStocktakingList');
-//Revise
+	//Revise
 	Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
 	Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
 	Route::get('fetch/stocktaking/revise_by_id', 'StockTakingController@fetchReviseId');
 	Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
 	Route::get('export/stocktaking/upload_sap', 'StockTakingController@exportUploadSAP');
 	Route::get('export/stocktaking/log', 'StockTakingController@exportLog');
-//Count PI
+	//Count PI
 	Route::post('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
 	Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
 });
