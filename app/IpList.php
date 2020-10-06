@@ -10,7 +10,7 @@ class IpList extends Model
     use SoftDeletes;
 
     protected $fillable = [
-		'ip', 'remark', 'image', 'created_by'
+		'ip', 'remark', 'image', 'location', 'created_by'
 	];
 
 	public function user()

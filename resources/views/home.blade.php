@@ -322,10 +322,14 @@
                     </tr>
                     <tr>
                         <td>
-                            <span style="font-weight: bold;">Silver Stock Taking (銀材棚卸し)</span>
+                            <span style="font-weight: bold;">Stock Taking Report (棚卸し報告)</span>
                             <br>
                             <a href="{{ url("/index/stocktaking/silver_report") }}">
                                 <i class="fa fa-caret-right"></i> Silver Stock Taking Report (銀材棚卸し報告)
+                            </a>
+                            <br>
+                            <a href="{{ url("/index/stocktaking/daily_report") }}">
+                                <i class="fa fa-caret-right"></i> Daily Stock Taking Report (???)
                             </a>
                             <br>
                         </td>
@@ -360,7 +364,7 @@
             </thead>
             <tbody>
                 <tr>
-                   <td>
+                 <td>
                     {{--     <a href="{{ url("index/report/overtime_outsource") }}">
                         <i class="fa fa-caret-right"></i> Outsource OT (派遣社員の残業管理)
                     </a> --}}
@@ -397,7 +401,7 @@
                                 <i class="fa fa-caret-right"></i> Toilet Availability (トイレステイタス(空席・使用中))
                             </a>
                             <br>
-                            <a href="{{ url("index/display/ip") }}">
+                            <a href="{{ url("index/display/ip?location=server") }}">
                                 <i class="fa fa-caret-right"></i> Internet Protocol Monitoring (IP管理)
                             </a>
                             <br>
@@ -514,19 +518,19 @@
                                         <i class="fa fa-caret-right"></i> Sharepoint;
                                     </a>
                                     <a href="https://a01.yamaha.co.jp/fw/dfw/SAP2/Citrix/XenApp/site/default.aspx" target="_blank">
-                                     SAP;
-                                 </a>
-                                 <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
-                                     Adagio;
-                                 </a>
-                                 <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
-                                     MA5;
-                                 </a>
-                             </td>     
-                         </tr>                                                                             
-                     </tbody>
-                 </table>
-                 <table class="table table-bordered">
+                                       SAP;
+                                   </a>
+                                   <a href="https://adagio.yamaha.co.jp/imart/default.portal" target="_blank">
+                                       Adagio;
+                                   </a>
+                                   <a href="https://a01.yamaha.co.jp/fw/dfw/MA5/ma5/EntranceServlet" target="_blank">
+                                       MA5;
+                                   </a>
+                               </td>     
+                           </tr>                                                                             
+                       </tbody>
+                   </table>
+                   <table class="table table-bordered">
                     <thead style="background-color: rgba(126,86,134,.7); font-size: 14px;">
                         <tr>
                             <th>Workshop<br>ワークショップ</th>

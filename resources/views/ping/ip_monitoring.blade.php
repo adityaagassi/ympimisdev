@@ -33,6 +33,7 @@
 	.content{
 		color: white;
 		font-weight: bold;
+		padding-top: 1px;
 	}
 	.patient-duration{
 		margin: 0px;
@@ -93,14 +94,36 @@
 <section class="content">
 	<div class="row">
 		<div class="col-xs-12">	
-			<?php $i = 0; foreach ($ip as $ip){ ?>
 
-				<div class="col-md-3 col-sm-3 col-xs-6">
+			<div class="col-xs-12" style="padding: 5px">	
+				<form method="GET" action="{{ action('PingController@indexIpMonitoring') }}">
+					<div class="col-md-2" style="padding: 0">
+				           <select class="form-control select2" multiple="multiple" id="locationSelect" data-placeholder="Select Locations" onchange="changeLocation()" style="width: 100%;"> 	
+				            	@foreach($location as $loc)
+				            	<option value="{{$loc->location}}">{{ trim($loc->location, "'")}}</option>
+				           		@endforeach
+				           </select>
+						   <input type="text" name="location" id="location" hidden>	
+				      </div>
+
+					<div class="col-xs-2">
+						<button class="btn btn-success" type="submit"><i class="fa fa-search"></i> Search</button>
+					</div>
+					<div class="pull-right" id="loc" style="margin: 0px;padding-top: 0px;padding-right: 20px;font-size: 1.6vw;"></div>
+				</form>
+			 </div>
+
+			<div id="ip_list">
+			</div>
+
+			<!-- <?php $i = 0; foreach ($ip as $ip){ ?>
+
+				<div class="col-md-3 col-sm-3 col-xs-6" style="padding: 5px">
 					<div class="info-box" id="box_{{ $ip->remark }}">
 						<span class="info-box-icon" style="height:108px">
 							<img src="{{ url('images/ping', $ip->image) }}" style="padding: 10px">
 						</span>
-						<div class="info-box-content" > <!-- style="color: #333" -->
+						<div class="info-box-content" > 
 							<span class="info-box-text">{{ $ip->remark }}</span>
 							<span class="info-box-number">{{ $ip->ip }}</span>
 							<div class="progress">
@@ -109,9 +132,9 @@
 							<span class="progress-description" id="status_{{ $ip->remark }}">Good</span>  <span id="time_{{ $ip->remark }}"> </span> ms
 						</div>
 					</div>
-					<!-- /.info-box -->
 				</div>
 
+		    <?php $i++; } ?> -->
 				<!-- <div class="col-xs-4" style="padding: 0px;">
 					<div class="info-box bg-green">
 			            <span class="info-box-icon">							
@@ -129,7 +152,6 @@
 			            </div>
 		            </div>	
 		        </div> -->
-		        <?php $i++; } ?>
 		        <!-- <div class="col-md-2 col-sm-3 col-xs-6">
 		        	<div class="info-box" style=" display: flex;">
 		        		<div class="col-sm-5" style="background-color: black;  opacity: 0.5;">
@@ -147,9 +169,7 @@
 		        </div> -->
 
 		    </div>
-
 		</div>
-
 	</section>
 
 	@endsection
@@ -172,15 +192,38 @@
 
 		jQuery(document).ready(function() {
 			fetchip();
-			setInterval(fetchip, 10000);
+			setInterval(fetchip, 30000);
 
+    		$('.select2').select2();
 		});
 
+		function changeLocation(){
+			$("#location").val($("#locationSelect").val());
+		}
+
 		function fetchip(){
-			$.get('{{ url("fetch/display/ip") }}', function(result, status, xhr){
+
+			var location = "{{$_GET['location']}}";
+
+			var data = {
+				location:location
+			}
+
+			$.get('{{ url("fetch/display/ip") }}', data, function(result, status, xhr){
 				if(result.status){
+
+					var title = result.title;
+					$('#loc').html('<b style="color:white">'+ title +'</b>');
+					$('#ip_list').html("");
+					
 					$.each(result.data, function(key, value){
+
+						var divdata = $("<div class='col-md-3 col-sm-3 col-xs-6' style='padding: 5px'><div class='info-box' id='box_"+value.remark+"'><span class='info-box-icon' style='height:108px'><img src='{{ url('images/ping') }}/"+value.image+"' style='padding: 10px'></span><div class='info-box-content'><span class='info-box-text'>"+value.remark+"</span><span class='info-box-number'>"+value.ip+"</span><div class='progress'><div class='progress-bar' style='width: 100%'></div></div><span class='progress-description' id='status_"+value.remark+"'>Good</span>  <span id='time_"+value.remark+"'> </span> ms</div></div></div>");
+
+						$('#ip_list').append(divdata);
+
 						var url = '{{ url("fetch/display/fetch_hit") }}'+'/'+value.ip;
+
 						$.get(url, function(result, status, xhr){
 							var time;
 
@@ -224,7 +267,7 @@
 
 						if (true) {}
 
-							$('#status_'+value.remark).append().empty();
+						$('#status_'+value.remark).append().empty();
 						$('#status_'+value.remark).html(status);
 
 						$('#time_'+value.remark).append().empty();
