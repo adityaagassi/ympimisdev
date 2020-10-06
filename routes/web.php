@@ -2004,16 +2004,31 @@ Route::group(['nav' => 'M24', 'middleware' => 'permission'], function(){
 });
 
 Route::group(['nav' => 'S22', 'middleware' => 'permission'], function(){
+	//Silver
 	Route::get('index/stocktaking/silver/{id}', 'StockTakingController@indexSilver');
 	Route::get('fetch/stocktaking/silver_list', 'StockTakingController@fetchSilverList');
 	Route::get('fetch/stocktaking/silver_count', 'StockTakingController@fetchSilverCount');
 	Route::get('fetch/stocktaking/silver_resume', 'StockTakingController@fetchSilverResume');
 	Route::post('input/stocktaking/silver_count', 'StockTakingController@inputSilverCount');
 	Route::post('input/stocktaking/silver_final', 'StockTakingController@inputSilverFinal');
+
+	//Daily
+	Route::get('index/stocktaking/daily/{id}', 'StockTakingController@indexDaily');
+	Route::get('fetch/stocktaking/daily_list', 'StockTakingController@fetchDailyList');
+	Route::get('fetch/stocktaking/daily_resume', 'StockTakingController@fetchDailyResume');
+	Route::get('fetch/stocktaking/daily_count', 'StockTakingController@fetchDailyCount');
+	Route::post('input/stocktaking/daily_count', 'StockTakingController@inputDailyCount');
+	Route::post('input/stocktaking/daily_final', 'StockTakingController@inputDailyFinal');
 });
+//Silver Report
 Route::get('index/stocktaking/silver_report', 'StockTakingController@indexSilverReport');
 Route::get('fetch/stocktaking/silver_report', 'StockTakingController@fetchSilverReport');
 Route::get('fetch/stocktaking/silver_report_modal', 'StockTakingController@fetchSilverReportModal');
+
+//Daily Report
+Route::get('index/stocktaking/daily_report', 'StockTakingController@indexDailyReport');
+Route::get('fetch/stocktaking/daily_report', 'StockTakingController@fetchDailyReport');
+Route::get('fetch/stocktaking/daily_report_modal', 'StockTakingController@fetchDailyReportModal');
 
 
 //Index Monthly

@@ -21,6 +21,8 @@ use App\StocktakingOutput;
 use App\StocktakingLocationStock;
 use App\StocktakingInquiryLog;
 use App\StocktakingOutputLog;
+use App\StocktakingDailyList;
+use App\StocktakingDailyLog;
 use App\StocktakingSilverList;
 use App\StocktakingSilverLog;
 use App\TransactionTransfer;
@@ -3135,8 +3137,9 @@ class StockTakingController extends Controller{
 	}
 
 
-	//Stock Taking Silver
 
+
+	//Stock Taking Silver
 	public function indexSilver($id){
 		if($id == 'fl_assembly'){
 			$title = 'Silver Stock Taking (Flute Assembly)';
@@ -3375,6 +3378,227 @@ class StockTakingController extends Controller{
 
 		$lists = StocktakingSilverList::where('location', '=', $request->get('location'))
 		->select('stocktaking_silver_lists.material_number', 'stocktaking_silver_lists.category', 'stocktaking_silver_lists.id', 'stocktaking_silver_lists.material_description')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'lists' => $lists,
+		);
+		return Response::json($response);
+	}
+
+
+
+
+
+	//Stock Taking Daily
+	public function indexDaily($id){
+		if($id == 'sx_assembly'){
+			$title = 'Body Stock Taking (Saxophone Assembly)';
+			$title_jp = 'SX組み立て職場の棚卸';
+			$location = 'SX ASSEMBLY';
+		}
+
+		return view('stocktakings.daily', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'location' => $location,
+		))->with('page', 'Stock Taking')->with('head', 'Daily');
+	}
+
+	public function indexDailyReport(){
+		$title = 'Daily Stocktaking Report';
+		$title_jp = '??';
+
+		return view('stocktakings.daily_report', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'Stock Taking')->with('head', 'Daily');
+	}
+
+	public function fetchDailyReport(Request $request){
+		Carbon::setWeekStartsAt(Carbon::SUNDAY);
+		Carbon::setWeekEndsAt(Carbon::SATURDAY);
+
+		if($request->get('datefrom') != ""){
+			$datefrom = date('Y-m-d', strtotime($request->get('datefrom')));
+		}
+		else{
+			$datefrom = date('Y-m-d', strtotime(Carbon::now()->subDays(14)));
+		}
+
+		if($request->get('dateto') != ""){
+			$dateto = date('Y-m-d', strtotime($request->get('dateto')));
+		}
+		else{
+			$dateto = date('Y-m-d', strtotime(Carbon::now()->addDays(1)));
+		}
+
+		$query = "select stock_date as order_date, date_format(stock_date, '%d-%b-%Y') as stock_date, storage_location, sum(variance) as variance, sum(ok) as ok from
+		(
+		select material_number, material_description, storage_location, if(round(sum(pi),3)-sum(book) <> 0, 1, 0) as variance, if(round(sum(pi),3)-sum(book) <> 0, 0, 1) as ok, stock_date from
+		(
+		select storage_location_stocks.material_number, storage_location_stocks.material_description, storage_location_stocks.storage_location, storage_location_stocks.unrestricted as book, 0 as pi, storage_location_stocks.stock_date from storage_location_stocks where storage_location_stocks.storage_location in (select distinct storage_location from stocktaking_daily_lists) and storage_location_stocks.material_number in (select distinct material_number from stocktaking_daily_lists) and storage_location_stocks.stock_date >= '".$datefrom."' and storage_location_stocks.stock_date <= '".$dateto."'
+
+		union all
+
+		select stocktaking_daily_logs.material_number, stocktaking_daily_logs.material_description, stocktaking_daily_logs.storage_location, 0 as book, stocktaking_daily_logs.quantity as pi, date(created_at) as stock_date from stocktaking_daily_logs where date(created_at) >= '".$datefrom."' and date(created_at) <= '".$dateto."') as variance group by material_number, material_description, storage_location, stock_date) as variance_count group by storage_location, stock_date order by order_date desc";
+
+		$variances = db::select($query);
+
+		$response = array(
+			'status' => true,
+			'variances' => $variances,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchDailyReportModal(Request $request){
+		$stock_date = date('Y-m-d', strtotime($request->get('date')));
+
+
+		$loc = " having storage_location = '" . $request->get('loc') . "'";
+
+		if( $request->get('loc') == 'all'){
+			$loc = "";
+		}
+
+		$query = "
+		select material_number, material_description, storage_location, round(sum(pi),3) as pi, sum(book) as book, round(round(sum(pi),3)-sum(book),3) as diff_qty, round(ABS(round(sum(pi),3)-sum(book)),3) as diff_abs from
+		(
+		select storage_location_stocks.material_number, storage_location_stocks.material_description, storage_location_stocks.storage_location, storage_location_stocks.unrestricted as book, 0 as pi, storage_location_stocks.stock_date from storage_location_stocks where storage_location_stocks.storage_location in (select distinct storage_location from stocktaking_daily_lists) and storage_location_stocks.material_number in (select distinct material_number from stocktaking_daily_lists) and storage_location_stocks.stock_date = '".$stock_date."'
+
+		union all
+
+		select stocktaking_daily_logs.material_number, stocktaking_daily_logs.material_description, stocktaking_daily_logs.storage_location, 0 as book, stocktaking_daily_logs.quantity as pi, date(created_at) as stock_date from stocktaking_daily_logs where date(stocktaking_daily_logs.created_at) = '".$stock_date."') as variance
+		group by material_number, material_description, storage_location
+		".$loc."
+		order by diff_abs desc, diff_qty asc";
+
+		$variance = DB::select($query);
+
+		$response = array(
+			'status' => true,
+			'variance' => $variance,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchDailyCount(Request $request){
+
+		$count = StocktakingDailyList::where('stocktaking_daily_lists.id', '=', $request->get('id'))
+		->select('stocktaking_daily_lists.material_number', 'stocktaking_daily_lists.category', 'stocktaking_daily_lists.id', 'stocktaking_daily_lists.material_description', 'stocktaking_daily_lists.quantity_check')
+		->first();
+
+		$response = array(
+			'status' => true,
+			'count' => $count,
+		);
+		return Response::json($response);
+	}
+
+	public function inputDailyCount(Request $request){
+		try{
+
+			$count = StocktakingDailyList::where('stocktaking_daily_lists.id', '=', $request->get('id'))
+			->first();
+
+			$count->quantity_check = $request->get('count');
+			$count->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'PI Count Confirmed',
+			);
+			return Response::json($response);
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function inputDailyFinal(Request $request){
+		try{
+			$now = date('Y-m-d');
+			$id = Auth::id();
+
+			$lists = StocktakingDailyList::where('location', '=', $request->get('location'))
+			->where('stocktaking_daily_lists.quantity_check', '>', 0)
+			->get();
+
+			if(count($lists) <= 0){
+				$response = array(
+					'status' => false,
+					'message' => 'Resume stocktaking kosong.'
+				);
+				return Response::json($response);				
+			}
+
+			$zero_quantity_final = DB::table('stocktaking_daily_lists')
+			->where('location', '=', $request->get('location'))
+			->update([
+				'quantity_final' => 0,
+			]);
+
+			$delete_logs = DB::delete('delete from stocktaking_daily_logs where location = "'.$request->get('location').'" and date(created_at) = "'.$now.'"');
+
+			$update_final = DB::table('stocktaking_daily_lists')
+			->where('location', '=', $request->get('location'))
+			->where('stocktaking_daily_lists.quantity_check', '>', 0)
+			->update([
+				'quantity_final' => db::raw('quantity_check'),
+				'quantity_check' => 0,
+			]);
+
+			$update_log_assy = DB::insert("insert into stocktaking_daily_logs (location, material_number, material_description, storage_location, quantity, created_by, created_at, updated_at)
+				select location, material_child, material_child_description, storage_location, round(sum(quantity), 6) as quantity, '".$id."' as created_by, '".date('Y-m-d H:i:s')."' as created_at, '".date('Y-m-d H:i:s')."' as updated_at from
+				(
+				select stocktaking_daily_lists.location, stocktaking_daily_boms.material_child, stocktaking_daily_boms.material_child_description, stocktaking_daily_lists.storage_location, stocktaking_daily_lists.quantity_final*stocktaking_daily_boms.`usage` as quantity from stocktaking_daily_lists left join stocktaking_daily_boms on stocktaking_daily_boms.material_parent = stocktaking_daily_lists.material_number where stocktaking_daily_lists.quantity_final > 0 and stocktaking_daily_lists.location = '".$request->get('location')."' and stocktaking_daily_lists.category = 'ASSY'
+			) as assy group by location, material_child, material_child_description, storage_location");
+
+			$update_log_single = DB::insert("insert into stocktaking_daily_logs (location, material_number, material_description, storage_location, quantity, created_by, created_at, updated_at)
+				select location, material_number, material_description, storage_location, quantity, '".$id."' as created_by, '".date('Y-m-d H:i:s')."' as created_at, '".date('Y-m-d H:i:s')."' as updated_at from
+				(
+				select stocktaking_daily_lists.location, stocktaking_daily_lists.material_number, stocktaking_daily_lists.material_description, stocktaking_daily_lists.storage_location, round(sum(stocktaking_daily_lists.quantity_final),6) as quantity from stocktaking_daily_lists where stocktaking_daily_lists.quantity_final > 0 and stocktaking_daily_lists.location = '".$request->get('location')."' and stocktaking_daily_lists.category = 'SINGLE' group by stocktaking_daily_lists.location, stocktaking_daily_lists.material_number, stocktaking_daily_lists.material_description, stocktaking_daily_lists.storage_location
+			) as single");
+
+			$response = array(
+				'status' => true,
+				'message' => 'PI Calculated',
+				'lists' => $lists,
+			);
+			return Response::json($response);
+		}
+		catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function fetchDailyResume(Request $request){
+
+		$lists = StocktakingDailyList::where('location', '=', $request->get('location'))
+		->where(db::raw('stocktaking_daily_lists.quantity_check+stocktaking_daily_lists.quantity_final'), '>', 0)
+		->get();
+
+		$response = array(
+			'status' => true,
+			'lists' => $lists,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchDailyList(Request $request){
+
+		$lists = StocktakingDailyList::where('location', '=', $request->get('location'))
+		->select('stocktaking_daily_lists.material_number', 'stocktaking_daily_lists.category', 'stocktaking_daily_lists.id', 'stocktaking_daily_lists.material_description')
 		->get();
 
 		$response = array(
