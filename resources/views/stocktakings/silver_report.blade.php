@@ -653,11 +653,11 @@
 						}
 					},
 					series: [{
-						name: 'Variance',
-						data: varSX91,
-						stack: 'SX91',
-						color: 'rgb(255,116,116)'
-					},{
+					// 	name: 'Variance',
+					// 	data: varSX91,
+					// 	stack: 'SX91',
+					// 	color: 'rgb(255,116,116)'
+					// },{
 						name: 'Variance',
 						data: varFL91,
 						stack: 'FL91',
@@ -688,11 +688,11 @@
 						stack: 'ZPA0',
 						color: 'rgb(255,116,116)'
 					}, {
-						name: 'OK',
-						data: okSX91,
-						stack: 'SX91',
-						color: 'rgb(144,238,126)'
-					}, {
+					// 	name: 'OK',
+					// 	data: okSX91,
+					// 	stack: 'SX91',
+					// 	color: 'rgb(144,238,126)'
+					// }, {
 						name: 'OK',
 						data: okFL91,
 						stack: 'FL91',
