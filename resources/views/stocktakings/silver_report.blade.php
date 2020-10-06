@@ -459,9 +459,9 @@
 
 					series: [
 					{
-						name: 'SX91',
-						data: sx91
-					},{
+					// 	name: 'SX91',
+					// 	data: sx91
+					// },{
 						name: 'FL91',
 						data: fl91
 					},{
