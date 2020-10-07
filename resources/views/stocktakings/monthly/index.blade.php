@@ -24,6 +24,21 @@
 		overflow:hidden;
 		text-overflow: ellipsis;
 	}
+	.nav-tabs-custom > ul.nav.nav-tabs {
+		display: table;
+		width: 100%;
+		table-layout: fixed;
+	}
+	.nav-tabs-custom > ul.nav.nav-tabs > li {
+		float: none;
+		display: table-cell;
+	}
+	.nav-tabs-custom > ul.nav.nav-tabs > li > a {
+		text-align: center;
+	}
+	.vendor-tab{
+		width:100%;
+	}
 	.dataTables_filter {
 		float: left !important;
 	}
@@ -73,25 +88,39 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xs-6" style="text-align: center; padding-right: 1px;">
-			<div id="container"></div>
-			{{-- <div id="container2"></div> --}}
+		<div class="col-xs-12">
+			<div class="nav-tabs-custom">
+				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
+					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Progress Input</a></li>
+					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Progress Audit</a></li>
+				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_1">
+						<div id="container"></div>
+					</div>
+					<div class="tab-pane" id="tab_2">
+						<div id="container1"></div>				
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="col-xs-6" style="text-align: center; padding-left: 1px;">
-			<div id="container1"></div>
-		</div>
+
+
 		<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-3" style="text-align: center;">
+					@if(in_array('S36', $navs))
 					<span style="font-size: 1.5vw; color: black;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
-					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Storage Loc Stock</a>
-					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Bom Output</a>
-					<a href="javascript:void(0)"  data-toggle="modal" data-target="#importMPDLModal" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Material Plant Data List</a>
+					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Bom Output</a> --}}
+					{{-- <a href="javascript:void(0)"  data-toggle="modal" data-target="#importMPDLModal" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Material Plant Data List</a> --}}
 					<a href="javascript:void(0)"  data-toggle="modal" data-target="#importModal" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Storage Loc Stock</a>
-					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Storage Location</a>
-					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Item Silver</a>
-					<a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Stocktaking Calendar</a>
+					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Storage Location</a> --}}
+					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Item Silver</a> --}}
+					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Stocktaking Calendar</a> --}}
 					<a href="{{ url("index/stocktaking/stocktaking_list") }}" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw; color:white; background-color: #616161;">Master Stocktaking List</a>
+					@endif
+
 				</div>
 				<div class="col-xs-3" style="text-align: center;">
 					<span style="font-size: 1.5vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
@@ -99,20 +128,28 @@
 					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input No Use</a>
 					<a id="input_pi" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input Physical Inventory (PI)</a>
 					<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Audit Internal</a>
+					@if(in_array('S36', $navs))
 					<a id="revise" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;">Revise Physical Inventory (PI)</a>
+					@endif
+
 				</div>
 				<div class="col-xs-3" style="text-align: center;">
 					<span style="font-size: 1.5vw; color: purple;"><i class="fa fa-angle-double-down"></i> Result <i class="fa fa-angle-double-down"></i></span>
+					@if(in_array('S36', $navs))
 					<a id="breakdown" data-toggle="modal" data-target="#modalBreakdown" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Breakdown Physical Inventory (PI)</a>
+					@endif
 					<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple; background-color: #e040fb;">Unmatch Check</a>
 					<a id="" href="{{ url("index/stocktaking/inquiry") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Inquiry</a>
 					<a id="" href="{{ url("index/stocktaking/variance_report") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple; background-color: #e040fb;">Variance Report</a>
-					<a id="" href="{{ url("") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Official Variance Report</a>
+					{{-- <a id="" href="{{ url("") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Official Variance Report</a> --}}
 				</div>
 				<div class="col-xs-3" style="text-align: center;">
+					@if(in_array('S36', $navs))
 					<span style="font-size: 1.5vw; color: red;"><i class="fa fa-angle-double-down"></i> Final <i class="fa fa-angle-double-down"></i></span>
 					<a id="upload_sap" onclick="uploadSap()" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: red;">Upload Textfile to SAP</a>
 					{{-- <a id="export_log" onclick="exportLog()" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: red; background-color: #ff5252;">End Stocktaking</a> --}}
+					@endif
+
 				</div>
 			</div>
 		</div>

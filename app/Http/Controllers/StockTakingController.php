@@ -238,12 +238,14 @@ class StockTakingController extends Controller{
 
 			$stocktaking_list->store = $request->get('store');
 			$stocktaking_list->material_number = $request->get('material');
-			$stocktaking_list->store = $request->get('location');
-			$stocktaking_list->store = $request->get('category');
+			$stocktaking_list->location = $request->get('location');
+			$stocktaking_list->category = $request->get('category');
+
+			$stocktaking_list->save();
 
 			$response = array(
 				'status' => true,
-				'message' => 'Stocktaking list berhasil di delete.'
+				'message' => 'Stocktaking list berhasil di update.'
 			);
 			return Response::json($response);
 		}
@@ -3408,7 +3410,7 @@ class StockTakingController extends Controller{
 
 	public function indexDailyReport(){
 		$title = 'Daily Stocktaking Report';
-		$title_jp = '??';
+		$title_jp = '日次棚卸し報告';
 
 		return view('stocktakings.daily_report', array(
 			'title' => $title,

@@ -27,7 +27,7 @@
 		}
 
 		.page-break {
-		    page-break-after: always;
+			page-break-after: always;
 		}
 
 
@@ -44,7 +44,7 @@
 		@endphp
 
 
-		<table style="width: 100%; text-align: center;" class="page-break">
+		<table style="width: 100%; text-align: center;" >
 			<tbody style="font-weight: bold;">
 				@php
 				QRcode::png($data[$i]->store, public_path().'/qr_code'.$data[$i]->store.'.png');
@@ -66,6 +66,13 @@
 				</tr>
 			</tbody>
 		</table>
+
+
+		@if($i != (count($data)-1))
+
+		<div class="page-break"></div>
+
+		@endif
 
 		@php
 	}	
