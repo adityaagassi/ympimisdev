@@ -36,9 +36,9 @@ use Response;
 
 class KnockDownController extends Controller{
 
-	// public function __construct(){
-	// 	$this->middleware('auth');
-	// }
+	public function __construct(){
+		$this->middleware('auth');
+	}
 
 	public function indexKD($id){
 		if($id == 'z-pro'){
@@ -1643,15 +1643,13 @@ class KnockDownController extends Controller{
 		}
 
 		$production_id = $request->get('production_id');
+		$quantity = $request->get('quantity');
 		$location = $request->get('location');
 
 
 		//Inisiasi Variabel
 		$production_schedule = ProductionSchedule::where('id', $production_id)->first();
 		$material_number = $production_schedule->material_number;
-
-		$material_volumes = MaterialVolume::where('material_number', $material_number)->first();
-		$quantity = $material_volumes->lot_completion;
 
 		//Production Schedule
 		$production_schedule->actual_quantity = $production_schedule->actual_quantity + $quantity;

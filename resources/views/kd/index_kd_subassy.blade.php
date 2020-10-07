@@ -85,18 +85,19 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-xs-7">
+				<div class="col-xs-7" style="padding-right: 0px;">
 					<div class="box box-danger">
 						<div class="box-body">
 							<table class="table table-hover table-bordered table-striped" id="tableList">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="width: 10%;">Due Date</th>
+										<th style="width: 15%;">Due Date</th>
 										<th style="width: 10%;">Material</th>
-										<th style="width: 45%;">Description</th>
+										<th style="width: 40%;">Description</th>
 										<th style="width: 15%;">Category</th>
-										<th style="width: 10%;">Surface</th>
+										<th style="width: 5%;">Surface</th>
 										<th style="width: 5%;">Target</th>
+										<th style="width: 5%;">Lot</th>
 										<th style="width: 5%;">Box</th>
 									</tr>					
 								</thead>
@@ -105,6 +106,7 @@
 								<tfoot style="background-color: rgb(252, 248, 227);">
 									<tr>
 										<th colspan="5" style="text-align:center;">Total:</th>
+										<th></th>
 										<th></th>
 										<th></th>
 									</tr>
@@ -145,8 +147,8 @@
 							<input type="text" id="material_description" style="width: 100%; height: 50px; font-size: 25px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-6">
-							<span style="font-weight: bold; font-size: 16px;">Qty Lot:</span>
-							<input type="text" id="qty_lot" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
+							<span style="font-weight: bold; font-size: 16px;">Qty Packing:</span>
+							<input type="text" id="qty_packing" style="width: 100%; height: 50px; font-size: 30px; text-align: center;" disabled>
 						</div>
 						<div class="col-xs-6" style="padding-top: 3.9%;">
 							<button class="btn btn-primary" onclick="print()" style="font-size: 2.5vw; width: 100%; font-weight: bold; padding: 0;">
@@ -175,8 +177,6 @@
 									<th style="width: 5%">Material Description</th>
 									<th style="width: 2%">Location</th>
 									<th style="width: 1%">Qty</th>
-									{{-- <th style="width: 2%">Stuffing Date</th> --}}
-									{{-- <th style="width: 2%">Destination</th> --}}
 									<th style="width: 3%">Created At</th>
 									<th style="width: 1%">Reprint</th>
 									<th style="width: 1%">Delete</th>
@@ -194,8 +194,6 @@
 									<th></th>
 									<th></th>
 									<th></th>
-									{{-- <th></th> --}}
-									{{-- <th></th> --}}
 								</tr>
 							</tfoot>
 						</table>
@@ -237,6 +235,16 @@
 		$("#print_kdo_modal").modal('show');
 	}
 
+	function printLabelSubassy(location,kd_detail,windowName) {
+		newwindow = window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+kd_detail, windowName, 'height=250,width=450');
+
+		if (window.focus) {
+			newwindow.focus();
+		}
+
+		return false;
+	}
+
 	function reprintKDODetail(id){
 
 		var data = id.split('+');
@@ -244,7 +252,9 @@
 		var kd_detail = data[0];
 		var location = "{{ $location }}";
 
-		window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+kd_detail, '_blank');
+		// window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+kd_detail, '_blank');
+		printLabelSubassy(location, kd_detail, ('reprint'+kd_detail));
+
 		openSuccessGritter('Success!', "Reprint Success");
 	}
 
@@ -373,11 +383,13 @@
 
 	function print() {
 		var production_id = $("#production_id").val();
+		var quantity = $("#qty_packing").val();
 		var location = "{{ $location }}";
 
 		var data = {
 			production_id : production_id,
-			location : location,
+			quantity : quantity,
+			location : location
 		}
 
 		if(production_id == ''){
@@ -390,7 +402,9 @@
 			if(result.status){
 				var id = result.knock_down_detail.id;
 
-				window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+id, '_blank');
+				// window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+id, '_blank');
+				printLabelSubassy(location, id, ('print'+id));
+
 
 				$('#production_id').val('');
 				$('#due_date').val('');
@@ -398,7 +412,7 @@
 				$('#material_number').val('');
 				$('#surface').val('');
 				$('#material_description').val('');
-				$('#qty_lot').val('');
+				$('#qty_packing').val('');
 
 				
 				fillTableList();
@@ -423,6 +437,8 @@
 		var material_description = $('#'+param).find('td').eq(2).text();
 		var hpl = $('#'+param).find('td').eq(3).text();
 		var surface = $('#'+param).find('td').eq(4).text();
+		var target = $('#'+param).find('td').eq(5).text();
+		var box = $('#'+param).find('td').eq(7).text();
 		var lot_completion = data[1];
 
 		$('#production_id').val(id);
@@ -431,8 +447,12 @@
 		$('#material_number').val(material_number);
 		$('#surface').val(surface);
 		$('#material_description').val(material_description);
-		$('#qty_lot').val(lot_completion);
 
+		if(box >= 1){
+			$('#qty_packing').val(lot_completion);
+		}else{
+			$('#qty_packing').val(target);
+		}
 	}
 
 	function fillTableList(){
@@ -451,6 +471,7 @@
 				tableData += '<td>'+ value.hpl +'</td>';
 				tableData += '<td>'+ value.surface +'</td>';
 				tableData += '<td>'+ value.target +'</td>';
+				tableData += '<td>'+ value.lot_completion +'</td>';
 				tableData += '<td>'+ value.box +'</td>';
 				tableData += '</tr>';
 			});
@@ -509,10 +530,10 @@
 					}, 0)
 					$(api.column(5).footer()).html(totalPlan.toLocaleString());
 
-					var totalPlan = api.column(6).data().reduce(function (a, b) {
+					var totalPlan = api.column(7).data().reduce(function (a, b) {
 						return intVal(a)+intVal(b);
 					}, 0)
-					$(api.column(6).footer()).html(totalPlan.toLocaleString());
+					$(api.column(7).footer()).html(totalPlan.toLocaleString());
 				},
 				'paging': true,
 				'lengthChange': true,
