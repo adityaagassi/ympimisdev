@@ -611,12 +611,24 @@ class MaintenanceController extends Controller
 				left join employee_syncs u on spk.created_by = u.employee_id
 				where order_no = '".$order_no."'");
 
+
 			if($prioritas == 'Urgent'){
 				$remark = 0;
 
+				if (date('W') % 2 == 0) {
+					$id = 'PI0004007';
+				} else {
+					$id = 'PI0805001';
+				}
+
+				$phone = EmployeeSync::select('phone')->where('employee_id', '=', $id)->first();
+
+				$new_phone = substr($phone->phone, 1, 15);
+				$new_phone = '62'.$new_phone;
+
 				// $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-				// $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode("6285645896741");
-				// $query_string .= "&message=".rawurlencode(stripslashes("Ada SPK Urgent Dari ".$data[0]->name.", Mohon segera cek MIRAI dan Setujui SPK. Terimakasih")) . "&languagetype=1";
+				// $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($new_phone);
+				// $query_string .= "&message=".rawurlencode(stripslashes("Ada SPK Urgent Dari ".$data[0]->name.", Mohon segera cek MIRAI. Terimakasih")) . "&languagetype=1";
 				// $url = "http://gateway.onewaysms.co.id:10002/".$query_string; 
 				// $fd = @implode('', file($url));
 				
@@ -642,7 +654,7 @@ class MaintenanceController extends Controller
 
 			$response = array(
 				'status' => true,
-				'message' => "Pembuatan SPK berhasil",
+				'message' => "Pembuatan SPK berhasil"
 			);
 			return Response::json($response);
 		} catch (QueryException $e) {
@@ -700,7 +712,7 @@ class MaintenanceController extends Controller
 			where deleted_at is null
 			group by order_no
 			) as prcs on prcs.order_no = maintenance_job_orders.order_no
-			left join (select * from maintenance_job_order_logs where remark = 4 and deleted_at is null) as inprogress on maintenance_job_orders.order_no = inprogress.order_no
+			left join (select * from maintenance_job_processes where start_actual is not null and deleted_at is null) as inprogress on maintenance_job_orders.order_no = inprogress.order_no
 			where maintenance_job_orders.remark in (3,4)
 			');
 
@@ -1955,7 +1967,7 @@ class MaintenanceController extends Controller
 
 		$ck->delete();
 
-		$cek_apar_ck = UtilityCheck::where('utility_id', '=', $ck->utility_id)->orderBy('id')->first();
+		$cek_apar_ck = UtilityCheck::where('utility_id', '=', $ck->utility_id)->orderBy('id', 'desc')->first();
 
 		if ($cek_apar_ck) {
 			if (strpos($cek_apar_ck->check, '0') !== false) {
@@ -2398,6 +2410,34 @@ class MaintenanceController extends Controller
 		$response = array(
 			'status' => true,
 			'datas' => $pics
+		);
+		return Response::json($response);
+	}
+
+	public function fetchPlanedMonitoring(Request $request)
+	{
+		$satu_hari = "SELECT masters.machine_name, description from
+		(SELECT machine_name FROM `maintenance_plan_item_checks` where remark = '1-HARI' group by machine_name) as masters
+		left join maintenance_plan_items on maintenance_plan_items.machine_name = masters.machine_name";
+
+		$response = array(
+			'status' => true,
+			'datas' => $satu_hari
+		);
+		return Response::json($response);
+	}
+
+	public function postPlannedSession(Request $request)
+	{
+		$request->session()->put('description'.$request->get('id'), $request->get('desc'));
+		$request->session()->put('before'.$request->get('id'), $request->get('before'));
+		$request->session()->put('after'.$request->get('id'), $request->get('after'));
+
+		$datas = $request->session()->get('before'.$request->get('id'));
+
+		$response = array(
+			'status' => true,
+			'datas' => $datas
 		);
 		return Response::json($response);
 	}
