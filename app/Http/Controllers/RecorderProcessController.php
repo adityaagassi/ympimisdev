@@ -97,10 +97,11 @@ class RecorderProcessController extends Controller
                       'BL 04'];
 
       $this->mail = ['budhi.apriyanto@music.yamaha.com',
-                    'khoirul.umam@music.yamaha.com',
-                    'aditya.agassi@music.yamaha.com',
                     'takashi.ohkubo@music.yamaha.com',
-                    'eko.prasetyo.wicaksono@music.yamaha.com'];
+                    'khoirul.umam@music.yamaha.com',
+                    'eko.prasetyo.wicaksono@music.yamaha.com',
+                    'andik.yayan@music.yamaha.com',
+                    'aditya.agassi@music.yamaha.com',];
       // $this->array_push_pull = [];
       $this->checked_at_time = date('Y-m-d H:i:s');
     }
