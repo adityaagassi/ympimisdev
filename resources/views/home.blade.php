@@ -161,7 +161,7 @@
                                     <span style="font-weight: bold;">Presence Information (出勤情報)</span>
                                     {{-- <br>
                                     <a href="{{ url("index/general/online_transportation") }}">
-                                        <i class="fa fa-caret-right"></i> Online Attendance And Transportation Report (??)
+                                        <i class="fa fa-caret-right"></i> Online Attendance And Transportation Report (出席・移動のオンライン報告)
                                     </a> --}}
                                     <br>
                                     <a href="{{ url("index/report/employee_resume") }}">
@@ -181,7 +181,7 @@
                                     </a>
                                     <br>
                                     <a href="{{ url("index/report/checklog_data")}}">
-                                        <i class="fa fa-caret-right"></i> Checklog Data (??)
+                                        <i class="fa fa-caret-right"></i> Checklog Data (出退勤登録データ)
                                     </a>
                                 </td>
                             </tr>
@@ -333,7 +333,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/stocktaking/daily_report") }}">
-                                <i class="fa fa-caret-right"></i> Daily Stock Taking Report (???)
+                                <i class="fa fa-caret-right"></i> Daily Stock Taking Report (日次棚卸し報告)
                             </a>
                             <br>
                         </td>
@@ -605,7 +605,7 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("index/maintenance/spk/operator") }}">
-                                    <i class="fa fa-caret-right"></i> Operator Monitoring (??)
+                                    <i class="fa fa-caret-right"></i> Operator Monitoring (作業者の監視)
                                 </a>
                                 <br>
                             </td>
@@ -627,25 +627,25 @@
                                 </a>
                                 <br>
                                 <a href="{{ url("index/maintenance/pic/Utility") }}">
-                                    <i class="fa fa-caret-right"></i> PIC List ()
+                                    <i class="fa fa-caret-right"></i> PIC List (担当者リスト)
                                 </a>
                                 <br>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <span style="font-weight: bold;">Planned Maintenance ()</span>
+                                <span style="font-weight: bold;">Planned Maintenance (予定保全)</span>
                                 <br>
                                 <a href="{{ url("index/maintenance/pm/schedule") }}">
-                                    <i class="fa fa-caret-right"></i> Plan Maintenance Schedule ()
+                                    <i class="fa fa-caret-right"></i> Plan Maintenance Schedule (予定保全の計画)
                                 </a>
                                 <br>
                                 <a href="{{ url("index/maintenance/pm/monitoring") }}">
-                                    <i class="fa fa-caret-right"></i> Plan Maintenance Monitoring ()
+                                    <i class="fa fa-caret-right"></i> Plan Maintenance Monitoring (保全計画の監視)
                                 </a>
                                 <br>
                                 <a href="{{ url("index/maintenance/apar") }}">
-                                    <i class="fa fa-caret-right"></i> PIC List ()
+                                    <i class="fa fa-caret-right"></i> PIC List (担当者リスト)
                                 </a>
                                 <br>
                             </td>
@@ -709,7 +709,7 @@
                                 </a>
                                 <br>
                                 <a href="http://172.17.129.10/tpro/" target="_blank">
-                                    <i class="fa fa-caret-right"></i> M-Pro Kanban Monitoring ()
+                                    <i class="fa fa-caret-right"></i> M-Pro Kanban Monitoring (Mプロかんばんの監視)
                                 </a>
                             </td>
                         </tr>
@@ -858,7 +858,7 @@
                                 </a>
                                     {{-- <br>
                                         <a href="{{ url("/index/fg_production_monitoring") }}">
-                                            <i class="fa fa-caret-right"></i> Production Schedule Monitoring (??)
+                                            <i class="fa fa-caret-right"></i> Production Schedule Monitoring (生産予定監視)
                                         </a> --}}
                                         <br>
                                         <a href="{{ url("/index/dp_production_result") }}">
