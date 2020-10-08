@@ -60,7 +60,13 @@ public function handle()
     }
 
     $q = "delete from patient_list where TIMESTAMPDIFF(minute,in_time,now()) > 150 and employee_id not like 'PR%'";
-
     $delete_klinik = db::connection('clinic')->select($q);
+
+
+    $delete_stamp_sx = db::select("DELETE FROM stamp_inventories 
+        WHERE serial_number IN ( SELECT serial_number FROM flo_details WHERE origin_group_code = '043' ) 
+        AND origin_group_code = '043'");
+
+
 }
 }
