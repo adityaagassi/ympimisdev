@@ -2515,28 +2515,33 @@ class QcReportController extends Controller
       public function close1(Request $request,$id)
       {
         try{
-            $id_user = Auth::id();
+              $id_user = Auth::id();
 
-            $cpars = QcCpar::find($id);
-            $cpars->cost = $request->get('cost');
-            $cpars->save();
+              $cpars = QcCpar::find($id);
+              $cpars->cost = $request->get('cost');
+              $cpars->save();
 
-            $ver = QcVerifikasi::where('cpar_no','=',$request->get("cpar_no"));
-            $ver->delete();
 
-            $jumlahVerif = $request->get('jumlahVerif');
-            for ($i = 1; $i <= $jumlahVerif; $i++) {
-              $tanggal = $request->get('tanggal'.$i);
-              $status = $request->get('status'.$i);
-              $keterangan = $request->get('verifikasi'.$i);
-              QcVerifikasi::create([
-                'cpar_no' => $request->get('cpar_no'),
-                'tanggal' => $tanggal,
-                'status' => $status,
-                'keterangan' => $keterangan,
-                'created_by' => $id_user
-              ]);
-              // $files=$request->file('gambar_'.$i);
+             DB::transaction(function() use ($request, $id) {
+
+              $ver = QcVerifikasi::where('cpar_no','=',$request->get("cpar_no"));
+              $ver->delete();
+
+              $jumlahVerif = $request->get('jumlahVerif');
+              for ($i = 1; $i <= $jumlahVerif; $i++) {
+                $tanggal = $request->get('tanggal'.$i);
+                $status = $request->get('status'.$i);
+                $keterangan = $request->get('verifikasi'.$i);
+                $view = QcVerifikasi::create([
+                  'cpar_no' => $request->get('cpar_no'),
+                  'tanggal' => $tanggal,
+                  'status' => $status,
+                  'keterangan' => $keterangan,
+                  'created_by' => Auth::id()
+                ]);
+                $view->save();
+              }
+                // $files=$request->file('gambar_'.$i);
               //   $nama=$files->getClientOriginalName();
               //   $files->move('files/gambar',$nama);
               //   QcVerifikasi::create([
@@ -2545,7 +2550,7 @@ class QcReportController extends Controller
               //       'keterangan' => $keterangan,
               //       'created_by' => $id_user
               //   ]);
-            }
+            });
             return redirect('/index/qc_report/verifikasiqa/'.$id)->with('status', 'Data Has Been Updated')->with('page', 'QA verification');
           }
           catch (QueryException $e){
