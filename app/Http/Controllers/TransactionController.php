@@ -225,6 +225,11 @@ class TransactionController extends Controller
 		if($id[0] == 'receive'){
 			try{
 
+				$material = db::connection('mysql2')->table('materials')
+				->where('material_number', '=', $return->material_number)
+				->first();
+
+
 				$return_log = new ReturnLog([
 					'return_id' => $return->id,
 					'material_number' => $return->material_number,
@@ -238,11 +243,7 @@ class TransactionController extends Controller
 					'remark' => 'received'
 				]);
 				$return_log->save();
-
-				$material = db::connection('mysql2')->table('materials')
-				->where('material_number', '=', $return->material_number)
-				->first();
-
+				
 
 				$return_data = db::connection('mysql2')->table('transfers_return')->insert([
 					'material_id' => $material->id,
@@ -563,7 +564,7 @@ class TransactionController extends Controller
 	public function returnSlipCopy($id, $material, $description, $issue, $receive, $quantity, $created_by){
 		$user = User::where('id', '=', $created_by)->first();
 
-		if(Auth::user()->role == 'MIS' || Auth::user()->role == 'S'){
+		if(Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
 			$printer_name = 'MIS';
 		}
 		else{
@@ -629,7 +630,7 @@ class TransactionController extends Controller
 	public function returnSlip($id, $material, $description, $issue, $receive, $quantity, $created_by){
 		$user = User::where('id', '=', $created_by)->first();
 
-		if(Auth::user()->role == 'MIS' || Auth::user()->role == 'S'){
+		if(Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
 			$printer_name = 'MIS';
 		}
 		else{
