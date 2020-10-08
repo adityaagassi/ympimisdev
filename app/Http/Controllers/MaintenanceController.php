@@ -1383,7 +1383,7 @@ class MaintenanceController extends Controller
 			->leftJoin('utility_checks', 'utility_checks.utility_id', '=', 'utilities.id')
 			->select('utilities.utility_code', 'utility_name', 'exp_date', 'utilities.status', db::raw('DATE_FORMAT(utility_checks.check_date, "%d-%m-%Y") as check_date'), 'utilities.remark')
 			->whereNull('utility_checks.deleted_at')
-			->orderBy('utility_checks.id', 'asc')
+			->orderBy('utility_checks.id', 'desc')
 			->limit(2)
 			->get();
 
