@@ -2758,9 +2758,11 @@ class StockTakingController extends Controller{
 				$storeID = StocktakingList::where('id', $id)->first();
 
 				$stores = StocktakingList::where('store', $storeID->store)
+				->where('print_status', 1)
 				->get();
 
 				$no_use = StocktakingList::where('store', $storeID->store)
+				->where('print_status', 1)
 				->where('remark', 'NO USE')
 				->get();
 
@@ -2771,7 +2773,6 @@ class StockTakingController extends Controller{
 						'final_count' => 0
 					]);
 				}
-
 			}
 
 			$response = array(
