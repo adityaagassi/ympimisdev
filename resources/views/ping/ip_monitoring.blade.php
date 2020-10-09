@@ -192,7 +192,7 @@
 
 		jQuery(document).ready(function() {
 			fetchip();
-			setInterval(fetchip, 30000);
+			setInterval(fetchip, 45000);
 
     		$('.select2').select2();
 		});
@@ -288,7 +288,6 @@
 							$("#box_"+value.remark).removeClass('bg-green');	
 							$("#box_"+value.remark).removeClass('bg-orange');	
 						}
-
 
 					});
 
