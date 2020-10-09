@@ -521,8 +521,8 @@
 		$('#createDestination').val('');
 		$('#createStart').val('');
 		$('#createEnd').val('');
-		$('#createStartTime').val('');
-		$('#createEndTime').val('');
+		$('#createStartTime').timepicker({defaultTime: '00:00'});
+		$('#createEndTime').timepicker({defaultTime: '00:00'});
 		$("#addEmployee").prop('selectedIndex', 0).change();
 
 		$('#tableDetailPassengerBody').html('');
@@ -532,8 +532,8 @@
 		$('#detailDestination').val('');
 		$('#detailStart').val('');
 		$('#detailEnd').val('');
-		$('#detailStartTime').val('');
-		$('#detailEndTime').val('');
+		$('#detailStartTime').timepicker({defaultTime: '00:00'});
+		$('#detailEndTime').timepicker({defaultTime: '00:00'});
 		$('#detailRequetedBy').val('');
 		$('#detailApprovedBy').val('');
 		$("#detailDriver").prop('selectedIndex', 0).change();
