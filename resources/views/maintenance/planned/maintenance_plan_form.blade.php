@@ -177,13 +177,50 @@
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
-						<label for="exampleInputEmail1">Operator</label>
+						<label>Operator</label>
 						<select class="form-control" id="operator" style="width: 100%; text-align: center;" onchange="getval(this)" data-placeholder="Pilih Operator">
+							<option value=""></option>
 							@foreach($mtc_op as $mtc)
 							<option value="{{ $mtc->employee_id }}">{{ $mtc->name }}</option>
 							@endforeach
 						</select>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modalNotGood">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-body table-responsive no-padding">
+					<div class="form-group">
+						<label id="judul_ng"></label>
+						<textarea class="form-control" placeholder="Isikan deskripsi Temuan dan Penanganan" id="deskripsi"></textarea>
+					</div>
+					<div class="form-group">
+						<table style="width: 100%">
+							<tr>
+								<th><label>BEFORE</label></th>
+								<th><label>AFTER</label></th>
+							</tr>
+							<tr>
+								<td>
+									<input type="file" name="pic_before" id="pic_before">
+									<img id="img_before" src="#" alt="before image" style="max-width: 100%;">
+								</td>
+								<td>
+									<input type="file" name="pic_after" id="pic_after">
+									<img id="img_after" src="#" alt="after image" style="max-width: 100%;">
+								</td>
+							</tr>
+						</table>
+					</div>
+					<input type="hidden" id="tmp_id">
+					<button class="btn btn-success" onclick="save_tmp()"><i class="fa fa-check"></i>&nbsp; Save</button>
+					<button class="btn btn-danger pull-right"><i class="fa fa-close"></i>&nbsp; Close</button>
 				</div>
 			</div>
 		</div>
@@ -258,10 +295,6 @@
 
 		$("#item_cat").append(tmp_var);
 	}
-
-	$('#modalOperator').on('shown.bs.modal', function () {
-		$('#operator').focus();
-	});
 
 	function getval(elem) {
 		$('#modalOperator').modal('hide');
@@ -342,7 +375,7 @@
 					body += "<div class='radio'><label><input type='radio' class='check' name='nm_"+value.id+"' id='check_"+value.id+"'>OK</label></div></td>";
 				}
 
-				body += "<td style='padding: 0px; background-color: #ffccff; text-align: center; color: #000000; font-size: 20px;'><div class='radio'><label><input type='radio' class='check' name='nm_"+value.id+"' id='ng_"+value.id+"'>NG</label></div></td>";
+				body += "<td style='padding: 0px; background-color: #ffccff; text-align: center; color: #000000; font-size: 20px;'><div class='radio'><label><input type='radio' class='check' name='nm_"+value.id+"' id='ng_"+value.id+"' onclick='openModalNG("+value.id+")'>NG</label></div></td>";
 
 				body += "</tr>";
 			}
@@ -456,12 +489,67 @@
 		}
 	}
 
+	function save_tmp() {
+		var ido = $("#tmp_id").val();
+
+		var data = {
+			id : ido,
+			desc : $("#deskripsi").val(),
+			before : $("#img_before").attr('src'),
+			after : $("#img_after").attr('src')
+		}
+
+		$.post('{{ url("post/maintenance/pm/session") }}', data, function(result, status, xhr) {
+			if (result.status) {
+				$("#img_after").attr('src', result.datas);
+			} else {
+
+			}
+		})
+	}
+
+	$("#pic_before").change(function() {
+		var target = "img_before";
+		readURL(this, target);
+	});
+
+	$("#pic_after").change(function() {
+		var target = "img_after";
+		readURL(this, target);
+	});
+
+	function openModalNG(id) {
+		$("#judul_ng").text("");
+		$("#pic_before").val("");
+		$("#pic_after").val("");
+		$("#img_before").attr("src", "#");
+		$("#img_after").attr("src", "#");
+		$("#tmp_id").val("");
+
+		$("#modalNotGood").modal('show');
+
+		$("#judul_ng").text($("#item_"+id).text()+" : "+$("#substance_"+id).text());
+		$("#tmp_id").val(id);
+	}
+
 	function unique(list) {
 		var result = [];
 		$.each(list, function(i, e) {
 			if ($.inArray(e, result) == -1) result.push(e);
 		});
 		return result;
+	}
+
+	function readURL(input, target) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				$('#'+target).attr('src', e.target.result);
+			}
+
+			reader.readAsDataURL(input.files[0]);
+		}
 	}
 
 	function openSuccessGritter(title, message){

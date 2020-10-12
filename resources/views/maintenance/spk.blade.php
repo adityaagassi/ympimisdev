@@ -127,10 +127,11 @@
 					<thead>
 						<tr>
 							<th width="5%">Nomor SPK</th>
-							<th width="25%">Bagian</th>
+							<th width="20%">Bagian</th>
 							<th width="5%">Jenis Pekerjaan</th>
 							<th width="50%">Deskripsi</th>
 							<th width="5%">Prioritas</th>
+							<th width="5%">Status</th>
 							<th width="10%">Start</th>
 							<th width="5%">Action</th>
 						</tr>
@@ -236,7 +237,6 @@
 											<div id="box">
 												<img src="" id="profile-img1" style="max-width: 33%" />
 												<img src="" id="profile-img2" style="max-width: 33%" />
-												<img src="" id="profile-img3" style="max-width: 33%" />
 											</div>
 											<label class="text-red pull-right txt_reset" onclick="reset()"><i class="fa fa-refresh"> Reset</i></label>
 											<label for="foto1" class="text-green txt_foto" id="txt_foto1"><i class="fa fa-plus"></i> Tambah</label>
@@ -245,8 +245,6 @@
 											<label for="foto2" class="text-green txt_foto" id="txt_foto2"><i class="fa fa-plus"></i> Tambah</label>
 											<input type="file" name="foto" id="foto2" class="foto">
 
-											<label for="foto3" class="text-green txt_foto" id="txt_foto3"><i class="fa fa-plus"></i> Tambah</label>
-											<input type="file" name="foto" id="foto3" class="foto">
 										</div>
 									</div>
 
@@ -273,13 +271,14 @@
 
 								<div class="col-xs-12">
 									<button type="button" class="btn btn-warning pull-left" onclick="pending_action(this, 'Vendor')" id="btn_vendor" style="margin-right: 3px"><i class="fa fa-exclamation-circle"></i> Vendor</button>
-									<button type="button" class="btn btn-warning pull-left" onclick="pending_action(this, 'masih WJO')" id="btn_wjo" style="margin-right: 3px"><i class="fa fa-exclamation-circle"></i> masih WJO</button>
-									<button type="button" class="btn btn-primary pull-left" onclick="pending_action(this, 'Part Tidak Ada')" id="btn_no_part"><i class="fa fa-exclamation-circle"></i> Part Tidak Ada</button>
+									<button type="button" class="btn btn-primary pull-left" onclick="pending_action(this, 'masih WJO')" id="btn_wjo" style="margin-right: 3px"><i class="fa fa-exclamation-circle"></i> masih WJO</button>
+									<button type="button" class="btn btn-primary pull-left" onclick="pending_action(this, 'Part Tidak Ada')" id="btn_no_part" style="margin-right: 3px"><i class="fa fa-exclamation-circle"></i> Part Tidak Ada</button>
+									<button type="button" class="btn btn-primary pull-left" onclick="pending_action(this, 'Call Friend')" id="btn_friend"><i class="fa fa-exclamation-circle"></i> Call Friend</button>
 
 									<button type="button" class="btn btn-success pull-left" style="display: none; margin-right: 5px" onclick="pending_action(this, 'No Part')" id="btn_no_part_yes"><i class="fa fa-check"></i> YES</button>
 									<button type="button" class="btn btn-danger pull-left" style="display: none" onclick="pending_action(this, 'No Part')" id="btn_no_part_no"><i class="fa fa-close"></i> NO</button>
 
-									<button type="button" class="btn btn-success pull-right" onclick="postFinish()" id="btn_selesai"><i class="fa fa-thumbs-up"></i> Selesai</button>
+									<button type="button" class="btn btn-success pull-right" onclick="postFinish()" id="btn_selesai"><i class="fa fa-thumbs-up"></i>SPK Selesai</button>
 								</div>
 							</div>
 						</td>
@@ -371,7 +370,10 @@
 
 						<div class="col-xs-12">
 							<button type="button" class="btn btn-danger pull-left" data-dismiss='modal'><i class="fa fa-close"></i> Close</button>
-							<button type="button" class="btn btn-primary pull-right" onclick="startWork()"><i class="fa fa-thumbs-up"></i> Kerjakan</button>
+
+							<button type="button" class="btn btn-primary pull-right" style="display: none" onclick="startWork()" id="btn_work"><i class="fa fa-wrench"></i> Kerjakan</button>
+
+							<button type="button" class="btn btn-warning pull-right" style="display: none" onclick="startPending()" id="btn_resume"><i class="fa fa-wrench"></i> Lanjutkan</button>
 						</div>
 					</div>
 				</div>
@@ -583,6 +585,7 @@
 					var priority = '<span style="font-size: 13px;" class="label label-default">Normal</span>';
 				}
 				body += "<td>"+priority+"</td>";
+				body += "<td>"+value.process_name+"</td>";
 
 				op = [];
 				var start_actual = "";
@@ -608,16 +611,19 @@
 
 
 				if (value.start_actual != null) {
-						// body += "<td style='background-color: #fffcb7'>"+start_actual+"</td>";
-						body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.description+"\")'><i class='fa fa-check'></i> Selesai</button></td>";
+					if (value.remark == '5') {
+						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.description+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\")'><i class='fa fa-rocket'></i>&nbsp; Lanjutkan</button></td>";
 					} else {
-						// start_working.push(["", ""]);
-						// body += "<td>-</td>";
-						body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.description+"\",\""+value.safety_note+"\",\""+value.priority+"\")'><i class='fa fa-gears'></i> Kerjakan</button></td>";
+						body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.description+"\")'><i class='fa fa-file'></i>&nbsp; Buat Laporan</button></td>";
 					}
+				} else {
 
-					body += "</tr>";
-				})
+					body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.description+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"work\")'><i class='fa fa-gears'></i>&nbsp; Kerjakan</button></td>";
+
+				}
+
+				body += "</tr>";
+			})
 			$('#table_master').DataTable().clear();
 			$('#table_master').DataTable().destroy();
 
@@ -638,11 +644,11 @@
 					},
 					]
 				},
-				'order': [5, 'desc'],
+				// 'order': [5, 'desc'],
 				'paging': true,
 				'lengthChange': true,
-				'searching': false,
-				'ordering': true,
+				'searching': true,
+				'ordering': false,
 				'info': true,
 				'autoWidth': true,
 				"sPaginationType": "full_numbers",
@@ -675,7 +681,15 @@
 		}
 	}
 
-	function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date, desc, safety_note, priority) {
+	function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date, desc, safety_note, priority, stat) {
+		if (stat == "work") {
+			$("#btn_work").show();
+			$("#btn_resume").hide();
+		} else {
+			$("#btn_resume").show();
+			$("#btn_work").hide();
+		}
+
 		$("#modalWork").modal('show');
 
 		$("#spk_work").val(order_no);
@@ -737,6 +751,7 @@
 			$("#tanggal_detail").val(request_date);
 			$("#bagian_detail").val(bagian);
 			$("#desc_detail").text(desc);
+
 		}
 
 		function postFinish() {
@@ -778,7 +793,7 @@
 				foto : foto
 			}
 
-			if ($("#profile-img1").attr("src") != "" || $("#profile-img2").attr("src") != "" || $("#profile-img3").attr("src") != "") {
+			if ($("#profile-img1").attr("src") != "" || $("#profile-img2").attr("src") != "") {
 				$.post('{{ url("report/maintenance/spk") }}', data, function(result, status, xhr){
 					if (result.status) {
 						openSuccessGritter('Success', 'SPK Terselesaikan');
@@ -802,25 +817,6 @@
 			}
 		}
 
-		function noPart() {
-			// $("#no_part").show();
-			// $("#btn_no_part").hide();
-
-			// $("#btn_vendor").css('visibility', 'hidden');
-			// $("#btn_wjo").css('visibility', 'hidden');
-			// $("#btn_selesai").css('visibility', 'hidden');
-			// $("#btn_no_part_yes").show();
-			// $("#btn_no_part_no").show();
-
-			// if (confirm('Apakah Anda Yakin Pending SPK "Tidak Ada Part" ?')) {
-			// 	if ($("#part_detail_1").val() != "") {
-
-			// 	} else {
-			// 		openErrorGritter('Gagal');
-			// 	}
-			// }
-		}
-
 		function get_parts() {
 			var option_part = "";
 			option_part += '<option></option>';
@@ -839,7 +835,7 @@
 
 				$("#part_detail_1").select2({
 					allowClear: true,
-					minimumInputLength: 3
+					// minimumInputLength: 3
 				});
 
 			})
@@ -877,7 +873,7 @@
 			$(function () {
 				$('.part').select2({
 					allowClear: true,
-					minimumInputLength: 3
+					// minimumInputLength: 3
 				});
 			})
 
@@ -896,16 +892,48 @@
 		function pending_action(elem, stat) {
 			ido = $(elem).attr('id');
 
+			var penyebab = $("#penyebab_detail").val();
+			var penanganan = $("#penanganan_detail").val();
+			var spk_detail = $("#spk_detail").val();
+
+			if (penyebab == "" || penanganan == "") {
+				openErrorGritter('Error', 'Ada Kolom yang Kosong');
+				return false;
+			}
+
+			var foto = [];
+			var part = [];
+
+			$('#box > img').each(function () {
+				foto.push($(this).attr("src"));
+			});
+
+			if ($("#profile-img1").attr("src") == "") {
+				openErrorGritter('Error', 'Foto Harap Diisi');
+				return false;
+			}
+
+			$('.part').each(function(index, value) {
+				ids = $(this).attr("id");
+				tmp_ids = ids.split('_')[2];
+
+				if ($("#part_detail_"+tmp_ids).val() != "") {
+					part.push({'part_number' : $("#part_detail_"+tmp_ids).val(), 'qty' : $("#qty_"+tmp_ids).val()});
+				}
+			});
+
 			if (confirm("Apakah Anda Yakin Pending SPK '"+stat+"' ?")) {
-				var spk_detail = $("#spk_detail").val();
+				var data = {
+					order_no : spk_detail,
+					penyebab : penyebab,
+					penanganan : penanganan,
+					spare_part : part,
+					foto : foto,
+					status : stat
+				}
 
 				if (ido != "btn_no_part") {
-					var data = {
-						order_no : spk_detail,
-						status : stat,
-						part : ''
-					}
-
+					
 					$.post('{{ url("report/maintenance/spk/pending") }}', data, function(result, status, xhr){
 						if (result.status) {
 							openSuccessGritter('Success', 'SPK Status Pending');
@@ -917,26 +945,28 @@
 						}
 					})
 				} else {
-					if ($("#part_detail_1").val() != "") {
+					if (part[0].part_number != "") {
 						
-						var part_detail = [];
+						// var part_detail = [];
 
-						for (var i = 1; i <= no; i++) {
-							var part_name = $("#part_detail_"+i).val();
-							var part_qty = $("#qty_"+i).val();
+						// for (var i = 1; i <= no; i++) {
+						// 	var part_name = $("#part_detail_"+i).val();
+						// 	var part_qty = $("#qty_"+i).val();
 
-							part_detail.push(part_name+" : "+part_qty);
-						}
+						// 	part_detail.push(part_name+" : "+part_qty);
+						// }
 
-						var data = {
-							order_no : spk_detail,
-							status : stat,
-							part : part_detail.toString()
-						}
+						// var data = {
+						// 	order_no : spk_detail,
+						// 	status : stat,
+						// 	part : part_detail.toString()
+						// }
 
 						$.post('{{ url("report/maintenance/spk/pending") }}', data, function(result, status, xhr){
 							if (result.status) {
 								openSuccessGritter('Success', 'SPK Status Pending');
+								$("#div_master").show();
+								$("#div_after").hide();
 								get_spk();
 							} else {
 								openErrorGritter('Error', result.message);
@@ -944,6 +974,7 @@
 						})
 					} else {
 						openErrorGritter('Gagal', 'Part Harus Diisi');
+						return false;
 					}
 				}
 			}
@@ -964,9 +995,7 @@
 				}
 
 				reader.readAsDataURL(input.files[0]);
-
 			}
-
 		}
 
 		$("#foto1, #foto2, #foto3").change(function(){
@@ -989,14 +1018,9 @@
 			$("input[id='foto2']").click();
 		});
 
-		$("#profile-img3").click(function() {
-			$("input[id='foto3']").click();
-		});
-
 		function reset() {
 			$("#profile-img1").attr("src", "");
 			$("#profile-img2").attr("src", "");
-			$("#profile-img3").attr("src", "");
 
 			$(".txt_foto").hide();
 			$("#txt_foto1").show();
@@ -1004,13 +1028,25 @@
 
 		function get_stock(elem) {
 			var num = $(elem).attr('id').split("_")[2];
-			// console.log(elem);
 
 			$.each(part_list, function(index, value){
 				if ($(elem).val() == value.part_number) {
 					$("#stock_"+num).val(value.stock);
 					return false;
 				}
+			})
+		}
+
+		function startPending() {
+			var data = {
+				order_no : $("#spk_work").val()
+			};
+
+			$.get('{{ url("rework/maintenance/spk") }}', data, function(result, status, xhr){
+				openSuccessGritter('Success', '');
+
+				$("#modalWork").modal('hide');
+				get_spk();
 			})
 		}
 

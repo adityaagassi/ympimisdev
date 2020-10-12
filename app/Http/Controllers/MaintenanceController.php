@@ -195,6 +195,17 @@ class MaintenanceController extends Controller
 		))->with('page', 'Operator Monitoring')->with('head2', 'SPK')->with('head', 'Maintenance');	
 	}
 
+	public function indexSPKGrafik()
+	{
+		$title = 'Maintenance SPK Monitoring';
+		$title_jp = '';
+
+		return view('maintenance.spk_grafik', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+		))->with('page', 'SPK Monitoring')->with('head2', 'SPK')->with('head', 'Maintenance');	
+	}
+
 	public function indexApar()
 	{
 		$title = 'APAR Check Schedule';
@@ -704,7 +715,7 @@ class MaintenanceController extends Controller
 		$tgl = "2020-09";
 
 		$get_data = db::select('
-			SELECT DISTINCT maintenance_job_orders.order_no, priority, type, category, DATE_FORMAT(maintenance_job_orders.created_at,"%Y-%m-%d") as request_date, `name` as requester, date(inprogress.created_at) as inprogress, pic, date(target_date) as target_date FROM `maintenance_job_orders` 
+			SELECT DISTINCT maintenance_job_orders.order_no, priority, SUBSTRING_INDEX(maintenance_job_orders.section,"_",1) as bagian, maintenance_job_orders.description, DATE_FORMAT(maintenance_job_orders.created_at,"%Y-%m-%d") as request_date, `name` as requester, inprogress.created_at as inprogress, pic, date(target_date) as target_date, target_date as target, process_code, process_name, rpt.handling, maintenance_job_pendings.status FROM `maintenance_job_orders` 
 			left join employee_syncs on maintenance_job_orders.created_by = employee_syncs.employee_id
 			left join (
 			select order_no, GROUP_CONCAT(`name`) as pic from maintenance_job_processes 
@@ -713,7 +724,11 @@ class MaintenanceController extends Controller
 			group by order_no
 			) as prcs on prcs.order_no = maintenance_job_orders.order_no
 			left join (select * from maintenance_job_processes where start_actual is not null and deleted_at is null) as inprogress on maintenance_job_orders.order_no = inprogress.order_no
-			where maintenance_job_orders.remark in (3,4)
+			left join (select process_code, process_name from processes where remark = "maintenance") l_pcr on l_pcr.process_code = maintenance_job_orders.remark
+			left join (SELECT order_no, operator_id, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) as rpt on maintenance_job_orders.order_no = rpt.order_no
+			left join maintenance_job_pendings on maintenance_job_orders.order_no = maintenance_job_pendings.order_no
+			where maintenance_job_orders.remark <> 7
+			order by target asc
 			');
 
 		$data_progress = db::select('
@@ -723,16 +738,13 @@ class MaintenanceController extends Controller
 			order by maintenance_job_orders.order_no
 			');
 
-		$data_bar = db::select('select dt, process_name, IFNULL(qty,0) qty from 
-			(select dt, process_code, process_name from (select process_code, process_name from processes where remark = "maintenance" and process_code in (3,4,5,6)) as proc
-			cross join (select DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as dt from maintenance_job_orders where maintenance_job_orders.deleted_at is null and maintenance_job_orders.remark in (3,4,5,6) and DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m") = "'.$tgl.'") as tgl_master
-			) as masters
-			left join (
-			select DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d") as tanggal, remark, count(maintenance_job_orders.remark) as qty from maintenance_job_orders
-			where maintenance_job_orders.deleted_at is null and maintenance_job_orders.remark in (3,4,5,6) and DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m") = "'.$tgl.'"
-			group by remark, DATE_FORMAT(maintenance_job_orders.created_at, "%Y-%m-%d")
-			) datas on masters.dt = datas.tanggal and masters.process_code = datas.remark
-			order by dt asc, process_code');
+		$data_bar = db::select('SELECT DATE_FORMAT(mstr.dt,"%d %b %Y") dt, mstr.process_code, mstr.process_name, IFNULL(datas.jml,0) jml from
+			(select * from
+			(select date(created_at) as dt from maintenance_job_orders where remark <> 7 group by date(created_at)) tgl
+			cross join (select process_code, process_name from processes where remark = "maintenance") as prs
+			) as mstr
+			left join (select remark ,date(created_at) as dt, count(remark) as jml from maintenance_job_orders where remark <> 7 group by remark, date(created_at)) as datas on mstr.dt = datas.dt and mstr.process_code = datas.remark
+			order by mstr.dt asc, mstr.process_code asc');
 
 		$response = array(
 			'status' => true,
@@ -1227,10 +1239,16 @@ class MaintenanceController extends Controller
 
 			$rpt->save();
 
-			
+			$arr_part = [];
+			foreach ($request->get('spare_part') as $prt) {
+				array_push($arr_part, $prt['part_number']." : ".$prt['qty']);
+			}
+
+			$part = implode("; ", $arr_part);
 
 			$spk_pending = MaintenanceJobPending::firstOrNew(array('order_no' => $request->get('order_no')));
 			$spk_pending->order_no = $request->get('order_no');
+			$spk_pending->description = $part;
 			$spk_pending->status = $request->get('status');
 
 

@@ -3269,6 +3269,7 @@ Route::get('fetch/maintenance/list_spk/user', 'MaintenanceController@fetchMainte
 Route::post('create/maintenance/spk', 'MaintenanceController@createSPK');
 Route::post('edit/maintenance/spk', 'MaintenanceController@editSPK');
 Route::get('fetch/maintenance/detail', 'MaintenanceController@fetchMaintenanceDetail');
+Route::get('index/maintenance/spk/grafik', 'MaintenanceController@indexSPKGrafik');
 
 Route::get('verify/maintenance/spk/approve_urgent', 'MaintenanceController@verifySPK');
 Route::get('verify/maintenance/spk/danger_note/{order_no}', 'MaintenanceController@indexDangerNote');

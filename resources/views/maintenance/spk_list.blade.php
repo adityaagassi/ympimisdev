@@ -266,7 +266,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="detailModal" style="color: black;">
+	<div class="modal fade" id="detailModal" style="color: black;" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -324,14 +324,21 @@
 							</div>
 
 							<div class="form-group row" align="right">
-								<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
+								<label class="col-xs-4" style="margin-top: 1%;">Reason Urgent</label>
 								<div class="col-xs-7" align="left">
-									<input type="text" class="form-control" id="kategori_detail" readonly>
+									<textarea class="form-control" id="urgent_reason_detail" rows="1" readonly></textarea>
 								</div>
 							</div>
 						</div>
 
 						<div class="col-xs-6">
+							<div class="form-group row" align="right">
+								<label class="col-xs-4" style="margin-top: 1%;">Kategori</label>
+								<div class="col-xs-7" align="left">
+									<input type="text" class="form-control" id="kategori_detail" readonly>
+								</div>
+							</div>
+
 							<div class="form-group row" align="right">
 								<label class="col-xs-4" style="margin-top: 1%;">Kondisi Mesin</label>
 								<div class="col-xs-7" align="left">
@@ -381,18 +388,55 @@
 						</div>
 
 						<div class="col-xs-12" id="open_session" style="display: none">
-							<div class="form-group row" align="right">
+							<!-- <div class="form-group row" align="right">
 								<label class="col-xs-2" style="margin-top: 1%;">Reason Open<span class="text-red">*</span></label>
 								<div class="col-xs-6">
 									<input type="text" class="form-control" placeholder="Isikan Catatan SPK Open" id="reason_open">
 								</div>
+							</div> -->
+
+							<div class="col-xs-4 col-xs-offset-4 class_pic_ubah">
+								<center><h2>UBAH PIC</h2></center>
+								<select class="form-control input-lg" data-placeholder="Pilih PIC"  id="pic_ubah" style="width: 100%">
+									<option value=""></option>
+									@foreach($mt_employees as $pic)
+									<option value="{{ $pic->employee_id }}">{{ $pic->name }}</option>
+									@endforeach
+								</select>
 							</div>
-							<button class="btn btn-success pull-right" id="btn_open" onclick="open_spk()">OPEN SPK</button>
+
+							<div class="col-xs-12" style="padding-top: 1%">
+								<table class="table table-hover table-striped">
+									<thead>
+										<tr>
+											<th width="6%">ID PIC</th>
+											<th>Nama PIC</th>
+											<th width="25%">Plan Mulai</th>
+											<th width="25%">Plan Selesai</th>
+											<th width="1%">Opsi</th>
+										</tr>
+									</thead>
+									<tbody id="pic_member2"></tbody>
+								</table>
+							</div>
+							<div class="col-xs-12">
+								<button type="button" class="btn btn-success pull-right" onclick="replace_member()"><i class="fa fa-save"></i> Simpan</button>
+							</div>
+
+							<!-- <button class="btn btn-success pull-right" id="btn_open" onclick="open_spk()">OPEN SPK</button> -->
 						</div>
 						<div class="col-xs-12"><hr style="margin-top: 10px; margin-bottom: 10px"></div>
+						<div id="approval">
+							<div class="col-xs-12">
+								<button type="button" class="btn btn-danger pull-left" onclick="approval('0')"><i class="fa fa-close"></i> Reject</button>
+
+								<button type="button" class="btn btn-success pull-right" onclick="approval('1')"><i class="fa fa-check"></i> Approve</button>
+							</div>
+						</div>
+
 						<div id="pilih_pic">
 							<div class="col-xs-12">
-								<div class="col-xs-4 col-xs-offset-4">
+								<div class="col-xs-4 col-xs-offset-4 class_pic_detail">
 									<center><h2>PILIH PIC</h2></center>
 									<select class="form-control input-lg" data-placeholder="Pilih PIC"  id="pic_detail" style="width: 100%">
 										<option value=""></option>
@@ -499,6 +543,7 @@
 
 	var counter = 1;
 	var pic_member = [];
+	var pic_ubah_member = [];
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
@@ -511,11 +556,21 @@
 
 		$('.select2').select2();
 
-		$('#pic_detail').select2({
-			dropdownAutoWidth : true,
-			dropdownParent: $("#detailModal"),
-		});
+		
 	});
+
+	$(function () {
+		$('#pic_detail').select2({
+			// dropdownAutoWidth : true,
+			dropdownParent: $(".class_pic_detail")
+		});
+
+		$('#pic_ubah').select2({
+			// dropdownAutoWidth : true,
+			dropdownParent: $(".class_pic_ubah")
+		});
+	})
+
 
 
 	function fillTable() {
@@ -553,7 +608,7 @@
 				var tableData = "";
 				$.each(result.tableData ,function(index, value){
 					click = "";
-					if (value.remark == "2" || value.remark == "4" || value.remark == "5" || value.remark == "6") {
+					if (value.remark == "0" || value.remark == "2" || value.remark == "4" || value.remark == "5" || value.remark == "6") {
 						click = "onclick='showJobModal(\""+value.order_no+"\")'";
 					}
 
@@ -713,8 +768,10 @@
 	function showJobModal(order_no) {
 		$("#detailModal").modal("show");
 		$("#pic_member").empty();
+		$("#pic_member2").empty();
 		counter = 1;
 		pic_member = [];
+		pic_ubah_member = [];
 
 		var data = {
 			order_no : order_no
@@ -736,6 +793,7 @@
 			$("#prioritas_detail").text(result.detail[0].priority);
 
 			$("#workType_detail").val(result.detail[0].type);
+			$("#urgent_reason_detail").val(result.detail[0].note);
 			$("#kategori_detail").val(result.detail[0].category);
 			$("#mesin_detail").val(result.detail[0].machine_condition);
 			$("#bahaya_detail").val(result.detail[0].danger);
@@ -823,16 +881,20 @@
 
 					$("#pending").show();
 					$("#report_list").hide();
+					$("#approval").hide();
 					$("#pending").append(pending);
 				} else if (result.detail[0].process_name == "Finished") {
+					$("#approval").hide();
 					$("#pilih_pic").hide();
 					$("#report_list").show();
 				} else if (result.detail[0].process_name == "InProgress") {
 					$("#prog").show();
+					$("#approval").hide();
 					$("#report_list").hide();
 					$("#pilih_pic").hide();
 					$("#pending").hide();
 				} else {
+					$("#approval").hide();
 					$("#pilih_pic").hide();
 					$("#report_list").hide();
 					$("#prog").hide();
@@ -841,9 +903,17 @@
 				$("#prog").hide();
 				$("#pilih_pic").show();
 				$("#report_list").hide();
+				$("#approval").hide();
+			}
+			else if (result.detail[0].process_name == "Requested") {
+				$("#approval").show();
+				$("#prog").hide();
+				$("#pilih_pic").hide();
+				$("#report_list").hide();
 			} else {
 				$("#prog").hide();
 				$("#report_list").hide();
+				$("#approval").hide();
 			}
 
 		})
@@ -879,21 +949,154 @@ function job_ok() {
 	})
 }
 
-function open_spk() {
-	if ($("#reason_open").val() == "") {
-		openErrorGritter('Fail', 'Kolom Catatan Harus diisi');
-		return false;
-	}
+function replace_member() {
+	var order_no = $("#spk_detail").val();
+	var arr_member = [];
+
+	$('.member2').each(function(index, value) {
+		var ids = $(this).attr('id');
+
+		arr_member.push({
+			'operator': $('#ubah_operator_'+ids).text(),
+			'start_date': $('#ubah_start_date_'+ids).val(),
+			'start_time': format_two_digits($('#ubah_start_time_'+ids).val().split(':')[0])+":"+ $('#ubah_start_time_'+ids).val().split(':')[1],
+			'finish_date': $('#ubah_finish_date_'+ids).val(),
+			'finish_time': format_two_digits($('#ubah_finish_time_'+ids).val().split(':')[0])+":"+ $('#ubah_finish_time_'+ids).val().split(':')[1],	
+		});
+	});
 
 	var data = {
-		order_no : $("#spk_detail").val(),
-		reason : $("#reason_open").val()
+		order_no : order_no,
+		member : arr_member
 	}
 
-	$.post('{{ url("post/maintenance/spk/open") }}', data,  function(result, status, xhr){
+	$.post('{{ url("post/maintenance/member/change") }}', data,  function(result, status, xhr){
+		$("#pic_member2").empty();
+		$("#detailModal").modal('hide');
+		fillTable();
 		openSuccessGritter("Success", "SPK Berhasil Ditugaskan");
 	})
+}
 
+// function open_spk() {
+// 	if ($("#reason_open").val() == "") {
+// 		openErrorGritter('Fail', 'Kolom Catatan Harus diisi');
+// 		return false;
+// 	}
+
+// 	var data = {
+// 		order_no : $("#spk_detail").val(),
+// 		reason : $("#reason_open").val()
+// 	}
+
+// 	$.post('{{ url("post/maintenance/spk/open") }}', data,  function(result, status, xhr){
+// 		openSuccessGritter("Success", "SPK Berhasil Ditugaskan");
+// 	})
+// }
+
+function approval(param) {
+	var data = {
+		stat : param,
+		order_no : $("#spk_detail").val()
+	}
+	
+	$.get('{{ url("verify/maintenance/spk/approve_urgent") }}', data,  function(result, status, xhr){
+		if (result.status) {
+			openSuccessGritter("Success", "SPK Berhasil Disetujui");
+			$("#detailModal").modal('hide');
+			fillTable();
+		} else {
+			openErrorGritter("Error", result.message);
+		}
+	})
+}
+
+$('#pic_ubah').on('change', function() {
+	var val = $('#pic_ubah').val();
+	var stat = 0;
+
+	if (val != "") {
+		if (pic_ubah_member.length > 0) {
+			$.each(pic_ubah_member, function(index, value){
+				if (value == val) {
+					stat = 1;
+				}
+			})
+		}
+
+		if (stat == 0) {
+			pic_ubah_member.push(val);
+			pilih_ubah();
+		} else {
+			openErrorGritter('Error!', "PIC Sudah berada pada list");
+		}
+		$("#pic_ubah").prop('selectedIndex', 0).change();
+	}
+});
+
+function pilih_ubah() {
+	var employee_id = $("#pic_ubah").val();
+	var employee_name = $("#pic_ubah option:selected").html();
+	body = "";
+
+	body += "<tr id='"+employee_id+"' class = 'member2'>";
+	body += "<td id='ubah_operator_"+employee_id+"'>"+employee_id+"</td>";
+	body += "<td>"+employee_name+"</td>";
+
+	body += "<td>";
+	body += "<div class='input-group'>";
+	body += "<input type='text' class='form-control datepicker' id='ubah_start_date_"+employee_id+"' placeholder='Start Date' style='width:60%'>";
+	body += "<input type='text' class='form-control timepicker' id='ubah_start_time_"+employee_id+"' placeholder='Start Time' style='width:40%'>";
+	body += "</div>";
+	body += "</td>";
+
+	body += "<td>";
+	body += "<div class='input-group'>";
+	body += "<input type='text' class='form-control datepicker' id='ubah_finish_date_"+employee_id+"' placeholder='Finish Date' style='width:60%'>";
+	body += "<input type='text' class='form-control timepicker' id='ubah_finish_time_"+employee_id+"' placeholder='Finish Time' style='width:40%'>";
+	body += "</div>";
+	body += "</td>";
+	body += "<td><button class='btn btn-danger' onClick='delete3(this)'><i class='fa fa-close'></i></button></td>";
+	body += "</tr>";
+
+	counter++;
+
+	$("#pic_member2").append(body);
+
+	var date = new Date();
+
+	var year  = pad(date.getFullYear());
+	var month = pad(date.getMonth() + 1);
+	var day   = pad(date.getDate());
+
+	var yyyymmdd = year +"-"+ month +"-"+ day;
+
+	$('.datepicker').val(yyyymmdd);
+
+
+	$('.datepicker').datepicker({
+		autoclose: true,
+		format: "yyyy-mm-dd",
+		todayHighlight: true
+	});
+
+	$('.timepicker').timepicker({
+		use24hours: true,
+		showInputs: false,
+		showMeridian: false,
+		minuteStep: 5,
+		defaultTime: '00:00',
+		timeFormat: 'hh:mm'
+	})
+}
+
+function delete3(elem) {
+	$(elem).closest('tr').remove();
+
+	var id = $(elem).closest('tr').attr('id');;
+	pic_ubah_member = $.grep(pic_ubah_member, function(value) {
+		return value != id;
+	});
 }
 
 function format_two_digits(n) {
