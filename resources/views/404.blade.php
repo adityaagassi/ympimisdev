@@ -20,6 +20,14 @@
   {{-- <link rel="stylesheet" href="{{ url("plugins/pace/pace.min.css")}}"> --}}
   @yield('stylesheets')
   <style>
+    .crop {
+      overflow: hidden;
+    }
+    .crop img {
+      margin: -10% 0 -10% 0;
+    }
+  </style>
+  <style>
     aside{
       font-size: 12px;
     }
@@ -44,19 +52,20 @@
         <div class="error-page">
           <h2 class="headline text-yellow"> 404</h2>
           <div class="error-content">
-            <h3><i class="fa fa-warning text-yellow"></i>Oops! Page not found.</h3>
+            <h3><i class="fa fa-warning text-yellow"></i> Oops! Page not found.</h3>
             <p>
-              The page you looking for is under maintenance.<br>
-              Or you do not have permission to access this page.<br><br>
-              Meanwhile, you may <a href="javascript:history.back()">back to previous page</a>.
+              Halaman yang anda kunjungi sedang dalam perbaikan.<br>
+              Atau anda tidak memiliki hak akses ke halaman ini.<br><br>
+              Tekan link di bawah ini untuk kembali ke halaman sebelumnya.<br>
+              <a href="javascript:history.back()"><i class="fa fa-angle-double-left "></i> Kembali</a>
             </p>
             <p style="font-weight: bold; font-size:20px; color: red;">
-                  @if(isset($message))
-                  {{$message}}
-                  @else
+              @if(isset($message))
+              {{$message}}
+              @else
 
-                  @endif
-                </p>
+              @endif
+            </p>
           </div>
         </div>
       </div>

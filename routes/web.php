@@ -19,6 +19,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 Route::get('trial2', 'TrialController@trial2');
 
 Route::get('testmail', 'TrialController@testmail');
+Route::get('testprint', 'TrialController@testPrint');
 
 
 Route::get('fetch_trial2', 'StockTakingController@printSummary');
@@ -979,6 +980,19 @@ Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 
 
 
+//STD CONTROL
+Route::get('index/std_control/safety_shoes', 'GeneralController@indexSafetyShoes');
+Route::get('fetch/std_control/safety_shoes', 'GeneralController@fetchSafetyShoes');
+
+Route::post('input/std_control/safety_shoes', 'GeneralController@inputSafetyShoes');
+
+
+
+Route::get('index/std_control/safety_shoes_log', 'GeneralController@indexSafetyShoesLog');
+
+
+
+
 Route::group(['nav' => 'S1', 'middleware' => 'permission'], function(){
 	Route::get('index/flo_view/bi', 'FloController@index_bi');
 });
@@ -1151,6 +1165,9 @@ Route::group(['nav' => 'M27', 'middleware' => 'permission'], function(){
 });
 Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
 Route::get('index/welding/jig_data', 'WeldingProcessController@indexWeldingJigData');
+Route::get('fetch/welding/jig_data', 'WeldingProcessController@fetchWeldingJigData');
+Route::post('input/welding/jig_data', 'WeldingProcessController@inputWeldingJigData');
+Route::get('edit/welding/jig_data', 'WeldingProcessController@editWeldingJigData');
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 Route::get('scan/welding/jig', 'WeldingProcessController@scanWeldingJig');
 Route::get('fetch/welding/jig_check', 'WeldingProcessController@fetchJigCheck');
@@ -1430,12 +1447,21 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::get('fetch/kd_mouthpiece/checksheet', 'MouthpieceController@fetchKdMouthpieceChecksheet');
 	Route::post('create/kd_mouthpiece/checksheet', 'MouthpieceController@createKdMouthpieceChecksheet');
 	Route::post('delete/kd_mouthpiece/checksheet', 'MouthpieceController@deleteKdMouthpieceChecksheet');
+	Route::get('reprint/kd_mouthpiece/checksheet', 'MouthpieceController@reprintKdMouthpieceChecksheet');
 
 	Route::get('index/kd_mouthpiece/picking', 'MouthpieceController@indexKdMouthpiecePicking');
 	Route::get('fetch/kd_mouthpiece/picking', 'MouthpieceController@fetchKdMouthpiecePicking');
 	Route::post('scan/kd_mouthpiece/picking', 'MouthpieceController@scanKdMouthpiecePicking');
+	Route::post('create/kd_mouthpiece/picking', 'MouthpieceController@createKdMouthpiecePicking');
 
 	Route::get('index/kd_mouthpiece/packing', 'MouthpieceController@indexKdMouthpiecePacking');
+	Route::get('fetch/kd_mouthpiece/packing', 'MouthpieceController@fetchKdMouthpiecePacking');
+	Route::get('check/kd_mouthpiece/checksheet', 'MouthpieceController@checkKdMouthpieceChecksheet');
+	Route::post('scan/kd_mouthpiece/packing', 'MouthpieceController@scanKdMouthpiecePacking');
+	Route::post('create/kd_mouthpiece/packing', 'MouthpieceController@createKdMouthpiecePacking');
+
+	Route::get('index/kd_mouthpiece/log', 'MouthpieceController@indexKdMouthpieceLog');
+	Route::get('fetch/kd_mouthpiece/log', 'MouthpieceController@fetchKdMouthpieceLog');
 });
 
 //ZPRO
@@ -1460,8 +1486,8 @@ Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
 	//Based on production sch item=1
 	Route::post('fetch/kd_print_subassy_new_single', 'KnockDownController@printLabelNewSingle');
 
-	Route::get('index/print_label_subassy/{location}/{id}', 'KnockDownController@indexPrintLabelSubassy');
-	Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
+	Route::get('index/print_label_subassy/{id}', 'KnockDownController@indexPrintLabelSubassy');
+	// Route::get('index/print_label_subassy_kecil/{id}', 'KnockDownController@indexPrintLabelSubassyKecil');
 
 });
 
@@ -2111,6 +2137,7 @@ Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 	Route::get('fetch/stocktaking/stocktaking_list', 'StockTakingController@fetchMonthlyStocktakingList');
 	Route::post('delete/stocktaking/stocktaking_list', 'StockTakingController@deleteMonthlyStocktakingList');
 	Route::post('edit/stocktaking/stocktaking_list', 'StockTakingController@editMonthlyStocktakingList');
+
 	//Revise
 	Route::get('index/stocktaking/revise', 'StockTakingController@indexRevise');
 	Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
@@ -2118,10 +2145,15 @@ Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 	Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
 	Route::get('export/stocktaking/upload_sap', 'StockTakingController@exportUploadSAP');
 	Route::get('export/stocktaking/log', 'StockTakingController@exportLog');
+
 	//Count PI
 	Route::post('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
 	Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
 });
+
+
+
+
 
 //START INDIRECT REQUEST
 
