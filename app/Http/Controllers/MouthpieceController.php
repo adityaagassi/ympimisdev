@@ -175,7 +175,11 @@ class MouthpieceController extends Controller
 			}
 		}
 
-		$kd = " AND m.kd_number in (".$kd_number_detail.") ";
+		$kd = "":
+
+		if(strlen($kd_number_detail)>0){
+			$kd = " AND m.kd_number in (".$kd_number_detail.") ";
+		}
 
 		$checksheet_details = db::select("SELECT
 			m.kd_number,
