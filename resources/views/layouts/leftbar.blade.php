@@ -512,13 +512,11 @@
       </li>
 
       @if(isset($page) && $page == "Upload Transaksi")<li class="active">@else<li>@endif
-        <a href="{{ url("upload_transaksi") }}"><i class="fa fa-upload"></i>Upload Transaksi Diluar PO</a>
+        <a href="{{ url("upload_transaksi") }}"><i class="fa fa-upload"></i>Upload Transaksi Non-PO</a>
       </li>
     </ul>
   </li>
   @endif
-
-
 
   @if(in_array('S39', $navs))
   @if(isset($head) && $head == "GA Control")<li class="treeview active">@else<li class="treeview">@endif
@@ -703,30 +701,40 @@
       @if(isset($page) && $page == "MP Material Picking")<li class="active">@else<li>@endif
         <a href="{{ url("/index/kd_mouthpiece/picking") }}"><i class="fa fa-calendar-plus-o"></i>Material Picking</a>
       </li>
-      @if(isset($page) && $page == "MP Material Packing")<li class="active">@else<li>@endif
+      @if(isset($page) && $page == "MP Packing")<li class="active">@else<li>@endif
         <a href="{{ url("/index/kd_mouthpiece/packing") }}"><i class="fa fa-calendar-plus-o"></i>Material Packing</a>
+      </li>
+      @if(isset($page) && $page == "MP Log")<li class="active">@else<li>@endif
+        <a href="{{ url("/index/kd_mouthpiece/log") }}"><i class="fa fa-calendar-plus-o"></i>Checksheet Log</a>
       </li>
     </ul>
   </li>
   @endif
 
-  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD']) || Auth::user()->username == 'op subassy sx')
+  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F']) || Auth::user()->username == 'op subassy sx')
   @if(isset($page) && $page == "KD Assy - SubAssy SX")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-sx") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Assy - SubAssy SX</span></a>
   </li>
   @endif
 
-  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD']) || Auth::user()->username == 'op-subassy-fl')
+  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F']) || Auth::user()->username == 'op-subassy-fl')
   @if(isset($page) && $page == "KD Sub Assy FL")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-fl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy FL</span></a>
   </li>
   @endif
 
-  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD']) || Auth::user()->username == 'op-subassy-cl')
+  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F']) || Auth::user()->username == 'op-subassy-cl')
   @if(isset($page) && $page == "KD Sub Assy CL")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-cl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy CL</span></a>
   </li>
   @endif
+
+  @if(in_array('S27', $navs))
+  @if(isset($page) && $page == "KD Closure")<li class="active">@else<li>@endif
+    <a href="{{ url("index/kd_closure") }}"><i class="fa fa-shopping-cart"></i> <span>KD  <i class="fa fa-angle-right"></i> Closure</span></a>
+  </li>
+  @endif
+
 
   @if(in_array('S29', $navs))
   @if(isset($page) && $page == "KD Delivery")<li class="active">@else<li>@endif
@@ -1158,9 +1166,9 @@
 @if(isset($page) && $page == "Manpower by Jabatan")<li class="active">@else<li>@endif
   <a href="{{ url("/index/report/jabatan") }}" target="_blank"><i class="fa fa-line-chart"></i> Manpower by Jabatan</a>
 </li>
-@if(isset($page) && $page == "Leave Control")<li class="active">@else<li>@endif
+{{-- @if(isset($page) && $page == "Leave Control")<li class="active">@else<li>@endif
   <a href="{{ url("/index/report/leave_control") }}"><i class="fa fa-line-chart"></i> Leave Control</a>
-</li>
+</li> --}}
 </ul>
 </li>
 @endif
@@ -1221,12 +1229,12 @@
 </li>
 @endif
 
-@if(in_array('R7', $navs))
+{{-- @if(in_array('R7', $navs))
 @if(isset($page) && $page == "Overtime Confirmation")<li class="active">@else<li>@endif
   <a href="{{ url("/index/overtime_confirmation") }}"><i class="fa fa-check-square-o"></i> <span>Overtime Confirmation</span></a>
 </li>
 @endif
-
+--}}
 @if(in_array('R3', $navs))
 @if(isset($head) && $head == "Finished Goods")<li class="treeview active">@else<li class="treeview">@endif
   <a href="#">
