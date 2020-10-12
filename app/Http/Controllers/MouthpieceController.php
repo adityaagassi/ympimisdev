@@ -175,7 +175,7 @@ class MouthpieceController extends Controller
 			}
 		}
 
-		$kd = "":
+		$kd = "";
 
 		if(strlen($kd_number_detail)>0){
 			$kd = " AND m.kd_number in (".$kd_number_detail.") ";
