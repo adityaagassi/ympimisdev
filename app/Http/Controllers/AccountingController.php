@@ -8842,6 +8842,21 @@ public function update_purchase_requisition_po(Request $request)
 
                 for ($i=0; $i < count($rows); $i++) {
                     if ($rows[$i][0] != "") {
+                        $periode = "";
+                        $document_no = "";
+                        $type = "";                    
+                        $description = "";            
+                        $reference = "";
+                        $gl_number = "";
+                        $post_date = "";    
+                        $local_amount = "";
+                        $local_currency = "";
+                        $amount = "";
+                        $currency = "";
+                        $budget_no = "";
+                        $investment_no = "";
+                        $month_date = "";
+
                         $periode  = $rows[$i][0];
                         $document_no = $rows[$i][1];
                         $type = $rows[$i][2];                    
@@ -8877,18 +8892,21 @@ public function update_purchase_requisition_po(Request $request)
 
                         $data2->save();
 
-                        $bulan = strtolower(date("M",strtotime($post_date)));
-                        $sisa_bulan = $bulan.'_sisa_budget';
-                        
-                        $budgetdata = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)->first();
+                        if ($budget_no != "" || $budget_no != null) {
+                            $bulan = strtolower(date("M",strtotime($post_date)));
+                            $sisa_bulan = $bulan.'_sisa_budget';
+                            
+                            $budgetdata = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)->first();
 
-                        //Kurangi Budget Skrg Dengan Actual
-                        $total = $budgetdata->$sisa_bulan - $local_amount;
+                            //Kurangi Budget Skrg Dengan Actual
+                            $total = $budgetdata->$sisa_bulan - $local_amount;
 
-                        $updatebudget = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)
-                        ->update([
-                            $sisa_bulan => $total
-                        ]);
+                            $updatebudget = AccBudget::where('budget_no','=',$budget_no)->where('periode','=', $periode)
+                            ->update([
+                                $sisa_bulan => $total
+                            ]);
+                        }
+
 
                     }
                 }       
