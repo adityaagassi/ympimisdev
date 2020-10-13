@@ -36,9 +36,9 @@ use Response;
 
 class KnockDownController extends Controller{
 
-	public function __construct(){
-		$this->middleware('auth');
-	}
+	// public function __construct(){
+	// 	$this->middleware('auth');
+	// }
 
 	public function indexKD($id){
 		if($id == 'z-pro'){
