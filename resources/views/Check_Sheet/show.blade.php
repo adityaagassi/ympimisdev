@@ -123,7 +123,8 @@ table.table-bordered > tfoot > tr > th{
 
 <div class="col-md-1 ">
  <a href="{{ url("print/CheckSheet/{$time->id}")}}" class="btn btn-primary btn-lg" style="color:white"><i class="fa fa-print"></i> Print {{ $page }}</a><br><br>
- <!-- <a href="{{ url("printsurat/CheckSheet/{$time->id}")}}" class="btn btn-warning btn-lg" style="color:white"><i class="fa fa-print"></i> Print Surat Jalan</a><br><br> -->
+
+ <a target="_blank" href="{{ url("printsurat/CheckSheet/{$time->id}")}}" class="btn btn-warning btn-lg" style="color:white"><i class="fa fa-print"></i> Print Surat Jalan</a><br><br>
  <a data-toggle="modal" data-target="#importModal" class="btn btn-success btn-lg" style="color:white"><i class="fa fa-folder-open-o"></i> Upload {{ $page }}</a>
 </div><BR>
 
