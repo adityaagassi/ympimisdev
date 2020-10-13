@@ -3,36 +3,36 @@
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
 <style>
-thead input {
-  width: 100%;
-  padding: 3px;
-  box-sizing: border-box;
-}
-thead>tr>th{
-  text-align:center;
-}
-tbody>tr>td{
-  text-align:center;
-}
-tfoot>tr>th{
-  text-align:center;
-}
-td:hover {
-  overflow: visible;
-}
-table.table-bordered{
-  border:1px solid black;
-}
-table.table-bordered > thead > tr > th{
-  border:1px solid black;
-}
-table.table-bordered > tbody > tr > td{
-  border:1px solid rgb(211,211,211);
-}
-table.table-bordered > tfoot > tr > th{
-  border:1px solid rgb(211,211,211);
-}
-#loading, #error { display: none; }
+  thead input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+  }
+  thead>tr>th{
+    text-align:center;
+  }
+  tbody>tr>td{
+    text-align:center;
+  }
+  tfoot>tr>th{
+    text-align:center;
+  }
+  td:hover {
+    overflow: visible;
+  }
+  table.table-bordered{
+    border:1px solid black;
+  }
+  table.table-bordered > thead > tr > th{
+    border:1px solid black;
+  }
+  table.table-bordered > tbody > tr > td{
+    border:1px solid rgb(211,211,211);
+  }
+  table.table-bordered > tfoot > tr > th{
+    border:1px solid rgb(211,211,211);
+  }
+  #loading, #error { display: none; }
 </style>
 @stop
 @section('header')
@@ -130,15 +130,15 @@ table.table-bordered > tfoot > tr > th{
 
 </div>
 
-  <div class="box box-solid">    
+<div class="box box-solid">    
   <div class="box-body">
    {{-- <CENTER> <span class="progress-text" id="progress_text_delivery"></span></CENTER> --}}
    {{-- <br> --}}
-    <div class="progress" style="height: 100px; margin: 0 auto">
-      <div class="progress-bar progress-bar-yellow progress-bar-striped active" id="progress_bar_delivery"></div>
-    </div>
-    {{-- <CENTER> <span class="progress-number" id="progress_number_delivery" style="font-weight:bold;"></span></CENTER> --}}
+   <div class="progress" style="height: 100px; margin: 0 auto">
+    <div class="progress-bar progress-bar-yellow progress-bar-striped active" id="progress_bar_delivery"></div>
   </div>
+  {{-- <CENTER> <span class="progress-number" id="progress_number_delivery" style="font-weight:bold;"></span></CENTER> --}}
+</div>
 </div>
 
 
@@ -571,21 +571,21 @@ table.table-bordered > tfoot > tr > th{
                                     if(((result.cek/result.total)*100).toFixed(0) <= 30){
                                       $('#progress_bar_delivery').removeClass('progress-bar-yellow').addClass('progress-bar-yellow');
                                     }else if(((result.cek/result.total)*100).toFixed(0) >= 31 && ((result.cek/result.total)*100).toFixed(0) <= 75){
-                                       $('#progress_bar_delivery').removeClass('progress-bar-yellow').addClass('progress-bar-aqua');
-                                    }else{
-                                      $('#progress_bar_delivery').removeClass('progress-bar-yellow').addClass('progress-bar-green');
-                                    }
-                                    
+                                     $('#progress_bar_delivery').removeClass('progress-bar-yellow').addClass('progress-bar-aqua');
+                                   }else{
+                                    $('#progress_bar_delivery').removeClass('progress-bar-yellow').addClass('progress-bar-green');
+                                  }
+                                  
 
-                                  }
-                                  else{
-                                    alert('Attempt to receive data failed');
-                                  }
                                 }
                                 else{
-                                  alert('Disconnected from server');
+                                  alert('Attempt to receive data failed');
                                 }
-                              });
+                              }
+                              else{
+                                alert('Disconnected from server');
+                              }
+                            });
                             }
                           </script>
                           @stop
