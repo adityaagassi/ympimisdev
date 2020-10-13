@@ -156,32 +156,38 @@ public function print_check($id)
 
 public function print_check_surat($id)
 {
+     $checksheet = MasterChecksheet::where('master_checksheets.id', '=', $id)
+     ->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'master_checksheets.carier')
+     ->select('master_checksheets.Stuffing_date', 'master_checksheets.toward', 'master_checksheets.id_checkSheet', 'master_checksheets.no_pol', 'master_checksheets.countainer_number', 'master_checksheets.seal_number', 'shipment_conditions.shipment_condition_name')
+     ->first();
 
-     $time = MasterChecksheet::find($id);
-     // $detail = DetailChecksheet::where('id_checkSheet','=' ,$time->id_checkSheet)
-     // ->get();
+     $checksheet_details = db::select("SELECT
+          invoice AS no_invoice,
+          gmc AS material_number,
+          goods AS material_description,
+          IF
+          ( package_qty IS NULL OR package_qty = '', '-', package_qty ) AS no_package,
+          IF
+          ( package_set IS NULL OR package_set = '', '-', package_set ) AS package,
+          qty_qty AS quantity,
+          qty_set AS uom 
+          FROM
+          detail_checksheets 
+          WHERE
+          id_checkSheet = '".$checksheet->id_checkSheet."'
+          AND deleted_at IS NULL");
+     
 
-     $details ="select cek.*, IFNULL(inv.quantity,0) as stock from (
-     SELECT * from detail_checksheets WHERE id_checkSheet='".$time->id_checkSheet."'
-     and deleted_at is null) cek
-     LEFT JOIN (
-     SELECT material_number, quantity  from inventories WHERE storage_location='FSTK'
-) as inv on cek.gmc = inv.material_number";
+     $pdf = \App::make('dompdf.wrapper');
+     $pdf->getDomPDF()->set_option("enable_php", true);
+     $pdf->setPaper('A4', 'potrait');
 
+     $pdf->loadView('Check_Sheet.printsurat', array(
+          'checksheet' => $checksheet,
+          'checksheet_details' => $checksheet_details,
+     ));
 
-$container = AreaInspection::orderBy('id','ASC')
-->get();
-$Inspection = Inspection::where('id_checkSheet','=' ,$time->id_checkSheet)
-->get();
-
-$detail = db::select($details);
-return view('Check_Sheet.printsurat', array(
-     'time' => $time,
-     'detail' => $detail,
-     'container' => $container,
-     'Inspection' => $Inspection,
-))->with('page', 'Check Sheet');
-//
+     return $pdf->stream("Surat Jalan.pdf");
 }
 
 public function checkmarking($id)
@@ -369,7 +375,8 @@ public function import(Request $request)
                'etd_sub' => $request->get('etd_sub'),
                'no_pol' => $request->get('nopol'),
                'Stuffing_date' => $request->get('Stuffing_date'),               
-               'invoice_date' => $request->get('invoice_date'),
+               'invoice_date' => $request->get('invoice_date'),            
+               'toward' => $request->get('toward'),
                'created_by' => $id
           ]);
 
@@ -602,43 +609,43 @@ public function bara(Request $request){
 
 public function getReason(Request $request)
 {
- $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
- ->select('reason','invoice_date')     
- ->first();
+    $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
+    ->select('reason','invoice_date')     
+    ->first();
 
- $response = array(
-    'status' => true,
-    'message' => 'Update Success',
-    'reason' => $reason
-);
- return Response::json($response);
+    $response = array(
+      'status' => true,
+      'message' => 'Update Success',
+      'reason' => $reason
+ );
+    return Response::json($response);
 }
 
 public function edit(Request $request){
- $id_user = Auth::id();
- $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
- ->first();
+    $id_user = Auth::id();
+    $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
+    ->first();
 
- $master->countainer_number = $request->get('countainer_numberE');
- $master->seal_number = $request->get('seal_numberE');
- $master->no_pol = $request->get('nopolE');
- $master->invoice = $request->get('invoiceE');
- $master->destination = strtoupper($request->get('destinationE'));
- $master->shipped_to = $request->get('shipped_toE');
- $master->Stuffing_date = $request->get('Stuffing_dateE');
- $master->invoice_date = $request->get('invoice_dateE');
- $master->etd_sub = $request->get('etd_subE');
- $master->carier = $request->get('carierE');
- $master->payment = $request->get('paymentE');
- $master->reason = $request->get('reason');
- $master->created_by = $id_user;
- $master->save();
- $response = array(
-    'status' => true,
-    'message' => 'Update Success',
-);
+    $master->countainer_number = $request->get('countainer_numberE');
+    $master->seal_number = $request->get('seal_numberE');
+    $master->no_pol = $request->get('nopolE');
+    $master->invoice = $request->get('invoiceE');
+    $master->destination = strtoupper($request->get('destinationE'));
+    $master->shipped_to = $request->get('shipped_toE');
+    $master->Stuffing_date = $request->get('Stuffing_dateE');
+    $master->invoice_date = $request->get('invoice_dateE');
+    $master->etd_sub = $request->get('etd_subE');
+    $master->carier = $request->get('carierE');
+    $master->payment = $request->get('paymentE');
+    $master->reason = $request->get('reason');
+    $master->created_by = $id_user;
+    $master->save();
+    $response = array(
+      'status' => true,
+      'message' => 'Update Success',
+ );
 
- return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
+    return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
 }
 
 public function marking(Request $request){
@@ -751,10 +758,10 @@ public function deleteReimport(Request $request)
 
 
      $response = array(
-         'status' => true,
-         'message' => 'Update Success',
-         'reason' => 'ok'
-    );
+      'status' => true,
+      'message' => 'Update Success',
+      'reason' => 'ok'
+ );
      return Response::json($response);
 }
 

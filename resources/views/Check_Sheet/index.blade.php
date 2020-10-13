@@ -266,7 +266,15 @@
           <label>SHIPPER</label>
           <input type="text" name="" class="form-control" value="PT. YMPI" readonly>
         </div>
+
+        <div class="col-xs-12">
+          <label>Towards: </label>
+          <textarea class="form-control" id="toward" name="toward" required></textarea>
+        </div>
+        
       </div>
+
+
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -322,7 +330,7 @@
             <label>INVOICE NO.</label>
             <input type="text" name="invoiceE" class="form-control" id="invoiceE" required>
             <label>INVOICE DATE</label>
-          <input type="text" name="invoice_dateE" class="form-control" id="invoice_dateE" required>
+            <input type="text" name="invoice_dateE" class="form-control" id="invoice_dateE" required>
 
             <label>STUFFING DATE</label>
             <input type="text" name="Stuffing_dateE" class="form-control" id="Stuffing_dateE" required>
@@ -354,57 +362,57 @@
 
 
 <div class="modal fade" id="importModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <form id ="importForm2" method="post" action="{{ url('importDetail/CheckSheet') }}" enctype="multipart/form-data">
-                                <input type="hidden" value="{{csrf_token()}}" name="_token" />
-                               <div class="modal-header">Re - Import Data        </div>
-                                <div class="">
-                                  <div class="modal-body">
-                                     Are you sure to Re - Import?<br>
-                                     All Data Will be Delete and Re - Import
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id ="importForm2" method="post" action="{{ url('importDetail/CheckSheet') }}" enctype="multipart/form-data">
+        <input type="hidden" value="{{csrf_token()}}" name="_token" />
+        <div class="modal-header">Re - Import Data        </div>
+        <div class="">
+          <div class="modal-body">
+           Are you sure to Re - Import?<br>
+           All Data Will be Delete and Re - Import
 
-                                     <center>
+           <center>
             <i class="fa fa-spinner fa-spin" id="loading" style="font-size: 80px;"></i>
           </center>
-                                    <input type="text" name="idcs" id="idcs" hidden="">
-                                    <input type="text" name="master_id" value="{{$time->id_checkSheet}}" hidden>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button id="modalImportButton" type="button" class="btn btn-success" onclick="deleteReimport()">Re - Import</button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
+          <input type="text" name="idcs" id="idcs" hidden="">
+          <input type="text" name="master_id" value="{{$time->id_checkSheet}}" hidden>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button id="modalImportButton" type="button" class="btn btn-success" onclick="deleteReimport()">Re - Import</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="importModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <form id ="importForm2" method="post" action="{{ url('importDetail/CheckSheet') }}" enctype="multipart/form-data">
-                                <input type="hidden" value="{{csrf_token()}}" name="_token" />
-                               <div class="modal-header">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id ="importForm2" method="post" action="{{ url('importDetail/CheckSheet') }}" enctype="multipart/form-data">
+        <input type="hidden" value="{{csrf_token()}}" name="_token" />
+        <div class="modal-header">
           <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
           <h4 class="modal-title" id="myModalLabel">Import Confirmation</h4>
           Format: [Destination][Invoice][GMC][Goods][Marking No][Package Qty][Package Set][Qty Qty][Qty Set]<br>
           Sample: <a href="{{ url('download/manual/import_check_sheet_detail.txt') }}">import_check_sheet_detail.txt</a> Code: #Truncate
         </div>
-                                <div class="">
-                                  <div class="modal-body">
-                                    <center><input type="file" name="check_sheet_import2" id="InputFile" accept="text/plain" required=""></center>
-                                    <input type="text" name="idcs2" id="idcs2" hidden="">
-                                    <input type="text" name="master_id" value="{{$time->id_checkSheet}}" hidden>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
-                                    <button id="modalImportButton" type="submit" class="btn btn-success" >Import</button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+        <div class="">
+          <div class="modal-body">
+            <center><input type="file" name="check_sheet_import2" id="InputFile" accept="text/plain" required=""></center>
+            <input type="text" name="idcs2" id="idcs2" hidden="">
+            <input type="text" name="master_id" value="{{$time->id_checkSheet}}" hidden>
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
+            <button id="modalImportButton" type="submit" class="btn btn-success" >Import</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -649,7 +657,7 @@ function addInspection(id){
      diff  = new Date(end - start),
      days  = diff/1000/60/60/24;
      if (days >= 0) {
-      
+
       document.getElementById("importForm").submit();
     }else{
       alert('Please Check Stuffing Date And Date ON OR ABOUT');
@@ -664,9 +672,9 @@ function addInspection(id){
     $('#idcs2').val(id_chek);
     $('#loading').hide();
    // alert(id_chek);
-  }
+ }
 
-  function deleteReimport() {  
+ function deleteReimport() {  
    var id = $('#idcs').val();
    // alert(id);
    var data = {
@@ -680,21 +688,21 @@ function addInspection(id){
       if(result.status){
         $('#loading').show();
         setTimeout(function() {
-   $('#importModal2').modal({backdrop: 'static', keyboard: false});
+         $('#importModal2').modal({backdrop: 'static', keyboard: false});
          $('#importModal2').modal('show');
-        }, 2000);
+       }, 2000);
         
 
-         
-     }
-     else{
-      alert('Attempt to retrieve data failed');
+
+      }
+      else{
+        alert('Attempt to retrieve data failed');
+      }
     }
-  }
-  else{
-    alert('Disconnected from server');
-  }
-});
+    else{
+      alert('Disconnected from server');
+    }
+  });
   
 }
 </script>
