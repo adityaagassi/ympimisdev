@@ -57,22 +57,22 @@
 	<input type="hidden" id="input_xy" value="{{$knock_down_detail->xy}}">
 	<input type="hidden" id="input_mj" value="{{$knock_down_detail->mj}}">
 
-	<table style="margin-top: 1px; width: 400px;">
-		<tr height="35">
+	<table style="margin-top: 1px; width: 370px;">
+		<tr height="32">
 			<th width="100px" class="top" id="material_number"></th>
 			<th width="80px" class="top" id="quantity">QTY</th>
 			<th width="100px" class="top" id="kd_name" colspan="2">18N</th>
 		</tr>
-		<tr height="29">
+		<tr height="28">
 			<th width="180px" class="desc" id="material_description" rowspan="2" colspan="2">DESKRIPSI</th>
 			<th width="25px" class="gmc">XY</th>
 			<th width="75px" class="gmc" id="xy">XY GMC</th>
 		</tr>
-		<tr height="29">
+		<tr height="28">
 			<th width="25px" class="gmc">MJ</th>
 			<th width="75px" class="gmc" id="mj">MJ GMC</th>
 		</tr>
-		<tr height="40px">
+		<tr height="34px">
 			<th colspan="4">
 				<img id="barcode" src="">
 				<p id="kd_number"></p>
