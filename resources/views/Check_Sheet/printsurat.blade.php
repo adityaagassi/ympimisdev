@@ -114,9 +114,10 @@ text-align: center
       </tr>
     </thead>
     <tbody>
+      <?php $count = 1; ?>
       @foreach($checksheet_details as $checksheet_detail)
       <tr>
-        <td style="border-right: 1px solid; border-left: 1px solid" align="center"></td>
+        <td style="border-right: 1px solid; border-left: 1px solid" align="center">{{ $count }}</td>
         <td style="border-right: 1px solid; border-left: 1px solid">{{ substr($checksheet_detail->no_invoice, 0, 6) }}</td>
         <td style="border-right: 1px solid; border-left: 1px solid">{{$checksheet_detail->material_number}}</td>
         <td style="border-right: 1px solid; border-left: 1px solid">{{$checksheet_detail->material_description}}</td>
@@ -132,6 +133,7 @@ text-align: center
           @endif
         </td>
       </tr>
+      <?php $count++ ?>
       @endforeach
     </tbody>
   </table>        
