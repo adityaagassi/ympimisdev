@@ -1011,9 +1011,9 @@ class StockTakingController extends Controller{
 		$printer->setEmphasis(true);
 		$printer->setTextSize(1, 1);
 		$printer->text($description."\n");
-		if($model != '' || $key != '' || $surface != ''){
-			$printer->text($model." - ".$key." - ".$surface."\n");
-		}
+		// if($model != '' || $key != '' || $surface != ''){
+		// 	$printer->text($model." - ".$key." - ".$surface."\n");
+		// }
 		if(strlen($lot) == 0){
 			$printer->text("Uom: ".$uom."\n");
 		}
@@ -1026,16 +1026,45 @@ class StockTakingController extends Controller{
 		$printer->setTextSize(1, 1);
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 
-		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
-		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
-		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
-		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
-		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
-		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
-		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
-		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
-		$printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
-		$printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		$printer->setReverseColors(true);
+		$printer->textRaw("          HITUNG        "."|"."         REVISI        ");
+		$printer->setReverseColors(false);
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+		$printer->textRaw(str_repeat(" ", 12)."x".str_repeat(" ", 11)." ".str_repeat(" ", 11)."x".str_repeat(" ", 12));
+		$printer->textRaw("\xc0".str_repeat("\xc4", 21)."\xd9 \xc0".str_repeat("\xc4", 21)."\xd9\n");
+
+
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+
+		// $printer->setReverseColors(true);
+		// $printer->text('                   REVISI                   '."\n");
+		// $printer->setReverseColors(false);
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
+		// $printer->textRaw(str_repeat(" ", 24)."X".str_repeat(" ", 24));
+		// $printer->textRaw("\xc0".str_repeat("\xc4", 45)."\xd9\n");
 
 		$printer->setTextSize(1, 1);
 		$printer->setJustification(Printer::JUSTIFY_RIGHT);
