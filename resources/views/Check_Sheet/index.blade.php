@@ -269,7 +269,19 @@
 
         <div class="col-xs-12">
           <label>Towards: </label>
-          <textarea class="form-control" id="toward" name="toward" required></textarea>
+          <select class="form-control select2" multiple="multiple" name="toward[]" id="toward"  data-placeholder="Choose a Toward ..." style="width: 100%;" >
+            <option value="YAMAHA MUSIC MANUFACTURING JAPAN CORPORATION BO & GD SECTION">YMMJ</option>
+            <option value="XIAOSHAN YAMAHA MUSICAL INSTRUMENT CO.,LTD">XY</option>
+            <option value="YAMAHA CORPORATION">YCJ/YMJ</option>
+            <option value="YAMAHA MUSIC EUROPE GMBH">YME</option>
+            <option value="YAMAHA MUSIC KOREA LTD.">YMK</option>
+            <option value="YAMAHA CORPORATION C/O MOL LOGISTIC S PASIR GUDANG WAREHOUSE">TASCO</option>
+            <option value="YCA,BAND&ORCHESTRAL DIV.">YCA</option>
+            <option value="SIAM MUSIC YAMAHA CO., LTD">SMY</option>
+            <option value="PT. YAMAHA MUSIK INDONESIA DISTRIBUTOR">YMID</option>
+            <option value="YAMAHA ELECTRONICS MFG INDONESIA">YEMI</option>
+            <option value="YAMAHA DE MEXICO S.A. DE C.V.">YDM</option>
+          </select>
         </div>
         
       </div>
@@ -462,6 +474,12 @@
     todayHighlight: true
   })
   jQuery(document).ready(function() {
+
+    $(function () {
+      $('.select2').select2({
+        dropdownParent: $('#importModal')
+      });
+    })
 
     $(document).ready(function () {
       $('body').toggleClass("sidebar-collapse");

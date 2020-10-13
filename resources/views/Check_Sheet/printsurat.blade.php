@@ -44,7 +44,7 @@ text-align: center
 </head>
 <body>
   <header>
-    <table style="width: 100%; border-collapse: collapse; text-align: left;" >
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
       <thead>
        <tr>
         <td colspan="5" style="font-weight: bold;font-size: 13px;">
@@ -61,15 +61,18 @@ text-align: center
         <td colspan="4" style="font-size: 12px;">Kepada :</td>
       </tr>
       <tr>
-        <td colspan="5" style="font-size: 12px;">Kawasan Industri PIER Pasuruan</td>
-        <td colspan="4" style="font-size: 12px;">Yth. </td>
-      </tr>
-      <tr>
-        <td colspan="5" style="font-size: 12px;">Phone: (0343) 740290</td>
-        <td colspan="4" style="font-size: 12px;"><b>{{ $checksheet->toward }}</b></td>
-      </tr>
-      <tr>
-        <td colspan="5" style="font-size: 12px;">Fax: (0343) 740291</td>
+        <td colspan="5" style="font-size: 12px; vertical-align: top;">Kawasan Industri PIER Pasuruan<br>
+          Phone: (0343) 740290<br>
+          Fax: (0343) 740291
+        </td>
+        <td colspan="4" style="font-size: 12px;">Yth. <br>
+          <b>
+            <?php $towards = explode('-', $checksheet->toward) ?>
+            @foreach($towards as $toward)
+            {{ $toward }}<br>
+            @endforeach
+          </b>
+        </td>
       </tr>
     </thead>
   </table>

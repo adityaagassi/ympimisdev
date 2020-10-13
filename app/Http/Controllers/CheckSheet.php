@@ -345,6 +345,10 @@ return view('Check_Sheet.checkmarking', array(
 
 public function import(Request $request)
 {
+
+
+
+
 // $masterid = MasterChecksheet::orderBy('id','desc')
 // ->first();
 // $masterid_fix = $masterid->id;
@@ -352,6 +356,17 @@ public function import(Request $request)
 // st_assemblies::truncate();
 
           $id = Auth::id();
+
+          $towards = $request->get('toward');
+          $toward_length = count($towards);
+          $toward = "";
+
+          for($x = 0; $x < $toward_length; $x++) {
+               $toward = $toward."".$towards[$x]."";
+               if($x != $toward_length-1){
+                    $toward = $toward."-";
+               }
+          }
 
           $file = $request->file('check_sheet_import');
           $data = file_get_contents($file);
@@ -376,7 +391,7 @@ public function import(Request $request)
                'no_pol' => $request->get('nopol'),
                'Stuffing_date' => $request->get('Stuffing_date'),               
                'invoice_date' => $request->get('invoice_date'),            
-               'toward' => $request->get('toward'),
+               'toward' => $toward,
                'created_by' => $id
           ]);
 
@@ -609,43 +624,43 @@ public function bara(Request $request){
 
 public function getReason(Request $request)
 {
-    $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
-    ->select('reason','invoice_date')     
-    ->first();
+ $reason = MasterChecksheet::where('id_checksheet','=', $request->get('id')) 
+ ->select('reason','invoice_date')     
+ ->first();
 
-    $response = array(
-      'status' => true,
-      'message' => 'Update Success',
-      'reason' => $reason
- );
-    return Response::json($response);
+ $response = array(
+    'status' => true,
+    'message' => 'Update Success',
+    'reason' => $reason
+);
+ return Response::json($response);
 }
 
 public function edit(Request $request){
-    $id_user = Auth::id();
-    $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
-    ->first();
+ $id_user = Auth::id();
+ $master = MasterChecksheet::where('id_checksheet','=', $request->get('id_chek'))      
+ ->first();
 
-    $master->countainer_number = $request->get('countainer_numberE');
-    $master->seal_number = $request->get('seal_numberE');
-    $master->no_pol = $request->get('nopolE');
-    $master->invoice = $request->get('invoiceE');
-    $master->destination = strtoupper($request->get('destinationE'));
-    $master->shipped_to = $request->get('shipped_toE');
-    $master->Stuffing_date = $request->get('Stuffing_dateE');
-    $master->invoice_date = $request->get('invoice_dateE');
-    $master->etd_sub = $request->get('etd_subE');
-    $master->carier = $request->get('carierE');
-    $master->payment = $request->get('paymentE');
-    $master->reason = $request->get('reason');
-    $master->created_by = $id_user;
-    $master->save();
-    $response = array(
-      'status' => true,
-      'message' => 'Update Success',
- );
+ $master->countainer_number = $request->get('countainer_numberE');
+ $master->seal_number = $request->get('seal_numberE');
+ $master->no_pol = $request->get('nopolE');
+ $master->invoice = $request->get('invoiceE');
+ $master->destination = strtoupper($request->get('destinationE'));
+ $master->shipped_to = $request->get('shipped_toE');
+ $master->Stuffing_date = $request->get('Stuffing_dateE');
+ $master->invoice_date = $request->get('invoice_dateE');
+ $master->etd_sub = $request->get('etd_subE');
+ $master->carier = $request->get('carierE');
+ $master->payment = $request->get('paymentE');
+ $master->reason = $request->get('reason');
+ $master->created_by = $id_user;
+ $master->save();
+ $response = array(
+    'status' => true,
+    'message' => 'Update Success',
+);
 
-    return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
+ return redirect('/index/CheckSheet')->with('status', 'Check Sheet has been updated.')->with('page', 'Check Sheet');
 }
 
 public function marking(Request $request){
@@ -758,10 +773,10 @@ public function deleteReimport(Request $request)
 
 
      $response = array(
-      'status' => true,
-      'message' => 'Update Success',
-      'reason' => 'ok'
- );
+         'status' => true,
+         'message' => 'Update Success',
+         'reason' => 'ok'
+    );
      return Response::json($response);
 }
 
