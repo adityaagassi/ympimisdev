@@ -235,8 +235,8 @@
 		$("#print_kdo_modal").modal('show');
 	}
 
-	function printLabelSubassy(location,kd_detail,windowName) {
-		newwindow = window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+kd_detail, windowName, 'height=250,width=450');
+	function printLabelSubassy(kd_detail,windowName) {
+		newwindow = window.open('{{ url("index/print_label_subassy/") }}'+'/'+kd_detail, windowName, 'height=250,width=450');
 
 		if (window.focus) {
 			newwindow.focus();
@@ -246,14 +246,12 @@
 	}
 
 	function reprintKDODetail(id){
-
 		var data = id.split('+');
-
 		var kd_detail = data[0];
 		var location = "{{ $location }}";
+		{{-- window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+kd_detail, '_blank'); --}}
 
-		// window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+kd_detail, '_blank');
-		printLabelSubassy(location, kd_detail, ('reprint'+kd_detail));
+		printLabelSubassy(kd_detail, ('reprint'+kd_detail));
 
 		openSuccessGritter('Success!', "Reprint Success");
 	}
@@ -403,7 +401,7 @@
 				var id = result.knock_down_detail.id;
 
 				// window.open('{{ url("index/print_label_subassy") }}'+'/'+location+'/'+id, '_blank');
-				printLabelSubassy(location, id, ('print'+id));
+				printLabelSubassy(id, ('print'+id));
 
 
 				$('#production_id').val('');
@@ -469,7 +467,7 @@
 				tableData += '<td>'+ value.material_number +'</td>';
 				tableData += '<td>'+ value.material_description +'</td>';
 				tableData += '<td>'+ value.hpl +'</td>';
-				tableData += '<td>'+ value.surface +'</td>';
+				tableData += '<td>'+ (value.surface || '') +'</td>';
 				tableData += '<td>'+ value.target +'</td>';
 				tableData += '<td>'+ value.lot_completion +'</td>';
 				tableData += '<td>'+ value.box +'</td>';

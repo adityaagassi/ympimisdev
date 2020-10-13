@@ -56,10 +56,8 @@
 	<input type="hidden" id="input_kd_name" value="{{$knock_down_detail->kd_name}}">
 	<input type="hidden" id="input_xy" value="{{$knock_down_detail->xy}}">
 	<input type="hidden" id="input_mj" value="{{$knock_down_detail->mj}}">
-	<input type="hidden" id="id" value="{{$id}}">
-	<input type="hidden" id="location" value="{{$location}}">
 
-	<table style="margin-top: 1px; width: 404px;">
+	<table style="margin-top: 1px; width: 400px;">
 		<tr height="35">
 			<th width="100px" class="top" id="material_number"></th>
 			<th width="80px" class="top" id="quantity">QTY</th>
@@ -200,18 +198,10 @@
 				console.log("before print: "+what, true);
 			});
 			win.addEventListener("afterprint", function(event) {
-
-				var id = $('#id').val();
-				var location = $('#location').val();
 				console.log("after print: "+what, true);
-				console.log(location);
 
-				if (location == "sub-assy-cl") {
-					window.open('{{ url("index/print_label_subassy_kecil") }}'+'/'+id, '_blank');
-				}else{
-					setTimeout(tutup,1000);
-				}
-
+				setTimeout(tutup,1000);
+				
 			});
 		}
 

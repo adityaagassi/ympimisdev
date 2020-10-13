@@ -148,24 +148,36 @@ class KnockDownController extends Controller{
 		));
 	}
 
-	public function indexPrintLabelSubassy($location, $id){
+	public function indexPrintLabelSubassy($id){
 		$knock_down_detail = KnockDownDetail::leftJoin('materials','materials.material_number','=','knock_down_details.material_number')
+		->leftJoin('material_volumes', 'material_volumes.material_number', '=', 'knock_down_details.material_number')
+		->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'knock_down_details.storage_location')
 		->where('knock_down_details.id','=',$id)
 		->select('knock_down_details.kd_number',
 			'knock_down_details.material_number',
+			'knock_down_details.storage_location',
 			'materials.material_description',
 			'knock_down_details.quantity',
 			'materials.kd_name',
+			'storage_locations.location',
+			'material_volumes.label',
 			db::raw('if(materials.xy is not null, materials.xy, "-") as xy'),
 			db::raw('if(materials.mj is not null, materials.mj, "-") as mj')
 		)
 		->first();
 
-		return view('kd.label.print_label_subassy', array(
-			'knock_down_detail' => $knock_down_detail,
-			'id' => $id,
-			'location' => $location
-		));
+		if($knock_down_detail->label == '76x35'){
+			return view('kd.label.print_label_subassy_kecil', array(
+				'knock_down_detail' => $knock_down_detail,
+			));
+		}else if($knock_down_detail->label == 'thermal'){
+			$this->printKDOSub($knock_down_detail);
+			return JavaScript("window.close();");			
+		}else{
+			return view('kd.label.print_label_subassy', array(
+				'knock_down_detail' => $knock_down_detail,
+			));
+		}
 	}
 
 	public function indexPrintLabelSubassyKecil($id){
