@@ -1132,8 +1132,6 @@ class KnockDownController extends Controller{
 		//Cek Marking		
 		foreach ($knock_down_details as $knock_down_detail) {
 
-
-
 			$act_pallet = db::select("SELECT kd.kd_number, d.material_number, SUM(d.quantity) AS quantity FROM knock_downs kd
 				LEFT JOIN knock_down_details d ON d.kd_number = kd.kd_number
 				WHERE kd.container_id = '".$container_id."'
@@ -1563,14 +1561,16 @@ class KnockDownController extends Controller{
 			->get();
 
 			$st_date = KnockDownDetail::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+			->leftJoin('destinations','destinations.destination_code','=','shipment_schedules.destination_code')
 			->where('knock_down_details.kd_number','=',$kd_number)
-			->select('knock_down_details.kd_number','knock_down_details.material_number','shipment_schedules.st_date')
+			->select('knock_down_details.kd_number','knock_down_details.material_number','shipment_schedules.st_date','destinations.destination_shortname')
 			->orderBy('shipment_schedules.st_date','asc')
 			->first();
 
+
 			$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
 
-			$this->printKDO($kd_number, $st_date->st_date, $knock_down_details, $storage_location->location, 'REPRINT');
+			$this->printKDO($kd_number, $st_date->st_date, $knock_down_details, $storage_location->location, 'REPRINT', $st_date->destination_shortname);
 
 			$response = array(
 				'status' => true,
@@ -1616,19 +1616,23 @@ class KnockDownController extends Controller{
 
 			$knock_down_details = KnockDownDetail::leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
 			->where('knock_down_details.kd_number','=',$kd_number)
-			->select('knock_down_details.kd_number','knock_down_details.material_number', 'materials.material_description', db::raw('sum(knock_down_details.quantity) as quantity'))
+			->select('knock_down_details.kd_number',
+				'knock_down_details.material_number',
+				'materials.material_description',
+				db::raw('sum(knock_down_details.quantity) as quantity'))
 			->groupBy('knock_down_details.kd_number','knock_down_details.material_number', 'materials.material_description')
 			->get();
 
 			$st_date = KnockDownDetail::leftJoin('shipment_schedules', 'shipment_schedules.id', '=', 'knock_down_details.shipment_schedule_id')
+			->leftJoin('destinations','destinations.destination_code','=','shipment_schedules.destination_code')
 			->where('knock_down_details.kd_number','=',$kd_number)
-			->select('knock_down_details.kd_number','knock_down_details.material_number','shipment_schedules.st_date')
+			->select('knock_down_details.kd_number','knock_down_details.material_number','shipment_schedules.st_date','destinations.destination_shortname')
 			->orderBy('shipment_schedules.st_date','asc')
 			->first();
 
 			$storage_location = StorageLocation::where('storage_location', '=', $storage_location)->first();
 
-			// $this->printKDO($kd_number, $st_date->st_date, $knock_down_details, $storage_location->location, 'PRINT');
+			$this->printKDO($kd_number, $st_date->st_date, $knock_down_details, $storage_location->location, 'PRINT', $st_date->destination_shortname);
 
 			$response = array(
 				'status' => true,
@@ -2168,14 +2172,14 @@ class KnockDownController extends Controller{
 		return Response::json($response);
 	}
 
-	public function printKDO($kd_number, $st_date, $knock_down_details, $storage_location, $remark){
+	public function printKDO($kd_number, $st_date, $knock_down_details, $storage_location, $remark, $destination_shortname){
 
 		if(Auth::user()->role_code == 'op-zpro'){
 			$printer_name = 'KDO ZPRO';
-		}else if (Auth::user()->role_code == 'OP-WH-Exim') {
+		}else if (Auth::user()->role_code == 'OP-WH-Exim'){
 			$printer_name = 'FLO Printer LOG';
 		}else{
-			$printer_name = 'MIS';
+			$printer_name = 'MIS2';
 		}
 
 		$connector = new WindowsPrintConnector($printer_name);
@@ -2208,6 +2212,19 @@ class KnockDownController extends Controller{
 		$printer->setJustification(Printer::JUSTIFY_CENTER);
 		$printer->qrCode($kd_number, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
 		$printer->text($kd_number."\n");
+
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_LEFT);
+		$printer->setUnderline(true);
+		$printer->text('Destination:');
+		$printer->setUnderline(false);
+		$printer->feed(1);
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setTextSize(6, 3);
+		$printer->text(strtoupper($destination_shortname."\n\n"));
+
+
 		$printer->initialize();
 		$printer->setUnderline(true);
 		$printer->text('Shipment Date:');
@@ -2247,6 +2264,69 @@ class KnockDownController extends Controller{
 		$printer->initialize();
 		$printer->text("Total Qty: ". $total_qty ."\n");
 		$printer->feed(2);
+		$printer->feed(2);
+		$printer->cut();
+		$printer->close();
+	}
+
+	public function printKDOSub($knock_down_details){
+		$receive = $knock_down_details->storage_location;
+
+		if(Auth::user()->role_code == 'MIS' || Auth::user()->role_code == 'S'){
+			$printer_name = 'MIS2';
+		}else{
+			if($receive == 'CL91' || $receive == 'CLB9'){
+				$printer_name = 'FLO Printer 102';
+			}
+			else if($receive == 'SX91'){
+				$printer_name = 'FLO Printer 103';
+			}
+			else if($receive == 'FL91'){
+				$printer_name = 'FLO Printer 101';
+			}
+			else if($receive == 'SX51' || $receive == 'CL51' || $receive == 'FL51' || $receive == 'VN51'){
+				$printer_name = 'Stockroom-Printer';			
+			}
+			else if($receive == 'SX21' || $receive == 'CL21' || $receive == 'FL21' || $receive == 'VN21'){
+				$printer_name = 'Welding-Printer';			
+			}
+			else{
+				$printer_name = 'MIS2';
+			}
+		}
+
+		$connector = new WindowsPrintConnector($printer_name);
+		$printer = new Printer($connector);
+
+		$printer->initialize();
+		$printer->setJustification(Printer::JUSTIFY_LEFT);
+		$printer->setUnderline(true);
+		$printer->text('Storage Location:');
+		$printer->setUnderline(false);
+		$printer->feed(1);
+
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->setTextSize(3, 3);
+		$printer->text(strtoupper($knock_down_details->location."\n"));
+		$printer->initialize();
+
+		$printer->setUnderline(true);
+		$printer->text('KDO:');
+		$printer->feed(1);
+		$printer->setUnderline(false);
+		$printer->setJustification(Printer::JUSTIFY_CENTER);
+		$printer->qrCode($knock_down_details->kd_number, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_2);
+		$printer->text($knock_down_details->kd_number."\n");
+
+		$printer->feed(2);
+		$printer->initialize();
+		$printer->text("GMC     | Description                     | Qty ");
+		$total_qty = 0;
+		$qty = $this->writeString($knock_down_details->quantity, 4, ' ');
+		$material_description = substr($knock_down_details->material_description, 0,31);
+		$material_description = $this->writeString($material_description, 31, ' ');
+		$printer->text($knock_down_details->material_number." | ".$material_description." | ".$qty);
+		
 		$printer->feed(2);
 		$printer->cut();
 		$printer->close();
