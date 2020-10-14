@@ -391,7 +391,8 @@ public function import(Request $request)
                'no_pol' => $request->get('nopol'),
                'Stuffing_date' => $request->get('Stuffing_date'),               
                'invoice_date' => $request->get('invoice_date'),            
-               'toward' => $toward,
+               'toward' => $toward,            
+               'ct_size' => $request->get('ct_size'),  
                'created_by' => $id
           ]);
 

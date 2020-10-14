@@ -267,7 +267,7 @@
           <input type="text" name="" class="form-control" value="PT. YMPI" readonly>
         </div>
 
-        <div class="col-xs-12">
+        <div class="col-xs-8">
           <label>Towards: </label>
           <select class="form-control select2" multiple="multiple" name="toward[]" id="toward"  data-placeholder="Choose a Toward ..." style="width: 100%;" >
             <option value="YAMAHA MUSIC MANUFACTURING JAPAN CORPORATION BO & GD SECTION">YMMJ</option>
@@ -283,7 +283,16 @@
             <option value="YAMAHA DE MEXICO S.A. DE C.V.">YDM</option>
           </select>
         </div>
-        
+        <div class="col-xs-4">
+          <label>Container Size: </label>
+          <select class="form-control select2" name="ct_size" id="ct_size"  data-placeholder="Choose a Size ..." style="width: 100%;" >
+            <option value=""></option>
+            <option value="20FT">20FT</option>
+            <option value="40FT">40FT</option>
+            <option value="40FT HC">40FT HC</option>
+            <option value="TRUCK">TRUCK</option>
+          </select>
+        </div>        
       </div>
 
 
