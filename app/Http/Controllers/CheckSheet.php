@@ -158,7 +158,7 @@ public function print_check_surat($id)
 {
      $checksheet = MasterChecksheet::where('master_checksheets.id', '=', $id)
      ->leftJoin('shipment_conditions', 'shipment_conditions.shipment_condition_code', '=', 'master_checksheets.carier')
-     ->select('master_checksheets.Stuffing_date', 'master_checksheets.toward', 'master_checksheets.id_checkSheet', 'master_checksheets.no_pol', 'master_checksheets.countainer_number', 'master_checksheets.seal_number', 'shipment_conditions.shipment_condition_name')
+     ->select('master_checksheets.Stuffing_date', 'master_checksheets.toward', 'master_checksheets.id_checkSheet', 'master_checksheets.no_pol', 'master_checksheets.countainer_number', 'master_checksheets.seal_number', 'shipment_conditions.shipment_condition_name', 'master_checksheets.ct_size')
      ->first();
 
      $checksheet_details = db::select("SELECT

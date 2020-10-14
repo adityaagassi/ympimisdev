@@ -44,15 +44,15 @@ text-align: center
 </head>
 <body>
   <header>
-    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left;" >
       <thead>
        <tr>
-        <td colspan="5" style="font-weight: bold;font-size: 13px;">
+        <td colspan="5" style="font-weight: bold;font-size: 13px; width: 50%">
           <b>
             PT.YAMAHA MUSICAL PRODUCTS INDONESIA
           </b>
         </td>
-        <td colspan="4" style="font-size: 12px;">
+        <td colspan="4" style="font-size: 12px; width: 50%;">
           Pasuruan, {{date('d M Y', strtotime($checksheet->Stuffing_date))}} 
         </td>
       </tr>
@@ -95,7 +95,7 @@ text-align: center
       </tr>
       <tr>
         <td style="width: 1%;border: none;font-size: 11px">No.Container/Size </td>              
-        <td style="border: none;font-size: 11px">: {{$checksheet->countainer_number}}</td>  
+        <td style="border: none;font-size: 11px">: {{$checksheet->countainer_number}} / {{ $checksheet->ct_size }}</td>  
       </tr>
       <tr>
         <td style="width: 1%;border: none;font-size: 11px">No. Segel </td>        
