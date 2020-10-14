@@ -1292,15 +1292,54 @@ class KnockDownController extends Controller{
 
 	}
 
+	public function fetchKDOClosure(Request $request){
+		$status = $request->get('status');
+		
+		$knock_downs = KnockDownDetail::leftJoin('knock_downs', 'knock_down_details.kd_number', '=', 'knock_downs.kd_number')
+		->leftJoin('knock_down_logs', 'knock_down_logs.kd_number', '=', 'knock_down_details.kd_number')
+		->leftJoin('materials', 'materials.material_number', '=', 'knock_down_details.material_number')
+		->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'knock_down_details.storage_location')
+		->where('knock_down_logs.status', '=', $status)
+		->where('knock_downs.status', '=', $status)
+		->where('knock_downs.remark', '=', ['sub-assy-sx','sub-assy-cl','sub-assy-fl'])
+		->orderBy('knock_down_logs.updated_at', 'desc')
+		->select(
+			'knock_downs.kd_number',
+			'knock_down_details.material_number',
+			'knock_down_details.quantity',
+			'materials.material_description',
+			'storage_locations.location',
+			'knock_downs.remark',
+			'knock_downs.closure_id',
+			'knock_down_logs.updated_at')
+		->get();
+
+		return DataTables::of($knock_downs)
+		->addColumn('deleteKDO', function($knock_downs){
+			return '<a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="deleteKDO(id)" id="' . $knock_downs->kd_number . '"><i class="fa fa-trash"></i></a>';
+		})
+		->rawColumns([
+			'deleteKDO' => 'deleteKDO'
+		])
+		->make(true);
+	}
+
 	public function fetchKDO(Request $request){
 		$status = $request->get('status');
+		$remark = $request->get('remark');
 
 		$knock_downs = KnockDown::leftJoin('knock_down_logs', 'knock_down_logs.kd_number', '=', 'knock_downs.kd_number')
 		->leftJoin('master_checksheets', 'master_checksheets.id_checkSheet', '=', 'knock_downs.container_id')
 		->leftJoin('container_schedules', 'container_schedules.container_id', '=', 'knock_downs.container_id')
 		->where('knock_down_logs.status', '=', $status)
-		->where('knock_downs.status', '=', $status)
-		->orderBy('knock_down_logs.updated_at', 'desc')
+		->where('knock_downs.status', '=', $status);
+
+		if(strlen($request->get('remark')) > 0 ){
+			$knock_downs = $knock_downs->where('knock_downs.remark', '=', $request->get('remark'));
+		}
+
+
+		$knock_downs = $knock_downs->orderBy('knock_down_logs.updated_at', 'desc')
 		->select(
 			'knock_downs.kd_number',
 			'master_checksheets.Stuffing_date',
