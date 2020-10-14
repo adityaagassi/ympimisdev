@@ -457,9 +457,13 @@
 	}
 
 	function fillTable(){
+		var location = "{{ $location }}";
+
 		var data = {
 			status : 1,
+			remark : location
 		}
+		
 		$('#kdo_table tfoot th').each( function () {
 			var title = $(this).text();
 			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" />' );
@@ -805,10 +809,7 @@
 				"processing": true
 
 			});
-
 		});
-
-
 	}
 
 
