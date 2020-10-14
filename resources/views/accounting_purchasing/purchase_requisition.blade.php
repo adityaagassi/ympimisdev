@@ -224,6 +224,7 @@
 								<li class="vendor-tab active disabledTab"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Informasi PR</a></li>
 								<li class="vendor-tab disabledTab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Informasi Budget PR</a></li>
 								<li class="vendor-tab disabledTab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Detail Item PR</a></li>
+								<li class="vendor-tab disabledTab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">Kebutuhan & Peruntukan</a></li>
 							</ul>
 						</div>
 						<div class="tab-content">
@@ -243,7 +244,6 @@
 												<input type="hidden" id="department" name="department" value="{{$employee->department}}">
 												<input type="hidden" id="section" name="section" value="{{$employee->section}}">
 											</div>
-											
 										</div>
 										<div class="col-md-6">
 											<div class="form-group">
@@ -371,14 +371,11 @@
 										<div class="col-xs-1" style="padding:5px;">
 											<b>Kode Item</b>
 										</div>
-										<div class="col-xs-2" style="padding:5px;">
+										<div class="col-xs-3" style="padding:5px;">
 											<b>Deskripsi</b>
 										</div>
 										<div class="col-xs-1" style="padding:5px;">
 											<b>Spesifikasi</b>
-										</div>
-										<div class="col-xs-1" style="padding:5px;">
-											<b>Stok WIP</b>
 										</div>
 										<div class="col-xs-1" style="padding:5px;">
 											<b>Request Date</b>
@@ -407,15 +404,15 @@
 											<select class="form-control select4" data-placeholder="Choose Item" name="item_code1" id="item_code1" style="width: 100% height: 35px;" onchange="pilihItem(this)">
 											</select>
 										</div>
-										<div class="col-xs-2" style="padding:5px;">
+										<div class="col-xs-3" style="padding:5px;">
 											<input type="text" class="form-control" id="item_desc1" name="item_desc1" placeholder="Description" required="">
 										</div>
 										<div class="col-xs-1" style="padding:5px;">
 											<input type="text" class="form-control" id="item_spec1" name="item_spec1" placeholder="Specification">
 										</div>
-										<div class="col-xs-1" style="padding:5px;">
+<!-- 										<div class="col-xs-1" style="padding:5px;">
 											<input type="text" class="form-control" id="item_stock1" name="item_stock1" placeholder="Stock">
-										</div>
+										</div> -->
 										<div class="col-xs-1" style="padding:5px;">
 											<div class="input-group date">
 												<div class="input-group-addon">
@@ -524,9 +521,53 @@
 									</div>
 									<div class="col-md-12">
 										<br>
+										<a class="btn btn-primary btnNext3 pull-right">Selanjutnya</a>
+										<span class="pull-right">&nbsp;</span>
+										<a class="btn btn-info btnPrevious pull-right">Kembali</a>
+									</div>
+								</div>
+							</div>
+
+							<div class="tab-pane" id="tab_4">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="col-xs-2" style="padding:5px;">
+											<b>Deskripsi Item</b>
+										</div>
+
+										<div class="col-xs-6" style="padding:5px;">
+											<b>Peruntukan</b>
+										</div>
+
+										<div class="col-xs-2" style="padding:5px;">
+											<b>Stock</b>
+										</div>
+
+										<div class="col-xs-2" style="padding:5px;">
+											<b>Kebutuhan / Hari</b>
+										</div>
+
+										<div class="col-xs-2" style="padding:5px;">
+											<input type="text" class="form-control" id="tujuan_desc1" name="tujuan_desc1" placeholder="Description" required="">
+										</div>
+										<div class="col-xs-6" style="padding:5px;">
+											<input type="text" class="form-control" id="tujuan_peruntukan1" name="tujuan_peruntukan1" placeholder="Tujuan Pembelian / Peruntukan">
+										</div>
+										<div class="col-xs-2" style="padding:5px;">
+											<input type="text" class="form-control" id="item_stock1" name="item_stock1" placeholder="Stock">
+										</div>
+										<div class="col-xs-2" style="padding:5px;">
+											<input type="text" class="form-control" id="tujuan_kebutuhan1" name="tujuan_kebutuhan1" placeholder="Kebutuhan (e.g. 10 pcs/hari)">
+										</div>
+									</div>
+
+									<div id="peruntukan"></div>
+									
+									<div class="col-md-12">
 										<button type="submit" class="btn btn-success pull-right">Konfirmasi</button> 
 										<span class="pull-right">&nbsp;</span>
 										<a class="btn btn-primary btnPrevious pull-right">Kembali</a>
+
 									</div>
 								</div>
 							</div>
@@ -539,7 +580,7 @@
 	</form>
 
 	<div class="modal fade in" id="modalEdit">
-		<form id ="importFormEdit" name="importFormEdit" method="post" action="{{ url('update/purchase_requisition') }}">
+		<form id="importFormEdit" name="importFormEdit" method="post" action="{{ url('update/purchase_requisition') }}">
 			<input type="hidden" value="{{csrf_token()}}" name="_token" />
 			<div class="modal-dialog modal-lg" style="width: 1300px">
 				<div class="modal-content">
@@ -549,119 +590,162 @@
 						</button>
 						<h4 class="modal-title">Edit Purchase Requisition</h4>
 						<br>
+						<div class="nav-tabs-custom tab-danger">
+							<ul class="nav nav-tabs" id="navv">
+								<li class="vendor-tab active disabledTab"><a href="#tab_1_edit" data-toggle="tab" id="tab_header_1">Informasi & Detail PR</a></li>
+								<li class="vendor-tab disabledTab"><a href="#tab_2_edit" data-toggle="tab" id="tab_header_2">Peruntukan dan Kebutuhan</a></li>
+							</ul>
+						</div>
+
+						<br>
 						<h4 class="modal-title" id="modalDetailTitle"></h4>
+						<div class="tab-content">
+							<div class="tab-pane active" id="tab_1_edit">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Identitas</label>
+												<input type="text" class="form-control" id="identitas_edit" name="identitas_edit" placeholder="Identitas">
+											</div>
+											<div class="form-group">
+												<label>No PR</label>
+												<input type="text" class="form-control" id="no_pr_edit" name="no_pr_edit" placeholder="PR Number">
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Departemen</label>
+												<input type="text" class="form-control" id="departemen_edit" name="departemen_edit" placeholder="Departemen">
+											</div>
+											<div class="form-group">
+												<label>No Budget</label>
+												<input type="text" class="form-control" id="no_budget_edit" name="no_budget_edit" placeholder="No Budget">
+											</div>
+										</div>
 
-						<div class="row">
-							<div class="col-md-12">
-
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>Identitas</label>
-										<input type="text" class="form-control" id="identitas_edit" name="identitas_edit" placeholder="Identitas">
+										<div class="col-md-4">
+											<div class="form-group">
+												<label>Tanggal Pengajuan</label>
+												<input type="text" class="form-control" id="tgl_pengajuan_edit" name="tgl_pengajuan_edit" placeholder="Tanggal Pengajuan">
+											</div>
+										</div>
 									</div>
-									<div class="form-group">
-										<label>No PR</label>
-										<input type="text" class="form-control" id="no_pr_edit" name="no_pr_edit" placeholder="PR Number">
+
+									<div class="col-md-12" style="margin-bottom : 5px">
+										<div class="col-xs-1" style="padding:5px;">
+											<b>Kode Item</b>
+										</div>
+										<div class="col-xs-3" style="padding:5px;">
+											<b>Deskripsi</b>
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<b>Spesifikasi</b>
+										</div>
+										<!-- <div class="col-xs-1" style="padding:5px;">
+											<b>Stok WIP</b>
+										</div> -->
+										<div class="col-xs-1" style="padding:5px;">
+											<b>Request Date</b>
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<b>Mata Uang</b>
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<b>Harga</b>
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<b>Jumlah</b>
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<b>UOM</b>
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<b>Total</b>
+										</div>
+										<div class="col-xs-1" style="padding:5px;">
+											<b>Aksi</b>
+										</div>
+									</div>
+
+									<div  id="modalDetailBodyEdit">
+									</div>
+
+
+									<br>
+									<div id="tambah2">
+										<input type="text" name="lop2" id="lop2" value="1" hidden="">
+										<input type="text" name="looping" id="looping" hidden="">
+									</div>
+
+									<div class="col-md-11" style="margin-top: 20px">
+										<p><b>Informasi Budget Yang Telah Masukkan</b></p>
+										<table class="table table-striped text-center">
+											<tr>
+												<th>Bulan</th>
+												<th>Budget Bulanan</th>
+												<th>Total Pembelian</th>
+												<th>Sisa Budget</th>
+											</tr>
+											<tr>
+												<td>
+													<label id="bulanbudgetedit" name="bulanbudgetedit"></label>
+												</td>
+												<td>
+													<label id="budgetLabelEdit" name="budgetLabelEdit"></label>
+												</td>
+												<td>
+													<label id="TotalPembelianEditLabel" name="TotalPembelianEditLabel"></label>
+													<input type="hidden" id="TotalPembelianEdit" name="TotalPembelianEdit">
+												</td>
+												<td>
+													<label id="SisaBudgetLabelEdit" name="SisaBudgetLabelEdit"></label>
+													<input type="hidden" id="SisaBudgetEdit" name="SisaBudgetEdit">
+												</td>
+											</tr>
+										</table>
 									</div>
 								</div>
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>Departemen</label>
-										<input type="text" class="form-control" id="departemen_edit" name="departemen_edit" placeholder="Departemen">
-									</div>
-									<div class="form-group">
-										<label>No Budget</label>
-										<input type="text" class="form-control" id="no_budget_edit" name="no_budget_edit" placeholder="No Budget">
-									</div>
+								<div class="col-md-12">
+									<a class="btn btn-primary btnNextEdit pull-right">Selanjutnya</a>
+									<span class="pull-right">&nbsp;</span>
 								</div>
+							</div>
+							<div class="tab-pane" id="tab_2_edit">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="col-xs-2" style="padding:5px;">
+											<b>Deskripsi Item</b>
+										</div>
 
-								<div class="col-md-4">
-									<div class="form-group">
-										<label>Tanggal Pengajuan</label>
-										<input type="text" class="form-control" id="tgl_pengajuan_edit" name="tgl_pengajuan_edit" placeholder="Tanggal Pengajuan">
+										<div class="col-xs-6" style="padding:5px;">
+											<b>Peruntukan</b>
+										</div>
+
+										<div class="col-xs-2" style="padding:5px;">
+											<b>Stock</b>
+										</div>
+
+										<div class="col-xs-2" style="padding:5px;">
+											<b>Kebutuhan / Hari</b>
+										</div>
+									</div>
+									
+									<div id="modalDetailTujuan">
+									</div>
+
+									<div id="peruntukan_edit"></div>
+									
+									<div class="col-md-12">
+										<input type="hidden" class="form-control" id="id_edit_pr" name="id_edit_pr" placeholder="ID">
+										<button type="submit" class="btn btn-warning pull-right">Update</button>
+										<span class="pull-right">&nbsp;</span>
+										<a class="btn btn-primary btnPrevious pull-right">Kembali</a>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div>
-							<div class="col-md-12" style="margin-bottom : 5px">
-								<div class="col-xs-1" style="padding:5px;">
-									<b>Kode Item</b>
-								</div>
-								<div class="col-xs-2" style="padding:5px;">
-									<b>Deskripsi</b>
-								</div>
-								<div class="col-xs-1" style="padding:5px;">
-									<b>Spesifikasi</b>
-								</div>
-								<div class="col-xs-1" style="padding:5px;">
-									<b>Stok WIP</b>
-								</div>
-								<div class="col-xs-1" style="padding:5px;">
-									<b>Request Date</b>
-								</div>
-								<div class="col-xs-1" style="padding:5px;">
-									<b>Mata Uang</b>
-								</div>
-								<div class="col-xs-1" style="padding:5px;">
-									<b>Harga</b>
-								</div>
-								<div class="col-xs-1" style="padding:5px;">
-									<b>Jumlah</b>
-								</div>
-								<div class="col-xs-1" style="padding:5px;">
-									<b>UOM</b>
-								</div>
-								<div class="col-xs-1" style="padding:5px;">
-									<b>Total</b>
-								</div>
-								<div class="col-xs-1" style="padding:5px;">
-									<b>Aksi</b>
-								</div>
-							</div>
 
-							<div  id="modalDetailBodyEdit">
-							</div>
-
-							<br>
-							<div id="tambah2">
-								<input type="text" name="lop2" id="lop2" value="1" hidden="">
-								<input type="text" name="looping" id="looping" hidden="">
-							</div>
-
-						</div>
-						<div class="col-md-11" style="margin-top: 20px">
-							<p><b>Informasi Budget Yang Telah Masukkan</b></p>
-							<table class="table table-striped text-center">
-								<tr>
-									<th>Bulan</th>
-									<th>Budget Bulanan</th>
-									<th>Total Pembelian</th>
-									<th>Sisa Budget</th>
-								</tr>
-								<tr>
-									<td>
-										<label id="bulanbudgetedit" name="bulanbudgetedit"></label>
-									</td>
-									<td>
-										<label id="budgetLabelEdit" name="budgetLabelEdit"></label>
-									</td>
-									<td>
-										<label id="TotalPembelianEditLabel" name="TotalPembelianEditLabel"></label>
-										<input type="hidden" id="TotalPembelianEdit" name="TotalPembelianEdit">
-									</td>
-									<td>
-										<label id="SisaBudgetLabelEdit" name="SisaBudgetLabelEdit"></label>
-										<input type="hidden" id="SisaBudgetEdit" name="SisaBudgetEdit">
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<input type="hidden" class="form-control" id="id_edit_pr" name="id_edit_pr" placeholder="ID">
-						<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-warning">Update</button>
 					</div>
 				</div>
 			</div>
@@ -831,6 +915,23 @@
         });
 
         $('.btnNext2').click(function(){
+
+        	var status = 0;  		
+			var len = $('#budget_sisa').text();
+			if (len != "") {
+				var sisa = parseFloat(len.substr(1));
+				if (sisa > 0) {
+					
+				} else {
+					status++;
+				}			        	
+			}
+
+			if (status > 0) {
+				openErrorGritter("Error","Budget Tidak Ada");
+				return false;
+			}
+
         	var budget_no = $('#budget_no').val();
         	if(budget_no == ""){
         		alert('Budget field must be filled');	
@@ -838,6 +939,37 @@
         	else{
         		$('.nav-tabs > .active').next('li').find('a').trigger('click');
         	}
+        });
+
+        $('.btnNext3').click(function(){
+
+        	var status = 0;  		
+			var len = $('#SisaBudgetLabel').text();
+			if (len != "") {
+				var sisa = parseFloat(len.substr(1));
+				if (sisa > 0) {
+					
+				} else {
+					status++;
+				}			        	
+			}
+
+			if (status > 0) {
+				openErrorGritter("Error","Tidak Boleh Melebihi Budget");
+				return false;
+			}
+
+        	var item_code1 = $('#item_code1').val();
+        	if(item_code1 == ""){
+        		alert('All field must be filled');	
+        	}
+        	else{
+        		$('.nav-tabs > .active').next('li').find('a').trigger('click');
+        	}
+        });
+
+        $('.btnNextEdit').click(function(){
+        	$('#navv > .active').next('li').find('a').trigger('click');
         });
 
         $('.btnPrevious').click(function(){
@@ -986,56 +1118,43 @@
 		var no = elem.id.match(/\d/g);
 		no = no.join("");
 
-		if (elem.value == "kosong") {
-			$('#item_code'+no).val("");
-			$('#item_desc'+no).val("").attr('readonly', false);
-			$('#item_spec'+no).val("").attr('readonly', false);
-			$('#item_stock'+no).val("").attr('readonly', false);
-			$('#item_price'+no).val("").attr('readonly', false);
-			$('#uom'+no).val("").attr('readonly', false);
-			$('#item_currency'+no).val("");
-			$('#item_currency'+no).next(".select2-container").show();
-			$('#item_currency'+no).next(".select3-container").show();
-			$('#item_currency'+no).show();
-			$('#item_currency_text'+no).val("");
-			$('#item_currency_text'+no).hide();
-			$('#ket_harga'+no).text("?");
-		}
+		$.ajax({
+			url: "{{ route('admin.prgetitemdesc') }}?kode_item="+elem.value,
+			method: 'GET',
+			success: function(data) {
+				var json = data,
+				obj = JSON.parse(json);
+				$('#item_desc'+no).val(obj.deskripsi).attr('readonly', true);
+				$('#item_spec'+no).val(obj.spesifikasi).attr('readonly', true);
+				$('#item_price'+no).val(obj.price).attr('readonly', true);
+				$('#uom'+no).val(obj.uom).change().attr('readonly', true);
+				$('#qty'+no).val("0");
+				$('#moq'+no).val(obj.moq);
+				$('#amount'+no).val("0");
+				$('#item_currency'+no).next(".select2-container").hide();
+				$('#item_currency'+no).hide();
+				$('#item_currency_text'+no).show();
+				$('#item_currency_text'+no).val(obj.currency).show().attr('readonly', true);
 
-		else{
-			$.ajax({
-				url: "{{ route('admin.prgetitemdesc') }}?kode_item="+elem.value,
-				method: 'GET',
-				success: function(data) {
-					var json = data,
-					obj = JSON.parse(json);
-					$('#item_desc'+no).val(obj.deskripsi).attr('readonly', true);
-					$('#item_spec'+no).val(obj.spesifikasi).attr('readonly', true);
-					$('#item_price'+no).val(obj.price).attr('readonly', true);
-					$('#uom'+no).val(obj.uom).change().attr('readonly', true);
-					$('#qty'+no).val("0");
-					$('#moq'+no).val(obj.moq);
-					$('#amount'+no).val("0");
-					$('#item_currency'+no).next(".select2-container").hide();
-					$('#item_currency'+no).hide();
-					$('#item_currency_text'+no).show();
-					$('#item_currency_text'+no).val(obj.currency).show().attr('readonly', true);
+				if (obj.currency == "USD") {
+					$('#ket_harga'+no).text("$");
+				}else if (obj.currency == "JPY") {
+					$('#ket_harga'+no).text("¥");
+				}else if (obj.currency == "IDR"){
+					$('#ket_harga'+no).text("Rp.");
+				}
 
-					if (obj.currency == "USD") {
-						$('#ket_harga'+no).text("$");
-					}else if (obj.currency == "JPY") {
-						$('#ket_harga'+no).text("¥");
-					}else if (obj.currency == "IDR"){
-						$('#ket_harga'+no).text("Rp.");
-					}
+				//tujuan + kebutuhan
+				$('#tujuan_desc'+no).val(obj.deskripsi).attr('readonly', true);
+				$('#tujuan_peruntukan'+no).val(obj.peruntukan);
+				$('#tujuan_kebutuhan'+no).val(obj.kebutuhan);
 
-					var $datepicker = $('#req_date'+no).attr('readonly', false);
-					$datepicker.datepicker();
-					$datepicker.datepicker('setDate', limitdate);
-				} 
-			});
+				var $datepicker = $('#req_date'+no).attr('readonly', false);
+				$datepicker.datepicker();
+				$datepicker.datepicker('setDate', limitdate);
+			} 
+		});
 
-		}
 	    // alert(sel.value);
 	}
 
@@ -1446,9 +1565,16 @@
     		lop = "lop2";
     	}
 
-    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock"+no+"' name='item_stock"+no+"' placeholder='Stock'></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''><input type='hidden' class='form-control' id='moq"+no+"' name='moq"+no+"' placeholder='Moq' required=''></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select6' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly><input type='hidden' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Total' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-3' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification' required=''></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''><input type='hidden' class='form-control' id='moq"+no+"' name='moq"+no+"' placeholder='Moq' required=''></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select6' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly><input type='hidden' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Total' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+
+    	var tujuan = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_desc"+no+"' name='tujuan_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-6' style='padding:5px;'><input type='text' class='form-control' id='tujuan_peruntukan"+no+"' name='tujuan_peruntukan"+no+"' placeholder='Tujuan Pembelian / Peruntukan' required=''></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_stock"+no+"' name='item_stock"+no+"' placeholder='Stock'></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_kebutuhan"+no+"' name='tujuan_kebutuhan"+no+"' placeholder='Kebutuhan (e.g 10 pcs/hari)' required=''></div></div>");
 
     	$("#"+id).append(divdata);
+    	if (id == "tambah"){
+    		$("#peruntukan").append(tujuan);
+		}else{
+    		$("#peruntukan_edit").append(tujuan);
+		}
     	$("#item_code"+no).append(item_list);
 
 
@@ -1488,13 +1614,13 @@
 		var ids = $(elem).parent('div').parent('div').attr('id');
 		var oldid = ids;
 		$(elem).parent('div').parent('div').remove();
+		$('#tujuan_desc'+ids).parent('div').parent('div').remove();
 		var newid = parseInt(ids) + 1;
 
 		$("#"+newid).attr("id",oldid);
 		$("#item_code"+newid).attr("name","item_code"+oldid);
 		$("#item_desc"+newid).attr("name","item_desc"+oldid);
 		$("#item_spec"+newid).attr("name","item_spec"+oldid);
-		$("#item_stock"+newid).attr("name","item_stock"+oldid);
 		$("#item_price"+newid).attr("name","item_price"+oldid);
 		$("#qty"+newid).attr("name","qty"+oldid);
 		$("#moq"+newid).attr("name","moq"+oldid);
@@ -1503,11 +1629,14 @@
 		$("#item_currency"+newid).attr("name","item_currency"+oldid);
 		$("#item_currency_text"+newid).attr("name","item_currency_text"+oldid);
 		$("#req_date"+newid).attr("name","req_date"+oldid);
+		$("#tujuan_desc"+newid).attr("name","tujuan_desc"+oldid);
+		$("#tujuan_peruntukan"+newid).attr("name","tujuan_peruntukan"+oldid);
+		$("#item_stock"+newid).attr("name","item_stock"+oldid);
+		$("#tujuan_kebutuhan"+newid).attr("name","tujuan_kebutuhan"+oldid);
 
 		$("#item_code"+newid).attr("id","item_code"+oldid);
 		$("#item_desc"+newid).attr("id","item_desc"+oldid);
 		$("#item_spec"+newid).attr("id","item_spec"+oldid);
-		$("#item_stock"+newid).attr("id","item_stock"+oldid);
 		$("#item_price"+newid).attr("id","item_price"+oldid);
 		$("#qty"+newid).attr("id","qty"+oldid);
 		$("#moq"+newid).attr("id","moq"+oldid);
@@ -1516,6 +1645,10 @@
 		$("#item_currency"+newid).attr("id","item_currency"+oldid);
 		$("#item_currency_text"+newid).attr("id","item_currency_text"+oldid);
 		$("#req_date"+newid).attr("id","req_date"+oldid);
+		$("#tujuan_desc"+newid).attr("id","tujuan_desc"+oldid);
+		$("#tujuan_peruntukan"+newid).attr("id","tujuan_peruntukan"+oldid);
+		$("#item_stock"+newid).attr("id","item_stock"+oldid);
+		$("#tujuan_kebutuhan"+newid).attr("id","tujuan_kebutuhan"+oldid);
 
 		no-=1;
 		var a = no -1;
@@ -1527,7 +1660,6 @@
 			$("#item_code"+newid).attr("name","item_code"+oldid);
 			$("#item_desc"+newid).attr("name","item_desc"+oldid);
 			$("#item_spec"+newid).attr("name","item_spec"+oldid);
-			$("#item_stock"+newid).attr("name","item_stock"+oldid);
 			$("#item_price"+newid).attr("name","item_price"+oldid);
 			$("#qty"+newid).attr("name","qty"+oldid);
 			$("#moq"+newid).attr("name","moq"+oldid);
@@ -1536,11 +1668,14 @@
 			$("#item_currency"+newid).attr("name","item_currency"+oldid);
 			$("#item_currency_text"+newid).attr("name","item_currency_text"+oldid);
 			$("#req_date"+newid).attr("name","req_date"+oldid);
+			$("#tujuan_desc"+newid).attr("name","tujuan_desc"+oldid);
+			$("#tujuan_peruntukan"+newid).attr("name","tujuan_peruntukan"+oldid);
+			$("#item_stock"+newid).attr("name","item_stock"+oldid);
+			$("#tujuan_kebutuhan"+newid).attr("name","tujuan_kebutuhan"+oldid);
 
 			$("#item_code"+newid).attr("id","item_code"+oldid);
 			$("#item_desc"+newid).attr("id","item_desc"+oldid);
 			$("#item_spec"+newid).attr("id","item_spec"+oldid);
-			$("#item_stock"+newid).attr("id","item_stock"+oldid);
 			$("#item_price"+newid).attr("id","item_price"+oldid);
 			$("#qty"+newid).attr("id","qty"+oldid);
 			$("#moq"+newid).attr("id","moq"+oldid);
@@ -1549,6 +1684,10 @@
 			$("#item_currency"+newid).attr("id","item_currency"+oldid);
 			$("#item_currency_text"+newid).attr("id","item_currency_text"+oldid);
 			$("#req_date"+newid).attr("id","req_date"+oldid);
+			$("#tujuan_desc"+newid).attr("id","tujuan_desc"+oldid);
+			$("#tujuan_peruntukan"+newid).attr("id","tujuan_peruntukan"+oldid);
+			$("#item_stock"+newid).attr("id","item_stock"+oldid);
+			$("#tujuan_kebutuhan"+newid).attr("id","tujuan_kebutuhan"+oldid);
 
 
 			// alert(i)
@@ -1658,6 +1797,7 @@
   		$("#id_edit_pr").val(result.purchase_requisition.id).attr('readonly', true);
 
   		$('#modalDetailBodyEdit').html('');
+  		$('#modalDetailTujuan').html('');
   		
   		var ids = [];
   		var total_amount = 0;
@@ -1690,17 +1830,17 @@
   				// isi += "<div class='col-xs-1' style='padding:5px'><select class='form-control select5 item_code_edit' data-placeholder='Choose Item' name='item_code_edit"+value.id+"' id='item_code_edit"+value.id+"' style='width: 100% height: 35px;' onchange='pilihItemEdit(this)'></select></div>"
   			}
   			
-  			isi += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
+  			isi += "<div class='col-xs-3' style='padding:5px;'><input type='text' class='form-control' id='item_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
   			if (value.item_spec != null) {
 	  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value='"+value.item_spec+"'></div>";
 	  		}else{
 	  			isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec_edit"+value.id+"' name='item_spec_edit"+value.id+"' placeholder='Specification' required='' value=''></div>";
 	  		}
-  			if (value.item_stock != null) {
-  				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
-  			}else{
-  				isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_stock_edit"+value.id+"' name='item_stock_edit"+value.id+"' placeholder='Stock'></div>";
-  			}
+  			// if (value.item_stock != null) {
+  			// 	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='tujuan_stock_edit"+value.id+"' name='tujuan_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
+  			// }else{
+  			// 	isi += "<div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='tujuan_stock_edit"+value.id+"' name='tujuan_stock_edit"+value.id+"' placeholder='Stock'></div>";
+  			// }
   			isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date_edit"+value.id+"' name='req_date_edit"+value.id+"' placeholder='Tanggal' required='' value='"+value.item_request_date+"'' readonly=''></div></div>";
   			isi += "<div class='col-xs-1' style='padding: 5px'><input type='text' class='form-control' id='item_currency_edit"+value.id+"' name='item_currency_edit"+value.id+"' value='"+value.item_currency+"' readonly=''><input type='text' class='form-control' id='item_currency_text_edit"+value.id+"' name='item_currency_text_edit"+value.id+"' readonly='' style='display:none'></div>";
   			isi += "<div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga_edit"+value.id+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price_edit"+value.id+"' name='item_price_edit"+value.id+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' readonly='' value="+value.item_price+" style='padding: 6px 6px'></div></div>";
@@ -1710,9 +1850,27 @@
   			isi += "<div class='col-xs-1' style='padding:5px;'><a href='javascript:void(0);' id='b"+ value.id +"' onclick='deleteConfirmation(\""+ value.item_desc +"\","+value.id +");' class='btn btn-danger' data-toggle='modal' data-target='#modaldanger'><i class='fa fa-close'></i> </a> <button type='button' class='btn btn-success' onclick='tambah(\""+ tambah2 +"\",\""+ lop2 +"\");'><i class='fa fa-plus' ></i></button></div>";
   			isi += "</div>";
 
+
+
+
+  			isi2 = "<div id='"+value.id+"' class='col-md-12' style='margin-bottom : 5px'>";
+ 
+ 			isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
+
+ 			isi2 += "<div class='col-xs-6' style='padding:5px;'><input type='text' class='form-control' id='tujuan_peruntukan_edit"+value.id+"' name='tujuan_peruntukan_edit"+value.id+"' placeholder='Peruntukan / Tujuan Pembelian' required='' value='"+value.peruntukan+"'></div>";
+
+	  		if (value.item_stock != null) {
+	  			isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_stock_edit"+value.id+"' name='tujuan_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
+	  		}else{
+	  			isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_stock_edit"+value.id+"' name='tujuan_stock_edit"+value.id+"' placeholder='Stock'></div>";
+	  		}
+	  		isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_kebutuhan_edit"+value.id+"' name='tujuan_kebutuhan_edit"+value.id+"' placeholder='Kebutuhan' value='"+value.kebutuhan+"'></div>";
+	  		isi2 += "</div>";
+
   			ids.push(value.id);
 
   			$('#modalDetailBodyEdit').append(isi);
+  			$('#modalDetailTujuan').append(isi2);
 
   			$('.item_code_edit').append(item_list);
 
@@ -1862,3 +2020,7 @@ function openErrorGritter(title, message) {
 </script>
 
 @endsection
+
+
+
+
