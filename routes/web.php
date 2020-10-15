@@ -3344,6 +3344,8 @@ Route::group(['nav' => 'S47', 'middleware' => 'permission'], function(){
 
 	Route::get('index/maintenance/spk/monitoring', 'MaintenanceController@indexMaintenanceMonitoring');
 	Route::get('fetch/maintenance/spk/monitoring', 'MaintenanceController@fetchSPKProgress');
+	Route::get('fetch/maintenance/spk/monitoring/detail', 'MaintenanceController@fetchSPKProgressDetail');
+
 	// -----------  APAR -----------
 	Route::get('index/maintenance/apar', 'MaintenanceController@indexApar');
 	Route::get('index/maintenance/aparCheck', 'MaintenanceController@indexAparCheck');
@@ -3404,6 +3406,8 @@ Route::get('fetch/maintenance/plan/checkList', 'MaintenanceController@fetchItemC
 
 Route::post('post/maintenance/pm/check', 'MaintenanceController@postPlannedCheck');
 Route::post('post/maintenance/pm/session', 'MaintenanceController@postPlannedSession');
+Route::get('get/maintenance/pm/session', 'MaintenanceController@getPlannedSession');
+
 
 Route::get('index/maintenance/pm/monitoring', 'MaintenanceController@indexPlannedMonitoring');
 Route::get('index/maintenance/pm/schedule', 'MaintenanceController@indexPlannedSchedule');
