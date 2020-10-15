@@ -608,7 +608,7 @@
 
 
 	function checkMaterial() {
-		var material_number = $('#material_number').val();
+		var material_number = $('#newMaterial').val();
 		if(material_number.length >= 7){
 			var data = {
 				material : material_number
