@@ -627,9 +627,13 @@ class MaintenanceController extends Controller
 				$remark = 0;
 
 				if (date('W') % 2 == 0) {
-					$id = 'PI0004007';
+					// $id = 'PI0004007';
+					$id = 'PI2002021';
+
 				} else {
-					$id = 'PI0805001';
+					// $id = 'PI0805001';
+					$id = 'PI2002021';
+
 				}
 
 				$phone = EmployeeSync::select('phone')->where('employee_id', '=', $id)->first();
