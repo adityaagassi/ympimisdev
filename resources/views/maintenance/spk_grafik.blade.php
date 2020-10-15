@@ -43,57 +43,102 @@
 		{{ $page }}
 	</h1>
 </section>
-</section>
 @stop
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content">
-	<div class="col-md-12" style="padding: 1px !important">
-		<div class="col-md-2">
-			<div class="input-group date">
-				<div class="input-group-addon bg-green">
-					<i class="fa fa-calendar"></i>
+	<div class="row">
+		<div class="col-xs-12" style="padding: 1px !important">
+			<div class="col-xs-2">
+				<div class="input-group date">
+					<div class="input-group-addon bg-green">
+						<i class="fa fa-flag"></i>
+					</div>
+					<select class="form-control select2" id="status_cari" data-placeholder="Pilih Status" onchange="get_data('')" style="width: 100%;">
+						<option></option>
+						<option value="Finished">Finished</option>
+					</select>
 				</div>
-				<select class="form-control" id="status_cari" placeholder="Pilih Status" onchange="get_data('')" style="width: 100%;">
-					<option></option>
-					<option value="Finished">Finished</option>
-				</select>
+			</div>
+		</div>
+
+		<div class="col-xs-12" style="padding-top: 10px;">
+			<div class="row">
+				<div id="chart_result" style="width: 100%; height: 300px;"></div>
+				<table id="masterTable" class="table">
+					<thead>
+						<tr>
+							<th rowspan='2' style="width: 3%">ORDER NO.</th>
+							<th colspan='2' style="border-left: 3px solid #f44336; width: 5%">Pemohon</th>
+							<th rowspan='2' style="border-left: 3px solid #f44336; width: 1%">Target Date</th>
+							<th rowspan='2' style="border-left: 3px solid #f44336; vertical-align: middle">Deskripsi SPK</th>
+							<!-- <th style="border-left: 3px solid #f44336;"></th> -->
+							<th rowspan="2" style="border-left: 3px solid #f44336; width: 1%; vertical-align: middle">Verifikasi</th>
+							<th colspan="2" style="border-left: 3px solid #f44336; width: 25%">Progres</th>
+							<th rowspan='2' style="border-left: 3px solid #f44336; vertical-align: middle">Analisa</th>
+							<th rowspan='2' style="border-left: 3px solid #f44336; vertical-align: middle">Penanganan</th>
+						</tr>
+
+						<tr>
+							<th style="border-left: 3px solid #f44336; width: 1%">Departemen</th>
+							<th style="border-left: 1px solid #363b38; width: 1%">Nama</th>
+							<!-- <th style="border-left: 3px solid #f44336; width: 1%">Request</th> -->
+							<!-- <th style="border-left: 1px solid #363b38; width: 1%">Receive</th> -->
+							<th style="border-left: 3px solid #f44336; width: 1%">PIC</th>
+							<th style="width: 1%">Status</th>
+						</tr>
+					</thead>
+					<tbody id="tableBody">
+					</tbody>
+					<tfoot>
+					</tfoot>
+				</table>
 			</div>
 		</div>
 	</div>
 
-	<div class="col-md-12" style="padding-top: 10px;">
-		<div class="row">
-			<div id="chart_result" style="width: 100%; height: 300px;"></div>
-			<table id="masterTable" class="table">
-				<thead>
-					<tr>
-						<th rowspan='2' style="width: 3%">ORDER NO.</th>
-						<th rowspan='2' style="border-left: 3px solid #f44336; width: 5%">Department</th>
-						<th rowspan='2' style="border-left: 3px solid #f44336; width: 1%">Target Date</th>
-						<th rowspan='2' style="border-left: 3px solid #f44336; vertical-align: middle">Permasalahan</th>
-						<th style="border-left: 3px solid #f44336;"></th>
-						<th colspan="2" style="border-left: 3px solid #f44336; width: 1%">Verification</th>
-						<th colspan="2" style="border-left: 3px solid #f44336; width: 25%">Progress</th>
-						<th rowspan='2' style="border-left: 3px solid #f44336; vertical-align: middle">Penanganan</th>
-					</tr>
 
-					<tr>
-						<th style="border-left: 3px solid #f44336; width: 1%">Requester</th>
-						<th style="border-left: 3px solid #f44336; width: 1%">Request</th>
-						<th style="border-left: 1px solid #363b38; width: 1%">Receive</th>
-						<th style="border-left: 3px solid #f44336; width: 1%">PIC</th>
-						<th style="width: 1%">Status</th>
-					</tr>
-				</thead>
-				<tbody id="tableBody">
-				</tbody>
-				<tfoot>
-				</tfoot>
-			</table>
+	<div class="modal fade" id="detailModal">
+		<div class="modal-dialog modal-lg" style="width: 98%">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 style="float: right;" id="modal-title"></h4> 
+					<h4 class="modal-title"><b>PT. YAMAHA MUSICAL PRODUCTS INDONESIA</b></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<table class="table table-bordered table-stripped table-responsive" style="width: 150%">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Order No.</th>
+										<th>Pemohon</th>
+										<th>Bagian</th>
+										<th>Prioritas</th>
+										<th>Tgl. Permintaan</th>
+										<th>Tipe</th>
+										<th>Kategori</th>
+										<th>Nama Mesin</th>
+										<th>Deskripsi SPK</th>
+										<th>Target</th>
+										<th>Waktu Mulai</th>
+										<th>Analisa</th>
+										<th>Penanganan</th>
+									</tr>
+								</thead>
+								<tbody id="tabelDetail"></tbody>
+								<tfoot>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>
 
 </section>
 
@@ -120,6 +165,11 @@
 
 	jQuery(document).ready(function() {
 		$('body').toggleClass("sidebar-collapse");
+
+		$('.select2').select2({
+			allowClear: true,
+		});
+
 		get_data('');
 
 		setInterval( function() { get_data(''); }, 10000 );
@@ -172,48 +222,58 @@
 					tableData += '<tr>';
 					tableData += '<td>'+ value.order_no +'</td>';
 					tableData += '<td style="border-left: 3px solid #f44336">'+ value.bagian +'</td>';
+					tableData += '<td style="border-left: 1px solid #363b38"><span class="label label-success">'+ value.requester.split(' ').slice(0,2).join(' '); +'</span></td>';
 
-					// if(value.priority == 'Urgent'){
-					// 	var priority = '<span style="font-size: 13px;" class="label label-danger">Urgent</span>';
-					// }else{
-					// 	var priority = '<span style="font-size: 13px;" class="label label-default">Normal</span>';
-					// }
+					if(value.priority == 'Urgent'){
+						var urgency = '<span class="label label-danger">Urgent</span><br>';
+					}else{
+						var urgency = '<span class="label label-default">Normal</span><br>';
+					}
 
-					tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-success">'+ value.target_date +'</span></td>';
+					tableData += '<td style="border-left: 3px solid #f44336">'+urgency+'<span class="label label-success">'+ value.target_date +'</span></td>';
 
 					tableData += '<td style="border-left: 3px solid #f44336"><span class="more">'+ value.description +'</span></td>';
-					tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-success">'+ value.requester +'</span></td>';
 
 					if (value.pic) {
-						tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-success">Maintenance</span></td>';
+						// tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-success">Maintenance</span></td>';
 
-						tableData += '<td><span class="label label-success">maintenance</span></td>';
+						tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-success">maintenance</span></td>';
 
 						picc = value.pic.split(',');
 						if (value.inprogress){
 
 							tableData += '<td style="border-left: 3px solid #f44336">';
 							for (var i = 0; i < picc.length; i++) {
-								tableData += '<span class="label label-success">'+picc[i]+'</span><br>';
+								var pics = picc[i].split(' ').slice(0,2).join(' ');
+								tableData += '<span class="label label-success">'+pics+'</span><br>';
 							}
 
 							tableData += '</td>';
 						}
 						else {
-							tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-danger">'+value.pic+'</span></td>';
+							tableData += '<td style="border-left: 3px solid #f44336">';
+
+							for (var i = 0; i < picc.length; i++) {
+								var pics = picc[i].split(' ').slice(0,2).join(' ');
+								tableData += '<span class="label label-danger">'+pics+'</span><br>';
+							}
+
+							tableData += '</td>';
+
+							// tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-danger">'+value.pic+'</span></td>';
 						}
 					}
 					else {
 						if (value.priority == "Urgent") {
-							if (value.process_name == "Requested")
+							// if (value.process_name == "Requested")
+								// tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-danger">Maintenance</span></td>';
+							// else {
+								// tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-success">Maintenance</span></td>';
 								tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-danger">Maintenance</span></td>';
-							else {
-								tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-success">Maintenance</span></td>';
-								tableData += '<td><span class="label label-danger">Maintenance</span></td>';
-							}
+							// }
 						} else {
-							tableData += '<td style="border-left: 3px solid #f44336"></td>';
-							tableData += '<td><span class="label label-danger">Maintenance</span></td>';
+							// tableData += '<td style="border-left: 3px solid #f44336"></td>';
+							tableData += '<td style="border-left: 3px solid #f44336"><span class="label label-danger">Maintenance</span></td>';
 						}
 
 						tableData += '<td style="border-left: 3px solid #f44336"></td>';
@@ -225,20 +285,23 @@
 					else
 						var status_pending = "";
 
-					tableData += '<td style="border-left: 1px solid #f44336"><span class="label label-'+colors[st.indexOf(value.process_name)]+'">'+value.process_name+'</span>'+status_pending+'</td>';
+					tableData += '<td style="border-left: 1px solid #363b38"><span class="label label-'+colors[st.indexOf(value.process_name)]+'">'+value.process_name+'</span>'+status_pending+'</td>';
 
-					if (value.process_name == "Pending" || value.process_name == "Finished") 
-
+					if (value.process_name == "Pending" || value.process_name == "Finished") {
+						tableData += '<td style="border-left: 3px solid #f44336"><span class="more">'+(value.cause || '' )+'</span></td>';	
 						tableData += '<td style="border-left: 3px solid #f44336"><span class="more">'+(value.handling || '' )+'</span></td>';	
-					else
-						tableData += '<td style="border-left: 3px solid #f44336"></td>';	
+					}
+					else {
+						tableData += '<td style="border-left: 3px solid #f44336"></td>';
+						tableData += '<td style="border-left: 3px solid #f44336"></td>';
+					}
 
 
 					tableData += '</tr>';	
 				}
 			})
 
-			$('#tableBody').append(tableData);
+$('#tableBody').append(tableData);
 
 			// -------------- MORE ----------	
 			$('.more').each(function() {
@@ -297,36 +360,36 @@
 		})
 }
 
-function showDetail(order_no) {
-	$("#detailModal").modal("show");
+// function showDetail(order_no) {
+// 	$("#detailModal").modal("show");
 
-	var data = {
-		order_no : order_no
-	}
+// 	var data = {
+// 		order_no : order_no
+// 	}
 
-	$.get('{{ url("fetch/maintenance/detail") }}', data,  function(result, status, xhr){
-		$("#spk_detail").val(result.detail.order_no);
-		$("#pengaju_detail").val(result.detail.name);
-		$("#tanggal_detail").val(result.detail.date);
-		$("#bagian_detail").val(result.detail.section);
+// 	$.get('{{ url("fetch/maintenance/detail") }}', data,  function(result, status, xhr){
+// 		$("#spk_detail").val(result.detail.order_no);
+// 		$("#pengaju_detail").val(result.detail.name);
+// 		$("#tanggal_detail").val(result.detail.date);
+// 		$("#bagian_detail").val(result.detail.section);
 
-		if (result.detail.priority == "Normal") {
-			$("#prioritas_detail").addClass("label-default");
-		} else {
-			$("#prioritas_detail").addClass("label-danger");
-		}
-		$("#prioritas_detail").text(result.detail.priority);
+// 		if (result.detail.priority == "Normal") {
+// 			$("#prioritas_detail").addClass("label-default");
+// 		} else {
+// 			$("#prioritas_detail").addClass("label-danger");
+// 		}
+// 		$("#prioritas_detail").text(result.detail.priority);
 
-		$("#workType_detail").val(result.detail.type);
-		$("#kategori_detail").val(result.detail.category);
-		$("#mesin_detail").val(result.detail.machine_condition);
-		$("#bahaya_detail").val(result.detail.danger);
-		$("#uraian_detail").val(result.detail.description);
-		$("#keamanan_detail").val(result.detail.safety_note);
-		$("#target_detail").val(result.detail.target_date);
-		$("#status_detail").val(result.detail.process_name);
-	})
-}
+// 		$("#workType_detail").val(result.detail.type);
+// 		$("#kategori_detail").val(result.detail.category);
+// 		$("#mesin_detail").val(result.detail.machine_condition);
+// 		$("#bahaya_detail").val(result.detail.danger);
+// 		$("#uraian_detail").val(result.detail.description);
+// 		$("#keamanan_detail").val(result.detail.safety_note);
+// 		$("#target_detail").val(result.detail.target_date);
+// 		$("#status_detail").val(result.detail.process_name);
+// 	})
+// }
 
 function drawChart(ctg, datas) {
 	Highcharts.chart('chart_result', {
@@ -344,6 +407,7 @@ function drawChart(ctg, datas) {
 			}
 		},
 		xAxis: {
+			type: 'category',
 			categories: ctg
 		},
 		yAxis: {
@@ -376,6 +440,16 @@ function drawChart(ctg, datas) {
 					enabled: true
 				},
 				animation: false
+			},
+			series: {
+				cursor: 'pointer',
+				point : {
+					events: {
+						click: function () {
+							showModalDetail(this.series.name, this.category);
+						}
+					}
+				}
 			}
 		},
 		series: [{
@@ -392,6 +466,45 @@ function drawChart(ctg, datas) {
 			data: datas[3]
 		}]
 	});
+}
+function showModalDetail(ctg, date) {
+	var data = {
+		process_name : ctg,
+		date : date
+	}
+	$.get('{{ url("fetch/maintenance/spk/monitoring/detail") }}', data, function(result, status, xhr){
+		$("#detailModal").modal("show");
+
+		body = "";
+		$("#tabelDetail").empty();
+
+		$.each(result.datas, function(index, value){
+			body += "<tr>";
+			body += "<td>"+value.order_no+"</td>";
+			body += "<td>"+value.name+"</td>";
+			body += "<td>"+value.bagian+"</td>";
+
+			if(value.priority == 'Urgent'){
+				var urgency = '<span class="label label-danger">Urgent</span><br>';
+			}else{
+				var urgency = '<span class="label label-default">Normal</span><br>';
+			}
+
+			body += "<td>"+urgency+"</td>";
+			body += "<td>"+value.dt+"</td>";
+			body += "<td>"+value.type+"</td>";
+			body += "<td>"+value.category+"</td>";
+			body += "<td>"+(value.machine_name || "-")+"</td>";
+			body += "<td>"+value.description+"</td>";
+			body += "<td>"+value.target_date+"</td>";
+			body += "<td></td>";
+			body += "<td></td>";
+			body += "<td></td>";
+			body += "</tr>";
+		})
+
+		$("#tabelDetail").append(body);
+	})
 }
 
 function insert() {

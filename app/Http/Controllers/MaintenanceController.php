@@ -198,7 +198,7 @@ class MaintenanceController extends Controller
 	public function indexSPKGrafik()
 	{
 		$title = 'Maintenance SPK Monitoring';
-		$title_jp = '';
+		$title_jp = '作業依頼書の管理';
 
 		return view('maintenance.spk_grafik', array(
 			'title' => $title,
@@ -637,13 +637,14 @@ class MaintenanceController extends Controller
 				$new_phone = substr($phone->phone, 1, 15);
 				$new_phone = '62'.$new_phone;
 
-				// $query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
-				// $query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($new_phone);
-				// $query_string .= "&message=".rawurlencode(stripslashes("Ada SPK Urgent Dari ".$data[0]->name.", Mohon segera cek MIRAI. Terimakasih")) . "&languagetype=1";
-				// $url = "http://gateway.onewaysms.co.id:10002/".$query_string; 
-				// $fd = @implode('', file($url));
+				// ---------- SMS ------------
+				$query_string = "api.aspx?apiusername=API3Y9RTZ5R6Y&apipassword=API3Y9RTZ5R6Y3Y9RT";
+				$query_string .= "&senderid=".rawurlencode("PT YMPI")."&mobileno=".rawurlencode($new_phone);
+				$query_string .= "&message=".rawurlencode(stripslashes("Ada SPK Urgent Dari ".$data[0]->name.", Mohon segera cek MIRAI. Terimakasih")) . "&languagetype=1";
+				$url = "http://gateway.onewaysms.co.id:10002/".$query_string; 
+				$fd = @implode('', file($url));
 				
-
+				// ----------- EMAIL ----------
 				// Mail::to('susilo.basri@music.yamaha.com')
 				// ->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])
 				// ->send(new SendEmail($data, 'urgent_spk'));
@@ -712,10 +713,8 @@ class MaintenanceController extends Controller
 
 	public function fetchSPKProgress(Request $request)
 	{
-		$tgl = "2020-09";
-
 		$get_data = db::select('
-			SELECT DISTINCT maintenance_job_orders.order_no, priority, SUBSTRING_INDEX(maintenance_job_orders.section,"_",1) as bagian, maintenance_job_orders.description, DATE_FORMAT(maintenance_job_orders.created_at,"%Y-%m-%d") as request_date, `name` as requester, inprogress.created_at as inprogress, pic, date(target_date) as target_date, target_date as target, process_code, process_name, rpt.handling, maintenance_job_pendings.status FROM `maintenance_job_orders` 
+			SELECT DISTINCT maintenance_job_orders.order_no, priority, department_shortname as bagian, maintenance_job_orders.description, DATE_FORMAT(maintenance_job_orders.created_at,"%Y-%m-%d") as request_date, `name` as requester, inprogress.created_at as inprogress, pic, date(target_date) as target_date, target_date as target, process_code, process_name, rpt.handling, rpt.cause, maintenance_job_pendings.status FROM `maintenance_job_orders` 
 			left join employee_syncs on maintenance_job_orders.created_by = employee_syncs.employee_id
 			left join (
 			select order_no, GROUP_CONCAT(`name`) as pic from maintenance_job_processes 
@@ -727,6 +726,7 @@ class MaintenanceController extends Controller
 			left join (select process_code, process_name from processes where remark = "maintenance") l_pcr on l_pcr.process_code = maintenance_job_orders.remark
 			left join (SELECT order_no, operator_id, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) as rpt on maintenance_job_orders.order_no = rpt.order_no
 			left join maintenance_job_pendings on maintenance_job_orders.order_no = maintenance_job_pendings.order_no
+			left join departments on SUBSTRING_INDEX(maintenance_job_orders.section,"_",1) = departments.department_name
 			where maintenance_job_orders.remark <> 7
 			order by target asc
 			');
@@ -751,6 +751,22 @@ class MaintenanceController extends Controller
 			'datas' => $get_data,
 			'progress' => $data_progress,
 			'data_bar' => $data_bar
+		);
+		return Response::json($response);
+	}
+
+	public function fetchSPKProgressDetail(Request $request)
+	{
+		$bar_detail = db::select('SELECT order_no, department_shortname as bagian, priority, type, category, machine_name, description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt from maintenance_job_orders 
+			left join (select process_code, process_name from processes where remark = "maintenance") prs on prs.process_code = maintenance_job_orders.remark
+			left join employee_syncs on employee_syncs.employee_id = maintenance_job_orders.created_by
+			left join departments on departments.department_name = SUBSTRING_INDEX(maintenance_job_orders.section,"_",1)
+			where DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") = "'.$request->get('date').'" and process_name = "'.$request->get('process_name').'"
+			order by order_no asc');
+
+		$response = array(
+			'status' => true,
+			'datas' => $bar_detail,
 		);
 		return Response::json($response);
 	}
@@ -2447,16 +2463,29 @@ class MaintenanceController extends Controller
 
 	public function postPlannedSession(Request $request)
 	{
-		$request->session()->put('description'.$request->get('id'), $request->get('desc'));
-		$request->session()->put('before'.$request->get('id'), $request->get('before'));
-		$request->session()->put('after'.$request->get('id'), $request->get('after'));
+		$request->session()->put('pm.description'.$request->get('id'), $request->get('desc'));
+		$request->session()->put('pm.before'.$request->get('id'), $request->get('before'));
+		$request->session()->put('pm.after'.$request->get('id'), $request->get('after'));
 
-		$datas = $request->session()->get('before'.$request->get('id'));
+		// $request->session()->forget('pm');
+
+		$datas = $request->session()->get('pm.before'.$request->get('id'));
 
 		$response = array(
 			'status' => true,
-			'datas' => $datas
+			'datas' => $datas,
+			'session' => $request->session()->all()
 		);
 		return Response::json($response);
+	}
+
+	public function getPlannedSession(Request $request)
+	{
+		$datas = [];
+		$datas['desc'] = $request->session()->get('pm.description'.$request->get('id'));
+		$datas['before'] = $request->session()->get('pm.before'.$request->get('id'));
+		$datas['after'] = $request->session()->get('pm.before'.$request->get('id'));
+
+		return Response::json($datas);
 	}
 }

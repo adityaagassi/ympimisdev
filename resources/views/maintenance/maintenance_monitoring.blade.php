@@ -244,13 +244,6 @@
 				},
 				stackLabels: {
 					enabled: true,
-					style: {
-						fontWeight: 'bold',
-						color: (
-							Highcharts.defaultOptions.title.style &&
-							Highcharts.defaultOptions.title.style.color
-							) || 'gray'
-					}
 				}
 			},
 			legend: {
@@ -258,12 +251,7 @@
 				x: -30,
 				verticalAlign: 'top',
 				y: 25,
-				floating: true,
-				backgroundColor:
-				Highcharts.defaultOptions.legend.backgroundColor || 'white',
-				borderColor: '#CCC',
-				borderWidth: 1,
-				shadow: false
+				floating: true
 			},
 			tooltip: {
 				headerFormat: '<b>{point.x}</b><br/>',
@@ -338,7 +326,7 @@
 	}, null, document.getElementsByTagName('head')[0]);
 
 	Highcharts.theme = {
-		colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+		colors: ['#ddd', '#1b7bc4', '#f45b5b', '#90ee7e', '#aaeeee', '#ff0066',
 		'#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
 		chart: {
 			backgroundColor: {

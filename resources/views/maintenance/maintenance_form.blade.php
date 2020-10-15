@@ -136,28 +136,6 @@
 
 							<div class="col-xs-12" style="padding-bottom: 1%;">
 								<div class="col-xs-4" style="padding: 0px;" align="right">
-									<span style="font-weight: bold; font-size: 16px;">Prioritas:<span class="text-red">*</span></span>
-								</div>
-								<div class="col-xs-4">
-									<select class="form-control select2" id="prioritas" name="prioritas" data-placeholder="Pilih Prioritas Pengerjaan">
-										<!-- <option></option> -->
-										<option>Normal</option>
-										<option>Urgent</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="col-xs-12" style="padding-bottom: 1%; display: none" id="div_reason">
-								<div class="col-xs-4" style="padding: 0px;" align="right">
-									<span style="font-weight: bold; font-size: 16px;">Reason Urgent:<span class="text-red">*</span></span>
-								</div>
-								<div class="col-xs-5">
-									<textarea class="form-control" placeholder="Isikan Catatan Urgent" name="reason_urgent" id="reason_urgent" rows="1"></textarea>
-								</div>
-							</div>
-
-							<div class="col-xs-12" style="padding-bottom: 1%;">
-								<div class="col-xs-4" style="padding: 0px;" align="right">
 									<span style="font-weight: bold; font-size: 16px;">Jenis Pekerjaan:<span class="text-red">*</span></span>
 								</div>
 								<div class="col-xs-4">
@@ -224,7 +202,7 @@
 								<div class="col-xs-4" style="padding: 0px;" align="right">
 									<span style="font-weight: bold; font-size: 16px;">Mesin:</span>
 								</div>
-								<div class="col-xs-7">
+								<div class="col-xs-7 mesin_div">
 									<select class="form-control" id="nama_mesin" name="nama_mesin" data-placeholder="pilih mesin (Bila berhubungan mesin)">
 										<option value=""></option>
 									</select>
@@ -268,6 +246,32 @@
 								</div>
 								<div class="col-xs-7">
 									<textarea class="form-control" id="safety" name="safety" placeholder="Catatan Keamanan"></textarea>
+								</div>
+							</div>
+
+							<div class="col-xs-12" style="padding-bottom: 1%;">
+								<div class="col-xs-4" style="padding: 0px;" align="right">
+									<span style="font-weight: bold; font-size: 16px;">Prioritas:<span class="text-red">*</span></span>
+								</div>
+								<div class="col-xs-4">
+									<select class="form-control select2" id="prioritas" name="prioritas" data-placeholder="Pilih Prioritas Pengerjaan">
+										<option>Normal</option>
+										<option>Urgent</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="col-xs-12" style="padding-bottom: 1%; display: none" id="div_reason">
+								<div class="col-xs-4" style="padding: 0px;" align="right">
+									<span style="font-weight: bold; font-size: 16px;">Reason Urgent:<span class="text-red">*</span></span>
+								</div>
+
+								<div class="col-xs-5">
+									<textarea class="form-control" placeholder="Isikan Catatan Urgent" name="reason_urgent" id="reason_urgent" rows="1"></textarea>
+								</div>
+
+								<div class="col-xs-8 col-xs-offset-4">
+									<span style="color: red !important; background-color: yellow; font-weight: bold;">Prioritas "Urgent" untuk mesin yang menyebabkan aliran produksi berhenti, tidak terdapat mesin cadangan</span>
 								</div>
 							</div>
 						</div>
@@ -617,7 +621,7 @@
 							<div class="col-xs-12">
 								<div class="form-group row" align="right">
 									<label class="col-xs-2" style="margin-top: 1%;">Mesin</label>
-									<div class="col-xs-10" align="left">
+									<div class="col-xs-10 mesin_div2" align="left">
 										<select class="form-control" id="mesin_edit" name="mesin_edit" data-placeholder="pilih mesin (Bila berhubungan mesin)">
 											<option value=""></option>
 										</select>
@@ -655,7 +659,6 @@
 										<br>
 										<span style="color: red !important; background-color: yellow">Note : </span><br>
 										<span style="color: red !important; background-color: yellow">*) Wajib diisi</span><br>
-										<span style="color: red !important; background-color: yellow">**) Diisi Pemohon, Jika pekerjaan berkaitan dengan chemical diisi oleh Chemical Staff atau kosongkan</span><br>
 									</div>
 								</div>
 
@@ -686,7 +689,6 @@
 <script src="{{ url("js/jquery.gritter.min.js") }}"></script>
 
 <script>
-
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -714,7 +716,7 @@
 		showInputs: false,
 		showMeridian: false,
 		minuteStep: 5,
-		defaultTime: '00:00',
+		defaultTime: '',
 		timeFormat: 'hh:mm'
 	})
 
@@ -1013,14 +1015,14 @@
 			$("#mesin_edit").append(options);
 			
 			$('#nama_mesin').select2({
-				dropdownParent: $('#createModal'),
+				dropdownParent: $('.mesin_div'),
 				width: '100%', 
 				allowClear: true,
 				// minimumInputLength: 3
 			});
 
 			$('#mesin_edit').select2({
-				dropdownParent: $('#editModal'), 
+				dropdownParent: $('.mesin_div2'),
 				width: '100%', 
 				allowClear: true,
 				// minimumInputLength: 3
