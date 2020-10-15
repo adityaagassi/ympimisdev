@@ -718,7 +718,9 @@ class MaintenanceController extends Controller
 	public function fetchSPKProgress(Request $request)
 	{
 		$get_data = db::select('
-			SELECT DISTINCT maintenance_job_orders.order_no, priority, department_shortname as bagian, maintenance_job_orders.description, DATE_FORMAT(maintenance_job_orders.created_at,"%Y-%m-%d") as request_date, `name` as requester, inprogress.created_at as inprogress, pic, date(target_date) as target_date, target_date as target, process_code, process_name, rpt.handling, rpt.cause, maintenance_job_pendings.status FROM `maintenance_job_orders` 
+			SELECT order_no, GROUP_CONCAT(priority) as priority, GROUP_CONCAT(bagian) bagian,GROUP_CONCAT(description)	description,GROUP_CONCAT(request_date)	request_date,GROUP_CONCAT(requester)	requester,GROUP_CONCAT(inprogress) 	inprogress,GROUP_CONCAT(pic)	pic,GROUP_CONCAT(target_date)	target_date,GROUP_CONCAT(target)	target,GROUP_CONCAT(process_code)	process_code,GROUP_CONCAT(process_name)	process_name,GROUP_CONCAT(`status`)	`status`,GROUP_CONCAT(cause) cause,GROUP_CONCAT(handling) handling from 
+			(select * from
+			(SELECT DISTINCT maintenance_job_orders.order_no, priority, department_shortname as bagian, maintenance_job_orders.description, DATE_FORMAT(maintenance_job_orders.created_at,"%Y-%m-%d") as request_date, `name` as requester, inprogress.created_at as inprogress, pic, date(target_date) as target_date, target_date as target, process_code, process_name, maintenance_job_pendings.status,null cause, null handling FROM `maintenance_job_orders` 
 			left join employee_syncs on maintenance_job_orders.created_by = employee_syncs.employee_id
 			left join (
 			select order_no, GROUP_CONCAT(`name`) as pic from maintenance_job_processes 
@@ -728,11 +730,16 @@ class MaintenanceController extends Controller
 			) as prcs on prcs.order_no = maintenance_job_orders.order_no
 			left join (select * from maintenance_job_processes where start_actual is not null and deleted_at is null) as inprogress on maintenance_job_orders.order_no = inprogress.order_no
 			left join (select process_code, process_name from processes where remark = "maintenance") l_pcr on l_pcr.process_code = maintenance_job_orders.remark
-			left join (SELECT order_no, operator_id, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) as rpt on maintenance_job_orders.order_no = rpt.order_no
 			left join maintenance_job_pendings on maintenance_job_orders.order_no = maintenance_job_pendings.order_no
 			left join departments on SUBSTRING_INDEX(maintenance_job_orders.section,"_",1) = departments.department_name
 			where maintenance_job_orders.remark <> 7
 			order by target asc
+			) as awal
+			union all
+			
+			SELECT order_no, null priority, null bagian,null	description,null	request_date,null	requester,null 	inprogress,null	pic,null	target_date,null	target,null	process_code,null	process_name,null	`status`, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) alls
+			group by order_no
+			order by target asc			
 			');
 
 		$data_progress = db::select('
