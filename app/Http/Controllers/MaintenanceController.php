@@ -1260,11 +1260,14 @@ class MaintenanceController extends Controller
 			$rpt->save();
 
 			$arr_part = [];
-			foreach ($request->get('spare_part') as $prt) {
-				array_push($arr_part, $prt['part_number']." : ".$prt['qty']);
-			}
+			$part = '';
+			if (count($request->get('spare_part')) > 0) {
+				foreach ($request->get('spare_part') as $prt) {
+					array_push($arr_part, $prt['part_number']." : ".$prt['qty']);
+				}
 
-			$part = implode("; ", $arr_part);
+				$part = implode("; ", $arr_part);
+			}
 
 			$spk_pending = MaintenanceJobPending::firstOrNew(array('order_no' => $request->get('order_no')));
 			$spk_pending->order_no = $request->get('order_no');
