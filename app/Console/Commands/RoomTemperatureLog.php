@@ -42,6 +42,7 @@ public function handle()
 {
     $plcs = Plc::orderBy('location', 'asc')->get();
     $lists = array();
+    $date = date('Y-m-d H:i:s');
 
     foreach ($plcs as $plc) {
         $cpu = new ActMLEasyIf($plc->station);
@@ -55,7 +56,8 @@ public function handle()
             'value' => $data,
             'upper_limit' => $plc->upper_limit,
             'lower_limit' => $plc->lower_limit,
-            'created_by' => 1
+            'created_by' => 1,
+            'created_at' => $date
         ]);
     }
 
