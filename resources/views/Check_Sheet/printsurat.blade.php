@@ -67,10 +67,31 @@ text-align: center
         </td>
         <td colspan="4" style="font-size: 12px;">Yth. <br>
           <b>
-            <?php $towards = explode('-', $checksheet->toward) ?>
-            @foreach($towards as $toward)
-            {{ $toward }}<br>
-            @endforeach
+            <?php 
+
+            $towards = explode('-', $checksheet->toward); 
+
+            print_r(implode("<br> & <br>", $towards));
+
+            // for ($i=0; $i < count($towards) ; $i++) { 
+            //   if(count($towards) <= 1) {
+            //     echo $towards[$i];
+            //   }
+
+            //   else if(count($towards) > 1){
+
+            //     if ($i != count($towards)) {
+            //     echo $towards[$i].'<br> & <br>';
+            //     }
+            //   }
+
+            // }
+
+
+            ?>
+
+
+
           </b>
         </td>
       </tr>
@@ -87,18 +108,18 @@ text-align: center
     <tbody>
       <tr>
         <td style="width: 1%;border: none;font-size: 11px">Surat Jalan No. </td>
-        <td style="border: none;font-size: 11px">: {{ $checksheet->id_checkSheet }}</td>  
+        <td style="border: none;font-size: 11px">: {{ $checksheet->id_checkSheet }}</td>
       </tr>
       <tr>
-        <td style="width: 1%;border: none;font-size: 11px">Kendaraan/No.Pol </td> 
-        <td style="border: none;font-size: 11px">: {{ $checksheet->no_pol }}</td>               
+        <td style="width: 1%;border: none;font-size: 11px">Kendaraan/No.Pol </td>
+        <td style="border: none;font-size: 11px">: {{ $checksheet->no_pol }}</td>  
       </tr>
       <tr>
-        <td style="width: 1%;border: none;font-size: 11px">No.Container/Size </td>              
+        <td style="width: 1%;border: none;font-size: 11px">No.Container/Size </td> 
         <td style="border: none;font-size: 11px">: {{$checksheet->countainer_number}} / {{ $checksheet->ct_size }}</td>  
       </tr>
       <tr>
-        <td style="width: 1%;border: none;font-size: 11px">No. Segel </td>        
+        <td style="width: 1%;border: none;font-size: 11px">No. Segel </td>
         <td style="border: none;font-size: 11px">: {{ $checksheet->seal_number }}</td>
       </tr>
     </tbody>
