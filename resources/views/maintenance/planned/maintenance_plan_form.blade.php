@@ -164,7 +164,7 @@
 				</tbody>
 			</table>
 			<br>
-			<button class="btn btn-success" style="width: 100%; display: none" id="btn_check" onclick="check()"><i class="fa fa-check"></i> CHECKED</button>
+			<button class="btn btn-success" style="width: 100%; display: none" id="btn_check" onclick="check2()"><i class="fa fa-check"></i> CHECKED</button>
 		</div>
 	</div>
 </div>
@@ -197,14 +197,19 @@
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
-						<label id="judul_ng"></label>
+						<label id="judul_ng"></label><br>
+						<label>Deskripsi :<span class="text-red">*</span></label>
 						<textarea class="form-control" placeholder="Isikan deskripsi Temuan dan Penanganan" id="deskripsi"></textarea>
+						<label>Keterangan :<span class="text-red">*</span></label><br>
+						<div class='radio'><label><input type='radio' name="Keterangan" id='Keterangan1' value='Diperbaiki'>Diperbaiki</label></div>
+						<div class='radio'><label><input type='radio' name="Keterangan" id='Keterangan2' value='Perlu Penanganan Lebih Lanjut'>Perlu Penanganan Lebih Lanjut</label></div>
+						<b>Note : Tanda Bintang (<span class="text-red">*</span>) wajib diisi</b>
 					</div>
 					<div class="form-group">
 						<table style="width: 100%">
 							<tr>
-								<th><label>BEFORE</label></th>
-								<th><label>AFTER</label></th>
+								<th style="width: 50%"><label>BEFORE<span class="text-red">*</span></label></th>
+								<th style="width: 50%"><label>AFTER</label></th>
 							</tr>
 							<tr>
 								<td>
@@ -372,10 +377,10 @@
 				if (value.essay_category == "1") {
 					body += '<input id="qty_'+value.id+'" style="text-align: center;" type="number" class="form-control numpad" placeholder="value" onchange="fill_value(this)"><span style="display:none" id="min_'+value.id+'">'+value.lower_limit+'</span><span style="display:none" id="max_'+value.id+'">'+value.upper_limit+'</span><input type="checkbox" style="display:none" class="check" id="check_'+value.id+'">';
 				} else {
-					body += "<div class='radio'><label><input type='radio' class='check' name='nm_"+value.id+"' id='check_"+value.id+"'>OK</label></div></td>";
+					body += "<div class='radio'><label><input type='radio' class='check' name='nm_"+value.id+"' id='check_"+value.id+"' value='OK'>OK</label></div></td>";
 				}
 
-				body += "<td style='padding: 0px; background-color: #ffccff; text-align: center; color: #000000; font-size: 20px;'><div class='radio'><label><input type='radio' class='check' name='nm_"+value.id+"' id='ng_"+value.id+"' onclick='openModalNG("+value.id+")'>NG</label></div></td>";
+				body += "<td style='padding: 0px; background-color: #ffccff; text-align: center; color: #000000; font-size: 20px;'><div class='radio'><label><input type='radio' class='check' name='nm_"+value.id+"' id='ng_"+value.id+"' onclick='openModalNG("+value.id+")' value='NG'>NG</label></div></td>";
 
 				body += "</tr>";
 			}
@@ -489,8 +494,43 @@
 		}
 	}
 
+	function check2() {
+		if ($(':radio:checked').length !== ($(':radio').length) / 2) {
+			alert("not all checked");
+			return false;
+		}
+
+		var radio_val = [];
+
+		$(':radio:checked').each(function() {
+			id = $(this).attr('name').split('_')[1];
+			if (this.value == 'NG') {
+				radio_val.push(id);
+			}
+		});
+
+		var data = {
+			operator : $("#op").text(),
+			item_check : $("#item_check").val(),
+			period : $("#cek_period").val(),
+			ng : radio_val
+		}
+
+		$.post('{{ url("post/maintenance/pm/check") }}', data, function(result, status, xhr) {
+
+		})
+
+		// console.log(radio_val);
+
+	}
+
 	function save_tmp() {
 		var ido = $("#tmp_id").val();
+
+		if ($("#deskripsi").val() == '' || $('#pic_before').get(0).files.length === 0 || !$("input[name='keterangan']").is(':checked')) {
+			openErrorGritter('Error', 'Harap Melengkapi Kolom');
+			return false;
+		}
 
 		var data = {
 			id : ido,
@@ -501,7 +541,7 @@
 
 		$.post('{{ url("post/maintenance/pm/session") }}', data, function(result, status, xhr) {
 			if (result.status) {
-				$("#img_after").attr('src', result.datas);
+				
 			} else {
 
 			}
@@ -520,15 +560,37 @@
 
 	function openModalNG(id) {
 		$("#judul_ng").text("");
+		$("#deskripsi").val("");
 		$("#pic_before").val("");
 		$("#pic_after").val("");
 		$("#img_before").attr("src", "#");
 		$("#img_after").attr("src", "#");
+		// $("input[name='keterangan']").prop("checked", false);
 		$("#tmp_id").val("");
 
 		$("#modalNotGood").modal('show');
 
 		$("#judul_ng").text($("#item_"+id).text()+" : "+$("#substance_"+id).text());
+
+		var data = {
+			id : id
+		}
+
+		$.get('{{ url("get/maintenance/pm/session") }}', data, function(result, status, xhr) {
+			console.log(result);
+			if (result.desc) {
+				$("#deskripsi").val(result.desc);
+			}
+
+			if (result.before) {
+				$("#img_before").attr('src', result.before);
+			}
+
+			if (result.after) {
+				$("#img_after").attr('src', result.after);
+			}
+		})
+
 		$("#tmp_id").val(id);
 	}
 

@@ -628,11 +628,11 @@ class MaintenanceController extends Controller
 
 				if (date('W') % 2 == 0) {
 					// $id = 'PI0004007';
-					$id = 'PI2002021';
+					$id = 'PI1910003';
 
 				} else {
 					// $id = 'PI0805001';
-					$id = 'PI2002021';
+					$id = 'PI1910003';
 
 				}
 
@@ -653,8 +653,8 @@ class MaintenanceController extends Controller
 				// ->bcc(['aditya.agassi@music.yamaha.com', 'nasiqul.ibat@music.yamaha.com'])
 				// ->send(new SendEmail($data, 'urgent_spk'));
 
-				Mail::to('nasiqul.ibat@music.yamaha.com')
-				->send(new SendEmail($data, 'urgent_spk'));
+				// Mail::to('nasiqul.ibat@music.yamaha.com')
+				// ->send(new SendEmail($data, 'urgent_spk'));
 			} else {
 				if(strpos($bahaya, 'Bahan Kimia Beracun') !== false){
 					$remark = 2;
@@ -768,10 +768,11 @@ class MaintenanceController extends Controller
 
 	public function fetchSPKProgressDetail(Request $request)
 	{
-		$bar_detail = db::select('SELECT order_no, department_shortname as bagian, priority, type, category, machine_name, description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt from maintenance_job_orders 
+		$bar_detail = db::select('SELECT maintenance_job_orders.order_no, department_shortname as bagian, priority, type, category, machine_name, description, DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") target_date, process_code, employee_syncs.name, date(maintenance_job_orders.created_at) as dt, cause, handling from maintenance_job_orders 
 			left join (select process_code, process_name from processes where remark = "maintenance") prs on prs.process_code = maintenance_job_orders.remark
 			left join employee_syncs on employee_syncs.employee_id = maintenance_job_orders.created_by
 			left join departments on departments.department_name = SUBSTRING_INDEX(maintenance_job_orders.section,"_",1)
+			left join (SELECT order_no, operator_id, cause, handling FROM maintenance_job_reports where id in (SELECT max(id) FROM maintenance_job_reports GROUP BY order_no)) as rpt on maintenance_job_orders.order_no = rpt.order_no
 			where DATE_FORMAT(maintenance_job_orders.created_at,"%d %b %Y") = "'.$request->get('date').'" and process_name = "'.$request->get('process_name').'"
 			order by order_no asc');
 
@@ -2353,39 +2354,57 @@ class MaintenanceController extends Controller
 
 	public function postPlannedCheck(Request $request)
 	{
-		try {
-			foreach ($request->get('check_list') as $val) {
-				$mtc_check = new MaintenancePlanCheck;
-				$mtc_check->item_code = $request->get('item_check');
-				
-				$mtc_check->item_check = $val[0];
-				$mtc_check->substance = $val[1];
-				$mtc_check->remark = $val[2];
+		// try {
+		// 	foreach ($request->get('check_list') as $val) {
+		// 		$mtc_check = new MaintenancePlanCheck;
+		// 		$mtc_check->item_code = $request->get('item_check');
 
-				if ($val[3] == '1') {
-					$mtc_check->check = 'OK';
-				} else {
-					$mtc_check->check = 'NG';
-				}
+		// 		$mtc_check->item_check = $val[0];
+		// 		$mtc_check->substance = $val[1];
+		// 		$mtc_check->remark = $val[2];
 
-				$mtc_check->check_value = $val[4];
-				$mtc_check->created_by = $request->get('operator');
+		// 		if ($val[3] == '1') {
+		// 			$mtc_check->check = 'OK';
+		// 		} else {
+		// 			$mtc_check->check = 'NG';
+		// 		}
 
-				$mtc_check->save();
+		// 		$mtc_check->check_value = $val[4];
+		// 		$mtc_check->created_by = $request->get('operator');
+
+		// 		$mtc_check->save();
+		// 	}
+
+		// 	$response = array(
+		// 		'status' => true,
+		// 		'message' => 'success'
+		// 	);
+		// 	return Response::json($response);
+		// } catch (QueryException $e) {
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'message' => $e->getMessage()
+		// 	);
+		// 	return Response::json($response);
+		// }
+		
+		$verif = true;
+		foreach ($request->get('ng') as $ngs) {
+			if ($request->session()->get('pm.description'.$ngs) == "" || $request->session()->get('pm.before'.$ngs) == "") {
+				$verif = false;
 			}
+		}
 
-			$response = array(
-				'status' => true,
-				'message' => 'success'
-			);
-			return Response::json($response);
-		} catch (QueryException $e) {
+		if ($verif == false) {
 			$response = array(
 				'status' => false,
-				'message' => $e->getMessage()
+				'message' => 'Harap melengkapi kolom NG'
 			);
 			return Response::json($response);
 		}
+
+		
+		
 	}
 
 	// public function getHistoryPlanned(Request $request)
@@ -2498,8 +2517,19 @@ class MaintenanceController extends Controller
 		$datas = [];
 		$datas['desc'] = $request->session()->get('pm.description'.$request->get('id'));
 		$datas['before'] = $request->session()->get('pm.before'.$request->get('id'));
-		$datas['after'] = $request->session()->get('pm.before'.$request->get('id'));
+		$datas['after'] = $request->session()->get('pm.after'.$request->get('id'));
 
 		return Response::json($datas);
+	}
+
+	public function getPlannedSchedule(Request $request)
+	{
+		$datas = db::select('SELECT machine_name FROM `maintenance_plan_item_checks` where remark = "1-HARI" group by machine_name');
+
+		$response = array(
+			'status' => true,
+			'datas' => $datas
+		);
+		return Response::json($response);
 	}
 }

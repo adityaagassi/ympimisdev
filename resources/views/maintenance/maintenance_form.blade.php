@@ -269,10 +269,6 @@
 								<div class="col-xs-5">
 									<textarea class="form-control" placeholder="Isikan Catatan Urgent" name="reason_urgent" id="reason_urgent" rows="1"></textarea>
 								</div>
-
-								<div class="col-xs-8 col-xs-offset-4">
-									<span style="color: red !important; background-color: yellow; font-weight: bold;">Prioritas "Urgent" untuk mesin yang menyebabkan aliran produksi berhenti, tidak terdapat mesin cadangan</span>
-								</div>
 							</div>
 						</div>
 
@@ -286,6 +282,7 @@
 							<div class="col-xs-10" style="font-weight: bold !important">
 								<span style="color: red !important; background-color: yellow">Note : </span><br>
 								<span style="color: red !important; background-color: yellow">*) Wajib diisi</span><br>
+								<span style="color: red !important; background-color: yellow; font-weight: bold;">Prioritas "Urgent" untuk mesin yang menyebabkan aliran produksi berhenti, tidak terdapat mesin cadangan</span>
 							</div>
 						</div>
 					</form>
