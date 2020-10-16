@@ -207,8 +207,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 
 
 		getCost();
-		
-		alert('<?php print_r($subleaders) ?>');
 	})
 
 	function getCost() {
