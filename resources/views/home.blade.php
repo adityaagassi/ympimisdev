@@ -603,8 +603,12 @@
                                 <a href="{{ url("index/maintenance/list/user") }}">
                                     <i class="fa fa-caret-right"></i> Create SPK (作業依頼書を作成)
                                 </a>
-                                <br>
+                                <!-- <br>
                                 <a href="{{ url("index/maintenance/spk/monitoring") }}">
+                                    <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
+                                </a> -->
+                                <br>
+                                <a href="{{ url("index/maintenance/spk/grafik") }}">
                                     <i class="fa fa-caret-right"></i> SPK Monitoring (作業依頼書の管理)
                                 </a>
                                 <br>

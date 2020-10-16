@@ -198,7 +198,7 @@
 
 				var st = ["Requested", "Received", "Listed", "InProgress", "Pending"];
 
-				if (statuses == value.process_name || (statuses == '' && st.indexOf(value.process_name) > 0)) {
+				if (statuses == value.process_name || (statuses == '' && st.indexOf(value.process_name) >= 0)) {
 					var stat = 0;
 					var progress = "0%";
 					var cls_prog = "progress-bar-success";
@@ -498,8 +498,8 @@ function showModalDetail(ctg, date) {
 			body += "<td>"+value.description+"</td>";
 			body += "<td>"+value.target_date+"</td>";
 			body += "<td></td>";
-			body += "<td></td>";
-			body += "<td></td>";
+			body += "<td>"+value.cause+"</td>";
+			body += "<td>"+value.handling+"</td>";
 			body += "</tr>";
 		})
 
