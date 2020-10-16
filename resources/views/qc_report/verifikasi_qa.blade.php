@@ -81,6 +81,13 @@ table.table-bordered > tfoot > tr > th{
     {{ session('error') }}
   </div>   
   @endif
+
+  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
+    <p style="position: absolute; color: White; top: 45%; left: 35%;">
+      <span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+    </p>
+  </div>
+
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-primary">
     <div class="box-header with-border">
@@ -205,8 +212,8 @@ table.table-bordered > tfoot > tr > th{
 
                 <div class="col-xs-2">
                     <select class="form-control select2" id="status1" name="status1" style="width: 100%;" data-placeholder="Pilih Status">
-                      <option value="Close">Close</option>
                       <option value="Open">Open</option>
+                      <option value="Close">Close</option>
                     </select>
                 </div>
               </div>
@@ -278,11 +285,11 @@ table.table-bordered > tfoot > tr > th{
                     <div class="col-xs-2">
                         <select class="form-control select2" id="status<?= $i+1 ?>" name="status<?= $i+1 ?>" style="width: 100%;" data-placeholder="Pilih Status">
                           @if($verifikasi[$i]->status == "Close")
-                          <option value="Close"  selected="">Close</option>
                           <option value="Open">Open</option>
+                          <option value="Close"  selected="">Close</option>
                           @elseif($verifikasi[$i]->status == "Open")
-                          <option value="Close">Close</option>
                           <option value="Open" selected="">Open</option>
+                          <option value="Close">Close</option>
                           @endif
                         </select>
                     </div>
@@ -542,7 +549,10 @@ table.table-bordered > tfoot > tr > th{
         return false;
       }
 
+      $("#loading").show();
+
       $.get('{{ url("index/qc_report/emailverification/$cpars->id") }}', data, function(result, status, xhr){
+        $("#loading").hide();
         openSuccessGritter("Success","Email Has Been Sent");
         window.location.reload();
       })

@@ -76,7 +76,31 @@
 				</tr>
 				<tr>
 					<td colspan="10" style="text-align:center;font-size: 20px;font-weight: bold;font-style: italic">
-						<div class="line"><span>@if($po[0]->goods_price != "0") PURCHASE @elseif($po[0]->service_price != "0") JOB @endif ORDER</span><div>
+						<div class="line">
+							<span>
+								<?php 
+
+									$status = 0;
+
+									foreach($po as $pos){
+	 									if($pos->service_price != "0"){
+											$status = 1;	 										
+	 									}						
+									}
+
+									if($status == "0")
+										{
+											echo "PURCHASE";
+										}
+									elseif($status == "1")
+										{
+											echo "JOB";
+										}
+								?>
+
+								ORDER
+							</span>
+						<div>
 					</td>
 				</tr>
 				<tr>
@@ -224,11 +248,27 @@
 					<td colspan="1" style="width:4%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Delivery Date<br><span style="font-size: 10px;font-style: italic">(Tanggal Pengiriman)</span></td>
 					<td colspan="1" style="width:2%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Qty<br><span style="font-size: 10px;font-style: italic">(Banyaknya)</span></td>
 					<td colspan="1" style="width:2%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">UM<br><span style="font-size: 10px;font-style: italic">(Satuan)</span></td>
-					@if($po[0]->goods_price != "0") 
-					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Unit Price<br><span style="font-size: 10px;font-style: italic">(Harga Satuan)</span></td>
-					@elseif($po[0]->service_price != "0") 
-					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Service Price<br><span style="font-size: 10px;font-style: italic">(Harga)</span></td>
-					@endif
+					<?php 
+
+						$status = 0;
+
+						foreach($po as $pos){
+							if($pos->service_price != "0"){
+								$status = 1;	 										
+							}						
+						}
+
+						if($status == "0")
+						{
+							echo '<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Unit Price<br><span style="font-size: 10px;font-style: italic">(Harga Satuan)</span></td>';
+						}
+						elseif($status == "1")
+						{
+							echo '
+								<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Price<br><span style="font-size: 10px;font-style: italic">(Harga)</span></td>';
+						}
+					?>
+
 					<td colspan="1" style="width:3%; background-color: #eceff1; font-weight: bold; border: 1px solid black;">Amount<br><span style="font-size: 10px;font-style: italic">(Jumlah)</span></td>
 				</tr>
 			</thead>
@@ -236,24 +276,24 @@
 				<?php $no = 1; 
 				$total = 0;
 				?>
-				@foreach($po as $po)
+				@foreach($po as $pos)
 				<tr>
 					<td colspan="1" style="height: 26px; border: 1px solid black;text-align: center;padding: 0">{{ $no }}</td>
-					<td colspan="2" style="border: 1px solid black;">{{ $po->nama_item }}</td>
-					<td colspan="1" style="border: 1px solid black;text-align: center;"><?= date('d-M-y', strtotime($po->delivery_date)) ?></td>
-					<td colspan="1" style="border: 1px solid black;text-align: center;">{{ $po->qty }}</td>
-					<td colspan="1" style="border: 1px solid black;text-align: center;">{{ $po->uom }}</td>
-					@if($po->goods_price != "0") 
-					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($po->goods_price,2,",",".");?></td>
+					<td colspan="2" style="border: 1px solid black;">{{ $pos->nama_item }}</td>
+					<td colspan="1" style="border: 1px solid black;text-align: center;"><?= date('d-M-y', strtotime($pos->delivery_date)) ?></td>
+					<td colspan="1" style="border: 1px solid black;text-align: center;">{{ $pos->qty }}</td>
+					<td colspan="1" style="border: 1px solid black;text-align: center;">{{ $pos->uom }}</td>
+					@if($pos->goods_price != "0") 
+					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($pos->goods_price,2,",",".");?></td>
 					<?php
-						$price = $po->goods_price * $po->qty;
+						$price = $pos->goods_price * $pos->qty;
 						$total = $total + $price;
 					?>
 
-					@elseif($po->service_price != "0")
-					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($po->service_price,2,",",".");?></td>
+					@elseif($pos->service_price != "0")
+					<td colspan="1" style="border: 1px solid black;text-align: right;padding-right: 5px"><?= number_format($pos->service_price,2,",",".");?></td>
 					<?php
-						$price = $po->service_price * $po->qty;
+						$price = $pos->service_price * $pos->qty;
 						$total = $total + $price;
 					?>
 
@@ -272,11 +312,29 @@
 
 				<tr>
 					<td colspan="5">
-					@if($po->goods_price != "0") 	
-					<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">Sub Total Goods</td>
-					@elseif($po->service_price != "0") 
-					<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">Sub Total Service</td>
-					@endif
+					
+					<?php 
+
+					$status = 0;
+
+						foreach($po as $pos){
+							if($pos->service_price != "0"){
+								$status = 1;	 										
+							}						
+						}
+
+						if($status == "0")
+						{
+							echo '<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">Sub Total Goods</td>';
+						}
+						elseif($status == "1")
+						{
+							echo '
+								<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">Sub Total</td>';
+						}
+
+					?>
+
 					<td colspan="1" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px"><?= number_format($total,2,",","."); ?></td>
 				</tr>
 
@@ -284,10 +342,10 @@
 					<td colspan="5">
 					<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">VAT 10 % 
 						<?php 
-							if ($po->material == "Dipungut PPNBM") {
+							if ($po[0]->material == "Dipungut PPNBM") {
 								echo "(Collected)";
 							}
-							else if ($po->material == "Tidak Dipungut PPNB"){
+							else if ($po[0]->material == "Tidak Dipungut PPNB"){
 								echo "(Not Collected)";
 							}
 						?>
@@ -296,15 +354,29 @@
 					
 					<?php 
 						//Jika ini barang
-						if ($po->goods_price != "0") {
-							if ($po->supplier_status == "PKP") {
+
+					$status = 0;
+
+						foreach($po as $pos){
+							if($pos->service_price != "0"){
+								$status = 1;	 										
+							}						
+						}
+
+						if($status == "0")
+						{
+							
+							if ($po[0]->supplier_status == "PKP") {
 								$pajak = ($total*10)/100;
 							}
-							else if ($po->supplier_status == "Non PKP" || $po->supplier_status == "Import"){
+							else if ($po[0]->supplier_status == "Non PKP" || $po[0]->supplier_status == "Import"){
 								$pajak = 0;
 							}
+
 						}
-						else if($po->service_price != "0"){
+						
+						elseif($status == "1")
+						{
 							$pajak = ($total*10)/100;
 						}
 
@@ -317,17 +389,17 @@
 
 				<?php 
 					$wh = 0;
-					if ($po->holding_tax != 0) {
+					if ($po[0]->holding_tax != 0) {
 				?>
 
 				<tr>
 					<td colspan="5">
-					<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">W/H Tax <?= $po->holding_tax ?> %</td>
+					<td colspan="2" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">W/H Tax <?= $po[0]->holding_tax ?> %</td>
 					<td colspan="1" style="font-weight: bold;font-size: 12px;text-align: right;padding-right: 5px">
 					
 					<?php 
-						if ($po->holding_tax != 0) {
-							$wh = (($total+$pajak) * $po->holding_tax)/100;
+						if ($po[0]->holding_tax != 0) {
+							$wh = (($total+$pajak) * $po[0]->holding_tax)/100;
 						}
 					?> 
 
@@ -345,25 +417,41 @@
 
 						<?php 
 							$net = 0;
-							if ($po->goods_price != "0") {
-								if($po->supplier_status == "PKP") {
-									if ($po->material == "Dipungut PPNBM") {
+							$status = 0;
+
+							foreach($po as $pos){
+								if($pos->service_price != "0"){
+									$status = 1;	 										
+								}						
+							}
+
+							if($status == "0")
+							{
+								
+								if($po[0]->supplier_status == "PKP") {
+									if ($po[0]->material == "Dipungut PPNBM") {
 										$vat = $pajak;
 									}
-									else if ($po->material == "Tidak Dipungut PPNB"){
+									else if ($po[0]->material == "Tidak Dipungut PPNB"){
 										$vat = 0;
 									}
 									
 								}
-								else if($po->supplier_status == "Non PKP" || $po->supplier_status == "Import"){
+								else if($po[0]->supplier_status == "Non PKP" || $po[0]->supplier_status == "Import"){
 									$vat = 0;
 								}
+
 							}
-							else if($po->service_price != "0"){
+							
+							elseif($status == "1")
+							{
 								$vat = $pajak;
 							}
+
+
 							$net = ($vat + $total) - $wh;
-						?>
+
+						?> 
 
 						<?= number_format($net,2,",",".");  ?>
 					</td>
@@ -374,7 +462,7 @@
 
 	<footer>
 
-		@if($po->approval_authorized4 == "Approved")
+		@if($po[0]->approval_authorized4 == "Approved")
 		<img width="100" src="{{ public_path() . '/files/ttd_pr_po/stempel_ympi.png' }}" alt="" style="padding: 0;position: absolute;top: 850px;left: 600px;z-index: 200">
 		@endif
 		<div class="footer">
@@ -385,33 +473,33 @@
 					</tr>
 					<tr>
 						<td colspan="3" style="width: 40%">
-							@if($po->buyer_id == "PI1908032")
+							@if($po[0]->buyer_id == "PI1908032")
 								<img width="100" src="{{ public_path() . '/files/ttd_pr_po/ttd_erlangga.png' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->tgl_po)) ?></span>
-							@elseif($po->buyer_id == "PI1810020")
+								<span style="position: absolute;left: 11px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
+							@elseif($po[0]->buyer_id == "PI1810020")
 								<img width="75" src="{{ public_path() . '/files/ttd_pr_po/ttd_shega.png' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 80px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->tgl_po)) ?></span>
+								<span style="position: absolute;left: 25px;width: 75px;font-size: 10px;font-weight: bold;top: 80px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->tgl_po)) ?></span>
 							@else
-								<?= $po->buyer_name ?>
+								<?= $po[0]->buyer_name ?>
 							@endif
 						</td>
 						<td colspan="3" style="width: 30%">
-							@if($po->approval_authorized2 == "Approved")
+							@if($po[0]->approval_authorized2 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 220px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->date_approval_authorized2)) ?></span>
+								<span style="position: absolute;left: 220px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized2)) ?></span>
 							@endif
 						</td>
 						<td colspan="3" style="width: 30%">
-							@if($po->approval_authorized3 == "Approved")
+							@if($po[0]->approval_authorized3 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 380px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->date_approval_authorized3)) ?></span>
+								<span style="position: absolute;left: 380px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized3)) ?></span>
 							@endif
 						</td>
 
 						<td colspan="3" style="width: 30%">
-							@if($po->approval_authorized4 == "Approved")
+							@if($po[0]->approval_authorized4 == "Approved")
 								<img width="70" src="{{ public_path() . '/files/ttd_pr_po/ttd_pak_imron.jpg' }}" alt="" style="padding: 0">
-								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po->date_approval_authorized4)) ?></span>
+								<span style="position: absolute;left: 540px;width: 75px;font-size: 10px;font-weight: bold;top: 81px;font-family: arial-narrow"><?= date('d-M-y', strtotime($po[0]->date_approval_authorized4)) ?></span>
 							@endif
 						</td>
 					</tr>
@@ -420,10 +508,10 @@
 				<tbody>
 
 					<tr>
-						<td colspan="3" style="height: 26px;padding: 0;font-weight: bold;text-decoration: underline;">{{ $po->buyer_name }}</td>
-						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po->authorized2_name }}</td>
-						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po->authorized3_name }}</td>
-						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po->authorized4_name }}</td>
+						<td colspan="3" style="height: 26px;padding: 0;font-weight: bold;text-decoration: underline;">{{ $po[0]->buyer_name }}</td>
+						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po[0]->authorized2_name }}</td>
+						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po[0]->authorized3_name }}</td>
+						<td colspan="3" style="font-weight: bold;text-decoration: underline;">{{ $po[0]->authorized4_name }}</td>
 					</tr>
 					<tr>
 						<td colspan="3">Procurement Staff</td>
