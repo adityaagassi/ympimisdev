@@ -39,8 +39,8 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader }}
+		<a href="{{ url('index/labeling/create/'.$id) }}" class="btn btn-primary pull-right">Buat Audit Label Safety</a>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -65,11 +65,11 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/labeling/filter_labeling/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -88,7 +88,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/9/'.$frequency) }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/labeling/index/'.$id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
@@ -98,7 +98,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Cetak {{ $activity_name }}</h3>
 						</div>
 						<form target="_blank" role="form" method="post" action="{{url('index/labeling/print_labeling/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -125,7 +125,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Kirim Email ke Foreman</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/labeling/sendemail/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -144,94 +144,77 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
+										<button type="submit" class="btn btn-primary col-sm-14">Kirim Email</button>
 									</div>
 								</div>
 							</div>
 						</form>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="col-md-12">
-							<div class="col-md-12">
-								<div class="form-group pull-right">
-									<a href="{{ url('index/labeling/create/'.$id) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
-									{{-- <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								        Create
-								    </button> --}}
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Product</th>
-												<th>Date</th>
-												<th>Nama Mesin</th>
-												<th>Foto Arah Putaran</th>
-												<th>Foto Sisa Putaran</th>
-												<th>Keterangan</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($labeling as $labeling)
-											<tr>
-												<td>{{$labeling->product}}</td>
-												<td>{{$labeling->date}}</td>
-												<td>{{$labeling->nama_mesin}}</td>
-												<td><img width="100px" src="{{ url('/data_file/labeling/'.$labeling->foto_arah_putaran) }}"></td>
-												<td><img width="100px" src="{{ url('/data_file/labeling/'.$labeling->foto_sisa_putaran) }}"></td>
-												<td>{{$labeling->keterangan}}</td>
-												<td>
-													@if($labeling->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($labeling->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														<a class="btn btn-info btn-sm" href="{{url('index/labeling/show/'.$id.'/'.$labeling->id)}}">View</a>
-														<a href="{{url('index/labeling/edit/'.$id.'/'.$labeling->id)}}" class="btn btn-warning btn-sm">Edit</a>
-														{{-- <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_daily('{{ url("index/labeling/update") }}','{{ $labeling->id }}','{{ $daily_check->product }}');">
-											               Edit
-											            </button> --}}
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/labeling/destroy") }}', '{{ $labeling->date }} - {{ $labeling->nama_mesin }}','{{ $id }}', '{{ $labeling->id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+						<div class="col-xs-12" style="overflow-x: scroll;">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Product</th>
+										<th>Date</th>
+										<th>Nama Mesin</th>
+										<th>Foto Arah Putaran</th>
+										<th>Foto Sisa Putaran</th>
+										<th>Keterangan</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($labeling as $labeling)
+									<tr>
+										<td>{{$labeling->product}}</td>
+										<td>{{$labeling->date}}</td>
+										<td>{{$labeling->nama_mesin}}</td>
+										<td><img width="100px" src="{{ url('/data_file/labeling/'.$labeling->foto_arah_putaran) }}"></td>
+										<td><img width="100px" src="{{ url('/data_file/labeling/'.$labeling->foto_sisa_putaran) }}"></td>
+										<td>{{$labeling->keterangan}}</td>
+										<td>
+											@if($labeling->send_status == "")
+						                		<label class="label label-danger">Not Yet Sent</label>
+						                	@else
+						                		<label class="label label-success">Sent</label>
+						                	@endif
+										</td>
+										<td>@if($labeling->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												<a href="{{url('index/labeling/edit/'.$id.'/'.$labeling->id)}}" class="btn btn-warning btn-sm">Edit</a>
+												{{-- <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_daily('{{ url("index/labeling/update") }}','{{ $labeling->id }}','{{ $daily_check->product }}');">
+									               Edit
+									            </button> --}}
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/labeling/destroy") }}', '{{ $labeling->date }} - {{ $labeling->nama_mesin }}','{{ $id }}', '{{ $labeling->id }}');">
+													Delete
+												</a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -272,6 +255,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			language : {
 				noResults : function(params) {

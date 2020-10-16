@@ -39,15 +39,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader }}
+		<a href="{{ url('index/audit_report_activity/create/'.$id) }}" class="btn btn-primary pull-right">Buat Audit IK</a>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -70,11 +65,11 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/audit_report_activity/filter_audit_report/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -82,7 +77,7 @@
 								<div class="col-md-10">
 									<div class="form-group">
 										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section...">
+										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section">
 											<option value=""></option>
 											@foreach($subsection as $subsection)
 											<option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -106,7 +101,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/4/'.$frequency) }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/audit_report_activity/index/'.$id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
@@ -116,7 +111,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Cetak {{ $activity_name }}</h3>
 						</div>
 						<form target="_blank" role="form" method="post" action="{{url('index/audit_report_activity/print_audit_report/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -124,7 +119,7 @@
 								<div class="col-md-10">
 									<div class="form-group">
 										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section" required>
 											<option value=""></option>
 											@foreach($subsection2 as $subsection2)
 											<option value="{{ $subsection2->sub_section_name }}">{{ $subsection2->sub_section_name }}</option>
@@ -156,7 +151,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Kirim Email ke Foreman</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/audit_report_activity/send_email/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -164,7 +159,7 @@
 								<div class="col-md-10">
 									<div class="form-group">
 										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section" required>
 											<option value=""></option>
 											@foreach($subsection3 as $subsection3)
 											<option value="{{ $subsection3->sub_section_name }}">{{ $subsection3->sub_section_name }}</option>
@@ -198,81 +193,76 @@
 						<div class="col-md-12">
 							<div class="col-md-12">
 								<div class="form-group pull-right">
-									<a href="{{ url('index/audit_report_activity/create/'.$id) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
+									
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Sub Section</th>
-												<th>Date</th>
-												<th>Nama Dokumen</th>
-												<th>No. Dokumen</th>
-												<th>Kesesuaian Aktual Proses</th>
-												<th>Kelengkapan Point Safety</th>
-												<th>Kesesuaian QC Kouteihyo</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($audit_report_activity as $audit_report_activity)
-											<tr>
-												<td>{{$audit_report_activity->subsection}}</td>
-												<td>{{$audit_report_activity->date}}</td>
-												<td>{{$audit_report_activity->nama_dokumen}}</td>
-												<td>{{$audit_report_activity->no_dokumen}}</td>
-												<td><?php echo $audit_report_activity->kesesuaian_aktual_proses ?></td>
-												<td>{{$audit_report_activity->kelengkapan_point_safety}}</td>
-												<td>{{$audit_report_activity->kesesuaian_qc_kouteihyo}}</td>
-												<td>
-													@if($audit_report_activity->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($audit_report_activity->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														<a class="btn btn-info btn-xs" href="{{url('index/audit_report_activity/show/'.$id.'/'.$audit_report_activity->id)}}">View</a>
-														<a href="{{url('index/audit_report_activity/edit/'.$id.'/'.$audit_report_activity->id)}}" class="btn btn-warning btn-xs">Edit</a>
-														<a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/audit_report_activity/destroy") }}', '{{ $audit_report_activity->no_dokumen }} - {{ $audit_report_activity->nama_dokumen }} - {{ $audit_report_activity->date }}','{{ $id }}', '{{ $audit_report_activity->id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+						<div class="col-xs-12" style="overflow-x: scroll;">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Sub Section</th>
+										<th>Date</th>
+										<th>Nama Dokumen</th>
+										<th>No. Dokumen</th>
+										<th>Kesesuaian Aktual Proses</th>
+										<th>Kelengkapan Point Safety</th>
+										<th>Kesesuaian QC Kouteihyo</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($audit_report_activity as $audit_report_activity)
+									<tr>
+										<td>{{$audit_report_activity->subsection}}</td>
+										<td>{{$audit_report_activity->date}}</td>
+										<td>{{$audit_report_activity->nama_dokumen}}</td>
+										<td>{{$audit_report_activity->no_dokumen}}</td>
+										<td><?php echo $audit_report_activity->kesesuaian_aktual_proses ?></td>
+										<td>{{$audit_report_activity->kelengkapan_point_safety}}</td>
+										<td>{{$audit_report_activity->kesesuaian_qc_kouteihyo}}</td>
+										<td>
+											@if($audit_report_activity->send_status == "")
+						                		<label class="label label-danger">Not Yet Sent</label>
+						                	@else
+						                		<label class="label label-success">Sent</label>
+						                	@endif
+										</td>
+										<td>@if($audit_report_activity->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												<a href="{{url('index/audit_report_activity/edit/'.$id.'/'.$audit_report_activity->id)}}" class="btn btn-warning">Edit</a>
+												<a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/audit_report_activity/destroy") }}', '{{ $audit_report_activity->no_dokumen }} - {{ $audit_report_activity->nama_dokumen }} - {{ $audit_report_activity->date }}','{{ $id }}', '{{ $audit_report_activity->id }}');">
+													Delete
+												</a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -312,6 +302,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			language : {
 				noResults : function(params) {

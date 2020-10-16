@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use App\ActivityList;
+use Response;
 use Illuminate\Support\Facades\DB;
 use App\User;
 
@@ -59,71 +60,120 @@ class ActivityListController extends Controller
 
     function filter($id,$no,$frequency)
     {
-      $emp_id = Auth::user()->username;
-      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+      try {
+        $emp_id = Auth::user()->username;
+        $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
 
-      $name = Auth::user()->name;
-      $role_code = Auth::user()->role_code;
-      $queryDepartments = "SELECT * FROM departments where id='".$id."'";
-      $department = DB::select($queryDepartments);
-      foreach ($department as $department) {
-          $dept_name = $department->department_name;
+        $name = Auth::user()->name;
+        $role_code = Auth::user()->role_code;
+        $queryDepartments = "SELECT * FROM departments where id='".$id."'";
+        $department = DB::select($queryDepartments);
+        foreach ($department as $department) {
+            $dept_name = $department->department_name;
+        }
+        if ($no == 1) {
+          $activity_type = 'Audit';
+          $act_name = 'Audit NG Jelas';
+        }
+        elseif ($no == 2) {
+          $activity_type = 'Training';
+          $act_name = 'Training';
+        }
+        elseif ($no == 3) {
+          $activity_type = 'Sampling Check';
+          $act_name = 'Sampling Check FG / KD';
+        }
+        elseif ($no == 4) {
+          $activity_type = 'Laporan Aktivitas';
+          $act_name = 'Laporan Audit IK';
+        }
+        elseif ($no == 5) {
+          $activity_type = 'Pemahaman Proses';
+          $act_name = 'Audit Pemahaman Proses';
+        }
+        elseif ($no == 6) {
+          $activity_type = 'Pengecekan';
+          $act_name = 'Cek Produk Pertama';
+        }
+        elseif ($no == 7) {
+          $activity_type = 'Interview';
+          $act_name = 'Interview Pointing Call';
+        }
+        elseif ($no == 8) {
+          $activity_type = 'Pengecekan Foto';
+          $act_name = 'Cek FG / KD Harian';
+        }
+        elseif ($no == 9) {
+          $activity_type = 'Labelisasi';
+          $act_name = 'Audit Label Safety';
+        }
+        elseif ($no == 10) {
+          $activity_type = 'Cek Area';
+          $act_name = 'Cek Safety Area Kerja';
+        }
+        elseif ($no == 11) {
+          $activity_type = 'Jishu Hozen';
+          $act_name = 'Audit Jishu Hozen';
+        }
+        elseif ($no == 12) {
+          $activity_type = 'Cek APD';
+          $act_name = 'Cek APD';
+        }
+        elseif ($no == 13) {
+          $activity_type = 'Weekly Report';
+          $act_name = 'Weekly Report';
+        }
+        elseif ($no == 14) {
+          $activity_type = 'Temuan NG';
+          $act_name = 'Temuan NG';
+        }
+
+        if ($frequency == 'Daily') {
+          $frekuensi = 'Harian';
+        }else if($frequency == 'Weekly'){
+          $frekuensi = 'Mingguan';
+        }else if($frequency == 'Monthly'){
+          $frekuensi = 'Bulanan';
+        }else if($frequency == 'Conditional'){
+          $frekuensi = 'Kondisional';
+        }
+
+        if($role_code == "MIS" || $role_code == "S"){
+          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();
+        }
+        else{
+          $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('leader_dept',$name)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();
+        }
+
+        $response = array(
+          'status' => true,
+          'activity_list' => $activityList,
+          'department' => $department,
+          'dept_name' => strtoupper($dept_name),
+          'id' => $id,
+          'frekuensi' => $frekuensi,
+          'act_name' => $act_name,
+          'activity_type' => $activity_type,
+          'no' => $no,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message' => $e->getMessage()
+        );
+        return Response::json($response);
       }
-      if ($no == 1) {
-        $activity_type = 'Audit';
-      }
-      elseif ($no == 2) {
-        $activity_type = 'Training';
-      }
-      elseif ($no == 3) {
-        $activity_type = 'Sampling Check';
-      }
-      elseif ($no == 4) {
-        $activity_type = 'Laporan Aktivitas';
-      }
-      elseif ($no == 5) {
-        $activity_type = 'Pemahaman Proses';
-      }
-      elseif ($no == 6) {
-        $activity_type = 'Pengecekan';
-      }
-      elseif ($no == 7) {
-        $activity_type = 'Interview';
-      }
-      elseif ($no == 8) {
-        $activity_type = 'Pengecekan Foto';
-      }
-      elseif ($no == 9) {
-        $activity_type = 'Labelisasi';
-      }
-      elseif ($no == 10) {
-        $activity_type = 'Cek Area';
-      }
-      elseif ($no == 11) {
-        $activity_type = 'Jishu Hozen';
-      }
-      elseif ($no == 12) {
-        $activity_type = 'Cek APD';
-      }
-      elseif ($no == 13) {
-        $activity_type = 'Weekly Report';
-      }
-      elseif ($no == 14) {
-        $activity_type = 'Temuan NG';
-      }
-      if($role_code == "MIS" || $role_code == "S"){
-        $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();
-      }
-      else{
-        $activityList = ActivityList::where('department_id',$id)->where('activity_type',$activity_type)->where('leader_dept',$name)->where('activity_name','!=','Null')->where('frequency',$frequency)->get();
-      }
-      $data = array('activity_list' => $activityList,
-                    'department' => $department,
-                    'dept_name' => strtoupper($dept_name),
-                    'id' => $id,
-                    'no' => $no,);
-      return view('activity_list.filter', $data
-        )->with('page', 'Activity List');
+      // $data = array('activity_list' => $activityList,
+      //               'department' => $department,
+      //               'dept_name' => strtoupper($dept_name),
+      //               'id' => $id,
+      //               'frekuensi' => $frekuensi,
+      //               'act_name' => $act_name,
+      //               'activity_type' => $activity_type,
+      //               'no' => $no,);
+      // return view('activity_list.filter', $data
+      //   )->with('page', 'Activity List');
     }
 
     function resume($id)

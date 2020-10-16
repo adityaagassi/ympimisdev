@@ -117,7 +117,10 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
+		{{ $activity_name }} - {{$leader}}
+		@if($session_training == "view")
+	      	<a href="{{ url('index/training_report/index/'.$activity_id) }}" class="btn btn-warning pull-right">Kembali</a>
+	    @endif
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -142,142 +145,116 @@ table.table-bordered > tfoot > tr > th{
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-header">
-					<h3 class="box-title">Training Details <span class="text-purple"></span></h3>
+					<h3 class="box-title">Detail Training <span class="text-purple"></span></h3>
 				</div>
 				<div class="box-body">
-				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Department</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->department}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Section</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->section}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Product</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->product}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Periode</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->periode}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Tanggal</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->date}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Waktu</label>
-			            <div class="col-sm-5" align="left">
-			              <?php 
-			                $timesplit=explode(':',$training_report->time);
-			                $min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
-			              {{$min.' Min'}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Trainer</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->trainer}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Theme</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->theme}}
-			            </div>
-			          </div>
-			          @if($session_training == "view")
-			          	<a href="{{ url('index/training_report/index/'.$activity_id) }}" class="btn btn-warning">Back</a>
-			          @endif
-			        </div>
-			        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Isi Training</label>
-			            <div class="col-sm-5" align="left">
-			              <?php echo $training_report->isi_training ?>
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Tujuan</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->tujuan}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Standard</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->standard}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Leader</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->leader}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Foreman</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->foreman}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Catatan</label>
-			            <div class="col-sm-5" align="left">
-			              <?php echo $training_report->notes?>
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Created By</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->user->name}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Created At</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->created_at}}
-			            </div>
-			          </div>
-			          <div class="form-group row" align="right">
-			            <label class="col-sm-5">Last Update</label>
-			            <div class="col-sm-5" align="left">
-			              {{$training_report->updated_at}}
-			            </div>
-			          </div>
-			          {{-- <input type="text" id="textnama"> --}}
+					<div class="col-xs-6">
+						<table class="table table-bordered">
+							<tr>
+								<td><b>Dept</b></td>
+								<td>{{strtoupper($training_report->department)}}</td>
+							</tr>
+							<tr>
+								<td><b>Section</b></td>
+								<td>{{strtoupper($training_report->section)}}</td>
+							</tr>
+							<tr>
+								<td><b>Product</b></td>
+								<td>{{$training_report->product}}</td>
+							</tr>
+							<tr>
+								<td><b>Periode</b></td>
+								<td>{{$training_report->periode}}</td>
+							</tr>
+							<tr>
+								<td><b>Tanggal</b></td>
+								<td>{{$training_report->date}}</td>
+							</tr>
+							<tr>
+								<td><b>Waktu</b></td>
+								<td><?php 
+				                $timesplit=explode(':',$training_report->time);
+				                $min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
+				              {{$min.' Min'}}</td>
+							</tr>
+							<tr>
+								<td><b>Trainer</b></td>
+								<td>{{$training_report->trainer}}</td>
+							</tr>
+							<tr>
+								<td><b>Tema</b></td>
+								<td>{{$training_report->tema}}</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-xs-6">
+						<table class="table table-bordered">
+							<tr>
+								<td><b>Tujuan</b></td>
+								<td>{{$training_report->tujuan}}</td>
+							</tr>
+							<tr>
+								<td><b>Standard</b></td>
+								<td>{{$training_report->standard}}</td>
+							</tr>
+							<tr>
+								<td><b>Periode</b></td>
+								<td>{{$training_report->periode}}</td>
+							</tr>
+							<tr>
+								<td><b>Tanggal</b></td>
+								<td>{{$training_report->date}}</td>
+							</tr>
+							<tr>
+								<td><b>Waktu</b></td>
+								<td><?php 
+				                $timesplit=explode(':',$training_report->time);
+				                $min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
+				              {{$min.' Min'}}</td>
+							</tr>
+							<tr>
+								<td><b>Trainer</b></td>
+								<td>{{$training_report->trainer}}</td>
+							</tr>
+							<tr>
+								<td><b>Tema</b></td>
+								<td>{{$training_report->tema}}</td>
+							</tr>
+							<tr>
+								<td><b>Isi Training</b></td>
+								<td><?php echo $training_report->isi_training ?></td>
+							</tr>
+							<tr>
+								<td><b>Catatan</b></td>
+								<td><?php echo $training_report->notes ?></td>
+							</tr>
+						</table>
+					</div>
 			      </div>
-				  <div class="row">
-				    <div class="col-xs-6">
-				      <div class="box">
-				      	<div class="box-header">
-							<h3 class="box-title">Training Pictures <span class="text-purple"></span></h3>
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<div class="box box-solid">
+					<div class="box-body">
+						<div class="col-xs-6">
+							<h3 class="box-title">Foto Training <span class="text-purple"></span></h3>
 							<form role="form" method="post" action="{{url('index/training_report/insertpicture/'.$id)}}" enctype="multipart/form-data">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
-								<div class="form-group">
-									<input type="file" class="btn btn-primary pull-right" id="" placeholder="Input field" name="file" onchange="readURL(this);" required>
-									<br>
-									<img width="200px" id="blah" src="" style="display: none" alt="your image" />
+								<div class="col-xs-8">
+									<div class="form-group">
+										<input type="file" class="btn btn-primary pull-right" id="" placeholder="Input field" name="file" onchange="readURL(this);" required>
+										<br>
+										<img width="200px" id="blah" src="" style="display: none" alt="your image" />
+									</div>
 								</div>
-								<br>
-								<button type="submit" class="btn btn-primary pull-right">Upload</button>
+								<div class="col-xs-4">
+									<button type="submit" class="btn btn-primary pull-right">Upload</button>
+								</div>
 							</form>
-						</div>
-				        <div class="box-body">
+				        <div class="col-xs-12" style="padding-top: 10px">
 				          <table id="example1" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
@@ -308,68 +285,48 @@ table.table-bordered > tfoot > tr > th{
 				              </tr>
 				              @endforeach
 				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
 				          </table>
 				        </div>
-				      </div>
 				    </div>
 				    <div class="col-xs-6">
-				      <div class="box">
-				      	<div class="box-header">
-							<h3 class="box-title">Training Participants <span class="text-purple"></span></h3>
-							<!-- <a class="btn btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}">Scan Barcode</a> -->
-							<button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#participant-modal" onclick="importparticipant('{{ url("index/training_report/importparticipant") }}','{{ $id }}');">
-				               Import Participant
-				            </button>
-							<div class="panel-body text-center" >
-				              <video width="200px" id="preview"></video>
-				            </div>
-							<form role="form" method="post" action="{{url('index/training_report/insertparticipant/'.$id)}}" enctype="multipart/form-data">
-								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+						<h3 class="box-title">Peserta Training <span class="text-purple"></span>
+							<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#participant-modal" onclick="importparticipant('{{ url("index/training_report/importparticipant") }}','{{ $id }}');">
+			               Tambah Banyak Peserta
+			            </button></h3>
+						<!-- <a class="btn btn-primary pull-right" href="{{ secure_url('index/training_report/scan_employee/'.$id) }}">Scan Barcode</a> -->
+						<!-- <div class="panel-body text-center" >
+			              <video width="200px" id="preview"></video>
+			            </div> -->
+						<form role="form" method="post" action="{{url('index/training_report/insertparticipant/'.$id)}}" enctype="multipart/form-data">
+							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
-								<div class="form-group" align="right">
+							<div class="col-xs-8">
+								<div class="form-group">
 									<input type="hidden" value="{{ $id }}" id="id_training">
-									<select class="form-control select2" name="participant_id" style="width: 100%;" data-placeholder="Choose a Participant..." required>
+									<select class="form-control select2" name="participant_id" style="width: 100%;" data-placeholder="Pilih Peserta ..." required>
 						                <option value=""></option>
 						                @foreach($operator as $operator)
 						                  <option value="{{ $operator->employee_id }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
 						                @endforeach
 						              </select>
 								</div>
-								<button type="submit" class="btn btn-primary pull-right">Submit</button>
-							</form>
-						</div>
-				        <div class="box-body">
-				          <table id="example2" class="table table-bordered table-striped table-hover">
+							</div>
+							<div class="col-xs-4">
+								<button type="submit" class="btn btn-primary pull-right">Tambah</button>
+							</div>
+						</form>
+				        <div class="col-xs-12">
+				          <table id="example2" class="table table-bordered table-striped table-hover" style="margin-top: 20px">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
-				              	@if($jml_null > 0)
-				              	<th>Attendance Checklist</th>
-				              	@endif
-				                <th>Name</th>
-				                <th>Attendance</th>
+				                <th>Nama</th>
+				                <th>Kehadiran</th>
 				                <th>Action</th>
 				              </tr>
 				            </thead>
 				            <tbody>
 				              @foreach($training_participant as $training_participant)
 				              <tr>
-				              	@if($jml_null > 0)
-								<td id="approval2">
-									<input type="hidden" value="{{csrf_token()}}" name="_token" />
-									@if($training_participant->participant_absence == Null)
-									    <input type="checkbox" name="ips[]" onchange="getValue(this.value)" value="{{ $training_participant->participant_id }}">
-									    <!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ttd-modal" onclick="getValue('{{ $training_participant->id }}','{{ $training_participant->participant_name->name }}')">
-							               Kehadiran
-							            </button> -->
-									@endif
-								</td>
-								@endif
 				                <td>
 				                	{{ $training_participant->participant_name->name }}
 				                </td>
@@ -393,25 +350,13 @@ table.table-bordered > tfoot > tr > th{
 				              </tr>
 				              @endforeach
 				            </tbody>
-				            <tfoot>
-				              <tr>
-				              	@if($jml_null > 0)
-				                <th></th>
-				                @endif
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
 				          </table>
 				        </div>
-				      </div>
 				    </div>
-				  </div>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 </section>
 
 <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -738,10 +683,6 @@ table.table-bordered > tfoot > tr > th{
       $('.select2').select2()
     });
     jQuery(document).ready(function() {
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       var table = $('#example1').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -784,27 +725,9 @@ table.table-bordered > tfoot > tr > th{
         }
       });
 
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example1 tfoot tr').appendTo('#example1 thead');
-
     });
 
     jQuery(document).ready(function() {
-      $('#example2 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       var table = $('#example2').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -846,20 +769,6 @@ table.table-bordered > tfoot > tr > th{
           ]
         }
       });
-
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example2 tfoot tr').appendTo('#example2 thead');
 
     });
 
@@ -967,65 +876,65 @@ table.table-bordered > tfoot > tr > th{
           }
     </script>
   <script type="text/javascript">
-  	let opts = {
-		  // Whether to scan continuously for QR codes. If false, use scanner.scan() to manually scan.
-		  // If true, the scanner emits the "scan" event when a QR code is scanned. Default true.
-		  continuous: true,
+  // 	let opts = {
+		//   // Whether to scan continuously for QR codes. If false, use scanner.scan() to manually scan.
+		//   // If true, the scanner emits the "scan" event when a QR code is scanned. Default true.
+		//   continuous: true,
 		  
-		  // The HTML element to use for the camera's video preview. Must be a <video> element.
-		  // When the camera is active, this element will have the "active" CSS class, otherwise,
-		  // it will have the "inactive" class. By default, an invisible element will be created to
-		  // host the video.
-		  video: document.getElementById('preview'),
+		//   // The HTML element to use for the camera's video preview. Must be a <video> element.
+		//   // When the camera is active, this element will have the "active" CSS class, otherwise,
+		//   // it will have the "inactive" class. By default, an invisible element will be created to
+		//   // host the video.
+		//   video: document.getElementById('preview'),
 		  
-		  // Whether to horizontally mirror the video preview. This is helpful when trying to
-		  // scan a QR code with a user-facing camera. Default true.
-		  mirror: false,
+		//   // Whether to horizontally mirror the video preview. This is helpful when trying to
+		//   // scan a QR code with a user-facing camera. Default true.
+		//   mirror: false,
 		  
-		  // Whether to include the scanned image data as part of the scan result. See the "scan" event
-		  // for image format details. Default false.
-		  captureImage: false,
+		//   // Whether to include the scanned image data as part of the scan result. See the "scan" event
+		//   // for image format details. Default false.
+		//   captureImage: false,
 		  
-		  // Only applies to continuous mode. Whether to actively scan when the tab is not active.
-		  // When false, this reduces CPU usage when the tab is not active. Default true.
-		  backgroundScan: true,
+		//   // Only applies to continuous mode. Whether to actively scan when the tab is not active.
+		//   // When false, this reduces CPU usage when the tab is not active. Default true.
+		//   backgroundScan: true,
 		  
-		  // Only applies to continuous mode. The period, in milliseconds, before the same QR code
-		  // will be recognized in succession. Default 5000 (5 seconds).
-		  refractoryPeriod: 5000,
+		//   // Only applies to continuous mode. The period, in milliseconds, before the same QR code
+		//   // will be recognized in succession. Default 5000 (5 seconds).
+		//   refractoryPeriod: 5000,
 		  
-		  // Only applies to continuous mode. The period, in rendered frames, between scans. A lower scan period
-		  // increases CPU usage but makes scan response faster. Default 1 (i.e. analyze every frame).
-		  scanPeriod: 1
-		};
-      let scanner = new Instascan.Scanner(opts);
+		//   // Only applies to continuous mode. The period, in rendered frames, between scans. A lower scan period
+		//   // increases CPU usage but makes scan response faster. Default 1 (i.e. analyze every frame).
+		//   scanPeriod: 1
+		// };
+  //     let scanner = new Instascan.Scanner(opts);
 
-      scanner.addListener('scan', function (content) {
+  //     scanner.addListener('scan', function (content) {
 
         
-        var res = content.substring(0, 9);
-        // alert(res);
-        window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+res+"/{{ $id }}";
+  //       var res = content.substring(0, 9);
+  //       // alert(res);
+  //       window.location.href = "https://172.17.128.87/miraidev/public/index/training_report/cek_employee/"+res+"/{{ $id }}";
 
-      });
+  //     });
 
-      Instascan.Camera.getCameras().then(function (cameras) {
+  //     Instascan.Camera.getCameras().then(function (cameras) {
 
-        if (cameras.length > 0) {
+  //       if (cameras.length > 0) {
 
-          scanner.start(cameras[0]);
+  //         scanner.start(cameras[0]);
 
-        } else {
+  //       } else {
 
-          console.error('No cameras found.');
+  //         console.error('No cameras found.');
 
-        }
+  //       }
 
-      }).catch(function (e) {
+  //     }).catch(function (e) {
 
-        console.error(e);
+  //       console.error(e);
 
-      });
+  //     });
 
     </script>
   <script type="text/javascript">

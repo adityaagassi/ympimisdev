@@ -4,8 +4,7 @@
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
-    Create {{ $activity_name }}
-    <small>it all starts here</small>
+    Buat {{ $activity_name }}
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -35,9 +34,8 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
+  <div class="box box-solid">
     <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
     <form role="form" method="post" action="{{url('index/training_report/store/'.$id)}}" enctype="multipart/form-data">
       <div class="box-body">
@@ -46,13 +44,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Department<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="department" placeholder="Enter Department" required value="{{ $departments }}" readonly>
+              <input type="text" class="form-control" name="department" placeholder="Masukkan Department" required value="{{ $departments }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Section<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Choose a Section..." required>
+              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Pilih Section..." required>
                 <option value=""></option>
                 @foreach($section as $section)
                   <option value="{{ $section->section_name }}">{{ $section->section_name }}</option>
@@ -63,7 +61,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
+              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Pilih Product..." required>
                 <option value=""></option>
                 <option value="Saxophone, Flute, Clarinet">Saxophone, Flute, Clarinet</option>
                 @foreach($product as $product)
@@ -75,7 +73,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Periode<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="periode" style="width: 100%;" data-placeholder="Choose a Periode..." required>
+              <select class="form-control select2" name="periode" style="width: 100%;" data-placeholder="Pilih Periode..." required>
                 <option value=""></option>
                 @foreach($periode as $periode)
                   <option value="{{ $periode->fiscal_year }}">{{ $periode->fiscal_year }}</option>
@@ -90,7 +88,7 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" class="form-control pull-right" id="date" name="date">
+                <input type="text" class="form-control pull-right" id="date" name="date" placeholder="Masukkan Tanggal">
               </div>
             </div>
           </div>
@@ -103,7 +101,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Tema<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="theme" placeholder="Enter Theme" required>
+              <input type="text" class="form-control" name="theme" placeholder="Masukkan Tema" required>
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -117,19 +115,19 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Tujuan<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="tujuan" placeholder="Enter Tujuan" required>
+              <input type="text" class="form-control" name="tujuan" placeholder="Masukkan Tujuan" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Standard<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="standard" placeholder="Enter Standard" required>
+              <input type="text" class="form-control" name="standard" placeholder="Masukkan Standard" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Trainer<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="trainer" style="width: 100%;" data-placeholder="Choose a Trainer..." required>
+              <select class="form-control select2" name="trainer" style="width: 100%;" data-placeholder="Pilih Trainer..." required>
                 <option value=""></option>
                 @foreach($trainer as $trainer)
                   <option value="{{ $trainer->name }}">{{ $trainer->employee_id }} - {{ $trainer->name }}</option>
@@ -140,8 +138,8 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Leader<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" name="leader" placeholder="Enter Tujuan" required value="{{ $leader_dept }}" readonly>
-              {{-- <select class="form-control select2" name="leader" style="width: 100%;" data-placeholder="Choose a Leader..." required>
+              <input type="text" class="form-control" name="leader" placeholder="Masukkan Tujuan" required value="{{ $leader_dept }}" readonly>
+              {{-- <select class="form-control select2" name="leader" style="width: 100%;" data-placeholder="Pilih Leader..." required>
                 <option value=""></option>
                 @foreach($leaderForeman as $leaderForeman)
                   <option value="{{ $leaderForeman->name }}">{{ $leaderForeman->employee_id }} - {{ $leaderForeman->name }}</option>
@@ -152,8 +150,8 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" name="foreman" placeholder="Enter Tujuan" required value="{{ $foreman_dept }}" readonly>
-              {{-- <select class="form-control select2" name="foreman" style="width: 100%;" data-placeholder="Choose a Foreman..." required>
+              <input type="text" class="form-control" name="foreman" placeholder="Masukkan Tujuan" required value="{{ $foreman_dept }}" readonly>
+              {{-- <select class="form-control select2" name="foreman" style="width: 100%;" data-placeholder="Pilih Foreman..." required>
                 <option value=""></option>
                 @foreach($foreman as $foreman)
                   <option value="{{ $foreman->name }}">{{ $foreman->employee_id }} - {{ $foreman->name }}</option>
@@ -202,6 +200,7 @@
     jQuery(document).ready(function() {
       $('#email').val('');
       $('#password').val('');
+      $('body').toggleClass("sidebar-collapse");
     });
     CKEDITOR.replace('editor1' ,{
         filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'

@@ -33,13 +33,14 @@ table.table-bordered > tfoot > tr > th{
   border:1px solid rgb(211,211,211);
 }
 #loading, #error { display: none; }
+
 </style>
 @endsection
 @section('header')
 <section class="content-header">
   <h1>
-    {{ $page }}s of {{ $dept_name }}
-    <small>it all starts here</small>
+    {{ $act_name }} {{$frekuensi}} - {{ $dept_name }}
+    <!-- <small>it all starts here</small> -->
   </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url("index/production_report/index/".$id)}}" class="btn btn-warning btn-sm" style="color:white">Back</a>&nbsp
@@ -55,84 +56,29 @@ table.table-bordered > tfoot > tr > th{
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
     {{ session('status') }}
-  </div>   
+  </div>
   @endif
   <div class="row">
     <div class="col-xs-12">
-      <div class="box">
+      <div class="box box-solid">
         <div class="box-body" style="overflow-x: scroll;">
-          <table id="example1" class="table table-bordered table-striped table-hover">
-            <thead style="background-color: rgba(126,86,134,.7);">
-              <tr>
-                <th>Activity Name</th>
-                <th>Activity Alias</th>
-                <th>Frequency</th>
-                <th>Department</th>
-                <th>Activity Type</th>
-                <th>Leader</th>
-                <th>Foreman</th>
-                <th>Standard Time</th>
-                <th>Action</th>
-                <!-- <th>Action</th> -->
-              </tr>
-            </thead>
-            <tbody>
-              @foreach($activity_list as $activity_list)
-              <tr>
-                <td>{{$activity_list->activity_name}}</td>
-                <td>{{$activity_list->activity_alias}}</td>
-                <td>{{$activity_list->frequency}}</td>
-                <td>{{$activity_list->departments->department_name}}</td>
-                <td>{{$activity_list->activity_type}}</td>
-                <td>{{$activity_list->leader_dept}}</td>
-                <td>{{$activity_list->foreman_dept}}</td>
-                <td>
-                  <?php 
-                    $timesplit=explode(':',$activity_list->plan_time);
-                    $min=($timesplit[0]*60)+($timesplit[1])+($timesplit[2]>30?1:0); ?>
-                  {{$min.' Min'}}
-                </td>
-                <td><a class="btn btn-primary btn-sm" href="{{url("index/production_report/activity/".$activity_list->id)}}">Details</a>
-                  @if($activity_list->activity_type == "Audit")
-                  <a class="btn btn-info btn-sm" href="{{url("index/point_check_audit/index/".$activity_list->id)}}">Point Check Master</a>
-                  @endif
-                  @if($activity_list->activity_type == "Laporan Aktivitas")
-                  <a class="btn btn-info btn-sm" href="{{url("index/audit_guidance/index/".$activity_list->id)}}">Schedule Audit IK</a>
-                  @endif
-                  @if($activity_list->activity_type == "Cek Area")
-                  <a class="btn btn-info btn-sm" href="{{url("index/area_check_point/index/".$activity_list->id)}}">Point Check</a>
-                  @endif
-                  @if($activity_list->activity_type == "Jishu Hozen")
-                  <a class="btn btn-info btn-sm" href="{{url("index/jishu_hozen_point/index/".$activity_list->id)}}">Master Pengecekan</a>
-                  @endif
-                </td>
-                <!-- <td>
-                  <center>
-                    <a class="btn btn-info btn-sm" href="{{url('index/activity_list/show', $activity_list->id)}}">View</a>
-                    <a href="{{url('index/activity_list/edit_by_department/'.$activity_list->id.'/'.$activity_list->department_id.'/'.$no)}}" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/activity_list/destroy_by_department") }}', '{{ $activity_list->activity_name }}', '{{ $activity_list->id }}','{{ $activity_list->department_id }}','{{ $no }}');">
-                      Delete
-                    </a>
-                  </center>
-                </td> -->
-              </tr>
-              @endforeach
-            </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <!-- <th></th> -->
-              </tr>
-            </tfoot>
-          </table>
+          <center>
+            @foreach($activity_list as $activity_list)
+          <a class="btn btn-primary" href="{{url('index/production_report/activity/'.$activity_list->id)}}" style="margin-bottom: 10px;white-space: normal;width: 200px;font-size: 17px">{{$activity_list->activity_name}}<br><b style="font-size: 15px">{{$activity_list->leader_dept}}</b></a> <br>
+          @if($activity_list->activity_type == "Audit")
+          <a class="btn btn-info" href="{{url('index/point_check_audit/index/'.$activity_list->id)}}" style="margin-bottom: 10px;white-space: normal;width: 200px;font-size: 17px">Point Check Master</a><br>
+          @endif
+          @if($activity_list->activity_type == "Laporan Aktivitas")
+          <a class="btn btn-info" style="margin-bottom: 10px;white-space: normal;width: 200px;font-size: 17px" href="{{url('index/audit_guidance/index/'.$activity_list->id)}}">Schedule Audit IK</a> <br>
+          @endif
+          @if($activity_list->activity_type == "Cek Area")
+          <a class="btn btn-info" style="margin-bottom: 10px;white-space: normal;width: 200px;font-size: 17px" href="{{url('index/area_check_point/index/'.$activity_list->id)}}">Point Check</a> <br>
+          @endif
+          @if($activity_list->activity_type == "Jishu Hozen")
+          <a class="btn btn-info" style="margin-bottom: 10px;white-space: normal;width: 200px;font-size: 17px" href="{{url('index/jishu_hozen_point/index/'.$activity_list->id)}}">Master Pengecekan</a> <br>
+          @endif
+          @endforeach
+          </center>
         </div>
       </div>
     </div>
@@ -167,6 +113,9 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
   <script>
     jQuery(document).ready(function() {
+
+      $('body').toggleClass("sidebar-collapse");
+
       $('#example1 tfoot th').each( function () {
         var title = $(this).text();
         $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );

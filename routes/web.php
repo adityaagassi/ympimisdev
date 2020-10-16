@@ -16,10 +16,18 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
+Route::get('test1', 'TrialController@test1');
+Route::get('test2', 'TrialController@test2');
+Route::get('test3', 'TrialController@test3');
+Route::get('test4', 'TrialController@test4');
+
+
+
 Route::get('trial2', 'TrialController@trial2');
 
 Route::get('testmail', 'TrialController@testmail');
 Route::get('testprint', 'TrialController@testPrint');
+Route::get('tesurgent', 'MaintenanceController@indexSPKUrgent');
 
 
 Route::get('fetch_trial2', 'StockTakingController@printSummary');
@@ -983,8 +991,21 @@ Route::get('index/ga_control/bento', 'GeneralAffairController@indexBento');
 //STD CONTROL
 Route::get('index/std_control/safety_shoes', 'GeneralController@indexSafetyShoes');
 Route::get('fetch/std_control/safety_shoes', 'GeneralController@fetchSafetyShoes');
+Route::get('fetch/std_control/request_safety_shoes', 'GeneralController@fetchRequestSafetyShoes');
+Route::get('fetch/std_control/detail_safety_shoes', 'GeneralController@fetchDetailSafetyShoes');
 
+
+// STD
 Route::post('input/std_control/safety_shoes', 'GeneralController@inputSafetyShoes');
+
+//PRD
+Route::post('input/std_control/req_safety_shoes', 'GeneralController@inputReqSafetyShoes');
+Route::get('reprint/std_control/safety_shoes', 'GeneralController@reprintReqSafetyShoes');
+
+
+//WH
+Route::get('scan/std_control/safety_shoes', 'GeneralController@scanSafetyShoes');
+Route::post('input/std_control/receive_safety_shoes', 'GeneralController@inputReceiveSafetyShoes');
 
 
 
@@ -1164,10 +1185,24 @@ Route::group(['nav' => 'M27', 'middleware' => 'permission'], function(){
 
 });
 Route::get('index/welding_jig', 'WeldingProcessController@indexWeldingJig');
+
 Route::get('index/welding/jig_data', 'WeldingProcessController@indexWeldingJigData');
 Route::get('fetch/welding/jig_data', 'WeldingProcessController@fetchWeldingJigData');
 Route::post('input/welding/jig_data', 'WeldingProcessController@inputWeldingJigData');
 Route::get('edit/welding/jig_data', 'WeldingProcessController@editWeldingJigData');
+Route::post('update/welding/jig_data', 'WeldingProcessController@updateWeldingJigData');
+Route::get('delete/welding/jig_data/{id}/{jig_id}/{jig_parent}', 'WeldingProcessController@deleteWeldingJigData');
+
+Route::get('index/welding/jig_bom', 'WeldingProcessController@indexWeldingJigBom');
+Route::get('fetch/welding/jig_bom', 'WeldingProcessController@fetchWeldingJigBom');
+Route::post('input/welding/jig_bom', 'WeldingProcessController@inputWeldingJigBom');
+Route::get('edit/welding/jig_bom', 'WeldingProcessController@editWeldingJigBom');
+Route::post('update/welding/jig_bom', 'WeldingProcessController@updateWeldingJigBom');
+Route::get('delete/welding/jig_bom/{id}', 'WeldingProcessController@deleteWeldingJigBom');
+
+Route::get('index/welding/jig_schedule', 'WeldingProcessController@indexWeldingJigSchedule');
+Route::get('fetch/welding/jig_schedule', 'WeldingProcessController@fetchWeldingJigSchedule');
+
 Route::get('index/welding/kensa_jig', 'WeldingProcessController@indexWeldingKensaJig');
 Route::get('scan/welding/jig', 'WeldingProcessController@scanWeldingJig');
 Route::get('fetch/welding/jig_check', 'WeldingProcessController@fetchJigCheck');
@@ -1185,16 +1220,11 @@ Route::get('fetch/welding/detail_monitoring_jig', 'WeldingProcessController@fetc
 //Sakurentsu
 Route::get('index/sakurentsu/upload_sakurentsu', 'SakurentsuController@upload_sakurentsu');
 Route::post('index/sakurentsu/upload_sakurentsu', 'SakurentsuController@upload_file_sakurentsu');
-Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
-Route::get('fetch/sakurentsu', 'SakurentsuController@fetch_sakuretsu');
 Route::get('index/sakurentsu/upload_sakurentsu_translate/{id}', 'SakurentsuController@upload_sakurentsu_translate');
 Route::post('index/sakurentsu/upload_sakurentsu_translate/{id}', 'SakurentsuController@upload_file_sakurentsu_translate');
-
-
-
-
-
-
+Route::get('fetch/sakurentsu', 'SakurentsuController@fetch_sakuretsu');
+Route::get('index/sakurentsu/monitoring', 'SakurentsuController@monitoring');
+Route::get('index/sakurentsu/detail/{id}', 'SakurentsuController@detail_sakurentsu');
 
 //Supplier
 Route::get('index/supplier', 'AccountingController@master_supplier');
@@ -2577,6 +2607,7 @@ Route::get('index/production_audit/signature', 'ProductionAuditController@signat
 Route::post('index/production_audit/save_signature', 'ProductionAuditController@save_signature');
 Route::post('index/production_audit/sendemail/{id}', 'ProductionAuditController@sendemail');
 Route::post('index/production_audit/approval/{id}', 'ProductionAuditController@approval');
+Route::get('fetch/production_audit/point_check', 'ProductionAuditController@fetchPointCheck');
 
 //point check master
 Route::get('index/point_check_audit/index/{id}', 'PointCheckController@index');
@@ -2777,6 +2808,7 @@ Route::group(['nav' => 'M25', 'middleware' => 'permission'], function(){
 	Route::get('index/leader_task_report/leader_task_list/{id}/{leader_name}', 'LeaderTaskReportController@leader_task_list');
 	Route::post('index/leader_task_report/filter_leader_task/{id}/{leader_name}', 'LeaderTaskReportController@filter_leader_task');
 	Route::get('index/leader_task_report/leader_task_detail/{activity_list_id}/{month}', 'LeaderTaskReportController@leader_task_detail');
+	Route::get('index/leader_task_report/fetch_report', 'LeaderTaskReportController@fetchReport');
 });
 
 
@@ -3411,6 +3443,7 @@ Route::get('get/maintenance/pm/session', 'MaintenanceController@getPlannedSessio
 
 Route::get('index/maintenance/pm/monitoring', 'MaintenanceController@indexPlannedMonitoring');
 Route::get('index/maintenance/pm/schedule', 'MaintenanceController@indexPlannedSchedule');
+Route::get('fetch/maintenance/pm/schedule', 'MaintenanceController@getPlannedSchedule');
 // Route::get('fetch/maintenance/planned', 'MaintenanceController@fetchPlanned');
 
 //Assemblies

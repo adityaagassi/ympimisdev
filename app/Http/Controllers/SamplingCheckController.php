@@ -46,6 +46,7 @@ class SamplingCheckController extends Controller
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
         $frequency = $activityList->frequency;
+        $leader = $activityList->leader_dept;
         // var_dump($productionAudit);
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $subsection = DB::select($querySubSection);
@@ -58,6 +59,7 @@ class SamplingCheckController extends Controller
                       'subsection3' => $subsection3,
     				  'departments' => $departments,
                       'frequency' => $frequency,
+                      'leader' => $leader,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
     				  'id' => $id,
@@ -74,6 +76,7 @@ class SamplingCheckController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
         $frequency = $activityList->frequency;
+        $leader = $activityList->leader_dept;
         // var_dump($request->get('product'));
         // var_dump($request->get('date'));
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
@@ -125,6 +128,7 @@ class SamplingCheckController extends Controller
                       'subsection3' => $subsection3,
                       'departments' => $departments,
                       'frequency' => $frequency,
+                      'leader' => $leader,
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,
@@ -305,6 +309,7 @@ class SamplingCheckController extends Controller
         $id_departments = $samplingCheck->activity_lists->departments->id;
         $activity_alias = $samplingCheck->activity_lists->activity_alias;
         $activity_id = $samplingCheck->activity_lists->id;
+        $leader = $samplingCheck->activity_lists->leader_dept;
 
         $data = array('sampling_check_details' => $samplingCheckDetails,
                       'sampling_check' => $samplingCheck,
@@ -312,6 +317,7 @@ class SamplingCheckController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'sampling_id' => $sampling_id,
+                      'leader' => $leader,
                       'activity_id' => $activity_id,
                       'id_departments' => $id_departments);
         return view('sampling_check.details', $data

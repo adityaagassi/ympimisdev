@@ -4,13 +4,9 @@
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
-    Create {{ $activity_name }}
-    <small>it all starts here</small>
+    Buat Sampling Check
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-   <li><a href="#">Examples</a></li>
-   <li class="active">Blank page</li> --}}
  </ol>
 </section>
 @endsection
@@ -35,10 +31,7 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
-    </div>  
+  <div class="box box-solid">
     <form role="form" method="post" action="{{url('index/sampling_check/store/'.$id)}}" enctype="multipart/form-data">
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -46,13 +39,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Department<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="department" placeholder="Enter Department" required value="{{ $departments }}" readonly>
+              <input type="text" class="form-control" name="department" placeholder="Masukkan Department" required value="{{ $departments }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Section<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Choose a Section..." required>
+              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Pilih Section..." required>
                 <option value=""></option>
                 @foreach($section as $section)
                 <option value="{{ $section->section_name }}">{{ $section->section_name }}</option>
@@ -63,7 +56,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Sub Section<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
                 <option value=""></option>
                 @foreach($subsection as $subsection)
                 <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -74,13 +67,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              {{-- <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
+              {{-- <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Pilih Product..." required>
                 <option value=""></option>
                 @foreach($product as $product)
                 <option value="{{ $product->origin_group_name }}">{{ $product->origin_group_name }}</option>
                 @endforeach
               </select> --}}
-              <input type="text" class="form-control" name="product" placeholder="Enter Product" required>
+              <input type="text" class="form-control" name="product" placeholder="Masukkan Product" required>
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -99,25 +92,25 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Nomor Seri / Part<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="no_seri_part" placeholder="Enter Nomor Seri / Part" required>
+              <input type="text" class="form-control" name="no_seri_part" placeholder="Masukkan Nomor Seri / Part" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Jumlah Cek<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="number" class="form-control" name="jumlah_cek" placeholder="Enter Jumlah Cek" required>
+              <input type="number" class="form-control" name="jumlah_cek" placeholder="Masukkan Jumlah Cek" required>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Leader<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" name="leader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+              <input type="text" class="form-control" name="leader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" name="foreman" placeholder="Enter Foreman" value="{{ $foreman }}" readonly>
+              <input type="text" class="form-control" name="foreman" placeholder="Masukkan Foreman" value="{{ $foreman }}" readonly>
             </div>
           </div>
           <div class="col-sm-4 col-sm-offset-6">
@@ -148,6 +141,7 @@
     });
 
     jQuery(document).ready(function() {
+      $('body').toggleClass("sidebar-collapse");
       $('#email').val('');
       $('#password').val('');
     });

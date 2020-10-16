@@ -66,191 +66,194 @@ class LeaderTaskReportController extends Controller
         $role_code = Auth::user()->role_code;
         $name = Auth::user()->name;
         $month = date('Y-m');
-        $activity_list = DB::SELECT("SELECT detail.id_activity_list,
-                                            detail.activity_type,
-                                            detail.activity_name,
-                                            detail.frequency,
-                                            detail.jumlah,
-                                            detail.link
-                from
-                (select activity_type, activity_lists.id as id_activity_list, activity_name,frequency,
-                IF(activity_type = 'Audit',
-                        (SELECT DISTINCT(CONCAT('/index/leader_task_report/leader_task_detail/',id_activity_list,'/','".$month."')) FROM production_audits
-                        where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Training',
-                        (SELECT DISTINCT(CONCAT('/index/training_report/print_training_approval/',id_activity_list,'/','".$month."')) FROM training_reports
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Sampling Check',
-                        (SELECT DISTINCT(CONCAT('/index/sampling_check/print_sampling_email/',id_activity_list,'/','".$month."')) FROM sampling_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pengecekan Foto',
-                        (SELECT DISTINCT(CONCAT('/index/daily_check_fg/print_daily_check_email/',id_activity_list,'/','".$month."')) FROM daily_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Laporan Aktivitas',
-                        (SELECT DISTINCT(CONCAT('/index/audit_report_activity/print_audit_report_email/',id_activity_list,'/','".$month."')) FROM audit_report_activities
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pemahaman Proses',
-                        (SELECT DISTINCT(CONCAT('/index/audit_process/print_audit_process_email/',id_activity_list,'/','".$month."')) FROM audit_processes
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pengecekan',
-                        (SELECT DISTINCT(CONCAT('/index/leader_task_report/leader_task_detail/',id_activity_list,'/','".$month."')) FROM first_product_audit_details
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Interview',
-                        (SELECT DISTINCT(CONCAT('/index/interview/print_approval/',id_activity_list,'/','".$month."')) FROM interviews
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Labelisasi',
-                        (SELECT DISTINCT(CONCAT('/index/labeling/print_labeling_email/',id_activity_list,'/','".$month."')) FROM labelings
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Cek Area',
-                        (SELECT DISTINCT(CONCAT('/index/area_check/print_area_check_email/',id_activity_list,'/','".$month."')) FROM area_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Jishu Hozen',
-                        (SELECT DISTINCT(CONCAT('/index/jishu_hozen/print_jishu_hozen_approval/',id_activity_list,'/','".$month."')) FROM jishu_hozens
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Cek APD',
-                        (SELECT DISTINCT(CONCAT('/index/apd_check/print_apd_check_email/',id_activity_list,'/','".$month."')) FROM apd_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Weekly Report',
-                        (SELECT DISTINCT(CONCAT('/index/weekly_report/print_weekly_report_email/',id_activity_list,'/','".$month."')) FROM weekly_activity_reports
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Temuan NG',
-                        (SELECT DISTINCT(CONCAT('/index/ng_finding/print_ng_finding_email/',id_activity_list,'/','".$month."')) FROM ng_findings
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),null))))))))))))))
-                as link,
-                IF(activity_type = 'Audit',
-                        (SELECT count(DISTINCT(week_name)) FROM production_audits
-                        where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Training',
-                        (SELECT count(DISTINCT(leader)) FROM training_reports
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Sampling Check',
-                        (SELECT count(DISTINCT(week_name)) FROM sampling_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pengecekan Foto',
-                        (SELECT count(id) FROM daily_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Laporan Aktivitas',
-                        (SELECT count(DISTINCT(leader)) FROM audit_report_activities
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pemahaman Proses',
-                        (SELECT count(DISTINCT(week_name)) FROM audit_processes
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pengecekan',
-                        (SELECT count(DISTINCT(leader)) FROM first_product_audit_details
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Interview',
-                        (SELECT COUNT(DISTINCT(leader)) FROM interviews
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Labelisasi',
-                        (SELECT count(DISTINCT(leader)) FROM labelings
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Cek Area',
-                        (SELECT count(DISTINCT(id)) FROM area_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Jishu Hozen',
-                        (SELECT count(DISTINCT(leader)) FROM jishu_hozens
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Cek APD',
-                        (SELECT count(DISTINCT(week_name)) FROM apd_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Weekly Report',
-                        (SELECT count(DISTINCT(week_name)) FROM weekly_activity_reports
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Temuan NG',
-                        (SELECT count(DISTINCT(id)) FROM ng_findings
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),null))))))))))))))
-                as jumlah
-                        from activity_lists
-                        where leader_dept = '".$leader_name."'
-                        and department_id = '".$id."'
-                        and activity_name is not null
-                        and deleted_at is null) detail");
+        // $activity_list = DB::SELECT("SELECT detail.id_activity_list,
+        //                                     detail.activity_type,
+        //                                     detail.activity_name,
+        //                                     detail.frequency,
+        //                                     detail.jumlah,
+        //                                     detail.link
+        //         from
+        //         (select activity_type, activity_lists.id as id_activity_list, activity_name,frequency,
+        //         IF(activity_type = 'Audit',
+        //                 (SELECT DISTINCT(CONCAT('/index/leader_task_report/leader_task_detail/',id_activity_list,'/','".$month."')) FROM production_audits
+        //                 where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Training',
+        //                 (SELECT DISTINCT(CONCAT('/index/training_report/print_training_approval/',id_activity_list,'/','".$month."')) FROM training_reports
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Sampling Check',
+        //                 (SELECT DISTINCT(CONCAT('/index/sampling_check/print_sampling_email/',id_activity_list,'/','".$month."')) FROM sampling_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pengecekan Foto',
+        //                 (SELECT DISTINCT(CONCAT('/index/daily_check_fg/print_daily_check_email/',id_activity_list,'/','".$month."')) FROM daily_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Laporan Aktivitas',
+        //                 (SELECT DISTINCT(CONCAT('/index/audit_report_activity/print_audit_report_email/',id_activity_list,'/','".$month."')) FROM audit_report_activities
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pemahaman Proses',
+        //                 (SELECT DISTINCT(CONCAT('/index/audit_process/print_audit_process_email/',id_activity_list,'/','".$month."')) FROM audit_processes
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pengecekan',
+        //                 (SELECT DISTINCT(CONCAT('/index/leader_task_report/leader_task_detail/',id_activity_list,'/','".$month."')) FROM first_product_audit_details
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Interview',
+        //                 (SELECT DISTINCT(CONCAT('/index/interview/print_approval/',id_activity_list,'/','".$month."')) FROM interviews
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Labelisasi',
+        //                 (SELECT DISTINCT(CONCAT('/index/labeling/print_labeling_email/',id_activity_list,'/','".$month."')) FROM labelings
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Cek Area',
+        //                 (SELECT DISTINCT(CONCAT('/index/area_check/print_area_check_email/',id_activity_list,'/','".$month."')) FROM area_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Jishu Hozen',
+        //                 (SELECT DISTINCT(CONCAT('/index/jishu_hozen/print_jishu_hozen_approval/',id_activity_list,'/','".$month."')) FROM jishu_hozens
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Cek APD',
+        //                 (SELECT DISTINCT(CONCAT('/index/apd_check/print_apd_check_email/',id_activity_list,'/','".$month."')) FROM apd_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Weekly Report',
+        //                 (SELECT DISTINCT(CONCAT('/index/weekly_report/print_weekly_report_email/',id_activity_list,'/','".$month."')) FROM weekly_activity_reports
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Temuan NG',
+        //                 (SELECT DISTINCT(CONCAT('/index/ng_finding/print_ng_finding_email/',id_activity_list,'/','".$month."')) FROM ng_findings
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),null))))))))))))))
+        //         as link,
+        //         IF(activity_type = 'Audit',
+        //                 (SELECT count(DISTINCT(week_name)) FROM production_audits
+        //                 where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Training',
+        //                 (SELECT count(DISTINCT(leader)) FROM training_reports
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Sampling Check',
+        //                 (SELECT count(DISTINCT(week_name)) FROM sampling_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pengecekan Foto',
+        //                 (SELECT count(id) FROM daily_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Laporan Aktivitas',
+        //                 (SELECT count(DISTINCT(leader)) FROM audit_report_activities
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pemahaman Proses',
+        //                 (SELECT count(DISTINCT(week_name)) FROM audit_processes
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pengecekan',
+        //                 (SELECT count(DISTINCT(leader)) FROM first_product_audit_details
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Interview',
+        //                 (SELECT COUNT(DISTINCT(leader)) FROM interviews
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Labelisasi',
+        //                 (SELECT count(DISTINCT(leader)) FROM labelings
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Cek Area',
+        //                 (SELECT count(DISTINCT(id)) FROM area_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Jishu Hozen',
+        //                 (SELECT count(DISTINCT(leader)) FROM jishu_hozens
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Cek APD',
+        //                 (SELECT count(DISTINCT(week_name)) FROM apd_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Weekly Report',
+        //                 (SELECT count(DISTINCT(week_name)) FROM weekly_activity_reports
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Temuan NG',
+        //                 (SELECT count(DISTINCT(id)) FROM ng_findings
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),null))))))))))))))
+        //         as jumlah
+        //                 from activity_lists
+        //                 where leader_dept = '".$leader_name."'
+        //                 and department_id = '".$id."'
+        //                 and activity_name is not null
+        //                 and deleted_at is null) detail");
+
+        $activity_list = ActivityList::where('department_id',$id)->where('leader_dept',$leader_name)->where('deleted_at', null)->get();
 		$monthTitle = date("F Y", strtotime($month));
         $data = array('activity_list' => $activity_list,
                       'leader_name' => $leader_name,
                       'monthTitle' => $monthTitle,
+                      'month' => $month,
                       'role_code' => $role_code,
                       'name' => $name,
                       'id' => $id);
@@ -268,191 +271,193 @@ class LeaderTaskReportController extends Controller
         }
         $role_code = Auth::user()->role_code;
         $name = Auth::user()->name;
-        $activity_list = DB::SELECT("SELECT detail.id_activity_list,
-                                            detail.activity_type,
-                                            detail.activity_name,
-                                            detail.frequency,
-                                            detail.jumlah,
-                                            detail.link
-                from
-                (select activity_type, activity_lists.id as id_activity_list, activity_name,frequency,
-                IF(activity_type = 'Audit',
-                        (SELECT DISTINCT(CONCAT('/index/leader_task_report/leader_task_detail/',id_activity_list,'/','".$month."')) FROM production_audits
-                        where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Training',
-                        (SELECT DISTINCT(CONCAT('/index/training_report/print_training_approval/',id_activity_list,'/','".$month."')) FROM training_reports
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Sampling Check',
-                        (SELECT DISTINCT(CONCAT('/index/sampling_check/print_sampling_email/',id_activity_list,'/','".$month."')) FROM sampling_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pengecekan Foto',
-                        (SELECT DISTINCT(CONCAT('/index/daily_check_fg/print_daily_check_email/',id_activity_list,'/','".$month."')) FROM daily_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Laporan Aktivitas',
-                        (SELECT DISTINCT(CONCAT('/index/audit_report_activity/print_audit_report_email/',id_activity_list,'/','".$month."')) FROM audit_report_activities
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pemahaman Proses',
-                        (SELECT DISTINCT(CONCAT('/index/audit_process/print_audit_process_email/',id_activity_list,'/','".$month."')) FROM audit_processes
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pengecekan',
-                        (SELECT DISTINCT(CONCAT('/index/leader_task_report/leader_task_detail/',id_activity_list,'/','".$month."')) FROM first_product_audit_details
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Interview',
-                        (SELECT DISTINCT(CONCAT('/index/interview/print_approval/',id_activity_list,'/','".$month."')) FROM interviews
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Labelisasi',
-                        (SELECT DISTINCT(CONCAT('/index/labeling/print_labeling_email/',id_activity_list,'/','".$month."')) FROM labelings
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Cek Area',
-                        (SELECT DISTINCT(CONCAT('/index/area_check/print_area_check_email/',id_activity_list,'/','".$month."')) FROM area_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Jishu Hozen',
-                        (SELECT DISTINCT(CONCAT('/index/jishu_hozen/print_jishu_hozen_approval/',id_activity_list,'/','".$month."')) FROM jishu_hozens
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Cek APD',
-                        (SELECT DISTINCT(CONCAT('/index/apd_check/print_apd_check_email/',id_activity_list,'/','".$month."')) FROM apd_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Weekly Report',
-                        (SELECT DISTINCT(CONCAT('/index/weekly_report/print_weekly_report_email/',id_activity_list,'/','".$month."')) FROM weekly_activity_reports
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Temuan NG',
-                        (SELECT DISTINCT(CONCAT('/index/ng_finding/print_ng_finding_email/',id_activity_list,'/','".$month."')) FROM ng_findings
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),null))))))))))))))
-                as link,
-                IF(activity_type = 'Audit',
-                        (SELECT count(DISTINCT(week_name)) FROM production_audits
-                        where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Training',
-                        (SELECT count(DISTINCT(leader)) FROM training_reports
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Sampling Check',
-                        (SELECT count(DISTINCT(week_name)) FROM sampling_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pengecekan Foto',
-                        (SELECT count(id) FROM daily_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Laporan Aktivitas',
-                        (SELECT count(DISTINCT(leader)) FROM audit_report_activities
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pemahaman Proses',
-                        (SELECT count(DISTINCT(week_name)) FROM audit_processes
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Pengecekan',
-                        (SELECT count(DISTINCT(leader)) FROM first_product_audit_details
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Interview',
-                        (SELECT COUNT(DISTINCT(leader)) FROM interviews
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Labelisasi',
-                        (SELECT count(DISTINCT(leader)) FROM labelings
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Cek Area',
-                        (SELECT count(DISTINCT(id)) FROM area_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Jishu Hozen',
-                        (SELECT count(DISTINCT(leader)) FROM jishu_hozens
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Cek APD',
-                        (SELECT count(DISTINCT(week_name)) FROM apd_checks
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Weekly Report',
-                        (SELECT count(DISTINCT(week_name)) FROM weekly_activity_reports
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),
-                    IF(activity_type = 'Temuan NG',
-                        (SELECT count(DISTINCT(id)) FROM ng_findings
-                        where leader = '".$leader_name."'
-                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
-                        and activity_list_id = id_activity_list
-                        and deleted_at is null),null))))))))))))))
-                as jumlah
-                        from activity_lists
-                        where leader_dept = '".$leader_name."'
-                        and department_id = '".$id."'
-                        and activity_name is not null
-                        and deleted_at is null) detail");
+        // $activity_list = DB::SELECT("SELECT detail.id_activity_list,
+        //                                     detail.activity_type,
+        //                                     detail.activity_name,
+        //                                     detail.frequency,
+        //                                     detail.jumlah,
+        //                                     detail.link
+        //         from
+        //         (select activity_type, activity_lists.id as id_activity_list, activity_name,frequency,
+        //         IF(activity_type = 'Audit',
+        //                 (SELECT DISTINCT(CONCAT('/index/leader_task_report/leader_task_detail/',id_activity_list,'/','".$month."')) FROM production_audits
+        //                 where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Training',
+        //                 (SELECT DISTINCT(CONCAT('/index/training_report/print_training_approval/',id_activity_list,'/','".$month."')) FROM training_reports
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Sampling Check',
+        //                 (SELECT DISTINCT(CONCAT('/index/sampling_check/print_sampling_email/',id_activity_list,'/','".$month."')) FROM sampling_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pengecekan Foto',
+        //                 (SELECT DISTINCT(CONCAT('/index/daily_check_fg/print_daily_check_email/',id_activity_list,'/','".$month."')) FROM daily_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Laporan Aktivitas',
+        //                 (SELECT DISTINCT(CONCAT('/index/audit_report_activity/print_audit_report_email/',id_activity_list,'/','".$month."')) FROM audit_report_activities
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pemahaman Proses',
+        //                 (SELECT DISTINCT(CONCAT('/index/audit_process/print_audit_process_email/',id_activity_list,'/','".$month."')) FROM audit_processes
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pengecekan',
+        //                 (SELECT DISTINCT(CONCAT('/index/leader_task_report/leader_task_detail/',id_activity_list,'/','".$month."')) FROM first_product_audit_details
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Interview',
+        //                 (SELECT DISTINCT(CONCAT('/index/interview/print_approval/',id_activity_list,'/','".$month."')) FROM interviews
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Labelisasi',
+        //                 (SELECT DISTINCT(CONCAT('/index/labeling/print_labeling_email/',id_activity_list,'/','".$month."')) FROM labelings
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Cek Area',
+        //                 (SELECT DISTINCT(CONCAT('/index/area_check/print_area_check_email/',id_activity_list,'/','".$month."')) FROM area_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Jishu Hozen',
+        //                 (SELECT DISTINCT(CONCAT('/index/jishu_hozen/print_jishu_hozen_approval/',id_activity_list,'/','".$month."')) FROM jishu_hozens
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Cek APD',
+        //                 (SELECT DISTINCT(CONCAT('/index/apd_check/print_apd_check_email/',id_activity_list,'/','".$month."')) FROM apd_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Weekly Report',
+        //                 (SELECT DISTINCT(CONCAT('/index/weekly_report/print_weekly_report_email/',id_activity_list,'/','".$month."')) FROM weekly_activity_reports
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Temuan NG',
+        //                 (SELECT DISTINCT(CONCAT('/index/ng_finding/print_ng_finding_email/',id_activity_list,'/','".$month."')) FROM ng_findings
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),null))))))))))))))
+        //         as link,
+        //         IF(activity_type = 'Audit',
+        //                 (SELECT count(DISTINCT(week_name)) FROM production_audits
+        //                 where DATE_FORMAT(production_audits.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Training',
+        //                 (SELECT count(DISTINCT(leader)) FROM training_reports
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(training_reports.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Sampling Check',
+        //                 (SELECT count(DISTINCT(week_name)) FROM sampling_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(sampling_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pengecekan Foto',
+        //                 (SELECT count(id) FROM daily_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(daily_checks.production_date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Laporan Aktivitas',
+        //                 (SELECT count(DISTINCT(leader)) FROM audit_report_activities
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pemahaman Proses',
+        //                 (SELECT count(DISTINCT(week_name)) FROM audit_processes
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(audit_processes.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Pengecekan',
+        //                 (SELECT count(DISTINCT(leader)) FROM first_product_audit_details
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Interview',
+        //                 (SELECT COUNT(DISTINCT(leader)) FROM interviews
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(interviews.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Labelisasi',
+        //                 (SELECT count(DISTINCT(leader)) FROM labelings
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(labelings.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Cek Area',
+        //                 (SELECT count(DISTINCT(id)) FROM area_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(area_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Jishu Hozen',
+        //                 (SELECT count(DISTINCT(leader)) FROM jishu_hozens
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(jishu_hozens.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Cek APD',
+        //                 (SELECT count(DISTINCT(week_name)) FROM apd_checks
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(apd_checks.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Weekly Report',
+        //                 (SELECT count(DISTINCT(week_name)) FROM weekly_activity_reports
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),
+        //             IF(activity_type = 'Temuan NG',
+        //                 (SELECT count(DISTINCT(id)) FROM ng_findings
+        //                 where leader = '".$leader_name."'
+        //                 and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+        //                 and activity_list_id = id_activity_list
+        //                 and deleted_at is null),null))))))))))))))
+        //         as jumlah
+        //                 from activity_lists
+        //                 where leader_dept = '".$leader_name."'
+        //                 and department_id = '".$id."'
+        //                 and activity_name is not null
+        //                 and deleted_at is null) detail");
+        $activity_list = ActivityList::where('department_id',$id)->where('leader_dept',$leader_name)->where('deleted_at', null)->get();
 		$monthTitle = date("F Y", strtotime($month));
         $data = array('activity_list' => $activity_list,
                       'leader_name' => $leader_name,
                       'monthTitle' => $monthTitle,
+                      'month' => $month,
                       'role_code' => $role_code,
                       'name' => $name,
                       'id' => $id);
@@ -493,5 +498,91 @@ class LeaderTaskReportController extends Controller
                       'activity_list_id' => $activity_list_id);
         return view('leader_task_report.leader_task_detail', $data
           )->with('page', 'Approval Leader Task Monitoring');
+    }
+
+    public function fetchReport(Request $request)
+    {
+        try {
+            $activity_type = $request->get('activity_type');
+            $id = $request->get('id');
+            $activity_list_id = $request->get('activity_list_id');
+            $frequency = $request->get('frequency');
+            $month = $request->get('month');
+
+            if ($month == "") {
+                $month = date('Y-m');
+            }
+
+            if ($activity_type == 'Audit') {
+              $activity = DB::SELECT('SELECT *,
+                    CONCAT("/index/leader_task_report/leader_task_detail/",activity_list_id,"/","'.$month.'") as link
+                FROM
+                    production_audits 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( production_audits.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND production_audits.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Training') {
+              $activity = DB::SELECT('SELECT
+                    * 
+                FROM
+                    training_reports 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( training_reports.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND training_reports.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Sampling Check') {
+              $act_name = 'Sampling Check FG / KD';
+            }
+            elseif ($activity_type == 'Laporan Aktivitas') {
+              $act_name = 'Laporan Audit IK';
+            }
+            elseif ($activity_type == 'Pemahaman Proses') {
+              $act_name = 'Audit Pemahaman Proses';
+            }
+            elseif ($activity_type == 'Pengecekan') {
+              $act_name = 'Cek Produk Pertama';
+            }
+            elseif ($activity_type == 'Interview') {
+              $act_name = 'Interview Pointing Call';
+            }
+            elseif ($activity_type == 'Pengecekan Foto') {
+              $act_name = 'Cek FG / KD Harian';
+            }
+            elseif ($activity_type == 'Labelisasi') {
+              $act_name = 'Audit Label Safety';
+            }
+            elseif ($activity_type == 'Cek Area') {
+              $act_name = 'Cek Safety Area Kerja';
+            }
+            elseif ($activity_type == 'Jishu Hozen') {
+              $act_name = 'Audit Jishu Hozen';
+            }
+            elseif ($activity_type == 'Cek APD') {
+              $act_name = 'Cek APD';
+            }
+            elseif ($activity_type = 'Weekly Report') {
+              $act_name = 'Weekly Report';
+            }
+            elseif ($activity_type = 'Temuan NG') {
+              $act_name = 'Temuan NG';
+            }
+          $response = array(
+            'status' => true,
+            'message' => 'Success Get Data',
+            'activity_list' => $activity,
+          );
+          return Response::json($response);
+        } catch (\Exception $e) {
+          $response = array(
+            'status' => false,
+            'message' => $e->getMessage(),
+          );
+          return Response::json($response);
+        }
     }
 }

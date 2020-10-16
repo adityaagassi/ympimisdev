@@ -82,10 +82,16 @@ class ProductionReportController extends Controller
         $activity->save();
 
         $role_code = Auth::user()->role_code;
-        $queryActivity = "SELECT DISTINCT(activity_type),frequency,no FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null ORDER BY frequency";
+        $name = Auth::user()->name;
+        if ($role_code == 'MIS') {
+            $queryActivity = "SELECT DISTINCT(activity_type),frequency,no FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null ORDER BY frequency";
+        }else{
+            $queryActivity = "SELECT DISTINCT(activity_type),frequency,no,leader_dept FROM activity_lists where department_id = '".$id."' and activity_lists.activity_name is not null and activity_lists.deleted_at is null ORDER BY frequency";
+        }
     	$activityList = DB::select($queryActivity);
         $data = array('activity_list' => $activityList,
                       'role_code' => $role_code,
+                      'name' => $name,
                       'id' => $id);
         return view('production_report.index', $data
           )->with('page', 'Leader Task Monitoring')->with('dept', $department);
@@ -2281,7 +2287,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0)))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Temuan NG',
+                        (SELECT count(*) FROM ng_findings
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0))))))))))))))
                 as jumlah_approval,
                 IF(activity_type = 'Audit',
                         (SELECT DISTINCT(CONCAT('/index/production_report/approval_detail/',id_activity_list,'/','".$month."')) FROM production_audits
@@ -2385,7 +2399,15 @@ class ProductionReportController extends Controller
                         and DATE_FORMAT(weekly_activity_reports.date,'%Y-%m') = '".$month."'
                         and activity_list_id = id_activity_list
                         and approval is null
-                        and deleted_at is null),0)))))))))))))
+                        and deleted_at is null),
+                    IF(activity_type = 'Temuan NG',
+                        (SELECT DISTINCT(CONCAT('/index/ng_finding/print_ng_finding_email/',id_activity_list,'/','".$month."')) FROM ng_findings
+                        where send_status = 'Sent'
+                        and leader = '".$leader_name."'
+                        and DATE_FORMAT(ng_findings.date,'%Y-%m') = '".$month."'
+                        and activity_list_id = id_activity_list
+                        and approval is null
+                        and deleted_at is null),0))))))))))))))
                 as link
                         from activity_lists
                         where leader_dept = '".$leader_name."'

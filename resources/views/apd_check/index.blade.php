@@ -40,8 +40,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader }}
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+	        Buat Audit
+	    </button>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -66,11 +68,11 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/apd_check/filter_apd_check/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -89,7 +91,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/12/'.$frequency) }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/apd_check/index/'.$id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
@@ -99,7 +101,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Cetak {{ $activity_name }}</h3>
 						</div>
 						<form target="_blank" role="form" method="post" action="{{url('index/apd_check/print_apd_check/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -126,7 +128,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Kirim Email ke Foreman</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/apd_check/sendemail/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -145,94 +147,79 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
+										<button type="submit" class="btn btn-primary col-sm-14">Kirim Email</button>
 									</div>
 								</div>
 							</div>
 						</form>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="col-md-12">
-							<div class="col-md-12">
-								<div class="form-group pull-right">
-									<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								        Create
-								    </button>
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Sub Section</th>
-												<th>Date</th>
-												<th>PIC</th>
-												<th>Proses</th>
-												<th>Jenis APD</th>
-												<th>Kondisi</th>
-												<th>Foto Aktual</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($apd_check as $apd_check)
-											<tr>
-												<td>{{$apd_check->subsection}}</td>
-												<td>{{$apd_check->date}}</td>
-												<td>{{$apd_check->pic}}</td>
-												<td>{{$apd_check->proses}}</td>
-												<td>{{$apd_check->jenis_apd}}</td>
-												<td>{{$apd_check->kondisi}}</td>
-												<td><?php echo $apd_check->foto_aktual ?></td>
-												<td>
-													@if($apd_check->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($apd_check->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_apd_check('{{ url("index/apd_check/update") }}','{{ $apd_check->id }}');">
-											               Edit
-											            </button>
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/apd_check/destroy") }}','{{ $apd_check->proses }} - {{ $apd_check->date }}','{{ $id }}', '{{ $apd_check->id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+						<div class="col-xs-12" style="overflow-x: scroll;">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Sub Section</th>
+										<th>Date</th>
+										<th>PIC</th>
+										<th>Proses</th>
+										<th>Jenis APD</th>
+										<th>Kondisi</th>
+										<th>Foto Aktual</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($apd_check as $apd_check)
+									<tr>
+										<td>{{$apd_check->subsection}}</td>
+										<td>{{$apd_check->date}}</td>
+										<td>{{$apd_check->pic}}</td>
+										<td>{{$apd_check->proses}}</td>
+										<td>{{$apd_check->jenis_apd}}</td>
+										<td>{{$apd_check->kondisi}}</td>
+										<td><?php echo $apd_check->foto_aktual ?></td>
+										<td>
+											@if($apd_check->send_status == "")
+						                		<label class="label label-danger">Not Yet Sent</label>
+						                	@else
+						                		<label class="label label-success">Sent</label>
+						                	@endif
+										</td>
+										<td>@if($apd_check->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_apd_check('{{ url("index/apd_check/update") }}','{{ $apd_check->id }}');">
+									               Edit
+									            </button>
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/apd_check/destroy") }}','{{ $apd_check->proses }} - {{ $apd_check->date }}','{{ $id }}', '{{ $apd_check->id }}');">
+													Delete
+												</a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -265,7 +252,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create APD Check</b></h4>
+        <h4 class="modal-title" align="center"><b>Buat Cek APD</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -278,7 +265,7 @@
 	            </div>
 	            <div class="form-group">
 	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+	                <select class="form-control" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
 	                  @foreach($subsection as $subsection)
 	                  <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
 	                  @endforeach
@@ -290,11 +277,11 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Proses</label>
-				  <input type="text" name="inputproses" id="inputproses" class="form-control" required="required" title="" placeholder="Enter Proses">
+				  <input type="text" name="inputproses" id="inputproses" class="form-control" required="required" title="" placeholder="Masukkan Proses">
 	            </div>
 	            <div class="form-group">
 	              <label>Jenis APD<span class="text-red">*</span></label><br>
-	                <!-- <select class="form-control" name="inputjenisapd" id="inputjenisapd" style="width: 100%;" data-placeholder="Choose a Jenis APD..." required> -->
+	                <!-- <select class="form-control" name="inputjenisapd" id="inputjenisapd" style="width: 100%;" data-placeholder="Pilih Jenis APD..." required> -->
 	                  @foreach($apd as $apd)
 	                    <!-- <option value="{{ $apd }}">{{ $apd }}</option> -->
 	                    <label class="checkbox-inline">
@@ -320,7 +307,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label>PIC<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="inputpic" id="inputpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+	                <select class="form-control select2" name="inputpic" id="inputpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 	                  <option value=""></option>
 	                  @foreach($pic as $pic)
 	                    <option value="{{ $pic->name }}">{{ $pic->employee_id }} - {{ $pic->name }}</option>
@@ -361,7 +348,7 @@
 	            </div>
 	            <div class="form-group">
 	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+	                <select class="form-control" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
 	                  @foreach($subsection2 as $subsection2)
 	                  <option value="{{ $subsection2->sub_section_name }}">{{ $subsection2->sub_section_name }}</option>
 	                  @endforeach
@@ -373,11 +360,11 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Proses</label>
-				  <input type="text" name="editproses" id="editproses" class="form-control" required="required" title="" placeholder="Enter Proses">
+				  <input type="text" name="editproses" id="editproses" class="form-control" required="required" title="" placeholder="Masukkan Proses">
 	            </div>
 	            <div class="form-group">
 	              <label>Jenis APD<span class="text-red">*</span></label>
-	                <select class="form-control" name="editjenisapd" id="editjenisapd" style="width: 100%;" data-placeholder="Choose a Jenis APD..." required>	                  
+	                <select class="form-control" name="editjenisapd" id="editjenisapd" style="width: 100%;" data-placeholder="Pilih Jenis APD..." required>	                  
 	                  @foreach($apd2 as $apd2)
 	                    <option value="{{ $apd2 }}">{{ $apd2 }}</option>
 	                  @endforeach
@@ -400,7 +387,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label>PIC<span class="text-red">*</span></label>
-	                <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+	                <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 	                  <option value=""></option>
 	                  @foreach($pic2 as $pic2)
 	                    <option value="{{ $pic2->name }}">{{ $pic2->employee_id }} - {{ $pic2->name }}</option>
@@ -434,6 +421,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			dropdownParent: $('#create-modal')
 		});
@@ -642,7 +630,7 @@
 					window.location.reload();
 				} else {
 					audio_error.play();
-					openErrorGritter('Error','Create APD Check Failed');
+					openErrorGritter('Error','Gagal Buat Audit');
 				}
 			});
 		}

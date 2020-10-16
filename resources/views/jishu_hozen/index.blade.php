@@ -40,8 +40,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }} - {{ $jishu_hozen_point->nama_pengecekan }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader }}
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+	        Buat Audit
+	    </button>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -66,11 +68,11 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-12">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/jishu_hozen/filter_jishu_hozen/'.$id.'/'.$jishu_hozen_point_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -102,85 +104,78 @@
 							<div class="col-md-12">
 								<div class="form-group pull-right">
 									{{-- <a href="{{ url('index/daily_check_fg/create/'.$id.'/'.$product) }}" class="btn btn-primary">Create {{ $activity_alias }}</a> --}}
-									<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								        Create
-								    </button>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Sub Section</th>
-												<th>Nama Pengecekan</th>
-												<th>Date</th>
-												<th>Month</th>
-												<th>Foto Aktual</th>
-												<th>PIC</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($jishu_hozen as $jishu_hozen)
-											<tr>
-												<td>{{$jishu_hozen->subsection}}</td>
-												<td>{{$jishu_hozen->jishu_hozen_point->nama_pengecekan}}</td>
-												<td>{{$jishu_hozen->date}}</td>
-												<td>{{$jishu_hozen->month}}</td>
-												<td><?php echo $jishu_hozen->foto_aktual ?></td>
-												<td>{{$jishu_hozen->pic}}</td>
-												<td>
-													@if($jishu_hozen->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($jishu_hozen->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														<a target="_blank" class="btn btn-info btn-sm" href="{{url('index/jishu_hozen/print_jishu_hozen/'.$id.'/'.$jishu_hozen->id.'/'.$jishu_hozen->month)}}">Print</a>
-														@if($jishu_hozen->send_status == "")
-														<a class="btn btn-primary btn-sm" href="{{url('index/jishu_hozen/sendemail/'.$jishu_hozen->id.'/'.$jishu_hozen_point_id)}}">Send Email</a>
-														@endif
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_jishu_hozen('{{ url("index/jishu_hozen/update") }}','{{ $id }}','{{ $jishu_hozen_point_id }}','{{ $jishu_hozen->id }}');">
-											               Edit
-											            </button>
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/jishu_hozen/destroy") }}','{{ $jishu_hozen->jishu_hozen_point->nama_pengecekan }} - {{ $jishu_hozen->month }}','{{ $id }}','{{ $jishu_hozen_point_id }}' ,'{{ $jishu_hozen->id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+						<div class="col-xs-12" style="overflow-x: scroll;">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Sub Section</th>
+										<th>Nama Pengecekan</th>
+										<th>Date</th>
+										<th>Month</th>
+										<th>Foto Aktual</th>
+										<th>PIC</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($jishu_hozen as $jishu_hozen)
+									<tr>
+										<td>{{$jishu_hozen->subsection}}</td>
+										<td>{{$jishu_hozen->jishu_hozen_point->nama_pengecekan}}</td>
+										<td>{{$jishu_hozen->date}}</td>
+										<td>{{$jishu_hozen->month}}</td>
+										<td><?php echo $jishu_hozen->foto_aktual ?></td>
+										<td>{{$jishu_hozen->pic}}</td>
+										<td>
+											@if($jishu_hozen->send_status == "")
+						                		<label class="label label-danger">Belum Terkirim</label>
+						                	@else
+						                		<label class="label label-success">Terkirim</label>
+						                	@endif
+										</td>
+										<td>@if($jishu_hozen->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												<a target="_blank" class="btn btn-info btn-sm" href="{{url('index/jishu_hozen/print_jishu_hozen/'.$id.'/'.$jishu_hozen->id.'/'.$jishu_hozen->month)}}">Cetak</a>
+												@if($jishu_hozen->send_status == "")
+												<a class="btn btn-primary btn-sm" href="{{url('index/jishu_hozen/sendemail/'.$jishu_hozen->id.'/'.$jishu_hozen_point_id)}}">Kirim Email</a>
+												@endif
+												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_jishu_hozen('{{ url("index/jishu_hozen/update") }}','{{ $id }}','{{ $jishu_hozen_point_id }}','{{ $jishu_hozen->id }}');">
+									               Edit
+									            </button>
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/jishu_hozen/destroy") }}','{{ $jishu_hozen->jishu_hozen_point->nama_pengecekan }} - {{ $jishu_hozen->month }}','{{ $id }}','{{ $jishu_hozen_point_id }}' ,'{{ $jishu_hozen->id }}');">
+													Delete
+												</a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -228,11 +223,11 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Nama Pengecekan</label>
-				  <input type="text" class="form-control" name="inputnamapengecekan" id="inputnamapengecekan" placeholder="Enter Leader" value="{{ $jishu_hozen_point->nama_pengecekan }}" readonly>
+				  <input type="text" class="form-control" name="inputnamapengecekan" id="inputnamapengecekan" placeholder="Masukkan Leader" value="{{ $jishu_hozen_point->nama_pengecekan }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" class="form-control" name="date" id="inputdate" placeholder="Enter Leader" value="{{ date('Y-m-d') }}" readonly>
+				  <input type="text" class="form-control" name="date" id="inputdate" placeholder="Masukkan Leader" value="{{ date('Y-m-d') }}" readonly>
 	            </div>
 	            <div class="form-group">
 	            	<label for="">Month</label>
@@ -245,7 +240,7 @@
 				</div>
 	            <div class="form-group">
 	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+	                <select class="form-control select2" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
 	                  <option value=""></option>
 	                  @foreach($subsection as $subsection)
 	                  <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -254,7 +249,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">PIC</label>
-		              <select class="form-control select2" name="inputpic" id="inputpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+		              <select class="form-control select2" name="inputpic" id="inputpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 		                <option value=""></option>
 		                @foreach($pic as $pic)
 		                <option value="{{ $pic->name }}">{{ $pic->employee_id }} - {{ $pic->name }}</option>
@@ -304,11 +299,11 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Nama Pengecekan</label>
-				  <input type="text" class="form-control" name="editnamapengecekan" id="editnamapengecekan" placeholder="Enter Leader" value="{{ $jishu_hozen_point->nama_pengecekan }}" readonly>
+				  <input type="text" class="form-control" name="editnamapengecekan" id="editnamapengecekan" placeholder="Masukkan Leader" value="{{ $jishu_hozen_point->nama_pengecekan }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" class="form-control" name="editdate" id="editdate" placeholder="Enter Leader" readonly>
+				  <input type="text" class="form-control" name="editdate" id="editdate" placeholder="Masukkan Leader" readonly>
 	            </div>
 	            <div class="form-group">
 	            	<label for="">Month</label>
@@ -321,7 +316,7 @@
 				</div>
 	            <div class="form-group">
 	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control select3" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+	                <select class="form-control select3" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
 	                  <option value=""></option>
 	                  @foreach($subsection2 as $subsection2)
 	                  <option value="{{ $subsection2->sub_section_name }}">{{ $subsection2->sub_section_name }}</option>
@@ -330,7 +325,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">PIC</label>
-		              <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+		              <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 		                <option value=""></option>
 		                @foreach($pic2 as $pic2)
 		                <option value="{{ $pic2->name }}">{{ $pic2->employee_id }} - {{ $pic2->name }}</option>
@@ -381,6 +376,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			dropdownParent: $("#create-modal")
 		});

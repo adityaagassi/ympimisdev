@@ -5,7 +5,6 @@
 <section class="content-header">
   <h1>
     Edit {{ $activity_name }}
-    <small>it all starts here</small>
   </h1>
   <ol class="breadcrumb">
    {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -35,9 +34,8 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
+  <div class="box box-solid">
+    <div class="box-header">
     </div>  
     <form role="form" method="post" action="{{url('index/training_report/update/'.$id.'/'.$training_report->id)}}" enctype="multipart/form-data">
       <div class="box-body">
@@ -46,13 +44,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Department<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="department" placeholder="Enter Department" required value="{{ $departments }}" readonly>
+              <input type="text" class="form-control" name="department" placeholder="Masukkan Department" required value="{{ $departments }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Section<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Choose a Section..." required>
+              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Pilih Section..." required>
                 <option value=""></option>
                 @foreach($section as $section)
                 @if($training_report->section == $section->section_name)
@@ -67,7 +65,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required>
+              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Pilih Product..." required>
                 <option value=""></option>
                 @if($training_report->product == 'Saxophone, Flute, Clarinet')
                   <option value="Saxophone, Flute, Clarinet" selected>Saxophone, Flute, Clarinet</option>
@@ -94,7 +92,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Periode<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="periode" style="width: 100%;" data-placeholder="Choose a Periode..." required>
+              <select class="form-control select2" name="periode" style="width: 100%;" data-placeholder="Pilih Periode..." required>
                 <option value=""></option>
                 @foreach($periode as $periode)
                 @if($training_report->periode == $periode->fiscal_year)
@@ -126,7 +124,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Tema<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="theme" placeholder="Enter Theme" required value="{{ $training_report->theme }}">
+              <input type="text" class="form-control" name="theme" placeholder="Masukkan Theme" required value="{{ $training_report->theme }}">
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -140,19 +138,19 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Tujuan<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="tujuan" placeholder="Enter Tujuan" required value="{{ $training_report->tujuan }}">
+              <input type="text" class="form-control" name="tujuan" placeholder="Masukkan Tujuan" required value="{{ $training_report->tujuan }}">
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Standard<span class="text-red">*</span></label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="standard" placeholder="Enter Standard" required value="{{ $training_report->standard }}">
+              <input type="text" class="form-control" name="standard" placeholder="Masukkan Standard" required value="{{ $training_report->standard }}">
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Trainer<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="trainer" style="width: 100%;" data-placeholder="Choose a Trainer..." required>
+              <select class="form-control select2" name="trainer" style="width: 100%;" data-placeholder="Pilih Trainer..." required>
                 <option value=""></option>
                 @foreach($trainer as $trainer)
                 @if($training_report->trainer == $trainer->name)
@@ -167,13 +165,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Leader<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" name="leader" placeholder="Enter Leader" required value="{{ $training_report->leader }}" readonly>
+              <input type="text" class="form-control" name="leader" placeholder="Masukkan Leader" required value="{{ $training_report->leader }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" name="foreman" placeholder="Enter Foreman" required value="{{ $training_report->foreman }}" readonly>
+              <input type="text" class="form-control" name="foreman" placeholder="Masukkan Foreman" required value="{{ $training_report->foreman }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -217,6 +215,7 @@
     jQuery(document).ready(function() {
       $('#email').val('');
       $('#password').val('');
+      $('body').toggleClass("sidebar-collapse");
     });
     CKEDITOR.replace('editor1' ,{
         filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'

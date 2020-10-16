@@ -43,7 +43,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
+		{{ $activity_name }} - {{$leader}}
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+	        Buat Temuan NG
+	    </button>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -72,7 +75,7 @@
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/ng_finding/filter_ng_finding/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -91,7 +94,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/14/'.$frequency) }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/ng_finding/index/'.$id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
@@ -101,7 +104,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Cetak {{ $activity_name }}</h3>
 						</div>
 						<form target="_blank" role="form" method="post" action="{{url('index/ng_finding/print_ng_finding/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -128,7 +131,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Kirim Email ke Foreman</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/ng_finding/sendemail/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -147,103 +150,88 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
+										<button type="submit" class="btn btn-primary col-sm-14">Kirim Email</button>
 									</div>
 								</div>
 							</div>
 						</form>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="col-md-12">
-							<div class="col-md-12">
-								<div class="form-group pull-right">
-									<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								        Create
-								    </button>
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Date</th>
-												<th>Material Number</th>
-												<th>Material Desc.</th>
-												<th>Qty</th>
-												<th>Finder</th>
-												<th>Picture</th>
-												<th>Defect</th>
-												<th>Checked By QA</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($ng_finding as $ng_finding)
-											<tr>
-												<td>{{$ng_finding->date}}</td>
-												<td><?php echo $ng_finding->material_number ?></td>
-												<td><?php echo $ng_finding->material_description ?>
-												</td>
-												<td><?php echo $ng_finding->quantity ?></td>
-												<td><?php echo $ng_finding->finder ?>
-												</td>
-												<?php if(strpos($ng_finding->picture, '<p>') !== false){ ?>
-													<td><?php echo $ng_finding->picture ?></td>
-												<?php }else{ ?>
-													<td><img width="200px" src="{{ url('/data_file/ng_finding/'.$ng_finding->picture) }}"></td>
-												<?php } ?>
-												<td><?php echo $ng_finding->defect ?></td>
-												<td><?php echo $ng_finding->checked_qa ?></td>
-												<td>
-													@if($ng_finding->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($ng_finding->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_ng_finding('{{ url("index/ng_finding/update") }}','{{$id}}','{{ $ng_finding->ng_finding_id }}');">
-											               Edit
-											            </button>
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/ng_finding/destroy") }}','{{ $ng_finding->material_number }} - {{ $ng_finding->date }}','{{ $id }}', '{{ $ng_finding->ng_finding_id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+						<div class="col-xs-12" style="overflow-x: scroll;margin-top: 30px">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Date</th>
+										<th>Material Number</th>
+										<th>Material Desc.</th>
+										<th>Qty</th>
+										<th>Finder</th>
+										<th>Picture</th>
+										<th>Defect</th>
+										<th>Checked By QA</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($ng_finding as $ng_finding)
+									<tr>
+										<td>{{$ng_finding->date}}</td>
+										<td><?php echo $ng_finding->material_number ?></td>
+										<td><?php echo $ng_finding->material_description ?>
+										</td>
+										<td><?php echo $ng_finding->quantity ?></td>
+										<td><?php echo $ng_finding->finder ?>
+										</td>
+										<?php if(strpos($ng_finding->picture, '<p>') !== false){ ?>
+											<td><?php echo $ng_finding->picture ?></td>
+										<?php }else{ ?>
+											<td><img width="200px" src="{{ url('/data_file/ng_finding/'.$ng_finding->picture) }}"></td>
+										<?php } ?>
+										<td><?php echo $ng_finding->defect ?></td>
+										<td><?php echo $ng_finding->checked_qa ?></td>
+										<td>
+											@if($ng_finding->send_status == "")
+						                		<label class="label label-danger">Belum Terkirim</label>
+						                	@else
+						                		<label class="label label-success">Terkirim</label>
+						                	@endif
+										</td>
+										<td>@if($ng_finding->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_ng_finding('{{ url("index/ng_finding/update") }}','{{$id}}','{{ $ng_finding->ng_finding_id }}');">
+									               Edit
+									            </button>
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/ng_finding/destroy") }}','{{ $ng_finding->material_number }} - {{ $ng_finding->date }}','{{ $id }}', '{{ $ng_finding->ng_finding_id }}');">
+													Delete
+												</a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -276,11 +264,11 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create Temuan NG</b></h4>
+        <h4 class="modal-title" align="center"><b>Buat Temuan NG</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
-       	<form method="POST" action="{{ url("index/ng_finding/store/".$id) }}" enctype="multipart/form-data">
+       	<form method="POST" action="{{ url('index/ng_finding/store/'.$id) }}" enctype="multipart/form-data">
        	<div>
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>"> 
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -290,12 +278,11 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" name="inputdate" id="inputdate" class="form-control" placeholder="Select Date" required="required" title="">
+				  <input type="text" name="inputdate" id="inputdate" class="form-control" placeholder="Pilih Tanggal" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	              <label for="">Material Number</label>
-				  <!-- <input type="text" name="inputmaterialnumber" id="inputmaterialnumber" class="form-control" placeholder="Enter Material Number" value="ZW97290" required="required" title=""> -->
-				  <select class="form-control select2" name="inputmaterialnumber" id="inputmaterialnumber" style="width: 100%;" data-placeholder="Choose a Material ..." required>
+				  <select class="form-control select2" name="inputmaterialnumber" id="inputmaterialnumber" style="width: 100%;" data-placeholder="Pilih Material ..." required>
 	                	<option value=""></option>
 	                	@foreach($mpdl as $mpdl)
 	                		<option value="{{ $mpdl->material_number }}">{{ $mpdl->material_number }} - {{ $mpdl->material_description }}</option>
@@ -304,11 +291,11 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Quantity</label>
-				  <input type="number" name="inputquantity" id="inputquantity" class="form-control" placeholder="Enter Quantity" required="required" title="">
+				  <input type="number" name="inputquantity" id="inputquantity" class="form-control" placeholder="Masukkan Quantity" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	             <label>Finder<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="inputfinder" id="inputfinder" style="width: 100%;" data-placeholder="Choose a Finder ..." required>
+	                <select class="form-control select2" name="inputfinder" id="inputfinder" style="width: 100%;" data-placeholder="Pilih Finder ..." required>
 	                	<option value=""></option>
 	                	@foreach($operator as $operator)
 	                		<option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
@@ -325,7 +312,7 @@
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
 	              <label for="">Defect</label>
-	              <input type="text" name="inputdefect" id="inputdefect" class="form-control" placeholder="Enter Defect" required="required" title="">
+	              <input type="text" name="inputdefect" id="inputdefect" class="form-control" placeholder="Masukkan Defect" required="required" title="">
 	            </div>
             	<div class="form-group">
 	              <label for="">Checked By QA <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
@@ -333,11 +320,11 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Leader</label>
-	              <input type="text" name="leader" id="leader" class="form-control" placeholder="Enter Leader" readonly value="{{$leader}}" required="required" title="">
+	              <input type="text" name="leader" id="leader" class="form-control" placeholder="Masukkan Leader" readonly value="{{$leader}}" required="required" title="">
 	            </div>
 	            <div class="form-group" id="action">
 	              <label for="">Foreman</label>
-	              <input type="text" name="foreman" id="foreman" class="form-control" placeholder="Enter foreman" readonly value="{{$foreman}}" required="required" title="">
+	              <input type="text" name="foreman" id="foreman" class="form-control" placeholder="Masukkan foreman" readonly value="{{$foreman}}" required="required" title="">
 	            </div>
             </div>
           </div>
@@ -377,7 +364,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Material Number</label>
-				  <select class="form-control select2" name="editmaterialnumber" id="editmaterialnumber" style="width: 100%;" data-placeholder="Choose a Material ..." required>
+				  <select class="form-control select2" name="editmaterialnumber" id="editmaterialnumber" style="width: 100%;" data-placeholder="Pilih Material ..." required>
 	                	<option value=""></option>
 	                	@foreach($mpdl2 as $mpdl2)
 	                		<option value="{{ $mpdl2->material_number }}">{{ $mpdl2->material_number }} - {{ $mpdl2->material_description }}</option>
@@ -386,11 +373,11 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Quantity</label>
-				  <input type="number" name="editquantity" id="editquantity" class="form-control" placeholder="Enter Quantity" required="required" title="">
+				  <input type="number" name="editquantity" id="editquantity" class="form-control" placeholder="Masukkan Quantity" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	             <label>Finder<span class="text-red">*</span></label>
-	                <select class="form-control select3" name="editfinder" id="editfinder" style="width: 100%;" data-placeholder="Choose a Finder ..." required>
+	                <select class="form-control select3" name="editfinder" id="editfinder" style="width: 100%;" data-placeholder="Pilih Finder ..." required>
 	                	<option value=""></option>
 	                	@foreach($operator2 as $operator2)
 	                		<option value="{{ $operator2->name }}">{{ $operator2->employee_id }} - {{ $operator2->name }}</option>
@@ -400,7 +387,7 @@
 	            <div class="form-group" id="pictureedit" style="display: none">
 	              <label for="" id="problem">Picture</label>
 	              <input type="file" name="editfile" id="editfile" class="form-control" onchange="readURL2(this);">
-	              <img width="200px" id="blah2" src="" style="display: none" alt="your image" />
+	              <img width="200px" id="blah2" src="" style="display: none" />
 	            </div>
 	            <div class="form-group" id="pictureeditkcfinder">
 	              <label for="" id="problem">Picture</label>
@@ -410,7 +397,7 @@
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
 	              <label for="">Defect</label>
-	              <input type="text" name="editdefect" id="editdefect" class="form-control" placeholder="Enter Defect" required="required" title="">
+	              <input type="text" name="editdefect" id="editdefect" class="form-control" placeholder="Masukkan Defect" required="required" title="">
 	            </div>
             	<div class="form-group">
 	              <label for="">Checked By QA <img width="20px" src="{{ url('/images/pic_icon.png') }}"></label>
@@ -418,11 +405,11 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Leader</label>
-	              <input type="text" name="leader" id="leader" class="form-control" placeholder="Enter Leader" readonly value="{{$leader}}" required="required" title="">
+	              <input type="text" name="leader" id="leader" class="form-control" placeholder="Masukkan Leader" readonly value="{{$leader}}" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-	              <input type="text" name="foreman" id="foreman" class="form-control" placeholder="Enter foreman" readonly value="{{$foreman}}" required="required" title="">
+	              <input type="text" name="foreman" id="foreman" class="form-control" placeholder="Masukkan foreman" readonly value="{{$foreman}}" required="required" title="">
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -548,6 +535,7 @@
 		});
 	}
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('#example1 tfoot th').each( function () {
 			var title = $(this).text();
 			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );

@@ -39,14 +39,11 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		List Point Audit Produk Pertama - {{$leader}}
+		<a style="color:white" href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning pull-right">Kembali</a>
+		<a style="color:white" href="{{ url('index/first_product_audit/create/'.$id) }}" class="btn btn-primary pull-right">Tambah Point Audit</a>
 	</h1>
 	<ol class="breadcrumb">
-		<li>
-			<a style="color:white" href="{{ url('index/activity_list/filter/'.$id_departments.'/6/'.$frequency) }}" class="btn btn-warning">Back</a>
-			<a style="color:white" href="{{ url('index/first_product_audit/create/'.$id) }}" class="btn btn-primary">Tambah {{ $page }}</a>
-		</li>
 	</ol>
 </section>
 @stop
@@ -69,75 +66,50 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Proses / Nama Mesin</th>
-												<th>Jenis</th>
-												<th>Standar Kualitas</th>
-												<th>Tool Check</th>
-												<th>Jumlah Cek</th>
-												<th>Leader</th>
-												<th>Foreman</th>
-												<th>Details</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($first_product_audit as $first_product_audit)
-											<tr>
-												<td>{{$first_product_audit->proses}}</td>
-												<td>{{$first_product_audit->jenis}}</td>
-												<td>{{$first_product_audit->standar_kualitas}}</td>
-												<td>{{$first_product_audit->tool_check}}</td>
-												<td>{{$first_product_audit->jumlah_cek}}</td>
-												<td>{{$first_product_audit->leader}}</td>
-												<td>{{$first_product_audit->foreman}}</td>
-												<td>
-													<center>
-														<a class="btn btn-primary btn-sm" href="{{url('index/first_product_audit/details/'.$id.'/'.$first_product_audit->id)}}">Monthly Evidence</a>
-														<a class="btn btn-warning btn-sm" href="{{url('index/first_product_audit/daily/'.$id.'/'.$first_product_audit->id)}}">Daily Evidence</a>
-													</center>
-												</td>
-												<td>
-													<center>
-														<a class="btn btn-info btn-sm" href="{{url('index/first_product_audit/show/'.$id.'/'.$first_product_audit->id)}}">View</a>
-														<a href="{{url('index/first_product_audit/edit/'.$id.'/'.$first_product_audit->id)}}" class="btn btn-warning btn-sm">Edit</a>
-														{{-- <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_daily('{{ url("index/labeling/update") }}','{{ $labeling->id }}','{{ $daily_check->product }}');">
-											               Edit
-											            </button> --}}
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit/destroy") }}', '{{ $first_product_audit->proses }}','{{ $id }}', '{{ $first_product_audit->id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
+					<table id="example1" class="table table-bordered table-striped table-hover">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th>Proses / Nama Mesin</th>
+								<th>Jenis</th>
+								<th>Standar Kualitas</th>
+								<th>Tool Check</th>
+								<th>Jumlah Cek</th>
+								<th>Leader</th>
+								<th>Foreman</th>
+								<th>Details</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach($first_product_audit as $first_product_audit)
+							<tr>
+								<td>{{$first_product_audit->proses}}</td>
+								<td>{{$first_product_audit->jenis}}</td>
+								<td>{{$first_product_audit->standar_kualitas}}</td>
+								<td>{{$first_product_audit->tool_check}}</td>
+								<td>{{$first_product_audit->jumlah_cek}}</td>
+								<td>{{$first_product_audit->leader}}</td>
+								<td>{{$first_product_audit->foreman}}</td>
+								<td>
+									<center>
+										<a class="btn btn-primary" href="{{url('index/first_product_audit/details/'.$id.'/'.$first_product_audit->id)}}">Bulanan</a>
+										<a class="btn btn-warning" href="{{url('index/first_product_audit/daily/'.$id.'/'.$first_product_audit->id)}}">Harian</a>
+									</center>
+								</td>
+								<td>
+									<center>
+										<a href="{{url('index/first_product_audit/edit/'.$id.'/'.$first_product_audit->id)}}" class="btn btn-warning">Edit</a>
+										<a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit/destroy") }}', '{{ $first_product_audit->proses }}','{{ $id }}', '{{ $first_product_audit->id }}');">
+											Delete
+										</a>
+									</center>
+								</td>
+							</tr>
+							@endforeach
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -176,6 +148,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			language : {
 				noResults : function(params) {
@@ -236,10 +209,6 @@
 		});
 	}
 	jQuery(document).ready(function() {
-		$('#example1 tfoot th').each( function () {
-			var title = $(this).text();
-			$(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-		} );
 		var table = $('#example1').DataTable({
 			"order": [],
 			'dom': 'Bfrtip',
@@ -281,21 +250,6 @@
 				]
 			}
 		});
-
-		table.columns().every( function () {
-			var that = this;
-
-			$( 'input', this.footer() ).on( 'keyup change', function () {
-				if ( that.search() !== this.value ) {
-					that
-					.search( this.value )
-					.draw();
-				}
-			} );
-		} );
-
-		$('#example1 tfoot tr').appendTo('#example1 thead');
-
 	});
 	$(function () {
 

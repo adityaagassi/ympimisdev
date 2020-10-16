@@ -3,13 +3,9 @@
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <section class="content-header">
   <h1>
-    Create Point Check
-    <small>it all starts here</small>
+    Buat Point Audit Produk Pertama
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -32,10 +28,7 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
-    </div>  
+  <div class="box box-solid">
     <form role="form" method="post" action="{{url('index/point_check_first_product/store/'.$id)}}" enctype="multipart/form-data">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -43,7 +36,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Proses<span class="text-red">*</span></label>
             <div class="col-sm-4" align="left">
-              <select class="form-control select2" name="proses" style="width: 100%;" data-placeholder="Choose a Proses..." required>
+              <select class="form-control select2" name="proses" style="width: 100%;" data-placeholder="Pilih Proses" required>
                 <option value=""></option>
                 @foreach($proses as $proses)
                   <option value="{{ $proses }}">{{ $proses }}</option>
@@ -60,11 +53,9 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Standard<span class="text-red">*</span></label>
             <div class="col-sm-4" align="left">
-              <input type="text" class="form-control" name="standar" placeholder="Enter Standard" required>
+              <input type="text" class="form-control" name="standar" placeholder="Masukkan Standard" required>
             </div>
           </div>
-        {{-- </div> --}}
-        {{-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6"> --}}
           <div class="col-sm-4 col-sm-offset-6">
             <div class="btn-group">
               <a class="btn btn-danger" href="{{ url('index/point_check_first_product/index/'.$id) }}">Cancel</a>
@@ -73,7 +64,6 @@
               <button type="submit" class="btn btn-primary col-sm-14">Submit</button>
             </div>
           </div>
-        {{-- </div> --}}
       </div>
     </form>
   </div>
@@ -87,6 +77,7 @@
     });
 
     jQuery(document).ready(function() {
+      $('body').toggleClass("sidebar-collapse");
       $('#email').val('');
       $('#password').val('');
     });

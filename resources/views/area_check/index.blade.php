@@ -39,8 +39,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader }}
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+	        Buat Cek Area
+	    </button>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -65,11 +67,11 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/area_check/filter_area_check/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -88,7 +90,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/10/'.$frequency) }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/area_check/index/'.$id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
@@ -98,7 +100,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Cetak {{ $activity_name }}</h3>
 						</div>
 						<form target="_blank" role="form" method="post" action="{{url('index/area_check/print_area_check/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -125,7 +127,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Kirim Email ke Foreman</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/area_check/sendemail/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -144,93 +146,77 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
+										<button type="submit" class="btn btn-primary col-sm-14">Kirim Email</button>
 									</div>
 								</div>
 							</div>
 						</form>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="col-md-12">
-							<div class="col-md-12">
-								<div class="form-group pull-right">
-									{{-- <a href="{{ url('index/daily_check_fg/create/'.$id.'/'.$product) }}" class="btn btn-primary">Create {{ $activity_alias }}</a> --}}
-									<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								        Create
-								    </button>
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="row">
 						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Sub Section</th>
-												<th>Point Check</th>
-												<th>Date</th>
-												<th>Condition</th>
-												<th>PIC</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@if(count($area_check) != 0)
-											@foreach($area_check as $area_check)
-											<tr>
-												<td>{{$area_check->subsection}}</td>
-												<td>{{$area_check->area_check_point->point_check}}</td>
-												<td>{{$area_check->date}}</td>
-												<td>{{$area_check->condition}}</td>
-												<td>{{$area_check->pic}}</td>
-												<td>
-													@if($area_check->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($area_check->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														{{-- <a class="btn btn-info btn-sm" href="{{url('index/area_check/show/'.$id.'/'.$area_check->id)}}">View</a> --}}
-														{{-- <a href="{{url('index/daily_check_fg/edit/'.$id.'/'.$daily_check->id)}}" class="btn btn-warning btn-xs">Edit</a> --}}
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_area_check('{{ url("index/area_check/update") }}','{{ $area_check->id }}');">
-											               Edit
-											            </button>
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/area_check/destroy") }}', '{{ $area_check->area_check_point->point_check }} - {{ $area_check->date }}','{{ $id }}', '{{ $area_check->id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-											@endif
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Sub Section</th>
+										<th>Point Check</th>
+										<th>Date</th>
+										<th>Condition</th>
+										<th>PIC</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@if(count($area_check) != 0)
+									@foreach($area_check as $area_check)
+									<tr>
+										<td>{{$area_check->subsection}}</td>
+										<td>{{$area_check->area_check_point->point_check}}</td>
+										<td>{{$area_check->date}}</td>
+										<td>{{$area_check->condition}}</td>
+										<td>{{$area_check->pic}}</td>
+										<td>
+											@if($area_check->send_status == "")
+						                		<label class="label label-danger">Not Yet Sent</label>
+						                	@else
+						                		<label class="label label-success">Sent</label>
+						                	@endif
+										</td>
+										<td>@if($area_check->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												{{-- <a class="btn btn-info btn-sm" href="{{url('index/area_check/show/'.$id.'/'.$area_check->id)}}">View</a> --}}
+												{{-- <a href="{{url('index/daily_check_fg/edit/'.$id.'/'.$daily_check->id)}}" class="btn btn-warning btn-xs">Edit</a> --}}
+												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_area_check('{{ url("index/area_check/update") }}','{{ $area_check->id }}');">
+									               Edit
+									            </button>
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/area_check/destroy") }}', '{{ $area_check->area_check_point->point_check }} - {{ $area_check->date }}','{{ $id }}', '{{ $area_check->id }}');">
+													Delete
+												</a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+									@endif
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -263,7 +249,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create Area Check</b></h4>
+        <h4 class="modal-title" align="center"><b>Buat Cek Area</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -275,7 +261,7 @@
 	            </div>
 	            <div class="form-group">
 	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+	                <select class="form-control" name="inputsubsection" id="inputsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
 	                  <!-- <option value=""></option> -->
 	                  @foreach($subsection as $subsection)
 	                  <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -291,7 +277,7 @@
             	<div class="form-group">
             		<?php $no = 1 ?>
 	              <label>Point Check<span class="text-red">*</span></label>
-	                <select class="form-control" name="inputpoint_check" id="inputpoint_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required>
+	                <select class="form-control" name="inputpoint_check" id="inputpoint_check" style="width: 100%;" data-placeholder="Pilih Point Check..." required>
 	                  <!-- <option value=""></option> -->
 	                  @foreach($point_check as $point_check)
 	                    <option value="{{ $point_check->id }}">{{ $no }}. {{ $point_check->point_check }}</option>
@@ -310,7 +296,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label>PIC<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="inputpic" id="inputpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+	                <select class="form-control select2" name="inputpic" id="inputpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 	                  <option value=""></option>
 	                  @foreach($pic as $pic)
 	                    <option value="{{ $pic->name }}">{{ $pic->employee_id }} - {{ $pic->name }}</option>
@@ -336,7 +322,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Edit Area Check</b></h4>
+        <h4 class="modal-title" align="center"><b>Edit Cek Area</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -351,7 +337,7 @@
 	            </div>
 	            <div class="form-group">
 	             <label>Sub Section<span class="text-red">*</span></label>
-	                <select class="form-control" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+	                <select class="form-control" name="editsubsection" id="editsubsection" style="width: 100%;" data-placeholder="Pilih Sub Section..." required>
 	                  <!-- <option value=""></option> -->
 	                  @foreach($subsection2 as $subsection2)
 	                  <option value="{{ $subsection2->sub_section_name }}">{{ $subsection2->sub_section_name }}</option>
@@ -367,7 +353,7 @@
             	<div class="form-group">
 	              <label>Point Check<span class="text-red">*</span></label>
 	              <?php $no = 1 ?>
-	                <select class="form-control" name="editpoint_check" id="editpoint_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required>
+	                <select class="form-control" name="editpoint_check" id="editpoint_check" style="width: 100%;" data-placeholder="Pilih Point Check..." required>
 	                  <!-- <option value=""></option> -->
 	                  @foreach($point_check2 as $point_check2)
 	                    <option value="{{ $point_check2->id }}">{{ $no }}. {{ $point_check2->point_check }}</option>
@@ -386,7 +372,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label>PIC<span class="text-red">*</span></label>
-	                <select class="form-control select2" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+	                <select class="form-control select2" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 	                  <option value=""></option>
 	                  @foreach($pic2 as $pic2)
 	                    <option value="{{ $pic2->name }}">{{ $pic2->employee_id }} - {{ $pic2->name }}</option>
@@ -421,6 +407,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			language : {
 				noResults : function(params) {

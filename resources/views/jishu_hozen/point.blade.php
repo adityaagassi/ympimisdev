@@ -39,15 +39,10 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Point of {{ $activity_name }} <span class="text-purple">{{ $leader }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		Point of {{ $activity_name }} - {{ $leader }}
+		<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning pull-right">Kembali</a>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -63,49 +58,15 @@ table.table-bordered > tfoot > tr > th{
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="form-group pull-right">
-							<a href="{{ url('index/activity_list/filter/'.$id_departments.'/11/'.$frequency) }}" class="btn btn-warning">Back</a>
-						</div>
-					</div>
-				  <div class="row">
-				    <div class="col-xs-12">
-				      <div class="box">
-				        <div class="box-body">
-				          <table id="example1" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Nama Pengecekan</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @if(count($jishu_hozen_point) != 0)
-				              @foreach($jishu_hozen_point as $jishu_hozen_point)
-				              <tr>
-				                <td>{{$jishu_hozen_point->nama_pengecekan}}</td>
-				                <td>
-				                  <center>
-				                    <a class="btn btn-info btn-sm" href="{{url('index/jishu_hozen/index/'.$id.'/'.$jishu_hozen_point->id)}}">Details</a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				              @endif
-				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
-				          </table>
-				        </div>
-				      </div>
-				    </div>
-				  </div>
+				  @if(count($jishu_hozen_point) != 0)
+	              @foreach($jishu_hozen_point as $jishu_hozen_point)
+	              	<div class="col-xs-4" style="margin-bottom: 5px">
+	              		<a class="btn btn-info" style="width: 100%" href="{{url('index/jishu_hozen/index/'.$id.'/'.$jishu_hozen_point->id)}}">{{$jishu_hozen_point->nama_pengecekan}}</a>
+	              	</div>
+	              @endforeach
+	              @endif
 				</div>
 			</div>
 		</div>
@@ -125,6 +86,7 @@ table.table-bordered > tfoot > tr > th{
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('#date').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm',

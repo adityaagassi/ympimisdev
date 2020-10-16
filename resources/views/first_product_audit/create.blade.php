@@ -3,13 +3,9 @@
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <section class="content-header">
   <h1>
-    Create {{ $activity_name }}
-    <small>it all starts here</small>
+    Buat Point Check Audit Produk Pertama
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -34,10 +30,7 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
-    </div>  
+  <div class="box box-solid">
     <form role="form" method="post" action="{{url('index/first_product_audit/store/'.$id)}}" enctype="multipart/form-data">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -51,7 +44,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Sub Section<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required id="subsection">
+              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section" required id="subsection">
                   <option value=""></option>
                   @foreach($subsection as $subsection)
                     <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -62,7 +55,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Proses / Nama Mesin<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="proses" id="proses" class="form-control" required placeholder="Enter Proses">
+              <input type="text" name="proses" id="proses" class="form-control" required placeholder="Masukkan Proses">
             </div>
           </div>
         </div>
@@ -70,25 +63,25 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Jenis<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="jenis" id="jenis" class="form-control" required placeholder="Enter Jenis">
+              <input type="text" name="jenis" id="jenis" class="form-control" required placeholder="Masukkan Jenis">
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Standar Kualitas<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="standar_kualitas" id="standar_kualitas" class="form-control" required placeholder="Enter Standar Kualitas">
+              <input type="text" name="standar_kualitas" id="standar_kualitas" class="form-control" required placeholder="Masukkan Standar Kualitas">
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Tool Check<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="tool_check" id="tool_check" class="form-control" required placeholder="Enter Tool Check">
+              <input type="text" name="tool_check" id="tool_check" class="form-control" required placeholder="Masukkan Tool Check">
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Jumlah Cek<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="number" name="jumlah_cek" id="jumlah_cek" class="form-control" required placeholder="Enter Jumlah Cek">
+              <input type="number" name="jumlah_cek" id="jumlah_cek" class="form-control" required placeholder="Masukkan Jumlah Cek">
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -147,6 +140,7 @@
     });
 
     jQuery(document).ready(function() {
+      $('body').toggleClass("sidebar-collapse");
       $('#email').val('');
       $('#password').val('');
     });

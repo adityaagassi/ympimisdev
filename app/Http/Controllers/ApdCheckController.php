@@ -41,8 +41,9 @@ class ApdCheckController extends Controller
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$apdCheck = ApdCheck::where('activity_list_id',$id)->orderBy('apd_checks.id','desc')
-            ->get();
+        $now = date('Y-m-d');
+        $one_month = date('Y-m-d', strtotime('-3 months', strtotime($now)));
+    	$apdCheck = ApdCheck::where('activity_list_id',$id)->orderBy('apd_checks.id','desc')->whereBetween('date', [$now, $one_month])->get();
 
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);

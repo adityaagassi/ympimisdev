@@ -39,15 +39,13 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Area Check Point {{ $activity_name }} <span class="text-purple">{{ $leader }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		Point Cek Area - {{ $leader }}
+    <a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning pull-right">Kembali</a>&nbsp;
+    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal" style="margin-right: 5px">
+      Tambahkan Point Check
+    </button>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -63,57 +61,44 @@ table.table-bordered > tfoot > tr > th{
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="form-group pull-right">
-							{{-- <a href="{{ url('index/audit_guidance/create/'.$id) }}" class="btn btn-primary">Create Schedule {{ $activity_alias }}</a> --}}
-							<a href="{{ url('index/activity_list/filter/'.$id_departments.'/10/'.$frequency) }}" class="btn btn-warning">Back</a>&nbsp
-							<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								Create Point Check
-							</button>
-						</div>
-					</div>
 				  <div class="row">
 				    <div class="col-xs-12">
-				      <div class="box">
-				        <div class="box-body">
-				          <table id="example1" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Point Check</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @if(count($area_check_point) != 0)
-				              @foreach($area_check_point as $area_check_point)
-				              <tr>
-				                <td>{{$area_check_point->point_check}}</td>
-				                <td>
-				                  <center>
-				                    <a class="btn btn-info btn-sm" href="{{url('index/area_check_point/show/'.$id.'/'.$area_check_point->id)}}">View</a>
-									<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit('{{ url("index/area_check_point/update") }}','{{ $id }}','{{ $area_check_point->id }}');">
-						               Edit
-						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/area_check_point/destroy") }}', '{{ $area_check_point->point_check }}','{{ $id }}', '{{ $area_check_point->id }}');">
-				                      Delete
-				                    </a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				              @endif
-				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
-				          </table>
-				        </div>
-				      </div>
+		          <table id="example1" class="table table-bordered table-striped table-hover">
+		            <thead style="background-color: rgba(126,86,134,.7);">
+		              <tr>
+		                <th>Point Check</th>
+		                <th>Action</th>
+		              </tr>
+		            </thead>
+		            <tbody>
+		              @if(count($area_check_point) != 0)
+		              @foreach($area_check_point as $area_check_point)
+		              <tr>
+		                <td>{{$area_check_point->point_check}}</td>
+		                <td>
+		                  <center>
+		                    <a class="btn btn-info btn-sm" href="{{url('index/area_check_point/show/'.$id.'/'.$area_check_point->id)}}">View</a>
+							<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit('{{ url("index/area_check_point/update") }}','{{ $id }}','{{ $area_check_point->id }}');">
+				               Edit
+				            </button>
+		                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/area_check_point/destroy") }}', '{{ $area_check_point->point_check }}','{{ $id }}', '{{ $area_check_point->id }}');">
+		                      Delete
+		                    </a>
+		                  </center>
+		                </td>
+		              </tr>
+		              @endforeach
+		              @endif
+		            </tbody>
+		            <tfoot>
+		              <tr>
+		                <th></th>
+		                <th></th>
+		              </tr>
+		            </tfoot>
+		          </table>
 				    </div>
 				  </div>
 				</div>
@@ -147,7 +132,7 @@ table.table-bordered > tfoot > tr > th{
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create Point Check</b></h4>
+        <h4 class="modal-title" align="center"><b>Tambahkan Point Check</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -156,17 +141,17 @@ table.table-bordered > tfoot > tr > th{
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Point Check</label>
-				  <input type="text" class="form-control" name="inputpoint_check" id="inputpoint_check" placeholder="Enter Point Check" required>
+				  <input type="text" class="form-control" name="inputpoint_check" id="inputpoint_check" placeholder="Masukkan Point Check" required>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="inputleader" id="inputleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+				  <input type="text" class="form-control" name="inputleader" id="inputleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="inputforeman" id="inputforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+				  <input type="text" class="form-control" name="inputforeman" id="inputforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -198,17 +183,17 @@ table.table-bordered > tfoot > tr > th{
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Point Check</label>
-				  <input type="text" class="form-control" name="editpoint_check" id="editpoint_check" placeholder="Enter Point Check" required>
+				  <input type="text" class="form-control" name="editpoint_check" id="editpoint_check" placeholder="Masukkan Point Check" required>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="editleader" id="editleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+				  <input type="text" class="form-control" name="editleader" id="editleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="editforeman" id="editforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+				  <input type="text" class="form-control" name="editforeman" id="editforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

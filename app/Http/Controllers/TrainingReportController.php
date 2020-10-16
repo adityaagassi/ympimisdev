@@ -48,6 +48,7 @@ class TrainingReportController extends Controller
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
+        $leader_dept = $activityList->leader_dept;
         $frequency = $activityList->frequency;
         // var_dump($productionAudit);
     	$data = array('training_report' => $trainingReport,
@@ -56,6 +57,7 @@ class TrainingReportController extends Controller
                       'frequency' => $frequency,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
+                      'leader_dept' => $leader_dept,
     				  'id' => $id,
                       'id_departments' => $id_departments);
     	return view('training_report.index', $data
@@ -88,6 +90,7 @@ class TrainingReportController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
         $frequency = $activityList->frequency;
+        $leader_dept = $activityList->leader_dept;
         // }
         $data = array(
                       'product2' => $product2,
@@ -96,6 +99,7 @@ class TrainingReportController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,
+                      'leader_dept' => $leader_dept,
                       'frequency' => $frequency,
                       'id_departments' => $id_departments);
         return view('training_report.index', $data
@@ -204,7 +208,7 @@ class TrainingReportController extends Controller
         
 
         return redirect('index/training_report/index/'.$id)
-            ->with('page', 'Training Report')->with('status', 'New Training Report has been created.');
+            ->with('page', 'Training Report')->with('status', 'Training Berhasil Dibuat.');
     }
 
     function edit($id,$training_id)
@@ -322,6 +326,7 @@ class TrainingReportController extends Controller
         $id_departments = $trainingReport->activity_lists->departments->id;
         $activity_alias = $trainingReport->activity_lists->activity_alias;
         $activity_id = $trainingReport->activity_lists->id;
+        $leader = $trainingReport->leader;
 
         // var_dump($trainingReport->section);
 
@@ -342,6 +347,7 @@ class TrainingReportController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,
+                      'leader' => $leader,
                       'activity_id' => $activity_id,
                       'session_training' => $session_training,
                       'id_departments' => $id_departments);
@@ -371,7 +377,7 @@ class TrainingReportController extends Controller
         
 
         return redirect('index/training_report/details/'.$id.'/view')
-            ->with('page', 'Training Report')->with('status', 'New Pictrue has been created.');
+            ->with('page', 'Training Report')->with('status', 'Foto Training Berhasil Dimasukkan.');
     }
 
     function insertparticipant(Request $request, $id)
@@ -387,7 +393,7 @@ class TrainingReportController extends Controller
         
 
         return redirect('index/training_report/details/'.$id.'/view')
-            ->with('page', 'Training Report')->with('status', 'New Participant has been created.');
+            ->with('page', 'Training Report')->with('status', 'Peserta Berhasil Dimasukkan.');
     }
 
     public function destroypicture($id,$picture_id)
@@ -525,6 +531,7 @@ class TrainingReportController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $leader = $activityList->leader_dept;
 
         $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
         $trainingPicture = DB::select($trainingPictureQuery);
@@ -541,6 +548,7 @@ class TrainingReportController extends Controller
                           'departments' => $departments,
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
+                          'leader' => $leader,
                           'id' => $id,
                           'id_departments' => $id_departments);
             return view('training_report.print', $data
@@ -558,6 +566,7 @@ class TrainingReportController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $leader = $activityList->leader_dept;
 
         $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
         $trainingPicture = DB::select($trainingPictureQuery);
@@ -575,6 +584,7 @@ class TrainingReportController extends Controller
                           'role_code' => Auth::user()->role_code,
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
+                          'leader' => $leader,
                           'id' => $id,
                           'id_departments' => $id_departments);
             return view('training_report.print_email', $data
@@ -611,6 +621,7 @@ class TrainingReportController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $leader = $activityList->leader_dept;
 
         $trainingPictureQuery = "select * from training_pictures where training_id = '".$id."' and deleted_at is null";
         $trainingPicture = DB::select($trainingPictureQuery);
@@ -625,6 +636,7 @@ class TrainingReportController extends Controller
                           'trainingParticipant' => $trainingParticipant,
                           'activityList' => $activityList,
                           'departments' => $departments,
+                          'leader' => $leader,
                           'activity_name' => $activity_name,
                           'role_code' => Auth::user()->role_code,
                           'activity_alias' => $activity_alias,

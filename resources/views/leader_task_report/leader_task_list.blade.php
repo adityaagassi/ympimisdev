@@ -38,12 +38,10 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
   <h1>
-    Leader Task Report of {{ $leader_name }} on {{ $monthTitle }}
-    <small>it all starts here</small>
+    List Tugas Leader <b>{{ $leader_name }}</b> Bulan <b>{{ $monthTitle }}</b>
+    <a href="{{ url('index/leader_task_report/index/'.$id)}}" class="btn btn-warning pull-right" style="color:white">Kembali</a>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li></li> --}}
-    <li><a href="{{ url("index/leader_task_report/index/".$id)}}" class="btn btn-warning btn-sm" style="color:white">Back</a></li>
   </ol>
 </section>
 @endsection
@@ -58,11 +56,11 @@ table.table-bordered > tfoot > tr > th{
   @endif
   <div class="row">
     <div class="col-xs-12">
-      <div class="box">
+      <div class="box box-solid">
         <div class="box-body">
           <div class="col-xs-12">
             <div class="box-header">
-              <h3 class="box-title">Filter <span class="text-purple">Leader Task Report</span></h3>
+              <h3 class="box-title">Filter Tugas Leader</h3>
             </div>
             <form role="form" method="post" action="{{url('index/leader_task_report/filter_leader_task/'.$id.'/'.$leader_name)}}">
             <input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -74,7 +72,7 @@ table.table-bordered > tfoot > tr > th{
                     <div class="input-group-addon">
                       <i class="fa fa-calendar"></i>
                     </div>
-                    <input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off" placeholder="Choose a Date">
+                    <input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off" placeholder="Pilih Tanggal">
                   </div>
                 </div>
               </div>
@@ -82,7 +80,7 @@ table.table-bordered > tfoot > tr > th{
             <div class="col-md-12 col-md-offset-4">
               <div class="col-md-3">
                 <div class="form-group pull-right">
-                  <a href="{{ url("index/leader_task_report/index/".$id)}}" class="btn btn-warning">Back</a>
+                  <a href="{{ url('index/leader_task_report/index/'.$id)}}" class="btn btn-warning">Back</a>
                   <a href="{{ url('index/leader_task_report/leader_task_list/'.$id.'/'.$leader_name) }}" class="btn btn-danger">Clear</a>
                   <button type="submit" class="btn btn-primary col-sm-14">Search</button>
                 </div>
@@ -90,74 +88,57 @@ table.table-bordered > tfoot > tr > th{
             </div>
             </form>
           </div>
-          {{$name}}
           <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>Activity Name</th>
-                <th>Activity Type</th>
-                <th>Details</th>                
+                <th>Frequency</th>
+                <th>Action</th>                
               </tr>
             </thead>
             <tbody>
               @foreach($activity_list as $activity_list)
               <tr>
                 <td>{{$activity_list->activity_name}}</td>
-                <td>{{$activity_list->activity_type}}</td>
+                <td>{{$activity_list->frequency}}</td>
                 <td>
-                  @if($activity_list->link != null)
-                    @if($role_code == 'L-Assy' || $name == 'Bagus Sudibyo')
-                      @if($name == 'Tofik Nur Hidayat')
-                        @if($activity_list->frequency == 'Weekly' && $activity_list->jumlah >= '4')
-                          <button class="btn btn-success">Sudah Dilaksanakan</button>
-                        @elseif($activity_list->frequency == 'Weekly' && $activity_list->jumlah < '4')
-                          <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
-                        @elseif($activity_list->frequency == 'Monthly' && $activity_list->jumlah >= '1' || $activity_list->frequency == 'Conditional' && $activity_list->jumlah >= '1')
-                          <button class="btn btn-success">Sudah Dilaksanakan</button>
-                        @elseif($activity_list->frequency == 'Daily' && $activity_list->jumlah >= '1')
-                          <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
-                        @else
-                          <button class="btn btn-danger">Belum Dilaksanakan</button>
-                        @endif
-                        <a target="_blank" class="btn btn-primary" href="{{url("$activity_list->link")}}">Details</a>
-                      @else
-                        @if($activity_list->frequency == 'Weekly' && $activity_list->jumlah >= '4')
-                          <button class="btn btn-success">Sudah Dilaksanakan</button>
-                        @elseif($activity_list->frequency == 'Weekly' && $activity_list->jumlah < '4')
-                          <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
-                        @elseif($activity_list->frequency == 'Monthly' && $activity_list->jumlah >= '1' || $activity_list->frequency == 'Conditional' && $activity_list->jumlah >= '1')
-                          <button class="btn btn-success">Sudah Dilaksanakan</button>
-                        @elseif($activity_list->frequency == 'Daily' && $activity_list->jumlah >= '1')
-                          <button class="btn btn-success">Sudah Dilaksanakan Tapi Masih Kurang</button>
-                        @else
-                          <button class="btn btn-danger">Belum Dilaksanakan</button>
-                        @endif
-                      @endif
-                    @else
-                      <a target="_blank" class="btn btn-primary" href="{{url("$activity_list->link")}}">Details</a>
-                    @endif
-                  @else
-                    @if($role_code == 'L-Assy' || $name == 'Bagus Sudibyo')
-                      <button class="btn btn-danger">Belum Dilaksanakan</button>
-                    @else
-                      <a class="btn btn-danger" href="">Data Tidak Tersedia</a>
-                    @endif
-                  @endif
+                 <button class="btn btn-primary" onclick="fetchReport('{{$id}}','{{$activity_list->id}}','{{$activity_list->frequency}}','{{$activity_list->activity_type}}')">
+                   See Report
+                 </button>
                 </td>
               </tr>
               @endforeach
             </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </tfoot>
           </table>
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="activity-modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-body table-responsive no-padding">
+            <div class="col-xs-12">
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <span style="font-weight: bold; font-size: 18px;">Pilih Laporan</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12" style="padding-top: 10px">
+                  <div class="row" id="aktivitas">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   </section>
 
   @stop
@@ -178,10 +159,7 @@ table.table-bordered > tfoot > tr > th{
       autoclose: true,
     });
     jQuery(document).ready(function() {
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
+      $('body').toggleClass("sidebar-collapse");
       var table = $('#example1').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -223,33 +201,35 @@ table.table-bordered > tfoot > tr > th{
           ]
         }
       });
-
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example1 tfoot tr').appendTo('#example1 thead');
-
     });
-    $(function () {
 
-      $('#example2').DataTable({
-        'paging'      : true,
-        'lengthChange': false,
-        'searching'   : false,
-        'ordering'    : true,
-        'info'        : true,
-        'autoWidth'   : false
-      })
-    })
+    function fetchReport(id,activity_list_id,frequency,activity_type) {
+      $('#loading').show();
+      var data = {
+        id:id,
+        activity_list_id:activity_list_id,
+        frequency:frequency,
+        activity_type:activity_type,
+        month:'{{$month}}'
+      }
+      $.get('{{ url("index/leader_task_report/fetch_report") }}',data, function(result, status, xhr){
+        if(result.status){
+          $('#aktivitas').empty();
+          var aktivitas = "";
+          $.each(result.activity_list, function(key, value) {
+            aktivitas += '<div class="col-xs-4">';
+            aktivitas += '<a class="btn btn-primary" href="'+value.link+'" style="margin-bottom: 10px;white-space: normal;width: 100%;font-size: 17px">'+value.activity_name+'<br><b style="font-size: 15px">'+value.leader_dept+'</b></a>';
+            aktivitas += '</div>';
+          });
+          $('#aktivitas').append(aktivitas);
+          $('#loading').hide();
+          $("#activity-modal").modal('show');
+        } else {
+          audio_error.play();
+          $('#loading').show();
+        }
+      });
+    }
   </script>
 
   @stop

@@ -3,13 +3,9 @@
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <section class="content-header">
   <h1>
-    Create {{ $activity_name }}
-    <small>it all starts here</small>
+    Buat Audit Proses
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -34,10 +30,7 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
-    </div>  
+  <div class="box box-solid">
     <form role="form" method="post" action="{{url('index/audit_process/store/'.$id)}}" enctype="multipart/form-data">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -50,7 +43,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required id="product">
+              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Pilih Product..." required id="product">
                   <option value=""></option>
                   @foreach($product as $product)
                     <option value="{{ $product }}">{{ $product }}</option>
@@ -61,13 +54,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Proses<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="proses" id="proses" class="form-control" required placeholder="Enter Proses">
+              <input type="text" name="proses" id="proses" class="form-control" required placeholder="Masukkan Proses">
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Operator<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Choose a Operator..." required id="operator">
+              <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Pilih Operator..." required id="operator">
                   <option value=""></option>
                   @foreach($operator as $operator)
                     <option value="{{ $operator->name }}">{{ $operator->name }}</option>
@@ -78,7 +71,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Auditor<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="auditor" style="width: 100%;" data-placeholder="Choose a Auditor..." required id="auditor">
+              <select class="form-control select2" name="auditor" style="width: 100%;" data-placeholder="Pilih Auditor..." required id="auditor">
                   <option value=""></option>
                   @foreach($auditor as $auditor)
                     <option value="{{ $auditor->name }}">{{ $auditor->name }}</option>
@@ -125,7 +118,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Keterangan<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="keterangan" id="keterangan" class="form-control" required placeholder="Enter Keterangan" value="-">
+              <input type="text" name="keterangan" id="keterangan" class="form-control" required placeholder="Masukkan Keterangan" value="-">
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -156,18 +149,12 @@
 
   @section('scripts')
   <script>
-    
-    // var product = document.getElementById("product");
-    // var proses = document.getElementById("proses");
-
-    // var productselected= product.options[product.selectedIndex];
-    // var prosesselected= proses.options[proses.selectedIndex];
-
     $(function () {
       $('.select2').select2()
     });
 
     jQuery(document).ready(function() {
+      $('body').toggleClass("sidebar-collapse");
       $('#email').val('');
       $('#password').val('');
     });

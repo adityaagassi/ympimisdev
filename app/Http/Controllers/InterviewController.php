@@ -312,6 +312,7 @@ class InterviewController extends Controller
         $id_departments = $interview->activity_lists->departments->id;
         $activity_alias = $interview->activity_lists->activity_alias;
         $activity_id = $interview->activity_lists->id;
+        $leader = $interview->activity_lists->leader_dept;
 
         $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
@@ -325,6 +326,7 @@ class InterviewController extends Controller
                       'operator' => $operator,
                       'operator2' => $operator2,
                       'activity_name' => $activity_name,
+                      'leader' => $leader,
                       'activity_alias' => $activity_alias,
                       'interview_id' => $interview_id,
                       'activity_id' => $activity_id,

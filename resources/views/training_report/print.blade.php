@@ -2,14 +2,10 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Print {{ $activity_name }} - {{ $leader }}
+    <button class="btn btn-primary pull-right" onclick="myFunction()">Print / Save PDF</button>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 <style type="text/css">
@@ -51,15 +47,15 @@
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;">Department</td>
-					<td style="border: 1px solid black;">{{ $departments }}</td>
-					<td rowspan="4" colspan="2" style="border: 1px solid black;padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="4"><center>Checked<br><br>
+					<td style="border: 1px solid black;">{{ strtoupper($departments) }}</td>
+					<td rowspan="3" colspan="2" style="border: 1px solid black;padding: 8px;vertical-align: middle;font-size: 30px"><center><b>{{ $activity_name }}</b></center></td>
+					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Checked<br><br>
 						@if($training->approval != Null)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $training->approved_date }}</b>
 						@endif<br><br>
 					{{ $training->foreman }}<br>Foreman</center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="4"><center>Prepared<br><br>
+					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Prepared<br><br>
 						@if($training->approval_leader != Null)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $training->approved_date_leader }}</b>
@@ -68,15 +64,11 @@
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;">Section</td>
-					<td style="border: 1px solid black;">{{ $training->section }}</td>
+					<td style="border: 1px solid black;">{{ strtoupper($training->section) }}</td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;">Product</td>
 					<td style="border: 1px solid black;">{{ $training->product }}</td>
-				</tr>
-				<tr style="border: 1px solid black;">
-					<td style="border: 1px solid black;">Proses</td>
-					<td style="border: 1px solid black;">{{ $training->periode }}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -166,7 +158,7 @@
 				</tr>
 				<tr>
 					<td class="bodytraining" colspan="6">
-						Picture : 
+						Foto Training : 
 					</td>
 				</tr>
 			</tbody>

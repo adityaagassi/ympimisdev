@@ -39,15 +39,10 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader }}
+    <a class="btn btn-warning pull-right" href="{{ url('index/production_report/index/'.$id_departments) }}">Kembali</a>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -70,43 +65,18 @@ table.table-bordered > tfoot > tr > th{
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="box-header">
-						<h3 class="box-title">Product <span class="text-purple">{{ $activity_name }}</span></h3>
-						<a class="btn btn-warning pull-right" href="{{ url('index/activity_list/filter/'.$id_departments.'/8/'.$frequency) }}">Back</a>
+						<h3 class="box-title">Pilih Produk</span></h3>
 					</div>
 				  <div class="row">
 				    <div class="col-xs-12">
-				      <div class="box">
-				        <div class="box-body">
-				          <table id="example1" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Product</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              {{-- @if(count($production_audit) != 0) --}}
-				              @foreach($product as $product)
-				              <tr>
-				                <td>
-				                  <center>
-				                    <a class="btn btn-info" href="{{url('index/daily_check_fg/index/'.$id.'/'.$product)}}">{{ $product }}</a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				              {{-- @endif --}}
-				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				              </tr>
-				            </tfoot>
-				          </table>
-				        </div>
-				      </div>
+		          @foreach($product as $product)
+              <div class="col-xs-4">
+                <a class="btn btn-info" style="width: 100%;font-size: 30px" href="{{url('index/daily_check_fg/index/'.$id.'/'.$product)}}">{{ $product }}</a>
+              </div>
+              @endforeach
 				    </div>
 				  </div>
 				</div>

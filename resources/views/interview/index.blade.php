@@ -39,15 +39,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader }}
+		<a href="{{ url('index/interview/create/'.$id) }}" class="btn btn-primary pull-right">Buat Interview</a>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -70,11 +65,11 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-md-6 col-md-offset-3">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/interview/filter_interview/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -106,7 +101,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-6">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/7/'.$frequency) }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/interview/index/'.$id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
@@ -114,170 +109,85 @@
 							</div>
 						</form>
 					</div>
-					{{-- <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
-						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/interview/print_interview/'.$id)}}">
-							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
-									<div class="form-group">
-										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
-											<option value=""></option>
-											@foreach($subsection2 as $subsection2)
-											<option value="{{ $subsection2->sub_section_name }}">{{ $subsection2->sub_section_name }}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
-									<div class="form-group">
-										<div class="input-group date">
-											<div class="input-group-addon bg-white">
-												<i class="fa fa-calendar"></i>
-											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
-									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Print</button>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div> --}}
-					{{-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
-						</div>
-						<form role="form" method="post" action="{{url('index/interview/send_email/'.$id)}}">
-							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
-											<option value=""></option>
-											@foreach($subsection3 as $subsection3)
-											<option value="{{ $subsection3->sub_section_name }}">{{ $subsection3->sub_section_name }}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-6">
-									<div class="form-group">
-										<div class="input-group date">
-											<div class="input-group-addon bg-white">
-												<i class="fa fa-calendar"></i>
-											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-6">
-									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div> --}}
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="col-md-12">
 							<div class="col-md-12">
 								<div class="form-group pull-right">
-									<a href="{{ url('index/interview/create/'.$id) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
+									
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Sub Section</th>
-												<th>Date</th>
-												<th>Periode</th>
-												<th>Leader</th>
-												<th>Foreman</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Details</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($interview as $interview)
-											<tr>
-												<td>{{$interview->subsection}}</td>
-												<td>{{$interview->date}}</td>
-												<td>{{$interview->periode}}</td>
-												<td>{{$interview->leader}}</td>
-												<td>{{$interview->foreman}}</td>
-												<td>
-													@if($interview->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($interview->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														<a class="btn btn-primary btn-sm" href="{{secure_url('index/interview/details/'.$interview->id)}}">Details</a>
-														<a class="btn btn-success btn-sm" href="{{url('index/interview/print_interview/'.$interview->id)}}">Print</a>
-														@if($interview->send_status == "")
-									                		<a class="btn btn-info btn-sm" href="{{url('index/interview/sendemail/'.$interview->id)}}">Send Email</a>
-									                	@endif
-													</center>
-												</td>
-												<td>
-													<center>
-														<a class="btn btn-info btn-xs" href="{{url('index/interview/show/'.$id.'/'.$interview->id)}}">View</a>
-														<a href="{{url('index/interview/edit/'.$id.'/'.$interview->id)}}" class="btn btn-warning btn-xs">Edit</a>
-														<a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/interview/destroy") }}', '{{ $interview->activity_lists->activity_name }} - {{ $interview->date }} - {{ $interview->periode }}','{{ $id }}', '{{ $interview->id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+						<div class="col-xs-12" style="overflow-x: scroll;">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Sub Section</th>
+										<th>Date</th>
+										<th>Periode</th>
+										<th>Leader</th>
+										<th>Foreman</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Details</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($interview as $interview)
+									<tr>
+										<td>{{$interview->subsection}}</td>
+										<td>{{$interview->date}}</td>
+										<td>{{$interview->periode}}</td>
+										<td>{{$interview->leader}}</td>
+										<td>{{$interview->foreman}}</td>
+										<td>
+											@if($interview->send_status == "")
+						                		<label class="label label-danger">Belum Dikirim</label>
+						                	@else
+						                		<label class="label label-success">Terkirim</label>
+						                	@endif
+										</td>
+										<td>@if($interview->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												<a class="btn btn-primary btn-sm" href="{{secure_url('index/interview/details/'.$interview->id)}}">Peserta Interview</a>
+												<a class="btn btn-success btn-sm" href="{{url('index/interview/print_interview/'.$interview->id)}}">Print</a>
+												@if($interview->send_status == "")
+							                		<a class="btn btn-info btn-sm" href="{{url('index/interview/sendemail/'.$interview->id)}}">Send Email</a>
+							                	@endif
+											</center>
+										</td>
+										<td>
+											<center>
+												<a href="{{url('index/interview/edit/'.$id.'/'.$interview->id)}}" class="btn btn-warning">Edit</a>
+												<a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/interview/destroy") }}', '{{ $interview->activity_lists->activity_name }} - {{ $interview->date }} - {{ $interview->periode }}','{{ $id }}', '{{ $interview->id }}');">
+													Delete
+												</a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -317,6 +227,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			language : {
 				noResults : function(params) {

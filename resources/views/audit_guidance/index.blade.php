@@ -39,15 +39,12 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Schedule {{ $activity_name }} <span class="text-purple">{{ $leader }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		Schedule {{ $activity_name }} - {{ $leader }}
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+			Buat Schedule
+		</button>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -63,11 +60,11 @@ table.table-bordered > tfoot > tr > th{
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-12">
 						<div class="box-header">
-							<h3 class="box-title">Filter Schedule <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter Schedule {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/audit_guidance/filter_guidance/'.$id)}}">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -79,7 +76,7 @@ table.table-bordered > tfoot > tr > th{
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" id="date" name="month" autocomplete="off" placeholder="Choose a Month">
+										<input type="text" class="form-control pull-right" id="date" name="month" autocomplete="off" placeholder="Pilih Month">
 									</div>
 								</div>
 							</div>
@@ -87,7 +84,7 @@ table.table-bordered > tfoot > tr > th{
 						<div class="col-md-12 col-md-offset-4">
 							<div class="col-md-3">
 								<div class="form-group pull-right">
-									<a href="{{ url('index/activity_list/filter/'.$id_departments.'/4/'.$frequency) }}" class="btn btn-warning">Back</a>
+									<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 									<a href="{{ url('index/audit_guidance/index/'.$id) }}" class="btn btn-danger">Clear</a>
 									<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 								</div>
@@ -95,72 +92,48 @@ table.table-bordered > tfoot > tr > th{
 						</div>
 						</form>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="form-group pull-right">
-							{{-- <a href="{{ url('index/audit_guidance/create/'.$id) }}" class="btn btn-primary">Create Schedule {{ $activity_alias }}</a> --}}
-							<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								Create Schedule {{ $activity_alias }}
-							</button>
-						</div>
-					</div>
 				  <div class="row">
-				    <div class="col-xs-12">
-				      <div class="box">
-				        <div class="box-body" style="overflow-x: scroll;">
-				          <table id="example1" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Nama Dokumen</th>
-				                <th>Nomor Dokumen</th>
-				                <th>Bulan</th>
-				                <th>Periode</th>
-				                <th>Status</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @if(count($audit_guidance) != 0)
-				              @foreach($audit_guidance as $audit_guidance)
-				              <tr>
-				                <td>{{$audit_guidance->nama_dokumen}}</td>
-				                <td>{{$audit_guidance->no_dokumen}}</td>
-				                <td>{{$monthTitle = date("F Y", strtotime($audit_guidance->month))}}</td>
-				                <td>{{$audit_guidance->periode}}</td>
-				                <td>@if($audit_guidance->status == "Belum Dikerjakan")
-				                		<label class="label label-danger">Belum Dikerjakan</label>
-				                	@else
-				                		<label class="label label-success">Sudah Dikerjakan</label>
-				                	@endif
-				        		</td>
-				                <td>
-				                  <center>
-				                    <a class="btn btn-info btn-sm" href="{{url('index/audit_guidance/show/'.$id.'/'.$audit_guidance->id)}}">View</a>
-				                    {{-- <a href="{{url('index/audit_guidance/edit/'.$id.'/'.$audit_guidance->id)}}" class="btn btn-warning btn-sm">Edit</a> --}}
-									<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit('{{ url("index/audit_guidance/update") }}','{{ $id }}','{{ $audit_guidance->id }}');">
-						               Edit
-						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/audit_guidance/destroy") }}', '{{ $audit_guidance->nama_dokumen }} - {{ $audit_guidance->no_dokumen }} - {{ $audit_guidance->month }}','{{ $id }}', '{{ $audit_guidance->id }}');">
-				                      Delete
-				                    </a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				              @endif
-				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
-				          </table>
-				        </div>
-				      </div>
+				    <div class="col-xs-12" style="overflow-x: scroll;">
+			          <table id="example1" class="table table-bordered table-striped table-hover">
+			            <thead style="background-color: rgba(126,86,134,.7);">
+			              <tr>
+			                <th>Nama Dokumen</th>
+			                <th>Nomor Dokumen</th>
+			                <th>Bulan</th>
+			                <th>Periode</th>
+			                <th>Status</th>
+			                <th>Action</th>
+			              </tr>
+			            </thead>
+			            <tbody>
+			              @if(count($audit_guidance) != 0)
+			              @foreach($audit_guidance as $audit_guidance)
+			              <tr>
+			                <td>{{$audit_guidance->nama_dokumen}}</td>
+			                <td>{{$audit_guidance->no_dokumen}}</td>
+			                <td>{{$monthTitle = date("F Y", strtotime($audit_guidance->month))}}</td>
+			                <td>{{$audit_guidance->periode}}</td>
+			                <td>@if($audit_guidance->status == "Belum Dikerjakan")
+			                		<label class="label label-danger">Belum Dikerjakan</label>
+			                	@else
+			                		<label class="label label-success">Sudah Dikerjakan</label>
+			                	@endif
+			        		</td>
+			                <td>
+			                  <center>
+								<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit('{{ url("index/audit_guidance/update") }}','{{ $id }}','{{ $audit_guidance->id }}');">
+					               Edit
+					            </button>
+			                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/audit_guidance/destroy") }}', '{{ $audit_guidance->nama_dokumen }} - {{ $audit_guidance->no_dokumen }} - {{ $audit_guidance->month }}','{{ $id }}', '{{ $audit_guidance->id }}');">
+			                      Delete
+			                    </a>
+			                  </center>
+			                </td>
+			              </tr>
+			              @endforeach
+			              @endif
+			            </tbody>
+			          </table>
 				    </div>
 				  </div>
 				</div>
@@ -201,14 +174,14 @@ table.table-bordered > tfoot > tr > th{
         <form role="form" method="post" action="{{url('index/audit_guidance/store/'.$id)}}" enctype="multipart/form-data">
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            	<input type="hidden" class="form-control" name="inputactivity_list_id" id="inputactivity_list_id" placeholder="Enter Leader" value="{{ $id }}" readonly>
+            	<input type="hidden" class="form-control" name="inputactivity_list_id" id="inputactivity_list_id" placeholder="Masukkan Leader" value="{{ $id }}" readonly>
 	            <div class="form-group">
 	              <label for="">Nama Dokumen</label>
-				  <input type="text" class="form-control" name="inputnama_dokumen" id="inputnama_dokumen" placeholder="Enter Nama Dokumen" required>
+				  <input type="text" class="form-control" name="inputnama_dokumen" id="inputnama_dokumen" placeholder="Masukkan Nama Dokumen" required>
 	            </div>
 	            <div class="form-group">
 	              <label for="">No. Dokumen</label>
-				  <input type="text" class="form-control" name="inputno_dokumen" id="inputno_dokumen" placeholder="Enter No. Dokumen" required>
+				  <input type="text" class="form-control" name="inputno_dokumen" id="inputno_dokumen" placeholder="Masukkan No. Dokumen" required>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Month</label>
@@ -216,22 +189,22 @@ table.table-bordered > tfoot > tr > th{
 					  <div class="input-group-addon">
 						<i class="fa fa-calendar"></i>
 					  </div>
-					  <input type="text" class="form-control pull-right" id="inputmonth" name="inputmonth" autocomplete="off" placeholder="Choose a Month" required>
+					  <input type="text" class="form-control pull-right" id="inputmonth" name="inputmonth" autocomplete="off" placeholder="Pilih Month" required>
 				  </div>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Periode</label>
-	              <input type="text" class="form-control" name="inputperiode" id="inputperiode" placeholder="Enter No. Dokumen" value="{{ $fy }}" readonly>
+	              <input type="text" class="form-control" name="inputperiode" id="inputperiode" placeholder="Masukkan No. Dokumen" value="{{ $fy }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="inputleader" id="inputleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+				  <input type="text" class="form-control" name="inputleader" id="inputleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="inputforeman" id="inputforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+				  <input type="text" class="form-control" name="inputforeman" id="inputforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -261,14 +234,14 @@ table.table-bordered > tfoot > tr > th{
         <form role="form" id="formedit" method="post" action="" enctype="multipart/form-data">
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            	<input type="hidden" class="form-control" name="inputactivity_list_id" id="inputactivity_list_id" placeholder="Enter Leader" value="{{ $id }}" readonly>
+            	<input type="hidden" class="form-control" name="inputactivity_list_id" id="inputactivity_list_id" placeholder="Masukkan Leader" value="{{ $id }}" readonly>
 	            <div class="form-group">
 	              <label for="">Nama Dokumen</label>
-				  <input type="text" class="form-control" name="editnama_dokumen" id="editnama_dokumen" placeholder="Enter Nama Dokumen" required>
+				  <input type="text" class="form-control" name="editnama_dokumen" id="editnama_dokumen" placeholder="Masukkan Nama Dokumen" required>
 	            </div>
 	            <div class="form-group">
 	              <label for="">No. Dokumen</label>
-				  <input type="text" class="form-control" name="editno_dokumen" id="editno_dokumen" placeholder="Enter No. Dokumen" required>
+				  <input type="text" class="form-control" name="editno_dokumen" id="editno_dokumen" placeholder="Masukkan No. Dokumen" required>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Month</label>
@@ -276,22 +249,22 @@ table.table-bordered > tfoot > tr > th{
 					  <div class="input-group-addon">
 						<i class="fa fa-calendar"></i>
 					  </div>
-					  <input type="text" class="form-control pull-right" id="editmonth" name="editmonth" autocomplete="off" placeholder="Choose a Month" required>
+					  <input type="text" class="form-control pull-right" id="editmonth" name="editmonth" autocomplete="off" placeholder="Pilih Month" required>
 				  </div>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Periode</label>
-	              <input type="text" class="form-control" name="editperiode" id="editperiode" placeholder="Enter No. Dokumen" value="{{ $fy }}" readonly>
+	              <input type="text" class="form-control" name="editperiode" id="editperiode" placeholder="Masukkan No. Dokumen" value="{{ $fy }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="editleader" id="editleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+				  <input type="text" class="form-control" name="editleader" id="editleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="editforeman" id="editforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+				  <input type="text" class="form-control" name="editforeman" id="editforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -320,6 +293,7 @@ table.table-bordered > tfoot > tr > th{
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('#date').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm',
@@ -363,10 +337,6 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
   <script>
     jQuery(document).ready(function() {
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       var table = $('#example1').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -408,33 +378,7 @@ table.table-bordered > tfoot > tr > th{
           ]
         }
       });
-
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example1 tfoot tr').appendTo('#example1 thead');
-
     });
-    $(function () {
-
-      $('#example2').DataTable({
-        'paging'      : true,
-        'lengthChange': false,
-        'searching'   : false,
-        'ordering'    : true,
-        'info'        : true,
-        'autoWidth'   : false
-      })
-    })
     function deleteConfirmation(url, name,id,audit_guidance_id) {
       console.log(url);
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");

@@ -44,15 +44,13 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader }}
+		<a class="btn btn-warning pull-right" href="{{ url('index/interview/index/'.$activity_id) }}">Kembali</a>
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal" style="margin-right: 5px">
+	        Masukkan Peserta
+	    </button>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -68,236 +66,180 @@ table.table-bordered > tfoot > tr > th{
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-header">
-					<h3 class="box-title">Interview Details <span class="text-purple"></span></h3>
+					<h3 class="box-title">Detail Interview <span class="text-purple"></span></h3>
 				</div>
 				<div class="box-body">
 				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			          	<div class="form-group row" align="right">
-				          <label class="col-sm-5">Department</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->department}}
-				          </div>
-				        </div>
-				        <div class="form-group row" align="right">
-				          <label class="col-sm-5">Section</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->section}}
-				          </div>
-				        </div>
-				        <div class="form-group row" align="right">
-				          <label class="col-sm-5">Sub Section</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->subsection}}
-				          </div>
-				        </div>
-				        <div class="form-group row" align="right">
-				          <label class="col-sm-5">Date</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->date}}
-				          </div>
-				        </div>
-				        <div class="form-group row" align="right">
-				          <label class="col-sm-5">Periode</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->periode}}
-				          </div>
-				        </div>
-			          <a class="btn btn-warning" href="{{ url('index/interview/index/'.$activity_id) }}">Back</a>
-			        </div>
-			        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-			          	<div class="form-group row" align="right">
-				          <label class="col-sm-5">Leader</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->leader}}
-				          </div>
-				        </div>
-				        <div class="form-group row" align="right">
-				          <label class="col-sm-5">Foreman</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->foreman}}
-				          </div>
-				        </div>
-				        <div class="form-group row" align="right">
-				          <label class="col-sm-5">Created By</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->user->name}}
-				          </div>
-				        </div>
-				        <div class="form-group row" align="right">
-				          <label class="col-sm-5">Created At</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->created_at}}
-				          </div>
-				        </div>
-				        <div class="form-group row" align="right">
-				          <label class="col-sm-5">Last Update</label>
-				          <div class="col-sm-5" align="left">
-				            {{$interview->updated_at}}
-				          </div>
-				        </div>
-			      </div>
+				  	<table class="table table-bordered">
+				  		<tr>
+							<td><b>Dept</b></td>
+							<td>{{strtoupper($interview->department)}}</td>
+						</tr>
+						<tr>
+							<td><b>Section</b></td>
+							<td>{{strtoupper($interview->section)}}</td>
+						</tr>
+						<tr>
+							<td><b>Subsection</b></td>
+							<td>{{$interview->subsection}}</td>
+						</tr>
+						<tr>
+							<td><b>Periode</b></td>
+							<td>{{$interview->periode}}</td>
+						</tr>
+				  	</table>
+				  </div>
+				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				  	<table class="table table-bordered">
+				  		<tr>
+							<td><b>Tanggal</b></td>
+							<td>{{$interview->date}}</td>
+						</tr>
+				  		<tr>
+							<td><b>Leader</b></td>
+							<td>{{$interview->leader}}</td>
+						</tr>
+						<tr>
+							<td><b>Foreman</b></td>
+							<td>{{strtoupper($interview->foreman)}}</td>
+						</tr>
+				  	</table>
+				  </div>
 				  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-				      <div class="box">
-				      	<div class="box-header">
-							<h3 class="box-title">Interview Participants <span class="text-purple"></span></h3>
-							<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-						        Create
-						    </button>
-						</div>
-				        <div class="box-body" style="overflow-x: scroll;">
-				          <table id="example1" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Participant</th>
-				                <th>Filosofi YAMAHA</th>
-				                <th>Aturan K3 YAHAMA</th>
-				                <th>10 Komitmen Berkendara</th>
-				                <th>Kebijakan Mutu</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @foreach($interview_detail as $interview_detail)
-				              <tr>
-				                <td>{{ $interview_detail->participants->name }}</td>
-				                <td>@if($interview_detail->filosofi_yamaha == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->filosofi_yamaha }}</label>
-				                	@elseif($interview_detail->filosofi_yamaha == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->filosofi_yamaha }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->filosofi_yamaha }}</label>
-				                	@endif
-				            	</td>
-				            	<td>@if($interview_detail->aturan_k3 == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->aturan_k3 }}</label>
-				                	@elseif($interview_detail->aturan_k3 == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->aturan_k3 }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->aturan_k3 }}</label>
-				                	@endif
-				                </td>
-				                <td>@if($interview_detail->komitmen_berkendara == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->komitmen_berkendara }}</label>
-				                	@elseif($interview_detail->komitmen_berkendara == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->komitmen_berkendara }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->komitmen_berkendara }}</label>
-				                	@endif
-				                </td>
-				                <td>@if($interview_detail->kebijakan_mutu == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->kebijakan_mutu }}</label>
-				                	@elseif($interview_detail->kebijakan_mutu == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->kebijakan_mutu }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->kebijakan_mutu }}</label>
-				                	@endif
-				                </td>
-				                <td>
-				                  <center>
-				                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editinterview('{{ url("index/interview/edit_participant") }}','{{ $interview_detail->id }}','{{ $interview_id }}');">
-						               <i class="fa fa-edit"></i>
-						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/interview/destroy_participant") }}','{{ $interview_detail->participants->name }}','{{ $interview_detail->id }}','{{ $interview_id }}');">
-				                      <i class="fa fa-trash"></i>
-				                    </a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
-				          </table>
+					<h3 class="box-title">Peserta Interview Pointing Call <span class="text-purple"></span></h3>
+			          <table id="example1" class="table table-bordered table-striped table-hover">
+			            <thead style="background-color: rgba(126,86,134,.7);">
+			              <tr>
+			                <th>Participant</th>
+			                <th>Filosofi YAMAHA</th>
+			                <th>Aturan K3 YAHAMA</th>
+			                <th>10 Komitmen Berkendara</th>
+			                <th>Kebijakan Mutu</th>
+			                <th>Action</th>
+			              </tr>
+			            </thead>
+			            <tbody>
+			              @foreach($interview_detail as $interview_detail)
+			              <tr>
+			                <td>{{ $interview_detail->participants->name }}</td>
+			                <td>@if($interview_detail->filosofi_yamaha == 'OK')
+			                		<label class="label label-success">{{ $interview_detail->filosofi_yamaha }}</label>
+			                	@elseif($interview_detail->filosofi_yamaha == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail->filosofi_yamaha }}</label>
+			                	@else
+			                		<label class="label label-danger">{{ $interview_detail->filosofi_yamaha }}</label>
+			                	@endif
+			            	</td>
+			            	<td>@if($interview_detail->aturan_k3 == 'OK')
+			                		<label class="label label-success">{{ $interview_detail->aturan_k3 }}</label>
+			                	@elseif($interview_detail->aturan_k3 == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail->aturan_k3 }}</label>
+			                	@else
+			                		<label class="label label-danger">{{ $interview_detail->aturan_k3 }}</label>
+			                	@endif
+			                </td>
+			                <td>@if($interview_detail->komitmen_berkendara == 'OK')
+			                		<label class="label label-success">{{ $interview_detail->komitmen_berkendara }}</label>
+			                	@elseif($interview_detail->komitmen_berkendara == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail->komitmen_berkendara }}</label>
+			                	@else
+			                		<label class="label label-danger">{{ $interview_detail->komitmen_berkendara }}</label>
+			                	@endif
+			                </td>
+			                <td>@if($interview_detail->kebijakan_mutu == 'OK')
+			                		<label class="label label-success">{{ $interview_detail->kebijakan_mutu }}</label>
+			                	@elseif($interview_detail->kebijakan_mutu == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail->kebijakan_mutu }}</label>
+			                	@else
+			                		<label class="label label-danger">{{ $interview_detail->kebijakan_mutu }}</label>
+			                	@endif
+			                </td>
+			                <td>
+			                  <center>
+			                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editinterview('{{ url("index/interview/edit_participant") }}','{{ $interview_detail->id }}','{{ $interview_id }}');">
+					               <i class="fa fa-edit"></i>
+					            </button>
+			                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/interview/destroy_participant") }}','{{ $interview_detail->participants->name }}','{{ $interview_detail->id }}','{{ $interview_id }}');">
+			                      <i class="fa fa-trash"></i>
+			                    </a>
+			                  </center>
+			                </td>
+			              </tr>
+			              @endforeach
+			            </tbody>
+			          </table>
 
-				          <table id="example2" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Participant</th>
-				                <th>6 Pasal Keselamatan Lalu Lintas</th>
-				                <th>Budaya Kerja YMPI</th>
-				                <th>5S</th>
-				                <th>Komitmen Hotel Concept</th>
-				                <th>Janji Tindakan Dasar Hotel Concept</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @foreach($interview_detail2 as $interview_detail2)
-				              <tr>
-				                <td>{{ $interview_detail2->participants->name }}</td>
-				                <td>@if($interview_detail->enam_pasal_keselamatan == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->enam_pasal_keselamatan }}</label>
-				                	@elseif($interview_detail->enam_pasal_keselamatan == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->enam_pasal_keselamatan }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->enam_pasal_keselamatan }}</label>
-				                	@endif
-				                </td>
-				                <td>@if($interview_detail->budaya_kerja == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->budaya_kerja }}</label>
-				                	@elseif($interview_detail->budaya_kerja == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->budaya_kerja }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->budaya_kerja }}</label>
-				                	@endif
-				                </td>
-				                <td>@if($interview_detail->budaya_5s == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->budaya_5s }}</label>
-				                	@elseif($interview_detail->budaya_5s == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->budaya_5s }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->budaya_5s }}</label>
-				                	@endif
-				                </td>
-				                <td>@if($interview_detail->komitmen_hotel_konsep == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->komitmen_hotel_konsep }}</label>
-				                	@elseif($interview_detail->komitmen_hotel_konsep == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->komitmen_hotel_konsep }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->komitmen_hotel_konsep }}</label>
-				                	@endif
-				                </td>
-				                <td>@if($interview_detail->janji_tindakan_dasar == 'OK')
-				                		<label class="label label-success">{{ $interview_detail->janji_tindakan_dasar }}</label>
-				                	@elseif($interview_detail->janji_tindakan_dasar == 'OK (Kurang Lancar)')
-				                		<label class="label label-warning">{{ $interview_detail->janji_tindakan_dasar }}</label>
-				                	@else
-				                		<label class="label label-danger">{{ $interview_detail->janji_tindakan_dasar }}</label>
-				                	@endif
-				                </td>
-				                <td>
-				                </td>
-				              </tr>
-				              @endforeach
-				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
-				          </table>
-				        </div>
-				      </div>
+			          <table id="example2" class="table table-bordered table-striped table-hover">
+			            <thead style="background-color: rgba(126,86,134,.7);">
+			              <tr>
+			                <th>Participant</th>
+			                <th>6 Pasal Keselamatan Lalu Lintas</th>
+			                <th>Budaya Kerja YMPI</th>
+			                <th>5S</th>
+			                <th>Komitmen Hotel Concept</th>
+			                <th>Janji Tindakan Dasar Hotel Concept</th>
+			                <th>Action</th>
+			              </tr>
+			            </thead>
+			            <tbody>
+			              @foreach($interview_detail2 as $interview_detail2)
+			              <tr>
+			                <td>{{ $interview_detail2->participants->name }}</td>
+			                <td>@if($interview_detail->enam_pasal_keselamatan == 'OK')
+			                		<label class="label label-success">{{ $interview_detail->enam_pasal_keselamatan }}</label>
+			                	@elseif($interview_detail->enam_pasal_keselamatan == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail->enam_pasal_keselamatan }}</label>
+			                	@else
+			                		<label class="label label-danger">{{ $interview_detail->enam_pasal_keselamatan }}</label>
+			                	@endif
+			                </td>
+			                <td>@if($interview_detail->budaya_kerja == 'OK')
+			                		<label class="label label-success">{{ $interview_detail->budaya_kerja }}</label>
+			                	@elseif($interview_detail->budaya_kerja == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail->budaya_kerja }}</label>
+			                	@else
+			                		<label class="label label-danger">{{ $interview_detail->budaya_kerja }}</label>
+			                	@endif
+			                </td>
+			                <td>@if($interview_detail->budaya_5s == 'OK')
+			                		<label class="label label-success">{{ $interview_detail->budaya_5s }}</label>
+			                	@elseif($interview_detail->budaya_5s == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail->budaya_5s }}</label>
+			                	@else
+			                		<label class="label label-danger">{{ $interview_detail->budaya_5s }}</label>
+			                	@endif
+			                </td>
+			                <td>@if($interview_detail->komitmen_hotel_konsep == 'OK')
+			                		<label class="label label-success">{{ $interview_detail->komitmen_hotel_konsep }}</label>
+			                	@elseif($interview_detail->komitmen_hotel_konsep == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail->komitmen_hotel_konsep }}</label>
+			                	@else
+			                		<label class="label label-danger">{{ $interview_detail->komitmen_hotel_konsep }}</label>
+			                	@endif
+			                </td>
+			                <td>@if($interview_detail->janji_tindakan_dasar == 'OK')
+			                		<label class="label label-success">{{ $interview_detail->janji_tindakan_dasar }}</label>
+			                	@elseif($interview_detail->janji_tindakan_dasar == 'OK (Kurang Lancar)')
+			                		<label class="label label-warning">{{ $interview_detail->janji_tindakan_dasar }}</label>
+			                	@else
+			                		<label class="label label-danger">{{ $interview_detail->janji_tindakan_dasar }}</label>
+			                	@endif
+			                </td>
+			                <td>
+			                </td>
+			              </tr>
+			              @endforeach
+			            </tbody>
+			          </table>
+				  </div>
+				</div>
+			</div>
 
-				      <div class="box">
+			<div class="box box-solid">
 				      	<div class="box-header">
-							<h3 class="box-title">Interview Pictures / Files <span class="text-purple"></span></h3>
+							<h3 class="box-title">Foto Interview<span class="text-purple"></span></h3>
 							<form role="form" method="post" action="{{url('index/interview/insertpicture/'.$interview_id)}}" enctype="multipart/form-data">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
@@ -310,7 +252,7 @@ table.table-bordered > tfoot > tr > th{
 								<button type="submit" class="btn btn-primary ">Upload</button>
 							</form>
 						</div>
-				        <div class="box-body" style="overflow-x: scroll;">
+				        <div class="box-body">
 				          <table id="example3" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
@@ -341,18 +283,9 @@ table.table-bordered > tfoot > tr > th{
 				              </tr>
 				              @endforeach
 				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
 				          </table>
 				        </div>
 				      </div>
-				  </div>
-				</div>
-			</div>
 		</div>
 	</div>
 </section>
@@ -737,6 +670,7 @@ table.table-bordered > tfoot > tr > th{
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('#date').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm-dd',
@@ -796,10 +730,6 @@ table.table-bordered > tfoot > tr > th{
       })
     });
     jQuery(document).ready(function() {
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       var table = $('#example1').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -842,27 +772,9 @@ table.table-bordered > tfoot > tr > th{
         }
       });
 
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example1 tfoot tr').appendTo('#example1 thead');
-
     });
 
     jQuery(document).ready(function() {
-      $('#example2 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       var table = $('#example2').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -905,26 +817,8 @@ table.table-bordered > tfoot > tr > th{
         }
       });
 
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example2 tfoot tr').appendTo('#example2 thead');
-
     });
     jQuery(document).ready(function() {
-      $('#example3 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       var table = $('#example3').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -966,20 +860,6 @@ table.table-bordered > tfoot > tr > th{
           ]
         }
       });
-
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example3 tfoot tr').appendTo('#example3 thead');
 
     });
     function deleteConfirmation(url, name, detail_id, interview_id) {

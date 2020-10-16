@@ -8,12 +8,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Leader Task Report<span class="text-purple"> リーダータスリポート</span>
-		<small>{{$dept}}</small>
+		Leader Task Report &nbsp;<small><span class="text-purple">リーダータスリポート</span></small>
+		<a href="{{ url('index/production_report/index/'.$id)}}" class="btn btn-warning pull-right" style="color:white">Kembali</a>
 	</h1>
 	<ol class="breadcrumb">
-    {{-- <li></li> --}}
-    	<li><a href="{{ url("index/production_report/index/".$id)}}" class="btn btn-warning" style="color:white">Back</a></li>
   	</ol>
 </section>
 @stop

@@ -39,8 +39,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }} - {{ $product }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader }} - {{ $product }}
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+	        Buat Cek FG / KD
+	    </button>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -65,11 +67,11 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/daily_check_fg/filter_daily_check/'.$id.'/'.$product)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -88,7 +90,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/daily_check_fg/product/'.$id) }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/daily_check_fg/index/'.$id.'/'.$product) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
@@ -98,7 +100,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Cetak {{ $activity_name }}</h3>
 						</div>
 						<form target="_blank" role="form" method="post" action="{{url('index/daily_check_fg/print_daily_check/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -125,7 +127,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Kirim Email ke Foreman</span></h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/daily_check_fg/sendemail/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -144,91 +146,75 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
+										<button type="submit" class="btn btn-primary col-sm-14">Kirim Email</button>
 									</div>
 								</div>
 							</div>
 						</form>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="col-md-12">
-							<div class="col-md-12">
-								<div class="form-group pull-right">
-									{{-- <a href="{{ url('index/daily_check_fg/create/'.$id.'/'.$product) }}" class="btn btn-primary">Create {{ $activity_alias }}</a> --}}
-									<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								        Create
-								    </button>
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Production Date</th>
-												<th>Check Date</th>
-												<th>Serial Number</th>
-												<th>Condition</th>
-												<th>Keterangan</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($daily_check as $daily_check)
-											<tr>
-												<td>{{$daily_check->production_date}}</td>
-												<td>{{$daily_check->check_date}}</td>
-												<td>{{$daily_check->serial_number}}</td>
-												<td>{{$daily_check->condition}}</td>
-												<td>{{$daily_check->keterangan}}</td>
-												<td>
-													@if($daily_check->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($daily_check->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														<a class="btn btn-info btn-sm" href="{{url('index/daily_check_fg/show/'.$id.'/'.$daily_check->id)}}">View</a>
-														{{-- <a href="{{url('index/daily_check_fg/edit/'.$id.'/'.$daily_check->id)}}" class="btn btn-warning btn-xs">Edit</a> --}}
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_daily('{{ url("index/daily_check_fg/update") }}','{{ $daily_check->id }}','{{ $daily_check->product }}');">
-											               Edit
-											            </button>
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/daily_check_fg/destroy") }}', '{{ $daily_check->product }} - {{ $daily_check->production_date }} - {{ $daily_check->serial_number }}','{{ $id }}', '{{ $daily_check->id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+						<div class="col-xs-12" style="overflow-x: scroll;">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Production Date</th>
+										<th>Check Date</th>
+										<th>Serial Number</th>
+										<th>Condition</th>
+										<th>Keterangan</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($daily_check as $daily_check)
+									<tr>
+										<td>{{$daily_check->production_date}}</td>
+										<td>{{$daily_check->check_date}}</td>
+										<td>{{$daily_check->serial_number}}</td>
+										<td>{{$daily_check->condition}}</td>
+										<td>{{$daily_check->keterangan}}</td>
+										<td>
+											@if($daily_check->send_status == "")
+						                		<label class="label label-danger">Not Yet Sent</label>
+						                	@else
+						                		<label class="label label-success">Sent</label>
+						                	@endif
+										</td>
+										<td>@if($daily_check->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												<a class="btn btn-info btn-sm" href="{{url('index/daily_check_fg/show/'.$id.'/'.$daily_check->id)}}">View</a>
+												{{-- <a href="{{url('index/daily_check_fg/edit/'.$id.'/'.$daily_check->id)}}" class="btn btn-warning btn-xs">Edit</a> --}}
+												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_daily('{{ url("index/daily_check_fg/update") }}','{{ $daily_check->id }}','{{ $daily_check->product }}');">
+									               Edit
+									            </button>
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/daily_check_fg/destroy") }}', '{{ $daily_check->product }} - {{ $daily_check->production_date }} - {{ $daily_check->serial_number }}','{{ $id }}', '{{ $daily_check->id }}');">
+													Delete
+												</a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -290,7 +276,7 @@
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
 	              <label for="">Serial Number / Photo Number</label>
-				  <input type="text" name="serial_number" id="inputSerialNumber" class="form-control" placeholder="Enter Serial Number / Photo Number" required="required" title="">
+				  <input type="text" name="serial_number" id="inputSerialNumber" class="form-control" placeholder="Masukkan Serial Number / Photo Number" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	              <label for="">Condition</label>
@@ -303,7 +289,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Keterangan</label>
-				  <input type="text" name="keterangan" id="inputKeterangan" class="form-control" placeholder="Enter Keterangan" required="required" title="" value="-">
+				  <input type="text" name="keterangan" id="inputKeterangan" class="form-control" placeholder="Masukkan Keterangan" required="required" title="" value="-">
 	            </div>
             </div>
           </div>
@@ -356,7 +342,7 @@
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
 	              <label for="">Serial Number / Photo Number</label>
-				  <input type="text" name="serial_number" id="editSerialNumber" class="form-control" placeholder="Enter Serial Number / Photo Number" required="required" title="">
+				  <input type="text" name="serial_number" id="editSerialNumber" class="form-control" placeholder="Masukkan Serial Number / Photo Number" required="required" title="">
 	            </div>
 	            <div class="form-group">
 	              <label for="">Condition</label>
@@ -369,7 +355,7 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Keterangan</label>
-				  <input type="text" name="keterangan" id="editKeterangan" class="form-control" placeholder="Enter Keterangan" required="required" title="" value="">
+				  <input type="text" name="keterangan" id="editKeterangan" class="form-control" placeholder="Masukkan Keterangan" required="required" title="" value="">
 	            </div>
             </div>
           </div>
@@ -399,6 +385,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			language : {
 				noResults : function(params) {

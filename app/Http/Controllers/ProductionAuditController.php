@@ -55,6 +55,8 @@ class ProductionAuditController extends Controller
 
     function index($id,$productproduct,$prosesproses)
     {
+        $now = date('Y-m-d');
+        $one_month = date('Y-m-d', strtotime('-3 months', strtotime($now)));
         $activityList = ActivityList::find($id);
     	  $productionAudit = ProductionAudit::where('activity_list_id',$id)
                 ->whereHas('point_check_audit', function ($query) use($productproduct) {
@@ -63,6 +65,7 @@ class ProductionAuditController extends Controller
                 ->whereHas('point_check_audit', function ($query2) use($prosesproses) {
                         $query2->where('proses','=', $prosesproses);
                     })
+                ->whereBetween('date', [$now, $one_month])
                 ->orderBy('production_audits.id','desc')
                 ->get();
 
@@ -77,6 +80,7 @@ class ProductionAuditController extends Controller
         $departments = $activityList->departments->department_name;
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
         // var_dump($productionAudit);
 
     	 $data = array('production_audit' => $productionAudit,
@@ -88,6 +92,7 @@ class ProductionAuditController extends Controller
             				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
             				  'id' => $id,
+                      'leader' => $leader,
                       'id_departments' => $id_departments);
     	return view('production_audit.index', $data
     		)->with('page', 'Production Audit');
@@ -114,6 +119,7 @@ class ProductionAuditController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,
+                      'leader' => $leader,
                       'id_departments' => $id_departments);
         return view('production_audit.details', $data
             )->with('page', 'Production Audit');
@@ -157,6 +163,7 @@ class ProductionAuditController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $leader = $activityList->leader_dept;
 
         $data = array(
                       'point_check_audit' => $pointCheckAudit,
@@ -167,9 +174,28 @@ class ProductionAuditController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,
+                      'leader' => $leader,
                       'id_departments' => $id_departments);
         return view('production_audit.index', $data
             )->with('page', 'Production Audit');
+    }
+
+    public function fetchPointCheck(Request $request)
+    {
+      try {
+        $pointCheckAudit = PointCheckAudit::where('activity_list_id',$request->get('id'))->where('product',$request->get('product'))->where('proses',$request->get('proses'))->get();
+        $response = array(
+          'status' => true,
+          'point_check_audit' => $pointCheckAudit,
+        );
+        return Response::json($response);
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message' => $e->getMessage()
+        );
+        return Response::json($response);
+      }
     }
 
     function show($id,$audit_id)

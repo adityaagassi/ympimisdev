@@ -40,8 +40,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Monthly Evidence {{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		Audit Bulanan Produk Pertama - {{ $leader }}
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+	        Buat Audit
+	    </button>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -66,11 +68,11 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $proses }}</span></h3>
+							<h3 class="box-title">Filter Audit Produk Pertama</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/first_product_audit/filter_first_product_detail/'.$id.'/'.$first_product_audit_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -99,7 +101,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $proses }}</span></h3>
+							<h3 class="box-title">Cetak Audit Produk Pertama</h3>
 						</div>
 						<form target="_blank" role="form" method="post" action="{{url('index/first_product_audit/print_first_product_audit/'.$id.'/'.$first_product_audit_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -126,7 +128,7 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $proses }}</span></h3>
+							<h3 class="box-title">Kirim Email ke Foreman</span></h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/first_product_audit/sendemail/'.$id.'/'.$first_product_audit_id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -145,104 +147,88 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
+										<button type="submit" class="btn btn-primary col-sm-14">Kirim Email</button>
 									</div>
 								</div>
 							</div>
 						</form>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="col-md-12">
-							<div class="col-md-12">
-								<div class="form-group pull-right">
-									{{-- <a href="{{ url('index/first_product_audit/create_details/'.$first_product_audit_id) }}" class="btn btn-primary">Create {{ $proses }}</a> --}}
-									<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								        Create
-								    </button>
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Proses</th>
-												<th>Jenis</th>
-												<th>Date</th>
-												<th>Month</th>
-												<th>Auditor</th>
-												<th>Foto Aktual</th>
-												<th>Note</th>
-												<th>PIC</th>
-												<th>Leader</th>
-												<th>Foreman</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($first_product_audit_details as $first_product_audit_details)
-											<tr>
-												<td>{{$first_product_audit_details->first_product_audit->proses}}</td>
-												<td>{{$first_product_audit_details->first_product_audit->jenis}}</td>
-												<td>{{$first_product_audit_details->date}}</td>
-												<td>{{$first_product_audit_details->month}}</td>
-												<td>{{$first_product_audit_details->auditor}}</td>
-												<td><?php echo $first_product_audit_details->foto_aktual ?></td>
-												<td><?php echo $first_product_audit_details->note ?></td>
-												<td>{{$first_product_audit_details->pic}}</td>
-												<td>{{$first_product_audit_details->leader}}</td>
-												<td>{{$first_product_audit_details->foreman}}</td>
-												<td>
-													@if($first_product_audit_details->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($first_product_audit_details->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editdetails('{{ url("index/first_product_audit/update_details") }}','{{ $id }}','{{ $first_product_audit_details->id }}');">
-											               <i class="fa fa-edit"></i>
-											            </button>
-									                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit/destroy_details") }}','{{ $first_product_audit_details->first_product_audit->proses }} - {{ $first_product_audit_details->date }}','{{ $id }}','{{ $first_product_audit_details->id }}');">
-									                      <i class="fa fa-trash"></i>
-									                    </a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+						<div class="col-xs-12" style="overflow-x: scroll">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Proses</th>
+										<th>Jenis</th>
+										<th>Date</th>
+										<th>Month</th>
+										<th>Auditor</th>
+										<th>Foto Aktual</th>
+										<th>Note</th>
+										<th>PIC</th>
+										<th>Leader</th>
+										<th>Foreman</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($first_product_audit_details as $first_product_audit_details)
+									<tr>
+										<td>{{$first_product_audit_details->first_product_audit->proses}}</td>
+										<td>{{$first_product_audit_details->first_product_audit->jenis}}</td>
+										<td>{{$first_product_audit_details->date}}</td>
+										<td>{{$first_product_audit_details->month}}</td>
+										<td>{{$first_product_audit_details->auditor}}</td>
+										<td><?php echo $first_product_audit_details->foto_aktual ?></td>
+										<td><?php echo $first_product_audit_details->note ?></td>
+										<td>{{$first_product_audit_details->pic}}</td>
+										<td>{{$first_product_audit_details->leader}}</td>
+										<td>{{$first_product_audit_details->foreman}}</td>
+										<td>
+											@if($first_product_audit_details->send_status == "")
+						                		<label class="label label-danger">Not Yet Sent</label>
+						                	@else
+						                		<label class="label label-success">Sent</label>
+						                	@endif
+										</td>
+										<td>@if($first_product_audit_details->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="editdetails('{{ url("index/first_product_audit/update_details") }}','{{ $id }}','{{ $first_product_audit_details->id }}');">
+									               <i class="fa fa-edit"></i>
+									            </button>
+							                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/first_product_audit/destroy_details") }}','{{ $first_product_audit_details->first_product_audit->proses }} - {{ $first_product_audit_details->date }}','{{ $id }}','{{ $first_product_audit_details->id }}');">
+							                      <i class="fa fa-trash"></i>
+							                    </a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -275,26 +261,26 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create Audit Cek Produk Pertama</b></h4>
+        <h4 class="modal-title" align="center"><b>Buat Audit Bulanan Produk Pertama</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
         <form role="form" method="post" action="{{url('index/first_product_audit/store_details/'.$id.'/'.$first_product_audit_id)}}" enctype="multipart/form-data">
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            	<input type="hidden" class="form-control" name="first_product_audit_id" id="inputfirst_product_audit_id" placeholder="Enter Leader" value="{{ $first_product_audit_id }}" readonly>
-            	<input type="hidden" class="form-control" name="activity_list_id" id="inputactivity_list_id" placeholder="Enter Leader" value="{{ $id }}" readonly>
+            	<input type="hidden" class="form-control" name="first_product_audit_id" id="inputfirst_product_audit_id" placeholder="Masukkan Leader" value="{{ $first_product_audit_id }}" readonly>
+            	<input type="hidden" class="form-control" name="activity_list_id" id="inputactivity_list_id" placeholder="Masukkan Leader" value="{{ $id }}" readonly>
 	            <div class="form-group">
 	              <label for="">Proses</label>
-				  <input type="text" class="form-control" name="proses" id="inputproses" placeholder="Enter Leader" value="{{ $proses }}" readonly>
+				  <input type="text" class="form-control" name="proses" id="inputproses" placeholder="Masukkan Leader" value="{{ $proses }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Jenis</label>
-				  <input type="text" class="form-control" name="jenis" id="inputjenis" placeholder="Enter Leader" value="{{ $jenis }}" readonly>
+				  <input type="text" class="form-control" name="jenis" id="inputjenis" placeholder="Masukkan Leader" value="{{ $jenis }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" class="form-control" name="date" id="inputdate" placeholder="Enter Leader" value="{{ date('Y-m-d') }}" readonly>
+				  <input type="text" class="form-control" name="date" id="inputdate" placeholder="Masukkan Leader" value="{{ date('Y-m-d') }}" readonly>
 	            </div>
 	            <div class="form-group">
 	            	<label for="">Month</label>
@@ -307,7 +293,7 @@
 				</div>
 	            <div class="form-group">
 	              <label for="">PIC</label>
-		              <select class="form-control select2" name="pic" id="inputpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+		              <select class="form-control select2" name="pic" id="inputpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 		                <option value=""></option>
 		                @foreach($operator as $operator)
 		                <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
@@ -330,15 +316,15 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Auditor</label>
-				  <input type="text" class="form-control" name="auditor" id="inputauditor" placeholder="Enter Leader" value="{{ $leader2 }}" readonly>
+				  <input type="text" class="form-control" name="auditor" id="inputauditor" placeholder="Masukkan Leader" value="{{ $leader2 }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="leader" id="inputleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+				  <input type="text" class="form-control" name="leader" id="inputleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="foreman" id="inputforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+				  <input type="text" class="form-control" name="foreman" id="inputforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -367,19 +353,19 @@
         <form role="form" id="formedit" method="post" action="" enctype="multipart/form-data">
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            	<input type="hidden" class="form-control" name="editfirst_product_audit_id" id="editfirst_product_audit_id" placeholder="Enter Leader" value="{{ $first_product_audit_id }}" readonly>
-            	<input type="hidden" class="form-control" name="editactivity_list_id" id="editactivity_list_id" placeholder="Enter Leader" value="{{ $id }}" readonly>
+            	<input type="hidden" class="form-control" name="editfirst_product_audit_id" id="editfirst_product_audit_id" placeholder="Masukkan Leader" value="{{ $first_product_audit_id }}" readonly>
+            	<input type="hidden" class="form-control" name="editactivity_list_id" id="editactivity_list_id" placeholder="Masukkan Leader" value="{{ $id }}" readonly>
 	            <div class="form-group">
 	              <label for="">Proses</label>
-				  <input type="text" class="form-control" name="editproses" id="editproses" placeholder="Enter Leader" value="{{ $proses }}" readonly>
+				  <input type="text" class="form-control" name="editproses" id="editproses" placeholder="Masukkan Leader" value="{{ $proses }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Jenis</label>
-				  <input type="text" class="form-control" name="editjenis" id="editjenis" placeholder="Enter Leader" value="{{ $jenis }}" readonly>
+				  <input type="text" class="form-control" name="editjenis" id="editjenis" placeholder="Masukkan Leader" value="{{ $jenis }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Date</label>
-				  <input type="text" class="form-control" name="editdate" id="editdate" placeholder="Enter Leader" readonly>
+				  <input type="text" class="form-control" name="editdate" id="editdate" placeholder="Masukkan Leader" readonly>
 	            </div>
 	            <div class="form-group">
 	            	<label for="">Month</label>
@@ -392,7 +378,7 @@
 				</div>
 	            <div class="form-group">
 	              <label for="">PIC</label>
-		              <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+		              <select class="form-control select3" name="editpic" id="editpic" style="width: 100%;" data-placeholder="Pilih PIC..." required>
 		                <option value=""></option>
 		                @foreach($operator2 as $operator2)
 		                <option value="{{ $operator2->name }}">{{ $operator2->employee_id }} - {{ $operator2->name }}</option>
@@ -411,15 +397,15 @@
 	            </div>
 	            <div class="form-group">
 	              <label for="">Auditor</label>
-				  <input type="text" class="form-control" name="editauditor" id="editauditor" placeholder="Enter Leader" value="{{ $leader2 }}" readonly>
+				  <input type="text" class="form-control" name="editauditor" id="editauditor" placeholder="Masukkan Leader" value="{{ $leader2 }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="editleader" id="editleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+				  <input type="text" class="form-control" name="editleader" id="editleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="editforeman" id="editforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+				  <input type="text" class="form-control" name="editforeman" id="editforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -448,6 +434,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			dropdownParent: $("#create-modal")
 		});

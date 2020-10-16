@@ -39,11 +39,9 @@ table.table-bordered > tfoot > tr > th{
 <section class="content-header">
   <h1>
     Approval of {{ $leader_name }}
-    <small>it all starts here</small>
+    <a href="{{ url('index/production_report/approval/'.$id)}}" class="btn btn-warning pull-right" style="color:white">Kembali</a>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li></li> --}}
-    <li><a href="{{ url("index/production_report/approval/".$id)}}" class="btn btn-warning btn-sm" style="color:white">Back</a></li>
   </ol>
 </section>
 @endsection
@@ -58,7 +56,7 @@ table.table-bordered > tfoot > tr > th{
   @endif
   <div class="row">
     <div class="col-xs-12">
-      <div class="box">
+      <div class="box box-solid">
         <div class="box-body">
             <div class="box-header">
               <h3 class="box-title">Filter</h3>
@@ -68,11 +66,12 @@ table.table-bordered > tfoot > tr > th{
               <div class="col-md-12 col-md-offset-4">
                 <div class="col-md-4">
                   <div class="form-group">
+                    <span><b>Bulan</b></span>
                     <div class="input-group date">
                       <div class="input-group-addon bg-white">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <input type="text" class="form-control datepicker" id="tgl"name="month" placeholder="Select Month" autocomplete="off">
+                      <input type="text" class="form-control datepicker" id="tgl"name="month" placeholder="Pilih Bulan" autocomplete="off">
                     </div>
                   </div>
                 </div>
@@ -80,21 +79,19 @@ table.table-bordered > tfoot > tr > th{
               <div class="col-md-12 col-md-offset-4">
                 <div class="col-md-4">
                   <div class="form-group pull-right">
-                    {{-- <a href="{{ url('index/production_report/approval_list/'.$id) }}" class="btn btn-warning">Back</a> --}}
                     <a href="{{ url('index/production_report/approval_list/'.$id.'/'.$leader_name) }}" class="btn btn-danger">Clear</a>
                     <button type="submit" class="btn btn-primary col-sm-14">Search</button>
                   </div>
                 </div>
               </div>
             </form>
-          </div>
-          <table id="example1" class="table table-bordered table-striped table-hover">
+            <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>Activity Name</th>
                 <th>Activity Type</th>
                 <th>Jumlah Approval</th>
-                <th>Details</th>                
+                <th>Action</th>                
               </tr>
             </thead>
             <tbody>
@@ -111,7 +108,7 @@ table.table-bordered > tfoot > tr > th{
                 </td>
                 <td>
                   @if($activity_list->link != null)
-                    <a target="_blank" class="btn btn-primary btn-sm" href="{{url("$activity_list->link")}}">Details</a>
+                    <a target="_blank" class="btn btn-primary btn-sm" href="{{url("$activity_list->link")}}">Approve</a>
                   @else
                     
                   @endif
@@ -119,15 +116,9 @@ table.table-bordered > tfoot > tr > th{
               </tr>
               @endforeach
             </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-            </tfoot>
           </table>
+          </div>
+          
         </div>
       </div>
     </div>
@@ -162,7 +153,7 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
   <script>
     jQuery(document).ready(function() {
-
+      $('body').toggleClass("sidebar-collapse");
       $('.datepicker').datepicker({
         autoclose: true,
         format: "yyyy-mm",
@@ -171,10 +162,6 @@ table.table-bordered > tfoot > tr > th{
         autoclose: true,
       });
 
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       var table = $('#example1').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -216,33 +203,7 @@ table.table-bordered > tfoot > tr > th{
           ]
         }
       });
-
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example1 tfoot tr').appendTo('#example1 thead');
-
     });
-    $(function () {
-
-      $('#example2').DataTable({
-        'paging'      : true,
-        'lengthChange': false,
-        'searching'   : false,
-        'ordering'    : true,
-        'info'        : true,
-        'autoWidth'   : false
-      })
-    })
     function deleteConfirmation(url, name, id,department_id,no) {
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton').attr("href", url+'/'+id +'/'+department_id+'/'+no);

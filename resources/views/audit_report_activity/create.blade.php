@@ -5,13 +5,9 @@
 <link rel="stylesheet" href="{{ url("plugins/timepicker/bootstrap-timepicker.min.css")}}">
 <section class="content-header">
   <h1>
-    Create {{ $activity_name }}
-    <small>it all starts here</small>
+    Buat Audit IK
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-   <li><a href="#">Examples</a></li>
-   <li class="active">Blank page</li> --}}
  </ol>
 </section>
 @endsection
@@ -36,24 +32,21 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
-    </div>  
+  <div class="box box-solid">
     <form role="form" method="post" action="{{url('index/audit_report_activity/store/'.$id)}}" enctype="multipart/form-data">
       <div class="box-body">
         <input type="hidden" value="{{csrf_token()}}" name="_token" />
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Department<span class="text-red">*</span></label>
+            <label class="col-sm-4">Department</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="department" placeholder="Enter Department" required value="{{ $departments }}" readonly>
+              <input type="text" class="form-control" name="department" placeholder="Masukkan Department" required value="{{ $departments }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Section<span class="text-red">*</span></label>
+            <label class="col-sm-4">Section</label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Choose a Section..." required>
+              <select class="form-control select2" name="section" style="width: 100%;" data-placeholder="Pilih Section" required>
                 <option value=""></option>
                 @foreach($section as $section)
                 <option value="{{ $section->section_name }}">{{ $section->section_name }}</option>
@@ -62,9 +55,9 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Sub Section<span class="text-red">*</span></label>
+            <label class="col-sm-4">Sub Section</label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Choose a Sub Section..." required>
+              <select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section" required>
                 <option value=""></option>
                 @foreach($subsection as $subsection)
                 <option value="{{ $subsection->sub_section_name }}">{{ $subsection->sub_section_name }}</option>
@@ -73,9 +66,9 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Audit Schedule<span class="text-red">*</span></label>
+            <label class="col-sm-4">Audit Schedule</label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Choose a Schedule This Month..." required>
+              <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Pilih Schedule Bulan Ini" required>
                 <option value=""></option>
                 @foreach($guidance as $guidance)
                   <option value="{{ $guidance->id }}">{{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
@@ -84,19 +77,19 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Nama Dokumen<span class="text-red">*</span></label>
+            <label class="col-sm-4">Nama Dokumen</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" name="nama_dokumen" placeholder="Enter Nama Dokumen" required>
+              <input type="text" class="form-control" name="nama_dokumen" placeholder="Masukkan Nama Dokumen" required>
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Nomor Dokumen<span class="text-red">*</span></label>
+            <label class="col-sm-4">Nomor Dokumen</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" name="no_dokumen" placeholder="Nomor Dokumen" required>
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Kesesuaian Aktual Proses<span class="text-red">*</span></label>
+            <label class="col-sm-4">Kesesuaian Aktual Proses</label>
             <div class="col-sm-8">
               <textarea id="editor1" class="form-control" style="height: 200px;" name="kesesuaian_aktual_proses"></textarea>
             </div>
@@ -104,13 +97,13 @@
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Tindakan Perbaikan<span class="text-red">*</span></label>
+            <label class="col-sm-4">Tindakan Perbaikan</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" name="tindakan_perbaikan" placeholder="Tindakan Perbaikan" value="-">
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Target<span class="text-red">*</span></label>
+            <label class="col-sm-4">Target</label>
             <div class="col-sm-8">
               <div class="input-group date">
                 <div class="input-group-addon">
@@ -121,21 +114,21 @@
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Kelengkapan Point Safety<span class="text-red">*</span></label>
+            <label class="col-sm-4">Kelengkapan Point Safety</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" name="kelengkapan_point_safety" placeholder="Kelengkapan Point Safety">
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Kesesuaian QC Kouteihyo<span class="text-red">*</span></label>
+            <label class="col-sm-4">Kesesuaian QC Kouteihyo</label>
             <div class="col-sm-8">
               <input type="text" class="form-control" name="kesesuaian_qc_kouteihyo" placeholder="Kesesuaian QC Kouteihyo">
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Operator<span class="text-red">*</span></label>
+            <label class="col-sm-4">Operator</label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Choose an Operator..." required>
+              <select class="form-control select2" name="operator" style="width: 100%;" data-placeholder="Pilih Operator" required>
                 <option value=""></option>
                 @foreach($operator as $operator)
                 <option value="{{ $operator->name }}">{{ $operator->employee_id }} - {{ $operator->name }}</option>
@@ -144,7 +137,7 @@
             </div>
           </div>
           <!-- <div class="form-group row" align="right" id='scanner'>
-            <label class="col-sm-4">Scan QR Code<span class="text-red">*</span></label>
+            <label class="col-sm-4">Scan QR Code</label>
             <div class="col-sm-8" align="left">
               <div class="col-xs-12">
                 <div class="col-xs-6 col-xs-offset-3">
@@ -162,17 +155,17 @@
           <!-- <div class="form-group row" align="right">
             <label class="col-sm-4">NIK</label>
             <div class="col-sm-8" align="left">
-              <input type="text" class="form-control" name="operator" id="input_employee_id" placeholder="Enter NIK">
+              <input type="text" class="form-control" name="operator" id="input_employee_id" placeholder="Masukkan NIK">
             </div>
           </div> -->
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Leader<span class="text-red">*</span></label>
+            <label class="col-sm-4">Leader</label>
             <div class="col-sm-8" align="left">
               <input type="text" class="form-control" name="leader" placeholder="" value="{{ $leader }}" readonly>
             </div>
           </div>
           <div class="form-group row" align="right">
-            <label class="col-sm-4">Foreman<span class="text-red">*</span></label>
+            <label class="col-sm-4">Foreman</label>
             <div class="col-sm-8" align="left">
               <input type="text" class="form-control" name="foreman" placeholder="" value="{{ $foreman }}" readonly>
             </div>
@@ -205,71 +198,11 @@
     });
 
     jQuery(document).ready(function() {
+      $('body').toggleClass("sidebar-collapse");
       $('#email').val('');
       $('#password').val('');
 
-      var video = document.createElement("video");
-    var canvasElement = document.getElementById("canvas");
-    var canvas = canvasElement.getContext("2d");
-    var loadingMessage = document.getElementById("loadingMessage");
-
-    var outputContainer = document.getElementById("output");
-    var outputMessage = document.getElementById("outputMessage");
-
-    function drawLine(begin, end, color) {
-      canvas.beginPath();
-      canvas.moveTo(begin.x, begin.y);
-      canvas.lineTo(end.x, end.y);
-      canvas.lineWidth = 4;
-      canvas.strokeStyle = color;
-      canvas.stroke();
-    }
-
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-      video.srcObject = stream;
-      video.setAttribute("playsinline", true);
-      video.play();
-      requestAnimationFrame(tick);
-    });
-
-    function tick() {
-      loadingMessage.innerText = "⌛ Loading video..."
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        loadingMessage.hidden = true;
-        canvasElement.hidden = false;
-
-        canvasElement.height = video.videoHeight;
-        canvasElement.width = video.videoWidth;
-        canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-        var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-        var code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: "dontInvert",
-        });
-        if (code) {
-          drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-          drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-          drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-          drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-          outputMessage.hidden = true;
-          $('#scanner').hide();
-          // document.getElementById("input_employee_id").value = code.data.substr(0, 9);
-          var data = {
-            employee_id : code.data.substr(0, 9)
-          }
-          $.get('{{ url("index/getemployee") }}', data, function(result, status, xhr){
-            if(result.status){
-              document.getElementById("input_employee_id").value = result.name;
-            }
-            else{
-              alert('Attempt to retrieve data failed');
-            }
-          });
-        } else {
-          outputMessage.hidden = false;
-        }
-      }
-      requestAnimationFrame(tick);
-    }
+     
     });
     CKEDITOR.replace('editor1' ,{
       filebrowserImageBrowseUrl : '{{ url('kcfinder_master') }}'

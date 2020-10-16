@@ -39,15 +39,11 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Point Check {{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		Point Check Audit NG Jelas - {{ $leader }}
+		<a href="{{ url('index/production_audit/details/'.$id) }}" class="btn btn-warning pull-right" style="margin-left: 5px">Kembali</a>
+		<a href="{{ url('index/point_check_audit/create/'.$id) }}" class="btn btn-primary pull-right">Buat Point Check</a>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -63,72 +59,41 @@ table.table-bordered > tfoot > tr > th{
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
-				<div class="box-header">
-					<h3 class="box-title">Point Check <span class="text-purple">{{ $activity_name }}</span></h3>
-					<div class="col-md-12 col-md-offset-9">
-						<div class="col-md-3">
-							<div class="form-group pull-right">
-								<a href="{{ url('index/activity_list/filter/'.$id_departments.'/1/'.$frequency) }}" class="btn btn-warning">Back</a>
-								<a href="{{ url('index/point_check_audit/create/'.$id) }}" class="btn btn-primary">Create Point Check</a>
-							</div>
-						</div>
-					</div>
-				</div>
+			<div class="box box-solid">
 				<div class="box-body">
-				  <div class="row">
-				    <div class="col-xs-12">
-				      <div class="box">
-				        <div class="box-body" style="overflow-x: scroll;">
-				          <table id="example1" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Product</th>
-				                <th>Proses</th>
-				                <th>Point Pengecekan</th>
-				                <th>Cara Cek</th>
-				                <th>Leader</th>
-				                <th>Foreman</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @foreach($pointCheckAudit as $pointCheckAudit)
-				              <tr>
-				                <td>{{$pointCheckAudit->product}}</td>
-				                <td>{{$pointCheckAudit->proses}}</td>
-				                <td><?php echo $pointCheckAudit->point_check?></td>
-				                <td><?php echo $pointCheckAudit->cara_cek?></td>
-				                <td>{{$pointCheckAudit->leader}}</td>
-				                <td>{{$pointCheckAudit->foreman}}</td>
-				                <td>
-				                  <center>
-				                    <a class="btn btn-info btn-xs" href="{{url('index/point_check_audit/show/'.$id.'/'.$pointCheckAudit->id)}}">View</a>
-				                    <a href="{{url('index/point_check_audit/edit/'.$id.'/'.$pointCheckAudit->id)}}" class="btn btn-warning btn-xs">Edit</a>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/point_check_audit/destroy") }}', '{{ $pointCheckAudit->product }} - {{ $pointCheckAudit->proses }}','{{ $id }}', '{{ $pointCheckAudit->id }}');">
-				                      Delete
-				                    </a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
-				          </table>
-				        </div>
-				      </div>
-				    </div>
-				  </div>
+		          <table id="example1" class="table table-bordered table-striped table-hover">
+		            <thead style="background-color: rgba(126,86,134,.7);">
+		              <tr>
+		                <th>Product</th>
+		                <th>Proses</th>
+		                <th>Point Pengecekan</th>
+		                <th>Cara Cek</th>
+		                <th>Leader</th>
+		                <th>Foreman</th>
+		                <th>Action</th>
+		              </tr>
+		            </thead>
+		            <tbody>
+		              @foreach($pointCheckAudit as $pointCheckAudit)
+		              <tr>
+		                <td>{{$pointCheckAudit->product}}</td>
+		                <td>{{$pointCheckAudit->proses}}</td>
+		                <td><?php echo $pointCheckAudit->point_check?></td>
+		                <td><?php echo $pointCheckAudit->cara_cek?></td>
+		                <td>{{$pointCheckAudit->leader}}</td>
+		                <td>{{$pointCheckAudit->foreman}}</td>
+		                <td>
+		                  <center>
+		                    <a href="{{url('index/point_check_audit/edit/'.$id.'/'.$pointCheckAudit->id)}}" class="btn btn-warning">Edit</a>
+		                    <a href="javascript:void(0)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/point_check_audit/destroy") }}', '{{ $pointCheckAudit->product }} - {{ $pointCheckAudit->proses }}','{{ $id }}', '{{ $pointCheckAudit->id }}');">
+		                      Delete
+		                    </a>
+		                  </center>
+		                </td>
+		              </tr>
+		              @endforeach
+		            </tbody>
+		          </table>
 				</div>
 			</div>
 		</div>
@@ -166,6 +131,7 @@ table.table-bordered > tfoot > tr > th{
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('#date').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm-dd',
@@ -190,10 +156,6 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
   <script>
     jQuery(document).ready(function() {
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       var table = $('#example1').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -235,21 +197,6 @@ table.table-bordered > tfoot > tr > th{
           ]
         }
       });
-
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example1 tfoot tr').appendTo('#example1 thead');
-
     });
     $(function () {
 

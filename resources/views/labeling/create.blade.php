@@ -3,13 +3,9 @@
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <section class="content-header">
   <h1>
-    Create {{ $activity_name }}
-    <small>it all starts here</small>
+    Buat Audit Label Safety Mesin
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -34,10 +30,7 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
-    </div>  
+  <div class="box box-solid">
     <form role="form" method="post" action="{{url('index/labeling/store/'.$id)}}" enctype="multipart/form-data">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -69,7 +62,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required id="product">
+              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Pilih Product..." required id="product">
                   <option value=""></option>
                   @foreach($product as $product)
                     <option value="{{ $product }}">{{ $product }}</option>
@@ -82,7 +75,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Nama Mesin<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="nama_mesin" id="nama_mesin" class="form-control" required placeholder="Enter Nama Mesin">
+              <input type="text" name="nama_mesin" id="nama_mesin" class="form-control" required placeholder="Masukkan Nama Mesin">
             </div>
           </div>
           <div class="form-group row" align="right">
@@ -104,7 +97,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Keterangan<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="keterangan" id="keterangan" class="form-control" required placeholder="Enter Keterangan" value="-">
+              <input type="text" name="keterangan" id="keterangan" class="form-control" required placeholder="Masukkan Keterangan" value="-">
             </div>
           </div>
           <div class="form-group row" align="right">

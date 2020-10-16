@@ -3,13 +3,9 @@
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <section class="content-header">
   <h1>
-    Create {{ $activity_name }}
-    <small>it all starts here</small>
+    Buat Audit NG Jelas
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -34,10 +30,7 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      {{-- <h3 class="box-title">Create New User</h3> --}}
-    </div>  
+  <div class="box box-solid">
     <form role="form" method="post" action="{{url('index/production_audit/store/'.$id.'/'.$product.'/'.$proses)}}" enctype="multipart/form-data">
       <div class="box-body">
       	<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -61,7 +54,7 @@
                 <textarea name="point_check_details" class="form-control" style="height: 250px;" id="editor1" readonly>{{ $point_check_audit->point_check }}</textarea>
                 <input type="hidden" name="point_check" value="{{ $point_check_audit->id }}">
               @else
-                <select class="form-control select2" name="point_check" style="width: 100%;" data-placeholder="Choose a Point Check..." required id="point_check">
+                <select class="form-control select2" name="point_check" style="width: 100%;" data-placeholder="Pilih Point Check..." required id="point_check">
                   <option value=""></option>
                 </select>
               @endif
@@ -96,7 +89,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">PIC<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="pic" style="width: 100%;" data-placeholder="Choose a PIC..." required>
+              <select class="form-control select2" name="pic" style="width: 100%;" data-placeholder="Pilih PIC" required>
                 <option value=""></option>
                 @foreach($pic as $pic)
                   <option value="{{ $pic->employee_id }}">{{ $pic->employee_id }} - {{ $pic->name }}</option>
@@ -161,6 +154,7 @@
     });
 
     jQuery(document).ready(function() {
+      $('body').toggleClass("sidebar-collapse");
       $('#email').val('');
       $('#password').val('');
     });

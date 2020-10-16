@@ -43,6 +43,7 @@ class NgFindingController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
         $frequency = $activityList->frequency;
+        $leader = $activityList->leader_dept;
 
         $queryOperator = "select DISTINCT(employee_syncs.name),employee_syncs.employee_id from employee_syncs  where employee_syncs.department = '".$departments."'";
         $operator = DB::select($queryOperator);
@@ -61,6 +62,7 @@ class NgFindingController extends Controller
                       'foreman' => $foreman,
                       'operator' => $operator,
                       'operator2' => $operator2,
+                      'leader' => $leader,
                       'mpdl' => $mpdl,
                       'mpdl2' => $mpdl2,
                       'id_departments' => $id_departments);
@@ -78,6 +80,7 @@ class NgFindingController extends Controller
         $leader = $activityList->leader_dept;
         $foreman = $activityList->foreman_dept;
         $frequency = $activityList->frequency;
+        $leader = $activityList->leader_dept;
 
         $emp_id = Auth::user()->username;
         $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
@@ -123,6 +126,7 @@ class NgFindingController extends Controller
                       'activity_alias' => $activity_alias,
                       'id' => $id,
                       'frequency' => $frequency,
+                      'leader' => $leader,
                       'leader' => $leader,
                       'foreman' => $foreman,
                       'operator' => $operator,
@@ -273,6 +277,7 @@ class NgFindingController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $leader = $activityList->leader_dept;
 
         $ng_finding_query = "
         SELECT
@@ -322,6 +327,7 @@ class NgFindingController extends Controller
                           'role_code' => Auth::user()->role_code,
                           'id_departments' => $id_departments,
                           'monthTitle' => $monthTitle,
+                          'leader' => $leader,
                           'month' => $month,
                           'leader' => $leader,
                           'jml_null' => $jml_null,
@@ -342,6 +348,7 @@ class NgFindingController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $leader = $activityList->leader_dept;
 
         $ng_finding_query = "
         SELECT
@@ -388,6 +395,7 @@ class NgFindingController extends Controller
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
                           'id' => $id,
+                          'leader' => $leader,
                           'role_code' => Auth::user()->role_code,
                           'id_departments' => $id_departments,
                           'monthTitle' => $monthTitle,

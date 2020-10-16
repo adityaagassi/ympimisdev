@@ -39,15 +39,10 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		{{ $activity_name }} - {{ $leader_dept }} <small><span class="text-purple">教育報告</span></small>
+		<a href="{{ url('index/training_report/create/'.$id) }}" class="btn btn-primary pull-right"><b>Buat {{ $activity_alias }}</b></a>
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -63,11 +58,11 @@ table.table-bordered > tfoot > tr > th{
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-12">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter {{ $activity_name }}</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/training_report/filter_training/'.$id)}}">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -79,7 +74,7 @@ table.table-bordered > tfoot > tr > th{
 										<div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										</div>
-										<input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off" placeholder="Choose a Date">
+										<input type="text" class="form-control pull-right" id="date" name="date" autocomplete="off" placeholder="Pilih Tanggal">
 									</div>
 								</div>
 							</div>
@@ -87,7 +82,7 @@ table.table-bordered > tfoot > tr > th{
 						<div class="col-md-12 col-md-offset-4">
 							<div class="col-md-3">
 								<div class="form-group pull-right">
-									<a href="{{ url('index/activity_list/filter/'.$id_departments.'/2/'.$frequency) }}" class="btn btn-warning">Back</a>
+									<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 									<a href="{{ url('index/training_report/index/'.$id) }}" class="btn btn-danger">Clear</a>
 									<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 								</div>
@@ -97,13 +92,13 @@ table.table-bordered > tfoot > tr > th{
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="form-group pull-right">
-							<a href="{{ url('index/training_report/create/'.$id) }}" class="btn btn-primary">Create {{ $activity_alias }}</a>
+							
 						</div>
 					</div>
 				  <div class="row">
 				    <div class="col-xs-12">
-				      <div class="box">
-				        <div class="box-body" style="overflow-x: scroll;">
+				      
+				        <div style="overflow-x: scroll;">
 				          <table id="example1" class="table table-bordered table-striped table-hover">
 				            <thead style="background-color: rgba(126,86,134,.7);">
 				              <tr>
@@ -130,9 +125,9 @@ table.table-bordered > tfoot > tr > th{
 				                <td>{{$training_report->date}}</td>
 				                <td>{{$training_report->trainer}}</td>
 				                <td>@if($training_report->send_status == "")
-				                		<label class="label label-danger">Not Yet Sent</label>
+				                		<label class="label label-danger">Belum Dikirim Email</label>
 				                	@else
-				                		<label class="label label-success">Sent</label>
+				                		<label class="label label-success">Terkirim</label>
 				                	@endif
 				        		</td>
 				                <td>@if($training_report->approval == "")
@@ -142,16 +137,16 @@ table.table-bordered > tfoot > tr > th{
 				                	@endif</td>
 				                <td>
 				                  <center>
-				                    <a class="btn btn-primary btn-sm" href="{{secure_url('index/training_report/details/'.$training_report->id.'/view')}}">Details</a>
-				                    <a class="btn btn-success btn-sm" href="{{url('index/training_report/print/'.$training_report->id)}}">Print</a>
+				                    <a class="btn btn-primary btn-sm" href="{{url('index/training_report/details/'.$training_report->id.'/view')}}">Isi Peserta</a>
+				                    <a class="btn btn-success btn-sm" href="{{url('index/training_report/print/'.$training_report->id)}}">Cetak</a>
 				                    @if($training_report->send_status == "")
-				                		<a class="btn btn-info btn-sm" href="{{url('index/training_report/sendemail/'.$training_report->id)}}">Send Email</a>
+				                		<a class="btn btn-info btn-sm" href="{{url('index/training_report/sendemail/'.$training_report->id)}}">Kirim Email</a>
 				                	@endif
 				                  </center>
 				                </td>
 				                <td>
 				                  <center>
-				                    <a class="btn btn-info btn-sm" href="{{url('index/training_report/show/'.$id.'/'.$training_report->id)}}">View</a>
+				                    <!-- <a class="btn btn-info btn-sm" href="{{url('index/training_report/show/'.$id.'/'.$training_report->id)}}">View</a> -->
 				                    <a href="{{url('index/training_report/edit/'.$id.'/'.$training_report->id)}}" class="btn btn-warning btn-sm">Edit</a>
 				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/training_report/destroy") }}', '{{ $training_report->activity_lists->activity_name }} - {{ $training_report->product }} - {{ $training_report->date }}','{{ $id }}', '{{ $training_report->id }}');">
 				                      Delete
@@ -178,7 +173,7 @@ table.table-bordered > tfoot > tr > th{
 				            </tfoot>
 				          </table>
 				        </div>
-				      </div>
+				      
 				    </div>
 				  </div>
 				</div>
@@ -235,6 +230,7 @@ table.table-bordered > tfoot > tr > th{
 				}
 			}
 		});
+		$('body').toggleClass("sidebar-collapse");
 	});
 
 	

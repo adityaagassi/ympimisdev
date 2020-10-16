@@ -3,13 +3,9 @@
 <script src="{{ asset('/ckeditor/ckeditor.js') }}"></script>
 <section class="content-header">
   <h1>
-    Edit {{ $activity_name }}
-    <small>it all starts here</small>
+    Edit Audit Label Safety Mesin
   </h1>
   <ol class="breadcrumb">
-   {{--  <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 @endsection
@@ -69,7 +65,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Product<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Choose a Product..." required id="product">
+              <select class="form-control select2" name="product" style="width: 100%;" data-placeholder="Pilih Product..." required id="product">
                   <option value=""></option>
                   @foreach($product as $product)
                     @if($labeling->product == $product)
@@ -86,13 +82,13 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Nama Mesin<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="nama_mesin" id="nama_mesin" class="form-control" required placeholder="Enter Nama Mesin" value="{{ $labeling->nama_mesin }}">
+              <input type="text" name="nama_mesin" id="nama_mesin" class="form-control" required placeholder="Masukkan Nama Mesin" value="{{ $labeling->nama_mesin }}">
             </div>
           </div>
           <div class="form-group row" align="right">
             <label class="col-sm-4">Foto Arah Putaran<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="hidden" name="foto_arah_putaran" id="foto_arah_putaran" class="form-control" placeholder="Enter Keterangan" value="{{ $labeling->foto_arah_putaran }}">
+              <input type="hidden" name="foto_arah_putaran" id="foto_arah_putaran" class="form-control" placeholder="Masukkan Keterangan" value="{{ $labeling->foto_arah_putaran }}">
               <img width="100px" src="{{ url('/data_file/labeling/'.$labeling->foto_arah_putaran) }}">
               <input type="file" name="file" id="inputFile" class="form-control" value="" onchange="readURL(this);">
               <br>
@@ -102,7 +98,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Foto Sisa Putaran<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="hidden" name="foto_sisa_putaran" id="foto_sisa_putaran" class="form-control" placeholder="Enter Keterangan" value="{{ $labeling->foto_sisa_putaran }}">
+              <input type="hidden" name="foto_sisa_putaran" id="foto_sisa_putaran" class="form-control" placeholder="Masukkan Keterangan" value="{{ $labeling->foto_sisa_putaran }}">
               <img width="100px" src="{{ url('/data_file/labeling/'.$labeling->foto_sisa_putaran) }}">
               <input type="file" name="file2" id="inputFile2" class="form-control" value="" onchange="readURL2(this);">
               <br>
@@ -112,7 +108,7 @@
           <div class="form-group row" align="right">
             <label class="col-sm-4">Keterangan<span class="text-red">*</span></label>
             <div class="col-sm-8" align="left">
-              <input type="text" name="keterangan" id="keterangan" class="form-control" required placeholder="Enter Keterangan" value="{{ $labeling->keterangan }}">
+              <input type="text" name="keterangan" id="keterangan" class="form-control" required placeholder="Masukkan Keterangan" value="{{ $labeling->keterangan }}">
             </div>
           </div>
           <div class="form-group row" align="right">

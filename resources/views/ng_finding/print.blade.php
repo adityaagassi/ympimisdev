@@ -2,14 +2,10 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
+    Print {{ $activity_name }} - {{ $leader }}
     <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 <style type="text/css">
@@ -44,8 +40,8 @@
 				</tr>
 				<tr>
 					<td class="head" style="vertical-align: middle;">Department</td>
-					<td class="head" style="vertical-align: middle;">{{ $departments }}</td>
-					<td class="head" rowspan="2" colspan="4" style="padding: 15px;vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
+					<td class="head" colspan="2" style="vertical-align: middle;">{{ strtoupper($departments) }}</td>
+					<td class="head" rowspan="2" colspan="3" style="font-size:30px;padding: 10px;vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
 					<td class="head" rowspan="2"><center>Checked<br><br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
@@ -64,8 +60,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="head" style="vertical-align: middle;">Month</td>
-					<td class="head" style="vertical-align: middle;">{{ $monthTitle }}</td>
+					<td class="head" style="vertical-align: middle;">Bulan</td>
+					<td class="head" colspan="2" style="vertical-align: middle;">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
 					<td class="head"><center><b>Date</b></center></td>

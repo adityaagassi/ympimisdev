@@ -39,15 +39,13 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
 	<h1>
-		Point of {{ $activity_name }} <span class="text-purple">{{ $leader }}</span>
-		{{-- <small> <span class="text-purple">??</span></small> --}}
+		Point of {{ $activity_name }} - {{ $leader }}
+    <a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning pull-right">Kembali</a>
+    <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal" style="margin-right: 5px">
+      Tambahkan Point Check
+    </button>&nbsp;&nbsp;
 	</h1>
 	<ol class="breadcrumb">
-		{{-- <li>
-			<button href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reprintModal">
-				<i class="fa fa-print"></i>&nbsp;&nbsp;Reprint FLO
-			</button>
-		</li> --}}
 	</ol>
 </section>
 @stop
@@ -62,63 +60,39 @@ table.table-bordered > tfoot > tr > th{
 		</div>   
 	@endif
 	<div class="row">
-		<div class="col-xs-12">
-			<div class="box box-primary">
-				<div class="box-body">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="form-group pull-right">
-							{{-- <a href="{{ url('index/audit_guidance/create/'.$id) }}" class="btn btn-primary">Create Schedule {{ $activity_alias }}</a> --}}
-							<a href="{{ url('index/activity_list/filter/'.$id_departments.'/11/'.$frequency) }}" class="btn btn-warning">Back</a>&nbsp
-							<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								Create Point Check
-							</button>
-						</div>
-					</div>
-				  <div class="row">
-				    <div class="col-xs-12">
-				      <div class="box">
-				        <div class="box-body">
-				          <table id="example1" class="table table-bordered table-striped table-hover">
-				            <thead style="background-color: rgba(126,86,134,.7);">
-				              <tr>
-				                <th>Nama Pengecekan</th>
-				                <th>Action</th>
-				              </tr>
-				            </thead>
-				            <tbody>
-				              @if(count($jishu_hozen_point) != 0)
-				              @foreach($jishu_hozen_point as $jishu_hozen_point)
-				              <tr>
-				                <td>{{$jishu_hozen_point->nama_pengecekan}}</td>
-				                <td>
-				                  <center>
-				                    <a class="btn btn-info btn-sm" href="{{url('index/jishu_hozen_point/show/'.$id.'/'.$jishu_hozen_point->id)}}">View</a>
-									<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit('{{ url("index/jishu_hozen_point/update") }}','{{ $id }}','{{ $jishu_hozen_point->id }}');">
-						               Edit
-						            </button>
-				                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/jishu_hozen_point/destroy") }}', '{{ $jishu_hozen_point->nama_pengecekan }} - {{ $jishu_hozen_point->point_check }}','{{ $id }}', '{{ $jishu_hozen_point->id }}');">
-				                      Delete
-				                    </a>
-				                  </center>
-				                </td>
-				              </tr>
-				              @endforeach
-				              @endif
-				            </tbody>
-				            <tfoot>
-				              <tr>
-				                <th></th>
-				                <th></th>
-				              </tr>
-				            </tfoot>
-				          </table>
-				        </div>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-			</div>
-		</div>
+    <div class="col-xs-12">
+      <div class="box box-solid">
+        <div class="box-body">
+          <table id="example1" class="table table-bordered table-striped table-hover">
+            <thead style="background-color: rgba(126,86,134,.7);">
+              <tr>
+                <th>Nama Pengecekan</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if(count($jishu_hozen_point) != 0)
+              @foreach($jishu_hozen_point as $jishu_hozen_point)
+              <tr>
+                <td>{{$jishu_hozen_point->nama_pengecekan}}</td>
+                <td>
+                  <center>
+					           <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit('{{ url("index/jishu_hozen_point/update") }}','{{ $id }}','{{ $jishu_hozen_point->id }}');">
+		                    Edit
+		                  </button>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/jishu_hozen_point/destroy") }}', '{{ $jishu_hozen_point->nama_pengecekan }} - {{ $jishu_hozen_point->point_check }}','{{ $id }}', '{{ $jishu_hozen_point->id }}');">
+                      Delete
+                    </a>
+                  </center>
+                </td>
+              </tr>
+              @endforeach
+              @endif
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 	</div>
 </section>
 
@@ -147,7 +121,7 @@ table.table-bordered > tfoot > tr > th{
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create Point Check</b></h4>
+        <h4 class="modal-title" align="center"><b>Tambahkan Point Check</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -156,17 +130,17 @@ table.table-bordered > tfoot > tr > th{
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             	<div class="form-group">
 	              <label for="">Nama Pengecekan</label>
-				  <input type="text" class="form-control" name="inputnama_pengecekan" id="inputnama_pengecekan" placeholder="Enter Nama Pengecekan" required>
+				  <input type="text" class="form-control" name="inputnama_pengecekan" id="inputnama_pengecekan" placeholder="Masukkan Nama Pengecekan" required>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="inputleader" id="inputleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+				  <input type="text" class="form-control" name="inputleader" id="inputleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="inputforeman" id="inputforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+				  <input type="text" class="form-control" name="inputforeman" id="inputforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -198,17 +172,17 @@ table.table-bordered > tfoot > tr > th{
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Nama Pengecekan</label>
-				  <input type="text" class="form-control" name="editnama_pengecekan" id="editnama_pengecekan" placeholder="Enter Nama Pengecekan" required>
+				  <input type="text" class="form-control" name="editnama_pengecekan" id="editnama_pengecekan" placeholder="Masukkan Nama Pengecekan" required>
 	            </div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 	            <div class="form-group">
 	              <label for="">Leader</label>
-				  <input type="text" class="form-control" name="editleader" id="editleader" placeholder="Enter Leader" value="{{ $leader }}" readonly>
+				  <input type="text" class="form-control" name="editleader" id="editleader" placeholder="Masukkan Leader" value="{{ $leader }}" readonly>
 	            </div>
 	            <div class="form-group">
 	              <label for="">Foreman</label>
-				  <input type="text" class="form-control" name="editforeman" id="editforeman" placeholder="Enter Leader" value="{{ $foreman }}" readonly>
+				  <input type="text" class="form-control" name="editforeman" id="editforeman" placeholder="Masukkan Leader" value="{{ $foreman }}" readonly>
 	            </div>
             </div>
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -237,6 +211,7 @@ table.table-bordered > tfoot > tr > th{
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+    $('body').toggleClass("sidebar-collapse");
 		$('#date').datepicker({
 			autoclose: true,
 			format: 'yyyy-mm',
@@ -280,10 +255,6 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
   <script>
     jQuery(document).ready(function() {
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
       var table = $('#example1').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -325,21 +296,6 @@ table.table-bordered > tfoot > tr > th{
           ]
         }
       });
-
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example1 tfoot tr').appendTo('#example1 thead');
-
     });
     $(function () {
 

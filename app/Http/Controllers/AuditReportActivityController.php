@@ -45,6 +45,7 @@ class AuditReportActivityController extends Controller
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
         $frequency = $activityList->frequency;
+        $leader = $activityList->leader_dept;
         // var_dump($productionAudit);
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
         $subsection = DB::select($querySubSection);
@@ -57,6 +58,7 @@ class AuditReportActivityController extends Controller
                       'subsection3' => $subsection3,
     				  'departments' => $departments,
                       'frequency' => $frequency,
+                      'leader' => $leader,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
     				  'id' => $id,
@@ -73,6 +75,7 @@ class AuditReportActivityController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
         $frequency = $activityList->frequency;
+        $leader = $activityList->leader_dept;
         // var_dump($request->get('product'));
         // var_dump($request->get('date'));
         $querySubSection = "select sub_section_name,section_name from sub_sections join sections on sections.id =  sub_sections.id_section join departments on sections.id_department = departments.id where departments.department_name = '".$departments."'";
@@ -124,6 +127,7 @@ class AuditReportActivityController extends Controller
                       'subsection3' => $subsection3,
                       'departments' => $departments,
                       'frequency' => $frequency,
+                      'leader' => $leader,
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,

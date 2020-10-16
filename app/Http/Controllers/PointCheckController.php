@@ -39,6 +39,7 @@ class PointCheckController extends Controller
         $id_departments = $activityList->departments->id;
         $activity_alias = $activityList->activity_alias;
         $frequency = $activityList->frequency;
+        $leader = $activityList->leader_dept;
 
     	$pointCheckAudit = PointCheckAudit::where('activity_list_id',$id)
             ->orderBy('point_check_audits.id','desc')->get();
@@ -47,6 +48,7 @@ class PointCheckController extends Controller
     				  'product' => $product,
     				  'departments' => $departments,
                       'frequency' => $frequency,
+                      'leader' => $leader,
     				  'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
     				  'id' => $id,
@@ -92,6 +94,7 @@ class PointCheckController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $leader = $activityList->leader_dept;
         // }
         $data = array('product' => $product,
                       'pointCheckAudit' => $pointCheckAudit,
@@ -99,6 +102,7 @@ class PointCheckController extends Controller
                       'activity_name' => $activity_name,
                       'activity_alias' => $activity_alias,
                       'id' => $id,
+                      'leader' => $leader,
                       'id_departments' => $id_departments);
         return view('point_check_audit.index', $data
     		)->with('page', 'Point Check Audit');
