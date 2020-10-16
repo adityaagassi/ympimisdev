@@ -40,26 +40,26 @@ public function __construct()
 */
 public function handle()
 {
-    $plcs = Plc::orderBy('location', 'asc')->get();
-    $lists = array();
-    $date = date('Y-m-d H:i:s');
+    // $plcs = Plc::orderBy('location', 'asc')->get();
+    // $lists = array();
+    // $date = date('Y-m-d H:i:s');
 
-    foreach ($plcs as $plc) {
-        $cpu = new ActMLEasyIf($plc->station);
-        $datas = $cpu->read_data($plc->address, 10);
-        $data = $datas[$plc->arr];
+    // foreach ($plcs as $plc) {
+    //     $cpu = new ActMLEasyIf($plc->station);
+    //     $datas = $cpu->read_data($plc->address, 10);
+    //     $data = $datas[$plc->arr];
 
-        $log = db::table('temperature_room_logs')
-        ->insert([
-            'location' => $plc->location,
-            'remark' => $plc->remark,
-            'value' => $data,
-            'upper_limit' => $plc->upper_limit,
-            'lower_limit' => $plc->lower_limit,
-            'created_by' => 1,
-            'created_at' => $date
-        ]);
-    }
+    //     $log = db::table('temperature_room_logs')
+    //     ->insert([
+    //         'location' => $plc->location,
+    //         'remark' => $plc->remark,
+    //         'value' => $data,
+    //         'upper_limit' => $plc->upper_limit,
+    //         'lower_limit' => $plc->lower_limit,
+    //         'created_by' => 1,
+    //         'created_at' => $date
+    //     ]);
+    // }
 
     $q = "delete from patient_list where TIMESTAMPDIFF(minute,in_time,now()) > 150 and employee_id not like 'PR%'";
     $delete_klinik = db::connection('clinic')->select($q);
