@@ -550,10 +550,10 @@
 	});
 
 	function addMaterial(argument) {
-		var location = $('#storage-location').val(); 
-		var store = $('#store').val();
-		var category = $('#category').val(); 
-		var material = $('#material_number').val();
+		var location = $('#newLocation').val(); 
+		var store = $('#newStore').val();
+		var category = $('#newCategory').val(); 
+		var material = $('#newMaterial').val();
 		var material_description = $('#material_description').text();
 
 		if(store == 'LAINNYA'){
@@ -578,17 +578,17 @@
 
 				$("#add_material").modal('hide');
 
-				$("#group").prop('selectedIndex', 0).change();
-				$("#storage-location").prop('selectedIndex', 0).change();
-				$("#store").prop('selectedIndex', 0).change();
+				$("#newArea").prop('selectedIndex', 0).change();
+				$("#newLocation").prop('selectedIndex', 0).change();
+				$("#newStore").prop('selectedIndex', 0).change();
 				$("#other-store").val("");
-				$("#category").prop('selectedIndex', 0).change();
-				$("#material_number").val("");
+				$("#newCategory").prop('selectedIndex', 0).change();
+				$("#newMaterial").val("");
 				$('#material_description').text('');
 
-				var area = $('#filter_area').val();
-				var location = $('#filter_location').val();
-				var store = $('#filter_store').val();
+				var area = $('#area').val();
+				var location = $('#storage_location').val();
+				var store = $('#store').val();
 
 				if(area != '' || location != '' || store != ''){
 					// $('#store_table').DataTable().ajax.reload();
