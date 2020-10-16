@@ -770,14 +770,6 @@ $avatar = 'images/avatar/'.Auth::user()->avatar;
 						<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 							<div class="carousel-inner">
 								<div class="item active">
-									<div class="col-xs-6">
-										<img class="img-responsive" src="{{url('images/hrq_announcement/0001.jpg')}}" style="width: 100%;">
-									</div>
-									<div class="col-xs-6">
-										<img class="img-responsive" src="{{url('images/hrq_announcement/0002.jpg')}}" style="width: 100%;">
-									</div>
-								</div>
-								<div class="item">
 									<center>
 										<img class="img-responsive" src="{{url('images/announchement2.png')}}" alt="...">
 									</center>
