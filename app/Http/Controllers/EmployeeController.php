@@ -536,7 +536,7 @@ class EmployeeController extends Controller
           ->select('kaizen_forms.id','kaizen_forms.employee_name','kaizen_forms.propose_date','kaizen_forms.section','kaizen_forms.leader','kaizen_forms.title','kaizen_forms.purpose', 'kaizen_forms.condition', 'kaizen_forms.improvement','kaizen_forms.area','kaizen_forms.employee_id','kaizen_calculations.id_cost', 'kaizen_calculations.cost','kaizen_notes.foreman_note','kaizen_notes.manager_note')
           ->get();
 
-          $section = explode(" ~ ",$data[0]->section)[0];
+          $section = explode(" ~",$data[0]->section)[0];
 
           $ldr = "position = 'Leader'";
           if ($section == 'Assembly Process Control') {
