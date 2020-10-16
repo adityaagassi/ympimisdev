@@ -566,51 +566,36 @@
 
 					var series = [];
 
-					for (var i = 0; i < result.emp.length; i++) {
-						var name_temp = result.emp[i].name.split(" ");
+					for (var i = 0; i < result.act.length; i++) {
+						var name_temp = result.act[i].name.split(" ");
 						var xAxis = '';
-						xAxis += result.emp[i].employee_id + ' - ';
+						xAxis += result.act[i].operator_id + ' - ';
 
 						if(name_temp[0] == 'M.' || name_temp[0] == 'Muhammad' || name_temp[0] == 'Muhamad' || name_temp[0] == 'Mokhammad' || name_temp[0] == 'Mokhamad' || name_temp[0] == 'Mukhammad' || name_temp[0] == 'Mochammad' || name_temp[0] == 'Akhmad' || name_temp[0] == 'Achmad' || name_temp[0] == 'Moh.' || name_temp[0] == 'Moch.' || name_temp[0] == 'Mochamad'){
 							xAxis += name_temp[0].charAt(0)+'. '+name_temp[1];
+						}else if(!result.act[i].name.includes(" ")){
+							xAxis += result.act[i].name;
 						}else{
 							xAxis += name_temp[0]+'. '+name_temp[1].charAt(0);
 						}
 
 						name.push(xAxis);
-
-
-						var sum = 0;
-						var temp = 0;
-						for (var j = 0; j < result.act.length; j++) {
-							if(result.emp[i].employee_id == result.act[j].operator_id){
-								sum += parseInt(result.act[j].std);
-								temp += 1;
-							}
-						}
-
-						count_time.push(temp);
-						sum_time.push(sum);
-						avg_time.push(Math.ceil(sum/temp) || 0);
-
-						series.push([xAxis, (Math.ceil(sum/temp) || 0)]);
-
+						series.push([xAxis, parseInt(result.act[i].std.toFixed(2))]);
 					}
 
-					series.sort(function(a, b){return b[1] - a[1]});
 					var categories = [];
-					var y = [];
 					var data = [];
 					for (var i = 0; i < series.length; i++) {
 						categories.push(series[i][0]);
-						y.push(series[i][1]);
 
-						if(y[i] > 420){
-							data.push({y: y[i], color: 'rgb(144,238,126)'});
+						if(series[i][1] > 420){
+							data.push({y: series[i][1], color: 'rgb(144,238,126)'});
 						}else{
-							data.push({y: y[i], color: 'rgb(255,116,116)'})
+							data.push({y: series[i][1], color: 'rgb(255,116,116)'})
 						}
 					}
+
+
 
 					Highcharts.chart('container3', {
 						chart: {

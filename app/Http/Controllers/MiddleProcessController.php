@@ -1384,11 +1384,16 @@ class MiddleProcessController extends Controller
 				$bulan = date('m-Y');
 			}
 
-			$act = db::connection('digital_kanban')->select("select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
+			$act = db::connection('digital_kanban')->select("SELECT prod.operator_id, e.`name`, AVG(prod.act) as act, AVG(prod.std) as std FROM 
+				(select d.operator_id, DATE(d.selesai_start_time) as tgl, SUM(TIMESTAMPDIFF(MINUTE,d.sedang_start_time,d.selesai_start_time)) as act, SUM((s.time*d.material_qty))/60 as std from data_log d
 				left join standard_times s on s.material_number = d.material_number
 				where DATE_FORMAT(d.selesai_start_time,'%m-%Y') = '".$bulan."'
+				and d.operator_id not like '%PG%'
 				GROUP BY d.operator_id, tgl
-				HAVING act > 60");
+				HAVING act > 60) prod
+				LEFT JOIN ympimis.employees e ON e.employee_id = prod.operator_id
+				GROUP BY prod.operator_id, e.`name`
+				ORDER BY std DESC");
 		}
 
 		$emp = db::select("select g.employee_id, concat(SPLIT_STRING(e.`name`, ' ', 1), ' ', SPLIT_STRING(e.`name`, ' ', 2)) as `name` from employee_groups g left join employees e on e.employee_id = g.employee_id
