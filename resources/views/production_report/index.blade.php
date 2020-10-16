@@ -9,6 +9,12 @@
 <section class="content-header">
 	<h1>
 		Activity Lists of {{$dept}}<span class="text-purple"> 活動リスト</span>
+		<span class="pull-right">
+		<button class="btn btn-default" style="font-size: 15px;background-color:white;color: black">Kondisional</button>
+		<button class="btn btn-primary" style="font-size: 15px;background-color:#2A3E79;color:white">Harian</button>
+		<button class="btn btn-success" style="font-size: 15px;background-color:#90EE7E;color: black">Bulanan</button>
+		<button class="btn btn-danger" style="font-size: 15px;background-color:#B93A2B;color:white">Mingguan</button>
+		</span>
 	</h1>
 </section>
 @stop
@@ -20,23 +26,6 @@
 		</p>
 	</div>
 	<div class="row">
-		<div class="col-xs-12" style="text-align: center;">
-			<div class="col-xs-12" style="text-align: center;">
-				<span style="font-size: 30px; color: blue;"><i class="fa fa-angle-double-down"></i> Keterangan <i class="fa fa-angle-double-down"></i></span>
-			</div>
-			<div class="col-xs-3" style="text-align: center;">
-				<button class="btn btn-success btn-block" style="font-size: 15px;background-color:white;color: black">Kondisional</button>
-			</div>
-			<div class="col-xs-3" style="text-align: center;">
-				<button class="btn btn-success btn-block" style="font-size: 15px;background-color:#2A3E79;color:white">Harian</button>
-			</div>
-			<div class="col-xs-3" style="text-align: center;">
-				<button class="btn btn-success btn-block" style="font-size: 15px;background-color:#90EE7E;color: black">Bulanan</button>
-			</div>
-			<div class="col-xs-3" style="text-align: center;">
-				<button class="btn btn-success btn-block" style="font-size: 15px;background-color:#B93A2B;color:white">Mingguan</button>
-			</div>
-		</div>
 		<div class="col-xs-4" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 			<?php $no = 1 ?>
