@@ -6973,6 +6973,7 @@ public function update_purchase_requisition_po(Request $request)
                             'Actual' as `status`
                             from acc_budget_histories
                             where acc_budget_histories.budget = '".$budget."' 
+                            and `status` = 'Actual'
                             
                         UNION ALL
 
