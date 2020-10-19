@@ -177,7 +177,7 @@ class AuditReportActivityController extends Controller
 
         $bulan = date('Y-m');
 
-        $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' and status = 'Belum Dikerjakan'");
+        $guidance = DB::SELECT("SELECT * FROM audit_guidances where activity_list_id = '".$id."' and deleted_at is null and status = 'Belum Dikerjakan'");
 
         $querySection = "select * from sections where id_department = '".$id_departments."'";
         $section = DB::select($querySection);

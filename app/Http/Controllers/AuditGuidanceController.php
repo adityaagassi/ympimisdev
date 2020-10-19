@@ -36,7 +36,7 @@ class AuditGuidanceController extends Controller
     function index($id)
     {
         $activityList = ActivityList::find($id);
-    	$audit_guidance = AuditGuidance::where('activity_list_id',$id)
+    	$audit_guidance = AuditGuidance::where('activity_list_id',$id)->where('audit_guidances.deleted_at',null)
             ->orderBy('audit_guidances.id','desc')->get();
 
     	$activity_name = $activityList->activity_name;
@@ -75,11 +75,12 @@ class AuditGuidanceController extends Controller
             $month = $request->get('month');
             $audit_guidance = AuditGuidance::where('activity_list_id',$id)
                 ->where('month', '=', $month)
+                ->where('audit_guidances.deleted_at',null)
                 ->orderBy('audit_guidances.id','desc')
                 ->get();
         }
         else{
-            $audit_guidance = AuditGuidance::where('activity_list_id',$id)
+            $audit_guidance = AuditGuidance::where('activity_list_id',$id)->where('audit_guidances.deleted_at',null)
             ->orderBy('audit_guidances.id','desc')->get();
         }
 
