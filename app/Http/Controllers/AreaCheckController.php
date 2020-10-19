@@ -254,9 +254,8 @@ class AreaCheckController extends Controller
             }
     }
 
-    function print_area_check(Request $request,$id)
+    function print_area_check($id,$month)
     {
-        $month = $request->get('month');
 
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
@@ -298,8 +297,34 @@ class AreaCheckController extends Controller
         if($area_check == null){
             return redirect('/index/area_check/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Area Check');
         }else{
-            $data = array(
-                          'countdate' => $countdate,
+            // $data = array(
+            //               'countdate' => $countdate,
+            //               'date' => $date,
+            //               'subsection' => $subsection,
+            //               'point_check' => $point_check,
+            //               'activityList' => $activityList,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'id' => $id,
+            //               'role_code' => Auth::user()->role_code,
+            //               'id_departments' => $id_departments,
+            //               'monthTitle' => $monthTitle,
+            //               'month' => $month,
+            //               'leader' => $leader,
+            //               'jml_null' => $jml_null,
+            //               'jml_null_leader' => $jml_null_leader,
+            //               'approved_date' => $approved_date,
+            //               'approved_date_leader' => $approved_date_leader,
+            //               'foreman' => $foreman,);
+            // return view('area_check.print', $data
+            //     )->with('page', 'Area Check');
+            $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'landscape');
+
+           $pdf->loadView('area_check.print', array(
+               'countdate' => $countdate,
                           'date' => $date,
                           'subsection' => $subsection,
                           'point_check' => $point_check,
@@ -317,9 +342,10 @@ class AreaCheckController extends Controller
                           'jml_null_leader' => $jml_null_leader,
                           'approved_date' => $approved_date,
                           'approved_date_leader' => $approved_date_leader,
-                          'foreman' => $foreman,);
-            return view('area_check.print', $data
-                )->with('page', 'Area Check');
+                          'foreman' => $foreman,
+           ));
+
+           return $pdf->stream("Cek Area.pdf");
         }
     }
 

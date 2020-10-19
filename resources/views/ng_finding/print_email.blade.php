@@ -3,7 +3,7 @@
 <section class="content-header">
   <h1>
     Print {{ $activity_name }} - {{ $leader }}
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    <button class="btn btn-primary pull-right" onclick="myFunction()">Print / Save PDF</button>
   </h1>
   <ol class="breadcrumb">
   </ol>

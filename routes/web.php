@@ -994,7 +994,6 @@ Route::get('fetch/std_control/safety_shoes', 'GeneralController@fetchSafetyShoes
 Route::get('fetch/std_control/request_safety_shoes', 'GeneralController@fetchRequestSafetyShoes');
 Route::get('fetch/std_control/detail_safety_shoes', 'GeneralController@fetchDetailSafetyShoes');
 
-
 // STD
 Route::post('input/std_control/safety_shoes', 'GeneralController@inputSafetyShoes');
 
@@ -1007,9 +1006,9 @@ Route::get('reprint/std_control/safety_shoes', 'GeneralController@reprintReqSafe
 Route::get('scan/std_control/safety_shoes', 'GeneralController@scanSafetyShoes');
 Route::post('input/std_control/receive_safety_shoes', 'GeneralController@inputReceiveSafetyShoes');
 
-
-
+//Log
 Route::get('index/std_control/safety_shoes_log', 'GeneralController@indexSafetyShoesLog');
+Route::get('fetch/std_control/safety_shoes_log', 'GeneralController@fetchSafetyShoesLog');
 
 
 
@@ -2827,7 +2826,7 @@ Route::post('index/area_check/store/{id}', 'AreaCheckController@store');
 Route::get('index/area_check/getareacheck','AreaCheckController@getareacheck')->name('area_check.getareacheck');
 Route::post('index/area_check/update/{id}','AreaCheckController@update');
 Route::get('index/area_check/destroy/{id}/{area_check_id}', 'AreaCheckController@destroy');
-Route::post('index/area_check/print_area_check/{id}','AreaCheckController@print_area_check');
+Route::get('index/area_check/print_area_check/{id}/{month}','AreaCheckController@print_area_check');
 Route::get('index/area_check/print_area_check_email/{id}/{month}','AreaCheckController@print_area_check_email');
 Route::post('index/area_check/sendemail/{id}','AreaCheckController@sendemail');
 Route::post('index/area_check/approval/{id}/{month}','AreaCheckController@approval');

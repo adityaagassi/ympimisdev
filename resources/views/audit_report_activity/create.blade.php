@@ -71,7 +71,7 @@
               <select class="form-control select2" name="audit_guidance_id" style="width: 100%;" data-placeholder="Pilih Schedule Bulan Ini" required>
                 <option value=""></option>
                 @foreach($guidance as $guidance)
-                  <option value="{{ $guidance->id }}">{{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
+                  <option value="{{ $guidance->id }}">({{ $guidance->month }}) {{ $guidance->no_dokumen }} - {{ $guidance->nama_dokumen }}</option>
                 @endforeach
               </select>
             </div>
