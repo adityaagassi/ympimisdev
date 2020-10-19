@@ -404,7 +404,7 @@
 						},
 						series: [
 						{
-							name: 'Working Time',
+							name: 'NG Rate',
 							data: data
 						}
 						]
@@ -676,7 +676,7 @@
 						},
 						series: [
 						{
-							name: 'Working Time',
+							name: 'Productivity',
 							data: data
 						}
 						]
