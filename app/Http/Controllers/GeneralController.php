@@ -500,7 +500,7 @@ class GeneralController extends Controller{
 		}
 
 		$mail_to = db::table('send_emails')
-		->where('remark', '=', 'chemical')
+		->where('remark', '=', 'safety_shoes')
 		->WhereNull('deleted_at')
 		->select('email')
 		->get();
