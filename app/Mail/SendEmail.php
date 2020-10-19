@@ -264,5 +264,17 @@ class SendEmail extends Mailable
             ->subject('Input Production Result (Controlling Chart) Reminder')
             ->view('mails.chemical_not_input');
         }
+
+        if($this->remark == 'safety_shoes'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Safety Shoes')
+            ->view('mails.safety_shoes');
+        }
+
+        if($this->remark == 'spk_urgent'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+            ->subject('Maintenance SPK Urgent Notification')
+            ->view('mails.maintenance_urgent');
+        }    
     }
 }

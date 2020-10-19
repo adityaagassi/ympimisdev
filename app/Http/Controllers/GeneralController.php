@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
+use App\Mail\SendEmail;
 use App\GeneralAttendance;
 use App\GeneralAttendanceLog;
 use App\Employee;
@@ -17,7 +19,9 @@ use App\CodeGenerator;
 use App\GeneralShoesLog;
 use App\GeneralShoesRequest;
 use App\GeneralShoesStock;
+use App\User;
 use Auth;
+use DataTables;
 use Response;
 
 class GeneralController extends Controller{
@@ -45,16 +49,35 @@ class GeneralController extends Controller{
 
 	}
 
+	public function indexSafetyShoesLog(){
+		$title = "Safety Shoes Log";
+		$title_jp = "";
+
+		$employees = EmployeeSync::orderBy('name', 'asc')->get();
+
+		$users = User::where('username', 'like', 'PI%')->get();
+
+		return view('general.safety_shoes.safety_shoes_log', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'employees' => $employees,
+			'users' => $users
+		));
+	}
+
 	public function indexSafetyShoes(){
 		$title = "Safety Shoes Control";
 		$title_jp = "安全靴管理システム";
 
 		$employees = EmployeeSync::orderBy('name', 'asc')->get();
 
+		$user = EmployeeSync::where('employee_id', Auth::user()->username)->first();
+
 		return view('general.safety_shoes.index', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'employees' => $employees,
+			'user' => $user,
 			'printers' => $this->printers
 		));
 	}
@@ -410,6 +433,8 @@ class GeneralController extends Controller{
 
 	public function inputSafetyShoes(Request $request){
 		$stock = $request->get('stock');
+		$data = array();
+
 
 		DB::beginTransaction();
 		for ($i=0; $i < count($stock); $i++) {
@@ -437,6 +462,19 @@ class GeneralController extends Controller{
 
 				$emp = EmployeeSync::where('employee_id', $stock[$i]['employee_id'])->first();
 
+				array_push($data,[
+					'employee_id' => $emp->employee_id,
+					'name' => $emp->name,
+					'department' => $emp->department,
+					'section' => $emp->section,
+					'group' => $emp->group,
+					'gender' => $stock[$i]['gender'],
+					'size' => $stock[$i]['size'],
+					'quantity' => $stock[$i]['qty'],
+					'status' => $stock[$i]['status']
+				]);
+
+
 				$log = new GeneralShoesLog([
 					'gender' => $stock[$i]['gender'],
 					'size' => $stock[$i]['size'],
@@ -461,7 +499,18 @@ class GeneralController extends Controller{
 			}
 		}
 
+		$mail_to = db::table('send_emails')
+		->where('remark', '=', 'chemical')
+		->WhereNull('deleted_at')
+		->select('email')
+		->get();
+
+		Mail::to($mail_to)
+		->bcc('aditya.agassi@music.yamaha.com')
+		->send(new SendEmail($data, 'safety_shoes'));
+
 		DB::commit();
+
 		$response = array(
 			'status' => true,
 			'message' => 'Safety Shoes berhasil ditambahkan'
@@ -811,6 +860,64 @@ class GeneralController extends Controller{
 		}
 	}
 
+	public function fetchSafetyShoesLog(Request $request){
+		
+		$data = GeneralShoesLog::leftJoin(db::raw("(SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS request_user"), 'general_shoes_logs.requested_by', '=', 'request_user.id')
+		->leftJoin(db::raw("(SELECT id, concat(SPLIT_STRING(`name`, ' ', 1), ' ', SPLIT_STRING(`name`, ' ', 2)) as `name` FROM users) AS create_user"), 'general_shoes_logs.created_by', '=', 'create_user.id');
+
+		if(strlen($request->get('datefrom')) > 0 ){
+			$data = $data->where('general_shoes_logs.created_at', '>=', $request->get('datefrom'));
+		}
+
+		if(strlen($request->get('dateto')) > 0 ){
+			$data = $data->where('general_shoes_logs.created_at', '<=', $request->get('dateto'));
+		}
+		
+		if($request->get('department') != null){
+			$data = $data->whereIn('general_shoes_logs.department', $request->get('department'));
+		}
+
+		if($request->get('section') != null){
+			$data = $data->whereIn('general_shoes_logs.section', $request->get('section'));
+		}
+
+		if($request->get('group') != null){
+			$data = $data->whereIn('general_shoes_logs.group', $request->get('group'));
+		}
+
+		if($request->get('sub_group') != null){
+			$data = $data->whereIn('general_shoes_logs.sub_group', $request->get('sub_group'));
+		}
+
+		if($request->get('requested_by') != null){
+			$data = $data->whereIn('general_shoes_logs.requested_by', $request->get('requested_by'));
+		}
+
+		if($request->get('created_by') != null){
+			$data = $data->whereIn('general_shoes_logs.created_by', $request->get('created_by'));
+		}
+
+		$data = $data->orderBy('general_shoes_logs.created_at', 'desc')
+		->select(
+			'general_shoes_logs.status',
+			'general_shoes_logs.size',
+			'general_shoes_logs.gender',
+			'general_shoes_logs.employee_id',
+			db::raw("concat(SPLIT_STRING(general_shoes_logs.name, ' ', 1), ' ', SPLIT_STRING(general_shoes_logs.name, ' ', 2)) as `name`"),
+			'general_shoes_logs.department',
+			'general_shoes_logs.section',
+			'general_shoes_logs.group',
+			'general_shoes_logs.sub_group',
+			'general_shoes_logs.quantity',
+			db::raw('request_user.name AS requester'),
+			db::raw('create_user.name AS creator'),
+			'general_shoes_logs.created_at'
+		)
+		->get();
+
+		return DataTables::of($data)->make(true);
+	}
+
 	public function fetchRequestSafetyShoes(){
 
 		$request = db::select("SELECT request.request_id, request.created_at, u.`name`, SUM(request.l) AS l, SUM(request.p) AS p FROM
@@ -827,6 +934,31 @@ class GeneralController extends Controller{
 		return Response::json($response);
 
 		
+	}
+
+	public function fetchDetailSafetyShoes(Request $request){
+		$request_id = $request->get('request_id');
+
+		$data = GeneralShoesRequest::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_shoes_requests.employee_id')
+		->leftJoin('users', 'users.id', '=', 'general_shoes_requests.created_by')
+		->where('general_shoes_requests.request_id', $request_id)
+		->select(
+			'employee_syncs.employee_id',
+			'employee_syncs.name',
+			'employee_syncs.gender',
+			'employee_syncs.department',
+			'employee_syncs.section',
+			'employee_syncs.group',
+			'general_shoes_requests.size',
+			db::raw('users.name AS requester')
+		)
+		->get();
+
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
 	}
 
 	public function fetchSafetyShoes(){

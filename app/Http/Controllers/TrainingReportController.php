@@ -813,7 +813,7 @@ class TrainingReportController extends Controller
       {
           $approve = $request->get('approve');
           $approvecount = count($approve);
-          if($approvecount < 10){
+          if($approvecount < 9){
             // echo "<script>alert('Data Belum Terverifikasi. Checklist semua poin jika akan verifikasi data.')</script>";
             return redirect('/index/training_report/print_training_email/'.$id)->with('error', 'Data Belum Terverifikasi. Checklist semua poin jika akan verifikasi data.')->with('page', 'Training Report');
           }
