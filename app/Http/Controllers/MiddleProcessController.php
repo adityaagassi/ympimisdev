@@ -1489,6 +1489,7 @@ class MiddleProcessController extends Controller
 				and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
+				and l.operator_id not like 'PG%'
 				GROUP BY l.operator_id) ng
 				left join
 				(SELECT l.operator_id, sum(l.quantity) g from middle_check_logs l
@@ -1496,6 +1497,7 @@ class MiddleProcessController extends Controller
 				and DATE_FORMAT(l.buffing_time,'%m-%Y') = '".$bulan."'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sun'
 				and DATE_FORMAT(l.buffing_time,'%a') != 'Sat'
+				and l.operator_id not like 'PG%'
 				GROUP BY l.operator_id) g
 				on ng.operator_id = g.operator_id) rate
 				left join employees e on e.employee_id = rate.operator_id
