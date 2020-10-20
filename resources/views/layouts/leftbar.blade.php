@@ -711,19 +711,19 @@
   </li>
   @endif
 
-  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F']) || Auth::user()->username == 'op subassy sx')
+  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F','PC']) || Auth::user()->username == 'op subassy sx')
   @if(isset($page) && $page == "KD Assy - SubAssy SX")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-sx") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Assy - SubAssy SX</span></a>
   </li>
   @endif
 
-  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F']) || Auth::user()->username == 'op-subassy-fl')
+  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F','PC']) || Auth::user()->username == 'op-subassy-fl')
   @if(isset($page) && $page == "KD Sub Assy FL")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-fl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy FL</span></a>
   </li>
   @endif
 
-  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F']) || Auth::user()->username == 'op-subassy-cl')
+  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F','PC']) || Auth::user()->username == 'op-subassy-cl')
   @if(isset($page) && $page == "KD Sub Assy CL")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-cl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy CL</span></a>
   </li>
