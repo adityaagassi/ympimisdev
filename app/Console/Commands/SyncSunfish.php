@@ -52,7 +52,7 @@ public function handle()
         $row['gender'] = $data['gender'];
         $row['birth_place'] = $data['birthplace'];
         $row['birth_date'] = $data['birthdate'];
-        $row['address'] = $data['address'];
+        $row['address'] = $data['Current_Address'];
         $row['phone'] = $data['phone'];
         $row['card_id'] = $data['identity_no'];
         $row['npwp'] = $data['taxfilenumber'];
@@ -121,7 +121,7 @@ public function handle()
                 'gender' => strtoupper($data->gender),
                 'birth_place' => ucwords($data->birthplace),
                 'birth_date' => $data->birthdate,
-                'address' => ucwords($data->address),
+                'address' => ucwords($data->Current_Address),
                 'card_id' => $data->identity_no,
                 'hire_date' => $data->start_date,
                 'created_by' => '1'
