@@ -45,6 +45,15 @@ class KnockDownController extends Controller{
 			$title = 'KD Z-PRO';
 			$title_jp = '';
 
+			return view('kd.index_kd_zpro', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}else if($id == 'mouthpiece'){
+			$title = 'KD Mouthpiece';
+			$title_jp = '';
+
 			return view('kd.index_kd', array(
 				'title' => $title,
 				'title_jp' => $title_jp,

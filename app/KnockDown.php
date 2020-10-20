@@ -9,6 +9,6 @@ class KnockDown extends Model{
 	use SoftDeletes;
 
 	protected $fillable = [
-		'kd_number', 'created_by', 'max_count', 'actual_count', 'remark', 'status', 'invoice_number', 'container_id', 'marking'
+		'kd_number', 'max_count', 'actual_count', 'remark', 'status', 'closure_id', 'invoice_number', 'container_id', 'marking', 'created_by'
 	];
 }
