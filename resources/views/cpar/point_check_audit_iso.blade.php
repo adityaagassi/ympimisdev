@@ -59,7 +59,7 @@ td {
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <section class="content-header">
   <h1>
-    List {{ $page }}
+    List Question Audit
     <small><b>E</b>lectronic-<b>I</b>nternal <b>R</b>equest <b>C</b>orrective <b>A</b>ction</small>
   </h1>
   <ol class="breadcrumb">
@@ -98,7 +98,7 @@ td {
                   <th>Nomor</th>
                   <th>Kategori</th>
                   <th>Lokasi</th>
-                  <th>Klausul</th>
+                  <th>Klausul / Nomor</th>
                   <th>Judul</th> 
                   <th>Question</th>
                   <th>Action</th>
@@ -162,7 +162,7 @@ td {
                 </div>
               </div>
               <div class="form-group row" align="right">
-                <label class="col-sm-2">Klausul<span class="text-red">*</span></label>
+                <label class="col-sm-2">Klausul / Nomor<span class="text-red">*</span></label>
                 <div class="col-sm-9">
                   <input type="inputklausul" class="form-control" id="inputklausul" placeholder="Input Klausul (Contoh : 1.1)" required>
                 </div>
@@ -223,7 +223,7 @@ td {
                 </div>
               </div>
               <div class="form-group row" align="right">
-                <label class="col-sm-2">Klausul<span class="text-red">*</span></label>
+                <label class="col-sm-2">Klausul / Nomor<span class="text-red">*</span></label>
                 <div class="col-sm-9">
                   <input type="editklausul" class="form-control" id="editklausul" placeholder="Edit Klausul (Contoh : 1.1)" required>
                 </div>

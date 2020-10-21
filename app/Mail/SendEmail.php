@@ -162,6 +162,10 @@ class SendEmail extends Mailable
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Audit ISO Standarisasi')->view('mails.std_audit');
         }
 
+        if($this->remark == 'audit_all'){
+            return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->priority(1)->subject('Audit MIRAI')->view('mails.audit_all');
+        }
+
         if($this->remark == 'reject_std_audit'){
             return $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')->subject('Audit ISO Standarisasi')->view('mails.std_audit');
         }
@@ -240,6 +244,41 @@ class SendEmail extends Mailable
                 ->priority(1)
                 ->subject('Investment - Expense Application (投資申請)')
                 ->view('mails.investment');
+            }
+        }
+
+        if($this->remark == 'sakurentsu'){
+            if ($this->data[0]->position == 'interpreter') {
+                if($this->data[0]->file != null){
+                    $all_file = json_decode($this->data[0]->file);
+
+                    $email = $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                    ->priority(1)
+                    ->subject('Sakurentsu (作連通)')
+                    ->view('mails.sakurentsu');
+
+                    for ($i=0; $i < count($all_file); $i++) { 
+                        $email->attach(public_path('uploads/sakurentsu/'.$all_file[$i]));
+                    }
+
+                    return $email;
+                }
+            }
+            else if ($this->data[0]->position == 'PC'){
+                if($this->data[0]->file_translate != null){
+                    $all_file = json_decode($this->data[0]->file_translate);
+
+                    $email = $this->from('ympimis@gmail.com', 'PT. Yamaha Musical Products Indonesia')
+                    ->priority(1)
+                    ->subject('Sakurentsu (作連通)')
+                    ->view('mails.sakurentsu');
+
+                    for ($i=0; $i < count($all_file); $i++) { 
+                        $email->attach(public_path('uploads/sakurentsu/translated/'.$all_file[$i]));
+                    }
+
+                    return $email;
+                }
             }
         }
 

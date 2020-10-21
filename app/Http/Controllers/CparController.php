@@ -19,6 +19,7 @@ use App\CparItem;
 use App\StandarisasiAudit;
 use App\StandarisasiAuditChecklist;
 use App\StandarisasiAuditIso;
+use App\AuditAll;
 
 class CparController extends Controller
 {
@@ -2734,7 +2735,7 @@ class CparController extends Controller
     public function check_audit_report()
     {
       $title = "Audit Report";
-      $title_jp = "";
+      $title_jp = "監査報告";
 
       $location = StandarisasiAuditChecklist::orderBy('lokasi', 'asc')
       ->select('lokasi')
@@ -2764,7 +2765,7 @@ class CparController extends Controller
     public function check_audit_report_new($kategori, $lokasi, $auditor, $tanggal)
     {
       $title = "Audit Report";
-      $title_jp = "";
+      $title_jp = "監査報告";
 
       return view('cpar.report_check_audit_iso_new', array(
         'title' => $title,
@@ -2981,4 +2982,370 @@ class CparController extends Controller
             return Response::json($response);
         }
     }
+
+    // AUDIT ISO STANDARISASI
+
+    public function audit_data() {
+     
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+      $employee = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position')->first();
+
+      return view('audit.audit_data', array(
+       'emp' => $emp_id,
+       'employee' => $employee
+      ))->with('page', 'Audit Data');
+    }
+
+    public function fetch_audit_all(Request $request)
+    {
+      $tanggal = $request->get("tanggal");
+
+      if ($tanggal == null) {
+        $tgl = '';
+      }
+      else{
+        $tgl = "and auditor_date = '".$tanggal."'"; 
+      }
+
+      $query = "SELECT * FROM audit_alls where deleted_at is null ".$tgl." order by id desc";
+      $detail = db::select($query);
+
+      $response = array(
+        'status' => true,
+        'lists' => $detail,
+      );
+      return Response::json($response);
+    }
+
+
+    public function audit_kanban()
+    {
+      $title = "Audit Kanban";
+      $title_jp = "かんばん監査";
+
+      $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position', 'department')->first();
+
+      $location = StandarisasiAuditChecklist::orderBy('lokasi', 'asc')
+      ->select('lokasi')
+      ->distinct()
+      ->where('kategori','=','kanban')
+      ->get();
+
+      $category = StandarisasiAuditChecklist::orderBy('kategori', 'asc')
+      ->select('kategori')
+      ->distinct()
+      ->where('kategori','=','kanban')
+      ->get();
+
+      $auditee = db::select("select DISTINCT employee_id, name, section, position from employee_syncs
+        where end_date is null and (position like '%Staff%' or position like '%Chief%' or position like '%Foreman%' or position like 'Manager%')");
+
+      return view('audit.create_audit', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'employee' => $emp,
+        'location' => $location,
+        'category' => $category,
+        'auditee' => $auditee
+      ))->with('page', 'Audit Kanban');
+    }
+
+    public function audit_point_check() {
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+      $employee = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position')->first();
+
+      return view('audit.audit_point_check', array(
+       'emp' => $emp_id,
+       'employee' => $employee
+      ))->with('page', 'Audit');
+    }
+
+    public function fetchKategoriLokasiAudit(Request $request)
+    {
+      try {
+
+        $category = $request->get('category');
+
+        $audit = DB::SELECT("SELECT DISTINCT(kategori),lokasi FROM `standarisasi_audit_checklists` where standarisasi_audit_checklists.deleted_at is null AND kategori = '".$category."'");
+
+        $response = array(
+          'status' => true,
+          'lists' => $audit
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function fetchHasilAuditAll(Request $request)
+    {
+      try {
+
+        $category = $request->get('category');
+
+
+        $audit = DB::SELECT("SELECT DISTINCT tanggal, kategori, auditor_id, auditor_name, lokasi, auditee, auditee_name from `standarisasi_audit_isos` where standarisasi_audit_isos.deleted_at is null and kategori  = '".$category."'");
+
+        $response = array(
+          'status' => true,
+          'lists' => $audit
+        );
+
+        return Response::json($response); 
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+    public function check_audit_report_all()
+    {
+      $title = "Audit Report";
+      $title_jp = "監査報告";
+
+      $cat = $_GET['category'];
+
+      $location = StandarisasiAuditChecklist::orderBy('lokasi', 'asc')
+      ->select('lokasi')
+      ->distinct()
+      ->where('kategori','=',$cat)
+      ->get();
+
+      $category = StandarisasiAuditChecklist::orderBy('kategori', 'asc')
+      ->select('kategori')
+      ->distinct()
+      ->where('kategori','=',$cat)
+      ->get();
+
+      $auditor = StandarisasiAuditIso::orderBy('auditor_name', 'asc')
+      ->select('auditor_name')
+      ->distinct()
+      ->where('kategori','=',$cat)
+      ->get();
+
+      return view('audit.report_audit', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'location' => $location,
+        'category' => $category,
+        'auditor' => $auditor
+
+      ))->with('page', 'Audit');
+    }
+
+    public function check_audit_report_new_all($kategori, $lokasi, $auditor, $tanggal)
+    {
+      $title = "Audit Report";
+      $title_jp = "監査報告";
+
+      return view('cpar.report_check_audit_iso_new', array(
+        'title' => $title,
+        'title_jp' => $title_jp,
+        'location' => $lokasi,
+        'category' => $kategori,
+        'auditor' => $auditor,
+        'audit_date' => $tanggal
+
+      ))->with('page', 'Audit');
+    }
+
+    public function fetch_audit_report_all(Request $request)
+    {
+      try {
+      
+        $lokasi = $request->get("location");
+        $kategori = $request->get("category");
+        $auditor = $request->get("auditor");
+        $tanggal = $request->get("date");
+
+        $query = 'SELECT * FROM standarisasi_audit_isos where deleted_at is null and kategori = "'.$kategori.'" and lokasi = "'.$lokasi.'" and auditor_name = "'.$auditor.'" and tanggal = "'.$tanggal.'" order by status desc, id asc';
+        $detail = db::select($query);
+
+        $response = array(
+          'status' => true,
+          'lists' => $detail
+        );
+        
+        return Response::json($response);
+
+      } catch (\Exception $e) {
+        $response = array(
+          'status' => false,
+          'message'=> $e->getMessage()
+        );
+
+        return Response::json($response); 
+      }
+    }
+
+
+    public function audit_create_checklist_all($id)
+    {
+      $audit = StandarisasiAuditIso::find($id);
+
+      $emp = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position', 'department')->first();
+
+      return view('audit.audit_laporan', array(
+        'audit' => $audit,
+        'employee' => $emp
+      ))->with('page', 'Form Audit');
+    }
+
+    public function audit_post_create_checklist_all(Request $request)
+    {
+      try {
+        $id_user = Auth::id();
+
+        $audits = AuditAll::create([
+           'auditor' => $request->get('auditor'),
+           'auditor_name' => $request->get('auditor_name'),
+           'auditor_date' => $request->get('auditor_date'),
+           'auditor_jenis' => $request->get('auditor_jenis'),
+           'auditor_lokasi' => $request->get('auditor_lokasi'),
+           'auditor_permasalahan' => $request->get('auditor_permasalahan'),
+           'auditor_bukti' => $request->get('auditor_bukti'),
+           'auditee' => $request->get('auditee'),
+           'auditee_name' => $request->get('auditee_name'),
+           'auditee_due_date' => $request->get('auditee_due_date'),
+           'posisi' => 'auditee',
+           'created_by' => $id_user
+        ]);
+
+        $audits->save(); 
+
+        $data3 = StandarisasiAuditIso::where('id', $request->get('id_checklist'))
+        ->update(['status_ditangani' => 'true']);
+
+        $mailto = "select distinct employees.name,email from audit_alls join employees on audit_alls.auditee = employees.employee_id join users on employees.employee_id = users.username where audit_alls.id = '".$audits->id."'";
+        $mails = DB::select($mailto);
+
+        foreach($mails as $mail){
+          $mailtoo = $mail->email;
+        }
+      
+        $isimail = "select * FROM audit_alls where audit_alls.id = ".$audits->id;
+        $audits = db::select($isimail);
+
+        Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($audits, 'audit_all'));
+
+        $response = array(
+          'status' => true,
+          'datas' => "Berhasil"
+        );
+
+        return Response::json($response);
+
+     } catch (QueryException $e){
+        $response = array(
+             'status' => false,
+             'datas' => $e->getMessage()
+        );
+        return Response::json($response);
+       }
+    }
+
+    public function audit_response_all($id){
+      $emp_id = Auth::user()->username;
+      $_SESSION['KCFINDER']['uploadURL'] = url("kcfinderimages/".$emp_id);
+
+      $audit = AuditAll::find($id);
+
+      $employee = EmployeeSync::where('employee_id', Auth::user()->username)
+      ->select('employee_id', 'name', 'position')->first();
+
+      if ($audit->posisi == 'auditee' || $audit->posisi == 'auditor_final') {
+        return view('audit.audit_response', array(
+          'audit' => $audit,
+          'employee' => $employee,
+        ))->with('page', 'Audit');
+      }
+      else{
+        return redirect('index/audit_all');
+      }
+    }
+
+    public function update_response_all(Request $request, $id)
+    {
+      try {
+        $audit = AuditAll::find($id);
+        $audit->auditor_penyebab = $request->get('auditor_penyebab');
+        $audit->auditee_perbaikan = $request->get('auditee_perbaikan');
+        $audit->auditee_pencegahan = $request->get('auditee_pencegahan');
+        $audit->auditee_biaya = $request->get('auditee_biaya');
+        $audit->auditee_date = date('Y-m-d');
+        $audit->save();
+
+        return redirect('/index/audit/response/'.$audit->id)->with('status', 'Data has been updated.')->with('page', 'Audit All');
+      }
+      catch (QueryException $e){
+        $error_code = $e->errorInfo[1];
+        if($error_code == 1062){
+          return back()->with('error', 'Already exist.')->with('page', 'Audit All');
+        }
+        else{
+          return back()->with('error', $e->getMessage())->with('page', 'Audit All');
+        }
+      }
+    }
+
+
+    public function sendemailpenanganan_all(Request $request,$id)
+    {
+      $id_user = Auth::id();
+      $auditee = AuditAll::find($id);
+
+      if ($auditee->posisi == "auditee") {
+        $auditee->posisi = "auditor_final";    
+        $auditee->save();      
+
+        $mailto = "select distinct employees.name,email from audit_alls join employees on audit_alls.auditor = employees.employee_id join users on employees.employee_id = users.username where audit_alls.id = '".$auditee->id."'";
+        $mails = DB::select($mailto);
+      }
+
+      foreach($mails as $mail){
+        $mailtoo = $mail->email;
+      }
+
+      $isimail = "select * FROM audit_alls where audit_alls.id = ".$auditee->id;
+      $audits = db::select($isimail);
+
+      Mail::to($mailtoo)->send(new SendEmail($audits, 'audit_all'));
+      return redirect('/index/audit/response/'.$id)->with('status', 'Audit Has Been Sent')->with('page', 'Audit');
+    }
+
+    public function print_audit_all($id)
+    {
+      $audit = AuditAll::find($id);
+
+      $pdf = \App::make('dompdf.wrapper');
+      $pdf->getDomPDF()->set_option("enable_php", true);
+      $pdf->setPaper('A4', 'potrait');
+      $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+      $pdf->loadView('audit.print_audit', array(
+        'audit' => $audit,
+      ));
+
+      return $pdf->stream("Form Audit.pdf");
+    }
+
 }

@@ -24,7 +24,7 @@
 <section class="content-header">
 	<input type="hidden" id="green">
 	<h1>
-		Report Audit Internal ISO
+		Report Audit {{ $_GET['category'] }}
 	</h1>
 	<ol class="breadcrumb">
      
@@ -71,10 +71,10 @@
 
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0;">
 
-				<input type="hidden" name="kategori" id="kategori" value="{{ $category }}">
-				<input type="hidden" name="lokasi" id="lokasi" value="{{ $location }}">
-				<input type="hidden" name="auditor" id="auditor" value="{{ $auditor }}">
-				<input type="hidden" name="date" id="date" value="{{ $audit_date }}">
+				<input type="hidden" name="kategori" id="kategori">
+				<input type="hidden" name="lokasi" id="lokasi">
+				<input type="hidden" name="auditor" id="auditor">
+				<input type="hidden" name="date" id="date">
 							
 				<table class="table table-bordered" style="width: 100%; color: white;" id="tableResult">
 					<thead style="font-weight: bold; color: white; background-color: #607d8b;">
@@ -113,6 +113,52 @@
 	</div>
 </section>
 
+<div class="modal fade" id="modalFirst">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="modal-body table-responsive no-padding">
+					<div class="form-group">
+						<label>Kategori</label>
+						<input type="text" class="form-control" id="selectCategory" name="selectCategory" readonly="" value="{{$_GET['category']}}">
+					</div>
+					<div class="form-group">
+						<label>Pilih Lokasi</label>
+						<select class="form-control select2" id="selectLocation" data-placeholder="Pilih Lokasi Anda..." style="width: 100%; font-size: 20px;">
+							<option></option>
+							@foreach($location as $loc)
+							<option value="{{ $loc->lokasi }}">{{ $loc->lokasi }}</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Pilih Auditor</label>
+						<select class="form-control select2" id="selectAuditor" data-placeholder="Pilih Auditor..." style="width: 100%; font-size: 20px;">
+							<option></option>
+							@foreach($auditor as $audit)
+							<option value="{{ $audit->auditor_name }}">{{ $audit->auditor_name }}</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Pilih Tanggal</label>
+						<div class="input-group date">
+		                  <div class="input-group-addon">
+		                    <i class="fa fa-calendar"></i>
+		                  </div>
+		                  <input type="text" class="form-control pull-right" id="selectDate" name="selectDate" placeholder="Select Tanggal">
+		                </div>
+					</div>
+
+					<div class="form-group">
+						<button class="btn btn-success" onclick="selectData()">Submit</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
 @section('scripts')
 <script src="{{ url("js/bootstrap-toggle.min.js") }}"></script>
@@ -149,9 +195,7 @@
 	        format: "yyyy-mm-dd",
 	        autoclose: true,
 	        todayHighlight: true
-	    });
-
-	    cek_report();
+	      });
 	})
 
 	function selectData(id){
@@ -261,12 +305,7 @@
 
 				if (value.status == "Not Good") {
 					if (value.status_ditangani == null) {
-						if (value.kategori == "ISO 45001" || value.kategori == "ISO 9001" || value.kategori == "ISO 14001") {
-							body += "<td width='10%'><a href={{url('index/audit_iso/create/')}}/"+value.id+" target='_blank' class='btn btn-success'>Buat Laporan</a></td>";							
-						}else{
-							body += "<td width='10%'><a href={{url('index/audit/create/')}}/"+value.id+" target='_blank' class='btn btn-success'>Buat Laporan</a></td>";
-						}
-
+						body += "<td width='10%'><a href={{url('index/audit_iso/create/')}}/"+value.id+" class='btn btn-success'>Buat Laporan</a></td>";
 					}else{
 						body += "<td width='10%'><span style='color:green'>Sudah Dibuat Laporan</span></td>";
 					}

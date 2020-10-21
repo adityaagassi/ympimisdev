@@ -1491,6 +1491,12 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 
 	Route::get('index/kd_mouthpiece/log', 'MouthpieceController@indexKdMouthpieceLog');
 	Route::get('fetch/kd_mouthpiece/log', 'MouthpieceController@fetchKdMouthpieceLog');
+
+
+	Route::get('index/kd_mouthpiece/{id}', 'KnockDownController@indexKD');
+	Route::post('fetch/kd_print', 'KnockDownController@printLabelNew');
+
+	
 });
 
 //ZPRO
@@ -1503,6 +1509,8 @@ Route::group(['nav' => 'S24', 'middleware' => 'permission'], function(){
 	Route::get('index/print_label_zpro/{id}', 'KnockDownController@indexPrintLabelZpro');
 
 });
+
+
 
 //SUBASSY
 Route::group(['nav' => 'S25', 'middleware' => 'permission'], function(){
@@ -2116,6 +2124,9 @@ Route::get('export/stocktaking/official_variance', 'StockTakingController@export
 
 //Manage Store
 Route::get('index/stocktaking/manage_store', 'StockTakingController@indexManageStore');
+Route::get('index/stocktaking/summary_new', 'StockTakingController@indexSummaryNew');
+
+
 Route::get('fetch/stocktaking/store', 'StockTakingController@fetchStore');
 Route::get('fetch/stocktaking/store_details', 'StockTakingController@fetchStoreDetail');
 Route::post('fetch/stocktaking/delete_store', 'StockTakingController@deleteStore');
@@ -2128,6 +2139,8 @@ Route::get('fetch/stocktaking/check_material', 'StockTakingController@fetchCheck
 Route::get('print/stocktaking/print_store/{id}', 'StockTakingController@printStore');
 Route::get('reprint/stocktaking/summary_of_counting_id', 'StockTakingController@reprintIdSoc');
 Route::get('reprint/stocktaking/summary_of_counting_store', 'StockTakingController@reprintStoreSoc');
+
+Route::get('reprint/stocktaking/summary_of_counting_id_new', 'StockTakingController@reprintIdSubStore');
 
 
 //Summary of Counting
@@ -2144,6 +2157,13 @@ Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
 Route::get('fetch/stocktaking/material_detail', 'StockTakingController@fetchMaterialDetail');
 Route::get('fetch/stocktaking/store_list', 'StockTakingController@fetchStoreList');
 Route::post('fetch/stocktaking/update_count', 'StockTakingController@updateCount');
+
+//Count New
+
+Route::get('index/stocktaking/count_new', 'StockTakingController@indexCountNew');
+Route::get('fetch/stocktaking/material_detail_new', 'StockTakingController@fetchMaterialDetailNew');
+Route::get('fetch/stocktaking/store_list_new', 'StockTakingController@fetchStoreListNew');
+Route::post('fetch/stocktaking/update_count_new', 'StockTakingController@updateCountNew');
 
 //Audit
 Route::get('index/stocktaking/audit/{id}', 'StockTakingController@indexAudit');
@@ -2687,7 +2707,7 @@ Route::post('index/audit_report_activity/update/{id}/{audit_report_id}', 'AuditR
 Route::get('index/audit_report_activity/report_audit_activity/{id}', 'AuditReportActivityController@report_audit_activity');
 Route::get('index/audit_report_activity/fetchReport/{id}', 'AuditReportActivityController@fetchReport');
 Route::get('fetch/audit_report_activity/detail_laporan_aktivitas/{id}', 'AuditReportActivityController@detail_laporan_aktivitas');
-Route::post('index/audit_report_activity/print_audit_report/{id}', 'AuditReportActivityController@print_audit_report');
+Route::get('index/audit_report_activity/print_audit_report/{id}/{month}', 'AuditReportActivityController@print_audit_report');
 Route::get('index/audit_report_activity/print_audit_report_chart/{id}/{subsection}/{month}', 'AuditReportActivityController@print_audit_report_chart');
 Route::get('index/audit_report_activity/print_audit_report_email/{id}/{month}', 'AuditReportActivityController@print_audit_report_email');
 Route::post('index/audit_report_activity/send_email/{id}', 'AuditReportActivityController@sendemail');
@@ -2727,7 +2747,7 @@ Route::get('index/daily_check_fg/create/{id}/{product}', 'DailyCheckController@c
 Route::post('index/daily_check_fg/store/{id}/{product}', 'DailyCheckController@store');
 Route::get('index/daily_check_fg/getdetail','DailyCheckController@getdetail')->name('daily_check_fg.getdetail');
 Route::post('index/daily_check_fg/update/{id}/{product}', 'DailyCheckController@update');
-Route::post('index/daily_check_fg/print_daily_check/{id}', 'DailyCheckController@print_daily_check');
+Route::get('index/daily_check_fg/print_daily_check/{id}/{month}', 'DailyCheckController@print_daily_check');
 Route::post('index/daily_check_fg/sendemail/{id}', 'DailyCheckController@sendemail');
 Route::get('index/daily_check_fg/print_daily_check_email/{id}/{month}', 'DailyCheckController@print_daily_check_email');
 Route::post('index/daily_check_fg/approval/{id}/{month}', 'DailyCheckController@approval');
@@ -2741,7 +2761,7 @@ Route::get('index/labeling/create/{id}', 'LabelingController@create');
 Route::post('index/labeling/store/{id}', 'LabelingController@store');
 Route::get('index/labeling/edit/{id}/{labeling_id}', 'LabelingController@edit');
 Route::post('index/labeling/update/{id}/{labeling_id}', 'LabelingController@update');
-Route::post('index/labeling/print_labeling/{id}', 'LabelingController@print_labeling');
+Route::get('index/labeling/print_labeling/{id}/{month}', 'LabelingController@print_labeling');
 Route::get('index/labeling/print_labeling_email/{id}/{month}', 'LabelingController@print_labeling_email');
 Route::post('index/labeling/sendemail/{id}', 'LabelingController@sendemail');
 Route::post('index/labeling/approval/{id}/{month}', 'LabelingController@approval');
@@ -2891,7 +2911,7 @@ Route::post('index/ng_finding/store/{id}', 'NgFindingController@store');
 Route::get('index/ng_finding/getngfinding','NgFindingController@getngfinding')->name('ng_finding.getngfinding');
 Route::post('index/ng_finding/update/{id}/{ng_finding_id}','NgFindingController@update');
 Route::get('index/ng_finding/destroy/{id}/{area_check_id}', 'NgFindingController@destroy');
-Route::post('index/ng_finding/print_ng_finding/{id}','NgFindingController@print_ng_finding');
+Route::get('index/ng_finding/print_ng_finding/{id}/{month}','NgFindingController@print_ng_finding');
 Route::get('index/ng_finding/print_ng_finding_email/{id}/{month}','NgFindingController@print_ng_finding_email');
 Route::post('index/ng_finding/sendemail/{id}','NgFindingController@sendemail');
 Route::post('index/ng_finding/approval/{id}/{month}','NgFindingController@approval');
@@ -3151,6 +3171,28 @@ Route::get('index/form_ketidaksesuaian/table', 'CparController@fetchTable');
 //approve or Reject CPAR By QA
 Route::get('index/form_ketidaksesuaian/approveqa/{id}', 'CparController@approveqa');
 Route::get('index/form_ketidaksesuaian/rejectqa/{id}', 'CparController@rejectqa');
+
+//Audit All
+
+Route::get('index/audit_data', 'CparController@audit_data');
+Route::get('index/audit_data/fetch', 'CparController@fetch_audit_all');
+Route::get('index/audit/print/{id}', 'CparController@print_audit_all');
+
+Route::get('index/audit', 'CparController@audit_kanban');
+Route::get('index/audit/point_check', 'CparController@audit_point_check');
+Route::get('index/audit/fetch_kategori_lokasi', 'CparController@fetchKategoriLokasiAudit');
+Route::get('index/audit/fetch_hasil_audit', 'CparController@fetchHasilAuditAll');
+
+Route::get('index/audit/cek_report', 'CparController@check_audit_report_all');
+Route::get('index/audit/cek_report/{kategori}/{lokasi}/{auditor}/{tanggal}', 'CparController@check_audit_report_new_all');
+Route::get('fetch/audit/cek_report', 'CparController@fetch_audit_report_all');
+
+Route::get('index/audit/create/{id}', 'CparController@audit_create_checklist_all');
+Route::post('post/audit/create', 'CparController@audit_post_create_checklist_all');
+Route::get('index/audit/response/{id}', 'CparController@audit_response_all');
+Route::post('index/audit/update_response/{id}', 'CparController@update_response_all');
+Route::get('index/audit/sendemailpenanganan/{id}', 'CparController@sendemailpenanganan_all');
+
 
 
 //Audit Internal ISO

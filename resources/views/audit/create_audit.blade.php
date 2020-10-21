@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
 <link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
@@ -11,6 +11,7 @@
 	}
 	table.table-bordered > tbody > tr > td{
 		color: black;
+		background-color: white;
 	}
 
 	#loading { display: none; }
@@ -93,19 +94,13 @@
 <section class="content-header">
 	<input type="hidden" id="green">
 	<h1>
-		Audit Internal ISO
+		Audit Kanban
 	</h1>
 	<ol class="breadcrumb">
 		<?php $user = STRTOUPPER(Auth::user()->username) ?>
 
-		@if(Auth::user()->role_code == "MIS" || $user == "PI1211001" || $user == "PI0904007")
-		<a class="btn btn-primary btn-sm" style="margin-right: 5px" href="{{ url("/index/audit_iso/check") }}">
-			<i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Audit
-		</a>
-		@endif
-
 		<button class="btn btn-success btn-sm" style="margin-right: 5px" onclick="location.reload()">
-			<i class="fa fa-edit"></i>&nbsp;&nbsp;Ganti Lokasi
+			<i class="fa fa-refresh"></i>&nbsp;&nbsp;Ganti Lokasi
 		</button>
 
 	</ol>
@@ -131,8 +126,8 @@
 	@endif
 
 	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8; display: none">
-		<p style="position: absolute; color: White; top: 45%; left: 35%;">
-			<span style="font-size: 40px">Loading, mohon tunggu . . . <i class="fa fa-spin fa-refresh"></i></span>
+		<p style="position: absolute; color: white; top: 45%; left: 35%;">
+			<span style="font-size: 40px">Loading, Please Wait . . . <i class="fa fa-spin fa-refresh"></i></span>
 		</p>
 	</div>
 
@@ -147,23 +142,23 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Audit Date</td>
+							<td style="padding: 0px; background-color: rgb(50, 50, 50); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid white">Audit Date</td>
 							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black"><?= date("d-m-Y") ?></td>
 						</tr>
 						<tr>
-							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditor</td>
+							<td style="padding: 0px; background-color: rgb(50, 50, 50); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid white">Auditor</td>
 							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="employee_id">{{ $employee->employee_id }} - {{ $employee->name }}</td>
 						</tr>
 						<tr>
-							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Category</td>
+							<td style="padding: 0px; background-color: rgb(50, 50, 50); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid white">Category</td>
 							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="category"></td>
 						</tr>
 						<tr>
-							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Location</td>
+							<td style="padding: 0px; background-color: rgb(50, 50, 50); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid white">Location</td>
 							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="location"></td>
 						</tr>
 						<tr>
-							<td style="padding: 0px; background-color: #5c6bc0; text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid black">Auditee</td>
+							<td style="padding: 0px; background-color: rgb(50, 50, 50); text-align: center; color: white; font-size:20px; width: 30%;border: 1px solid white">Auditee</td>
 							<td colspan="2" style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: #000000; font-size: 20px;border: 1px solid black" id="auditee_name"></td>
 						</tr>
 					</tbody>
@@ -175,7 +170,7 @@
 					<thead style="font-weight: bold; color: black; background-color: #cddc39;">
 						<tr>
 							<th>No.</th>
-							<th>Klausul</th>
+							<th>Poin Audit</th>
 							<th>Subject</th>
 							<th>Question</th>
 							<th>Condition</th>
@@ -200,13 +195,12 @@
 			<div class="modal-header">
 				<div class="modal-body table-responsive no-padding">
 					<div class="form-group">
-						<label>Pilih Kategori ISO</label>
-						<select class="form-control select2" id="selectCategory" data-placeholder="Pilih Kategori..." style="width: 100%; font-size: 20px;">
-							<option></option>
-							@foreach($category as $cat)
-							<option value="{{ $cat->kategori }}">{{ $cat->kategori }}</option>
-							@endforeach
-						</select>
+						<label>Pilih Kategori</label>
+						<!-- <select class="form-control select2" id="selectCategory" data-placeholder="Pilih Kategori..." style="width: 100%; font-size: 20px;">
+							<option value="Audit Kanban">Audit Kanban</option>
+						</select> -->
+						<input type="text" class="form-control" id="selectCategory" name="selectCategory" style="width: 100%" value="{{$_GET['category']}}" readonly="">
+
 					</div>
 					<div class="form-group">
 						<label>Pilih Lokasi</label>
@@ -228,10 +222,26 @@
 					</div>
 
 					<div class="form-group">
-						<a href="{{ url("index/audit_iso/cek_report")}}" class="btn btn-danger btn-sm" target="_blank" style="color:white;margin-right: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil {{ $page }} </a>
-						<button class="btn btn-success pull-right" onclick="selectData()">Submit</button>
+
+						<button class="btn btn-success pull-right" onclick="selectData()" style="width: 33%">Submit</button>
+
+						<a href="{{ url("index/audit/cek_report?category=")}}{{$_GET['category']}}" class="btn btn-danger btn-sm" target="_blank" style="color:white;width: 100%;margin-top: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil Audit {{$_GET['category']}} </a>
+
+
+						@if(Auth::user()->role_code == "MIS" || $user == "PI1911001")
+						
+						<a class="btn btn-primary btn-sm" style="width: 100%;margin-top: 5px" 
+						href="{{ url("/index/audit/point_check?category=") }}{{$_GET['category']}}"> 
+							<i class="fa fa-plus"></i>&nbsp;&nbsp;Point Check & Hasil Audit {{$_GET['category']}}
+						</a>
+						<br>
+						<a class="btn btn-info btn-sm" style="width: 100%;margin-top: 5px" href="{{ url("/index/audit_data")}}"> 
+							<i class="fa fa-file-pdf-o"></i>&nbsp;&nbsp;Audit Data
+						</a>
+						@endif
 
 					</div>
+
 
 				</div>
 			</div>
@@ -251,7 +261,7 @@
 			<div class="modal-footer">
 				<a  class="btn btn-danger" href="{{ url('') }}">Tutup</button>
 				<!-- <a href="{{ url("index/audit_iso/cek_report/")}}" class="btn btn-success btn-sm" target="_blank" style="color:white;margin-right: 5px"><i class="fa fa-file-pdf-o"></i> Cek Laporan Hasil {{ $page }} </a> -->
-				<a id="modalDeleteButton" href="#" type="button" class="btn btn-success">Buat Laporan Audit ISO</a>
+				<a id="modalDeleteButton" href="#" type="button" class="btn btn-success">Lihat Report Hasil Audit</a>
 			</div>
 		</div>
 	</div>
@@ -490,7 +500,7 @@
 						$('#myModal').modal('show');
 						var url = 
 						// jQuery('#myModal').attr("href", url+'/'+id+'/'+weekly_report_id);
-						$('.modal-body').html("Terima Kasih telah mengisi Audit Internal ISO.<br>Jika Anda akan membuat Laporan Audit ISO, silahkan klik tombol di bawah ini.");
+						$('.modal-body').html("Terima Kasih telah mengisi Audit.<br>Jika Anda ingin melihat Laporan Hasil Audit, silahkan klik tombol di bawah ini.");
 						$('#modalDeleteButton').attr("href", '{{ url("/index/audit_iso/cek_report") }}/'+kategori+'/'+lokasi+'/'+auditor_name+'/'+tanggal);
 					}
 				}

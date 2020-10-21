@@ -273,7 +273,7 @@
             <option value="YAMAHA MUSIC MANUFACTURING JAPAN CORPORATION BO & GD SECTION">YMMJ</option>
             <option value="XIAOSHAN YAMAHA MUSICAL INSTRUMENT CO.,LTD">XY</option>
             <option value="YAMAHA CORPORATION">YCJ/YMJ</option>
-            <option value="YAMAHA MUSIC EUROPE GMBH">YME</option>
+            <option value="YAMAHA MUSIC EUROPE">YME</option>
             <option value="YAMAHA MUSIC KOREA LTD.">YMK</option>
             <option value="YAMAHA CORPORATION C/O MOL LOGISTIC S PASIR GUDANG WAREHOUSE">TASCO</option>
             <option value="YCA,BAND&ORCHESTRAL DIV.">YCA</option>
