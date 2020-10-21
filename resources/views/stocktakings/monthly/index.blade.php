@@ -124,12 +124,24 @@
 				</div>
 				<div class="col-xs-3" style="text-align: center;">
 					<span style="font-size: 1.5vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
-					<a id="manage_store" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;">Print Summary Of Counting</a>
+
+					
+					<a id="manage_store_past" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;">Print Summary Of Counting</a>
+					<a id="manage_store" href="{{ url("index/stocktaking/summary_new") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ffce5c;">NEW Print Summary Of Counting</a>
+
+
+
 					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input No Use</a>
-					<a id="input_pi" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input Physical Inventory (PI)</a>
+
+					<a id="input_pi_past" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input Physical Inventory (PI)</a>
+					<a id="input_pi" href="{{ secure_url('index/stocktaking/count_new') }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ffce5c;">NEW Input Physical Inventory (PI)</a>
+					
 					<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Audit Internal</a>
+					<a id="audit1_new" href="{{ secure_url("index/stocktaking/audit/"."1_new") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ffce5c;">NEW Audit Internal</a>
+					
 					@if(in_array('S36', $navs))
-					<a id="revise" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;">Revise Physical Inventory (PI)</a>
+					<a id="revise_past" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;">Revise Physical Inventory (PI)</a>
+					<a id="revise" href="{{ secure_url("index/stocktaking/revise_new") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;background-color: #ffce5c">NEW Revise Physical Inventory (PI)</a>
 					@endif
 
 				</div>
