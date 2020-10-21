@@ -252,4 +252,14 @@ class FormExperienceController extends Controller
       return json_encode($nama);
     }
 
+    public function fetchChart(Request $request){
+      $detail = db::select("SELECT employee_syncs.department,COUNT(form_failures.id) as total FROM `form_failures` join employee_syncs on form_failures.employee_id = employee_syncs.employee_id group by employee_syncs.department");
+
+      $response = array(
+        'status' => true,
+        'detail' => $detail
+      );
+      return Response::json($response);
+    }
+
 }

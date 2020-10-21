@@ -3341,6 +3341,8 @@ Route::post('index/update/form_experience', 'FormExperienceController@update_for
 Route::get('index/form_experience/print/{id}', 'FormExperienceController@print_form');
 Route::get('index/form_experience/get_nama', 'FormExperienceController@get_nik');
 
+Route::get('fetch/form_experience/chart', 'FormExperienceController@fetchChart');
+
 //IP
 Route::group(['nav' => 'S40', 'middleware' => 'permission'], function(){
 	Route::get('index/display/ip', 'PingController@indexIpMonitoring');
