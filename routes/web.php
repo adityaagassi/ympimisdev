@@ -2143,6 +2143,7 @@ Route::get('print/stocktaking/print_store/{id}', 'StockTakingController@printSto
 Route::get('reprint/stocktaking/summary_of_counting_id', 'StockTakingController@reprintIdSoc');
 Route::get('reprint/stocktaking/summary_of_counting_store', 'StockTakingController@reprintStoreSoc');
 
+Route::get('fetch/stocktaking/new_store_details', 'StockTakingController@fetchStoreDetailNew');
 Route::get('reprint/stocktaking/summary_of_counting_id_new/{id}', 'StockTakingController@reprintIdSubStore');
 
 
