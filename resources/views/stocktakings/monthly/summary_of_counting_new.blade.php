@@ -131,7 +131,7 @@
 								<select class="form-control select2" multiple="multiple" name="filter_store" id='filter_store' data-placeholder="Select Store" style="width: 100%;">
 									<option value=""></option>
 									@foreach($stores as $store) 
-									<option value="{{ $store->store }}">{{ $location->location }} - {{ $store->store }}</option>
+									<option value="{{ $store->store }}">{{ $store->store }}</option>
 									@endforeach
 								</select>
 							</div>
