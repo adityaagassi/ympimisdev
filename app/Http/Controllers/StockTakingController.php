@@ -1280,6 +1280,7 @@ class StockTakingController extends Controller{
 				$whereID = $whereID.',';
 			}
 		}
+		DB::connection()->enableQueryLog();
 
 		$lists = db::select("SELECT
 			s.id,
@@ -1331,6 +1332,7 @@ class StockTakingController extends Controller{
 
 		$pdf->loadView('stocktakings.print_substore', array(
 			'lists' => $lists,
+			'query' => DB::getQueryLog()
 		));
 
 		return $pdf->stream($lists[0]->sub_store."_".$lists[0]->store.".pdf");
