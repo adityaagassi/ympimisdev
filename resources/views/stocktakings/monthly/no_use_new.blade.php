@@ -205,13 +205,13 @@
 
 	$('#qr_code').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			var id = $("#qr_code").val().split('_');
-			if(numberValidation(id[1])){
-				checkCode(id[1]);
-			}else{
-				canc();
-				openErrorGritter('Error', 'QR Code Tidak Terdaftar');
-			}
+			var id = $("#qr_code").val();
+			// if(numberValidation(id)){
+				checkCode(id);
+			// }else{
+			// 	canc();
+			// 	openErrorGritter('Error', 'QR Code Tidak Terdaftar');
+			// }
 		}
 	});
 
@@ -394,7 +394,7 @@
 	function canc(){
 		$('#qr_code').val("");
 		$('#qr_code').focus();
-		$('#qr_code').blur();
+		// $('#qr_code').blur();
 
 	}
 

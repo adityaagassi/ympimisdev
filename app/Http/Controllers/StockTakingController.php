@@ -2757,43 +2757,104 @@ class StockTakingController extends Controller{
 	}
 
 	public function fetchMaterialDetailNew(Request $request){
-		$material = db::select("SELECT
-			s.id,
-			s.store,
-			s.sub_store,
-			s.category,
-			s.material_number,
-			s.process,
-			mpdl.material_description,
-			m.`key`,
-			m.model,
-			m.surface,
-			mpdl.bun,
-			s.location,
-			sl.area,
-			mpdl.storage_location,
-			v.lot_completion,
-			v.lot_transfer,
-			IF
-			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
-			s.quantity,
-			s.audit1,
-			s.final_count,
-			s.remark 
-			FROM
-			stocktaking_new_lists s
-			LEFT JOIN materials m ON m.material_number = s.material_number
-			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
-			LEFT JOIN material_volumes v ON v.material_number = s.material_number
-			LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
-			WHERE
-			s.id = ".$request->get('id'));
 
-		$response = array(
-			'status' => true,
-			'material' => $material,
-		);
-		return Response::json($response);
+		$id = $request->get('id');
+
+		$idnew = explode('_', $id);
+
+		try {
+			if ($idnew[0] == 'ST') {
+				$material = db::select("SELECT
+					s.id,
+					s.store,
+					s.sub_store,
+					s.category,
+					s.material_number,
+					s.process,
+					mpdl.material_description,
+					m.`key`,
+					m.model,
+					m.surface,
+					mpdl.bun,
+					s.location,
+					sl.area,
+					mpdl.storage_location,
+					v.lot_completion,
+					v.lot_transfer,
+					IF
+					( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
+					s.quantity,
+					s.audit1,
+					s.final_count,
+					s.remark 
+					FROM
+					stocktaking_new_lists s
+					LEFT JOIN materials m ON m.material_number = s.material_number
+					LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+					LEFT JOIN material_volumes v ON v.material_number = s.material_number
+					LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
+					WHERE
+					s.id = ".$idnew[1]);
+
+				$response = array(
+					'status' => true,
+					'material' => $material,
+				);
+				return Response::json($response);
+			}else{
+				$location = StocktakingNewList::join('storage_locations','storage_locations.storage_location','stocktaking_new_lists.location')->where('stocktaking_new_lists.id',$id)->first();
+
+				if ($location->area == 'WAREHOUSE' || $location->area == 'FINISHED GOODS') {
+					$material = db::select("SELECT
+						s.id,
+						s.store,
+						s.sub_store,
+						s.category,
+						s.material_number,
+						s.process,
+						mpdl.material_description,
+						m.`key`,
+						m.model,
+						m.surface,
+						mpdl.bun,
+						s.location,
+						sl.area,
+						mpdl.storage_location,
+						v.lot_completion,
+						v.lot_transfer,
+						IF
+						( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
+						s.quantity,
+						s.audit1,
+						s.final_count,
+						s.remark 
+						FROM
+						stocktaking_new_lists s
+						LEFT JOIN materials m ON m.material_number = s.material_number
+						LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+						LEFT JOIN material_volumes v ON v.material_number = s.material_number
+						LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
+						WHERE
+						s.id = ".$id);
+
+					$response = array(
+						'status' => true,
+						'material' => $material,
+					);
+					return Response::json($response);
+				}else{
+					$response = array(
+						'status' => false,
+					);
+					return Response::json($response);
+				}
+			}
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function fetchStoreList(Request $request){
