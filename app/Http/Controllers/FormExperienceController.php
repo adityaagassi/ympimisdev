@@ -253,7 +253,7 @@ class FormExperienceController extends Controller
     }
 
     public function fetchChart(Request $request){
-      $detail = db::select("SELECT employee_syncs.department,COUNT(form_failures.id) as total FROM `form_failures` join employee_syncs on form_failures.employee_id = employee_syncs.employee_id group by employee_syncs.department");
+      $detail = db::select("SELECT departments.department_name as department,COUNT(form_failures.id) as total FROM `form_failures` join employee_syncs on form_failures.employee_id = employee_syncs.employee_id RIGHT JOIN departments on employee_syncs.department = departments.department_name where department_name != 'japan staff' group by departments.department_name ");
 
       $response = array(
         'status' => true,
@@ -261,5 +261,23 @@ class FormExperienceController extends Controller
       );
       return Response::json($response);
     }
+
+    public function fetchDetailChart(Request $request){
+      $group = $request->get('group');
+
+      $data = db::select("SELECT
+        * 
+      FROM
+        form_failures
+        JOIN employee_syncs ON form_failures.employee_id = employee_syncs.employee_id
+      WHERE
+        employee_syncs.department = '".$group."'");
+
+    $response = array(
+      'status' => true,
+      'data' => $data
+    );
+    return Response::json($response);
+  }
 
 }

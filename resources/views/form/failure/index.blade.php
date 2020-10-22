@@ -73,8 +73,16 @@ td{
     {{ session('error') }}
   </div>   
   @endif
-  <div class="row">
 
+  <div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+    <p style="text-align: center; position: absolute; color: white; top: 45%; left: 40%;">
+      <span style="font-size: 50px;">Please wait ... </span><br>
+      <span style="font-size: 50px;"><i class="fa fa-spin fa-refresh"></i></span>
+    </p>
+  </div>
+
+
+  <div class="row">
     <div class="col-xs-12">
         <div id="container"></div>
     </div>
@@ -145,6 +153,38 @@ td{
     </div>
   </div>
 </section>
+
+
+  <div class="modal fade" id="modalInput">
+    <div class="modal-dialog modal-lg" style="width: 90%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-body table-responsive no-padding" style="min-height: 100px">
+            <table class="table table-hover table-bordered table-striped" id="tableInput">
+              <thead style="background-color: rgba(126,86,134,.7);">
+                <tr>
+                  <th>Tanggal Kejadian</th>
+                  <th>Lokasi Kejadian</th>
+                  <th>Equipment</th>
+                  <th>Grup Kejadian</th>
+                  <th>Kategori</th>
+                  <th>Judu;</th>
+                  <th>Loss</th>
+                  <th>Kerugian</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="bodyInput">
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Close&nbsp;&nbsp;<i class="fa fa-close"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <div class="modal modal-danger fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -320,7 +360,7 @@ td{
             type: 'column'
           },
           title: {
-            text: 'Form Permasalahan & Kegagalan By Department'
+            text: 'Resume Form By Department'
           },  
           legend:{
             enabled: false
@@ -330,7 +370,18 @@ td{
           },
           xAxis: {
             categories: department,
-            type: 'category'
+            type: 'category',
+            labels: {
+              style: {
+                fontSize: '14px',
+                textTransform: 'uppercase'
+              }
+            },
+            // min: 0,
+            // max:21,
+            scrollbar: {
+              enabled: false
+            }
           },
           yAxis: {
             title: {
@@ -342,13 +393,13 @@ td{
           },
           tooltip: {
             formatter: function () {
-              return '<b>' + this.x + '</b><br/>' +
+              return '<b style="text-transform:uppercase">' + this.x + '</b><br/>' +
               'Total: ' + this.y;
             }
           },
           plotOptions: {
             column: {
-              stacking: 'percent',
+              stacking: 'normal',
             },
             series:{
               animation: false,
@@ -356,7 +407,7 @@ td{
               groupPadding: 0.93,
               borderWidth: 0.93,
               cursor: 'pointer',
-              stacking: 'percent',
+              stacking: 'normal',
               dataLabels: {
                 enabled: true,
                 formatter: function() {
@@ -369,7 +420,7 @@ td{
               point: {
                 events: {
                   click: function () {
-                    fillInputModal(this.category, this.series.name);
+                    fillInputModal(this.category);
                   }
                 }
               }
@@ -382,6 +433,87 @@ td{
             color: '#00a65a'
           }]
         });
+      }
+    });
+  }
+
+
+  function fillInputModal(group, series) {
+
+    $('#loading').show();
+    $('#tableInput').hide();
+
+    var data = {
+      group : group
+    }
+
+    $.get('{{ url("fetch/form_experience/detail_chart") }}', data, function(result, status, xhr){
+      if(result.status){
+        $('#tableInput').DataTable().clear();
+        $('#tableInput').DataTable().destroy();
+        $('#bodyInput').html('');
+        $('#loading').hide();
+
+        var body = '';
+        for (var i = 0; i < result.data.length; i++) {
+          body += '<tr>';
+          body += '<td style="width: 1%">'+ result.data[i].tanggal_kejadian +'</td>';
+          body += '<td style="width: 1%">'+ result.data[i].lokasi_kejadian +'</td>';
+          body += '<td style="width: 1%">'+ result.data[i].equipment +'</td>';
+          body += '<td style="width: 1%">'+ result.data[i].grup_kejadian +'</td>';
+          body += '<td style="width: 1%">'+ result.data[i].kategori +'</td>';
+          body += '<td style="width: 10%">'+ result.data[i].judul +'</td>';
+          
+          if (result.data[i].loss != null) {
+            body += '<td style="width: 1%;">'+ result.data[i].loss +'</td>';            
+          }
+          else{
+            body += '<td style="width: 1%;"></td>';     
+          }
+
+          if (result.data[i].kerugian != null) {
+            body += '<td style="width: 1%;">'+ result.data[i].kerugian +'</td>';            
+          }
+          else{
+            body += '<td style="width: 1%;"></td>';     
+          }
+
+          body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-sm">Report PDF</a></td>';
+          body += '</tr>';
+        }
+
+        $('#bodyInput').append(body);
+
+        var table = $('#tableInput').DataTable({
+          'dom': 'Bfrtip',
+          'responsive':true,
+          'lengthMenu': [
+          [ 10, 25, 50, -1 ],
+          [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+          ],
+          'buttons': {
+            buttons:[
+            {
+              extend: 'pageLength',
+              className: 'btn btn-default',
+            },
+            ]
+          },
+          'paging': false,
+          'lengthChange': true,
+          'searching': true,
+          'ordering': true,
+          'info': true,
+          'autoWidth': true,
+          'sPaginationType': 'full_numbers',
+          'bJQueryUI': true,
+          'bAutoWidth': false,
+          'processing': true,
+          'bPaginate': false
+        });
+
+        $('#modalInput').modal('show');
+        $('#tableInput').show();
       }
     });
   }
