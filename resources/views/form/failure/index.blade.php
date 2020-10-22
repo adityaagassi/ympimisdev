@@ -463,7 +463,7 @@ td{
           body += '<td style="width: 1%">'+ result.data[i].grup_kejadian +'</td>';
           body += '<td style="width: 1%">'+ result.data[i].kategori +'</td>';
           body += '<td style="width: 10%">'+ result.data[i].judul +'</td>';
-          
+
           if (result.data[i].loss != null) {
             body += '<td style="width: 1%;">'+ result.data[i].loss +'</td>';            
           }
@@ -478,7 +478,7 @@ td{
             body += '<td style="width: 1%;"></td>';     
           }
 
-          body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-sm">Report PDF</a></td>';
+          body += '<td style="width: 1%; font-weight: bold;"><a href="{{url("index/form_experience/print")}}/'+ result.data[i].id +'" type="button" class="btn btn-warning btn-sm" target="_blank">Report PDF</a></td>';
           body += '</tr>';
         }
 
