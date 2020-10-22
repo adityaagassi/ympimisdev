@@ -391,6 +391,16 @@ class StockTakingController extends Controller{
 		))->with('page', 'No Use')->with('head', 'Stocktaking');
 	}
 
+	public function indexNoUseNew(){
+		$title = 'No Use';
+		$title_jp = '使用しない';
+
+		return view('stocktakings.monthly.no_use_new', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'No Use')->with('head', 'Stocktaking');
+	}
+
 	public function indexCount(){
 		$title = 'Monthly Stocktaking';
 		$title_jp = '月次棚卸';
@@ -3291,6 +3301,53 @@ s.id ASC");
 
 				if(count($stores) == count($no_use)){
 					$update = StocktakingList::where('store', $storeID->store)
+					->update([
+						'process' => 2,
+						'final_count' => 0
+					]);
+				}
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update No Use Berhasil'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateNoUseNew(Request $request){
+		try {
+
+			$update = StocktakingNewList::whereIn('id', $request->get('id'))
+			->update([
+				'remark' => 'NO USE',
+				'process' => 1,
+				'quantity' => 0,
+				'inputed_by' => Auth::user()->username
+			]);
+
+			$id = $request->get('id');
+			for ($i=0; $i < count($id); $i++) { 
+				$storeID = StocktakingNewList::where('id', $id)->first();
+
+				$stores = StocktakingNewList::where('store', $storeID->store)
+				->where('print_status', 1)
+				->get();
+
+				$no_use = StocktakingNewList::where('store', $storeID->store)
+				->where('print_status', 1)
+				->where('remark', 'NO USE')
+				->get();
+
+				if(count($stores) == count($no_use)){
+					$update = StocktakingNewList::where('store', $storeID->store)
 					->update([
 						'process' => 2,
 						'final_count' => 0

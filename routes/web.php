@@ -16,7 +16,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 }
 
-Route::get('test1', 'TrialController@test1');
+Route::get('printSummary', 'TrialController@printSummary');
 Route::get('test2', 'TrialController@test2');
 Route::get('test3', 'TrialController@test3');
 Route::get('test4', 'TrialController@test4');
@@ -2118,6 +2118,9 @@ Route::get('fetch/stocktaking/audited_list_detail', 'StockTakingController@fetch
 Route::get('fetch/stocktaking/variance', 'StockTakingController@fetchVariance');
 Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVarianceDetail');
 
+Route::get('fetch/stocktaking/filled_list_new', 'StockTakingController@fetchfilledListNew');
+Route::get('fetch/stocktaking/filled_list_detail_new', 'StockTakingController@fetchfilledListDetailNew');
+
 Route::get('export/stocktaking/inquiry', 'StockTakingController@exportInquiry');
 Route::get('export/stocktaking/variance', 'StockTakingController@exportVariance');
 Route::get('export/stocktaking/official_variance', 'StockTakingController@exportOfficailVariance');
@@ -2140,7 +2143,7 @@ Route::get('print/stocktaking/print_store/{id}', 'StockTakingController@printSto
 Route::get('reprint/stocktaking/summary_of_counting_id', 'StockTakingController@reprintIdSoc');
 Route::get('reprint/stocktaking/summary_of_counting_store', 'StockTakingController@reprintStoreSoc');
 
-Route::get('reprint/stocktaking/summary_of_counting_id_new', 'StockTakingController@reprintIdSubStore');
+Route::get('reprint/stocktaking/summary_of_counting_id_new/{id}', 'StockTakingController@reprintIdSubStore');
 
 
 //Summary of Counting
@@ -2151,6 +2154,11 @@ Route::get('print/stocktaking/summary_of_counting', 'StockTakingController@print
 //No Use
 Route::get('index/stocktaking/no_use', 'StockTakingController@indexNoUse');
 Route::post('fetch/stocktaking/update_no_use', 'StockTakingController@updateNoUse');
+
+
+//New No Use
+Route::get('index/stocktaking/no_use_new', 'StockTakingController@indexNoUseNew');
+Route::post('fetch/stocktaking/update_no_use_new', 'StockTakingController@updateNoUseNew');
 
 //Count
 Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
@@ -2167,7 +2175,9 @@ Route::post('fetch/stocktaking/update_count_new', 'StockTakingController@updateC
 
 //Audit
 Route::get('index/stocktaking/audit/{id}', 'StockTakingController@indexAudit');
+Route::get('index/stocktaking/audit_new/{id}', 'StockTakingController@indexAuditNew');
 Route::get('fetch/stocktaking/audit_store_list', 'StockTakingController@fetchAuditStoreList');
+Route::get('fetch/stocktaking/audit_store_list_new', 'StockTakingController@fetchAuditStoreListNew');
 Route::get('fetch/stocktaking/check_confirm/{id}', 'StockTakingController@fetchCheckAudit');
 Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@updateAudit');
 Route::post('fetch/stocktaking/update_process/{id}', 'StockTakingController@updateProcessAudit');
@@ -2192,6 +2202,13 @@ Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 	Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
 	Route::get('fetch/stocktaking/revise_by_id', 'StockTakingController@fetchReviseId');
 	Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
+
+	Route::get('index/stocktaking/revise_new', 'StockTakingController@indexReviseNew');
+	// Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
+	// Route::get('fetch/stocktaking/revise_by_id', 'StockTakingController@fetchReviseId');
+	// Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
+
+
 	Route::get('export/stocktaking/upload_sap', 'StockTakingController@exportUploadSAP');
 	Route::get('export/stocktaking/log', 'StockTakingController@exportLog');
 
@@ -3342,6 +3359,7 @@ Route::get('index/form_experience/print/{id}', 'FormExperienceController@print_f
 Route::get('index/form_experience/get_nama', 'FormExperienceController@get_nik');
 
 Route::get('fetch/form_experience/chart', 'FormExperienceController@fetchChart');
+Route::get('fetch/form_experience/detail_chart', 'FormExperienceController@fetchDetailChart');
 
 //IP
 Route::group(['nav' => 'S40', 'middleware' => 'permission'], function(){

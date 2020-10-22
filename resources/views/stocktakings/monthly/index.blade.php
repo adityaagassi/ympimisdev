@@ -133,6 +133,8 @@
 
 					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input No Use</a>
 
+					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use_new") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ffce5c;">NEW Input No Use</a>
+
 					<a id="input_pi_past" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input Physical Inventory (PI)</a>
 					<a id="input_pi" href="{{ secure_url('index/stocktaking/count_new') }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ffce5c;">NEW Input Physical Inventory (PI)</a>
 					
