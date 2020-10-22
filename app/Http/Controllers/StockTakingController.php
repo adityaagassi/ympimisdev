@@ -1274,8 +1274,8 @@ class StockTakingController extends Controller{
 		$whereID = '';
 		$list_id = array();
 		for ($i=0; $i < count($ids); $i++) {
-			array_push($list_id, $ids[$i][0]); 
-			$whereID = $whereID."'".$ids[$i][0]."'";
+			array_push($list_id, $ids[$i]); 
+			$whereID = $whereID."'".$ids[$i]."'";
 			if($i != (count($ids)-1)){
 				$whereID = $whereID.',';
 			}
