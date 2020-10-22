@@ -257,8 +257,13 @@
 						<div class="col-xs-12">
 							<div class="box-body">
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
+								<div class="form-group row" align="right">
+									<label class="col-sm-3">Date<span class="text-red">*</span></label>	
+									<div class="col-sm-4" align="left">
+										<input type="text" class="form-control datepicker" name="add_date" id="add_date" placeholder="Select Date">
+									</div>
+								</div>
 
-								
 								<div class="form-group row" align="right">
 									<label class="col-sm-3">Material<span class="text-red">*</span></label>
 									<div class="col-sm-8" align="left">
@@ -268,7 +273,7 @@
 											<option value="{{ $material->material_number }}">{{ $material->material_number }} - {{ $material->material_description }}</option>
 											@endforeach
 										</select>
-									</div>	
+									</div>
 								</div>
 
 								<div class="form-group row" align="right">
@@ -302,8 +307,20 @@
 						Sample: <a href="{{ url('uploads/indirect_material_chm/sample/import_chemical_stock(200710_09.58).xlsx') }}">import_chemical_stock(200710_09.58).xlsx</a>
 					</div>
 					<div class="modal-body">
-						Upload Excel file here:<span class="text-red">*</span>
-						<input type="file" name="upload_file" id="upload_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+						<div class="form-group row" align="right">
+							<label class="col-sm-3">Date<span class="text-red">*</span></label>	
+							<div class="col-sm-4" align="left">
+								<input type="text" class="form-control datepicker" name="upload_date" id="upload_date" placeholder="Select Date">
+							</div>
+						</div>
+
+						<div class="form-group row" align="right">
+							<label class="col-sm-3">Upload Excel<br>file here<span class="text-red">*</span></label>	
+							<div class="col-sm-4" align="left">
+								<input type="file" name="upload_file" id="upload_file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+							</div>
+						</div>
+
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -341,6 +358,13 @@
 		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2();
 
+
+		$('.datepicker').datepicker({
+			autoclose: true,
+			format: "yyyy-mm-dd",
+			todayHighlight: true
+		});
+
 		fetchTable();
 
 		$('#alert').hide();
@@ -354,6 +378,11 @@
 	$("form#importForm").submit(function(e) {
 		if ($('#upload_file').val() == '') {
 			openErrorGritter('Error!', 'You need to select file');
+			return false;
+		}
+
+		if ($('#upload_date').val() == '') {
+			openErrorGritter('Error!', 'You need to select date');
 			return false;
 		}
 
@@ -374,6 +403,7 @@
 					$('#table-new').DataTable().ajax.reload();
 
 					$("#upload_file").val('');
+					$("#upload_date").val('');
 
 					$('#upload_material').modal('hide');
 					openSuccessGritter('Success', result.message);
@@ -414,10 +444,27 @@
 	});
 
 	function addMaterial() {
+		var add_date = $('#add_date').val();
 		var material_number = $('#material_number').val();
 		var quantity = $('#quantity').val();
 
+		if (add_date == '') {
+			openErrorGritter('Error!', 'You need to select date');
+			return false;
+		}
+
+		if (material_number == '') {
+			openErrorGritter('Error!', 'You need to select material');
+			return false;
+		}
+
+		if (quantity == '') {
+			openErrorGritter('Error!', 'You need to input quantity');
+			return false;
+		}
+
 		var data = {
+			add_date : add_date,
 			material_number : material_number,
 			quantity : quantity
 		}
@@ -432,6 +479,7 @@
 
 				$("#material_number").prop('selectedIndex', 0).change();
 				$('#quantity').val('');
+				$('#add_date').val('');
 				
 				$('#table-material').DataTable().ajax.reload();
 				$('#table-new').DataTable().ajax.reload();

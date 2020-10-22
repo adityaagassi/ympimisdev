@@ -57,11 +57,10 @@
 @section('header')
 <section class="content-header">
 	<div class="row">
-		<div class="col-xs-9">
-			<h2 style="margin-top: 0px;">{{ $title }}<span class="text-purple"> {{ $title_jp }}</span></h2>
+		<div class="col-xs-12 col-md-9 col-lg-9">
+			<h3 style="margin-top: 0px;">{{ $title }}<span class="text-purple"> {{ $title_jp }}</span></h3>
 		</div>
-		<div class="col-xs-3">
-			{{-- <h3 style="margin: 0px;" id="month_text"></h3> --}}
+		<div class="col-xs-12 col-md-3 col-lg-3">
 			<div class="pull-right" id="last_update" style="color: black; margin: 0px; padding-top: 0px; padding-right: 0px; font-size: 0.9vw;"></div>
 		</div>
 	</div>
@@ -109,59 +108,59 @@
 
 		<div class="col-xs-12">
 			<div class="row">
-				<div class="col-xs-3" style="text-align: center;">
+				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
 					@if(in_array('S36', $navs))
-					<span style="font-size: 1.5vw; color: black;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
-					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Bom Output</a> --}}
-					{{-- <a href="javascript:void(0)"  data-toggle="modal" data-target="#importMPDLModal" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Material Plant Data List</a> --}}
-					<a href="javascript:void(0)"  data-toggle="modal" data-target="#importModal" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Upload Storage Loc Stock</a>
-					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Storage Location</a> --}}
-					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Item Silver</a> --}}
-					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw;">Master Stocktaking Calendar</a> --}}
-					<a href="{{ url("index/stocktaking/stocktaking_list") }}" class="btn btn-default btn-block" style="border-color: black; font-size: 1.2vw; color:white; background-color: #616161;">Master Stocktaking List</a>
+					<span style="font-size: 20px; color: black;"><i class="fa fa-angle-double-down"></i> Master <i class="fa fa-angle-double-down"></i></span>
+					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Bom Output</a> --}}
+					{{-- <a href="javascript:void(0)"  data-toggle="modal" data-target="#importMPDLModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Material Plant Data List</a> --}}
+					<a href="javascript:void(0)"  data-toggle="modal" data-target="#importModal" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Upload Storage Loc Stock</a>
+					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Master Storage Location</a> --}}
+					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Master Item Silver</a> --}}
+					{{-- <a href="" class="btn btn-default btn-block" style="border-color: black; font-size: 15px;">Master Stocktaking Calendar</a> --}}
+					<a href="{{ url("index/stocktaking/stocktaking_list") }}" class="btn btn-default btn-block" style="border-color: black; font-size: 15px; color:white; background-color: #616161;">Master Stocktaking List</a>
 					@endif
 
 				</div>
-				<div class="col-xs-3" style="text-align: center;">
-					<span style="font-size: 1.5vw; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
+				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
+					<span style="font-size: 20px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 
 					
-					<a id="manage_store_past" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;">Print Summary Of Counting</a>
-					<a id="manage_store" href="{{ url("index/stocktaking/summary_new") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ffce5c;">NEW Print Summary Of Counting</a>
+					<a id="manage_store_past" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Print Summary Of Counting</a>
+					<a id="manage_store" href="{{ url("index/stocktaking/summary_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Print Summary Of Counting</a>
 
 
 
-					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input No Use</a>
+					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Input No Use</a>
 
-					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use_new") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ffce5c;">NEW Input No Use</a>
+					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Input No Use</a>
 
-					<a id="input_pi_past" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Input Physical Inventory (PI)</a>
-					<a id="input_pi" href="{{ secure_url('index/stocktaking/count_new') }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ffce5c;">NEW Input Physical Inventory (PI)</a>
+					<a id="input_pi_past" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Input Physical Inventory (PI)</a>
+					<a id="input_pi" href="{{ secure_url('index/stocktaking/count_new') }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Input Physical Inventory (PI)</a>
 					
-					<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ccff90;">Audit Internal</a>
-					<a id="audit1_new" href="{{ secure_url("index/stocktaking/audit/"."1_new") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green; background-color: #ffce5c;">NEW Audit Internal</a>
+					<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Audit Internal</a>
+					<a id="audit1_new" href="{{ secure_url("index/stocktaking/audit_new/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Audit Internal</a>
 					
 					@if(in_array('S36', $navs))
-					<a id="revise_past" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;">Revise Physical Inventory (PI)</a>
-					<a id="revise" href="{{ secure_url("index/stocktaking/revise_new") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: green;background-color: #ffce5c">NEW Revise Physical Inventory (PI)</a>
+					<a id="revise_past" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Revise Physical Inventory (PI)</a>
+					<a id="revise" href="{{ secure_url("index/stocktaking/revise_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;background-color: #ffce5c">NEW Revise Physical Inventory (PI)</a>
 					@endif
 
 				</div>
-				<div class="col-xs-3" style="text-align: center;">
-					<span style="font-size: 1.5vw; color: purple;"><i class="fa fa-angle-double-down"></i> Result <i class="fa fa-angle-double-down"></i></span>
+				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
+					<span style="font-size: 20px; color: purple;"><i class="fa fa-angle-double-down"></i> Result <i class="fa fa-angle-double-down"></i></span>
 					@if(in_array('S36', $navs))
-					<a id="breakdown" data-toggle="modal" data-target="#modalBreakdown" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Breakdown Physical Inventory (PI)</a>
+					<a id="breakdown" data-toggle="modal" data-target="#modalBreakdown" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Breakdown Physical Inventory (PI)</a>
 					@endif
-					<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple; background-color: #e040fb;">Unmatch Check</a>
-					<a id="" href="{{ url("index/stocktaking/inquiry") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Inquiry</a>
-					<a id="" href="{{ url("index/stocktaking/variance_report") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple; background-color: #e040fb;">Variance Report</a>
-					{{-- <a id="" href="{{ url("") }}" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: purple;">Official Variance Report</a> --}}
+					<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple; background-color: #e040fb;">Unmatch Check</a>
+					<a id="" href="{{ url("index/stocktaking/inquiry") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Inquiry</a>
+					<a id="" href="{{ url("index/stocktaking/variance_report") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple; background-color: #e040fb;">Variance Report</a>
+					{{-- <a id="" href="{{ url("") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Official Variance Report</a> --}}
 				</div>
-				<div class="col-xs-3" style="text-align: center;">
+				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
 					@if(in_array('S36', $navs))
-					<span style="font-size: 1.5vw; color: red;"><i class="fa fa-angle-double-down"></i> Final <i class="fa fa-angle-double-down"></i></span>
-					<a id="upload_sap" onclick="uploadSap()" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: red;">Upload Textfile to SAP</a>
-					{{-- <a id="export_log" onclick="exportLog()" class="btn btn-default btn-block" style="font-size: 1.2vw; border-color: red; background-color: #ff5252;">End Stocktaking</a> --}}
+					<span style="font-size: 20px; color: red;"><i class="fa fa-angle-double-down"></i> Final <i class="fa fa-angle-double-down"></i></span>
+					<a id="upload_sap" onclick="uploadSap()" class="btn btn-default btn-block" style="font-size: 15px; border-color: red;">Upload Textfile to SAP</a>
+					{{-- <a id="export_log" onclick="exportLog()" class="btn btn-default btn-block" style="font-size: 15px; border-color: red; background-color: #ff5252;">End Stocktaking</a> --}}
 					@endif
 
 				</div>
@@ -170,7 +169,7 @@
 
 
 
-		{{-- <div class="col-xs-3" style="text-align: center;">
+		{{-- <div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
 			<span style="font-size: 30px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
 
 			<a id="manage_store" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 24px; border-color: green;">Manage Store</a>
