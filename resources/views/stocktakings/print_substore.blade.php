@@ -34,7 +34,7 @@
 	include public_path(). "/qr_generator/qrlib.php"; 
 	for ($i=1; $i <= count($lists); $i++) { 
 
-		QRcode::png("ST_".$lists[$i-1]->id, public_path().'/stk-qr.png');
+		QRcode::png("ST_".$lists[$i-1]->id, public_path().'/stocktaking_qr/ST_'.$lists[$i-1]->id.'.png');
 
 
 		if ($i % 2 == 0) $margin = 'style="margin-left:10px"'; else $margin = 'style="margin-right:10px"' ?>
@@ -43,7 +43,7 @@
 				<tr><td style="text-align: center; background-color: black; font-size: 16px; color: white" colspan="2"><b>Summary of Counting</b></td></tr>
 				<tr><td style="text-align: center; font-weight: bold;" colspan="2">Store : <?php echo $lists[$i-1]->store ?></td></tr>
 				<tr><td style="text-align: center; font-size: 12px" colspan="2">SubStore : <?php echo $lists[$i-1]->sub_store ?></td></tr>
-				<tr><td style="text-align: center;" colspan="2"><img src="{{ public_path() . '/stk-qr.png' }}" class="cropped"></td></tr>
+				<tr><td style="text-align: center;" colspan="2"><img src="{{ public_path() . '/stocktaking_qr/ST_'.$lists[$i-1]->id.'.png' }}" class="cropped"></td></tr>
 				<tr><td style="text-align: center; font-size: 8px" colspan="2"><?php echo "ST_".$lists[$i-1]->id ?></td></tr>
 				<tr><td style="text-align: center" colspan="2"><?php echo $lists[$i-1]->category ?></td></tr>
 				<tr><td style="text-align: center" colspan="2"><?php echo $lists[$i-1]->material_number."( ".$lists[$i-1]->location." )" ?></td></tr>

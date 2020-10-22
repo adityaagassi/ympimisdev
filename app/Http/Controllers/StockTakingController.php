@@ -1325,6 +1325,12 @@ class StockTakingController extends Controller{
 			// 	$index++;
 			// }
 
+		// foreach ($lists as $key) {
+		// 	$qr_code = base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate($key->id));
+
+		// 	array_push($arr_qr, $qr_code);
+		// }
+
 		$pdf = \App::make('dompdf.wrapper');
 		$pdf->getDomPDF()->set_option("enable_php", true);
 		$pdf->setPaper('A4', 'potrait');
@@ -1332,6 +1338,7 @@ class StockTakingController extends Controller{
 
 		$pdf->loadView('stocktakings.print_substore', array(
 			'lists' => $lists,
+			// 'qr_code' => $arr_qr,
 			'query' => DB::getQueryLog()
 		));
 
