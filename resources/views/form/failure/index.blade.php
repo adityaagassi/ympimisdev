@@ -168,7 +168,7 @@ td{
                   <th>Equipment</th>
                   <th>Grup Kejadian</th>
                   <th>Kategori</th>
-                  <th>Judu;</th>
+                  <th>Judul</th>
                   <th>Loss</th>
                   <th>Kerugian</th>
                   <th>Aksi</th>

@@ -364,12 +364,12 @@
 				body += "<tr>";
 				body += "<td width='1%'>"+count+"</td>";
 				body += "<td width='5%' id='klausul_"+count+"'>"+value.klausul+"<input type='hidden' id='id_point_"+count+"' value='"+value.id+"'><input type='hidden' id='jumlah_point_"+count+"' value='"+result.lists.length+"'></td>";
-				body += "<td width='10%' id='point_judul_"+count+"'>"+value.point_judul+"</td>";
+				body += "<td width='15%' id='point_judul_"+count+"'>"+value.point_judul+"</td>";
 				body += "<td width='20%' id='point_question_"+count+"'>"+value.point_question+"</td>";
-				body += "<td><label class='radio' style='margin-top: 5px;margin-left: 5px'>Good<input onclick='goodchoice(this.id)' type='radio' id='status_"+count+"' name='status_"+count+"' value='Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>Not Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Not Good' onclick='notgoodchoice(this.id)'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>None<input type='radio' id='status_"+count+"' name='status_"+count+"' value='None' onclick='goodchoice(this.id)'><span class='checkmark'></span></label></td>";
+				body += "<td width='20%'><label class='radio' style='margin-top: 5px;margin-left: 5px'>Good<input onclick='goodchoice(this.id)' type='radio' id='status_"+count+"' name='status_"+count+"' value='Good'><span class='checkmark'></span></label><label class='radio' style='margin-top: 5px;margin-left: 5px'>Not Good<input type='radio' id='status_"+count+"' name='status_"+count+"' value='Not Good' onclick='notgoodchoice(this.id)'><span class='checkmark'></span></label></td>";
 				body += "<td width='20%'><textarea id='note_"+count+"' height='50%' style='display:none'></textarea></td>";
 				var idid = '#file_'+count;
-				body += '<td width="20%"><input type="file" style="display:none" onchange="readURL(this,\''+count+'\');" id="file_'+count+'"><button class="btn btn-primary btn-lg" id="btnImage_'+count+'" value="Photo" style="display:none" onclick="buttonImage(\''+idid+'\')">Photo</button><img width="150px" id="blah_'+count+'" src="" style="display: none" alt="your image" /></td>';
+				body += '<td width="15%"><input type="file" style="display:none" onchange="readURL(this,\''+count+'\');" id="file_'+count+'"><button class="btn btn-primary btn-lg" id="btnImage_'+count+'" value="Photo" style="display:none" onclick="buttonImage(\''+idid+'\')">Photo</button><img width="150px" id="blah_'+count+'" src="" style="display: none" alt="your image" /></td>';
 				body += "</tr>";
 				count++;
 			})
