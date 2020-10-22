@@ -1306,7 +1306,7 @@ class StockTakingController extends Controller{
 			WHERE s.id in (".$whereID.")
 			ORDER BY s.location, s.store, s.sub_store, s.category, s.material_number ASC");
 
-			$update = StocktakingNewList::whereIn('id', $list_id)->update(['print_status' => 1]);
+		$update = StocktakingNewList::whereIn('id', $list_id)->update(['print_status' => 1]);
 
 			// $stores = StocktakingList::where('store', $lists[0]->store)->get();
 
@@ -1937,6 +1937,125 @@ class StockTakingController extends Controller{
 
 
 	public function fetchStoreDetail(Request $request){
+		$area = '';
+		if($request->get('area') != null){
+			$areas =  $request->get('area');
+			for ($i=0; $i < count($areas); $i++) {
+				$area = $area."'".$areas[$i]."'";
+				if($i != (count($areas)-1)){
+					$area = $area.',';
+				}
+			}
+			$area = "sl.area IN (".$area.") ";
+		}
+
+		$location = '';
+		if($request->get('location') != null){
+			$locations =  $request->get('location');
+			for ($i=0; $i < count($locations); $i++) {
+				$location = $location."'".$locations[$i]."'";
+				if($i != (count($locations)-1)){
+					$location = $location.',';
+				}
+			}
+			$location = "s.location IN (".$location.") ";
+		}
+
+		$store = '';
+		if($request->get('store') != null){
+			$stores =  $request->get('store');
+			for ($i=0; $i < count($stores); $i++) {
+				$store = $store."'".$stores[$i]."'";
+				if($i != (count($stores)-1)){
+					$store = $store.',';
+				}
+			}
+			$store = "s.store IN (".$store.") ";
+		}
+
+		$condition = '';
+		$and = false;
+		if($area != '' || $location != '' || $store != ''){
+			$condition = 'WHERE';
+		}
+
+		if($area != ''){
+			$and = true;
+			$condition = $condition. ' ' .$area;
+		}
+
+		if($location != ''){
+			if($and){
+				$condition =  $condition.' OR ';
+			}
+
+			$condition = $condition. ' ' .$location;
+		}
+
+		if($store != ''){
+			if($and){
+				$condition =  $condition.' OR ';
+			}
+
+			$condition = $condition. ' ' .$store;
+		}
+
+		$data = db::select("SELECT
+			s.id,
+			sl.area AS `group`,
+			s.location,
+			s.store,
+			s.category,
+			s.material_number,
+			mpdl.material_description,
+			mpdl.bun AS uom,
+			s.print_status 
+			FROM
+			stocktaking_lists s
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN storage_locations sl ON sl.storage_location = s.location ".$condition." 
+			ORDER BY
+			sl.area,
+			s.location,
+			s.store,
+			s.category,
+			s.material_number ASC");
+
+		$response = array(
+			'status' => true,
+			'data' => $data,
+			'role' => Auth::user()->role_code
+		);
+		return Response::json($response);
+
+
+		// return DataTables::of($data)
+		// ->addColumn('delete', function($data){
+		// 	return '<button style="width: 75%; height: 100%; vertical_align: middle;" onclick="deleteMaterial(\''.$data->id.'\')" class="btn btn-sm btn-danger form-control"><span><i class="fa fa-trash"></i> Delete</span></button>';
+		// })
+		// ->addColumn('print', function($data){
+		// 	if($data->print_status == 0){
+		// 		return '<span class="label label-sm label-primary">Print</span>';
+		// 	}else{
+		// 		return '<span class="label label-sm label-info">Rerint</span>';
+		// 	}
+		// })
+		// ->addColumn('check', function($data){
+		// 	if($data->print_status == 0){
+		// 		return '<input class="minimal" type="checkbox" id="'.$data->id.'+R'.'" onclick="showSelected(this)">';
+		// 	}else{
+		// 		return '<input class="minimal" type="checkbox" id="'.$data->id.'+RP'.'" onclick="showSelected(this)">';
+		// 	}
+		// })
+		// ->rawColumns([
+		// 	'check' => 'check',
+		// 	'print' => 'print',
+		// 	'delete' => 'delete'
+		// ])
+		// ->make(true);
+	}
+
+	public function fetchStoreDetailNew(Request $request){
 
 		$area = '';
 		if($request->get('area') != null){
