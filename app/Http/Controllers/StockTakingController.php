@@ -914,7 +914,7 @@ class StockTakingController extends Controller{
 		// 	s.store ASC");
 
 		$data = db::select("SELECT DISTINCT IF (l.area = 'ST', 'SURFACE TREATMENT', l.area) AS area, s.store FROM
-			(SELECT DISTINCT location, store FROM stocktaking_lists) s
+			(SELECT DISTINCT location, store FROM stocktaking_new_lists) s
 			LEFT JOIN storage_locations l
 			ON s.location = l.storage_location
 			".$store."
