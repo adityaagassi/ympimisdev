@@ -2164,6 +2164,8 @@ Route::post('fetch/stocktaking/update_no_use_new', 'StockTakingController@update
 //Count
 Route::get('index/stocktaking/count', 'StockTakingController@indexCount');
 Route::get('fetch/stocktaking/material_detail', 'StockTakingController@fetchMaterialDetail');
+Route::get('fetch/stocktaking/material_detail_audit', 'StockTakingController@fetchMaterialDetailAudit');
+
 Route::get('fetch/stocktaking/store_list', 'StockTakingController@fetchStoreList');
 Route::post('fetch/stocktaking/update_count', 'StockTakingController@updateCount');
 
@@ -2180,8 +2182,11 @@ Route::get('index/stocktaking/audit_new/{id}', 'StockTakingController@indexAudit
 Route::get('fetch/stocktaking/audit_store_list', 'StockTakingController@fetchAuditStoreList');
 Route::get('fetch/stocktaking/audit_store_list_new', 'StockTakingController@fetchAuditStoreListNew');
 Route::get('fetch/stocktaking/check_confirm/{id}', 'StockTakingController@fetchCheckAudit');
+Route::get('fetch/stocktaking/check_confirm_new/{id}', 'StockTakingController@fetchCheckAuditNew');
 Route::post('fetch/stocktaking/update_audit/{id}', 'StockTakingController@updateAudit');
+Route::post('fetch/stocktaking/update_audit_new/{audit}', 'StockTakingController@updateAuditNew');
 Route::post('fetch/stocktaking/update_process/{id}', 'StockTakingController@updateProcessAudit');
+Route::post('fetch/stocktaking/update_process_new/{id}', 'StockTakingController@updateProcessAuditNew');
 
 //Unmatch
 Route::get('index/stocktaking/unmatch/{month}', 'StockTakingController@indexUnmatch');

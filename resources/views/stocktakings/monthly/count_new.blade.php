@@ -104,6 +104,10 @@
 								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="store"></td>
 							</tr>
 							<tr>
+								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Sub Store</td>
+								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="sub_store"></td>
+							</tr>
+							<tr>
 								<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Category</td>
 								<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="category"></td>
 							</tr>
@@ -701,6 +705,7 @@
 					$('#qr_code').prop('disabled', true);
 
 					$("#store").text(result.material[0].store);
+					$("#sub_store").text(result.material[0].sub_store);
 					$("#category").text(result.material[0].category);
 					$("#material_number").text(result.material[0].material_number);
 					$("#location").text(result.material[0].location);

@@ -65,7 +65,7 @@
 	#progress-text {
 		text-align: center;
 		font-weight: bold;
-		font-size: 1.5vw;
+		font-size: 20px;
 		color: #fff;
 	}
 
@@ -74,6 +74,14 @@
 @section('header')
 @endsection
 @section('content')
+	
+<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+	<p style="text-align: center; position: absolute; color: white; top: 45%; left: 40%;">
+		<span style="font-size: 50px;">Please wait ... </span><br>
+		<span style="font-size: 50px;"><i class="fa fa-spin fa-refresh"></i></span>
+	</p>
+</div>
+
 <section class="content" style="padding-top: 0;">
 	<div class="row" style="margin-left: 1%; margin-right: 1%;" id="main">
 		<div class="col-xs-12" style="padding-left: 0px;">
@@ -147,6 +155,11 @@
 							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="store"></td>
 						</tr>
 						<tr>
+							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Sub Store</td>
+							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="sub_store"></td>
+						</tr>
+
+						<tr>
 							<td style="padding: 0px; background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:20px; width: 30%;">Category</td>
 							<td style="padding: 0px; padding-left: 5px; padding-left: 5px; background-color: rgb(204,255,255); text-align: left; color: #000000; font-size: 20px;" id="category"></td>
 						</tr>
@@ -188,18 +201,18 @@
 				{{-- 1 --}}
 				<div class="col-xs-12" id="count_1">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_1">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_1">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_1" readonly="">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-2" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_1" readonly="">
 						</div>
-						<div class="col-xs-1" align="right">
+						<div class="col-xs-2" align="right" style="padding: 0">
 							<button class="btn btn-danger" id="remove_1" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
 						</div>
 					</div>
@@ -207,18 +220,18 @@
 				{{-- 2 --}}
 				<div class="col-xs-12" id="count_2">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_2">
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_2">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_2">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_2">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_2" readonly="">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-2" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_2" readonly="">
 						</div>
-						<div class="col-xs-1" align="right">
+						<div class="col-xs-2" align="right" style="padding: 0">
 							<button class="btn btn-danger" id="remove_2" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
 						</div>
 					</div>
@@ -226,18 +239,18 @@
 				{{-- 3 --}}
 				<div class="col-xs-12" id="count_3">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_3">
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_3">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_3">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_3">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_3" readonly="">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-2" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_3" readonly="">
 						</div>
-						<div class="col-xs-1" align="right">
+						<div class="col-xs-2" align="right" style="padding: 0">
 							<button class="btn btn-danger" id="remove_3" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
 						</div>
 					</div>
@@ -245,18 +258,18 @@
 				{{-- 4 --}}
 				<div class="col-xs-12" id="count_4">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_4">
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_4">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_4">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_4">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_4" readonly="">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-2" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_4" readonly="">
 						</div>
-						<div class="col-xs-1" align="right">
+						<div class="col-xs-2" align="right" style="padding: 0">
 							<button class="btn btn-danger" id="remove_4" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
 						</div>
 					</div>
@@ -264,18 +277,18 @@
 				{{-- 5 --}}
 				<div class="col-xs-12" id="count_5">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_5">
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_5">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_5">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-3" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_5">
 						</div>
-						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_5" readonly="">
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-2" align="right" style="padding: 0">
+							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_5" readonly="">
 						</div>
-						<div class="col-xs-1" align="right">
+						<div class="col-xs-2" align="right" style="padding: 0">
 							<button class="btn btn-danger" id="remove_5" onclick="removeCount(id)"><i class="fa fa-close"></i></button>
 						</div>
 					</div>
@@ -286,7 +299,7 @@
 				<div class="form-group row" align="right">					
 					<label class="col-xs-1 col-xs-offset-5" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">Total</label>
 					<div class="col-xs-3 col-xs-offset-2" align="right">
-						<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
+						<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
 					</div>
 				</div>
 			</div>
@@ -363,11 +376,11 @@
 		}
 	});
 
-	$.fn.numpad.defaults.gridTpl = '<table class="table modal-content" style="width: 40%;"></table>';
+	$.fn.numpad.defaults.gridTpl = '<table class="table modal-content" style="width: 60%;"></table>';
 	$.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
-	$.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" style="font-size:2vw; height: 50px;"/>';
-	$.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default" style="font-size:2vw; width:100%;"></button>';
-	$.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="font-size:2vw; width: 100%;"></button>';
+	$.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" style="font-size:20px; height: 50px;"/>';
+	$.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default" style="font-size:20px; width:100%;"></button>';
+	$.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="font-size:20px; width: 100%;"></button>';
 	$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
 
 	var vdo;
@@ -412,15 +425,15 @@
 		$add += '<div class="col-xs-12" id="count_'+ count +'">';
 		$add += '<div class="form-group row" style="margin-bottom: 2%;">';
 		$add += '<div class="col-xs-3" align="right">';
-		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
+		$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ count +'">';
 		$add += '</div>';
-		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>';
 		$add += '<div class="col-xs-3" align="right">';
-		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
+		$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ count +'">';
 		$add += '</div>';
-		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
+		$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>';
 		$add += '<div class="col-xs-3" align="right">';
-		$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
+		$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ count +'" readonly="">';
 		$add += '</div>';
 		$add += '<div class="col-xs-1" align="right">';
 		$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
@@ -473,15 +486,15 @@
 			$add += '<div class="col-xs-12" id="count_'+ i +'">';
 			$add += '<div class="form-group row" style="margin-bottom: 2%;">';
 			$add += '<div class="col-xs-3" align="right">';
-			$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ i +'">';
+			$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="qty_'+ i +'">';
 			$add += '</div>';
-			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">X</label>';
+			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>';
 			$add += '<div class="col-xs-3" align="right">';
-			$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ i +'">';
+			$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="koef_'+ i +'">';
 			$add += '</div>';
-			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">=</label>';
+			$add += '<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>';
 			$add += '<div class="col-xs-3" align="right">';
-			$add += '<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ i +'" readonly="">';
+			$add += '<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_'+ i +'" readonly="">';
 			$add += '</div>';
 			$add += '<div class="col-xs-1" align="right">';
 			$add += '<button class="btn btn-danger" id="remove_'+count+'" onclick="removeCount(id)"><i class="fa fa-close"></i></button>';
@@ -647,10 +660,15 @@
 					body += '<td '+css+'>'+result.store[i].id+'</td>';
 
 					if(result.store[i].process == 1){
-						if(result.store[i].audit1){
-							body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="cancAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button></td>';
-						}else{
-							body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-success form-control"><span><i class="fa fa-check-square-o"></i></span></button></td>';
+						if (result.store[i].quantity != 0) {
+							if(result.store[i].audit1){
+								body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="cancAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-danger form-control"><span><i class="fa fa-close"></i></span></button></td>';
+							}else{
+								body += '<td '+css+'><button style="width: 50%; height: 100%;" onclick="showAudit(\''+result.store[i].id+'\')" class="btn btn-xs btn-success form-control"><span><i class="fa fa-check-square-o"></i></span></button></td>';
+							}
+						}
+						else{
+							body += '<td '+css+'></td>';
 						}
 
 						$('#confirm').show();
@@ -698,19 +716,16 @@
 	}
 
 	function cancAudit(id) {
-		$("#loading").show();
-
 		var data = {
 			id : id
 		}
 
 		if(confirm("Data Audit 1 yang dipilih akan dihapus.\nData tidak dapat dikembalikan.")){
-			$.post('{{ url("fetch/stocktaking/update_audit/audit1") }}', data, function(result, status, xhr){
+			$("#loading").show();
+			$.post('{{ url("fetch/stocktaking/update_audit_new/audit1") }}', data, function(result, status, xhr){
 				if(result.status){
 					openSuccessGritter('Success', result.message);
 					$("#loading").hide();
-
-
 					var id = $("#qr_code").val();
 					fillStore(id);
 				}else{
@@ -728,6 +743,7 @@
 
 		$('#id').val("");
 		$('#store').html("");
+		$('#sub_store').html("");
 		$('#category').html("");
 		$('#material_number').html("");
 		$('#location').html("");
@@ -746,7 +762,7 @@
 			store : store
 		}
 
-		$.get('{{ url("fetch/stocktaking/check_confirm/audit1") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/stocktaking/check_confirm_new/audit1") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#confirm').prop('disabled', false);
 			}else{
@@ -754,9 +770,10 @@
 			}
 
 			var persen = Math.floor(parseFloat(result.actual) / parseFloat(result.minimum) * 100);
+
 			if(persen > 0 && persen < 100){
 				$('#progress-bar').css('width', persen+'%');
-				$('#progress-bar').css('font-size', '1.5vw');
+				$('#progress-bar').css('font-size', '20px');
 				$('#progress-bar').css('font-weight', 'bold');
 				$('#progress-bar').html(persen + "% Complete");
 
@@ -769,7 +786,7 @@
 				$('#progress-text').html("0% Complete");
 			}else{
 				$('#progress-bar').css('width', '100%');
-				$('#progress-bar').css('font-size', '1.5vw');
+				$('#progress-bar').css('font-size', '20px');
 				$('#progress-bar').css('font-weight', 'bold');
 				$('#progress-bar').html("100% Complete");
 				
@@ -786,12 +803,13 @@
 			id : id
 		}
 
-		$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/stocktaking/material_detail_audit") }}', data, function(result, status, xhr){
 
 			if (result.status) {
 
 				$("#id").val(id);
 				$("#store").text(result.material[0].store);
+				$("#sub_store").text(result.material[0].sub_store);
 				$("#category").text(result.material[0].category);
 				$("#material_number").text(result.material[0].material_number);
 				$("#location").text(result.material[0].location);
@@ -828,7 +846,7 @@
 			auditor : auditor
 		}
 
-		$.post('{{ url("fetch/stocktaking/update_audit/audit1") }}', data, function(result, status, xhr){
+		$.post('{{ url("fetch/stocktaking/update_audit_new/audit1") }}', data, function(result, status, xhr){
 			if (result.status) {
 				openSuccessGritter('Success', result.message);
 				var store = $("#qr_code").val();
@@ -853,7 +871,7 @@
 
 		if(confirm("Data Audit 1 akan disimpan oleh sistem.\nData tidak dapat dikembalikan.")){
 
-			$.post('{{ url("fetch/stocktaking/update_process/audit1") }}', data, function(result, status, xhr){
+			$.post('{{ url("fetch/stocktaking/update_process_new/audit1") }}', data, function(result, status, xhr){
 				if (result.status) {
 					openSuccessGritter('Success', result.message);
 					$("#loading").hide();

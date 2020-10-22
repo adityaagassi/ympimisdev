@@ -88,7 +88,7 @@
 	</div>
 
 	<div class="row" style="margin-left: 1%; margin-right: 1%;" id="main">
-		<div class="col-xs-6 col-xs-offset-3" style="padding-left: 0px;">
+		<div class="col-xs-12 col-md-6 col-md-offset-3" style="padding-left: 0px;">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
 				<div class="input-group input-group-lg">
 					<div class="input-group-addon" id="icon-serial" style="font-weight: bold; border-color: none; font-size: 18px;">
@@ -102,7 +102,7 @@
 			</div>
 		</div>
 
-		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-top: 0%;">
+		<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-top: 0%;overflow-x: scroll">
 			<table class="table table-bordered" id="store_table">
 				<thead>
 					<tr>

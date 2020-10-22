@@ -2534,40 +2534,40 @@ class StockTakingController extends Controller{
 				sum( total ) - sum( qty ) AS empty,
 				sum( qty ) AS qty,
 				sum( total ) AS total 
-			FROM
+				FROM
 				(
 				SELECT
-					sl.area,
-					s.location,
-					0 AS qty,
-					count( s.id ) AS total 
+				sl.area,
+				s.location,
+				0 AS qty,
+				count( s.id ) AS total 
 				FROM
-					stocktaking_new_lists s
-					LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
+				stocktaking_new_lists s
+				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
 				WHERE
-					s.print_status = 1 
+				s.print_status = 1 
 				GROUP BY
-					sl.area,
-					s.location UNION ALL
+				sl.area,
+				s.location UNION ALL
 				SELECT
-					sl.area,
-					s.location,
-					count( s.id ) AS qty,
-					0 AS total 
+				sl.area,
+				s.location,
+				count( s.id ) AS qty,
+				0 AS total 
 				FROM
-					stocktaking_new_lists s
-					LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
+				stocktaking_new_lists s
+				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
 				WHERE
-					s.print_status = 1 
-					AND s.quantity IS NOT NULL 
+				s.print_status = 1 
+				AND s.quantity IS NOT NULL 
 				GROUP BY
-					sl.area,
-					s.location 
+				sl.area,
+				s.location 
 				) AS list 
-			GROUP BY
+				GROUP BY
 				area,
 				location 
-			ORDER BY
+				ORDER BY
 				area");
 		}else{
 			$data = db::select("SELECT area, location, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
@@ -2659,13 +2659,32 @@ class StockTakingController extends Controller{
 		}
 
 		if($calendar->status != 'finished'){
-			$input_detail = db::select("SELECT sl.area, s.location, s.category, s.store, s.material_number, mpdl.material_description, s.quantity, s.audit1, s.audit2, s.final_count, if(s.quantity is null, 0, 1) as ord FROM stocktaking_lists s
-				LEFT JOIN storage_locations sl on sl.storage_location = s.location
-				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
-				WHERE s.location = '".$group."'
-				".$quantity."
-				AND s.print_status = 1
-				ORDER BY ord, sl.area, s.location, s.store, s.material_number ASC");
+			$input_detail = db::select("SELECT
+				sl.area,
+				s.location,
+				s.category,
+				s.store,
+				s.material_number,
+				mpdl.material_description,
+				s.quantity,
+				s.audit1,
+			-- 	s.audit2,
+			s.final_count,
+			IF
+			( s.quantity IS NULL, 0, 1 ) AS ord 
+			FROM
+			stocktaking_new_lists s
+			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number 
+			WHERE
+			s.location = '".$group."' ".$quantity." 
+			AND s.print_status = 1 
+			ORDER BY
+			ord,
+			sl.area,
+			s.location,
+			s.store,
+			s.material_number ASC");
 		}else{
 			$input_detail = db::select("
 				SELECT sl.area, s.location, s.category, s.store, s.material_number, mpdl.material_description, NULL AS quantity, NULL AS audit1, NULL AS audit2, s.quantity AS final_count FROM stocktaking_inquiry_logs s
@@ -2801,6 +2820,49 @@ class StockTakingController extends Controller{
 
 	}
 
+	public function fetchCheckAuditNew(Request $request, $audit){
+
+		$minimum = 0;
+		if($audit == 'audit1'){
+			$minimum = 10;
+		}else if($audit == 'audit2'){
+			$minimum = 5;
+		}
+
+		$actual = db::select("SELECT
+			( SELECT count( id ) AS total FROM stocktaking_new_lists
+			WHERE remark = 'USE'
+			AND store = '".$request->get('store')."'
+			AND print_status = 1
+			AND ".$audit." IS NOT NULL )
+			/
+			( SELECT count( id ) AS total
+			FROM stocktaking_new_lists
+			WHERE remark = 'USE'
+			AND print_status = 1
+			AND store = '".$request->get('store')."' )
+			* 100
+			AS percentage");
+
+
+		if($actual[0]->percentage >= $minimum){
+			$response = array(
+				'status' => true,
+				'actual' => $actual[0]->percentage,
+				'minimum' => $minimum
+			);
+			return Response::json($response);
+		}else{
+			$response = array(
+				'status' => false,
+				'actual' => $actual[0]->percentage,
+				'minimum' => $minimum
+			);
+			return Response::json($response);
+		}
+
+	}
+
 	public function fetchSummaryOfCounting(Request $request){
 
 		$store = '';
@@ -2870,6 +2932,46 @@ class StockTakingController extends Controller{
 			s.remark
 			FROM
 			stocktaking_lists s
+			LEFT JOIN materials m ON m.material_number = s.material_number
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number
+			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
+			WHERE
+			s.id = ". $request->get('id'));
+
+		$response = array(
+			'status' => true,
+			'material' => $material,
+		);
+		return Response::json($response);
+	}
+
+	public function fetchMaterialDetailAudit(Request $request){
+		$material = db::select("SELECT
+			s.id,
+			s.store,
+			s.sub_store,
+			s.category,
+			s.material_number,
+			s.process,
+			mpdl.material_description,
+			m.`key`,
+			m.model,
+			m.surface,
+			mpdl.bun,
+			s.location,
+			sl.area,
+			mpdl.storage_location,
+			v.lot_completion,
+			v.lot_transfer,
+			IF
+			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
+			s.quantity,
+			s.audit1,
+			s.final_count,
+			s.remark
+			FROM
+			stocktaking_new_lists s
 			LEFT JOIN materials m ON m.material_number = s.material_number
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 			LEFT JOIN material_volumes v ON v.material_number = s.material_number
@@ -3628,6 +3730,78 @@ s.id ASC");
 		}
 	}
 
+	public function updateProcessAuditNew(Request $request, $audit){
+
+		if($audit == 'audit1'){
+			$process = 2;
+		}else if($audit == 'audit2'){
+			$process = 3;
+		}
+
+		try {
+
+			$updateStore = StocktakingList::where('store', $request->get('store'))
+			->update([
+				'process' => $process
+			]);
+
+			$updateStoreNew = StocktakingNewList::where('store', $request->get('store'))
+			->update([
+				'process' => $process
+			]);
+
+			//Audit 1 -> Update Final Count
+			if($audit == 'audit1'){
+				$store = StocktakingList::where('store', $request->get('store'))->get();
+
+				for ($i = 0; $i < count($store); $i++) {
+					$final = 0;
+					if($store[$i]->audit2 > 0){
+						$final = $store[$i]->audit2;
+					}else if($store[$i]->audit1 > 0){
+						$final = $store[$i]->audit1;
+					}else{
+						$final = $store[$i]->quantity;
+					}
+					$updateStore = StocktakingList::where('id', $store[$i]->id)
+					->update([
+						'final_count' => $final
+					]);
+				}
+
+
+				$storenew = StocktakingNewList::where('store', $request->get('store'))->get();
+
+				for ($i = 0; $i < count($storenew); $i++) {
+					$final2 = 0;
+					if($storenew[$i]->audit2 > 0){
+						$final2 = $storenew[$i]->audit2;
+					}else if($storenew[$i]->audit1 > 0){
+						$final2 = $storenew[$i]->audit1;
+					}else{
+						$final2 = $storenew[$i]->quantity;
+					}
+					$updateStoreNew = StocktakingNewList::where('id', $storenew[$i]->id)
+					->update([
+						'final_count' => $final2
+					]);
+				}
+			}
+
+			$response = array(
+				'status' => true,
+				'message' => 'Audit Berhasil'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function updateAudit(Request $request, $audit){
 		$id = $request->get('id');
 		$quantity = $request->get('quantity');
@@ -3648,6 +3822,49 @@ s.id ASC");
 				$audit => $quantity,
 				$field => $auditor
 			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update Berhasil'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
+	public function updateAuditNew(Request $request, $audit){
+		$id = $request->get('id');
+		$quantity = $request->get('quantity');
+		$auditor = $request->get('auditor');
+
+
+		$field = '';
+		if($audit == 'audit1'){
+			$field = 'audit1_by';
+		}else if($audit == 'audit2'){
+			$field = 'audit2_by';
+		}
+
+		try {
+
+			$update = StocktakingNewList::where('id', $id)
+			->update([
+				$audit => $quantity,
+				$field => $auditor,
+			]);
+
+			$list = StocktakingNewList::where('id', $id)->first();
+			$id_list = $list->id_list;
+
+			$updatelist = StocktakingList::where('id',$id_list)->first();
+			$updatelist->audit1 = $quantity;
+			$updatelist->audit1_by = $auditor;
+			$updatelist->save();
 
 			$response = array(
 				'status' => true,
