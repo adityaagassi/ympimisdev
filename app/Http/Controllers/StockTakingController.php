@@ -505,6 +505,191 @@ class StockTakingController extends Controller{
 		))->with('page', 'Summary Of Counting')->with('head', 'Stocktaking');
 	}
 
+	public function countNewStcPISingle($location){
+		$single = StocktakingNewList::whereIn('location', $location)
+		->where('category', 'SINGLE')
+		->where('final_count', '>', 0)
+		->get();
+
+		for ($i=0; $i < count($single); $i++) {
+
+			$insert = new StocktakingOutput([
+				'material_number' => $single[$i]->material_number,
+				'store' => $single[$i]->store,
+				'location' => $single[$i]->location,
+				'quantity' => $single[$i]->final_count
+			]);
+			$insert->save();
+		}
+	}
+
+	public function countNewStcPIAssy($location){
+		$assy = StocktakingNewList::whereIn('location', $location)
+		->where('category', 'ASSY')
+		->where('final_count', '>', 0)
+		->get();
+
+		for ($i=0; $i < count($assy); $i++) {
+			$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
+				FROM bom_outputs b
+				LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
+				WHERE b.material_parent = '".$assy[$i]->material_number."'");
+
+			for ($j=0; $j < count($breakdown); $j++) {
+				if($breakdown[$j]->spt == 50){
+					$row = array();
+					$row['material_number'] = $breakdown[$j]->material_child;
+					$row['store'] = $assy[$i]->store;
+					$row['location'] = $assy[$i]->location;
+					$row['quantity'] = $assy[$i]->final_count * ($breakdown[$j]->usage / $breakdown[$j]->divider);
+					$row['created_at'] = Carbon::now();
+					$row['updated_at'] = Carbon::now();
+
+					$this->cek[] = $row;
+				}else{
+					$row = array();
+					$row['material_number'] = $breakdown[$j]->material_child;
+					$row['store'] = $assy[$i]->store;
+					$row['location'] = $assy[$i]->location;
+					$row['quantity'] = $assy[$i]->final_count * ($breakdown[$j]->usage / $breakdown[$j]->divider);
+					$row['created_at'] = Carbon::now();
+					$row['updated_at'] = Carbon::now();
+
+					$this->assy_output[] = $row;
+				}
+			}
+		}
+
+		while(count($this->cek) > 0) {
+			$this->breakdownNew();
+		}
+
+		foreach (array_chunk($this->assy_output,1000) as $t) {
+			$output = StocktakingOutput::insert($t);
+		}
+	}
+
+	public function breakdownNew(){
+
+		$this->temp = array();
+
+		for ($i=0; $i < count($this->cek); $i++) {
+			$breakdown = db::select("SELECT b.material_parent, b.material_child, b.`usage`, b.divider, m.spt
+				FROM bom_outputs b
+				LEFT JOIN material_plant_data_lists m ON m.material_number = b.material_child 
+				WHERE b.material_parent = '".$this->cek[$i]['material_number']."'");
+
+			for ($j=0; $j < count($breakdown); $j++) {
+
+				if($breakdown[$j]->spt == 50){
+					$row = array();
+					$row['material_number'] = $breakdown[$j]->material_child;
+					$row['store'] = $this->cek[$i]['store'];
+					$row['location'] = $this->cek[$i]['location'];
+					$row['quantity'] = $this->cek[$i]['quantity'] * ($breakdown[$j]->usage / $breakdown[$j]->divider) ;
+					$row['created_at'] = Carbon::now();
+					$row['updated_at'] = Carbon::now();
+					$this->temp[] = $row;
+				}else{
+					$row = array();
+					$row['material_number'] = $breakdown[$j]->material_child;
+					$row['store'] = $this->cek[$i]['store'];
+					$row['location'] = $this->cek[$i]['location'];
+					$row['quantity'] = $this->cek[$i]['quantity'] * ($breakdown[$j]->usage / $breakdown[$j]->divider) ;
+					$row['created_at'] = Carbon::now();
+					$row['updated_at'] = Carbon::now();
+					$this->assy_output[] = $row;
+				}
+			}
+		}
+
+		$this->cek = array();
+		$this->cek = $this->temp;
+	}
+
+	public function indexCountPINew(Request $request){
+		$group = $request->get('group');
+
+		// $lock = db::table('locks')->where('remark', '=', 'breakdown_pi')->first();
+
+		// if($lock->status == 1){
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'message' => 'Breakdown PI sedang dilakukan, tidak melakukan proses double.',
+		// 	);
+		// 	return Response::json($response);
+		// }
+
+		// $lock->status = 1;
+		// $lock->save();
+
+		$locations = StorageLocation::whereIn('area', $group)
+		->select('storage_location')
+		->get();
+
+		// $location = '';
+		// for ($i=0; $i < count($locations); $i++) { 
+		// 	$location = $location."'".$locations[$i]->storage_location."'";
+		// 	if($i != (count($locations)-1)){
+		// 		$location = $location.',';
+		// 	}
+		// }
+		// $data = db::select("SELECT DISTINCT process FROM stocktaking_lists WEHER location IN (".$location.")");
+
+
+		$location = array();
+		for ($i=0; $i < count($locations); $i++) {
+			array_push($location, $locations[$i]->storage_location); 
+		}
+
+		//Supaya Bisa Breakdown PI
+
+		// $data = StocktakingNewList::whereIn('location', $location)
+		// ->where('print_status', 1)
+		// ->get();
+
+		// for ($i=0; $i < count($data); $i++) { 
+		// 	if($data[$i]->process < 2){
+		// 		$response = array(
+		// 			'status' => false,
+		// 			'message' => 'Ada slip yang belum di input atau di audit.',
+		// 		);
+		// 		return Response::json($response);
+		// 	}
+		// }
+
+		try{
+			DB::transaction(function() use ($location) {
+				$delete = StocktakingOutput::whereIn('location', $location)
+				->delete();
+
+				$update = StocktakingNewList::where('process', 2)
+				->whereIn('location', $location)
+				->update([
+					'process' => 4
+				]);
+			});
+
+			$this->countNewStcPISingle($location);
+			$this->countNewStcPIAssy($location);
+
+			// $lock->status = 0;
+			// $lock->save();
+
+			$response = array(
+				'status' => true,
+				'message' => 'Count PI Berhasil'
+			);
+			return Response::json($response);
+		}catch(\Exception $e){
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+	}
+
 	public function indexCountPI(Request $request){
 		$group = $request->get('group');
 
@@ -586,6 +771,17 @@ class StockTakingController extends Controller{
 			);
 			return Response::json($response);
 		}
+	}
+
+	public function indexCheckInput()
+	{
+		$title = 'Check Input Physical Inventory (PI)';
+		$title_jp = '';
+
+		return view('stocktakings.monthly.check_input_new', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('page', 'Check Input PI')->with('head', 'Stocktaking');
 	}
 
 	public function countPISingle($location){
@@ -2621,47 +2817,47 @@ class StockTakingController extends Controller{
 				sum( total ) - sum( qty ) AS empty,
 				sum( qty ) AS qty,
 				sum( total ) AS total 
-			FROM
+				FROM
 				(
-			SELECT
+				SELECT
 				sl.area,
 				s.location,
 				s.sub_store,
 				0 AS qty,
 				count( s.id ) AS total 
-			FROM
+				FROM
 				stocktaking_new_lists s
 				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
-			WHERE
+				WHERE
 				s.print_status = 1 
-			GROUP BY
+				GROUP BY
 				s.sub_store,
 				sl.area,
 				s.location 
 				
-			UNION ALL
-			SELECT
+				UNION ALL
+				SELECT
 				sl.area,
 				s.location,
 				s.sub_store,	
 				count( s.id ) AS qty,
 				0 AS total 
-			FROM
+				FROM
 				stocktaking_new_lists s
 				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
-			WHERE
+				WHERE
 				s.print_status = 1 
 				AND s.quantity IS NOT NULL 
-			GROUP BY
+				GROUP BY
 				s.sub_store,
 				sl.area,
 				s.location 
 				) AS list 
-			GROUP BY
+				GROUP BY
 				list.sub_store,
 				list.area,
 				list.location
-			ORDER BY
+				ORDER BY
 				list.sub_store,
 				list.area,
 				list.location");

@@ -61,15 +61,18 @@
 		text-align: center;
 		font-weight: bold;
 	}
+	.no-padding{
+		padding: 0px;
+	}
 </style>
 @stop
 @section('header')
 @endsection
 @section('content')
 <section class="content" style="padding-top: 0;">
-	<div class="row" style="margin-left: 1%; margin-right: 1%;">
+	<div class="row" style="">
 		
-		<div class="col-xs-12 col-md-7 col-lg-7" style="padding-left: 0px;">
+		<div class="col-xs-12 col-md-7 col-lg-7" style="">
 			<div class="col-xs-12" style="padding-right: 0; padding-left: 0; margin-bottom: 2%;">
 				<p id="inputor_name" style="font-size:18px; text-align: center; color: yellow; padding: 0px; margin: 0px; font-weight: bold; text-transform: uppercase;"></p>
 
@@ -148,7 +151,7 @@
 		</div>
 
 		<div class="col-xs-12 col-lg-5 col-md-5" style="margin-top: 2%;">
-			<div class="col-xs-12">
+			<div class="col-xs-12" style="padding-left: 0px;">
 				<div class="form-group">
 					<label class="col-xs-12" style="padding: 0px; color: yellow; font-size:20px;">Reason</label>
 					<div class="col-xs-11" style="padding: 0px;">
@@ -164,7 +167,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-xs-12">
+			<div class="col-xs-12" style="margin-top: 2%; padding-right: 2%;">
 				<div class="form-group row" align="right">
 					<div class="col-xs-1 col-xs-offset-11" align="right">
 						<button class="btn btn-success" onclick="addCount()"><i class="fa fa-plus"></i></button>
@@ -172,19 +175,35 @@
 				</div>
 			</div>
 
-			<div id="count">
+			<div class="col-xs-12" style="padding-left: 6%;">
+				<div class="form-group row" style="margin-bottom: 2%;">
+					<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
+						<span style="font-weight: bold;color: yellow;font-size: 15px">QTY</span>
+					</div>
+					<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+					<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
+						<span style="font-weight: bold;color: yellow;font-size: 15px">QTY LOT</span>
+					</div>
+					<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+					<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
+						<span style="font-weight: bold;color: yellow;font-size: 15px">TOTAL</span>
+					</div>
+
+				</div>
+			</div>
+			<div id="count" style="padding-left: 5%;">
 				{{-- 1 --}}
-				<div class="col-xs-12" id="count_1">
+				<div class="col-xs-12" id="count_1" style="padding: 0px">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
-							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
+						<div class="col-xs-2 no-padding" align="right">
+							<input type="text" style="width: 100%; font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_1">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_1">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_1" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
@@ -193,17 +212,17 @@
 					</div>
 				</div>
 				{{-- 2 --}}
-				<div class="col-xs-12" id="count_2">
+				<div class="col-xs-12" id="count_2" style="padding: 0px">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_2">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_2">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_2" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
@@ -212,17 +231,17 @@
 					</div>
 				</div>
 				{{-- 3 --}}
-				<div class="col-xs-12" id="count_3">
+				<div class="col-xs-12" id="count_3" style="padding: 0px">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_3">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_3">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_3" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
@@ -231,17 +250,17 @@
 					</div>
 				</div>
 				{{-- 4 --}}
-				<div class="col-xs-12" id="count_4">
+				<div class="col-xs-12" id="count_4" style="padding: 0px">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_4">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_4">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_4" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
@@ -250,17 +269,17 @@
 					</div>
 				</div>
 				{{-- 5 --}}
-				<div class="col-xs-12" id="count_5">
+				<div class="col-xs-12" id="count_5" style="padding: 0px">
 					<div class="form-group row" style="margin-bottom: 2%;">
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="qty_5">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control numpad input" id="koef_5">
 						</div>
 						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
-						<div class="col-xs-3" align="right">
+						<div class="col-xs-2 no-padding" align="right">
 							<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="total_5" readonly="">
 						</div>
 						<div class="col-xs-1" align="right">
@@ -270,11 +289,11 @@
 				</div>
 			</div>
 
-			<div class="col-xs-12">	
+			<div class="col-xs-12" style="padding-left: 5%;"> 	
 				<div class="form-group row" align="right">					
-					<label class="col-xs-1 col-xs-offset-5" style="padding: 0px; text-align: center; color: yellow; font-size:1.5vw;">Total</label>
-					<div class="col-xs-3 col-xs-offset-2" align="right">
-						<input type="text" style="font-size:1.5vw; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
+					<label class="col-xs-2 col-xs-offset-3" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">Total</label>
+					<div class="col-xs-2 col-xs-offset-1" align="right" style="padding: 0px;">
+						<input type="text" style="font-size:20px; height: 30px;" onchange="changeVal()" class="form-control input" id="sum_total" readonly="">
 					</div>
 				</div>
 			</div>

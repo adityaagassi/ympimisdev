@@ -2203,6 +2203,10 @@ Route::get('fetch/stocktaking/kitto_vs_pi', 'StockTakingController@fetchKittoVsP
 Route::get('fetch/stocktaking/kitto_vs_book', 'StockTakingController@fetchKittoVsBook');
 Route::get('fetch/stocktaking/pi_vs_lot', 'StockTakingController@fetchPiVsLot');
 
+//checkInput
+Route::get('index/stocktaking/check_input_new', 'StockTakingController@indexCheckInput');
+Route::get('fetch/stocktaking/pi_vs_book', 'StockTakingController@fetchPiVsBook');
+
 Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 
 	Route::get('index/stocktaking/stocktaking_list', 'StockTakingController@indexMonthlyStocktakingList');
@@ -2228,6 +2232,7 @@ Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 
 	//Count PI
 	Route::post('index/stocktaking/count_pi', 'StockTakingController@indexCountPI');
+	Route::post('index/stocktaking/count_pi_new', 'StockTakingController@indexCountPINew');
 	Route::get('index/stocktaking/bypass', 'StockTakingController@byPassAudit');
 });
 

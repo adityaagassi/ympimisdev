@@ -157,12 +157,13 @@
 
 					<a id="input_pi" href="{{ secure_url('index/stocktaking/count_new') }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Input Physical Inventory (PI)</a>
 
-					<a id="audit1_new" href="{{ secure_url("index/stocktaking/audit_new/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Audit Internal</a>
-					
+					<a id="audit1_new" href="{{ secure_url("index/stocktaking/audit_new/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Audit Internal</a>				
 
 					@if(in_array('S36', $navs))
 					<a id="revise" href="{{ secure_url("index/stocktaking/revise_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;background-color: #ffce5c">NEW Revise Physical Inventory (PI)</a>
 					@endif
+
+					{{-- <a id="check_new" href="{{ secure_url("index/stocktaking/check_input_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Check Input</a> --}}
 
 				</div>
 				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
@@ -707,7 +708,7 @@
 				group : group
 			}
 
-			$.post('{{ url("index/stocktaking/count_pi") }}', data, function(result, status, xhr){
+			$.post('{{ url("index/stocktaking/count_pi_new") }}', data, function(result, status, xhr){
 				if(result.status){
 					$("#loading").hide();
 					$("#modalBreakdown").modal('hide');
