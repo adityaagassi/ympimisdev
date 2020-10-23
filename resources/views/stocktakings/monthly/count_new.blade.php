@@ -154,6 +154,25 @@
 					</div>
 				</div>
 
+				<div class="col-xs-12">
+					<div class="form-group row" style="margin-bottom: 2%;">
+						<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
+						<span style="font-weight: bold;color: yellow;font-size: 15px">QTY</span>
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">X</label>
+						<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
+						<span style="font-weight: bold;color: yellow;font-size: 15px">QTY LOT</span>
+						</div>
+						<label class="col-xs-1" style="padding: 0px; text-align: center; color: yellow; font-size:20px;">=</label>
+						<div class="col-xs-2" align="center" style="padding-left:0px;padding-right:0px">
+						<span style="font-weight: bold;color: yellow;font-size: 15px">TOTAL</span>
+						</div>
+						<div class="col-xs-2" align="center">
+						
+						</div>
+					</div>
+				</div>
+
 				<div id="count">
 					{{-- 1 --}}
 					<div class="col-xs-12" id="count_1">
