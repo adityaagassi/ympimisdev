@@ -434,7 +434,8 @@ class StockTakingController extends Controller{
 		if($id == 1){
 			$auditors = db::select("SELECT * FROM employee_syncs
 				where position like '%Leader%'
-				or position = 'Foreman'");
+				or position = 'Foreman'
+				or position like '%Staff%'");
 
 			return view('stocktakings.monthly.audit_1', array(
 				'title' => $title,
@@ -447,6 +448,8 @@ class StockTakingController extends Controller{
 			->orWhere('position', '=', 'Chief')
 			->orWhere('position', '=', 'Foreman')
 			->orWhere('position', '=', 'Coordinator')
+			->orWhere('position', '=', 'Staff')
+			->orWhere('position', '=', 'Senior Staff')
 			->WhereNotNull('end_date')
 			->get();
 
@@ -465,7 +468,8 @@ class StockTakingController extends Controller{
 		if($id == 1){
 			$auditors = db::select("SELECT * FROM employee_syncs
 				where position like '%Leader%'
-				or position = 'Foreman'");
+				or position = 'Foreman'
+				or position like '%Staff%'");
 
 			return view('stocktakings.monthly.audit_1_new', array(
 				'title' => $title,
@@ -478,6 +482,8 @@ class StockTakingController extends Controller{
 			->orWhere('position', '=', 'Chief')
 			->orWhere('position', '=', 'Foreman')
 			->orWhere('position', '=', 'Coordinator')
+			->orWhere('position', '=', 'Staff')
+			->orWhere('position', '=', 'Senior Staff')
 			->WhereNotNull('end_date')
 			->get();
 
