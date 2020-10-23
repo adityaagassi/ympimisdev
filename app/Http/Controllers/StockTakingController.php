@@ -2740,6 +2740,43 @@ class StockTakingController extends Controller{
 		return Response::json($response);
 	}
 
+	public function fetchAuditedListNew(Request $request){
+		$month = $request->get('month');
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$data = db::select("SELECT storage_locations.area, audited.location, sum( audited ) AS audited, sum( not_audited ) AS not_audited FROM
+				(SELECT location, store, IF( total = audit, 1, 0 ) AS audited, IF( total <> audit, 1, 0 ) AS not_audited FROM
+				(SELECT stocktaking_new_lists.location, stocktaking_new_lists.store, count( stocktaking_new_lists.id ) AS total, SUM( IF ( stocktaking_new_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_new_lists
+				WHERE print_status = 1
+				GROUP BY stocktaking_new_lists.location, stocktaking_new_lists.store
+				) audit
+				) AS audited
+				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location 
+				GROUP BY storage_locations.area, audited.location");
+		}else{
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
+		}
+
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
+	}
+
 	public function fetchAuditedListDetail(Request $request){
 		$group = $request->get('group');
 		$month = $request->get('month');
@@ -2761,6 +2798,43 @@ class StockTakingController extends Controller{
 				WHERE stocktaking_lists.location = '".$group."'
 				AND stocktaking_lists.print_status = 1
 				GROUP BY stocktaking_lists.location, stocktaking_lists.store) audit) AS audited
+				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location
+				order by ord asc");
+		}else{
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
+		}
+
+		$response = array(
+			'status' => true,
+			'audit_detail' => $audit_detail
+		);
+		return Response::json($response);
+	}
+
+	public function fetchAuditedListDetailNew(Request $request){
+		$group = $request->get('group');
+		$month = $request->get('month');
+		$series = $request->get('series');
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$audit_detail = db::select("SELECT storage_locations.area, audited.location, audited.store, IF( audited.audited = 1, 1, 0) AS ord FROM
+				(SELECT location, store, IF( total = audit, 1, 0 ) AS audited, IF( total <> audit, 1, 0 ) AS not_audited FROM
+				(SELECT stocktaking_new_lists.location, stocktaking_new_lists.store, count( stocktaking_new_lists.id ) AS total, SUM( IF ( stocktaking_new_lists.process >= 2, 1, 0 ) ) AS audit FROM stocktaking_new_lists
+				WHERE stocktaking_new_lists.location = '".$group."'
+				AND stocktaking_new_lists.print_status = 1
+				GROUP BY stocktaking_new_lists.location, stocktaking_new_lists.store) audit) AS audited
 				LEFT JOIN storage_locations ON audited.location = storage_locations.storage_location
 				order by ord asc");
 		}else{

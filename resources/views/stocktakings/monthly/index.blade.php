@@ -91,7 +91,9 @@
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Progress Input</a></li>
-					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Progress Audit</a></li>
+					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Progress Input New</a></li>
+					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Progress Audit</a></li>
+					<li class="vendor-tab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">Progress Audit New</a></li>
 				</ul>
 
 				<div class="tab-content">
@@ -99,7 +101,13 @@
 						<div id="container"></div>
 					</div>
 					<div class="tab-pane" id="tab_2">
-						<div id="container1"></div>				
+						<div id="container0"></div>				
+					</div>
+					<div class="tab-pane" id="tab_3">
+						<div id="container3"></div>				
+					</div>
+					<div class="tab-pane" id="tab_4">
+						<div id="container4"></div>				
 					</div>
 				</div>
 			</div>
@@ -122,26 +130,33 @@
 
 				</div>
 				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
-					<span style="font-size: 20px; color: green;"><i class="fa fa-angle-double-down"></i> Process <i class="fa fa-angle-double-down"></i></span>
+					<span style="font-size: 20px; color: green;"><i class="fa fa-angle-double-down"></i> Process (Khusus Warehouse) <i class="fa fa-angle-double-down"></i></span>
 
 					
 					<a id="manage_store_past" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Print Summary Of Counting</a>
-					<a id="manage_store" href="{{ url("index/stocktaking/summary_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Print Summary Of Counting</a>
-
-
 
 					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Input No Use</a>
-
-					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Input No Use</a>
-
 					<a id="input_pi_past" href="{{ secure_url("index/stocktaking/count") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Input Physical Inventory (PI)</a>
-					<a id="input_pi" href="{{ secure_url('index/stocktaking/count_new') }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Input Physical Inventory (PI)</a>
-					
 					<a id="audit1" href="{{ secure_url("index/stocktaking/audit/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ccff90;">Audit Internal</a>
-					<a id="audit1_new" href="{{ secure_url("index/stocktaking/audit_new/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Audit Internal</a>
 					
 					@if(in_array('S36', $navs))
 					<a id="revise_past" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Revise Physical Inventory (PI)</a>
+					@endif
+
+					<br><br>
+
+					<span style="font-size: 20px; color: green;"><i class="fa fa-angle-double-down"></i> New Process <i class="fa fa-angle-double-down"></i></span>
+
+					<a id="manage_store" href="{{ url("index/stocktaking/summary_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Print Summary Of Counting</a>
+
+					<a id="no_use" href="{{ secure_url("index/stocktaking/no_use_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Input No Use</a>
+
+					<a id="input_pi" href="{{ secure_url('index/stocktaking/count_new') }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Input Physical Inventory (PI)</a>
+
+					<a id="audit1_new" href="{{ secure_url("index/stocktaking/audit_new/"."1") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green; background-color: #ffce5c;">NEW Audit Internal</a>
+					
+
+					@if(in_array('S36', $navs))
 					<a id="revise" href="{{ secure_url("index/stocktaking/revise_new") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;background-color: #ffce5c">NEW Revise Physical Inventory (PI)</a>
 					@endif
 
@@ -781,6 +796,96 @@
 					});
 				}
 			});
+
+
+			$.get('{{ url("fetch/stocktaking/filled_list_new") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
+					var location_new = [];
+					var fill_new = [];
+					var empty_new = [];
+
+					for (var i = 0; i < result.data.length; i++) {
+						location_new.push(result.data[i].location);
+						fill_new.push(parseInt(result.data[i].qty));
+						empty_new.push(parseInt(result.data[i].empty));
+					}
+
+					Highcharts.chart('container0', {
+						chart: {
+							height: 225,
+							type: 'column'
+						},
+						title: {
+							text: 'Progress Input New'
+						},	
+						legend:{
+							enabled: false
+						},
+						credits:{	
+							enabled:false
+						},
+						xAxis: {
+							categories: location_new,
+							type: 'category'
+						},
+						yAxis: {
+							title: {
+								enabled:false,
+							},
+							labels: {
+								enabled:false
+							}
+						},
+						tooltip: {
+							formatter: function () {
+								return '<b>' + this.x + '</b><br/>' +
+								this.series.name + ': ' + this.y + '<br/>' +
+								'Total Item: ' + this.point.stackTotal;
+							}
+						},
+						plotOptions: {
+							column: {
+								stacking: 'percent',
+							},
+							series:{
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer',
+								stacking: 'percent',
+								dataLabels: {
+									enabled: true,
+									formatter: function() {
+										return this.y;
+									},
+									style: {
+										fontWeight: 'bold',
+									}
+								},
+								point: {
+									events: {
+										click: function () {
+											fillInputModalNew(this.category, this.series.name);
+										}
+									}
+								}
+							}
+						},
+						series: [{
+							name: 'Empty',
+							data: empty_new,
+							color: 'rgba(255, 0, 0, 0.25)'
+						}, {
+							name: 'Inputted',
+							data: fill_new,
+							color: '#00a65a'
+						}]
+					});
+				}
+			});
 		}
 	}
 
@@ -886,6 +991,106 @@
 		});
 	}
 
+	function fillInputModalNew(group, series) {
+
+		$('#loading').show();
+		$('#tableInput').hide();
+
+		var month = $('#month').val();
+
+		var data = {
+			group : group,
+			series : series,
+			month : month
+		}
+
+		$.get('{{ url("fetch/stocktaking/filled_list_detail_new") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableInput').DataTable().clear();
+				$('#tableInput').DataTable().destroy();
+				$('#bodyInput').html('');
+				$('#loading').hide();
+
+				var body = '';
+				for (var i = 0; i < result.input_detail.length; i++) {
+					var color = ''
+					if(result.input_detail[i].ord == 0){
+						color = 'style="background-color: rgba(255, 0, 0, 0.25);"';
+					}else{
+						color = 'style="background-color: #00a65a;"';
+					}
+					body += '<tr '+ color +'">';
+					body += '<td style="width: 1%">'+ result.input_detail[i].area +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].location +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].store +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].category +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].material_number +'</td>';
+					body += '<td style="width: 10%">'+ (result.input_detail[i].material_description || '-') +'</td>';
+
+					if(result.input_detail[i].quantity != null){
+						body += '<td style="width: 1%;">'+ result.input_detail[i].quantity.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+
+					if(result.input_detail[i].audit1 != null){
+						body += '<td style="width: 1%;">'+ result.input_detail[i].audit1.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+
+					// if(result.input_detail[i].audit2 != null){
+					// 	body += '<td style="width: 1%;">'+ result.input_detail[i].audit2.toLocaleString() +'</td>';
+					// }else{
+					// 	body += '<td style="width: 1%;"></td>';
+					// }
+
+					if(result.input_detail[i].final_count != null){
+						body += '<td style="width: 1%; font-weight: bold;">'+ result.input_detail[i].final_count.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+
+
+					body += '</tr>';
+				}
+
+				$('#bodyInput').append(body);
+
+				var table = $('#tableInput').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'info': true,
+					'autoWidth': true,
+					'sPaginationType': 'full_numbers',
+					'bJQueryUI': true,
+					'bAutoWidth': false,
+					'processing': true,
+					'bPaginate': false
+				});
+
+				$('#modalInput').modal('show');
+				$('#tableInput').show();
+			}
+		});
+	}
+
 
 	function auditedList() {
 		var month = $('#month').val();
@@ -908,7 +1113,7 @@
 						notyet.push(parseInt(result.data[i].not_audited));
 					}
 
-					Highcharts.chart('container1', {
+					Highcharts.chart('container3', {
 						chart: {
 							height: 225,
 							type: 'column'
@@ -982,6 +1187,95 @@
 					});
 				}
 			});
+
+
+			$.get('{{ url("fetch/stocktaking/audited_list_new") }}', data, function(result, status, xhr){
+				if(result.status){
+
+					var location_new = [];
+					var audited_new = [];
+					var notyet_new = [];
+
+					for (var i = 0; i < result.data.length; i++) {
+						location_new.push(result.data[i].location);
+						audited_new.push(parseInt(result.data[i].audited));
+						notyet_new.push(parseInt(result.data[i].not_audited));
+					}
+
+					Highcharts.chart('container4', {
+						chart: {
+							height: 225,
+							type: 'column'
+						},
+						title: {
+							text: 'Progress Audit New'
+						},	
+						legend:{
+							enabled: false
+						},
+						credits:{	
+							enabled:false
+						},
+						xAxis: {
+							categories: location_new,
+							type: 'category'
+						},
+						yAxis: {
+							title: {
+								enabled:false,
+							},
+							labels: {
+								enabled:false
+							}
+						},
+						tooltip: {
+							formatter: function () {
+								return '<b>' + this.x + '</b><br/>' +
+								this.series.name + ': ' + this.y + '<br/>' +
+								'Total Store: ' + this.point.stackTotal;
+							}
+						},
+						plotOptions: {
+							column: {
+								stacking: 'percent',
+							},
+							series:{
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer',
+								stacking: 'percent',
+								dataLabels: {
+									enabled: true,
+									formatter: function() {
+										return this.y;
+									},
+									style: {
+										fontWeight: 'bold',
+									}
+								},
+								point: {
+									events: {
+										click: function () {
+											fillAuditModalNew(this.category, this.series.name);
+										}
+									}
+								}
+							}
+						},
+						series: [{
+							name: 'Not yet',
+							data: notyet_new,
+							color: 'rgba(255, 0, 0, 0.25)'
+						}, {
+							name: 'Audited',
+							data: audited_new,
+							color: '#00a65a'
+						}]
+					});
+				}
+			});
 		}
 	}
 
@@ -999,6 +1293,79 @@
 		}
 
 		$.get('{{ url("fetch/stocktaking/audited_list_detail") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableAudit').DataTable().clear();
+				$('#tableAudit').DataTable().destroy();
+				$('#bodyAudit').html('');
+				$('#loading').hide();
+
+				var body = '';
+				for (var i = 0; i < result.audit_detail.length; i++) {
+
+					var color = ''
+					if(result.audit_detail[i].ord == 0){
+						color = 'style="background-color: rgba(255, 0, 0, 0.25);"';
+					}else{
+						color = 'style="background-color: #00a65a;"'			
+					}
+
+					body += '<tr '+ color +'">';
+					body += '<td style="width: 1%">'+ result.audit_detail[i].area +'</td>';
+					body += '<td style="width: 1%">'+ result.audit_detail[i].location +'</td>';
+					body += '<td style="width: 1%">'+ result.audit_detail[i].store +'</td>';
+					body += '</tr>';
+				}
+
+				$('#bodyAudit').append(body);
+
+				var table = $('#tableAudit').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'info': true,
+					'autoWidth': true,
+					'sPaginationType': 'full_numbers',
+					'bJQueryUI': true,
+					'bAutoWidth': false,
+					'processing': true,
+					'bPaginate': false
+				});
+
+				$('#modalAudit').modal('show');
+				$('#tableAudit').show();
+			}
+		});
+	}
+
+	function fillAuditModalNew(group, series){
+
+		$('#loading').show();
+		$('#tableAudit').hide();
+
+		var month = $('#month').val();
+
+		var data = {
+			group : group,
+			series : series,
+			month : month
+		}
+
+		$.get('{{ url("fetch/stocktaking/audited_list_detail_new") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#tableAudit').DataTable().clear();
 				$('#tableAudit').DataTable().destroy();
