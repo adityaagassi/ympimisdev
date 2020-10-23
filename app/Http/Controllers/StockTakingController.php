@@ -3395,7 +3395,7 @@ LEFT JOIN material_volumes v ON v.material_number = s.material_number
 LEFT JOIN storage_locations sl ON sl.storage_location = s.location
 -- 			WHERE s.print_status = 1
 WHERE 
-s.sub_store = '".$request->get('sub_store')."'
+s.store = '".$request->get('store')."'
 ORDER BY
 s.id ASC");
 
