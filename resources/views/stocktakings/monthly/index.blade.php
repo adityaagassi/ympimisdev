@@ -90,26 +90,26 @@
 		<div class="col-xs-12">
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
-					<li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Progress Input</a></li>
-					<li class="vendor-tab"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Progress Input New</a></li>
+					{{-- <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Progress Input</a></li> --}}
+					<li class="vendor-tab active"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Progress Input New</a></li>
 					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Progress Input New By Sub Store</a></li>
-					<li class="vendor-tab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">Progress Audit</a></li>
+					{{-- <li class="vendor-tab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">Progress Audit</a></li> --}}
 					<li class="vendor-tab"><a href="#tab_5" data-toggle="tab" id="tab_header_5">Progress Audit New</a></li>
 				</ul>
 
 				<div class="tab-content">
-					<div class="tab-pane active" id="tab_1">
+					{{-- <div class="tab-pane active" id="tab_1">
 						<div id="container"></div>
-					</div>
-					<div class="tab-pane" id="tab_2">
+					</div> --}}
+					<div class="tab-pane active" id="tab_2">
 						<div id="container0"></div>				
 					</div>
 					<div class="tab-pane" id="tab_3">
 						<div id="container5"></div>				
 					</div>
-					<div class="tab-pane" id="tab_4">
+					{{-- <div class="tab-pane" id="tab_4">
 						<div id="container3"></div>				
-					</div>
+					</div> --}}
 					<div class="tab-pane" id="tab_5">
 						<div id="container4"></div>				
 					</div>
@@ -134,7 +134,7 @@
 
 				</div>
 				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
-					<span style="font-size: 20px; color: green;"><i class="fa fa-angle-double-down"></i> Process (Khusus Warehouse) <i class="fa fa-angle-double-down"></i></span>
+					{{-- <span style="font-size: 20px; color: green;"><i class="fa fa-angle-double-down"></i> Process (Khusus Warehouse) <i class="fa fa-angle-double-down"></i></span>
 
 					
 					<a id="manage_store_past" href="{{ url("index/stocktaking/manage_store") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Print Summary Of Counting</a>
@@ -145,9 +145,9 @@
 					
 					@if(in_array('S36', $navs))
 					<a id="revise_past" href="{{ secure_url("index/stocktaking/revise") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: green;">Revise Physical Inventory (PI)</a>
-					@endif
+					@endif --}}
 
-					<br><br>
+					{{-- <br><br> --}}
 
 					<span style="font-size: 20px; color: green;"><i class="fa fa-angle-double-down"></i> New Process <i class="fa fa-angle-double-down"></i></span>
 
@@ -758,78 +758,78 @@
 						empty.push(parseInt(result.data[i].empty));
 					}
 
-					Highcharts.chart('container', {
-						chart: {
-							height: 225,
-							type: 'column'
-						},
-						title: {
-							text: 'Progress Input'
-						},	
-						legend:{
-							enabled: false
-						},
-						credits:{	
-							enabled:false
-						},
-						xAxis: {
-							categories: location,
-							type: 'category'
-						},
-						yAxis: {
-							title: {
-								enabled:false,
-							},
-							labels: {
-								enabled:false
-							}
-						},
-						tooltip: {
-							formatter: function () {
-								return '<b>' + this.x + '</b><br/>' +
-								this.series.name + ': ' + this.y + '<br/>' +
-								'Total Item: ' + this.point.stackTotal;
-							}
-						},
-						plotOptions: {
-							column: {
-								stacking: 'percent',
-							},
-							series:{
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer',
-								stacking: 'percent',
-								dataLabels: {
-									enabled: true,
-									formatter: function() {
-										return this.y;
-									},
-									style: {
-										fontWeight: 'bold',
-									}
-								},
-								point: {
-									events: {
-										click: function () {
-											fillInputModal(this.category, this.series.name);
-										}
-									}
-								}
-							}
-						},
-						series: [{
-							name: 'Empty',
-							data: empty,
-							color: 'rgba(255, 0, 0, 0.25)'
-						}, {
-							name: 'Inputted',
-							data: fill,
-							color: '#00a65a'
-						}]
-					});
+					// Highcharts.chart('container', {
+					// 	chart: {
+					// 		height: 225,
+					// 		type: 'column'
+					// 	},
+					// 	title: {
+					// 		text: 'Progress Input'
+					// 	},	
+					// 	legend:{
+					// 		enabled: false
+					// 	},
+					// 	credits:{	
+					// 		enabled:false
+					// 	},
+					// 	xAxis: {
+					// 		categories: location,
+					// 		type: 'category'
+					// 	},
+					// 	yAxis: {
+					// 		title: {
+					// 			enabled:false,
+					// 		},
+					// 		labels: {
+					// 			enabled:false
+					// 		}
+					// 	},
+					// 	tooltip: {
+					// 		formatter: function () {
+					// 			return '<b>' + this.x + '</b><br/>' +
+					// 			this.series.name + ': ' + this.y + '<br/>' +
+					// 			'Total Item: ' + this.point.stackTotal;
+					// 		}
+					// 	},
+					// 	plotOptions: {
+					// 		column: {
+					// 			stacking: 'percent',
+					// 		},
+					// 		series:{
+					// 			animation: false,
+					// 			pointPadding: 0.93,
+					// 			groupPadding: 0.93,
+					// 			borderWidth: 0.93,
+					// 			cursor: 'pointer',
+					// 			stacking: 'percent',
+					// 			dataLabels: {
+					// 				enabled: true,
+					// 				formatter: function() {
+					// 					return this.y;
+					// 				},
+					// 				style: {
+					// 					fontWeight: 'bold',
+					// 				}
+					// 			},
+					// 			point: {
+					// 				events: {
+					// 					click: function () {
+					// 						fillInputModal(this.category, this.series.name);
+					// 					}
+					// 				}
+					// 			}
+					// 		}
+					// 	},
+					// 	series: [{
+					// 		name: 'Empty',
+					// 		data: empty,
+					// 		color: 'rgba(255, 0, 0, 0.25)'
+					// 	}, {
+					// 		name: 'Inputted',
+					// 		data: fill,
+					// 		color: '#00a65a'
+					// 	}]
+					// });
 				}
 			});
 
@@ -1344,78 +1344,78 @@
 						notyet.push(parseInt(result.data[i].not_audited));
 					}
 
-					Highcharts.chart('container3', {
-						chart: {
-							height: 225,
-							type: 'column'
-						},
-						title: {
-							text: 'Progress Audit'
-						},	
-						legend:{
-							enabled: false
-						},
-						credits:{	
-							enabled:false
-						},
-						xAxis: {
-							categories: location,
-							type: 'category'
-						},
-						yAxis: {
-							title: {
-								enabled:false,
-							},
-							labels: {
-								enabled:false
-							}
-						},
-						tooltip: {
-							formatter: function () {
-								return '<b>' + this.x + '</b><br/>' +
-								this.series.name + ': ' + this.y + '<br/>' +
-								'Total Store: ' + this.point.stackTotal;
-							}
-						},
-						plotOptions: {
-							column: {
-								stacking: 'percent',
-							},
-							series:{
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer',
-								stacking: 'percent',
-								dataLabels: {
-									enabled: true,
-									formatter: function() {
-										return this.y;
-									},
-									style: {
-										fontWeight: 'bold',
-									}
-								},
-								point: {
-									events: {
-										click: function () {
-											fillAuditModal(this.category, this.series.name);
-										}
-									}
-								}
-							}
-						},
-						series: [{
-							name: 'Not yet',
-							data: notyet,
-							color: 'rgba(255, 0, 0, 0.25)'
-						}, {
-							name: 'Audited',
-							data: audited,
-							color: '#00a65a'
-						}]
-					});
+					// Highcharts.chart('container3', {
+					// 	chart: {
+					// 		height: 225,
+					// 		type: 'column'
+					// 	},
+					// 	title: {
+					// 		text: 'Progress Audit'
+					// 	},	
+					// 	legend:{
+					// 		enabled: false
+					// 	},
+					// 	credits:{	
+					// 		enabled:false
+					// 	},
+					// 	xAxis: {
+					// 		categories: location,
+					// 		type: 'category'
+					// 	},
+					// 	yAxis: {
+					// 		title: {
+					// 			enabled:false,
+					// 		},
+					// 		labels: {
+					// 			enabled:false
+					// 		}
+					// 	},
+					// 	tooltip: {
+					// 		formatter: function () {
+					// 			return '<b>' + this.x + '</b><br/>' +
+					// 			this.series.name + ': ' + this.y + '<br/>' +
+					// 			'Total Store: ' + this.point.stackTotal;
+					// 		}
+					// 	},
+					// 	plotOptions: {
+					// 		column: {
+					// 			stacking: 'percent',
+					// 		},
+					// 		series:{
+					// 			animation: false,
+					// 			pointPadding: 0.93,
+					// 			groupPadding: 0.93,
+					// 			borderWidth: 0.93,
+					// 			cursor: 'pointer',
+					// 			stacking: 'percent',
+					// 			dataLabels: {
+					// 				enabled: true,
+					// 				formatter: function() {
+					// 					return this.y;
+					// 				},
+					// 				style: {
+					// 					fontWeight: 'bold',
+					// 				}
+					// 			},
+					// 			point: {
+					// 				events: {
+					// 					click: function () {
+					// 						fillAuditModal(this.category, this.series.name);
+					// 					}
+					// 				}
+					// 			}
+					// 		}
+					// 	},
+					// 	series: [{
+					// 		name: 'Not yet',
+					// 		data: notyet,
+					// 		color: 'rgba(255, 0, 0, 0.25)'
+					// 	}, {
+					// 		name: 'Audited',
+					// 		data: audited,
+					// 		color: '#00a65a'
+					// 	}]
+					// });
 				}
 			});
 
