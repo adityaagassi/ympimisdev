@@ -2121,6 +2121,9 @@ Route::get('fetch/stocktaking/variance_detail', 'StockTakingController@fetchVari
 Route::get('fetch/stocktaking/filled_list_new', 'StockTakingController@fetchfilledListNew');
 Route::get('fetch/stocktaking/filled_list_detail_new', 'StockTakingController@fetchfilledListDetailNew');
 
+Route::get('fetch/stocktaking/filled_list_by_substore', 'StockTakingController@fetchfilledListbBySubstore');
+Route::get('fetch/stocktaking/filled_list_detail_by_substore', 'StockTakingController@fetchfilledListDetailBySubstore');
+
 Route::get('fetch/stocktaking/audited_list_new', 'StockTakingController@fetchAuditedListNew');
 Route::get('fetch/stocktaking/audited_list_detail_new', 'StockTakingController@fetchAuditedListDetailNew');
 
