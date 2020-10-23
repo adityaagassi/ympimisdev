@@ -294,12 +294,12 @@
 		<div class="col-xs-12" style=" margin-top: 2%;overflow-x: scroll;">
 			<table class="table table-bordered" id="store_table">
 				<thead>
-					<!-- <tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='store_title'>STORE</th>
-					</tr> -->
 					<tr>
-						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='sub_store_title'>SUB STORE</th>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='store_title'>STORE</th>
 					</tr>
+					{{-- <tr>
+						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="8" id='sub_store_title'>SUB STORE</th>
+					</tr> --}}
 					<tr>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">#</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">STORE</th>
@@ -769,9 +769,9 @@
 			if (result.status) {
 				$("#store_body").empty();
 				// $("#store_title").text("");
-				$("#sub_store_title").text("");
-				// $("#store_title").text("STORE : " + store);
-				$("#sub_store_title").text("SUB STORE : " + sub_store);
+				// $("#sub_store_title").text("");
+				$("#store_title").text("STORE : " + store);
+				// $("#sub_store_title").text("SUB STORE : " + sub_store);
 
 
 				var body = '';
