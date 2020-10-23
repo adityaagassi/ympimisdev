@@ -36,7 +36,7 @@ class FormExperienceController extends Controller
     	$title = 'Form Permasalahan & Kegagalan';
 		  $title_jp = '問題・失敗のフォーム';
 
-        $departments = Department::select('departments.id', 'departments.department_name')->get();
+      $departments = Department::select('departments.id', 'departments.department_name')->get();
 
 		return view('form.failure.index', array(
 			'title' => $title,
@@ -80,7 +80,7 @@ class FormExperienceController extends Controller
 
         ->addColumn('action', function($details){
           $id = $details->id;
-          if ($details->created_by == Auth::id() || Auth::user()->role_code == "MIS" || Auth::id() == "13") {
+          if (Auth::user()->role_code == "MIS" || $details->employee_id == STRAuth::user()->username) {
             return '
               <a href="form_experience/edit/'.$id.'" class="btn btn-primary btn-xs">Edit</a>
               <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
@@ -253,7 +253,7 @@ class FormExperienceController extends Controller
     }
 
     public function fetchChart(Request $request){
-      $detail = db::select("SELECT departments.department_name as department,COUNT(form_failures.id) as total FROM `form_failures` join employee_syncs on form_failures.employee_id = employee_syncs.employee_id RIGHT JOIN departments on employee_syncs.department = departments.department_name where department_name != 'japan staff' group by departments.department_name ");
+      $detail = db::select("SELECT departments.department_name as department,COUNT(form_failures.id) as total FROM `form_failures` join employee_syncs on form_failures.employee_id = employee_syncs.employee_id RIGHT JOIN departments on employee_syncs.department = departments.department_name where id_division = '5' group by departments.department_name ");
 
       $response = array(
         'status' => true,
