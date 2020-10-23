@@ -316,6 +316,38 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="modalInputNew">
+		<div class="modal-dialog modal-lg" style="width: 90%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+						<button type="button" class="btn btn-danger button-right" data-dismiss="modal">Close&nbsp;&nbsp;<i class="fa fa-close"></i></button>
+
+						<table class="table table-hover table-bordered table-striped" id="tableInputNew">
+							<thead style="background-color: rgba(126,86,134,.7);">
+								<tr>
+									<th>Group</th>
+									<th>Location</th>
+									<th>Store</th>
+									<th>Sub Store</th>
+									<th>Category</th>
+									<th>Material</th>
+									<th>Description</th>
+									<th>Qty</th>
+									<th>Audit 1</th>
+									{{-- <th>Audit 2</th> --}}
+									<th>PI</th>
+								</tr>
+							</thead>
+							<tbody id="bodyInputNew">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="modal fade" id="modalMonth">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
@@ -994,7 +1026,7 @@
 	function fillInputModalNew(group, series) {
 
 		$('#loading').show();
-		$('#tableInput').hide();
+		$('#tableInputNew').hide();
 
 		var month = $('#month').val();
 
@@ -1006,9 +1038,9 @@
 
 		$.get('{{ url("fetch/stocktaking/filled_list_detail_new") }}', data, function(result, status, xhr){
 			if(result.status){
-				$('#tableInput').DataTable().clear();
-				$('#tableInput').DataTable().destroy();
-				$('#bodyInput').html('');
+				$('#tableInputNew').DataTable().clear();
+				$('#tableInputNew').DataTable().destroy();
+				$('#bodyInputNew').html('');
 				$('#loading').hide();
 
 				var body = '';
@@ -1023,6 +1055,7 @@
 					body += '<td style="width: 1%">'+ result.input_detail[i].area +'</td>';
 					body += '<td style="width: 1%">'+ result.input_detail[i].location +'</td>';
 					body += '<td style="width: 1%">'+ result.input_detail[i].store +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].sub_store +'</td>';
 					body += '<td style="width: 1%">'+ result.input_detail[i].category +'</td>';
 					body += '<td style="width: 1%">'+ result.input_detail[i].material_number +'</td>';
 					body += '<td style="width: 10%">'+ (result.input_detail[i].material_description || '-') +'</td>';
@@ -1055,9 +1088,9 @@
 					body += '</tr>';
 				}
 
-				$('#bodyInput').append(body);
+				$('#bodyInputNew').append(body);
 
-				var table = $('#tableInput').DataTable({
+				var table = $('#tableInputNew').DataTable({
 					'dom': 'Bfrtip',
 					'responsive':true,
 					'lengthMenu': [
@@ -1085,8 +1118,9 @@
 					'bPaginate': false
 				});
 
-				$('#modalInput').modal('show');
-				$('#tableInput').show();
+				// $('#modalInput').modal('show');
+				$('#modalInputNew').modal('show');
+				$('#tableInputNew').show();
 			}
 		});
 	}

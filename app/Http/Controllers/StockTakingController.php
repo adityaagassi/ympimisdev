@@ -2664,6 +2664,7 @@ class StockTakingController extends Controller{
 				s.location,
 				s.category,
 				s.store,
+				s.sub_store,
 				s.material_number,
 				mpdl.material_description,
 				s.quantity,
@@ -2684,6 +2685,7 @@ class StockTakingController extends Controller{
 			sl.area,
 			s.location,
 			s.store,
+			s.sub_store,
 			s.material_number ASC");
 		}else{
 			$input_detail = db::select("
