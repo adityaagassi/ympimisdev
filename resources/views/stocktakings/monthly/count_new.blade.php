@@ -389,6 +389,8 @@
 
 	jQuery(document).ready(function() {
 
+		$("#last_input").text("");
+
 		$('.numpad').numpad({
 			hidePlusMinusButton : true,
 			decimalSeparator : '.'
@@ -823,7 +825,9 @@
 		$('#model_key_surface').html("");
 		$('#lot_uom').html("");
 		$('#text_lot').html("");
+		$("#sub_store").html("");
 		$('#lot').prop('disabled', false);
+		$("#last_input").text("");
 
 		$('#qr_code').val("");
 		$('#qr_code').prop('disabled', false);
@@ -875,8 +879,10 @@
 				openSuccessGritter('Success', result.message);
 				var store = $("#store").text();
 
-				fillStore(store);
+				// fillStore(store);
 				canc();
+				$('#sub_store_title').html("SUB STORE");
+				$('#sub_store').html("");
 				resetCount();
 
 				$('#input').hide();
