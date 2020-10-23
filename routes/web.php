@@ -2217,6 +2217,7 @@ Route::group(['nav' => 'S36', 'middleware' => 'permission'], function(){
 	Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');
 
 	Route::get('index/stocktaking/revise_new', 'StockTakingController@indexReviseNew');
+	Route::post('fetch/stocktaking/update_revise_new', 'StockTakingController@updateReviseNew');
 	// Route::get('fetch/stocktaking/revise', 'StockTakingController@fetchRevise');
 	// Route::get('fetch/stocktaking/revise_by_id', 'StockTakingController@fetchReviseId');
 	// Route::post('fetch/stocktaking/update_revise', 'StockTakingController@updateRevise');

@@ -347,7 +347,7 @@
 			decimalSeparator : '.'
 		});
 
-		$('#qr_code').blur();
+		$('#qr_code').focus();
 
 		$('#save_button').prop('disabled', true);	
 
@@ -632,7 +632,7 @@
 			id : code
 		}
 
-		$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/stocktaking/material_detail_new") }}', data, function(result, status, xhr){
 
 			if (result.status) {
 
@@ -704,7 +704,7 @@
 			id : id
 		}
 
-		$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
+		$.get('{{ url("fetch/stocktaking/material_detail_new") }}', data, function(result, status, xhr){
 
 			if (result.status) {
 				$("#store_body").empty();
@@ -757,7 +757,6 @@
 		$('#qr_code').val("");
 		$('#qr_code').prop('disabled', false);
 		$('#qr_code').focus();
-		$('#qr_code').blur();
 
 		$("#reason").prop('selectedIndex', 0).change();
 
@@ -801,7 +800,7 @@
 			return false;
 		}
 		
-		$.post('{{ url("fetch/stocktaking/update_revise") }}', data, function(result, status, xhr){
+		$.post('{{ url("fetch/stocktaking/update_revise_new") }}', data, function(result, status, xhr){
 			if (result.status) {
 				openSuccessGritter('Success', result.message);
 

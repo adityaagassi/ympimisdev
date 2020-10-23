@@ -4172,6 +4172,63 @@ s.id ASC");
 		}
 	}
 
+	public function updateReviseNew(Request $request)
+	{
+		$id = $request->get('id');
+		$ids = explode('_', $id);
+
+		$final_count = $request->get('quantity');
+		$reason = $request->get('reason');
+
+		$remark = '';
+		if($final_count > 0){
+			$remark = 'USE';
+		}else{
+			$remark = 'NO USE';
+		}
+
+		$material = StocktakingNewList::where('id', $ids[1])->first();
+
+		$process;
+		if($material->process == 0){
+			$process = 4;
+		}else{
+			$process = $material->process;
+		}
+
+		$quantity;
+		if($material->quantity == null){
+			$quantity = $final_count;
+		}else{
+			$quantity = $material->quantity;
+		}
+
+		try {
+
+			$update = StocktakingNewList::where('id', $ids[1])
+			->update([
+				'remark' => $remark,
+				'process' => $process,
+				'quantity' => $quantity,
+				'final_count' => $final_count,
+				'revised_by' => Auth::user()->username,
+				'reason' => $reason
+			]);
+
+			$response = array(
+				'status' => true,
+				'message' => 'Update Berhasil'
+			);
+			return Response::json($response);
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+	}
+
 
 	public function updateCount(Request $request){
 
