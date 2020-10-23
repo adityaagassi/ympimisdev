@@ -80,7 +80,7 @@ class FormExperienceController extends Controller
 
         ->addColumn('action', function($details){
           $id = $details->id;
-          if (Auth::user()->role_code == "MIS" || $details->employee_id == STRAuth::user()->username) {
+          if (Auth::user()->role_code == "MIS" || $details->employee_id == Auth::user()->username) {
             return '
               <a href="form_experience/edit/'.$id.'" class="btn btn-primary btn-xs">Edit</a>
               <a href="form_experience/print/'.$id.'" class="btn btn-warning btn-xs">Detail PDF</a>
