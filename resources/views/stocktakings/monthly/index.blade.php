@@ -176,8 +176,21 @@
 					<a id="breakdown" data-toggle="modal" data-target="#modalBreakdown" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Breakdown Physical Inventory (PI)</a>
 					@endif
 					<a id="unmatch" onclick="unmatch()" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple; background-color: #e040fb;">Unmatch Check</a>
-					<a id="" href="{{ url("index/stocktaking/inquiry") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Inquiry</a>
-					<a id="" href="{{ url("index/stocktaking/variance_report") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple; background-color: #e040fb;">Variance Report</a>
+					{{-- <a id="" href="{{ url("index/stocktaking/inquiry") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Inquiry</a> --}}
+					{{-- <a id="" href="{{ url("index/stocktaking/variance_report") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple; background-color: #e040fb;">Variance Report</a> --}}
+
+
+					<form method="GET" action="{{ url("export/stocktaking/inquiry") }}">
+						<input type="text" name="month_inquiry" id="month_inquiry" placeholder="Select Month" hidden>
+						<button id="inquiry" type="submit" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Inquiry</button>
+					</form>
+					<form method="GET" action="{{ url("export/stocktaking/variance") }}">
+						<input type="text" name="month_variance" id="month_variance" placeholder="Select Month" hidden>
+						<button id="variance" type="submit" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple; background-color: #e040fb;">Variance Report</button>
+					</form>
+
+
+
 					{{-- <a id="" href="{{ url("") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Official Variance Report</a> --}}
 				</div>
 				<div class="col-xs-12 col-md-3 col-lg-3" style="text-align: center;">
