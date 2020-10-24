@@ -105,6 +105,7 @@
 						<th style="width:15%; background-color: rgb(220,220,220); text-align: center; color: black; padding:0;font-size: 25px;" colspan="9" id='store_title'>STORE</th>
 					</tr>
 					<tr>
+						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">Location</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">SUB STORE</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">CATEGORY</th>
 						<th style="background-color: rgb(204,255,255); text-align: center; color: yellow; background-color: rgb(50, 50, 50); font-size:18px;">MATERIAL NUMBER</th>
@@ -329,6 +330,7 @@
 					}					
 					num++;
 					body += '<tr '+ css +'">';
+					body += '<td '+css+'>'+result.store[i].location+'</td>';
 					body += '<td '+css+'>'+result.store[i].sub_store+'</td>';
 					body += '<td '+css+'>'+result.store[i].category+'</td>';
 					body += '<td '+css+'>'+result.store[i].material_number+'</td>';
