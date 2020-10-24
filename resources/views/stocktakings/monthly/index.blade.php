@@ -180,7 +180,7 @@
 					{{-- <a id="" href="{{ url("index/stocktaking/variance_report") }}" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple; background-color: #e040fb;">Variance Report</a> --}}
 
 
-					<form method="GET" action="{{ url("export/stocktaking/inquiry") }}">
+					<form method="GET" action="{{ url("export/stocktaking/inquiry_new") }}">
 						<input type="text" name="month_inquiry" id="month_inquiry" placeholder="Select Month" hidden>
 						<button id="inquiry" type="submit" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Inquiry</button>
 					</form>

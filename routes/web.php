@@ -2132,6 +2132,7 @@ Route::get('fetch/stocktaking/audited_list_detail_new', 'StockTakingController@f
 
 
 Route::get('export/stocktaking/inquiry', 'StockTakingController@exportInquiry');
+Route::get('export/stocktaking/inquiry_new', 'StockTakingController@exportInquiryNew');
 Route::get('export/stocktaking/variance', 'StockTakingController@exportVariance');
 Route::get('export/stocktaking/official_variance', 'StockTakingController@exportOfficailVariance');
 
@@ -2835,7 +2836,7 @@ Route::post('index/first_product_audit/store_details/{id}/{first_product_audit_i
 Route::get('index/first_product_audit/getdetail','FirstProductAuditController@getdetail')->name('first_product_audit.getdetail');
 Route::post('index/first_product_audit/update_details/{id}/{first_product_audit_detail_id}','FirstProductAuditController@update_details');
 Route::get('index/first_product_audit/destroy_details/{id}/{first_product_audit_detail_id}','FirstProductAuditController@destroy_details');
-Route::post('index/first_product_audit/print_first_product_audit/{id}/{first_product_audit_id}/{month}','FirstProductAuditController@print_first_product_audit');
+Route::get('index/first_product_audit/print_first_product_audit/{id}/{first_product_audit_id}/{month}','FirstProductAuditController@print_first_product_audit');
 Route::get('index/first_product_audit/print_first_product_audit_email/{id}/{first_product_audit_id}/{month}','FirstProductAuditController@print_first_product_audit_email');
 Route::post('index/first_product_audit/sendemail/{id}/{first_product_audit_id}','FirstProductAuditController@sendemail');
 Route::post('index/first_product_audit/approval/{id}/{first_product_audit_id}/{month}','FirstProductAuditController@approval');

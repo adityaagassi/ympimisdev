@@ -1706,6 +1706,64 @@ class StockTakingController extends Controller{
 
 	}
 
+	public function exportInquiryNew(Request $request){
+
+		$month = $request->get('month_inquiry');
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if($calendar->status == 'finished'){
+			$inquiries = db::select("SELECT
+				stocktaking_inquiry_logs.id,
+				stocktaking_inquiry_logs.location,
+				storage_locations.area AS `group`,
+				stocktaking_inquiry_logs.store,
+				stocktaking_inquiry_logs.material_number,
+				material_plant_data_lists.material_description,
+				stocktaking_inquiry_logs.category,
+				material_plant_data_lists.bun,
+				stocktaking_inquiry_logs.quantity as final_count,
+				date_format( stocktaking_inquiry_logs.updated_at, '%d-%M-%y' ) AS updated_at 
+				FROM
+				stocktaking_inquiry_logs
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_inquiry_logs.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_inquiry_logs.location
+				WHERE stocktaking_inquiry_logs.stocktaking_date = '".$calendar->date."'
+				ORDER BY storage_locations.area, stocktaking_inquiry_logs.location, stocktaking_inquiry_logs.material_number ASC");
+		}else{
+			$inquiries = db::select("SELECT
+				stocktaking_new_lists.id,
+				stocktaking_new_lists.location,
+				storage_locations.area AS `group`,
+				stocktaking_new_lists.store,
+				stocktaking_new_lists.material_number,
+				material_plant_data_lists.material_description,
+				stocktaking_new_lists.category,
+				material_plant_data_lists.bun,
+				stocktaking_new_lists.final_count,
+				date_format( stocktaking_new_lists.updated_at, '%d-%M-%y' ) AS updated_at 
+				FROM
+				stocktaking_new_lists
+				LEFT JOIN material_plant_data_lists ON material_plant_data_lists.material_number = stocktaking_new_lists.material_number
+				LEFT JOIN storage_locations ON storage_locations.storage_location = stocktaking_new_lists.location
+				where stocktaking_new_lists.print_status = 1
+				ORDER BY storage_locations.area, stocktaking_new_lists.location, stocktaking_new_lists.material_number ASC");
+		}
+
+		$title = 'Inquiry'.str_replace('-', '' ,$month).'_('.date('ymd H.i').')';
+
+		$data = array(
+			'inquiries' => $inquiries
+		);
+
+		ob_clean();
+		Excel::create($title, function($excel) use ($data){
+			$excel->sheet('Inquiry', function($sheet) use ($data) {
+				return $sheet->loadView('stocktakings.monthly.report.inquiry_excel', $data);
+			});
+		})->export('xlsx');
+
+	}
+
 	public function exportVariance(Request $request){
 
 		$month = $request->get('month_variance');
