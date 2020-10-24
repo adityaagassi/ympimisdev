@@ -499,7 +499,7 @@
 					id : id
 				}
 
-				$.get('{{ url("fetch/stocktaking/material_detail") }}', data, function(result, status, xhr){
+				$.get('{{ url("fetch/stocktaking/material_detail_new") }}', data, function(result, status, xhr){
 
 					if (result.status) {
 
