@@ -266,9 +266,12 @@ class StockTakingController extends Controller{
 		$employee = EmployeeSync::where('employee_id', Auth::user()->username)
 		->select('employee_id', 'name', 'position')->first();
 
+		$role = Auth::user()->role_code;
+
 		return view('stocktakings.monthly.index', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
+			'role' => $role,
 			'employee' => $employee
 		))->with('page', 'Monthly Stock Taking')->with('head', 'Stocktaking');
 	}
@@ -2796,6 +2799,96 @@ class StockTakingController extends Controller{
 
 	}
 
+	public function fetchfilledListbByStore(Request $request){
+		$month = $request->get('month');
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$data = db::select("SELECT
+				area,
+				location,
+				store,
+				sum( total ) - sum( qty ) AS empty,
+				sum( qty ) AS qty,
+				sum( total ) AS total 
+				FROM
+				(
+				SELECT
+				sl.area,
+				s.location,
+				s.store,
+				0 AS qty,
+				count( s.id ) AS total 
+				FROM
+				stocktaking_new_lists s
+				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
+				WHERE
+				s.print_status = 1 
+				GROUP BY
+				s.store,
+				sl.area,
+				s.location 
+				
+				UNION ALL
+				SELECT
+				sl.area,
+				s.location,
+				s.store,	
+				count( s.id ) AS qty,
+				0 AS total 
+				FROM
+				stocktaking_new_lists s
+				LEFT JOIN storage_locations sl ON sl.storage_location = s.location 
+				WHERE
+				s.print_status = 1 
+				AND s.quantity IS NOT NULL 
+				GROUP BY
+				s.store,
+				sl.area,
+				s.location 
+				) AS list 
+				GROUP BY
+				list.store,
+				list.area,
+				list.location
+				ORDER BY
+				list.store,
+				list.area,
+				list.location");
+		}else{
+			$data = db::select("SELECT area, location, sum(total) - sum(qty) AS empty, sum(qty) AS qty, sum(total) AS total FROM
+				(SELECT sl.area, s.location, 0 AS qty, count(s.id) AS total FROM stocktaking_inquiry_logs s
+				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				WHERE s.stocktaking_date = '".$calendar->date."'
+				GROUP BY sl.area, s.location
+				UNION ALL
+				SELECT sl.area, s.location, count(s.id) AS qty, 0 AS total FROM stocktaking_inquiry_logs s
+				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				WHERE s.stocktaking_date = '".$calendar->date."'
+				AND s.quantity IS NOT NULL
+				GROUP BY sl.area, s.location) AS list 
+				GROUP BY area, location
+				ORDER BY area");
+		}
+
+
+		$response = array(
+			'status' => true,
+			'data' => $data
+		);
+		return Response::json($response);
+
+	}
+
 	public function fetchfilledListbBySubstore(Request $request){
 		$month = $request->get('month');
 
@@ -2971,6 +3064,72 @@ class StockTakingController extends Controller{
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number 
 			WHERE
 			s.location = '".$group."' ".$quantity." 
+			AND s.print_status = 1 
+			ORDER BY
+			ord,
+			sl.area,
+			s.location,
+			s.store,
+			s.sub_store,
+			s.material_number ASC");
+		}else{
+			$input_detail = db::select("
+				SELECT sl.area, s.location, s.category, s.store, s.material_number, mpdl.material_description, NULL AS quantity, NULL AS audit1, NULL AS audit2, s.quantity AS final_count FROM stocktaking_inquiry_logs s
+				LEFT JOIN storage_locations sl on sl.storage_location = s.location
+				LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+				WHERE s.location = '".$group."'
+				".$quantity."
+				AND s.stocktaking_date = '".$calendar->date."'
+				ORDER BY sl.area, s.location, s.store, s.material_number, s.quantity ASC;");
+		}
+
+		$response = array(
+			'status' => true,
+			'input_detail' => $input_detail
+		);
+		return Response::json($response);
+	}
+
+	public function fetchfilledListDetailByStore(Request $request){
+		$group = $request->get('group');
+		$month = $request->get('month');
+		$quantity = '';
+		// if($request->get('series') == 'Empty'){
+		// 	$quantity = 'AND s.quantity IS NULL';
+		// }else if ($request->get('series') == 'Inputted') {
+		// 	$quantity = 'AND s.quantity IS NOT NULL';
+		// }
+
+		$calendar = StocktakingCalendar::where(db::raw("DATE_FORMAT(date,'%Y-%m')"), $month)->first();
+		if(!$calendar){
+			$response = array(
+				'status' => false,
+				'message' => "Stocktaking Data Not Found"
+			);
+			return Response::json($response);
+		}
+
+		if($calendar->status != 'finished'){
+			$input_detail = db::select("SELECT
+				sl.area,
+				s.location,
+				s.category,
+				s.store,
+				s.sub_store,
+				s.material_number,
+				mpdl.material_description,
+				s.quantity,
+				s.audit1,
+			-- 	s.audit2,
+			s.final_count,
+			IF
+			( s.quantity IS NULL, 0, 1 ) AS ord 
+			FROM
+			stocktaking_new_lists s
+			LEFT JOIN storage_locations sl ON sl.storage_location = s.location
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number 
+			WHERE
+			s.store = '".$group."'
 			AND s.print_status = 1 
 			ORDER BY
 			ord,

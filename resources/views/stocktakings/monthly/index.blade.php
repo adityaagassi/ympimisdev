@@ -91,10 +91,11 @@
 			<div class="nav-tabs-custom">
 				<ul class="nav nav-tabs" style="font-weight: bold; font-size: 15px">
 					{{-- <li class="vendor-tab active"><a href="#tab_1" data-toggle="tab" id="tab_header_1">Progress Input</a></li> --}}
-					<li class="vendor-tab active"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Progress Input New</a></li>
-					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Progress Input New By Sub Store</a></li>
+					<li class="vendor-tab active"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Progress Input By Location</a></li>
 					{{-- <li class="vendor-tab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">Progress Audit</a></li> --}}
-					<li class="vendor-tab"><a href="#tab_5" data-toggle="tab" id="tab_header_5">Progress Audit New</a></li>
+					<li class="vendor-tab"><a href="#tab_5" data-toggle="tab" id="tab_header_5">Progress Audit By Location</a></li>
+					<li class="vendor-tab"><a href="#tab_6" data-toggle="tab" id="tab_header_6">Progress Input By Store</a></li>
+					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Progress Input By Sub Store</a></li>
 				</ul>
 
 				<div class="tab-content">
@@ -112,6 +113,9 @@
 					</div> --}}
 					<div class="tab-pane" id="tab_5">
 						<div id="container4"></div>				
+					</div>
+					<div class="tab-pane" id="tab_6">
+						<div id="container6"></div>				
 					</div>
 				</div>
 			</div>
@@ -926,6 +930,97 @@
 
 
 
+
+			$.get('{{ url("fetch/stocktaking/filled_list_by_store") }}', data, function(result, status, xhr){
+				if(result.status){
+					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
+					var store = [];
+					var fill_new = [];
+					var empty_new = [];
+
+					for (var i = 0; i < result.data.length; i++) {
+						store.push(result.data[i].store);
+						fill_new.push(parseInt(result.data[i].qty));
+						empty_new.push(parseInt(result.data[i].empty));
+					}
+
+					Highcharts.chart('container6', {
+						chart: {
+							height: 225,
+							type: 'column'
+						},
+						title: {
+							text: 'Progress By Store'
+						},	
+						legend:{
+							enabled: false
+						},
+						credits:{	
+							enabled:false
+						},
+						xAxis: {
+							categories: store,
+							type: 'category'
+						},
+						yAxis: {
+							title: {
+								enabled:false,
+							},
+							labels: {
+								enabled:false
+							}
+						},
+						tooltip: {
+							formatter: function () {
+								return '<b>' + this.x + '</b><br/>' +
+								this.series.name + ': ' + this.y + '<br/>' +
+								'Total Item: ' + this.point.stackTotal;
+							}
+						},
+						plotOptions: {
+							column: {
+								stacking: 'percent',
+							},
+							series:{
+								animation: false,
+								pointPadding: 0.93,
+								groupPadding: 0.93,
+								borderWidth: 0.93,
+								cursor: 'pointer',
+								stacking: 'percent',
+								dataLabels: {
+									enabled: true,
+									formatter: function() {
+										return this.y;
+									},
+									style: {
+										fontWeight: 'bold',
+									}
+								},
+								point: {
+									events: {
+										click: function () {
+											fillInputModalByStore(this.category, this.series.name);
+										}
+									}
+								}
+							}
+						},
+						series: [{
+							name: 'Empty',
+							data: empty_new,
+							color: 'rgba(255, 0, 0, 0.25)'
+						}, {
+							name: 'Inputted',
+							data: fill_new,
+							color: '#00a65a'
+						}]
+					});
+				}
+			});
+
+
 			$.get('{{ url("fetch/stocktaking/filled_list_by_substore") }}', data, function(result, status, xhr){
 				if(result.status){
 					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
@@ -1014,6 +1109,7 @@
 					});
 				}
 			});
+
 		}
 	}
 
@@ -1132,6 +1228,109 @@
 		}
 
 		$.get('{{ url("fetch/stocktaking/filled_list_detail_new") }}', data, function(result, status, xhr){
+			if(result.status){
+				$('#tableInputNew').DataTable().clear();
+				$('#tableInputNew').DataTable().destroy();
+				$('#bodyInputNew').html('');
+				$('#loading').hide();
+
+				var body = '';
+				for (var i = 0; i < result.input_detail.length; i++) {
+					var color = ''
+					if(result.input_detail[i].ord == 0){
+						color = 'style="background-color: rgba(255, 0, 0, 0.25);"';
+					}else{
+						color = 'style="background-color: #00a65a;"';
+					}
+					body += '<tr '+ color +'">';
+					body += '<td style="width: 1%">'+ result.input_detail[i].area +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].location +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].store +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].sub_store +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].category +'</td>';
+					body += '<td style="width: 1%">'+ result.input_detail[i].material_number +'</td>';
+					body += '<td style="width: 10%">'+ (result.input_detail[i].material_description || '-') +'</td>';
+
+					if(result.input_detail[i].quantity != null){
+						body += '<td style="width: 1%;">'+ result.input_detail[i].quantity.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+
+					if(result.input_detail[i].audit1 != null){
+						body += '<td style="width: 1%;">'+ result.input_detail[i].audit1.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+
+					// if(result.input_detail[i].audit2 != null){
+					// 	body += '<td style="width: 1%;">'+ result.input_detail[i].audit2.toLocaleString() +'</td>';
+					// }else{
+					// 	body += '<td style="width: 1%;"></td>';
+					// }
+
+					if(result.input_detail[i].final_count != null){
+						body += '<td style="width: 1%; font-weight: bold;">'+ result.input_detail[i].final_count.toLocaleString() +'</td>';
+					}else{
+						body += '<td style="width: 1%;"></td>';
+					}
+
+
+					body += '</tr>';
+				}
+
+				$('#bodyInputNew').append(body);
+
+				var table = $('#tableInputNew').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ 10, 25, 50, -1 ],
+					[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'pageLength',
+							className: 'btn btn-default',
+						},
+						]
+					},
+					'paging': false,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'info': true,
+					'autoWidth': true,
+					'sPaginationType': 'full_numbers',
+					'bJQueryUI': true,
+					'bAutoWidth': false,
+					'processing': true,
+					'bPaginate': false
+				});
+
+				// $('#modalInput').modal('show');
+				$('#modalInputNew').modal('show');
+				$('#tableInputNew').show();
+			}
+		});
+	}
+
+
+	function fillInputModalByStore(group, series) {
+
+		$('#loading').show();
+		$('#tableInputNew').hide();
+
+		var month = $('#month').val();
+
+		var data = {
+			group : group,
+			series : series,
+			month : month
+		}
+
+		$.get('{{ url("fetch/stocktaking/filled_list_detail_by_store") }}', data, function(result, status, xhr){
 			if(result.status){
 				$('#tableInputNew').DataTable().clear();
 				$('#tableInputNew').DataTable().destroy();
