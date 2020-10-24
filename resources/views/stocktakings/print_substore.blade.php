@@ -46,7 +46,7 @@
 				<tr><td style="text-align: center;" colspan="2"><img src="{{ public_path() . '/stocktaking_qr/ST_'.$lists[$i-1]->id.'.png' }}" class="cropped"></td></tr>
 				<tr><td style="text-align: center; font-size: 8px" colspan="2"><?php echo "ST_".$lists[$i-1]->id ?></td></tr>
 				<tr><td style="text-align: center" colspan="2"><?php echo $lists[$i-1]->category ?></td></tr>
-				<tr><td style="text-align: center" colspan="2"><?php echo $lists[$i-1]->material_number."( ".$lists[$i-1]->location." )" ?></td></tr>
+				<tr><td style="text-align: center; font-size: 13px" colspan="2"><?php echo $lists[$i-1]->material_number."( ".$lists[$i-1]->location." )" ?></td></tr>
 				<tr><td colspan="2" style="font-size: 13px; text-align: center"><?php echo $lists[$i-1]->material_description ?></td></tr>
 				<tr><td colspan="2"><?php echo "uom : ".$lists[$i-1]->bun; ?></td></tr>
 
