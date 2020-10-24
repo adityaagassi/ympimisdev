@@ -494,7 +494,7 @@
 		if (event.keyCode == 13 || event.keyCode == 9) {
 			var id = $("#qr_code").val();
 
-			if(numberValidation(id)){
+			// if(numberValidation(id)){
 				var data = {
 					id : id
 				}
@@ -556,16 +556,17 @@
 
 					} else {
 						openErrorGritter('Error', 'QR Code Not Registered');
+						canc();
 					}
 
 					$('#scanner').hide();
 					$('#scanModal').modal('hide');
 					$(".modal-backdrop").remove();
 				});
-			}else{
-				canc();
-				openErrorGritter('Error', 'QR Code Tidak Terdaftar');
-			}	
+			// }else{
+			// 	canc();
+			// 	openErrorGritter('Error', 'QR Code Tidak Terdaftar');
+			// }	
 		}
 	});
 
