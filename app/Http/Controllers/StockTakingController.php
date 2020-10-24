@@ -1735,6 +1735,7 @@ class StockTakingController extends Controller{
 				stocktaking_new_lists.location,
 				storage_locations.area AS `group`,
 				stocktaking_new_lists.store,
+				stocktaking_new_lists.sub_store,
 				stocktaking_new_lists.material_number,
 				material_plant_data_lists.material_description,
 				stocktaking_new_lists.category,

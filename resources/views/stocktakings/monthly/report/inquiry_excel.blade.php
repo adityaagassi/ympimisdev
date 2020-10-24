@@ -11,6 +11,7 @@
                 <th>Loc</th>
                 <th>Kode Slip</th>
                 <th>Store</th>
+                <th>SubStore</th>
                 <th>GMC</th>
                 <th>Description</th>
                 <th>Jenis Slip</th>
@@ -26,6 +27,7 @@
                 <td>{{ $tr->location }}</td>
                 <td>{{ $tr->group }}</td>
                 <td>{{ $tr->store }}</td>
+                <td>{{ $tr->sub_store }}</td>
                 <td>{{ $tr->material_number }}</td>
                 <td>{{ $tr->material_description }}</td>
                 <td>{{ $tr->category }}</td>
