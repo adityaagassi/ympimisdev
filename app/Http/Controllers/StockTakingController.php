@@ -3928,6 +3928,45 @@ s.id ASC");
 		return Response::json($response);
 	}
 
+	public function fetchCheckInputStoreListNew(Request $request)
+	{
+		$store = db::select("SELECT
+			s.id,
+			s.store,
+			s.sub_store,
+			s.category,
+			s.material_number,
+			mpdl.material_description,
+			m.`key`,
+			m.model,
+			m.surface,
+			mpdl.bun,
+			s.location,
+			mpdl.storage_location,
+			v.lot_completion,
+			v.lot_transfer,
+			IF
+			( s.location = mpdl.storage_location, v.lot_completion, v.lot_transfer ) AS lot,
+			s.remark,
+			s.process,
+			s.quantity,
+			s.audit1
+			FROM
+			stocktaking_new_lists s
+			LEFT JOIN materials m ON m.material_number = s.material_number
+			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
+			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
+			WHERE s.print_status = 1
+			AND s.store = '". $request->get('store'). "'
+			ORDER BY s.quantity asc,s.id");
+
+		$response = array(
+			'status' => true,
+			'store' => $store,
+		);
+		return Response::json($response);
+	}
+
 	public function fetchmpdl(Request $request){
 		$material_plant_data_lists = MaterialPlantDataList::orderBy('material_plant_data_lists.material_number', 'asc');
 
