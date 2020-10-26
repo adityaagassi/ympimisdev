@@ -4433,37 +4433,74 @@ s.id ASC");
 
 		try {
 
-			$updateStore = StocktakingList::where('store', $request->get('store'))
-			->update([
-				'process' => $process
-			]);
-
-			$updateStoreNew = StocktakingNewList::where('store', $request->get('store'))
-			->update([
-				'process' => $process
-			]);
+			
 
 			//Audit 1 -> Update Final Count
 			if($audit == 'audit1'){
-				$store = StocktakingList::where('store', $request->get('store'))->get();
 
-				for ($i = 0; $i < count($store); $i++) {
-					$final = 0;
-					if($store[$i]->audit2 > 0){
-						$final = $store[$i]->audit2;
-					}else if($store[$i]->audit1 > 0){
-						$final = $store[$i]->audit1;
-					}else{
-						$final = $store[$i]->quantity;
+
+				$storex = StocktakingNewList::select('stocktaking_new_lists.*')
+				->leftJoin('storage_locations', 'storage_locations.storage_location', '=', 'stocktaking_new_lists.location')
+				->where('store', $request->get('store'))
+				->get();
+
+				$loc = [];
+
+				for ($z = 0; $z < count($storex); $z++) {
+					if ($storex[$z]->audit1 > 0) {
+						if (in_array($storex[$z]->location, $loc)) {
+							
+						}
+						else{
+							array_push($loc, $storex[$z]->location);
+						}
+
 					}
-					$updateStore = StocktakingList::where('id', $store[$i]->id)
-					->update([
-						'final_count' => $final
-					]);
 				}
 
+				// $updateStore = StocktakingList::where('store', $request->get('store'))
+				// ->whereIn('location')
+				// ->update([
+				// 	'process' => $process
+				// ]);
 
-				$storenew = StocktakingNewList::where('store', $request->get('store'))->get();
+				$updateStoreNew = StocktakingNewList::where('store', $request->get('store'))
+				->whereIn('location',$loc)
+				->update([
+					'process' => $process
+				]);
+
+				$updateNoUse = StocktakingNewList::where('store', $request->get('store'))
+				->whereNull('quantity')
+				->update([
+					'process' => '2',
+					'quantity' => '0',
+					'remark' => 'NO USE'
+				]);
+
+
+				// $store = StocktakingList::where('store', $request->get('store'))
+				// ->get();
+
+				// for ($i = 0; $i < count($store); $i++) {
+				// 	$final = 0;
+				// 	if($store[$i]->audit2 > 0){
+				// 		$final = $store[$i]->audit2;
+				// 	}else if($store[$i]->audit1 > 0){
+				// 		$final = $store[$i]->audit1;
+				// 	}else{
+				// 		$final = $store[$i]->quantity;
+				// 	}
+				// 	$updateStore = StocktakingList::where('id', $store[$i]->id)
+				// 	->update([
+				// 		'final_count' => $final
+				// 	]);
+				// }
+
+
+				$storenew = StocktakingNewList::where('store', $request->get('store'))
+				->whereIn('location',$loc)
+				->get();
 
 				for ($i = 0; $i < count($storenew); $i++) {
 					$final2 = 0;
@@ -4554,10 +4591,10 @@ s.id ASC");
 			$list = StocktakingNewList::where('id', $id)->first();
 			$id_list = $list->id_list;
 
-			$updatelist = StocktakingList::where('id',$id_list)->first();
-			$updatelist->audit1 = $quantity;
-			$updatelist->audit1_by = $auditor;
-			$updatelist->save();
+			// $updatelist = StocktakingList::where('id',$id_list)->first();
+			// $updatelist->audit1 = $quantity;
+			// $updatelist->audit1_by = $auditor;
+			// $updatelist->save();
 
 			$response = array(
 				'status' => true,
@@ -4630,57 +4667,110 @@ s.id ASC");
 	public function updateReviseNew(Request $request)
 	{
 		$id = $request->get('id');
-		$ids = explode('_', $id);
+		if (is_numeric($id)) {
+			$final_count = $request->get('quantity');
+			$reason = $request->get('reason');
 
-		$final_count = $request->get('quantity');
-		$reason = $request->get('reason');
+			$remark = '';
+			if($final_count > 0){
+				$remark = 'USE';
+			}else{
+				$remark = 'NO USE';
+			}
 
-		$remark = '';
-		if($final_count > 0){
-			$remark = 'USE';
+			$material = StocktakingNewList::where('id', $id)->first();
+
+			$process;
+			if($material->process == 0){
+				$process = 4;
+			}else{
+				$process = $material->process;
+			}
+
+			$quantity;
+			if($material->quantity == null){
+				$quantity = $final_count;
+			}else{
+				$quantity = $material->quantity;
+			}
+
+			try {
+
+				$update = StocktakingNewList::where('id', $id)
+				->update([
+					'remark' => $remark,
+					'process' => $process,
+					'quantity' => $quantity,
+					'final_count' => $final_count,
+					'revised_by' => Auth::user()->username,
+					'reason' => $reason
+				]);
+
+				$response = array(
+					'status' => true,
+					'message' => 'Update Berhasil'
+				);
+				return Response::json($response);
+			} catch (Exception $e) {
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage()
+				);
+				return Response::json($response);
+			}
 		}else{
-			$remark = 'NO USE';
-		}
+			$ids = explode('_', $id);
 
-		$material = StocktakingNewList::where('id', $ids[1])->first();
+			$final_count = $request->get('quantity');
+			$reason = $request->get('reason');
 
-		$process;
-		if($material->process == 0){
-			$process = 4;
-		}else{
-			$process = $material->process;
-		}
+			$remark = '';
+			if($final_count > 0){
+				$remark = 'USE';
+			}else{
+				$remark = 'NO USE';
+			}
 
-		$quantity;
-		if($material->quantity == null){
-			$quantity = $final_count;
-		}else{
-			$quantity = $material->quantity;
-		}
+			$material = StocktakingNewList::where('id', $ids[1])->first();
 
-		try {
+			$process;
+			if($material->process == 0){
+				$process = 4;
+			}else{
+				$process = $material->process;
+			}
 
-			$update = StocktakingNewList::where('id', $ids[1])
-			->update([
-				'remark' => $remark,
-				'process' => $process,
-				'quantity' => $quantity,
-				'final_count' => $final_count,
-				'revised_by' => Auth::user()->username,
-				'reason' => $reason
-			]);
+			$quantity;
+			if($material->quantity == null){
+				$quantity = $final_count;
+			}else{
+				$quantity = $material->quantity;
+			}
 
-			$response = array(
-				'status' => true,
-				'message' => 'Update Berhasil'
-			);
-			return Response::json($response);
-		} catch (Exception $e) {
-			$response = array(
-				'status' => false,
-				'message' => $e->getMessage()
-			);
-			return Response::json($response);
+			try {
+
+				$update = StocktakingNewList::where('id', $ids[1])
+				->update([
+					'remark' => $remark,
+					'process' => $process,
+					'quantity' => $quantity,
+					'final_count' => $final_count,
+					'revised_by' => Auth::user()->username,
+					'reason' => $reason
+				]);
+
+				$response = array(
+					'status' => true,
+					'message' => 'Update Berhasil'
+				);
+				return Response::json($response);
+			} catch (Exception $e) {
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage()
+				);
+				return Response::json($response);
+			}
 		}
 	}
 
