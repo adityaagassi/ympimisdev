@@ -2512,8 +2512,8 @@ class StockTakingController extends Controller{
 	public function fetchKittoVsPi(){
 		$data = db::select("SELECT storage_locations.area AS `group`, kitto_pi.location, kitto_pi.material_number, material_plant_data_lists.material_description, kitto_pi.kitto, kitto_pi.pi FROM
 			(SELECT	inventory.location, inventory.material_number, inventory.qty AS kitto,	COALESCE ( pi.qty, 0 ) AS pi FROM
-			(SELECT issue_location AS location, material_number, sum( lot ) AS qty FROM kitto.inventories
-			GROUP BY issue_location, material_number) AS inventory
+			(SELECT storage_location AS location, material_number, sum( quantity ) AS qty FROM kitto_inventories
+			GROUP BY storage_location, material_number) AS inventory
 			LEFT JOIN
 			(SELECT location, material_number, sum( quantity ) AS qty FROM stocktaking_outputs
 			GROUP BY location, material_number) AS pi
@@ -2535,8 +2535,8 @@ class StockTakingController extends Controller{
 		if($calendar){
 			$data = db::select("SELECT storage_locations.area AS `group`, kitto_book.location, kitto_book.material_number, material_plant_data_lists.material_description, kitto_book.kitto, kitto_book.book FROM
 				(SELECT inventory.location, inventory.material_number, inventory.qty AS kitto, COALESCE ( book.qty, 0 ) AS book FROM
-				(SELECT issue_location AS location, material_number, sum( lot ) AS qty FROM kitto.inventories
-				GROUP BY issue_location, material_number) AS inventory
+				(SELECT storage_location AS location, material_number, sum( quantity ) AS qty FROM kitto_inventories
+				GROUP BY storage_location, material_number) AS inventory
 				LEFT JOIN
 				(SELECT storage_location AS location, material_number, sum( unrestricted ) AS qty FROM stocktaking_location_stocks
 				WHERE stock_date = '".$calendar->date."'
