@@ -94,8 +94,8 @@
 					<li class="vendor-tab active"><a href="#tab_2" data-toggle="tab" id="tab_header_2">Progress Input By Location</a></li>
 					{{-- <li class="vendor-tab"><a href="#tab_4" data-toggle="tab" id="tab_header_4">Progress Audit</a></li> --}}
 					<li class="vendor-tab"><a href="#tab_5" data-toggle="tab" id="tab_header_5">Progress Audit By Location</a></li>
-					<li class="vendor-tab"><a href="#tab_6" data-toggle="tab" id="tab_header_6">Progress Input By Store</a></li>
-					<li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Progress Input By Sub Store</a></li>
+					{{-- <li class="vendor-tab"><a href="#tab_6" data-toggle="tab" id="tab_header_6">Progress Input By Store</a></li> --}}
+					{{-- <li class="vendor-tab"><a href="#tab_3" data-toggle="tab" id="tab_header_3">Progress Input By Sub Store</a></li> --}}
 				</ul>
 
 				<div class="tab-content">
@@ -182,11 +182,11 @@
 
 					<form method="GET" action="{{ url("export/stocktaking/inquiry_new") }}">
 						<input type="text" name="month_inquiry" id="month_inquiry" placeholder="Select Month" hidden>
-						<button id="inquiry" type="submit" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple;">Inquiry</button>
+						<button id="inquiry" type="submit" class="btn btn-default btn-block" style="margin-top: 5px; font-size: 15px; border-color: purple;">Inquiry</button>
 					</form>
 					<form method="GET" action="{{ url("export/stocktaking/variance") }}">
 						<input type="text" name="month_variance" id="month_variance" placeholder="Select Month" hidden>
-						<button id="variance" type="submit" class="btn btn-default btn-block" style="font-size: 15px; border-color: purple; background-color: #e040fb;">Variance Report</button>
+						<button id="variance" type="submit" class="btn btn-default btn-block" style="margin-top: 5px; font-size: 15px; border-color: purple; background-color: #e040fb;">Variance Report</button>
 					</form>
 
 
@@ -942,186 +942,184 @@
 			});
 
 
+			// $.get('{{ url("fetch/stocktaking/filled_list_by_store") }}', data, function(result, status, xhr){
+			// 	if(result.status){
+			// 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+
+			// 		var store = [];
+			// 		var fill_new = [];
+			// 		var empty_new = [];
+
+			// 		for (var i = 0; i < result.data.length; i++) {
+			// 			store.push(result.data[i].store);
+			// 			fill_new.push(parseInt(result.data[i].qty));
+			// 			empty_new.push(parseInt(result.data[i].empty));
+			// 		}
+
+			// 		Highcharts.chart('container6', {
+			// 			chart: {
+			// 				height: 225,
+			// 				type: 'column'
+			// 			},
+			// 			title: {
+			// 				text: 'Progress By Store'
+			// 			},	
+			// 			legend:{
+			// 				enabled: false
+			// 			},
+			// 			credits:{	
+			// 				enabled:false
+			// 			},
+			// 			xAxis: {
+			// 				categories: store,
+			// 				type: 'category'
+			// 			},
+			// 			yAxis: {
+			// 				title: {
+			// 					enabled:false,
+			// 				},
+			// 				labels: {
+			// 					enabled:false
+			// 				}
+			// 			},
+			// 			tooltip: {
+			// 				formatter: function () {
+			// 					return '<b>' + this.x + '</b><br/>' +
+			// 					this.series.name + ': ' + this.y + '<br/>' +
+			// 					'Total Item: ' + this.point.stackTotal;
+			// 				}
+			// 			},
+			// 			plotOptions: {
+			// 				column: {
+			// 					stacking: 'percent',
+			// 				},
+			// 				series:{
+			// 					animation: false,
+			// 					pointPadding: 0.93,
+			// 					groupPadding: 0.93,
+			// 					borderWidth: 0.93,
+			// 					cursor: 'pointer',
+			// 					stacking: 'percent',
+			// 					dataLabels: {
+			// 						enabled: true,
+			// 						formatter: function() {
+			// 							return this.y;
+			// 						},
+			// 						style: {
+			// 							fontWeight: 'bold',
+			// 						}
+			// 					},
+			// 					point: {
+			// 						events: {
+			// 							click: function () {
+			// 								fillInputModalByStore(this.category, this.series.name);
+			// 							}
+			// 						}
+			// 					}
+			// 				}
+			// 			},
+			// 			series: [{
+			// 				name: 'Empty',
+			// 				data: empty_new,
+			// 				color: 'rgba(255, 0, 0, 0.25)'
+			// 			}, {
+			// 				name: 'Inputted',
+			// 				data: fill_new,
+			// 				color: '#00a65a'
+			// 			}]
+			// 		});
+			// 	}
+			// });
 
 
-			$.get('{{ url("fetch/stocktaking/filled_list_by_store") }}', data, function(result, status, xhr){
-				if(result.status){
-					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
+			// $.get('{{ url("fetch/stocktaking/filled_list_by_substore") }}', data, function(result, status, xhr){
+			// 	if(result.status){
+			// 		$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
 
-					var store = [];
-					var fill_new = [];
-					var empty_new = [];
+			// 		var sub_store = [];
+			// 		var fill_new = [];
+			// 		var empty_new = [];
 
-					for (var i = 0; i < result.data.length; i++) {
-						store.push(result.data[i].store);
-						fill_new.push(parseInt(result.data[i].qty));
-						empty_new.push(parseInt(result.data[i].empty));
-					}
+			// 		for (var i = 0; i < result.data.length; i++) {
+			// 			sub_store.push(result.data[i].sub_store);
+			// 			fill_new.push(parseInt(result.data[i].qty));
+			// 			empty_new.push(parseInt(result.data[i].empty));
+			// 		}
 
-					Highcharts.chart('container6', {
-						chart: {
-							height: 225,
-							type: 'column'
-						},
-						title: {
-							text: 'Progress By Store'
-						},	
-						legend:{
-							enabled: false
-						},
-						credits:{	
-							enabled:false
-						},
-						xAxis: {
-							categories: store,
-							type: 'category'
-						},
-						yAxis: {
-							title: {
-								enabled:false,
-							},
-							labels: {
-								enabled:false
-							}
-						},
-						tooltip: {
-							formatter: function () {
-								return '<b>' + this.x + '</b><br/>' +
-								this.series.name + ': ' + this.y + '<br/>' +
-								'Total Item: ' + this.point.stackTotal;
-							}
-						},
-						plotOptions: {
-							column: {
-								stacking: 'percent',
-							},
-							series:{
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer',
-								stacking: 'percent',
-								dataLabels: {
-									enabled: true,
-									formatter: function() {
-										return this.y;
-									},
-									style: {
-										fontWeight: 'bold',
-									}
-								},
-								point: {
-									events: {
-										click: function () {
-											fillInputModalByStore(this.category, this.series.name);
-										}
-									}
-								}
-							}
-						},
-						series: [{
-							name: 'Empty',
-							data: empty_new,
-							color: 'rgba(255, 0, 0, 0.25)'
-						}, {
-							name: 'Inputted',
-							data: fill_new,
-							color: '#00a65a'
-						}]
-					});
-				}
-			});
-
-
-			$.get('{{ url("fetch/stocktaking/filled_list_by_substore") }}', data, function(result, status, xhr){
-				if(result.status){
-					$('#last_update').html('<p><i class="fa fa-fw fa-clock-o"></i> Last Updated: '+ getActualFullDate() +'</p>');
-
-					var sub_store = [];
-					var fill_new = [];
-					var empty_new = [];
-
-					for (var i = 0; i < result.data.length; i++) {
-						sub_store.push(result.data[i].sub_store);
-						fill_new.push(parseInt(result.data[i].qty));
-						empty_new.push(parseInt(result.data[i].empty));
-					}
-
-					Highcharts.chart('container5', {
-						chart: {
-							height: 225,
-							type: 'column'
-						},
-						title: {
-							text: 'Progress By Sub Store'
-						},	
-						legend:{
-							enabled: false
-						},
-						credits:{	
-							enabled:false
-						},
-						xAxis: {
-							categories: sub_store,
-							type: 'category'
-						},
-						yAxis: {
-							title: {
-								enabled:false,
-							},
-							labels: {
-								enabled:false
-							}
-						},
-						tooltip: {
-							formatter: function () {
-								return '<b>' + this.x + '</b><br/>' +
-								this.series.name + ': ' + this.y + '<br/>' +
-								'Total Item: ' + this.point.stackTotal;
-							}
-						},
-						plotOptions: {
-							column: {
-								stacking: 'percent',
-							},
-							series:{
-								animation: false,
-								pointPadding: 0.93,
-								groupPadding: 0.93,
-								borderWidth: 0.93,
-								cursor: 'pointer',
-								stacking: 'percent',
-								dataLabels: {
-									enabled: true,
-									formatter: function() {
-										return this.y;
-									},
-									style: {
-										fontWeight: 'bold',
-									}
-								},
-								point: {
-									events: {
-										click: function () {
-											fillInputModalBySubstore(this.category, this.series.name);
-										}
-									}
-								}
-							}
-						},
-						series: [{
-							name: 'Empty',
-							data: empty_new,
-							color: 'rgba(255, 0, 0, 0.25)'
-						}, {
-							name: 'Inputted',
-							data: fill_new,
-							color: '#00a65a'
-						}]
-					});
-				}
-			});
+			// 		Highcharts.chart('container5', {
+			// 			chart: {
+			// 				height: 225,
+			// 				type: 'column'
+			// 			},
+			// 			title: {
+			// 				text: 'Progress By Sub Store'
+			// 			},	
+			// 			legend:{
+			// 				enabled: false
+			// 			},
+			// 			credits:{	
+			// 				enabled:false
+			// 			},
+			// 			xAxis: {
+			// 				categories: sub_store,
+			// 				type: 'category'
+			// 			},
+			// 			yAxis: {
+			// 				title: {
+			// 					enabled:false,
+			// 				},
+			// 				labels: {
+			// 					enabled:false
+			// 				}
+			// 			},
+			// 			tooltip: {
+			// 				formatter: function () {
+			// 					return '<b>' + this.x + '</b><br/>' +
+			// 					this.series.name + ': ' + this.y + '<br/>' +
+			// 					'Total Item: ' + this.point.stackTotal;
+			// 				}
+			// 			},
+			// 			plotOptions: {
+			// 				column: {
+			// 					stacking: 'percent',
+			// 				},
+			// 				series:{
+			// 					animation: false,
+			// 					pointPadding: 0.93,
+			// 					groupPadding: 0.93,
+			// 					borderWidth: 0.93,
+			// 					cursor: 'pointer',
+			// 					stacking: 'percent',
+			// 					dataLabels: {
+			// 						enabled: true,
+			// 						formatter: function() {
+			// 							return this.y;
+			// 						},
+			// 						style: {
+			// 							fontWeight: 'bold',
+			// 						}
+			// 					},
+			// 					point: {
+			// 						events: {
+			// 							click: function () {
+			// 								fillInputModalBySubstore(this.category, this.series.name);
+			// 							}
+			// 						}
+			// 					}
+			// 				}
+			// 			},
+			// 			series: [{
+			// 				name: 'Empty',
+			// 				data: empty_new,
+			// 				color: 'rgba(255, 0, 0, 0.25)'
+			// 			}, {
+			// 				name: 'Inputted',
+			// 				data: fill_new,
+			// 				color: '#00a65a'
+			// 			}]
+			// 		});
+			// 	}
+			// });
 
 		}
 	}
