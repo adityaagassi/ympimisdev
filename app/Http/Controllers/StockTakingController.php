@@ -4432,9 +4432,6 @@ s.id ASC");
 		}
 
 		try {
-
-			
-
 			//Audit 1 -> Update Final Count
 			if($audit == 'audit1'){
 
@@ -4458,11 +4455,11 @@ s.id ASC");
 					}
 				}
 
-				// $updateStore = StocktakingList::where('store', $request->get('store'))
-				// ->whereIn('location')
-				// ->update([
-				// 	'process' => $process
-				// ]);
+				$updateStore = StocktakingList::where('store', $request->get('store'))
+				->whereIn('location',$loc)
+				->update([
+					'process' => $process
+				]);
 
 				$updateStoreNew = StocktakingNewList::where('store', $request->get('store'))
 				->whereIn('location',$loc)
@@ -4479,23 +4476,24 @@ s.id ASC");
 				]);
 
 
-				// $store = StocktakingList::where('store', $request->get('store'))
-				// ->get();
+				$store = StocktakingList::where('store', $request->get('store'))
+				->whereIn('location',$loc)
+				->get();
 
-				// for ($i = 0; $i < count($store); $i++) {
-				// 	$final = 0;
-				// 	if($store[$i]->audit2 > 0){
-				// 		$final = $store[$i]->audit2;
-				// 	}else if($store[$i]->audit1 > 0){
-				// 		$final = $store[$i]->audit1;
-				// 	}else{
-				// 		$final = $store[$i]->quantity;
-				// 	}
-				// 	$updateStore = StocktakingList::where('id', $store[$i]->id)
-				// 	->update([
-				// 		'final_count' => $final
-				// 	]);
-				// }
+				for ($i = 0; $i < count($store); $i++) {
+					$final = 0;
+					if($store[$i]->audit2 > 0){
+						$final = $store[$i]->audit2;
+					}else if($store[$i]->audit1 > 0){
+						$final = $store[$i]->audit1;
+					}else{
+						$final = $store[$i]->quantity;
+					}
+					$updateStore = StocktakingList::where('id', $store[$i]->id)
+					->update([
+						'final_count' => $final
+					]);
+				}
 
 
 				$storenew = StocktakingNewList::where('store', $request->get('store'))
