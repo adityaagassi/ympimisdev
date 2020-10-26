@@ -3491,6 +3491,7 @@ class StockTakingController extends Controller{
 			( SELECT count( id ) AS total
 			FROM stocktaking_new_lists
 			WHERE remark = 'USE'
+			AND quantity > 0
 			AND print_status = 1
 			AND store = '".$request->get('store')."' )
 			* 100
@@ -4088,22 +4089,22 @@ s.id ASC");
 		}
 
 		//Cek qty sudah terisi ?
-		if(count($null) > 0){
-			$response = array(
-				'status' => false,
-				'message' => 'Proses sebelumnya belum selesai',
-			);
-			return Response::json($response);
-		}
+		// if(count($null) > 0){
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'message' => 'Proses sebelumnya belum selesai',
+		// 	);
+		// 	return Response::json($response);
+		// }
 
 		//Cek proses saat ini
-		if($process > $current->process){
-			$response = array(
-				'status' => false,
-				'message' => 'Proses sebelumnya belum selesai',
-			);
-			return Response::json($response);
-		}
+		// if($process > $current->process){
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'message' => 'Proses sebelumnya belum selesai',
+		// 	);
+		// 	return Response::json($response);
+		// }
 
 		$store = db::select("SELECT
 			s.id,
@@ -4132,6 +4133,7 @@ s.id ASC");
 			LEFT JOIN material_plant_data_lists mpdl ON mpdl.material_number = s.material_number
 			LEFT JOIN material_volumes v ON v.material_number = s.material_number 
 			WHERE s.print_status = 1
+			AND s.quantity > 0
 			AND s.store = '". $request->get('store'). "'
 			ORDER BY s.id");
 
