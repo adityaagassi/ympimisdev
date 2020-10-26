@@ -99,11 +99,12 @@
 		day();
 		jumlah();
 
-		// setTimeout(asd,2000);
-
-
 		defineCustomPaperSize();
-		printWindow(window, 'Label Besar');
+		// printWindow(window, 'Label Besar');
+
+		setTimeout(function() {
+			printWindow(window, 'Label Besar');
+		}, 2000)
 
 		
 	});
