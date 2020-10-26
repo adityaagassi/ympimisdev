@@ -568,19 +568,20 @@ class TemperatureController extends Controller
                     employee_syncs.name,
                     a.group,(
                     SELECT
-                         ivms_temperatures.person_id 
+                         DISTINCT(SPLIT_STRING ( ivms.ivms_attendance.person_name, ' ', 1 ) )
                     FROM
-                         ivms_temperatures 
+                         ivms.ivms_attendance 
                     WHERE
-                         ivms_temperatures.date = '".$now."' 
-                         AND employee_id = a.employee_id
+                         ivms.ivms_attendance.auth_date = '".$now."' 
+                         AND SPLIT_STRING ( ivms.ivms_attendance.person_name, ' ', 1 ) = a.employee_id 
                     ) AS checks 
                FROM
                     employee_groups a
                     LEFT JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id 
                WHERE
-                    a.location = '".$request->get('location')."'
-               ORDER BY a.group");
+                    a.location = '".$request->get('location')."' 
+               ORDER BY
+                    a.GROUP");
 
                $dateTitle = date("d M Y", strtotime($now));
 
