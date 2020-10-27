@@ -33,6 +33,16 @@
 @section('content')
 <section class="content" style="padding-top: 0;">
 	<input type="hidden" id="location" value="{{ $location }}">
+
+	<div id="loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(0,191,255); z-index: 30001; opacity: 0.8;">
+		<div>
+			<center>
+				<span style="font-size: 3vw; text-align: center;"><i class="fa fa-spin fa-hourglass-half"></i>
+					<br>Mohon menunggu data besar sedang di olah
+				</span>
+			</center>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-xs-12" style="padding-bottom: 5px;">
 			<div class="row">
@@ -346,6 +356,7 @@
 	}
 
 	function fillChart(){
+		$('#loading').show();
 		var location = $('#location').val();
 		if($('#locs').val() != ""){
 			location = $('#locs').val().toString();
@@ -442,9 +453,11 @@
 					},
 					series: dataCount
 				});
+				$('#loading').hide();
 			}
 			else{
 				alert('Attempt to retrieve data failed.');
+				$('#loading').hide();
 			}
 		});
 
