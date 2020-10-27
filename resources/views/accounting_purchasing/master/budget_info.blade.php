@@ -52,7 +52,7 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		Budget Info <span class="text-purple">{{ $title_jp }}</span>
+		Budget Information <span class="text-purple">{{ $title_jp }}</span>
 	</h1>
 	<ol class="breadcrumb">
 		<li>

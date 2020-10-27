@@ -978,6 +978,8 @@ class AccountingController extends Controller
             $manager = null;
             $manager_name = null;
             $posisi = null;
+            $dgm = null;
+            $gm = null;
 
             //jika PE maka Pak Alok
 
@@ -998,7 +1000,6 @@ class AccountingController extends Controller
                 // Get Manager
                 $manag = db::select("SELECT employee_id, name, position, section FROM employee_syncs where end_date is null and department = '" . $request->get('department') . "' and position = 'manager'");
             }
-
 
             // Jika ada staff
             if ($request->get('staff') != "") {
@@ -1059,6 +1060,26 @@ class AccountingController extends Controller
             $submission_date = $request->get('submission_date');
             $po_date = date('Y-m-d', strtotime($submission_date . ' + 7 days'));
 
+
+
+
+
+            if($request->get('department') == "Human Resources" || $request->get('department') == "General Affairs"){
+                $dgm = null;
+
+                //GM Pak Arief
+                $getgm = EmployeeSync::select('employee_id', 'name', 'position')
+                ->where('employee_id','=','PI9709001')
+                ->first();
+
+                $gm = $getgm->employee_id;
+            }
+            else{
+                $dgm = $this->dgm;
+                $gm = $this->gm;
+            }
+
+
             $data = new AccPurchaseRequisition([
                 'no_pr' => $request->get('no_pr') , 
                 'emp_id' => $request->get('emp_id') , 
@@ -1076,8 +1097,8 @@ class AccountingController extends Controller
                 'staff' => $staff,
                 'manager' => $manager,
                 'manager_name' => $manager_name,
-                'dgm' => $this->dgm, 
-                'gm' => $this->gm, 
+                'dgm' => $dgm, 
+                'gm' => $gm, 
                 'created_by' => $id
             ]);
 
@@ -1546,16 +1567,32 @@ class AccountingController extends Controller
 
             if ($pr->posisi == "manager")
             {
-                $pr->posisi = "dgm";
-                $pr->approvalm = "Approved";
-                $pr->dateapprovalm = date('Y-m-d H:i:s');
 
-                $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.dgm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
-                $mails = DB::select($mailto);
+                if ($pr->dgm != null) {
+                    $pr->posisi = "dgm";
+                    $pr->approvalm = "Approved";
+                    $pr->dateapprovalm = date('Y-m-d H:i:s');
 
-                foreach ($mails as $mail)
-                {
-                    $mailtoo = $mail->email;
+                    $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.dgm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
+                    $mails = DB::select($mailto);
+
+                    foreach ($mails as $mail)
+                    {
+                        $mailtoo = $mail->email;
+                    }
+                }
+                else{
+                    $pr->posisi = "gm";
+                    $pr->approvalm = "Approved";
+                    $pr->dateapprovalm = date('Y-m-d H:i:s');
+
+                    $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.gm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
+                    $mails = DB::select($mailto);
+
+                    foreach ($mails as $mail)
+                    {
+                        $mailtoo = $mail->email;
+                    }
                 }
             }
 
@@ -1636,55 +1673,140 @@ class AccountingController extends Controller
         try{
             if ($pr->posisi == "manager")
             {
-                $pr->posisi = "dgm";
-                $pr->approvalm = "Approved";
-                $pr->dateapprovalm = date('Y-m-d H:i:s');
 
-                $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.dgm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
-                $mails = DB::select($mailto);
+                if ($pr->dgm != null) {
+                    $pr->posisi = "dgm";
+                    $pr->approvalm = "Approved";
+                    $pr->dateapprovalm = date('Y-m-d H:i:s');
 
-                foreach ($mails as $mail)
-                {
-                    $mailtoo = $mail->email;
+                    $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.dgm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
+                    $mails = DB::select($mailto);
+
+                    foreach ($mails as $mail)
+                    {
+                        $mailtoo = $mail->email;
+                    }
+
+                    $pr->save();
+
+                    $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                    ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
+                    ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
+                    ->join('acc_budget_histories', function($join) {
+                       $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                       $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+                   })
+                    ->where('acc_purchase_requisitions.id', '=', $id)
+                    ->get();
+
+                    $exchange_rate = AccExchangeRate::select('*')
+                    ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+                    ->where('currency','!=','USD')
+                    ->orderBy('currency','ASC')
+                    ->get();
+
+
+                    $pdf = \App::make('dompdf.wrapper');
+                    $pdf->getDomPDF()->set_option("enable_php", true);
+                    $pdf->setPaper('A4', 'potrait');
+
+                    $pdf->loadView('accounting_purchasing.report.report_pr', array(
+                        'pr' => $detail_pr,
+                        'rate' => $exchange_rate
+                    ));
+
+                    $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
+
+                    $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
+                    $pr_isi = db::select($isimail);
+
+                    Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
+
+                    $message = 'PR dengan Nomor '.$pr->no_pr;
+                    $message2 ='Berhasil di approve';
+                }
+                else{
+
+                    $pr->posisi = "gm";
+                    $pr->approvalm = "Approved";
+                    $pr->dateapprovalm = date('Y-m-d H:i:s');
+                    
+                    $mailto = "select distinct email from acc_purchase_requisitions join users on acc_purchase_requisitions.gm = users.username where acc_purchase_requisitions.id = '" . $pr->id . "'";
+                    $mails = DB::select($mailto);
+
+                    foreach ($mails as $mail)
+                    {
+                        $mailtoo = $mail->email;
+                    }
+
+                    $pr->save();
+
+                    $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                    ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
+                    ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
+                    ->join('acc_budget_histories', function($join) {
+                       $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                       $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+                   })
+                    ->where('acc_purchase_requisitions.id', '=', $id)
+                    ->get();
+
+                    $exchange_rate = AccExchangeRate::select('*')
+                    ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+                    ->where('currency','!=','USD')
+                    ->orderBy('currency','ASC')
+                    ->get();
+
+
+                    $pdf = \App::make('dompdf.wrapper');
+                    $pdf->getDomPDF()->set_option("enable_php", true);
+                    $pdf->setPaper('A4', 'potrait');
+
+                    $pdf->loadView('accounting_purchasing.report.report_pr', array(
+                        'pr' => $detail_pr,
+                        'rate' => $exchange_rate
+                    ));
+
+                    $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
+
+                    $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
+                    $pr_isi = db::select($isimail);
+
+                    Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
+
+                    $message = 'PR dengan Nomor '.$pr->no_pr;
+                    $message2 ='Berhasil di approve';
+
+                    $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
+                    ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
+                    ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
+                    ->join('acc_budget_histories', function($join) {
+                       $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
+                       $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
+                   })
+                    ->where('acc_purchase_requisitions.id', '=', $id)
+                    ->get();
+
+                    $exchange_rate = AccExchangeRate::select('*')
+                    ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
+                    ->where('currency','!=','USD')
+                    ->orderBy('currency','ASC')
+                    ->get();
+
+
+                    $pdf = \App::make('dompdf.wrapper');
+                    $pdf->getDomPDF()->set_option("enable_php", true);
+                    $pdf->setPaper('A4', 'potrait');
+
+                    $pdf->loadView('accounting_purchasing.report.report_pr', array(
+                        'pr' => $detail_pr,
+                        'rate' => $exchange_rate
+                    ));
+
+                    $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
                 }
 
-                $pr->save();
 
-                $detail_pr = AccPurchaseRequisition::select('*',DB::raw("(select DATE(created_at) from acc_purchase_order_details where acc_purchase_order_details.no_item = acc_purchase_requisition_items.item_code ORDER BY created_at desc limit 1) as last_order"))
-                ->leftJoin('acc_purchase_requisition_items', 'acc_purchase_requisitions.no_pr', '=', 'acc_purchase_requisition_items.no_pr')
-                ->leftJoin('acc_items', 'acc_purchase_requisition_items.item_code', '=', 'acc_items.kode_item')
-                ->join('acc_budget_histories', function($join) {
-                   $join->on('acc_budget_histories.category_number', '=', 'acc_purchase_requisition_items.no_pr');
-                   $join->on('acc_budget_histories.no_item','=', 'acc_purchase_requisition_items.item_desc');
-               })
-                ->where('acc_purchase_requisitions.id', '=', $id)
-                ->get();
-
-                $exchange_rate = AccExchangeRate::select('*')
-                ->where('periode','=',date('Y-m-01', strtotime($detail_pr[0]->submission_date)))
-                ->where('currency','!=','USD')
-                ->orderBy('currency','ASC')
-                ->get();
-
-
-                $pdf = \App::make('dompdf.wrapper');
-                $pdf->getDomPDF()->set_option("enable_php", true);
-                $pdf->setPaper('A4', 'potrait');
-
-                $pdf->loadView('accounting_purchasing.report.report_pr', array(
-                    'pr' => $detail_pr,
-                    'rate' => $exchange_rate
-                ));
-
-                $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
-
-                $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
-                $pr_isi = db::select($isimail);
-
-                Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
-
-                $message = 'PR dengan Nomor '.$pr->no_pr;
-                $message2 ='Berhasil di approve';
             }
             else{
                 $message = 'PR dengan Nomor. '.$pr->no_pr;

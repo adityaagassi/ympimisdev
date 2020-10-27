@@ -700,8 +700,11 @@ hr { background-color: red; height: 1px; border: 0; }
           }
           var colormanager = "";
 
-          var dgm_name = value.dgm;
-          var dgmname = dgm_name.split(' ').slice(0,2).join(' ');
+          if (value.dgm != null) {
+            var dgm_name = value.dgm;
+            var dgmname = dgm_name.split(' ').slice(0,2).join(' ');
+          }
+
           var colordgm = "";
 
           var gm_name = value.gm;
@@ -768,28 +771,30 @@ hr { background-color: red; height: 1px; border: 0; }
 
 
               //DGM
-              if (value.approvaldgm == "Approved") {
-                  if (value.posisi == "dgm") {
-                    if (d == 0) {  
-                        dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
-                        colordgm = 'style="background-color:#dd4b39"';              
-                        d = 1;
-                      } else {
-                        dgm = '';
-                      }
+              if (value.dgm != null) {
+                if (value.approvaldgm == "Approved") {
+                    if (value.posisi == "dgm") {
+                      if (d == 0) {  
+                          dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
+                          colordgm = 'style="background-color:#dd4b39"';              
+                          d = 1;
+                        } else {
+                          dgm = '';
+                        }
+                    }
+                    else {
+                      dgm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+dgmname+'</span></a>';
+                      colordgm = 'style="background-color:#00a65a"'; 
+                    } 
+                }
+                else {
+                  if (d == 0) {  
+                    dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
+                    colordgm = 'style="background-color:#dd4b39"';                   
+                    d = 1;
+                  } else {
+                    dgm = '';
                   }
-                  else {
-                    dgm = '<a href="'+urlreport+'/'+value.id+'"><span class="label label-success">'+dgmname+'</span></a>';
-                    colordgm = 'style="background-color:#00a65a"'; 
-                  } 
-              }
-              else {
-                if (d == 0) {  
-                  dgm = '<a href="'+urlverifikasi+'/'+value.id+'"><span class="label label-danger">'+dgmname+'</span></a>';
-                  colordgm = 'style="background-color:#dd4b39"';                   
-                  d = 1;
-                } else {
-                  dgm = '';
                 }
               }
 

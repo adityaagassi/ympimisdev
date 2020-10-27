@@ -123,6 +123,7 @@
 							<table id="TranskasiTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
+										<th style="width:5%;">Budget No</th>
 										<th style="width:5%;">Document No</th>
 										<th style="width:4%;">Type</th>
 										<th style="width:6%;">Description</th>
@@ -131,7 +132,6 @@
 										<th style="width:5%;">Post Date</th>
 										<th style="width:5%;">Local Amount ($)</th>	
 										<th style="width:5%;">Original Amount</th>
-										<th style="width:5%;">Budget No</th>
 										<th style="width:5%;">Investment No</th>
 										<th style="width:5%;">Action</th>
 									</tr>
@@ -339,6 +339,7 @@
 				"data" : data
 			},
 			"columns": [
+				{ "data": "budget_no"},
 				{ "data": "document_no", "width":"7%"},
 				{ "data": "type", "width":"7%"},
 				{ "data": "description", "width":"15%"},
@@ -347,7 +348,6 @@
 				{ "data": "post_date"},
 				{ "data": "local_amount"},
 				{ "data": "amount"},
-				{ "data": "budget_no"},
 				{ "data": "investment_no"},
 				{ "data": "action"}
 			]
