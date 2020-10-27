@@ -243,11 +243,7 @@
 						$('#packingTable').DataTable().ajax.reload();
 						openSuccessGritter('Success', result.message);
 						$('#barcode_inner').val('');
-						$('#barcode_outer').val('');
-						
-						$('#barcode_outer').prop('disabled', false);
-						$('#barcode_inner').prop('disabled', true);
-						$('#barcode_outer').focus();
+						$('#barcode_outer').prop('disabled', true);
 					}
 					else{
 						$('#loading').hide();
