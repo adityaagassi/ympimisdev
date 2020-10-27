@@ -2871,6 +2871,7 @@ Route::group(['nav' => 'M25', 'middleware' => 'permission'], function(){
 	Route::post('index/leader_task_report/filter_leader_task/{id}/{leader_name}', 'LeaderTaskReportController@filter_leader_task');
 	Route::get('index/leader_task_report/leader_task_detail/{activity_list_id}/{month}', 'LeaderTaskReportController@leader_task_detail');
 	Route::get('index/leader_task_report/fetch_report', 'LeaderTaskReportController@fetchReport');
+	Route::get('index/leader_task_report/filter', 'LeaderTaskReportController@filter');
 });
 
 

@@ -10,7 +10,7 @@ class MouthpieceChecksheet extends Model
 	use SoftDeletes;
 
 	protected $fillable = [	
-		'kd_number', 'material_number', 'quantity', 'actual_quantity', 'remark', 'shipment_schedule_id', 'created_by', 'start_packing', 'end_packing', 'print_status', 'st_date', 'destination_shortname', 'material_description'
+		'kd_number', 'material_number', 'quantity', 'actual_quantity', 'remark', 'shipment_schedule_id', 'created_by', 'start_packing', 'end_packing', 'print_status', 'st_date', 'destination_shortname', 'material_description', 'qa_check'
 	];
 
 	public function user()

@@ -29,6 +29,213 @@ use DataTables;
 
 class MouthpieceController extends Controller
 {
+	public function indexKdMouthpieceQaCheck(){
+		$title = 'Mouthpiece QA Check';
+		$title_jp = '';
+
+		return view('kd.mouthpiece.qa_check', array(
+			'title' => $title,
+			'title_jp' => $title_jp
+		))->with('head', 'KD Mouthpiece')->with('page', 'MP QA Check');
+	}
+
+	public function scanKdMouthpieceQaCheck(Request $request){
+		$checksheets = MouthpieceChecksheet::leftJoin('materials', 'materials.material_number', '=', 'mouthpiece_checksheets.material_number')
+		->where('mouthpiece_checksheets.kd_number', '=', $request->get('kd_number'))
+		->where('mouthpiece_checksheets.remark', '=', '1')
+		->select(
+			'mouthpiece_checksheets.kd_number', 
+			'mouthpiece_checksheets.material_number', 
+			'materials.issue_storage_location', 
+			'mouthpiece_checksheets.material_description', 
+			'mouthpiece_checksheets.quantity', 
+			'mouthpiece_checksheets.actual_quantity',
+			'mouthpiece_checksheets.shipment_schedule_id',
+			'mouthpiece_checksheets.remark',
+			'mouthpiece_checksheets.employee_id',
+			'mouthpiece_checksheets.start_packing',
+			'mouthpiece_checksheets.end_packing',
+			'mouthpiece_checksheets.destination_shortname',
+			'mouthpiece_checksheets.st_date',
+			'mouthpiece_checksheets.created_by',
+			'mouthpiece_checksheets.created_at',
+			'mouthpiece_checksheets.updated_at'
+		)
+		->get();
+
+		if(count($checksheets) <= 0){
+			$response = array(
+				'status' => false,
+				'message' => "Checksheet tidak ditemukan"
+			);
+			return Response::json($response);			
+		}
+
+		$quantity = 0;
+		$actual_quantity = 0;
+
+		foreach ($checksheets as $checksheet) {
+			$quantity += $checksheet->quantity;
+			$actual_quantity += $checksheet->actual_quantity;
+		}
+
+		if($quantity != $actual_quantity){
+			$response = array(
+				'status' => false,
+				'message' => "Proses packing mouthpiece belum selesai"
+			);
+			return Response::json($response);
+		}
+
+		foreach($checksheets as $checksheet){
+			try{
+				$knock_down_details = new KnockDownDetail([
+					'kd_number' => $checksheet->kd_number,
+					'material_number' => $checksheet->material_number,
+					'quantity' => $checksheet->quantity,
+					'shipment_schedule_id' => $checksheet->shipment_schedule_id,
+					'storage_location' => $checksheet->issue_storage_location,
+					'created_by' => Auth::id()
+				]);
+				$knock_down_details->save();
+
+				$inventory = Inventory::where('plant', '=', '8190')
+				->where('material_number', '=', $checksheet->material_number)
+				->where('storage_location', '=', $checksheet->issue_storage_location)
+				->first();
+
+				if($inventory){
+					$inventory->quantity = $inventory->quantity + $checksheet->quantity;
+					$inventory->save();
+				}else{	
+					$inventory = new Inventory([
+						'plant' => '8190',
+						'material_number' => $checksheet->material_number,
+						'storage_location' => $checksheet->issue_storage_location,
+						'quantity' => $checksheet->quantity
+					]);
+					$inventory->save();
+				}
+
+				$transaction_completion = new TransactionCompletion([
+					'serial_number' => $checksheet->kd_number,
+					'material_number' => $checksheet->material_number,
+					'issue_plant' => '8190',
+					'issue_location' => $checksheet->issue_storage_location,
+					'quantity' => $checksheet->quantity,
+					'movement_type' => '101',
+					'created_by' => Auth::id(),
+				]);
+				$transaction_completion->save();
+
+				$shipment_schedule = ShipmentSchedule::where('shipment_schedules.id', '=', $checksheet->shipment_schedule_id)
+				->first();
+
+				$shipment_schedule->actual_quantity = $shipment_schedule->actual_quantity + $checksheet->quantity;
+				$shipment_schedule->save();
+
+				$mouthpiece_checksheet_log = db::table('mouthpiece_checksheet_logs')->insert([
+					'kd_number' => $checksheet->kd_number,
+					'material_number' => $checksheet->material_number,
+					'material_description' => $checksheet->material_description,
+					'quantity' => $checksheet->quantity,
+					'actual_quantity' => $checksheet->actual_quantity,
+					'shipment_schedule_id' => $checksheet->shipment_schedule_id,
+					'remark' => $checksheet->remark,
+					'employee_id' => $checksheet->employee_id,
+					'start_packing' => $checksheet->start_packing,
+					'end_packing' => $checksheet->end_packing,
+					'print_status' => $checksheet->print_status,
+					'destination_shortname' => $checksheet->destination_shortname,
+					'st_date' => $checksheet->st_date,
+					'qa_check' => $request->get('employee_id'),
+					'created_by' => $checksheet->created_by,
+					'created_at' => $checksheet->created_at,
+					'updated_at' => $checksheet->updated_at
+				]);
+
+			}
+			catch(\Exception $e){
+				$error_log = new ErrorLog([
+					'error_message' => $e->getMessage(),
+					'created_by' => Auth::id()
+				]);
+				$error_log->save();
+				$response = array(
+					'status' => false,
+					'message' => $e->getMessage(),
+				);
+				return Response::json($response);
+			}
+		}
+
+		try{
+			$knock_down = new KnockDown([
+				'kd_number' => $checksheets[0]->kd_number,
+				'created_by' => Auth::id(),
+				'max_count' => 100,
+				'actual_count' => count($checksheets),
+				'remark' => 'MP',
+				'status' => 1
+			]);
+			$knock_down->save();
+
+			$kd_log1 = KnockDownLog::updateOrCreate(
+				['kd_number' => $checksheets[0]->kd_number, 'status' => 0],
+				['created_by' => Auth::id(), 'status' => 0, 'updated_at' => Carbon::now()]
+			);
+			$kd_log1->save();
+
+			$kd_log2 = KnockDownLog::updateOrCreate(
+				['kd_number' => $checksheets[0]->kd_number, 'status' => 1],
+				['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
+			);
+			$kd_log2->save();
+
+			$mouthpiece_checksheet_detail_logs = db::select("
+				INSERT INTO mouthpiece_checksheet_detail_logs ( kd_number, material_number, material_description, quantity, actual_quantity, remark, end_picking, employee_id, created_by, deleted_at, created_at, updated_at ) SELECT
+				mouthpiece_checksheet_details.kd_number,
+				mouthpiece_checksheet_details.material_number,
+				mouthpiece_checksheet_details.material_description,
+				mouthpiece_checksheet_details.quantity,
+				mouthpiece_checksheet_details.actual_quantity,
+				mouthpiece_checksheet_details.remark,
+				mouthpiece_checksheet_details.end_picking,
+				mouthpiece_checksheet_details.employee_id,
+				mouthpiece_checksheet_details.created_by,
+				mouthpiece_checksheet_details.deleted_at,
+				mouthpiece_checksheet_details.created_at,
+				mouthpiece_checksheet_details.updated_at 
+				FROM
+				mouthpiece_checksheet_details
+				WHERE
+				mouthpiece_checksheet_details.kd_number = '".$checksheets[0]->kd_number."'
+				");
+
+			$del_checksheet = MouthpieceChecksheet::where('kd_number', '=', $checksheets[0]->kd_number)->forceDelete();
+			$del_detail = MouthpieceChecksheetDetail::where('kd_number', '=', $checksheets[0]->kd_number)->forceDelete();
+
+		}
+		catch(\Exception $e){
+			$error_log = new ErrorLog([
+				'error_message' => $e->getMessage(),
+				'created_by' => Auth::id()
+			]);
+			$error_log->save();
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
+
+		$response = array(
+			'status' => true,
+			'message' => 'Checksheet berhasil lolos QA Check',
+		);
+		return Response::json($response);
+
+	}
 
 	public function indexKdMouthpieceLog(){
 		$title = 'Mouthpiece Checksheet Log';
@@ -78,7 +285,7 @@ class MouthpieceController extends Controller
 			$shipFrom = date('Y-m-d', strtotime($request->get('shipFrom')));
 			$shipDate = " AND date(m.st_date) >= '".$shipFrom."'";
 		}
-		
+
 		if(strlen($request->get('shipFrom'))>0 && strlen($request->get('shipTo'))>0){
 			$shipFrom = date('Y-m-d', strtotime($request->get('shipFrom')));
 			$shipTo = date('Y-m-d', strtotime($request->get('shipTo')));
@@ -213,195 +420,6 @@ class MouthpieceController extends Controller
 			'title' => $title,
 			'title_jp' => $title_jp
 		))->with('head', 'KD Mouthpiece')->with('page', 'MP Packing');
-	}
-
-	public function createKdMouthpiecePacking(Request $request){
-		$checksheets = MouthpieceChecksheet::leftJoin('materials', 'materials.material_number', '=', 'mouthpiece_checksheets.material_number')
-		->where('mouthpiece_checksheets.kd_number', '=', $request->get('kd_number'))
-		->where('mouthpiece_checksheets.remark', '=', '1')
-		->select(
-			'mouthpiece_checksheets.kd_number', 
-			'mouthpiece_checksheets.material_number', 
-			'materials.issue_storage_location', 
-			'mouthpiece_checksheets.material_description', 
-			'mouthpiece_checksheets.quantity', 
-			'mouthpiece_checksheets.actual_quantity',
-			'mouthpiece_checksheets.shipment_schedule_id',
-			'mouthpiece_checksheets.remark',
-			'mouthpiece_checksheets.employee_id',
-			'mouthpiece_checksheets.start_packing',
-			'mouthpiece_checksheets.end_packing',
-			'mouthpiece_checksheets.destination_shortname',
-			'mouthpiece_checksheets.st_date',
-			'mouthpiece_checksheets.created_by',
-			'mouthpiece_checksheets.created_at',
-			'mouthpiece_checksheets.updated_at'
-		)
-		->get();
-
-		$quantity = 0;
-		$actual_quantity = 0;
-
-		foreach ($checksheets as $checksheet) {
-			$quantity += $checksheet->quantity;
-			$actual_quantity += $checksheet->actual_quantity;
-		}
-
-		if($quantity != $actual_quantity){
-			$response = array(
-				'status' => false,
-				'message' => "Proses packing mouthpiece belum selesai"
-			);
-			return Response::json($response);
-		}
-
-		foreach($checksheets as $checksheet){
-			try{
-				$knock_down_details = new KnockDownDetail([
-					'kd_number' => $checksheet->kd_number,
-					'material_number' => $checksheet->material_number,
-					'quantity' => $checksheet->quantity,
-					'shipment_schedule_id' => $checksheet->shipment_schedule_id,
-					'storage_location' => $checksheet->issue_storage_location,
-					'created_by' => Auth::id()
-				]);
-				$knock_down_details->save();
-
-				$inventory = Inventory::where('plant', '=', '8190')
-				->where('material_number', '=', $checksheet->material_number)
-				->where('storage_location', '=', $checksheet->issue_storage_location)
-				->first();
-
-				if($inventory){
-					$inventory->quantity = $inventory->quantity + $checksheet->quantity;
-					$inventory->save();
-				}else{	
-					$inventory = new Inventory([
-						'plant' => '8190',
-						'material_number' => $checksheet->material_number,
-						'storage_location' => $checksheet->issue_storage_location,
-						'quantity' => $checksheet->quantity
-					]);
-					$inventory->save();
-				}
-
-				$transaction_completion = new TransactionCompletion([
-					'serial_number' => $checksheet->kd_number,
-					'material_number' => $checksheet->material_number,
-					'issue_plant' => '8190',
-					'issue_location' => $checksheet->issue_storage_location,
-					'quantity' => $checksheet->quantity,
-					'movement_type' => '101',
-					'created_by' => Auth::id(),
-				]);
-				$transaction_completion->save();
-
-				$shipment_schedule = ShipmentSchedule::where('shipment_schedules.id', '=', $checksheet->shipment_schedule_id)
-				->first();
-
-				$shipment_schedule->actual_quantity = $shipment_schedule->actual_quantity + $checksheet->quantity;
-				$shipment_schedule->save();
-
-				$mouthpiece_checksheet_log = db::table('mouthpiece_checksheet_logs')->insert([
-					'kd_number' => $checksheet->kd_number,
-					'material_number' => $checksheet->material_number,
-					'material_description' => $checksheet->material_description,
-					'quantity' => $checksheet->quantity,
-					'actual_quantity' => $checksheet->actual_quantity,
-					'shipment_schedule_id' => $checksheet->shipment_schedule_id,
-					'remark' => $checksheet->remark,
-					'employee_id' => $checksheet->employee_id,
-					'start_packing' => $checksheet->start_packing,
-					'end_packing' => $checksheet->end_packing,
-					'print_status' => $checksheet->print_status,
-					'destination_shortname' => $checksheet->destination_shortname,
-					'st_date' => $checksheet->st_date,
-					'created_by' => $checksheet->created_by,
-					'created_at' => $checksheet->created_at,
-					'updated_at' => $checksheet->updated_at
-				]);
-
-			}
-			catch(\Exception $e){
-				$error_log = new ErrorLog([
-					'error_message' => $e->getMessage(),
-					'created_by' => Auth::id()
-				]);
-				$error_log->save();
-				$response = array(
-					'status' => false,
-					'message' => $e->getMessage(),
-				);
-				return Response::json($response);
-			}
-		}
-
-		try{
-			$knock_down = new KnockDown([
-				'kd_number' => $checksheets[0]->kd_number,
-				'created_by' => Auth::id(),
-				'max_count' => 99,
-				'actual_count' => count($checksheets),
-				'remark' => 'MP',
-				'status' => 1
-			]);
-			$knock_down->save();
-
-			$kd_log1 = KnockDownLog::updateOrCreate(
-				['kd_number' => $checksheets[0]->kd_number, 'status' => 0],
-				['created_by' => Auth::id(), 'status' => 0, 'updated_at' => Carbon::now()]
-			);
-			$kd_log1->save();
-
-			$kd_log2 = KnockDownLog::updateOrCreate(
-				['kd_number' => $checksheets[0]->kd_number, 'status' => 1],
-				['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
-			);
-			$kd_log2->save();
-
-			$mouthpiece_checksheet_detail_logs = db::select("
-				INSERT INTO mouthpiece_checksheet_detail_logs ( kd_number, material_number, material_description, quantity, actual_quantity, remark, end_picking, employee_id, created_by, deleted_at, created_at, updated_at ) SELECT
-				mouthpiece_checksheet_details.kd_number,
-				mouthpiece_checksheet_details.material_number,
-				mouthpiece_checksheet_details.material_description,
-				mouthpiece_checksheet_details.quantity,
-				mouthpiece_checksheet_details.actual_quantity,
-				mouthpiece_checksheet_details.remark,
-				mouthpiece_checksheet_details.end_picking,
-				mouthpiece_checksheet_details.employee_id,
-				mouthpiece_checksheet_details.created_by,
-				mouthpiece_checksheet_details.deleted_at,
-				mouthpiece_checksheet_details.created_at,
-				mouthpiece_checksheet_details.updated_at 
-				FROM
-				mouthpiece_checksheet_details
-				WHERE
-				mouthpiece_checksheet_details.kd_number = '".$checksheets[0]->kd_number."'
-				");
-
-			$del_checksheet = MouthpieceChecksheet::where('kd_number', '=', $checksheets[0]->kd_number)->forceDelete();
-			$del_detail = MouthpieceChecksheetDetail::where('kd_number', '=', $checksheets[0]->kd_number)->forceDelete();
-
-		}
-		catch(\Exception $e){
-			$error_log = new ErrorLog([
-				'error_message' => $e->getMessage(),
-				'created_by' => Auth::id()
-			]);
-			$error_log->save();
-			$response = array(
-				'status' => false,
-				'message' => $e->getMessage()
-			);
-			return Response::json($response);
-		}
-
-		$response = array(
-			'status' => true,
-			'message' => 'Checksheet berhasil dieselesaikan',
-		);
-		return Response::json($response);
-
 	}
 
 	public function checkKdMouthpieceChecksheet(Request $request){

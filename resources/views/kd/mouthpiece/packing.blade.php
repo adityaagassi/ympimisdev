@@ -1,6 +1,7 @@
 @extends('layouts.display')
 @section('stylesheets')
 <link href="{{ url("css/jquery.gritter.css") }}" rel="stylesheet">
+<link href="{{ url("css//bootstrap-toggle.min.css") }}" rel="stylesheet">
 <style type="text/css">
 	thead input {
 		width: 100%;
@@ -69,14 +70,23 @@
 					</thead>
 				</table>
 				<center>
-					<div style="background-color: #00c0ef;">
-						<span style="font-weight: bold; color: white; font-size: 2vw;">1. SCAN INNER</span><br>
+					<div class="col-xs-12" style="padding: 0px;">
+						<div style="background-color: orange;">
+							<span style="font-weight: bold; color: white; font-size: 2vw;">1. SCAN OUTER</span><br>
+						</div>
+						<input type="text" style="text-align: center; width: 100%; font-size: 2vw;" id="barcode_outer" placeholder="Scan Barcode">
 					</div>
-					<input type="text" style="text-align: center; width: 100%; font-size: 2vw; margin-bottom: 10px;" id="barcode_inner" placeholder="Scan Barcode">
-					<div style="background-color: orange;">
-						<span style="font-weight: bold; color: white; font-size: 2vw;">2. SCAN OUTER</span><br>
+
+					<div class="col-xs-12" style="padding-top: 5px; padding-bottom: 5px; margin-bottom: 5%; background-color: orange;">
+						<button class="btn btn-default btn-md" onclick="refreshOuter()"><i class="fa fa-refresh"></i> <span>REFRESH</span></button>
 					</div>
-					<input type="text" style="text-align: center; width: 100%; font-size: 2vw;" id="barcode_outer" placeholder="Scan Barcode">
+
+					<div class="col-xs-12" style="padding: 0px; margin-bottom: 5%;">
+						<div style="background-color: #00c0ef;">
+							<span style="font-weight: bold; color: white; font-size: 2vw;">2. SCAN INNER</span><br>
+						</div>
+						<input type="text" style="text-align: center; width: 100%; font-size: 2vw;" id="barcode_inner" placeholder="Scan Barcode">
+					</div>
 				</center>
 			</div>
 			<div class="col-xs-9">
@@ -109,7 +119,6 @@
 					<tfoot>
 					</tfoot>
 				</table>
-				<button id="finishPacking" onclick="finishPacking()" class="btn btn-danger" style="font-weight: bold; font-size: 3vw; width: 100%; margin-top: 20px;">SELESAI PACKING</button>
 			</div>
 		</div>		
 	</div>
@@ -146,6 +155,7 @@
 <script src="{{ url("js/vfs_fonts.js")}}"></script>
 <script src="{{ url("js/buttons.html5.min.js")}}"></script>
 <script src="{{ url("js/buttons.print.min.js")}}"></script>
+<script src="{{ url("js/bootstrap-toggle.min.js") }}"></script>
 <script>
 	$.ajaxSetup({
 		headers: {
@@ -170,40 +180,48 @@
 	function clearAll(){
 		$('#operator').val("");
 		$('#qr_checksheet').val("");
-		$('#barcode_inner').val("");
-		$('#barcode_outer').prop('disabled', false);
+
 		$('#barcode_outer').val("");
-		$('#barcode_outer').prop('disabled', true);
+		
+		$('#barcode_inner').prop('disabled', false);
+		$('#barcode_inner').val("");
+		$('#barcode_inner').prop('disabled', true);
 	}
 
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
-	$('#barcode_inner').keydown(function(event) {
+	$('#barcode_outer').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($('#barcode_inner').val().length == 7){
-				$('#barcode_inner').prop('disabled', true);
-				$('#barcode_outer').prop('disabled', false);
-				$('#barcode_outer').val("");
-				$('#barcode_outer').focus();
-			}
-			else{
+			if($('#barcode_outer').val().length == 7){
+				$('#barcode_outer').prop('disabled', true);
+				$('#barcode_inner').prop('disabled', false);
+				$('#barcode_inner').val("");
+				$('#barcode_inner').focus();
+			}else{
 				audio_error.play();
 				openErrorGritter('Error', 'Barcode tidak valid');
-				$('#barcode_inner').val('');			
+				$('#barcode_outer').val('');			
 			}
 		}
 	});
 
-	$('#barcode_outer').keydown(function(event) {
+	function refreshOuter() {
+		$('#barcode_inner').val("");
+		$('#barcode_outer').val("");
+
+		$('#barcode_outer').prop('disabled', false);
+		$('#barcode_outer').focus();
+
+		$('#barcode_inner').prop('disabled', true);
+	}
+
+	$('#barcode_inner').keydown(function(event) {
 		if (event.keyCode == 13 || event.keyCode == 9) {
-			if($('#barcode_outer').val().length == 7){
+			if($('#barcode_inner').val().length == 7){
 				if($('#barcode_outer').val() != $('#barcode_inner').val()){
 					audio_error.play();
 					openErrorGritter('Error', 'Barcode INNER & OUTER tidak sama.');
-					$('#barcode_inner').val('');
-					$('#barcode_outer').val('');
-					$('#barcode_inner').prop('disabled', false);
-					$('#barcode_outer').prop('disabled', true);
+					$('#barcode_inner').val('');					
 					$('#barcode_inner').focus();
 					return false;
 				}
@@ -226,19 +244,23 @@
 						openSuccessGritter('Success', result.message);
 						$('#barcode_inner').val('');
 						$('#barcode_outer').val('');
-						$('#barcode_inner').prop('disabled', false);
-						$('#barcode_outer').prop('disabled', true);
-						$('#barcode_inner').focus();
+						
+						$('#barcode_outer').prop('disabled', false);
+						$('#barcode_inner').prop('disabled', true);
+						$('#barcode_outer').focus();
 					}
 					else{
 						$('#loading').hide();
 						audio_error.play();
 						openErrorGritter('Error', result.message);
+						
 						$('#barcode_inner').val('');
 						$('#barcode_outer').val('');
-						$('#barcode_inner').prop('disabled', false);
-						$('#barcode_outer').prop('disabled', true);
-						$('#barcode_inner').focus();
+						
+						$('#barcode_outer').prop('disabled', false);
+						$('#barcode_inner').prop('disabled', true);
+						$('#barcode_outer').focus();
+						
 						return false;
 					}
 				});
@@ -246,7 +268,7 @@
 			else{
 				audio_error.play();
 				openErrorGritter('Error', 'Barcode tidak valid');
-				$('#barcode_outer').val('');			
+				$('#barcode_inner').val('');			
 			}
 		}
 	});
@@ -283,30 +305,6 @@
 			}
 		}
 	});
-
-	function finishPacking(){
-		$('#loading').show();
-		var kd_number = $('#kd_number').val();
-		var data = {
-			kd_number:kd_number
-		}
-
-		if(confirm("Apakah anda yakin proses packing sudah selesai?")){
-			$.post('{{ url("create/kd_mouthpiece/packing") }}', data, function(result, status, xhr){
-				if(result.status){
-					location.reload(true);
-				}
-				else{
-					$('#loading').hide();
-					openErrorGritter('Error!', result.message);
-					audio_error.play();
-				}
-			});
-		}
-		else{
-			return false;
-		}
-	}
 
 	function selectChecksheet(id){
 		$('#loading').show();
@@ -381,7 +379,7 @@
 				});
 
 				clearAll();
-				$('#barcode_inner').focus();
+				$('#barcode_outer').focus();
 				$('#loading').hide();
 			}
 			else{
