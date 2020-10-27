@@ -61,12 +61,12 @@
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;"><center>No.</center></td>
-					<td style="border: 1px solid black;"><center>Production Date</center></td>
-					<td style="border: 1px solid black;"><center>Check Date</center></td>
-					<td style="border: 1px solid black;"><center>Serial Number</center></td>
-					<td style="border: 1px solid black;"><center>Condition</center></td>
-					<td style="border: 1px solid black;"><center>Keterangan</center></td>
+					<td style="border: 1px solid black;font-weight: bold;"><center>No.</center></td>
+					<td style="border: 1px solid black;font-weight: bold;"><center>Production Date</center></td>
+					<td style="border: 1px solid black;font-weight: bold;"><center>Check Date</center></td>
+					<td style="border: 1px solid black;font-weight: bold;"><center>Serial Number</center></td>
+					<td style="border: 1px solid black;font-weight: bold;"><center>Condition</center></td>
+					<td style="border: 1px solid black;font-weight: bold;"><center>Keterangan</center></td>
 				</tr>
 				<?php $no = 1; ?>
 				@foreach($daily_check as $daily_check)

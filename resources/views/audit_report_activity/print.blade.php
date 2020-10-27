@@ -65,7 +65,7 @@
 					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($section) }}</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">Month</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">Bulan</td>
 					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
