@@ -2398,7 +2398,7 @@ public function fetchGAReport(Request $request)
 
 			CASE
 			WHEN
-			SHIFT_OVTPLAN LIKE '%Shift_2%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 150
+			SHIFT_OVTPLAN LIKE '%Shift_2%' and DATEDIFF(minute, ovtplanfrom, ovtplanto) >= 130
 			THEN 1 
 			ELSE null
 			END AS extra2,
