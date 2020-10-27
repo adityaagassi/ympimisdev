@@ -405,7 +405,7 @@
 					},
 					yAxis: {
 						title: {
-							text: 'Quantity (pcs)'
+							text: 'Item(s)'
 						}
 					},
 					title: {
@@ -448,7 +448,7 @@
 						enabled:false
 					},
 					tooltip: {
-						pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> pc(s)<br/>',
+						pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> Item(s)<br/>',
 						split: true
 					},
 					series: dataCount
