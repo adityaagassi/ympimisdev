@@ -4969,7 +4969,8 @@ s.id ASC");
 	}
 
 	function writeDecimal($text, $maxLength, $char) {
-		$decimal;
+		$decimal = '';
+
 		if ($maxLength > 0) {
 			$textLength = 0;
 			if ($text != null) {
