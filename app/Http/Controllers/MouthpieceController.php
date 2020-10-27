@@ -925,12 +925,12 @@ class MouthpieceController extends Controller
 
 	public function printKDO($kd_number, $st_date, $knock_down_details, $storage_location, $remark, $destination_shortname){
 
-		if(Auth::user()->role_code == 'op-zpro'){
-			$printer_name = 'KDO ZPRO';
+		if(Auth::user()->role_code == 'MIS'){
+			$printer_name = 'MIS';
 		}else if (Auth::user()->role_code == 'OP-WH-Exim') {
 			$printer_name = 'FLO Printer LOG';
 		}else{
-			$printer_name = 'MIS2';
+			$printer_name = 'KDO MP';
 		}
 
 		$connector = new WindowsPrintConnector($printer_name);
