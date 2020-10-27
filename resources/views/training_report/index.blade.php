@@ -138,7 +138,7 @@ table.table-bordered > tfoot > tr > th{
 				                <td>
 				                  <center>
 				                    <a class="btn btn-primary btn-sm" href="{{url('index/training_report/details/'.$training_report->id.'/view')}}">Isi Peserta</a>
-				                    <a class="btn btn-success btn-sm" href="{{url('index/training_report/print/'.$training_report->id)}}">Cetak</a>
+				                    <a class="btn btn-success btn-sm" href="{{url('index/training_report/print/'.$training_report->id)}}" target="_blank">Cetak</a>
 				                    @if($training_report->send_status == "")
 				                		<a class="btn btn-info btn-sm" href="{{url('index/training_report/sendemail/'.$training_report->id)}}">Kirim Email</a>
 				                	@endif

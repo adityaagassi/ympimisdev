@@ -342,7 +342,7 @@ class LabelingController extends Controller
           }
     }
 
-    function print_labeling(Request $request,$id)
+    function print_labeling($id,$month)
     {
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
@@ -350,8 +350,8 @@ class LabelingController extends Controller
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-        if($request->get('month') != null){
-            $date = $request->get('month');
+        if($month != null){
+            $date = $month;
             $queryLabeling = "select *
 					from labelings
 					join activity_lists on activity_lists.id = activity_list_id
@@ -390,26 +390,52 @@ class LabelingController extends Controller
                 alert('Data Tidak Tersedia');
                 window.close();</script>";
         }else{
-            $data = array(
-                          'product' => $product,
-                          'foreman' => $foreman,
-                          'leader' => $leader,
-                          'approved_date' => $approved_date,
-                          'approved_date_leader' => $approved_date_leader,
-                          'jml_null' => $jml_null,
-                          'jml_null_leader' => $jml_null_leader,
-                          'section' => $section,
-                          'periode' => $periode,
-                          'monthTitle' => $monthTitle,
-                          'labeling' => $labeling,
-                          'labeling2' => $labeling2,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'id_departments' => $id_departments);
-            return view('labeling.print', $data
-                )->with('page', 'Labeling');
+            // $data = array(
+            //               'product' => $product,
+            //               'foreman' => $foreman,
+            //               'leader' => $leader,
+            //               'approved_date' => $approved_date,
+            //               'approved_date_leader' => $approved_date_leader,
+            //               'jml_null' => $jml_null,
+            //               'jml_null_leader' => $jml_null_leader,
+            //               'section' => $section,
+            //               'periode' => $periode,
+            //               'monthTitle' => $monthTitle,
+            //               'labeling' => $labeling,
+            //               'labeling2' => $labeling2,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'id' => $id,
+            //               'id_departments' => $id_departments);
+            // return view('labeling.print', $data
+            //     )->with('page', 'Labeling');
+
+            $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'landscape');
+
+           $pdf->loadView('labeling.print', array(
+                'product' => $product,
+              'foreman' => $foreman,
+              'leader' => $leader,
+              'approved_date' => $approved_date,
+              'approved_date_leader' => $approved_date_leader,
+              'jml_null' => $jml_null,
+              'jml_null_leader' => $jml_null_leader,
+              'section' => $section,
+              'periode' => $periode,
+              'monthTitle' => $monthTitle,
+              'labeling' => $labeling,
+              'labeling2' => $labeling2,
+              'departments' => $departments,
+              'activity_name' => $activity_name,
+              'activity_alias' => $activity_alias,
+              'id' => $id,
+              'id_departments' => $id_departments
+           ));
+
+           return $pdf->stream("Audit Label Safety ".$leader." (".$monthTitle.").pdf");
         }
     }
 

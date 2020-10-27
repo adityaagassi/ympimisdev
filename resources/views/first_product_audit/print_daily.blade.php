@@ -1,134 +1,116 @@
-@extends('layouts.master')
-@section('header')
-<section class="content-header">
-  <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
-  </h1>
-  <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
-  </ol>
-  <style>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YMPI 情報システム</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <style type="text/css">
+    body{
+      font-size: 10px;
+      font-family: Calibri, sans-serif; 
+    }
+
+    #isi > thead > tr > td {
+      text-align: center;
+    }
+
+    #isi > tbody > tr > td {
+	/*      text-align: left;
+	padding-left: 5px;*/
+	text-align: center
+	}
+
 	table, th, td {
 	  border: 1px solid black;
 	  border-collapse: collapse;
-	  font-family:"Arial";
-	  padding: 5px;
 	  vertical-align:middle;
 	}
-	@media print {
-		body {-webkit-print-color-adjust: exact;}
-	}
-   </style>
-</section>
-<style type="text/css">
-	@media print {
-	.table {-webkit-print-color-adjust: exact;}
-	#approval1 {
-	    display: none;
-	  }
-	  #approval2 {
-	    display: none;
-	  }
-	  #approval3 {
-	    display: none;
-	  }
+
+@page { }
+.footer { position: fixed; left: 0px; bottom: -50px; right: 0px; height: 200px;text-align: center;}
+.footer .pagenum:before { content: counter(page); }
 </style>
-@endsection
-@section('content')
-<section class="content">
-  @if ($errors->has('password'))
-  <div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
-    {{ $errors->first() }}
-  </div>   
-  @endif
-  <div class="box box-primary">
-      <div class="box-body">
-      	<table>
+</head>
+<body>
+  <header>
+    <table style="width: 100%; border-collapse: collapse; " >
 			<tbody>
 				<tr>
-					<td style="border: 1px solid black;" colspan="11" class="head">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+					<td colspan="5" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
-					<td class="head">Department</td>
-					<td class="head">{{ $departments }}</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="5" class="head">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+				</tr>
+				<tr>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Department</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($departments) }}</td>
 					<td class="head" rowspan="8" style="vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
-					<td class="head" rowspan="8"><center>Checked<br><br>
+					<td class="head" rowspan="8" style="padding-top: 0px;padding-bottom: 0px;"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $foreman }}<br>Foreman</center></td>
-					<td class="head" rowspan="8"><center>Prepared<br><br>
+					<td class="head" rowspan="8" style="padding-top: 0px;padding-bottom: 0px;"><center>Prepared<br>
 						@if($jml_null_leader == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date_leader }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $leader }}<br>Leader</center></td>
 				</tr>
 				<tr>
-					<td class="head">Sub Section</td>
-					<td class="head">{{ $subsection }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Sub Section</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($subsection) }}</td>
 				</tr>
 				<tr>
-					<td class="head">Proses</td>
-					<td class="head">{{ $proses }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Proses</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $proses }}</td>
 				</tr>
 				<tr>
-					<td class="head">Jenis</td>
-					<td class="head">{{ $jenis }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Jenis</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $jenis }}</td>
 				</tr>
 				<tr>
-					<td class="head">Standar Kualitas</td>
-					<td class="head">{{ $standar_kualitas }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Standar Kualitas</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $standar_kualitas }}</td>
 				</tr>
 				<tr>
-					<td class="head">Tool Check</td>
-					<td class="head">{{ $tool_check }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Tool Check</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $tool_check }}</td>
 				</tr>
 				<tr>
-					<td class="head">Jumlah Cek</td>
-					<td class="head">{{ $jumlah_cek }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Jumlah Cek</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $jumlah_cek }}</td>
 				</tr>
 				<tr>
-					<td class="head">Bulan</td>
-					<td class="head">{{ $monthTitle }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Bulan</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
-					<th style="vertical-align: middle"><center>Date</center></th>
-					<th style="vertical-align: middle"><center>Judgement</center></th>
-					<th style="vertical-align: middle"><center>Note</center></th>
-					<th style="vertical-align: middle"><center>PIC</center></th>
-					<th style="vertical-align: middle"><center>Auditor</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;font-weight: bold;"><center>Date</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;font-weight: bold;"><center>Judgement</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;font-weight: bold;"><center>Note</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;font-weight: bold;"><center>PIC</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;font-weight: bold;"><center>Auditor</center></th>
 				</tr>
 				@foreach($first_product_audit as $first_product_audit)
 				<tr>
-					<td class="head" style="vertical-align: middle"><center>{{ $first_product_audit->date }}</center></td>
-					<td class="head" style="vertical-align: middle"><center>{{ $first_product_audit->judgement }}</center></td>
-					<td class="head" style="vertical-align: middle"><center><?php echo $first_product_audit->note ?></center></td>
-					<td class="head" style="vertical-align: middle">{{ $first_product_audit->pic }}</td>
-					<td class="head" style="vertical-align: middle">{{ $first_product_audit->auditor }}</td>
+					<td class="head" style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>{{ $first_product_audit->date }}</center></td>
+					<td class="head" style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>{{ $first_product_audit->judgement }}</center></td>
+					<td class="head" style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center><?php echo $first_product_audit->note ?></center></td>
+					<td class="head" style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>{{ $first_product_audit->pic }}</center></td>
+					<td class="head" style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>{{ $first_product_audit->auditor }}</center></td>
 				</tr>
 				@endforeach
 			</tbody>
 		</table>
-	</div>
-  </div>
-  @endsection
+</header>
+<main>
+</main>
+</body>
+</html>
 
-<script>
-    // setTimeout(function () { window.print(); }, 200);
-    function myFunction() {
-	  window.print();
-	}
-	jQuery(document).ready(function() {
-		$('body').toggleClass("sidebar-collapse");
-	});
-</script>
+
+

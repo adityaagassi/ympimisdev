@@ -483,6 +483,7 @@ class InterviewController extends Controller
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
         $id_departments = $activityList->departments->id;
 
         $interviewDetailQuery = "select * from interview_details join employee_syncs on interview_details.nik = employee_syncs.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
@@ -493,18 +494,36 @@ class InterviewController extends Controller
         if($interview == null){
             return redirect('/index/interview/index/'.$activity_list_id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Interview');
         }else{
-            $data = array(
-                          'interview' => $interview,
-                          'interviewDetail' => $interviewDetail,
-                          'activityList' => $activityList,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'interview_id' => $interview_id,
-                          'interviewPicture' => $interviewPicture,
-                          'id_departments' => $id_departments);
-            return view('interview.print', $data
-                )->with('page', 'Interview');
+            // $data = array(
+            //               'interview' => $interview,
+            //               'interviewDetail' => $interviewDetail,
+            //               'activityList' => $activityList,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'interview_id' => $interview_id,
+            //               'interviewPicture' => $interviewPicture,
+            //               'id_departments' => $id_departments);
+            // return view('interview.print', $data
+            //     )->with('page', 'Interview');
+             $pdf = \App::make('dompdf.wrapper');
+             $pdf->getDomPDF()->set_option("enable_php", true);
+             $pdf->setPaper('A4', 'landscape');
+
+             $pdf->loadView('interview.print', array(
+                   'interview' => $interview,
+                    'interviewDetail' => $interviewDetail,
+                    'activityList' => $activityList,
+                    'departments' => $departments,
+                    'leader' => $leader,
+                    'activity_name' => $activity_name,
+                    'activity_alias' => $activity_alias,
+                    'interview_id' => $interview_id,
+                    'interviewPicture' => $interviewPicture,
+                    'id_departments' => $id_departments
+             ));
+
+             return $pdf->stream($activity_name." - ".$leader.".pdf");
         }
     }
 
@@ -517,6 +536,7 @@ class InterviewController extends Controller
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
         $id_departments = $activityList->departments->id;
 
         $interviewDetailQuery = "select * from interview_details join employee_syncs on interview_details.nik = employee_syncs.employee_id where interview_id = '".$interview_id."' and interview_details.deleted_at is null";
@@ -534,6 +554,7 @@ class InterviewController extends Controller
                           'departments' => $departments,
                           'role_code' => Auth::user()->role_code,
                           'activity_name' => $activity_name,
+                          'leader' => $leader,
                           'activity_alias' => $activity_alias,
                           'interview_id' => $interview_id,
                           'interviewPicture' => $interviewPicture,

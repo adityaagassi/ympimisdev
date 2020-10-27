@@ -2,14 +2,13 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>Page Orientation : Landscape</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    <a class="btn btn-info pull-right" style="margin-right: 10px" href="{{url('index/area_check/print_area_check/'.$id.'/'.$month)}}">Cetak / Save PDF</a>
+    @if($jml_null > 0 && $role_code != 'M')
+	<label id="approval1" class="label label-success pull-right"><input type="checkbox" onclick="checkAll(this.checked)">Approve All</label>
+	@endif
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 <style type="text/css">
@@ -46,7 +45,7 @@
 		</div>   
 	@endif
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
+  <div class="box box-solid">
     {{-- <div class="box-header with-border">
       <h3 class="box-title">Detail User</h3>
     </div>   --}}
@@ -57,21 +56,21 @@
 					<td colspan="{{ $countdate+1 }}" style="border: 1px solid black;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;vertical-align: middle;" colspan="{{ $countdate+1 }}">PT. YAMAHA MUSICAL PRODUCTS INDONESIA
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px" colspan="{{ $countdate+1 }}">PT. YAMAHA MUSICAL PRODUCTS INDONESIA
 					</td>
 				</tr>
 				<?php $colspan = $countdate - 16 ?>
 				<tr>
-					<td style="border: 1px solid black;">Department</td>
-					<td style="border: 1px solid black;" colspan="2">{{ $departments }}</td>
-					<td rowspan="3" colspan="16" style="border: 1px solid black;padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Checked<br><br>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px">Department</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px" colspan="2">{{ strtoupper($departments) }}</td>
+					<td rowspan="3" colspan="16" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px" rowspan="3"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green !important'>Approved</b><br>
 							<b style='color:green !important'>{{ $approved_date }}</b>
 						@endif<br>
 					{{ $foreman }}<br>Foreman</center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3" colspan="{{ $colspan }}"><center>Prepared<br><br>
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px" rowspan="3" colspan="{{ $colspan }}"><center>Prepared<br>
 						@if($jml_null_leader == 0)
 							<b style='color:green !important'>Approved</b><br>
 							<b style='color:green !important'>{{ $approved_date_leader }}</b>
@@ -79,18 +78,15 @@
 						{{ $leader }}<br>Leader</center></td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;">Subsection</td>
-					<td style="border: 1px solid black;" colspan="2">{{ $subsection }}</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px">Subsection</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px" colspan="2">{{ strtoupper($subsection) }}</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;">Month</td>
-					<td style="border: 1px solid black;" colspan="2">{{ $monthTitle }}</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px">Bulan</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px" colspan="2">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;"><center>Point Check / Date
-					@if($jml_null > 0 && $role_code != 'M')
-					<label id="approval1" class="label label-success"><input type="checkbox" onclick="checkAll(this.checked)">Approve All</label>
-					@endif</center></td>
+					<td style="border: 1px solid black;"><center>Point Check / Date</center></td>
 					@foreach($date as $date)
 					<td style="border: 1px solid black;"><center>{{ substr($date->week_date,-2) }}</center></td>
 					<?php $datenow[] = $date->week_date ?>
@@ -114,10 +110,10 @@
 							and week_date not in (select tanggal from ftm.kalender)"); ?>
 						<td style="border: 1px solid black;"><center><?php for($j = 0;$j < count($condition) ; $j++){ ?>
 							<?php if($condition[$j]->condition == 'Good'){
-								echo '<label class="label label-success">-</label>';
+								echo '<label class="label label-success">O</label>';
 							}
 							else{
-								echo '<label class="label label-danger">-</label>';
+								echo '<label class="label label-danger">X</label>';
 							} ?>
 							<br>
 							@if($jml_null > 0 && $role_code != 'M')
@@ -149,18 +145,9 @@
 						<?php } ?></center></td>
 					<?php } ?>
 				</tr>
-				<tr>
-					<td style="border: 1px solid black;" colspan="{{ $countdate+1 }}"><center>Keterangan : </center></td>
-				</tr>
-				<tr>
-					<td style="border: 1px solid black;" colspan="{{ $countdate+1 }}"><center><label class="label label-success">Good</label></center></td>
-				</tr>
-				<tr>
-					<td style="border: 1px solid black;" colspan="{{ $countdate+1 }}"><center><label class="label label-danger">Not Good</label></center></td>
-				</tr>
 				@if($jml_null > 0 && $role_code != 'M')
 				<tr class="head" id="approval3">
-					<td style="border: 1px solid black;" colspan="{{ $countdate+1 }}"><center><button class="btn btn-success" type="submit">Submit</button></center></td>
+					<td style="border: 1px solid black;" colspan="{{ $countdate+1 }}"><center><button class="btn btn-success" type="submit">Approve</button></center></td>
 				</tr>
 				@endif
 				</form>

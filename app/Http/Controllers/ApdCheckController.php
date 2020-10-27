@@ -283,9 +283,8 @@ class ApdCheckController extends Controller
             }
     }
 
-    function print_apd_check(Request $request,$id)
+    function print_apd_check($id,$month)
     {
-        $month = $request->get('month');
 
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
@@ -322,26 +321,51 @@ class ApdCheckController extends Controller
         if($apd_check == null){
             return redirect('/index/apd_check/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'APD Check');
         }else{
-            $data = array(
-                          'subsection' => $subsection,
-                          'apd_check' => $apd_check,
-                          'activityList' => $activityList,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'role_code' => Auth::user()->role_code,
-                          'id_departments' => $id_departments,
-                          'monthTitle' => $monthTitle,
-                          'month' => $month,
-                          'leader' => $leader,
-                          'jml_null' => $jml_null,
-                          'jml_null_leader' => $jml_null_leader,
-                          'approved_date' => $approved_date,
-                          'approved_date_leader' => $approved_date_leader,
-                          'foreman' => $foreman,);
-            return view('apd_check.print', $data
-                )->with('page', 'APD Check');
+            // $data = array(
+            //               'subsection' => $subsection,
+            //               'apd_check' => $apd_check,
+            //               'activityList' => $activityList,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'id' => $id,
+            //               'role_code' => Auth::user()->role_code,
+            //               'id_departments' => $id_departments,
+            //               'monthTitle' => $monthTitle,
+            //               'month' => $month,
+            //               'leader' => $leader,
+            //               'jml_null' => $jml_null,
+            //               'jml_null_leader' => $jml_null_leader,
+            //               'approved_date' => $approved_date,
+            //               'approved_date_leader' => $approved_date_leader,
+            //               'foreman' => $foreman,);
+            // return view('apd_check.print', $data
+            //     )->with('page', 'APD Check');
+          $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'potrait');
+
+           $pdf->loadView('apd_check.print', array(
+               'subsection' => $subsection,
+              'apd_check' => $apd_check,
+              'activityList' => $activityList,
+              'departments' => $departments,
+              'activity_name' => $activity_name,
+              'activity_alias' => $activity_alias,
+              'id' => $id,
+              'role_code' => Auth::user()->role_code,
+              'id_departments' => $id_departments,
+              'monthTitle' => $monthTitle,
+              'month' => $month,
+              'leader' => $leader,
+              'jml_null' => $jml_null,
+              'jml_null_leader' => $jml_null_leader,
+              'approved_date' => $approved_date,
+              'approved_date_leader' => $approved_date_leader,
+              'foreman' => $foreman,
+           ));
+
+           return $pdf->stream("Cek APD ".$leader." (".$monthTitle.").pdf");
         }
     }
 

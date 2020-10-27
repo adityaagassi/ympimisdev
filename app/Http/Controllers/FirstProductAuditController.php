@@ -434,7 +434,7 @@ class FirstProductAuditController extends Controller
               ->with('page', 'First Product Audit Details')->with('status', 'First Product Audit Details has been deleted.');     
     }
 
-    function print_first_product_audit(Request $request,$id,$first_product_audit_id)
+    function print_first_product_audit($id,$first_product_audit_id,$month)
     {
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
@@ -443,8 +443,8 @@ class FirstProductAuditController extends Controller
         $id_departments = $activityList->departments->id;
 
 
-        if($request->get('month') != null){
-            $month = $request->get('month');
+        if($month != null){
+            // $month = $request->get('month');
             $queryfirst_product_audit = "select *, first_product_audits.id as id_first_product_audit
                 from first_product_audit_details
                 join activity_lists on activity_lists.id = first_product_audit_details.activity_list_id
@@ -493,31 +493,62 @@ class FirstProductAuditController extends Controller
                 alert('Data Tidak Tersedia');
                 window.close();</script>";
         }else{
-            $data = array(
-                          'subsection' => $subsection,
-                          'leader' => $leader,
-                          'foreman' => $foreman,
-                          'monthTitle' => $monthTitle,
-                          'subsection' => $subsection,
-                          'date' => $date,
-                          'proses' => $proses,
-                          'jenis' => $jenis,
-                          'standar_kualitas' => $standar_kualitas,
-                          'jml_null' => $jml_null,
-                          'tool_check' => $tool_check,
-                          'jumlah_cek' => $jumlah_cek,
-                          'jml_null_leader' => $jml_null_leader,
-                          'approved_date' => $approved_date,
-                          'approval_leader' => $approval_leader,
-                          'approved_date_leader' => $approved_date_leader,
-                          'first_product_audit' => $first_product_audit,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'id_departments' => $id_departments);
-            return view('first_product_audit.print', $data
-                )->with('page', 'First Product Audit');
+            // $data = array(
+            //               'subsection' => $subsection,
+            //               'leader' => $leader,
+            //               'foreman' => $foreman,
+            //               'monthTitle' => $monthTitle,
+            //               'subsection' => $subsection,
+            //               'date' => $date,
+            //               'proses' => $proses,
+            //               'jenis' => $jenis,
+            //               'standar_kualitas' => $standar_kualitas,
+            //               'jml_null' => $jml_null,
+            //               'tool_check' => $tool_check,
+            //               'jumlah_cek' => $jumlah_cek,
+            //               'jml_null_leader' => $jml_null_leader,
+            //               'approved_date' => $approved_date,
+            //               'approval_leader' => $approval_leader,
+            //               'approved_date_leader' => $approved_date_leader,
+            //               'first_product_audit' => $first_product_audit,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'id' => $id,
+            //               'id_departments' => $id_departments);
+            // return view('first_product_audit.print', $data
+            //     )->with('page', 'First Product Audit');
+
+            $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'landscape');
+
+           $pdf->loadView('first_product_audit.print', array(
+                'subsection' => $subsection,
+                'leader' => $leader,
+                'foreman' => $foreman,
+                'monthTitle' => $monthTitle,
+                'subsection' => $subsection,
+                'date' => $date,
+                'proses' => $proses,
+                'jenis' => $jenis,
+                'standar_kualitas' => $standar_kualitas,
+                'jml_null' => $jml_null,
+                'tool_check' => $tool_check,
+                'jumlah_cek' => $jumlah_cek,
+                'jml_null_leader' => $jml_null_leader,
+                'approved_date' => $approved_date,
+                'approval_leader' => $approval_leader,
+                'approved_date_leader' => $approved_date_leader,
+                'first_product_audit' => $first_product_audit,
+                'departments' => $departments,
+                'activity_name' => $activity_name,
+                'activity_alias' => $activity_alias,
+                'id' => $id,
+                'id_departments' => $id_departments
+           ));
+
+           return $pdf->stream("Audit Cek Produk Pertama Bulanan ".$leader." (".$monthTitle.").pdf");
         }
     }
 
@@ -897,7 +928,7 @@ class FirstProductAuditController extends Controller
               ->with('page', 'First Product Audit Daily')->with('status', 'First Product Audit Daily has been deleted.');     
     }
 
-    function print_first_product_audit_daily(Request $request,$id,$first_product_audit_id)
+    function print_first_product_audit_daily($id,$first_product_audit_id,$month)
     {
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
@@ -906,8 +937,7 @@ class FirstProductAuditController extends Controller
         $id_departments = $activityList->departments->id;
 
 
-        if($request->get('month') != null){
-            $month = $request->get('month');
+        if($month != null){
             $queryfirst_product_audit = "select *, first_product_audits.id as id_first_product_audit
                 from first_product_audit_dailies
                 join activity_lists on activity_lists.id = first_product_audit_dailies.activity_list_id
@@ -956,31 +986,63 @@ class FirstProductAuditController extends Controller
                 alert('Data Tidak Tersedia');
                 window.close();</script>";
         }else{
-            $data = array(
-                          'subsection' => $subsection,
-                          'leader' => $leader,
-                          'foreman' => $foreman,
-                          'monthTitle' => $monthTitle,
-                          'subsection' => $subsection,
-                          'date' => $date,
-                          'proses' => $proses,
-                          'jenis' => $jenis,
-                          'standar_kualitas' => $standar_kualitas,
-                          'jml_null' => $jml_null,
-                          'tool_check' => $tool_check,
-                          'jumlah_cek' => $jumlah_cek,
-                          'jml_null_leader' => $jml_null_leader,
-                          'approved_date' => $approved_date,
-                          'approval_leader' => $approval_leader,
-                          'approved_date_leader' => $approved_date_leader,
-                          'first_product_audit' => $first_product_audit,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'id_departments' => $id_departments);
-            return view('first_product_audit.print_daily', $data
-                )->with('page', 'First Product Audit');
+            // $data = array(
+            //               'subsection' => $subsection,
+            //               'leader' => $leader,
+            //               'foreman' => $foreman,
+            //               'monthTitle' => $monthTitle,
+            //               'subsection' => $subsection,
+            //               'date' => $date,
+            //               'proses' => $proses,
+            //               'jenis' => $jenis,
+            //               'standar_kualitas' => $standar_kualitas,
+            //               'jml_null' => $jml_null,
+            //               'tool_check' => $tool_check,
+            //               'jumlah_cek' => $jumlah_cek,
+            //               'jml_null_leader' => $jml_null_leader,
+            //               'approved_date' => $approved_date,
+            //               'approval_leader' => $approval_leader,
+            //               'approved_date_leader' => $approved_date_leader,
+            //               'first_product_audit' => $first_product_audit,
+            //               'first_product_audit_id' => $first_product_audit_id,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'id' => $id,
+            //               'id_departments' => $id_departments);
+            // return view('first_product_audit.print_daily', $data
+            //     )->with('page', 'First Product Audit');
+
+            $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'landscape');
+
+           $pdf->loadView('first_product_audit.print_daily', array(
+                'subsection' => $subsection,
+                'leader' => $leader,
+                'foreman' => $foreman,
+                'monthTitle' => $monthTitle,
+                'subsection' => $subsection,
+                'date' => $date,
+                'proses' => $proses,
+                'jenis' => $jenis,
+                'standar_kualitas' => $standar_kualitas,
+                'jml_null' => $jml_null,
+                'tool_check' => $tool_check,
+                'jumlah_cek' => $jumlah_cek,
+                'jml_null_leader' => $jml_null_leader,
+                'approved_date' => $approved_date,
+                'approval_leader' => $approval_leader,
+                'approved_date_leader' => $approved_date_leader,
+                'first_product_audit' => $first_product_audit,
+                'departments' => $departments,
+                'activity_name' => $activity_name,
+                'activity_alias' => $activity_alias,
+                'id' => $id,
+                'id_departments' => $id_departments
+           ));
+
+           return $pdf->stream("Audit Cek Produk Pertama Harian ".$leader." (".$monthTitle.").pdf");
         }
     }
 

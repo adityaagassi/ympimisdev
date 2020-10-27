@@ -2,14 +2,10 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    <a style="margin-right: 10px" class="btn btn-info pull-right" href="{{url('index/sampling_check/print_sampling/'.$id.'/'.$month)}}">Cetak / Save PDF</a>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 <style type="text/css">
@@ -42,42 +38,47 @@
 			{{ session('error') }}
 		</div>   
 	@endif
-  <div class="box box-primary">
+  <div class="box box-solid">
       <div class="box-body">
-		<table class="table">
+		<table style="width: 100%; border-collapse: collapse;" >
 			<tbody>
 				<tr>
-					<td colspan="10" style="border: 1px solid black;">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+					<td colspan="10" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">
+						<img style="width: 80px" src="{{ asset('images/logo_yamaha2.png') }}" alt="">
+					</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head">Department</td>
-					<td colspan="2" class="head">{{ $departments }}</td>
+					<td colspan="10" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">Department</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($departments) }}</td>
 					@if($jml_null > 0 && $role_code != 'M')
-					<td class="head" rowspan="5" id="approval1" style="vertical-align: middle"><center>Approval</center></td>
+					<td class="head" rowspan="5" id="approval1" style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>Approval</center></td>
 					@endif
-					<td class="head" rowspan="4" colspan="4" style="padding: 15px;vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
-					<td class="head" rowspan="4"><center>Checked<br><br>
+					<td class="head" rowspan="4" colspan="4" style="padding: 15px;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center><b>{{ $activity_name }}</b></center></td>
+					<td class="head" rowspan="4" style="padding-top: 0px;padding-bottom: 0px;"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $foreman }}<br>Foreman</center>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head">Section</td>
-					<td colspan="2" class="head">{{ $section }}</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">Section</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($section) }}</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head">Sub Section</td>
-					<td colspan="2" class="head">{{ $subsection }}</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">Sub Section</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($subsection) }}</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head">Month</td>
-					<td colspan="2" class="head">{{ $month }}</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">Bulan</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $monthTitle }}</td>
 				</tr>
-				<tr>
+				<tr style="font-weight: bold;">
 					<td class="head"><center>Date</center></td>
 					<td class="head"><center>Product</center></td>
 					<td class="head"><center>No. Seri / Part</center></td>
@@ -106,7 +107,7 @@
 					</td>
 					@endif
 					@foreach($point_check as $point_check)
-						<tr>
+						<tr style="text-align: center;">
 							<td class="head" style="border: 1px solid black;vertical-align: middle"><?php echo $point_check->point_check ?></td>
 							<td class="head" style="border: 1px solid black;vertical-align: middle"><?php echo $point_check->hasil_check ?></td>
 							<td class="head" style="border: 1px solid black;vertical-align: middle"><img width="200px" src="{{ url('/data_file/sampling_check/'.$point_check->picture_check) }}"></td>
@@ -118,7 +119,7 @@
 				@endforeach
 				@if($jml_null > 0 && $role_code != 'M')
 				<tr class="head" id="approval3">
-					<td align="right" colspan="5"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td align="right" colspan="5"><button class="btn btn-success" type="submit">Approve</button></td>
 				</tr>
 				@endif
 				</form>

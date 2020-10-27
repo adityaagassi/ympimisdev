@@ -107,7 +107,7 @@ table.table-bordered > tfoot > tr > th{
 						<div class="box-header">
 							<h3 class="box-title">Cetak {{ $activity_name }}</h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/production_audit/print_audit/'.$id)}}">
+						<!-- <form target="_blank" role="form" method="post" action="{{url('index/production_audit/print_audit/'.$id)}}"> -->
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
 						<div class="col-md-12 col-md-offset-2">
 							<div class="col-md-8">
@@ -122,16 +122,16 @@ table.table-bordered > tfoot > tr > th{
 								</div>
 							</div>
 						</div>
-						<input type="hidden" class="form-control" name="product" value="{{ $product }}" readonly>
-						<input type="hidden" class="form-control" name="proses" value="{{ $proses }}" readonly>
+						<input type="hidden" class="form-control" name="product" id="product_print" value="{{ $product }}" readonly>
+						<input type="hidden" class="form-control" name="proses" id="proses_print" value="{{ $proses }}" readonly>
 						<div class="col-md-12 col-md-offset-2">
 							<div class="col-md-8">
 								<div class="form-group pull-right">
-									<button type="submit" class="btn btn-primary col-sm-14">Print</button>
+									<button onclick="printPdf('{{$id}}',$('#product_print').val(),$('#proses_print').val(),$('#date-print').val())" class="btn btn-primary col-sm-14">Cetak</button>
 								</div>
 							</div>
 						</div>
-						</form>
+						<!-- </form> -->
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
@@ -447,6 +447,16 @@ table.table-bordered > tfoot > tr > th{
     function deleteConfirmation(url, name, audit_id,id,product,proses) {
       jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
       jQuery('#modalDeleteButton').attr("href", url+'/'+audit_id+'/'+id+'/'+product+'/'+proses);
+    }
+
+    function printPdf(id,product,proses,month) {
+    	if (month == "") {
+			alert('Pilih Bulan');
+		}else{
+			var url = "{{url('index/production_audit/print_audit/')}}";
+			// console.log(url + '/' + id+ '/' + month);
+			window.open(url + '/' + id+ '/'+ month+ '/'+ product+ '/' + proses,"_blank");
+		}
     }
   </script>
 @endsection

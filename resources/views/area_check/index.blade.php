@@ -111,7 +111,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Select Date" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Select Month" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -644,9 +644,13 @@
 	}
 
 	function print_pdf(id,month) {
-		var url = "{{url('index/area_check/print_area_check/')}}";
-		// console.log(url + '/' + id+ '/' + month);
-		window.open(url + '/' + id+ '/' + month,"_blank");
+		if (month == "") {
+			alert('Pilih Bulan');
+		}else{
+			var url = "{{url('index/area_check/print_area_check/')}}";
+			// console.log(url + '/' + id+ '/' + month);
+			window.open(url + '/' + id+ '/' + month,"_blank");
+		}
 	}
 </script>
 @endsection

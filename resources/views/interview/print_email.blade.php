@@ -2,14 +2,11 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>Paper Orientation = Landscape</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    <a class="btn btn-info pull-right" href="{{url('index/interview/print_interview/'.$interview_id)}}">Cetak / Save PDF</a>
+    <!-- <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button> -->
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 <style type="text/css">
@@ -43,55 +40,52 @@
 		</div>   
 	@endif
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    {{-- <div class="box-header with-border">
-      <h3 class="box-title">Detail User</h3>
-    </div>   --}}
+  <div class="box box-solid">
       <div class="box-body">
 		<table class="table" style="border: 1px solid black;">
 			<tbody>
 				<tr>
-					<td colspan="12" style="border: 1px solid black;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
+					<td colspan="12" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;vertical-align: middle;" colspan="12">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;" colspan="12">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;" colspan="2">Department</td>
-					<td style="border: 1px solid black;" colspan="3">{{ $departments }}</td>
-					<td rowspan="5" colspan="5" style="border: 1px solid black;padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="5"><center>Checked<br><br>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Department</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ strtoupper($departments) }}</td>
+					<td rowspan="5" colspan="5" style="border: 1px solid black;padding: 15px;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center><b>{{ $activity_name }}</b></center></td>
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;" rowspan="5"><center>Checked<br>
 						@if($interview->approval != Null)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $interview->approved_date }}</b>
-						@endif<br><br>
+						@endif<br>
 					{{ $interview->foreman }}<br>Foreman</center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="5"><center>Prepared<br><br>
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;" rowspan="5"><center>Prepared<br>
 						@if($interview->approval_leader != Null)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $interview->approved_date_leader }}</b>
-						@endif<br><br>
+						@endif<br>
 						{{ $interview->leader }}<br>Leader</center>
 					</td>
 					@if($interview->approval == Null && $role_code != 'M')
-						<td rowspan="6" id="approval1" style="border: 1px solid black;vertical-align: middle;"><center>Approval</center></td>
+						<td rowspan="6" id="approval1" style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>Approval</center></td>
 					@endif
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;" colspan="2">Section</td>
-					<td style="border: 1px solid black;" colspan="3">{{ $interview->section }}</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Section</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ strtoupper($interview->section) }}</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;" colspan="2">Sub Section</td>
-					<td style="border: 1px solid black;" colspan="3">{{ $interview->subsection }}</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Sub Section</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ strtoupper($interview->subsection) }}</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;" colspan="2">Periode</td>
-					<td style="border: 1px solid black;" colspan="3">{{ $interview->periode }}</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Periode</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ $interview->periode }}</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;" colspan="2">Date</td>
-					<td style="border: 1px solid black;" colspan="3">{{ $interview->date }}</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="2">Date</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="3">{{ $interview->date }}</td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;"><center>No.</center></td>
@@ -234,7 +228,7 @@
 					<td style="vertical-align: middle;border-top: 1px solid black"><center><label class="label label-warning">OK (Kurang Lancar)</label></center></td>
 					<td style="vertical-align: middle;border-top: 1px solid black"><center><label class="label label-danger">Not OK</label></center></td>
 					@if($interview->approval == Null && $role_code != 'M')
-					<td align="right" colspan="8" style="border-top: 1px solid black"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td align="right" colspan="8" style="border-top: 1px solid black"><button class="btn btn-success" type="submit">Approve</button></td>
 					@endif
 				</tr>
 				</form>

@@ -30,7 +30,7 @@
 
 
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
+  <div class="box box-solid">
     <div class="box-header with-border">
       {{-- <h3 class="box-title">Create New User</h3> --}}
     </div>  
@@ -167,6 +167,7 @@
     });
 
     jQuery(document).ready(function() {
+      $('body').toggleClass("sidebar-collapse");
       $('#email').val('');
       $('#password').val('');
     });

@@ -2,8 +2,9 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $leader }}
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print / Save PDF</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    <a class="btn btn-info pull-right" href="{{url('index/ng_finding/print_ng_finding/'.$id.'/'.$month)}}">Cetak / Save PDF</a>
+    <!-- <button class="btn btn-primary pull-right" onclick="myFunction()">Print / Save PDF</button> -->
   </h1>
   <ol class="breadcrumb">
   </ol>
@@ -43,12 +44,15 @@
       	<table class="table">
 			<tbody style="font-size: 10px">
 				<tr>
+					<td colspan="12" style="border: 1px solid black;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
+				</tr>
+				<tr>
 					<td style="border: 1px solid black;" colspan="10" class="head">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
 					<td class="head" style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px">Department</td>
 					<td class="head" style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px">{{ strtoupper($departments) }}</td>
-					<td class="head" rowspan="2" colspan="4" style="padding: 10px;vertical-align: middle;padding-top: 0px;padding-bottom: 0px"><center><b>{{ $activity_name }}</b></center></td>
+					<td class="head" rowspan="2" colspan="4" style="font-size:15px;padding: 10px;vertical-align: middle;padding-top: 0px;padding-bottom: 0px"><center><b>{{ $activity_name }}</b></center></td>
 					<td class="head" rowspan="2" style="padding-top: 0px;padding-bottom: 0px"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
@@ -111,7 +115,7 @@
 				@endforeach
 				@if($jml_null > 0 && $role_code != 'M')
 				<tr id="approval3" style="padding-top: 0px;padding-bottom: 0px">
-					<td align="right" colspan="10"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td align="right" colspan="10"><button class="btn btn-success" type="submit">Approve</button></td>
 				</tr>
 				@endif
 				</form>

@@ -100,7 +100,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Cetak {{ $activity_name }}</h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/labeling/print_labeling/'.$id)}}">
+						<!-- <form target="_blank" role="form" method="post" action="{{url('index/labeling/print_labeling/'.$id)}}"> -->
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -109,7 +109,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Select Month" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -117,11 +117,11 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Print</button>
+										<button onclick="printPdf('{{$id}}',$('#tgl_print').val())" class="btn btn-primary col-sm-14">Cetak</button>
 									</div>
 								</div>
 							</div>
-						</form>
+						<!-- </form> -->
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
@@ -190,9 +190,6 @@
 										<td>
 											<center>
 												<a href="{{url('index/labeling/edit/'.$id.'/'.$labeling->id)}}" class="btn btn-warning btn-sm">Edit</a>
-												{{-- <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_daily('{{ url("index/labeling/update") }}','{{ $labeling->id }}','{{ $daily_check->product }}');">
-									               Edit
-									            </button> --}}
 												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/labeling/destroy") }}', '{{ $labeling->date }} - {{ $labeling->nama_mesin }}','{{ $id }}', '{{ $labeling->id }}');">
 													Delete
 												</a>
@@ -391,6 +388,16 @@
 	function deleteConfirmation(url, name, labeling_id,id) {
 		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
 		jQuery('#modalDeleteButton').attr("href", url+'/'+labeling_id+'/'+id);
+	}
+
+	function printPdf(id,month) {
+		if (month == "") {
+			alert('Pilih Bulan');
+		}else{
+			var url = "{{url('index/labeling/print_labeling/')}}";
+			// console.log(url + '/' + id+ '/' + month);
+			window.open(url + '/' + id+ '/' + month,"_blank");
+		}
 	}
 </script>
 @endsection

@@ -2,14 +2,10 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    <a style="margin-right: 10px" class="btn btn-info pull-right" href="{{url('index/audit_process/print_audit_process/'.$id.'/'.$month)}}">Cetak / Save PDF</a>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
   <style>
 	table, th, td {
@@ -47,23 +43,28 @@
     {{ $errors->first() }}
   </div>   
   @endif
-  <div class="box box-primary">
+  <div class="box box-solid">
       <div class="box-body">
       	<table>
 			<tbody>
+				<tr>
+					<td colspan="10" style="padding-top: 0px;padding-bottom: 0px;">
+						<img style="width: 80px" src="{{ asset('images/logo_yamaha2.png') }}" alt="">
+					</td>
+				</tr>
 				<tr>
 					<td style="border: 1px solid black;" colspan="10" class="head">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
 					<td colspan="2" class="head">Department</td>
-					<td colspan="2" class="head">{{ $departments }}</td>
-					<td class="head" rowspan="5" colspan="5" style="vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
-					<td class="head" rowspan="5"><center>Checked<br><br>
+					<td colspan="2" class="head">{{ strtoupper($departments) }}</td>
+					<td class="head" rowspan="4" colspan="5" style="vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
+					<td class="head" rowspan="4"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $foreman }}<br>Foreman</center>
 					</td>
 					@if($jml_null > 0 && $role_code != 'M')
@@ -72,21 +73,17 @@
 				</tr>
 				<tr>
 					<td colspan="2" class="head">Section</td>
-					<td colspan="2" class="head">{{ $section }}</td>
+					<td colspan="2" class="head">{{ strtoupper($section) }}</td>
 				</tr>
 				<tr>
 					<td colspan="2" class="head">Product</td>
 					<td colspan="2" class="head">{{ $product }}</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head">Periode</td>
-					<td colspan="2" class="head">{{ $periode }}</td>
-				</tr>
-				<tr>
-					<td colspan="2" class="head">Month</td>
+					<td colspan="2" class="head">Bulan</td>
 					<td colspan="2" class="head">{{ $monthTitle }}</td>
 				</tr>
-				<tr>
+				<tr style="font-weight: bold;">
 					<td rowspan="2" class="head" style="vertical-align: middle"><center>No.</center></td>
 					<td rowspan="2" class="head" style="vertical-align: middle"><center>Tanggal</center></td>
 					<td rowspan="2" class="head" style="vertical-align: middle"><center>Nama Proses</center></td>
@@ -95,7 +92,7 @@
 					<td colspan="4" class="head" style="vertical-align: middle"><center>Point Audit</center></td>
 					<td rowspan="2" class="head" style="vertical-align: middle"><center>Keterangan</center></td>
 				</tr>
-				<tr>
+				<tr style="font-weight: bold;">
 					<td class="head" style="vertical-align: middle"><center>Cara Proses</center></td>
 					<td class="head" style="vertical-align: middle"><center>Kondisi Cara Proses</center></td>
 					<td class="head" style="vertical-align: middle"><center>Pemahaman</center></td>
@@ -128,7 +125,7 @@
 				@endforeach
 				@if($jml_null > 0 && $role_code != 'M')
 				<tr class="head" id="approval3">
-					<td style="border: 1px solid black;" align="right" colspan="11"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td style="border: 1px solid black;" align="right" colspan="11"><button class="btn btn-success" type="submit">Approve</button></td>
 				</tr>
 				@endif
 				</form>

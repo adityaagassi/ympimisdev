@@ -1,4 +1,4 @@
-<!-- <?php var_dump($countdate) ?> -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,16 +37,16 @@ text-align: center
 		</tr>
 		<?php $colspan = $countdate - 16 ?>
 		<tr>
-			<td style="border: 1px solid black;">Department</td>
-			<td style="border: 1px solid black;" colspan="2">{{ strtoupper($departments) }}</td>
-			<td rowspan="3" colspan="13" style="border: 1px solid black;padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
-			<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Checked<br>
+			<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px">Department</td>
+			<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px" colspan="2">{{ strtoupper($departments) }}</td>
+			<td rowspan="3" colspan="13" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
+			<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px" rowspan="3"><center>Checked<br>
 				@if($jml_null == 0)
 					<b style='color:green'>Approved</b><br>
 					<b style='color:green'>{{ $approved_date }}</b>
 				@endif<br>
 			{{ $foreman }}<br>Foreman</center></td>
-			<td style="border: 1px solid black;vertical-align: middle;" rowspan="3" colspan="{{ $colspan }}"><center>Prepared<br>
+			<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px" rowspan="3" colspan="{{ $colspan }}"><center>Prepared<br>
 				@if($jml_null_leader == 0)
 					<b style='color:green'>Approved</b><br>
 					<b style='color:green'>{{ $approved_date_leader }}</b>
@@ -54,12 +54,12 @@ text-align: center
 				{{ $leader }}<br>Leader</center></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid black;">Subsection</td>
-			<td style="border: 1px solid black;" colspan="2">{{ strtoupper($subsection) }}</td>
+			<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px">Subsection</td>
+			<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px" colspan="2">{{ strtoupper($subsection) }}</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid black;">Month</td>
-			<td style="border: 1px solid black;" colspan="2">{{ $monthTitle }}</td>
+			<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px">Bulan</td>
+			<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px" colspan="2">{{ $monthTitle }}</td>
 		</tr>
 		 <tr>
 			<td style="border: 1px solid black;"><center>Point Check / Date</center></td>

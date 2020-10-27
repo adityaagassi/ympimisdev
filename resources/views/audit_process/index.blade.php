@@ -100,7 +100,7 @@
 						<div class="box-header">
 							<h3 class="box-title">Cetak Audit Proses</h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/audit_process/print_audit_process/'.$id)}}">
+						<!-- <form target="_blank" role="form" method="post" action="{{url('index/audit_process/print_audit_process/'.$id)}}"> -->
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -109,7 +109,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Month" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Select Month" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -117,11 +117,11 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Print</button>
+										<button onclick="printPdf('{{$id}}',$('#tgl_print').val())" class="btn btn-primary col-sm-14">Print</button>
 									</div>
 								</div>
 							</div>
-						</form>
+						<!-- </form> -->
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
@@ -392,5 +392,15 @@
 		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
 		jQuery('#modalDeleteButton').attr("href", url+'/'+id+'/'+audit_process_id);
 	}
+
+	function printPdf(id,month) {
+    	if (month == "") {
+			alert('Pilih Bulan');
+		}else{
+			var url = "{{url('index/audit_process/print_audit_process/')}}";
+			// // console.log(url + '/' + id+ '/' + month);
+			window.open(url + '/' + id+ '/'+ month,"_blank");
+		}
+    }
 </script>
 @endsection

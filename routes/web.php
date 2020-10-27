@@ -17,6 +17,7 @@ if (version_compare(PHP_VERSION, '7.2.0', '>=')) {
 }
 
 Route::get('printSummary', 'TrialController@printSummary');
+Route::get('test1', 'TrialController@test1');
 Route::get('test2', 'TrialController@test2');
 Route::get('test3', 'TrialController@test3');
 Route::get('test4', 'TrialController@test4');
@@ -1489,14 +1490,15 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::post('scan/kd_mouthpiece/packing', 'MouthpieceController@scanKdMouthpiecePacking');
 	Route::post('create/kd_mouthpiece/packing', 'MouthpieceController@createKdMouthpiecePacking');
 
+	Route::get('index/kd_mouthpiece/qa_check', 'MouthpieceController@indexKdMouthpieceQaCheck');
+	Route::post('scan/kd_mouthpiece/qa_check', 'MouthpieceController@scanKdMouthpieceQaCheck');
+
 	Route::get('index/kd_mouthpiece/log', 'MouthpieceController@indexKdMouthpieceLog');
 	Route::get('fetch/kd_mouthpiece/log', 'MouthpieceController@fetchKdMouthpieceLog');
 
 
 	Route::get('index/kd_mouthpiece/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print', 'KnockDownController@printLabelNew');
-
-	
 });
 
 //ZPRO
@@ -2657,7 +2659,7 @@ Route::post('index/production_audit/store/{id}/{product}/{proses}', 'ProductionA
 Route::get('index/production_audit/edit/{id}/{audit_id}/{product}/{proses}', 'ProductionAuditController@edit');
 Route::post('index/production_audit/update/{id}/{audit_id}/{product}/{proses}', 'ProductionAuditController@update');
 Route::get('cities/get_by_country', 'ProductionAuditController@get_by_country')->name('admin.cities.get_by_country');
-Route::post('index/production_audit/print_audit/{id}', 'ProductionAuditController@print_audit');
+Route::get('index/production_audit/print_audit/{id}/{date}/{product}/{proses}', 'ProductionAuditController@print_audit');
 Route::get('index/production_audit/print_audit_email/{id}/{date}/{product}/{proses}', 'ProductionAuditController@print_audit_email');
 Route::get('index/production_audit/print_audit_chart/{id}/{date}/{product}/{proses}', 'ProductionAuditController@print_audit_chart');
 Route::get('index/production_audit/report_audit/{id}', 'ProductionAuditController@report_audit');
@@ -2730,7 +2732,7 @@ Route::post('index/sampling_check/updatedetails/{id}/{sampling_check_details_id}
 Route::get('index/sampling_check/report_sampling_check/{id}', 'SamplingCheckController@report_sampling_check');
 Route::get('index/sampling_check/fetchReport/{id}', 'SamplingCheckController@fetchReport');
 Route::get('fetch/sampling_check/detail_stat/{id}', 'SamplingCheckController@detail_sampling_check');
-Route::post('index/sampling_check/print_sampling/{id}', 'SamplingCheckController@print_sampling');
+Route::get('index/sampling_check/print_sampling/{id}/{month}', 'SamplingCheckController@print_sampling');
 Route::get('index/sampling_check/print_sampling_email/{id}/{month}', 'SamplingCheckController@print_sampling_email');
 Route::get('index/sampling_check/print_sampling_chart/{id}/{subsection}/{month}', 'SamplingCheckController@print_sampling_chart');
 Route::post('index/sampling_check/approval/{id}/{month}', 'SamplingCheckController@approval');
@@ -2816,7 +2818,7 @@ Route::get('index/audit_process/create/{id}', 'AuditProcessController@create');
 Route::post('index/audit_process/store/{id}', 'AuditProcessController@store');
 Route::get('index/audit_process/edit/{id}/{audit_process_id}', 'AuditProcessController@edit');
 Route::post('index/audit_process/update/{id}/{audit_process_id}', 'AuditProcessController@update');
-Route::post('index/audit_process/print_audit_process/{id}', 'AuditProcessController@print_audit_process');
+Route::get('index/audit_process/print_audit_process/{id}/{month}', 'AuditProcessController@print_audit_process');
 Route::post('index/audit_process/sendemail/{id}', 'AuditProcessController@sendemail');
 Route::get('index/audit_process/print_audit_process_email/{id}/{month}', 'AuditProcessController@print_audit_process_email');
 Route::post('index/audit_process/approval/{id}/{month}', 'AuditProcessController@approval');
@@ -2848,7 +2850,7 @@ Route::post('index/first_product_audit/store_daily/{id}/{first_product_audit_id}
 Route::get('index/first_product_audit/getdaily','FirstProductAuditController@getdaily')->name('first_product_audit.getdaily');
 Route::post('index/first_product_audit/update_daily/{id}/{first_product_audit_detail_id}','FirstProductAuditController@update_daily');
 Route::get('index/first_product_audit/destroy_daily/{id}/{first_product_audit_detail_id}','FirstProductAuditController@destroy_daily');
-Route::post('index/first_product_audit/print_first_product_audit_daily/{id}/{first_product_audit_id}','FirstProductAuditController@print_first_product_audit_daily');
+Route::get('index/first_product_audit/print_first_product_audit_daily/{id}/{first_product_audit_id}/{month}','FirstProductAuditController@print_first_product_audit_daily');
 Route::get('index/first_product_audit/print_first_product_audit_email_daily/{id}/{first_product_audit_id}/{month}','FirstProductAuditController@print_first_product_audit_email_daily');
 Route::post('index/first_product_audit/sendemail_daily/{id}/{first_product_audit_id}','FirstProductAuditController@sendemail_daily');
 Route::post('index/first_product_audit/approval_daily/{id}/{first_product_audit_id}/{month}','FirstProductAuditController@approval_daily');
@@ -2921,7 +2923,7 @@ Route::post('index/apd_check/store/{id}', 'ApdCheckController@store');
 Route::get('index/apd_check/getapdcheck','ApdCheckController@getapdcheck')->name('apd_check.getapdcheck');
 Route::post('index/apd_check/update/{id}','ApdCheckController@update');
 Route::get('index/apd_check/destroy/{id}/{area_check_id}', 'ApdCheckController@destroy');
-Route::post('index/apd_check/print_apd_check/{id}','ApdCheckController@print_apd_check');
+Route::get('index/apd_check/print_apd_check/{id}/{month}','ApdCheckController@print_apd_check');
 Route::get('index/apd_check/print_apd_check_email/{id}/{month}','ApdCheckController@print_apd_check_email');
 Route::post('index/apd_check/sendemail/{id}','ApdCheckController@sendemail');
 Route::post('index/apd_check/approval/{id}/{month}','ApdCheckController@approval');
@@ -2940,7 +2942,7 @@ Route::post('index/weekly_report/store/{id}', 'WeeklyActivityReportController@st
 Route::get('index/weekly_report/getweeklyreport','WeeklyActivityReportController@getweeklyreport')->name('weekly_report.getweeklyreport');
 Route::post('index/weekly_report/update/{id}','WeeklyActivityReportController@update');
 Route::get('index/weekly_report/destroy/{id}/{area_check_id}', 'WeeklyActivityReportController@destroy');
-Route::post('index/weekly_report/print_weekly_report/{id}','WeeklyActivityReportController@print_weekly_report');
+Route::get('index/weekly_report/print_weekly_report/{id}/{month}','WeeklyActivityReportController@print_weekly_report');
 Route::get('index/weekly_report/print_weekly_report_email/{id}/{month}','WeeklyActivityReportController@print_weekly_report_email');
 Route::post('index/weekly_report/sendemail/{id}','WeeklyActivityReportController@sendemail');
 Route::post('index/weekly_report/approval/{id}/{month}','WeeklyActivityReportController@approval');

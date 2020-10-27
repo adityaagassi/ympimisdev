@@ -156,6 +156,7 @@
     });
 
     jQuery(document).ready(function() {
+      $('body').toggleClass("sidebar-collapse");
       $('#email').val('');
       $('#password').val('');
     });

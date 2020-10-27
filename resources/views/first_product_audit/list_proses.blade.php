@@ -40,7 +40,7 @@
 <section class="content-header">
 	<h1>
 		List Point Audit Produk Pertama - {{$leader}}
-		<a style="color:white" href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning pull-right">Kembali</a>
+		<a style="color:white;margin-left: 5px" href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning pull-right">Kembali</a>
 		<a style="color:white" href="{{ url('index/first_product_audit/create/'.$id) }}" class="btn btn-primary pull-right">Tambah Point Audit</a>
 	</h1>
 	<ol class="breadcrumb">

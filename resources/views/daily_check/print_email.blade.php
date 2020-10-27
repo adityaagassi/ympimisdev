@@ -2,14 +2,15 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small></small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    @if($jml_null > 0 && $role_code != 'M')
+    <label class="label label-success pull-right"><input type="checkbox" onclick="checkAll(this.checked)">Approve All</label>
+    @endif
+    <a class="btn btn-info pull-right" style="margin-right: 10px" href="{{url('index/daily_check_fg/print_daily_check/'.$id.'/'.$month)}}">Cetak / Save PDF</a>
+    <!-- <small></small> -->
+    <!-- <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button> -->
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 <style type="text/css">
@@ -43,10 +44,7 @@
 		</div>   
 	@endif
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    {{-- <div class="box-header with-border">
-      <h3 class="box-title">Detail User</h3>
-    </div>   --}}
+  <div class="box box-solid">
       <div class="box-body">
 		<table class="table" style="border: 1px solid black;">
 			<tbody>
@@ -60,20 +58,20 @@
 					<td style="border: 1px solid black;">Department</td>
 					<td style="border: 1px solid black;">{{ $departments }}</td>
 					<td rowspan="3" colspan="2" style="border: 1px solid black;padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Checked<br><br>
+					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif<br>
 					{{ $foreman }}<br>Foreman</center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Prepared<br><br>
+					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Prepared<br>
 						@if($jml_null_leader == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date_leader }}</b>
 						@endif<br>
 						{{ $leader }}<br>Leader</center></td>
 					@if($jml_null > 0 && $role_code != 'M')
-					<td rowspan="4" id="approval1" style="border: 1px solid black;vertical-align: middle"><center>Approval<br><label class="label label-success"><input type="checkbox" onclick="checkAll(this.checked)">Check All</label></center></td>
+					<td rowspan="4" id="approval1" style="border: 1px solid black;vertical-align: middle"><center>Approval</center></td>
 					@endif
 				</tr>
 				<tr>
@@ -115,7 +113,7 @@
 				@endforeach
 				@if($jml_null > 0 && $role_code != 'M')
 				<tr class="head" id="approval3">
-					<td style="border: 1px solid black;" align="right" colspan="7"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td style="border: 1px solid black;" align="right" colspan="7"><button class="btn btn-success" type="submit">Approve</button></td>
 				</tr>
 				@endif
 				</form>

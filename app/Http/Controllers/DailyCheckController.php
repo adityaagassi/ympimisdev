@@ -296,9 +296,9 @@ class DailyCheckController extends Controller
             }
     }
 
-    function print_daily_check(Request $request,$id)
+    function print_daily_check($id,$month)
     {
-        $month = $request->get('month');
+        // $month = $request->get('month');
 
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
@@ -337,24 +337,47 @@ class DailyCheckController extends Controller
         if($daily_check == null){
             return redirect('/index/daily_check_fg/index/'.$id.'/'.$product)->with('error', 'Data Tidak Tersedia.')->with('page', 'Daily Check');
         }else{
-            $data = array(
-                          'daily_check' => $daily_check,
-                          'activityList' => $activityList,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'id_departments' => $id_departments,
-                          'monthTitle' => $monthTitle,
-                          'leader' => $leader,
-                          'jml_null' => $jml_null,
-                          'jml_null_leader' => $jml_null_leader,
-                          'approved_date' => $approved_date,
-                          'approved_date_leader' => $approved_date_leader,
-                          'foreman' => $foreman,
-                          'product' => $product);
-            return view('daily_check.print', $data
-                )->with('page', 'Daily Check');
+            // $data = array(
+            //               'daily_check' => $daily_check,
+            //               'activityList' => $activityList,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'id' => $id,
+            //               'id_departments' => $id_departments,
+            //               'monthTitle' => $monthTitle,
+            //               'leader' => $leader,
+            //               'jml_null' => $jml_null,
+            //               'jml_null_leader' => $jml_null_leader,
+            //               'approved_date' => $approved_date,
+            //               'approved_date_leader' => $approved_date_leader,
+            //               'foreman' => $foreman,
+            //               'product' => $product);
+            // return view('daily_check.print', $data
+            //     )->with('page', 'Daily Check');
+          $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'potrait');
+
+           $pdf->loadView('daily_check.print', array(
+                'daily_check' => $daily_check,
+                'activityList' => $activityList,
+                'departments' => $departments,
+                'activity_name' => $activity_name,
+                'activity_alias' => $activity_alias,
+                'id' => $id,
+                'id_departments' => $id_departments,
+                'monthTitle' => $monthTitle,
+                'leader' => $leader,
+                'jml_null' => $jml_null,
+                'jml_null_leader' => $jml_null_leader,
+                'approved_date' => $approved_date,
+                'approved_date_leader' => $approved_date_leader,
+                'foreman' => $foreman,
+                'product' => $product
+           ));
+
+           return $pdf->stream("Cek FG / KD ".$leader." (".$monthTitle.").pdf");
         }
     }
 

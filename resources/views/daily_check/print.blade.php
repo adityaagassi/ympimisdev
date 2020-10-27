@@ -1,65 +1,51 @@
-@extends('layouts.master')
-@section('header')
-<section class="content-header">
-  <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small></small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
-  </h1>
-  <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
-  </ol>
-</section>
-<style type="text/css">
-	@media print {
-	.table {-webkit-print-color-adjust: exact;}
-	#approval1 {
-	    display: none;
-	  }
-	  #approval2 {
-	    display: none;
-	  }
-	  #approval3 {
-	    display: none;
-	  }
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YMPI 情報システム</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <style type="text/css">
+    body{
+      font-size: 10px;
+      font-family: Calibri, sans-serif; 
+    }
+
+    #isi > thead > tr > td {
+      text-align: center;
+    }
+
+    #isi > tbody > tr > td {
+	/*      text-align: left;
+	padding-left: 5px;*/
+	text-align: center
+	}
+
+@page { }
+.footer { position: fixed; left: 0px; bottom: -50px; right: 0px; height: 200px;text-align: center;}
+.footer .pagenum:before { content: counter(page); }
 </style>
-@endsection
-@section('content')
-<section class="content">
-  @if ($errors->has('password'))
-  <div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h4><i class="icon fa fa-ban"></i> Alert!</h4>
-    {{ $errors->first() }}
-  </div>   
-  @endif
-  <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
-    {{-- <div class="box-header with-border">
-      <h3 class="box-title">Detail User</h3>
-    </div>   --}}
-      <div class="box-body">
-		<table class="table" style="border: 1px solid black;">
+</head>
+<body>
+  <header>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;" >
 			<tbody>
 				<tr>
-					<td colspan="12" style="border: 1px solid black;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
+					<td colspan="6" style="border: 1px solid black;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;vertical-align: middle;" colspan="12">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+					<td style="border: 1px solid black;vertical-align: middle;" colspan="6">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;">Department</td>
-					<td style="border: 1px solid black;">{{ $departments }}</td>
-					<td rowspan="3" colspan="2" style="border: 1px solid black;padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Checked<br><br>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">Department</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($departments) }}</td>
+					<td rowspan="3" colspan="2" style="border: 1px solid black;padding: 15px;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center><b>{{ $activity_name }}</b></center></td>
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;" rowspan="3"><center>Checked<br><br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif<br>
 					{{ $foreman }}<br>Foreman</center></td>
-					<td style="border: 1px solid black;vertical-align: middle;" rowspan="3"><center>Prepared<br><br>
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;" rowspan="3"><center>Prepared<br><br>
 						@if($jml_null_leader == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date_leader }}</b>
@@ -67,12 +53,12 @@
 						{{ $leader }}<br>Leader</center></td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;">Product</td>
-					<td style="border: 1px solid black;">{{ $product }}</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">Product</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">{{ $product }}</td>
 				</tr>
 				<tr>
-					<td style="border: 1px solid black;">Month</td>
-					<td style="border: 1px solid black;">{{ $monthTitle }}</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">Month</td>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
 					<td style="border: 1px solid black;"><center>No.</center></td>
@@ -96,30 +82,11 @@
 				@endforeach
 			</tbody>
 		</table>
-	</div>
-  </div>
-  @endsection
-<style>
-.table {
-  border: 1px solid black;
-  border-collapse: collapse;
-  font-family:"Arial";
-  padding: 5px;
-}
-#table2 {
-	border: 1px solid black;
-  border-collapse: collapse;
-  font-family:"Arial";
-  padding: 5px;
-}
-</style>
-<script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
-<script>
-    // setTimeout(function () { window.print(); }, 200);
-    function myFunction() {
-	  window.print();
-	}
-	jQuery(document).ready(function() {
-		$('body').toggleClass("sidebar-collapse");
-	});
-</script>
+</header>
+<main>
+</main>
+</body>
+</html>
+
+
+

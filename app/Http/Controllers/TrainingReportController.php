@@ -540,19 +540,38 @@ class TrainingReportController extends Controller
         if($training == null){
             return redirect('/index/training_report/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Training Report');
         }else{
-            $data = array(
-                          'training' => $training,
-                          'trainingPicture' => $trainingPicture,
-                          'trainingParticipant' => $trainingParticipant,
-                          'activityList' => $activityList,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'leader' => $leader,
-                          'id' => $id,
-                          'id_departments' => $id_departments);
-            return view('training_report.print', $data
-                )->with('page', 'Training Report');
+            // $data = array(
+            //               'training' => $training,
+            //               'trainingPicture' => $trainingPicture,
+            //               'trainingParticipant' => $trainingParticipant,
+            //               'activityList' => $activityList,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'leader' => $leader,
+            //               'id' => $id,
+            //               'id_departments' => $id_departments);
+            // return view('training_report.print', $data
+            //     )->with('page', 'Training Report');
+
+            $pdf = \App::make('dompdf.wrapper');
+             $pdf->getDomPDF()->set_option("enable_php", true);
+             $pdf->setPaper('A4', 'potrait');
+
+             $pdf->loadView('training_report.print', array(
+                   'training' => $training,
+                  'trainingPicture' => $trainingPicture,
+                  'trainingParticipant' => $trainingParticipant,
+                  'activityList' => $activityList,
+                  'departments' => $departments,
+                  'activity_name' => $activity_name,
+                  'activity_alias' => $activity_alias,
+                  'leader' => $leader,
+                  'id' => $id,
+                  'id_departments' => $id_departments
+             ));
+
+             return $pdf->stream($activity_name." - ".$leader.".pdf");
         }
     }
 

@@ -2,14 +2,10 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    <a style="margin-right: 10px" class="btn btn-info pull-right" href="{{url('index/apd_check/print_apd_check/'.$id.'/'.$month)}}">Cetak / Save PDF</a>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 <style type="text/css">
@@ -42,7 +38,7 @@
 			{{ session('error') }}
 		</div>   
 	@endif
-  <div class="box box-primary">
+  <div class="box box-solid">
       <div class="box-body">
       	<table class="table">
 			<tbody>
@@ -51,22 +47,22 @@
 				</tr>
 				<tr>
 					<td class="head">Department</td>
-					<td class="head">{{ $departments }}</td>
+					<td class="head">{{ strtoupper($departments) }}</td>
 					<td class="head" rowspan="3" colspan="6" style="padding: 15px;vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
-					<td class="head" rowspan="3"><center>Checked<br><br>
+					<td class="head" rowspan="3"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $foreman }}<br>Foreman</center>
 					</td>
-					<td class="head" rowspan="3"><center>Prepared<br><br>
+					<td class="head" rowspan="3"><center>Prepared<br>
 						@if($jml_null_leader == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date_leader }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $leader }}<br>Leader</center>
 					</td>
 					@if($jml_null > 0 && $role_code != 'M')
@@ -74,21 +70,21 @@
 					@endif
 				</tr>
 				<tr>
-					<td class="head">Sub Section</td>
-					<td class="head">{{ $subsection }}</td>
+					<td class="head">Section</td>
+					<td class="head">{{ strtoupper($subsection) }}</td>
 				</tr>
 				<tr>
 					<td class="head">Month</td>
 					<td class="head">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
-					<td class="head"><center>Date</center></td>
-					<td class="head"><center>Nama</center></td>
+					<td class="head"><center>Tanggal</center></td>
+					<td class="head"><center>Nama Operator</center></td>
 					<td class="head"><center>Proses</center></td>
 					<td class="head"><center>Jenis APD</center></td>
 					<td class="head"><center>Kondisi</center></td>
 					<td class="head" colspan="4"><center>Foto Aktual</center></td>
-					<td class="head"><center>Checked By</center></td>
+					<td class="head"><center>Dicek Oleh</center></td>
 				</tr>
 				<form role="form" method="post" action="{{url('index/apd_check/approval/'.$id.'/'.$month)}}">
 				@foreach($apd_check as $apd_check)
@@ -98,7 +94,7 @@
 					<td style="vertical-align: middle" class="head"><center>{{ $apd_check->proses }}</center></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $apd_check->jenis_apd }}</center></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $apd_check->kondisi }}</center></td>
-					<td style="vertical-align: middle" class="head" colspan="4"><?php echo  $apd_check->foto_aktual ?></td>
+					<td style="vertical-align: middle;text-align: center;" class="head" colspan="4"><?php echo  $apd_check->foto_aktual ?></td>
 					<td style="vertical-align: middle" class="head"><center>{{ $apd_check->leader }}</center></td>
 					@if($jml_null > 0 && $role_code != 'M')
 					<td id="approval2" style="vertical-align: middle;">
@@ -113,7 +109,7 @@
 				@endforeach
 				@if($jml_null > 0 && $role_code != 'M')
 				<tr id="approval3">
-					<td align="right" colspan="10"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td align="right" colspan="11"><button class="btn btn-success" type="submit">Approve</button></td>
 				</tr>
 				@endif
 				</form>

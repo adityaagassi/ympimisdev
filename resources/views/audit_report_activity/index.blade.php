@@ -113,21 +113,8 @@
 						<div class="box-header">
 							<h3 class="box-title">Cetak {{ $activity_name }}</h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/audit_report_activity/print_audit_report/'.$id)}}">
+						<!-- <form target="_blank" role="form" method="post" action="{{url('index/audit_report_activity/print_audit_report/'.$id)}}"> -->
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<div class="col-md-12 col-md-offset-2">
-								<div class="col-md-10">
-									<div class="form-group">
-										<label>Sub Section</label>
-										<select class="form-control select2" name="subsection" style="width: 100%;" data-placeholder="Pilih Sub Section" required>
-											<option value=""></option>
-											@foreach($subsection2 as $subsection2)
-											<option value="{{ $subsection2->sub_section_name }}">{{ $subsection2->sub_section_name }}</option>
-											@endforeach
-										</select>
-									</div>
-								</div>
-							</div>
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group">
@@ -135,7 +122,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Select Month" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -143,11 +130,11 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Print</button>
+										<button onclick="printPdf('{{$id}}',$('#tgl_print').val())" class="btn btn-primary col-sm-14">Cetak</button>
 									</div>
 								</div>
 							</div>
-						</form>
+						<!-- </form> -->
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
@@ -416,6 +403,16 @@
 	function deleteConfirmation(url, name, sampling_check_id,id) {
 		jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
 		jQuery('#modalDeleteButton').attr("href", url+'/'+sampling_check_id+'/'+id);
+	}
+
+	function printPdf(id,month) {
+		if (month == "") {
+			alert('Pilih Bulan');
+		}else{
+			var url = "{{url('index/audit_report_activity/print_audit_report/')}}";
+			// console.log(url + '/' + id+ '/' + month);
+			window.open(url + '/' + id+ '/' + month,"_blank");
+		}
 	}
 </script>
 @endsection

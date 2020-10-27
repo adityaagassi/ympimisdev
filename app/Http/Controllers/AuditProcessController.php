@@ -301,18 +301,15 @@ class AuditProcessController extends Controller
           }
     }
 
-    function print_audit_process(Request $request,$id)
+    function print_audit_process($id,$month)
     {
         $activityList = ActivityList::find($id);
-        // var_dump($request->get('product'));
-        // var_dump($request->get('date'));
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
 
-        if($request->get('month') != null){
-            $month = $request->get('month');
+        if($month != null){
             $queryaudit_process = "select *, audit_processes.id as id_audit_process
                 from audit_processes
                 join activity_lists on activity_lists.id = audit_processes.activity_list_id
@@ -326,8 +323,6 @@ class AuditProcessController extends Controller
         $monthTitle = date("F Y", strtotime($month));
         $jml_null = 0;
         foreach($audit_process2 as $audit_process2){
-            // $product = $samplingCheck->product;
-            // $proses = $samplingCheck->proses;
             $date = $audit_process2->date;
             $foreman = $audit_process2->foreman;
             $section = $audit_process2->section;
@@ -340,30 +335,35 @@ class AuditProcessController extends Controller
             $approved_date = $audit_process2->approved_date;
         }
         if($audit_process == null){
-            // return redirect('/index/production_audit/index/'.$id.'/'.$request->get('product').'/'.$request->get('proses'))->with('error', 'Data Tidak Tersedia.')->with('page', 'Production Audit');
             echo "<script>
                 alert('Data Tidak Tersedia');
                 window.close();</script>";
         }else{
-            $data = array(
-                          'monthTitle' => $monthTitle,
-                          'month' => $month,
-                          'leader' => $leader,
-                          'foreman' => $foreman,
-                          'section' => $section,
-                          'product' => $product,
-                          'periode' => $periode,
-                          'date' => $date,
-                          'jml_null' => $jml_null,
-                          'approved_date' => $approved_date,
-                          'audit_process' => $audit_process,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'id_departments' => $id_departments);
-            return view('audit_process.print', $data
-                )->with('page', 'Audit Process');
+
+            $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'landscape');
+
+           $pdf->loadView('audit_process.print', array(
+               'monthTitle' => $monthTitle,
+                'month' => $month,
+                'leader' => $leader,
+                'foreman' => $foreman,
+                'section' => $section,
+                'product' => $product,
+                'periode' => $periode,
+                'date' => $date,
+                'jml_null' => $jml_null,
+                'approved_date' => $approved_date,
+                'audit_process' => $audit_process,
+                'departments' => $departments,
+                'activity_name' => $activity_name,
+                'activity_alias' => $activity_alias,
+                'id' => $id,
+                'id_departments' => $id_departments
+           ));
+
+           return $pdf->stream("Audit Pemahaman Proses ".$leader." (".$monthTitle.").pdf");
         }
     }
 

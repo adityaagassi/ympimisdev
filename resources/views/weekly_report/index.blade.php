@@ -40,7 +40,10 @@
 @section('header')
 <section class="content-header">
 	<h1>
-		{{ $activity_name }} <span class="text-purple">{{ $departments }}</span>
+		Weekly Report - {{ $leader }}
+		<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
+	        Buat Weekly Report
+	    </button>
 	</h1>
 	<ol class="breadcrumb">
 	</ol>
@@ -65,11 +68,11 @@
 	@endif
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="box box-primary">
+			<div class="box box-solid">
 				<div class="box-body">
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Filter <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Filter Weekly Report</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/weekly_report/filter_weekly_report/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -88,7 +91,7 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<a href="{{ url('index/activity_list/filter/'.$id_departments.'/13/'.$frequency) }}" class="btn btn-warning">Back</a>
+										<a href="{{ url('index/production_report/index/'.$id_departments) }}" class="btn btn-warning">Back</a>
 										<a href="{{ url('index/weekly_report/index/'.$id) }}" class="btn btn-danger">Clear</a>
 										<button type="submit" class="btn btn-primary col-sm-14">Search</button>
 									</div>
@@ -98,9 +101,9 @@
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Cetak <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Cetak Weekly Report</h3>
 						</div>
-						<form target="_blank" role="form" method="post" action="{{url('index/weekly_report/print_weekly_report/'.$id)}}">
+						<!-- <form target="_blank" role="form" method="post" action="{{url('index/weekly_report/print_weekly_report/'.$id)}}"> -->
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
@@ -109,7 +112,7 @@
 											<div class="input-group-addon bg-white">
 												<i class="fa fa-calendar"></i>
 											</div>
-											<input type="text" class="form-control datepicker2" id="tgl" name="month" placeholder="Select Date" required autocomplete="off">
+											<input type="text" class="form-control datepicker2" id="tgl_print" name="month" placeholder="Select Date" required autocomplete="off">
 										</div>
 									</div>
 								</div>
@@ -117,15 +120,15 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Print</button>
+										<button onclick="printPdf('{{$id}}',$('#tgl_print').val())" class="btn btn-primary col-sm-14">Cetak</button>
 									</div>
 								</div>
 							</div>
-						</form>
+						<!-- </form> -->
 					</div>
 					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 						<div class="box-header">
-							<h3 class="box-title">Send Email <span class="text-purple">{{ $activity_name }}</span></h3>
+							<h3 class="box-title">Kirim Email ke Foreman</h3>
 						</div>
 						<form role="form" method="post" action="{{url('index/weekly_report/sendemail/'.$id)}}">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -144,107 +147,92 @@
 							<div class="col-md-12 col-md-offset-2">
 								<div class="col-md-10">
 									<div class="form-group pull-right">
-										<button type="submit" class="btn btn-primary col-sm-14">Send Email</button>
+										<button type="submit" class="btn btn-primary col-sm-14">Kirim Email</button>
 									</div>
 								</div>
 							</div>
 						</form>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div class="col-md-12">
-							<div class="col-md-12">
-								<div class="form-group pull-right">
-									<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#create-modal">
-								        Create
-								    </button>
-								</div>
-							</div>
-						</div>
-					</div>
 					<div class="row">
-						<div class="col-xs-12">
-							<div class="box">
-								<div class="box-body" style="overflow-x: scroll;">
-									<table id="example1" class="table table-bordered table-striped table-hover">
-										<thead style="background-color: rgba(126,86,134,.7);">
-											<tr>
-												<th>Sub Section</th>
-												<th>Date</th>
-												<th>Tinjauan 4M</th>
-												<th>Problem / Activity</th>
-												<th>Report Action</th>
-												<th>Foto Aktual</th>
-												<th>Send Status</th>
-												<th>Approval Status</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($weekly_report as $weekly_report)
-											<?php $type = [] ?>
-											<tr>
-												<td>{{$weekly_report->subsection}}</td>
-												<td>{{$weekly_report->date}}</td>
-												<td><?php $tinjauan = explode(',', $weekly_report->report_type);
-												for ($i = 0; $i < count($tinjauan); $i++) {
-												 	if($tinjauan[$i] == 1){
-												 		$type[] = 'Man';
-												 	}elseif ($tinjauan[$i] == 2) {
-												 		$type[] = 'Machine';
-												 	}elseif ($tinjauan[$i] == 3) {
-												 		$type[] = 'Material';
-												 	}elseif ($tinjauan[$i] == 4) {
-												 		$type[] = 'Method';
-												 	}elseif ($tinjauan[$i] == 5) {
-												 		$type[] = 'Other';
-												 	}
-												 }
-												 echo implode(' , ', $type);
-												 ?></td>
-												<td><?php echo $weekly_report->problem ?></td>
-												<td><?php echo $weekly_report->action ?></td>
-												<td><?php echo $weekly_report->foto_aktual ?></td>
-												<td>
-													@if($weekly_report->send_status == "")
-								                		<label class="label label-danger">Not Yet Sent</label>
-								                	@else
-								                		<label class="label label-success">Sent</label>
-								                	@endif
-												</td>
-												<td>@if($weekly_report->approval == "")
-								                		<label class="label label-danger">Not Approved</label>
-								                	@else
-								                		<label class="label label-success">Approved</label>
-								                	@endif</td>
-												<td>
-													<center>
-														<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_weekly_report('{{ url("index/weekly_report/update") }}','{{ $weekly_report->id }}');">
-											               Edit
-											            </button>
-														<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/weekly_report/destroy") }}','{{ implode(' , ', $type) }} - {{ $weekly_report->date }}','{{ $id }}', '{{ $weekly_report->id }}');">
-															Delete
-														</a>
-													</center>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-										<tfoot>
-											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</div>
+						<div class="col-xs-12" style="overflow-x: scroll;">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead style="background-color: rgba(126,86,134,.7);">
+									<tr>
+										<th>Sub Section</th>
+										<th>Date</th>
+										<th>Tinjauan 4M</th>
+										<th>Problem / Activity</th>
+										<th>Report Action</th>
+										<th>Foto Aktual</th>
+										<th>Send Status</th>
+										<th>Approval Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($weekly_report as $weekly_report)
+									<?php $type = [] ?>
+									<tr>
+										<td>{{$weekly_report->subsection}}</td>
+										<td>{{$weekly_report->date}}</td>
+										<td><?php $tinjauan = explode(',', $weekly_report->report_type);
+										for ($i = 0; $i < count($tinjauan); $i++) {
+										 	if($tinjauan[$i] == 1){
+										 		$type[] = 'Man';
+										 	}elseif ($tinjauan[$i] == 2) {
+										 		$type[] = 'Machine';
+										 	}elseif ($tinjauan[$i] == 3) {
+										 		$type[] = 'Material';
+										 	}elseif ($tinjauan[$i] == 4) {
+										 		$type[] = 'Method';
+										 	}elseif ($tinjauan[$i] == 5) {
+										 		$type[] = 'Other';
+										 	}
+										 }
+										 echo implode(' , ', $type);
+										 ?></td>
+										<td><?php echo $weekly_report->problem ?></td>
+										<td><?php echo $weekly_report->action ?></td>
+										<td><?php echo $weekly_report->foto_aktual ?></td>
+										<td>
+											@if($weekly_report->send_status == "")
+						                		<label class="label label-danger">Not Yet Sent</label>
+						                	@else
+						                		<label class="label label-success">Sent</label>
+						                	@endif
+										</td>
+										<td>@if($weekly_report->approval == "")
+						                		<label class="label label-danger">Not Approved</label>
+						                	@else
+						                		<label class="label label-success">Approved</label>
+						                	@endif</td>
+										<td>
+											<center>
+												<button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit-modal" onclick="edit_weekly_report('{{ url("index/weekly_report/update") }}','{{ $weekly_report->id }}');">
+									               Edit
+									            </button>
+												<a href="javascript:void(0)" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal" onclick="deleteConfirmation('{{ url("index/weekly_report/destroy") }}','{{ implode(' , ', $type) }} - {{ $weekly_report->date }}','{{ $id }}', '{{ $weekly_report->id }}');">
+													Delete
+												</a>
+											</center>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
+								<tfoot>
+									<tr>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
+							</table>
 						</div>
 					</div>
 				</div>
@@ -277,7 +265,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Create Weekly Activity Report</b></h4>
+        <h4 class="modal-title" align="center"><b>Buat Weekly Report</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -360,7 +348,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" align="center"><b>Edit Weekly Activity Report</b></h4>
+        <h4 class="modal-title" align="center"><b>Edit Weekly Report</b></h4>
       </div>
       <div class="modal-body">
       	<div class="box-body">
@@ -449,6 +437,7 @@
 	var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
 
 	jQuery(document).ready(function() {
+		$('body').toggleClass("sidebar-collapse");
 		$('.select2').select2({
 			dropdownParent: $('#create-modal')
 		});
@@ -793,5 +782,15 @@
 			}
 		});
 	}
+
+	function printPdf(id,month) {
+    	if (month == "") {
+			alert('Pilih Bulan');
+		}else{
+			var url = "{{url('index/weekly_report/print_weekly_report/')}}";
+			// // console.log(url + '/' + id+ '/' + month);
+			window.open(url + '/' + id+ '/'+ month,"_blank");
+		}
+    }
 </script>
 @endsection

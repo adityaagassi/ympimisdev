@@ -2,8 +2,9 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $leader }}
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print / Save PDF</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    <a class="btn btn-info pull-right" href="{{url('index/training_report/print/'.$id)}}">Cetak / Save PDF</a>
+    <!-- <button class="btn btn-primary pull-right" onclick="myFunction()">Print / Save PDF</button> -->
   </h1>
   <ol class="breadcrumb">
   </ol>
@@ -40,9 +41,6 @@
 	@endif
   <!-- SELECT2 EXAMPLE -->
   <div class="box box-solid">
-    {{-- <div class="box-header with-border">
-      <h3 class="box-title">Detail User</h3>
-    </div>   --}}
       <div class="box-body">
 		<table class="table" style="border: 1px solid black;">
 			<tbody style="font-size: 10px">
@@ -56,7 +54,7 @@
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px">Department</td>
 					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px">{{ strtoupper($departments) }}</td>
 					<td rowspan="3" colspan="2" style="border: 1px solid black;vertical-align: middle;font-size: 15px"><center><b>{{ $activity_name }}</b></center></td>
-					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px" rowspan="3"><center>Checked<br><br>
+					<td style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px" rowspan="3"><center>Checked<br>
 						@if($training->approval != Null)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $training->approved_date }}</b>
@@ -93,8 +91,8 @@
 					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2" style="border-top: 1px solid black;padding-top: 20px;padding-bottom: 0px">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<span class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="1">
-							    Approve</span>
+							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="1">
+							    Approve</label>
 						</td>
 					@endif
 				</tr>
@@ -109,8 +107,8 @@
 					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2" style="padding-top: 0px;padding-bottom: 0px">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<span class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="2">
-							    Approve</span>
+							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="2">
+							    Approve</label>
 						</td>
 					@endif
 				</tr>
@@ -122,8 +120,8 @@
 					@if($training->approval == Null && $role_code != 'M')
 						<td id="approval2" style="padding-top: 0px;padding-bottom: 0px">
 							<input type="hidden" value="{{csrf_token()}}" name="_token" />
-							<span class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="3">
-							    Approve</span>
+							<label class="label label-success"><input type="checkbox" class="minimal-red" name="approve[]" value="3">
+							    Approve</label>
 						</td>
 					@endif
 				</tr>
@@ -228,7 +226,7 @@
 				</tr>
 				@if($training->approval == Null && $role_code != 'M')
 				<tr id="approval3">
-					<td align="right" colspan="5"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td align="right" colspan="5"><button class="btn btn-success" type="submit">Approve</button></td>
 				</tr>
 				@endif
 				</form>

@@ -441,15 +441,12 @@ class ProductionAuditController extends Controller
         return response()->json(['html' => $html]);
     }
 
-    function print_audit(Request $request,$id)
+    function print_audit($id,$date,$origin_group,$proses)
     {
         $activityList = ActivityList::find($id);
         // var_dump($request->get('product'));
         // var_dump($request->get('date'));
-        if($request->get('product') != null && strlen($request->get('date')) != null && $request->get('proses') != null){
-            $origin_group = $request->get('product');
-            $proses = $request->get('proses');
-            $date = $request->get('date');
+        if($origin_group != null && strlen($date) != null && $proses != null){
             $queryProductionAudit = "select *, employees1.name as pic_name,
                     employees2.name as auditor_name
                     from production_audits 
@@ -467,6 +464,7 @@ class ProductionAuditController extends Controller
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
         $id_departments = $activityList->departments->id;
+        $leader = $activityList->leader_dept;
         $jml_null = 0;
 
         foreach($productionAudit as $productAudit){
@@ -486,22 +484,45 @@ class ProductionAuditController extends Controller
                 alert('Data Tidak Tersedia');
                 window.close();</script>";
         }else{
-            $data = array(
-                          'proses' => $proses,
+           //  $data = array(
+           //                'proses' => $proses,
+           //                'product' => $product,
+           //                'foreman' => $foreman,
+           //                'monthTitle' => $monthTitle,
+           //                'approved_date' => $approved_date,
+           //                'jml_null' => $jml_null,
+           //                'date_audit' => $date_audit,
+           //                'production_audit' => $productionAudit,
+           //                'departments' => $departments,
+           //                'activity_name' => $activity_name,
+           //                'activity_alias' => $activity_alias,
+           //                'id' => $id,
+           //                'id_departments' => $id_departments);
+           //  return view('production_audit.print', $data
+           //      )->with('page', 'Production Audit');
+
+             $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'potrait');
+
+           $pdf->loadView('production_audit.print', array(
+                'proses' => $proses,
                           'product' => $product,
                           'foreman' => $foreman,
                           'monthTitle' => $monthTitle,
                           'approved_date' => $approved_date,
                           'jml_null' => $jml_null,
+                          'leader' => $leader,
                           'date_audit' => $date_audit,
                           'production_audit' => $productionAudit,
                           'departments' => $departments,
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
                           'id' => $id,
-                          'id_departments' => $id_departments);
-            return view('production_audit.print', $data
-                )->with('page', 'Production Audit');
+                          'id_departments' => $id_departments
+           ));
+
+           return $pdf->stream("Audit NG Jelas ".$leader." (".$monthTitle.").pdf");
         }
     }
 
@@ -529,6 +550,7 @@ class ProductionAuditController extends Controller
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
         $id_departments = $activityList->departments->id;
 
         $monthTitle = date("F Y", strtotime($date));
@@ -558,12 +580,14 @@ class ProductionAuditController extends Controller
                           'role_code' => Auth::user()->role_code,
                           'monthTitle' => $monthTitle,
                           'jml_null' => $jml_null,
+                          'leader' => $leader,
                           'date_audit' => $date_audit,
                           'production_audit' => $productionAudit,
                           'departments' => $departments,
                           'activity_name' => $activity_name,
                           'activity_alias' => $activity_alias,
                           'id' => $id,
+                          'date' => $date,
                           'id_departments' => $id_departments);
             return view('production_audit.print_email', $data
                 )->with('page', 'Production Audit');

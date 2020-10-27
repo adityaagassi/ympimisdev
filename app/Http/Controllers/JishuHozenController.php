@@ -281,6 +281,7 @@ class JishuHozenController extends Controller
         $activity_name = $activityList->activity_name;
         $departments = $activityList->departments->department_name;
         $activity_alias = $activityList->activity_alias;
+        $leader = $activityList->leader_dept;
         $id_departments = $activityList->departments->id;
 
         $queryjishu_hozen = "select *, jishu_hozens.id as id_jishu_hozen
@@ -324,26 +325,52 @@ class JishuHozenController extends Controller
                 alert('Data Tidak Tersedia');
                 window.close();</script>";
         }else{
-            $data = array(
-                          'subsection' => $subsection,
-                          'leader' => $leader,
-                          'foreman' => $foreman,
-                          'monthTitle' => $monthTitle,
-                          'subsection' => $subsection,
-                          'date' => $date,
-                          'jml_null' => $jml_null,
-                          'jml_null_leader' => $jml_null_leader,
-                          'approved_date' => $approved_date,
-                          'approval_leader' => $approval_leader,
-                          'approved_date_leader' => $approved_date_leader,
-                          'jishu_hozen' => $jishu_hozen,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'id_departments' => $id_departments);
-            return view('jishu_hozen.print', $data
-                )->with('page', 'Jishu Hozen');
+            // $data = array(
+            //               'subsection' => $subsection,
+            //               'leader' => $leader,
+            //               'foreman' => $foreman,
+            //               'monthTitle' => $monthTitle,
+            //               'subsection' => $subsection,
+            //               'date' => $date,
+            //               'jml_null' => $jml_null,
+            //               'jml_null_leader' => $jml_null_leader,
+            //               'approved_date' => $approved_date,
+            //               'approval_leader' => $approval_leader,
+            //               'approved_date_leader' => $approved_date_leader,
+            //               'jishu_hozen' => $jishu_hozen,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'id' => $id,
+            //               'id_departments' => $id_departments);
+            // return view('jishu_hozen.print', $data
+            //     )->with('page', 'Jishu Hozen');
+
+             $pdf = \App::make('dompdf.wrapper');
+             $pdf->getDomPDF()->set_option("enable_php", true);
+             $pdf->setPaper('A4', 'landscape');
+
+             $pdf->loadView('jishu_hozen.print', array(
+                  'subsection' => $subsection,
+                  'leader' => $leader,
+                  'foreman' => $foreman,
+                  'monthTitle' => $monthTitle,
+                  'subsection' => $subsection,
+                  'date' => $date,
+                  'jml_null' => $jml_null,
+                  'jml_null_leader' => $jml_null_leader,
+                  'approved_date' => $approved_date,
+                  'approval_leader' => $approval_leader,
+                  'approved_date_leader' => $approved_date_leader,
+                  'jishu_hozen' => $jishu_hozen,
+                  'departments' => $departments,
+                  'activity_name' => $activity_name,
+                  'activity_alias' => $activity_alias,
+                  'id' => $id,
+                  'id_departments' => $id_departments
+             ));
+
+             return $pdf->stream("Audit Jishu Hozen ".$leader." (".$monthTitle.").pdf");
         }
     }
 

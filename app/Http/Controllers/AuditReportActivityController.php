@@ -366,7 +366,7 @@ class AuditReportActivityController extends Controller
 
     }
 
-    function print_audit_report(Request $request,$id)
+    function print_audit_report($id,$month)
     {
         $activityList = ActivityList::find($id);
         // var_dump($request->get('product'));
@@ -377,15 +377,13 @@ class AuditReportActivityController extends Controller
         $id_departments = $activityList->departments->id;
 
 
-        if($request->get('subsection') != null && $request->get('month') != null){
-            $subsection = $request->get('subsection');
-            $month = $request->get('month');
+        if($month != null){
+            // $month = $request->get('month');
             $queryLaporanAktivitas = "select *, audit_report_activities.id as id_audit_report
                 from audit_report_activities
                 join activity_lists on activity_lists.id = audit_report_activities.activity_list_id
                 where activity_lists.id = '".$id."'
                 and activity_lists.department_id = '".$id_departments."'
-                and audit_report_activities.subsection = '".$subsection."' 
                 and DATE_FORMAT(audit_report_activities.date,'%Y-%m') = '".$month."' 
                 and audit_report_activities.deleted_at is null";
             $laporanAktivitas = DB::select($queryLaporanAktivitas);
@@ -417,26 +415,51 @@ class AuditReportActivityController extends Controller
                 alert('Data Tidak Tersedia');
                 window.close();</script>";
         }else{
-            $data = array(
-                          'subsection' => $subsection,
-                          'leader' => $leader,
-                          'foreman' => $foreman,
-                          'section' => $section,
-                          'monthTitle' => $monthTitle,
-                          'subsection' => $subsection,
-                          'date' => $date,
-                          'jml_null' => $jml_null,
-                          'approved_date' => $approved_date,
-                          'approval_leader' => $approval_leader,
-                          'approved_date_leader' => $approved_date_leader,
-                          'laporanAktivitas' => $laporanAktivitas,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'id_departments' => $id_departments);
-            return view('audit_report_activity.print', $data
-                )->with('page', 'Laporan Aktivitas Audit');
+            // $data = array(
+            //               'subsection' => $subsection,
+            //               'leader' => $leader,
+            //               'foreman' => $foreman,
+            //               'section' => $section,
+            //               'monthTitle' => $monthTitle,
+            //               'date' => $date,
+            //               'jml_null' => $jml_null,
+            //               'approved_date' => $approved_date,
+            //               'approval_leader' => $approval_leader,
+            //               'approved_date_leader' => $approved_date_leader,
+            //               'laporanAktivitas' => $laporanAktivitas,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'id' => $id,
+            //               'id_departments' => $id_departments);
+            // return view('audit_report_activity.print', $data
+            //     )->with('page', 'Laporan Aktivitas Audit');
+
+            $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'landscape');
+
+           $pdf->loadView('audit_report_activity.print', array(
+                'subsection' => $subsection,
+                  'leader' => $leader,
+                  'foreman' => $foreman,
+                  'section' => $section,
+                  'monthTitle' => $monthTitle,
+                  'date' => $date,
+                  'jml_null' => $jml_null,
+                  'month' => $month,
+                  'approved_date' => $approved_date,
+                  'approval_leader' => $approval_leader,
+                  'approved_date_leader' => $approved_date_leader,
+                  'laporanAktivitas' => $laporanAktivitas,
+                  'departments' => $departments,
+                  'activity_name' => $activity_name,
+                  'activity_alias' => $activity_alias,
+                  'id' => $id,
+                  'id_departments' => $id_departments
+           ));
+
+           return $pdf->stream("Audit IK ".$leader." (".$monthTitle.").pdf");
         }
     }
 
@@ -566,6 +589,7 @@ class AuditReportActivityController extends Controller
                           'approved_date_leader' => $approved_date_leader,
                           'monthTitle' => $monthTitle,
                           'date' => $date,
+                          'month' => $month,
                           'jml_null' => $jml_null,
                           'approved_date' => $approved_date,
                           'laporanAktivitas' => $laporanAktivitas,

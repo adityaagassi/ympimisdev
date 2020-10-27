@@ -2,14 +2,10 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    <a style="margin-right: 10px" class="btn btn-info pull-right" href="{{url('index/production_audit/print_audit/'.$id.'/'.$date.'/'.$product.'/'.$proses)}}">Cetak / Save PDF</a>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
 </section>
 <style type="text/css">
@@ -43,7 +39,7 @@
 		</div>   
 	@endif
   <!-- SELECT2 EXAMPLE -->
-  <div class="box box-primary">
+  <div class="box box-solid">
       <div class="box-body">
 			<table class="table" style="border: 1px solid black;">
 				<tbody>
@@ -118,7 +114,7 @@
 					@endforeach
 					@if($jml_null > 0 && $role_code != 'M')
 					<tr id="approval3">
-						<td align="right" colspan="8"><button class="btn btn-success" type="submit">Submit</button></td>
+						<td align="right" colspan="8"><button class="btn btn-success" type="submit">Approve</button></td>
 					</tr>
 					@endif
 					</form>

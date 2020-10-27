@@ -260,9 +260,8 @@ class WeeklyActivityReportController extends Controller
             }
     }
 
-    function print_weekly_report(Request $request,$id)
+    function print_weekly_report($id,$month)
     {
-        $month = $request->get('month');
 
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
@@ -302,26 +301,31 @@ class WeeklyActivityReportController extends Controller
         if($weekly_report == null){
             return redirect('/index/weekly_report/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Weekly Activity Report');
         }else{
-            $data = array(
-                          'subsection' => $subsection,
-                          'weekly_report' => $weekly_report,
-                          'activityList' => $activityList,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'role_code' => Auth::user()->role_code,
-                          'id_departments' => $id_departments,
-                          'monthTitle' => $monthTitle,
-                          'month' => $month,
-                          'leader' => $leader,
-                          'jml_null' => $jml_null,
-                          'jml_null_leader' => $jml_null_leader,
-                          'approved_date' => $approved_date,
-                          'approved_date_leader' => $approved_date_leader,
-                          'foreman' => $foreman,);
-            return view('weekly_report.print', $data
-                )->with('page', 'Weekly Activity Report');
+            $pdf = \App::make('dompdf.wrapper');
+           $pdf->getDomPDF()->set_option("enable_php", true);
+           $pdf->setPaper('A4', 'landscape');
+
+           $pdf->loadView('weekly_report.print', array(
+               'subsection' => $subsection,
+                'weekly_report' => $weekly_report,
+                'activityList' => $activityList,
+                'departments' => $departments,
+                'activity_name' => $activity_name,
+                'activity_alias' => $activity_alias,
+                'id' => $id,
+                'role_code' => Auth::user()->role_code,
+                'id_departments' => $id_departments,
+                'monthTitle' => $monthTitle,
+                'month' => $month,
+                'leader' => $leader,
+                'jml_null' => $jml_null,
+                'jml_null_leader' => $jml_null_leader,
+                'approved_date' => $approved_date,
+                'approved_date_leader' => $approved_date_leader,
+                'foreman' => $foreman,
+           ));
+
+           return $pdf->stream("Weekly Report ".$leader." (".$monthTitle.").pdf");
         }
     }
 

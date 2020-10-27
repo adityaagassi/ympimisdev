@@ -1,148 +1,114 @@
-@extends('layouts.master')
-@section('header')
-<section class="content-header">
-  <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
-  </h1>
-  <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
-  </ol>
-</section>
-<style type="text/css">
-	@media print {
-	.table {-webkit-print-color-adjust: exact;}
-	#approval1 {
-	    display: none;
-	  }
-	  #approval2 {
-	    display: none;
-	  }
-	  #approval3 {
-	    display: none;
-	  }
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>YMPI 情報システム</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <style type="text/css">
+    body{
+      font-size: 10px;
+      font-family: Calibri, sans-serif; 
+    }
+
+    #isi > thead > tr > td {
+      text-align: center;
+    }
+
+    #isi > tbody > tr > td {
+	/*      text-align: left;
+	padding-left: 5px;*/
+	text-align: center
+	}
+
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	  vertical-align:middle;
+	}
+
+@page { }
+.footer { position: fixed; left: 0px; bottom: -50px; right: 0px; height: 200px;text-align: center;}
+.footer .pagenum:before { content: counter(page); }
 </style>
-@endsection
-@section('content')
-<section class="content">
-  @if (session('status'))
-		<div class="alert alert-success alert-dismissible">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			<h4><i class="icon fa fa-thumbs-o-up"></i> Success!</h4>
-			{{ session('status') }}
-		</div>   
-	@endif
-	@if (session('error'))
-		<div class="alert alert-warning alert-dismissible">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			<h4> Warning!</h4>
-			{{ session('error') }}
-		</div>   
-	@endif
-  <div class="box box-primary">
-      <div class="box-body">
-		<table class="table">
+</head>
+<body>
+  <header>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;" >
 			<tbody>
 				<tr>
-					<td colspan="9" style="border: 1px solid black;">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+					<td colspan="8" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head">Department</td>
-					<td colspan="2" class="head">{{ $departments }}</td>
-					<td class="head" rowspan="4" colspan="2" style="padding: 15px;vertical-align: middle;"><center><b>{{ $activity_name }}</b></center></td>
-					<td class="head" rowspan="4"><center>Checked<br><br>
+					<td colspan="8" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">Department</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($departments) }}</td>
+					<td class="head" rowspan="3" colspan="2" style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center><b>{{ $activity_name }}</b></center></td>
+					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $foreman }}<br>Foreman</center></td>
-					<td class="head" rowspan="4"><center>Prepared<br><br>
+					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center>Prepared<br>
 						@if($approval_leader != Null)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date_leader }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $leader }}<br>Leader</center></td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head">Section</td>
-					<td colspan="2" class="head">{{ $section }}</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">Section</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($section) }}</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head">Nama PIC</td>
-					<td colspan="2" class="head">{{ $leader }}</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">Month</td>
+					<td colspan="2" class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
-					<td colspan="2" class="head">Month</td>
-					<td colspan="2" class="head">{{ $monthTitle }}</td>
+					<td class="head" rowspan="2"><center><b>No.</b></center></td>
+					<td class="head" rowspan="2"><center><b>Date</b></center></td>
+					<td class="head" rowspan="2"><center><b>Nama Dokumen</b></center></td>
+					<td class="head" rowspan="2"><center><b>No. Dokumen</b></center></td>
+					<td class="head" colspan='3'><center><b>Hasil Audit IK</b></center></td>
+					<td class="head" rowspan="2"><center><b>Operator</b></center></td>
 				</tr>
 				<tr>
-					<td class="head" colspan='8'></td>
-				</tr>
-				<tr>
-					<td class="head" rowspan="2"><center>No.</center></td>
-					<td class="head" rowspan="2"><center>Date</center></td>
-					<td class="head" rowspan="2"><center>Nama Dokumen</center></td>
-					<td class="head" rowspan="2"><center>No. Dokumen</center></td>
-					<td class="head" colspan='3'><center>Hasil Audit IK</center></td>
-					<td class="head"><center>Sosialisasi</center></td>
-				</tr>
-				<tr>
-					<td class="head"><center>Kesesuaian dengan Aktual Proses</center></td>
-					<td class="head"><center>Kelengkapan Point Safety</center></td>
-					<td class="head"><center>Kesesuaian QC Kouteihyo</center></td>
-					<td class="head"><center>Nama Operator</center></td>
+					<td class="head"><center><b>Kesesuaian dengan Aktual Proses</b></center></td>
+					<td class="head"><center><b>Kelengkapan Point Safety</b></center></td>
+					<td class="head"><center><b>Kesesuaian QC Kouteihyo</b></center></td>
 				</tr>
 				<?php $no = 1 ?>
 				@foreach($laporanAktivitas as $laporanAktivitas)
 				<tr>
-					<td class="head" rowspan="3"><center>{{ $no }}</center></td>
-					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->date }}</center></td>
-					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->nama_dokumen }}</center></td>
-					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->no_dokumen }}</center></td>
-					<td class="head"><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></td>
-					<td class="head" rowspan="3">{{ $laporanAktivitas->kelengkapan_point_safety }}</td>
-					<td class="head" rowspan="3">{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</td>
-					<td class="head" rowspan="3"><center>{{ $laporanAktivitas->operator }}</center></td>
+					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center>{{ $no }}</center></td>
+					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center>{{ $laporanAktivitas->date }}</center></td>
+					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center>{{ $laporanAktivitas->nama_dokumen }}</center></td>
+					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center>{{ $laporanAktivitas->no_dokumen }}</center></td>
+					<td class="head" style="text-align: center;padding-top: 0px;padding-bottom: 0px;"><?php echo $laporanAktivitas->kesesuaian_aktual_proses ?></td>
+					<td class="head" rowspan="3" style="text-align: center;padding-top: 0px;padding-bottom: 0px;">{{ $laporanAktivitas->kelengkapan_point_safety }}</td>
+					<td class="head" rowspan="3" style="text-align: center;padding-top: 0px;padding-bottom: 0px;">{{ $laporanAktivitas->kesesuaian_qc_kouteihyo }}</td>
+					<td class="head" rowspan="3" style="padding-top: 0px;padding-bottom: 0px;"><center>{{ $laporanAktivitas->operator }}</center></td>
 				</tr>
 				<tr>
-					<td>Tindakan Perbaikan : {{ $laporanAktivitas->tindakan_perbaikan }}</td>
+					<td style="padding-top: 0px;padding-bottom: 0px;">Tindakan Perbaikan : {{ $laporanAktivitas->tindakan_perbaikan }}</td>
 				</tr>
 				<tr>
-					<td>Target : {{ $laporanAktivitas->target }}</td>
+					<td style="padding-top: 0px;padding-bottom: 0px;">Target : {{ $laporanAktivitas->target }}</td>
 				</tr>
 				<?php $no++ ?>
 				@endforeach
 				
 			</tbody>
 		</table>
-	</div>
-  </div>
-</section>
-  @endsection
-<style>
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-  font-family:"Arial";
-  padding: 5px;
-  vertical-align:middle;
-}
-@media print {
-	body {-webkit-print-color-adjust: exact;}
-}
-</style>
-<script src="{{ url("bower_components/jquery/dist/jquery.min.js")}}"></script>
-<script>
-    // setTimeout(function () { window.print(); }, 200);
-    function myFunction() {
-	  window.print();
-	}
-	jQuery(document).ready(function() {
-		$('body').toggleClass("sidebar-collapse");
-	});
-</script>
+</header>
+<main>
+</main>
+</body>
+</html>
+
+
+

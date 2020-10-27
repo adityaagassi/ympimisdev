@@ -345,7 +345,7 @@ class AreaCheckController extends Controller
                           'foreman' => $foreman,
            ));
 
-           return $pdf->stream("Cek Area.pdf");
+           return $pdf->stream("Cek Area ".$leader." (".$monthTitle.").pdf");
         }
     }
 

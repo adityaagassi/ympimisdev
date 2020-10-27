@@ -2,14 +2,11 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Approval {{ $activity_name }} - {{ $leader }}
+    <a style="margin-right: 10px" class="btn btn-info pull-right" href="{{url('index/first_product_audit/print_first_product_audit_daily/'.$id.'/'.$id_first_product_audit.'/'.$month)}}">Cetak / Save PDF</a>
+    <!-- <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button> -->
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
   <style>
 	table, th, td {
@@ -18,6 +15,7 @@
 	  font-family:"Arial";
 	  padding: 5px;
 	  vertical-align:middle;
+	  font-size: 10px
 	}
 	@media print {
 		body {-webkit-print-color-adjust: exact;}
@@ -54,79 +52,82 @@
 			{{ session('error') }}
 		</div>   
 	@endif
-  <div class="box box-primary">
+  <div class="box box-solid">
       <div class="box-body">
-      	<table>
+      	<table style="width: 100%; border-collapse: collapse; text-align: left;" >
 			<tbody>
 				<tr>
-					<td style="border: 1px solid black;" colspan="11" class="head">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+					<td colspan="11" style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;"><img width="80px" src="{{ asset('images/logo_yamaha2.png') }}" alt=""></td>
 				</tr>
 				<tr>
-					<td  class="head">Department</td>
-					<td  class="head">{{ $departments }}</td>
-					<td class="head" rowspan="8"  style="vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
-					<td class="head" rowspan="8"><center>Checked<br><br>
+					<td style="border: 1px solid black;padding-top: 0px;padding-bottom: 0px;" colspan="11" class="head">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
+				</tr>
+				<tr>
+					<td  class="head" style="padding-top: 0px;padding-bottom: 0px;">Department</td>
+					<td  class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($departments) }}</td>
+					<td class="head" rowspan="8"  style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center><b>{{ $activity_name }}</b></center></td>
+					<td class="head" rowspan="8" style="padding-top: 0px;padding-bottom: 0px;"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $foreman }}<br>Foreman</center></td>
-					<td class="head" rowspan="8"><center>Prepared<br><br>
+					<td class="head" rowspan="8" style="padding-top: 0px;padding-bottom: 0px;"><center>Prepared<br>
 						@if($jml_null_leader == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date_leader }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $leader }}<br>Leader</center>
 					</td>
 					@if($jml_null > 0)
-					<td rowspan="8" id="approval1" style="border: 1px solid black;vertical-align: middle"><center>Approval</center></td>
+					<td rowspan="8" id="approval1" style="border: 1px solid black;vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>Approval</center></td>
 					@endif
 				</tr>
 				<tr>
-					<td  class="head">Sub Section</td>
-					<td  class="head">{{ $subsection }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Sub Section</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ strtoupper($subsection) }}</td>
 				</tr>
 				<tr>
-					<td  class="head">Proses</td>
-					<td  class="head">{{ $proses }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Proses</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $proses }}</td>
 				</tr>
 				<tr>
-					<td  class="head">Jenis</td>
-					<td  class="head">{{ $jenis }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Jenis</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $jenis }}</td>
 				</tr>
 				<tr>
-					<td  class="head">Standar Kualitas</td>
-					<td  class="head">{{ $standar_kualitas }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Standar Kualitas</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $standar_kualitas }}</td>
 				</tr>
 				<tr>
-					<td  class="head">Tool Check</td>
-					<td  class="head">{{ $tool_check }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Tool Check</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $tool_check }}</td>
 				</tr>
 				<tr>
-					<td  class="head">Jumlah Cek</td>
-					<td  class="head">{{ $jumlah_cek }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Jumlah Cek</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $jumlah_cek }}</td>
 				</tr>
 				<tr>
-					<td  class="head">Bulan</td>
-					<td  class="head">{{ $monthTitle }}</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">Bulan</td>
+					<td class="head" style="padding-top: 0px;padding-bottom: 0px;">{{ $monthTitle }}</td>
 				</tr>
 				<tr>
-					<th style="vertical-align: middle"><center>Date</center></th>
-					<th style="vertical-align: middle"><center>Judgement</center></th>
-					<th style="vertical-align: middle"><center>Note</center></th>
-					<th style="vertical-align: middle"><center>PIC</center></th>
-					<th style="vertical-align: middle"><center>Auditor</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>Date</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>Judgement</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>Note</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>PIC</center></th>
+					<th style="vertical-align: middle;padding-top: 0px;padding-bottom: 0px;"><center>Auditor</center></th>
 				</tr>
 				<form role="form" method="post" action="{{url('index/first_product_audit/approval_daily/'.$id.'/'.$id_first_product_audit.'/'.$month)}}">
 				@foreach($first_product_audit as $first_product_audit)
 				<tr>
-					<td class="head" style="vertical-align: middle"><center>{{ $first_product_audit->date }}</center></td>
-					<td class="head" style="vertical-align: middle"><center>{{ $first_product_audit->judgement }}</center></td>
-					<td class="head" style="vertical-align: middle"><center><?php echo $first_product_audit->note ?></center></td>
-					<td class="head" style="vertical-align: middle">{{ $first_product_audit->pic }}</td>
-					<td class="head" style="vertical-align: middle">{{ $first_product_audit->auditor }}</td>
+					<td class="head" style="vertical-align: middle;"><center>{{ $first_product_audit->date }}</center></td>
+					<td class="head" style="vertical-align: middle;"><center>{{ $first_product_audit->judgement }}</center></td>
+					<td class="head" style="vertical-align: middle;"><center><?php echo $first_product_audit->note ?></center></td>
+					<td class="head" style="vertical-align: middle;">{{ $first_product_audit->pic }}</td>
+					<td class="head" style="vertical-align: middle;">{{ $first_product_audit->auditor }}</td>
 					@if($jml_null > 0)
 					<td id="approval2" class="head" style="border: 1px solid black;vertical-align: middle">
 						<input type="hidden" value="{{csrf_token()}}" name="_token" />
@@ -139,7 +140,7 @@
 				@endforeach
 				@if($jml_null > 0)
 				<tr class="head" id="approval3">
-					<td style="border: 1px solid black;" align="right" colspan="12"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td style="border: 1px solid black;" align="right" colspan="12"><button class="btn btn-success" type="submit">Approve</button></td>
 				</tr>
 				@endif
 				</form>

@@ -2,14 +2,10 @@
 @section('header')
 <section class="content-header">
   <h1>
-    Print {{ $activity_name }} - {{ $departments }}
-    <small>it all starts here</small>
-    <button class="btn btn-primary pull-right" onclick="myFunction()">Print</button>
+    Cetak {{ $activity_name }} - {{ $leader }}
+    <a class="btn btn-info pull-right" href="{{url('index/jishu_hozen/print_jishu_hozen/'.$id.'/'.$jishu_hozen_id.'/'.$month)}}">Cetak / Save PDF</a>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li><a href="#">Examples</a></li>
-    <li class="active">Blank page</li> --}}
   </ol>
   <style>
 	table, th, td {
@@ -18,6 +14,7 @@
 	  font-family:"Arial";
 	  padding: 5px;
 	  vertical-align:middle;
+	  font-size: 10px
 	}
 	@media print {
 		body {-webkit-print-color-adjust: exact;}
@@ -54,30 +51,30 @@
 			{{ session('error') }}
 		</div>   
 	@endif
-  <div class="box box-primary">
+  <div class="box box-solid">
       <div class="box-body">
-      	<table>
+      	<table style="width: 100%">
 			<tbody>
 				<tr>
 					<td style="border: 1px solid black;" colspan="8"  class="head">PT. YAMAHA MUSICAL PRODUCTS INDONESIA</td>
 				</tr>
 				<tr>
 					<td colspan="2" class="head">Department</td>
-					<td colspan="2" class="head">{{ $departments }}</td>
+					<td colspan="2" class="head">{{ strtoupper($departments) }}</td>
 					<td class="head" rowspan="4" colspan="2" style="vertical-align: middle"><center><b>{{ $activity_name }}</b></center></td>
-					<td class="head" rowspan="4"><center>Checked<br><br>
+					<td class="head" rowspan="4"><center>Checked<br>
 						@if($jml_null == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $foreman }}<br>Foreman</center></td>
-					<td class="head" rowspan="4"><center>Prepared<br><br>
+					<td class="head" rowspan="4"><center>Prepared<br>
 						@if($jml_null_leader == 0)
 							<b style='color:green'>Approved</b><br>
 							<b style='color:green'>{{ $approved_date_leader }}</b>
 						@endif
-						<br><br>
+						<br>
 						{{ $leader }}<br>Leader</center>
 					</td>
 					@if($approval == Null && $role_code != 'M')
@@ -86,7 +83,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" class="head">Sub Section</td>
-					<td colspan="2" class="head">{{ $subsection }}</td>
+					<td colspan="2" class="head">{{ strtoupper($subsection) }}</td>
 				</tr>
 				<tr>
 					<td colspan="2" class="head">Bulan</td>
@@ -111,7 +108,7 @@
 				@endforeach
 				@if($jishu_hozen->approval == Null && $role_code != 'M')
 				<tr id="approval3">
-					<td align="right" colspan="9"><button class="btn btn-success" type="submit">Submit</button></td>
+					<td align="right" colspan="9"><button class="btn btn-success" type="submit">Approve</button></td>
 				</tr>
 				@endif
 				</form>

@@ -268,9 +268,9 @@ class NgFindingController extends Controller
             }
     }
 
-    function print_ng_finding(Request $request,$id)
+    function print_ng_finding($id,$month)
     {
-        $month = $request->get('month');
+        // $month = $request->get('month');
 
         $activityList = ActivityList::find($id);
         $activity_name = $activityList->activity_name;
@@ -317,26 +317,52 @@ class NgFindingController extends Controller
         	echo "<script type='text/javascript'>window.close();</script>";
             // return redirect('/index/ng_finding/index/'.$id)->with('error', 'Data Tidak Tersedia.')->with('page', 'Temuan NG');
         }else{
-            $data = array(
-                          'ng_finding' => $ng_finding,
-                          'activityList' => $activityList,
-                          'departments' => $departments,
-                          'activity_name' => $activity_name,
-                          'activity_alias' => $activity_alias,
-                          'id' => $id,
-                          'role_code' => Auth::user()->role_code,
-                          'id_departments' => $id_departments,
-                          'monthTitle' => $monthTitle,
-                          'leader' => $leader,
-                          'month' => $month,
-                          'leader' => $leader,
-                          'jml_null' => $jml_null,
-                          'jml_null_leader' => $jml_null_leader,
-                          'approved_date' => $approved_date,
-                          'approved_date_leader' => $approved_date_leader,
-                          'foreman' => $foreman,);
-            return view('ng_finding.print', $data
-                )->with('page', 'Temuan NG');
+            // $data = array(
+            //               'ng_finding' => $ng_finding,
+            //               'activityList' => $activityList,
+            //               'departments' => $departments,
+            //               'activity_name' => $activity_name,
+            //               'activity_alias' => $activity_alias,
+            //               'id' => $id,
+            //               'role_code' => Auth::user()->role_code,
+            //               'id_departments' => $id_departments,
+            //               'monthTitle' => $monthTitle,
+            //               'leader' => $leader,
+            //               'month' => $month,
+            //               'leader' => $leader,
+            //               'jml_null' => $jml_null,
+            //               'jml_null_leader' => $jml_null_leader,
+            //               'approved_date' => $approved_date,
+            //               'approved_date_leader' => $approved_date_leader,
+            //               'foreman' => $foreman,);
+            // return view('ng_finding.print', $data
+            //     )->with('page', 'Temuan NG');
+
+             $pdf = \App::make('dompdf.wrapper');
+             $pdf->getDomPDF()->set_option("enable_php", true);
+             $pdf->setPaper('A4', 'landscape');
+
+             $pdf->loadView('ng_finding.print', array(
+                  'ng_finding' => $ng_finding,
+                  'activityList' => $activityList,
+                  'departments' => $departments,
+                  'activity_name' => $activity_name,
+                  'activity_alias' => $activity_alias,
+                  'id' => $id,
+                  'role_code' => Auth::user()->role_code,
+                  'id_departments' => $id_departments,
+                  'monthTitle' => $monthTitle,
+                  'leader' => $leader,
+                  'month' => $month,
+                  'leader' => $leader,
+                  'jml_null' => $jml_null,
+                  'jml_null_leader' => $jml_null_leader,
+                  'approved_date' => $approved_date,
+                  'approved_date_leader' => $approved_date_leader,
+                  'foreman' => $foreman,
+             ));
+
+             return $pdf->stream("Temuan NG ".$leader." (".$monthTitle.").pdf");
         }
     }
 
