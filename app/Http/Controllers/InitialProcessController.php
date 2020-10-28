@@ -245,8 +245,21 @@ class InitialProcessController extends Controller
 
 	public function fetchStockMonitoringDetail(Request $request){
 		$now = date('Y-m');
-		
+
 		$query = "SELECT
+		A.material_number,
+		A.description,
+		A.remark,
+		A.quantity,
+		A.safety,
+		A.stock,
+		A.category,
+		A.days,
+		B.lot,
+		B.kanban
+		FROM
+		(
+		SELECT
 		inventories.material_number,
 		inventories.description,
 		COALESCE ( inventories.remark, 'UNIDENTIFIED' ) AS remark,
@@ -313,201 +326,284 @@ class InitialProcessController extends Controller
 		category = '".$request->get('category')."' 
 		AND remark = '".$request->get('remark')."' 
 		ORDER BY
-		days ASC";
+		days ASC 
+		) AS A
+		LEFT JOIN (
+		SELECT
+		kitto.materials.material_number,
+		count( kitto.completions.id ) AS kanban,
+		min( kitto.completions.lot_completion ) AS lot 
+		FROM
+		kitto.completions
+		LEFT JOIN kitto.materials ON kitto.materials.id = kitto.completions.material_id 
+		WHERE
+		kitto.completions.active = 1 
+		GROUP BY
+		kitto.materials.material_number 
+	) AS B ON A.material_number = B.material_number";
+	
+	// $query = "SELECT
+	// inventories.material_number,
+	// inventories.description,
+	// COALESCE ( inventories.remark, 'UNIDENTIFIED' ) AS remark,
+	// inventories.quantity,
+	// stocks.quantity AS safety,
+	// IF
+	// (
+	// ceiling( inventories.quantity / stocks.quantity )= 0,
+	// 0,
+	// IF
+	// (
+	// inventories.quantity / stocks.quantity > 0 
+	// AND inventories.quantity / stocks.quantity <= 0.5, 0.5, IF ( inventories.quantity / stocks.quantity > 0.5 
+	// AND inventories.quantity / stocks.quantity <= 1, 1, IF ( inventories.quantity / stocks.quantity > 1 
+	// AND inventories.quantity / stocks.quantity <= 1.5, 1.5, IF ( inventories.quantity / stocks.quantity > 1.5 
+	// AND inventories.quantity / stocks.quantity <= 2, 2, IF ( inventories.quantity / stocks.quantity > 2 
+	// AND inventories.quantity / stocks.quantity <= 2.5, 2.5, IF ( inventories.quantity / stocks.quantity > 2.5 
+	// AND inventories.quantity / stocks.quantity <= 3, 3, IF ( inventories.quantity / stocks.quantity > 3 
+	// AND inventories.quantity / stocks.quantity <= 3.5, 3.5, IF ( inventories.quantity / stocks.quantity > 3.5 
+	// AND inventories.quantity / stocks.quantity <= 4, 4, IF ( inventories.quantity / stocks.quantity > 4 
+	// AND inventories.quantity / stocks.quantity <= 4.5, 4.5, IF ( inventories.quantity / stocks.quantity > 4.5,
+	// 4.6,
+	// 4.6 
+	// ))))))))))) AS stock,
+	// IF
+	// (
+	// ceiling( inventories.quantity / stocks.quantity )= 0,
+	// '0Days',
+	// IF
+	// (
+	// inventories.quantity / stocks.quantity > 0 
+	// AND inventories.quantity / stocks.quantity <= 0.5, '<0.5Days', IF ( inventories.quantity / stocks.quantity > 0.5 
+	// AND inventories.quantity / stocks.quantity <= 1, '<1Days', IF ( inventories.quantity / stocks.quantity > 1 
+	// AND inventories.quantity / stocks.quantity <= 1.5, '<1.5Days', IF ( inventories.quantity / stocks.quantity > 1.5 
+	// AND inventories.quantity / stocks.quantity <= 2, '<2Days', IF ( inventories.quantity / stocks.quantity > 2 
+	// AND inventories.quantity / stocks.quantity <= 2.5, '<2.5Days', IF ( inventories.quantity / stocks.quantity > 2.5 
+	// AND inventories.quantity / stocks.quantity <= 3, '<3Days', IF ( inventories.quantity / stocks.quantity > 3 
+	// AND inventories.quantity / stocks.quantity <= 3.5, '<3.5Days', IF ( inventories.quantity / stocks.quantity > 3.5 
+	// AND inventories.quantity / stocks.quantity <= 4, '<4Days', IF ( inventories.quantity / stocks.quantity > 4 
+	// AND inventories.quantity / stocks.quantity <= 4.5, '<4.5Days', IF ( inventories.quantity / stocks.quantity > 4.5,
+	// '>4.5Days',
+	// '>4.5Days' 
+	// ))))))))))) AS category,
+	// inventories.quantity / stocks.quantity AS days 
+	// FROM
+	// (
+	// SELECT
+	// kitto.inventories.material_number,
+	// kitto.materials.description,
+	// kitto.materials.remark,
+	// sum( kitto.inventories.lot ) AS quantity 
+	// FROM
+	// kitto.inventories
+	// LEFT JOIN kitto.materials ON kitto.materials.material_number = kitto.inventories.material_number 
+	// WHERE
+	// kitto.materials.location IN ( ".$request->get('location')." ) 
+	// GROUP BY
+	// kitto.inventories.material_number,
+	// kitto.materials.remark,
+	// kitto.materials.description 
+	// ) AS inventories
+	// INNER JOIN ( SELECT initial_safety_stocks.material_number, initial_safety_stocks.quantity FROM initial_safety_stocks WHERE DATE_FORMAT( valid_date, '%Y-%m' ) = '".$now."' AND initial_safety_stocks.quantity > 0 ) AS stocks ON stocks.material_number = inventories.material_number 
+	// HAVING
+	// category = '".$request->get('category')."' 
+	// AND remark = '".$request->get('remark')."' 
+	// ORDER BY
+	// days ASC";
 
-		$stocks = db::select($query);
+	$stocks = db::select($query);
 
-		$response = array(
-			'status' => true,
-			'stocks' => $stocks,
-		);
-		return Response::json($response);
+	$response = array(
+		'status' => true,
+		'stocks' => $stocks,
+	);
+	return Response::json($response);
+}
+
+public function fetchStockMaster()
+{
+	$initial_safety = InitialSafetyStock::leftJoin("materials","materials.material_number","=","initial_safety_stocks.material_number")
+	->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
+	->select('initial_safety_stocks.id','initial_safety_stocks.material_number','initial_safety_stocks.valid_date','initial_safety_stocks.quantity','materials.material_description','origin_groups.origin_group_name')
+	->orderByRaw('valid_date DESC', 'initial_safety_stocks.material_number ASC')
+	->get();
+
+	return DataTables::of($initial_safety)
+	->addColumn('action', function($initial_safety){
+		return '
+		<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$initial_safety->id.')">View</button>
+		<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$initial_safety->id.')">Edit</button>
+		<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$initial_safety->id.',\''.$initial_safety->material_number.'\',\''.$initial_safety->valid_date.'\')">Delete</button>';
+	})
+
+	->rawColumns(['action' => 'action'])
+	->make(true);
+}
+
+public function view(Request $request)
+{
+	$query = "select initial_stock.material_number, initial_stock.valid_date, initial_stock.quantity, users.`name`, material_description, origin_group_name, initial_stock.created_at, initial_stock.updated_at from
+	(select material_number, valid_date, quantity, created_by, created_at, updated_at from initial_safety_stocks where id = "
+	.$request->get('id').") as initial_stock
+	left join materials on materials.material_number = initial_stock.material_number
+	left join origin_groups on origin_groups.origin_group_code = materials.origin_group_code
+	left join users on initial_stock.created_by = users.id";
+
+	$intial_stock = DB::select($query);
+
+	$response = array(
+		'status' => true,
+		'datas' => $intial_stock
+	);
+
+	return Response::json($response);
+}
+
+public function fetchEdit(Request $request)
+{
+	$intial_stock = InitialSafetyStock::where('id', '=', $request->get("id"))
+	->first();
+
+	$response = array(
+		'status' => true,
+		'datas' => $intial_stock
+	);
+
+	return Response::json($response);
+}
+
+public function edit(Request $request)
+{
+	$head = InitialSafetyStock::where('id', '=', $request->get('id'))
+	->first();
+
+	$head->quantity = $request->get('quantity');
+	$head->save();
+
+	$response = array(
+		'status' => true
+	);
+
+	return Response::json($response);
+}
+
+public function import(Request $request)
+{
+	try{
+		if($request->hasFile('intial_stock')){
+                // ProductionSchedule::truncate();
+
+			$id = Auth::id();
+
+			$file = $request->file('intial_stock');
+			$data = file_get_contents($file);
+
+			$rows = explode("\r\n", $data);
+
+			$first = explode("\t", $rows[0]);
+			$date =  date('Y-m-d' , strtotime(str_replace('/','-',$first[1])));
+
+			$delete = InitialSafetyStock::where('valid_date', '=', $date)
+			->forceDelete();
+
+			foreach ($rows as $row)
+			{
+				if (strlen($row) > 0) {
+					$row = explode("\t", $row);
+					$intial_stock = new InitialSafetyStock([
+						'material_number' => $row[0],
+						'valid_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[1]))),
+						'quantity' => $row[2],
+						'created_by' => $id,
+					]);
+
+					$intial_stock->save();
+				}
+			}
+			return redirect('/index/safety_stock')->with('status', 'New Initial Safety Stock has been imported.')->with('page', 'Safety Stock');
+		}
+		else
+		{
+			return redirect('/index/safety_stock')->with('error', 'Please select a file.')->with('page', 'Safety Stock');
+		}
 	}
 
-	public function fetchStockMaster()
-	{
-		$initial_safety = InitialSafetyStock::leftJoin("materials","materials.material_number","=","initial_safety_stocks.material_number")
-		->leftJoin("origin_groups","origin_groups.origin_group_code","=","materials.origin_group_code")
-		->select('initial_safety_stocks.id','initial_safety_stocks.material_number','initial_safety_stocks.valid_date','initial_safety_stocks.quantity','materials.material_description','origin_groups.origin_group_name')
-		->orderByRaw('valid_date DESC', 'initial_safety_stocks.material_number ASC')
-		->get();
+	catch (QueryException $e){
+		$error_code = $e->errorInfo[1];
+		if($error_code == 1062){
+			return back()->with('error', 'Initial Safety Stock with preferred due date already exist.')->with('page', 'Safety Stock');
+		}
+		else{
+			return back()->with('error', $e->getMessage())->with('page', 'Safety Stock');
+		}
 
-		return DataTables::of($initial_safety)
-		->addColumn('action', function($initial_safety){
-			return '
-			<button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView('.$initial_safety->id.')">View</button>
-			<button class="btn btn-xs btn-warning" data-toggle="tooltip" title="Edit" onclick="modalEdit('.$initial_safety->id.')">Edit</button>
-			<button class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete" onclick="modalDelete('.$initial_safety->id.',\''.$initial_safety->material_number.'\',\''.$initial_safety->valid_date.'\')">Delete</button>';
-		})
-
-		->rawColumns(['action' => 'action'])
-		->make(true);
 	}
+}
 
-	public function view(Request $request)
+public function createInitial(Request $request)
+{
+	$valid_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('valid_date'))));
+
+	try
 	{
-		$query = "select initial_stock.material_number, initial_stock.valid_date, initial_stock.quantity, users.`name`, material_description, origin_group_name, initial_stock.created_at, initial_stock.updated_at from
-		(select material_number, valid_date, quantity, created_by, created_at, updated_at from initial_safety_stocks where id = "
-		.$request->get('id').") as initial_stock
-		left join materials on materials.material_number = initial_stock.material_number
-		left join origin_groups on origin_groups.origin_group_code = materials.origin_group_code
-		left join users on initial_stock.created_by = users.id";
+		$id = Auth::id();
+		$intial_stock = new InitialSafetyStock([
+			'material_number' => $request->get('material_number'),
+			'valid_date' => $valid_date,
+			'quantity' => $request->get('quantity'),
+			'created_by' => $id
+		]);
 
-		$intial_stock = DB::select($query);
-
-		$response = array(
-			'status' => true,
-			'datas' => $intial_stock
-		);
-
-		return Response::json($response);
-	}
-
-	public function fetchEdit(Request $request)
-	{
-		$intial_stock = InitialSafetyStock::where('id', '=', $request->get("id"))
-		->first();
-
-		$response = array(
-			'status' => true,
-			'datas' => $intial_stock
-		);
-
-		return Response::json($response);
-	}
-
-	public function edit(Request $request)
-	{
-		$head = InitialSafetyStock::where('id', '=', $request->get('id'))
-		->first();
-
-		$head->quantity = $request->get('quantity');
-		$head->save();
+		$intial_stock->save();  
 
 		$response = array(
 			'status' => true
 		);
-
 		return Response::json($response);
 	}
-
-	public function import(Request $request)
-	{
-		try{
-			if($request->hasFile('intial_stock')){
-                // ProductionSchedule::truncate();
-
-				$id = Auth::id();
-
-				$file = $request->file('intial_stock');
-				$data = file_get_contents($file);
-
-				$rows = explode("\r\n", $data);
-
-				$first = explode("\t", $rows[0]);
-				$date =  date('Y-m-d' , strtotime(str_replace('/','-',$first[1])));
-
-				$delete = InitialSafetyStock::where('valid_date', '=', $date)
-				->forceDelete();
-
-				foreach ($rows as $row)
-				{
-					if (strlen($row) > 0) {
-						$row = explode("\t", $row);
-						$intial_stock = new InitialSafetyStock([
-							'material_number' => $row[0],
-							'valid_date' => date('Y-m-d', strtotime(str_replace('/','-',$row[1]))),
-							'quantity' => $row[2],
-							'created_by' => $id,
-						]);
-
-						$intial_stock->save();
-					}
-				}
-				return redirect('/index/safety_stock')->with('status', 'New Initial Safety Stock has been imported.')->with('page', 'Safety Stock');
-			}
-			else
-			{
-				return redirect('/index/safety_stock')->with('error', 'Please select a file.')->with('page', 'Safety Stock');
-			}
-		}
-
-		catch (QueryException $e){
-			$error_code = $e->errorInfo[1];
-			if($error_code == 1062){
-				return back()->with('error', 'Initial Safety Stock with preferred due date already exist.')->with('page', 'Safety Stock');
-			}
-			else{
-				return back()->with('error', $e->getMessage())->with('page', 'Safety Stock');
-			}
-
-		}
-	}
-
-	public function createInitial(Request $request)
-	{
-		$valid_date = date('Y-m-d', strtotime(str_replace('/','-', $request->get('valid_date'))));
-
-		try
-		{
-			$id = Auth::id();
-			$intial_stock = new InitialSafetyStock([
-				'material_number' => $request->get('material_number'),
-				'valid_date' => $valid_date,
-				'quantity' => $request->get('quantity'),
-				'created_by' => $id
-			]);
-
-			$intial_stock->save();  
-
+	catch (QueryException $e){
+		$error_code = $e->errorInfo[1];
+		if($error_code == 1062){
 			$response = array(
-				'status' => true
+				'status' => false,
+				'Message'=> 'already exist'
 			);
 			return Response::json($response);
 		}
-		catch (QueryException $e){
-			$error_code = $e->errorInfo[1];
-			if($error_code == 1062){
-				$response = array(
-					'status' => false,
-					'Message'=> 'already exist'
-				);
-				return Response::json($response);
-			}
-			else{
-				$response = array(
-					'status' => false
-				);
-				return Response::json($response);
-			}
+		else{
+			$response = array(
+				'status' => false
+			);
+			return Response::json($response);
 		}
 	}
+}
 
-	public function delete(Request $request)
-	{
-		$intial_stock = InitialSafetyStock::where('id', '=', $request->get("id"))
-		->forceDelete();
+public function delete(Request $request)
+{
+	$intial_stock = InitialSafetyStock::where('id', '=', $request->get("id"))
+	->forceDelete();
 
-		$response = array(
-			'status' => true
-		);
+	$response = array(
+		'status' => true
+	);
 
-		return Response::json($response);
-	}
+	return Response::json($response);
+}
 
-	public function destroy(Request $request)
-	{
-		$valid_date = date('Y-m-d', strtotime('01-'.$request->get('valid_date2')));
+public function destroy(Request $request)
+{
+	$valid_date = date('Y-m-d', strtotime('01-'.$request->get('valid_date2')));
 
-		$materials = Material::whereIn('origin_group_code', $request->get('origin_group2'))
-		->select('material_number')->get();
+	$materials = Material::whereIn('origin_group_code', $request->get('origin_group2'))
+	->select('material_number')->get();
 
-		$intial_stock = InitialSafetyStock::where('valid_date', '=', $valid_date)
-		->whereIn('material_number', $materials)
-		->forceDelete();
+	$intial_stock = InitialSafetyStock::where('valid_date', '=', $valid_date)
+	->whereIn('material_number', $materials)
+	->forceDelete();
 
-		return redirect('/index/safety_stock')
-		->with('status', 'Initial Safety Stock has been deleted.')
-		->with('page', 'Safety Stock');
-	}
+	return redirect('/index/safety_stock')
+	->with('status', 'Initial Safety Stock has been deleted.')
+	->with('page', 'Safety Stock');
+}
 }

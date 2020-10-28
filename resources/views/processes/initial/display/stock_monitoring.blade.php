@@ -73,6 +73,8 @@
 								<th style="width: 3%;">Stock/Day</th>
 								<th style="width: 3%;">Act. Stock</th>
 								<th style="width: 3%;">Stock</th>
+								<th style="width: 3%;">Lot</th>
+								<th style="width: 3%;">Kanban</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailBody">
@@ -487,6 +489,8 @@
 					resultData += '<td>'+ value.safety.toLocaleString() +'</td>';
 					resultData += '<td>'+ parseInt(value.quantity).toLocaleString() +'</td>';
 					resultData += '<td>'+ value.days.toFixed(2) +' Day(s)</td>';
+					resultData += '<td>'+ value.lot +' Day(s)</td>';
+					resultData += '<td>'+ value.kanban +' Day(s)</td>';
 					resultData += '</tr>';
 					index += 1;
 				});
