@@ -33,9 +33,31 @@
 		<div class="col-xs-12" id="detail_scrap_mscr">
 
 		</div>
-		{{-- <div class="col-xs-6" id="pp_scrap"></div> --}}
 	</div>
 </section>
+
+<div class="modal fade" id="modalDetail">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="modalDetailTitle"></h4>
+				<div class="modal-body table-responsive no-padding" style="min-height: 100px">
+					<table class="table table-hover table-bordered table-striped" id="tableDetail">
+						<thead style="background-color: rgba(126,86,134,.7);">
+							<tr>
+								<th style="width: 3%;">Material</th>
+								<th style="width: 9%;">Description</th>
+								<th style="width: 1%;">Amount</th>
+							</tr>
+						</thead>
+						<tbody id="tableDetailBody">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 @endsection
 @section('scripts')
 <script src="{{ url("js/highcharts.js")}}"></script>
@@ -61,7 +83,186 @@
 		});
 	});
 
-	var details = "";
+	var detail_mscr = "";
+	var detail_wscr = "";
+
+	$.date = function(dateObject) {
+		var d = new Date(dateObject);
+		var day = d.getDate();
+		var month = d.getMonth() + 1;
+		var year = d.getFullYear();
+		if (day < 10) {
+			day = "0" + day;
+		}
+		if (month < 10) {
+			month = "0" + month;
+		}
+		var date = year + "-" + month + "-" + day;
+
+		return date;
+	};
+
+	function fetchDetail(a,b){
+		// $('#loading').show();
+		var loc = a.split("_");
+		$('#tableDetailBody').html("");
+		$('#modalDetailTitle').text(a+' '+b);
+		var detailData = "";
+
+		if(loc[0] == 'MSCR'){
+			if(loc[1] == 'ALL'){
+
+				var items = {}, base, key;
+				$.each(detail_mscr, function(key, value){
+					if($.date(value.posting_date) <= $.date(b)){
+						key = value.material_number+'_'+value.material_description;
+						if (!items[key]) {
+							items[key] = 0;
+						}
+						items[key] += value.amount;
+					}
+				});
+
+				var outputArr = [];
+				var total = 0;
+
+				$.each(items, function(key, val) {
+					var a = key.split('_');
+
+					detailData += '<tr>';
+					detailData += '<td>'+a[0]+'</td>';
+					detailData += '<td>'+a[1]+'</td>';
+					detailData += '<td>'+val.toFixed(4)+'</td>';
+					detailData += '</tr>';
+
+					total += val;
+				});
+				detailData += '<tr>';
+				detailData += '<td></td>';
+				detailData += '<td></td>';
+				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
+				detailData += '</tr>';
+
+				$('#tableDetailBody').append(detailData);
+				$('#modalDetail').modal('show');
+			}
+			else{
+
+
+				var items = {}, base, key;
+				$.each(detail_mscr, function(key, value){
+					if($.date(value.posting_date) <= $.date(b) && loc[1] == value.reason){
+						key = value.material_number+'_'+value.material_description;
+						if (!items[key]) {
+							items[key] = 0;
+						}
+						items[key] += value.amount;
+					}
+				});
+
+				var outputArr = [];
+				var total = 0;
+
+				$.each(items, function(key, val) {
+					var a = key.split('_');
+
+					detailData += '<tr>';
+					detailData += '<td>'+a[0]+'</td>';
+					detailData += '<td>'+a[1]+'</td>';
+					detailData += '<td>'+val.toFixed(4)+'</td>';
+					detailData += '</tr>';
+
+					total += val;
+				});
+				detailData += '<tr>';
+				detailData += '<td></td>';
+				detailData += '<td></td>';
+				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
+				detailData += '</tr>';
+
+				$('#tableDetailBody').append(detailData);
+				$('#modalDetail').modal('show');
+
+			}
+		}
+
+		if(loc[0] == 'WSCR'){
+			if(loc[1] == 'ALL'){
+
+				var items = {}, base, key;
+				$.each(detail_wscr, function(key, value){
+					if($.date(value.posting_date) <= $.date(b)){
+						key = value.material_number+'_'+value.material_description;
+						if (!items[key]) {
+							items[key] = 0;
+						}
+						items[key] += value.amount;
+					}
+				});
+
+				var outputArr = [];
+				var total = 0;
+
+				$.each(items, function(key, val) {
+					var a = key.split('_');
+
+					detailData += '<tr>';
+					detailData += '<td>'+a[0]+'</td>';
+					detailData += '<td>'+a[1]+'</td>';
+					detailData += '<td>'+val.toFixed(4)+'</td>';
+					detailData += '</tr>';
+
+					total += val;
+				});
+				detailData += '<tr>';
+				detailData += '<td></td>';
+				detailData += '<td></td>';
+				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
+				detailData += '</tr>';
+
+				$('#tableDetailBody').append(detailData);
+				$('#modalDetail').modal('show');
+			}
+			else{
+
+
+				var items = {}, base, key;
+				$.each(detail_wscr, function(key, value){
+					if($.date(value.posting_date) <= $.date(b) && loc[1] == value.reason){
+						key = value.material_number+'_'+value.material_description;
+						if (!items[key]) {
+							items[key] = 0;
+						}
+						items[key] += value.amount;
+					}
+				});
+
+				var outputArr = [];
+				var total = 0;
+
+				$.each(items, function(key, val) {
+					var a = key.split('_');
+
+					detailData += '<tr>';
+					detailData += '<td>'+a[0]+'</td>';
+					detailData += '<td>'+a[1]+'</td>';
+					detailData += '<td>'+val.toFixed(4)+'</td>';
+					detailData += '</tr>';
+
+					total += val;
+				});
+				detailData += '<tr>';
+				detailData += '<td></td>';
+				detailData += '<td></td>';
+				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
+				detailData += '</tr>';
+
+				$('#tableDetailBody').append(detailData);
+				$('#modalDetail').modal('show');
+
+			}
+		}
+	}
 
 	function fetchChart(){
 		$('#loading').show();
@@ -176,6 +377,14 @@
 								formatter: function () {
 									return (this.y/1000).toFixed(3)+'K';
 								}
+							},
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function () {
+										fetchDetail(this.series.name, $.date(this.category));
+									}
+								}
 							}
 						},
 						area: {
@@ -204,7 +413,7 @@
 						color: 'rgb(248,161,63)',
 						data: target_mscr
 					},{
-						name: 'Actual',
+						name: 'MSCR_ALL',
 						type: 'line',
 						lineWidth: 1,
 						zIndex: 1,
@@ -260,6 +469,14 @@
 								formatter: function () {
 									return (this.y/1000).toFixed(3)+'K';
 								}
+							},
+							cursor: 'pointer',
+							point: {
+								events: {
+									click: function () {
+										fetchDetail(this.series.name, $.date(this.category));
+									}
+								}
 							}
 						},
 						area: {
@@ -288,7 +505,7 @@
 						color: 'rgb(248,161,63)',
 						data: target_wscr
 					},{
-						name: 'Actual',
+						name: 'WSCR_ALL',
 						type: 'line',
 						lineWidth: 1,
 						zIndex: 1,
@@ -417,11 +634,19 @@
 										label: {
 											connectorAllowed: false
 										},
-										pointStart: 2010
+										pointStart: 2010,
+										cursor: 'pointer',
+										point: {
+											events: {
+												click: function () {
+													fetchDetail(this.series.name, $.date(this.category));
+												}
+											}
+										}
 									}
 								},
 								series: [{
-									name: 'Amount Scrap',
+									name: id_div,
 									marker:{
 										enabled:false
 									},
@@ -545,11 +770,19 @@
 										label: {
 											connectorAllowed: false
 										},
-										pointStart: 2010
+										pointStart: 2010,
+										cursor: 'pointer',
+										point: {
+											events: {
+												click: function () {
+													fetchDetail(this.series.name, $.date(this.category));
+												}
+											}
+										}
 									}
 								},
 								series: [{
-									name: 'Amount Scrap',
+									name: id_div,
 									marker:{
 										enabled:false
 									},
