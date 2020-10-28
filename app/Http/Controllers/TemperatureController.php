@@ -327,32 +327,32 @@ class TemperatureController extends Controller
      }
 
      public function importMinMoe(Request $request)
-    {
+     {
           try{
 
-            $id_user = Auth::id();
+             $id_user = Auth::id();
 
-            $file = $request->file('file');
-            $file_name = 'temp_'. MD5(date("YmdHisa")) .'.'.$file->getClientOriginalExtension();
-            $file->move('data_file/temperature/minmoe/', $file_name);
+             $file = $request->file('file');
+             $file_name = 'temp_'. MD5(date("YmdHisa")) .'.'.$file->getClientOriginalExtension();
+             $file->move('data_file/temperature/minmoe/', $file_name);
 
-            $excel = 'data_file/temperature/minmoe/' . $file_name;
-            $rows = Excel::load($excel, function($reader) {
-              $reader->noHeading();
-              $reader->skipRows(1);
+             $excel = 'data_file/temperature/minmoe/' . $file_name;
+             $rows = Excel::load($excel, function($reader) {
+                $reader->noHeading();
+                $reader->skipRows(1);
 
-              $reader->each(function($row) {
-              });
-            })->toObject();
+                $reader->each(function($row) {
+                });
+           })->toObject();
 
             // var_dump($rows[0][1]);
-            $person = [];
+             $person = [];
 
-            $persondata = [];
+             $persondata = [];
 
-            $index1 = 0;
+             $index1 = 0;
 
-            for ($i=0; $i < count($rows); $i++) {
+             for ($i=0; $i < count($rows); $i++) {
                if ($rows[$i][1] == 'Face Authentication Passed') {
                     if ($rows[$i][4] != '-') {
                          $empid = explode(' ', $rows[$i][2]);
@@ -360,11 +360,11 @@ class TemperatureController extends Controller
 
                          $personid = DB::SELECT('SELECT
                                     *,employee_groups.group as geroups
-                               FROM
-                                    employee_groups
-                                    JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
-                               WHERE
-                                    employee_groups.employee_id = "'.$empid[0].'"');
+                             FROM
+                             employee_groups
+                             JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+                             WHERE
+                             employee_groups.employee_id = "'.$empid[0].'"');
 
                          foreach ($personid as $key) {
                               $person_id = $key->geroups;
@@ -386,7 +386,7 @@ class TemperatureController extends Controller
                     }
 
                     // if (in_array($rows[$i][2], $person)) {
-                         
+
                     // }else{
                     //      if ($rows[$i][4] != '-') {
                     //           $temps = explode('°', $rows[$i][4]);
@@ -422,18 +422,18 @@ class TemperatureController extends Controller
                     //      }
                     // }
                }
-            }
+          }
 
-            $ivmstemp = DB::SELECT("SELECT DISTINCT ( a.employee_id ), name, person_id,( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
+          $ivmstemp = DB::SELECT("SELECT DISTINCT ( a.employee_id ), name, person_id,( SELECT MAX( temperature ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS temperature,
                ( SELECT MIN( date_in ) FROM ivms_temperature_temps WHERE employee_id = a.employee_id ) AS date_in,
                location,
                point,
                abnormal_status ,
                date
                FROM
-                    `ivms_temperature_temps` AS a");
+               `ivms_temperature_temps` AS a");
 
-            foreach ($ivmstemp as $key) {
+          foreach ($ivmstemp as $key) {
                $ivms = IvmsTemperature::firstOrNew(['employee_id' => $key->employee_id, 'date' => $key->date]);
                $ivms->person_id = $key->person_id;
                $ivms->employee_id = $key->employee_id;
@@ -446,207 +446,205 @@ class TemperatureController extends Controller
                $ivms->abnormal_status = $key->abnormal_status;
                $ivms->created_by = $id_user;
                $ivms->save();
-            }
+          }
 
-            IvmsTemperatureTemp::truncate();
+          IvmsTemperatureTemp::truncate();
 
-            $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employee_groups join miraimobile.quiz_logs on employee_groups.employee_id = miraimobile.quiz_logs.employee_id where location = 'YMPI-OFFICE' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh'");
+          $miraimobile =DB::SELECT("SELECT *,miraimobile.quiz_logs.created_at as date_in FROM employee_groups join miraimobile.quiz_logs on employee_groups.employee_id = miraimobile.quiz_logs.employee_id where location = 'YMPI-OFFICE' and miraimobile.quiz_logs.answer_date = '".date('Y-m-d')."' and miraimobile.quiz_logs.question = 'Suhu Tubuh'");
 
             // var_dump($miraimobile);
 
-            foreach ($miraimobile as $val) {
-                    $ivms = IvmsTemperature::firstOrNew(['employee_id' => $val->employee_id, 'date' => $val->answer_date]);
-                    $ivms->person_id = $val->group;
-                    $ivms->employee_id = $val->employee_id;
-                    $ivms->name = $val->name;
-                    $ivms->location = $val->location;
-                    $ivms->date = $val->answer_date;
-                    $ivms->date_in = $val->date_in;
-                    $ivms->point = "Mirai Mobile";
-                    $tempmobile = floatval($val->answer);
-                    $ivms->temperature = $tempmobile;
-                    if ($tempmobile > '37.5') {
-                         $ivms->abnormal_status = "Yes";
-                    }else{
-                         $ivms->abnormal_status = "No";
-                    }
-                    $ivms->created_by = $id_user;
-                    $ivms->save();
-            }
-
-            $response = array(
-              'status' => true,
-              'message' => 'Upload file success',
-            );
-            return Response::json($response);
-
-          }catch(\Exception $e){
-            $response = array(
-              'status' => false,
-              'message' => $e->getMessage(),
-            );
-            return Response::json($response);
+          foreach ($miraimobile as $val) {
+               $ivms = IvmsTemperature::firstOrNew(['employee_id' => $val->employee_id, 'date' => $val->answer_date]);
+               $ivms->person_id = $val->group;
+               $ivms->employee_id = $val->employee_id;
+               $ivms->name = $val->name;
+               $ivms->location = $val->location;
+               $ivms->date = $val->answer_date;
+               $ivms->date_in = $val->date_in;
+               $ivms->point = "Mirai Mobile";
+               $tempmobile = floatval($val->answer);
+               $ivms->temperature = $tempmobile;
+               if ($tempmobile > '37.5') {
+                    $ivms->abnormal_status = "Yes";
+               }else{
+                    $ivms->abnormal_status = "No";
+               }
+               $ivms->created_by = $id_user;
+               $ivms->save();
           }
-    }
 
-    public function indexMinMoeMonitoring($location)
-    {
+          $response = array(
+           'status' => true,
+           'message' => 'Upload file success',
+      );
+          return Response::json($response);
 
-          $title = "Resume Pengecekan Suhu Tubuh Karyawan";
-          $title_jp = "従業員の検温のまとめ";
+     }catch(\Exception $e){
+        $response = array(
+           'status' => false,
+           'message' => $e->getMessage(),
+      );
+        return Response::json($response);
+   }
+}
 
-         if ($location == 'office') {
-               $loc = 'YMPI-OFFICE';
-          }
-          return view('temperature.minmoe_monitoring', array(
-               'loc' => $loc,
-               'location' => $location,
-               'title' => $title,
-               'title_jp' => $title_jp
-          ))->with('page', 'Temperature');
-    }
+public function indexMinMoeMonitoring($location)
+{
 
-    public function fetchMinMoeMonitoring(Request $request)
-    {
-         try {
-               $date_from = $request->get('tanggal_from');
+     $title = "Resume Pengecekan Suhu Tubuh Karyawan";
+     $title_jp = "従業員の検温のまとめ";
+
+     if ($location == 'office') {
+          $loc = 'YMPI-OFFICE';
+     }
+     return view('temperature.minmoe_monitoring', array(
+          'loc' => $loc,
+          'location' => $location,
+          'title' => $title,
+          'title_jp' => $title_jp
+     ))->with('page', 'Temperature');
+}
+
+public function fetchMinMoeMonitoring(Request $request)
+{
+ try {
+     $date_from = $request->get('tanggal_from');
                // $date_to = $request->get('tanggal_to');
-               $now  = date('Y-m-d');
+     $now  = date('Y-m-d');
 
-               if ($date_from != null) {
-                    $now  = $date_from;
-               }
+     if ($date_from != null) {
+          $now  = $date_from;
+     }
 
-               $datatoday = DB::SELECT("SELECT DISTINCT ( a.temperature ),( SELECT count( person_id ) FROM ivms_temperatures WHERE DATE( date_in ) = '".$now."' AND temperature = a.temperature ) AS jumlah 
-                    FROM
-                         `ivms_temperatures` AS a 
-                    WHERE
-                         DATE( a.date_in ) = '".$now."' 
-                    AND 
-                         location = '".$request->get('location')."'
-                    ORDER BY
-                         a.temperature asc");
+     $datatoday = DB::SELECT("SELECT DISTINCT ( a.temperature ),( SELECT count( person_id ) FROM ivms_temperatures WHERE DATE( date_in ) = '".$now."' AND temperature = a.temperature ) AS jumlah 
+          FROM
+          `ivms_temperatures` AS a 
+          WHERE
+          DATE( a.date_in ) = '".$now."' 
+          AND 
+          location = '".$request->get('location')."'
+          ORDER BY
+          a.temperature asc");
 
-               $employee_groups = DB::SELECT("SELECT employee_id from employee_groups where location = '".$request->get('location')."'");
+     $employee_groups = DB::SELECT("SELECT employee_id from employee_groups where location = '".$request->get('location')."'");
 
-               $attendance = [];
+     $attendance = [];
 
-               foreach ($employee_groups as $key) {
-                    $attendance[] = DB::connection('sunfish')->select("SELECT
-                    IIF (
-                         Attend_Code LIKE '%Mangkir%',
-                         'Mangkir',
-                         IIF (
-                              Attend_Code LIKE '%CK%' 
-                              OR Attend_Code LIKE '%CUTI%' 
-                              OR Attend_Code LIKE '%UPL%',
-                              'Cuti',
-                              IIF (
-                                   Attend_Code LIKE '%Izin%',
-                                   'Izin',
-                                   IIF (
-                                        Attend_Code LIKE '%SAKIT%',
-                                        'Sakit',
-                                        IIF ( Attend_Code LIKE '%LTI%' OR Attend_Code LIKE '%TELAT%', 'Terlambat', IIF ( Attend_Code LIKE '%LTI%', 'Pulang Cepat',
-                                        IIF ( Attend_Code LIKE '%PRS%', 'Present', '-' ) ) ) 
-                                   ) 
-                              ) 
-                         ) 
-                    ) as attend_code,
-                    emp_no 
-                    FROM
-                         VIEW_YMPI_Emp_Attendance 
-                    WHERE
-                         Emp_no = '".$key->employee_id."'
-                         AND FORMAT ( shiftstarttime, 'yyyy-MM-dd' ) = '".$now."'");
-                    // var_dump($key->employee_id);
-                    // var_dump($now);
-               }
-
-               $datacheck = DB::SELECT("SELECT
-                    a.employee_id,
-                    employee_syncs.name,
-                    a.group,(
-                    SELECT
-                         DISTINCT(SPLIT_STRING ( ivms.ivms_attendance.person_name, ' ', 1 ) )
-                    FROM
-                         ivms.ivms_attendance 
-                    WHERE
-                         ivms.ivms_attendance.auth_date = '".$now."' 
-                         AND SPLIT_STRING ( ivms.ivms_attendance.person_name, ' ', 1 ) = a.employee_id 
-                    ) AS checks 
+     foreach ($employee_groups as $key) {
+          $attendance[] = DB::connection('sunfish')->select("SELECT
+               IIF (
+               Attend_Code LIKE '%Mangkir%',
+               'Mangkir',
+               IIF (
+               Attend_Code LIKE '%CK%' 
+               OR Attend_Code LIKE '%CUTI%' 
+               OR Attend_Code LIKE '%UPL%',
+               'Cuti',
+               IIF (
+               Attend_Code LIKE '%Izin%',
+               'Izin',
+               IIF (
+               Attend_Code LIKE '%SAKIT%',
+               'Sakit',
+               IIF ( Attend_Code LIKE '%LTI%' OR Attend_Code LIKE '%TELAT%', 'Terlambat', IIF ( Attend_Code LIKE '%LTI%', 'Pulang Cepat',
+               IIF ( Attend_Code LIKE '%PRS%', 'Present', shiftdaily_code ) ) )
+               ) 
+               ) 
+               ) 
+               ) as attend_code,
+               emp_no 
                FROM
-                    employee_groups a
-                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id 
+               VIEW_YMPI_Emp_Attendance 
                WHERE
-                    a.location = '".$request->get('location')."' 
-               ORDER BY
-                    a.GROUP");
+               Emp_no = '".$key->employee_id."'
+               AND FORMAT ( shiftstarttime, 'yyyy-MM-dd' ) = '".$now."'");
+     }
 
-               $dateTitle = date("d M Y", strtotime($now));
+     $datacheck = DB::SELECT("SELECT
+          a.employee_id,
+          employee_syncs.name,
+          a.group,(
+          SELECT
+          DISTINCT(SPLIT_STRING ( ivms.ivms_attendance.person_name, ' ', 1 ) )
+          FROM
+          ivms.ivms_attendance 
+          WHERE
+          ivms.ivms_attendance.auth_date = '".$now."' 
+          AND SPLIT_STRING ( ivms.ivms_attendance.person_name, ' ', 1 ) = a.employee_id 
+          ) AS checks 
+          FROM
+          employee_groups a
+          LEFT JOIN employee_syncs ON employee_syncs.employee_id = a.employee_id 
+          WHERE
+          a.location = '".$request->get('location')."' 
+          ORDER BY
+          a.GROUP");
 
-               $response = array(
-                    'status' => true,
-                    'message' => 'Get Data Success',
-                    'datatoday' => $datatoday,
-                    'dateTitle' => $dateTitle,
-                    'datacheck' => $datacheck,
-                    'attendance' => $attendance,
-               );
+     $dateTitle = date("d M Y", strtotime($now));
 
-               return Response::json($response);
-          } catch (\Exception $e) {
-               $response = array(
-                    'status' => false,
-                    'message' => 'Get Data Failed'
-               );
+     $response = array(
+          'status' => true,
+          'message' => 'Get Data Success',
+          'datatoday' => $datatoday,
+          'dateTitle' => $dateTitle,
+          'datacheck' => $datacheck,
+          'attendance' => $attendance,
+     );
 
-               return Response::json($response);
-          }
-    }
+     return Response::json($response);
+} catch (\Exception $e) {
+     $response = array(
+          'status' => false,
+          'message' => 'Get Data Failed'
+     );
 
-    public function fetchDetailMinMoeMonitoring(Request $request)
-    {
-         try {
-               $date_from = $request->get('tanggal_from');
-               $now  = date('Y-m-d');
+     return Response::json($response);
+}
+}
 
-               if ($date_from != null) {
-                    $now  = $date_from;
-               }
+public function fetchDetailMinMoeMonitoring(Request $request)
+{
+ try {
+     $date_from = $request->get('tanggal_from');
+     $now  = date('Y-m-d');
 
-               $temperature = $request->get('temperature');
+     if ($date_from != null) {
+          $now  = $date_from;
+     }
+
+     $temperature = $request->get('temperature');
 
                // var_dump(str_replace('.', ',', $temperature));
                // var_dump($now);
                // var_dump($request->get('location'));
 
-               $detail = DB::SELECT("SELECT
+     $detail = DB::SELECT("SELECT
                     * 
-               FROM
-                    ivms_temperatures 
-                    LEFT JOIN employee_groups ON employee_groups.GROUP = ivms_temperatures.person_id
-                    LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
-               WHERE
-                    employee_groups.location = '".$request->get('location')."' 
-                    AND DATE( date_in ) = '".$now."' 
-                    AND temperature = ".$temperature."");
+          FROM
+          ivms_temperatures 
+          LEFT JOIN employee_groups ON employee_groups.GROUP = ivms_temperatures.person_id
+          LEFT JOIN employee_syncs ON employee_syncs.employee_id = employee_groups.employee_id 
+          WHERE
+          employee_groups.location = '".$request->get('location')."' 
+          AND DATE( date_in ) = '".$now."' 
+          AND temperature = ".$temperature."");
 
 
-               $response = array(
-                    'status' => true,
-                    'message' => 'Get Data Success',
-                    'details' => $detail
-               );
+     $response = array(
+          'status' => true,
+          'message' => 'Get Data Success',
+          'details' => $detail
+     );
 
-               return Response::json($response);
-          } catch (\Exception $e) {
-               $response = array(
-                    'status' => false,
-                    'message' => $e->getMessage()
-               );
+     return Response::json($response);
+} catch (\Exception $e) {
+     $response = array(
+          'status' => false,
+          'message' => $e->getMessage()
+     );
 
-               return Response::json($response);
-          }
-    }
+     return Response::json($response);
+}
+}
 }
