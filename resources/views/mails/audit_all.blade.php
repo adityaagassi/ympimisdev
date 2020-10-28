@@ -25,6 +25,7 @@
 				<?php $auditor_lokasi = $datas->auditor_lokasi ?>
 				<?php $auditee_name = $datas->auditee_name ?>
 				<?php $auditee_due_date = $datas->auditee_due_date ?>
+				<?php $auditor_permasalahan = $datas->auditor_permasalahan ?>
 				<?php $posisi = $datas->posisi ?>
 			@endforeach
 
@@ -35,6 +36,7 @@
 			This is an automatic notification. Please do not reply to this address.
 
 			<h3> Audit {{$auditor_jenis}} </h3>
+			<h4>Permasalahan: <br><?= $auditor_permasalahan ?></h4>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
