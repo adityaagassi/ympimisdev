@@ -131,7 +131,7 @@
 			<?php if($role_code == "PROD-SPL" || $role_code == "F-SPL" || $role_code == "MIS" || $role_code == "S"){ ?>
 				<a href="{{ url('index/production_report/approval/'.$id) }}" class="btn btn-default btn-block" style="font-size: 20px; border-color: purple;">Approval</a>
 			<?php } ?>
-				<!-- <a href="{{ url('index/leader_task_report/index/'.$id) }}" class="btn btn-default btn-block" style="font-size: 20px; border-color: purple;">Leader Task Report</a> -->
+				<a href="{{ url('index/leader_task_report/index/'.$id) }}" class="btn btn-default btn-block" style="font-size: 20px; border-color: purple;">Leader Task Report</a>
 		</div>
 	</div>
 

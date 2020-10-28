@@ -38,12 +38,10 @@ table.table-bordered > tfoot > tr > th{
 @section('header')
 <section class="content-header">
   <h1>
-    Detail Approval of {{ $activity_name }} - {{ $leader }}
-    <small>it all starts here</small>
+    Detail {{ $activity_name }} - {{ $leader }}
+    <button class="btn btn-warning pull-right" style="color:white" onclick="close()">Kembali</button>
   </h1>
   <ol class="breadcrumb">
-    {{-- <li></li> --}}
-    <li><a href="{{ url("index/production_report/approval_list/".$id_departments.'/'.$leader)}}" class="btn btn-warning btn-sm" style="color:white">Back</a></li>
   </ol>
 </section>
 @endsection
@@ -58,13 +56,13 @@ table.table-bordered > tfoot > tr > th{
   @endif
   <div class="row">
     <div class="col-xs-12">
-      <div class="box">
+      <div class="box box-solid">
         <div class="box-body">
           <table id="example1" class="table table-bordered table-striped table-hover">
             <thead style="background-color: rgba(126,86,134,.7);">
               <tr>
                 <th>Product and Process</th>
-                <th>Details</th>                
+                <th>Action</th>                
               </tr>
             </thead>
             <tbody>
@@ -73,7 +71,7 @@ table.table-bordered > tfoot > tr > th{
                 <td>{{$detail->title}}</td>
                 <td>
                   @if($detail->link != null)
-                    <a class="btn btn-primary btn-sm" href="{{url("$detail->link")}}">Details</a>
+                    <a class="btn btn-primary btn-sm" href="{{url("$detail->link")}}">Lihat Laporan</a>
                   @else
                     
                   @endif
@@ -81,12 +79,6 @@ table.table-bordered > tfoot > tr > th{
               </tr>
               @endforeach
             </tbody>
-            <tfoot>
-              <tr>
-                <th></th>
-                <th></th>
-              </tr>
-            </tfoot>
           </table>
         </div>
       </div>
@@ -122,10 +114,7 @@ table.table-bordered > tfoot > tr > th{
   <script src="{{ url("js/buttons.print.min.js")}}"></script>
   <script>
     jQuery(document).ready(function() {
-      $('#example1 tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input style="text-align: center;" type="text" placeholder="Search '+title+'" size="20"/>' );
-      } );
+      $('body').toggleClass("sidebar-collapse");
       var table = $('#example1').DataTable({
         "order": [],
         'dom': 'Bfrtip',
@@ -168,36 +157,7 @@ table.table-bordered > tfoot > tr > th{
         }
       });
 
-      table.columns().every( function () {
-        var that = this;
-
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-          if ( that.search() !== this.value ) {
-            that
-            .search( this.value )
-            .draw();
-          }
-        } );
-      } );
-
-      $('#example1 tfoot tr').appendTo('#example1 thead');
-
     });
-    $(function () {
-
-      $('#example2').DataTable({
-        'paging'      : true,
-        'lengthChange': false,
-        'searching'   : false,
-        'ordering'    : true,
-        'info'        : true,
-        'autoWidth'   : false
-      })
-    })
-    function deleteConfirmation(url, name, id,department_id,no) {
-      jQuery('.modal-body').text("Are you sure want to delete '" + name + "'?");
-      jQuery('#modalDeleteButton').attr("href", url+'/'+id +'/'+department_id+'/'+no);
-    }
   </script>
 
   @stop

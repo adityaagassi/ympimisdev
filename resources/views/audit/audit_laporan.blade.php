@@ -77,9 +77,9 @@
         <div class="row">
           <div class="col-xs-6 col-sm-6 col-md-6">
             <label for="form_identitas">Auditor / Penemu Masalah</label>
-            <input type="text" id="form_identitas" class="form-control" value="{{$employee->employee_id}} - {{$employee->name}} ({{$employee->department}})" readonly>
-            <input type="hidden" id="auditor" class="form-control" value="{{$employee->employee_id}}" readonly>
-            <input type="hidden" id="auditor_name" class="form-control" value="{{$employee->name}}" readonly>
+            <input type="text" id="form_identitas" class="form-control" value="{{$audit->auditor_id}} - {{$audit->auditor_name}}" readonly>
+            <input type="hidden" id="auditor" class="form-control" value="{{$audit->auditor_id}}" readonly>
+            <input type="hidden" id="auditor_name" class="form-control" value="{{$audit->auditor_name}}" readonly>
           </div>
           <div class="col-xs-2 col-sm-2 col-md-2">
             <label for="auditor_tgl">Tanggal Terbit</label>
@@ -103,7 +103,13 @@
         <div class="row">
           <div class="col-xs-6">
             <label for="auditor_permasalahan">Uraian Permasalahan</label>
-            <textarea class="form-control" id="auditor_permasalahan"><?= $audit->note ?></textarea>
+            <textarea class="form-control" id="auditor_permasalahan">
+              Poin Pertanyaan : <br>
+              <?= $audit->point_question ?>              
+              <br> Note : <br>
+              <?= $audit->note ?>
+                
+            </textarea>
           </div>
           <div class="col-xs-6">
             <label for="auditor_bukti">Bukti Temuan (Yang Mendukung Uraian Permasalahan)</label>

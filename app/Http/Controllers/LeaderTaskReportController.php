@@ -56,7 +56,8 @@ class LeaderTaskReportController extends Controller
             $dept = $key->department_name;
         }
         $data = array('leader' => $leader,
-                      'id' => $id);
+                      'id' => $id
+                  );
         return view('leader_task_report.index', $data
           )->with('page', 'Leader Task Report')->with('dept', strtoupper($dept));
     }
@@ -476,7 +477,7 @@ class LeaderTaskReportController extends Controller
         $leader = $activityList->leader_dept;
 
         if ($activity_type == 'Audit') {
-            $detail = DB::select("SELECT DISTINCT(CONCAT('/index/production_audit/print_audit_email/',production_audits.activity_list_id,'/','".$month."','/',product,'/',proses)) as link,
+            $detail = DB::select("SELECT DISTINCT(CONCAT('/index/production_audit/print_audit/',production_audits.activity_list_id,'/','".$month."','/',product,'/',proses)) as link,
                 CONCAT(product,' - ',proses) as title
                 FROM production_audits
                         join point_check_audits on production_audits.point_check_audit_id = point_check_audits.id
@@ -485,7 +486,7 @@ class LeaderTaskReportController extends Controller
                         and production_audits.deleted_at is null");
         }
         else if ($activity_type == 'Pengecekan') {
-            $detail = DB::select("SELECT DISTINCT(CONCAT('/index/first_product_audit/print_first_product_audit_email/',first_product_audit_details.activity_list_id,'/',first_product_audit_details.first_product_audit_id,'/','".$month."')) as link, CONCAT(proses,' - ',jenis) as title FROM first_product_audit_details
+            $detail = DB::select("SELECT DISTINCT(CONCAT('/index/first_product_audit/print_first_product_audit/',first_product_audit_details.activity_list_id,'/',first_product_audit_details.first_product_audit_id,'/','".$month."')) as link, CONCAT(proses,' - ',jenis) as title FROM first_product_audit_details
                     join first_product_audits on first_product_audits.id = first_product_audit_details.first_product_audit_id
                     and DATE_FORMAT(first_product_audit_details.date,'%Y-%m') = '".$month."'
                     and first_product_audit_details.activity_list_id = '".$activity_list_id."'
@@ -506,7 +507,6 @@ class LeaderTaskReportController extends Controller
             $activity_type = $request->get('activity_type');
             $id = $request->get('id');
             $activity_list_id = $request->get('activity_list_id');
-            $frequency = $request->get('frequency');
             $month = $request->get('month');
 
             if ($month == "") {
@@ -583,6 +583,253 @@ class LeaderTaskReportController extends Controller
             'message' => $e->getMessage(),
           );
           return Response::json($response);
+        }
+    }
+
+    public function filter(Request $request)
+    {
+        try {
+            $leader = $request->get('leader');
+            $id = $request->get('id');
+
+            $activity = ActivityList::where('leader_dept',$leader)->where('department_id',$id)->get();
+
+            $response = array(
+                'status' => true,
+                'activity' => $activity,
+                'id' => $id,
+                'leader' => $leader
+              );
+              return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
+        }
+    }
+
+    public function filter_detail(Request $request)
+    {
+        try {
+            $activity_type = $request->get('activity_type');
+            $id = $request->get('id');
+            $activity_list_id = $request->get('activity_list_id');
+            $month = $request->get('month');
+
+            if ($month == "") {
+                $month = date('Y-m');
+            }
+
+            if ($activity_type == 'Audit') {
+              $activity = DB::SELECT('SELECT
+                    DISTINCT(activity_list_id),activity_lists.activity_name,activity_lists.leader_dept,activity_lists.activity_type,frequency,
+                    CONCAT( "/index/leader_task_report/leader_task_detail/", activity_list_id, "/", "'.$month.'" ) AS link 
+                FROM
+                    production_audits
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( production_audits.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND production_audits.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Training') {
+              $activity = DB::SELECT('SELECT DISTINCT(CONCAT("/index/training_report/print/",training_reports.id)) as link,
+                    training_reports.*,activity_lists.*
+                FROM
+                    training_reports 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( training_reports.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND training_reports.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Sampling Check') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                    ( activity_list_id ),
+                    CONCAT( "/index/sampling_check/print_sampling/", activity_list_id, "/", "'.$month.'" ) AS link,
+                    activity_lists.activity_name,
+                    activity_lists.leader_dept,
+                    activity_lists.frequency
+                FROM
+                    sampling_checks 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( sampling_checks.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND sampling_checks.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Laporan Aktivitas') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/audit_report_activity/print_audit_report/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        audit_report_activities
+                    audit_report_activities 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( audit_report_activities.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND audit_report_activities.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Pemahaman Proses') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/audit_process/print_audit_process/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        audit_processes
+                    audit_processes 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( audit_processes.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND audit_processes.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Pengecekan') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/leader_task_report/leader_task_detail/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        first_product_audit_details
+                    first_product_audit_details 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( first_product_audit_details.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND first_product_audit_details.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Interview') {
+              $activity = DB::SELECT('SELECT DISTINCT(CONCAT("/index/interview/print_interview/",interviews.id)) as link,
+                    interviews.*,activity_lists.*
+                FROM
+                    interviews 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( interviews.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND interviews.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Pengecekan Foto') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/daily_check_fg/print_daily_check/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        daily_checks
+                    daily_checks 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( daily_checks.check_date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND daily_checks.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Labelisasi') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/labeling/print_labeling/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        labelings
+                    labelings 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( labelings.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND labelings.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Cek Area') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/area_check/print_area_check/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        area_checks
+                    area_checks 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( area_checks.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND area_checks.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Jishu Hozen') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                (jishu_hozen_point_id),
+                CONCAT( "/index/jishu_hozen/print_jishu_hozen/", jishu_hozens.activity_list_id, "/",jishu_hozens.id, "/", "'.$month.'" ) AS link,
+                activity_lists.activity_name,
+                CONCAT(activity_lists.activity_name," - ",jishu_hozen_points.nama_pengecekan) as activity_name_detail,
+                activity_lists.leader_dept,
+                activity_lists.frequency 
+            FROM
+                jishu_hozens
+                JOIN activity_lists ON activity_list_id = activity_lists.id 
+                join jishu_hozen_points on jishu_hozen_point_id = jishu_hozen_points.id
+            WHERE
+                DATE_FORMAT( jishu_hozens.date, "%Y-%m" ) = "'.$month.'" 
+                AND jishu_hozens.activity_list_id = "'.$activity_list_id.'" 
+                AND jishu_hozens.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Cek APD') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/apd_check/print_apd_check/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        apd_checks
+                    apd_checks 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( apd_checks.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND apd_checks.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Weekly Report') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/weekly_report/print_weekly_report/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        weekly_activity_reports
+                    weekly_activity_reports 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( weekly_activity_reports.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND weekly_activity_reports.deleted_at IS NULL');
+            }
+            elseif ($activity_type == 'Temuan NG') {
+              $activity = DB::SELECT('SELECT DISTINCT
+                        ( activity_list_id ),
+                        CONCAT( "/index/ng_finding/print_ng_finding/", activity_list_id, "/", "'.$month.'" ) AS link,
+                        activity_lists.activity_name,activity_lists.leader_dept,activity_lists.frequency
+                    FROM
+                        ng_findings
+                    ng_findings 
+                    JOIN activity_lists ON activity_list_id = activity_lists.id 
+                WHERE
+                    DATE_FORMAT( ng_findings.date, "%Y-%m" ) = "'.$month.'" 
+                    AND activity_list_id = "'.$activity_list_id.'" 
+                    AND ng_findings.deleted_at IS NULL');
+            }
+
+            $monthTitle = date("F Y", strtotime($month));
+
+            $response = array(
+                'status' => true,
+                'activity' => $activity,
+                'monthTitle' => $monthTitle,
+                'id' => $id,
+              );
+              return Response::json($response);
+        } catch (\Exception $e) {
+            $response = array(
+                'status' => false,
+                'message' => $e->getMessage(),
+              );
+              return Response::json($response);
         }
     }
 }

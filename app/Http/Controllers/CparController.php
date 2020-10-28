@@ -3245,7 +3245,7 @@ class CparController extends Controller
         $isimail = "select * FROM audit_alls where audit_alls.id = ".$audits->id;
         $audits = db::select($isimail);
 
-        Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($audits, 'audit_all'));
+        Mail::to($mailtoo)->cc(['aditya.agassi@music.yamaha.com'])->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($audits, 'audit_all'));
 
         $response = array(
           'status' => true,

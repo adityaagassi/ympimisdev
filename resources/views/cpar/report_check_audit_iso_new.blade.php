@@ -24,7 +24,7 @@
 <section class="content-header">
 	<input type="hidden" id="green">
 	<h1>
-		Report Audit Internal ISO
+		Report Audit 
 	</h1>
 	<ol class="breadcrumb">
      
@@ -86,7 +86,7 @@
 						</tr> -->
 						<tr>
 							<th colspan="7" style="border-right: 1px solid black;background: #7e5686">
-							Laporan Hasil Internal Audit ISO
+							Laporan Hasil Audit
 							</th>
 						</tr>
 
