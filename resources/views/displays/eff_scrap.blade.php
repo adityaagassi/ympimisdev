@@ -47,7 +47,8 @@
 							<tr>
 								<th style="width: 3%;">Material</th>
 								<th style="width: 9%;">Description</th>
-								<th style="width: 1%;">Amount</th>
+								<th style="width: 1%;">Quantity</th>
+								<th style="width: 1%;">Total Amount</th>
 							</tr>
 						</thead>
 						<tbody id="tableDetailBody">
@@ -115,11 +116,11 @@
 				var items = {}, base, key;
 				$.each(detail_mscr, function(key, value){
 					if($.date(value.posting_date) <= $.date(b)){
-						key = value.material_number+'_'+value.material_description;
+						key = value.material_number+'_'+value.material_description+'_'+value.std_price;
 						if (!items[key]) {
 							items[key] = 0;
 						}
-						items[key] += value.amount;
+						items[key] += value.quantity;
 					}
 				});
 
@@ -132,12 +133,14 @@
 					detailData += '<tr>';
 					detailData += '<td>'+a[0]+'</td>';
 					detailData += '<td>'+a[1]+'</td>';
-					detailData += '<td>'+val.toFixed(4)+'</td>';
+					detailData += '<td>'+val.toFixed(2)+'</td>';
+					detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
 					detailData += '</tr>';
 
-					total += val;
+					total += val*a[2];
 				});
 				detailData += '<tr>';
+				detailData += '<td></td>';
 				detailData += '<td></td>';
 				detailData += '<td></td>';
 				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
@@ -152,11 +155,11 @@
 				var items = {}, base, key;
 				$.each(detail_mscr, function(key, value){
 					if($.date(value.posting_date) <= $.date(b) && loc[1] == value.reason){
-						key = value.material_number+'_'+value.material_description;
+						key = value.material_number+'_'+value.material_description+'_'+value.std_price;
 						if (!items[key]) {
 							items[key] = 0;
 						}
-						items[key] += value.amount;
+						items[key] += value.quantity;
 					}
 				});
 
@@ -169,12 +172,14 @@
 					detailData += '<tr>';
 					detailData += '<td>'+a[0]+'</td>';
 					detailData += '<td>'+a[1]+'</td>';
-					detailData += '<td>'+val.toFixed(4)+'</td>';
+					detailData += '<td>'+val.toFixed(2)+'</td>';
+					detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
 					detailData += '</tr>';
 
-					total += val;
+					total += val*a[2];
 				});
 				detailData += '<tr>';
+				detailData += '<td></td>';
 				detailData += '<td></td>';
 				detailData += '<td></td>';
 				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
@@ -192,11 +197,11 @@
 				var items = {}, base, key;
 				$.each(detail_wscr, function(key, value){
 					if($.date(value.posting_date) <= $.date(b)){
-						key = value.material_number+'_'+value.material_description;
+						key = value.material_number+'_'+value.material_description+'_'+value.std_price;
 						if (!items[key]) {
 							items[key] = 0;
 						}
-						items[key] += value.amount;
+						items[key] += value.quantity;
 					}
 				});
 
@@ -209,12 +214,14 @@
 					detailData += '<tr>';
 					detailData += '<td>'+a[0]+'</td>';
 					detailData += '<td>'+a[1]+'</td>';
-					detailData += '<td>'+val.toFixed(4)+'</td>';
+					detailData += '<td>'+val.toFixed(2)+'</td>';
+					detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
 					detailData += '</tr>';
 
-					total += val;
+					total += val*a[2];
 				});
 				detailData += '<tr>';
+				detailData += '<td></td>';
 				detailData += '<td></td>';
 				detailData += '<td></td>';
 				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
@@ -229,11 +236,11 @@
 				var items = {}, base, key;
 				$.each(detail_wscr, function(key, value){
 					if($.date(value.posting_date) <= $.date(b) && loc[1] == value.reason){
-						key = value.material_number+'_'+value.material_description;
+						key = value.material_number+'_'+value.material_description+'_'+value.std_price;
 						if (!items[key]) {
 							items[key] = 0;
 						}
-						items[key] += value.amount;
+						items[key] += value.quantity;
 					}
 				});
 
@@ -246,12 +253,14 @@
 					detailData += '<tr>';
 					detailData += '<td>'+a[0]+'</td>';
 					detailData += '<td>'+a[1]+'</td>';
-					detailData += '<td>'+val.toFixed(4)+'</td>';
+					detailData += '<td>'+val.toFixed(2)+'</td>';
+					detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
 					detailData += '</tr>';
 
-					total += val;
+					total += val*a[2];
 				});
 				detailData += '<tr>';
+				detailData += '<td></td>';
 				detailData += '<td></td>';
 				detailData += '<td></td>';
 				detailData += '<td><b>'+total.toFixed(4)+'</b></td>';
