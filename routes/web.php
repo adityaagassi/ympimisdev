@@ -1432,6 +1432,7 @@ Route::get('budget/info', 'AccountingController@budget_info');
 Route::get('budget/report', 'AccountingController@budget_control');
 Route::get('fetch/budget/info', 'AccountingController@fetch_budget_info');
 Route::get('fetch/budget/table', 'AccountingController@fetch_budget_table');
+Route::get('fetch/budget/summary', 'AccountingController@fetch_budget_summary');
 Route::get('fetch/budget/detail_table', 'AccountingController@fetch_budget_detail');
 Route::get('budget/detail', 'AccountingController@budget_detail');
 Route::post('import/budget', 'AccountingController@import_budget');
@@ -2872,6 +2873,7 @@ Route::group(['nav' => 'M25', 'middleware' => 'permission'], function(){
 	Route::get('index/leader_task_report/leader_task_detail/{activity_list_id}/{month}', 'LeaderTaskReportController@leader_task_detail');
 	Route::get('index/leader_task_report/fetch_report', 'LeaderTaskReportController@fetchReport');
 	Route::get('index/leader_task_report/filter', 'LeaderTaskReportController@filter');
+	Route::get('index/leader_task_report/filter_detail', 'LeaderTaskReportController@filter_detail');
 });
 
 

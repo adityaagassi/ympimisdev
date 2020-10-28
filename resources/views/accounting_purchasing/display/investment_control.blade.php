@@ -456,7 +456,8 @@ hr { background-color: red; height: 1px; border: 0; }
 
           $('#chart').highcharts({
             chart: {
-              type: 'column'
+              type: 'column',
+              height: 275,
             },
             title: {
               text: 'Investment Monitoring & Control',
@@ -501,14 +502,7 @@ hr { background-color: red; height: 1px; border: 0; }
               }
             },
             legend: {
-              enabled:true,
-              reversed: true,
-              itemStyle:{
-                color: "white",
-                fontSize: "12px",
-                fontWeight: "bold",
-
-              },
+              enabled:false
             },
             plotOptions: {
               series: {
@@ -561,7 +555,7 @@ hr { background-color: red; height: 1px; border: 0; }
           $('#chartundone').highcharts({
             chart: {
               type: 'column',
-              height: 350
+              height: 250
             },
             title: {
               text: 'Outstanding Investment Belum PO',
@@ -654,7 +648,7 @@ hr { background-color: red; height: 1px; border: 0; }
           $('#chartActual').highcharts({
             chart: {
               type: 'column',
-              height: 350
+              height: 250
             },
             title: {
               text: 'Outstanding Investment Sudah PO (Belum Receive)',

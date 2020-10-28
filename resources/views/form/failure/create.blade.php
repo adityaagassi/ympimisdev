@@ -319,8 +319,8 @@
       if(result.status == true){    
         $("#loading").hide();
         openSuccessGritter("Success","Berhasil Dibuat");
-        location.reload();
-        // setTimeout(function(){ window.history.back(); }, 2000); 
+        // location.reload();
+        window.location.href = '{{url("index/form_experience")}}';
       }
       else {
         $("#loading").hide();

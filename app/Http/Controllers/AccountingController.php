@@ -6982,21 +6982,24 @@ public function update_purchase_requisition_po(Request $request)
 
     public function budget_control()
     {
-        $title = 'Budget Report & Control';
-        $title_jp = '予算報告・管理';
+        // $title = 'Budget Report & Control';
+        // $title_jp = '予算報告・管理';
+
+        $title = 'Budget Summary';
+        $title_jp = '';
 
         $dept = db::select("select DISTINCT department from employee_syncs");
         $emp_dept = EmployeeSync::where('employee_id', Auth::user()->username)
         ->select('department')
         ->first();
 
-        return view('accounting_purchasing.display.budget_control', array(
+        return view('accounting_purchasing.display.budget_summary', array(
             'title' => $title,
             'title_jp' => $title_jp,
             'emp_dept' => $emp_dept,
             'department' => $dept
-        ))->with('page', 'Budget Report & Control')
-        ->with('head', 'Budget Report & Control');
+        ))->with('page', 'Budget Summary')
+        ->with('head', 'Budget Summary');
     }
 
     public function fetch_budget_table(Request $request)
@@ -7054,6 +7057,42 @@ public function update_purchase_requisition_po(Request $request)
         $response = array(
             'status' => true,
             'datas' => $data
+        );
+
+        return Response::json($response); 
+    }
+
+    public function fetch_budget_summary(Request $request)
+    {
+
+        $category = db::select('
+            SELECT
+            category,
+            sum(amount) AS amount
+            FROM
+            acc_budgets
+            WHERE
+            acc_budgets.deleted_at IS NULL
+            GROUP BY
+            category
+        ');
+
+        $type = db::select('
+            SELECT
+            account_name,
+            sum(amount) AS amount
+            FROM
+            acc_budgets
+            WHERE
+            acc_budgets.deleted_at IS NULL
+            GROUP BY
+            account_name
+        ');
+
+        $response = array(
+            'status' => true,
+            'cat_budget' => $category,
+            'type_budget' => $type
         );
 
         return Response::json($response); 
