@@ -1906,8 +1906,7 @@ class StockTakingController extends Controller{
 				LEFT JOIN storage_locations ON storage_locations.storage_location = pi_book.location
 				WHERE storage_locations.area IS NOT NULL
 				AND pi_book.location NOT IN ('WCJR','WSCR','MSCR','YCJP','401','203','208','214','216','217','MMJR')
-				AND storage_locations.area in ('PP','EI', 'WAREHOUSE')
-				AND ABS(pi_book.pi - pi_book.book) > 0");
+				AND ROUND(ABS(pi_book.pi - pi_book.book),3) > 0");
 
 
 			$upload_text = "";
@@ -1935,7 +1934,7 @@ class StockTakingController extends Controller{
 
 			try{
 				File::put($filepath, $upload_text);
-				// $success = self::uploadFTP($filepath, $filedestination);
+				$success = self::uploadFTP($filepath, $filedestination);
 
 				$response = array(
 					'status' => true
