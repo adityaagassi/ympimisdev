@@ -5900,7 +5900,7 @@ class MiddleProcessController extends Controller
 			LEFT JOIN material_volumes ON material_volumes.material_number = middle_material_requests.material_number
 			LEFT JOIN materials ON materials.material_number = middle_material_requests.material_number 
 			WHERE
-			middle_material_requests.quantity > 0 
+			middle_material_requests.quantity <> 0 
 			AND materials.origin_group_code = '".$request->get('origin_group_code')."'".$filter." 
 			ORDER BY
 			middle_material_requests.quantity / material_volumes.lot_transfer DESC,
