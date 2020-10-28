@@ -489,8 +489,8 @@
 					resultData += '<td>'+ value.safety.toLocaleString() +'</td>';
 					resultData += '<td>'+ parseInt(value.quantity).toLocaleString() +'</td>';
 					resultData += '<td>'+ value.days.toFixed(2) +' Day(s)</td>';
-					resultData += '<td>'+ value.lot +' Day(s)</td>';
-					resultData += '<td>'+ value.kanban +' Day(s)</td>';
+					resultData += '<td>'+ value.lot +'</td>';
+					resultData += '<td>'+ value.kanban +'</td>';
 					resultData += '</tr>';
 					index += 1;
 				});
