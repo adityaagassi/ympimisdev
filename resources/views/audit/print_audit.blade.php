@@ -59,9 +59,6 @@
 			</tr>
 			@endif
 
-			<tr>
-				<td colspan="10"><b>Persyaratan (Sesuai dengan Masalah)</b></td>
-			</tr>
 			@if($audit->auditor_kategori != "") 
 			<tr>
 				<td colspan="10"><?= $audit->auditor_kategori ?></td>

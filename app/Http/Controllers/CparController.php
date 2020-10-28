@@ -3328,7 +3328,7 @@ class CparController extends Controller
       $isimail = "select * FROM audit_alls where audit_alls.id = ".$auditee->id;
       $audits = db::select($isimail);
 
-      Mail::to($mailtoo)->send(new SendEmail($audits, 'audit_all'));
+      Mail::to($mailtoo)->cc(['ali.murdani@music.yamaha.com'])->send(new SendEmail($audits, 'audit_all'));
       return redirect('/index/audit/response/'.$id)->with('status', 'Audit Has Been Sent')->with('page', 'Audit');
     }
 

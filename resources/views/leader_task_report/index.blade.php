@@ -46,7 +46,7 @@
 								<div class="col-xs-12">
 									<div class="row">
 										<div class="col-xs-12">
-											<span style="font-weight: bold; font-size: 18px;margin-right: 20px">Pilih Aktivitas</span>
+											<span style="font-weight: bold; font-size: 18px;margin-right: 20px" id="titleAktivitas">Pilih Aktivitas</span>
 											<div class="col-md-4 pull-right" id="tanggalAktivitas">
 												<div class="form-group">
 													<div class="input-group date">
@@ -214,6 +214,8 @@
 					"processing": true
 				});
 
+				$('#titleAktivitas').html("Pilih Aktivitas "+leader);
+
 				$('#loading').hide();
 				$("#activity-modal").modal('show');
 				$('#divDetail').hide();
@@ -319,7 +321,7 @@
 					});
 
 					$('#divDetail').show();
-					$('#titleDetail').html(activity_name+' of '+leader+' on '+result.monthTitle);
+					$('#titleDetail').html(activity_name+' oleh '+leader+' <br>Bulan '+result.monthTitle);
 					$('#divAktivitas').hide();
 					$('#backAktivitas').show();
 					$('#tanggalAktivitas').hide();
