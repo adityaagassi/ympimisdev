@@ -1132,7 +1132,7 @@ class WeldingProcessController extends Controller
 			}elseif ($loc == 'hpp-sx') {
 				$lists = DB::connection('welding_controller')->select("SELECT
 					queue.*,
-					CONCAT( m.model, ' ', m.`key` ) AS `name` 
+					IF(queue.phs_jenis = 0,CONCAT( 'Alto ', m.model, ' ', m.`key` ),IF(queue.phs_jenis = 1,CONCAT( 'Tenor ', m.model, ' ', m.`key`),CONCAT( 'A82Z ', m.model, ' ', m.`key` )) ) AS `name`
 					FROM
 					(
 					SELECT
@@ -1140,7 +1140,8 @@ class WeldingProcessController extends Controller
 					part_id,
 					COALESCE ( m_hsa.hsa_kito_code, m_phs.phs_code ) AS phs_code,
 					COALESCE ( m_hsa.hsa_name, m_phs.phs_name ) AS phs_name,
-					COALESCE ( ws_phs.ws_name, ws_hsa.ws_name ) AS ws_name 
+					COALESCE ( ws_phs.ws_name, ws_hsa.ws_name ) AS ws_name,
+					COALESCE ( m_hsa.hsa_jenis, m_phs.phs_jenis ) AS phs_jenis
 					FROM
 					t_proses
 					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
