@@ -303,7 +303,7 @@
                             </a>
                             <br>
                             <a href="{{ url("/index/form_experience") }}">
-                                <i class="fa fa-caret-right"></i> Form Failures Report (問題・失敗のフォーム)
+                                <i class="fa fa-caret-right"></i> (One For All) Form Permasalahan & Kegagalan (問題・失敗のフォーム)
                             </a>
                         </td>
                     </tr>
@@ -381,10 +381,10 @@
                             <i class="fa fa-caret-right"></i> Clinic Visit ()
                         </a> 
                         <br>--}}
-                        <a href="{{ url("index/general/mosaic") }}">
+                       {{--  <a href="{{ url("index/general/mosaic") }}">
                             <i class="fa fa-caret-right"></i> Yamaha Day Mosaic Art Project
                         </a>
-                        <br>
+                        <br> --}}
                         <a href="{{ url("index/mirai_mobile/index") }}">
                             <i class="fa fa-caret-right"></i> MIRAI Mobile Report(モバイルMIRAIの記録)
                         </a>
