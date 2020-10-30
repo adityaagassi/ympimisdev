@@ -278,7 +278,7 @@
 				$('#itemTableBody').html("");
 				item_list = [];
 				fetchChecksheet();
-				fillTableList();
+				// fillTableList();
 				$('#loading').hide();
 			}
 			else{
