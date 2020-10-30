@@ -275,6 +275,8 @@
 				// $('#addDestination').prop('selectedIndex', 0).change();
 				// $('#addPackingDate').val("");
 				// $('#addStuffingDate').val("");
+				$('#itemTableBody').html("");
+				item_list = [];
 				fetchChecksheet();
 				fillTableList();
 				$('#loading').hide();
