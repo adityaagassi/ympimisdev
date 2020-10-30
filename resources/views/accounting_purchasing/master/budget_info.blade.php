@@ -32,6 +32,7 @@
 	  border:1px solid rgb(211,211,211);
 	  padding-top: 0;
 	  padding-bottom: 0;
+	  vertical-align: middle;
 	}
 	table.table-bordered > tfoot > tr > th{
 	  border:1px solid rgb(211,211,211);
@@ -191,7 +192,7 @@
 										<th>Transfer ($)</th>
 										<th>Actual ($)</th>
 										<th>Ending ($)</th>
-										<th>Action</th>
+										<th>Detail</th>
 									</tr>
 								</thead>
 								<tbody id="tablebudget">
@@ -618,7 +619,7 @@
 	                <thead style="background-color: rgba(126,86,134,.7);">
 	                  <tr>
 	                    <th width="10%">Budget</th>
-	                    <th width="10%">Budget Month</th>
+	                    <th width="10%">Month</th>
 	                    <th width="30%">Category Number</th>
 	                    <th width="30%">Detail Item</th>
 	                    <th width="10%">Status</th>
@@ -727,7 +728,7 @@
 	              	table += '<td style="color:blue">'+ending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })+'</td>';                
 	              }
 
-	              table += '<td><button class="btn btn-xs btn-info" data-toggle="tooltip" title="Details" onclick="modalView(\''+value.budget_no+'\')"><i class="fa fa-eye"></i> Detail Sisa Budget</button></td>';  
+	              table += '<td><button class="btn btn-md btn-warning" data-toggle="tooltip" title="Details" onclick="modalView(\''+value.budget_no+'\')"><i class="fa fa-eye"></i></button></td>';  
 
 	              table += '</tr>';
 	          })
@@ -920,6 +921,11 @@
 	    $.get('{{ url("budget/detail") }}', data, function(result, status, xhr){
 
 	    	// $(".sisa").css({backgroundColor:'#ff7043', color:'#fff', borderTop:'0'});
+
+	    	var d = new Date();
+	    	var n = d.getMonth();
+
+	    	// if () {}
 
 	    	$("#budget_awal4").text('$'+result.datas.apr_budget_awal);
 	    	$("#budget_awal5").text('$'+result.datas.may_budget_awal);

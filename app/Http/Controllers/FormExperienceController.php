@@ -253,7 +253,7 @@ class FormExperienceController extends Controller
     }
 
     public function fetchChart(Request $request){
-      $detail = db::select("SELECT departments.department_name as department,COUNT(form_failures.id) as total FROM `form_failures` join employee_syncs on form_failures.employee_id = employee_syncs.employee_id RIGHT JOIN departments on employee_syncs.department = departments.department_name where id_division = '5' group by departments.department_name ");
+      $detail = db::select("SELECT departments.department_name as department,COUNT(form_failures.id) as total FROM `form_failures` join employee_syncs on form_failures.employee_id = employee_syncs.employee_id RIGHT JOIN departments on employee_syncs.department = departments.department_name where id_division = '5' or id_division = '4' or id_division = '2' group by departments.department_name");
 
       $response = array(
         'status' => true,

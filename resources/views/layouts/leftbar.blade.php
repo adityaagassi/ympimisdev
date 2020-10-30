@@ -480,7 +480,7 @@
             <a href="{{ url("budget/info") }}"><i class="fa fa-money"></i><span>Budget Info</span></a>
           </li>
           @if(isset($page) && $page == "Budget Report")<li class="active">@else<li>@endif
-            <a href="{{ url("budget/report") }}"><i class="fa fa-money"></i><span>Budget Report</span></a>
+            <a href="{{ url("budget/report") }}"><i class="fa fa-money"></i><span>Budget Summary</span></a>
           </li>
           @if(isset($page) && $page == "Transfer Budget")<li class="active">@else<li>@endif
             <a href="{{ url("transfer/budget") }}"><i class="fa fa-money"></i><span>Transfer Budget</span></a>

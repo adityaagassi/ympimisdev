@@ -309,10 +309,10 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="col-md-12">
-											<div class="form-group">
+											<div class="form-group" id="budget_data">
 												<label>Budget<span class="text-red">*</span></label>
 												<!-- <input type="text" class="form-control" id="budget_no" name="budget_no"> -->
-												<select class="form-control select2" data-placeholder="Pilih Nomor Budget" name="budget_no" id="budget_no" style="width: 100% height: 35px;" required onchange="pilihBudget(this)"> 
+												<select class="form-control select10" data-placeholder="Pilih Nomor Budget" name="budget_no" id="budget_no" style="width: 100% height: 35px;" required onchange="pilihBudget(this)"> 
 													<option></option>
 												</select>
 											</div>
@@ -343,9 +343,14 @@
 														<td style="border:none;text-align: left;padding-left: 0;width: 80%"><label id="budget_category" name="budget_category"></label></td>
 													</tr>
 													<tr>
-														<td style="border:none;text-align: left;padding-left: 0;width: 18%">Budget 1 Tahun</td>
+														<td style="border:none;text-align: left;padding-left: 0;width: 18%">Budget Awal</td>
 														<td style="border:none;text-align: left;padding-left: 0;width: 2%">:</td>
 														<td style="border:none;text-align: left;padding-left: 0;width: 80%"><label id="budget_amount" name="budget_amount"></label></td>
+													</tr>
+													<tr>
+														<td style="border:none;text-align: left;padding-left: 0;width: 18%">Sisa Budget Tahun Ini</td>
+														<td style="border:none;text-align: left;padding-left: 0;width: 2%">:</td>
+														<td style="border:none;text-align: left;padding-left: 0;width: 80%"><label id="budget_sisa_tahun" name="budget_sisa_tahun"></label></td>
 													</tr>
 													<tr>
 														<td style="border:none;text-align: left;padding-left: 0;width: 18%">Sisa Budget Bulan Ini</td>
@@ -405,7 +410,7 @@
 											</select>
 										</div>
 										<div class="col-xs-3" style="padding:5px;">
-											<input type="text" class="form-control" id="item_desc1" name="item_desc1" placeholder="Description" required="">
+											<input type="text" class="form-control" id="item_desc1" name="item_desc1" placeholder="Description" required="" onkeyup="ubahDescTujuan(this)">
 										</div>
 										<div class="col-xs-1" style="padding:5px;">
 											<input type="text" class="form-control" id="item_spec1" name="item_spec1" placeholder="Specification">
@@ -850,6 +855,13 @@
 				}
 			});
 
+
+    		$('.select10').select2({
+    			dropdownAutoWidth : true,
+    			dropdownParent: $("#budget_data"),
+    			allowClear:true,
+    		});
+
 		// data table
 		fillTable();		
 
@@ -959,8 +971,8 @@
 				return false;
 			}
 
-        	var item_code1 = $('#item_code1').val();
-        	if(item_code1 == ""){
+        	var item_desc1 = $('#item_desc1').val();
+        	if(item_desc1 == ""){
         		alert('All field must be filled');	
         	}
         	else{
@@ -1158,6 +1170,18 @@
 	    // alert(sel.value);
 	}
 
+	function ubahDescTujuan(elem)
+	{
+		var no = elem.id.match(/\d/g);
+		no = no.join("");
+
+		var item_desc;
+		item_desc =	$('#item_desc'+no).val();
+
+		$('#tujuan_desc'+no).val(item_desc).attr('readonly', true);
+
+	}
+
 	function pilihItemEdit(elem)
 	{
 		var no = elem.id.match(/\d/g);
@@ -1256,7 +1280,12 @@
 				$('#budget_description').text(obj.description);
 				$('#budget_account').text(obj.account);
 				$('#budget_category').text(obj.category);
+				
+				var total_tahun = obj.apr + obj.may + obj.jun + obj.jul + obj.aug + obj.sep + obj.oct + obj.nov + obj.dec + obj.jan + obj.feb + obj.mar;
+				// console.log(total_tahun);
+
 				$('#budget_amount').text("$"+obj.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+				$('#budget_sisa_tahun').text("$"+total_tahun.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 				$('#budget_sisa').text("$"+obj.budget_now.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 
 				$('#budgetLabel').text("$"+obj.budget_now.toFixed(2));
@@ -1565,9 +1594,9 @@
     		lop = "lop2";
     	}
 
-    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-3' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification' required=''></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''><input type='hidden' class='form-control' id='moq"+no+"' name='moq"+no+"' placeholder='Moq' required=''></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select6' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly><input type='hidden' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Total' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-3' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required='' onkeyup='ubahDescTujuan(this)'></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification' required=''></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''><input type='hidden' class='form-control' id='moq"+no+"' name='moq"+no+"' placeholder='Moq' required=''></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select6' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly><input type='hidden' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Total' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
 
-    	var tujuan = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_desc"+no+"' name='tujuan_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-6' style='padding:5px;'><input type='text' class='form-control' id='tujuan_peruntukan"+no+"' name='tujuan_peruntukan"+no+"' placeholder='Tujuan Pembelian / Peruntukan' required=''></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_stock"+no+"' name='item_stock"+no+"' placeholder='Stock'></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_kebutuhan"+no+"' name='tujuan_kebutuhan"+no+"' placeholder='Kebutuhan (e.g 10 pcs/hari)' required=''></div></div>");
+    	var tujuan = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_desc"+no+"' name='tujuan_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-6' style='padding:5px;'><input type='text' class='form-control' id='tujuan_peruntukan"+no+"' name='tujuan_peruntukan"+no+"' placeholder='Tujuan Pembelian / Peruntukan'></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_stock"+no+"' name='item_stock"+no+"' placeholder='Stock'></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_kebutuhan"+no+"' name='tujuan_kebutuhan"+no+"' placeholder='Kebutuhan (e.g 10 pcs/hari)'></div></div>");
 
     	$("#"+id).append(divdata);
     	if (id == "tambah"){
@@ -1857,7 +1886,7 @@
  
  			isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_desc_edit"+value.id+"' name='item_desc_edit"+value.id+"' placeholder='Description' required='' value='"+value.item_desc+"'></div>";
 
- 			isi2 += "<div class='col-xs-6' style='padding:5px;'><input type='text' class='form-control' id='tujuan_peruntukan_edit"+value.id+"' name='tujuan_peruntukan_edit"+value.id+"' placeholder='Peruntukan / Tujuan Pembelian' required='' value='"+value.peruntukan+"'></div>";
+ 			isi2 += "<div class='col-xs-6' style='padding:5px;'><input type='text' class='form-control' id='tujuan_peruntukan_edit"+value.id+"' name='tujuan_peruntukan_edit"+value.id+"' placeholder='Peruntukan / Tujuan Pembelian' value='"+value.peruntukan+"'></div>";
 
 	  		if (value.item_stock != null) {
 	  			isi2 += "<div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_stock_edit"+value.id+"' name='tujuan_stock_edit"+value.id+"' placeholder='Stock' value='"+value.item_stock+"'></div>";					
