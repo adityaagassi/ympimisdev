@@ -152,7 +152,7 @@
 		"footerStrLeft": "",
 		"footerStrCenter": "",
 		"footerStrRight": "",
-		"printerName" : "SATO CG408"
+		"printerName" : "SATO CG408 (kecil)"
 	};
 
 	function tutup() {

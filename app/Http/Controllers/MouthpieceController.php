@@ -667,10 +667,28 @@ class MouthpieceController extends Controller
 		$title = 'Create Mouthpiece Packing Checksheet';
 		$title_jp = '';
 
+		$destinations= db::table('destinations')->orderBy('destination_shortname')
+		->get();
+
 		return view('kd.mouthpiece.checksheet', array(
 			'title' => $title,
-			'title_jp' => $title_jp
+			'title_jp' => $title_jp,
+			'destinations' => $destinations
 		))->with('head', 'KD Mouthpiece')->with('page', 'MP Create Checksheet');
+	}
+
+	public function fetchKdMouthpieceMaterial(){
+		$materials = Material::where('category', '=', 'KD')
+		->where('hpl', '=', 'MP')
+		->where('kd_name', '=', 'SINGLE')
+		->get();
+
+		$response = array(
+			'status' => true,
+			'target' => $materials
+		);
+		return Response::json($response);
+
 	}
 
 	public function scanKdMouthpieceOperator(Request $request){
@@ -697,6 +715,7 @@ class MouthpieceController extends Controller
 	public function fetchKdMouthpieceChecksheet(){
 		$checksheets = db::select("SELECT
 			mouthpiece_checksheets.kd_number,
+			mouthpiece_checksheets.packing_date,
 			mouthpiece_checksheets.st_date,
 			mouthpiece_checksheets.destination_shortname,
 			group_concat(
@@ -706,6 +725,7 @@ class MouthpieceController extends Controller
 			mouthpiece_checksheets
 			GROUP BY
 			mouthpiece_checksheets.kd_number,
+			mouthpiece_checksheets.packing_date,
 			mouthpiece_checksheets.st_date,
 			mouthpiece_checksheets.destination_shortname");
 
@@ -744,7 +764,7 @@ class MouthpieceController extends Controller
 					'quantity' => $list['quantity'],
 					'actual_quantity' => 0,
 					'remark' => '0',
-					'shipment_schedule_id' => $list['shipment_schedule_id'],
+					'packing_date' => $list['packing_date'],
 					'destination_shortname' => $list['destination'],
 					'st_date' => $list['shipment_date'],
 					'created_by' => Auth::id()
@@ -853,7 +873,7 @@ class MouthpieceController extends Controller
 		)
 		->get();
 
-		$this->printKDO($kd_number, $st_date, $details, $location, 'PRINT', $details[0]->destination_shortname);
+		// $this->printKDO($kd_number, $st_date, $details, $location, 'PRINT', $details[0]->destination_shortname);
 
 		$response = array(
 			'status' => true,

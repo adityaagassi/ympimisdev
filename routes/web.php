@@ -1475,6 +1475,7 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 	Route::get('scan/kd_mouthpiece/operator', 'MouthpieceController@scanKdMouthpieceOperator');
 
 	Route::get('index/kd_mouthpiece/checksheet', 'MouthpieceController@indexKdMouthpieceChecksheet');
+	Route::get('fetch/kd_mouthpiece/material', 'MouthpieceController@fetchKdMouthpieceMaterial');
 	Route::get('fetch/kd_mouthpiece/checksheet', 'MouthpieceController@fetchKdMouthpieceChecksheet');
 	Route::post('create/kd_mouthpiece/checksheet', 'MouthpieceController@createKdMouthpieceChecksheet');
 	Route::post('delete/kd_mouthpiece/checksheet', 'MouthpieceController@deleteKdMouthpieceChecksheet');
