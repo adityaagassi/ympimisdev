@@ -70,12 +70,7 @@ class FormExperienceController extends Controller
           })
 
         ->editColumn('kerugian',function($details){
-            if ($details->kerugian != null) {
-              return "$ ".number_format($details->kerugian,0,"",".");
-            }
-            else {
-              return $details->kerugian;
-            }
+            return $details->kerugian;
           })
 
         ->addColumn('action', function($details){
