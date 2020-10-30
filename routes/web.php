@@ -112,6 +112,7 @@ Route::get('index/general/online_transportation', 'GeneralController@indexOnline
 Route::get('fetch/general/online_transportation', 'GeneralController@fetchOnlineTransportation');
 Route::post('input/general/online_transportation', 'GeneralController@inputOnlineTransportation');
 Route::post('delete/general/online_transportation', 'GeneralController@deleteOnlineTransportation');
+Route::get('fetch/general/online_transportation_data', 'GeneralController@fetchOnlineTransportationData');
 
 //SURAT DOKTER
 Route::get('index/general/surat_dokter', 'GeneralController@indexSuratDokter');
@@ -3047,6 +3048,10 @@ Route::get('index/recorder/fetch_resume_cdm', 'RecorderProcessController@fetchRe
 Route::get('fetch/recorder/cdm', 'RecorderProcessController@fetchCdm');
 Route::get('index/recorder/cdm_report', 'RecorderProcessController@indexCdmReport');
 Route::get('fetch/recorder/cdm_report', 'RecorderProcessController@fetchCdmReport');
+
+//NG RATE ASSY RC
+Route::get('index/recorder/kensa_initial', 'RecorderProcessController@indexKensaInitial');
+Route::get('scan/recorder/kensa_initial', 'RecorderProcessController@scanKensaInitial');
 
 //WEBCAM
 Route::get('index/webcam', 'WebcamController@index');
