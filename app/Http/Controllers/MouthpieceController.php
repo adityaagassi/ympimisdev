@@ -351,11 +351,14 @@ class MouthpieceController extends Controller
 			m.st_date,
 			m.destination_shortname,
 			m.employee_id,
+			m.qa_check,
+			qa.name AS qa_name,
 			e.`name`,
 			TIMESTAMPDIFF( MINUTE, start_packing, end_packing ) AS packing 
 			FROM
 			mouthpiece_checksheet_logs m
 			LEFT JOIN employee_syncs e ON m.employee_id = e.employee_id 
+			LEFT JOIN employee_syncs qa ON m.qa_check = qa.employee_id 
 			WHERE
 			m.deleted_at IS NULL
 			".$prodDate."

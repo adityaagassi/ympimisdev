@@ -162,6 +162,7 @@
 									<th style="width: 1%;">Stuffing</th>
 									<th style="width: 1%;">Destinasi</th>
 									<th style="width: 4%;">PIC</th>
+									<th style="width: 4%;">QA</th>
 									<th style="width: 0.7%;">Packing (Menit)</th>
 									<th style="width: 1%;">Picking</th>
 								</tr>
@@ -313,6 +314,7 @@
 					logTable += '<td style="width: 1%;">'+value.st_date+'</td>';
 					logTable += '<td style="width: 1%;">'+value.destination_shortname+'</td>';
 					logTable += '<td style="width: 4%;">'+value.employee_id+'<br>'+value.name+'</td>';
+					logTable += '<td style="width: 4%;">'+value.qa_check+'<br>'+value.qa_name+'</td>';
 					logTable += '<td style="width: 0.5%;">'+value.packing+'</td>';
 					logTable += '<td style="width: 0.5%;"><button onclick="detailLog(id)" id="'+value.kd_number+'" class="btn btn-info">Detail</button></td>';
 					logTable += '</tr>';
