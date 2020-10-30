@@ -368,14 +368,23 @@
 		if(name == 'CL'){
 			var hpl = 'CLFG';
 		}
-		if(name == 'SUBSX'){
+		if(name == 'SXKEY'){
 			var hpl = 'SUBASSY-SX';
 		}
-		if(name == 'ASSYSX'){
+		if(name == 'SXBODY'){
 			var hpl = 'ASSY-SX';
 		}
 		if(name == 'ZPRO'){
 			var hpl = 'ZPRO';
+		}
+		if(name == 'CLKEY'){
+			var hpl = 'SUBASSY-CL';
+		}
+		if(name == 'FLKEY'){
+			var hpl = 'SUBASSY-FL';
+		}
+		if(name == 'MP'){
+			var hpl = 'MP';
 		}
 
 		var data = {
@@ -530,6 +539,7 @@
 					typeof i === 'number' ?
 					i : 0;
 				};
+
 				for(i = 0; i < data.length; i++){
 					cat = data[i].st_date;
 					if(xCategories.indexOf(cat) === -1){
@@ -565,11 +575,11 @@
 					}
 				}
 
-				if(xCategories.length <= 5){
+				if(xCategories.length <= 4){
 					var scrollMax = xCategories.length-1;
 				}
 				else{
-					var scrollMax = 4;
+					var scrollMax = 3;
 				}
 
 
@@ -790,12 +800,25 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 
 		var data = result.shipment_results;
 		var xCategories = [];
+
 		var planZPRO = [];
 		var actualZPRO = [];
+
 		var planSubAssySX = [];
 		var actualSubAssySX = [];
+
 		var planAssySX = [];
 		var actualAssySX = [];
+
+		var planSubAssyCL = [];
+		var actualSubAssyCL = [];
+
+		var planSubAssyFL = [];
+		var actualSubAssyFL = [];
+
+		var planMP = [];
+		var actualMP = [];
+
 		var i, cat;
 		var intVal = function ( i ) {
 			return typeof i === 'string' ?
@@ -820,13 +843,29 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				planAssySX.push(data[i].plan-data[i].act);
 				actualAssySX.push(data[i].act);
 			}
+			if(data[i].hpl == 'SUBASSY-CL'){
+				planSubAssyCL.push(data[i].plan-data[i].act);
+				actualSubAssyCL.push(data[i].act);
+			}
+			if(data[i].hpl == 'SUBASSY-FL'){
+				planSubAssyFL.push(data[i].plan-data[i].act);
+				actualSubAssyFL.push(data[i].act);
+			}
+			if(data[i].hpl == 'SUBASSY-FL'){
+				planSubAssyFL.push(data[i].plan-data[i].act);
+				actualSubAssyFL.push(data[i].act);
+			}
+			if(data[i].hpl == 'MP'){
+				planMP.push(data[i].plan-data[i].act);
+				actualMP.push(data[i].act);
+			}
 		}
 
-		if(xCategories.length <= 5){
+		if(xCategories.length <= 4){
 			var scrollMax = xCategories.length-1;
 		}
 		else{
-			var scrollMax = 4;
+			var scrollMax = 3;
 		}
 
 
@@ -839,7 +878,7 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 			},
 
 			title: {
-				text: 'Knock Down Parts Achievement For Shipment Progress',
+				text: 'KD Parts Achievement For Shipment Progress',
 				style: {
 					fontSize: '30px',
 					fontWeight: 'bold'
@@ -936,20 +975,62 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 			},
 			series: [{
 				name: 'Plan',
-				data: planZPRO,
-				stack: 'ZPRO',
-				color: 'rgba(255, 0, 0, 0.25)'
-			}, {
-				name: 'Plan',
 				data: planSubAssySX,
-				stack: 'SUBSX',
+				stack: 'SXKEY',
 				color: 'rgba(255, 0, 0, 0.25)',
 				showInLegend: false
 			}, {
 				name: 'Plan',
 				data: planAssySX,
-				stack: 'ASSYSX',
+				stack: 'SXBODY',
 				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
+				data: planSubAssyCL,
+				stack: 'CLKEY',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
+				data: planSubAssyFL,
+				stack: 'FLKEY',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Plan',
+				data: planZPRO,
+				stack: 'ZPRO',
+				color: 'rgba(255, 0, 0, 0.25)'
+			}, {
+				name: 'Plan',
+				data: planMP,
+				stack: 'MP',
+				color: 'rgba(255, 0, 0, 0.25)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
+				data: actualSubAssySX,
+				stack: 'SXKEY',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
+				data: actualAssySX,
+				stack: 'SXBODY',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
+				data: actualSubAssyCL,
+				stack: 'CLKEY',
+				color: 'rgba(0, 255, 0, 0.90)',
+				showInLegend: false
+			}, {
+				name: 'Actual',
+				data: actualSubAssyFL,
+				stack: 'FLKEY',
+				color: 'rgba(0, 255, 0, 0.90)',
 				showInLegend: false
 			}, {
 				name: 'Actual',
@@ -958,14 +1039,8 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				color: 'rgba(0, 255, 0, 0.90)'
 			}, {
 				name: 'Actual',
-				data: actualSubAssySX,
-				stack: 'SUBSX',
-				color: 'rgba(0, 255, 0, 0.90)',
-				showInLegend: false
-			}, {
-				name: 'Actual',
-				data: actualAssySX,
-				stack: 'ASSYSX',
+				data: actualMP,
+				stack: 'MP',
 				color: 'rgba(0, 255, 0, 0.90)',
 				showInLegend: false
 			}]
@@ -993,8 +1068,6 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 	}
 });
 }
-
-
 
 function addZero(i) {
 	if (i < 10) {
