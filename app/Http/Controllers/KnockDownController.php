@@ -76,13 +76,12 @@ class KnockDownController extends Controller{
 				$title = 'KD Sub Assy CL';
 				$title_jp = '';
 			}
-		}
-		
-		return view('kd.index_kd_subassy', array(
-			'title' => $title,
-			'title_jp' => $title_jp,
-			'location' => $id,
-		))->with('page', $title)->with('head', $title);
+			return view('kd.index_kd_subassy', array(
+				'title' => $title,
+				'title_jp' => $title_jp,
+				'location' => $id,
+			))->with('page', $title)->with('head', $title);
+		}		
 	}
 
 	public function indexKDClosure(){
