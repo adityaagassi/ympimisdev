@@ -133,8 +133,8 @@
 					detailData += '<tr>';
 					detailData += '<td>'+a[0]+'</td>';
 					detailData += '<td>'+a[1]+'</td>';
-					detailData += '<td>'+val.toFixed(2)+'</td>';
-					detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
+					detailData += '<td>'+val+'</td>';
+					detailData += '<td>'+(val*a[2]).toFixed(1)+'</td>';
 					detailData += '</tr>';
 
 					total += val*a[2];
