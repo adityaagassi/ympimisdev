@@ -319,7 +319,12 @@
 					checksheetTable += '<td>'+value.total+'</td>';
 					checksheetTable += '<td>'+value.st_date+'</td>';
 					checksheetTable += '<td>'+value.destination_shortname+'</td>';
-					checksheetTable += '<td><button class="btn btn-info btn-sm" id="'+value.kd_number+'" onclick="reprintChecksheet(id)"><i class="fa fa-print"></i></button>&nbsp;<button class="btn btn-danger btn-sm" id="'+value.kd_number+'" onclick="deleteChecksheet(id)">Delete</button></td>';
+					if(value.print_status != 1){
+						checksheetTable += '<td><button class="btn btn-info btn-sm" id="'+value.kd_number+'" onclick="reprintChecksheet(id)">Print</button>&nbsp;<button class="btn btn-danger btn-sm" id="'+value.kd_number+'" onclick="deleteChecksheet(id)"><i class="fa fa-trash"></i></button></td>';
+					}
+					else{
+						checksheetTable += '<td><button class="btn btn-info btn-sm" id="'+value.kd_number+'" onclick="reprintChecksheet(id)">Re-Print</button>&nbsp;<button class="btn btn-danger btn-sm" id="'+value.kd_number+'" onclick="deleteChecksheet(id)"><i class="fa fa-trash"></i></button></td>';						
+					}
 					checksheetTable += '</tr>';
 				});
 

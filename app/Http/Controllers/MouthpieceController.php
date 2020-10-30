@@ -57,6 +57,7 @@ class MouthpieceController extends Controller
 			'mouthpiece_checksheets.end_packing',
 			'mouthpiece_checksheets.destination_shortname',
 			'mouthpiece_checksheets.st_date',
+			'mouthpiece_checksheets.packing_date',
 			'mouthpiece_checksheets.created_by',
 			'mouthpiece_checksheets.created_at',
 			'mouthpiece_checksheets.updated_at'
@@ -140,7 +141,6 @@ class MouthpieceController extends Controller
 					'material_description' => $checksheet->material_description,
 					'quantity' => $checksheet->quantity,
 					'actual_quantity' => $checksheet->actual_quantity,
-					'shipment_schedule_id' => $checksheet->shipment_schedule_id,
 					'remark' => $checksheet->remark,
 					'employee_id' => $checksheet->employee_id,
 					'start_packing' => $checksheet->start_packing,
@@ -148,6 +148,7 @@ class MouthpieceController extends Controller
 					'print_status' => $checksheet->print_status,
 					'destination_shortname' => $checksheet->destination_shortname,
 					'st_date' => $checksheet->st_date,
+					'st_date' => $checksheet->packing_date,
 					'qa_check' => $request->get('employee_id'),
 					'created_by' => $checksheet->created_by,
 					'created_at' => $checksheet->created_at,
@@ -718,6 +719,7 @@ class MouthpieceController extends Controller
 			mouthpiece_checksheets.packing_date,
 			mouthpiece_checksheets.st_date,
 			mouthpiece_checksheets.destination_shortname,
+			mouthpiece_checksheets.print_status,
 			group_concat(
 			CONCAT( mouthpiece_checksheets.material_description, ' (', mouthpiece_checksheets.quantity, ')' )) AS item,
 			sum( mouthpiece_checksheets.quantity ) AS total 
@@ -727,6 +729,7 @@ class MouthpieceController extends Controller
 			mouthpiece_checksheets.kd_number,
 			mouthpiece_checksheets.packing_date,
 			mouthpiece_checksheets.st_date,
+			mouthpiece_checksheets.print_status,
 			mouthpiece_checksheets.destination_shortname");
 
 		$response = array(
