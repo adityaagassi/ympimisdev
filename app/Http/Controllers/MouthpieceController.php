@@ -94,7 +94,7 @@ class MouthpieceController extends Controller
 					'kd_number' => $checksheet->kd_number,
 					'material_number' => $checksheet->material_number,
 					'quantity' => $checksheet->quantity,
-					'shipment_schedule_id' => $checksheet->shipment_schedule_id,
+					// 'shipment_schedule_id' => $checksheet->shipment_schedule_id,
 					'storage_location' => $checksheet->issue_storage_location,
 					'created_by' => Auth::id()
 				]);
@@ -129,11 +129,11 @@ class MouthpieceController extends Controller
 				]);
 				$transaction_completion->save();
 
-				$shipment_schedule = ShipmentSchedule::where('shipment_schedules.id', '=', $checksheet->shipment_schedule_id)
-				->first();
+				// $shipment_schedule = ShipmentSchedule::where('shipment_schedules.id', '=', $checksheet->shipment_schedule_id)
+				// ->first();
 
-				$shipment_schedule->actual_quantity = $shipment_schedule->actual_quantity + $checksheet->quantity;
-				$shipment_schedule->save();
+				// $shipment_schedule->actual_quantity = $shipment_schedule->actual_quantity + $checksheet->quantity;
+				// $shipment_schedule->save();
 
 				$mouthpiece_checksheet_log = db::table('mouthpiece_checksheet_logs')->insert([
 					'kd_number' => $checksheet->kd_number,
