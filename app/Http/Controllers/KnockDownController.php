@@ -50,7 +50,8 @@ class KnockDownController extends Controller{
 				'title_jp' => $title_jp,
 				'location' => $id,
 			))->with('page', $title)->with('head', $title);
-		}else if($id == 'mouthpiece'){
+		}
+		else if($id == 'mouthpiece-packed'){
 			$title = 'KD Mouthpiece';
 			$title_jp = '';
 
@@ -59,24 +60,29 @@ class KnockDownController extends Controller{
 				'title_jp' => $title_jp,
 				'location' => $id,
 			))->with('page', $title)->with('head', $title);
-		}else{
+		}
+		else{
 			if($id == 'sub-assy-sx'){
 				$title = 'KD Assy - SubAssy SX';
 				$title_jp = '';
-			}else if($id == 'sub-assy-fl'){
+			}
+			else if($id == 'sub-assy-fl')
+			{
 				$title = 'KD Sub Assy FL';
 				$title_jp = '';
-			}else if($id == 'sub-assy-cl'){
+			}
+			else if($id == 'sub-assy-cl')
+			{
 				$title = 'KD Sub Assy CL';
 				$title_jp = '';
 			}
-
-			return view('kd.index_kd_subassy', array(
-				'title' => $title,
-				'title_jp' => $title_jp,
-				'location' => $id,
-			))->with('page', $title)->with('head', $title);
 		}
+		
+		return view('kd.index_kd_subassy', array(
+			'title' => $title,
+			'title_jp' => $title_jp,
+			'location' => $id,
+		))->with('page', $title)->with('head', $title);
 	}
 
 	public function indexKDClosure(){
@@ -730,7 +736,9 @@ class KnockDownController extends Controller{
 		->where('actual_quantity','>',0)
 		->orderBy('due_date', 'desc')
 		->first();
-		$production_sch->actual_quantity = $production_sch->actual_quantity - $knock_down_detail->quantity;	
+		if($production_sch){
+			$production_sch->actual_quantity = $production_sch->actual_quantity - $knock_down_detail->quantity;
+		}
 
 		$inventory = Inventory::where('plant','=','8190')
 		->where('material_number','=',$knock_down_detail->material_number)
@@ -765,7 +773,9 @@ class KnockDownController extends Controller{
 				$knock_down_detail->forceDelete();
 				$transaction_completion->save();
 				$inventory->save();
-				$production_sch->save();
+				if($production_sch){				
+					$production_sch->save();
+				}
 				if($shipment_sch){
 					$shipment_sch->save();
 
@@ -846,7 +856,6 @@ class KnockDownController extends Controller{
 	}
 
 	public function scanKdClosure(Request $request){
-		$id = Auth::id();
 		$status = $request->get('status');
 
 		$knock_down = KnockDownDetail::leftJoin('knock_downs','knock_down_details.kd_number','=','knock_downs.kd_number')
@@ -907,127 +916,13 @@ class KnockDownController extends Controller{
 
 	}
 
-	// public function scanKdDelivery(Request $request){
-
-	// 	$id = Auth::id();
-
-	// 	$status = $request->get('status');
-
-	// 	$knock_down = KnockDown::where('kd_number', '=', $request->get('kd_number'))->first();
-
-	// 	if(!$knock_down){
-	// 		$response = array(
-	// 			'status' => false,
-	// 			'message' => 'Nomor KDO tidak ditemukan'
-	// 		);
-	// 		return Response::json($response);
-	// 	}
-
-	// 	if($knock_down->status != ($status-1)){
-	// 		if($knock_down->status == $status){
-	// 			$response = array(
-	// 				'status' => true,
-	// 				'knock_down' => $knock_down,
-	// 				'message' => 'Nomor KDO sudah scan delivery',
-	// 				'update' => false
-	// 			);
-	// 			return Response::json($response);
-	// 		}else{
-	// 			$response = array(
-	// 				'status' => false,
-	// 				'message' => 'Alur proses salah'
-	// 			);
-	// 			return Response::json($response);	
-	// 		}
-	// 	}else{
-	// 		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
-
-	// 		$knock_down->status = $status;
-
-	// 		foreach ($knock_down_details as $knock_down_detail) {
-
-	// 			$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $knock_down_detail->material_number, 'storage_location' => $knock_down_detail->storage_location]);
-	// 			$inventoryWIP->quantity = ($inventoryWIP->quantity-$knock_down_detail->quantity);
-
-	// 			$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $knock_down_detail->material_number, 'storage_location' => 'FSTK']);
-	// 			$inventoryFSTK->quantity = ($inventoryFSTK->quantity+$knock_down_detail->quantity);
-
-	// 			$transaction_transfer = new TransactionTransfer([
-	// 				'plant' => '8190',
-	// 				'serial_number' => $knock_down_detail->kd_number,
-	// 				'material_number' => $knock_down_detail->material_number,
-	// 				'issue_plant' => '8190',
-	// 				'issue_location' => $knock_down_detail->storage_location,
-	// 				'receive_plant' => '8191',
-	// 				'receive_location' => 'FSTK',
-	// 				'transaction_code' => 'MB1B',
-	// 				'movement_type' => '9P1',
-	// 				'quantity' => $knock_down_detail->quantity,
-	// 				'created_by' => $id
-	// 			]);
-
-	// 			try{
-	// 				DB::transaction(function() use ($inventoryWIP, $inventoryFSTK, $transaction_transfer, $knock_down){
-	// 					$inventoryWIP->save();
-	// 					$inventoryFSTK->save();
-	// 					$transaction_transfer->save();
-	// 					$knock_down->save();
-	// 				});	
-	// 			}
-	// 			catch(\Exception $e){
-	// 				$error_log = new ErrorLog([
-	// 					'error_message' => $e->getMessage(),
-	// 					'created_by' => $id
-	// 				]);
-	// 				$error_log->save();
-	// 				$response = array(
-	// 					'status' => false,
-	// 					'message' => $e->getMessage(),
-	// 				);
-	// 				return Response::json($response);
-	// 			}
-	// 		}
-
-	// 		try{
-	// 			$kd_log = KnockDownLog::updateOrCreate(
-	// 				['kd_number' => $request->get('kd_number'), 'status' => $status],
-	// 				['created_by' => $id, 'status' => $status, 'updated_at' => Carbon::now()]
-	// 			);
-	// 			$kd_log->save();
-	// 		}
-	// 		catch(\Exception $e){
-	// 			$error_log = new ErrorLog([
-	// 				'error_message' => $e->getMessage(),
-	// 				'created_by' => $id
-	// 			]);
-	// 			$error_log->save();
-	// 			$response = array(
-	// 				'status' => false,
-	// 				'message' => $e->getMessage(),
-	// 			);
-	// 			return Response::json($response);
-	// 		}
-
-	// 		$response = array(
-	// 			'status' => true,
-	// 			'message' => 'KDO berhasil ditransfer ke FSTK.',
-	// 			'knock_down' => $knock_down,
-	// 			'update' => true
-	// 		);
-	// 		return Response::json($response);
-	// 	}
-	// }
-
-
 	public function scanKdDelivery(Request $request){
 
 		$id = Auth::id();
 
 		$status = $request->get('status');
 
-		$knock_down = KnockDown::where('kd_number', '=', $request->get('kd_number'))
-		->where('status', ($status-1))
-		->first();
+		$knock_down = KnockDown::where('kd_number', '=', $request->get('kd_number'))->first();
 
 		if(!$knock_down){
 			$response = array(
@@ -1036,40 +931,78 @@ class KnockDownController extends Controller{
 			);
 			return Response::json($response);
 		}
-		
-		$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
 
-		$knock_down->status = $status;
+		if($knock_down->status != ($status-1)){
+			if($knock_down->status == $status){
+				$response = array(
+					'status' => true,
+					'knock_down' => $knock_down,
+					'message' => 'Nomor KDO sudah scan delivery',
+					'update' => false
+				);
+				return Response::json($response);
+			}else{
+				$response = array(
+					'status' => false,
+					'message' => 'Alur proses salah'
+				);
+				return Response::json($response);	
+			}
+		}else{
+			$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
 
-		foreach ($knock_down_details as $knock_down_detail) {
+			$knock_down->status = $status;
 
-			$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $knock_down_detail->material_number, 'storage_location' => $knock_down_detail->storage_location]);
-			$inventoryWIP->quantity = ($inventoryWIP->quantity-$knock_down_detail->quantity);
+			foreach ($knock_down_details as $knock_down_detail) {
 
-			$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $knock_down_detail->material_number, 'storage_location' => 'FSTK']);
-			$inventoryFSTK->quantity = ($inventoryFSTK->quantity+$knock_down_detail->quantity);
+				$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $knock_down_detail->material_number, 'storage_location' => $knock_down_detail->storage_location]);
+				$inventoryWIP->quantity = ($inventoryWIP->quantity-$knock_down_detail->quantity);
 
-			$transaction_transfer = new TransactionTransfer([
-				'plant' => '8190',
-				'serial_number' => $knock_down_detail->kd_number,
-				'material_number' => $knock_down_detail->material_number,
-				'issue_plant' => '8190',
-				'issue_location' => $knock_down_detail->storage_location,
-				'receive_plant' => '8191',
-				'receive_location' => 'FSTK',
-				'transaction_code' => 'MB1B',
-				'movement_type' => '9P1',
-				'quantity' => $knock_down_detail->quantity,
-				'created_by' => $id
-			]);
+				$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $knock_down_detail->material_number, 'storage_location' => 'FSTK']);
+				$inventoryFSTK->quantity = ($inventoryFSTK->quantity+$knock_down_detail->quantity);
+
+				$transaction_transfer = new TransactionTransfer([
+					'plant' => '8190',
+					'serial_number' => $knock_down_detail->kd_number,
+					'material_number' => $knock_down_detail->material_number,
+					'issue_plant' => '8190',
+					'issue_location' => $knock_down_detail->storage_location,
+					'receive_plant' => '8191',
+					'receive_location' => 'FSTK',
+					'transaction_code' => 'MB1B',
+					'movement_type' => '9P1',
+					'quantity' => $knock_down_detail->quantity,
+					'created_by' => $id
+				]);
+
+				try{
+					DB::transaction(function() use ($inventoryWIP, $inventoryFSTK, $transaction_transfer, $knock_down){
+						$inventoryWIP->save();
+						$inventoryFSTK->save();
+						$transaction_transfer->save();
+						$knock_down->save();
+					});	
+				}
+				catch(\Exception $e){
+					$error_log = new ErrorLog([
+						'error_message' => $e->getMessage(),
+						'created_by' => $id
+					]);
+					$error_log->save();
+					$response = array(
+						'status' => false,
+						'message' => $e->getMessage(),
+					);
+					return Response::json($response);
+				}
+			}
 
 			try{
-				DB::transaction(function() use ($inventoryWIP, $inventoryFSTK, $transaction_transfer, $knock_down){
-					$inventoryWIP->save();
-					$inventoryFSTK->save();
-					$transaction_transfer->save();
-					$knock_down->save();
-				});	
+				$kd_log = KnockDownLog::updateOrCreate(
+					['kd_number' => $request->get('kd_number'), 'status' => $status],
+					['created_by' => $id, 'status' => $status, 'updated_at' => Carbon::now()]
+				);
+				$kd_log->save();
 			}
 			catch(\Exception $e){
 				$error_log = new ErrorLog([
@@ -1083,36 +1016,113 @@ class KnockDownController extends Controller{
 				);
 				return Response::json($response);
 			}
-		}
 
-		try{
-			$kd_log = KnockDownLog::updateOrCreate(
-				['kd_number' => $request->get('kd_number'), 'status' => $status],
-				['created_by' => $id, 'status' => $status, 'updated_at' => Carbon::now()]
-			);
-			$kd_log->save();
-		}
-		catch(\Exception $e){
-			$error_log = new ErrorLog([
-				'error_message' => $e->getMessage(),
-				'created_by' => $id
-			]);
-			$error_log->save();
 			$response = array(
-				'status' => false,
-				'message' => $e->getMessage(),
+				'status' => true,
+				'message' => 'KDO berhasil ditransfer ke FSTK.',
+				'knock_down' => $knock_down,
+				'update' => true
 			);
 			return Response::json($response);
 		}
-
-		$response = array(
-			'status' => true,
-			'message' => 'KDO berhasil ditransfer ke FSTK.',
-			'knock_down' => $knock_down,
-			'update' => true
-		);
-		return Response::json($response);
 	}
+
+
+	// public function scanKdDelivery(Request $request){
+
+	// 	$id = Auth::id();
+
+	// 	$status = $request->get('status');
+
+	// 	$knock_down = KnockDown::where('kd_number', '=', $request->get('kd_number'))
+	// 	->where('status', ($status-1))
+	// 	->first();
+
+	// 	if(!$knock_down){
+	// 		$response = array(
+	// 			'status' => false,
+	// 			'message' => 'Nomor KDO tidak ditemukan'
+	// 		);
+	// 		return Response::json($response);
+	// 	}
+
+	// 	$knock_down_details = KnockDownDetail::where('kd_number', '=', $request->get('kd_number'))->get();
+
+	// 	$knock_down->status = $status;
+
+	// 	foreach ($knock_down_details as $knock_down_detail) {
+
+	// 		$inventoryWIP = Inventory::firstOrNew(['plant' => '8190', 'material_number' => $knock_down_detail->material_number, 'storage_location' => $knock_down_detail->storage_location]);
+	// 		$inventoryWIP->quantity = ($inventoryWIP->quantity-$knock_down_detail->quantity);
+
+	// 		$inventoryFSTK = Inventory::firstOrNew(['plant' => '8191', 'material_number' => $knock_down_detail->material_number, 'storage_location' => 'FSTK']);
+	// 		$inventoryFSTK->quantity = ($inventoryFSTK->quantity+$knock_down_detail->quantity);
+
+	// 		$transaction_transfer = new TransactionTransfer([
+	// 			'plant' => '8190',
+	// 			'serial_number' => $knock_down_detail->kd_number,
+	// 			'material_number' => $knock_down_detail->material_number,
+	// 			'issue_plant' => '8190',
+	// 			'issue_location' => $knock_down_detail->storage_location,
+	// 			'receive_plant' => '8191',
+	// 			'receive_location' => 'FSTK',
+	// 			'transaction_code' => 'MB1B',
+	// 			'movement_type' => '9P1',
+	// 			'quantity' => $knock_down_detail->quantity,
+	// 			'created_by' => $id
+	// 		]);
+
+	// 		try{
+	// 			DB::transaction(function() use ($inventoryWIP, $inventoryFSTK, $transaction_transfer, $knock_down){
+	// 				$inventoryWIP->save();
+	// 				$inventoryFSTK->save();
+	// 				$transaction_transfer->save();
+	// 				$knock_down->save();
+	// 			});	
+	// 		}
+	// 		catch(\Exception $e){
+	// 			$error_log = new ErrorLog([
+	// 				'error_message' => $e->getMessage(),
+	// 				'created_by' => $id
+	// 			]);
+	// 			$error_log->save();
+	// 			$response = array(
+	// 				'status' => false,
+	// 				'message' => $e->getMessage(),
+	// 			);
+	// 			return Response::json($response);
+	// 		}
+	// 	}
+
+	// 	try{
+	// 		$kd_log = KnockDownLog::updateOrCreate(
+	// 			['kd_number' => $request->get('kd_number'), 'status' => $status],
+	// 			['created_by' => $id, 'status' => $status, 'updated_at' => Carbon::now()]
+	// 		);
+	// 		$kd_log->save();
+	// 	}
+	// 	catch(\Exception $e){
+	// 		$error_log = new ErrorLog([
+	// 			'error_message' => $e->getMessage(),
+	// 			'created_by' => $id
+	// 		]);
+	// 		$error_log->save();
+	// 		$response = array(
+	// 			'status' => false,
+	// 			'message' => $e->getMessage(),
+	// 		);
+	// 		return Response::json($response);
+	// 	}
+
+	// 	$response = array(
+	// 		'status' => true,
+	// 		'message' => 'KDO berhasil ditransfer ke FSTK.',
+	// 		'knock_down' => $knock_down,
+	// 		'update' => true
+	// 	);
+	// 	return Response::json($response);
+	// }
+	
 
 	public function scanKdStuffing(Request $request){
 		$id = Auth::id();
@@ -1504,7 +1514,9 @@ class KnockDownController extends Controller{
 		}else if($id == 'sub-assy-cl'){
 			$storage = "('SUBASSY-CL')";
 		}else if($id == 'mouthpiece'){
-			$storage = "('MP')";
+			$storage = "('MP') AND m.kd_name = 'SINGLE'";
+		}else if($id == 'mouthpiece-packed'){
+			$storage = "('MP') AND m.kd_name = 'MP'";
 		}
 
 		$target = db::select("SELECT
@@ -1732,16 +1744,17 @@ class KnockDownController extends Controller{
 		$knock_down = new KnockDown([
 			'kd_number' => $kd_number,
 			'created_by' => Auth::id(),
+			'max_count' => 1,
 			'actual_count' => 1,
 			'remark' => $location,
-			'status' => 1,
+			'status' => 0,
 		]);
 
 
 		//KnockDown Log
 		$knock_down_log = KnockDownLog::updateOrCreate(
-			['kd_number' => $kd_number, 'status' => 1],
-			['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
+			['kd_number' => $kd_number, 'status' => 0],
+			['created_by' => Auth::id(), 'status' => 0, 'updated_at' => Carbon::now()]
 		);
 
 
@@ -1878,8 +1891,10 @@ class KnockDownController extends Controller{
 		$location = $request->get('location');
 		
 		$max_count = 1;
+		$status = 1;
 		if($location == 'z-pro'){
 			$max_count = 100;
+			$status = 100;
 		}
 
 		$storage_location = Material::where('material_number','=',$material_number)
@@ -1893,6 +1908,7 @@ class KnockDownController extends Controller{
 		->where('status','=', 0)
 		->orderBy('kd_number', 'desc')
 		->first();
+
 
 		$kd_number = '';
 		if($knock_down){
@@ -1912,7 +1928,7 @@ class KnockDownController extends Controller{
 					'max_count' => $max_count,
 					'actual_count' => 1,
 					'remark' => $location,
-					'status' => 0,
+					'status' => $status,
 				]);
 
 			}
@@ -1928,24 +1944,33 @@ class KnockDownController extends Controller{
 				'max_count' => $max_count,
 				'actual_count' => 1,
 				'remark' => $location,
-				'status' => 0,
+				'status' => $status,
 			]);
 
 		}
 
 		//KnockDown Log
-		$knock_down_log;
-		if(($knock_down->actual_count + 1) == $max_count){
+		$knock_down_log;	
+		if($location == 'z-pro'){
+			if(($knock_down->actual_count + 1) == $max_count){
+				$knock_down_log = KnockDownLog::updateOrCreate(
+					['kd_number' => $kd_number, 'status' => 1],
+					['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
+				);
+			}else{
+				$knock_down_log = KnockDownLog::updateOrCreate(
+					['kd_number' => $kd_number, 'status' => 0],
+					['created_by' => Auth::id(), 'status' => 0, 'updated_at' => Carbon::now()]
+				);
+			}
+		}else{
 			$knock_down_log = KnockDownLog::updateOrCreate(
 				['kd_number' => $kd_number, 'status' => 1],
 				['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
 			);
-		}else{
-			$knock_down_log = KnockDownLog::updateOrCreate(
-				['kd_number' => $kd_number, 'status' => 0],
-				['created_by' => Auth::id(), 'status' => 0, 'updated_at' => Carbon::now()]
-			);
 		}
+
+		
 
 		//KnockDown Detail
 		$knock_down_detail = new KnockDownDetail([
