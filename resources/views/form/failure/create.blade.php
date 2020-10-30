@@ -24,6 +24,9 @@
   .col-xs-8{
     padding-top: 5px;
   }
+  input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+  }
   
 </style>
 @endsection
@@ -164,7 +167,7 @@
               <div class="input-group-addon">
               $
               </div>
-              <input type="text" id="form_rugi" class="form-control" placeholder="Contoh: 2000 (Satuan Dollar)">
+              <input type="number" id="form_rugi" class="form-control" placeholder="Contoh: 2000 (Satuan Dollar)">
             </div>
         </div>
       </div>
