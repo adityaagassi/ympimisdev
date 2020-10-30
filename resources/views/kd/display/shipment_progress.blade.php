@@ -351,8 +351,38 @@
 		$('#modalProgressTitle').hide();
 		$('#tableModal').hide();
 		var hpl = name;
+		if(name == 'VN'){
+			var hpl = 'VENOVA';
+		}
+		if(name == 'FL'){
+			var hpl = 'FLFG';
+		}
+		if(name == 'AS'){
+			var hpl = 'ASFG';
+		}
+		if(name == 'TS'){
+			var hpl = 'TSFG';
+		}
+		if(name == 'CL'){
+			var hpl = 'CLFG';
+		}
+		if(name == 'SXKEY'){
+			var hpl = 'SUBASSY-SX';
+		}
+		if(name == 'SXBODY'){
+			var hpl = 'ASSY-SX';
+		}
 		if(name == 'ZPRO'){
 			var hpl = 'ZPRO';
+		}
+		if(name == 'CLKEY'){
+			var hpl = 'SUBASSY-CL';
+		}
+		if(name == 'FLKEY'){
+			var hpl = 'SUBASSY-FL';
+		}
+		if(name == 'MP'){
+			var hpl = 'MP';
 		}
 		var data = {
 			date:cat,
@@ -458,6 +488,18 @@
 					if(data[i].hpl == 'ASSY-SX'){
 						planAssySX.push(data[i].plan-data[i].act);
 						actualAssySX.push(data[i].act);
+					}
+					if(data[i].hpl == 'SUBASSY-CL'){
+						planSubAssyCL.push(data[i].plan-data[i].act);
+						actualSubAssyCL.push(data[i].act);
+					}
+					if(data[i].hpl == 'SUBASSY-FL'){
+						planSubAssyFL.push(data[i].plan-data[i].act);
+						actualSubAssyFL.push(data[i].act);
+					}
+					if(data[i].hpl == 'MP'){
+						planMP.push(data[i].plan-data[i].act);
+						actualMP.push(data[i].act);
 					}
 				}
 
@@ -571,19 +613,63 @@
 					},
 					series: [{
 						name: 'Plan',
+						data: planSubAssySX,
+						stack: 'SXKEY',
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
+					}, {
+						name: 'Plan',
+						data: planAssySX,
+						stack: 'SXBODY',
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
+					}, {
+						name: 'Plan',
+						data: planSubAssyCL,
+						stack: 'CLKEY',
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
+					}, {
+						name: 'Plan',
+						data: planSubAssyFL,
+						stack: 'FLKEY',
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
+					}, {
+						name: 'Plan',
 						data: planZPRO,
 						stack: 'ZPRO',
 						color: 'rgba(255, 0, 0, 0.25)'
 					}, {
 						name: 'Plan',
-						data: planSubAssySX,
-						stack: 'SUBASSY-SX',
-						color: 'rgba(255, 0, 0, 0.25)'
+						data: planMP,
+						stack: 'MP',
+						color: 'rgba(255, 0, 0, 0.25)',
+						showInLegend: false
 					}, {
-						name: 'Plan',
-						data: planAssySX,
-						stack: 'ASSY-SX',
-						color: 'rgba(255, 0, 0, 0.25)'
+						name: 'Actual',
+						data: actualSubAssySX,
+						stack: 'SXKEY',
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
+					}, {
+						name: 'Actual',
+						data: actualAssySX,
+						stack: 'SXBODY',
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
+					}, {
+						name: 'Actual',
+						data: actualSubAssyCL,
+						stack: 'CLKEY',
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
+					}, {
+						name: 'Actual',
+						data: actualSubAssyFL,
+						stack: 'FLKEY',
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
 					}, {
 						name: 'Actual',
 						data: actualZPRO,
@@ -591,14 +677,10 @@
 						color: 'rgba(0, 255, 0, 0.90)'
 					}, {
 						name: 'Actual',
-						data: actualSubAssySX,
-						stack: 'SUBASSY-SX',
-						color: 'rgba(0, 255, 0, 0.90)'
-					}, {
-						name: 'Actual',
-						data: actualAssySX,
-						stack: 'ASSY-SX',
-						color: 'rgba(0, 255, 0, 0.90)'
+						data: actualMP,
+						stack: 'MP',
+						color: 'rgba(0, 255, 0, 0.90)',
+						showInLegend: false
 					}]
 				});
 

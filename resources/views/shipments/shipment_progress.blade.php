@@ -864,11 +864,6 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 			var scrollMax = 3;
 		}
 
-		console.log(xCategories);
-		console.log(planSubAssyFL);
-		console.log(actualSubAssyFL);
-
-
 		var yAxisLabels = [0,25,50,75,100,110];
 		var chart = Highcharts.chart('container2', {
 
