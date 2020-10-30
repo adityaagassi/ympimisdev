@@ -272,9 +272,9 @@
 			if(result.status){
 				openSuccessGritter('Success', result.message);
 				clearItem();
-				$('#addDestination').prop('selectedIndex', 0).change();
-				$('#addPackingDate').val("");
-				$('#addStuffingDate').val("");
+				// $('#addDestination').prop('selectedIndex', 0).change();
+				// $('#addPackingDate').val("");
+				// $('#addStuffingDate').val("");
 				fetchChecksheet();
 				fillTableList();
 				$('#loading').hide();
