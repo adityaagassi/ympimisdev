@@ -1746,14 +1746,20 @@ class KnockDownController extends Controller{
 			'max_count' => 1,
 			'actual_count' => 1,
 			'remark' => $location,
-			'status' => 0,
+			'status' => 1,
+			// 'status' => 0,
 		]);
 
 
 		//KnockDown Log
+		// $knock_down_log = KnockDownLog::updateOrCreate(
+		// 	['kd_number' => $kd_number, 'status' => 0],
+		// 	['created_by' => Auth::id(), 'status' => 0, 'updated_at' => Carbon::now()]
+		// );
+
 		$knock_down_log = KnockDownLog::updateOrCreate(
-			['kd_number' => $kd_number, 'status' => 0],
-			['created_by' => Auth::id(), 'status' => 0, 'updated_at' => Carbon::now()]
+			['kd_number' => $kd_number, 'status' => 1],
+			['created_by' => Auth::id(), 'status' => 1, 'updated_at' => Carbon::now()]
 		);
 
 
