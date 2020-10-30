@@ -851,10 +851,6 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 				planSubAssyFL.push(data[i].plan-data[i].act);
 				actualSubAssyFL.push(data[i].act);
 			}
-			if(data[i].hpl == 'SUBASSY-FL'){
-				planSubAssyFL.push(data[i].plan-data[i].act);
-				actualSubAssyFL.push(data[i].act);
-			}
 			if(data[i].hpl == 'MP'){
 				planMP.push(data[i].plan-data[i].act);
 				actualMP.push(data[i].act);
@@ -867,6 +863,10 @@ $.get('{{ url("fetch/kd_shipment_progress") }}', data, function(result, status, 
 		else{
 			var scrollMax = 3;
 		}
+
+		console.log(xCategories);
+		console.log(planSubAssyFL);
+		console.log(actualSubAssyFL);
 
 
 		var yAxisLabels = [0,25,50,75,100,110];
