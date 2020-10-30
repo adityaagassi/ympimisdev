@@ -14,6 +14,7 @@ use App\GeneralAttendanceLog;
 use App\Employee;
 use App\EmployeeSync;
 use App\GeneralTransportation;
+use App\GeneralTransportationData;
 use App\GeneralDoctor;
 use App\CodeGenerator;
 use App\GeneralShoesLog;
@@ -764,7 +765,7 @@ class GeneralController extends Controller{
 		->where('employee_syncs.employee_id', '=', Auth::user()->username)
 		->first();
 
-		if(Auth::user()->role_code != 'MIS' && Auth::user()->role_code != 'S' && substr($employee->grade_code, 1, 1) != 'L' && substr($employee->grade_code, 1, 1) != 'M'){
+		if(Auth::user()->role_code != 'MIS' && Auth::user()->role_code != 'S' && substr($employee->grade_code, 0, 1) != 'L' && substr($employee->grade_code, 0, 1) != 'M'){
 			return view('404');
 		}
 
@@ -823,6 +824,16 @@ class GeneralController extends Controller{
 				'created_by' => Auth::id()
 			]);
 
+			$general_data = GeneralTransportationData::firstOrNew(['employee_id' => $request->input('employee_id'), 'attend_code' => $request->input('newAttend')]);
+			$general_data->employee_id = $request->input('employee_id');
+            $general_data->check_time = date('H:i:s', strtotime($request->input('newTime')));
+			$general_data->attend_code = $request->input('newAttend');
+			$general_data->vehicle = $request->input('newVehicle');
+			$general_data->distance = $request->input('newDistance');
+			$general_data->vehicle_number = $request->input('newVehicleNumber');
+			$general_data->created_by = Auth::id();
+            $general_data->save();
+
 			$response = array(
 				'status' => true,
 				'message' => 'Data baru berhasil ditambahkan'
@@ -837,6 +848,36 @@ class GeneralController extends Controller{
 			return Response::json($response);
 		}
 
+	}
+
+	public function fetchOnlineTransportationData(Request $request)
+	{
+		try {
+			$employee_id = $request->get('employee_id');
+			$attend_code = $request->get('attend_code');
+
+			$data = GeneralTransportationData::where('employee_id',$employee_id)->where('attend_code',$attend_code)->first();
+
+			if (count($data) > 0) {
+				$response = array(
+					'status' => true,
+					'datas' => $data
+				);
+				return Response::json($response);
+			}else{
+				$response = array(
+					'status' => true,
+					'datas' => ""
+				);
+				return Response::json($response);
+			}
+		} catch (\Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage()
+			);
+			return Response::json($response);
+		}
 	}
 
 	public function confirmOnlineTransportationReport(Request $request){

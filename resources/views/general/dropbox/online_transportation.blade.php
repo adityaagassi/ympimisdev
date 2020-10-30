@@ -187,7 +187,7 @@
 						<form class="form-horizontal">
 							<input type="hidden" id="newId">
 							<div class="form-group">
-								<label for="newAttend" class="col-sm-2 control-label">Kehadiran</label>
+								<label for="newAttend" class="col-sm-2 control-label">Kehadiran<span class="text-red">*</span></label>
 								<div class="col-sm-6">
 									<select class="form-control select2" name="newAttend" id="newAttend" data-placeholder="Pilih Kehadiran" style="width: 100%;" onchange="selectAttend(value)">
 										<option value=""></option>
@@ -200,19 +200,19 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="newDate" class="col-sm-2 control-label">Tanggal</label>
+								<label for="newDate" class="col-sm-2 control-label">Tanggal<span class="text-red">*</span></label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control pull-right" id="newDate" name="newDate">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="newTime" class="col-sm-2 control-label">Jam</label>
+								<label for="newTime" class="col-sm-2 control-label">Jam<span class="text-red">*</span></label>
 								<div class="col-sm-4">
 									<input type="text" class="form-control timepicker" id="newTime" name="newTime">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="newVehicle" class="col-sm-2 control-label">Kendaraan</label>
+								<label for="newVehicle" class="col-sm-2 control-label">Kendaraan<span class="text-red">*</span></label>
 								<div class="col-sm-6">
 									<select class="form-control select2" name="newVehicle" id="newVehicle" data-placeholder="Pilih Kendaraan" style="width: 100%;" onchange="selectVehicle(value)">
 										<option value=""></option>
@@ -223,7 +223,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="newDistance" class="col-sm-2 control-label">Jarak</label>
+								<label for="newDistance" class="col-sm-2 control-label">Jarak<span class="text-red">*</span></label>
 								<div class="col-sm-6">
 									<div class="input-group">
 										<input type="text" style="width: 100%" class="form-control" id="newDistance" name="newDistance" placeholder="Jarak Tempuh">
@@ -234,13 +234,13 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="newVehicleNumber" class="col-sm-2 control-label">No Polisi</label>
+								<label for="newVehicleNumber" class="col-sm-2 control-label">No Polisi<span class="text-red">*</span></label>
 								<div class="col-sm-6">
 									<input type="text" style="width: 100%" class="form-control" id="newVehicleNumber" name="newVehicleNumber" placeholder="No Polisi Kendaraan">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="newHighwayBill" class="col-sm-2 control-label">No Seri</label>
+								<label for="newHighwayBill" class="col-sm-2 control-label">No Seri<span class="text-red">*</span></label>
 								<div class="col-sm-6">
 									<input type="text" style="width: 100%" class="form-control" id="newHighwayBill" name="newHighwayBill" placeholder="No Seri Struk Tol">
 								</div>
@@ -254,7 +254,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="newHighwayAmount" class="col-sm-2 control-label">Tol</label>
+								<label for="newHighwayAmount" class="col-sm-2 control-label">Tol<span class="text-red">*</span></label>
 								<div class="col-sm-6">
 									<input type="text" style="width: 100%" class="form-control" id="newHighwayAmount" name="newHighwayAmount" placeholder="Biaya Tol">
 								</div>
@@ -445,7 +445,7 @@
 			processData: false,
 			success:function(data)
 			{
-				openSuccessGritter('Success','Input Data Audit Berhasil');
+				openSuccessGritter('Success','Input Data Transportation');
 				$('#loading').hide();
 				$('#modalRecord').modal('hide');
 				clearModal();
@@ -492,6 +492,30 @@
 			$('#newDistance').prop("disabled", false);
 			$('#newAttachment').prop("disabled", false);
 		}
+
+		var data = {
+			employee_id:$('#employee_id').val(),
+			attend_code:id
+		}
+
+		$.get('{{ url("fetch/general/online_transportation_data") }}', data, function(result, status, xhr){
+			if (result.status) {
+				if (result.datas.check_time == "") {
+					if (id === 'in') {
+						$('#newTime').val("06:30");
+					}else{
+						$('#newTime').val(result.datas.check_time);
+					}
+				}else{
+					$('#newTime').val(result.datas.check_time);
+				}
+				$('#newVehicle').val(result.datas.vehicle).trigger('change');
+				$('#newVehicleNumber').val(result.datas.vehicle_number);
+				$('#newDistance').val(result.datas.distance);
+			}else{
+				openErrorGritter('Error!','Data Tidak Tersedia');
+			}
+		});
 	}
 
 	function selectVehicle(id){
