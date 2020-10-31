@@ -185,7 +185,7 @@
 			This is an automatic notification. Please do not reply to this address.<br>
 			自動通知です。返事しないでください。<br>
 
-			<h2>Purchase Order (PO) {{$no_po}}</h2>
+			<h2>Purchase Order (発注依頼) {{$no_po}}</h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
