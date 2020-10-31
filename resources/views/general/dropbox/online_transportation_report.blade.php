@@ -108,7 +108,6 @@
 										<th style="width: 1%">Jam</th>
 										<th style="width: 1%">Kehadiran</th>
 										<th style="width: 1%">Kendaraan</th>
-										<th style="width: 1%">Struk</th>
 										<th style="width: 1%">Tol</th>
 										<th style="width: 1%">Jarak</th>
 										<th style="width: 1%">Lampiran</th>
@@ -119,7 +118,6 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -176,7 +174,6 @@
 										<th style="width: 1%">Pulang</th>
 										<th style="width: 1%">Kehadiran</th>
 										<th style="width: 1%">Kendaraan</th>
-										<th style="width: 2%">No Seri</th>
 										<th style="width: 1%">Tol (IDR)</th>
 										<th style="width: 1%">Jarak (Km)</th>
 										<th style="width: 1%">Bensin</th>
@@ -188,7 +185,6 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
-										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -295,16 +291,15 @@
 					detailTable += '<td style="width: 1%;">'+value.check_out+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.attend_code.toUpperCase()+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.vehicle.toUpperCase()+' ('+value.vehicle_number.toUpperCase()+')</td>';
-					detailTable += '<td style="width: 5%;">'+value.highway_bill_in+'; '+value.highway_bill_out+';</td>';
 					detailTable += '<td style="width: 1%;">'+value.highway_amount_total+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.distance_total+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.fuel+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.total_amount+'</td>';
 					detailTable += '<td style="width: 1%;">';
-					if(value.highway_bill_in != 0){
+					if(value.att_in != '{{ url("files/general_transportation/0") }}'){
 						detailTable += '<a href="javascript:void(0)" id="'+ value.att_in +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> in</a>';
 					}
-					if(value.highway_bill_out != 0){
+					if(value.att_out != '{{ url("files/general_transportation/0") }}'){
 						detailTable += '&nbsp;<a href="javascript:void(0)" id="'+ value.att_out +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> out</a>';
 					}
 					detailTable += '</td>';
@@ -506,7 +501,6 @@ function fetchConfirmTable(){
 				confirmTable += '<td>'+value.check_time+'</td>';
 				confirmTable += '<td>'+value.attend_code+'</td>';
 				confirmTable += '<td>'+value.vehicle+'</td>';
-				confirmTable += '<td>'+value.highway_bill+'</td>';
 				confirmTable += '<td>'+value.highway_amount+'</td>';
 				confirmTable += '<td>'+value.distance+'</td>';
 				confirmTable += '<td><a href="javascript:void(0)" id="'+ value.highway_attachment +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> Struk</a></td>';
