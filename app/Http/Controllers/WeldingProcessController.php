@@ -1028,7 +1028,8 @@ class WeldingProcessController extends Controller
 					COALESCE ( m_hsa.hsa_kito_code, m_phs.phs_code ) AS hsa_kito_code,
 					COALESCE ( m_hsa.hsa_name, m_phs.phs_name ) AS hsa_name,
 					COALESCE ( ws_phs.ws_name, ws_hsa.ws_name ) AS ws_name,
-					t_proses.part_type
+					t_proses.part_type,
+					antrian_date
 					FROM
 					t_proses
 					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
@@ -1041,7 +1042,9 @@ class WeldingProcessController extends Controller
 					ORDER BY
 					antrian_date ASC
 					) queue
-					LEFT JOIN ympimis.materials m ON m.material_number = queue.hsa_kito_code");
+					LEFT JOIN ympimis.materials m ON m.material_number = queue.hsa_kito_code
+					ORDER BY
+					antrian_date ASC ");
 
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
@@ -1085,7 +1088,8 @@ class WeldingProcessController extends Controller
 					COALESCE ( m_hsa.hsa_kito_code, m_phs.phs_code ) AS phs_code,
 					COALESCE ( m_hsa.hsa_name, m_phs.phs_name ) AS phs_name,
 					COALESCE ( ws_phs.ws_name, ws_hsa.ws_name ) AS ws_name,
-					t_proses.part_type
+					t_proses.part_type,
+					antrian_date
 					FROM
 					t_proses
 					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
@@ -1098,7 +1102,9 @@ class WeldingProcessController extends Controller
 					ORDER BY
 					antrian_date ASC 
 					) queue
-					LEFT JOIN ympimis.materials m ON m.material_number = queue.phs_code");
+					LEFT JOIN ympimis.materials m ON m.material_number = queue.phs_code
+					ORDER BY
+					antrian_date ASC ");
 				
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
@@ -1141,7 +1147,8 @@ class WeldingProcessController extends Controller
 					COALESCE ( m_hsa.hsa_kito_code, m_phs.phs_code ) AS phs_code,
 					COALESCE ( m_hsa.hsa_name, m_phs.phs_name ) AS phs_name,
 					COALESCE ( ws_phs.ws_name, ws_hsa.ws_name ) AS ws_name,
-					COALESCE ( m_hsa.hsa_jenis, m_phs.phs_jenis ) AS phs_jenis
+					COALESCE ( m_hsa.hsa_jenis, m_phs.phs_jenis ) AS phs_jenis,
+					antrian_date
 					FROM
 					t_proses
 					LEFT JOIN m_hsa ON m_hsa.hsa_id = t_proses.part_id
@@ -1154,7 +1161,9 @@ class WeldingProcessController extends Controller
 					ORDER BY
 					antrian_date ASC 
 					) queue
-					LEFT JOIN ympimis.materials m ON m.material_number = queue.phs_code");
+					LEFT JOIN ympimis.materials m ON m.material_number = queue.phs_code
+					ORDER BY
+					antrian_date ASC ");
 
 				if (count($lists) > 9) {
 					foreach ($lists as $key) {
