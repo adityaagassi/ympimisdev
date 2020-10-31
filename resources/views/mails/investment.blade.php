@@ -27,9 +27,11 @@
 				<?php $submission_date = $datas->submission_date ?>
 				<?php $category = $datas->category ?>
 				<?php $subject = $datas->subject ?>
+				<?php $subject_jpy = $datas->subject_jpy ?>
 				<?php $type = $datas->type ?>
 				<?php $objective = $datas->objective ?>
 				<?php $objective_detail = $datas->objective_detail ?>
+				<?php $objective_detail_jpy = $datas->objective_detail_jpy ?>
 				<?php $supplier_code = $datas->supplier_code ?>
 				<?php $supplier_name = $datas->supplier_name ?>
 				<?php $delivery_order = $datas->delivery_order ?>
@@ -303,8 +305,8 @@
 			This is an automatic notification. Please do not reply to this address.<br>
 			自動通知です。返事しないでください。<br>
 
-			<h2>Investment No : {{$reff_number}} <br>
-			Subject : <?= ucfirst($subject) ?></h2>
+			<h2>投資番号 : {{$reff_number}} <br>
+			件名 : <?= $subject_jpy ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -336,7 +338,7 @@
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Objective (目的)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
+						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail_jpy ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Vendor (サプライヤー)</td>
@@ -421,8 +423,8 @@
 			This is an automatic notification. Please do not reply to this address.<br>
 			自動通知です。返事しないでください。<br>
 
-			<h2>Investment No : {{$reff_number}} <br>
-			Subject : <?= ucfirst($subject) ?></h2>
+			<h2>投資番号 : {{$reff_number}} <br>
+			件名 : <?= $subject_jpy ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -454,7 +456,7 @@
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Objective (目的)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
+						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail_jpy ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Vendor (サプライヤー)</td>
@@ -481,8 +483,8 @@
 			This is an automatic notification. Please do not reply to this address.<br>
 			自動通知です。返事しないでください。<br>
 
-			<h2>Investment No : {{$reff_number}} <br>
-			Subject : <?= ucfirst($subject) ?></h2>
+			<h2>投資番号 : {{$reff_number}} <br>
+			件名 : <?= $subject_jpy ?></h2>
 
 			<table style="border:1px solid black; border-collapse: collapse;" width="80%">
 				<thead style="background-color: rgb(126,86,134);">
@@ -514,7 +516,7 @@
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Objective (目的)</td>
-						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail ?></td>
+						<td style="border:1px solid black; text-align: center;"><?= $objective ?> - <?= $objective_detail_jpy ?></td>
 					</tr>
 					<tr>
 						<td style="width: 2%; border:1px solid black;">Vendor (サプライヤー)</td>

@@ -355,7 +355,7 @@
         <a href="{{ url("investment") }}"><i class="fa fa-file-pdf-o"></i>Investment</a>
       </li>
       @if(isset($page) && $page == "Investment Control")<li class="active">@else<li>@endif
-        <a href="{{ url("investment/control") }}"><i class="fa fa-tv"></i><span>Investment Control</span></a>
+        <a href="{{ url("investment/control") }}"><i class="fa fa-tv"></i><span>Investment Monitoring & Control</span></a>
       </li>
       @if(isset($page) && $page == "Purchase Item")<li class="active">@else<li>@endif
         <a href="{{ url("/index/purchase_item") }}"><i class="fa fa-sort-alpha-asc"></i><span>Purchase Item</span></a>
@@ -746,7 +746,7 @@
   </li>
   @endif
 
-  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F','PC']) || Auth::user()->username == 'op-subassy-cl')
+  @if(in_array(Auth::user()->role_code, ['S','MIS','PROD','F','PC']) || Auth::user()->username == 'op-subassy-cl' || Auth::user()->username == 'pi0103003')
   @if(isset($page) && $page == "KD Sub Assy CL")<li class="active">@else<li>@endif
     <a href="{{ url("index/kd_subassy/"."sub-assy-cl") }}"><i class="fa fa-pencil-square-o"></i> <span>KD  <i class="fa fa-angle-right"></i> Sub Assy CL</span></a>
   </li>

@@ -1055,7 +1055,7 @@
                                             </a>
                                             <br>
                                             <a href="{{ url("investment/control") }}">
-                                                <i class="fa fa-caret-right"></i> Investment Control (投資管理)
+                                                <i class="fa fa-caret-right"></i> Investment Monitoring & Control (投資管理)
                                             </a>
                                         </td>
                                     </tr>
