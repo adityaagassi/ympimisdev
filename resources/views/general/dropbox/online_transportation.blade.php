@@ -499,15 +499,15 @@
 
 		$.get('{{ url("fetch/general/online_transportation_data") }}', data, function(result, status, xhr){
 			if (result.status) {
-					if (result.datas.check_time == "") {
-						if (id === 'in') {
-							$('#newTime').val("06:30");
-						}else{
-							$('#newTime').val(result.datas.check_time);
-						}
+					// if (result.datas.check_time == "") {
+					if (id === 'in') {
+						$('#newTime').val("06:30");
 					}else{
 						$('#newTime').val(result.datas.check_time);
 					}
+				// }else{
+					// 	$('#newTime').val(result.datas.check_time);
+					// }
 					$('#newVehicle').val(result.datas.vehicle).trigger('change');
 					$('#newVehicleNumber').val(result.datas.vehicle_number);
 					$('#newDistance').val(result.datas.distance);
