@@ -1502,6 +1502,7 @@ Route::group(['nav' => 'S26', 'middleware' => 'permission'], function(){
 
 	Route::get('index/kd_mouthpiece/{id}', 'KnockDownController@indexKD');
 	Route::post('fetch/kd_print', 'KnockDownController@printLabelNew');
+	Route::get('index/print_label_mouthpiece/{id}', 'KnockDownController@indexPrintLabelSubassy');
 });
 
 //ZPRO

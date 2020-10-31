@@ -381,7 +381,7 @@
 	}
 
 	function printLabelSubassy(kd_detail,windowName) {
-		newwindow = window.open('{{ url("index/print_label_subassy/") }}'+'/'+kd_detail, windowName, 'height=250,width=450');
+		newwindow = window.open('{{ url("index/print_label_mouthpiece/") }}'+'/'+kd_detail, windowName, 'height=250,width=450');
 
 		if (window.focus) {
 			newwindow.focus();

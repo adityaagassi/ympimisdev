@@ -83,6 +83,8 @@
 						</div>
 						<label for="exampleInputEmail1">Employee ID</label>
 						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Scan ID Card" required>
+						<br><br>
+						<a href="{{ url("/home") }}" class="btn btn-success" style="width: 100%; font-size: 1vw; font-weight: bold; margin-top: 10px;"><i class="fa fa-hand-o-right"></i> Ke Halaman Dashboard</a>
 					</div>
 				</div>
 			</div>

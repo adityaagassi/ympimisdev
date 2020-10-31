@@ -928,6 +928,20 @@ class MouthpieceController extends Controller
 		$kd_number = $request->get('kd_number');
 		$location = $request->get('location');
 
+		try {
+			$ck = MouthpieceChecksheet::where('kd_number', $kd_number)
+			->update([
+				'print_status' => 1
+			]);
+			
+		} catch (Exception $e) {
+			$response = array(
+				'status' => false,
+				'message' => $e->getMessage(),
+			);
+			return Response::json($response);
+		}
+
 		$details = MouthpieceChecksheet::where('mouthpiece_checksheets.kd_number', $kd_number)
 		->select(
 			'mouthpiece_checksheets.kd_number',

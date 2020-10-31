@@ -72,7 +72,7 @@
 		</p>
 	</div>
 	<div class="row">
-		<div class="col-xs-6">
+		<div class="col-xs-4">
 			<div class="box box-danger">
 				<div class="box-body">
 					<div class="col-xs-12" style="overflow-x: auto;">
@@ -114,7 +114,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-6">
+		<div class="col-xs-8">
 			<div class="row">
 				<input type="hidden" id="shipment_schedule_id">
 				<div class="col-xs-4">
@@ -174,13 +174,13 @@
 					<table id="checksheetTable" class="table table-bordered table-striped table-hover">
 						<thead style="background-color: orange;">
 							<tr>
-								<th style="width: 1.5%">ID Checksheet</th>
-								<th style="width: 1.5%">Tanggal Packing</th>
-								<th style="width: 5%">List Item</th>
-								<th style="width: 1%">Total Qty</th>
-								<th style="width: 1.5%">Tanggal Stuffing</th>
-								<th style="width: 1%">Destinasi</th>
-								<th style="width: 2%">Action</th>
+								<th style="width: 15%">ID Checksheet</th>
+								<th style="width: 10%">Tanggal Packing</th>
+								<th style="width: 35%">List Item</th>
+								<th style="width: 5%">Total Qty</th>
+								<th style="width: 10%">Tanggal Stuffing</th>
+								<th style="width: 10%">Destinasi</th>
+								<th style="width: 15%">Action</th>
 							</tr>
 						</thead>
 						<tbody id="checksheetTableBody">
@@ -296,11 +296,13 @@
 			location:'mouthpiece'
 		}
 
-		if(confirm("Apakah anda yakin akan mencetak ulang KDO nomor "+kd_number+"?")){
+		if(confirm("Apakah anda yakin akan mencetak KDO nomor "+kd_number+"?")){
 
 			$.get('{{ url("reprint/kd_mouthpiece/checksheet") }}',data, function(result, status, xhr){
 				if(result.status){
 					openSuccessGritter('Success', result.message);	
+				}else{
+					openErrorGritter('Error!', result.message);	
 				}
 			});
 		}
@@ -311,6 +313,8 @@
 			if(result.status){
 
 				var checksheetTable = "";
+				$('#checksheetTable').DataTable().clear();
+				$('#checksheetTable').DataTable().destroy();
 				$('#checksheetTableBody').html("");
 
 				$.each(result.checksheets, function(key, value){
@@ -331,6 +335,57 @@
 				});
 
 				$('#checksheetTableBody').append(checksheetTable);
+
+				$('#checksheetTable').DataTable({
+					'dom': 'Bfrtip',
+					'responsive':true,
+					'lengthMenu': [
+					[ -1 ],
+					[ 'Show all' ]
+					],
+					'buttons': {
+						buttons:[
+						{
+							extend: 'copy',
+							className: 'btn btn-success',
+							text: '<i class="fa fa-copy"></i> Copy',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'excel',
+							className: 'btn btn-info',
+							text: '<i class="fa fa-file-excel-o"></i> Excel',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						{
+							extend: 'print',
+							className: 'btn btn-warning',
+							text: '<i class="fa fa-print"></i> Print',
+							exportOptions: {
+								columns: ':not(.notexport)'
+							}
+						},
+						]
+					},
+					'paging': true,
+					'lengthChange': true,
+					'searching': true,
+					'ordering': true,
+					'order': [],
+					'info': true,
+					'autoWidth': true,
+					"sPaginationType": "full_numbers",
+					"bJQueryUI": true,
+					"bAutoWidth": false,
+					"processing": true
+
+				});
+
+
 			}
 			else{
 				openErrorGritter('Error', result.message);

@@ -64,11 +64,30 @@
               </div>
             </div>
           </div>
+          <div id="resume_closure" class="col-md-8 col-md-offset-2" style="text-align: center; margin-top: 1%; display: flex; flex-wrap: wrap;">
+            <table class="table table-bordered table-striped table-hover" style="width: 100%;">
+              <thead style="background-color: rgba(126,86,134,.7);">
+                <tr>
+                  <th id="total_resume_closure" colspan="5" style="font-size: 1.5vw; padding-top: 0px; padding-bottom: 0px;"></th>
+                </tr>
+                <tr>
+                  <th style="width: 15%">KD Number</th>
+                  <th style="width: 10%">Material</th>
+                  <th style="width: 50%">Material Description</th>
+                  <th style="width: 20%">Location</th>
+                  <th style="width: 5%">Status</th>
+                </tr>
+              </thead>
+              <tbody id="body_resume_closure">
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<button class="btn btn-info pull-right" onClick="refreshTable()"><i class="fa fa-refresh"></i> Refresh Tabel Delivery</button>
 
 <div class="row">
   <div class="col-xs-12" style="padding-top: 1%;">
@@ -154,9 +173,11 @@
   });
 
   jQuery(document).ready(function() {
+    $('body').toggleClass("sidebar-collapse");
     $("#kdo_number_delivery").focus();
     fetchKDO();
     fetchKDODetail();
+    $("#resume_closure").hide();
   })
 
   var audio_error = new Audio('{{ url("sounds/error.mp3") }}');
@@ -186,7 +207,7 @@
   $('#kdo_number_delivery').keydown(function(event) {
     if (event.keyCode == 13 || event.keyCode == 9) {
       if($("#kdo_number_delivery").val().length >= 10){
-        scan_kdo_delivery();
+        scanKdoDelivery();
         return false;
       }
       else{
@@ -378,34 +399,14 @@
     $('#kdo_table tfoot tr').appendTo('#kdo_table thead');
   }
 
-  function reprintKDO(id) {
-
-    var data = {
-      kd_number : id,
-      printer : 'FLO Printer LOG'
-    }
-
-    $("#loading").show();
-
-    if(confirm("Apakah anda ingin mencetak ulang KDO Number dari "+ id +" ?")){
-      $.get('{{ url("fetch/kd_reprint_kdo") }}', data,  function(result, status, xhr){
-        if(result.status){
-          $("#loading").hide();
-          openSuccessGritter('Success', result.message);
-        }else{
-          $("#loading").hide();
-          openErrorGritter('Error!', result.message);
-        }
-
-      });
-    }else{
-      $("#loading").hide();
-
-    }   
-  }
 
   function detailKDO(id){
     alert(id);
+  }
+
+  function refreshTable(){
+    $('#kdo_table').DataTable().ajax.reload();
+    $('#kdo_detail').DataTable().ajax.reload();
   }
 
   function deleteKDO(id){
@@ -428,29 +429,113 @@
     });
   }
 
-  function scan_kdo_delivery(){
-   var kd_number  = $("#kdo_number_delivery").val();
-   var data = {
-    kd_number : kd_number,
-    status : 2,
+  var currClosureID = '';
+
+
+  function scanKdoDelivery(){
+    var kd_number  = $("#kdo_number_delivery").val();
+    var data = {
+      kd_number : kd_number,
+      status : 2
+    }
+
+    $.post('{{ url("scan/kd_delivery") }}', data, function(result, status, xhr){
+      if(result.status){
+        if(result.knock_down.closure_id != null){
+          if(currClosureID == result.knock_down.closure_id){
+            updateTableClosure(result.knock_down.kd_number, result.update);
+          }else{
+            fillTableClosure(result.knock_down.closure_id);
+          }
+        }
+
+        $("#kdo_number_delivery").val("");
+        $("#kdo_number_delivery").focus();
+
+        if(result.update){
+          // $('#kdo_table').DataTable().ajax.reload();
+          // $('#kdo_detail').DataTable().ajax.reload();
+          openSuccessGritter('Success!', result.message);
+        }else{
+          openErrorGritter('Error!', result.message);
+        }
+      }else{
+        openErrorGritter('Error!', result.message);
+        $("#kdo_number_delivery").val("");
+        $("#kdo_number_delivery").focus();
+      }
+    });
   }
 
-  $.post('{{ url("scan/kd_delivery") }}', data, function(result, status, xhr){
-    if(result.status){
-      openSuccessGritter('Success!', result.message);
-      $('#kdo_table').DataTable().ajax.reload();
-      $('#kdo_detail').DataTable().ajax.reload();
-      $("#kdo_number_delivery").val("");
-      $("#kdo_number_delivery").focus();
+  function fillTableClosure(closure_id) {
+    currClosureID = closure_id;
+
+    var data = {
+      closure_id : closure_id
     }
-    else{
-      openErrorGritter('Error!', result.message);
-      $("#kdo_number_delivery").val("");
-      $("#kdo_number_delivery").focus();
+
+    $.get('{{ url("fetch/kd_delivery_closure") }}', data,  function(result, status, xhr){
+      if(result.status){
+        $('#body_resume_closure').html("");
+
+        var tableData = '';
+        var delivery = 0;
+        $.each(result.closure, function(key, value) {
+          var icon = '';
+          var background = '';
+          if(value.status == 2){
+            background = 'style="background-color: rgb(204, 255, 255)"';
+            icon += '<span"><i class="glyphicon glyphicon-ok"></i></span>';
+            delivery++;
+          }else{
+            background = 'style="background-color: rgb(255, 204, 255)"';
+            icon += '<span"><i class="glyphicon glyphicon-minus"></i></span>';
+          }
+
+          tableData += '<tr id="'+value.kd_number+'" '+background+'>';
+          tableData += '<td>'+ value.kd_number +'</td>';
+          tableData += '<td>'+ value.material_number +'</td>';
+          tableData += '<td>'+ value.material_description +'</td>';
+          tableData += '<td>'+ value.location +'</td>'; 
+          tableData += '<td>'+ icon +'</td>';
+          tableData += '</tr>';
+        });
+        $('#body_resume_closure').append(tableData);
+
+
+        var header = '';
+        header += 'Total Delivery : ';
+        header += '<span id="delivery" style="font-weight: bold; font-size: 26px; color: red;">'+delivery+'</span>';
+        header += ' of ';
+        header += '<span style="font-weight: bold; font-size: 24px; color: red;">'+result.closure.length+'</span>';
+        header += '<button onClick="closeResume()" class="btn btn-danger btn-xs pull-right" style="margin-top: 1%;"><i class="fa fa-close"></i>&nbsp;&nbsp;Close</button>';
+        $('#total_resume_closure').html(header);
+
+        $("#resume_closure").show();
+
+      }
+    });
+  }
+
+  function updateTableClosure(kd_number, update) {
+
+    var icon = '<span"><i class="glyphicon glyphicon-ok"></i></span>';
+    $('#'+kd_number).find('td').eq(4).html(icon);
+    $('#'+kd_number).css({"background-color" : "rgb(204, 255, 255)"});
+
+    if(update){
+      var delivery = $('#delivery').text();
+      $('#delivery').text(parseInt(delivery) + 1);
     }
-  });
-  
-}
+  }
+
+  function closeResume() {
+    $("#resume_closure").hide();
+    currClosureID = '';
+
+  }
+
+
 </script>
 
 @stop

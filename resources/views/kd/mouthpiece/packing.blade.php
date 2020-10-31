@@ -139,6 +139,7 @@
 						<input class="form-control" style="width: 100%; text-align: center;" type="text" id="operator" placeholder="Scan ID Card" required>
 						<br><br>
 						<a href="{{ url("/index/kd_mouthpiece/picking") }}" class="btn btn-info" style="width: 100%; font-size: 1vw; font-weight: bold;"><i class="fa fa-hand-o-right"></i> Ke Halaman Picking</a>
+						<a href="{{ url("/index/kd_mouthpiece/qa_check") }}" class="btn btn-success" style="width: 100%; font-size: 1vw; font-weight: bold; margin-top: 10px;"><i class="fa fa-hand-o-right"></i> Ke Halaman QA Check</a>
 					</div>
 				</div>
 			</div>
