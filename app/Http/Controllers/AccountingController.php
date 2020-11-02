@@ -947,10 +947,10 @@ class AccountingController extends Controller
                 $dept = "ST";
             }
             else if($sect == "Chemical Process Control"){
-                $dept == "CM";
+                $dept = "CM";
             }
             else{
-                $dept == "QC";
+                $dept = "QC";
             }
         }
         else if ($dept == "Welding-Surface Treatment (WI-WST)")
