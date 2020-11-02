@@ -1441,6 +1441,7 @@ class KnockDownController extends Controller{
 
 		$now = WeeklyCalendar::where('week_date', date('Y-m-d'))->first();
 		$dateto = WeeklyCalendar::where('week_name', $now->week_name)->orderBy('week_date', 'desc')->first();
+		$first = date('Y-m-01');
 
 		$storage = '';
 		if($id == 'z-pro'){
@@ -1486,7 +1487,8 @@ class KnockDownController extends Controller{
 			FROM production_schedules p
 			LEFT JOIN materials m ON m.material_number = p.material_number
 			LEFT JOIN material_volumes v ON v.material_number = p.material_number
-			WHERE date( p.due_date ) <= '".$dateto->week_date."' 
+			WHERE date( p.due_date ) <= '".$dateto->week_date."'
+			AND date( p.due_date ) >= '".$first."'
 			AND p.actual_quantity < p.quantity
 			AND m.category = 'KD' 
 			AND m.hpl IN ".$storage."
