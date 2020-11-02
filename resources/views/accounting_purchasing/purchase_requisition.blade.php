@@ -732,7 +732,7 @@
 										</div>
 
 										<div class="col-xs-2" style="padding:5px;">
-											<b>Kebutuhan / Hari</b>
+											<b>Kebutuhan</b>
 										</div>
 									</div>
 									
