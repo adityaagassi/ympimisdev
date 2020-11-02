@@ -765,7 +765,7 @@ class GeneralController extends Controller{
 		->where('employee_syncs.employee_id', '=', Auth::user()->username)
 		->first();
 
-		if(Auth::user()->role_code != 'MIS' && Auth::user()->role_code != 'S' && substr($employee->grade_code, 0, 1) != 'L' && substr($employee->grade_code, 0, 1) != 'M'){
+		if(Auth::user()->role_code != 'MIS' && Auth::user()->role_code != 'S' && substr($employee->grade_code, 0, 1) != 'L' && substr($employee->grade_code, 0, 1) != 'M' && Auth::user()->username != 'pi0603019'){
 			return view('404');
 		}
 
