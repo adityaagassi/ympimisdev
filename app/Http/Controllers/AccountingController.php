@@ -51,8 +51,8 @@ class AccountingController extends Controller
         // $this->dgm = 'PI1910003';
         // $this->gm = 'PI1206001';
 
-    $this->dgm = 'PI0902001';
-    $this->gm = 'PI1412008';
+        $this->dgm = 'PI0109004';
+        $this->gm = 'PI1206001';
 
         $this->manager_acc = 'PI9902017/Romy Agung Kurniawan'; //Pak Romy
         $this->dir_acc = 'PI1712018/Kyohei Iida'; //Pak Ida
