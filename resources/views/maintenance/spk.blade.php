@@ -232,7 +232,7 @@
 									</div>
 
 									<div class="form-group row" align="right">
-										<label class="col-xs-2" style="margin-top: 1%;">Foto</label>
+										<label class="col-xs-2" style="margin-top: 1%;">Foto<span class="text-red">*</span></label>
 										<div class="col-xs-10" align="left">
 											<div id="box">
 												<img src="" id="profile-img1" style="max-width: 33%" />
@@ -539,6 +539,7 @@
 	var start_working = [];
 	var part_list = [];
 	var no = 1;
+	var desc_new = [];
 
 	jQuery(document).ready(function() {
 		$('.select3').select2({
@@ -612,14 +613,16 @@
 
 				if (value.start_actual != null) {
 					if (value.remark == '5') {
-						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.description+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\")'><i class='fa fa-rocket'></i>&nbsp; Lanjutkan</button></td>";
+						body += "<td><button class='btn btn-warning' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"rework\", "+index+")'><i class='fa fa-rocket'></i>&nbsp; Lanjutkan</button></td>";
+						desc_new.push(value.description);
 					} else {
-						body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.description+"\")'><i class='fa fa-file'></i>&nbsp; Buat Laporan</button></td>";
+						body += "<td><button class='btn btn-success' onclick='modalAfterWork(\""+value.order_no+"\",\""+$("#op").text()+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\", "+index+")'><i class='fa fa-file'></i>&nbsp; Buat Laporan</button></td>";
+						desc_new.push(value.description);
 					}
 				} else {
 
-					body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.description+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"work\")'><i class='fa fa-gears'></i>&nbsp; Kerjakan</button></td>";
-
+					body += "<td><button class='btn btn-primary' onclick='modalWork(\""+value.order_no+"\",\""+value.type+" - "+value.category+"\",\""+value.request_date+"\",\""+value.section+"\",\""+value.name+"\",\""+value.target_date+"\",\""+value.safety_note+"\",\""+value.priority+"\", \"work\", "+index+")'><i class='fa fa-gears'></i>&nbsp; Kerjakan</button></td>";
+					desc_new.push(value.description);
 				}
 
 				body += "</tr>";
@@ -681,7 +684,7 @@
 		}
 	}
 
-	function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date, desc, safety_note, priority, stat) {
+	function modalWork(order_no, pekerjaan, request_date, bagian, nama, target_date, safety_note, priority, stat, index) {
 		if (stat == "work") {
 			$("#btn_work").show();
 			$("#btn_resume").hide();
@@ -706,7 +709,7 @@
 		$("#bagian_work").val(bagian);
 		$("#nama_work").val(nama);
 		$("#target_work").val(target_date);
-		$("#desc_work").text(desc);
+		$("#desc_work").text(desc_new[index]);
 
 		if (safety_note != 'null') {
 			$("#safety_work").text(safety_note);
@@ -740,7 +743,7 @@
 		// 	})
 		// }
 
-		function modalAfterWork(order_no, operator_id, pekerjaan, request_date, bagian, desc) {
+		function modalAfterWork(order_no, operator_id, pekerjaan, request_date, bagian, index) {
 			$("#div_after").show();
 			$("#div_master").hide();
 
@@ -750,7 +753,7 @@
 			$("#pekerjaan_detail").val(pekerjaan);
 			$("#tanggal_detail").val(request_date);
 			$("#bagian_detail").val(bagian);
-			$("#desc_detail").text(desc);
+			$("#desc_detail").text(desc_new[index]);
 
 		}
 
@@ -802,8 +805,8 @@
 						$("#div_after").hide();
 						$("#part_detail_1").val("");
 						$("#qty_1").val("");
-						$("#penyebab_detail").val("");
-						$("#penanganan_detail").val("");
+						$("#penyebab_detail").empty();
+						$("#penanganan_detail").empty();
 						$("#sp_other").empty();
 						reset();
 						get_spk();
