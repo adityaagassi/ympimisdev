@@ -105,9 +105,10 @@
 										<th style="width: 5%">Nama</th>
 										<th style="width: 1%">Grade</th>
 										<th style="width: 1%">Tanggal</th>
-										<th style="width: 1%">Jam</th>
 										<th style="width: 1%">Kehadiran</th>
 										<th style="width: 1%">Kendaraan</th>
+										<th style="width: 1%">Asal</th>
+										<th style="width: 1%">Tujuan</th>
 										<th style="width: 1%">Tol</th>
 										<th style="width: 1%">Jarak</th>
 										<th style="width: 1%">Lampiran</th>
@@ -118,6 +119,7 @@
 								</tbody>
 								<tfoot style="background-color: RGB(252, 248, 227);">
 									<tr>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
@@ -170,10 +172,10 @@
 										<th style="width: 1%">ID</th>
 										<th style="width: 10%">Nama</th>
 										<th style="width: 1%">Tanggal</th>
-										<th style="width: 1%">Datang</th>
-										<th style="width: 1%">Pulang</th>
 										<th style="width: 1%">Kehadiran</th>
 										<th style="width: 1%">Kendaraan</th>
+										<th style="width: 1%">Asal</th>
+										<th style="width: 1%">Tujuan</th>
 										<th style="width: 1%">Tol (IDR)</th>
 										<th style="width: 1%">Jarak (Km)</th>
 										<th style="width: 1%">Bensin</th>
@@ -287,10 +289,10 @@
 					detailTable += '<td style="width: 1%;">'+value.employee_id+'</td>';
 					detailTable += '<td style="width: 10%;">'+value.name+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.check_date+'</td>';
-					detailTable += '<td style="width: 1%;">'+value.check_in+'</td>';
-					detailTable += '<td style="width: 1%;">'+value.check_out+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.attend_code.toUpperCase()+'</td>';
-					detailTable += '<td style="width: 1%;">'+value.vehicle.toUpperCase()+' ('+value.vehicle_number.toUpperCase()+')</td>';
+					detailTable += '<td style="width: 1%;">'+value.vehicle.toUpperCase()+'</td>';
+					detailTable += '<td style="width: 1%;">(IN = '+value.origin_in+') - (OUT = '+value.origin_out+')</td>';
+					detailTable += '<td style="width: 1%;">(IN = '+value.destination_in+') - (OUT = '+value.destination_out+')</td>';
 					detailTable += '<td style="width: 1%;">'+value.highway_amount_total+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.distance_total+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.fuel+'</td>';
@@ -492,15 +494,18 @@ function fetchConfirmTable(){
 			var confirmTable = "";
 			$('#confirmTableBody').html('');
 
+			console.log(result.transportations);
+
 			$.each(result.transportations, function(key, value){
 				confirmTable += '<tr id="confirm_'+value.id+'">';
 				confirmTable += '<td>'+value.employee_id+'</td>';
 				confirmTable += '<td>'+value.name+'</td>';
 				confirmTable += '<td>'+value.grade_code+'</td>';
 				confirmTable += '<td>'+value.check_date+'</td>';
-				confirmTable += '<td>'+value.check_time+'</td>';
-				confirmTable += '<td>'+value.attend_code+'</td>';
-				confirmTable += '<td>'+value.vehicle+'</td>';
+				confirmTable += '<td>'+value.attend_code.toUpperCase()+'</td>';
+				confirmTable += '<td>'+value.vehicle.toUpperCase()+'</td>';
+				confirmTable += '<td>'+value.origin+'</td>';
+				confirmTable += '<td>'+value.destination+'</td>';
 				confirmTable += '<td>'+value.highway_amount+'</td>';
 				confirmTable += '<td>'+value.distance+'</td>';
 				confirmTable += '<td><a href="javascript:void(0)" id="'+ value.highway_attachment +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> Struk</a></td>';

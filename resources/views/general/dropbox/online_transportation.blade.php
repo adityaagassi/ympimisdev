@@ -151,10 +151,10 @@
 							<thead style="background-color: rgba(126,86,134,.7);">
 								<tr>
 									<th style="width: 1%">Tanggal</th>
-									<th style="width: 1%">Datang</th>
-									<th style="width: 1%">Pulang</th>
 									<th style="width: 1%">Kehadiran</th>
 									<th style="width: 1%">Kendaraan</th>
+									<th style="width: 1%">Asal</th>
+									<th style="width: 1%">Tujuan</th>
 									<th style="width: 1%">Tol (IDR)</th>
 									<th style="width: 1%">Jarak (Km)</th>
 									<th style="width: 1%">Bensin</th>
@@ -201,31 +201,37 @@
 							<div class="form-group">
 								<label for="newDate" class="col-sm-2 control-label">Tanggal<span class="text-red">*</span></label>
 								<div class="col-sm-6">
-									<input type="text" class="form-control pull-right" id="newDate" name="newDate">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="newTime" class="col-sm-2 control-label">Jam<span class="text-red">*</span></label>
-								<div class="col-sm-4">
-									<input type="text" class="form-control timepicker" id="newTime" name="newTime">
+									<input type="text" class="form-control pull-right" id="newDate" name="newDate" value="{{date('Y-m-d')}}">
 								</div>
 							</div>
 							<div class="form-group">
 								<label for="newVehicle" class="col-sm-2 control-label">Kendaraan<span class="text-red">*</span></label>
 								<div class="col-sm-6">
-									<select class="form-control select2" name="newVehicle" id="newVehicle" data-placeholder="Pilih Kendaraan" style="width: 100%;" onchange="selectVehicle(value)">
+									<select class="form-control select2" name="newVehicle" id="newVehicle" data-placeholder="Pilih Kehadiran" style="width: 100%;" onchange="selectVehicle(value)">
 										<option value=""></option>
 										<option value="car">Mobil</option>
 										<option value="shuttle">Shuttle</option>
-										<option value="other">Other</option>
+										<option value="lainnya">Lainnya</option>
 									</select>
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="newDistance" class="col-sm-2 control-label">Jarak<span class="text-red">*</span></label>
+								<label for="newOrigin" class="col-sm-2 control-label">Asal<span class="text-red">*</span></label>
+								<div class="col-sm-6">
+									<input type="text" style="width: 100%" class="form-control" id="newOrigin" name="newOrigin" placeholder="Asal">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="newDestination" class="col-sm-2 control-label">Tujuan<span class="text-red">*</span></label>
+								<div class="col-sm-6">
+									<input type="text" style="width: 100%" class="form-control" id="newDestination" name="newDestination" placeholder="Tujuan">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="" class="col-sm-2 control-label">Jarak<span class="text-red">*</span></label>
 								<div class="col-sm-6">
 									<div class="input-group">
-										<input type="text" style="width: 100%" class="form-control" id="newDistance" name="newDistance" placeholder="Jarak Tempuh">
+										<input type="number" style="width: 100%" class="form-control" id="newDistance" name="newDistance" placeholder="Jarak Tempuh">
 										<div class="input-group-addon">
 											Km
 										</div>
@@ -233,19 +239,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="newVehicleNumber" class="col-sm-2 control-label">No Polisi<span class="text-red">*</span></label>
-								<div class="col-sm-6">
-									<input type="text" style="width: 100%" class="form-control" id="newVehicleNumber" name="newVehicleNumber" placeholder="No Polisi Kendaraan">
-								</div>
-							</div>
-							<!-- <div class="form-group">
-								<label for="newHighwayBill" class="col-sm-2 control-label">No Seri<span class="text-red">*</span></label>
-								<div class="col-sm-6">
-									<input type="text" style="width: 100%" class="form-control" id="newHighwayBill" name="newHighwayBill" placeholder="No Seri Struk Tol">
-								</div>
-							</div> -->
-							<div class="form-group">
-								<label for="newHighwayAmount" class="col-sm-2 control-label">Tol<span class="text-red">*</span></label>
+								<label for="newHighwayAmount" class="col-sm-2 control-label">Biaya Tol<span class="text-red">*</span></label>
 								<div class="col-sm-6">
 									<input type="text" style="width: 100%" class="form-control" id="newHighwayAmount" name="newHighwayAmount" placeholder="Biaya Tol">
 								</div>
@@ -348,7 +342,7 @@
 		$(idfile).click();
 	}
 
-	function deleteRecord(id, check_date, check_time, attend_code, vehicle, vehicle_number,  highway_amount, distance){
+	function deleteRecord(id, check_date, attend_code,vehicle,origin,destination,highway_amount,distance){
 		if(confirm("Apakah anda yakin akan menghapus data '"+attend_code.toUpperCase()+"' pada tanggal '"+check_date+"'")){
 			var data = {
 				id:id
@@ -371,45 +365,29 @@
 	function addRecord(){
 
 		if($('#newAttend').val() != "" && ($('#newAttend').val() == 'in' || $('#newAttend').val() == 'out')){
-			if($('#newVehicle').val() != "" && $('#newVehicle').val() == 'car'){
-				var employee_id = $('#employee_id').val();
-				var grade = $('#grade_code').val();
-				var zona = $('#zona').val();
-				var newDate = $('#newDate').val();
-				var newTime = $('#newTime').val();
-				var newAttend = $('#newAttend').val();
-				var newDistance = $('#newDistance').val();
-				var newVehicle = $('#newVehicle').val();
-				var newVehicleNumber = $('#newVehicleNumber').val();
-				// var newHighwayBill = $('#newHighwayBill').val();
-				var newHighwayAmount = $('#newHighwayAmount').val();
-				var newAttachment  = $('#newAttachment').prop('files')[0];
-			}
-			else{
-				var employee_id = $('#employee_id').val();
-				var grade = $('#grade_code').val();
-				var zona = $('#zona').val();
-				var newDate = $('#newDate').val();
-				var newTime = 0;
-				var newAttend = $('#newAttend').val();
-				var newDistance = 0;
-				var newVehicle = $('#newVehicle').val();
-				var newVehicleNumber = 0;
-				// var newHighwayBill = 0;
-				var newHighwayAmount = 0;
-				var newAttachment  = "";
-			}
+			var employee_id = $('#employee_id').val();
+			var grade = $('#grade_code').val();
+			var zona = $('#zona').val();
+			var newDate = $('#newDate').val();
+			var newAttend = $('#newAttend').val();
+			var newDistance = $('#newDistance').val();
+			var newOrigin = $('#newOrigin').val();
+			var newVehicle = $('#newVehicle').val();
+			var newDestination = $('#newDestination').val();
+			// var newHighwayBill = $('#newHighwayBill').val();
+			var newHighwayAmount = $('#newHighwayAmount').val();
+			var newAttachment  = $('#newAttachment').prop('files')[0];
 		}
 		else if($('#newAttend').val() != ""){
 			var employee_id = $('#employee_id').val();
 			var grade = $('#grade_code').val();
 			var zona = $('#zona').val();
 			var newDate = $('#newDate').val();
-			var newTime = 0;
 			var newAttend = $('#newAttend').val();
+			var newVehicle = $('#newVehicle').val();
 			var newDistance = 0;
-			var newVehicle = 0;
-			var newVehicleNumber = 0;
+			var newOrigin = $('#newOrigin').val();
+			var newDestination = $('#newDestination').val();
 			// var newHighwayBill = 0;
 			var newHighwayAmount = 0;
 			var newAttachment  = "";
@@ -424,11 +402,11 @@
 		formData.append('grade', grade);
 		formData.append('zona', zona);
 		formData.append('newDate', newDate);
-		formData.append('newTime', newTime);
+		formData.append('newVehicle', newVehicle);
 		formData.append('newAttend', newAttend);
 		formData.append('newDistance', newDistance);
-		formData.append('newVehicle', newVehicle);
-		formData.append('newVehicleNumber', newVehicleNumber);
+		formData.append('newOrigin', newOrigin);
+		formData.append('newDestination', newDestination);
 		// formData.append('newHighwayBill', newHighwayBill);
 		formData.append('newHighwayAmount', newHighwayAmount);
 		formData.append('extension', file[1]);
@@ -462,19 +440,17 @@
 			$('#newDate').prop("disabled", false);
 			$('#newTime').prop("disabled", true);
 			$("#newAttend").prop("disabled", false);
-			$("#newVehicle").prop("disabled", true);
-			$('#newVehicleNumber').prop("disabled", true);
-			// $('#newHighwayBill').prop("disabled", true);
+			$("#newOrigin").prop("disabled", true);
+			$('#newDestination').prop("disabled", true);
+			$('#newVehicle').prop("disabled", true);
 			$('#newHighwayAmount').prop("disabled", true);
 			$('#newDistance').prop("disabled", true);
 			$('#newAttachment').prop("disabled", false);
 
 			$('#newId').val("");
-			$('#newDate').val("");
-			$('#newTime').timepicker({defaultTime: '00:00'});
-			$("#newVehicle").prop('selectedIndex', 0).change();
-			$('#newVehicleNumber').val("");
-			// $('#newHighwayBill').val("");
+			$('#newDate').val("{{date('Y-m-d')}}");
+			$("#newOrigin").val('');
+			$('#newDestination').val("");
 			$('#newHighwayAmount').val("");
 			$('#newDistance').val("");
 
@@ -484,9 +460,9 @@
 			$('#newDate').prop("disabled", false);
 			$('#newTime').prop("disabled", false);
 			$("#newAttend").prop("disabled", false);
+			$("#newOrigin").prop("disabled", false);
 			$("#newVehicle").prop("disabled", false);
-			$('#newVehicleNumber').prop("disabled", false);
-			// $('#newHighwayBill').prop("disabled", false);
+			$('#newDestination').prop("disabled", false);
 			$('#newHighwayAmount').prop("disabled", false);
 			$('#newDistance').prop("disabled", false);
 			$('#newAttachment').prop("disabled", false);
@@ -499,17 +475,9 @@
 
 		$.get('{{ url("fetch/general/online_transportation_data") }}', data, function(result, status, xhr){
 			if (result.status) {
-					// if (result.datas.check_time == "") {
-					if (id === 'in') {
-						$('#newTime').val("06:30");
-					}else{
-						$('#newTime').val(result.datas.check_time);
-					}
-				// }else{
-					// 	$('#newTime').val(result.datas.check_time);
-					// }
 					$('#newVehicle').val(result.datas.vehicle).trigger('change');
-					$('#newVehicleNumber').val(result.datas.vehicle_number);
+					$('#newOrigin').val(result.datas.origin);
+					$('#newDestination').val(result.datas.destination);
 					$('#newDistance').val(result.datas.distance);
 					$('#newHighwayAmount').val(result.datas.highway_amount);
 			}else{
@@ -519,22 +487,23 @@
 	}
 
 	function selectVehicle(id){
-		if(id != "" || id != "car"){
-			$('#newVehicleNumber').prop("disabled", true);
-			// $('#newHighwayBill').prop("disabled", true);
+		if(id !== "" || id !== "car"){
+			$('#newOrigin').prop("disabled", true);
+			$('#newDestination').prop("disabled", true);
 			$('#newHighwayAmount').prop("disabled", true);
 			$('#newDistance').prop("disabled", true);
 			$('#newAttachment').prop("disabled", false);
 
-			$('#newVehicleNumber').val("");
-			// $('#newHighwayBill').val("");
+			$('#newOrigin').val("");
+			$('#newDestination').val("");
 			$('#newHighwayAmount').val("");
 			$('#newDistance').val("");
 		}
 
-		if(id != "" && id == 'car'){
-			$('#newVehicleNumber').prop("disabled", false);
-			// $('#newHighwayBill').prop("disabled", false);
+		if(id !== "" && (id === 'car' || id === 'lainnya')){
+			$('#newVehicle').prop("disabled", false);
+			$('#newOrigin').prop("disabled", false);
+			$('#newDestination').prop("disabled", false);
 			$('#newHighwayAmount').prop("disabled", false);
 			$('#newDistance').prop("disabled", false);
 			$('#newAttachment').prop("disabled", false);
@@ -543,13 +512,14 @@
 
 	function clearModal(){
 		$('#newId').val("");
-		$('#newDate').val("");
+		$('#newDate').val("{{date('Y-m-d')}}");
 		$('#newTime').timepicker({defaultTime: '00:00'});
 		$("#newAttend").prop('selectedIndex', 0).change();
 		$("#newVehicle").prop('selectedIndex', 0).change();
-		$('#newVehicleNumber').val("");
 		// $('#newHighwayBill').val("");
 		$('#newHighwayAmount').val("");
+		$('#newOrigin').val("");
+		$('#newDestination').val("");
 		$('#newDistance').val("");
 		$('#newAttachment').val("");
 	}
@@ -561,8 +531,8 @@
 		$('#newDate').prop("disabled", true);
 		$('#newTime').prop("disabled", true);
 		$("#newAttend").prop("disabled", false);
-		$("#newVehicle").prop("disabled", true);
-		$('#newVehicleNumber').prop("disabled", true);
+		$("#newOrigin").prop("disabled", true);
+		$('#newDestination').prop("disabled", true);
 		// $('#newHighwayBill').prop("disabled", true);
 		$('#newHighwayAmount').prop("disabled", true);
 		$('#newDistance').prop("disabled", true);
@@ -629,7 +599,7 @@
 						}
 					}
 
-					if(value.vehicle == 'other'){
+					if(value.vehicle == 'lainnya'){
 						if($('#zona').val() == '1'){
 							fuel = 11000;
 						}
@@ -640,6 +610,7 @@
 							fuel = 17000;
 						}
 					}
+
 
 					var total_amount = fuel+value.highway_amount_total;
 
@@ -663,10 +634,18 @@
 
 					recordTable += '<tr style="text-align: center; '+bgcolor+'">';	
 					recordTable += '<td style="width: 0.1%;">'+value.check_date+'</td>';
-					recordTable += '<td style="width: 0.1%;">'+value.check_in+'</td>';
-					recordTable += '<td style="width: 0.1%;">'+value.check_out+'</td>';
 					recordTable += '<td style="width: 0.1%;">'+value.attend_code.toUpperCase()+'</td>';
-					recordTable += '<td style="width: 1%;">'+value.vehicle.toUpperCase()+' ('+value.vehicle_number.toUpperCase()+')</td>';
+					if (value.vehicle == 'car') {
+						recordTable += '<td style="width: 1%;">Mobil</td>';
+					}else if(value.vehicle == 'shuttle'){
+						recordTable += '<td style="width: 1%;">Shuttle</td>';
+					}else if(value.vehicle == 'lainnya'){
+						recordTable += '<td style="width: 1%;">Lainnya</td>';
+					}else{
+						recordTable += '<td style="width: 1%;">'+value.vehicle+'</td>';
+					}
+					recordTable += '<td style="width: 1%;">('+value.origin_in+') - ('+value.origin_out+')</td>';
+					recordTable += '<td style="width: 1%;">('+value.destination_in+') - ('+value.destination_out+')</td>';
 					// recordTable += '<td style="width: 2%;">'+value.highway_bill_in+'; '+value.highway_bill_out+';</td>';
 					recordTable += '<td style="width: 1%;">'+value.highway_amount_total.toLocaleString()+'</td>';
 					recordTable += '<td style="width: 1%;">'+value.distance_total+'</td>';
@@ -683,13 +662,13 @@
 					recordTable += '<td style="width: 0.3%;">'+remark+'</td>';
 					recordTable += '<td style="width: 1.5%">';
 					if(value.attend_code == 'hadir' && value.id_in > 0 && value.remark_in == 0){
-						recordTable += '<button onclick="deleteRecord(\''+value.id_in+'\''+','+'\''+value.check_date+'\''+','+'\''+value.check_in+'\''+','+'\''+value.attend_code+'\''+','+'\''+value.vehicle+'\''+','+'\''+value.vehicle_number+'\''+','+'\''+value.highway_amount_in+'\''+','+'\''+value.distance_in+'\')" style="width: 45%; padding: 0; margin-right:5px;" class="btn btn-danger">In</button>';
+						recordTable += '<button onclick="deleteRecord(\''+value.id_in+'\''+','+'\''+value.check_date+'\''+','+'\''+value.attend_code+'\''+','+'\''+value.vehicle+'\''+','+'\''+value.origin_in+'\''+','+'\''+value.destination_in+'\''+','+'\''+value.highway_amount_in+'\''+','+'\''+value.distance_in+'\')" style="width: 45%; padding: 0; margin-right:5px;" class="btn btn-danger">In</button>';
 					}
 					if(value.attend_code == 'izin' && value.id_in > 0 && value.id_out == 0 && value.remark_in == 0){
-						recordTable += '<button onclick="deleteRecord(\''+value.id_in+'\''+','+'\''+value.check_date+'\''+','+'\''+value.check_in+'\''+','+'\''+value.attend_code+'\''+','+'\''+value.vehicle+'\''+','+'\''+value.vehicle_number+'\''+','+'\''+value.highway_amount_in+'\''+','+'\''+value.distance_in+'\')" style="width: 45%; padding: 0; margin-right:5px;" class="btn btn-danger">In</button>';
+						recordTable += '<button onclick="deleteRecord(\''+value.id_in+'\''+','+'\''+value.check_date+'\''+','+'\''+value.attend_code+'\''+','+'\''+value.vehicle+'\''+','+'\''+value.origin_in+'\''+','+'\''+value.destination_in+'\''+','+'\''+value.highway_amount_in+'\''+','+'\''+value.distance_in+'\')" style="width: 45%; padding: 0; margin-right:5px;" class="btn btn-danger">In</button>';
 					}
 					if(value.attend_code == 'hadir' && value.id_out > 0 && value.remark_out == 0){
-						recordTable += '<button onclick="deleteRecord(\''+value.id_out+'\''+','+'\''+value.check_date+'\''+','+'\''+value.check_out+'\''+','+'\''+value.attend_code+'\''+','+'\''+value.vehicle+'\''+','+'\''+value.vehicle_number+'\''+','+'\''+value.highway_amount_out+'\''+','+'\''+value.distance_out+'\')" style="width: 45%; padding: 0;" class="btn btn-danger">Out</button>';
+						recordTable += '<button onclick="deleteRecord(\''+value.id_out+'\''+','+'\''+value.check_date+'\''+','+'\''+value.attend_code+'\''+','+'\''+value.vehicle+'\''+','+'\''+value.origin_out+'\''+','+'\''+value.destination_out+'\''+','+'\''+value.highway_amount_out+'\''+','+'\''+value.distance_out+'\')" style="width: 45%; padding: 0;" class="btn btn-danger">Out</button>';
 					}
 					recordTable += '</td>';
 					recordTable += '</tr>';
@@ -706,9 +685,9 @@
 
 recordTableFoot += '<tr>';
 recordTableFoot += '<th>Grand Total</th>';
-recordTableFoot += '<th></th>';
-recordTableFoot += '<th></th>';
 recordTableFoot += '<th>'+grand_hadir+' Hari</th>';
+recordTableFoot += '<th></th>';
+recordTableFoot += '<th></th>';
 recordTableFoot += '<th></th>';
 recordTableFoot += '<th>'+grand_highway.toLocaleString()+'</th>';
 recordTableFoot += '<th>'+grand_distance.toLocaleString()+'</th>';

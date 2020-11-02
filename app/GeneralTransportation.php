@@ -10,6 +10,6 @@ class GeneralTransportation extends Model
 	use SoftDeletes;
 
 	protected $fillable = [
-		'employee_id','grade','zona','check_date','check_time','attend_code','vehicle','vehicle_number','highway_amount','distance','highway_attachment','remark','created_by'
+		'employee_id','grade','zona','check_date','vehicle','attend_code','highway_amount','distance','highway_attachment','origin','destination','remark','created_by'
 	];
 }

@@ -807,29 +807,47 @@ class GeneralController extends Controller{
 		}
 
 		try{
-			GeneralTransportation::create([
-				'employee_id' => $request->input('employee_id'),
-				'grade' => $request->input('grade'),
-				'zona' => $request->input('zona'),
-				'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
-				'check_time' => date('H:i:s', strtotime($request->input('newTime'))),
-				'attend_code' => $request->input('newAttend'),
-				'vehicle' => $request->input('newVehicle'),
-				'vehicle_number' => $request->input('newVehicleNumber'),
-				'highway_amount' => $request->input('newHighwayAmount'),
-				'distance' => $request->input('newDistance'),
-				'highway_attachment' => $filename,
-				'remark' => 0,
-				'created_by' => Auth::id()
-			]);
+			if ($filename == "") {
+				GeneralTransportation::create([
+					'employee_id' => $request->input('employee_id'),
+					'grade' => $request->input('grade'),
+					'zona' => $request->input('zona'),
+					'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
+					'attend_code' => $request->input('newAttend'),
+					'vehicle' => $request->input('newVehicle'),
+					'origin' => $request->input('newOrigin'),
+					'destination' => $request->input('newDestination'),
+					'highway_amount' => $request->input('newHighwayAmount'),
+					'distance' => $request->input('newDistance'),
+					// 'highway_attachment' => $filename,
+					'remark' => 0,
+					'created_by' => Auth::id()
+				]);
+			}else{
+				GeneralTransportation::create([
+					'employee_id' => $request->input('employee_id'),
+					'grade' => $request->input('grade'),
+					'zona' => $request->input('zona'),
+					'check_date' => date('Y-m-d', strtotime($request->input('newDate'))),
+					'attend_code' => $request->input('newAttend'),
+					'vehicle' => $request->input('newVehicle'),
+					'origin' => $request->input('newOrigin'),
+					'destination' => $request->input('newDestination'),
+					'highway_amount' => $request->input('newHighwayAmount'),
+					'distance' => $request->input('newDistance'),
+					'highway_attachment' => $filename,
+					'remark' => 0,
+					'created_by' => Auth::id()
+				]);
+			}
 
 			$general_data = GeneralTransportationData::firstOrNew(['employee_id' => $request->input('employee_id'), 'attend_code' => $request->input('newAttend')]);
 			$general_data->employee_id = $request->input('employee_id');
-            $general_data->check_time = date('H:i:s', strtotime($request->input('newTime')));
 			$general_data->attend_code = $request->input('newAttend');
 			$general_data->vehicle = $request->input('newVehicle');
+			$general_data->origin = $request->input('newOrigin');
 			$general_data->distance = $request->input('newDistance');
-			$general_data->vehicle_number = $request->input('newVehicleNumber');
+			$general_data->destination = $request->input('newDestination');
 			$general_data->highway_amount = $request->input('newHighwayAmount');
 			$general_data->created_by = Auth::id();
             $general_data->save();
@@ -1034,16 +1052,17 @@ class GeneralController extends Controller{
 			A.id_out,
 			A.grade,
 			A.check_date,
-			A.check_in,
-			A.check_out,
 			A.attend_code,
 			A.attend_count,
 			A.vehicle,
-			A.vehicle_number,
 			A.highway_amount_in,
 			A.highway_amount_out,
 			A.distance_in,
 			A.distance_out,
+			A.origin_in,
+			A.origin_out,
+			A.destination_in,
+			A.destination_out,
 			A.highway_amount_total,
 			A.distance_total,
 			A.remark 
@@ -1060,16 +1079,17 @@ class GeneralController extends Controller{
 				attendance.employee_id,
 				attendance.grade,
 				attendance.check_date,
-				max( attendance.check_in ) AS check_in,
-				max( attendance.check_out ) AS check_out,
 				attendance.attend_code,
 				max( attendance.attend_count ) AS attend_count,
 				max( attendance.vehicle ) AS vehicle,
-				max( attendance.vehicle_number ) AS vehicle_number,
 				max( attendance.highway_in ) AS highway_amount_in,
 				max( attendance.highway_out ) AS highway_amount_out,
 				max( attendance.distance_in ) AS distance_in,
 				max( attendance.distance_out ) AS distance_out,
+				max( attendance.origin_in ) AS origin_in,
+				max( attendance.origin_out ) AS origin_out,
+				max( attendance.destination_in ) AS destination_in,
+				max( attendance.destination_out) AS destination_out,
 				max( attendance.highway_in ) + max( attendance.highway_out ) AS highway_amount_total,
 				max( attendance.distance_in ) + max( attendance.distance_out ) AS distance_total,
 				min( attendance.remark ) AS remark 
@@ -1086,16 +1106,17 @@ class GeneralController extends Controller{
 					employee_id,
 					grade,
 					check_date,
-					check_time AS check_in,
-					0 AS check_out,
 					'hadir' AS attend_code,
 					1 AS attend_count,
 					vehicle,
-					vehicle_number,
 					highway_amount AS highway_in,
 					0 AS highway_out,
 					distance AS distance_in,
 					0 AS distance_out,
+					origin AS origin_in,
+					0 AS origin_out,
+					destination AS destination_in,
+					0 AS destination_out,
 					remark 
 				FROM
 					`general_transportations` 
@@ -1114,16 +1135,17 @@ class GeneralController extends Controller{
 					employee_id,
 					grade,
 					check_date,
-					0 AS check_in,
-					check_time AS check_out,
 					'hadir' AS attend_code,
 					1 AS attend_count,
 					vehicle,
-					0 AS vehicle_number,
 					0 AS highway_in,
 					highway_amount AS highway_out,
 					0 AS distance_in,
 					distance AS distance_out,
+					0 AS origin_in,
+					origin AS origin_out,
+					0 AS destination_in,
+					destination AS destination_out,
 					remark 
 				FROM
 					`general_transportations` 
@@ -1142,16 +1164,17 @@ class GeneralController extends Controller{
 					employee_id,
 					grade,
 					check_date,
-					0 AS check_in,
-					0 AS check_out,
 					attend_code,
 					0 AS attend_count,
 					0 AS vehicle,
-					0 AS vehicle_number,
 					0 AS highway_in,
 					0 AS highway_out,
 					0 AS distance_in,
 					0 AS distance_out,
+					0 AS origin_in,
+					0 AS origin_out,
+					0 AS destination_in,
+					0 AS destination_out,
 					remark 
 				FROM
 					`general_transportations` 
@@ -1219,9 +1242,9 @@ class GeneralController extends Controller{
 				}
 			}
 
-			$total_amount = $fuel+$transportation->highway_amount_total;
-
-			if(substr($grade, 1, 1) != 'M' || substr($grade, 1, 1) != 'L'){
+			if(substr($grade, 0, 1) == 'M' || substr($grade, 0, 1) == 'L'){
+				$total_amount = $fuel+$transportation->highway_amount_total;
+			}else{
 				$total_amount = 0;
 			}
 
@@ -1238,16 +1261,17 @@ class GeneralController extends Controller{
 					"name" => $transportation->name,
 					"grade" => $transportation->grade,
 					"check_date" => $transportation->check_date,
-					"check_in" => $transportation->check_in,
-					"check_out" => $transportation->check_out,
 					"attend_code" => $transportation->attend_code,
 					"attend_count" => $transportation->attend_count,
 					"vehicle" => $transportation->vehicle,
-					"vehicle_number" => $transportation->vehicle_number,
 					"highway_amount_in" => $transportation->highway_amount_in,
 					"highway_amount_out" => $transportation->highway_amount_out,
 					"distance_in" => $transportation->distance_in,
 					"distance_out" => $transportation->distance_out,
+					"origin_in" => $transportation->origin_in,
+					"destination_in" => $transportation->destination_in,
+					"origin_out" => $transportation->origin_out,
+					"destination_out" => $transportation->destination_out,
 					"highway_amount_total" => $transportation->highway_amount_total,
 					"distance_total" => $transportation->distance_total,
 					"remark" => $transportation->remark,
@@ -1271,7 +1295,7 @@ class GeneralController extends Controller{
 		}
 
 		$transportations = GeneralTransportation::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'general_transportations.employee_id')
-		->select('general_transportations.id', 'general_transportations.employee_id', 'employee_syncs.name', 'employee_syncs.grade_code', 'general_transportations.check_date', 'general_transportations.check_time', 'general_transportations.attend_code', 'general_transportations.vehicle',  'general_transportations.highway_amount', 'general_transportations.distance', 'general_transportations.highway_attachment')
+		->select('general_transportations.id', 'general_transportations.employee_id', 'employee_syncs.name', 'employee_syncs.grade_code', 'general_transportations.check_date','general_transportations.vehicle','general_transportations.origin','general_transportations.destination', 'general_transportations.attend_code',  'general_transportations.highway_amount', 'general_transportations.distance', 'general_transportations.highway_attachment')
 		->where(db::raw('date_format(general_transportations.check_date, "%Y-%m")'), '=', $month)
 		->where('general_transportations.remark', '=', 0)
 		->get();
@@ -1286,9 +1310,10 @@ class GeneralController extends Controller{
 					"name" => $transportation->name,
 					"grade_code" => $transportation->grade_code,
 					"check_date" => $transportation->check_date,
-					"check_time" => $transportation->check_time,
 					"attend_code" => $transportation->attend_code,
 					"vehicle" => $transportation->vehicle,
+					"origin" => $transportation->origin,
+					"destination" => $transportation->destination,
 					"highway_amount" => $transportation->highway_amount,
 					"distance" => $transportation->distance,
 					"highway_attachment" => asset('files/general_transportation/'.$transportation->highway_attachment)
@@ -1329,11 +1354,12 @@ class GeneralController extends Controller{
 				COALESCE ( attendance.id_out, 0 ) AS id_out,
 				COALESCE ( attendance.employee_id, 0 ) AS employee_id,
 				COALESCE ( attendance.grade, 0 ) AS grade,
-				COALESCE ( attendance.check_in, 0 ) AS check_in,
-				COALESCE ( attendance.check_out, 0 ) AS check_out,
 				COALESCE ( attendance.attend_code, 0 ) AS attend_code,
 				COALESCE ( attendance.vehicle, 0 ) AS vehicle,
-				COALESCE ( attendance.vehicle_number, 0 ) AS vehicle_number,
+				COALESCE ( attendance.origin_in, 0 ) AS origin_in,
+				COALESCE ( attendance.destination_in, 0 ) AS destination_in,
+				COALESCE ( attendance.origin_out, 0 ) AS origin_out,
+				COALESCE ( attendance.destination_out, 0 ) AS destination_out,
 				COALESCE ( attendance.highway_amount_in, 0 ) AS highway_amount_in,
 				COALESCE ( attendance.highway_amount_out, 0 ) AS highway_amount_out,
 				COALESCE ( attendance.distance_in, 0 ) AS distance_in,
@@ -1355,11 +1381,12 @@ class GeneralController extends Controller{
 					employee_id,
 					grade,
 					check_date,
-					max( check_in ) AS check_in,
-					max( check_out ) AS check_out,
 					attend_code,
 					max( vehicle ) AS vehicle,
-					max( vehicle_number ) AS vehicle_number,
+					max( origin_in ) AS origin_in,
+					max( destination_in ) AS destination_in,
+					max( origin_out ) AS origin_out,
+					max( destination_out ) AS destination_out,
 					max( highway_in ) AS highway_amount_in,
 					max( highway_out ) AS highway_amount_out,
 					max( distance_in ) AS distance_in,
@@ -1380,11 +1407,12 @@ class GeneralController extends Controller{
 						employee_id,
 						grade,
 						check_date,
-						check_time AS check_in,
-						0 AS check_out,
 						'hadir' AS attend_code,
 						vehicle,
-						vehicle_number,
+						origin as origin_in,
+						destination as destination_in,
+						0 AS origin_out,
+						0 AS destination_out,
 						highway_amount AS highway_in,
 						0 AS highway_out,
 						distance AS distance_in,
@@ -1408,11 +1436,12 @@ class GeneralController extends Controller{
 						employee_id,
 						grade,
 						check_date,
-						0 AS check_in,
-						check_time AS check_out,
 						'hadir' AS attend_code,
 						vehicle,
-						0 AS vehicle_number,
+						0 AS origin_in,
+						0 AS destination_in,
+						origin as origin_out,
+						destination as destination_out,
 						0 AS highway_in,
 						highway_amount AS highway_out,
 						0 AS distance_in,
@@ -1436,11 +1465,12 @@ class GeneralController extends Controller{
 						employee_id,
 						grade,
 						check_date,
-						0 AS check_in,
-						0 AS check_out,
 						attend_code,
 						0 AS vehicle,
-						0 AS vehicle_number,
+						0 AS origin_in,
+						0 AS destination_in,
+						0 AS origin_out,
+						0 AS destination_out,
 						0 AS highway_in,
 						0 AS highway_out,
 						0 AS distance_in,
@@ -1481,11 +1511,12 @@ foreach ($transportations as $transportation) {
 			"employee_id" => $transportation->employee_id,
 			"grade" => $transportation->grade,
 			"check_date" => $transportation->check_date,
-			"check_in" => $transportation->check_in,
-			"check_out" => $transportation->check_out,
 			"attend_code" => $transportation->attend_code,
+			"origin_in" => $transportation->origin_in,
+			"destination_in" => $transportation->destination_in,
+			"origin_out" => $transportation->origin_out,
+			"destination_out" => $transportation->destination_out,
 			"vehicle" => $transportation->vehicle,
-			"vehicle_number" => $transportation->vehicle_number,
 			"highway_amount_in" => $transportation->highway_amount_in,
 			"highway_amount_out" => $transportation->highway_amount_out,
 			"distance_in" => $transportation->distance_in,
