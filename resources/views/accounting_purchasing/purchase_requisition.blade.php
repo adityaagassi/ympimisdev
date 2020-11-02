@@ -831,31 +831,6 @@
 
 		jQuery(document).ready(function() {
 
-			$("#importForm").submit(function(){
-				if (!confirm("Apakah Anda Yakin Ingin Membuat PR Ini??")) {
-					return false;
-				} else {
-					var status = 0;  		
-					var len = $('#SisaBudgetLabel').text();
-					if (len != "") {
-						var sisa = parseFloat(len.substr(1));
-						if (sisa > 0) {
-							
-						} else {
-							status++;
-						}			        	
-					}
-
-					if (status > 0) {
-						openErrorGritter("Error","Tidak Boleh Melebihi Budget");
-						return false;
-					}else{
-						this.submit();
-					}
-				}
-			});
-
-
     		$('.select10').select2({
     			dropdownAutoWidth : true,
     			dropdownParent: $("#budget_data"),
@@ -988,6 +963,31 @@
         	$('.nav-tabs > .active').prev('li').find('a').trigger('click');
         });
     });
+
+		
+	$("#importForm").submit(function(){
+		if (!confirm("Apakah Anda Yakin Ingin Membuat PR Ini??")) {
+			return false;
+		} else {
+			var status = 0;  		
+			var len = $('#SisaBudgetLabel').text();
+			if (len != "") {
+				var sisa = parseFloat(len.substr(1));
+				if (sisa > 0) {
+					
+				} else {
+					status++;
+				}			        	
+			}
+
+			if (status > 0) {
+				openErrorGritter("Error","Tidak Boleh Melebihi Budget");
+				return false;
+			}else{
+				this.submit();
+			}
+		}
+	});
 
 	//Datatable 
 
