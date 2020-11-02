@@ -112,8 +112,8 @@
 							<table id="docTable" class="table table-bordered table-striped table-hover">
 								<thead style="background-color: rgba(126,86,134,.7);">
 									<tr>
-										<th style="">Category</th>
 										<th style="">Employee ID</th>
+										<th style="">Category</th>
 										<th style="">No. Document</th>
 										<th style="width: 20%">Name</th>
 										<th style="">Valid From</th>
@@ -242,7 +242,7 @@
 								<input type="hidden" value="{{csrf_token()}}" name="_token" />
 
 								<div class="form-group row" align="right">
-									<label class="col-sm-4">Document Number</label>
+									<label class="col-sm-4">Document Number<span class="text-red">*</span></label>
 									<div class="col-sm-5" align="left">
 										<input type="text" class="form-control" id="renew_document_number">
 									</div>
@@ -544,9 +544,9 @@
 				}
 			}],
 			"columns": [
-			{ "data": "document_number" },
-			{ "data": "category" },
 			{ "data": "employee_id" },
+			{ "data": "category" },
+			{ "data": "document_number" },
 			{ "data": "name" },
 			{ "data": "valid_from" },
 			{ "data": "valid_to" },
