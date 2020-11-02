@@ -1262,7 +1262,7 @@ class AccountingController extends Controller
                 
             // }
 
-            // $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $data->id;
+            // $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $data->id;
             // $purchaserequisition = db::select($isimail);
 
             // Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($purchaserequisition, 'purchase_requisition'));
@@ -1310,7 +1310,7 @@ class AccountingController extends Controller
 
                     $pr->save();
 
-                    $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id = ".$request->get('id');
+                    $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id = ".$request->get('id');
                     $purchaserequisition = db::select($isimail);
 
                     Mail::to($mailtoo)->bcc('rio.irvansyah@music.yamaha.com','Rio Irvansyah')->send(new SendEmail($purchaserequisition, 'purchase_requisition'));
@@ -1420,7 +1420,7 @@ class AccountingController extends Controller
 
             $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
 
-            $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $id;
+            $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $id;
             $pr_isi = db::select($isimail);
 
             //CEK APAR
@@ -1653,7 +1653,7 @@ class AccountingController extends Controller
 
             $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
 
-            $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
+            $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
             $pr_isi = db::select($isimail);
 
             Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
@@ -1717,7 +1717,7 @@ class AccountingController extends Controller
 
                     $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
 
-                    $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
+                    $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
                     $pr_isi = db::select($isimail);
 
                     Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
@@ -1769,7 +1769,7 @@ class AccountingController extends Controller
 
                     $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
 
-                    $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
+                    $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
                     $pr_isi = db::select($isimail);
 
                     Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
@@ -1875,7 +1875,7 @@ class AccountingController extends Controller
 
                 $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
 
-                $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
+                $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
                 $pr_isi = db::select($isimail);
 
                 Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
@@ -1974,7 +1974,7 @@ class AccountingController extends Controller
 
                 $pdf->save(public_path() . "/pr_list/PR".$detail_pr[0]->no_pr.".pdf");
 
-                $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
+                $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
                 $pr_isi = db::select($isimail);
 
                 Mail::to($mailtoo)->send(new SendEmail($pr_isi, 'purchase_requisition'));
@@ -2046,7 +2046,7 @@ class AccountingController extends Controller
 
         $pr->save();
 
-        $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
+        $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
         $tolak = db::select($isimail);
 
         //kirim email ke User
@@ -2087,7 +2087,7 @@ class AccountingController extends Controller
 
         $pr->save();
 
-        $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
+        $isimail = "select acc_purchase_requisitions.*,acc_purchase_requisition_items.item_stock, acc_purchase_requisition_items.item_desc, acc_items.kebutuhan, acc_items.peruntukan FROM acc_purchase_requisitions join acc_purchase_requisition_items on acc_purchase_requisitions.no_pr = acc_purchase_requisition_items.no_pr left join acc_items on acc_purchase_requisition_items.item_code = acc_items.kode_item where acc_purchase_requisitions.id= " . $pr->id;
         $tolak = db::select($isimail);
 
         //kirim email ke User
