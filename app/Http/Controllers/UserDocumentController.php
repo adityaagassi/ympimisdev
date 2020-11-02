@@ -56,7 +56,7 @@ class UserDocumentController extends Controller
 	}
 
 	public function fetchUserDocument(Request $request){
-		$document = UserDocument::leftJoin('users', 'users.username', '=', 'user_documents.employee_id');
+		$document = UserDocument::leftJoin('employee_syncs', 'employee_syncs.employee_id', '=', 'user_documents.employee_id');
 
 		if($request->get('documentNumber') != null){
 			$document = $document->whereIn('user_documents.document_number', $request->get('documentNumber'));
@@ -70,7 +70,7 @@ class UserDocumentController extends Controller
 			$document = $document->whereIn('user_documents.category', $request->get('category'));
 		}
 
-		$document = $document->select('user_documents.document_number', 'user_documents.employee_id', 'users.name', 'user_documents.valid_from', 'user_documents.valid_to', 'user_documents.category', 'user_documents.status', 'user_documents.condition')->orderBy('employee_id', 'asc')->get();
+		$document = $document->select('user_documents.document_number', 'user_documents.employee_id', 'employee_syncs.name', 'employee_syncs.position', 'user_documents.valid_from', 'user_documents.valid_to', 'user_documents.category', 'user_documents.status', 'user_documents.condition')->orderBy('employee_id', 'asc')->get();
 
 		return DataTables::of($document)
 		->addColumn('button', function($document){
