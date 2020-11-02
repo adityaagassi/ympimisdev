@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AccPurchaseRequisitionItem extends Model
 {
     protected $fillable = [
-		'no_pr','item_code','item_desc','item_spec','item_stock','item_request_date','item_qty','item_uom','item_currency','item_price','item_amount','no_budget','sudah_po','status_harga','created_by'
+		'no_pr','item_code','item_desc','item_spec','item_stock','item_request_date','item_qty','item_uom','item_currency','item_price','item_amount','peruntukan','kebutuhan','no_budget','sudah_po','status_harga','created_by'
 	];
 
 	public function user()
