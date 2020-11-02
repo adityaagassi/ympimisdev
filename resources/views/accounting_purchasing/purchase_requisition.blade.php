@@ -440,7 +440,7 @@
 										<div class="col-xs-1" style="padding:5px;">
 
 											<div class="input-group"> 
-												<span class="input-group-addon" id="ket_harga1" style="padding:3px">?</span>
+												<span class="input-group-addon" id="ket_harga1" name="ket_harga1" style="padding:3px">?</span>
 												<input type="text" class="form-control currency" id="item_price1" name="item_price1" placeholder="Harga" data-number-to-fixed="2" data-number-stepfactor="100"required="" style="padding: 6px 6px">
 											</div>
 											<!-- input type="text" class="form-control" id="item_price1" name="item_price1" placeholder="Price" required="" onkeyup='getTotal(this.id)'> -->
@@ -1594,7 +1594,7 @@
     		lop = "lop2";
     	}
 
-    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-3' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required='' onkeyup='ubahDescTujuan(this)'></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification'></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''><input type='hidden' class='form-control' id='moq"+no+"' name='moq"+no+"' placeholder='Moq'></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select6' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly><input type='hidden' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Total' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
+    	var divdata = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-1' style='padding:5px;'><select class='form-control select3' data-placeholder='Choose Item' name='item_code"+no+"' id='item_code"+no+"' onchange='pilihItem(this)'><option></option></select></div><div class='col-xs-3' style='padding:5px;'><input type='text' class='form-control' id='item_desc"+no+"' name='item_desc"+no+"' placeholder='Description' required='' onkeyup='ubahDescTujuan(this)'></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='item_spec"+no+"' name='item_spec"+no+"' placeholder='Specification'></div><div class='col-xs-1' style='padding:5px;'><div class='input-group date'><div class='input-group-addon'><i class='fa fa-calendar' style='font-size: 10px'></i> </div><input type='text' class='form-control pull-right datepicker' id='req_date"+no+"' name='req_date"+no+"' placeholder='Tanggal' required=''></div></div> <div class='col-xs-1' style='padding: 5px'><select class='form-control select2' id='item_currency"+no+"' name='item_currency"+no+"'data-placeholder='Currency' style='width: 100%' onchange='currency(this)'><option value=''>&nbsp;</option><option value='USD'>USD</option><option value='IDR'>IDR</option><option value='JPY'>JPY</option></select><input type='text' class='form-control' id='item_currency_text"+no+"' name='item_currency_text"+no+"' style='display:none'></div> <div class='col-xs-1' style='padding:5px;'><div class='input-group'><span class='input-group-addon' id='ket_harga"+no+"' name='ket_harga"+no+"' style='padding:3px'>?</span><input type='text' class='form-control currency' id='item_price"+no+"' name='item_price"+no+"' placeholder='Harga' data-number-to-fixed='2' data-number-stepfactor='100' required='' style='padding:6px 6px'></div></div><div class='col-xs-1' style='padding:5px;'><input type='number' class='form-control' id='qty"+no+"' name='qty"+no+"' placeholder='Qty' onkeyup='getTotal(this.id)' required=''><input type='hidden' class='form-control' id='moq"+no+"' name='moq"+no+"' placeholder='Moq'></div><div class='col-xs-1' style='padding:5px;'><select class='form-control select6' id='uom"+no+"' name='uom"+no+"' data-placeholder='UOM' style='width: 100%;'><option></option>@foreach($uom as $um)<option value='{{ $um }}'>{{ $um }}</option>@endforeach</select></div><div class='col-xs-1' style='padding:5px;'><input type='text' class='form-control' id='amount"+no+"' name='amount"+no+"' placeholder='Total' required='' readonly><input type='hidden' class='form-control' id='konversi_dollar"+no+"' name='konversi_dollar"+no+"' placeholder='Total' required='' readonly=''></div><div class='col-xs-1' style='padding:5px;'>&nbsp;<button onclick='kurang(this,\""+lop+"\");' class='btn btn-danger'><i class='fa fa-close'></i> </button> <button type='button' onclick='tambah(\""+id+"\",\""+lop+"\"); ' class='btn btn-success'><i class='fa fa-plus' ></i></button></div></div>");
 
     	var tujuan = $("<div id='"+no+"' class='col-md-12' style='margin-bottom : 5px'><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_desc"+no+"' name='tujuan_desc"+no+"' placeholder='Description' required=''></div><div class='col-xs-6' style='padding:5px;'><input type='text' class='form-control' id='tujuan_peruntukan"+no+"' name='tujuan_peruntukan"+no+"' placeholder='Tujuan Pembelian / Peruntukan'></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='item_stock"+no+"' name='item_stock"+no+"' placeholder='Stock'></div><div class='col-xs-2' style='padding:5px;'><input type='text' class='form-control' id='tujuan_kebutuhan"+no+"' name='tujuan_kebutuhan"+no+"' placeholder='Kebutuhan (e.g 10 pcs/hari)'></div></div>");
 
@@ -1654,7 +1654,9 @@
 		$("#qty"+newid).attr("name","qty"+oldid);
 		$("#moq"+newid).attr("name","moq"+oldid);
 		$("#uom"+newid).attr("name","uom"+oldid);
+		$("#ket_harga"+newid).attr("name","ket_harga"+oldid);
 		$("#amount"+newid).attr("name","amount"+oldid);
+		$("#konversi_dollar"+newid).attr("name","konversi_dollar"+oldid);
 		$("#item_currency"+newid).attr("name","item_currency"+oldid);
 		$("#item_currency_text"+newid).attr("name","item_currency_text"+oldid);
 		$("#req_date"+newid).attr("name","req_date"+oldid);
@@ -1663,6 +1665,8 @@
 		$("#item_stock"+newid).attr("name","item_stock"+oldid);
 		$("#tujuan_kebutuhan"+newid).attr("name","tujuan_kebutuhan"+oldid);
 
+
+
 		$("#item_code"+newid).attr("id","item_code"+oldid);
 		$("#item_desc"+newid).attr("id","item_desc"+oldid);
 		$("#item_spec"+newid).attr("id","item_spec"+oldid);
@@ -1670,7 +1674,9 @@
 		$("#qty"+newid).attr("id","qty"+oldid);
 		$("#moq"+newid).attr("id","moq"+oldid);
 		$("#uom"+newid).attr("id","uom"+oldid);
+		$("#ket_harga"+newid).attr("id","ket_harga"+oldid);
 		$("#amount"+newid).attr("id","amount"+oldid);
+		$("#konversi_dollar"+newid).attr("id","konversi_dollar"+oldid);
 		$("#item_currency"+newid).attr("id","item_currency"+oldid);
 		$("#item_currency_text"+newid).attr("id","item_currency_text"+oldid);
 		$("#req_date"+newid).attr("id","req_date"+oldid);
@@ -1693,7 +1699,9 @@
 			$("#qty"+newid).attr("name","qty"+oldid);
 			$("#moq"+newid).attr("name","moq"+oldid);
 			$("#uom"+newid).attr("name","uom"+oldid);
+			$("#ket_harga"+newid).attr("name","ket_harga"+oldid);
 			$("#amount"+newid).attr("name","amount"+oldid);
+			$("#konversi_dollar"+newid).attr("name","konversi_dollar"+oldid);
 			$("#item_currency"+newid).attr("name","item_currency"+oldid);
 			$("#item_currency_text"+newid).attr("name","item_currency_text"+oldid);
 			$("#req_date"+newid).attr("name","req_date"+oldid);
@@ -1709,7 +1717,9 @@
 			$("#qty"+newid).attr("id","qty"+oldid);
 			$("#moq"+newid).attr("id","moq"+oldid);
 			$("#uom"+newid).attr("id","uom"+oldid);
+			$("#ket_harga"+newid).attr("id","ket_harga"+oldid);
 			$("#amount"+newid).attr("id","amount"+oldid);
+			$("#konversi_dollar"+newid).attr("id","konversi_dollar"+oldid);
 			$("#item_currency"+newid).attr("id","item_currency"+oldid);
 			$("#item_currency_text"+newid).attr("id","item_currency_text"+oldid);
 			$("#req_date"+newid).attr("id","req_date"+oldid);
