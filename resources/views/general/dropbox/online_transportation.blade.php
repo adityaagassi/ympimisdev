@@ -159,7 +159,7 @@
 									<th style="width: 1%">Jarak (Km)</th>
 									<th style="width: 1%">Bensin</th>
 									<th style="width: 1%">Total</th>
-									<th style="width: 2%">Lampiran</th>
+									<!-- <th style="width: 2%">Lampiran</th> -->
 									<th style="width: 1%">Verifikasi</th>
 									<th style="width: 1.5%">Hapus</th>
 								</tr>
@@ -244,14 +244,14 @@
 									<input type="text" style="width: 100%" class="form-control" id="newHighwayAmount" name="newHighwayAmount" placeholder="Biaya Tol">
 								</div>
 							</div>
-							<div class="form-group">
+							<!-- <div class="form-group">
 								<label for="lampiran" class="col-sm-2 control-label">Lampiran</label>
 								<div class="col-sm-6">
 									<input type="file" onchange="readURL(this);" id="newAttachment">
 									{{-- <button class="btn btn-primary btn-lg" id="btnImage" value="Photo" onclick="buttonImage('#fileData')">Photo</button> --}}
 									<img width="150px" id="blah" src="" style="display: none" alt="your image" />
 								</div>
-							</div>
+							</div> -->
 						</form>
 					</div>
 				</div>
@@ -376,7 +376,7 @@
 			var newDestination = $('#newDestination').val();
 			// var newHighwayBill = $('#newHighwayBill').val();
 			var newHighwayAmount = $('#newHighwayAmount').val();
-			var newAttachment  = $('#newAttachment').prop('files')[0];
+			// var newAttachment  = $('#newAttachment').prop('files')[0];
 		}
 		else if($('#newAttend').val() != ""){
 			var employee_id = $('#employee_id').val();
@@ -390,14 +390,14 @@
 			var newDestination = $('#newDestination').val();
 			// var newHighwayBill = 0;
 			var newHighwayAmount = 0;
-			var newAttachment  = "";
+			// var newAttachment  = "";
 		}
 
 
-		var file = $('#newAttachment').val().replace(/C:\\fakepath\\/i, '').split(".");
+		// var file = $('#newAttachment').val().replace(/C:\\fakepath\\/i, '').split(".");
 
 		var formData = new FormData();
-		formData.append('newAttachment', newAttachment);
+		// formData.append('newAttachment', newAttachment);
 		formData.append('employee_id', employee_id);
 		formData.append('grade', grade);
 		formData.append('zona', zona);
@@ -409,8 +409,8 @@
 		formData.append('newDestination', newDestination);
 		// formData.append('newHighwayBill', newHighwayBill);
 		formData.append('newHighwayAmount', newHighwayAmount);
-		formData.append('extension', file[1]);
-		formData.append('file_name', file[0]);
+		// formData.append('extension', file[1]);
+		// formData.append('file_name', file[0]);
 
 		$.ajax({
 			url:"{{ url('input/general/online_transportation') }}",
@@ -445,7 +445,7 @@
 			$('#newVehicle').prop("disabled", true);
 			$('#newHighwayAmount').prop("disabled", true);
 			$('#newDistance').prop("disabled", true);
-			$('#newAttachment').prop("disabled", false);
+			// $('#newAttachment').prop("disabled", false);
 
 			$('#newId').val("");
 			$('#newDate').val("{{date('Y-m-d')}}");
@@ -465,7 +465,7 @@
 			$('#newDestination').prop("disabled", false);
 			$('#newHighwayAmount').prop("disabled", false);
 			$('#newDistance').prop("disabled", false);
-			$('#newAttachment').prop("disabled", false);
+			// $('#newAttachment').prop("disabled", false);
 		}
 
 		var data = {
@@ -492,7 +492,7 @@
 			$('#newDestination').prop("disabled", true);
 			$('#newHighwayAmount').prop("disabled", true);
 			$('#newDistance').prop("disabled", true);
-			$('#newAttachment').prop("disabled", false);
+			// $('#newAttachment').prop("disabled", false);
 
 			$('#newOrigin').val("");
 			$('#newDestination').val("");
@@ -506,7 +506,7 @@
 			$('#newDestination').prop("disabled", false);
 			$('#newHighwayAmount').prop("disabled", false);
 			$('#newDistance').prop("disabled", false);
-			$('#newAttachment').prop("disabled", false);
+			// $('#newAttachment').prop("disabled", false);
 		}
 	}
 
@@ -521,7 +521,7 @@
 		$('#newOrigin').val("");
 		$('#newDestination').val("");
 		$('#newDistance').val("");
-		$('#newAttachment').val("");
+		// $('#newAttachment').val("");
 	}
 
 	function openModalCreate(){
@@ -536,7 +536,7 @@
 		// $('#newHighwayBill').prop("disabled", true);
 		$('#newHighwayAmount').prop("disabled", true);
 		$('#newDistance').prop("disabled", true);
-		$('#newAttachment').prop("disabled", true);
+		// $('#newAttachment').prop("disabled", true);
 
 		$('#modalRecordTitle').text('Tambah Record');
 		$('#editButton').hide();
@@ -651,14 +651,14 @@
 					recordTable += '<td style="width: 1%;">'+value.distance_total+'</td>';
 					recordTable += '<td style="width: 1%;">'+fuel.toLocaleString()+'</td>';
 					recordTable += '<td style="width: 1%;">'+total_amount.toLocaleString()+'</td>';
-					recordTable += '<td style="width: 2%";>';
-					if(value.att_in != '{{ url("files/general_transportation/0") }}'){
-						recordTable += '<a href="javascript:void(0)" id="'+ value.att_in +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> in</a>';
-					}
-					if(value.att_out != '{{ url("files/general_transportation/0") }}'){
-						recordTable += '&nbsp;<a href="javascript:void(0)" id="'+ value.att_out +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> out</a>';
-					}
-					recordTable += '</td>';
+					// recordTable += '<td style="width: 2%";>';
+					// if(value.att_in != '{{ url("files/general_transportation/0") }}'){
+					// 	recordTable += '<a href="javascript:void(0)" id="'+ value.att_in +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> in</a>';
+					// }
+					// if(value.att_out != '{{ url("files/general_transportation/0") }}'){
+					// 	recordTable += '&nbsp;<a href="javascript:void(0)" id="'+ value.att_out +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> out</a>';
+					// }
+					// recordTable += '</td>';
 					recordTable += '<td style="width: 0.3%;">'+remark+'</td>';
 					recordTable += '<td style="width: 1.5%">';
 					if(value.attend_code == 'hadir' && value.id_in > 0 && value.remark_in == 0){
@@ -695,7 +695,7 @@ recordTableFoot += '<th>'+grand_fuel.toLocaleString()+'</th>';
 recordTableFoot += '<th>'+grand_total.toLocaleString()+'</th>';
 recordTableFoot += '<th></th>';
 recordTableFoot += '<th></th>';
-recordTableFoot += '<th></th>';
+// recordTableFoot += '<th></th>';
 recordTableFoot += '</tr>';
 
 $('#recordTableBody').append(recordTable);

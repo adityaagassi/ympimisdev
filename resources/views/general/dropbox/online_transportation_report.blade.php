@@ -111,7 +111,7 @@
 										<th style="width: 1%">Tujuan</th>
 										<th style="width: 1%">Tol</th>
 										<th style="width: 1%">Jarak</th>
-										<th style="width: 1%">Lampiran</th>
+										<!-- <th style="width: 1%">Lampiran</th> -->
 										<th style="width: 1%">Confirm</th>
 									</tr>
 								</thead>
@@ -129,7 +129,7 @@
 										<th></th>
 										<th></th>
 										<th></th>
-										<th></th>
+										<!-- <th></th> -->
 										<th></th>
 									</tr>
 								</tfoot>
@@ -180,7 +180,7 @@
 										<th style="width: 1%">Jarak (Km)</th>
 										<th style="width: 1%">Bensin</th>
 										<th style="width: 1%">Total</th>
-										<th style="width: 2%">Lampiran</th>
+										<!-- <th style="width: 2%">Lampiran</th> -->
 									</tr>
 								</thead>
 								<tbody id="detailTableBody">
@@ -198,7 +198,7 @@
 										<th></th>
 										<th></th>
 										<th></th>
-										<th></th>
+										<!-- <th></th> -->
 									</tr>
 								</tfoot>
 							</table>
@@ -297,14 +297,14 @@
 					detailTable += '<td style="width: 1%;">'+value.distance_total+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.fuel+'</td>';
 					detailTable += '<td style="width: 1%;">'+value.total_amount+'</td>';
-					detailTable += '<td style="width: 1%;">';
-					if(value.att_in != '{{ url("files/general_transportation/0") }}'){
-						detailTable += '<a href="javascript:void(0)" id="'+ value.att_in +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> in</a>';
-					}
-					if(value.att_out != '{{ url("files/general_transportation/0") }}'){
-						detailTable += '&nbsp;<a href="javascript:void(0)" id="'+ value.att_out +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> out</a>';
-					}
-					detailTable += '</td>';
+					// detailTable += '<td style="width: 1%;">';
+					// if(value.att_in != '{{ url("files/general_transportation/0") }}'){
+					// 	detailTable += '<a href="javascript:void(0)" id="'+ value.att_in +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> in</a>';
+					// }
+					// if(value.att_out != '{{ url("files/general_transportation/0") }}'){
+					// 	detailTable += '&nbsp;<a href="javascript:void(0)" id="'+ value.att_out +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> out</a>';
+					// }
+					// detailTable += '</td>';
 					detailTable += '</tr>';					
 				});
 
@@ -508,7 +508,7 @@ function fetchConfirmTable(){
 				confirmTable += '<td>'+value.destination+'</td>';
 				confirmTable += '<td>'+value.highway_amount+'</td>';
 				confirmTable += '<td>'+value.distance+'</td>';
-				confirmTable += '<td><a href="javascript:void(0)" id="'+ value.highway_attachment +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> Struk</a></td>';
+				// confirmTable += '<td><a href="javascript:void(0)" id="'+ value.highway_attachment +'" onClick="downloadAtt(id)" class="fa fa-paperclip"> Struk</a></td>';
 				confirmTable += '<td><button class="btn btn-success btn-xs" onclick="confirmRecord(\''+value.id+'\')">Confirm</button></td>';
 				confirmTable += '</tr>';
 			});

@@ -800,11 +800,11 @@ class GeneralController extends Controller{
 		$filename = "";
 		$file_destination = 'files/general_transportation';
 
-		if (count($request->file('newAttachment')) > 0) {
-			$file = $request->file('newAttachment');
-			$filename = md5($request->input('employee_id').date('YmdHis')).'.'.$request->input('extension');
-			$file->move($file_destination, $filename);
-		}
+		// if (count($request->file('newAttachment')) > 0) {
+		// 	$file = $request->file('newAttachment');
+		// 	$filename = md5($request->input('employee_id').date('YmdHis')).'.'.$request->input('extension');
+		// 	$file->move($file_destination, $filename);
+		// }
 
 		try{
 			if ($filename == "") {
