@@ -23,17 +23,21 @@ class UserDocumentController extends Controller
 	{
 		$this->middleware('auth');
 		$this->category = [
-			'Passport',
-			'IMTA',
+			'PASPOR',
+			'KITAS',
+			'MERP',
+			'SKLD',
+			'SKJ',
+			'NOTIF'
 		];
 		$this->status = [
 			'Active',
-			'Inactive',
+			'Inactive'
 		];
 		$this->condition = [
 			'Safe',
 			'InProcess',
-			'AtRisk',
+			'AtRisk'
 		];
 	}
 
@@ -66,7 +70,7 @@ class UserDocumentController extends Controller
 			$document = $document->whereIn('user_documents.category', $request->get('category'));
 		}
 
-		$document = $document->select('user_documents.document_number', 'user_documents.employee_id', 'users.name', 'user_documents.valid_from', 'user_documents.valid_to', 'user_documents.category', 'user_documents.status', 'user_documents.condition')->orderBy('status', 'asc')->orderBy('valid_to', 'asc')->get();
+		$document = $document->select('user_documents.document_number', 'user_documents.employee_id', 'users.name', 'user_documents.valid_from', 'user_documents.valid_to', 'user_documents.category', 'user_documents.status', 'user_documents.condition')->orderBy('employee_id', 'asc')->get();
 
 		return DataTables::of($document)
 		->addColumn('button', function($document){
