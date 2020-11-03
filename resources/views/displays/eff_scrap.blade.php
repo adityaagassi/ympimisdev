@@ -121,7 +121,7 @@
 							items[key] = 0;
 						}
 						if(value.movement_type == '102' || value.movement_type == '9S2'){
-							items[key] += -(value.quantity);
+							items[key] -= value.quantity;
 						}
 						else{
 							items[key] += value.quantity;
@@ -133,16 +133,18 @@
 				var total = 0;
 
 				$.each(items, function(key, val) {
-					var a = key.split('_');
+					if(val != 0){
+						var a = key.split('_');
 
-					detailData += '<tr>';
-					detailData += '<td>'+a[0]+'</td>';
-					detailData += '<td>'+a[1]+'</td>';
-					detailData += '<td>'+val+'</td>';
-					detailData += '<td>'+(val*a[2]).toFixed(1)+'</td>';
-					detailData += '</tr>';
+						detailData += '<tr>';
+						detailData += '<td>'+a[0]+'</td>';
+						detailData += '<td>'+a[1]+'</td>';
+						detailData += '<td>'+val+'</td>';
+						detailData += '<td>'+(val*a[2]).toFixed(1)+'</td>';
+						detailData += '</tr>';
 
-					total += val*a[2];
+						total += val*a[2];
+					}
 				});
 				detailData += '<tr>';
 				detailData += '<td></td>';
@@ -156,7 +158,6 @@
 			}
 			else{
 
-
 				var items = {}, base, key;
 				$.each(detail_mscr, function(key, value){
 					if($.date(value.posting_date) <= $.date(b) && loc[1] == value.reason){
@@ -164,7 +165,12 @@
 						if (!items[key]) {
 							items[key] = 0;
 						}
-						items[key] += value.quantity;
+						if(value.movement_type == '102' || value.movement_type == '9S2'){
+							items[key] -= value.quantity;
+						}
+						else{
+							items[key] += value.quantity;
+						}
 					}
 				});
 
@@ -172,16 +178,18 @@
 				var total = 0;
 
 				$.each(items, function(key, val) {
-					var a = key.split('_');
+					if(val != 0){
+						var a = key.split('_');
 
-					detailData += '<tr>';
-					detailData += '<td>'+a[0]+'</td>';
-					detailData += '<td>'+a[1]+'</td>';
-					detailData += '<td>'+val.toFixed(2)+'</td>';
-					detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
-					detailData += '</tr>';
+						detailData += '<tr>';
+						detailData += '<td>'+a[0]+'</td>';
+						detailData += '<td>'+a[1]+'</td>';
+						detailData += '<td>'+val.toFixed(2)+'</td>';
+						detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
+						detailData += '</tr>';
 
-					total += val*a[2];
+						total += val*a[2];
+					}
 				});
 				detailData += '<tr>';
 				detailData += '<td></td>';
@@ -206,7 +214,12 @@
 						if (!items[key]) {
 							items[key] = 0;
 						}
-						items[key] += value.quantity;
+						if(value.movement_type == '102' || value.movement_type == '9S2'){
+							items[key] -= value.quantity;
+						}
+						else{
+							items[key] += value.quantity;
+						}
 					}
 				});
 
@@ -214,16 +227,18 @@
 				var total = 0;
 
 				$.each(items, function(key, val) {
-					var a = key.split('_');
+					if(val != 0){
+						var a = key.split('_');
 
-					detailData += '<tr>';
-					detailData += '<td>'+a[0]+'</td>';
-					detailData += '<td>'+a[1]+'</td>';
-					detailData += '<td>'+val.toFixed(2)+'</td>';
-					detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
-					detailData += '</tr>';
+						detailData += '<tr>';
+						detailData += '<td>'+a[0]+'</td>';
+						detailData += '<td>'+a[1]+'</td>';
+						detailData += '<td>'+val.toFixed(2)+'</td>';
+						detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
+						detailData += '</tr>';
 
-					total += val*a[2];
+						total += val*a[2];
+					}
 				});
 				detailData += '<tr>';
 				detailData += '<td></td>';
@@ -237,7 +252,6 @@
 			}
 			else{
 
-
 				var items = {}, base, key;
 				$.each(detail_wscr, function(key, value){
 					if($.date(value.posting_date) <= $.date(b) && loc[1] == value.reason){
@@ -245,7 +259,12 @@
 						if (!items[key]) {
 							items[key] = 0;
 						}
-						items[key] += value.quantity;
+						if(value.movement_type == '102' || value.movement_type == '9S2'){
+							items[key] -= value.quantity;
+						}
+						else{
+							items[key] += value.quantity;
+						}
 					}
 				});
 
@@ -253,16 +272,18 @@
 				var total = 0;
 
 				$.each(items, function(key, val) {
-					var a = key.split('_');
+					if(val != 0){
+						var a = key.split('_');
 
-					detailData += '<tr>';
-					detailData += '<td>'+a[0]+'</td>';
-					detailData += '<td>'+a[1]+'</td>';
-					detailData += '<td>'+val.toFixed(2)+'</td>';
-					detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
-					detailData += '</tr>';
+						detailData += '<tr>';
+						detailData += '<td>'+a[0]+'</td>';
+						detailData += '<td>'+a[1]+'</td>';
+						detailData += '<td>'+val.toFixed(2)+'</td>';
+						detailData += '<td>'+(val*a[2]).toFixed(2)+'</td>';
+						detailData += '</tr>';
 
-					total += val*a[2];
+						total += val*a[2];
+					}
 				});
 				detailData += '<tr>';
 				detailData += '<td></td>';
