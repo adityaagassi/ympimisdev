@@ -5591,7 +5591,7 @@ public function update_purchase_requisition_po(Request $request)
 
             // Mail::to($mailtoo)->cc($mailcc)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
 
-            Mail::to($mailtoo)->send(new SendEmail($investe, 'investment'));
+            Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
 
             return redirect('/investment/check/'.$id)->with('status', 'Investment Berhasil Dicek')
             ->with('page', 'Investment');
@@ -5714,7 +5714,7 @@ public function update_purchase_requisition_po(Request $request)
                 $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
-                Mail::to($mailtoo)->send(new SendEmail($investe, 'investment'));
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
 
                 $message = 'Investment '.$invest->reff_number;
                 $message2 ='Approved Successfully';
@@ -5778,7 +5778,7 @@ public function update_purchase_requisition_po(Request $request)
                 $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
-                Mail::to($mailtoo)->send(new SendEmail($investe, 'investment'));
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
 
                 $message = 'Investment '.$invest->reff_number;
                 $message2 ='Approved Successfully';
@@ -5843,7 +5843,7 @@ public function update_purchase_requisition_po(Request $request)
                 $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
-                Mail::to($mailtoo)->send(new SendEmail($investe, 'investment'));
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
 
                 $message = 'Investment '.$invest->reff_number;
                 $message2 ='Approved Successfully';
@@ -5908,7 +5908,7 @@ public function update_purchase_requisition_po(Request $request)
                 $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
-                Mail::to($mailtoo)->send(new SendEmail($investe, 'investment'));
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
 
                 $message = 'Investment '.$invest->reff_number;
                 $message2 ='Approved Successfully';
@@ -5972,7 +5972,7 @@ public function update_purchase_requisition_po(Request $request)
                 $isimail = "select * FROM acc_investments where acc_investments.id = ".$invest->id;
                 $investe = db::select($isimail);
 
-                Mail::to($mailtoo)->send(new SendEmail($investe, 'investment'));
+                Mail::to($mailtoo)->bcc(['rio.irvansyah@music.yamaha.com','aditya.agassi@music.yamaha.com'])->send(new SendEmail($investe, 'investment'));
 
                 $message = 'Investment '.$invest->reff_number;
                 $message2 ='Approved Successfully';
