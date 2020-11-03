@@ -21,6 +21,7 @@ use App\WorkshopTagAvailability;
 use App\WorkshopFlowProcess;
 use App\Employee;
 use App\EmployeeSync;
+use App\JigPartStock;
 use Carbon\Carbon;
 use DataTables;
 use Response;
@@ -172,12 +173,19 @@ class WorkshopController extends Controller{
 		->groupBy('process_name','machine_name','machine_code')
 		->get();
 
+		$requester = WorkshopJobOrder::leftJoin("employees", "employees.employee_id", "=", "workshop_job_orders.created_by")
+		->select("employees.name","employees.employee_id")
+		->groupBy("employees.name","employees.employee_id")
+		->orderBy("employees.employee_id")
+		->get();
+
 		return view('workshop.wjo_list', array(
 			'title' => $title,
 			'title_jp' => $title_jp,
 			'workshop_materials' => $this->material,
 			'statuses' => $this->status,
 			'employees' => $this->employee,
+			'requesters' => $requester,
 			'operators' => $this->operator,
 			'machines' => $this->machine,
 			'processes' => $process,
@@ -1523,11 +1531,17 @@ class WorkshopController extends Controller{
 		if(strlen($request->get('workType')) > 0 ){
 			$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.type', '=', $request->get('workType'));
 		}
-		if($request->get('rawMaterial') != null){
-			$workshop_job_orders = $workshop_job_orders->whereIn('workshop_job_orders.material', $request->get('rawMaterial'));
+		// if($request->get('rawMaterial') != null){
+		// 	$workshop_job_orders = $workshop_job_orders->whereIn('workshop_job_orders.material', $request->get('rawMaterial'));
+		// }
+		// if($request->get('material') != null){
+		// 	$workshop_job_orders = $workshop_job_orders->whereIn('workshop_job_orders.item_number', $request->get('material'));
+		// }
+		if(strlen($request->get('req')) > 0){
+			$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.created_by', '=', $request->get('req'));
 		}
-		if($request->get('material') != null){
-			$workshop_job_orders = $workshop_job_orders->whereIn('workshop_job_orders.item_number', $request->get('material'));
+		if(strlen($request->get('approvedBy')) > 0){
+			$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.approved_by', '=', $request->get('approvedBy'));
 		}
 		if(strlen($request->get('pic')) > 0){
 			$workshop_job_orders = $workshop_job_orders->where('workshop_job_orders.operator', '=', $request->get('pic'));
@@ -2025,6 +2039,16 @@ class WorkshopController extends Controller{
 					'updated_at' => date('Y-m-d H:i:s')
 				]
 			);
+
+			$wjo_jig = JigPartStock::where("remark", "=", $request->get('wjo'))->get()->count();
+
+			if ($wjo_jig > 0) {
+				$updt_jig = JigPartStock::where('remark', '=', $request->get('wjo'))->first();
+				$updt_jig->remark = null;
+				$updt_jig->quantity = $updt_jig->quantity + $updt_jig->quantity_order;
+				$updt_jig->quantity_order = null;
+				$updt_jig->save();
+			}
 
 			$response = array(
 				'status' => true,

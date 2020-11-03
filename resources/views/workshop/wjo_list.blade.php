@@ -198,33 +198,29 @@
 														</select>
 													</div>
 												</div>
+
 												<div class="col-md-4">
 													<div class="form-group">
-														<label>Material Awal</label>
-														<select class="form-control select2" multiple="multiple" name="rawMaterial" id="rawMaterial" data-placeholder="Pilih Material Awal" style="width: 100%;">
-															<option></option>
-															@foreach($workshop_materials as $workshop_material)
-															@if(in_array($workshop_material->remark, ['raw']))
-															<option value="{{ $workshop_material->item_name }}">{{ $workshop_material->item_name }}</option>
-															@endif
-															@endforeach
-															<option value="LAINNYA">LAINNYA</option>
+														<label>Approved By</label>
+														<select class="form-control select2" data-placeholder="Pilih Approver" name="approvedBy" id="approvedBy" style="width: 100% height: 35px; font-size: 15px;">
+															<option value=""></option>
+															<option value="PI1108003">Andik Yayan</option>
+															<option value="PI9903004">M. Fadoli</option>
 														</select>
 													</div>
 												</div>
+
 												<div class="col-md-4">
 													<div class="form-group">
-														<label>Material Number</label>
-														<select class="form-control select2" multiple="multiple" name="material" id="material" data-placeholder="Select Material Number" style="width: 100%;">
-															<option></option>
-															@foreach($workshop_materials as $workshop_material)
-															@if(in_array($workshop_material->remark, ['jig','molding','equipment']))
-															<option value="{{ $workshop_material->item_number }}">{{ $workshop_material->item_number }} - {{ $workshop_material->material_description }}</option>
-															@endif
+														<label>Pemohon</label>
+														<select class="form-control select2" data-placeholder="Pilih Pemohon" name="req" id="req" style="width: 100% height: 35px; font-size: 15px;">
+															<option value=""></option>
+															@foreach($requesters as $req)
+															<option value="{{ $req->employee_id }}">{{ $req->employee_id }}-{{ $req->name }}</option>
 															@endforeach
 														</select>
 													</div>
-												</div>
+												</div>											
 											</div>
 										</div>
 										<div class="col-md-12">
@@ -253,16 +249,7 @@
 														</select>
 													</div>
 												</div>
-												<div class="col-md-4">
-													<div class="form-group">
-														<label>Approved By</label>
-														<select class="form-control select2" data-placeholder="Pilih Approver" name="approvedBy" id="approvedBy" style="width: 100% height: 35px; font-size: 15px;">
-															<option value=""></option>
-															<option value="PI1108003">Andik Yayan</option>
-															<option value="PI9903004">M. Fadoli</option>
-														</select>
-													</div>
-												</div>
+												
 											</div>
 										</div>
 									</div>
@@ -1583,8 +1570,9 @@
 			var orderNo = $('#orderNo').val();
 			var sub_section = $('#sub_section').val();
 			var workType = $('#workType').val();
-			var rawMaterial = $('#rawMaterial').val();
-			var material = $('#material').val();
+			var req = $('#req').val();
+			// var rawMaterial = $('#rawMaterial').val();
+			// var material = $('#material').val();
 			// var pic = $('#pic').val();
 			var remark = $('#remark').val(); 
 			var approvedBy = $('#approvedBy').val(); 
@@ -1598,8 +1586,9 @@
 				orderNo:orderNo,
 				sub_section:sub_section,
 				workType:workType,
-				rawMaterial:rawMaterial,
-				material:material,
+				req:req,
+				// rawMaterial:rawMaterial,
+				// material:material,
 				// pic:pic,
 				remark:remark,
 				approvedBy:approvedBy
