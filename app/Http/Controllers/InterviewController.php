@@ -655,7 +655,7 @@ class InterviewController extends Controller
           }
           
           elseif($interview != null){
-              Mail::to($mail_to)->send(new SendEmail($interview3, 'interview'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($interview3, 'interview'));
               return redirect('/index/interview/index/'.$activity_list_id)->with('status', 'Your E-mail has been sent.')->with('page', 'Interview');
           }
           else{

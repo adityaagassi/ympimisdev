@@ -698,7 +698,7 @@ class FirstProductAuditController extends Controller
             return redirect('/index/first_product_audit/details/'.$id.'/'.$first_product_audit_id)->with('error', 'Data pernah dikirim.')->with('page', 'First Product Audit');
           }
           elseif($first_product_audit != null){
-              Mail::to($mail_to)->send(new SendEmail($first_product_audit, 'first_product_audit'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($first_product_audit, 'first_product_audit'));
               return redirect('/index/first_product_audit/details/'.$id.'/'.$first_product_audit_id)->with('status', 'Your E-mail has been sent.')->with('page', 'First Product Audit');
           }
           else{
@@ -1191,7 +1191,7 @@ class FirstProductAuditController extends Controller
             return redirect('/index/first_product_audit/daily/'.$id.'/'.$first_product_audit_id)->with('error', 'Data pernah dikirim.')->with('page', 'First Product Audit');
           }
           elseif($first_product_audit != null){
-              Mail::to($mail_to)->send(new SendEmail($first_product_audit, 'first_product_audit_daily'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($first_product_audit, 'first_product_audit_daily'));
               return redirect('/index/first_product_audit/daily/'.$id.'/'.$first_product_audit_id)->with('status', 'Your E-mail has been sent.')->with('page', 'First Product Audit');
           }
           else{

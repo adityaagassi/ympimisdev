@@ -822,7 +822,7 @@ class SamplingCheckController extends Controller
             return redirect('/index/sampling_check/index/'.$id)->with('error', 'Data pernah dikirim.')->with('page', 'Sampling Check');
           }
           elseif($sampling_check != null){
-              Mail::to($mail_to)->send(new SendEmail($sampling_check, 'sampling_check'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($sampling_check, 'sampling_check'));
               return redirect('/index/sampling_check/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'Sampling Check');
           }
           else{

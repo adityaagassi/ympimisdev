@@ -497,7 +497,7 @@ class NgFindingController extends Controller
           }
           
           elseif($ng_finding != null){
-              Mail::to($mail_to)->send(new SendEmail($ng_finding3, 'ng_finding'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($ng_finding3, 'ng_finding'));
               return redirect('/index/ng_finding/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'Temuan NG');
           }
           else{

@@ -562,7 +562,7 @@ class LabelingController extends Controller
             return redirect('/index/labeling/index/'.$id)->with('error', 'Data pernah dikirim.')->with('page', 'Labeling');
           }
           elseif($labeling != null){
-              Mail::to($mail_to)->send(new SendEmail($labeling, 'labeling'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($labeling, 'labeling'));
               return redirect('/index/labeling/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'Labeling');
           }
           else{

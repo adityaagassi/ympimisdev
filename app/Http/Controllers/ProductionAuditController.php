@@ -794,7 +794,7 @@ class ProductionAuditController extends Controller
           }
           
           elseif($productionAudit != null){
-              Mail::to($mail_to)->send(new SendEmail($productionAudit, 'audit'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($productionAudit, 'audit'));
               return redirect('/index/production_audit/index/'.$id.'/'.$origin_group.'/'.$proses)->with('status', 'Your E-mail has been sent.')->with('page', 'Production Audit');
           }
           else{

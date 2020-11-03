@@ -820,7 +820,7 @@ class TrainingReportController extends Controller
           }
           
           elseif($training != null){
-              Mail::to($mail_to)->send(new SendEmail($training3, 'training'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($training3, 'training'));
               return redirect('/index/training_report/index/'.$activity_list_id)->with('status', 'Your E-mail has been sent.')->with('page', 'Training Report');
           }
           else{

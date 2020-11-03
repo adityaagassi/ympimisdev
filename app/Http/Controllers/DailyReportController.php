@@ -18,6 +18,9 @@ use App\MisPointAudit;
 use App\CodeGenerator;
 use App\User;
 use App\MisInventory;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\EscposImage;
 
 
 class DailyReportController extends Controller
@@ -56,179 +59,179 @@ class DailyReportController extends Controller
             'Welding-Surface Treatment (WI-WST)'
         ];
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-       $cat = $this->cat;
-       $loc = $this->loc;
-       return view('daily_reports.index', array(
+/**
+* Display a listing of the resource.
+*
+* @return \Illuminate\Http\Response
+*/
+public function index()
+{
+    $cat = $this->cat;
+    $loc = $this->loc;
+    return view('daily_reports.index', array(
         'cat' => $cat,
         'loc' => $loc,
-        
+
     ))->with('page', 'Daily Report');
-        //
-   }
+//
+}
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-        $id = Auth::id();
+/**
+* Show the form for creating a new resource.
+*
+* @return \Illuminate\Http\Response
+*/
+public function create(Request $request)
+{
+    $id = Auth::id();
 
-        $code_generator = CodeGenerator::where('note','=','report')->first();
-        $number = sprintf("%'.0" . $code_generator->length . "d\n" , $code_generator->index);
-        $code = $number+1;
-        $number1 = sprintf("%'.0" . $code_generator->length . "d" , $code);
-        $lop = $request->get('lop');
-        try{
-            for ($i=1; $i <= $lop ; $i++) {
-                $description = "description".$i;
-                $duration = "duration".$i;
+    $code_generator = CodeGenerator::where('note','=','report')->first();
+    $number = sprintf("%'.0" . $code_generator->length . "d\n" , $code_generator->index);
+    $code = $number+1;
+    $number1 = sprintf("%'.0" . $code_generator->length . "d" , $code);
+    $lop = $request->get('lop');
+    try{
+        for ($i=1; $i <= $lop ; $i++) {
+            $description = "description".$i;
+            $duration = "duration".$i;
 
-                $data = new DailyReport([
+            $data = new DailyReport([
+                'report_code' => $code_generator->prefix . $number1,
+                'category' => $request->get('category'),
+                'description' => $request->get($description),
+                'location' => $request->get('location'),
+                'duration' => $request->get($duration),
+                'begin_date' => $request->get('datebegin'),
+                'target_date' => $request->get('datetarget'),
+                'finished_date' => $request->get('datefinished'), 
+                'created_by' => $id
+            ]);
+            $data->save();
+        }
+        if($request->hasFile('reportAttachment')){
+            $files = $request->file('reportAttachment');
+            foreach ($files as $file) 
+            {
+                $number= $code_generator->prefix . $number1;
+                $data = file_get_contents($file);
+                $photo_number = $number . $file->getClientOriginalName() ;
+                $ext = $file->getClientOriginalExtension();
+                $filepath = public_path() . "/uploads/dailyreports/" . $photo_number;
+                $attachment = new DailyReportAttachment([
                     'report_code' => $code_generator->prefix . $number1,
-                    'category' => $request->get('category'),
-                    'description' => $request->get($description),
-                    'location' => $request->get('location'),
-                    'duration' => $request->get($duration),
-                    'begin_date' => $request->get('datebegin'),
-                    'target_date' => $request->get('datetarget'),
-                    'finished_date' => $request->get('datefinished'), 
-                    'created_by' => $id
+                    'file_name' =>  $photo_number,
+                    'file_path' => "/uploads/dailyreports/",
+                    'created_by' => $id,
                 ]);
-                $data->save();
+                $attachment->save();
+                File::put($filepath, $data);
             }
-            if($request->hasFile('reportAttachment')){
-                $files = $request->file('reportAttachment');
-                foreach ($files as $file) 
-                {
-                    $number= $code_generator->prefix . $number1;
-                    $data = file_get_contents($file);
-                    $photo_number = $number . $file->getClientOriginalName() ;
-                    $ext = $file->getClientOriginalExtension();
-                    $filepath = public_path() . "/uploads/dailyreports/" . $photo_number;
-                    $attachment = new DailyReportAttachment([
-                        'report_code' => $code_generator->prefix . $number1,
-                        'file_name' =>  $photo_number,
-                        'file_path' => "/uploads/dailyreports/",
-                        'created_by' => $id,
-                    ]);
-                    $attachment->save();
-                    File::put($filepath, $data);
-                }
-            }
-
-            $code_generator->index = $code_generator->index+1;
-            $code_generator->save();
-            return redirect('/index/daily_report')->with('status', 'Crete daily report success')->with('page', 'Daily Report');
         }
-        catch (QueryException $e){
-            return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
+
+        $code_generator->index = $code_generator->index+1;
+        $code_generator->save();
+        return redirect('/index/daily_report')->with('status', 'Crete daily report success')->with('page', 'Daily Report');
+    }
+    catch (QueryException $e){
+        return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
+    }
+}
+
+public function fetchDailyReport(){
+    $daily_reports = DailyReport::leftJoin('users', 'users.id', '=', 'daily_reports.created_by')
+    ->leftJoin('roles', 'users.role_code', '=', 'roles.role_code')
+    ->leftJoin(db::raw('(select report_code, count(file_name) as att from daily_report_attachments group by report_code) as daily_report_attachments'), 'daily_report_attachments.report_code', '=', 'daily_reports.report_code')
+    ->select('roles.role_code', 'users.name', 'daily_reports.category', 'daily_reports.description', 'daily_reports.location', 'daily_reports.begin_date', 'daily_reports.target_date', 'daily_reports.finished_date', 'daily_reports.report_code', 'daily_report_attachments.att', db::raw('concat(round(time_to_sec(daily_reports.duration)/60, 0), " Min") as duration'))
+    ->distinct()
+    ->orderByRaw('daily_reports.begin_date desc, users.name asc')
+    ->limit(500)
+    ->get();
+
+    return DataTables::of($daily_reports)
+    ->addColumn('action', function($daily_reports){
+        return '<a href="javascript:void(0)" class="btn btn-xs btn-info" onClick="detailReport(id)" id="' . $daily_reports->report_code . '">Details</a>';
+    })
+    ->addColumn('attach', function($daily_reports){
+        if($daily_reports->att > 0){
+            return '<a href="javascript:void(0)" id="' . $daily_reports->report_code . '" onClick="downloadAtt(id)" class="fa fa-paperclip"> ' . $daily_reports->att . '</a>';
         }
-    }
-
-    public function fetchDailyReport(){
-        $daily_reports = DailyReport::leftJoin('users', 'users.id', '=', 'daily_reports.created_by')
-        ->leftJoin('roles', 'users.role_code', '=', 'roles.role_code')
-        ->leftJoin(db::raw('(select report_code, count(file_name) as att from daily_report_attachments group by report_code) as daily_report_attachments'), 'daily_report_attachments.report_code', '=', 'daily_reports.report_code')
-        ->select('roles.role_code', 'users.name', 'daily_reports.category', 'daily_reports.description', 'daily_reports.location', 'daily_reports.begin_date', 'daily_reports.target_date', 'daily_reports.finished_date', 'daily_reports.report_code', 'daily_report_attachments.att', db::raw('concat(round(time_to_sec(daily_reports.duration)/60, 0), " Min") as duration'))
-        ->distinct()
-        ->orderByRaw('daily_reports.begin_date desc, users.name asc')
-        ->limit(500)
-        ->get();
-
-        return DataTables::of($daily_reports)
-        ->addColumn('action', function($daily_reports){
-            return '<a href="javascript:void(0)" class="btn btn-xs btn-info" onClick="detailReport(id)" id="' . $daily_reports->report_code . '">Details</a>';
-        })
-        ->addColumn('attach', function($daily_reports){
-            if($daily_reports->att > 0){
-                return '<a href="javascript:void(0)" id="' . $daily_reports->report_code . '" onClick="downloadAtt(id)" class="fa fa-paperclip"> ' . $daily_reports->att . '</a>';
-            }
-            else{
-                return '-';
-            }
-        })
-        ->addColumn('action', function($daily_reports){
-            return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editReport(id)" id="' . $daily_reports->report_code . '"><i class="fa fa-edit"></i></a>';
-        })
-        ->rawColumns(['action' => 'action', 'attach' => 'attach'])
-        ->make(true);
-    }
-
-    public function fetchDailyReportDetail(Request $request){
-        $daily_reports = DailyReport::where('report_code', '=', $request->get('report_code'))->select('description', 'duration')->get();
-
-        $response = array(
-            'status' => true,
-            'daily_reports' => $daily_reports,
-        );
-        return Response::json($response);
-    }
-
-    public function downloadDailyReport(Request $request){
-        $report_attachments = DailyReportAttachment::where('report_code', '=', $request->get('report_code'))->get();
-
-        $zip = new ZipArchive();
-        $zip_name = $request->get('report_code').".zip";
-        $zip_path = public_path() . '/' . $zip_name;
-        File::delete($zip_path);
-        $zip->open($zip_name, ZipArchive::CREATE);
-
-        foreach ($report_attachments as $report_attachment) {
-            $file_path = public_path() . $report_attachment->file_path . $report_attachment->file_name;
-            $file_name = $report_attachment->file_name;
-            $zip->addFile($file_path, $file_name);
+        else{
+            return '-';
         }
-        $zip->close();
+    })
+    ->addColumn('action', function($daily_reports){
+        return '<a href="javascript:void(0)" data-toggle="modal" class="btn btn-xs btn-warning" onClick="editReport(id)" id="' . $daily_reports->report_code . '"><i class="fa fa-edit"></i></a>';
+    })
+    ->rawColumns(['action' => 'action', 'attach' => 'attach'])
+    ->make(true);
+}
 
-        $path = asset($zip_name);
+public function fetchDailyReportDetail(Request $request){
+    $daily_reports = DailyReport::where('report_code', '=', $request->get('report_code'))->select('description', 'duration')->get();
 
-        $response = array(
-            'status' => true,
-            'file_path' => $path,
-        );
-        return Response::json($response);
+    $response = array(
+        'status' => true,
+        'daily_reports' => $daily_reports,
+    );
+    return Response::json($response);
+}
+
+public function downloadDailyReport(Request $request){
+    $report_attachments = DailyReportAttachment::where('report_code', '=', $request->get('report_code'))->get();
+
+    $zip = new ZipArchive();
+    $zip_name = $request->get('report_code').".zip";
+    $zip_path = public_path() . '/' . $zip_name;
+    File::delete($zip_path);
+    $zip->open($zip_name, ZipArchive::CREATE);
+
+    foreach ($report_attachments as $report_attachment) {
+        $file_path = public_path() . $report_attachment->file_path . $report_attachment->file_name;
+        $file_name = $report_attachment->file_name;
+        $zip->addFile($file_path, $file_name);
     }
+    $zip->close();
+
+    $path = asset($zip_name);
+
+    $response = array(
+        'status' => true,
+        'file_path' => $path,
+    );
+    return Response::json($response);
+}
 
 
-    public function store(Request $request)
-    {
-        //
-    }
+public function store(Request $request)
+{
+//
+}
 
-    public function show($id)
-    {
+public function show($id)
+{
 
-    }
+}
 
-    public function edit(Request $request)
-    {
-        $daily_reports = DailyReport::where('report_code', '=', $request->get('report_code'))->get();
-        $daily_reportsHead = DailyReport::where('report_code', '=', $request->get('report_code'))->select('report_code','category','location','begin_date','finished_date','target_date')->distinct()->get();
-        $response = array(
-            'status' => true,
-            'daily_reports' => $daily_reports,
-            'daily_reportsHead' => $daily_reportsHead,
-        );
-        return Response::json($response);
-    }
+public function edit(Request $request)
+{
+    $daily_reports = DailyReport::where('report_code', '=', $request->get('report_code'))->get();
+    $daily_reportsHead = DailyReport::where('report_code', '=', $request->get('report_code'))->select('report_code','category','location','begin_date','finished_date','target_date')->distinct()->get();
+    $response = array(
+        'status' => true,
+        'daily_reports' => $daily_reports,
+        'daily_reportsHead' => $daily_reportsHead,
+    );
+    return Response::json($response);
+}
 
-    
-    public function update(Request $request)
-    {
-        try{
-           $id_user = Auth::id();
-           $ids = $request->get('report_id');
-           $lop = $request->get('lop2');
-           if($ids != null){
+
+public function update(Request $request)
+{
+    try{
+        $id_user = Auth::id();
+        $ids = $request->get('report_id');
+        $lop = $request->get('lop2');
+        if($ids != null){
             foreach ($ids as $id) 
             {
                 $description = "description".$id;
@@ -278,12 +281,12 @@ class DailyReportController extends Controller
 
 public function delete(Request $request)
 {
- try{
-    $master = DailyReport::where('id','=' ,$request->get('id'))
-    ->delete();
-}catch (QueryException $e){
-    return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
-}
+    try{
+        $master = DailyReport::where('id','=' ,$request->get('id'))
+        ->delete();
+    }catch (QueryException $e){
+        return redirect('/index/daily_report')->with('error', $e->getMessage())->with('page', 'Daily Report');
+    }
 
 }
 
@@ -325,14 +328,14 @@ public function postCheckAudit(Request $request)
 
     $id = DB::getPdo()->lastInsertId();
 
-    // foreach ($ng as $key) {
+// foreach ($ng as $key) {
     $tujuan_upload = 'files/mis';
     $file = $request->file('fileData');
     $filename = md5($id.$ng.date('YmdHisa')).'.'.$request->input('extension');
     $file->move($tujuan_upload,$filename);
 
     db::table('mis_audit_details')->insert(['point_audit' => $ng, 'created_by' => Auth::user()->username, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), 'id_audit' => $id, 'remark' => $filename]);
-    // }
+// }
 
     $response = array(
         'status' => true,
@@ -440,8 +443,52 @@ public function deleteInventoryMIS(Request $request)
     );
     return Response::json($response);
 }
-public function birthday()
+
+public function printInventory($id)
 {
-    return view('trials.birthday');
+    $printer_name = 'MIS2';
+
+    $connector = new WindowsPrintConnector($printer_name);
+    $printer = new Printer($connector);
+
+    $datas =  MisInventory::where("id", '=', $id)->first();
+
+    $data = [
+        'id' => $datas->id,
+        'cat' => $datas->category,
+        'device' => $datas->device,
+        'desc' => $datas->description,
+        'proj' => $datas->project,
+        'loc' => $datas->location,
+        'qty' => $datas->qty,
+        'used_by' => $datas->used_by,
+        'cond' => $datas->condition,
+        'rc_date' => $datas->receive_date
+    ];
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->getDomPDF()->set_option("enable_php", true);
+    $pdf->setPaper([0, 0, 70.8661, 232.441], 'landscape');
+    $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+    $pdf->loadView('inventory_mis.mis_print', array(
+        'data' => $data
+    ));
+
+    return $pdf->download("MIS_QR.pdf");
+
+    // $img = EscposImage::load("apar-qr.png");
+
+    // $printer->setTextSize(1, 1);
+    // // $printer->text($datas->category. "-". $datas->location);
+    // $printer->initialize();
+    // $printer->setTextSize(1, 1);
+    // $printer->setJustification(Printer::JUSTIFY_LEFT);
+
+    // $printer->graphics($img);
+    // $printer->text("F-03G");
+    // $printer->feed(1);
+    // $printer->cut();
+    // $printer->close();
 }
 }

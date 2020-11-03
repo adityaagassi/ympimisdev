@@ -661,7 +661,7 @@ class AuditReportActivityController extends Controller
             return redirect('/index/audit_report_activity/index/'.$id)->with('error', 'Data pernah dikirim.')->with('page', 'Laporan Aktivitas Audit');
           }
           elseif($laporan_aktivitas != null){
-              Mail::to($mail_to)->send(new SendEmail($laporan_aktivitas, 'laporan_aktivitas'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($laporan_aktivitas, 'laporan_aktivitas'));
               return redirect('/index/audit_report_activity/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'Laporan Aktivitas Audit');
           }
           else{

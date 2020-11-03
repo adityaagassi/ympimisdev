@@ -475,7 +475,7 @@ class AuditProcessController extends Controller
             return redirect('/index/audit_process/index/'.$id)->with('error', 'Data pernah dikirim.')->with('page', 'Audit Process');
           }
           elseif($audit_process != null){
-              Mail::to($mail_to)->send(new SendEmail($audit_process, 'audit_process'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($audit_process, 'audit_process'));
               return redirect('/index/audit_process/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'Audit Process');
           }
           else{

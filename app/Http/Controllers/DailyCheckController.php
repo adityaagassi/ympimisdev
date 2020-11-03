@@ -500,7 +500,7 @@ class DailyCheckController extends Controller
           }
           
           elseif($daily_check != null){
-              Mail::to($mail_to)->send(new SendEmail($daily_check3, 'daily_check'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($daily_check3, 'daily_check'));
               return redirect('/index/daily_check_fg/index/'.$id.'/'.$product)->with('status', 'Your E-mail has been sent.')->with('page', 'Daily Check');
           }
           else{

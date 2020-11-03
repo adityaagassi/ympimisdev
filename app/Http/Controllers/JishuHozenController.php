@@ -567,7 +567,7 @@ class JishuHozenController extends Controller
           }
           
           elseif($jishu_hozen != null){
-              Mail::to($mail_to)->send(new SendEmail($jishu_hozen3, 'jishu_hozen'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($jishu_hozen3, 'jishu_hozen'));
               return redirect('/index/jishu_hozen/index/'.$activity_list_id.'/'.$jishu_hozen_point_id)->with('status', 'Your E-mail has been sent.')->with('page', 'Jishu Hozen');
           }
           else{

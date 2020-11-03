@@ -447,7 +447,7 @@ class WeeklyActivityReportController extends Controller
           }
           
           elseif($weekly_report != null){
-              Mail::to($mail_to)->send(new SendEmail($weekly_report3, 'weekly_report'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($weekly_report3, 'weekly_report'));
               return redirect('/index/weekly_report/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'Weekly Activity Report');
           }
           else{

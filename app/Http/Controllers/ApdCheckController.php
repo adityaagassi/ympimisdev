@@ -485,7 +485,7 @@ class ApdCheckController extends Controller
           }
           
           elseif($apd_check != null){
-              Mail::to($mail_to)->send(new SendEmail($apd_check3, 'apd_check'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($apd_check3, 'apd_check'));
               return redirect('/index/apd_check/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'APD Check');
           }
           else{

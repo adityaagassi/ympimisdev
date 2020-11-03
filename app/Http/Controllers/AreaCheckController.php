@@ -473,7 +473,7 @@ class AreaCheckController extends Controller
           }
           
           elseif($area_check != null){
-              Mail::to($mail_to)->send(new SendEmail($area_check3, 'area_check'));
+              Mail::to($mail_to)->bcc('mokhamad.khamdan.khabibi@music.yamaha.com')->send(new SendEmail($area_check3, 'area_check'));
               return redirect('/index/area_check/index/'.$id)->with('status', 'Your E-mail has been sent.')->with('page', 'Area Check');
           }
           else{
